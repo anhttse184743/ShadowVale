@@ -1,0 +1,14 @@
+{
+    "name": "ShadowVale.Tests.EditMode",
+    "rootNamespace": "ShadowVale.Tests.EditMode",
+    "references": ["ShadowVale.Core","ShadowVale.Data","ShadowVale.Content","ShadowVale.Networking","ShadowVale.Persistence","ShadowVale.Telemetry","ShadowVale.AI","ShadowVale.Gameplay","ShadowVale.UI","ShadowVale.Bootstrap","UnityEngine.TestRunner","UnityEditor.TestRunner"],
+    "includePlatforms": ["Editor"],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": ["nunit.framework.dll", "Newtonsoft.Json.dll"],
+    "autoReferenced": false,
+    "defineConstraints": ["UNITY_INCLUDE_TESTS"],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,0 +1,14 @@
+{
+    "name": "ShadowVale.Persistence",
+    "rootNamespace": "ShadowVale.Persistence",
+    "references": ["ShadowVale.Core","ShadowVale.Data"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

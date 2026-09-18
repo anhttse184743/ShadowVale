@@ -1,0 +1,197 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://shadowvale.dev/schemas/content-bundle-v1.json",
+  "title": "ShadowVale content bundle v1",
+  "description": "Contract between the Content & Balancing Platform (backend publishes) and the game client (consumes). Source of truth lives in shadowvale-backend/contracts/; this is a copy for offline validation.",
+  "type": "object",
+  "required": ["bundle_version", "schema_version", "items", "weapons", "enemy_archetypes", "loot_tables", "craft_recipes", "quests", "maps", "ai_settings"],
+  "additionalProperties": false,
+  "properties": {
+    "bundle_version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+    "schema_version": { "type": "integer", "const": 1 },
+    "published_at": { "type": "string", "format": "date-time" },
+    "checksum": { "type": "string" },
+    "items":            { "type": "array", "items": { "$ref": "#/definitions/item" } },
+    "weapons":          { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/weapon" } },
+    "enemy_archetypes": { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/enemy_archetype" } },
+    "loot_tables":      { "type": "array", "items": { "$ref": "#/definitions/loot_table" } },
+    "craft_recipes":    { "type": "array", "items": { "$ref": "#/definitions/craft_recipe" } },
+    "quests":           { "type": "array", "items": { "$ref": "#/definitions/quest" } },
+    "maps":             { "type": "array", "minItems": 1, "items": { "$ref": "#/definitions/map" } },
+    "ai_settings":      { "$ref": "#/definitions/ai_settings" }
+  },
+  "definitions": {
+    "id": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$", "description": "snake_case, never an ordinal number" },
+    "item": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "display_name", "category"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "display_name": { "type": "string" },
+        "category": { "type": "string", "enum": ["ammo", "material", "consumable", "tool"] },
+        "stack_max": { "type": "integer", "minimum": 1, "default": 1 },
+        "weight": { "type": "number", "minimum": 0 }
+      }
+    },
+    "weapon": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "display_name", "class", "damage", "fire_rate", "ammo_type", "magazine_size", "durability_max", "durability_per_shot", "noise_radius"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "display_name": { "type": "string" },
+        "class": { "type": "string", "enum": ["rifle", "smg", "shotgun", "pistol", "sniper", "carbine"] },
+        "damage": { "type": "number", "exclusiveMinimum": 0 },
+        "fire_rate": { "type": "number", "exclusiveMinimum": 0, "description": "shots per second" },
+        "range": { "type": "number", "minimum": 0 },
+        "ammo_type": { "$ref": "#/definitions/id", "description": "item id with category ammo" },
+        "magazine_size": { "type": "integer", "minimum": 1 },
+        "reload_seconds": { "type": "number", "minimum": 0 },
+        "durability_max": { "type": "number", "exclusiveMinimum": 0 },
+        "durability_per_shot": { "type": "number", "minimum": 0 },
+        "noise_radius": { "type": "number", "minimum": 0 },
+        "suppressed": { "type": "boolean", "default": false }
+      }
+    },
+    "enemy_archetype": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "max_hp", "move_speed", "vision_range", "vision_angle", "hearing_range", "weapon_id", "alert_decay_seconds", "retreat_hp_threshold"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "display_name": { "type": "string" },
+        "max_hp": { "type": "number", "exclusiveMinimum": 0 },
+        "move_speed": { "type": "number", "exclusiveMinimum": 0 },
+        "vision_range": { "type": "number", "minimum": 0 },
+        "vision_angle": { "type": "number", "minimum": 0, "maximum": 360 },
+        "hearing_range": { "type": "number", "minimum": 0 },
+        "weapon_id": { "$ref": "#/definitions/id" },
+        "alert_decay_seconds": { "type": "number", "minimum": 0 },
+        "retreat_hp_threshold": { "type": "number", "minimum": 0, "maximum": 1 },
+        "loot_table_id": { "$ref": "#/definitions/id" },
+        "is_boss": { "type": "boolean", "default": false }
+      }
+    },
+    "loot_table": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "tier", "rolls", "entries"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "tier": { "type": "integer", "minimum": 1, "maximum": 3 },
+        "rolls": { "type": "integer", "minimum": 1 },
+        "entries": { "type": "array", "minItems": 1, "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["item_id", "weight"],
+          "properties": {
+            "item_id": { "$ref": "#/definitions/id" },
+            "weight": { "type": "number", "exclusiveMinimum": 0 },
+            "min": { "type": "integer", "minimum": 1, "default": 1 },
+            "max": { "type": "integer", "minimum": 1, "default": 1 }
+          }
+        } }
+      }
+    },
+    "craft_recipe": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "output_item_id", "inputs"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "output_item_id": { "$ref": "#/definitions/id" },
+        "output_count": { "type": "integer", "minimum": 1, "default": 1 },
+        "required_skill": { "type": "string", "enum": ["shooting", "engineering", "stealth"] },
+        "required_skill_level": { "type": "integer", "minimum": 0 },
+        "craft_seconds": { "type": "number", "minimum": 0 },
+        "inputs": { "type": "array", "minItems": 1, "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["item_id", "count"],
+          "properties": { "item_id": { "$ref": "#/definitions/id" }, "count": { "type": "integer", "minimum": 1 } }
+        } }
+      }
+    },
+    "quest": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title", "objectives"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "giver_npc_id": { "type": "string" },
+        "map_id": { "$ref": "#/definitions/id" },
+        "objectives": { "type": "array", "minItems": 1, "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["id", "type"],
+          "properties": {
+            "id": { "$ref": "#/definitions/id" },
+            "type": { "type": "string", "enum": ["reach_node", "kill_archetype", "collect_item", "escape_map", "stealth_no_alert"] },
+            "target_id": { "type": "string" },
+            "count": { "type": "integer", "minimum": 1, "default": 1 }
+          }
+        } },
+        "rewards": { "type": "array", "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["item_id", "count"],
+          "properties": { "item_id": { "$ref": "#/definitions/id" }, "count": { "type": "integer", "minimum": 1 } }
+        } }
+      }
+    },
+    "map": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "scene_name", "spawn_groups", "nav_graph_nodes", "escape_routes"],
+      "properties": {
+        "id": { "$ref": "#/definitions/id" },
+        "display_name": { "type": "string" },
+        "scene_name": { "type": "string", "description": "Unity scene that owns geometry and the baked NavMesh" },
+        "player_start_node": { "type": "integer", "minimum": 0, "default": 0 },
+        "boss_archetype_id": { "oneOf": [ { "$ref": "#/definitions/id" }, { "type": "null" } ] },
+        "spawn_groups": { "type": "array", "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["squad_id", "archetype_id", "count"],
+          "properties": {
+            "squad_id": { "$ref": "#/definitions/id" },
+            "archetype_id": { "$ref": "#/definitions/id" },
+            "count": { "type": "integer", "minimum": 1 },
+            "start_nodes": { "type": "array", "items": { "type": "integer", "minimum": 0 } }
+          }
+        } },
+        "loot_placements": { "type": "array", "items": {
+          "type": "object", "additionalProperties": false,
+          "required": ["container_id", "loot_table_id", "node"],
+          "properties": {
+            "container_id": { "type": "string" },
+            "loot_table_id": { "$ref": "#/definitions/id" },
+            "node": { "type": "integer", "minimum": 0 }
+          }
+        } },
+        "nav_graph_nodes": {
+          "type": "array", "minItems": 2, "maxItems": 200,
+          "description": "Tactical graph (20–100 nodes in scope). id must equal array index.",
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["id", "x", "y", "z", "neighbors"],
+            "properties": {
+              "id": { "type": "integer", "minimum": 0 },
+              "x": { "type": "number" }, "y": { "type": "number" }, "z": { "type": "number" },
+              "is_cover": { "type": "boolean", "default": false },
+              "cover_facing": { "type": "number", "minimum": 0, "maximum": 360 },
+              "neighbors": { "type": "array", "items": { "type": "integer", "minimum": 0 } }
+            }
+          }
+        },
+        "escape_routes": { "type": "array", "minItems": 1, "items": { "type": "integer", "minimum": 0 } }
+      }
+    },
+    "ai_settings": {
+      "type": "object", "additionalProperties": false,
+      "required": ["default_solver_variant", "latency_budget_ms", "replan_cooldown_ms"],
+      "properties": {
+        "default_solver_variant": { "type": "string", "enum": ["greedy", "ga", "sa", "sqa", "qiea", "qaoa"] },
+        "latency_budget_ms": { "type": "integer", "minimum": 1 },
+        "replan_cooldown_ms": { "type": "integer", "minimum": 0 },
+        "weight_coverage": { "type": "number", "minimum": 0, "default": 1.0 },
+        "weight_redundancy": { "type": "number", "minimum": 0, "default": 0.5 },
+        "weight_flanking": { "type": "number", "minimum": 0, "default": 1.0 },
+        "weight_cover": { "type": "number", "minimum": 0, "default": 0.5 },
+        "weight_distance": { "type": "number", "minimum": 0, "default": 0.1 },
+        "vision_hops": { "type": "integer", "minimum": 1, "default": 2 }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f34f14f657e185b49a489275c9af44aa, type: 3}
+  m_Name: SolverProfile_Default
+  m_EditorClassIdentifier:
+  SolverBaseUrl: http://127.0.0.1:8001
+  SidecarRelativePath: Solver/svl-solver.exe
+  AutoLaunchSidecar: 1
+  SidecarStartupTimeoutSeconds: 5
+  FallbackLatencyBudgetMs: 120
