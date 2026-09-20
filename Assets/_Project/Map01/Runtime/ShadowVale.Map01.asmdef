@@ -1,0 +1,6 @@
+{
+  "name": "ShadowVale.Map01",
+  "rootNamespace": "ShadowVale.Map01",
+  "references": ["Unity.InputSystem", "Unity.AI.Navigation"],
+  "autoReferenced": true
+}
