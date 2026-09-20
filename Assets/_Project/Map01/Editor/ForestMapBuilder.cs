@@ -14,20 +14,28 @@ namespace ShadowVale.Map01.Editor
     public static class ForestMapBuilder
     {
         public const string ScenePath = "Assets/_Project/Scenes/Maps/Map01_ForestFootprints.unity";
-        private const string Root = "Assets/_Project/Map01";
+        private static string Root = "Assets/_Project/Map01";
+        private static string Reports = "Tools/Map01Reports";
         private static Transform environment, detail;
         private static Material soil, trail, grass, bark, leaf, stone, wood, canvas, water, metal, paper, gold;
         private static readonly List<Vector3[]> routes = new List<Vector3[]>();
 
         [MenuItem("ShadowVale/Map 1/Build Forest Scene")]
-        public static void Build()
+        public static void Build() => BuildScene(ScenePath, "Assets/_Project/Map01", false);
+
+        [MenuItem("ShadowVale/Map 1/Build Reference Wetland Blockout")]
+        public static void BuildReference() => BuildScene("Assets/_Project/Scenes/Maps/Map01_ReferenceBlockout.unity", "Assets/_Project/Map01/ReferenceBlockout", true);
+
+        private static void BuildScene(string destination, string assetRoot, bool reference)
         {
             if (!Application.isBatchMode && !EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo()) return;
-            if (File.Exists(ScenePath))
+            Root = assetRoot;
+            Reports = reference ? "Tools/Map01ReferenceReports" : "Tools/Map01Reports";
+            if (File.Exists(destination))
             {
                 // Keep the previous authored scene as a timestamped backup before explicit rebuilds.
                 Directory.CreateDirectory("Tools/Map01Backups");
-                File.Copy(ScenePath, "Tools/Map01Backups/Map01_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".unity");
+                File.Copy(destination, "Tools/Map01Backups/Map01_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".unity");
             }
             Directory.CreateDirectory(Root + "/Generated/Materials");
             Directory.CreateDirectory(Root + "/Generated/Prefabs");
@@ -40,13 +48,18 @@ namespace ShadowVale.Map01.Editor
             Paths();
             Woodland();
             var mission = new GameObject("00 • Map 1 mission").AddComponent<ForestMission>();
-            mission.balanceJson = AssetDatabase.LoadAssetAtPath<TextAsset>(Root + "/Map01Balance.json");
-            mission.contentBundle = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/StreamingAssets/Content/fallback_bundle.json");
+            mission.balanceJson = AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/_Project/Map01/Map01Balance.json");
+            // StreamingAssets are imported as raw files; copy the JSON to a normal TextAsset.
+            string bundlePath = Root + "/Generated/Map01Content.json";
+            File.Copy("Assets/StreamingAssets/Content/fallback_bundle.json", bundlePath, true);
+            AssetDatabase.ImportAsset(bundlePath, ImportAssetOptions.ForceSynchronousImport);
+            mission.contentBundle = AssetDatabase.LoadAssetAtPath<TextAsset>(bundlePath);
             mission.trailMaterial = Material("Tracer", new Color(1, .8f, .3f), true);
             StartCamp();
             PatrolCrossing();
             RestCamp();
-            AbandonedBase();
+            if (reference) ReferenceWetlandDressing.Build(environment, detail);
+            else AbandonedBase();
             RiverExit();
             Lighting();
             var surface = environment.gameObject.AddComponent<NavMeshSurface>();
@@ -71,14 +84,16 @@ namespace ShadowVale.Map01.Editor
             cam.nearClipPlane = .1f; cam.farClipPlane = 250;
             cam.clearFlags = CameraClearFlags.SolidColor; cam.backgroundColor = new Color(.12f, .19f, .18f);
             cam.gameObject.AddComponent<AudioListener>(); mission.gameCamera = cam;
-            EditorSceneManager.SaveScene(scene, ScenePath);
+            EditorSceneManager.SaveScene(scene, destination);
             var scenes = EditorBuildSettings.scenes.ToList();
-            if (!scenes.Any(s => s.path == ScenePath)) scenes.Add(new EditorBuildSettingsScene(ScenePath, true));
+            if (!scenes.Any(s => s.path == destination)) scenes.Add(new EditorBuildSettingsScene(destination, true));
             EditorBuildSettings.scenes = scenes.ToArray();
             AssetDatabase.SaveAssets();
             Validate();
             Capture();
-            Debug.Log("[Map01] Built forest scene, baked navigation, validated routes and captured previews: " + ScenePath);
+            if (reference && SceneView.lastActiveSceneView != null)
+                SceneView.lastActiveSceneView.LookAt(new Vector3(0,0,14), Quaternion.Euler(58,0,0), 100);
+            Debug.Log("[Map01] Built forest scene, baked navigation, validated routes and captured previews: " + destination);
         }
 
         private static Material Material(string name, Color color, bool unlit = false)
@@ -327,6 +342,7 @@ namespace ShadowVale.Map01.Editor
         [MenuItem("ShadowVale/Map 1/Validate Forest Routes")]
         public static void Validate()
         {
+            Reports = EditorSceneManager.GetActiveScene().path.Contains("ReferenceBlockout") ? "Tools/Map01ReferenceReports" : "Tools/Map01Reports";
             InitializeRoutes();
             var triangles=NavMesh.CalculateTriangulation();
             if(triangles.vertices.Length==0) throw new InvalidOperationException("No navigation data");
@@ -340,8 +356,8 @@ namespace ShadowVale.Map01.Editor
                 for(int i=0;i<guard.patrol.Length;i++) AssertPath(guard.patrol[i],guard.patrol[(i+1)%guard.patrol.Length],checks);
             var mission=UnityEngine.Object.FindFirstObjectByType<ForestMission>();
             if(mission==null || mission.balanceJson==null || mission.contentBundle==null || mission.player==null || mission.hung==null) throw new InvalidOperationException("Missing mission references");
-            Directory.CreateDirectory("Tools/Map01Reports");
-            File.WriteAllLines("Tools/Map01Reports/navigation.txt",checks);
+            Directory.CreateDirectory(Reports);
+            File.WriteAllLines(Reports + "/navigation.txt",checks);
             Debug.Log("[Map01] PASS: "+checks.Count+" complete navigation paths; all mission references present.");
         }
         private static void AssertPath(Vector3 a,Vector3 b,List<string> checks)
@@ -354,7 +370,8 @@ namespace ShadowVale.Map01.Editor
         [MenuItem("ShadowVale/Map 1/Capture Forest Previews")]
         public static void Capture()
         {
-            Directory.CreateDirectory("Tools/Map01Reports");
+            Reports = EditorSceneManager.GetActiveScene().path.Contains("ReferenceBlockout") ? "Tools/Map01ReferenceReports" : "Tools/Map01Reports";
+            Directory.CreateDirectory(Reports);
             var cam=Camera.main; var position=cam.transform.position;var rotation=cam.transform.rotation;float size=cam.orthographicSize;
             try
             {
@@ -369,7 +386,7 @@ namespace ShadowVale.Map01.Editor
             cam.transform.rotation=Quaternion.Euler(angles);cam.transform.position=target-cam.transform.forward*130;cam.orthographicSize=size;
             var rt=new RenderTexture(1600,1000,24);cam.targetTexture=rt;cam.Render();var previous=RenderTexture.active;RenderTexture.active=rt;
             var image=new Texture2D(1600,1000,TextureFormat.RGB24,false);image.ReadPixels(new Rect(0,0,1600,1000),0,0);image.Apply();
-            File.WriteAllBytes("Tools/Map01Reports/"+name+".png",image.EncodeToPNG());cam.targetTexture=null;RenderTexture.active=previous;
+            File.WriteAllBytes(Reports + "/"+name+".png",image.EncodeToPNG());cam.targetTexture=null;RenderTexture.active=previous;
             UnityEngine.Object.DestroyImmediate(image);UnityEngine.Object.DestroyImmediate(rt);
         }
     }
