@@ -238,7 +238,7 @@ namespace ShadowVale.Map01
                 case ForestPointKind.Loot:
                     if (point.used) return;
                     foreach (var item in point.items) inventory[item.item_id] = Count(item.item_id) + item.count;
-                    point.used = true; Say("Đã nhặt vật tư. Tab mở túi đồ. Bàn chế tạo nằm ở điểm nghỉ phía bắc.");
+                    point.used = true; Say("Đã nhặt vật tư. Tab mở túi đồ. Bàn chế tạo nằm ở điểm tiếp tế.");
                     break;
                 case ForestPointKind.Workbench:
                     Say("Bàn chế tạo: B để làm băng cứu thương (2 vải + 1 thảo dược). F5 lưu khi khu vực an toàn.");
@@ -267,7 +267,7 @@ namespace ShadowVale.Map01
 
         [Serializable] private sealed class Checkpoint
         {
-            public int version = 1, stage, stones;
+            public int version = 2, stage, stones;
             public float hp, stamina;
             public Vector3 player, hung;
             public bool alarmed;
@@ -307,7 +307,7 @@ namespace ShadowVale.Map01
             try
             {
                 var data = JsonUtility.FromJson<Checkpoint>(File.ReadAllText(SavePath));
-                if (data == null || data.version != 1 || data.items == null || data.used == null || data.down == null) throw new IOException();
+                if (data == null || data.version != 2 || data.items == null || data.used == null || data.down == null) throw new IOException();
                 controller.enabled = false; player.position = data.player; controller.enabled = true;
                 companion.Warp(data.hung); stage = Mathf.Clamp(data.stage, 0, 3); stones = data.stones;
                 hp = Mathf.Clamp(data.hp, 1, Settings.playerHP); stamina = Mathf.Clamp(data.stamina, 0, Settings.stamina); Alarmed = data.alarmed;

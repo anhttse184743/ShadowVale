@@ -1,0 +1,1 @@
+PASS: mission/three guards initialized; exit gate; supplies; bridge progression; evidence; delivery with Hung; complete stage 4. Navigation tested separately; this flow check teleports between objectives.

@@ -13,6 +13,9 @@ PASS main 11 -> 12
 PASS main 12 -> 13
 PASS main 13 -> 14
 PASS main 14 -> 15
+PASS main 15 -> 16
+PASS main 16 -> 17
+PASS main 17 -> 18
 PASS stealth 0 -> 1
 PASS stealth 1 -> 2
 PASS stealth 2 -> 3
@@ -29,6 +32,11 @@ PASS base_flank 2 -> 3
 PASS base_flank 3 -> 4
 PASS overlook 0 -> 1
 PASS overlook 1 -> 2
+PASS eastern_loop 0 -> 1
+PASS eastern_loop 1 -> 2
+PASS eastern_loop 2 -> 3
+PASS eastern_loop 3 -> 4
+PASS eastern_loop 4 -> 5
 PASS patrol_0 0 -> 1
 PASS patrol_0 1 -> 2
 PASS patrol_0 2 -> 3

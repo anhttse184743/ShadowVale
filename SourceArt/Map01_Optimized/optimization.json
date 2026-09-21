@@ -1,18 +1,24 @@
 {
-  "before_triangles": 6372468,
-  "tree_instances": 1197,
+  "before_triangles": 7478792,
+  "tree_instances": 1398,
+  "prop_instances": 613,
+  "prefab_variants": 8,
   "shared_tree_meshes": 15,
   "tree_triangles_per_lod": [
-    700,
-    130,
-    70
+    1972,
+    904,
+    400
   ],
-  "static_triangles": 148176,
-  "maximum_lod0_triangles": 986076,
-  "all_lod1_triangles": 303786,
-  "all_lod2_triangles": 231966,
-  "render_chunks": 75,
-  "collision_meshes": 31,
+  "static_triangles": 179408,
+  "maximum_lod0_triangles": 2985776,
+  "all_lod1_triangles": 1492712,
+  "all_lod2_triangles": 788120,
+  "render_chunks": 114,
+  "collision_meshes": 21,
   "materials_in_unity": 2,
-  "reduction_lod0_percent": 84.5
+  "extent_meters": [
+    220,
+    200
+  ],
+  "reduction_lod0_percent": 60.1
 }

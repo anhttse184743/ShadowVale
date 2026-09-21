@@ -1,7 +1,9 @@
 {
-    "treeInstances": 1197,
+    "treeInstances": 1398,
+    "propInstances": 613,
+    "prefabAssets": 8,
     "sharedTreeMeshes": 15,
-    "staticChunks": 75,
-    "trianglesInUniqueMeshes": 239572,
+    "staticChunks": 114,
+    "trianglesInUniqueMeshes": 286368,
     "scene": "Assets/_Project/Scenes/Maps/Map 1.unity"
 }
