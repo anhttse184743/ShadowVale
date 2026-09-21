@@ -1,0 +1,180 @@
+Blender-authored assets applied
+Forest trees: 1355; banana plants: 125; grass cells: 333; detailed houses: 3; riverside palms: 25
+Camera skybox, layered moving clouds, animated river ripple/Fresnel shading
+Navigation: original routes and every guard patrol loop PASS
+Shared LOD meshes + instanced materials; grass shadows disabled; no per-frame vegetation scripts
+Triangles per shared prototype:
+Forest_0_LOD0: 3520
+Forest_0_LOD1: 1096
+Forest_0_LOD2: 284
+Forest_1_LOD0: 3520
+Forest_1_LOD1: 1096
+Forest_1_LOD2: 284
+Forest_2_LOD0: 3520
+Forest_2_LOD1: 1096
+Forest_2_LOD2: 284
+Forest_3_LOD0: 3520
+Forest_3_LOD1: 1096
+Forest_3_LOD2: 284
+Forest_4_LOD0: 3520
+Forest_4_LOD1: 1096
+Forest_4_LOD2: 284
+Coconut_LOD0: 3710
+Coconut_LOD1: 1806
+Coconut_LOD2: 746
+Banana_LOD0: 936
+Banana_LOD1: 196
+Banana_LOD2: 108
+Grass_LOD0: 512
+Grass_LOD1: 128
+Grass_LOD2: 56
+House_LOD0: 3048
+House_LOD1: 1176
+Chunk_-5_-5_opaque: 112
+Chunk_-4_-5_opaque: 192
+Chunk_-3_-5_opaque: 192
+Chunk_-2_-5_opaque: 192
+Chunk_-1_-5_opaque: 192
+Chunk_0_-5_opaque: 192
+Chunk_1_-5_opaque: 192
+Chunk_2_-5_opaque: 192
+Chunk_3_-5_opaque: 192
+Chunk_4_-5_opaque: 112
+Chunk_-5_-4_opaque: 672
+Chunk_-4_-4_opaque: 2898
+Chunk_-3_-4_opaque: 1338
+Chunk_-2_-4_opaque: 1152
+Chunk_-1_-4_opaque: 1152
+Chunk_0_-4_opaque: 1152
+Chunk_1_-4_opaque: 1152
+Chunk_2_-4_opaque: 1152
+Chunk_3_-4_opaque: 1152
+Chunk_4_-4_opaque: 672
+Chunk_-5_-3_opaque: 672
+Chunk_-4_-3_opaque: 3192
+Chunk_-3_-3_opaque: 12114
+Chunk_-2_-3_opaque: 1152
+Chunk_-1_-3_opaque: 1152
+Chunk_0_-3_opaque: 1152
+Chunk_1_-3_opaque: 1152
+Chunk_2_-3_opaque: 1152
+Chunk_3_-3_opaque: 1152
+Chunk_4_-3_opaque: 672
+Chunk_-5_-2_opaque: 672
+Chunk_-4_-2_opaque: 1600
+Chunk_-3_-2_opaque: 3062
+Chunk_-2_-2_opaque: 1220
+Chunk_-1_-2_opaque: 1168
+Chunk_0_-2_opaque: 1152
+Chunk_1_-2_opaque: 1152
+Chunk_2_-2_opaque: 1152
+Chunk_3_-2_opaque: 1152
+Chunk_4_-2_opaque: 672
+Chunk_-5_-1_opaque: 672
+Chunk_-4_-1_opaque: 1152
+Chunk_-3_-1_opaque: 1234
+Chunk_-2_-1_opaque: 8000
+Chunk_-1_-1_opaque: 4162
+Chunk_0_-1_opaque: 1482
+Chunk_1_-1_opaque: 1220
+Chunk_2_-1_opaque: 7206
+Chunk_3_-1_opaque: 1152
+Chunk_4_-1_opaque: 672
+Chunk_-5_0_opaque: 672
+Chunk_-4_0_opaque: 1152
+Chunk_-3_0_opaque: 1220
+Chunk_-2_0_opaque: 1550
+Chunk_-1_0_opaque: 1624
+Chunk_0_0_opaque: 2006
+Chunk_1_0_opaque: 3604
+Chunk_2_0_opaque: 2948
+Chunk_3_0_opaque: 2618
+Chunk_4_0_opaque: 672
+Chunk_-5_1_opaque: 672
+Chunk_-4_1_opaque: 1152
+Chunk_-3_1_opaque: 7657
+Chunk_-2_1_opaque: 1446
+Chunk_-1_1_opaque: 1152
+Chunk_0_1_opaque: 1152
+Chunk_1_1_opaque: 11144
+Chunk_2_1_opaque: 6706
+Chunk_3_1_opaque: 4058
+Chunk_4_1_opaque: 672
+Chunk_-5_2_opaque: 672
+Chunk_-4_2_opaque: 1152
+Chunk_-3_2_opaque: 2961
+Chunk_-2_2_opaque: 1192
+Chunk_-1_2_opaque: 1152
+Chunk_0_2_opaque: 1152
+Chunk_1_2_opaque: 1940
+Chunk_2_2_opaque: 4885
+Chunk_3_2_opaque: 3455
+Chunk_4_2_opaque: 672
+Chunk_-5_3_opaque: 672
+Chunk_-4_3_opaque: 1152
+Chunk_-3_3_opaque: 1152
+Chunk_-2_3_opaque: 1152
+Chunk_-1_3_opaque: 1158
+Chunk_0_3_opaque: 4222
+Chunk_1_3_opaque: 3212
+Chunk_2_3_opaque: 1152
+Chunk_3_3_opaque: 1152
+Chunk_4_3_opaque: 672
+Chunk_-5_4_opaque: 112
+Chunk_-4_4_opaque: 192
+Chunk_-3_4_opaque: 192
+Chunk_-2_4_opaque: 192
+Chunk_-1_4_opaque: 192
+Chunk_0_4_opaque: 192
+Chunk_1_4_opaque: 192
+Chunk_2_4_opaque: 192
+Chunk_3_4_opaque: 192
+Chunk_4_4_opaque: 112
+Chunk_0_-5_water: 16
+Chunk_0_-4_water: 96
+Chunk_0_-3_water: 96
+Chunk_0_-2_water: 24
+Chunk_-1_-2_water: 72
+Chunk_-1_-1_water: 58
+Chunk_0_-1_water: 38
+Chunk_0_0_water: 96
+Chunk_0_1_water: 96
+Chunk_0_2_water: 96
+Chunk_0_3_water: 80
+Chunk_-1_3_water: 16
+Chunk_-1_4_water: 16
+GrassPatch_0_LOD0: 8192
+GrassPatch_0_LOD1: 2048
+GrassPatch_0_LOD2: 896
+GrassPatch_1_LOD0: 8192
+GrassPatch_1_LOD1: 2048
+GrassPatch_1_LOD2: 896
+GrassPatch_2_LOD0: 8192
+GrassPatch_2_LOD1: 2048
+GrassPatch_2_LOD2: 896
+Palm positions (within 7.7–9.9 m of authored river centre; bridge and exit reserved):
+(3.86, 1.69, -88.00)
+(-4.53, 2.25, -78.50)
+(-6.81, 1.07, -69.00)
+(-8.43, 1.22, -59.50)
+(-8.95, 2.46, -50.00)
+(-11.85, 1.93, -31.00)
+(-14.08, 2.40, -21.50)
+(-9.30, 1.24, -12.00)
+(11.65, 1.10, 16.50)
+(11.23, 1.60, 26.00)
+(8.00, 1.94, 35.50)
+(7.74, 0.90, 45.00)
+(6.43, 1.87, 54.50)
+(5.93, 2.74, 64.00)
+(5.70, 1.33, 73.50)
+(18.92, 2.09, -85.00)
+(13.21, 2.52, -75.50)
+(8.37, 1.42, -66.00)
+(9.38, 2.16, -56.50)
+(6.70, 0.81, -37.50)
+(5.75, 2.22, -18.50)
+(25.97, 1.92, 10.00)
+(27.97, 1.53, 19.50)
+(23.09, 1.45, 48.00)
+(25.04, 2.31, 67.00)

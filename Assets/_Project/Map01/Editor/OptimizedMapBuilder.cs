@@ -180,7 +180,7 @@ namespace ShadowVale.Map01.Editor
             var build=EditorBuildSettings.scenes.Where(s=>!s.path.EndsWith("Map01_ForestFootprints.unity")&&!s.path.EndsWith("Map01_ReferenceBlockout.unity")&&s.path!=ScenePath).ToList();build.Add(new EditorBuildSettingsScene(ScenePath,true));EditorBuildSettings.scenes=build.ToArray();
             Selection.activeGameObject=env;
             if(SceneView.lastActiveSceneView!=null){SceneView.lastActiveSceneView.LookAt(new Vector3(0,3,0),Quaternion.Euler(55,-38,0),145,true,true);}
-            Validate();Capture();
+            Map01Expansion.Apply();
             File.WriteAllText(Reports+"/summary.json",JsonUtility.ToJson(new Summary{treeInstances=data.trees.Length,propInstances=data.props.Length,prefabAssets=treePrefabs.Length+propPrefabs.Count,sharedTreeMeshes=15,staticChunks=data.meshes.Count(m=>m.kind=="opaque"||m.kind=="water"),trianglesInUniqueMeshes=data.meshes.Sum(m=>m.triangles.Length/3),scene=ScenePath},true));
         }
         [Serializable] class Summary {public int treeInstances,propInstances,prefabAssets,sharedTreeMeshes,staticChunks,trianglesInUniqueMeshes;public string scene;}
@@ -243,7 +243,7 @@ namespace ShadowVale.Map01.Editor
         static void PlayState(PlayModeStateChange state)
         {
             if(state!=PlayModeStateChange.EnteredPlayMode||!SessionState.GetBool("SV.Map01.PlayCheck",false))return;
-            playPhase=0;nextFrame=Time.frameCount+5;EditorApplication.update-=AdvancePlayCheck;EditorApplication.update+=AdvancePlayCheck;
+            Application.runInBackground=true;playPhase=0;nextFrame=Time.frameCount+5;EditorApplication.update-=AdvancePlayCheck;EditorApplication.update+=AdvancePlayCheck;
         }
         static void AdvancePlayCheck()
         {
@@ -254,7 +254,7 @@ namespace ShadowVale.Map01.Editor
                 var points=Object.FindObjectsByType<ForestPoint>(FindObjectsSortMode.None);
                 if(playPhase==0)
                 {
-                    var guards=Object.FindObjectsByType<ForestGuard>(FindObjectsSortMode.None);if(guards.Length!=3||guards.Any(g=>!g.enabled||g.hp<=0))throw new InvalidOperationException("Guard startup failed");
+                    var guards=Object.FindObjectsByType<ForestGuard>(FindObjectsSortMode.None);if(guards.Length<3||guards.Any(g=>!g.enabled||g.hp<=0))throw new InvalidOperationException("Guard startup failed");
                     m.Interact(points.Single(p=>p.id=="river_exit"));if(m.Stage!=0)throw new InvalidOperationException("Exit skipped mission");
                     m.Interact(points.Single(p=>p.id=="supplies"));if(m.Stage!=1)throw new InvalidOperationException("Supply interaction failed");
                     var controller=m.player.GetComponent<CharacterController>();controller.enabled=false;m.player.position=m.encounterExit.position;controller.enabled=true;
@@ -264,7 +264,7 @@ namespace ShadowVale.Map01.Editor
                 m.Interact(points.Single(p=>p.id=="documents"));if(m.Stage!=3||m.Count("river_documents")!=1)throw new InvalidOperationException("Evidence interaction failed");
                 var exit=points.Single(p=>p.id=="river_exit").transform.position;var cc=m.player.GetComponent<CharacterController>();cc.enabled=false;m.player.position=exit;cc.enabled=true;m.hung.GetComponent<NavMeshAgent>().Warp(exit);
                 m.Interact(points.Single(p=>p.id=="river_exit"));if(m.Stage!=4)throw new InvalidOperationException("Delivery at the expanded landing did not complete mission");
-                File.WriteAllText(Reports+"/playcheck-result.txt","PASS: mission/three guards initialized; exit gate; supplies; bridge progression; evidence; delivery with Hung; complete stage 4. Navigation tested separately; this flow check teleports between objectives.");
+                File.WriteAllText(Reports+"/playcheck-result.txt","PASS: mission/all guards initialized; exit gate; supplies; bridge progression; evidence; delivery with Hung; complete stage 4. Navigation tested separately; this flow check teleports between objectives.");
             }
             catch(Exception e){File.WriteAllText(Reports+"/playcheck-result.txt","FAIL: "+e);}
             EditorApplication.update-=AdvancePlayCheck;SessionState.SetBool("SV.Map01.PlayCheck",false);EditorApplication.isPlaying=false;

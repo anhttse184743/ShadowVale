@@ -169,6 +169,15 @@ namespace ShadowVale.Map01
 
         private void Aim()
         {
+            if (gameCamera.TryGetComponent<ForestThirdPersonCamera>(out var thirdPerson))
+            {
+                var centerRay = gameCamera.ViewportPointToRay(new Vector3(.5f, .5f));
+                aim = Physics.Raycast(centerRay, out var targetHit, Weapon.range, ObstructionMask | LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Ignore)
+                    ? targetHit.point : centerRay.GetPoint(Weapon.range);
+                var look = aim - player.position; look.y = 0;
+                if (look.sqrMagnitude > .01f) player.rotation = Quaternion.LookRotation(look);
+                return;
+            }
             if (Mouse.current == null) return;
             var ray = gameCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (new Plane(Vector3.up, player.position).Raycast(ray, out float distance)) aim = ray.GetPoint(distance);
@@ -183,8 +192,10 @@ namespace ShadowVale.Map01
             inventory["ammo_rifle"]--;
             var origin = player.position + Vector3.up * 1.1f + player.forward * .7f;
             var target = origin + player.forward * Weapon.range;
+            var shotDirection = gameCamera.GetComponent<ForestThirdPersonCamera>() != null ? (aim - origin).normalized : player.forward;
+            target = origin + shotDirection * Weapon.range;
             int mask = ObstructionMask | LayerMask.GetMask("Enemy");
-            if (Physics.Raycast(origin, player.forward, out var hit, Weapon.range, mask, QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(origin, shotDirection, out var hit, Weapon.range, mask, QueryTriggerInteraction.Ignore))
             { target = hit.point; var enemy = hit.collider.GetComponentInParent<ForestGuard>(); if (enemy != null) enemy.Hit(Weapon.damage); }
             Trace(origin, target, new Color(1, .84f, .45f));
             EmitNoise(player.position, Weapon.noise_radius);
@@ -212,12 +223,14 @@ namespace ShadowVale.Map01
 
         private void LateUpdate()
         {
-            if (gameCamera != null && player != null)
+            if (gameCamera != null && player != null && gameCamera.GetComponent<ForestThirdPersonCamera>() == null)
             {
                 var target = player.position - gameCamera.transform.forward * 30;
                 gameCamera.transform.position = Vector3.Lerp(gameCamera.transform.position, target, 1 - Mathf.Exp(-8 * Time.unscaledDeltaTime));
             }
         }
+
+        public bool CameraInputEnabled => IsInitialized && !Stopped && !inventoryOpen && !mapOpen;
 
         public Vector3 GuardCover(Vector3 origin, Vector3 threat)
         {
@@ -339,7 +352,7 @@ namespace ShadowVale.Map01
             Panel(new Rect(width - 265, 20, 245, 138));
             GUI.Label(new Rect(width - 247, 32, 220, 120), $"NAM    HP {hp:0} / {Settings.playerHP:0}\nSức bền {stamina:0}    Đạn {Count("ammo_rifle")}\nĐá {stones}   •   {(Hidden ? "ẨN TRONG BỤI" : crouched ? "ĐANG ĐI KHOM" : "ĐANG DI CHUYỂN")}", textStyle);
             Panel(new Rect(22, height - 69, width - 44, 49));
-            GUI.Label(new Rect(36, height - 59, width - 65, 43), "WASD Di chuyển  •  Shift Chạy  •  C Đi khom  •  Chuột Bắn  •  Q Ném đá  •  E Tương tác  •  Tab Túi đồ  •  M Bản đồ  •  Esc Dừng", smallStyle);
+            GUI.Label(new Rect(36, height - 59, width - 65, 43), "WASD Di chuyển  •  Shift Chạy  •  C Đi khom  •  Chuột Xoay / Trái Bắn  •  Q Ném đá  •  E Tương tác  •  Tab Túi đồ  •  M Bản đồ  •  Esc Dừng", smallStyle);
             if (Time.time < dialogueUntil)
             {
                 Panel(new Rect(210, height - 205, width - 420, 110));

@@ -1,0 +1,7 @@
+Hills: 3
+Houses / enemy outposts: 3
+Additional guards: 6
+Vegetation cells: 374
+Tall grass patches: 374
+Camera: third person, 62 FOV, obstruction sphere cast
+Original routes and new patrol loops: PASS
