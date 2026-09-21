@@ -32,3 +32,6 @@ Nhận hàng → vượt tuần tra và qua cầu → đọc bản đồ trong c
 
 ContentBundle dùng TextAsset trong `Map01/Generated/Map01Content.json`; có kiểm tra tham chiếu thiếu/hỏng và guard chỉ khởi tạo sau khi mission sẵn sàng. Checkpoint phiên bản 2 để loại tọa độ cũ.
 
+
+## Bản cập nhật đường mòn, cỏ và di chuyển
+Đã áp dụng vào Map 1.unity: đường mòn cong, mái lá nhiều lớp, bốn prefab cỏ dùng chung mesh. Bỏ collider Stream boundary và bake lại NavMesh; ba tuyến kiểm tra suối đạt. Kiểm tra Play Mode qua InputSystem: Space nhảy cao 1,07 m và hạ đất; CharacterController đi xuống lòng suối ở cao độ -0,72 m. Camera và các actor hiện có được giữ lại. Chi tiết tại Tools/Map01OptimizedReports/movement-check.txt và river-revision.txt.

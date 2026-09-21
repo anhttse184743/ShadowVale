@@ -32,6 +32,23 @@ namespace ShadowVale.Map01
         private readonly List<ForestPoint> points = new List<ForestPoint>();
         private readonly Dictionary<string, int> inventory = new Dictionary<string, int>();
         private float hp, stamina, nextShot, nextNoise, dialogueUntil, craftUntil;
+        private float verticalVelocity;
+        public bool IsWading => player != null && player.position.y < .12f &&
+            Mathf.Abs(player.position.x - (8 + 12 * Mathf.Sin(player.position.z * .041f) + 4 * Mathf.Sin(player.position.z * .105f))) < 5f;
+        public float MovementSurfaceMultiplier => IsWading ? .68f : 1f;
+        public bool TryJump()
+        {
+            if (!IsInitialized || Stopped || inventoryOpen || mapOpen || crafting != null || !controller.isGrounded || verticalVelocity > 0 || stamina < 8) return false;
+            verticalVelocity = Mathf.Sqrt(2f * 22f * 1.15f);
+            stamina -= 8; crouched = false; EmitNoise(player.position, 5); return true;
+        }
+        private void MovePlayer(Vector3 horizontal)
+        {
+            if (controller.isGrounded && verticalVelocity < 0) verticalVelocity = -2;
+            verticalVelocity = Mathf.Max(-30, verticalVelocity - 22 * Time.deltaTime);
+            var flags = controller.Move((horizontal + Vector3.up * verticalVelocity) * Time.deltaTime);
+            if ((flags & CollisionFlags.Above) != 0 && verticalVelocity > 0) verticalVelocity = 0;
+        }
         private int stage, stones;
         private bool crouched, inventoryOpen, mapOpen, paused, encounterLine;
         private string dialogue, crafting;
@@ -118,7 +135,7 @@ namespace ShadowVale.Map01
             if (kb.f5Key.wasPressedThisFrame) Save();
             if (kb.hKey.wasPressedThisFrame && Count("medkit_small") > 0 && hp < Settings.playerHP)
             { inventory["medkit_small"]--; hp = Mathf.Min(Settings.playerHP, hp + Settings.medkitHeal); }
-            if (inventoryOpen || mapOpen) { UpdateCompanion(); return; }
+            if (inventoryOpen || mapOpen) { MovePlayer(Vector3.zero); UpdateCompanion(); return; }
 
             var motion = new Vector2((kb.dKey.isPressed ? 1 : 0) - (kb.aKey.isPressed ? 1 : 0),
                 (kb.wKey.isPressed ? 1 : 0) - (kb.sKey.isPressed ? 1 : 0));
@@ -128,7 +145,8 @@ namespace ShadowVale.Map01
             bool sprint = !crouched && kb.leftShiftKey.isPressed && stamina > 2 && direction.sqrMagnitude > .01f;
             float speed = crouched ? Settings.crouchSpeed : sprint ? Settings.sprintSpeed : Settings.walkSpeed;
             if (crafting != null) speed = 0;
-            controller.Move((direction * speed + Vector3.down * 8) * Time.deltaTime);
+            if (kb.spaceKey.wasPressedThisFrame) TryJump();
+            MovePlayer(direction * speed * MovementSurfaceMultiplier);
             stamina = Mathf.Clamp(stamina + (sprint ? -Settings.staminaDrain : Settings.staminaRecovery) * Time.deltaTime, 0, Settings.stamina);
             Hidden = crouched && points.Any(p => p.kind == ForestPointKind.Hide && Vector3.Distance(player.position, p.transform.position) < p.radius);
             if (sprint && Time.time > nextNoise) { nextNoise = Time.time + .6f; EmitNoise(player.position, 7); }
@@ -321,7 +339,7 @@ namespace ShadowVale.Map01
             {
                 var data = JsonUtility.FromJson<Checkpoint>(File.ReadAllText(SavePath));
                 if (data == null || data.version != 2 || data.items == null || data.used == null || data.down == null) throw new IOException();
-                controller.enabled = false; player.position = data.player; controller.enabled = true;
+                verticalVelocity = 0; controller.enabled = false; player.position = data.player; controller.enabled = true;
                 companion.Warp(data.hung); stage = Mathf.Clamp(data.stage, 0, 3); stones = data.stones;
                 hp = Mathf.Clamp(data.hp, 1, Settings.playerHP); stamina = Mathf.Clamp(data.stamina, 0, Settings.stamina); Alarmed = data.alarmed;
                 inventory.Clear(); foreach (var i in data.items) inventory[i.item_id] = i.count;
@@ -352,7 +370,7 @@ namespace ShadowVale.Map01
             Panel(new Rect(width - 265, 20, 245, 138));
             GUI.Label(new Rect(width - 247, 32, 220, 120), $"NAM    HP {hp:0} / {Settings.playerHP:0}\nSức bền {stamina:0}    Đạn {Count("ammo_rifle")}\nĐá {stones}   •   {(Hidden ? "ẨN TRONG BỤI" : crouched ? "ĐANG ĐI KHOM" : "ĐANG DI CHUYỂN")}", textStyle);
             Panel(new Rect(22, height - 69, width - 44, 49));
-            GUI.Label(new Rect(36, height - 59, width - 65, 43), "WASD Di chuyển  •  Shift Chạy  •  C Đi khom  •  Chuột Xoay / Trái Bắn  •  Q Ném đá  •  E Tương tác  •  Tab Túi đồ  •  M Bản đồ  •  Esc Dừng", smallStyle);
+            GUI.Label(new Rect(36, height - 59, width - 65, 43), "Space Nhảy • WASD Di chuyển  •  Shift Chạy  •  C Đi khom  •  Chuột Xoay / Trái Bắn  •  Q Ném đá  •  E Tương tác  •  Tab Túi đồ  •  M Bản đồ  •  Esc Dừng", smallStyle);
             if (Time.time < dialogueUntil)
             {
                 Panel(new Rect(210, height - 205, width - 420, 110));

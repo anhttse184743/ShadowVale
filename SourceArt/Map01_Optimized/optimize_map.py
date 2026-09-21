@@ -4,7 +4,7 @@ Run from the project root with Blender 5.2 --background --python this_file.
 import bpy,bmesh,math,random,json,gzip,os
 from mathutils import Vector, Matrix
 random.seed(416)
-ROOT=r'G:\game\ShadowVale'
+ROOT=os.environ.get('SHADOWVALE_PROJECT',r'G:\game\ShadowVale')
 OUT=os.path.join(ROOT,'SourceArt','Map01_Optimized')
 os.makedirs(OUT,exist_ok=True)
 bpy.ops.wm.open_mainfile(filepath=os.path.join(OUT,'ShadowVale_Map01_Master.blend'))
@@ -84,12 +84,12 @@ chunks={};collision_chunks={}
 prop_prototypes={}
 depsgraph=bpy.context.evaluated_depsgraph_get()
 walk_prefix=('MAP01','Bridge decking','Bridge approach ramp','Floor board','Entry step','Intelligence shelter floor','Observation platform')
-block_prefix=('Rear timber wall','Side wall','Front wall','Back wall','Cover','Supply crate','Tall rock','Fallen trunk','Rounded river boulder')
+block_prefix=('Cover','Supply crate','Tall rock','Fallen trunk','Rounded river boulder')
 for o in list(scene.objects):
     if o.type!='MESH' or o.hide_render or o in trees:continue
-    if o.name=='Diorama earth foundation':continue
+    if o.name=='Diorama earth foundation' or o.name.startswith(('Natural woodland footpath','Trampled clearing','New rest clearing')):continue
     ev=o.evaluated_get(depsgraph);me=ev.to_mesh();me.calc_loop_triangles()
-    prop='Crate' if o.name.startswith('Supply crate') else 'Drum' if o.name.startswith('Rusted empty fuel drum') else 'Rock' if o.name.startswith(('Rounded river boulder','Mossy rock','Base scattered rubble')) else None
+    prop=('Grass'+o.name.split('_')[1]) if o.name.startswith('Groundcover_') else 'Crate' if o.name.startswith('Supply crate') else 'Drum' if o.name.startswith('Rusted empty fuel drum') else 'Rock' if o.name.startswith(('Rounded river boulder','Mossy rock','Base scattered rubble')) else None
     if prop:
         dims=[max(v.co[i] for v in me.vertices)-min(v.co[i] for v in me.vertices) for i in range(3)]
         if prop not in prop_prototypes:
@@ -124,6 +124,14 @@ for o in list(scene.objects):
         if k not in collision_chunks:collision_chunks[k]=newmesh('Collision_%s_%d_%d'%k,'walk' if walk else 'block')
         append_mesh(collision_chunks[k],me,world)
     ev.to_mesh_clear()
+extra_boxes=[]
+for o in scene.objects:
+    if o.type!='MESH' or not o.name.startswith(('Rear timber wall','Side wall','Front wall','Back wall','Bamboo fence','Fence rail','Bridge handrail','Watch railing','Map table','Old camp bench')):continue
+    pts=[o.matrix_world@Vector(c) for c in o.bound_box];lo=[min(p[i] for p in pts) for i in range(3)];hi=[max(p[i] for p in pts) for i in range(3)]
+    if o.name.startswith(('Bridge handrail','Fence rail','Watch railing')):lo[2]=hi[2]-1.15
+    if o.name.startswith(('Map table','Old camp bench')):lo[2]-=.8
+    extra_boxes.append({'name':'Solid '+o.name,'position':unity(Vector([(lo[i]+hi[i])/2 for i in range(3)])),'size':unity(Vector([max(.18,hi[i]-lo[i]) for i in range(3)]))})
+payload['boxes'].extend(extra_boxes)
 payload['meshes'].extend(chunks.values());payload['meshes'].extend(collision_chunks.values())
 for m in payload['meshes']:m.pop('_cache')
 def rx(y):return 8+12*math.sin(y*.041)+4*math.sin(y*.105)
@@ -131,7 +139,7 @@ def height(x,y):
     hills=14*math.exp(-((x+57)**2/440+(y-48)**2/520))+7*math.exp(-((x-68)**2/650+(y-57)**2/700))
     raw=2.7+.7*math.sin(x*.11)*math.cos(y*.09)+.4*math.sin(y*.22+x*.1)+hills
     return -.8+(raw+.8)*min(1,max(0,(abs(x-rx(y))-3)/8))
-for y in range(-99,100,2):
+for y in []: # The shallow stream is traversable; no invisible wall along its banks.
     if abs(y)<3:continue
     payload['boxes'].append({'name':'Stream boundary','position':[rx(y),1,y],'size':[6,4,2.25]})
 for x,z,sx,sz in [(-110,0,1,200),(110,0,1,200),(0,-100,220,1),(0,100,220,1)]:payload['boxes'].append({'name':'Map boundary','position':[x,10,z],'size':[sx,30,sz]})
@@ -147,7 +155,7 @@ with gzip.open(os.path.join(OUT,'Map01.meshdata.json.gz'),'wt',encoding='utf8') 
 tree_tri=[sum(len(p.vertices)-2 for p in tree_meshes[(0,l)].polygons) for l in range(3)]
 static_tri=sum(len(m['triangles'])//3 for m in chunks.values())
 prop_tri=sum(len(prop_prototypes[p['id'][5:]][0]['triangles'])//3 for p in payload['props'])
-report={'before_triangles':original,'tree_instances':len(trees),'prop_instances':len(payload['props']),'prefab_variants':8,'shared_tree_meshes':15,'tree_triangles_per_lod':tree_tri,'static_triangles':static_tri,'maximum_lod0_triangles':static_tri+prop_tri+len(trees)*tree_tri[0],'all_lod1_triangles':static_tri+prop_tri+len(trees)*tree_tri[1],'all_lod2_triangles':static_tri+prop_tri+len(trees)*tree_tri[2],'render_chunks':len(chunks),'collision_meshes':len(collision_chunks),'materials_in_unity':2,'extent_meters':[220,200]}
+report={'before_triangles':original,'tree_instances':len(trees),'prop_instances':len(payload['props']),'prefab_variants':5+len(prop_prototypes),'shared_tree_meshes':15,'tree_triangles_per_lod':tree_tri,'static_triangles':static_tri,'maximum_lod0_triangles':static_tri+prop_tri+len(trees)*tree_tri[0],'all_lod1_triangles':static_tri+prop_tri+len(trees)*tree_tri[1],'all_lod2_triangles':static_tri+prop_tri+len(trees)*tree_tri[2],'render_chunks':len(chunks),'collision_meshes':len(collision_chunks),'materials_in_unity':2,'extent_meters':[220,200]}
 report['reduction_lod0_percent']=round(100*(1-report['maximum_lod0_triangles']/original),1)
 with open(os.path.join(OUT,'optimization.json'),'w') as f:json.dump(report,f,indent=2)
 scene['Optimization']='Shared tree meshes, 3 LODs, 24m static chunks, vertex colour palette, simplified collision source'
@@ -155,3 +163,6 @@ scene.camera=bpy.data.objects['CAM_01 • Isometric overview'];scene.render.reso
 bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT,'ShadowVale_Map01_Optimized.blend'))
 scene.render.filepath=os.path.abspath('outputs/Map01_Optimized/Blender_Optimized.png')
 print('OPTIMIZED',report,flush=True)
+
+
+

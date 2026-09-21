@@ -1,1 +1,1 @@
-Editor camera.Render CPU submission average (20 renders at 1440x900): 1.34 ms. Not GPU frame time or playable-build FPS.
+Editor camera.Render CPU submission average (20 renders at 1440x900): 5.93 ms. Not GPU frame time or playable-build FPS.

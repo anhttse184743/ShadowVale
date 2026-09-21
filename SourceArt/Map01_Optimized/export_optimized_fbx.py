@@ -1,5 +1,5 @@
 import bpy,json,gzip,os,math
-ROOT=r'G:\game\ShadowVale';SOURCE=os.path.join(ROOT,'SourceArt','Map01_Optimized')
+ROOT=os.environ.get('SHADOWVALE_PROJECT',r'G:\game\ShadowVale');SOURCE=os.path.join(ROOT,'SourceArt','Map01_Optimized')
 with gzip.open(os.path.join(SOURCE,'Map01.meshdata.json.gz'),'rt',encoding='utf8') as f:data=json.load(f)
 bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
 def material(name):
@@ -23,3 +23,4 @@ for idx,src in enumerate(data['props']):
 path=os.path.join(ROOT,'Assets','_Project','Art','Environment','Map01_Blender','Map01_Environment.fbx')
 bpy.ops.export_scene.fbx(filepath=path,use_selection=True,object_types={'MESH'},axis_forward='-Z',axis_up='Y',apply_unit_scale=True,bake_anim=False,use_mesh_modifiers=False,mesh_smooth_type='FACE',colors_type='LINEAR')
 print('FBX_COMPLETE',os.path.getsize(path),flush=True)
+
