@@ -1,0 +1,18 @@
+{
+  "before_triangles": 6372468,
+  "tree_instances": 1197,
+  "shared_tree_meshes": 15,
+  "tree_triangles_per_lod": [
+    700,
+    130,
+    70
+  ],
+  "static_triangles": 148176,
+  "maximum_lod0_triangles": 986076,
+  "all_lod1_triangles": 303786,
+  "all_lod2_triangles": 231966,
+  "render_chunks": 75,
+  "collision_meshes": 31,
+  "materials_in_unity": 2,
+  "reduction_lod0_percent": 84.5
+}

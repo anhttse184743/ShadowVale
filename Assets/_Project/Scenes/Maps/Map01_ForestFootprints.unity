@@ -156522,7 +156522,7 @@ MonoBehaviour:
   hung: {fileID: 5006829}
   gameCamera: {fileID: 1109116645}
   balanceJson: {fileID: 4900000, guid: 0768da4cc2bf6eaf34f6682981c8e7b7, type: 3}
-  contentBundle: {fileID: 4900000, guid: eba4ed8d42e945a4b934a9a92485fed9, type: 3}
+  contentBundle: {fileID: 4900000, guid: 5862fa00dbe2b2a4eadc375f2d0870c6, type: 3}
   trailMaterial: {fileID: 2100000, guid: 52f55b35caf4a66fe6e4b8e148c41b01, type: 2}
 --- !u!1 &475667024
 GameObject:

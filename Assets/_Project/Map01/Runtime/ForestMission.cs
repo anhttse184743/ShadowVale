@@ -13,10 +13,13 @@ namespace ShadowVale.Map01
     {
         public Transform player, hung;
         public Camera gameCamera;
+        public Transform encounterExit;
+        public Vector2 mapMin = new Vector2(-45, -60), mapMax = new Vector2(45, 88);
         public TextAsset balanceJson, contentBundle;
         public ForestSettings Settings { get; private set; }
         public ForestWeapon Weapon { get; private set; }
         public ForestArchetype GuardData { get; private set; }
+        public bool IsInitialized { get; private set; }
         public bool Alarmed { get; set; }
         public bool Hidden { get; private set; }
         public bool Stopped => hp <= 0 || stage == 4 || paused;
@@ -45,17 +48,54 @@ namespace ShadowVale.Map01
 
         private void Awake()
         {
-            Settings = JsonUtility.FromJson<ForestSettings>(balanceJson.text);
-            bundle = JsonUtility.FromJson<ForestBundle>(contentBundle.text);
-            Weapon = bundle.weapons.First(w => w.id == "rifle_standard");
-            GuardData = bundle.enemy_archetypes.First(e => e.id == "grunt");
+            // Unity objects can retain a managed wrapper after the asset was deleted.
+            // Use Unity's null check before accessing TextAsset.text.
+            if (balanceJson == null || contentBundle == null)
+            {
+                FailInitialization("Assign valid balanceJson and contentBundle TextAssets in the Inspector.");
+                return;
+            }
+            try
+            {
+                Settings = JsonUtility.FromJson<ForestSettings>(balanceJson.text);
+                bundle = JsonUtility.FromJson<ForestBundle>(contentBundle.text);
+            }
+            catch (ArgumentException exception)
+            {
+                FailInitialization("Invalid mission JSON: " + exception.Message);
+                return;
+            }
+            Weapon = bundle?.weapons?.FirstOrDefault(w => w != null && w.id == "rifle_standard");
+            GuardData = bundle?.enemy_archetypes?.FirstOrDefault(e => e != null && e.id == "grunt");
+            if (Settings == null || Weapon == null || GuardData == null)
+            {
+                FailInitialization("Mission JSON must contain settings, rifle_standard and grunt.");
+                return;
+            }
+            if (player == null || hung == null || gameCamera == null)
+            {
+                FailInitialization("Assign player, hung and gameCamera in the Inspector.");
+                return;
+            }
             controller = player.GetComponent<CharacterController>();
             companion = hung.GetComponent<NavMeshAgent>();
+            if (controller == null || companion == null)
+            {
+                FailInitialization("Player needs a CharacterController and Hung needs a NavMeshAgent.");
+                return;
+            }
             guards = FindObjectsByType<ForestGuard>(FindObjectsSortMode.None);
             points.AddRange(FindObjectsByType<ForestPoint>(FindObjectsSortMode.None));
             hp = Settings.playerHP; stamina = Settings.stamina; stones = Settings.startingStones;
             inventory["ammo_rifle"] = Settings.startingAmmo;
+            IsInitialized = true;
             Say("Hùng: Nhận hàng rồi đi thôi, Nam. Qua rừng là tới bến sông.", 9);
+        }
+
+        private void FailInitialization(string reason)
+        {
+            Debug.LogError("ForestMission could not initialize. " + reason, this);
+            enabled = false;
         }
 
         public void RegisterPoint(ForestPoint point) => points.Add(point);
@@ -112,7 +152,9 @@ namespace ShadowVale.Map01
                 inventory[recipe.output_item_id] = Count(recipe.output_item_id) + recipe.output_count;
                 crafting = null; Say("Đã chế tạo băng cứu thương. Nhấn H để sử dụng.");
             }
-            if (stage == 1 && player.position.z > 27)
+            if (stage == 1 && (encounterExit != null
+                ? Vector3.Distance(player.position, encounterExit.position) < 5f
+                : player.position.z > 27))
             {
                 stage = 2;
                 Say(Alarmed ? "Hùng: Bọn này hôm nay phản ứng nhanh hơn bình thường." : "Hùng: Qua được rồi. Chúng tuần tra kỹ hơn bình thường… Phía trước có một căn cứ cũ.", 9);
@@ -281,7 +323,7 @@ namespace ShadowVale.Map01
 
         private void OnGUI()
         {
-            if (Settings == null) return;
+            if (!IsInitialized) return;
             if (titleStyle == null)
             {
                 titleStyle = new GUIStyle(GUI.skin.label) { fontSize = 23, fontStyle = FontStyle.Bold, wordWrap = true };
@@ -356,7 +398,7 @@ namespace ShadowVale.Map01
             GUI.color = Color.cyan; var playerPos = MapPosition(player.position, area);
             GUI.DrawTexture(new Rect(playerPos.x - 5, playerPos.y - 5, 10, 10), Texture2D.whiteTexture); GUI.color = Color.white;
         }
-        private static Vector2 MapPosition(Vector3 p, Rect r) => new Vector2(r.x + Mathf.InverseLerp(-45, 45, p.x) * r.width, r.yMax - Mathf.InverseLerp(-60, 88, p.z) * r.height);
+        private Vector2 MapPosition(Vector3 p, Rect r) => new Vector2(r.x + Mathf.InverseLerp(mapMin.x, mapMax.x, p.x) * r.width, r.yMax - Mathf.InverseLerp(mapMin.y, mapMax.y, p.z) * r.height);
         private static void Panel(Rect rect) { var old = GUI.color; GUI.color = new Color(.035f, .07f, .06f, .94f); GUI.DrawTexture(rect, Texture2D.whiteTexture); GUI.color = old; }
     }
 }
