@@ -1,15 +1,13 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 namespace ShadowVale.Map01
 {
-    public sealed class ForestMission : MonoBehaviour
+    public sealed partial class ForestMission : MonoBehaviour
     {
         public Transform player, hung;
         public Camera gameCamera;
@@ -36,19 +34,6 @@ namespace ShadowVale.Map01
         public bool IsWading => player != null && player.position.y < .12f &&
             Mathf.Abs(player.position.x - (8 + 12 * Mathf.Sin(player.position.z * .041f) + 4 * Mathf.Sin(player.position.z * .105f))) < 5f;
         public float MovementSurfaceMultiplier => IsWading ? .68f : 1f;
-        public bool TryJump()
-        {
-            if (!IsInitialized || Stopped || inventoryOpen || mapOpen || crafting != null || !controller.isGrounded || verticalVelocity > 0 || stamina < 8) return false;
-            verticalVelocity = Mathf.Sqrt(2f * 22f * 1.15f);
-            stamina -= 8; crouched = false; EmitNoise(player.position, 5); return true;
-        }
-        private void MovePlayer(Vector3 horizontal)
-        {
-            if (controller.isGrounded && verticalVelocity < 0) verticalVelocity = -2;
-            verticalVelocity = Mathf.Max(-30, verticalVelocity - 22 * Time.deltaTime);
-            var flags = controller.Move((horizontal + Vector3.up * verticalVelocity) * Time.deltaTime);
-            if ((flags & CollisionFlags.Above) != 0 && verticalVelocity > 0) verticalVelocity = 0;
-        }
         private int stage, stones;
         private bool crouched, inventoryOpen, mapOpen, paused, encounterLine;
         private string dialogue, crafting;
@@ -186,68 +171,7 @@ namespace ShadowVale.Map01
 
         private bool nearWorkbench() => points.Any(p => p.kind == ForestPointKind.Workbench && Vector3.Distance(player.position, p.transform.position) < Settings.interactRange);
 
-        private void Aim()
-        {
-            if (gameCamera.TryGetComponent<ForestThirdPersonCamera>(out var thirdPerson))
-            {
-                var centerRay = gameCamera.ViewportPointToRay(new Vector3(.5f, .5f));
-                aim = Physics.Raycast(centerRay, out var targetHit, Weapon.range, ObstructionMask | LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Ignore)
-                    ? targetHit.point : centerRay.GetPoint(Weapon.range);
-                var look = aim - player.position; look.y = 0;
-                if (look.sqrMagnitude > .01f) player.rotation = Quaternion.LookRotation(look);
-                return;
-            }
-            if (Mouse.current == null) return;
-            var ray = gameCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (new Plane(Vector3.up, player.position).Raycast(ray, out float distance)) aim = ray.GetPoint(distance);
-            var facing = aim - player.position; facing.y = 0;
-            if (facing.sqrMagnitude > .01f) player.rotation = Quaternion.LookRotation(facing);
-        }
-
-        private void Fire()
-        {
-            nextShot = Time.time + 1 / Weapon.fire_rate;
-            if (Count("ammo_rifle") <= 0) { Say("Hết đạn — vẫn có thể lén đi hoặc đánh lạc hướng.", 2); return; }
-            inventory["ammo_rifle"]--;
-            var origin = player.position + Vector3.up * 1.1f;
-            var target = origin + player.forward * Weapon.range;
-            var shotDirection = gameCamera.GetComponent<ForestThirdPersonCamera>() != null ? (aim - origin).normalized : player.forward;
-            target = origin + shotDirection * Weapon.range;
-            if (ForestBallistics.MuzzleBlocked(origin, player)) { EmitNoise(player.position, Weapon.noise_radius); return; }
-            if (ForestBallistics.Cast(origin, shotDirection, Weapon.range, player, out var hit))
-            { target = hit.point; var enemy = hit.collider.GetComponentInParent<ForestGuard>(); if (enemy != null) enemy.Hit(Weapon.damage); }
-            Trace(origin, target, new Color(1, .84f, .45f));
-            EmitNoise(player.position, Weapon.noise_radius);
-        }
-
-        public void Trace(Vector3 start, Vector3 end, Color color)
-        {
-            var go = new GameObject("Transient trail");
-            var line = go.AddComponent<LineRenderer>();
-            line.sharedMaterial = trailMaterial;
-            line.positionCount = 2; line.SetPosition(0, start); line.SetPosition(1, end);
-            line.startWidth = .055f; line.endWidth = .015f; line.startColor = color; line.endColor = color;
-            Destroy(go, .12f);
-        }
         public Material trailMaterial;
-
-        private void UpdateCompanion()
-        {
-            if (companion == null || !companion.isOnNavMesh) return;
-            // Hùng is a narrative companion in this map; he does not reveal a stealth player.
-            companion.speed = Settings.sprintSpeed;
-            companion.stoppingDistance = Settings.followDistance;
-            if (NavMesh.SamplePosition(player.position, out var hit, 3, NavMesh.AllAreas)) companion.SetDestination(hit.position);
-        }
-
-        private void LateUpdate()
-        {
-            if (gameCamera != null && player != null && gameCamera.GetComponent<ForestThirdPersonCamera>() == null)
-            {
-                var target = player.position - gameCamera.transform.forward * 30;
-                gameCamera.transform.position = Vector3.Lerp(gameCamera.transform.position, target, 1 - Mathf.Exp(-8 * Time.unscaledDeltaTime));
-            }
-        }
 
         public bool CameraInputEnabled => IsInitialized && !Stopped && !inventoryOpen && !mapOpen;
 
@@ -297,162 +221,5 @@ namespace ShadowVale.Map01
             crafting = recipe.id; craftUntil = Time.time + recipe.craft_seconds;
         }
 
-        [Serializable] private sealed class Checkpoint
-        {
-            public int version = 2, stage, stones;
-            public float hp, stamina;
-            public Vector3 player, hung;
-            public bool alarmed;
-            public string[] used;
-            public ForestIngredient[] items;
-            public string[] down;
-        }
-        private string SavePath => Path.Combine(Application.persistentDataPath, "shadowvale-map01-checkpoint.json");
-
-        private bool CanSave() => !Stopped && crafting == null && guards.All(g => !g.Alive ||
-            (g.state == ForestGuardState.Patrol && Vector3.Distance(g.transform.position, player.position) > 18));
-
-        private void Save()
-        {
-            if (!CanSave()) { Say("Chỉ lưu khi đã thoát nguy hiểm và không đang chế tạo."); return; }
-            var data = new Checkpoint { stage = stage, stones = stones, hp = hp, stamina = stamina,
-                player = player.position, hung = hung.position, alarmed = Alarmed,
-                used = points.Where(p => p.used).Select(p => p.id).ToArray(),
-                items = inventory.Select(p => new ForestIngredient { item_id = p.Key, count = p.Value }).ToArray(),
-                down = guards.Where(g => !g.Alive).Select(g => g.id).ToArray() };
-            try { File.WriteAllText(SavePath, JsonUtility.ToJson(data, true)); Say("Đã lưu checkpoint Map 1. F9 để tải lại."); }
-            catch (IOException) { Say("Không thể ghi checkpoint. Hãy kiểm tra quyền truy cập ổ đĩa."); }
-        }
-
-        private static bool loadAfterRestart;
-        private void Start()
-        {
-            if (loadAfterRestart) { loadAfterRestart = false; Invoke(nameof(Restore), .1f); }
-        }
-        private void Load()
-        {
-            if (!File.Exists(SavePath)) { Say("Chưa có checkpoint Map 1."); return; }
-            loadAfterRestart = true; Restart();
-        }
-        private void Restore()
-        {
-            try
-            {
-                var data = JsonUtility.FromJson<Checkpoint>(File.ReadAllText(SavePath));
-                if (data == null || data.version != 2 || data.items == null || data.used == null || data.down == null) throw new IOException();
-                verticalVelocity = 0; controller.enabled = false; player.position = data.player; controller.enabled = true;
-                companion.Warp(data.hung); stage = Mathf.Clamp(data.stage, 0, 3); stones = data.stones;
-                hp = Mathf.Clamp(data.hp, 1, Settings.playerHP); stamina = Mathf.Clamp(data.stamina, 0, Settings.stamina); Alarmed = data.alarmed;
-                inventory.Clear(); foreach (var i in data.items) inventory[i.item_id] = i.count;
-                foreach (var guard in guards) if (data.down.Contains(guard.id)) guard.Hit(GuardData.max_hp + 1);
-                foreach (var point in points) point.used = data.used.Contains(point.id);
-                Say("Đã tải checkpoint. Lính còn sống bắt đầu lại tuyến tuần tra.");
-            }
-            catch (Exception) { Say("Checkpoint không hợp lệ. Bắt đầu lại Map 1."); }
-        }
-        private void Restart() { Time.timeScale = 1; SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); }
-        private void OnDisable() { Time.timeScale = 1; }
-
-        private void OnGUI()
-        {
-            if (!IsInitialized) return;
-            if (titleStyle == null)
-            {
-                titleStyle = new GUIStyle(GUI.skin.label) { fontSize = 23, fontStyle = FontStyle.Bold, wordWrap = true };
-                textStyle = new GUIStyle(GUI.skin.label) { fontSize = 17, wordWrap = true };
-                smallStyle = new GUIStyle(GUI.skin.label) { fontSize = 14, wordWrap = true };
-            }
-            float scale = Mathf.Min(Screen.width / 1280f, Screen.height / 720f);
-            GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(scale, scale, 1));
-            float width = Screen.width / scale, height = Screen.height / scale;
-            Panel(new Rect(22, 20, 460, 139));
-            GUI.Label(new Rect(38, 30, 425, 35), "01 / NHỮNG DẤU CHÂN TRONG RỪNG", textStyle);
-            GUI.Label(new Rect(38, 67, 425, 66), Objectives[stage], textStyle);
-            Panel(new Rect(width - 265, 20, 245, 138));
-            GUI.Label(new Rect(width - 247, 32, 220, 120), $"NAM    HP {hp:0} / {Settings.playerHP:0}\nSức bền {stamina:0}    Đạn {Count("ammo_rifle")}\nĐá {stones}   •   {(Hidden ? "ẨN TRONG BỤI" : crouched ? "ĐANG ĐI KHOM" : "ĐANG DI CHUYỂN")}", textStyle);
-            Panel(new Rect(22, height - 69, width - 44, 49));
-            GUI.Label(new Rect(36, height - 59, width - 65, 43), "Space Nhảy • WASD Di chuyển  •  Shift Chạy  •  C Đi khom  •  Chuột Xoay / Trái Bắn  •  Q Ném đá  •  E Tương tác  •  Tab Túi đồ  •  M Bản đồ  •  Esc Dừng", smallStyle);
-            if (Time.time < dialogueUntil)
-            {
-                Panel(new Rect(210, height - 205, width - 420, 110));
-                GUI.Label(new Rect(232, height - 193, width - 464, 94), dialogue, textStyle);
-            }
-            if (nearby != null && !nearby.used && !Stopped)
-                GUI.Label(new Rect(width / 2 - 250, height - 247, 500, 40), "[E] " + nearby.label, textStyle);
-            if (crafting != null) GUI.Label(new Rect(38, 167, 430, 30), $"Đang chế tạo… {Mathf.Max(0, craftUntil - Time.time):0.0}s", textStyle);
-            foreach (var guard in guards.Where(g => g.Alive))
-            {
-                var screen = gameCamera.WorldToScreenPoint(guard.transform.position + Vector3.up * 2.4f);
-                if (screen.z > 0 && Vector3.Distance(player.position, guard.transform.position) < 24)
-                    GUI.Label(new Rect(screen.x / scale - 60, (Screen.height - screen.y) / scale, 190, 40), (guard.isCommander ? "CHỈ HUY • " : "") + guard.state + (guard.suspicion > .05f ? $" {Mathf.Min(100, guard.suspicion * 100):0}%" : ""), smallStyle);
-            }
-            // Screen-space arrows stay legible against foliage and disappear as soon as loot is collected.
-            if (!Stopped && !inventoryOpen && !mapOpen)
-            {
-                var savedColor = GUI.color;
-                foreach (var point in points)
-                {
-                    if (point == null || !point.isActiveAndEnabled || point.used ||
-                        (point.kind != ForestPointKind.Loot && point.kind != ForestPointKind.Supplies)) continue;
-                    if ((point.transform.position - player.position).sqrMagnitude > 32 * 32) continue;
-                    var screen = gameCamera.WorldToViewportPoint(point.transform.position + Vector3.up * .7f);
-                    if (screen.z <= 0 || screen.x < 0 || screen.x > 1 || screen.y < 0 || screen.y > 1) continue;
-                    float x = screen.x * width, y = (1 - screen.y) * height - 12 - Mathf.Sin(Time.unscaledTime * 3) * 4;
-                    // A stepped triangle avoids depending on Unicode arrow support in the UI font.
-                    GUI.color = new Color(.08f,.06f,.015f,.9f);
-                    GUI.DrawTexture(new Rect(x-5,y-16,10,17),Texture2D.whiteTexture);
-                    for (int row=0;row<10;row++) GUI.DrawTexture(new Rect(x-11+row,y-2+row,22-row*2,2),Texture2D.whiteTexture);
-                    GUI.color = new Color(1,.83f,.2f,1);
-                    GUI.DrawTexture(new Rect(x-3,y-14,6,14),Texture2D.whiteTexture);
-                    for (int row=0;row<8;row++) GUI.DrawTexture(new Rect(x-8+row,y+row,16-row*2,1),Texture2D.whiteTexture);
-                }
-                GUI.color = savedColor;
-            }
-            if (inventoryOpen)
-            {
-                Panel(new Rect(width / 2 - 240, 170, 480, 330));
-                GUI.Label(new Rect(width / 2 - 215, 185, 440, 40), "TÚI ĐỒ / VẬT TƯ", titleStyle);
-                GUI.Label(new Rect(width / 2 - 215, 232, 430, 210), string.Join("\n", inventory.Where(i => i.Value > 0).Select(i => ItemName(i.Key) + "  × " + i.Value)), textStyle);
-                GUI.Label(new Rect(width / 2 - 215, 457, 430, 38), "H Dùng băng cứu thương • B Chế tạo ở bàn", smallStyle);
-            }
-            if (mapOpen) DrawMap(width, height);
-            if (Stopped)
-            {
-                Panel(new Rect(width / 2 - 300, 235, 600, 180));
-                GUI.Label(new Rect(width / 2 - 270, 253, 540, 70), hp <= 0 ? "NAM ĐÃ GỤC NGÃ" : stage == 4 ? "ĐÃ HOÀN THÀNH MAP 1" : "TẠM DỪNG", titleStyle);
-                GUI.Label(new Rect(width / 2 - 270, 332, 540, 70), paused ? "Esc Tiếp tục • F9 Tải checkpoint" : "Enter Chơi lại • F9 Tải checkpoint", textStyle);
-            }
-        }
-        private static string ItemName(string id)
-        {
-            switch (id)
-            {
-                case "ammo_rifle": return "Đạn súng trường";
-                case "cloth": return "Vải";
-                case "herb": return "Thảo dược";
-                case "scrap_metal": return "Kim loại";
-                case "medkit_small": return "Băng cứu thương";
-                case "supplies": return "Hàng tiếp tế";
-                case "river_documents": return "Bản đồ và ghi chép bến sông";
-                default: return id;
-            }
-        }
-        private void DrawMap(float width, float height)
-        {
-            var rect = new Rect(width / 2 - 310, 164, 620, 420); Panel(rect);
-            GUI.Label(new Rect(rect.x + 20, rect.y + 10, 580, 35), "TUYẾN VẬN CHUYỂN / M để đóng", titleStyle);
-            GUI.Label(new Rect(rect.x + 20, rect.y + 60, 260, 300), "BẮC ↑\n\n05  Bến sông / rút lui\n04  Căn cứ / bàn tài liệu\n03  Điểm nghỉ / chế tạo\n02  Khu tuần tra\n      Tây: bụi rậm\n      Giữa: vật chắn\n      Đông: đánh lạc hướng\n01  Nhận hàng / xuất phát", textStyle);
-            var area = new Rect(rect.x + 310, rect.y + 60, 280, 335);
-            foreach (var p in points.Where(p => p.kind != ForestPointKind.Cover && p.kind != ForestPointKind.Hide))
-            {
-                var pos = MapPosition(p.transform.position, area);
-                GUI.color = p.used ? Color.gray : new Color(.95f, .75f, .32f);
-                GUI.DrawTexture(new Rect(pos.x - 4, pos.y - 4, 8, 8), Texture2D.whiteTexture);
-            }
-            GUI.color = Color.cyan; var playerPos = MapPosition(player.position, area);
-            GUI.DrawTexture(new Rect(playerPos.x - 5, playerPos.y - 5, 10, 10), Texture2D.whiteTexture); GUI.color = Color.white;
-        }
-        private Vector2 MapPosition(Vector3 p, Rect r) => new Vector2(r.x + Mathf.InverseLerp(mapMin.x, mapMax.x, p.x) * r.width, r.yMax - Mathf.InverseLerp(mapMin.y, mapMax.y, p.z) * r.height);
-        private static void Panel(Rect rect) { var old = GUI.color; GUI.color = new Color(.035f, .07f, .06f, .94f); GUI.DrawTexture(rect, Texture2D.whiteTexture); GUI.color = old; }
     }
 }

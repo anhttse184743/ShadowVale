@@ -48,3 +48,7 @@ Assets/_Project/**/GeneratedContent/
 
 # Batchmode logs
 *.log
+
+# Unity unpacks FBX-embedded textures here during extraction. Pure duplicates of
+# whatever ended up in the model's own Textures folder, ~30 MB per character.
+*.fbm/

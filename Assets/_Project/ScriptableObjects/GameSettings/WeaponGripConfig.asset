@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba2ff4a812fe5a045967404c70c0f4c9, type: 3}
+  m_Name: WeaponGripConfig
+  m_EditorClassIdentifier: ShadowVale.Gameplay::ShadowVale.Gameplay.Combat.WeaponGripConfig
+  anchorPosition: {x: 0, y: 0, z: 0}
+  anchorEuler: {x: 0, y: 0, z: 0}
+  weapons:
+  - kind: 2
+    localPosition: {x: -0.015, y: -0.018, z: 0.035}
+    localEuler: {x: 30.513338, y: 105.078575, z: 9.832622}
+    aimLocalPosition: {x: 0, y: 0, z: 0}
+    aimLocalEuler: {x: 321.3, y: 92.6, z: 103.8}
+    hasAimPose: 0
+    scale: 1.15
+  - kind: 1
+    localPosition: {x: 0.09310901, y: -0.043052346, z: 0.014027377}
+    localEuler: {x: 3.902841, y: 35.154167, z: 18.650005}
+    aimLocalPosition: {x: 0, y: 0, z: 0}
+    aimLocalEuler: {x: 335.5, y: 71, z: 62.8}
+    hasAimPose: 0
+    scale: 0
