@@ -21,10 +21,10 @@ namespace ShadowVale.Editor
         public const string ControllerPath =
             "Assets/_Project/Art/Characters/Animations/Controllers/AC_Player.controller";
 
-        private const string UpperBodyMaskPath =
+        internal const string UpperBodyMaskPath =
             "Assets/_Project/Art/Characters/Animations/Controllers/AM_UpperBody.mask";
 
-        private const string UpperBodyLayer = "UpperBody";
+        internal const string UpperBodyLayer = "UpperBody";
 
         /// <summary>
         /// The Mixamo jump take includes a long landing settle that the controller does not wait
@@ -39,7 +39,7 @@ namespace ShadowVale.Editor
         /// cooldown, otherwise a second attack lands on top of the first.
         /// Keep in step with the cooldowns in WeaponPrefabBuilder and PlayerCombat.
         /// </summary>
-        private const float AttackExitTime = 0.75f;
+        internal const float AttackExitTime = 0.75f;
 
         /// <summary>Death take has a slow settle the testbed does not need to sit through.</summary>
         public const float DiePlaybackSpeed = 1.7f;
@@ -50,22 +50,22 @@ namespace ShadowVale.Editor
         /// attack, and running armed looks identical to running empty-handed.
         /// </summary>
         private const float KnifeHoldFrame = 0.08f;
-        private const float RifleHoldFrame = 0.12f;
+        internal const float RifleHoldFrame = 0.12f;
 
         // Blend times. Long enough to read as a change of stance, short enough to stay responsive.
-        private const float StanceBlend = 0.2f;
-        private const float AttackEnterBlend = 0.06f;
-        private const float AttackExitBlend = 0.18f;
+        internal const float StanceBlend = 0.2f;
+        internal const float AttackEnterBlend = 0.06f;
+        internal const float AttackExitBlend = 0.18f;
         private const float UnarmedAttackSpeed = 1.8f;  // 0.85 s take vs 0.45 s cooldown
         private const float KnifeAttackSpeed = 2.4f;    // 2.12 s take vs 0.75 s cooldown
-        private const float RifleAttackSpeed = 2.0f;    // 0.55 s take, full auto re-triggers it
+        internal const float RifleAttackSpeed = 2.0f;    // 0.55 s take, full auto re-triggers it
 
         // Blend thresholds in m/s — must bracket PlayerController's walk/sprint speeds.
-        private const float WalkThreshold = 2.5f;
-        private const float RunThreshold = 6f;
+        internal const float WalkThreshold = 2.5f;
+        internal const float RunThreshold = 6f;
 
         /// <summary>Parameter names, duplicated here so the Editor asmdef needs no runtime types.</summary>
-        private static class Params
+        internal static class Params
         {
             public const string Speed = "Speed";
             public const string Grounded = "Grounded";
@@ -272,7 +272,7 @@ namespace ShadowVale.Editor
         }
 
         /// <summary>A frozen frame of a clip, used as a weapon-in-hand idle.</summary>
-        private static AnimatorState AddHold(AnimatorStateMachine machine, string name,
+        internal static AnimatorState AddHold(AnimatorStateMachine machine, string name,
             AnimationClip clip, float frame)
         {
             if (clip == null)
@@ -356,7 +356,7 @@ namespace ShadowVale.Editor
         /// <summary>
         /// Upper-body-only mask, so an attack plays on the arms while the legs keep walking.
         /// </summary>
-        private static AvatarMask EnsureUpperBodyMask()
+        internal static AvatarMask EnsureUpperBodyMask()
         {
             var mask = AssetDatabase.LoadAssetAtPath<AvatarMask>(UpperBodyMaskPath);
             if (mask == null)
@@ -385,7 +385,7 @@ namespace ShadowVale.Editor
 
         // ---- Teardown --------------------------------------------------------
 
-        private static void ClearController(AnimatorController controller)
+        internal static void ClearController(AnimatorController controller)
         {
             foreach (AnimatorControllerParameter p in controller.parameters)
             {
@@ -399,6 +399,24 @@ namespace ShadowVale.Editor
             }
 
             AnimatorStateMachine root = controller.layers[0].stateMachine;
+            if (root == null)
+            {
+                // A base machine can go missing if something destroyed it as a sub-asset.
+                // Recreate it rather than throwing: deleting the controller to start over would
+                // orphan every prefab pointing at it.
+                root = new AnimatorStateMachine
+                {
+                    name = controller.layers[0].name,
+                    hideFlags = HideFlags.HideInHierarchy,
+                };
+                AssetDatabase.AddObjectToAsset(root, controller);
+                AnimatorControllerLayer[] layers = controller.layers;
+                layers[0].stateMachine = root;
+                controller.layers = layers;
+                Debug.LogWarning($"[PlayerAnimator] {AssetDatabase.GetAssetPath(controller)} had no " +
+                                 "base state machine — recreated it.");
+            }
+
             foreach (ChildAnimatorState child in root.states)
             {
                 root.RemoveState(child.state);
@@ -408,8 +426,12 @@ namespace ShadowVale.Editor
                 root.RemoveAnyStateTransition(transition);
             }
 
-            // Sub-assets from a previous build would otherwise pile up inside the file.
-            foreach (Object sub in AssetDatabase.LoadAllAssetsAtPath(ControllerPath))
+            // Sub-assets from a previous build would otherwise pile up inside the file. The path
+            // comes from the controller being cleared, never a constant: this is shared with the
+            // enemy builder, and reading the player's path here quietly gutted AC_Player every
+            // time AC_Enemy was built.
+            foreach (Object sub in AssetDatabase.LoadAllAssetsAtPath(
+                         AssetDatabase.GetAssetPath(controller)))
             {
                 if (sub is BlendTree || (sub is AnimatorStateMachine machine && machine != root))
                 {
