@@ -72,7 +72,10 @@ namespace ShadowVale.UI.HUD
         private void Start()
         {
             if (combat == null) return;
-            var effect = GetComponent<LowHealthEffect>() ?? gameObject.AddComponent<LowHealthEffect>();
+            // Deliberately not "GetComponent<T>() ?? AddComponent<T>()" on one line — that
+            // combination did not reliably assign the result here (see hotbarGroup in Awake).
+            LowHealthEffect effect = GetComponent<LowHealthEffect>();
+            if (effect == null) effect = gameObject.AddComponent<LowHealthEffect>();
             effect.Bind(combat.GetComponent<Health>());
         }
 
