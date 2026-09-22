@@ -228,8 +228,11 @@ namespace ShadowVale.Map01
         private void FinishHudDrag(Event ev, float width, float height)
         {
             if (!inventoryOpen || Stopped) { CancelHudDrag(); return; }
-            if (dragItem != null && ev.type == EventType.MouseDrag) { dragging = true; ev.Use(); }
-            if (dragItem != null && ev.type == EventType.MouseUp && ev.button == 0) {
+            // rawType, not type: the latter resolves through Unity's live GUI dispatch and
+            // collapses mouse events to Ignore outside an active OnGUI pass (e.g. a test driving
+            // this via reflection), even though the physical mouse-up/drag it represents is real.
+            if (dragItem != null && ev.rawType == EventType.MouseDrag) { dragging = true; ev.Use(); }
+            if (dragItem != null && ev.rawType == EventType.MouseUp && ev.button == 0) {
                 if (dragging) {
                     var bar = QuickRect(width, height);
                     for (int i = 0; i < 5; i++) if (QuickCell(bar, i).Contains(ev.mousePosition)) AssignQuickSlot(i, dragItem);
