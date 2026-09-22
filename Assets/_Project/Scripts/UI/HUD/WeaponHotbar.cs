@@ -69,6 +69,13 @@ namespace ShadowVale.UI.HUD
             hotbarGroup.interactable = false;
         }
 
+        private void Start()
+        {
+            if (combat == null) return;
+            var effect = GetComponent<LowHealthEffect>() ?? gameObject.AddComponent<LowHealthEffect>();
+            effect.Bind(combat.GetComponent<Health>());
+        }
+
         private void OnEnable()
         {
             if (combat != null)
