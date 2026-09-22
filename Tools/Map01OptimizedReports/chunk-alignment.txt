@@ -1,0 +1,6 @@
+Chunk_-1_-2_opaque before: (0.0000, 0.0600, 0.2800)
+Chunk_-1_-3_opaque before: (0.0000, -0.1200, 0.0000)
+PASS: 25/25 shared edge vertices; maximum gap = 0.000000 m
+PASS: 25/25 ground collider samples; maximum error = 0.000000 m
+PASS: NavMesh uses unchanged PhysicsColliders; existing bake remains aligned.
+PASS: saved Assets/_Project/Scenes/Maps/Map 1.unity at 2026-09-22T09:21:21.3452801Z
