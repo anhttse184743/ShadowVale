@@ -20,6 +20,37 @@ namespace ShadowVale.Map01
         private Vector3 lastKnown;
         public bool Alive => state != ForestGuardState.Down;
 
+        [System.Serializable] public sealed class Snapshot
+        {
+            public string id;
+            public Vector3 position, lastKnown, destination;
+            public Quaternion rotation;
+            public ForestGuardState state;
+            public float hp, suspicion, timer, lastSeenAgo, shotRemaining, patrolPause;
+            public int waypoint;
+            public bool stopped;
+        }
+        public Snapshot Capture() => new Snapshot {
+            id = id, position = transform.position, rotation = transform.rotation, state = state,
+            hp = hp, suspicion = suspicion, timer = timer, lastKnown = lastKnown,
+            lastSeenAgo = Time.time - lastSeen, shotRemaining = Mathf.Max(0, shotAt - Time.time),
+            waypoint = waypoint, patrolPause = patrolPause,
+            destination = agent != null && agent.isOnNavMesh && agent.hasPath ? agent.destination : transform.position,
+            stopped = agent != null && agent.isOnNavMesh && agent.isStopped
+        };
+        public void RestoreSnapshot(Snapshot data)
+        {
+            if (agent.isOnNavMesh) agent.Warp(data.position); else transform.position = data.position;
+            transform.rotation = data.rotation;
+            if (data.state == ForestGuardState.Down) { Hit(mission.GuardData.max_hp + 1); return; }
+            hp = data.hp; state = data.state; suspicion = data.suspicion;
+            timer = data.timer; lastKnown = data.lastKnown; lastSeen = Time.time - data.lastSeenAgo;
+            shotAt = Time.time + data.shotRemaining; patrolPause = data.patrolPause;
+            waypoint = patrol.Length == 0 ? 0 : Mathf.Clamp(data.waypoint, 0, patrol.Length - 1);
+            Go(data.destination);
+            if (agent.isOnNavMesh) agent.isStopped = data.stopped;
+        }
+
         private void Start()
         {
             mission = FindFirstObjectByType<ForestMission>();

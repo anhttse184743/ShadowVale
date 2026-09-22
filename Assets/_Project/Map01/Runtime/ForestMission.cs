@@ -19,7 +19,10 @@ namespace ShadowVale.Map01
         public ForestArchetype GuardData { get; private set; }
         public bool Alarmed { get; set; }
         public bool Hidden { get; private set; }
-        public bool Stopped => hp <= 0 || stage == 4 || paused;
+        public bool Paused => paused;
+        public float PlaySeconds { get; private set; }
+        public void SetPaused(bool value) { paused = value; Time.timeScale = value ? 0 : 1; }
+        public bool Stopped => hp <= 0 || stage == 4 || paused || pendingCheckpoint != null;
         public int ObstructionMask => LayerMask.GetMask("Obstacle", "Cover", "VisionBlocker");
         public int Stage => stage;
         private ForestBundle bundle;
@@ -66,16 +69,20 @@ namespace ShadowVale.Map01
 
         private void Update()
         {
+            if (!Stopped) {
+                PlaySeconds += Time.deltaTime;
+                AdvanceMission();
+            }
             var kb = Keyboard.current;
             if (kb == null) return;
-            if (kb.escapeKey.wasPressedThisFrame) { paused = !paused; Time.timeScale = paused ? 0 : 1; }
+            if (ForestMenu.Visible) return;
             if (kb.f9Key.wasPressedThisFrame) Load();
             if (kb.enterKey.wasPressedThisFrame && (hp <= 0 || stage == 4)) Restart();
             if (Stopped) return;
             if (kb.tabKey.wasPressedThisFrame) inventoryOpen = !inventoryOpen;
             if (kb.mKey.wasPressedThisFrame) mapOpen = !mapOpen;
             if (kb.cKey.wasPressedThisFrame) crouched = !crouched;
-            if (kb.f5Key.wasPressedThisFrame) Save();
+            if (kb.f5Key.wasPressedThisFrame) SaveSlot(0, out _);
             if (kb.hKey.wasPressedThisFrame && Count("medkit_small") > 0 && hp < Settings.playerHP)
             { inventory["medkit_small"]--; hp = Mathf.Min(Settings.playerHP, hp + Settings.medkitHeal); }
             if (inventoryOpen || mapOpen) { UpdateCompanion(); return; }
@@ -112,6 +119,11 @@ namespace ShadowVale.Map01
                 inventory[recipe.output_item_id] = Count(recipe.output_item_id) + recipe.output_count;
                 crafting = null; Say("Đã chế tạo băng cứu thương. Nhấn H để sử dụng.");
             }
+            UpdateCompanion();
+        }
+
+        private void AdvanceMission()
+        {
             if (stage == 1 && player.position.z > 27)
             {
                 stage = 2;
@@ -120,7 +132,6 @@ namespace ShadowVale.Map01
             }
             if (!encounterLine && Alarmed && guards.All(g => !g.Alive))
             { encounterLine = true; Say("Hùng: Bọn này hôm nay phản ứng nhanh hơn bình thường."); }
-            UpdateCompanion();
         }
 
         private bool nearWorkbench() => points.Any(p => p.kind == ForestPointKind.Workbench && Vector3.Distance(player.position, p.transform.position) < Settings.interactRange);
@@ -199,7 +210,7 @@ namespace ShadowVale.Map01
                     point.used = true; Say("Đã nhặt vật tư. Tab mở túi đồ. Bàn chế tạo nằm ở điểm nghỉ phía bắc.");
                     break;
                 case ForestPointKind.Workbench:
-                    Say("Bàn chế tạo: B để làm băng cứu thương (2 vải + 1 thảo dược). F5 lưu khi khu vực an toàn.");
+                    Say("Bàn chế tạo: B để làm băng cứu thương (2 vải + 1 thảo dược). Game tự lưu khi về menu hoặc thoát.");
                     break;
                 case ForestPointKind.Documents:
                     if (stage < 2) { Say("Hãy nhận hàng và cùng Hùng vượt tuyến tuần tra trước."); return; }
@@ -225,63 +236,141 @@ namespace ShadowVale.Map01
 
         [Serializable] private sealed class Checkpoint
         {
-            public int version = 1, stage, stones;
+            public int version = 2, stage, stones;
             public float hp, stamina;
             public Vector3 player, hung;
             public bool alarmed;
             public string[] used;
             public ForestIngredient[] items;
             public string[] down;
+            public ForestGuard.Snapshot[] guards;
+            public string crafting;
+            public float craftRemaining, playerYaw, hungYaw, nextShotRemaining;
+            public bool crouched, encounterLine;
         }
         private string SavePath => Path.Combine(Application.persistentDataPath, "shadowvale-map01-checkpoint.json");
 
-        private bool CanSave() => !Stopped && crafting == null && guards.All(g => !g.Alive ||
-            (g.state == ForestGuardState.Patrol && Vector3.Distance(g.transform.position, player.position) > 18));
-
-        private void Save()
+        public string ManualSaveBlockReason()
         {
-            if (!CanSave()) { Say("Chỉ lưu khi đã thoát nguy hiểm và không đang chế tạo."); return; }
+            if (pendingCheckpoint != null) return "Đang tải bản lưu. Vui lòng đợi giây lát.";
+            if (hp <= 0) return "Không thể lưu khi nhân vật đã gục ngã.";
+            if (stage == 4) return "Màn chơi đã kết thúc. Về menu để tự lưu kết quả.";
+            if (crafting != null) return "Hãy hoàn thành chế tạo trước khi lưu thủ công.";
+            if (guards.Any(g => g.Alive && g.state != ForestGuardState.Patrol)) return "Lính đang cảnh giác hoặc giao chiến. Hãy thoát nguy hiểm trước khi lưu.";
+            if (guards.Any(g => g.Alive && Vector3.Distance(g.transform.position, player.position) <= 18)) return "Có lính ở quá gần. Hãy cách lính hơn 18 đơn vị để lưu thủ công.";
+            return null;
+        }
+        public bool CanSave() => ManualSaveBlockReason() == null;
+
+        public bool AutoSaveOnExit(out string error)
+        {
+            error = null;
+            if (pendingCheckpoint != null) { error = "Đang khôi phục bản lưu. Vui lòng thử lại sau giây lát."; return false; }
+            // Never replace a usable checkpoint with a dead character.
+            if (hp <= 0) return true;
+            return SaveSlot(ForestSaveSlots.AutoSlot, out error, true);
+        }
+
+        public bool SaveSlot(int slot, out string error, bool automatic = false)
+        {
+            error = null;
+            if (!automatic && (error = ManualSaveBlockReason()) != null) { Say(error); return false; }
             var data = new Checkpoint { stage = stage, stones = stones, hp = hp, stamina = stamina,
                 player = player.position, hung = hung.position, alarmed = Alarmed,
                 used = points.Where(p => p.used).Select(p => p.id).ToArray(),
                 items = inventory.Select(p => new ForestIngredient { item_id = p.Key, count = p.Value }).ToArray(),
-                down = guards.Where(g => !g.Alive).Select(g => g.id).ToArray() };
-            try { File.WriteAllText(SavePath, JsonUtility.ToJson(data, true)); Say("Đã lưu checkpoint Map 1. F9 để tải lại."); }
-            catch (IOException) { Say("Không thể ghi checkpoint. Hãy kiểm tra quyền truy cập ổ đĩa."); }
+                down = guards.Where(g => !g.Alive).Select(g => g.id).ToArray(),
+                guards = guards.Select(g => g.Capture()).ToArray(), crafting = crafting,
+                craftRemaining = Mathf.Max(0, craftUntil - Time.time),
+                playerYaw = player.eulerAngles.y, hungYaw = hung.eulerAngles.y,
+                crouched = crouched, encounterLine = encounterLine, nextShotRemaining = Mathf.Max(0, nextShot - Time.time) };
+            try {
+                string thumbnail = null;
+                try { thumbnail = CaptureThumbnail(); } catch (Exception) { /* A missing preview must not prevent saving progress on exit. */ }
+                ForestSaveSlots.Write(slot, new ForestSaveSlots.Entry {
+                    savedAt = DateTime.UtcNow.ToString("o"), playSeconds = PlaySeconds,
+                    location = stage == 0 ? "Điểm tập kết" : stage == 1 ? "Đường tuần tra" : stage == 2 ? "Căn cứ cũ" : "Bến sông",
+                    checkpoint = JsonUtility.ToJson(data), thumbnail = thumbnail
+                });
+                Say("Đã lưu tiến trình."); return true;
+            }
+            catch (Exception e) { error = "Không thể lưu: " + e.Message; Say(error); return false; }
         }
 
-        private static bool loadAfterRestart;
+        private static string pendingCheckpoint;
+        private static float pendingSeconds;
+        private string CaptureThumbnail()
+        {
+            var rt = RenderTexture.GetTemporary(320, 180, 24);
+            var previous = gameCamera.targetTexture; var active = RenderTexture.active;
+            var texture = new Texture2D(320, 180, TextureFormat.RGB24, false);
+            try {
+                gameCamera.targetTexture = rt; gameCamera.Render(); RenderTexture.active = rt;
+                texture.ReadPixels(new Rect(0, 0, 320, 180), 0, 0); texture.Apply();
+                return Convert.ToBase64String(texture.EncodeToJPG(70));
+            } finally { gameCamera.targetTexture = previous; RenderTexture.active = active; RenderTexture.ReleaseTemporary(rt); Destroy(texture); }
+        }
+        public static void BeginGame(int slot = -1)
+        {
+            pendingCheckpoint = null; pendingSeconds = 0;
+            if (slot >= 0) {
+                var entry = ForestSaveSlots.Read(slot);
+                if (entry == null) throw new IOException("Ô lưu trống.");
+                var data = JsonUtility.FromJson<Checkpoint>(entry.checkpoint);
+                if (data == null || (data.version != 1 && data.version != 2) || data.items == null || data.used == null || data.down == null)
+                    throw new IOException("Dữ liệu checkpoint bị hỏng.");
+                pendingCheckpoint = entry.checkpoint; pendingSeconds = entry.playSeconds;
+            }
+            Time.timeScale = 1;
+            SceneManager.LoadScene("Map01_ForestFootprints");
+        }
         private void Start()
         {
-            if (loadAfterRestart) { loadAfterRestart = false; Invoke(nameof(Restore), .1f); }
+            if (pendingCheckpoint != null) Invoke(nameof(Restore), .1f);
         }
         private void Load()
         {
-            if (!File.Exists(SavePath)) { Say("Chưa có checkpoint Map 1."); return; }
-            loadAfterRestart = true; Restart();
+            try {
+                if (ForestSaveSlots.Exists(0)) { BeginGame(0); return; }
+                if (!File.Exists(SavePath)) { Say("Chưa có bản lưu nhanh."); return; }
+                pendingCheckpoint = File.ReadAllText(SavePath); pendingSeconds = 0; Restart();
+            } catch (Exception e) { Say("Không thể tải: " + e.Message); }
         }
         private void Restore()
         {
             try
             {
-                var data = JsonUtility.FromJson<Checkpoint>(File.ReadAllText(SavePath));
-                if (data == null || data.version != 1 || data.items == null || data.used == null || data.down == null) throw new IOException();
+                var data = JsonUtility.FromJson<Checkpoint>(pendingCheckpoint);
+                PlaySeconds = pendingSeconds;
+                if (data == null || (data.version != 1 && data.version != 2) || data.items == null || data.used == null || data.down == null) throw new IOException();
                 controller.enabled = false; player.position = data.player; controller.enabled = true;
-                companion.Warp(data.hung); stage = Mathf.Clamp(data.stage, 0, 3); stones = data.stones;
+                companion.Warp(data.hung); stage = Mathf.Clamp(data.stage, 0, 4); stones = data.stones;
                 hp = Mathf.Clamp(data.hp, 1, Settings.playerHP); stamina = Mathf.Clamp(data.stamina, 0, Settings.stamina); Alarmed = data.alarmed;
                 inventory.Clear(); foreach (var i in data.items) inventory[i.item_id] = i.count;
-                foreach (var guard in guards) if (data.down.Contains(guard.id)) guard.Hit(GuardData.max_hp + 1);
+                if (data.version == 2 && data.guards != null) {
+                    foreach (var guard in guards) {
+                        var saved = data.guards.FirstOrDefault(g => g.id == guard.id);
+                        if (saved != null) guard.RestoreSnapshot(saved);
+                    }
+                    player.rotation = Quaternion.Euler(0, data.playerYaw, 0);
+                    hung.rotation = Quaternion.Euler(0, data.hungYaw, 0);
+                    crouched = data.crouched; encounterLine = data.encounterLine;
+                    crafting = string.IsNullOrEmpty(data.crafting) ? null : data.crafting;
+                    craftUntil = Time.time + data.craftRemaining;
+                    nextShot = Time.time + data.nextShotRemaining;
+                } else foreach (var guard in guards) if (data.down.Contains(guard.id)) guard.Hit(GuardData.max_hp + 1);
                 foreach (var point in points) point.used = data.used.Contains(point.id);
-                Say("Đã tải checkpoint. Lính còn sống bắt đầu lại tuyến tuần tra.");
+                Say(data.version == 2 ? "Đã khôi phục tiến trình và trạng thái giao chiến." : "Đã tải bản lưu cũ. Lính còn sống bắt đầu lại tuyến tuần tra.");
             }
             catch (Exception) { Say("Checkpoint không hợp lệ. Bắt đầu lại Map 1."); }
+            finally { pendingCheckpoint = null; }
         }
         private void Restart() { Time.timeScale = 1; SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); }
         private void OnDisable() { Time.timeScale = 1; }
 
         private void OnGUI()
         {
-            if (Settings == null) return;
+            if (Settings == null || ForestMenu.Visible) return;
             if (titleStyle == null)
             {
                 titleStyle = new GUIStyle(GUI.skin.label) { fontSize = 23, fontStyle = FontStyle.Bold, wordWrap = true };
