@@ -46,6 +46,10 @@ namespace ShadowVale.Map01.Tests
                 yield return null;
                 Assert.AreEqual("01_MainMenu", SceneManager.GetActiveScene().name);
                 Assert.AreEqual(ForestSaveSlots.AutoSlot, ForestSaveSlots.Latest());
+                var legacyEntry = ForestSaveSlots.Read(ForestSaveSlots.AutoSlot);
+                Assert.AreEqual("Map01_ForestFootprints", legacyEntry.sceneName);
+                legacyEntry.sceneName = null; // Saves made before scene metadata must still load the original map.
+                ForestSaveSlots.Write(ForestSaveSlots.AutoSlot, legacyEntry);
                 ForestMission.BeginGame(ForestSaveSlots.AutoSlot);
                 yield return null;
                 var pending = typeof(ForestMission).GetField("pendingCheckpoint", BindingFlags.Static | BindingFlags.NonPublic);

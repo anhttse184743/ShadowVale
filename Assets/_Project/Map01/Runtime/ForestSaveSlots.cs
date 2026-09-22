@@ -10,7 +10,7 @@ namespace ShadowVale.Map01
         [Serializable] public sealed class Entry
         {
             public int version = 1;
-            public string savedAt, location, checkpoint, thumbnail;
+            public string savedAt, location, checkpoint, thumbnail, sceneName;
             public float playSeconds;
         }
         public const int AutoSlot = 4;

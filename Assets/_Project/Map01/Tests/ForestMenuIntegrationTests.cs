@@ -81,7 +81,7 @@ namespace ShadowVale.Map01.Tests
                 Call(menu, "MainAction", 1);
                 yield return null;
                 yield return new WaitForSeconds(1);
-                Assert.AreEqual("Map01_ForestFootprints", SceneManager.GetActiveScene().name);
+                Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name);
                 Assert.IsFalse(ForestMenu.Visible);
                 var mission = UnityEngine.Object.FindFirstObjectByType<ForestMission>();
                 Assert.IsNotNull(mission);
@@ -94,6 +94,7 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsTrue(ForestSaveSlots.Exists(1), "Saving an empty slot through the menu must write a backup.");
                 Assert.AreEqual(1, ForestSaveSlots.Latest());
                 var entry = ForestSaveSlots.Read(1);
+                Assert.AreEqual("Map 1", entry.sceneName);
                 Assert.Greater(entry.thumbnail.Length, 100);
                 Assert.Greater(entry.playSeconds, 0);
                 Call(menu, "SlotAction");

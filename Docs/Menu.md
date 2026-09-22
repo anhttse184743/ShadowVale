@@ -7,7 +7,9 @@ Hoặc chọn menu Unity **ShadowVale → Menu → Mở menu chính**, rồi nh�
 Hai scene có object `ShadowVale Menu` gắn sẵn; giao diện chỉ vẽ khi chạy.
 Nếu nhấn Play trong scene trống/chưa lưu hoặc scene chưa có `ForestMission`, menu chính
 vẫn xuất hiện thay vì chỉ có skybox. Trong Editor, menu cũng được phục hồi sau khi reload script lúc Play.
-Boot tải content rồi chuyển sang menu; Chơi mới mở `Map01_ForestFootprints`.
+Boot tải content rồi chuyển sang menu; Chơi mới mở `Map 1` từ nhánh dev.
+Mỗi bản lưu mới giữ tên scene để tải đúng bản đồ. Bản lưu cũ chưa có tên scene
+vẫn mở `Map01_ForestFootprints`; cả hai scene được giữ trong Build Settings.
 Khi mở trực tiếp scene Map 1, nhấn Esc để mở menu tạm dừng.
 
 - Chuột hoặc mũi tên lên/xuống + Enter chọn chức năng và ô lưu.
