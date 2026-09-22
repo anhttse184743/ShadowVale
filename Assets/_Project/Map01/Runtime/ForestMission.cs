@@ -13,10 +13,13 @@ namespace ShadowVale.Map01
     {
         public Transform player, hung;
         public Camera gameCamera;
+        public Transform encounterExit;
+        public Vector2 mapMin = new Vector2(-45, -60), mapMax = new Vector2(45, 88);
         public TextAsset balanceJson, contentBundle;
         public ForestSettings Settings { get; private set; }
         public ForestWeapon Weapon { get; private set; }
         public ForestArchetype GuardData { get; private set; }
+        public bool IsInitialized { get; private set; }
         public bool Alarmed { get; set; }
         public bool Hidden { get; private set; }
         public bool Paused => paused;
@@ -32,6 +35,23 @@ namespace ShadowVale.Map01
         private readonly List<ForestPoint> points = new List<ForestPoint>();
         private readonly Dictionary<string, int> inventory = new Dictionary<string, int>();
         private float hp, stamina, nextShot, nextNoise, dialogueUntil, craftUntil;
+        private float verticalVelocity;
+        public bool IsWading => player != null && player.position.y < .12f &&
+            Mathf.Abs(player.position.x - (8 + 12 * Mathf.Sin(player.position.z * .041f) + 4 * Mathf.Sin(player.position.z * .105f))) < 5f;
+        public float MovementSurfaceMultiplier => IsWading ? .68f : 1f;
+        public bool TryJump()
+        {
+            if (!IsInitialized || Stopped || inventoryOpen || mapOpen || crafting != null || !controller.isGrounded || verticalVelocity > 0 || stamina < 8) return false;
+            verticalVelocity = Mathf.Sqrt(2f * 22f * 1.15f);
+            stamina -= 8; crouched = false; EmitNoise(player.position, 5); return true;
+        }
+        private void MovePlayer(Vector3 horizontal)
+        {
+            if (controller.isGrounded && verticalVelocity < 0) verticalVelocity = -2;
+            verticalVelocity = Mathf.Max(-30, verticalVelocity - 22 * Time.deltaTime);
+            var flags = controller.Move((horizontal + Vector3.up * verticalVelocity) * Time.deltaTime);
+            if ((flags & CollisionFlags.Above) != 0 && verticalVelocity > 0) verticalVelocity = 0;
+        }
         private int stage, stones;
         private bool crouched, inventoryOpen, mapOpen, paused, encounterLine;
         private string dialogue, crafting;
@@ -48,17 +68,54 @@ namespace ShadowVale.Map01
 
         private void Awake()
         {
-            Settings = JsonUtility.FromJson<ForestSettings>(balanceJson.text);
-            bundle = JsonUtility.FromJson<ForestBundle>(contentBundle.text);
-            Weapon = bundle.weapons.First(w => w.id == "rifle_standard");
-            GuardData = bundle.enemy_archetypes.First(e => e.id == "grunt");
+            // Unity objects can retain a managed wrapper after the asset was deleted.
+            // Use Unity's null check before accessing TextAsset.text.
+            if (balanceJson == null || contentBundle == null)
+            {
+                FailInitialization("Assign valid balanceJson and contentBundle TextAssets in the Inspector.");
+                return;
+            }
+            try
+            {
+                Settings = JsonUtility.FromJson<ForestSettings>(balanceJson.text);
+                bundle = JsonUtility.FromJson<ForestBundle>(contentBundle.text);
+            }
+            catch (ArgumentException exception)
+            {
+                FailInitialization("Invalid mission JSON: " + exception.Message);
+                return;
+            }
+            Weapon = bundle?.weapons?.FirstOrDefault(w => w != null && w.id == "rifle_standard");
+            GuardData = bundle?.enemy_archetypes?.FirstOrDefault(e => e != null && e.id == "grunt");
+            if (Settings == null || Weapon == null || GuardData == null)
+            {
+                FailInitialization("Mission JSON must contain settings, rifle_standard and grunt.");
+                return;
+            }
+            if (player == null || hung == null || gameCamera == null)
+            {
+                FailInitialization("Assign player, hung and gameCamera in the Inspector.");
+                return;
+            }
             controller = player.GetComponent<CharacterController>();
             companion = hung.GetComponent<NavMeshAgent>();
+            if (controller == null || companion == null)
+            {
+                FailInitialization("Player needs a CharacterController and Hung needs a NavMeshAgent.");
+                return;
+            }
             guards = FindObjectsByType<ForestGuard>(FindObjectsSortMode.None);
             points.AddRange(FindObjectsByType<ForestPoint>(FindObjectsSortMode.None));
             hp = Settings.playerHP; stamina = Settings.stamina; stones = Settings.startingStones;
             inventory["ammo_rifle"] = Settings.startingAmmo;
+            IsInitialized = true;
             Say("Hùng: Nhận hàng rồi đi thôi, Nam. Qua rừng là tới bến sông.", 9);
+        }
+
+        private void FailInitialization(string reason)
+        {
+            Debug.LogError("ForestMission could not initialize. " + reason, this);
+            enabled = false;
         }
 
         public void RegisterPoint(ForestPoint point) => points.Add(point);
@@ -85,7 +142,7 @@ namespace ShadowVale.Map01
             if (kb.f5Key.wasPressedThisFrame) SaveSlot(0, out _);
             if (kb.hKey.wasPressedThisFrame && Count("medkit_small") > 0 && hp < Settings.playerHP)
             { inventory["medkit_small"]--; hp = Mathf.Min(Settings.playerHP, hp + Settings.medkitHeal); }
-            if (inventoryOpen || mapOpen) { UpdateCompanion(); return; }
+            if (inventoryOpen || mapOpen) { MovePlayer(Vector3.zero); UpdateCompanion(); return; }
 
             var motion = new Vector2((kb.dKey.isPressed ? 1 : 0) - (kb.aKey.isPressed ? 1 : 0),
                 (kb.wKey.isPressed ? 1 : 0) - (kb.sKey.isPressed ? 1 : 0));
@@ -95,7 +152,8 @@ namespace ShadowVale.Map01
             bool sprint = !crouched && kb.leftShiftKey.isPressed && stamina > 2 && direction.sqrMagnitude > .01f;
             float speed = crouched ? Settings.crouchSpeed : sprint ? Settings.sprintSpeed : Settings.walkSpeed;
             if (crafting != null) speed = 0;
-            controller.Move((direction * speed + Vector3.down * 8) * Time.deltaTime);
+            if (kb.spaceKey.wasPressedThisFrame) TryJump();
+            MovePlayer(direction * speed * MovementSurfaceMultiplier);
             stamina = Mathf.Clamp(stamina + (sprint ? -Settings.staminaDrain : Settings.staminaRecovery) * Time.deltaTime, 0, Settings.stamina);
             Hidden = crouched && points.Any(p => p.kind == ForestPointKind.Hide && Vector3.Distance(player.position, p.transform.position) < p.radius);
             if (sprint && Time.time > nextNoise) { nextNoise = Time.time + .6f; EmitNoise(player.position, 7); }
@@ -124,7 +182,9 @@ namespace ShadowVale.Map01
 
         private void AdvanceMission()
         {
-            if (stage == 1 && player.position.z > 27)
+            if (stage == 1 && (encounterExit != null
+                ? Vector3.Distance(player.position, encounterExit.position) < 5f
+                : player.position.z > 27))
             {
                 stage = 2;
                 Say(Alarmed ? "Hùng: Bọn này hôm nay phản ứng nhanh hơn bình thường." : "Hùng: Qua được rồi. Chúng tuần tra kỹ hơn bình thường… Phía trước có một căn cứ cũ.", 9);
@@ -138,6 +198,15 @@ namespace ShadowVale.Map01
 
         private void Aim()
         {
+            if (gameCamera.TryGetComponent<ForestThirdPersonCamera>(out var thirdPerson))
+            {
+                var centerRay = gameCamera.ViewportPointToRay(new Vector3(.5f, .5f));
+                aim = Physics.Raycast(centerRay, out var targetHit, Weapon.range, ObstructionMask | LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Ignore)
+                    ? targetHit.point : centerRay.GetPoint(Weapon.range);
+                var look = aim - player.position; look.y = 0;
+                if (look.sqrMagnitude > .01f) player.rotation = Quaternion.LookRotation(look);
+                return;
+            }
             if (Mouse.current == null) return;
             var ray = gameCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
             if (new Plane(Vector3.up, player.position).Raycast(ray, out float distance)) aim = ray.GetPoint(distance);
@@ -152,8 +221,10 @@ namespace ShadowVale.Map01
             inventory["ammo_rifle"]--;
             var origin = player.position + Vector3.up * 1.1f + player.forward * .7f;
             var target = origin + player.forward * Weapon.range;
+            var shotDirection = gameCamera.GetComponent<ForestThirdPersonCamera>() != null ? (aim - origin).normalized : player.forward;
+            target = origin + shotDirection * Weapon.range;
             int mask = ObstructionMask | LayerMask.GetMask("Enemy");
-            if (Physics.Raycast(origin, player.forward, out var hit, Weapon.range, mask, QueryTriggerInteraction.Ignore))
+            if (Physics.Raycast(origin, shotDirection, out var hit, Weapon.range, mask, QueryTriggerInteraction.Ignore))
             { target = hit.point; var enemy = hit.collider.GetComponentInParent<ForestGuard>(); if (enemy != null) enemy.Hit(Weapon.damage); }
             Trace(origin, target, new Color(1, .84f, .45f));
             EmitNoise(player.position, Weapon.noise_radius);
@@ -181,12 +252,14 @@ namespace ShadowVale.Map01
 
         private void LateUpdate()
         {
-            if (gameCamera != null && player != null)
+            if (gameCamera != null && player != null && gameCamera.GetComponent<ForestThirdPersonCamera>() == null)
             {
                 var target = player.position - gameCamera.transform.forward * 30;
                 gameCamera.transform.position = Vector3.Lerp(gameCamera.transform.position, target, 1 - Mathf.Exp(-8 * Time.unscaledDeltaTime));
             }
         }
+
+        public bool CameraInputEnabled => IsInitialized && !Stopped && !inventoryOpen && !mapOpen;
 
         public Vector3 GuardCover(Vector3 origin, Vector3 threat)
         {
@@ -207,7 +280,7 @@ namespace ShadowVale.Map01
                 case ForestPointKind.Loot:
                     if (point.used) return;
                     foreach (var item in point.items) inventory[item.item_id] = Count(item.item_id) + item.count;
-                    point.used = true; Say("Đã nhặt vật tư. Tab mở túi đồ. Bàn chế tạo nằm ở điểm nghỉ phía bắc.");
+                    point.used = true; Say("Đã nhặt vật tư. Tab mở túi đồ. Bàn chế tạo nằm ở điểm tiếp tế.");
                     break;
                 case ForestPointKind.Workbench:
                     Say("Bàn chế tạo: B để làm băng cứu thương (2 vải + 1 thảo dược). Game tự lưu khi về menu hoặc thoát.");
@@ -288,6 +361,7 @@ namespace ShadowVale.Map01
                 string thumbnail = null;
                 try { thumbnail = CaptureThumbnail(); } catch (Exception) { /* A missing preview must not prevent saving progress on exit. */ }
                 ForestSaveSlots.Write(slot, new ForestSaveSlots.Entry {
+                    sceneName = SceneManager.GetActiveScene().name,
                     savedAt = DateTime.UtcNow.ToString("o"), playSeconds = PlaySeconds,
                     location = stage == 0 ? "Điểm tập kết" : stage == 1 ? "Đường tuần tra" : stage == 2 ? "Căn cứ cũ" : "Bến sông",
                     checkpoint = JsonUtility.ToJson(data), thumbnail = thumbnail
@@ -313,16 +387,19 @@ namespace ShadowVale.Map01
         public static void BeginGame(int slot = -1)
         {
             pendingCheckpoint = null; pendingSeconds = 0;
+            string sceneName = "Map 1";
             if (slot >= 0) {
                 var entry = ForestSaveSlots.Read(slot);
                 if (entry == null) throw new IOException("Ô lưu trống.");
+                sceneName = string.IsNullOrEmpty(entry.sceneName) ? "Map01_ForestFootprints" : entry.sceneName;
+                if (sceneName != "Map 1" && sceneName != "Map01_ForestFootprints") throw new IOException("Bản lưu thuộc màn chơi chưa được hỗ trợ.");
                 var data = JsonUtility.FromJson<Checkpoint>(entry.checkpoint);
                 if (data == null || (data.version != 1 && data.version != 2) || data.items == null || data.used == null || data.down == null)
                     throw new IOException("Dữ liệu checkpoint bị hỏng.");
                 pendingCheckpoint = entry.checkpoint; pendingSeconds = entry.playSeconds;
             }
             Time.timeScale = 1;
-            SceneManager.LoadScene("Map01_ForestFootprints");
+            SceneManager.LoadScene(sceneName);
         }
         private void Start()
         {
@@ -333,7 +410,8 @@ namespace ShadowVale.Map01
             try {
                 if (ForestSaveSlots.Exists(0)) { BeginGame(0); return; }
                 if (!File.Exists(SavePath)) { Say("Chưa có bản lưu nhanh."); return; }
-                pendingCheckpoint = File.ReadAllText(SavePath); pendingSeconds = 0; Restart();
+                pendingCheckpoint = File.ReadAllText(SavePath); pendingSeconds = 0;
+                Time.timeScale = 1; SceneManager.LoadScene("Map01_ForestFootprints");
             } catch (Exception e) { Say("Không thể tải: " + e.Message); }
         }
         private void Restore()
@@ -343,7 +421,7 @@ namespace ShadowVale.Map01
                 var data = JsonUtility.FromJson<Checkpoint>(pendingCheckpoint);
                 PlaySeconds = pendingSeconds;
                 if (data == null || (data.version != 1 && data.version != 2) || data.items == null || data.used == null || data.down == null) throw new IOException();
-                controller.enabled = false; player.position = data.player; controller.enabled = true;
+                verticalVelocity = 0; controller.enabled = false; player.position = data.player; controller.enabled = true;
                 companion.Warp(data.hung); stage = Mathf.Clamp(data.stage, 0, 4); stones = data.stones;
                 hp = Mathf.Clamp(data.hp, 1, Settings.playerHP); stamina = Mathf.Clamp(data.stamina, 0, Settings.stamina); Alarmed = data.alarmed;
                 inventory.Clear(); foreach (var i in data.items) inventory[i.item_id] = i.count;
@@ -370,7 +448,7 @@ namespace ShadowVale.Map01
 
         private void OnGUI()
         {
-            if (Settings == null || ForestMenu.Visible) return;
+            if (!IsInitialized || ForestMenu.Visible) return;
             if (titleStyle == null)
             {
                 titleStyle = new GUIStyle(GUI.skin.label) { fontSize = 23, fontStyle = FontStyle.Bold, wordWrap = true };
@@ -386,7 +464,7 @@ namespace ShadowVale.Map01
             Panel(new Rect(width - 265, 20, 245, 138));
             GUI.Label(new Rect(width - 247, 32, 220, 120), $"NAM    HP {hp:0} / {Settings.playerHP:0}\nSức bền {stamina:0}    Đạn {Count("ammo_rifle")}\nĐá {stones}   •   {(Hidden ? "ẨN TRONG BỤI" : crouched ? "ĐANG ĐI KHOM" : "ĐANG DI CHUYỂN")}", textStyle);
             Panel(new Rect(22, height - 69, width - 44, 49));
-            GUI.Label(new Rect(36, height - 59, width - 65, 43), "WASD Di chuyển  •  Shift Chạy  •  C Đi khom  •  Chuột Bắn  •  Q Ném đá  •  E Tương tác  •  Tab Túi đồ  •  M Bản đồ  •  Esc Dừng", smallStyle);
+            GUI.Label(new Rect(36, height - 59, width - 65, 43), "Space Nhảy • WASD Di chuyển  •  Shift Chạy  •  C Đi khom  •  Chuột Xoay / Trái Bắn  •  Q Ném đá  •  E Tương tác  •  Tab Túi đồ  •  M Bản đồ  •  Esc Dừng", smallStyle);
             if (Time.time < dialogueUntil)
             {
                 Panel(new Rect(210, height - 205, width - 420, 110));
@@ -445,7 +523,7 @@ namespace ShadowVale.Map01
             GUI.color = Color.cyan; var playerPos = MapPosition(player.position, area);
             GUI.DrawTexture(new Rect(playerPos.x - 5, playerPos.y - 5, 10, 10), Texture2D.whiteTexture); GUI.color = Color.white;
         }
-        private static Vector2 MapPosition(Vector3 p, Rect r) => new Vector2(r.x + Mathf.InverseLerp(-45, 45, p.x) * r.width, r.yMax - Mathf.InverseLerp(-60, 88, p.z) * r.height);
+        private Vector2 MapPosition(Vector3 p, Rect r) => new Vector2(r.x + Mathf.InverseLerp(mapMin.x, mapMax.x, p.x) * r.width, r.yMax - Mathf.InverseLerp(mapMin.y, mapMax.y, p.z) * r.height);
         private static void Panel(Rect rect) { var old = GUI.color; GUI.color = new Color(.035f, .07f, .06f, .94f); GUI.DrawTexture(rect, Texture2D.whiteTexture); GUI.color = old; }
     }
 }

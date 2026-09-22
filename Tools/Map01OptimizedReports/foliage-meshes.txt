@@ -1,0 +1,15 @@
+Tree_0_LOD0: 1972 triangles
+Tree_0_LOD1: 904 triangles
+Tree_0_LOD2: 400 triangles
+Tree_1_LOD0: 1972 triangles
+Tree_1_LOD1: 904 triangles
+Tree_1_LOD2: 400 triangles
+Tree_2_LOD0: 1972 triangles
+Tree_2_LOD1: 904 triangles
+Tree_2_LOD2: 400 triangles
+Tree_3_LOD0: 1972 triangles
+Tree_3_LOD1: 904 triangles
+Tree_3_LOD2: 400 triangles
+Tree_4_LOD0: 1972 triangles
+Tree_4_LOD1: 904 triangles
+Tree_4_LOD2: 400 triangles

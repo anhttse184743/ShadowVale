@@ -15,6 +15,7 @@ namespace ShadowVale.Map01
         public float suspicion;
         private ForestMission mission;
         private NavMeshAgent agent;
+        private bool initialized;
         private int waypoint;
         private float timer, lastSeen, shotAt, patrolPause;
         private Vector3 lastKnown;
@@ -55,8 +56,17 @@ namespace ShadowVale.Map01
         {
             mission = FindFirstObjectByType<ForestMission>();
             agent = GetComponent<NavMeshAgent>();
+            if (mission == null || !mission.IsInitialized)
+            {
+                // The mission reports its configuration error once; don't cascade
+                // into one NullReferenceException per guard.
+                if (mission == null) Debug.LogError("ForestGuard requires a ForestMission in the scene.", this);
+                enabled = false;
+                return;
+            }
             hp = mission.GuardData.max_hp;
             agent.speed = mission.GuardData.move_speed;
+            initialized = true;
             if (patrol.Length > 0) Go(patrol[0]);
         }
 
@@ -68,7 +78,7 @@ namespace ShadowVale.Map01
 
         public void Hear(Vector3 location, float radius)
         {
-            if (!Alive || state >= ForestGuardState.SpotPlayer) return;
+            if (!initialized || !Alive || state >= ForestGuardState.SpotPlayer) return;
             if (Vector3.Distance(location, transform.position) > Mathf.Min(radius, mission.GuardData.hearing_range)) return;
             lastKnown = location;
             state = ForestGuardState.Investigate;
@@ -78,7 +88,7 @@ namespace ShadowVale.Map01
 
         public void Hit(float damage)
         {
-            if (!Alive) return;
+            if (!initialized || !Alive) return;
             hp -= damage;
             if (hp <= 0)
             {
@@ -120,7 +130,7 @@ namespace ShadowVale.Map01
 
         private void Update()
         {
-            if (mission == null || !Alive || mission.Stopped) return;
+            if (!initialized || mission == null || !mission.IsInitialized || !Alive || mission.Stopped) return;
             bool visible = SeesPlayer();
             if (visible)
             {
