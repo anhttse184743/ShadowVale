@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -28,6 +28,13 @@ namespace ShadowVale.Editor
         private const string PlayerFolder = "Assets/_Project/Art/Characters/Player";
 
         /// <summary>
+        /// Enemy characters. They came out of the same DCC setup as the player — identical bone
+        /// names, identical missing finger and twist bones — so they get exactly the same
+        /// treatment: Humanoid avatar, straightened bind-pose arms, the same twist split.
+        /// </summary>
+        private const string EnemyFolder = "Assets/_Project/Art/Characters/Enemies";
+
+        /// <summary>
         /// Finds the character model instead of hardcoding its filename. Unity's AssetDatabase is
         /// case sensitive even on Windows, so re-exporting as "Player.fbx" instead of "player.fbx"
         /// silently resolved to null and left the built prefab pointing at a deleted mesh — which
@@ -49,6 +56,187 @@ namespace ShadowVale.Editor
             Debug.LogError($"[CharacterImport] No character model found in {PlayerFolder} " +
                            $"(anything other than {ClipSourceRigPath}).");
             return null;
+        }
+
+        /// <summary>
+        /// Pulls the textures out of a model that carries them inside the FBX, into a folder of
+        /// its own beside it. Without this the mesh renders in flat material colour: Unity leaves
+        /// embedded images packed away, so the material has nothing to sample.
+        /// <para>
+        /// Each model gets its own folder because the rig service names every character's maps
+        /// identically — <c>texture_pbr_&lt;date&gt;.png</c> and friends. Extracted side by side they
+        /// would collide, and every character would end up wearing whichever skin landed last.
+        /// </para>
+        /// </summary>
+        private static void ExtractEmbeddedTextures(string modelPath)
+        {
+            var importer = AssetImporter.GetAtPath(modelPath) as ModelImporter;
+            if (importer == null)
+            {
+                return;
+            }
+
+            string folder = Path.ChangeExtension(modelPath, null) + " Textures";
+            // Already unpacked: re-extracting would rewrite the files and dirty the import for
+            // nothing, on every single run of this menu item.
+            if (Directory.Exists(folder) && Directory.GetFiles(folder, "*.png").Length > 0)
+            {
+                return;
+            }
+
+            Directory.CreateDirectory(folder);
+            if (importer.ExtractTextures(folder))
+            {
+                AssetDatabase.Refresh();
+                importer.SaveAndReimport();
+                Debug.Log($"[CharacterImport] Extracted embedded textures from {modelPath} -> {folder}");
+            }
+            else
+            {
+                // Nothing inside; drop the empty folder rather than leaving clutter behind.
+                Directory.Delete(folder);
+            }
+        }
+
+        /// <summary>
+        /// Gives a model its own material, pointed at the textures unpacked from it.
+        /// <para>
+        /// Both halves matter. Unity names an extracted material after the texture it references,
+        /// and the rig service calls every character's map <c>texture_pbr_&lt;date&gt;.png</c> — so
+        /// letting Unity extract materials normally hands two different characters the same single
+        /// .mat file, and whichever imported last dresses both. The material is created here with
+        /// the model's name on it and remapped, so each keeps its own.
+        /// </para>
+        /// <para>
+        /// The textures are bound by path rather than left to Unity's search for the same reason:
+        /// three identically named albedo maps in one project is a coin toss.
+        /// </para>
+        /// </summary>
+        private static void BindExtractedTextures(string modelPath)
+        {
+            string textureFolder = Path.ChangeExtension(modelPath, null) + " Textures";
+            var importer = AssetImporter.GetAtPath(modelPath) as ModelImporter;
+            if (importer == null || !Directory.Exists(textureFolder))
+            {
+                return;
+            }
+
+            Texture2D albedo = null, normal = null, metallic = null;
+            foreach (string file in Directory.GetFiles(textureFolder, "*.png"))
+            {
+                string assetPath = file.Replace(Path.DirectorySeparatorChar, '/');
+                var tex = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath);
+                if (tex == null)
+                {
+                    continue;
+                }
+
+                string stem = Path.GetFileNameWithoutExtension(assetPath).ToLowerInvariant();
+                if (stem.EndsWith("_normal"))
+                {
+                    normal = tex;
+                    // Unity will not sample a colour texture as a normal map. It says so as a
+                    // warning on the material and then renders it wrong anyway.
+                    var texImporter = AssetImporter.GetAtPath(assetPath) as TextureImporter;
+                    if (texImporter != null && texImporter.textureType != TextureImporterType.NormalMap)
+                    {
+                        texImporter.textureType = TextureImporterType.NormalMap;
+                        texImporter.SaveAndReimport();
+                    }
+                }
+                else if (stem.EndsWith("_metallic"))
+                {
+                    metallic = tex;
+                }
+                else if (!stem.EndsWith("_roughness"))
+                {
+                    // URP's Lit shader reads smoothness out of the metallic map's alpha, so the
+                    // roughness map has nowhere to go and is deliberately left on disk.
+                    albedo = tex;
+                }
+            }
+
+            // Materials have to come back inside the model before they can be read off it.
+            if (importer.materialLocation != ModelImporterMaterialLocation.InPrefab)
+            {
+                importer.materialLocation = ModelImporterMaterialLocation.InPrefab;
+                importer.SaveAndReimport();
+            }
+
+            string modelStem = Path.GetFileNameWithoutExtension(modelPath);
+            string materialFolder = Path.GetDirectoryName(modelPath)!
+                .Replace(Path.DirectorySeparatorChar, '/') + "/Materials";
+            Directory.CreateDirectory(materialFolder);
+
+            int bound = 0;
+            foreach (Object sub in AssetDatabase.LoadAllAssetsAtPath(modelPath))
+            {
+                if (sub is not Material embedded)
+                {
+                    continue;
+                }
+
+                string matPath = $"{materialFolder}/{modelStem} - {embedded.name}.mat";
+                var mat = AssetDatabase.LoadAssetAtPath<Material>(matPath);
+                if (mat == null)
+                {
+                    mat = new Material(embedded);
+                    AssetDatabase.CreateAsset(mat, matPath);
+                }
+
+                if (albedo != null)
+                {
+                    if (mat.HasProperty("_BaseMap")) mat.SetTexture("_BaseMap", albedo);
+                    if (mat.HasProperty("_MainTex")) mat.SetTexture("_MainTex", albedo);
+                    // The flat tint it carried in place of a texture would multiply it down.
+                    if (mat.HasProperty("_BaseColor")) mat.SetColor("_BaseColor", Color.white);
+                    if (mat.HasProperty("_Color")) mat.SetColor("_Color", Color.white);
+                }
+                if (normal != null && mat.HasProperty("_BumpMap"))
+                {
+                    mat.SetTexture("_BumpMap", normal);
+                    mat.EnableKeyword("_NORMALMAP");
+                }
+                if (metallic != null && mat.HasProperty("_MetallicGlossMap"))
+                {
+                    mat.SetTexture("_MetallicGlossMap", metallic);
+                    mat.EnableKeyword("_METALLICSPECGLOSSMAP");
+                }
+
+                EditorUtility.SetDirty(mat);
+                importer.AddRemap(new AssetImporter.SourceAssetIdentifier(embedded), mat);
+                bound++;
+            }
+
+            if (bound == 0)
+            {
+                Debug.LogWarning($"[CharacterImport] {modelPath} declares no material — its " +
+                                 "textures were unpacked but nothing samples them.");
+                return;
+            }
+
+            AssetDatabase.SaveAssets();
+            importer.SaveAndReimport();
+            Debug.Log($"[CharacterImport] {modelStem}: {bound} material(s) of its own, bound to " +
+                      $"{textureFolder}.");
+        }
+
+        /// <summary>Every enemy model, in a stable order so the map always picks the same two.</summary>
+        public static string[] ResolveEnemyModelPaths()
+        {
+            if (!Directory.Exists(EnemyFolder))
+            {
+                return System.Array.Empty<string>();
+            }
+
+            var paths = new List<string>();
+            foreach (string guid in AssetDatabase.FindAssets("t:Model", new[] { EnemyFolder }))
+            {
+                paths.Add(AssetDatabase.GUIDToAssetPath(guid));
+            }
+            // FindAssets order is not guaranteed; sort so enemy 0 and enemy 1 stay put.
+            paths.Sort(System.StringComparer.Ordinal);
+            return paths.ToArray();
         }
 
         /// <summary>
@@ -106,6 +294,18 @@ namespace ShadowVale.Editor
                           $"valid={playerAvatar.isValid}, human={playerAvatar.isHuman}.");
             }
 
+            foreach (string enemyPath in ResolveEnemyModelPaths())
+            {
+                ExtractEmbeddedTextures(enemyPath);
+                BindExtractedTextures(enemyPath);
+                StraightenArms(enemyPath);
+                Avatar enemyAvatar = ConfigureModel(enemyPath, tuneTwist: true);
+                Debug.Log(enemyAvatar == null
+                    ? $"[CharacterImport] {enemyPath} produced no Humanoid avatar."
+                    : $"[CharacterImport] Enemy avatar '{enemyAvatar.name}' " +
+                      $"valid={enemyAvatar.isValid}, human={enemyAvatar.isHuman}.");
+            }
+
             Dictionary<string, string> resolved = CharacterClipLibrary.ResolveRoleToPath();
             var pathToRole = new Dictionary<string, string>();
             foreach (KeyValuePair<string, string> pair in resolved)
@@ -116,7 +316,7 @@ namespace ShadowVale.Editor
             int configured = 0;
             foreach (string raw in Directory.GetFiles(CharacterClipLibrary.ClipsFolder, "*.fbx"))
             {
-                string path = raw.Replace('\\', '/');
+                string path = raw.Replace(Path.DirectorySeparatorChar, '/');
                 pathToRole.TryGetValue(path, out string role);
                 if (ConfigureClip(path, avatar, role))
                 {
@@ -359,11 +559,13 @@ namespace ShadowVale.Editor
             if (!string.IsNullOrEmpty(role))
             {
                 CharacterClipLibrary.Role spec = CharacterClipLibrary.FindRole(role);
+                bool bakeHeight = CharacterClipLibrary.BakesRootHeight(role);
                 ModelImporterClipAnimation[] current = importer.clipAnimations;
-                bool alreadyNamed = current.Length > 0
-                                    && current[0].name == spec.Name
-                                    && current[0].loopTime == spec.Loop;
-                if (!alreadyNamed)
+                bool alreadySet = current.Length > 0
+                                  && current[0].name == spec.Name
+                                  && current[0].loopTime == spec.Loop
+                                  && current[0].lockRootHeightY == bakeHeight;
+                if (!alreadySet)
                 {
                     // defaultClipAnimations carries the correct frame range straight from the FBX.
                     ModelImporterClipAnimation[] clips =
@@ -372,6 +574,9 @@ namespace ShadowVale.Editor
                     {
                         clips[0].name = spec.Name;
                         clips[0].loopTime = spec.Loop;
+                        // Written every time rather than only when turning it on, so a clip that
+                        // once had it set does not keep it after the rule changes.
+                        clips[0].lockRootHeightY = bakeHeight;
                         importer.clipAnimations = clips;
                         dirty = true;
                     }

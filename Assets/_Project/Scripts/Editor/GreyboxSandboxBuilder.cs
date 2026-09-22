@@ -45,6 +45,13 @@ namespace ShadowVale.Editor
         private const float ScaleDeadzone = 0.06f;
 
         /// <summary>
+        /// Enemies stand a little over the player. Expressed as a hip-height target rather than a
+        /// multiplier on the model, so both enemy rigs come out the same height as each other no
+        /// matter what they were exported at.
+        /// </summary>
+        private const float EnemyHipHeight = TargetHipHeight * 1.06f;
+
+        /// <summary>
         /// The test bot deliberately uses the plain Mixamo dummy, not the player's character, so
         /// the two are never confused in a screenshot or a bug report.
         /// </summary>
@@ -109,6 +116,7 @@ namespace ShadowVale.Editor
 
             GameObject player = InstantiatePlayer(playerPrefab, root.transform, new Vector3(0f, 0.2f, 0f));
             BuildBot(root.transform, new Vector3(0f, 0f, 7f), targetMat);
+            BuildEnemies(root.transform, targetMat);
             ConfigureCamera(player.transform, playerLayer);
             ConfigureLight();
             HudBuilder.CreateHud(root.transform, player.GetComponent<PlayerCombat>());
@@ -473,6 +481,134 @@ namespace ShadowVale.Editor
             Object.DestroyImmediate(disc.GetComponent<CapsuleCollider>());
         }
 
+        /// <summary>
+        /// One armed enemy per model in the Enemies folder, flanking the test bot and facing the
+        /// player spawn. They run <c>AC_Enemy</c>, which carries the rifle stance at full weight
+        /// on its own — there is no script on them, so nothing would otherwise raise that layer.
+        /// <para>
+        /// They stand a little over the player. That is the only thing separating them from him:
+        /// same skeleton, same retargeted clips, same straightened elbows.
+        /// </para>
+        /// Stationary for now. Aiming and firing at the player is AI, which this does not do.
+        /// </summary>
+        private static void BuildEnemies(Transform parent, Material markerMat)
+        {
+            string[] models = CharacterImportSetup.ResolveEnemyModelPaths();
+            if (models.Length == 0)
+            {
+                Debug.Log("[Greybox] No models in the Enemies folder — no enemies placed.");
+                return;
+            }
+
+            var controller = AssetDatabase.LoadAssetAtPath<AnimatorController>(
+                EnemyAnimatorBuilder.ControllerPath);
+            if (controller == null)
+            {
+                Debug.LogWarning($"[Greybox] {EnemyAnimatorBuilder.ControllerPath} missing — run " +
+                                 "'ShadowVale ▸ Build Enemy Animator'. Enemies will stand in their " +
+                                 "bind pose.");
+            }
+
+            WeaponGripConfig grip = WeaponGripTool.EnsureConfig();
+            GameObject rifle = FindWeaponPrefab(WeaponKind.Rifle);
+
+            // Spread along x so both are visible from the spawn without hiding each other.
+            for (int i = 0; i < models.Length; i++)
+            {
+                float x = (i - (models.Length - 1) * 0.5f) * 5f;
+                var position = new Vector3(x, 0f, 11f);
+                BuildEnemy(parent, models[i], i, position, controller, grip, rifle, markerMat);
+            }
+        }
+
+        private static void BuildEnemy(Transform parent, string modelPath, int index,
+            Vector3 position, AnimatorController controller, WeaponGripConfig grip,
+            GameObject rifle, Material markerMat)
+        {
+            var model = AssetDatabase.LoadAssetAtPath<GameObject>(modelPath);
+            if (model == null)
+            {
+                Debug.LogWarning($"[Greybox] {modelPath} would not load — enemy skipped.");
+                return;
+            }
+
+            var enemy = new GameObject($"Enemy_{index}");
+            enemy.transform.SetParent(parent, false);
+            enemy.transform.localPosition = position;
+            enemy.transform.localRotation = Quaternion.LookRotation(-position.normalized, Vector3.up);
+
+            var instance = (GameObject)PrefabUtility.InstantiatePrefab(model);
+            PrefabUtility.UnpackPrefabInstance(instance, PrefabUnpackMode.Completely,
+                InteractionMode.AutomatedAction);
+            instance.name = "Model";
+            instance.transform.SetParent(enemy.transform, false);
+
+            Animator animator = instance.GetComponent<Animator>() ?? instance.AddComponent<Animator>();
+            animator.avatar = FindAvatar(modelPath);
+            float scale = NormalizeCharacterModel(instance, EnemyHipHeight);
+            animator.applyRootMotion = false;
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            if (controller != null)
+            {
+                // Speed stays 0, so the blend tree holds the idle pose.
+                animator.runtimeAnimatorController = controller;
+            }
+
+            // A skinned mesh carries no collider, so without this nothing can shoot them.
+            var capsule = enemy.AddComponent<CapsuleCollider>();
+            capsule.height = 1.8f * scale;
+            capsule.radius = 0.35f * scale;
+            capsule.center = new Vector3(0f, capsule.height * 0.5f, 0f);
+
+            var health = enemy.AddComponent<Health>();
+            var so = new SerializedObject(health);
+            so.FindProperty("maxHealth").floatValue = 100f;
+            so.FindProperty("animator").objectReferenceValue = animator;
+            so.FindProperty("respawnDelay").floatValue = DeathClipLength() + RespawnBuffer;
+            so.ApplyModifiedPropertiesWithoutUndo();
+
+            if (rifle != null)
+            {
+                Transform anchor = CreateWeaponAnchor(enemy, animator, grip, enemy.layer);
+                if (anchor != null)
+                {
+                    var held = (GameObject)PrefabUtility.InstantiatePrefab(rifle);
+                    held.transform.SetParent(anchor, false);
+                    grip.Apply(held.transform, WeaponKind.Rifle);
+                    // The Weapon component is left on it. Stripping it would mean editing a
+                    // linked prefab instance, and it does nothing on its own anyway — only
+                    // PlayerCombat ever fires a weapon, and no enemy carries that.
+                }
+            }
+
+            GameObject disc = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            disc.name = "Marker";
+            disc.transform.SetParent(enemy.transform, false);
+            disc.transform.localPosition = new Vector3(0f, 0.02f, 0f);
+            disc.transform.localScale = new Vector3(1.2f, 0.02f, 1.2f);
+            disc.GetComponent<MeshRenderer>().sharedMaterial = markerMat;
+            Object.DestroyImmediate(disc.GetComponent<CapsuleCollider>());
+
+            Debug.Log($"[Greybox] Enemy_{index} from {System.IO.Path.GetFileName(modelPath)} " +
+                      $"at scale {scale:F3}.");
+        }
+
+        /// <summary>The prefab in the weapons folder carrying this kind, or null.</summary>
+        private static GameObject FindWeaponPrefab(WeaponKind kind)
+        {
+            foreach (string guid in AssetDatabase.FindAssets("t:Prefab", new[] { WeaponFolder }))
+            {
+                var go = AssetDatabase.LoadAssetAtPath<GameObject>(
+                    AssetDatabase.GUIDToAssetPath(guid));
+                var weapon = go != null ? go.GetComponent<Weapon>() : null;
+                if (weapon != null && weapon.Kind == kind)
+                {
+                    return go;
+                }
+            }
+            return null;
+        }
+
         // ---- Primitives -----------------------------------------------------
 
         private static Transform NewHolder(string name, Transform parent)
@@ -592,6 +728,45 @@ namespace ShadowVale.Editor
         }
 
         /// <summary>
+        /// The transform a weapon hangs from: a child of the right hand bone, so it follows the
+        /// animation. Shared by the player and the enemies — the offsets in
+        /// <see cref="WeaponGripConfig"/> are measured against this frame, so anything holding a
+        /// weapon has to build it the same way or the tuned numbers mean nothing.
+        /// </summary>
+        private static Transform CreateWeaponAnchor(GameObject rootGo, Animator animator,
+            WeaponGripConfig grip, int layer)
+        {
+            if (animator == null || animator.avatar == null || !animator.avatar.isHuman)
+            {
+                return null;
+            }
+
+            Transform hand = animator.GetBoneTransform(HumanBodyBones.RightHand);
+            if (hand == null)
+            {
+                Debug.LogWarning($"[Greybox] {rootGo.name}: no right hand bone — weapons will " +
+                                 "parent to the root.");
+                return null;
+            }
+
+            var anchorGo = new GameObject("WeaponAnchor") { layer = layer };
+            anchorGo.transform.SetParent(hand, false);
+            // World-space align: +Z (the barrel/blade) points where the character faces,
+            // whatever roll the bind-pose hand happens to have.
+            anchorGo.transform.rotation =
+                rootGo.transform.rotation * Quaternion.Euler(grip.AnchorEuler);
+            anchorGo.transform.localPosition = grip.AnchorPosition;
+            // Cancel the character rescale, so a weapon keeps the real-world size it was
+            // authored at instead of shrinking or growing with the model.
+            Vector3 lossy = hand.lossyScale;
+            anchorGo.transform.localScale = new Vector3(
+                lossy.x != 0f ? 1f / lossy.x : 1f,
+                lossy.y != 0f ? 1f / lossy.y : 1f,
+                lossy.z != 0f ? 1f / lossy.z : 1f);
+            return anchorGo.transform;
+        }
+
+        /// <summary>
         /// Adds PlayerCombat and the hand anchor the weapons hang from. The anchor is a child of
         /// the right hand bone, so it follows the animation; its offset is the one thing that
         /// normally needs eyeballing after an art change.
@@ -600,34 +775,7 @@ namespace ShadowVale.Editor
         {
             var combat = rootGo.AddComponent<PlayerCombat>();
             WeaponGripConfig grip = WeaponGripTool.EnsureConfig();
-            Transform anchor = null;
-
-            if (animator != null && animator.avatar != null && animator.avatar.isHuman)
-            {
-                Transform hand = animator.GetBoneTransform(HumanBodyBones.RightHand);
-                if (hand != null)
-                {
-                    var anchorGo = new GameObject("WeaponAnchor") { layer = layer };
-                    anchorGo.transform.SetParent(hand, false);
-                    // World-space align: +Z (the barrel/blade) points where the character faces,
-                    // whatever roll the bind-pose hand happens to have.
-                    anchorGo.transform.rotation =
-                        rootGo.transform.rotation * Quaternion.Euler(grip.AnchorEuler);
-                    anchorGo.transform.localPosition = grip.AnchorPosition;
-                    // Cancel the character rescale, so a weapon keeps the real-world size it was
-                    // authored at instead of shrinking with the model.
-                    Vector3 lossy = hand.lossyScale;
-                    anchorGo.transform.localScale = new Vector3(
-                        lossy.x != 0f ? 1f / lossy.x : 1f,
-                        lossy.y != 0f ? 1f / lossy.y : 1f,
-                        lossy.z != 0f ? 1f / lossy.z : 1f);
-                    anchor = anchorGo.transform;
-                }
-                else
-                {
-                    Debug.LogWarning("[Greybox] No right hand bone — weapons will parent to the root.");
-                }
-            }
+            Transform anchor = CreateWeaponAnchor(rootGo, animator, grip, layer);
 
             var weapons = new List<Object>();
             foreach (string guid in AssetDatabase.FindAssets("t:Prefab", new[] { WeaponFolder }))
@@ -705,7 +853,8 @@ namespace ShadowVale.Editor
         /// 2.27 m when it is really about 1.75 m — measuring that way shrank it and left it
         /// hovering. A model that is already the right size is left untouched.
         /// </summary>
-        private static float NormalizeCharacterModel(GameObject instance)
+        private static float NormalizeCharacterModel(GameObject instance,
+            float targetHipHeight = TargetHipHeight)
         {
             var animator = instance.GetComponent<Animator>();
             if (animator == null || animator.avatar == null || !animator.avatar.isHuman)
@@ -729,8 +878,12 @@ namespace ShadowVale.Editor
                 return 1f;
             }
 
-            float scale = TargetHipHeight / hipHeight;
-            if (Mathf.Abs(scale - 1f) < ScaleDeadzone)
+            float scale = targetHipHeight / hipHeight;
+            // The deadzone keeps a model that is already about right from being nudged for
+            // nothing. It only guards the default target — asking for a different height is a
+            // decision, so it is always honoured however small the difference turns out to be.
+            bool deliberate = !Mathf.Approximately(targetHipHeight, TargetHipHeight);
+            if (!deliberate && Mathf.Abs(scale - 1f) < ScaleDeadzone)
             {
                 scale = 1f;
             }

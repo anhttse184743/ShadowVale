@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 
 namespace ShadowVale.Editor
@@ -18,6 +18,7 @@ namespace ShadowVale.Editor
             // animator and the weapon prefabs before it can wire the player.
             CharacterImportSetup.Run();
             PlayerAnimatorBuilder.Build();
+            EnemyAnimatorBuilder.Build();
             WeaponPrefabBuilder.Build();
             GreyboxSandboxBuilder.Build();
 
