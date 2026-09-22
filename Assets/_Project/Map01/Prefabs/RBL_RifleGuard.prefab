@@ -134,7 +134,6 @@ GameObject:
   - component: {fileID: 2142848589368958395}
   - component: {fileID: 1426306849136718913}
   - component: {fileID: 4732607199130218983}
-  - component: {fileID: 2056542745552634711}
   m_Layer: 7
   m_Name: RBL_RifleGuard
   m_TagString: Untagged
@@ -203,25 +202,6 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &2056542745552634711
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1146594033676507066}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e370aaf05ca189cc25cc13223f16d25, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.ForestGuard
-  id: 
-  squadId: 
-  isCommander: 0
-  patrol: []
-  state: 0
-  hp: 0
-  suspicion: 0
 --- !u!1 &1597592278496448607
 GameObject:
   m_ObjectHideFlags: 0
