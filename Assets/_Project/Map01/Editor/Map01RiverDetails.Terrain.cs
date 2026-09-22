@@ -108,7 +108,7 @@ namespace ShadowVale.Map01.Editor
                 if(f.name=="Chunk_0_3_opaque"){f.transform.localPosition=Vector3.zero;f.transform.localRotation=Quaternion.identity;f.transform.localScale=Vector3.one;}
             }
             foreach(var c in env.GetComponentsInChildren<MeshCollider>().Where(c=>c.sharedMesh!=null&&c.sharedMesh.name.StartsWith("Collision_")))
-            {var b=c.sharedMesh.bounds;if(b.max.z<83||b.min.z>96||b.max.x<-.3f||b.min.x>22)continue;var m=strip(c.sharedMesh);c.sharedMesh=null;c.sharedMesh=m;}
+            {var b=c.sharedMesh.bounds;if(b.max.z<83||b.min.z>96||b.max.x<-.3f||b.min.x>22)continue;var original=c.sharedMesh;c.sharedMesh=null;Map01CollisionMesh.Assign(c,strip(original));}
             Physics.SyncTransforms();
             float river=TropicalRealismBuilder.RiverX(85),deck=TerrainHeight(new Vector3(river+14.6f,0,85))+.18f;
             var jetty=MeshObject("North jetty • independent from Chunk_0_3",root,meshes["Jetty_Rebuilt"],material);jetty.transform.position=new Vector3(river,deck,85);jetty.layer=LayerMask.NameToLayer("Obstacle");

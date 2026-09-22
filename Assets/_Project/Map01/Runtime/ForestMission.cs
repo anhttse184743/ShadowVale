@@ -23,7 +23,7 @@ namespace ShadowVale.Map01
         public bool Alarmed { get; set; }
         public bool Hidden { get; private set; }
         public bool Stopped => hp <= 0 || stage == 4 || paused;
-        public int ObstructionMask => LayerMask.GetMask("Obstacle", "Cover", "VisionBlocker");
+        public int ObstructionMask => LayerMask.GetMask("Default", "Obstacle", "Cover", "VisionBlocker");
         public int Stage => stage;
         private ForestBundle bundle;
         private CharacterController controller;
@@ -119,7 +119,8 @@ namespace ShadowVale.Map01
         public int Count(string id) => inventory.TryGetValue(id, out int count) ? count : 0;
         public void Say(string text, float seconds = 7) { dialogue = text; dialogueUntil = Time.time + seconds; }
         public void EmitNoise(Vector3 position, float radius) { foreach (var guard in guards) guard.Hear(position, radius); }
-        public void Damage(float amount) { if (!Stopped) hp = Mathf.Max(0, hp - amount); }
+        public void Damage(float amount) { if (!Stopped) { hp = Mathf.Max(0, hp - amount); if (hp <= 0) GetComponent<ForestSquadCoordinator>()?.Event("player_down", "", player.position); } }
+        public float PlayerHealth => hp;
 
         private void Update()
         {
@@ -208,12 +209,12 @@ namespace ShadowVale.Map01
             nextShot = Time.time + 1 / Weapon.fire_rate;
             if (Count("ammo_rifle") <= 0) { Say("Hết đạn — vẫn có thể lén đi hoặc đánh lạc hướng.", 2); return; }
             inventory["ammo_rifle"]--;
-            var origin = player.position + Vector3.up * 1.1f + player.forward * .7f;
+            var origin = player.position + Vector3.up * 1.1f;
             var target = origin + player.forward * Weapon.range;
             var shotDirection = gameCamera.GetComponent<ForestThirdPersonCamera>() != null ? (aim - origin).normalized : player.forward;
             target = origin + shotDirection * Weapon.range;
-            int mask = ObstructionMask | LayerMask.GetMask("Enemy");
-            if (Physics.Raycast(origin, shotDirection, out var hit, Weapon.range, mask, QueryTriggerInteraction.Ignore))
+            if (ForestBallistics.MuzzleBlocked(origin, player)) { EmitNoise(player.position, Weapon.noise_radius); return; }
+            if (ForestBallistics.Cast(origin, shotDirection, Weapon.range, player, out var hit))
             { target = hit.point; var enemy = hit.collider.GetComponentInParent<ForestGuard>(); if (enemy != null) enemy.Hit(Weapon.damage); }
             Trace(origin, target, new Color(1, .84f, .45f));
             EmitNoise(player.position, Weapon.noise_radius);
@@ -383,7 +384,7 @@ namespace ShadowVale.Map01
             {
                 var screen = gameCamera.WorldToScreenPoint(guard.transform.position + Vector3.up * 2.4f);
                 if (screen.z > 0 && Vector3.Distance(player.position, guard.transform.position) < 24)
-                    GUI.Label(new Rect(screen.x / scale - 60, (Screen.height - screen.y) / scale, 190, 40), guard.state + (guard.suspicion > .05f ? $" {Mathf.Min(100, guard.suspicion * 100):0}%" : ""), smallStyle);
+                    GUI.Label(new Rect(screen.x / scale - 60, (Screen.height - screen.y) / scale, 190, 40), (guard.isCommander ? "CHỈ HUY • " : "") + guard.state + (guard.suspicion > .05f ? $" {Mathf.Min(100, guard.suspicion * 100):0}%" : ""), smallStyle);
             }
             // Screen-space arrows stay legible against foliage and disappear as soon as loot is collected.
             if (!Stopped && !inventoryOpen && !mapOpen)

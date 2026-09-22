@@ -105,7 +105,7 @@ namespace ShadowVale.Map01.Editor
                 if(src.kind=="tree"||src.kind=="prop")continue;
                 bool col=src.kind=="walk"||src.kind=="block";
                 var go=Child(src.id,col?collision.transform:ground.transform);
-                if(col){go.layer=blockLayer;go.AddComponent<MeshCollider>().sharedMesh=meshAssets[src.id];}
+                if(col){go.layer=blockLayer;Map01CollisionMesh.Assign(go.AddComponent<MeshCollider>(),meshAssets[src.id]);}
                 else{go.AddComponent<MeshFilter>().sharedMesh=meshAssets[src.id];var r=go.AddComponent<MeshRenderer>();r.sharedMaterial=src.kind=="water"?water:opaque;r.shadowCastingMode=src.kind=="water"?ShadowCastingMode.Off:ShadowCastingMode.On;r.receiveShadows=true;}
             }
             var treePrefabs=new GameObject[5];

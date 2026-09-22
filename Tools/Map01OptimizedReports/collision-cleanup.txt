@@ -1,0 +1,7 @@
+Removed empty MeshCollider: Collision_Walk_-4_-3_collision; indices=0
+Removed empty MeshCollider: Collision_Block_-4_-2_collision; indices=0
+Removed empty MeshCollider: Collision_Block_-3_-2_collision; indices=0
+Removed empty MeshCollider: Collision_Block_-4_-3_collision; indices=0
+Removed empty MeshCollider: Collision_Block_-3_-3_collision; indices=0
+Removed empty MeshCollider: Collision_Walk_0_3_collision_separated; indices=0
+PASS: removed 6; 20 valid mesh colliders retained; all map routes pass; replacement jetty floor and rails retained; empty/degenerate/valid triangle checks pass.

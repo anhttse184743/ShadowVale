@@ -41,7 +41,7 @@ namespace ShadowVale.AI.Solvers
         }
 
         /// <summary>Variants that run inside the game process (no sidecar needed).</summary>
-        public static bool IsInProcess(this SolverVariant v) => v == SolverVariant.Greedy;
+        public static bool IsInProcess(this SolverVariant v) => v == SolverVariant.Greedy || v == SolverVariant.Qiea;
 
         public static bool IsQuantumInspired(this SolverVariant v) =>
             v == SolverVariant.Sqa || v == SolverVariant.Qiea || v == SolverVariant.Qaoa;
