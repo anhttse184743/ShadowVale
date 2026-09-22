@@ -13,7 +13,48 @@ namespace ShadowVale.Map01.Editor
     {
         const string Root="Assets/_Project/Art/Environment/Map01_Horizon",Reports="Tools/Map01HorizonReports";
         static readonly List<Vector3> edge=new List<Vector3>();
-        static Map01HorizonBuilder(){EditorApplication.update+=Poll;}
+        static Map01HorizonBuilder(){EditorApplication.update+=Poll;EditorApplication.update+=PollMood;}
+        static void PollMood()
+        {
+            const string request="Tools/Map01HorizonMood.request";
+            if(!File.Exists(request)||EditorApplication.isCompiling||EditorApplication.isUpdating||EditorApplication.isPlayingOrWillChangePlaymode)return;
+            File.Delete(request);Directory.CreateDirectory(Reports);
+            try{ApplyMood();File.WriteAllText(Reports+"/mood-status.txt","PASS "+DateTime.UtcNow.ToString("O"));}
+            catch(Exception e){File.WriteAllText(Reports+"/mood-status.txt","FAIL "+e);Debug.LogException(e);}
+        }
+        [MenuItem("ShadowVale/Map 1/Darken forest horizon")]
+        public static void ApplyMood()
+        {
+            var scene=EditorSceneManager.GetActiveScene();
+            if(scene.path!=OptimizedMapBuilder.ScenePath){if(!Application.isBatchMode)throw new Exception("Open Map 1 first.");scene=EditorSceneManager.OpenScene(OptimizedMapBuilder.ScenePath);}
+            var root=GameObject.Find("03 Distant landscape • outside playable map");
+            if(root==null)throw new Exception("Build the horizon first.");
+            Directory.CreateDirectory(Reports);
+            EditorSceneManager.SaveScene(scene,Reports+"/Map1_before_mood.unity",true);
+            SetMood(root);
+            AssetDatabase.SaveAssets();EditorSceneManager.SaveScene(scene);
+            foreach(var dir in new[]{Vector3.forward,Vector3.back,Vector3.left,Vector3.right})
+            {
+                var p=new Vector3(dir.x*106,0,dir.z*96);p.y=EdgeHeight(p.x,p.z)+2.2f;
+                Capture(p,p+dir*90+Vector3.up*5,"mood-edge-"+dir);
+            }
+        }
+        static void SetMood(GameObject root)
+        {
+            var source=AssetDatabase.LoadAssetAtPath<Material>("Assets/_Project/Art/Environment/Map01_Optimized/Materials/MapPalette.mat");
+            string path=Root+"/Forest_Shadow.mat";
+            var material=AssetDatabase.LoadAssetAtPath<Material>(path);
+            if(material==null){material=new Material(source);AssetDatabase.CreateAsset(material,path);}
+            material.SetColor("_BaseColor",new Color(.43f,.52f,.49f,1));
+            EditorUtility.SetDirty(material);
+            foreach(var renderer in root.GetComponentsInChildren<MeshRenderer>())
+                if(renderer.name.StartsWith("Distant forest")||renderer.name.StartsWith("Surrounding terrain"))renderer.sharedMaterial=material;
+            var haze=new Color(.34f,.43f,.45f,1);
+            RenderSettings.fog=true;RenderSettings.fogMode=FogMode.Linear;
+            RenderSettings.fogStartDistance=32;RenderSettings.fogEndDistance=270;RenderSettings.fogColor=haze;
+            var sky=RenderSettings.skybox;
+            if(sky!=null){if(sky.HasProperty("_Horizon"))sky.SetColor("_Horizon",haze);if(sky.HasProperty("_Zenith"))sky.SetColor("_Zenith",new Color(.12f,.20f,.25f,1));if(sky.HasProperty("_CloudCover"))sky.SetFloat("_CloudCover",.7f);EditorUtility.SetDirty(sky);}
+        }
         static void Poll(){const string request="Tools/Map01Horizon.request";if(!File.Exists(request)||EditorApplication.isCompiling||EditorApplication.isUpdating||EditorApplication.isPlayingOrWillChangePlaymode)return;File.Delete(request);try{Apply();File.WriteAllText(Reports+"/status.txt","PASS");}catch(Exception e){Directory.CreateDirectory(Reports);File.WriteAllText(Reports+"/status.txt","FAIL "+e);Debug.LogException(e);}}
         static Mesh Save(Mesh mesh,string name){mesh.name=name;var path=Root+"/"+name+".asset";var old=AssetDatabase.LoadAssetAtPath<Mesh>(path);if(old==null){AssetDatabase.CreateAsset(mesh,path);return mesh;}EditorUtility.CopySerialized(mesh,old);Object.DestroyImmediate(mesh);EditorUtility.SetDirty(old);return old;}
         static GameObject Model(string name,Transform parent,Mesh mesh,Material material){var go=new GameObject(name);go.transform.SetParent(parent,false);go.AddComponent<MeshFilter>().sharedMesh=mesh;var renderer=go.AddComponent<MeshRenderer>();renderer.sharedMaterial=material;renderer.shadowCastingMode=ShadowCastingMode.Off;return go;}
@@ -87,7 +128,8 @@ namespace ShadowVale.Map01.Editor
             var skySource=RenderSettings.skybox;if(skySource!=null){string skyPath=Root+"/Forest_Haze_Sky.mat";var sky=AssetDatabase.LoadAssetAtPath<Material>(skyPath);if(sky==null){sky=new Material(skySource);AssetDatabase.CreateAsset(sky,skyPath);}if(sky.HasProperty("_Horizon"))sky.SetColor("_Horizon",fogColor);RenderSettings.skybox=sky;EditorUtility.SetDirty(sky);}
             foreach(var camera in Object.FindObjectsByType<Camera>(FindObjectsSortMode.None).Where(c=>c.gameObject.scene==scene)){camera.farClipPlane=Mathf.Max(1100,camera.farClipPlane);camera.clearFlags=CameraClearFlags.Skybox;}
             AssetDatabase.SaveAssets();EditorSceneManager.SaveScene(scene);
-            var report=new List<string>{"PASS 360-degree exterior ground ring, 0.6m overlap, scenery extends 700m","PASS "+trees+" distant trees in "+groups.Count+" static render groups; low-detail shared source meshes","PASS distance fog: clear foreground to 40m, full haze by 310m","PASS no exterior colliders or NavMesh changes"};
+            SetMood(root);AssetDatabase.SaveAssets();EditorSceneManager.SaveScene(scene);
+            var report=new List<string>{"PASS 360-degree exterior ground ring, 0.6m overlap, scenery extends 700m","PASS "+trees+" distant trees in "+groups.Count+" static render groups; low-detail shared source meshes","PASS distance fog: clear foreground to 32m, full haze by 270m","PASS no exterior colliders or NavMesh changes"};
             if(root.GetComponentsInChildren<Collider>().Length!=0)throw new Exception("Backdrop must not alter collision");
             foreach(var dir in new[]{Vector3.forward,Vector3.back,Vector3.left,Vector3.right}){var p=new Vector3(dir.x*106,0,dir.z*96);p.y=EdgeHeight(p.x,p.z)+2.2f;Capture(p,p+dir*90+Vector3.up*5,"edge-"+dir);}
             File.WriteAllLines(Reports+"/checks.txt",report);File.WriteAllText(Reports+"/status.txt","PASS "+DateTime.UtcNow.ToString("O"));

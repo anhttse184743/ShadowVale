@@ -26,7 +26,7 @@ namespace ShadowVale.Map01.Editor
         public static void ApplyMood()
         {
             var scene=EditorSceneManager.GetActiveScene();
-            if(scene.path!=OptimizedMapBuilder.ScenePath)throw new Exception("Open Map 1 first.");
+            if(scene.path!=OptimizedMapBuilder.ScenePath){if(!Application.isBatchMode)throw new Exception("Open Map 1 first.");scene=EditorSceneManager.OpenScene(OptimizedMapBuilder.ScenePath);}
             var root=GameObject.Find("03 Distant landscape • outside playable map");
             if(root==null)throw new Exception("Build the horizon first.");
             Directory.CreateDirectory(Reports);
@@ -128,7 +128,8 @@ namespace ShadowVale.Map01.Editor
             var skySource=RenderSettings.skybox;if(skySource!=null){string skyPath=Root+"/Forest_Haze_Sky.mat";var sky=AssetDatabase.LoadAssetAtPath<Material>(skyPath);if(sky==null){sky=new Material(skySource);AssetDatabase.CreateAsset(sky,skyPath);}if(sky.HasProperty("_Horizon"))sky.SetColor("_Horizon",fogColor);RenderSettings.skybox=sky;EditorUtility.SetDirty(sky);}
             foreach(var camera in Object.FindObjectsByType<Camera>(FindObjectsSortMode.None).Where(c=>c.gameObject.scene==scene)){camera.farClipPlane=Mathf.Max(1100,camera.farClipPlane);camera.clearFlags=CameraClearFlags.Skybox;}
             AssetDatabase.SaveAssets();EditorSceneManager.SaveScene(scene);
-            var report=new List<string>{"PASS 360-degree exterior ground ring, 0.6m overlap, scenery extends 700m","PASS "+trees+" distant trees in "+groups.Count+" static render groups; low-detail shared source meshes","PASS distance fog: clear foreground to 40m, full haze by 310m","PASS no exterior colliders or NavMesh changes"};
+            SetMood(root);AssetDatabase.SaveAssets();EditorSceneManager.SaveScene(scene);
+            var report=new List<string>{"PASS 360-degree exterior ground ring, 0.6m overlap, scenery extends 700m","PASS "+trees+" distant trees in "+groups.Count+" static render groups; low-detail shared source meshes","PASS distance fog: clear foreground to 32m, full haze by 270m","PASS no exterior colliders or NavMesh changes"};
             if(root.GetComponentsInChildren<Collider>().Length!=0)throw new Exception("Backdrop must not alter collision");
             foreach(var dir in new[]{Vector3.forward,Vector3.back,Vector3.left,Vector3.right}){var p=new Vector3(dir.x*106,0,dir.z*96);p.y=EdgeHeight(p.x,p.z)+2.2f;Capture(p,p+dir*90+Vector3.up*5,"edge-"+dir);}
             File.WriteAllLines(Reports+"/checks.txt",report);File.WriteAllText(Reports+"/status.txt","PASS "+DateTime.UtcNow.ToString("O"));
