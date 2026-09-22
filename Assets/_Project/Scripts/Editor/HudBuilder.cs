@@ -45,10 +45,11 @@ namespace ShadowVale.Editor
             CreateCrosshair(canvasGo.transform);
 
             var hotbar = canvasGo.AddComponent<WeaponHotbar>();
-            WeaponHotbar.Slot[] slots = CreateHotbar(canvasGo.transform);
+            WeaponHotbar.Slot[] slots = CreateHotbar(canvasGo.transform, out CanvasGroup hotbarGroup);
 
             var so = new SerializedObject(hotbar);
             so.FindProperty("combat").objectReferenceValue = combat;
+            so.FindProperty("hotbarGroup").objectReferenceValue = hotbarGroup;
             SerializedProperty array = so.FindProperty("slots");
             array.arraySize = slots.Length;
             for (int i = 0; i < slots.Length; i++)
@@ -76,7 +77,7 @@ namespace ShadowVale.Editor
             image.raycastTarget = false;
         }
 
-        private static WeaponHotbar.Slot[] CreateHotbar(Transform parent)
+        private static WeaponHotbar.Slot[] CreateHotbar(Transform parent, out CanvasGroup hotbarGroup)
         {
             WeaponKind[] order = PlayerCombat.SlotOrder;
             var slots = new WeaponHotbar.Slot[order.Length];
@@ -87,6 +88,9 @@ namespace ShadowVale.Editor
             row.anchorMin = row.anchorMax = new Vector2(0.5f, 0f);
             row.pivot = new Vector2(0.5f, 0f);
             row.anchoredPosition = new Vector2(0f, BottomMargin);
+            // Own CanvasGroup so Map 1's mission HUD can hide just this row — the crosshair is a
+            // sibling under the same canvas and must not go down with it.
+            hotbarGroup = row.gameObject.AddComponent<CanvasGroup>();
 
             for (int i = 0; i < order.Length; i++)
             {

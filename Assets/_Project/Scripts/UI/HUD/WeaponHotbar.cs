@@ -24,6 +24,10 @@ namespace ShadowVale.UI.HUD
         [SerializeField] private PlayerCombat combat;
         [SerializeField] private Slot[] slots = System.Array.Empty<Slot>();
 
+        [Tooltip("The hotbar row only, not the whole HUD canvas — the crosshair is a sibling of " +
+                 "this under the same canvas and must stay visible when the row is hidden.")]
+        [SerializeField] private CanvasGroup hotbarGroup;
+
         [Header("Colours")]
         [SerializeField] private Color idleBackground = new(0f, 0f, 0f, 0.45f);
         [SerializeField] private Color activeBackground = new(0.10f, 0.10f, 0.12f, 0.85f);
@@ -38,18 +42,31 @@ namespace ShadowVale.UI.HUD
             {
                 combat = FindFirstObjectByType<PlayerCombat>();
             }
+            if (hotbarGroup == null)
+            {
+                // Scenes built before hotbarGroup existed have no serialized reference — find the
+                // row HudBuilder always names "Hotbar" instead of falling back to hiding the whole
+                // canvas (and the crosshair sitting on it) the way this used to.
+                Transform row = transform.Find("Hotbar");
+                if (row != null)
+                {
+                    // Deliberately not "GetComponent<CanvasGroup>() ?? AddComponent<CanvasGroup>()"
+                    // on one line — that combination did not reliably assign hotbarGroup here.
+                    CanvasGroup existing = row.GetComponent<CanvasGroup>();
+                    if (existing == null) hotbarGroup = row.gameObject.AddComponent<CanvasGroup>();
+                    else hotbarGroup = existing;
+                }
+            }
         }
 
-        private CanvasGroup missionVisibility;
         private void LateUpdate()
         {
-            if (combat == null || !combat.UsesInventoryHotkeys) return;
-            // Mission HUD already draws the consumable bar and weapon shortcuts.
-            if (missionVisibility == null) missionVisibility = GetComponent<CanvasGroup>();
-            if (missionVisibility == null) missionVisibility = gameObject.AddComponent<CanvasGroup>();
-            missionVisibility.alpha = 0;
-            missionVisibility.blocksRaycasts = false;
-            missionVisibility.interactable = false;
+            if (combat == null || !combat.UsesInventoryHotkeys || hotbarGroup == null) return;
+            // Mission HUD already draws the consumable bar and weapon shortcuts — hide only this
+            // row, never the canvas it shares with the crosshair.
+            hotbarGroup.alpha = 0;
+            hotbarGroup.blocksRaycasts = false;
+            hotbarGroup.interactable = false;
         }
 
         private void OnEnable()

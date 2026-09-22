@@ -1,6 +1,6 @@
 {
   "name": "ShadowVale.Map01.Tests",
-  "references": ["ShadowVale.Map01", "UnityEngine.TestRunner", "UnityEditor.TestRunner", "Unity.InputSystem", "ShadowVale.AI", "ShadowVale.Data", "ShadowVale.Gameplay"],
+  "references": ["ShadowVale.Map01", "UnityEngine.TestRunner", "UnityEditor.TestRunner", "Unity.InputSystem", "ShadowVale.AI", "ShadowVale.Data", "ShadowVale.Gameplay", "ShadowVale.UI"],
   "includePlatforms": ["Editor"],
   "overrideReferences": true,
   "precompiledReferences": [

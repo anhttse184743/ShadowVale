@@ -178,7 +178,7 @@ namespace ShadowVale.Map01
             nearby = points.Where(p => !p.used && p.kind != ForestPointKind.Hide && p.kind != ForestPointKind.Cover)
                 .OrderBy(p => Vector3.Distance(player.position, p.transform.position))
                 .FirstOrDefault(p => Vector3.Distance(player.position, p.transform.position) < Settings.interactRange);
-            if (kb.eKey.wasPressedThisFrame) { if (stage == 0) TryRescueHung(); else if (nearby != null) Interact(nearby); }
+            if (kb.eKey.wasPressedThisFrame) HandleInteractKey();
             if (kb.bKey.wasPressedThisFrame && nearWorkbench()) Craft();
             if (crafting != null && Time.time >= craftUntil)
             {

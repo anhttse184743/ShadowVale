@@ -48,6 +48,17 @@ namespace ShadowVale.Map01
             Say("Nam: Chịu khó chút, Hùng. Thảo dược này cầm máu được.\nHùng: ...Cảm ơn Nam. Về căn cứ lấy hàng tiếp tế rồi tính tiếp.", 9);
         }
 
+        /// <summary>
+        /// [E]: treating Hùng takes priority when he's the one in range, otherwise it's the usual
+        /// point interaction. Rescuing him must never require walking away from every loot crate
+        /// first — the herb he needs at stage 0 comes from one.
+        /// </summary>
+        private void HandleInteractKey()
+        {
+            if (HungInRange) TryRescueHung();
+            else if (nearby != null) Interact(nearby);
+        }
+
         /// <summary>[M] while stage 2 clears "Trinh sát địa hình" from the briefing.</summary>
         private void OnMapOpened()
         {

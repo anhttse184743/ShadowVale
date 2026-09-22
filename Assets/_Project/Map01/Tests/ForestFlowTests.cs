@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using ShadowVale.Gameplay.Combat;
+using ShadowVale.UI.HUD;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -90,6 +91,52 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(boss.IsBoss);
             boss.GetComponent<Health>().TakeDamage(999999, boss.transform.position, null);
             Assert.AreEqual(ForestMission.CompleteStage, mission.Stage, "Defeating the commander must complete Map 1.");
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
+        public IEnumerator InteractKeyTreatsHungWhenInRangeElseFallsBackToNearbyPoint()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            yield return null;
+            var mission = Object.FindFirstObjectByType<ForestMission>();
+            var loot = Object.FindObjectsByType<ForestPoint>(FindObjectsSortMode.None).Single(p => p.id == "tutorial_loot");
+
+            // Stage 0, standing at a point that is not Hùng: [E] must still trigger it — before
+            // this fix, stage 0 routed every [E] press into the rescue check alone, so the herb the
+            // rescue itself needs could never be picked up.
+            Assert.AreEqual(0, mission.Stage);
+            typeof(ForestMission).GetField("nearby", Private).SetValue(mission, loot);
+            typeof(ForestMission).GetMethod("HandleInteractKey", Private).Invoke(mission, null);
+            Assert.Greater(mission.Count("herb"), 0, "Standing at a point other than Hùng must still interact with it.");
+
+            // Standing at Hùng instead: [E] treats him rather than doing nothing.
+            var controller = mission.player.GetComponent<CharacterController>();
+            controller.enabled = false; mission.player.position = mission.hung.position; controller.enabled = true;
+            yield return null;
+            typeof(ForestMission).GetMethod("HandleInteractKey", Private).Invoke(mission, null);
+            Assert.AreEqual(1, mission.Stage, "[E] near Hùng must treat him, not silently do nothing.");
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
+        public IEnumerator WeaponHotbarHidesOnlyItsOwnRowNotTheCrosshairCanvas()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            yield return null; yield return null;
+            var hotbar = Object.FindFirstObjectByType<WeaponHotbar>();
+            Assert.IsNotNull(hotbar, "Map 1's migrated HUD must include the weapon hotbar.");
+            // HudBuilder always puts WeaponHotbar directly on the HUD canvas GameObject.
+            var canvasRoot = hotbar.GetComponent<Canvas>().transform;
+            Assert.IsNotNull(canvasRoot.Find("Crosshair"), "The HUD canvas must still have its crosshair.");
+            var rootGroup = canvasRoot.GetComponent<CanvasGroup>();
+            Assert.IsTrue(rootGroup == null || rootGroup.alpha > 0,
+                "Hiding the redundant hotbar must not hide the whole HUD canvas (and the crosshair with it).");
+            var rowGroup = (CanvasGroup)typeof(WeaponHotbar).GetField("hotbarGroup", Private).GetValue(hotbar);
+            Assert.IsNotNull(rowGroup, "hotbarGroup must resolve, wired or by falling back to the row named \"Hotbar\".");
+            Assert.AreEqual(0f, rowGroup.alpha, "The hotbar row itself is still hidden — Map 1's own HUD already covers it.");
             yield return new ExitPlayMode();
         }
 
