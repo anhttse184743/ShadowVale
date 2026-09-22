@@ -1,0 +1,1 @@
+PASS: 12 guards, 2 commanders; all patrol loops connected; research config assigned; Map 1 saved.

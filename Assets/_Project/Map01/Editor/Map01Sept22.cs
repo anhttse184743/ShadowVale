@@ -58,7 +58,7 @@ namespace ShadowVale.Map01.Editor
    var additions=env.transform.Find("04 Blender landmarks");if(additions!=null)Object.DestroyImmediate(additions.gameObject);var root=Child("04 Blender landmarks",env.transform).transform;
    // Remove the old bridge triangles, preserving the terrain and riverbed.
    foreach(var mesh in env.GetComponentsInChildren<MeshFilter>().Where(f=>f.sharedMesh!=null&&f.sharedMesh.name.StartsWith("Chunk_")&&f.sharedMesh.name.Contains("opaque")).Select(f=>f.sharedMesh).Distinct())StripBridge(mesh);
-   foreach(var c in env.GetComponentsInChildren<MeshCollider>().Where(c=>c.sharedMesh!=null&&c.sharedMesh.name.StartsWith("Collision_"))){StripBridge(c.sharedMesh);var m=c.sharedMesh;c.sharedMesh=null;c.sharedMesh=m;}
+   foreach(var c in env.GetComponentsInChildren<MeshCollider>().Where(c=>c.sharedMesh!=null&&c.sharedMesh.name.StartsWith("Collision_"))){var m=c.sharedMesh;c.sharedMesh=null;StripBridge(m);Map01CollisionMesh.Assign(c,m);}
    foreach(var c in env.GetComponentsInChildren<BoxCollider>().Where(c=>c.name.StartsWith("Solid Bridge handrail")).ToArray())Object.DestroyImmediate(c.gameObject);
    var bridge=Place("Bridge_New",root,new Vector3(7.65f,3.08f,0),Vector3.one);
    Box(bridge.transform,"Bridge deck",Vector3.zero,new Vector3(24,.18f,3.7f));

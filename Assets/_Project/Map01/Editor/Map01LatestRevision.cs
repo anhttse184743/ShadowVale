@@ -70,9 +70,9 @@ namespace ShadowVale.Map01.Editor
     m.colors=colors;m.triangles=kept.ToArray();m.RecalculateBounds();filter.sharedMesh=Save(m,filter.name+"_flush");
    }
    // Remove old hut walk surfaces and the problematic shelter-wall triangle shell.
-   foreach(var col in env.transform.Find("Collision • simplified").GetComponentsInChildren<MeshCollider>())
+   foreach(var col in env.transform.Find("Collision • simplified").GetComponentsInChildren<MeshCollider>().Where(c=>c.sharedMesh!=null))
    {
-    var m=Object.Instantiate(col.sharedMesh);var v=m.vertices;var tris=m.triangles;var kept=new List<int>();for(int i=0;i<tris.Length;i+=3){var a=v[tris[i]];var b=v[tris[i+1]];var c=v[tris[i+2]];var p=(a+b+c)/3;if(!(GroundPoint(a)&&GroundPoint(b)&&GroundPoint(c))&&(HutGeometry(p)||ShelterWall(p)))continue;kept.AddRange(new[]{tris[i],tris[i+1],tris[i+2]});}m.triangles=kept.ToArray();m.RecalculateBounds();col.sharedMesh=Save(m,col.name+"_collision");col.sharedMaterial=friction;
+    var m=Object.Instantiate(col.sharedMesh);var v=m.vertices;var tris=m.triangles;var kept=new List<int>();for(int i=0;i<tris.Length;i+=3){var a=v[tris[i]];var b=v[tris[i+1]];var c=v[tris[i+2]];var p=(a+b+c)/3;if(!(GroundPoint(a)&&GroundPoint(b)&&GroundPoint(c))&&(HutGeometry(p)||ShelterWall(p)))continue;kept.AddRange(new[]{tris[i],tris[i+1],tris[i+2]});}m.triangles=kept.ToArray();m.RecalculateBounds();col.sharedMaterial=friction;col.sharedMesh=null;Map01CollisionMesh.Assign(col,Save(m,col.name+"_collision"));
    }
    foreach(var col in env.GetComponentsInChildren<BoxCollider>())
    {if(col.name.Contains("Map table")||col.name.Contains("Back wall of intelligence")||(HutGeometry(col.bounds.center)&&col.name.Contains("wall")))col.enabled=false;else col.sharedMaterial=friction;}
