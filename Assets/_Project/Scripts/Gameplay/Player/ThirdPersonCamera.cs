@@ -21,7 +21,7 @@ namespace ShadowVale.Gameplay.Player
         [SerializeField] private float pivotHeight = 1.6f;
 
         [Tooltip("Resting distance behind the pivot.")]
-        [SerializeField] private float distance = 3.2f;
+        [SerializeField] private float distance = 2.0f;
 
         [SerializeField] private float minDistance = 1.2f;
         [SerializeField] private float maxDistance = 12f;
