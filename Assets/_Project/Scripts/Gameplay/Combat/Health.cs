@@ -42,6 +42,8 @@ namespace ShadowVale.Gameplay.Combat
         public float Max => maxHealth;
         public float Normalized => maxHealth > 0f ? Mathf.Clamp01(_current / maxHealth) : 0f;
         public void KeepCheckpointCorpse() { respawnDelay = 0; despawnDelay = 0; }
+        /// <summary>Raises the health pool (a boss variant, say) and tops the current value up to match.</summary>
+        public void SetMaxHealth(float value) { maxHealth = Mathf.Max(1f, value); _current = maxHealth; }
         public void RestoreHealth(float value)
         {
             value = Mathf.Clamp(value, 0, maxHealth);

@@ -87,6 +87,20 @@ namespace ShadowVale.Map01
 
         public void Configure(Vector3[] points) => patrolPoints = points ?? System.Array.Empty<Vector3>();
 
+        public bool IsBoss { get; private set; }
+        /// <summary>
+        /// Turns a regular outpost guard clone into the map's commander: no different model yet
+        /// (Map 1's briefing doesn't have one), just a tougher, longer-sighted stand its ground.
+        /// </summary>
+        public void ConfigureAsBoss(float healthMultiplier, float damageMultiplier)
+        {
+            IsBoss = true;
+            damage *= damageMultiplier;
+            visionRange *= 1.2f; attackRange *= 1.2f;
+            var health = GetComponent<Health>();
+            if (health != null) health.SetMaxHealth(health.Max * healthMultiplier);
+        }
+
         private void Awake()
         {
             _agent = GetComponent<NavMeshAgent>();

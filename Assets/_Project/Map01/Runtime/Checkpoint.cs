@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 namespace ShadowVale.Map01 { public sealed partial class ForestMission {
         [Serializable] private sealed class Checkpoint
         {
-            public int version = 2, stage, stones;
+            public int version = 3, stage, stones;
             public float hp, stamina;
             public Vector3 player, hung;
             public bool alarmed;
@@ -30,7 +30,8 @@ namespace ShadowVale.Map01 { public sealed partial class ForestMission {
             if (modernHealth != null) hp = modernHealth.Current;
             if (pendingCheckpoint != null) return "Đang tải bản lưu. Vui lòng đợi giây lát.";
             if (hp <= 0) return "Không thể lưu khi nhân vật đã gục ngã.";
-            if (stage == 4) return "Màn chơi đã kết thúc. Về menu để tự lưu kết quả.";
+            if (stage == CompleteStage) return "Màn chơi đã kết thúc. Về menu để tự lưu kết quả.";
+            if (stage == BossStage) return "Đang đối đầu chỉ huy địch. Hãy thoát nguy hiểm trước khi lưu thủ công.";
             if (crafting != null) return "Hãy hoàn thành chế tạo trước khi lưu thủ công.";
             if (guards.Any(g => g.Alive && g.state != ForestGuardState.Patrol)) return "Lính đang cảnh giác hoặc giao chiến. Hãy thoát nguy hiểm trước khi lưu.";
             if (guards.Any(g => g.Alive && Vector3.Distance(g.transform.position, player.position) <= 18)) return "Có lính ở quá gần. Hãy cách lính hơn 18 đơn vị để lưu thủ công.";
@@ -73,7 +74,8 @@ namespace ShadowVale.Map01 { public sealed partial class ForestMission {
                 ForestSaveSlots.Write(slot, new ForestSaveSlots.Entry {
                     sceneName = SceneManager.GetActiveScene().name,
                     savedAt = DateTime.UtcNow.ToString("o"), playSeconds = PlaySeconds,
-                    location = stage == 0 ? "Điểm tập kết" : stage == 1 ? "Đường tuần tra" : stage == 2 ? "Căn cứ cũ" : "Bến sông",
+                    location = stage == 0 ? "Đang tìm Hùng" : stage == 1 ? "Trên đường về căn cứ" : stage == 2 ? "Căn cứ chỉ huy"
+                        : stage == 3 ? "Doanh trại địch" : stage == BossStage ? "Đối đầu chỉ huy" : "Map 1 hoàn tất",
                     checkpoint = JsonUtility.ToJson(data), thumbnail = thumbnail
                 });
                 Say("Đã lưu tiến trình."); return true;
@@ -104,7 +106,7 @@ namespace ShadowVale.Map01 { public sealed partial class ForestMission {
                 sceneName = string.IsNullOrEmpty(entry.sceneName) ? "Map01_ForestFootprints" : entry.sceneName;
                 if (sceneName != "Map 1" && sceneName != "Map01_ForestFootprints") throw new IOException("Bản lưu thuộc màn chơi chưa được hỗ trợ.");
                 var data = JsonUtility.FromJson<Checkpoint>(entry.checkpoint);
-                if (data == null || (data.version != 1 && data.version != 2) || data.items == null || data.used == null || data.down == null)
+                if (data == null || data.version < 1 || data.version > 3 || data.items == null || data.used == null || data.down == null)
                     throw new IOException("Dữ liệu checkpoint bị hỏng.");
                 pendingCheckpoint = entry.checkpoint; pendingSeconds = entry.playSeconds;
             }
@@ -130,13 +132,13 @@ namespace ShadowVale.Map01 { public sealed partial class ForestMission {
             {
                 var data = JsonUtility.FromJson<Checkpoint>(pendingCheckpoint);
                 PlaySeconds = pendingSeconds;
-                if (data == null || (data.version != 1 && data.version != 2) || data.items == null || data.used == null || data.down == null) throw new IOException();
+                if (data == null || data.version < 1 || data.version > 3 || data.items == null || data.used == null || data.down == null) throw new IOException();
                 verticalVelocity = 0; controller.enabled = false; player.position = data.player; controller.enabled = true;
-                companion.Warp(data.hung); stage = Mathf.Clamp(data.stage, 0, 4); stones = data.stones;
+                companion.Warp(data.hung); stage = Mathf.Clamp(data.stage, 0, CompleteStage); stones = data.stones;
                 hp = Mathf.Clamp(data.hp, 1, Settings.playerHP); stamina = Mathf.Clamp(data.stamina, 0, Settings.stamina); Alarmed = data.alarmed;
                 inventory.Clear(); foreach (var i in data.items) inventory[i.item_id] = i.count;
                 RestoreQuickSlots(data.quickSlots);
-                if (data.version == 2 && data.guards != null) {
+                if (data.version >= 2 && data.guards != null) {
                     foreach (var guard in guards) {
                         var saved = data.guards.FirstOrDefault(g => g.id == guard.id);
                         if (saved != null) guard.RestoreSnapshot(saved);
@@ -150,7 +152,7 @@ namespace ShadowVale.Map01 { public sealed partial class ForestMission {
                 } else foreach (var guard in guards) if (data.down.Contains(guard.id)) guard.Hit(GuardData.max_hp + 1);
                 RestoreGameplay(data);
                 foreach (var point in points) point.used = data.used.Contains(point.id);
-                Say(data.version == 2 ? "Đã khôi phục tiến trình và trạng thái giao chiến." : "Đã tải bản lưu cũ. Lính còn sống bắt đầu lại tuyến tuần tra.");
+                Say(data.version >= 2 ? "Đã khôi phục tiến trình và trạng thái giao chiến." : "Đã tải bản lưu cũ. Lính còn sống bắt đầu lại tuyến tuần tra.");
             }
             catch (Exception) { Say("Checkpoint không hợp lệ. Bắt đầu lại Map 1."); }
             finally { pendingCheckpoint = null; }

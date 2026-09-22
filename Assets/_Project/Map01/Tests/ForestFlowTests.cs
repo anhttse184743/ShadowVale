@@ -1,15 +1,18 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
+using ShadowVale.Gameplay.Combat;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.TestTools;
 
 namespace ShadowVale.Map01.Tests
 {
     public sealed class ForestFlowTests : ForestSceneTestBase
     {
+        private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
         [TestCase(false)]
         [TestCase(true)]
         public void MissingOrDestroyedContentStopsInitializationWithoutGuardCascade(bool destroyed)
@@ -48,33 +51,45 @@ namespace ShadowVale.Map01.Tests
         }
 
         [UnityTest]
-        public IEnumerator NonCombatRouteCompletesWithSuppliesAndEvidence()
+        public IEnumerator BriefingRouteRescuesHungClearsOutpostsAndDefeatsCommander()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
             yield return null;
             var mission = Object.FindFirstObjectByType<ForestMission>();
             Assert.IsTrue(mission.IsInitialized, "The serialized mission content must resolve before guards start.");
+            Assert.AreEqual(0, mission.Stage);
             var points = Object.FindObjectsByType<ForestPoint>(FindObjectsSortMode.None);
-            mission.Interact(points.Single(p => p.id == "river_exit"));
-            Assert.AreEqual(0, mission.Stage, "Exit must not skip the mission");
-            mission.Interact(points.Single(p => p.id == "documents"));
-            Assert.AreEqual(0, mission.Stage, "Evidence is gated by the first objective");
-            mission.Interact(points.Single(p => p.id == "supplies"));
-            Assert.AreEqual(1, mission.Stage);
             var controller = mission.player.GetComponent<CharacterController>();
-            controller.enabled = false; mission.player.position = mission.encounterExit.position; controller.enabled = true;
-            yield return null;
+
+            mission.Interact(points.Single(p => p.id == "supplies"));
+            Assert.AreEqual(0, mission.Stage, "Reporting to base is gated until Hùng is treated.");
+
+            var inventory = (Dictionary<string, int>)typeof(ForestMission).GetField("inventory", Private).GetValue(mission);
+            inventory["herb"] = 1;
+            controller.enabled = false; mission.player.position = mission.hung.position; controller.enabled = true;
+            typeof(ForestMission).GetMethod("TryRescueHung", Private).Invoke(mission, null);
+            Assert.AreEqual(1, mission.Stage, "Treating the wounded Hùng with herb must send Nam back to base.");
+            Assert.AreEqual(0, mission.Count("herb"), "The herb must be spent on the treatment.");
+
+            mission.Interact(points.Single(p => p.id == "supplies"));
             Assert.AreEqual(2, mission.Stage);
-            mission.Interact(points.Single(p => p.id == "documents"));
-            Assert.AreEqual(3, mission.Stage);
-            Assert.AreEqual(1, mission.Count("river_documents"));
-            var exitPosition = points.Single(p => p.id == "river_exit").transform.position;
-            controller.enabled = false; mission.player.position = exitPosition; controller.enabled = true;
-            mission.hung.GetComponent<NavMeshAgent>().Warp(exitPosition);
-            mission.Interact(points.Single(p => p.id == "river_exit"));
-            Assert.AreEqual(4, mission.Stage);
-            Assert.IsFalse(mission.Alarmed, "Stealth completion must not force a battle");
+            Assert.AreEqual(1, mission.Count("supplies"));
+
+            typeof(ForestMission).GetMethod("OnMapOpened", Private).Invoke(mission, null);
+            Assert.AreEqual(3, mission.Stage, "Opening the map must clear the terrain-scouting objective.");
+
+            var outposts = Object.FindObjectsByType<Map01EnemyController>(FindObjectsSortMode.None)
+                .Where(e => e.name.StartsWith("Outpost guard ")).ToArray();
+            Assert.GreaterOrEqual(outposts.Length, 1, "Map 1's three built-in enemy outposts must still be present.");
+            foreach (var guard in outposts) guard.GetComponent<Health>().TakeDamage(9999, guard.transform.position, null);
+            yield return null;
+            Assert.AreEqual(ForestMission.BossStage, mission.Stage, "Clearing every outpost must summon the commander.");
+
+            var boss = Object.FindObjectsByType<Map01EnemyController>(FindObjectsSortMode.None).Single(e => e.name == "Chỉ huy địch");
+            Assert.IsTrue(boss.IsBoss);
+            boss.GetComponent<Health>().TakeDamage(999999, boss.transform.position, null);
+            Assert.AreEqual(ForestMission.CompleteStage, mission.Stage, "Defeating the commander must complete Map 1.");
             yield return new ExitPlayMode();
         }
 

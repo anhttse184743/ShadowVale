@@ -116,7 +116,7 @@ namespace ShadowVale.Map01
             }
             DrawHudFeedback(width, height);
             if (mapOpen) DrawMap(width, height);
-            if (hp <= 0 || stage == 4) {
+            if (hp <= 0 || stage == CompleteStage) {
                 HudPanel(new Rect(width / 2 - 300, 320, 600, 185));
                 GUI.Label(new Rect(width / 2 - 275, 345, 550, 75), hp <= 0 ? "NAM ĐÃ GỤC NGÃ" : "HOÀN THÀNH MAP 1", hudCenter);
                 GUI.Label(new Rect(width / 2 - 245, 437, 490, 50), "Enter Chơi lại  ·  F9 Tải bản lưu  ·  Esc Menu", hudSmall);
@@ -144,7 +144,7 @@ namespace ShadowVale.Map01
             HudPanel(new Rect(28, 186, 373, 152));
             GUI.Label(new Rect(48, 205, 332, 37), "NHIỆM VỤ", hudHeading);
             HudFill(new Rect(49, 246, 328, 1), new Color(.6f, .51f, .3f, .65f));
-            GUI.Label(new Rect(49, 258, 328, 69), Objectives[Mathf.Clamp(stage, 0, 4)], hudBody);
+            GUI.Label(new Rect(49, 258, 328, 69), Objectives[Mathf.Clamp(stage, 0, CompleteStage)], hudBody);
         }
         private void DrawInventory(float width)
         {
@@ -249,7 +249,10 @@ namespace ShadowVale.Map01
                 var r = new Rect(x, height - 289, areaWidth, 86); HudPanel(r);
                 GUI.Label(new Rect(r.x + 18, r.y + 12, r.width - 36, r.height - 20), dialogue, hudBody);
             }
-            if (nearby != null && !nearby.used && !Stopped && !inventoryOpen)
+            if (HungInRange && !Stopped && !inventoryOpen)
+                GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43),
+                    Count("herb") > 0 ? "[E] Dùng thảo dược chữa trị cho Hùng" : "Cần thảo dược để chữa trị cho Hùng", hudBody);
+            else if (nearby != null && !nearby.used && !Stopped && !inventoryOpen)
                 GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), "[E] " + nearby.label, hudBody);
             if (crafting != null) GUI.Label(new Rect(47, 350, 415, 40), $"Đang chế tạo… {Mathf.Max(0, craftUntil - Time.time):0.0}s", hudBody);
             foreach (var guard in guards.Where(g => g.Alive)) {

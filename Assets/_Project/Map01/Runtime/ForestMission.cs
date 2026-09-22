@@ -23,7 +23,7 @@ namespace ShadowVale.Map01
         public bool Paused => paused;
         public float PlaySeconds { get; private set; }
         public void SetPaused(bool value) { paused = value; Time.timeScale = value ? 0 : 1; }
-        public bool Stopped => (modernHealth != null ? modernHealth.IsDead : hp <= 0) || stage == 4 || paused || pendingCheckpoint != null;
+        public bool Stopped => (modernHealth != null ? modernHealth.IsDead : hp <= 0) || stage == CompleteStage || paused || pendingCheckpoint != null;
         public int ObstructionMask => LayerMask.GetMask("Default", "Obstacle", "Cover", "VisionBlocker");
         public int Stage => stage;
         private ForestBundle bundle;
@@ -43,11 +43,15 @@ namespace ShadowVale.Map01
         private Vector3 aim;
         private ForestPoint nearby;
         private GUIStyle titleStyle, textStyle, smallStyle;
+        // Stage numbers are the save format — see Checkpoint.cs — so append, never reorder.
+        public const int BossStage = 4;
+        public const int CompleteStage = 5;
         private static readonly string[] Objectives = {
-            "Nhận hàng tiếp tế cạnh Hùng [E]",
-            "Cùng Hùng vượt khu tuần tra — chọn lén lút, đánh lạc hướng hoặc giao chiến",
-            "Khám xét bàn bản đồ trong căn cứ bỏ hoang [E]",
-            "Mang tài liệu và hàng tiếp tế đến bến sông [E]",
+            "Tìm Hùng đang bị thương và dùng thảo dược chữa trị cho anh ấy [E]",
+            "Đưa Hùng về căn cứ, nhận hàng tiếp tế [E]",
+            "Trinh sát địa hình — mở bản đồ [M]",
+            "Chiếm đóng 3 doanh trại của địch — tiêu diệt toàn bộ lính",
+            "Tiêu diệt chỉ huy địch",
             "Hoàn thành Map 1 — Những dấu chân trong rừng"
         };
 
@@ -97,7 +101,8 @@ namespace ShadowVale.Map01
             inventory["ammo_rifle"] = Settings.startingAmmo;
             IsInitialized = true;
             ConnectGameplay();
-            Say("Hùng: Nhận hàng rồi đi thôi, Nam. Qua rừng là tới bến sông.", 9);
+            PositionHungForRescue();
+            Say("Nam: Hùng đâu rồi? ... Kia! Bị thương rồi. Phải tìm thảo dược cứu anh ấy.", 9);
         }
 
         private void FailInitialization(string reason)
@@ -132,15 +137,18 @@ namespace ShadowVale.Map01
             if (kb == null) return;
             if (ForestMenu.Visible) return;
             if (kb.f9Key.wasPressedThisFrame) Load();
-            if (kb.enterKey.wasPressedThisFrame && (hp <= 0 || stage == 4)) Restart();
+            if (kb.enterKey.wasPressedThisFrame && (hp <= 0 || stage == CompleteStage)) Restart();
             if (Stopped) return;
             if (kb.tabKey.wasPressedThisFrame) { inventoryOpen = !inventoryOpen; mapOpen = false; CancelHudDrag(); suppressFireUntilRelease = true; }
-            if (kb.mKey.wasPressedThisFrame) { mapOpen = !mapOpen; inventoryOpen = false; CancelHudDrag(); suppressFireUntilRelease = true; }
+            if (kb.mKey.wasPressedThisFrame) {
+                mapOpen = !mapOpen; inventoryOpen = false; CancelHudDrag(); suppressFireUntilRelease = true;
+                if (mapOpen) OnMapOpened();
+            }
             if (kb.cKey.wasPressedThisFrame) crouched = !crouched;
             if (kb.f5Key.wasPressedThisFrame) SaveSlot(0, out _);
             if (kb.hKey.wasPressedThisFrame) UseItem("medkit_small");
             HandleQuickKeys(kb);
-            if (inventoryOpen || mapOpen) { if (modernPlayer == null) MovePlayer(Vector3.zero); UpdateCompanion(); return; }
+            if (inventoryOpen || mapOpen) { if (modernPlayer == null) MovePlayer(Vector3.zero); if (stage >= 1) UpdateCompanion(); return; }
 
             if (modernPlayer == null) {
                 var motion = new Vector2((kb.dKey.isPressed ? 1 : 0) - (kb.aKey.isPressed ? 1 : 0),
@@ -170,7 +178,7 @@ namespace ShadowVale.Map01
             nearby = points.Where(p => !p.used && p.kind != ForestPointKind.Hide && p.kind != ForestPointKind.Cover)
                 .OrderBy(p => Vector3.Distance(player.position, p.transform.position))
                 .FirstOrDefault(p => Vector3.Distance(player.position, p.transform.position) < Settings.interactRange);
-            if (kb.eKey.wasPressedThisFrame && nearby != null) Interact(nearby);
+            if (kb.eKey.wasPressedThisFrame) { if (stage == 0) TryRescueHung(); else if (nearby != null) Interact(nearby); }
             if (kb.bKey.wasPressedThisFrame && nearWorkbench()) Craft();
             if (crafting != null && Time.time >= craftUntil)
             {
@@ -178,19 +186,13 @@ namespace ShadowVale.Map01
                 inventory[recipe.output_item_id] = Count(recipe.output_item_id) + recipe.output_count;
                 crafting = null; Say("Đã chế tạo băng cứu thương. Nhấn H để sử dụng.");
             }
-            UpdateCompanion();
+            if (stage >= 1) UpdateCompanion();
         }
 
         private void AdvanceMission()
         {
-            if (stage == 1 && (encounterExit != null
-                ? Vector3.Distance(player.position, encounterExit.position) < 5f
-                : player.position.z > 27))
-            {
-                stage = 2;
-                Say(Alarmed ? "Hùng: Bọn này hôm nay phản ứng nhanh hơn bình thường." : "Hùng: Qua được rồi. Chúng tuần tra kỹ hơn bình thường… Phía trước có một căn cứ cũ.", 9);
-                encounterLine = true;
-            }
+            UpdateRescuePrompt();
+            HandleCampObjective();
             if (!encounterLine && Alarmed && guards.All(g => !g.Alive) && modernEnemies.All(g => !g.Alive))
             { encounterLine = true; Say("Hùng: Bọn này hôm nay phản ứng nhanh hơn bình thường."); }
         }
@@ -213,9 +215,9 @@ namespace ShadowVale.Map01
             switch (point.kind)
             {
                 case ForestPointKind.Supplies:
-                    if (stage != 0) return;
-                    point.used = true; stage = 1; inventory["supplies"] = 1;
-                    Say("Hùng: Đi theo lối đất. WASD di chuyển, Shift chạy. Nhớ giữ sức.");
+                    if (stage != 1) return;
+                    point.used = true; stage = 2; inventory["supplies"] = 1;
+                    Say("Hùng: Cảm ơn Nam. Anh sẽ ở lại căn cứ chỉ huy — cứ quay lại đây khi cần giao nhiệm vụ mới.");
                     break;
                 case ForestPointKind.Loot:
                     if (point.used) return;
@@ -226,14 +228,13 @@ namespace ShadowVale.Map01
                     Say("Bàn chế tạo: B để làm băng cứu thương (2 vải + 1 thảo dược). Game tự lưu khi về menu hoặc thoát.");
                     break;
                 case ForestPointKind.Documents:
-                    if (stage < 2) { Say("Hãy nhận hàng và cùng Hùng vượt tuyến tuần tra trước."); return; }
-                    point.used = true; stage = 3; inventory["river_documents"] = 1;
-                    Say("Nam: Đây là bản đồ các tuyến quanh bến sông… cả đường bí mật của đơn vị!\nHùng: Có người đang theo dõi chúng ta. Mang những ghi chép này về ngay.", 15);
+                    // Side content: useful lore, not on the critical path the briefing laid out.
+                    if (point.used) return;
+                    point.used = true; inventory["river_documents"] = 1;
+                    Say("Nam: Tài liệu cũ của đơn vị tuần tra — cất đi, có thể còn hữu ích.", 8);
                     break;
                 case ForestPointKind.Exit:
-                    if (stage != 3) { Say("Cần lấy hàng tiếp tế và tài liệu trong căn cứ trước khi rời rừng."); return; }
-                    if (Vector3.Distance(hung.position, player.position) > 8) { Say("Chờ Hùng đến cùng trước khi rời rừng."); return; }
-                    stage = 4; Say("Hàng đã đến bến sông. Những tuyến đường bị lộ là đầu mối đầu tiên.", 30);
+                    Say("Bến sông vắng lặng. Đường rút lui vẫn còn đó, nhưng nhiệm vụ chưa xong.", 6);
                     break;
             }
         }
