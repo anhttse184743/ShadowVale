@@ -1,0 +1,3 @@
+PASS shallow stream crossing z=-35
+PASS shallow stream crossing z=25
+PASS shallow stream crossing z=55

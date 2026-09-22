@@ -1,0 +1,8 @@
+{
+  "name": "ShadowVale.Map01.Editor",
+  "rootNamespace": "ShadowVale.Map01.Editor",
+  "references": ["ShadowVale.Map01", "Unity.AI.Navigation", "Unity.InputSystem"],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": true
+}
+
