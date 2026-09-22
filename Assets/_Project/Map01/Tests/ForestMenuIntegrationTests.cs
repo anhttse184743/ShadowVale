@@ -10,10 +10,32 @@ using UnityEditor.SceneManagement;
 
 namespace ShadowVale.Map01.Tests
 {
-    public sealed class ForestMenuIntegrationTests
+    public sealed class ForestMenuIntegrationTests : ForestSceneTestBase
     {
         private const BindingFlags Private = BindingFlags.NonPublic | BindingFlags.Instance;
         private static void Call(ForestMenu menu, string method, params object[] args) => typeof(ForestMenu).GetMethod(method, Private).Invoke(menu, args);
+
+        [UnityTest]
+        public IEnumerator PlayWhileEditingMapStartsAtMenuAndNewGameStillWorks()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            Assert.IsTrue(UnityEditor.EditorApplication.ExecuteMenuItem("ShadowVale/Menu/Luôn bắt đầu từ menu chính"));
+            Assert.AreEqual("Assets/_Project/Scenes/00_Boot.unity", UnityEditor.AssetDatabase.GetAssetPath(EditorSceneManager.playModeStartScene));
+            yield return new EnterPlayMode();
+            double deadline = Time.realtimeSinceStartupAsDouble + 10;
+            while (SceneManager.GetActiveScene().name != "01_MainMenu" && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
+            Assert.AreEqual("01_MainMenu", SceneManager.GetActiveScene().name);
+            Assert.IsTrue(ForestMenu.Visible);
+            Assert.IsNull(UnityEngine.Object.FindFirstObjectByType<ForestMission>(), "No gameplay should run behind the title on startup.");
+            var menu = UnityEngine.Object.FindFirstObjectByType<ForestMenu>();
+            Call(menu, "MainAction", 1);
+            yield return null;
+            Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name);
+            Assert.IsFalse(ForestMenu.Visible);
+            Assert.IsNotNull(UnityEngine.Object.FindFirstObjectByType<ForestMission>());
+            yield return new ExitPlayMode();
+            Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name, "Stopping Play must restore the scene being edited.");
+        }
 
         [UnityTest]
         public IEnumerator UnsavedSceneShowsMenuInsteadOfSkybox()

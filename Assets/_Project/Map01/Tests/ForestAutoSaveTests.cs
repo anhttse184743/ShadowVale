@@ -10,7 +10,7 @@ using UnityEngine.TestTools;
 
 namespace ShadowVale.Map01.Tests
 {
-    public sealed class ForestAutoSaveTests
+    public sealed class ForestAutoSaveTests : ForestSceneTestBase
     {
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
         private static void Set(ForestMission mission, string field, object value) => typeof(ForestMission).GetField(field, Private).SetValue(mission, value);

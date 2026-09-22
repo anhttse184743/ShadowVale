@@ -1,6 +1,6 @@
 {
   "name": "ShadowVale.Map01.Tests",
-  "references": ["ShadowVale.Map01", "UnityEngine.TestRunner", "UnityEditor.TestRunner"],
+  "references": ["ShadowVale.Map01", "UnityEngine.TestRunner", "UnityEditor.TestRunner", "Unity.InputSystem"],
   "includePlatforms": ["Editor"],
   "overrideReferences": true,
   "precompiledReferences": ["nunit.framework.dll"],

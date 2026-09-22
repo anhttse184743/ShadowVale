@@ -8,7 +8,7 @@ using UnityEngine.TestTools;
 
 namespace ShadowVale.Map01.Tests
 {
-    public sealed class ForestFlowTests
+    public sealed class ForestFlowTests : ForestSceneTestBase
     {
         [TestCase(false)]
         [TestCase(true)]

@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 
 namespace ShadowVale.Map01
 {
-    public sealed class ForestMission : MonoBehaviour
+    public sealed partial class ForestMission : MonoBehaviour
     {
         public Transform player, hung;
         public Camera gameCamera;
@@ -119,7 +119,7 @@ namespace ShadowVale.Map01
         }
 
         public void RegisterPoint(ForestPoint point) => points.Add(point);
-        public int Count(string id) => inventory.TryGetValue(id, out int count) ? count : 0;
+        public int Count(string id) => id == "stone" ? stones : inventory.TryGetValue(id, out int count) ? count : 0;
         public void Say(string text, float seconds = 7) { dialogue = text; dialogueUntil = Time.time + seconds; }
         public void EmitNoise(Vector3 position, float radius) { foreach (var guard in guards) guard.Hear(position, radius); }
         public void Damage(float amount) { if (!Stopped) hp = Mathf.Max(0, hp - amount); }
@@ -136,12 +136,12 @@ namespace ShadowVale.Map01
             if (kb.f9Key.wasPressedThisFrame) Load();
             if (kb.enterKey.wasPressedThisFrame && (hp <= 0 || stage == 4)) Restart();
             if (Stopped) return;
-            if (kb.tabKey.wasPressedThisFrame) inventoryOpen = !inventoryOpen;
-            if (kb.mKey.wasPressedThisFrame) mapOpen = !mapOpen;
+            if (kb.tabKey.wasPressedThisFrame) { inventoryOpen = !inventoryOpen; mapOpen = false; CancelHudDrag(); suppressFireUntilRelease = true; }
+            if (kb.mKey.wasPressedThisFrame) { mapOpen = !mapOpen; inventoryOpen = false; CancelHudDrag(); suppressFireUntilRelease = true; }
             if (kb.cKey.wasPressedThisFrame) crouched = !crouched;
             if (kb.f5Key.wasPressedThisFrame) SaveSlot(0, out _);
-            if (kb.hKey.wasPressedThisFrame && Count("medkit_small") > 0 && hp < Settings.playerHP)
-            { inventory["medkit_small"]--; hp = Mathf.Min(Settings.playerHP, hp + Settings.medkitHeal); }
+            if (kb.hKey.wasPressedThisFrame) UseItem("medkit_small");
+            HandleQuickKeys(kb);
             if (inventoryOpen || mapOpen) { MovePlayer(Vector3.zero); UpdateCompanion(); return; }
 
             var motion = new Vector2((kb.dKey.isPressed ? 1 : 0) - (kb.aKey.isPressed ? 1 : 0),
@@ -158,14 +158,9 @@ namespace ShadowVale.Map01
             Hidden = crouched && points.Any(p => p.kind == ForestPointKind.Hide && Vector3.Distance(player.position, p.transform.position) < p.radius);
             if (sprint && Time.time > nextNoise) { nextNoise = Time.time + .6f; EmitNoise(player.position, 7); }
             Aim();
-            if (Mouse.current != null && Mouse.current.leftButton.isPressed && Time.time > nextShot && crafting == null) Fire();
-            if (kb.qKey.wasPressedThisFrame && stones > 0)
-            {
-                stones--;
-                var target = player.position + Vector3.ClampMagnitude(aim - player.position, Settings.stoneRange);
-                EmitNoise(target, Settings.stoneNoise); Trace(player.position + Vector3.up, target + Vector3.up * .2f, Color.yellow);
-                Say("Tiếng đá rơi — lính gần đó sẽ đến kiểm tra.", 3);
-            }
+            if (Mouse.current == null || !Mouse.current.leftButton.isPressed) suppressFireUntilRelease = false;
+            if (Mouse.current != null && Mouse.current.leftButton.isPressed && !suppressFireUntilRelease && !HudPointerBlocked() && Time.time > nextShot && crafting == null) Fire();
+            if (kb.qKey.wasPressedThisFrame) UseItem("stone");
             nearby = points.Where(p => !p.used && p.kind != ForestPointKind.Hide && p.kind != ForestPointKind.Cover)
                 .OrderBy(p => Vector3.Distance(player.position, p.transform.position))
                 .FirstOrDefault(p => Vector3.Distance(player.position, p.transform.position) < Settings.interactRange);
@@ -320,6 +315,7 @@ namespace ShadowVale.Map01
             public string crafting;
             public float craftRemaining, playerYaw, hungYaw, nextShotRemaining;
             public bool crouched, encounterLine;
+            public string[] quickSlots;
         }
         private string SavePath => Path.Combine(Application.persistentDataPath, "shadowvale-map01-checkpoint.json");
 
@@ -356,7 +352,8 @@ namespace ShadowVale.Map01
                 guards = guards.Select(g => g.Capture()).ToArray(), crafting = crafting,
                 craftRemaining = Mathf.Max(0, craftUntil - Time.time),
                 playerYaw = player.eulerAngles.y, hungYaw = hung.eulerAngles.y,
-                crouched = crouched, encounterLine = encounterLine, nextShotRemaining = Mathf.Max(0, nextShot - Time.time) };
+                crouched = crouched, encounterLine = encounterLine, nextShotRemaining = Mathf.Max(0, nextShot - Time.time),
+                quickSlots = (string[])quickSlots.Clone() };
             try {
                 string thumbnail = null;
                 try { thumbnail = CaptureThumbnail(); } catch (Exception) { /* A missing preview must not prevent saving progress on exit. */ }
@@ -425,6 +422,7 @@ namespace ShadowVale.Map01
                 companion.Warp(data.hung); stage = Mathf.Clamp(data.stage, 0, 4); stones = data.stones;
                 hp = Mathf.Clamp(data.hp, 1, Settings.playerHP); stamina = Mathf.Clamp(data.stamina, 0, Settings.stamina); Alarmed = data.alarmed;
                 inventory.Clear(); foreach (var i in data.items) inventory[i.item_id] = i.count;
+                RestoreQuickSlots(data.quickSlots);
                 if (data.version == 2 && data.guards != null) {
                     foreach (var guard in guards) {
                         var saved = data.guards.FirstOrDefault(g => g.id == guard.id);
@@ -446,68 +444,8 @@ namespace ShadowVale.Map01
         private void Restart() { Time.timeScale = 1; SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); }
         private void OnDisable() { Time.timeScale = 1; }
 
-        private void OnGUI()
-        {
-            if (!IsInitialized || ForestMenu.Visible) return;
-            if (titleStyle == null)
-            {
-                titleStyle = new GUIStyle(GUI.skin.label) { fontSize = 23, fontStyle = FontStyle.Bold, wordWrap = true };
-                textStyle = new GUIStyle(GUI.skin.label) { fontSize = 17, wordWrap = true };
-                smallStyle = new GUIStyle(GUI.skin.label) { fontSize = 14, wordWrap = true };
-            }
-            float scale = Mathf.Min(Screen.width / 1280f, Screen.height / 720f);
-            GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(scale, scale, 1));
-            float width = Screen.width / scale, height = Screen.height / scale;
-            Panel(new Rect(22, 20, 460, 139));
-            GUI.Label(new Rect(38, 30, 425, 35), "01 / NHỮNG DẤU CHÂN TRONG RỪNG", textStyle);
-            GUI.Label(new Rect(38, 67, 425, 66), Objectives[stage], textStyle);
-            Panel(new Rect(width - 265, 20, 245, 138));
-            GUI.Label(new Rect(width - 247, 32, 220, 120), $"NAM    HP {hp:0} / {Settings.playerHP:0}\nSức bền {stamina:0}    Đạn {Count("ammo_rifle")}\nĐá {stones}   •   {(Hidden ? "ẨN TRONG BỤI" : crouched ? "ĐANG ĐI KHOM" : "ĐANG DI CHUYỂN")}", textStyle);
-            Panel(new Rect(22, height - 69, width - 44, 49));
-            GUI.Label(new Rect(36, height - 59, width - 65, 43), "Space Nhảy • WASD Di chuyển  •  Shift Chạy  •  C Đi khom  •  Chuột Xoay / Trái Bắn  •  Q Ném đá  •  E Tương tác  •  Tab Túi đồ  •  M Bản đồ  •  Esc Dừng", smallStyle);
-            if (Time.time < dialogueUntil)
-            {
-                Panel(new Rect(210, height - 205, width - 420, 110));
-                GUI.Label(new Rect(232, height - 193, width - 464, 94), dialogue, textStyle);
-            }
-            if (nearby != null && !nearby.used && !Stopped)
-                GUI.Label(new Rect(width / 2 - 250, height - 247, 500, 40), "[E] " + nearby.label, textStyle);
-            if (crafting != null) GUI.Label(new Rect(38, 167, 430, 30), $"Đang chế tạo… {Mathf.Max(0, craftUntil - Time.time):0.0}s", textStyle);
-            foreach (var guard in guards.Where(g => g.Alive))
-            {
-                var screen = gameCamera.WorldToScreenPoint(guard.transform.position + Vector3.up * 2.4f);
-                if (screen.z > 0 && Vector3.Distance(player.position, guard.transform.position) < 24)
-                    GUI.Label(new Rect(screen.x / scale - 60, (Screen.height - screen.y) / scale, 190, 40), guard.state + (guard.suspicion > .05f ? $" {Mathf.Min(100, guard.suspicion * 100):0}%" : ""), smallStyle);
-            }
-            if (inventoryOpen)
-            {
-                Panel(new Rect(width / 2 - 240, 170, 480, 330));
-                GUI.Label(new Rect(width / 2 - 215, 185, 440, 40), "TÚI ĐỒ / VẬT TƯ", titleStyle);
-                GUI.Label(new Rect(width / 2 - 215, 232, 430, 210), string.Join("\n", inventory.Where(i => i.Value > 0).Select(i => ItemName(i.Key) + "  × " + i.Value)), textStyle);
-                GUI.Label(new Rect(width / 2 - 215, 457, 430, 38), "H Dùng băng cứu thương • B Chế tạo ở bàn", smallStyle);
-            }
-            if (mapOpen) DrawMap(width, height);
-            if (Stopped)
-            {
-                Panel(new Rect(width / 2 - 300, 235, 600, 180));
-                GUI.Label(new Rect(width / 2 - 270, 253, 540, 70), hp <= 0 ? "NAM ĐÃ GỤC NGÃ" : stage == 4 ? "ĐÃ HOÀN THÀNH MAP 1" : "TẠM DỪNG", titleStyle);
-                GUI.Label(new Rect(width / 2 - 270, 332, 540, 70), paused ? "Esc Tiếp tục • F9 Tải checkpoint" : "Enter Chơi lại • F9 Tải checkpoint", textStyle);
-            }
-        }
-        private static string ItemName(string id)
-        {
-            switch (id)
-            {
-                case "ammo_rifle": return "Đạn súng trường";
-                case "cloth": return "Vải";
-                case "herb": return "Thảo dược";
-                case "scrap_metal": return "Kim loại";
-                case "medkit_small": return "Băng cứu thương";
-                case "supplies": return "Hàng tiếp tế";
-                case "river_documents": return "Bản đồ và ghi chép bến sông";
-                default: return id;
-            }
-        }
+        private void OnGUI() => DrawHud();
+
         private void DrawMap(float width, float height)
         {
             var rect = new Rect(width / 2 - 310, 164, 620, 420); Panel(rect);

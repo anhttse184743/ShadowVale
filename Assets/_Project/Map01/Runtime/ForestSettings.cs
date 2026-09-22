@@ -17,10 +17,12 @@ namespace ShadowVale.Map01
 
     [Serializable] public sealed class ForestBundle
     {
+        public ForestItem[] items;
         public ForestWeapon[] weapons;
         public ForestArchetype[] enemy_archetypes;
         public ForestRecipe[] craft_recipes;
     }
+    [Serializable] public sealed class ForestItem { public string id; public int stack_max; }
     [Serializable] public sealed class ForestWeapon
     {
         public string id;

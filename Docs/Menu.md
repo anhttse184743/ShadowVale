@@ -2,7 +2,9 @@
 
 ## Chạy
 
-Mở `Assets/_Project/Scenes/00_Boot.unity` hoặc `01_MainMenu.unity`, nhấn Play.
+Nhấn Play từ bất kỳ scene nào: Editor tự bắt đầu bằng `00_Boot` rồi vào menu chính.
+Scene đang chỉnh sửa được giữ nguyên và trở lại sau khi Stop. Cấu hình được áp dụng
+khi Unity nạp script; có thể áp dụng lại bằng **ShadowVale → Menu → Luôn bắt đầu từ menu chính**.
 Hoặc chọn menu Unity **ShadowVale → Menu → Mở menu chính**, rồi nhấn Play và xem tab **Game**.
 Hai scene có object `ShadowVale Menu` gắn sẵn; giao diện chỉ vẽ khi chạy.
 Nếu nhấn Play trong scene trống/chưa lưu hoặc scene chưa có `ForestMission`, menu chính
@@ -10,7 +12,7 @@ vẫn xuất hiện thay vì chỉ có skybox. Trong Editor, menu cũng được
 Boot tải content rồi chuyển sang menu; Chơi mới mở `Map 1` từ nhánh dev.
 Mỗi bản lưu mới giữ tên scene để tải đúng bản đồ. Bản lưu cũ chưa có tên scene
 vẫn mở `Map01_ForestFootprints`; cả hai scene được giữ trong Build Settings.
-Khi mở trực tiếp scene Map 1, nhấn Esc để mở menu tạm dừng.
+Chọn Chơi mới/Tiếp tục/Tải game để vào map; trong màn chơi nhấn Esc để mở menu tạm dừng.
 
 - Chuột hoặc mũi tên lên/xuống + Enter chọn chức năng và ô lưu.
 - Esc quay lại/tiếp tục; Delete yêu cầu xác nhận xóa ô đang chọn.
@@ -66,6 +68,10 @@ gear, dates, insignia or campaign reference. Match approved rustic 2D painted ga
 rather than photorealism. No text at all.
 
 ## Kiểm tra
+
+Sửa khởi động từ scene đang chỉnh sửa: **18/18 đạt** (`Logs/Menu-Startup-Fix.xml`).
+Test mở Map 1, nhấn Play qua Boot → menu, chọn Chơi mới → Map 1, rồi Stop
+và xác nhận scene chỉnh sửa được khôi phục. Các test gameplay dùng scene chỉ định riêng.
 
 Unity Test Runner / EditMode / `ShadowVale.Map01.Tests`: gồm kiểm tra dữ liệu lưu và luồng
 menu → chơi mới → pause → ghi/ghi đè ô lưu → tải lại → xóa. Test tích hợp dùng thư mục

@@ -109,7 +109,10 @@ namespace ShadowVale.Map01
             if (kb.escapeKey.wasPressedThisFrame) {
                 if (question != null) { question = null; confirmed = null; }
                 else if (browser) { browser = false; selected = 0; }
-                else if (mission != null) { visible = !visible; mission.SetPaused(visible); Refresh(); }
+                else if (mission != null) {
+                    if (!visible && mission.CloseGameplayPanel()) return;
+                    visible = !visible; mission.SetPaused(visible); Refresh();
+                }
             }
             if (!visible || question != null) return;
             int count = browser ? ForestSaveSlots.Count : mission != null ? 5 : 4;
