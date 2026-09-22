@@ -5,7 +5,8 @@
     "Unity.InputSystem",
     "Unity.AI.Navigation",
     "ShadowVale.AI",
-    "ShadowVale.Data"
+    "ShadowVale.Data",
+    "ShadowVale.Gameplay"
   ],
   "autoReferenced": true
 }
