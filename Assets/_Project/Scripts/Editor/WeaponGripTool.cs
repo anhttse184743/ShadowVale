@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using ShadowVale.Gameplay.Combat;
 using UnityEditor;
 using UnityEngine;
@@ -95,8 +95,10 @@ namespace ShadowVale.Editor
                 }
 
                 config.SetOffset(weapon.Kind, child.localPosition, child.localEulerAngles);
+                // Scaling the preview counts as tuning too, so it is saved with the rest.
+                config.SetScale(weapon.Kind, child.localScale.x);
                 Debug.Log($"[Grip] {weapon.Kind}: position {child.localPosition}, " +
-                          $"rotation {child.localEulerAngles}");
+                          $"rotation {child.localEulerAngles}, scale {child.localScale.x:F3}");
                 saved++;
             }
 

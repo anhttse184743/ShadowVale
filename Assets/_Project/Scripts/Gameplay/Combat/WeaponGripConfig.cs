@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ShadowVale.Gameplay.Combat
 {
@@ -31,6 +31,10 @@ namespace ShadowVale.Gameplay.Combat
 
             [Tooltip("Off means the weapon keeps one pose whatever the player is doing.")]
             public bool hasAimPose;
+
+            [Tooltip("Uniform size of the weapon in the hand. 1 is the size it was modelled at. " +
+                     "0 counts as 1, so offsets saved before this field existed still work.")]
+            public float scale;
         }
 
         [Header("Hand anchor")]
@@ -44,6 +48,14 @@ namespace ShadowVale.Gameplay.Combat
 
         [Header("Per weapon")]
         [SerializeField] private GripOffset[] weapons = System.Array.Empty<GripOffset>();
+
+        /// <summary>
+        /// The stored size, treating an unset 0 as 1. Offsets saved before the field existed
+        /// deserialise to 0, and a weapon scaled to nothing is invisible — which reads as the
+        /// weapon having failed to spawn rather than as a missing number.
+        /// </summary>
+        public static float EffectiveScale(GripOffset offset)
+            => offset.scale <= 0.0001f ? 1f : offset.scale;
 
         public Vector3 AnchorPosition => anchorPosition;
         public Vector3 AnchorEuler => anchorEuler;
@@ -69,12 +81,13 @@ namespace ShadowVale.Gameplay.Combat
             {
                 GetPose(offset, aiming, out Vector3 position, out Quaternion rotation);
                 weapon.SetLocalPositionAndRotation(position, rotation);
+                weapon.localScale = Vector3.one * EffectiveScale(offset);
             }
             else
             {
                 weapon.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+                weapon.localScale = Vector3.one;
             }
-            weapon.localScale = Vector3.one;
         }
 
         /// <summary>
@@ -102,6 +115,19 @@ namespace ShadowVale.Gameplay.Combat
                 weapons[i].aimLocalEuler = localEuler;
                 weapons[i].hasAimPose = true;
                 return;
+            }
+        }
+
+        /// <summary>Editor hook: records how big the weapon should sit in the hand.</summary>
+        public void SetScale(WeaponKind kind, float scale)
+        {
+            for (int i = 0; i < weapons.Length; i++)
+            {
+                if (weapons[i].kind == kind)
+                {
+                    weapons[i].scale = scale;
+                    return;
+                }
             }
         }
 

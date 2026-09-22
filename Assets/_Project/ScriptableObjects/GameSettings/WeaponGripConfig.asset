@@ -21,9 +21,11 @@ MonoBehaviour:
     aimLocalPosition: {x: 0, y: 0, z: 0}
     aimLocalEuler: {x: 321.3, y: 92.6, z: 103.8}
     hasAimPose: 0
+    scale: 1.15
   - kind: 1
     localPosition: {x: 0.09310901, y: -0.043052346, z: 0.014027377}
     localEuler: {x: 3.902841, y: 35.154167, z: 18.650005}
     aimLocalPosition: {x: 0, y: 0, z: 0}
     aimLocalEuler: {x: 335.5, y: 71, z: 62.8}
     hasAimPose: 0
+    scale: 0
