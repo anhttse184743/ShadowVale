@@ -1,0 +1,3 @@
+PASS landmark navigation (-83.00, 2.77, -80.30) -> (-63.00, 2.97, -55.00)
+PASS landmark navigation (-4.00, 3.30, 0.00) -> (19.00, 3.30, 0.00)
+PASS two continuous bridge rail colliders

@@ -385,6 +385,28 @@ namespace ShadowVale.Map01
                 if (screen.z > 0 && Vector3.Distance(player.position, guard.transform.position) < 24)
                     GUI.Label(new Rect(screen.x / scale - 60, (Screen.height - screen.y) / scale, 190, 40), guard.state + (guard.suspicion > .05f ? $" {Mathf.Min(100, guard.suspicion * 100):0}%" : ""), smallStyle);
             }
+            // Screen-space arrows stay legible against foliage and disappear as soon as loot is collected.
+            if (!Stopped && !inventoryOpen && !mapOpen)
+            {
+                var savedColor = GUI.color;
+                foreach (var point in points)
+                {
+                    if (point == null || !point.isActiveAndEnabled || point.used ||
+                        (point.kind != ForestPointKind.Loot && point.kind != ForestPointKind.Supplies)) continue;
+                    if ((point.transform.position - player.position).sqrMagnitude > 32 * 32) continue;
+                    var screen = gameCamera.WorldToViewportPoint(point.transform.position + Vector3.up * .7f);
+                    if (screen.z <= 0 || screen.x < 0 || screen.x > 1 || screen.y < 0 || screen.y > 1) continue;
+                    float x = screen.x * width, y = (1 - screen.y) * height - 12 - Mathf.Sin(Time.unscaledTime * 3) * 4;
+                    // A stepped triangle avoids depending on Unicode arrow support in the UI font.
+                    GUI.color = new Color(.08f,.06f,.015f,.9f);
+                    GUI.DrawTexture(new Rect(x-5,y-16,10,17),Texture2D.whiteTexture);
+                    for (int row=0;row<10;row++) GUI.DrawTexture(new Rect(x-11+row,y-2+row,22-row*2,2),Texture2D.whiteTexture);
+                    GUI.color = new Color(1,.83f,.2f,1);
+                    GUI.DrawTexture(new Rect(x-3,y-14,6,14),Texture2D.whiteTexture);
+                    for (int row=0;row<8;row++) GUI.DrawTexture(new Rect(x-8+row,y+row,16-row*2,1),Texture2D.whiteTexture);
+                }
+                GUI.color = savedColor;
+            }
             if (inventoryOpen)
             {
                 Panel(new Rect(width / 2 - 240, 170, 480, 330));
