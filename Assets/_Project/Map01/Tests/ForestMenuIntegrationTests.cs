@@ -30,6 +30,12 @@ namespace ShadowVale.Map01.Tests
             var menu = UnityEngine.Object.FindFirstObjectByType<ForestMenu>();
             Call(menu, "MainAction", 1);
             yield return null;
+            Assert.IsTrue((bool)typeof(ForestMenu).GetField("playingIntro", Private).GetValue(menu),
+                "Chơi mới must play the briefing cutscene before Map 1 loads.");
+            Assert.AreEqual("01_MainMenu", SceneManager.GetActiveScene().name, "The cutscene must hold the scene switch, not race it.");
+            // "Chơi mới" plays the briefing cutscene first; skip it the same way Esc/Enter would.
+            Call(menu, "EndIntro");
+            yield return null;
             Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name);
             Assert.IsFalse(ForestMenu.Visible);
             Assert.IsNotNull(UnityEngine.Object.FindFirstObjectByType<ForestMission>());
@@ -101,6 +107,9 @@ namespace ShadowVale.Map01.Tests
                 ScreenCapture.CaptureScreenshot("Logs/MenuPreview/main.png");
                 for (int i = 0; i < 10; i++) yield return null;
                 Call(menu, "MainAction", 1);
+                yield return null;
+                // "Chơi mới" plays the briefing cutscene first; skip it the same way Esc/Enter would.
+                Call(menu, "EndIntro");
                 yield return null;
                 yield return new WaitForSeconds(1);
                 Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name);
