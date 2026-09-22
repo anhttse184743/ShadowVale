@@ -14,7 +14,7 @@ namespace ShadowVale.Map01
         private float nextQuickUse;
         private bool suppressFireUntilRelease;
         public bool InventoryOpen => inventoryOpen;
-        public float Health => hp;
+        public float Health => modernHealth != null ? modernHealth.Current : hp;
         public string QuickItem(int slot) => slot >= 0 && slot < 5 ? quickSlots[slot] : null;
 
         public int StackLimit(string id)
@@ -66,6 +66,7 @@ namespace ShadowVale.Map01
         }
         public bool UseItem(string id)
         {
+            if (modernHealth != null) hp = modernHealth.Current;
             if (!IsInitialized || Stopped || ForestMenu.Visible || Time.time < nextQuickUse) return false;
             if (crafting != null) { Say("Hãy hoàn thành chế tạo trước khi dùng vật phẩm.", 3); return false; }
             if (!ForestInventory.QuickUsable(id)) { Say("Vật phẩm này không dùng trực tiếp.", 3); return false; }
@@ -73,6 +74,7 @@ namespace ShadowVale.Map01
             if (id == "medkit_small") {
                 if (hp >= Settings.playerHP) { Say("Máu đã đầy, chưa cần dùng băng cứu thương.", 3); return false; }
                 inventory[id]--; hp = Mathf.Min(Settings.playerHP, hp + Settings.medkitHeal);
+                if (modernHealth != null) modernHealth.RestoreHealth(hp);
                 Say("Đã dùng băng cứu thương.", 3);
             } else {
                 if (inventoryOpen || mapOpen) { Say("Đóng túi đồ để ngắm hướng ném đá.", 3); return false; }

@@ -1,7 +1,7 @@
 {
     "name": "ShadowVale.Editor",
     "rootNamespace": "ShadowVale.Editor",
-    "references": ["ShadowVale.Core","ShadowVale.Data","ShadowVale.Content","ShadowVale.Networking","ShadowVale.Persistence","ShadowVale.Telemetry","ShadowVale.AI","ShadowVale.Gameplay","ShadowVale.UI","ShadowVale.Bootstrap","ShadowVale.Debugging"],
+    "references": ["ShadowVale.Core","ShadowVale.Data","ShadowVale.Content","ShadowVale.Networking","ShadowVale.Persistence","ShadowVale.Telemetry","ShadowVale.AI","ShadowVale.Gameplay","ShadowVale.UI","ShadowVale.Bootstrap","ShadowVale.Debugging","ShadowVale.Map01","UnityEngine.UI"],
     "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

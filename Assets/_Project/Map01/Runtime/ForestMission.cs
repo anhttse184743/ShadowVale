@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 namespace ShadowVale.Map01
 {
@@ -25,8 +23,8 @@ namespace ShadowVale.Map01
         public bool Paused => paused;
         public float PlaySeconds { get; private set; }
         public void SetPaused(bool value) { paused = value; Time.timeScale = value ? 0 : 1; }
-        public bool Stopped => hp <= 0 || stage == 4 || paused || pendingCheckpoint != null;
-        public int ObstructionMask => LayerMask.GetMask("Obstacle", "Cover", "VisionBlocker");
+        public bool Stopped => (modernHealth != null ? modernHealth.IsDead : hp <= 0) || stage == 4 || paused || pendingCheckpoint != null;
+        public int ObstructionMask => LayerMask.GetMask("Default", "Obstacle", "Cover", "VisionBlocker");
         public int Stage => stage;
         private ForestBundle bundle;
         private CharacterController controller;
@@ -39,19 +37,6 @@ namespace ShadowVale.Map01
         public bool IsWading => player != null && player.position.y < .12f &&
             Mathf.Abs(player.position.x - (8 + 12 * Mathf.Sin(player.position.z * .041f) + 4 * Mathf.Sin(player.position.z * .105f))) < 5f;
         public float MovementSurfaceMultiplier => IsWading ? .68f : 1f;
-        public bool TryJump()
-        {
-            if (!IsInitialized || Stopped || inventoryOpen || mapOpen || crafting != null || !controller.isGrounded || verticalVelocity > 0 || stamina < 8) return false;
-            verticalVelocity = Mathf.Sqrt(2f * 22f * 1.15f);
-            stamina -= 8; crouched = false; EmitNoise(player.position, 5); return true;
-        }
-        private void MovePlayer(Vector3 horizontal)
-        {
-            if (controller.isGrounded && verticalVelocity < 0) verticalVelocity = -2;
-            verticalVelocity = Mathf.Max(-30, verticalVelocity - 22 * Time.deltaTime);
-            var flags = controller.Move((horizontal + Vector3.up * verticalVelocity) * Time.deltaTime);
-            if ((flags & CollisionFlags.Above) != 0 && verticalVelocity > 0) verticalVelocity = 0;
-        }
         private int stage, stones;
         private bool crouched, inventoryOpen, mapOpen, paused, encounterLine;
         private string dialogue, crafting;
@@ -68,6 +53,8 @@ namespace ShadowVale.Map01
 
         private void Awake()
         {
+            if (player == null)
+                player = FindFirstObjectByType<ShadowVale.Gameplay.Player.PlayerController>()?.transform;
             // Unity objects can retain a managed wrapper after the asset was deleted.
             // Use Unity's null check before accessing TextAsset.text.
             if (balanceJson == null || contentBundle == null)
@@ -109,6 +96,7 @@ namespace ShadowVale.Map01
             hp = Settings.playerHP; stamina = Settings.stamina; stones = Settings.startingStones;
             inventory["ammo_rifle"] = Settings.startingAmmo;
             IsInitialized = true;
+            ConnectGameplay();
             Say("Hùng: Nhận hàng rồi đi thôi, Nam. Qua rừng là tới bến sông.", 9);
         }
 
@@ -121,11 +109,21 @@ namespace ShadowVale.Map01
         public void RegisterPoint(ForestPoint point) => points.Add(point);
         public int Count(string id) => id == "stone" ? stones : inventory.TryGetValue(id, out int count) ? count : 0;
         public void Say(string text, float seconds = 7) { dialogue = text; dialogueUntil = Time.time + seconds; }
-        public void EmitNoise(Vector3 position, float radius) { foreach (var guard in guards) guard.Hear(position, radius); }
-        public void Damage(float amount) { if (!Stopped) hp = Mathf.Max(0, hp - amount); }
+        public void EmitNoise(Vector3 position, float radius) {
+            foreach (var guard in guards) guard.Hear(position, radius);
+            foreach (var enemy in modernEnemies) enemy.Hear(position, radius);
+        }
+        public void Damage(float amount) {
+            if (Stopped) return;
+            if (modernHealth != null) { modernHealth.TakeDamage(amount, player.position, gameObject); hp = modernHealth.Current; }
+            else hp = Mathf.Max(0, hp - amount);
+            if (hp <= 0) GetComponent<ForestSquadCoordinator>()?.Event("player_down", "", player.position);
+        }
+        public float PlayerHealth => hp;
 
         private void Update()
         {
+            if (modernHealth != null) hp = modernHealth.Current;
             if (!Stopped) {
                 PlaySeconds += Time.deltaTime;
                 AdvanceMission();
@@ -142,24 +140,32 @@ namespace ShadowVale.Map01
             if (kb.f5Key.wasPressedThisFrame) SaveSlot(0, out _);
             if (kb.hKey.wasPressedThisFrame) UseItem("medkit_small");
             HandleQuickKeys(kb);
-            if (inventoryOpen || mapOpen) { MovePlayer(Vector3.zero); UpdateCompanion(); return; }
+            if (inventoryOpen || mapOpen) { if (modernPlayer == null) MovePlayer(Vector3.zero); UpdateCompanion(); return; }
 
-            var motion = new Vector2((kb.dKey.isPressed ? 1 : 0) - (kb.aKey.isPressed ? 1 : 0),
-                (kb.wKey.isPressed ? 1 : 0) - (kb.sKey.isPressed ? 1 : 0));
-            var right = gameCamera.transform.right; right.y = 0;
-            var forward = gameCamera.transform.forward; forward.y = 0;
-            var direction = Vector3.ClampMagnitude(right.normalized * motion.x + forward.normalized * motion.y, 1);
-            bool sprint = !crouched && kb.leftShiftKey.isPressed && stamina > 2 && direction.sqrMagnitude > .01f;
-            float speed = crouched ? Settings.crouchSpeed : sprint ? Settings.sprintSpeed : Settings.walkSpeed;
-            if (crafting != null) speed = 0;
-            if (kb.spaceKey.wasPressedThisFrame) TryJump();
-            MovePlayer(direction * speed * MovementSurfaceMultiplier);
-            stamina = Mathf.Clamp(stamina + (sprint ? -Settings.staminaDrain : Settings.staminaRecovery) * Time.deltaTime, 0, Settings.stamina);
-            Hidden = crouched && points.Any(p => p.kind == ForestPointKind.Hide && Vector3.Distance(player.position, p.transform.position) < p.radius);
-            if (sprint && Time.time > nextNoise) { nextNoise = Time.time + .6f; EmitNoise(player.position, 7); }
-            Aim();
-            if (Mouse.current == null || !Mouse.current.leftButton.isPressed) suppressFireUntilRelease = false;
-            if (Mouse.current != null && Mouse.current.leftButton.isPressed && !suppressFireUntilRelease && !HudPointerBlocked() && Time.time > nextShot && crafting == null) Fire();
+            if (modernPlayer == null) {
+                var motion = new Vector2((kb.dKey.isPressed ? 1 : 0) - (kb.aKey.isPressed ? 1 : 0),
+                    (kb.wKey.isPressed ? 1 : 0) - (kb.sKey.isPressed ? 1 : 0));
+                var right = gameCamera.transform.right; right.y = 0;
+                var forward = gameCamera.transform.forward; forward.y = 0;
+                var direction = Vector3.ClampMagnitude(right.normalized * motion.x + forward.normalized * motion.y, 1);
+                bool sprint = !crouched && kb.leftShiftKey.isPressed && stamina > 2 && direction.sqrMagnitude > .01f;
+                float speed = crouched ? Settings.crouchSpeed : sprint ? Settings.sprintSpeed : Settings.walkSpeed;
+                if (crafting != null) speed = 0;
+                if (kb.spaceKey.wasPressedThisFrame) TryJump();
+                MovePlayer(direction * speed * MovementSurfaceMultiplier);
+                stamina = Mathf.Clamp(stamina + (sprint ? -Settings.staminaDrain : Settings.staminaRecovery) * Time.deltaTime, 0, Settings.stamina);
+                Hidden = crouched && points.Any(p => p.kind == ForestPointKind.Hide && Vector3.Distance(player.position, p.transform.position) < p.radius);
+                if (sprint && Time.time > nextNoise) { nextNoise = Time.time + .6f; EmitNoise(player.position, 7); }
+                Aim();
+                if (Mouse.current == null || !Mouse.current.leftButton.isPressed) suppressFireUntilRelease = false;
+                if (Mouse.current != null && Mouse.current.leftButton.isPressed && !suppressFireUntilRelease && !HudPointerBlocked() && Time.time > nextShot && crafting == null) Fire();
+                } else {
+                modernPlayer.SurfaceSpeedMultiplier = MovementSurfaceMultiplier;
+                crouched = modernPlayer.IsSneaking;
+                Hidden = crouched && points.Any(p => p.kind == ForestPointKind.Hide && Vector3.Distance(player.position, p.transform.position) < p.radius);
+                stamina = Mathf.Clamp(stamina + (modernPlayer.IsSprinting ? -Settings.staminaDrain : Settings.staminaRecovery) * Time.deltaTime, 0, Settings.stamina);
+                if (modernPlayer.IsSprinting && Time.time > nextNoise) { nextNoise = Time.time + .6f; EmitNoise(player.position, 7); }
+            }
             if (kb.qKey.wasPressedThisFrame) UseItem("stone");
             nearby = points.Where(p => !p.used && p.kind != ForestPointKind.Hide && p.kind != ForestPointKind.Cover)
                 .OrderBy(p => Vector3.Distance(player.position, p.transform.position))
@@ -185,74 +191,13 @@ namespace ShadowVale.Map01
                 Say(Alarmed ? "Hùng: Bọn này hôm nay phản ứng nhanh hơn bình thường." : "Hùng: Qua được rồi. Chúng tuần tra kỹ hơn bình thường… Phía trước có một căn cứ cũ.", 9);
                 encounterLine = true;
             }
-            if (!encounterLine && Alarmed && guards.All(g => !g.Alive))
+            if (!encounterLine && Alarmed && guards.All(g => !g.Alive) && modernEnemies.All(g => !g.Alive))
             { encounterLine = true; Say("Hùng: Bọn này hôm nay phản ứng nhanh hơn bình thường."); }
         }
 
         private bool nearWorkbench() => points.Any(p => p.kind == ForestPointKind.Workbench && Vector3.Distance(player.position, p.transform.position) < Settings.interactRange);
 
-        private void Aim()
-        {
-            if (gameCamera.TryGetComponent<ForestThirdPersonCamera>(out var thirdPerson))
-            {
-                var centerRay = gameCamera.ViewportPointToRay(new Vector3(.5f, .5f));
-                aim = Physics.Raycast(centerRay, out var targetHit, Weapon.range, ObstructionMask | LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Ignore)
-                    ? targetHit.point : centerRay.GetPoint(Weapon.range);
-                var look = aim - player.position; look.y = 0;
-                if (look.sqrMagnitude > .01f) player.rotation = Quaternion.LookRotation(look);
-                return;
-            }
-            if (Mouse.current == null) return;
-            var ray = gameCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
-            if (new Plane(Vector3.up, player.position).Raycast(ray, out float distance)) aim = ray.GetPoint(distance);
-            var facing = aim - player.position; facing.y = 0;
-            if (facing.sqrMagnitude > .01f) player.rotation = Quaternion.LookRotation(facing);
-        }
-
-        private void Fire()
-        {
-            nextShot = Time.time + 1 / Weapon.fire_rate;
-            if (Count("ammo_rifle") <= 0) { Say("Hết đạn — vẫn có thể lén đi hoặc đánh lạc hướng.", 2); return; }
-            inventory["ammo_rifle"]--;
-            var origin = player.position + Vector3.up * 1.1f + player.forward * .7f;
-            var target = origin + player.forward * Weapon.range;
-            var shotDirection = gameCamera.GetComponent<ForestThirdPersonCamera>() != null ? (aim - origin).normalized : player.forward;
-            target = origin + shotDirection * Weapon.range;
-            int mask = ObstructionMask | LayerMask.GetMask("Enemy");
-            if (Physics.Raycast(origin, shotDirection, out var hit, Weapon.range, mask, QueryTriggerInteraction.Ignore))
-            { target = hit.point; var enemy = hit.collider.GetComponentInParent<ForestGuard>(); if (enemy != null) enemy.Hit(Weapon.damage); }
-            Trace(origin, target, new Color(1, .84f, .45f));
-            EmitNoise(player.position, Weapon.noise_radius);
-        }
-
-        public void Trace(Vector3 start, Vector3 end, Color color)
-        {
-            var go = new GameObject("Transient trail");
-            var line = go.AddComponent<LineRenderer>();
-            line.sharedMaterial = trailMaterial;
-            line.positionCount = 2; line.SetPosition(0, start); line.SetPosition(1, end);
-            line.startWidth = .055f; line.endWidth = .015f; line.startColor = color; line.endColor = color;
-            Destroy(go, .12f);
-        }
         public Material trailMaterial;
-
-        private void UpdateCompanion()
-        {
-            if (companion == null || !companion.isOnNavMesh) return;
-            // Hùng is a narrative companion in this map; he does not reveal a stealth player.
-            companion.speed = Settings.sprintSpeed;
-            companion.stoppingDistance = Settings.followDistance;
-            if (NavMesh.SamplePosition(player.position, out var hit, 3, NavMesh.AllAreas)) companion.SetDestination(hit.position);
-        }
-
-        private void LateUpdate()
-        {
-            if (gameCamera != null && player != null && gameCamera.GetComponent<ForestThirdPersonCamera>() == null)
-            {
-                var target = player.position - gameCamera.transform.forward * 30;
-                gameCamera.transform.position = Vector3.Lerp(gameCamera.transform.position, target, 1 - Mathf.Exp(-8 * Time.unscaledDeltaTime));
-            }
-        }
 
         public bool CameraInputEnabled => IsInitialized && !Stopped && !inventoryOpen && !mapOpen;
 
@@ -302,166 +247,5 @@ namespace ShadowVale.Map01
             crafting = recipe.id; craftUntil = Time.time + recipe.craft_seconds;
         }
 
-        [Serializable] private sealed class Checkpoint
-        {
-            public int version = 2, stage, stones;
-            public float hp, stamina;
-            public Vector3 player, hung;
-            public bool alarmed;
-            public string[] used;
-            public ForestIngredient[] items;
-            public string[] down;
-            public ForestGuard.Snapshot[] guards;
-            public string crafting;
-            public float craftRemaining, playerYaw, hungYaw, nextShotRemaining;
-            public bool crouched, encounterLine;
-            public string[] quickSlots;
-        }
-        private string SavePath => Path.Combine(Application.persistentDataPath, "shadowvale-map01-checkpoint.json");
-
-        public string ManualSaveBlockReason()
-        {
-            if (pendingCheckpoint != null) return "Đang tải bản lưu. Vui lòng đợi giây lát.";
-            if (hp <= 0) return "Không thể lưu khi nhân vật đã gục ngã.";
-            if (stage == 4) return "Màn chơi đã kết thúc. Về menu để tự lưu kết quả.";
-            if (crafting != null) return "Hãy hoàn thành chế tạo trước khi lưu thủ công.";
-            if (guards.Any(g => g.Alive && g.state != ForestGuardState.Patrol)) return "Lính đang cảnh giác hoặc giao chiến. Hãy thoát nguy hiểm trước khi lưu.";
-            if (guards.Any(g => g.Alive && Vector3.Distance(g.transform.position, player.position) <= 18)) return "Có lính ở quá gần. Hãy cách lính hơn 18 đơn vị để lưu thủ công.";
-            return null;
-        }
-        public bool CanSave() => ManualSaveBlockReason() == null;
-
-        public bool AutoSaveOnExit(out string error)
-        {
-            error = null;
-            if (pendingCheckpoint != null) { error = "Đang khôi phục bản lưu. Vui lòng thử lại sau giây lát."; return false; }
-            // Never replace a usable checkpoint with a dead character.
-            if (hp <= 0) return true;
-            return SaveSlot(ForestSaveSlots.AutoSlot, out error, true);
-        }
-
-        public bool SaveSlot(int slot, out string error, bool automatic = false)
-        {
-            error = null;
-            if (!automatic && (error = ManualSaveBlockReason()) != null) { Say(error); return false; }
-            var data = new Checkpoint { stage = stage, stones = stones, hp = hp, stamina = stamina,
-                player = player.position, hung = hung.position, alarmed = Alarmed,
-                used = points.Where(p => p.used).Select(p => p.id).ToArray(),
-                items = inventory.Select(p => new ForestIngredient { item_id = p.Key, count = p.Value }).ToArray(),
-                down = guards.Where(g => !g.Alive).Select(g => g.id).ToArray(),
-                guards = guards.Select(g => g.Capture()).ToArray(), crafting = crafting,
-                craftRemaining = Mathf.Max(0, craftUntil - Time.time),
-                playerYaw = player.eulerAngles.y, hungYaw = hung.eulerAngles.y,
-                crouched = crouched, encounterLine = encounterLine, nextShotRemaining = Mathf.Max(0, nextShot - Time.time),
-                quickSlots = (string[])quickSlots.Clone() };
-            try {
-                string thumbnail = null;
-                try { thumbnail = CaptureThumbnail(); } catch (Exception) { /* A missing preview must not prevent saving progress on exit. */ }
-                ForestSaveSlots.Write(slot, new ForestSaveSlots.Entry {
-                    sceneName = SceneManager.GetActiveScene().name,
-                    savedAt = DateTime.UtcNow.ToString("o"), playSeconds = PlaySeconds,
-                    location = stage == 0 ? "Điểm tập kết" : stage == 1 ? "Đường tuần tra" : stage == 2 ? "Căn cứ cũ" : "Bến sông",
-                    checkpoint = JsonUtility.ToJson(data), thumbnail = thumbnail
-                });
-                Say("Đã lưu tiến trình."); return true;
-            }
-            catch (Exception e) { error = "Không thể lưu: " + e.Message; Say(error); return false; }
-        }
-
-        private static string pendingCheckpoint;
-        private static float pendingSeconds;
-        private string CaptureThumbnail()
-        {
-            var rt = RenderTexture.GetTemporary(320, 180, 24);
-            var previous = gameCamera.targetTexture; var active = RenderTexture.active;
-            var texture = new Texture2D(320, 180, TextureFormat.RGB24, false);
-            try {
-                gameCamera.targetTexture = rt; gameCamera.Render(); RenderTexture.active = rt;
-                texture.ReadPixels(new Rect(0, 0, 320, 180), 0, 0); texture.Apply();
-                return Convert.ToBase64String(texture.EncodeToJPG(70));
-            } finally { gameCamera.targetTexture = previous; RenderTexture.active = active; RenderTexture.ReleaseTemporary(rt); Destroy(texture); }
-        }
-        public static void BeginGame(int slot = -1)
-        {
-            pendingCheckpoint = null; pendingSeconds = 0;
-            string sceneName = "Map 1";
-            if (slot >= 0) {
-                var entry = ForestSaveSlots.Read(slot);
-                if (entry == null) throw new IOException("Ô lưu trống.");
-                sceneName = string.IsNullOrEmpty(entry.sceneName) ? "Map01_ForestFootprints" : entry.sceneName;
-                if (sceneName != "Map 1" && sceneName != "Map01_ForestFootprints") throw new IOException("Bản lưu thuộc màn chơi chưa được hỗ trợ.");
-                var data = JsonUtility.FromJson<Checkpoint>(entry.checkpoint);
-                if (data == null || (data.version != 1 && data.version != 2) || data.items == null || data.used == null || data.down == null)
-                    throw new IOException("Dữ liệu checkpoint bị hỏng.");
-                pendingCheckpoint = entry.checkpoint; pendingSeconds = entry.playSeconds;
-            }
-            Time.timeScale = 1;
-            SceneManager.LoadScene(sceneName);
-        }
-        private void Start()
-        {
-            if (pendingCheckpoint != null) Invoke(nameof(Restore), .1f);
-        }
-        private void Load()
-        {
-            try {
-                if (ForestSaveSlots.Exists(0)) { BeginGame(0); return; }
-                if (!File.Exists(SavePath)) { Say("Chưa có bản lưu nhanh."); return; }
-                pendingCheckpoint = File.ReadAllText(SavePath); pendingSeconds = 0;
-                Time.timeScale = 1; SceneManager.LoadScene("Map01_ForestFootprints");
-            } catch (Exception e) { Say("Không thể tải: " + e.Message); }
-        }
-        private void Restore()
-        {
-            try
-            {
-                var data = JsonUtility.FromJson<Checkpoint>(pendingCheckpoint);
-                PlaySeconds = pendingSeconds;
-                if (data == null || (data.version != 1 && data.version != 2) || data.items == null || data.used == null || data.down == null) throw new IOException();
-                verticalVelocity = 0; controller.enabled = false; player.position = data.player; controller.enabled = true;
-                companion.Warp(data.hung); stage = Mathf.Clamp(data.stage, 0, 4); stones = data.stones;
-                hp = Mathf.Clamp(data.hp, 1, Settings.playerHP); stamina = Mathf.Clamp(data.stamina, 0, Settings.stamina); Alarmed = data.alarmed;
-                inventory.Clear(); foreach (var i in data.items) inventory[i.item_id] = i.count;
-                RestoreQuickSlots(data.quickSlots);
-                if (data.version == 2 && data.guards != null) {
-                    foreach (var guard in guards) {
-                        var saved = data.guards.FirstOrDefault(g => g.id == guard.id);
-                        if (saved != null) guard.RestoreSnapshot(saved);
-                    }
-                    player.rotation = Quaternion.Euler(0, data.playerYaw, 0);
-                    hung.rotation = Quaternion.Euler(0, data.hungYaw, 0);
-                    crouched = data.crouched; encounterLine = data.encounterLine;
-                    crafting = string.IsNullOrEmpty(data.crafting) ? null : data.crafting;
-                    craftUntil = Time.time + data.craftRemaining;
-                    nextShot = Time.time + data.nextShotRemaining;
-                } else foreach (var guard in guards) if (data.down.Contains(guard.id)) guard.Hit(GuardData.max_hp + 1);
-                foreach (var point in points) point.used = data.used.Contains(point.id);
-                Say(data.version == 2 ? "Đã khôi phục tiến trình và trạng thái giao chiến." : "Đã tải bản lưu cũ. Lính còn sống bắt đầu lại tuyến tuần tra.");
-            }
-            catch (Exception) { Say("Checkpoint không hợp lệ. Bắt đầu lại Map 1."); }
-            finally { pendingCheckpoint = null; }
-        }
-        private void Restart() { Time.timeScale = 1; SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); }
-        private void OnDisable() { Time.timeScale = 1; }
-
-        private void OnGUI() => DrawHud();
-
-        private void DrawMap(float width, float height)
-        {
-            var rect = new Rect(width / 2 - 310, 164, 620, 420); Panel(rect);
-            GUI.Label(new Rect(rect.x + 20, rect.y + 10, 580, 35), "TUYẾN VẬN CHUYỂN / M để đóng", titleStyle);
-            GUI.Label(new Rect(rect.x + 20, rect.y + 60, 260, 300), "BẮC ↑\n\n05  Bến sông / rút lui\n04  Căn cứ / bàn tài liệu\n03  Điểm nghỉ / chế tạo\n02  Khu tuần tra\n      Tây: bụi rậm\n      Giữa: vật chắn\n      Đông: đánh lạc hướng\n01  Nhận hàng / xuất phát", textStyle);
-            var area = new Rect(rect.x + 310, rect.y + 60, 280, 335);
-            foreach (var p in points.Where(p => p.kind != ForestPointKind.Cover && p.kind != ForestPointKind.Hide))
-            {
-                var pos = MapPosition(p.transform.position, area);
-                GUI.color = p.used ? Color.gray : new Color(.95f, .75f, .32f);
-                GUI.DrawTexture(new Rect(pos.x - 4, pos.y - 4, 8, 8), Texture2D.whiteTexture);
-            }
-            GUI.color = Color.cyan; var playerPos = MapPosition(player.position, area);
-            GUI.DrawTexture(new Rect(playerPos.x - 5, playerPos.y - 5, 10, 10), Texture2D.whiteTexture); GUI.color = Color.white;
-        }
-        private Vector2 MapPosition(Vector3 p, Rect r) => new Vector2(r.x + Mathf.InverseLerp(mapMin.x, mapMax.x, p.x) * r.width, r.yMax - Mathf.InverseLerp(mapMin.y, mapMax.y, p.z) * r.height);
-        private static void Panel(Rect rect) { var old = GUI.color; GUI.color = new Color(.035f, .07f, .06f, .94f); GUI.DrawTexture(rect, Texture2D.whiteTexture); GUI.color = old; }
     }
 }

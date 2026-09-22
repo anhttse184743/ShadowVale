@@ -1,0 +1,4 @@
+PASS CharacterController blocked from rear at x=-1, final z=-5.034996
+PASS CharacterController blocked from rear at x=0, final z=-5.034996
+PASS CharacterController blocked from rear at x=1, final z=-5.034996
+PASS Player/Obstacle layers collide; rear wall is solid, not a trigger

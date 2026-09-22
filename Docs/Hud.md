@@ -12,6 +12,9 @@ trong map cũ khi tải checkpoint. Không cần gắn thêm component vào scen
 - Bấm ô để xem tên, mô tả, tổng số lượng và giới hạn mỗi stack.
 - Kéo băng cứu thương/đá từ túi xuống thanh nhanh, hoặc chọn vật phẩm rồi nhấn 1–5.
 - Khi đóng túi, nhấn 1–5 để dùng ô tương ứng. H và Q vẫn dùng được như trước.
+- Map 1 dùng nhân vật/animation mới từ dev: 6 đổi súng trường, 7 dao, 8 tay không.
+  Các phím 1–5 vẫn dành riêng cho vật phẩm. C hoặc Ctrl bật/tắt đi khom; Shift bật/tắt chạy.
+  Đạn súng lấy từ túi đồ; thanh máu và băng cứu thương dùng cùng Health của nhân vật.
 - Chuột phải ô nhanh khi mở túi để bỏ gán. Phím tắt chỉ tham chiếu tổng số đồ
   trong túi, không tạo bản sao và không chuyển đồ ra khỏi túi.
 - Máu đầy, hết vật phẩm, đang chế tạo, chết hoặc tạm dừng không tiêu hao băng.

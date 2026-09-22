@@ -105,6 +105,11 @@ namespace ShadowVale.Map01
             GUI.matrix = Matrix4x4.Scale(new Vector3(scale, scale, 1)); GUI.color = Color.white; GUI.depth = -10;
             DrawHealth();
             DrawObjective();
+            if (modernCombat != null && !inventoryOpen && !mapOpen) {
+                var weapon = modernCombat.EquippedKind;
+                string label = weapon == ShadowVale.Gameplay.Combat.WeaponKind.Rifle ? "SÚNG TRƯỜNG" : weapon == ShadowVale.Gameplay.Combat.WeaponKind.Knife ? "DAO" : "TAY KHÔNG";
+                GUI.Label(new Rect(width - 390, 28, 360, 70), label + "\n6 Súng  ·  7 Dao  ·  8 Tay không", hudSmall);
+            }
             if (!mapOpen) {
                 DrawQuickBar(width, height);
                 if (inventoryOpen) DrawInventory(width);

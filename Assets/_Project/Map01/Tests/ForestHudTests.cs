@@ -17,7 +17,11 @@ namespace ShadowVale.Map01.Tests
     public sealed class ForestHudTests : ForestSceneTestBase
     {
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
-        private static void Set(ForestMission mission, string field, object value) => typeof(ForestMission).GetField(field, Private).SetValue(mission, value);
+        private static void Set(ForestMission mission, string field, object value)
+        {
+            typeof(ForestMission).GetField(field, Private).SetValue(mission, value);
+            if (field == "hp") mission.player.GetComponent<ShadowVale.Gameplay.Combat.Health>()?.RestoreHealth((float)value);
+        }
 
         private static void SetPreviewResolution(int width, int height)
         {

@@ -49,6 +49,11 @@ Không tự lưu khi tải bản khác hoặc nhấn Chơi mới. Tắt cưỡng
   tồn tại qua chuyển scene và tự loại bỏ bản trùng.
 - `ForestSaveSlots`: file lưu, kiểm tra envelope và tìm ô gần nhất.
 - `ForestMission`: chụp/khôi phục checkpoint, pause và thumbnail.
+- `Checkpoint.cs`: phần lưu/tải của `ForestMission`, giữ ô backup, F5 và tự lưu riêng biệt.
+- `ForestMissionGameplay.cs`: nối nhiệm vụ, HUD và checkpoint với PlayerController/PlayerCombat
+  mới trong Map 1. `Player.cs`/`Combat.cs` vẫn phục vụ map cũ; không chạy song song hai bộ điều khiển.
+- Checkpoint v2 bổ sung vũ khí đang cầm, thời gian hồi đòn, HP/vị trí/cảnh giác của
+  Map01EnemyController. Bản lưu trước khi chuyển nhân vật vẫn giữ lính đã bị hạ và điểm loot.
 - Giao diện IMGUI đồng bộ với prototype hiện tại; bố cục 1600×900 tự scale/letterbox.
 - Chữ và nút là UI thật. Nền là ảnh 2D tĩnh, không phải nhân vật 3D tương tác.
 - Font stencil đóng gói cùng game, logo alpha và bảng kim loại 9-slice: xem [MenuArt.md](MenuArt.md).

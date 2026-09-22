@@ -1,0 +1,4 @@
+PASS 360-degree exterior ground ring, 0.6m overlap, scenery extends 700m
+PASS 5896 distant trees in 128 static render groups; low-detail shared source meshes
+PASS distance fog: clear foreground to 40m, full haze by 310m
+PASS no exterior colliders or NavMesh changes

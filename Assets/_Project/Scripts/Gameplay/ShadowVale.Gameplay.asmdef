@@ -1,7 +1,7 @@
 {
     "name": "ShadowVale.Gameplay",
     "rootNamespace": "ShadowVale.Gameplay",
-    "references": ["ShadowVale.Core","ShadowVale.Data","ShadowVale.AI","ShadowVale.Content","ShadowVale.Persistence","ShadowVale.Telemetry"],
+    "references": ["ShadowVale.Core","ShadowVale.Data","ShadowVale.AI","ShadowVale.Content","ShadowVale.Persistence","ShadowVale.Telemetry","Unity.InputSystem"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

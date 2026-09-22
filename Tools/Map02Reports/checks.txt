@@ -1,0 +1,8 @@
+PASS continuous terrain 220 x 200 = 44000 m2; same footprint as Map 1
+PASS straight river centre x=-36.66666 at one-third width; 10.5m = 1.5 x Map 1 nominal 7m
+PASS no enemy models / ForestGuard components in Map 2
+PASS 14 houses, 18 rice paddies, two evacuation landings, separate design-only story markers
+PASS arrival route -> (12.00, 1.00, 33.00)
+PASS arrival route -> (28.00, 1.00, -4.00)
+PASS arrival route -> (-26.67, 1.00, 45.00)
+PASS arrival route -> (-26.67, 1.00, -76.00)

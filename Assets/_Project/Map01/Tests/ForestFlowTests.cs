@@ -85,11 +85,12 @@ namespace ShadowVale.Map01.Tests
             yield return new EnterPlayMode();
             yield return null;
             var mission = Object.FindFirstObjectByType<ForestMission>();
-            var guards = Object.FindObjectsByType<ForestGuard>(FindObjectsSortMode.None);
+            var guards = Object.FindObjectsByType<Map01EnemyController>(FindObjectsSortMode.None);
+            Assert.IsNotEmpty(guards);
             mission.EmitNoise(mission.player.position, 7);
-            Assert.IsTrue(guards.All(g => g.state == ForestGuardState.Patrol));
+            Assert.IsTrue(guards.All(g => !g.Alerted));
             mission.EmitNoise(guards[0].transform.position, 8);
-            Assert.AreEqual(ForestGuardState.Investigate, guards[0].state);
+            Assert.IsTrue(guards[0].Alerted);
             var loot = Object.FindObjectsByType<ForestPoint>(FindObjectsSortMode.None).Single(p => p.id == "tutorial_loot");
             mission.Interact(loot); int cloth = mission.Count("cloth");
             mission.Interact(loot); Assert.AreEqual(cloth, mission.Count("cloth"));

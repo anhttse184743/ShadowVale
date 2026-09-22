@@ -1,7 +1,7 @@
 {
     "name": "ShadowVale.UI",
     "rootNamespace": "ShadowVale.UI",
-    "references": ["ShadowVale.Core","ShadowVale.Data","ShadowVale.Gameplay"],
+    "references": ["ShadowVale.Core","ShadowVale.Data","ShadowVale.Gameplay","UnityEngine.UI"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
