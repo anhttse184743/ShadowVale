@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -112,6 +112,21 @@ namespace ShadowVale.Editor
             }
             return default;
         }
+
+        /// <summary>
+        /// Whether a role's vertical root travel is baked into the pose rather than left as root
+        /// motion. Root motion is off everywhere — the controllers own movement — so anything a
+        /// take does to the root's height is otherwise discarded.
+        /// <para>
+        /// Death needs it: the take lowers the body over its 212 frames, and throwing that away
+        /// lays the character down still at standing height, leaving the corpse hovering.
+        /// </para>
+        /// <para>
+        /// Jump and the locomotion takes deliberately do not. CharacterController already lifts
+        /// the player, and baking the take's rise on top would raise them twice.
+        /// </para>
+        /// </summary>
+        public static bool BakesRootHeight(string role) => role == "Die";
 
         /// <summary>Loads the clip a role resolved to, or null when that role has no file.</summary>
         public static AnimationClip LoadClip(Dictionary<string, string> resolved, string role)
