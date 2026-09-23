@@ -149,7 +149,20 @@ namespace ShadowVale.Map01
             GUI.Label(new Rect(230, 100, 66, 25), "NAM", hudKey);
             GUI.Label(new Rect(308, 100, 138, 25), $"{mission.PlayerHealth:0} / {mission.Settings.playerHP:0} HP", hudKey);
             HudPanel(new Rect(141, 136, 390, 38));
-            GUI.Label(new Rect(158, 144, 355, 27), $"Sức bền {mission.Stamina:0}  ·  Đạn {inventory.Count("ammo_rifle")}  ·  {(mission.Hidden ? "Ẩn nấp" : mission.Crouched ? "Đi khom" : "Sẵn sàng")}", hudSmall);
+            GUI.Label(new Rect(158, 144, 355, 27), $"Sức bền {mission.Stamina:0}  ·  {AmmoLabel()}  ·  {(mission.Hidden ? "Ẩn nấp" : mission.Crouched ? "Đi khom" : "Sẵn sàng")}", hudSmall);
+        }
+
+        /// <summary>
+        /// Rounds in the weapon over rounds in the pack. The magazine is the number that decides
+        /// whether to push on or break contact, so it reads first; a reload replaces it with the
+        /// wait, because during those seconds the pack total is not what the player needs to know.
+        /// </summary>
+        private string AmmoLabel()
+        {
+            var combat = mission.ModernCombat;
+            if (combat == null) return $"Đạn {inventory.Count("ammo_rifle")}";
+            if (combat.IsReloading) return $"Nạp đạn {combat.ReloadProgress * 100f:0}%";
+            return $"Đạn {combat.RoundsInMagazine} / {inventory.Count("ammo_rifle")}";
         }
         private void DrawObjective()
         {

@@ -125,6 +125,20 @@ namespace ShadowVale.Map01
                     EmitNoise(player.position, Weapon.noise_radius);
                     return true;
                 };
+                // With a magazine in the weapon the pack is a reserve, drawn once per reload
+                // rather than once per shot, so the two hooks below replace the one above.
+                ModernCombat.ReserveRounds = () => inventory.Count("ammo_rifle");
+                ModernCombat.DrawRounds = wanted =>
+                {
+                    int granted = Mathf.Min(wanted, inventory.Count("ammo_rifle"));
+                    if (granted > 0) inventory.Spend("ammo_rifle", granted);
+                    else Say("Hết đạn — nhặt thêm đạn hoặc đổi vũ khí bằng 6 / 7 / 8.", 2);
+                    return granted;
+                };
+                // The shot's noise used to ride along with spending the round. It now hangs off
+                // the attack itself, so a reload does not announce the player thirty times over.
+                ModernCombat.Attacked -= OnPlayerAttacked;
+                ModernCombat.Attacked += OnPlayerAttacked;
             }
             if (gameCamera != null && gameCamera.TryGetComponent<ThirdPersonCamera>(out var cameraRig))
                 cameraRig.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible;
@@ -164,6 +178,11 @@ namespace ShadowVale.Map01
             Destroy(trail, .12f);
         }
         public void Say(string text, float seconds = 7) { Dialogue = text; DialogueUntil = Time.time + seconds; }
+        private void OnPlayerAttacked(WeaponKind kind, Vector3 position)
+        {
+            if (kind == WeaponKind.Rifle) EmitNoise(position, Weapon.noise_radius);
+        }
+
         public void EmitNoise(Vector3 position, float radius)
         {
             foreach (var enemy in Enemies) enemy.Hear(position, radius);
