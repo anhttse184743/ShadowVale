@@ -999,6 +999,8 @@ GameObject:
   - component: {fileID: 4017542438721466583}
   - component: {fileID: 7618391314602926735}
   - component: {fileID: 881147567421290734}
+  - component: {fileID: 1827577701865370797}
+  - component: {fileID: 320424969959985637}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -1124,6 +1126,49 @@ MonoBehaviour:
   animator: {fileID: 4453975508673679039}
   cameraRig: {fileID: 0}
   health: {fileID: 0}
+--- !u!114 &1827577701865370797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7520678392727501015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d11b53920beb9444d892268066167d56, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ShadowVale.Gameplay::ShadowVale.Gameplay.Player.PlayerFootsteps
+  bank: {fileID: 11400000, guid: e180a262d5a36774fafdfaffa251c728, type: 2}
+  controller: {fileID: 4017542438721466583}
+  sneakStride: 0.75
+  walkStride: 1
+  sprintStride: 1.35
+  masterVolume: 1
+  landingVolumeBoost: 0.35
+--- !u!114 &320424969959985637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7520678392727501015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e640620356011419756a70e050c28e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ShadowVale.Gameplay::ShadowVale.Gameplay.Audio.CombatAudio
+  gunshot:
+    clip: {fileID: 8300000, guid: e8bcd2df7f0c31c4c90d6fb6857c5e81, type: 3}
+    startTime: 0.03
+    duration: 0.13
+    gain: 1
+  melee:
+    clip: {fileID: 8300000, guid: 43878e86103b2f447a3ce8fcbbd27cb6, type: 3}
+    startTime: 0.15
+    duration: 0.55
+    gain: 0.9
+  volume: 0.85
+  pitchJitter: 0.07
 --- !u!1 &7523722493039022541
 GameObject:
   m_ObjectHideFlags: 0
