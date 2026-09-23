@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace ShadowVale.Gameplay.Player
@@ -61,14 +61,52 @@ namespace ShadowVale.Gameplay.Player
         [Tooltip("Keeps the camera off the surface it hits.")]
         [SerializeField] private float collisionPadding = 0.3f;
 
+        [Header("Recoil")]
+        [Tooltip("Degrees per second the view settles back down after a burst. Fast enough to " +
+                 "recover between bursts, slow enough that the climb has to be fought during one.")]
+        [SerializeField] private float recoilRecoverySpeed = 9f;
+
         private Camera _camera;
         private float _yaw;
         private float _pitch = 15f;
+
+        // Recoil applied to the view and not yet paid back, stored as the correction still to
+        // be made: recovery adds these straight onto pitch and yaw. Same convention on both
+        // axes, so one absorb rule covers them.
+        private float _recoilPitchOwed;
+        private float _recoilYawOwed;
         private float _currentDistance;
         private float _aimBlend; // 0 = hip, 1 = aiming
         private bool _aiming;
 
         public bool IsAiming => _aiming;
+
+        /// <summary>Degrees of recoil still sitting in the view, for tests and for the HUD.</summary>
+        public Vector2 RecoilOwed => new(_recoilPitchOwed, _recoilYawOwed);
+
+        /// <summary>
+        /// Kicks the view. <paramref name="up"/> raises the aim, <paramref name="right"/> drags
+        /// it sideways, both in degrees.
+        /// <para>
+        /// The kick goes into the same pitch and yaw the player steers with, not a decorative
+        /// layer on top, so the barrel really does move and a shot fired mid-climb really does
+        /// miss. A cosmetic shake that leaves the aim untouched teaches the player to ignore it.
+        /// </para>
+        /// </summary>
+        public void AddRecoil(float up, float right)
+        {
+            _pitch = Mathf.Clamp(_pitch - up, minPitch, maxPitch);
+            _yaw += right;
+            _recoilPitchOwed += up;    // adding this back brings the view down again
+            _recoilYawOwed -= right;   // and this brings it back left
+        }
+
+        /// <summary>Drops any outstanding recoil without moving the view. For respawns.</summary>
+        public void ClearRecoil()
+        {
+            _recoilPitchOwed = 0f;
+            _recoilYawOwed = 0f;
+        }
         public System.Func<bool> InputAllowed { get; set; }
 
         private void Awake()
@@ -96,6 +134,10 @@ namespace ShadowVale.Gameplay.Player
 
             if (InputAllowed != null && !InputAllowed()) SetCursorLocked(false);
             else ReadLookInput();
+
+            // After the player's input, so a pull that cancels the climb is credited before any
+            // of it is handed back.
+            RecoverRecoil(Time.deltaTime);
 
             _aimBlend = Mathf.MoveTowards(_aimBlend, _aiming ? 1f : 0f, aimBlendSpeed * Time.deltaTime);
             _camera.fieldOfView = Mathf.Lerp(hipFov, aimFov, _aimBlend);
@@ -144,8 +186,19 @@ namespace ShadowVale.Gameplay.Player
             {
                 float sensitivity = mouseSensitivity * Mathf.Lerp(1f, aimSensitivityScale, _aimBlend);
                 Vector2 delta = mouse.delta.ReadValue();
-                _yaw += delta.x * sensitivity;
-                _pitch = Mathf.Clamp(_pitch - delta.y * sensitivity, minPitch, maxPitch);
+
+                float yawDelta = delta.x * sensitivity;
+                float pitchDelta = -delta.y * sensitivity; // positive looks down
+
+                // Pulling against the climb pays off the debt before anything else. Without
+                // this step the recovery below keeps running underneath a player who is already
+                // compensating correctly, and drags their aim below the target the moment they
+                // stop firing — the usual way this mechanic is got wrong.
+                Absorb(pitchDelta, ref _recoilPitchOwed);
+                Absorb(yawDelta, ref _recoilYawOwed);
+
+                _yaw += yawDelta;
+                _pitch = Mathf.Clamp(_pitch + pitchDelta, minPitch, maxPitch);
             }
 
             // Wheel zoom only applies to the hip-fire arm; aiming has its own fixed distance.
@@ -153,6 +206,40 @@ namespace ShadowVale.Gameplay.Player
             if (!Mathf.Approximately(scroll, 0f) && !_aiming)
             {
                 distance = Mathf.Clamp(distance - scroll * zoomSpeed, minDistance, maxDistance);
+            }
+        }
+
+        /// <summary>
+        /// Cancels as much outstanding recoil as this input has already made up for. The input
+        /// itself is untouched — the player still sees their own movement — only the debt
+        /// shrinks, so the recovery below has that much less to hand back.
+        /// </summary>
+        private static void Absorb(float input, ref float owed)
+        {
+            if (owed > 0f && input > 0f) owed = Mathf.Max(0f, owed - input);
+            else if (owed < 0f && input < 0f) owed = Mathf.Min(0f, owed - input);
+        }
+
+        /// <summary>
+        /// Eases the view back down to where it was pointing, but only by as much recoil as the
+        /// player has not already cancelled themselves.
+        /// </summary>
+        private void RecoverRecoil(float deltaTime)
+        {
+            float step = recoilRecoverySpeed * deltaTime;
+
+            if (!Mathf.Approximately(_recoilPitchOwed, 0f))
+            {
+                float give = Mathf.Clamp(_recoilPitchOwed, -step, step);
+                _pitch = Mathf.Clamp(_pitch + give, minPitch, maxPitch);
+                _recoilPitchOwed -= give;
+            }
+
+            if (!Mathf.Approximately(_recoilYawOwed, 0f))
+            {
+                float give = Mathf.Clamp(_recoilYawOwed, -step, step);
+                _yaw += give;
+                _recoilYawOwed -= give;
             }
         }
 
