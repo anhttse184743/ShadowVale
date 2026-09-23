@@ -14,7 +14,8 @@ namespace ShadowVale.Map01
         public static bool Visible => instance != null && instance.visible;
         private bool visible, browser, saving, quitAuthorized;
         private int selected, latest;
-        private ForestMission mission;
+        private Map01Mission mission;
+        private Map01SaveSystem saveSystem;
         private Texture2D background, buttonPlate, wordmark;
         private Font font, displayFont;
         private GUIStyle title, heading, body, small, button, mainButton, caption, pointer;
@@ -69,7 +70,8 @@ namespace ShadowVale.Map01
         private void OnScene(Scene scene, LoadSceneMode mode) => BindScene();
         private void BindScene()
         {
-            mission = FindFirstObjectByType<ForestMission>();
+            mission = FindFirstObjectByType<Map01Mission>();
+            saveSystem = mission != null ? mission.GetComponent<Map01SaveSystem>() : null;
             var name = SceneManager.GetActiveScene().name;
             // A blank/unsaved editor scene has no gameplay. It must show the title rather than just its skybox.
             visible = mission == null || mission.Paused;
@@ -83,7 +85,7 @@ namespace ShadowVale.Map01
         private bool SaveBeforeExit()
         {
             if (mission == null) return true;
-            if (mission.AutoSaveOnExit(out var error)) return true;
+            if (saveSystem.AutoSaveOnExit(out var error)) return true;
             visible = true; mission.SetPaused(true); message = error;
             return false;
         }
@@ -139,7 +141,7 @@ namespace ShadowVale.Map01
         private void OpenSlots(bool save) { browser = true; saving = save; message = null; Refresh(); selected = save ? 1 : Mathf.Max(0, latest); }
         private void StartGame(int slot)
         {
-            try { ForestMission.BeginGame(slot); }
+            try { Map01SaveSystem.BeginGame(slot); }
             catch (Exception e) { message = "Không thể mở bản lưu: " + e.Message; }
         }
         /// <summary>"Chơi mới" plays the briefing cutscene once before Map 1 loads. Loading a save
@@ -191,7 +193,7 @@ namespace ShadowVale.Map01
             if (saving) {
                 if (mission == null) { message = "Hãy vào màn chơi trước khi lưu."; return; }
                 if (slot == 0 || slot == ForestSaveSlots.AutoSlot) { message = "Chọn Ô lưu 01, 02 hoặc 03 để lưu backup thủ công."; return; }
-                if (!mission.CanSave()) { message = mission.ManualSaveBlockReason(); return; }
+                if (!saveSystem.CanSave()) { message = saveSystem.ManualSaveBlockReason(); return; }
                 if (ForestSaveSlots.Exists(slot)) Ask("Ghi đè " + ForestSaveSlots.Title(slot) + "?", () => Save(slot));
                 else Save(slot);
             } else if (entries[slot] != null && !damaged[slot]) {
@@ -201,7 +203,7 @@ namespace ShadowVale.Map01
         }
         private void Save(int slot)
         {
-            message = mission.SaveSlot(slot, out var error) ? "Đã lưu vào " + ForestSaveSlots.Title(slot) + ". Bạn có thể chuyển sang Tải game để kiểm tra." : error;
+            message = saveSystem.SaveSlot(slot, out var error) ? "Đã lưu vào " + ForestSaveSlots.Title(slot) + ". Bạn có thể chuyển sang Tải game để kiểm tra." : error;
             Refresh();
         }
         private void DeleteSelected()
@@ -372,7 +374,7 @@ namespace ShadowVale.Map01
             if (Button(new Rect(960, 750, 250, 60), "XÓA", false, ForestSaveSlots.Exists(selected))) DeleteSelected();
             if (Button(new Rect(1235, 750, 285, 60), "QUAY LẠI")) { browser = false; selected = 0; }
             Fill(new Rect(535, 842, 1025, 52), Ink);
-            GUI.Label(new Rect(575, 850, 980, 45), message ?? (saving ? mission?.ManualSaveBlockReason() ?? "Chọn Ô lưu 01–03, rồi bấm Lưu vào ô này. Enter xác nhận ghi đè." : "↑ ↓ Chọn ô     Enter Tải     Delete Xóa     Esc Quay lại"), small);
+            GUI.Label(new Rect(575, 850, 980, 45), message ?? (saving ? saveSystem?.ManualSaveBlockReason() ?? "Chọn Ô lưu 01–03, rồi bấm Lưu vào ô này. Enter xác nhận ghi đè." : "↑ ↓ Chọn ô     Enter Tải     Delete Xóa     Esc Quay lại"), small);
         }
         private void OnDestroy()
         {

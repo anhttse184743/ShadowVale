@@ -21,7 +21,7 @@ namespace ShadowVale.Map01
         private Health _playerHealth;
         private int _patrolIndex;
         private float _nextShot;
-        private ForestMission _mission;
+        private Map01Mission _mission;
         private float _alertUntil;
         private Vector3 _investigate;
         private bool _lootCreated;
@@ -36,7 +36,7 @@ namespace ShadowVale.Map01
                 return path;
             }
         }
-        public void BindMission(ForestMission mission) { _mission = mission; GetComponent<Health>().KeepCheckpointCorpse(); }
+        public void BindMission(Map01Mission mission) { _mission = mission; GetComponent<Health>().KeepCheckpointCorpse(); }
         public void Hear(Vector3 position, float radius)
         {
             if (!Alive || Vector3.Distance(position, transform.position) > radius) return;
@@ -70,11 +70,6 @@ namespace ShadowVale.Map01
             if (_agent.isOnNavMesh) _agent.isStopped = saved.stopped || !Alive;
             if (!Alive) CreateLoot();
         }
-        public void RestoreLegacy(ForestGuard.Snapshot saved) => RestoreSnapshot(new Snapshot {
-            position = saved.position, rotation = saved.rotation, hp = saved.state == ForestGuardState.Down ? 0 : saved.hp,
-            patrolIndex = saved.waypoint, shotRemaining = saved.shotRemaining, destination = saved.destination,
-            investigate = saved.lastKnown, alertRemaining = saved.state == ForestGuardState.Patrol ? 0 : 6, stopped = saved.stopped
-        });
         private void CreateLoot()
         {
             if (_lootCreated || _mission == null) return;

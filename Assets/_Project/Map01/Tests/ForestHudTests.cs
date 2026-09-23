@@ -17,11 +17,8 @@ namespace ShadowVale.Map01.Tests
     public sealed class ForestHudTests : ForestSceneTestBase
     {
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
-        private static void Set(ForestMission mission, string field, object value)
-        {
-            typeof(ForestMission).GetField(field, Private).SetValue(mission, value);
-            if (field == "hp") mission.player.GetComponent<ShadowVale.Gameplay.Combat.Health>()?.RestoreHealth((float)value);
-        }
+        private static void SetPrivate(object target, string field, object value) =>
+            target.GetType().GetField(field, Private).SetValue(target, value);
 
         private static void SetPreviewResolution(int width, int height)
         {
@@ -64,100 +61,105 @@ namespace ShadowVale.Map01.Tests
             string root = Path.Combine(Application.temporaryCachePath, "hud-test-" + Guid.NewGuid().ToString("N"));
             rootField.SetValue(null, root);
             try {
-                var mission = UnityEngine.Object.FindFirstObjectByType<ForestMission>();
+                var mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
+                var inventory = mission.GetComponent<Map01Inventory>();
+                var hud = mission.GetComponent<Map01Hud>();
+                var saveSystem = mission.GetComponent<Map01SaveSystem>();
                 Assert.IsTrue(mission.IsInitialized);
                 Assert.IsNotNull(Resources.Load<Texture2D>("Hud/Items"));
                 Assert.IsNotNull(Resources.Load<Texture2D>("Hud/HealthFrame"));
-                var stock = (Dictionary<string, int>)typeof(ForestMission).GetField("inventory", Private).GetValue(mission);
+                var stock = (Dictionary<string, int>)typeof(Map01Inventory).GetField("items", Private).GetValue(inventory);
                 stock["ammo_rifle"] = 125; stock["medkit_small"] = 5; stock["cloth"] = 12;
                 stock["herb"] = 8; stock["supplies"] = 1; stock["river_documents"] = 1;
                 stock["ammo_sniper"] = 6; stock["scrap_metal"] = 4;
-                CollectionAssert.AreEqual(new[] { 90, 35 }, mission.InventoryStacks().Where(s => s.Id == "ammo_rifle").Select(s => s.Count));
-                Assert.IsFalse(mission.AssignQuickSlot(2, "ammo_rifle"));
-                Assert.IsFalse(mission.AssignQuickSlot(2, "river_documents"));
-                Assert.IsFalse(mission.AssignQuickSlot(9, "medkit_small"));
-                Assert.IsTrue(mission.AssignQuickSlot(2, "medkit_small"));
-                Assert.AreEqual(5, mission.Count("medkit_small"), "Assigning must not move stock.");
-                Assert.IsFalse(mission.UseQuickSlot(2), "Full health must not consume a bandage.");
-                Assert.AreEqual(5, mission.Count("medkit_small"));
+                CollectionAssert.AreEqual(new[] { 90, 35 }, inventory.InventoryStacks().Where(s => s.Id == "ammo_rifle").Select(s => s.Count));
+                Assert.IsFalse(inventory.AssignQuickSlot(2, "ammo_rifle"));
+                Assert.IsFalse(inventory.AssignQuickSlot(2, "river_documents"));
+                Assert.IsFalse(inventory.AssignQuickSlot(9, "medkit_small"));
+                Assert.IsTrue(inventory.AssignQuickSlot(2, "medkit_small"));
+                Assert.AreEqual(5, inventory.Count("medkit_small"), "Assigning must not move stock.");
+                Assert.IsFalse(inventory.UseQuickSlot(2), "Full health must not consume a bandage.");
+                Assert.AreEqual(5, inventory.Count("medkit_small"));
                 mission.Damage(50);
-                float before = mission.Health;
-                Assert.IsTrue(mission.UseQuickSlot(2));
-                Assert.AreEqual(4, mission.Count("medkit_small"));
-                Assert.AreEqual(Mathf.Min(mission.Settings.playerHP, before + mission.Settings.medkitHeal), mission.Health);
-                Assert.IsFalse(mission.UseQuickSlot(2), "The same frame must not consume twice.");
-                Set(mission, "nextQuickUse", 0f);
-                int stones = mission.Count("stone");
+                float before = mission.PlayerHealth;
+                Assert.IsTrue(inventory.UseQuickSlot(2));
+                Assert.AreEqual(4, inventory.Count("medkit_small"));
+                Assert.AreEqual(Mathf.Min(mission.Settings.playerHP, before + mission.Settings.medkitHeal), mission.PlayerHealth);
+                Assert.IsFalse(inventory.UseQuickSlot(2), "The same frame must not consume twice.");
+                SetPrivate(inventory, "nextQuickUse", 0f);
+                int stones = inventory.Count("stone");
                 mission.SetInventoryOpen(true);
-                Assert.IsFalse(mission.UseItem("stone"), "Throwing must require a gameplay aim.");
-                Assert.AreEqual(stones, mission.Count("stone"));
+                Assert.IsFalse(inventory.UseItem("stone"), "Throwing must require closing the gameplay panel first.");
+                Assert.AreEqual(stones, inventory.Count("stone"));
                 Assert.IsTrue(mission.CloseGameplayPanel());
                 Assert.IsFalse(mission.CloseGameplayPanel());
-                Assert.IsTrue(mission.UseItem("stone"));
-                Assert.AreEqual(stones - 1, mission.Count("stone"));
+                Assert.IsTrue(inventory.UseItem("stone", mission.player.position + Vector3.forward * 3f));
+                Assert.AreEqual(stones - 1, inventory.Count("stone"));
                 mission.SetPaused(true);
-                Set(mission, "nextQuickUse", 0f);
-                Assert.IsFalse(mission.UseQuickSlot(2), "Pause must block consumables.");
-                Assert.IsTrue(mission.AssignQuickSlot(4, "stone"));
-                Assert.IsTrue(mission.AssignQuickSlot(0, null));
-                Assert.IsTrue(mission.SaveSlot(1, out var error), error);
-                ForestMission.BeginGame(1);
+                SetPrivate(inventory, "nextQuickUse", 0f);
+                Assert.IsFalse(inventory.UseQuickSlot(2), "Pause must block consumables.");
+                Assert.IsTrue(inventory.AssignQuickSlot(4, "stone"));
+                Assert.IsTrue(inventory.AssignQuickSlot(0, null));
+                Assert.IsTrue(saveSystem.SaveSlot(1, out var error), error);
+                Map01SaveSystem.BeginGame(1);
                 yield return null;
-                var pending = typeof(ForestMission).GetField("pendingCheckpoint", BindingFlags.Static | BindingFlags.NonPublic);
+                var pending = typeof(Map01SaveSystem).GetField("pendingCheckpoint", BindingFlags.Static | BindingFlags.NonPublic);
                 double deadline = Time.realtimeSinceStartupAsDouble + 10;
                 while (pending.GetValue(null) != null && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
                 Assert.IsNull(pending.GetValue(null));
-                mission = UnityEngine.Object.FindFirstObjectByType<ForestMission>();
-                Assert.IsNull(mission.QuickItem(0));
-                Assert.AreEqual("medkit_small", mission.QuickItem(2));
-                Assert.AreEqual("stone", mission.QuickItem(4));
-                Assert.AreEqual(4, mission.Count("medkit_small"));
-                Assert.AreEqual(125, mission.Count("ammo_rifle"));
+                mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
+                inventory = mission.GetComponent<Map01Inventory>();
+                hud = mission.GetComponent<Map01Hud>();
+                Assert.IsNull(inventory.QuickItem(0));
+                Assert.AreEqual("medkit_small", inventory.QuickItem(2));
+                Assert.AreEqual("stone", inventory.QuickItem(4));
+                Assert.AreEqual(4, inventory.Count("medkit_small"));
+                Assert.AreEqual(125, inventory.Count("ammo_rifle"));
                 mission.SetInventoryOpen(true);
                 {
                     // Release a dragged bandage over the third shortcut, then outside the bar.
-                    mission.AssignQuickSlot(2, null);
-                    Set(mission, "dragItem", "medkit_small"); Set(mission, "dragging", true);
+                    inventory.AssignQuickSlot(2, null);
+                    SetPrivate(hud, "dragItem", "medkit_small"); SetPrivate(hud, "dragging", true);
                     var release = new Event { type = EventType.MouseUp, button = 0, mousePosition = new Vector2(426, 804) };
-                    typeof(ForestMission).GetMethod("FinishHudDrag", Private).Invoke(mission, new object[] { release, 1600f, 900f });
-                    Assert.AreEqual("medkit_small", mission.QuickItem(2));
-                    Assert.IsNull(typeof(ForestMission).GetField("dragItem", Private).GetValue(mission));
-                    Set(mission, "dragItem", "stone"); Set(mission, "dragging", true);
+                    typeof(Map01Hud).GetMethod("FinishHudDrag", Private).Invoke(hud, new object[] { release, 1600f, 900f });
+                    Assert.AreEqual("medkit_small", inventory.QuickItem(2));
+                    Assert.IsNull(typeof(Map01Hud).GetField("dragItem", Private).GetValue(hud));
+                    SetPrivate(hud, "dragItem", "stone"); SetPrivate(hud, "dragging", true);
                     release = new Event { type = EventType.MouseUp, button = 0, mousePosition = new Vector2(700, 400) };
-                    typeof(ForestMission).GetMethod("FinishHudDrag", Private).Invoke(mission, new object[] { release, 1600f, 900f });
-                    Assert.AreEqual("medkit_small", mission.QuickItem(2), "Dropping outside a shortcut must not change its binding.");
-                    Assert.AreEqual(4, mission.Count("medkit_small"), "Dragging must not consume inventory.");
+                    typeof(Map01Hud).GetMethod("FinishHudDrag", Private).Invoke(hud, new object[] { release, 1600f, 900f });
+                    Assert.AreEqual("medkit_small", inventory.QuickItem(2), "Dropping outside a shortcut must not change its binding.");
+                    Assert.AreEqual(4, inventory.Count("medkit_small"), "Dragging must not consume inventory.");
                 }
                 var testKeyboard = InputSystem.AddDevice<Keyboard>();
                 try {
-                    mission.SetInventoryOpen(true); Set(mission, "selectedItem", "medkit_small");
+                    mission.SetInventoryOpen(true); inventory.SelectedItem = "medkit_small";
                     InputSystem.QueueStateEvent(testKeyboard, new KeyboardState(Key.Digit4)); InputSystem.Update();
-                    typeof(ForestMission).GetMethod("HandleQuickKeys", Private).Invoke(mission, new object[] { testKeyboard });
-                    Assert.AreEqual("medkit_small", mission.QuickItem(3), "Number keys assign while the bag is open.");
-                    Assert.AreEqual(4, mission.Count("medkit_small"));
+                    inventory.HandleQuickKeys(testKeyboard);
+                    Assert.AreEqual("medkit_small", inventory.QuickItem(3), "Number keys assign while the bag is open.");
+                    Assert.AreEqual(4, inventory.Count("medkit_small"));
                     InputSystem.QueueStateEvent(testKeyboard, new KeyboardState()); InputSystem.Update();
-                    mission.SetInventoryOpen(false); Set(mission, "nextQuickUse", 0f); Set(mission, "hp", 20f);
+                    mission.SetInventoryOpen(false); SetPrivate(inventory, "nextQuickUse", 0f); mission.RestoreHealthFromSave(20f);
                     InputSystem.QueueStateEvent(testKeyboard, new KeyboardState(Key.Digit4)); InputSystem.Update();
-                    typeof(ForestMission).GetMethod("HandleQuickKeys", Private).Invoke(mission, new object[] { testKeyboard });
-                    Assert.AreEqual(3, mission.Count("medkit_small"), "Number keys consume while playing.");
+                    inventory.HandleQuickKeys(testKeyboard);
+                    Assert.AreEqual(3, inventory.Count("medkit_small"), "Number keys consume while playing.");
                 } finally { InputSystem.RemoveDevice(testKeyboard); }
                 // Also preserve default shortcuts when loading pre-HUD saves.
-                typeof(ForestMission).GetMethod("RestoreQuickSlots", Private).Invoke(mission, new object[] { null });
-                Assert.AreEqual("medkit_small", mission.QuickItem(0));
-                Assert.AreEqual("stone", mission.QuickItem(1));
+                inventory.RestoreQuickSlots(null);
+                Assert.AreEqual("medkit_small", inventory.QuickItem(0));
+                Assert.AreEqual("stone", inventory.QuickItem(1));
 
                 // A real rendered screenshot with deliberately seeded QA inventory; no demo stock ships in gameplay.
                 mission.SetPaused(true); mission.SetInventoryOpen(true);
                 SetPreviewResolution(1600, 900);
-                Set(mission, "selectedStack", 2); Set(mission, "dialogueUntil", 0f); Set(mission, "hp", 75f);
+                SetPrivate(hud, "selectedStack", 2); mission.Say(null, -1f); mission.RestoreHealthFromSave(75f);
                 Directory.CreateDirectory("Logs/HudPreview");
                 for (int i = 0; i < 5; i++) yield return null;
                 ScreenCapture.CaptureScreenshot("Logs/HudPreview/inventory.png");
                 for (int i = 0; i < 10; i++) yield return null;
-                stock = (Dictionary<string, int>)typeof(ForestMission).GetField("inventory", Private).GetValue(mission);
+                stock = (Dictionary<string, int>)typeof(Map01Inventory).GetField("items", Private).GetValue(inventory);
                 stock["ammo_rifle"] = 2700;
-                Assert.Greater(mission.InventoryStacks().Count, 24, "Overflow must remain accessible beyond the visible grid.");
-                Set(mission, "hudScroll", 444f);
+                Assert.Greater(inventory.InventoryStacks().Count, 24, "Overflow must remain accessible beyond the visible grid.");
+                SetPrivate(hud, "hudScroll", 444f);
                 for (int i = 0; i < 3; i++) yield return null;
                 ScreenCapture.CaptureScreenshot("Logs/HudPreview/scrolled.png");
                 for (int i = 0; i < 10; i++) yield return null;

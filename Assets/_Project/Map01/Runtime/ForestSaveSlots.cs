@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ShadowVale.Map01
 {
-    /// <summary>Checkpoint envelopes. The checkpoint payload remains owned by ForestMission.</summary>
+    /// <summary>Checkpoint envelopes. The checkpoint payload remains owned by Map01SaveSystem.</summary>
     public static class ForestSaveSlots
     {
         [Serializable] public sealed class Entry

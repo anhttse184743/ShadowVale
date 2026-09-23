@@ -26,7 +26,7 @@ namespace ShadowVale.Map01.Tests
             while (SceneManager.GetActiveScene().name != "01_MainMenu" && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
             Assert.AreEqual("01_MainMenu", SceneManager.GetActiveScene().name);
             Assert.IsTrue(ForestMenu.Visible);
-            Assert.IsNull(UnityEngine.Object.FindFirstObjectByType<ForestMission>(), "No gameplay should run behind the title on startup.");
+            Assert.IsNull(UnityEngine.Object.FindFirstObjectByType<Map01Mission>(), "No gameplay should run behind the title on startup.");
             var menu = UnityEngine.Object.FindFirstObjectByType<ForestMenu>();
             Call(menu, "MainAction", 1);
             yield return null;
@@ -38,7 +38,7 @@ namespace ShadowVale.Map01.Tests
             yield return null;
             Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name);
             Assert.IsFalse(ForestMenu.Visible);
-            Assert.IsNotNull(UnityEngine.Object.FindFirstObjectByType<ForestMission>());
+            Assert.IsNotNull(UnityEngine.Object.FindFirstObjectByType<Map01Mission>());
             yield return new ExitPlayMode();
             Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name, "Stopping Play must restore the scene being edited.");
         }
@@ -114,11 +114,12 @@ namespace ShadowVale.Map01.Tests
                 yield return new WaitForSeconds(1);
                 Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name);
                 Assert.IsFalse(ForestMenu.Visible);
-                var mission = UnityEngine.Object.FindFirstObjectByType<ForestMission>();
+                var mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
                 Assert.IsNotNull(mission);
+                var saveSystem = mission.GetComponent<Map01SaveSystem>();
                 var position = mission.player.position;
                 mission.SetPaused(true);
-                Assert.IsTrue(mission.CanSave(), "Initial safe camp must allow saves while paused.");
+                Assert.IsTrue(saveSystem.CanSave(), "Initial safe camp must allow saves while paused.");
                 Call(menu, "OpenSlots", true);
                 Assert.AreEqual(1, typeof(ForestMenu).GetField("selected", Private).GetValue(menu));
                 Call(menu, "SlotAction");
@@ -148,14 +149,14 @@ namespace ShadowVale.Map01.Tests
                 Call(menu, "DeleteSelected");
                 ScreenCapture.CaptureScreenshot("Logs/MenuPreview/confirm.png");
                 for (int i = 0; i < 10; i++) yield return null;
-                ForestMission.BeginGame(1);
+                Map01SaveSystem.BeginGame(1);
                 yield return null;
                 // Invoke-based restore depends on actual player frames, not the EditMode runner's wait handling.
-                var pending = typeof(ForestMission).GetField("pendingCheckpoint", BindingFlags.NonPublic | BindingFlags.Static);
+                var pending = typeof(Map01SaveSystem).GetField("pendingCheckpoint", BindingFlags.NonPublic | BindingFlags.Static);
                 double deadline = Time.realtimeSinceStartupAsDouble + 10;
                 while (pending.GetValue(null) != null && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
                 Assert.IsNull(pending.GetValue(null), "Checkpoint restore did not complete.");
-                mission = UnityEngine.Object.FindFirstObjectByType<ForestMission>();
+                mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
                 Assert.Less(Vector3.Distance(position, mission.player.position), .2f);
                 Assert.GreaterOrEqual(mission.PlaySeconds, entry.playSeconds);
                 Assert.AreEqual(1, Time.timeScale);
