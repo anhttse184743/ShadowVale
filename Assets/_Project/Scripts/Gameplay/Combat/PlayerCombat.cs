@@ -53,9 +53,44 @@ namespace ShadowVale.Gameplay.Combat
 
         private static readonly Key[] SlotKeys = { Key.Digit1, Key.Digit2, Key.Digit3 };
         public System.Func<bool> InputAllowed { get; set; }
+
+        /// <summary>
+        /// Legacy per-shot ammo gate, kept for scenes that never configured a magazine. Once a
+        /// magazine exists it owns the round count and this is not consulted: the reserve is
+        /// drawn on reload through <see cref="DrawRounds"/> instead, so a shot costs one round
+        /// from the weapon rather than one from the pack.
+        /// </summary>
         public System.Func<bool> TryConsumeRound { get; set; }
+
+        /// <summary>
+        /// Asked for rounds when the magazine reloads; returns how many the reserve could give.
+        /// Left unset, reloads draw on an unlimited supply, which is what a greybox scene wants.
+        /// </summary>
+        public System.Func<int, int> DrawRounds { get; set; }
+
+        /// <summary>Rounds left in the reserve, for the HUD and for refusing a pointless reload.</summary>
+        public System.Func<int> ReserveRounds { get; set; }
         public bool UsesInventoryHotkeys { get; set; }
         public float AttackCooldownRemaining => Mathf.Max(0, _nextAttackTime - Time.time);
+
+        /// <summary>Rounds in the weapon right now.</summary>
+        public int RoundsInMagazine => _magazine?.Rounds ?? 0;
+
+        public int MagazineCapacity => _magazine?.Capacity ?? 0;
+        public bool IsReloading => _magazine is { IsReloading: true };
+
+        /// <summary>0 to 1 across a reload, for a HUD bar. 0 when not reloading.</summary>
+        public float ReloadProgress => _magazine?.ReloadProgress ?? 0f;
+
+        /// <summary>Puts a saved round count back in the weapon and clears any reload.</summary>
+        public void RestoreMagazine(int rounds) => _magazine?.Refill(rounds);
+
+        /// <summary>Starts a reload if one is possible. Returns false when it is not.</summary>
+        public bool TryReload()
+        {
+            if (_magazine == null || _equipped == null || !_equipped.IsGun) return false;
+            return _magazine.BeginReload(ReserveRounds != null ? ReserveRounds() : -1);
+        }
         public void RestoreAttackCooldown(float remaining) => _nextAttackTime = Time.time + Mathf.Max(0, remaining);
 
         [Header("Loadout")]
@@ -94,6 +129,9 @@ namespace ShadowVale.Gameplay.Combat
         /// </summary>
         public event System.Action<WeaponKind, Vector3> Attacked;
 
+        [Header("Magazine")]
+        [SerializeField] private WeaponTuning tuning = WeaponTuning.Rifle;
+
         [Header("Unarmed")]
         [SerializeField] private float punchDamage = 12f;
         [SerializeField] private float punchRange = 1.5f;
@@ -121,6 +159,7 @@ namespace ShadowVale.Gameplay.Combat
         private Weapon _equipped;
         private WeaponKind _equippedKind;
         private float _nextAttackTime;
+        private Magazine _magazine;
         private bool _aiming;
         private ShotTracer[] _tracers;
         private int _tracerCursor;
@@ -148,6 +187,9 @@ namespace ShadowVale.Gameplay.Combat
             {
                 _upperBodyLayer = animator.GetLayerIndex(UpperBodyLayer);
             }
+
+            tuning = tuning.OrDefault();
+            _magazine = tuning.Create();
 
             SpawnWeapons();
             SpawnTracerPool();
@@ -236,7 +278,21 @@ namespace ShadowVale.Gameplay.Combat
 
         private void Update()
         {
-            if ((health != null && health.IsDead) || (InputAllowed != null && !InputAllowed()))
+            bool dead = health != null && health.IsDead;
+
+            // The magazine is ticked before any early return. Dying halfway through a reload
+            // would otherwise leave the timer frozen for good, and a magazine that believes it
+            // is reloading refuses to fire — the weapon would come back from the respawn dead.
+            if (dead)
+            {
+                _magazine?.CancelReload();
+            }
+            else
+            {
+                _magazine?.Tick(Time.deltaTime, DrawRounds);
+            }
+
+            if (dead || (InputAllowed != null && !InputAllowed()))
             {
                 SetAiming(false);
                 _faceCameraHoldUntil = 0f;
@@ -249,6 +305,7 @@ namespace ShadowVale.Gameplay.Combat
 
             ReadEquipInput();
             ReadAimInput();
+            ReadReloadInput();
             ReadAttackInput();
             UpdateFacing();
             UpdateUpperBodyWeight();
@@ -380,6 +437,12 @@ namespace ShadowVale.Gameplay.Combat
             SetAiming(wants);
         }
 
+        private void ReadReloadInput()
+        {
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard != null && keyboard.rKey.wasPressedThisFrame) TryReload();
+        }
+
         private void ReadAttackInput()
         {
             Mouse mouse = Mouse.current;
@@ -454,9 +517,35 @@ namespace ShadowVale.Gameplay.Combat
 
         private void Attack()
         {
-            if (_equipped != null && _equipped.IsGun && TryConsumeRound != null && !TryConsumeRound()) return;
+            // Everything that can refuse the shot is settled before a single side effect runs.
+            // Pulling the trigger on an empty magazine used to burn the cooldown and play the
+            // firing animation anyway, so the weapon mimed a shot it never took.
+            bool firingGun = _equipped != null && _equipped.IsGun;
+            if (firingGun)
+            {
+                if (_magazine != null)
+                {
+                    if (!_magazine.TryConsume())
+                    {
+                        // Out, or mid-reload. Reaching for a fresh magazine is what the player
+                        // meant by pulling the trigger on an empty gun.
+                        TryReload();
+                        return;
+                    }
+                }
+                else if (TryConsumeRound != null && !TryConsumeRound())
+                {
+                    return;
+                }
+            }
+
             float cooldown = _equipped != null ? _equipped.Cooldown : punchCooldown;
-            _nextAttackTime = Time.time + cooldown;
+
+            // Accumulate rather than restart from now. `Time.time + cooldown` rounds the gap up
+            // to whole frames, which quietly turns 600 rounds per minute into 500 at 50 fps;
+            // carrying the remainder forward keeps the rate the same on every machine. Clamping
+            // to now stops a long pause between shots from banking a burst.
+            _nextAttackTime = Mathf.Max(Time.time, _nextAttackTime + cooldown);
 
             // The muzzle is where a gunshot is heard from; an empty hand has none, so fall back
             // to the character. Raised before the trace so a listener cannot miss a kill's shot.
