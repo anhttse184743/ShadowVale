@@ -4,7 +4,7 @@
   "staminaDrain": 22, "staminaRecovery": 16,
   "interactRange": 3.5, "stoneRange": 16, "stoneNoise": 14,
   "guardDamageScale": 0.35, "guardShotInterval": 1.6,
-  "detectionSeconds": 1.5, "hiddenVisionScale": 0.32,
+  "detectionSeconds": 1.5, "hiddenVisionScale": 0.32, "crouchVisionScale": 0.6,
   "medkitHeal": 45, "followDistance": 3,
-  "startingAmmo": 48, "startingStones": 6
+  "startingStones": 6, "guardDropAmmo": 30, "guardDropMedkits": 1
 }

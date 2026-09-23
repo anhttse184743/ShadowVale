@@ -52,6 +52,80 @@ namespace ShadowVale.Map01.Tests
         }
 
         [UnityTest]
+        public IEnumerator ObjectiveGuidePreviewScreenshots()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            yield return null;
+            var mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
+            var quest = mission.GetComponent<Map01Quest>();
+            var guide = mission.GetComponent<Map01ObjectiveGuide>();
+            var controller = mission.player.GetComponent<CharacterController>();
+            var cameraRig = mission.gameCamera.GetComponent<ShadowVale.Gameplay.Player.ThirdPersonCamera>();
+            foreach (var e in mission.Enemies) e.enabled = false; // A clean shot, not a firefight.
+            SetPreviewResolution(1600, 900);
+            Directory.CreateDirectory("Logs/GuidePreview");
+
+            // Nam spawns on the base's floor — a known NavMesh spot to station Hùng for the report shot
+            // (right at the supply point the floor is carved out under furniture).
+            Vector3 baseFloor = mission.player.position;
+            // The escort is shot from Hùng's side looking home (the base is where Nam starts); the
+            // outposts from ~20 m out of the base; the report walking back to Hùng at the base.
+            foreach (var (stage, file, along) in new[] {
+                (Map01Quest.EscortStage, "escort-base", 3), (Map01Quest.CampsStage, "camps-outpost", 20), (Map01Quest.ReportCampsStage, "report-hung", 4) })
+            {
+                if (stage == Map01Quest.EscortStage) { controller.enabled = false; mission.player.position = mission.hung.position + Vector3.right * 2; controller.enabled = true; }
+                if (stage == Map01Quest.ReportCampsStage) mission.hung.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(baseFloor);
+                quest.RestoreStage(stage);
+                mission.Say(null, -1f);
+                for (float until = Time.time + .7f; Time.time < until;) yield return null;
+                Assert.Greater(guide.Route.Count, along + 8, "Need a route long enough to look down.");
+                // Walk Nam a little down the route and look along the next stretch of it.
+                Vector3 stand = guide.Route[along], ahead = guide.Route[along + 8];
+                float yaw = Mathf.Atan2(ahead.x - stand.x, ahead.z - stand.z) * Mathf.Rad2Deg;
+                controller.enabled = false; mission.player.SetPositionAndRotation(stand, Quaternion.Euler(0, yaw, 0)); controller.enabled = true;
+                typeof(ShadowVale.Gameplay.Player.ThirdPersonCamera).GetField("_yaw", Private).SetValue(cameraRig, yaw);
+                for (float until = Time.time + .7f; Time.time < until;) yield return null;
+                Assert.IsTrue(guide.HasTarget, "The compass must be on screen for the preview.");
+                ScreenCapture.CaptureScreenshot($"Logs/GuidePreview/{file}.png");
+                for (int i = 0; i < 10; i++) yield return null;
+            }
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
+        public IEnumerator WeaponsStartInQuickSlotsAndCanBeDragReassigned()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            yield return null;
+            var mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
+            var inventory = mission.GetComponent<Map01Inventory>();
+            var hud = mission.GetComponent<Map01Hud>();
+
+            // Fresh loadout: rifle and knife are already in the quick bar, ready to use without
+            // opening the bag first.
+            Assert.AreEqual("rifle_standard", inventory.QuickItem(0));
+            Assert.AreEqual("knife", inventory.QuickItem(1));
+            Assert.IsTrue(inventory.IsEquipped("rifle_standard"), "PlayerCombat's starting weapon is the rifle.");
+
+            // Pressing a weapon's quick-slot switches weapons, same as any other shortcut.
+            Assert.IsTrue(inventory.UseQuickSlot(1));
+            Assert.IsTrue(inventory.IsEquipped("knife"));
+            Assert.IsFalse(inventory.IsEquipped("rifle_standard"));
+
+            // Drag-and-drop reassignment: the mechanic already used for medkit/stone must also
+            // accept a weapon dragged from the inventory grid onto a different shortcut.
+            mission.SetInventoryOpen(true);
+            SetPrivate(hud, "dragItem", "rifle_standard"); SetPrivate(hud, "dragging", true);
+            var release = new Event { type = EventType.MouseUp, button = 0, mousePosition = new Vector2(636, 804) };
+            typeof(Map01Hud).GetMethod("FinishHudDrag", Private).Invoke(hud, new object[] { release, 1600f, 900f });
+            Assert.AreEqual("rifle_standard", inventory.QuickItem(4), "Dragging a weapon onto an empty shortcut must assign it there.");
+            Assert.AreEqual("rifle_standard", inventory.QuickItem(0), "Dragging must not remove the weapon from its other shortcut.");
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
         public IEnumerator HudQuickUseAndSaveRestoreUseRealInventory()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
@@ -66,6 +140,16 @@ namespace ShadowVale.Map01.Tests
                 var hud = mission.GetComponent<Map01Hud>();
                 var saveSystem = mission.GetComponent<Map01SaveSystem>();
                 Assert.IsTrue(mission.IsInitialized);
+                Assert.AreEqual(1, inventory.Count("rifle_standard"));
+                Assert.AreEqual(1, inventory.Count("knife"));
+                Assert.AreEqual(0, inventory.Count("ammo_rifle"), "Ammo must come from loot, not a free starting stock.");
+                Assert.AreEqual(0, inventory.Count("herb"), "Herb must come from loot, not a free starting stock.");
+                Assert.IsNotNull(Resources.Load<Texture2D>("Hud/StartingWeapons"));
+                Assert.IsTrue(inventory.EquipItem("knife"));
+                Assert.IsTrue(inventory.IsEquipped("knife"));
+                Assert.IsTrue(inventory.EquipItem("rifle_standard"));
+                Assert.IsTrue(inventory.IsEquipped("rifle_standard"));
+                Assert.AreEqual(1, inventory.Count("knife"), "Equipping does not consume the weapon.");
                 Assert.IsNotNull(Resources.Load<Texture2D>("Hud/Items"));
                 Assert.IsNotNull(Resources.Load<Texture2D>("Hud/HealthFrame"));
                 var stock = (Dictionary<string, int>)typeof(Map01Inventory).GetField("items", Private).GetValue(inventory);
@@ -115,6 +199,8 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual("stone", inventory.QuickItem(4));
                 Assert.AreEqual(4, inventory.Count("medkit_small"));
                 Assert.AreEqual(125, inventory.Count("ammo_rifle"));
+                Assert.AreEqual(1, inventory.Count("rifle_standard"));
+                Assert.AreEqual(1, inventory.Count("knife"));
                 mission.SetInventoryOpen(true);
                 {
                     // Release a dragged bandage over the third shortcut, then outside the bar.
@@ -130,6 +216,7 @@ namespace ShadowVale.Map01.Tests
                     Assert.AreEqual("medkit_small", inventory.QuickItem(2), "Dropping outside a shortcut must not change its binding.");
                     Assert.AreEqual(4, inventory.Count("medkit_small"), "Dragging must not consume inventory.");
                 }
+                var routing = RouteInputToGame();
                 var testKeyboard = InputSystem.AddDevice<Keyboard>();
                 try {
                     mission.SetInventoryOpen(true); inventory.SelectedItem = "medkit_small";
@@ -142,16 +229,18 @@ namespace ShadowVale.Map01.Tests
                     InputSystem.QueueStateEvent(testKeyboard, new KeyboardState(Key.Digit4)); InputSystem.Update();
                     inventory.HandleQuickKeys(testKeyboard);
                     Assert.AreEqual(3, inventory.Count("medkit_small"), "Number keys consume while playing.");
-                } finally { InputSystem.RemoveDevice(testKeyboard); }
+                } finally { InputSystem.RemoveDevice(testKeyboard); RestoreInputRouting(routing); }
                 // Also preserve default shortcuts when loading pre-HUD saves.
                 inventory.RestoreQuickSlots(null);
-                Assert.AreEqual("medkit_small", inventory.QuickItem(0));
-                Assert.AreEqual("stone", inventory.QuickItem(1));
+                Assert.AreEqual("rifle_standard", inventory.QuickItem(0));
+                Assert.AreEqual("knife", inventory.QuickItem(1));
+                Assert.AreEqual("medkit_small", inventory.QuickItem(2));
+                Assert.AreEqual("stone", inventory.QuickItem(3));
 
                 // A real rendered screenshot with deliberately seeded QA inventory; no demo stock ships in gameplay.
                 mission.SetPaused(true); mission.SetInventoryOpen(true);
                 SetPreviewResolution(1600, 900);
-                SetPrivate(hud, "selectedStack", 2); mission.Say(null, -1f); mission.RestoreHealthFromSave(75f);
+                SetPrivate(hud, "selectedStack", 0); mission.Say(null, -1f); mission.RestoreHealthFromSave(75f);
                 Directory.CreateDirectory("Logs/HudPreview");
                 for (int i = 0; i < 5; i++) yield return null;
                 ScreenCapture.CaptureScreenshot("Logs/HudPreview/inventory.png");

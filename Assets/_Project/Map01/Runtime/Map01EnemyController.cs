@@ -9,6 +9,8 @@ namespace ShadowVale.Map01
     {
         [SerializeField] private Vector3[] patrolPoints = System.Array.Empty<Vector3>();
         [SerializeField] private float visionRange = 24f;
+        [Tooltip("Field of view while unaware; once engaged a guard keeps track of Nam all around.")]
+        [SerializeField] private float visionAngle = 110f;
         [SerializeField] private float attackRange = 18f;
         [SerializeField] private float damage = 10f;
         [SerializeField] private float fireInterval = 0.65f;
@@ -25,8 +27,16 @@ namespace ShadowVale.Map01
         private float _alertUntil;
         private Vector3 _investigate;
         private bool _lootCreated;
+        private float _suspicion, _engagedUntil, _calmUntil;
+        private float _detectionSeconds = 1.5f, _hiddenScale = .32f, _crouchScale = .6f;
+        private Vector3 _postPosition;
+        private Quaternion _postRotation;
         public bool Alive => !GetComponent<Health>().IsDead;
         public bool Alerted => Time.time < _alertUntil;
+        /// <summary>0..1 — how sure this guard is that he has seen Nam; 1 means spotted.</summary>
+        public float Suspicion => _suspicion;
+        /// <summary>Spotted Nam and fighting him — refreshed while he stays in sight.</summary>
+        public bool Engaged => Time.time < _engagedUntil;
         public string LegacyId => name.StartsWith("Outpost guard ", System.StringComparison.Ordinal)
             ? "expansion_guard_" + name.Substring("Outpost guard ".Length) : name;
         public string SaveId {
@@ -36,7 +46,41 @@ namespace ShadowVale.Map01
                 return path;
             }
         }
-        public void BindMission(Map01Mission mission) { _mission = mission; GetComponent<Health>().KeepCheckpointCorpse(); }
+        public void BindMission(Map01Mission mission)
+        {
+            _mission = mission;
+            GetComponent<Health>().KeepCheckpointCorpse();
+            // Map 1's guard tuning lives in Map01Balance.json, not in each guard's serialized fields.
+            damage = mission.Weapon.damage * mission.Settings.guardDamageScale;
+            fireInterval = mission.Settings.guardShotInterval;
+            _detectionSeconds = Mathf.Max(.1f, mission.Settings.detectionSeconds);
+            _hiddenScale = mission.Settings.hiddenVisionScale;
+            _crouchScale = mission.Settings.crouchVisionScale;
+        }
+
+        /// <summary>
+        /// Back to the post at full health and calm — a failed scouting run means the camp was
+        /// reinforced, so even a guard Nam took down is replaced, loot and all. Calm for a few
+        /// seconds so Nam gets to slip away instead of being re-spotted on the spot.
+        /// </summary>
+        public void ReturnToPost()
+        {
+            if (_health.IsDead) _health.Revive(); else _health.RestoreHealth(_health.Max);
+            if (_lootCreated)
+            {
+                _lootCreated = false;
+                var loot = GetComponent<ForestPoint>();
+                if (loot != null) { _mission.UnregisterPoint(loot); Destroy(loot); } // _lootCreated implies a bound mission.
+            }
+            if (_agent.isOnNavMesh) _agent.Warp(_postPosition); else transform.position = _postPosition;
+            transform.rotation = _postRotation;
+            _suspicion = 0; _alertUntil = 0; _engagedUntil = 0;
+            _calmUntil = Time.time + 4f;
+            _patrolIndex = 0;
+            if (patrolPoints.Length > 0) Go(patrolPoints[0]);
+        }
+        public float DamagePerShot => damage;
+        public float FireInterval => fireInterval;
         public void Hear(Vector3 position, float radius)
         {
             if (!Alive || Vector3.Distance(position, transform.position) > radius) return;
@@ -76,7 +120,10 @@ namespace ShadowVale.Map01
             _lootCreated = true;
             var loot = gameObject.AddComponent<ForestPoint>();
             loot.id = "loot_" + LegacyId; loot.label = "Túi lính tuần tra"; loot.kind = ForestPointKind.Loot;
-            loot.items = new[] { new ForestIngredient { item_id = "ammo_rifle", count = 12 } };
+            loot.items = new[] {
+                new ForestIngredient { item_id = "ammo_rifle", count = _mission.Settings.guardDropAmmo },
+                new ForestIngredient { item_id = "medkit_small", count = _mission.Settings.guardDropMedkits }
+            };
             _mission.RegisterPoint(loot);
         }
 
@@ -101,6 +148,7 @@ namespace ShadowVale.Map01
             _agent = GetComponent<NavMeshAgent>();
             _animator = GetComponentInChildren<Animator>();
             _health = GetComponent<Health>();
+            _postPosition = transform.position; _postRotation = transform.rotation;
             var controller = FindFirstObjectByType<ShadowVale.Gameplay.Player.PlayerController>();
             if (controller != null)
             {
@@ -130,9 +178,23 @@ namespace ShadowVale.Map01
             }
 
             bool seesPlayer = CanSeePlayer(out float distance);
+            if (seesPlayer && !Engaged)
+            {
+                // Not an instant spot: suspicion builds while Nam stays in view, faster up close.
+                float closeness = 1f - Mathf.Clamp01(distance / visionRange);
+                _suspicion = Mathf.Min(1f, _suspicion + Time.deltaTime / _detectionSeconds * Mathf.Lerp(.6f, 3f, closeness));
+                if (_suspicion < 1f)
+                {
+                    // Something's there — stop and stare at it rather than walk on.
+                    if (_agent.isOnNavMesh) _agent.isStopped = true;
+                    SetSpeed(0f);
+                    Face(_player.position);
+                    return;
+                }
+            }
             if (seesPlayer)
             {
-                _alertUntil = Time.time + 6; _investigate = _player.position;
+                _engagedUntil = _alertUntil = Time.time + 6; _investigate = _player.position;
                 if (_mission != null) _mission.Alarmed = true;
                 Face(_player.position);
                 if (distance <= attackRange)
@@ -149,6 +211,7 @@ namespace ShadowVale.Map01
                 return;
             }
 
+            if (!Engaged) _suspicion = Mathf.Max(0f, _suspicion - Time.deltaTime * .35f);
             if (Alerted) Go(_investigate);
             else { if (_agent.isOnNavMesh) _agent.isStopped = false; Patrol(); }
             SetSpeed(_agent.velocity.magnitude);
@@ -157,12 +220,23 @@ namespace ShadowVale.Map01
         private bool CanSeePlayer(out float distance)
         {
             distance = float.PositiveInfinity;
-            if (_player == null || _playerHealth == null || _playerHealth.IsDead) return false;
+            if (_player == null || _playerHealth == null || _playerHealth.IsDead || Time.time < _calmUntil) return false;
             Vector3 origin = transform.position + Vector3.up * 1.3f;
             Vector3 target = _player.position + Vector3.up * 1.1f;
             Vector3 delta = target - origin;
             distance = delta.magnitude;
-            if (distance > visionRange) return false;
+            if (Engaged)
+            {
+                if (distance > visionRange) return false;
+            }
+            else
+            {
+                // Unaware: a forward cone, shorter while Nam crouches and far shorter while he
+                // hides in cover; only brushing right past a guard is noticed from any side.
+                bool hidden = _mission != null && _mission.Hidden, crouched = _mission != null && _mission.Crouched;
+                if (distance > visionRange * (hidden ? _hiddenScale : crouched ? _crouchScale : 1f)) return false;
+                if (distance > 2.5f && Vector3.Angle(transform.forward, Vector3.ProjectOnPlane(delta, Vector3.up)) > visionAngle * .5f) return false;
+            }
             if (Physics.Raycast(origin, delta.normalized, out var hit, distance, obstructionMask,
                     QueryTriggerInteraction.Ignore))
                 return hit.transform == _player || hit.transform.IsChildOf(_player);

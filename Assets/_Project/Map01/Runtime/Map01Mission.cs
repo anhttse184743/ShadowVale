@@ -96,7 +96,7 @@ namespace ShadowVale.Map01
             }
             Points.AddRange(FindObjectsByType<ForestPoint>(FindObjectsSortMode.None));
             hp = Settings.playerHP; stamina = Settings.stamina;
-            inventory.SeedStartingLoadout(Settings.startingAmmo, Settings.startingStones);
+            inventory.SeedStartingLoadout(Settings.startingStones);
             IsInitialized = true;
         }
 
@@ -116,10 +116,12 @@ namespace ShadowVale.Map01
             if (ModernCombat != null)
             {
                 ModernCombat.UsesInventoryHotkeys = true;
-                ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting && !inventory.SuppressFire && !hud.PointerBlocked();
+                var scouting = GetComponent<Map01Scouting>(); // Added by Map01Quest.Awake.
+                ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting && !inventory.SuppressFire
+                    && !hud.PointerBlocked() && !scouting.Binoculars; // Hands are on the binoculars, not the rifle.
                 ModernCombat.TryConsumeRound = () =>
                 {
-                    if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt thêm đạn hoặc đổi vũ khí bằng 6 / 7 / 8.", 2); return false; }
+                    if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 2 hoặc 7.", 3); return false; }
                     inventory.Spend("ammo_rifle", 1);
                     EmitNoise(player.position, Weapon.noise_radius);
                     return true;
@@ -138,6 +140,7 @@ namespace ShadowVale.Map01
 
         public Material trailMaterial;
         public void RegisterPoint(ForestPoint point) => Points.Add(point);
+        public void UnregisterPoint(ForestPoint point) => Points.Remove(point);
         public void AddEnemy(Map01EnemyController enemy) => Enemies = Enemies.Append(enemy).ToArray();
         /// <summary>A brief visible streak — thrown stones, tracers — using the shared trail material.</summary>
         public void Trace(Vector3 start, Vector3 end, Color color)
@@ -198,6 +201,9 @@ namespace ShadowVale.Map01
         {
             if (ModernHealth != null) hp = ModernHealth.Current;
             AdvancePlaySeconds();
+            // restockAt is not saved, so a checkpoint load refills restockable points straight away.
+            foreach (var point in Points)
+                if (point.used && point.restockSeconds > 0 && Time.time >= point.restockAt) point.used = false;
             var kb = UnityEngine.InputSystem.Keyboard.current;
             if (kb == null) return;
             if (ForestMenu.Visible) return;

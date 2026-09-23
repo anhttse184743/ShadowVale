@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 
 namespace ShadowVale.Gameplay.Player
 {
@@ -8,7 +9,8 @@ namespace ShadowVale.Gameplay.Player
     /// yaw/pitch driven by the mouse, wheel to zoom. Pulls in when the arm would clip
     /// through geometry so the player never ends up inside a wall.
     /// Aiming pulls the arm in over the shoulder and narrows the FOV — iron-sight zoom,
-    /// no scope overlay. The yaw here is the movement basis PlayerController reads, so
+    /// no scope overlay. Binoculars instead go first person from the eyes (see SetBinoculars).
+    /// The yaw here is the movement basis PlayerController reads, so
     /// keep them consistent.
     /// </summary>
     [RequireComponent(typeof(Camera))]
@@ -54,6 +56,13 @@ namespace ShadowVale.Gameplay.Player
         [Tooltip("Mouse sensitivity multiplier while aiming — steadier at high zoom.")]
         [SerializeField] private float aimSensitivityScale = 0.55f;
 
+        [Header("Binoculars (first person)")]
+        [Tooltip("Field of view through the binoculars — far narrower than aiming.")]
+        [SerializeField] private float binocularFov = 16f;
+
+        [Tooltip("How quickly the view zooms in once the binoculars are up.")]
+        [SerializeField] private float binocularZoomSpeed = 14f;
+
         [Header("Collision")]
         [Tooltip("Layers the arm collides with. Player layer should be excluded.")]
         [SerializeField] private LayerMask obstructionMask = ~0;
@@ -67,8 +76,13 @@ namespace ShadowVale.Gameplay.Player
         private float _currentDistance;
         private float _aimBlend; // 0 = hip, 1 = aiming
         private bool _aiming;
+        private bool _binoculars;
+        private float _eyeHeight;
+        private Renderer[] _hidden = System.Array.Empty<Renderer>();
+        private ShadowCastingMode[] _hiddenModes = System.Array.Empty<ShadowCastingMode>();
 
         public bool IsAiming => _aiming;
+        public bool IsBinoculars => _binoculars;
         public System.Func<bool> InputAllowed { get; set; }
 
         private void Awake()
@@ -96,6 +110,15 @@ namespace ShadowVale.Gameplay.Player
 
             if (InputAllowed != null && !InputAllowed()) SetCursorLocked(false);
             else ReadLookInput();
+
+            if (_binoculars)
+            {
+                // Straight from the eyes: no arm, no shoulder, so nothing of the character in view.
+                Quaternion look = Quaternion.Euler(_pitch, _yaw, 0f);
+                _camera.fieldOfView = Mathf.Lerp(_camera.fieldOfView, binocularFov, 1f - Mathf.Exp(-binocularZoomSpeed * Time.deltaTime));
+                transform.SetPositionAndRotation(target.position + Vector3.up * _eyeHeight + look * Vector3.forward * 0.15f, look);
+                return;
+            }
 
             _aimBlend = Mathf.MoveTowards(_aimBlend, _aiming ? 1f : 0f, aimBlendSpeed * Time.deltaTime);
             _camera.fieldOfView = Mathf.Lerp(hipFov, aimFov, _aimBlend);
@@ -142,7 +165,7 @@ namespace ShadowVale.Gameplay.Player
 
             if (Cursor.lockState == CursorLockMode.Locked)
             {
-                float sensitivity = mouseSensitivity * Mathf.Lerp(1f, aimSensitivityScale, _aimBlend);
+                float sensitivity = mouseSensitivity * (_binoculars ? binocularFov / hipFov : Mathf.Lerp(1f, aimSensitivityScale, _aimBlend));
                 Vector2 delta = mouse.delta.ReadValue();
                 _yaw += delta.x * sensitivity;
                 _pitch = Mathf.Clamp(_pitch - delta.y * sensitivity, minPitch, maxPitch);
@@ -150,7 +173,7 @@ namespace ShadowVale.Gameplay.Player
 
             // Wheel zoom only applies to the hip-fire arm; aiming has its own fixed distance.
             float scroll = mouse.scroll.ReadValue().y;
-            if (!Mathf.Approximately(scroll, 0f) && !_aiming)
+            if (!Mathf.Approximately(scroll, 0f) && !_aiming && !_binoculars)
             {
                 distance = Mathf.Clamp(distance - scroll * zoomSpeed, minDistance, maxDistance);
             }
@@ -170,6 +193,34 @@ namespace ShadowVale.Gameplay.Player
         public void SetAiming(bool value)
         {
             _aiming = value;
+        }
+
+        /// <summary>
+        /// Raise or lower binoculars: a first-person view from <paramref name="eyeHeight"/> above
+        /// the target's feet with a narrow field of view. The target's own model would fill the
+        /// screen from there, so it only casts its shadow until they come down. Safe to call
+        /// every frame (the eye height follows crouching).
+        /// </summary>
+        public void SetBinoculars(bool value, float eyeHeight)
+        {
+            _eyeHeight = eyeHeight;
+            if (_binoculars == value || target == null) return;
+            _binoculars = value;
+            if (value)
+            {
+                _hidden = target.GetComponentsInChildren<Renderer>();
+                _hiddenModes = new ShadowCastingMode[_hidden.Length];
+                for (int i = 0; i < _hidden.Length; i++)
+                {
+                    _hiddenModes[i] = _hidden[i].shadowCastingMode;
+                    _hidden[i].shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+                }
+                return;
+            }
+            for (int i = 0; i < _hidden.Length; i++)
+                if (_hidden[i] != null) _hidden[i].shadowCastingMode = _hiddenModes[i];
+            _hidden = System.Array.Empty<Renderer>();
+            _camera.fieldOfView = Mathf.Lerp(hipFov, aimFov, _aimBlend);
         }
     }
 }

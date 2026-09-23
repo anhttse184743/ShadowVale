@@ -65,3 +65,25 @@ không chèn những vật phẩm/số lượng này vào scene hoặc dữ li�
 Kết quả: toàn bộ Map01 **17/17 đạt** (`Logs/Hud-Final.xml`). Sau khi bổ sung
 kiểm tra thả đúng ô/thả ra ngoài, nhóm HUD **2/2 đạt**
 (`Logs/Hud-Interaction-Final.xml`). Không kiểm thử bằng dữ liệu lưu của người chơi.
+
+## Trang bị khởi hành
+
+- Súng trường (rifle_standard) và dao (knife): mỗi món x1 khi chơi mới, tối đa 1/ô.
+- Tab → chọn món → Trang bị; nhãn Đang cầm đồng bộ với PlayerCombat. Phím 6/7 vẫn đổi súng/dao; 1–5 dành cho vật phẩm tiêu hao.
+- Bản lưu v4 trước khi thêm item được bổ sung khóa còn thiếu, không nhân đôi số lượng đã lưu.
+- Hud/StartingWeapons.png giữ ảnh mẫu đã duyệt; HUD dùng UV lấy hai icon nhỏ không có chữ, số lượng được vẽ từ dữ liệu túi.
+## Minimap
+
+- Góc trái trên: bản đồ hướng Bắc cố định, vùng nhìn 90 m, tự di chuyển theo Nam.
+- M mở bản đồ toàn khu vực từ cùng dữ liệu địa hình; Esc hoặc M đóng. Ẩn minimap khi mở túi hoặc menu.
+- Mũi tên trắng là Nam; chấm xanh là Hùng; hình thoi vàng đọc mục tiêu và khoảng cách từ Map01ObjectiveGuide.
+- Tam giác đỏ chỉ hiện lính còn sống trong 30 m, trong góc nhìn camera và không bị vật cản che; kiểm tra 4 lần/giây.
+- Map01Minimap chụp scene từ trên cao một lần khi vào màn, chuyển sang tông giấy ô-liu. Không dùng địa hình tưởng tượng từ ảnh mẫu. Không chạy thêm camera render mỗi frame.
+- Ảnh nền không phản ánh thay đổi địa hình sau khi vào màn. Chưa có hệ thống lưu vùng đã khám phá/fog of war.
+
+## HUD chiến đấu tối giản
+
+- Góc dưới phải: giọt HP trắng ngà không viền, phần mất máu tối đi, kèm HP hiện tại/tối đa. Hình giọt được tạo bằng code và cắt từ dưới lên theo HP thật.
+- Icon súng/dao/tay không đọc từ Hud/CombatIcons.png; phím 6/7/8 đổi trang bị, icon đang cầm sáng hơn. Atlas được tạo bằng công cụ imagegen tích hợp; yêu cầu tạo silhouette súng, dao và nắm tay màu ngà trên nền trong suốt. Phần giọt đỏ trong atlas không được sử dụng.
+- Số đạn là tổng ammo_rifle thực có trong kho; chưa có cơ chế băng đạn/nạp đạn nên không hiển thị tỷ lệ đạn giả.
+- Không hiện thanh dùng nhanh khi chơi; thanh gán vật phẩm vẫn có trong túi đồ. Giữ các phím tắt sử dụng đồ.

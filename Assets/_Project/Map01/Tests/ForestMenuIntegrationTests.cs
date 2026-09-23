@@ -4,6 +4,8 @@ using System.IO;
 using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using UnityEditor.SceneManagement;
@@ -35,12 +37,63 @@ namespace ShadowVale.Map01.Tests
             Assert.AreEqual("01_MainMenu", SceneManager.GetActiveScene().name, "The cutscene must hold the scene switch, not race it.");
             // "Chơi mới" plays the briefing cutscene first; skip it the same way Esc/Enter would.
             Call(menu, "EndIntro");
+            // Map 1 loads synchronously and the screen freezes on this frame for seconds — it must
+            // be drawn as a loading screen, not the title (which read as "skipping sent me back").
+            Assert.IsTrue((bool)typeof(ForestMenu).GetField("loading", Private).GetValue(menu));
             yield return null;
             Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name);
             Assert.IsFalse(ForestMenu.Visible);
+            Assert.IsFalse((bool)typeof(ForestMenu).GetField("loading", Private).GetValue(menu), "Arriving in the map clears the loading screen.");
             Assert.IsNotNull(UnityEngine.Object.FindFirstObjectByType<Map01Mission>());
             yield return new ExitPlayMode();
             Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name, "Stopping Play must restore the scene being edited.");
+        }
+
+        [UnityTest]
+        public IEnumerator SkippingTheIntroWithEscLandsInTheMapNotAMenu()
+        {
+            yield return new EnterPlayMode();
+            var routing = RouteInputToGame();
+            var keyboard = InputSystem.AddDevice<Keyboard>();
+            try
+            {
+                SceneManager.LoadScene("01_MainMenu");
+                yield return null; yield return null;
+                yield return new WaitForSecondsRealtime(.6f); // Past the title's own key grace.
+                var menu = UnityEngine.Object.FindFirstObjectByType<ForestMenu>();
+                Call(menu, "MainAction", 1);
+                yield return null;
+                Assert.IsTrue((bool)typeof(ForestMenu).GetField("playingIntro", Private).GetValue(menu));
+
+                // A real Esc press skips the intro (queued, so ForestMenu.Update reads it next frame).
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.Escape));
+                yield return null;
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+                double deadline = Time.realtimeSinceStartupAsDouble + 10;
+                while (SceneManager.GetActiveScene().name != "Map 1" && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
+                Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name, "Esc during the intro must start Map 1.");
+
+                // An impatient second Esc, the kind pressed during the multi-second load freeze,
+                // lands right after arrival — it must not open the pause menu.
+                yield return null;
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.Escape));
+                yield return null; yield return null;
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+                yield return null;
+                var mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
+                Assert.IsFalse(ForestMenu.Visible, "Skipping the intro must land in the map, not a menu.");
+                Assert.IsFalse(mission.Paused);
+
+                // Once settled in, Esc still pauses as normal.
+                yield return new WaitForSecondsRealtime(.6f);
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.Escape));
+                yield return null; yield return null;
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+                Assert.IsTrue(ForestMenu.Visible, "Esc must still open the pause menu during play.");
+                Assert.IsTrue(mission.Paused);
+            }
+            finally { InputSystem.RemoveDevice(keyboard); RestoreInputRouting(routing); Time.timeScale = 1; }
+            yield return new ExitPlayMode();
         }
 
         [UnityTest]

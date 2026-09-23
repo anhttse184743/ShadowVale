@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace ShadowVale.Map01
@@ -11,6 +12,11 @@ namespace ShadowVale.Map01
         public float radius = 3;
         public bool used;
         public ForestIngredient[] items;
+        [Tooltip("Seconds until a looted point refills with the same items; 0 = one-time pickup.")]
+        public float restockSeconds;
+        [NonSerialized] public float restockAt;
+
+        public void MarkLooted() { used = true; restockAt = Time.time + restockSeconds; }
 
         private void OnDrawGizmosSelected()
         {

@@ -8,6 +8,7 @@ namespace ShadowVale.Map01
     public static class ForestInventory
     {
         public static readonly string[] Order = {
+            "rifle_standard", "knife",
             "ammo_rifle", "medkit_small", "cloth", "herb", "stone", "supplies", "river_documents",
             "ammo_sniper", "scrap_metal", "gun_oil", "repair_kit", "ammo_smg", "ammo_pistol", "ammo_shotgun"
         };
@@ -30,10 +31,13 @@ namespace ShadowVale.Map01
             }
             return result;
         }
-        public static bool QuickUsable(string id) => id == "medkit_small" || id == "stone";
+        public static bool IsWeapon(string id) => id == "rifle_standard" || id == "knife";
+        public static bool QuickUsable(string id) => id == "medkit_small" || id == "stone" || IsWeapon(id);
         public static string Name(string id)
         {
             switch (id) {
+                case "rifle_standard": return "Súng trường";
+                case "knife": return "Dao";
                 case "ammo_rifle": return "Đạn súng trường";
                 case "ammo_smg": return "Đạn tiểu liên";
                 case "ammo_pistol": return "Đạn súng ngắn";
@@ -54,6 +58,8 @@ namespace ShadowVale.Map01
         public static string Description(string id)
         {
             switch (id) {
+                case "rifle_standard": return "Trang bị khởi hành. Dùng đạn súng trường. Nhấn 6 để cầm súng.";
+                case "knife": return "Trang bị cận chiến, không tiêu hao đạn. Nhấn 7 để cầm dao.";
                 case "medkit_small": return "Hồi máu cho nhân vật. Dùng bằng H hoặc ô nhanh.";
                 case "stone": return "Ném theo hướng ngắm để đánh lạc hướng lính.";
                 case "cloth": return "Vật liệu chế tạo. Kết hợp thảo dược tại bàn chế tạo.";

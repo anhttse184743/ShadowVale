@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 namespace ShadowVale.Map01
 {
     /// <summary>
-    /// Routes keyboard input to whichever sibling component owns it, keeps Hùng following once
+    /// Routes keyboard input to whichever sibling component owns it, keeps Hùng following while
     /// the quest says he should, and dispatches world-point interactions (loot, workbench,
     /// documents, exit — the supplies drop-off defers to Map01Quest for the stage gate). One
     /// place for "what does this key do right now" instead of it being spread across a dozen
@@ -21,6 +21,7 @@ namespace ShadowVale.Map01
         private Map01Inventory inventory;
         private Map01Hud hud;
         private Map01SaveSystem saveSystem;
+        private Map01Scouting scouting;
         private NavMeshAgent companion;
 
         private void Awake()
@@ -35,6 +36,7 @@ namespace ShadowVale.Map01
         private void Start()
         {
             if (mission.IsInitialized) companion = mission.hung.GetComponent<NavMeshAgent>();
+            scouting = GetComponent<Map01Scouting>(); // Added by Map01Quest.Awake, so only certain from Start.
         }
 
         private void Update()
@@ -42,6 +44,7 @@ namespace ShadowVale.Map01
             if (!mission.IsInitialized) return;
             var kb = Keyboard.current;
             if (kb == null) return;
+            scouting.HoldBinoculars(kb.fKey.isPressed); // Map01Scouting decides when they actually work.
             if (ForestMenu.Visible) return;
             if (kb.f9Key.wasPressedThisFrame) saveSystem.Load();
             if (mission.Stopped) return;
@@ -49,15 +52,19 @@ namespace ShadowVale.Map01
             { mission.SetInventoryOpen(!mission.InventoryOpen); hud.CancelDrag(); inventory.SuppressFire = true; }
             if (kb.mKey.wasPressedThisFrame)
             {
-                bool open = !mission.MapOpen;
-                mission.SetMapOpen(open); hud.CancelDrag(); inventory.SuppressFire = true;
-                if (open) quest.OnMapOpened();
+                mission.SetMapOpen(!mission.MapOpen); hud.CancelDrag(); inventory.SuppressFire = true;
             }
             if (kb.cKey.wasPressedThisFrame) mission.Crouched = !mission.Crouched;
             if (kb.f5Key.wasPressedThisFrame) saveSystem.SaveSlot(0, out _);
             if (kb.hKey.wasPressedThisFrame) inventory.UseItem("medkit_small");
             inventory.HandleQuickKeys(kb);
-            if (mission.InventoryOpen || mission.MapOpen) { UpdateCompanion(); return; }
+            if (mission.InventoryOpen || mission.MapOpen)
+            {
+                // Same gate as below: this used to call UpdateCompanion unconditionally, so opening
+                // the bag or map pulled Hùng to Nam at any stage — wounded, or at his post at base.
+                if (quest.ShouldFollowPlayer()) UpdateCompanion();
+                return;
+            }
 
             if (mission.ModernPlayer != null)
             {
@@ -100,14 +107,23 @@ namespace ShadowVale.Map01
         }
 
         /// <summary>
-        /// [E]: treating Hùng takes priority when he's the one in range, otherwise it's the usual
-        /// point interaction. Rescuing him must never require walking away from every loot crate
-        /// first — the herb he needs at stage 0 comes from one.
+        /// [E]: talking to Hùng (treating him, or reporting in) takes priority while he is in range
+        /// and has something to say; otherwise it's the usual point interaction. HungInRange is only
+        /// true at those moments, so the loot crate with the rescue's herb is never blocked.
         /// </summary>
         private void HandleInteractKey()
         {
-            if (quest.HungInRange) quest.TryRescueHung();
+            if (quest.HungInRange) quest.TalkToHung();
             else if (Nearby != null) Interact(Nearby);
+        }
+
+        /// <summary>Grants the point's items and starts its restock timer; returns what was taken.</summary>
+        private string TakeItems(ForestPoint point)
+        {
+            foreach (var item in point.items) inventory.Add(item.item_id, item.count);
+            point.MarkLooted();
+            string taken = "Nhận " + string.Join(", ", point.items.Select(i => i.count + " " + ForestInventory.Name(i.item_id).ToLowerInvariant())) + ".";
+            return point.restockSeconds > 0 ? taken + $" Tiếp tế lại sau {point.restockSeconds:0} giây." : taken;
         }
 
         public void Interact(ForestPoint point)
@@ -115,13 +131,19 @@ namespace ShadowVale.Map01
             switch (point.kind)
             {
                 case ForestPointKind.Supplies:
-                    if (!quest.TryDeliverSupplies()) return;
-                    point.used = true; inventory.Add("supplies", 1);
+                    if (point.used) return;
+                    if (quest.TryDeliverSupplies())
+                    {
+                        // Hùng's hand-off line stays on screen; the first resupply comes with it.
+                        inventory.Add("supplies", 1);
+                        TakeItems(point);
+                    }
+                    // Once Hùng is home, the base keeps resupplying on its restock timer.
+                    else if (quest.BaseResupplyOpen) mission.Say("Căn cứ tiếp tế — " + TakeItems(point), 6);
                     break;
                 case ForestPointKind.Loot:
                     if (point.used) return;
-                    foreach (var item in point.items) inventory.Add(item.item_id, item.count);
-                    point.used = true; mission.Say("Đã nhặt vật tư. Tab mở túi đồ. Bàn chế tạo nằm ở điểm tiếp tế.");
+                    mission.Say(TakeItems(point) + " Tab mở túi đồ.", 6);
                     break;
                 case ForestPointKind.Workbench:
                     mission.Say("Bàn chế tạo: B để làm băng cứu thương (2 vải + 1 thảo dược). Game tự lưu khi về menu hoặc thoát.");

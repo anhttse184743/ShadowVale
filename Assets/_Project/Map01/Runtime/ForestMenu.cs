@@ -32,6 +32,16 @@ namespace ShadowVale.Map01
         private VideoPlayer introPlayer;
         private RenderTexture introTexture;
         private bool playingIntro;
+        // Map 1 loads synchronously and freezes on the last drawn frame for several seconds; that
+        // frame must be a loading screen, not the title, or skipping the intro looks like a bounce.
+        private bool loading;
+        // Keys pressed during that freeze arrive right after the load. Esc there would open the
+        // pause menu the moment the player lands in the map. Real time: the freeze stalls frames.
+        private float ignoreKeysUntil;
+        // The scene's first frames freeze again on its Start work (the minimap survey, say), so
+        // the grace restarts after each such hitch rather than running out during one.
+        private int settleFrames;
+        private float lastFrameAt;
         private static readonly Color Ink = new Color(.09f, .12f, .075f, .96f);
         private static readonly Color Paper = new Color(.89f, .83f, .63f);
         private static readonly Color Gold = new Color(.8f, .65f, .28f);
@@ -75,7 +85,8 @@ namespace ShadowVale.Map01
             var name = SceneManager.GetActiveScene().name;
             // A blank/unsaved editor scene has no gameplay. It must show the title rather than just its skybox.
             visible = mission == null || mission.Paused;
-            browser = saving = quitAuthorized = false; selected = 0; question = message = null; confirmed = null;
+            browser = saving = quitAuthorized = loading = false; selected = 0; question = message = null; confirmed = null;
+            ignoreKeysUntil = Time.realtimeSinceStartup + .5f; settleFrames = 10;
             Time.timeScale = mission != null && mission.Paused ? 0 : 1;
             Refresh();
             if (mission == null && latest < 0) selected = 1;
@@ -108,8 +119,11 @@ namespace ShadowVale.Map01
         }
         private void Update()
         {
+            float now = Time.realtimeSinceStartup;
+            if (settleFrames > 0) { settleFrames--; if (now - lastFrameAt > .2f) ignoreKeysUntil = Mathf.Max(ignoreKeysUntil, now + .5f); }
+            lastFrameAt = now;
             var kb = Keyboard.current;
-            if (kb == null) return;
+            if (kb == null || now < ignoreKeysUntil) return;
             if (playingIntro) {
                 if (kb.escapeKey.wasPressedThisFrame || kb.enterKey.wasPressedThisFrame
                     || kb.numpadEnterKey.wasPressedThisFrame || kb.spaceKey.wasPressedThisFrame) EndIntro();
@@ -141,8 +155,8 @@ namespace ShadowVale.Map01
         private void OpenSlots(bool save) { browser = true; saving = save; message = null; Refresh(); selected = save ? 1 : Mathf.Max(0, latest); }
         private void StartGame(int slot)
         {
-            try { Map01SaveSystem.BeginGame(slot); }
-            catch (Exception e) { message = "Không thể mở bản lưu: " + e.Message; }
+            try { loading = true; Map01SaveSystem.BeginGame(slot); }
+            catch (Exception e) { loading = false; message = "Không thể mở bản lưu: " + e.Message; }
         }
         /// <summary>"Chơi mới" plays the briefing cutscene once before Map 1 loads. Loading a save
         /// (existing progress) never replays it — only a fresh start does.</summary>
@@ -296,6 +310,7 @@ namespace ShadowVale.Map01
         private void OnGUI()
         {
             if (playingIntro) { DrawIntro(); return; }
+            if (loading) { DrawLoading(); return; }
             if (!visible) return;
             Styles(); GUI.depth = -100;
             var matrix = GUI.matrix; var color = GUI.color; GUI.color = Color.white;
@@ -331,6 +346,18 @@ namespace ShadowVale.Map01
             Styles();
             Fill(new Rect(Screen.width - 300, Screen.height - 54, 280, 40), new Color(0, 0, 0, .55f));
             GUI.Label(new Rect(Screen.width - 290, Screen.height - 47, 270, 30), "Enter / Esc / Space để bỏ qua", small);
+        }
+        private void DrawLoading()
+        {
+            Styles(); GUI.depth = -100;
+            Fill(new Rect(0, 0, Screen.width, Screen.height), Color.black);
+            var matrix = GUI.matrix;
+            float scale = Mathf.Min(Screen.width / 1600f, Screen.height / 900f);
+            GUI.matrix = Matrix4x4.TRS(new Vector3((Screen.width - 1600 * scale) / 2, (Screen.height - 900 * scale) / 2), Quaternion.identity, new Vector3(scale, scale, 1));
+            var old = heading.alignment; heading.alignment = TextAnchor.MiddleCenter;
+            GUI.Label(new Rect(0, 400, 1600, 60), "ĐANG TẢI MÀN CHƠI...", heading);
+            heading.alignment = old;
+            GUI.matrix = matrix;
         }
         private void DrawMain()
         {

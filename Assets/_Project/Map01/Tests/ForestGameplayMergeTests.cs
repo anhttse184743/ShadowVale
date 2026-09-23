@@ -46,6 +46,9 @@ namespace ShadowVale.Map01.Tests
                 mission.Damage(30);
                 Assert.AreEqual(health.Current, mission.PlayerHealth);
                 combat.Equip(WeaponKind.Knife);
+                // Ammo is no longer free at spawn — seed some, as if picked up in the field, so
+                // firing has something to consume.
+                inventory.Add("ammo_rifle", 10);
                 int ammo = inventory.Count("ammo_rifle");
                 Assert.IsTrue(combat.TryConsumeRound());
                 Assert.AreEqual(ammo - 1, inventory.Count("ammo_rifle"));

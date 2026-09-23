@@ -7,14 +7,15 @@ using UnityEngine.SceneManagement;
 
 namespace ShadowVale.Map01
 {
-    /// <summary>Save/load for Map 1 — checkpoint format v4, the first version written after the
-    /// legacy ForestGuard system was retired, so it no longer carries guard snapshots at all.</summary>
+    /// <summary>Save/load for Map 1 — checkpoint format v5. v4 (the first without the legacy
+    /// ForestGuard snapshots) still loads: only its stage numbers predate the report-to-Hùng steps
+    /// and are mapped through Map01Quest.FromV4Stage.</summary>
     public sealed class Map01SaveSystem : MonoBehaviour
     {
         [Serializable]
         private sealed class CheckpointData
         {
-            public int version = 4, stage, stones;
+            public int version = 5, stage, stones;
             public float hp, stamina;
             public Vector3 player, hung;
             public bool alarmed, crouched;
@@ -24,6 +25,7 @@ namespace ShadowVale.Map01
             public float craftRemaining, playerYaw, hungYaw;
             public string[] quickSlots;
             public int equippedWeapon;
+            public int scoutedCamps; // Bitmask of camps logged during the scouting order; 0 in older saves.
             public float attackRemaining;
             public Map01EnemyController.Snapshot[] enemies;
         }
@@ -85,7 +87,8 @@ namespace ShadowVale.Map01
                 quickSlots = new[] { inventory.QuickItem(0), inventory.QuickItem(1), inventory.QuickItem(2), inventory.QuickItem(3), inventory.QuickItem(4) },
                 equippedWeapon = mission.ModernCombat != null ? (int)mission.ModernCombat.EquippedKind : 0,
                 attackRemaining = mission.ModernCombat != null ? mission.ModernCombat.AttackCooldownRemaining : 0,
-                enemies = mission.Enemies.Select(e => e.Capture()).ToArray()
+                enemies = mission.Enemies.Select(e => e.Capture()).ToArray(),
+                scoutedCamps = GetComponent<Map01Scouting>().FoundMask
             };
             try
             {
@@ -95,8 +98,7 @@ namespace ShadowVale.Map01
                 {
                     sceneName = SceneManager.GetActiveScene().name,
                     savedAt = DateTime.UtcNow.ToString("o"), playSeconds = mission.PlaySeconds,
-                    location = quest.Stage == 0 ? "Đang tìm Hùng" : quest.Stage == 1 ? "Trên đường về căn cứ" : quest.Stage == 2 ? "Căn cứ chỉ huy"
-                        : quest.Stage == 3 ? "Doanh trại địch" : quest.Stage == Map01Quest.BossStage ? "Đối đầu chỉ huy" : "Map 1 hoàn tất",
+                    location = Map01Quest.SaveLocations[Mathf.Clamp(quest.Stage, 0, Map01Quest.CompleteStage)],
                     checkpoint = JsonUtility.ToJson(data), thumbnail = thumbnail
                 });
                 mission.Say("Đã lưu tiến trình."); return true;
@@ -161,7 +163,7 @@ namespace ShadowVale.Map01
                 if (controller != null) { controller.enabled = false; mission.player.position = data.player; controller.enabled = true; }
                 else mission.player.position = data.player;
                 mission.hung.GetComponent<NavMeshAgent>()?.Warp(data.hung);
-                quest.RestoreStage(data.stage);
+                quest.RestoreStage(data.version >= 5 ? data.stage : Map01Quest.FromV4Stage(data.stage));
                 inventory.RestoreFromSave(data.items, data.stones, data.crafting, data.craftRemaining);
                 inventory.RestoreQuickSlots(data.quickSlots);
                 mission.Alarmed = data.alarmed;
@@ -171,6 +173,7 @@ namespace ShadowVale.Map01
                 mission.player.rotation = Quaternion.Euler(0, data.playerYaw, 0);
                 mission.hung.rotation = Quaternion.Euler(0, data.hungYaw, 0);
                 RestoreGameplay(data);
+                GetComponent<Map01Scouting>().RestoreFound(data.scoutedCamps);
                 foreach (var point in mission.Points) point.used = data.used.Contains(point.id);
                 mission.Say("Đã khôi phục tiến trình và trạng thái giao chiến.");
             }

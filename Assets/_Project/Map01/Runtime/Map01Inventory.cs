@@ -15,15 +15,16 @@ namespace ShadowVale.Map01
     {
         private readonly Dictionary<string, int> items = new Dictionary<string, int>();
         private int stones;
-        private string[] quickSlots = { "medkit_small", "stone", null, null, null };
+        private string[] quickSlots = { "rifle_standard", "knife", "medkit_small", "stone", null };
         private int activeQuickSlot;
         private string selectedItem;
         private float nextQuickUse;
         private string crafting;
         private float craftUntil;
 
-        /// <summary>Set true while the inventory/map panel is open, so a released mouse button
-        /// does not fire a shot the moment the panel closes.</summary>
+        /// <summary>Set when a panel toggles or a weapon is equipped, so the click that did it
+        /// cannot also fire. Clears itself in <see cref="Update"/> once the left button is up —
+        /// it must never outlive that click, or combat input stays blocked for good.</summary>
         public bool SuppressFire { get; set; }
         public bool IsCrafting => crafting != null;
         public string SelectedItem { get => selectedItem; set => selectedItem = value; }
@@ -34,9 +35,12 @@ namespace ShadowVale.Map01
         private Map01Mission mission;
         private void Awake() { mission = GetComponent<Map01Mission>(); }
 
-        public void SeedStartingLoadout(int startingAmmo, int startingStones)
+        /// <summary>Nam starts with his rifle and knife but no ammunition — ammo_rifle and herb
+        /// only come from picking up loot in the field (see the "tutorial_loot" point).</summary>
+        public void SeedStartingLoadout(int startingStones)
         {
-            items["ammo_rifle"] = startingAmmo;
+            items["rifle_standard"] = 1;
+            items["knife"] = 1;
             stones = startingStones;
         }
         public int Count(string id) => id == "stone" ? stones : items.TryGetValue(id, out int count) ? count : 0;
@@ -55,6 +59,7 @@ namespace ShadowVale.Map01
 
         public int StackLimit(string id)
         {
+            if (ForestInventory.IsWeapon(id)) return 1;
             if (id == "stone") return 20;
             if (id == "supplies" || id == "river_documents") return 1;
             return Mathf.Max(1, mission.Bundle?.items?.FirstOrDefault(i => i.id == id)?.stack_max ?? 1);
@@ -66,12 +71,28 @@ namespace ShadowVale.Map01
             return ForestInventory.Split(values, StackLimit);
         }
 
+        public bool IsEquipped(string id)
+        {
+            if (!ForestInventory.IsWeapon(id) || mission == null || mission.ModernCombat == null) return false;
+            return mission.ModernCombat.EquippedKind == (id == "knife"
+                ? ShadowVale.Gameplay.Combat.WeaponKind.Knife : ShadowVale.Gameplay.Combat.WeaponKind.Rifle);
+        }
+        public bool EquipItem(string id)
+        {
+            if (!ForestInventory.IsWeapon(id) || Count(id) <= 0 || mission == null || !mission.IsInitialized ||
+                mission.Stopped || ForestMenu.Visible || IsCrafting || mission.ModernCombat == null) return false;
+            var kind = id == "knife" ? ShadowVale.Gameplay.Combat.WeaponKind.Knife : ShadowVale.Gameplay.Combat.WeaponKind.Rifle;
+            SuppressFire = true;
+            mission.ModernCombat.Equip(kind);
+            return mission.ModernCombat.EquippedKind == kind;
+        }
+
         public bool AssignQuickSlot(int slot, string id)
         {
             if (slot < 0 || slot >= quickSlots.Length) return false;
             if (!string.IsNullOrEmpty(id) && (!ForestInventory.QuickUsable(id) || Count(id) <= 0))
             {
-                mission.Say("Chỉ băng cứu thương và đá ném có thể gán vào ô nhanh."); return false;
+                mission.Say("Chỉ vũ khí, băng cứu thương và đá ném có thể gán vào ô nhanh."); return false;
             }
             // A shortcut references the total stock; assigning it never moves or duplicates inventory.
             quickSlots[slot] = string.IsNullOrEmpty(id) ? null : id;
@@ -81,7 +102,7 @@ namespace ShadowVale.Map01
         public void RestoreQuickSlots(string[] saved)
         {
             activeQuickSlot = 0;
-            quickSlots = new[] { "medkit_small", "stone", null, null, null };
+            quickSlots = new[] { "rifle_standard", "knife", "medkit_small", "stone", null };
             if (saved == null) return; // Old checkpoints retain the useful default layout.
             Array.Clear(quickSlots, 0, quickSlots.Length);
             for (int i = 0; i < Math.Min(5, saved.Length); i++)
@@ -99,6 +120,7 @@ namespace ShadowVale.Map01
             if (!mission.IsInitialized || mission.Stopped || ForestMenu.Visible || Time.time < nextQuickUse) return false;
             if (crafting != null) { mission.Say("Hãy hoàn thành chế tạo trước khi dùng vật phẩm.", 3); return false; }
             if (!ForestInventory.QuickUsable(id)) { mission.Say("Vật phẩm này không dùng trực tiếp.", 3); return false; }
+            if (ForestInventory.IsWeapon(id)) return EquipItem(id);
             if (Count(id) <= 0) { mission.Say("Đã hết " + ForestInventory.Name(id).ToLowerInvariant() + ".", 3); return false; }
             if (id == "medkit_small")
             {
@@ -143,6 +165,7 @@ namespace ShadowVale.Map01
         }
         public void Update()
         {
+            if (SuppressFire && (Mouse.current == null || !Mouse.current.leftButton.isPressed)) SuppressFire = false;
             if (crafting != null && Time.time >= craftUntil)
             {
                 var recipe = mission.Bundle.craft_recipes.First(r => r.id == crafting);
@@ -155,6 +178,9 @@ namespace ShadowVale.Map01
         {
             items.Clear();
             foreach (var i in savedItems) items[i.item_id] = i.count;
+            // Earlier saves carried these prefabs without inventory entries. Only migrate missing keys.
+            if (!items.ContainsKey("rifle_standard")) items["rifle_standard"] = 1;
+            if (!items.ContainsKey("knife")) items["knife"] = 1;
             stones = savedStones;
             crafting = string.IsNullOrEmpty(savedCrafting) ? null : savedCrafting;
             craftUntil = Time.time + craftRemaining;

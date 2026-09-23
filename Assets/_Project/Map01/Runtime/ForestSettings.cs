@@ -10,9 +10,9 @@ namespace ShadowVale.Map01
     {
         public float playerHP, stamina, walkSpeed, sprintSpeed, crouchSpeed;
         public float staminaDrain, staminaRecovery, interactRange, stoneRange, stoneNoise;
-        public float guardDamageScale, guardShotInterval, detectionSeconds, hiddenVisionScale;
+        public float guardDamageScale, guardShotInterval, detectionSeconds, hiddenVisionScale, crouchVisionScale;
         public float medkitHeal, followDistance;
-        public int startingAmmo, startingStones;
+        public int startingStones, guardDropAmmo, guardDropMedkits;
     }
 
     [Serializable] public sealed class ForestBundle

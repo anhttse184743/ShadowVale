@@ -4,6 +4,8 @@
   "published_at": "2026-09-18T00:00:00Z",
   "checksum": "sha256:fallback-dev-bundle",
   "items": [
+    { "id": "rifle_standard", "display_name": "Súng trường", "category": "weapon", "stack_max": 1, "weight": 3.5 },
+    { "id": "knife", "display_name": "Dao", "category": "weapon", "stack_max": 1, "weight": 0.4 },
     { "id": "ammo_rifle",    "display_name": "Rifle Rounds",    "category": "ammo",       "stack_max": 90,  "weight": 0.02 },
     { "id": "ammo_smg",      "display_name": "SMG Rounds",      "category": "ammo",       "stack_max": 120, "weight": 0.01 },
     { "id": "ammo_shotgun",  "display_name": "Shells",          "category": "ammo",       "stack_max": 32,  "weight": 0.05 },
