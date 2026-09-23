@@ -65,7 +65,6 @@ namespace ShadowVale.Map01
                 mission.Crouched = mission.ModernPlayer.IsSneaking;
                 mission.UpdateHiddenState();
                 mission.SetStamina(mission.Stamina + (mission.ModernPlayer.IsSprinting ? -mission.Settings.staminaDrain : mission.Settings.staminaRecovery) * Time.deltaTime);
-                if (mission.ModernPlayer.IsSprinting) mission.NotifySprintNoise();
             }
             if (kb.qKey.wasPressedThisFrame) ThrowStone();
             Nearby = mission.Points.Where(p => !p.used && p.kind != ForestPointKind.Hide && p.kind != ForestPointKind.Cover)
