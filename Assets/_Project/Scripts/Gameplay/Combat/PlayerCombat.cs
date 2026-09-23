@@ -87,6 +87,13 @@ namespace ShadowVale.Gameplay.Combat
         /// <summary>Raised on equip so the HUD can follow without polling.</summary>
         public event System.Action<WeaponKind> WeaponChanged;
 
+        /// <summary>
+        /// Raised the moment an attack commits — after the round is spent, before the trace.
+        /// Carries the weapon used and where the sound comes from, so audio and anything else
+        /// that reacts to a shot can hang off one place instead of reaching into the internals.
+        /// </summary>
+        public event System.Action<WeaponKind, Vector3> Attacked;
+
         [Header("Unarmed")]
         [SerializeField] private float punchDamage = 12f;
         [SerializeField] private float punchRange = 1.5f;
@@ -450,6 +457,11 @@ namespace ShadowVale.Gameplay.Combat
             if (_equipped != null && _equipped.IsGun && TryConsumeRound != null && !TryConsumeRound()) return;
             float cooldown = _equipped != null ? _equipped.Cooldown : punchCooldown;
             _nextAttackTime = Time.time + cooldown;
+
+            // The muzzle is where a gunshot is heard from; an empty hand has none, so fall back
+            // to the character. Raised before the trace so a listener cannot miss a kill's shot.
+            Transform sound = _equipped != null && _equipped.Muzzle != null ? _equipped.Muzzle : transform;
+            Attacked?.Invoke(_equippedKind, sound.position);
 
             _upperBodyHoldUntil = Time.time + cooldown + attackLayerTail;
             if (animator != null)
