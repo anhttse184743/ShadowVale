@@ -73,6 +73,15 @@ namespace ShadowVale.Gameplay.Combat
         public bool UsesInventoryHotkeys { get; set; }
         public float AttackCooldownRemaining => Mathf.Max(0, _nextAttackTime - Time.time);
 
+        /// <summary>Half-angle of the cone the next shot can land in, in degrees.</summary>
+        public float CurrentSpreadDegrees => _spread.ConeHalfAngle(CurrentStance(), _aiming);
+
+        /// <summary>0 to 1. How far sustained fire has opened the cone.</summary>
+        public float SpreadBloom => _spread.Bloom;
+
+        /// <summary>Shots into the current burst.</summary>
+        public int BurstShotIndex => _spread.ShotIndex;
+
         /// <summary>Rounds in the weapon right now.</summary>
         public int RoundsInMagazine => _magazine?.Rounds ?? 0;
 
@@ -156,10 +165,12 @@ namespace ShadowVale.Gameplay.Combat
 
         private readonly System.Collections.Generic.Dictionary<WeaponKind, Weapon> _weapons = new();
         private PlayerController _controller;
+        private CharacterController _characterController;
         private Weapon _equipped;
         private WeaponKind _equippedKind;
         private float _nextAttackTime;
         private Magazine _magazine;
+        private readonly WeaponSpreadState _spread = new();
         private bool _aiming;
         private ShotTracer[] _tracers;
         private int _tracerCursor;
@@ -176,6 +187,7 @@ namespace ShadowVale.Gameplay.Combat
         private void Awake()
         {
             _controller = GetComponent<PlayerController>();
+            _characterController = GetComponent<CharacterController>();
             if (animator == null) animator = GetComponentInChildren<Animator>();
             if (health == null) health = GetComponent<Health>();
             if (cameraRig == null && Camera.main != null)
@@ -286,10 +298,13 @@ namespace ShadowVale.Gameplay.Combat
             if (dead)
             {
                 _magazine?.CancelReload();
+                _spread.Reset();
+                if (cameraRig != null) cameraRig.ClearRecoil();
             }
             else
             {
                 _magazine?.Tick(Time.deltaTime, DrawRounds);
+                _spread.Tick(Time.deltaTime);
             }
 
             if (dead || (InputAllowed != null && !InputAllowed()))
@@ -437,6 +452,19 @@ namespace ShadowVale.Gameplay.Combat
             SetAiming(wants);
         }
 
+        /// <summary>
+        /// Reads how steady the shooter is right now. Feet off the ground beats everything —
+        /// a sneaking player who jumps is not sneaking any more.
+        /// </summary>
+        private ShooterStance CurrentStance()
+        {
+            if (_controller == null) return ShooterStance.Standing;
+            if (_characterController != null && !_characterController.isGrounded) return ShooterStance.Airborne;
+            if (_controller.IsSprinting) return ShooterStance.Running;
+            if (_controller.IsSneaking) return ShooterStance.Sneak;
+            return _controller.IsMoving ? ShooterStance.Walking : ShooterStance.Standing;
+        }
+
         private void ReadReloadInput()
         {
             Keyboard keyboard = Keyboard.current;
@@ -541,11 +569,14 @@ namespace ShadowVale.Gameplay.Combat
 
             float cooldown = _equipped != null ? _equipped.Cooldown : punchCooldown;
 
-            // Accumulate rather than restart from now. `Time.time + cooldown` rounds the gap up
-            // to whole frames, which quietly turns 600 rounds per minute into 500 at 50 fps;
-            // carrying the remainder forward keeps the rate the same on every machine. Clamping
-            // to now stops a long pause between shots from banking a burst.
-            _nextAttackTime = Mathf.Max(Time.time, _nextAttackTime + cooldown);
+            // `Time.time + cooldown` rounds every gap up to a whole frame, quietly turning 600
+            // rounds per minute into 500 at 50 fps. Carrying the remainder forward fixes that
+            // during sustained fire, but only while the weapon is genuinely mid-burst: once the
+            // schedule is more than a cooldown stale the burst is over, and resuming from it
+            // would leave no delay at all before the next shot.
+            _nextAttackTime = Time.time - _nextAttackTime > cooldown
+                ? Time.time + cooldown
+                : _nextAttackTime + cooldown;
 
             // The muzzle is where a gunshot is heard from; an empty hand has none, so fall back
             // to the character. Raised before the trace so a listener cannot miss a kill's shot.
@@ -581,13 +612,14 @@ namespace ShadowVale.Gameplay.Combat
             Vector3 origin = cam.transform.position;
             Vector3 direction = cam.transform.forward;
 
-            // Aiming halves the cone; hip fire keeps the full spread.
-            float spread = _aiming ? gun.HipSpread * 0.5f : gun.HipSpread;
-            if (spread > 0f)
-            {
-                direction = Quaternion.Euler(
-                    Random.Range(-spread, spread), Random.Range(-spread, spread), 0f) * direction;
-            }
+            // How steady the shooter is decides the cone, and how long they have held the
+            // trigger widens it. The weapon's own HipSpread is no longer consulted: one flat
+            // number could not tell a crouched aimed tap from a shot fired mid-jump.
+            ShooterStance stance = CurrentStance();
+            direction = WeaponSpreadState.Scatter(direction, _spread.ConeHalfAngle(stance, _aiming));
+
+            Vector2 kick = _spread.Fire(Time.time);
+            if (cameraRig != null) cameraRig.AddRecoil(kick.x, kick.y);
 
             // The trace starts at the camera so the shot lands on the crosshair, but the streak
             // has to come out of the barrel or it looks like the player is firing from their eyes.
