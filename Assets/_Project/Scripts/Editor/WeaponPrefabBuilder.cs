@@ -76,7 +76,7 @@ namespace ShadowVale.Editor
             new("Assets/_Project/Art/Items/ak-47.glb", "W_AK47", WeaponKind.Rifle,
                 targetLength: 0.88f, gripFraction: 0.32f, gripHeightFraction: 0.28f,
                 flipForward: true,
-                damage: 30f, range: 120f, cooldown: 0.11f, automatic: true),
+                damage: 30f, range: 120f, cooldown: 0.1f, automatic: true),
 
             new("Assets/_Project/Art/Items/ka-bar_knife.glb", "W_Knife", WeaponKind.Knife,
                 targetLength: 0.30f, gripFraction: 0.20f, gripHeightFraction: 0.5f,
