@@ -13,12 +13,12 @@ using Unity.AI.Navigation;
 using Object=UnityEngine.Object;
 namespace ShadowVale.Map01.Editor
 {
-    [InitializeOnLoad] public static class Map02VillageBuilder
+    [InitializeOnLoad] public static partial class Map02VillageBuilder
     {
         const string Root="Assets/_Project/Art/Environment/Map02_Village",Reports="Tools/Map02Reports",ScenePath="Assets/_Project/Scenes/Maps/Map 2.unity";
         const float RiverX=-110+220f/3,RiverWidth=10.5f;
         static Material palette,soil,rice,water,wood;static Transform env,markers;static Dictionary<string,Mesh> meshes=new Dictionary<string,Mesh>();static System.Random rng;
-        static Map02VillageBuilder(){EditorApplication.update+=Poll;}
+        static Map02VillageBuilder(){EditorApplication.update+=Poll;EditorApplication.update+=PollReference;}
         static void Poll(){const string request="Tools/Map02Village.request";if(!File.Exists(request)||EditorApplication.isCompiling||EditorApplication.isUpdating||EditorApplication.isPlayingOrWillChangePlaymode)return;File.Delete(request);try{Build();File.WriteAllText(Reports+"/build.status","PASS "+DateTime.UtcNow.ToString("O"));}catch(Exception e){File.WriteAllText(Reports+"/build.status","FAIL "+e);Debug.LogException(e);}}
         static float Rand(float a,float b)=>Mathf.Lerp(a,b,(float)rng.NextDouble());
         static float H(float x)=>Mathf.Lerp(-.8f,1,Mathf.SmoothStep(0,1,Mathf.InverseLerp(RiverWidth/2,RiverWidth/2+3,Mathf.Abs(x-RiverX))));
@@ -145,4 +145,5 @@ namespace ShadowVale.Map01.Editor
         }
     }
 }
+
 
