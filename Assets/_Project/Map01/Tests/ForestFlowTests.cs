@@ -298,14 +298,13 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual(60, inventory.Count("ammo_rifle"));
 
                 // Everything that raises SuppressFire in play, the way Map01PlayerInteraction does
-                // it: Tab open/close, M open/close (the scouting objective requires M), and
-                // switching weapons from the quick bar.
+                // it: Tab open/close, M open/close, and switching weapons from the bag.
                 mission.SetInventoryOpen(true); inventory.SuppressFire = true;
                 mission.SetInventoryOpen(false); inventory.SuppressFire = true;
                 mission.SetMapOpen(true); inventory.SuppressFire = true;
                 mission.SetMapOpen(false); inventory.SuppressFire = true;
-                Assert.IsTrue(inventory.UseQuickSlot(1));
-                Assert.IsTrue(inventory.UseQuickSlot(0));
+                Assert.IsTrue(inventory.EquipItem("knife"));
+                Assert.IsTrue(inventory.EquipItem("rifle_standard"));
                 yield return null;
                 Assert.IsTrue(combat.InputAllowed(), "Combat input must come back once the click that toggled a panel or weapon is released.");
 

@@ -49,7 +49,6 @@ namespace ShadowVale.Map01
         private bool paused;
         private Map01Quest quest;
         private Map01Inventory inventory;
-        private Map01Hud hud;
 
         public bool IsWading => player != null && player.position.y < .12f &&
             Mathf.Abs(player.position.x - (8 + 12 * Mathf.Sin(player.position.z * .041f) + 4 * Mathf.Sin(player.position.z * .105f))) < 5f;
@@ -62,7 +61,6 @@ namespace ShadowVale.Map01
         {
             quest = GetComponent<Map01Quest>();
             inventory = GetComponent<Map01Inventory>();
-            hud = GetComponent<Map01Hud>();
             if (player == null)
                 player = FindFirstObjectByType<PlayerController>()?.transform;
             // Unity objects can retain a managed wrapper after the asset was deleted.
@@ -118,10 +116,10 @@ namespace ShadowVale.Map01
                 ModernCombat.UsesInventoryHotkeys = true;
                 var scouting = GetComponent<Map01Scouting>(); // Added by Map01Quest.Awake.
                 ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting && !inventory.SuppressFire
-                    && !hud.PointerBlocked() && !scouting.Binoculars; // Hands are on the binoculars, not the rifle.
+                    && !scouting.Binoculars; // Hands are on the binoculars, not the rifle.
                 ModernCombat.TryConsumeRound = () =>
                 {
-                    if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 2 hoặc 7.", 3); return false; }
+                    if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 7.", 3); return false; }
                     inventory.Spend("ammo_rifle", 1);
                     EmitNoise(player.position, Weapon.noise_radius);
                     return true;

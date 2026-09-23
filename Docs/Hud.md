@@ -1,4 +1,4 @@
-# HUD, túi đồ và dùng nhanh
+# HUD và túi đồ
 
 Nhấn Play → menu chính → Chơi mới. Kể cả đang mở `Map 1`, Play vẫn vào menu trước. HUD cũng hoạt động
 trong map cũ khi tải checkpoint. Không cần gắn thêm component vào scene:
@@ -10,13 +10,10 @@ trong map cũ khi tải checkpoint. Không cần gắn thêm component vào scen
 - Túi đồ lớn bên phải có 6 cột × 4 hàng nhìn thấy. Cuộn chuột hoặc kéo thanh cuộn
   để xem thêm stack; 24 ô không phải giới hạn tổng sức chứa.
 - Bấm ô để xem tên, mô tả, tổng số lượng và giới hạn mỗi stack.
-- Kéo băng cứu thương/đá từ túi xuống thanh nhanh, hoặc chọn vật phẩm rồi nhấn 1–5.
-- Khi đóng túi, nhấn 1–5 để dùng ô tương ứng. H và Q vẫn dùng được như trước.
-- Map 1 dùng nhân vật/animation mới từ dev: 6 đổi súng trường, 7 dao, 8 tay không.
-  Các phím 1–5 vẫn dành riêng cho vật phẩm. C hoặc Ctrl bật/tắt đi khom; Shift bật/tắt chạy.
+- Không có thanh dùng nhanh/ô gán phím: mỗi vật phẩm có phím riêng. H dùng băng cứu thương,
+  Q ném đá, 6 súng trường, 7 dao, 8 tay không (hoặc chọn vũ khí trong túi rồi bấm Trang bị).
+  Phím 1–5 không còn gắn chức năng. C hoặc Ctrl bật/tắt đi khom; Shift bật/tắt chạy.
   Đạn súng lấy từ túi đồ; thanh máu và băng cứu thương dùng cùng Health của nhân vật.
-- Chuột phải ô nhanh khi mở túi để bỏ gán. Phím tắt chỉ tham chiếu tổng số đồ
-  trong túi, không tạo bản sao và không chuyển đồ ra khỏi túi.
 - Máu đầy, hết vật phẩm, đang chế tạo, chết hoặc tạm dừng không tiêu hao băng.
   Đóng túi để ngắm và ném đá. Nguyên liệu, đạn và đồ nhiệm vụ không dùng trực tiếp.
 - Mở túi vẫn giữ quy tắc gameplay hiện có: nhân vật dừng di chuyển, thế giới không tạm dừng.
@@ -27,9 +24,8 @@ Giới hạn stack đọc từ `contentBundle.items[].stack_max`, không lặp l
 trong UI. Đá ném dùng giới hạn 20; hàng tiếp tế và tài liệu nhiệm vụ dùng 1/ô.
 125 viên đạn súng trường hiển thị thành 90 + 35. UI không cấp thêm đồ cho người chơi.
 
-Các ô nhanh được lưu trong trường `quickSlots` của checkpoint v2. Bản lưu cũ chưa
-có trường này vẫn mở được, mặc định ô 1 là băng cứu thương, ô 2 là đá ném.
-Cả lưu thủ công, F5 và tự lưu khi thoát đều dùng chung dữ liệu này.
+Checkpoint không còn lưu ô nhanh. Bản lưu cũ có trường `quickSlots` vẫn mở được:
+JsonUtility bỏ qua trường thừa. Cả lưu thủ công, F5 và tự lưu khi thoát đều dùng chung dữ liệu này.
 
 ## Hình ảnh
 
@@ -54,9 +50,9 @@ Extract and recreate a reusable blank UI panel texture inspired by the inventory
 
 ## Kiểm thử
 
-`ForestHudTests`: chia stack, bảo toàn số lượng, gán ô nhanh không sao chép đồ,
-không tiêu hao khi máu đầy/tạm dừng, ném đá, phím số gán/dùng theo trạng thái túi,
-khôi phục cấu hình ô nhanh sau lưu/tải, tương thích bản lưu cũ và tồn kho vượt 24 ô.
+`ForestHudTests`: chia stack, bảo toàn số lượng, không tiêu hao khi máu đầy/tạm dừng,
+ném đá, khôi phục kho sau lưu/tải, tồn kho vượt 24 ô; phím 6/7 đổi vũ khí, H dùng băng,
+phím 1–5 không còn tác dụng (`ItemsUseTheirOwnKeysWithNoShortcutBar`).
 
 Test ảnh dùng kho đồ được điền riêng trong môi trường QA để nhìn đủ icon;
 không chèn những vật phẩm/số lượng này vào scene hoặc dữ liệu chơi thật.
@@ -69,7 +65,7 @@ kiểm tra thả đúng ô/thả ra ngoài, nhóm HUD **2/2 đạt**
 ## Trang bị khởi hành
 
 - Súng trường (rifle_standard) và dao (knife): mỗi món x1 khi chơi mới, tối đa 1/ô.
-- Tab → chọn món → Trang bị; nhãn Đang cầm đồng bộ với PlayerCombat. Phím 6/7 vẫn đổi súng/dao; 1–5 dành cho vật phẩm tiêu hao.
+- Tab → chọn món → Trang bị; nhãn Đang cầm đồng bộ với PlayerCombat. Phím 6/7 đổi súng/dao.
 - Bản lưu v4 trước khi thêm item được bổ sung khóa còn thiếu, không nhân đôi số lượng đã lưu.
 - Hud/StartingWeapons.png giữ ảnh mẫu đã duyệt; HUD dùng UV lấy hai icon nhỏ không có chữ, số lượng được vẽ từ dữ liệu túi.
 ## Minimap
@@ -86,4 +82,4 @@ kiểm tra thả đúng ô/thả ra ngoài, nhóm HUD **2/2 đạt**
 - Góc dưới phải: giọt HP trắng ngà không viền, phần mất máu tối đi, kèm HP hiện tại/tối đa. Hình giọt được tạo bằng code và cắt từ dưới lên theo HP thật.
 - Icon súng/dao/tay không đọc từ Hud/CombatIcons.png; phím 6/7/8 đổi trang bị, icon đang cầm sáng hơn. Atlas được tạo bằng công cụ imagegen tích hợp; yêu cầu tạo silhouette súng, dao và nắm tay màu ngà trên nền trong suốt. Phần giọt đỏ trong atlas không được sử dụng.
 - Số đạn là tổng ammo_rifle thực có trong kho; chưa có cơ chế băng đạn/nạp đạn nên không hiển thị tỷ lệ đạn giả.
-- Không hiện thanh dùng nhanh khi chơi; thanh gán vật phẩm vẫn có trong túi đồ. Giữ các phím tắt sử dụng đồ.
+- Không có thanh dùng nhanh, kể cả trong túi đồ; dùng H/Q và 6/7/8.

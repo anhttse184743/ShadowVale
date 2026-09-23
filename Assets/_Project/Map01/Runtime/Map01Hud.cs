@@ -4,8 +4,8 @@ using UnityEngine.InputSystem;
 
 namespace ShadowVale.Map01
 {
-    /// <summary>Map 1's HUD: borderless health/weapon icons, objective plate, inventory, bag quick-use slots,
-    /// drag-and-drop, dialogue feedback, the objective compass/marker and the map overlay. Pure
+    /// <summary>Map 1's HUD: borderless health/weapon icons, objective plate, inventory, dialogue
+    /// feedback, the objective compass/marker and the map overlay. Pure
     /// presentation — reads Map01Mission/Map01Quest/Map01Inventory/Map01PlayerInteraction/
     /// Map01ObjectiveGuide, owns nothing gameplay.</summary>
     public sealed partial class Map01Hud : MonoBehaviour
@@ -15,8 +15,6 @@ namespace ShadowVale.Map01
         private float hudScroll;
         private float objectiveBottom;
         private int selectedStack;
-        private string dragItem;
-        private bool dragging;
         private static readonly Color HudPaper = new Color(.9f, .85f, .68f);
         private static readonly Color HudGold = new Color(.87f, .68f, .32f);
         private static readonly Rect HudPlateUv = new Rect(0, 0, 1, 1);
@@ -39,15 +37,6 @@ namespace ShadowVale.Map01
             // Deliberately not "GetComponent() ?? AddComponent()" — see WeaponHotbar.
             guide = GetComponent<Map01ObjectiveGuide>();
             if (guide == null) guide = gameObject.AddComponent<Map01ObjectiveGuide>();
-        }
-
-        public void CancelDrag() { dragItem = null; dragging = false; }
-        public bool PointerBlocked()
-        {
-            if (Cursor.lockState == CursorLockMode.Locked || Mouse.current == null) return false;
-            float scale = HudScale;
-            var p = Mouse.current.position.ReadValue(); p = new Vector2(p.x / scale, (Screen.height - p.y) / scale);
-            return mission.InventoryOpen && QuickRect(Screen.width / scale, Screen.height / scale).Contains(p);
         }
 
         private void HudStyles()
@@ -161,13 +150,12 @@ namespace ShadowVale.Map01
         }
         private float HudScale => Mathf.Min(Screen.width / 1600f, Screen.height / 900f);
         private Rect InventoryRect(float width) => new Rect(width - 748, 52, 716, 816);
-        private Rect QuickRect(float width, float height) => new Rect(mission.InventoryOpen ? Mathf.Max(25, (width - 748 - 540) / 2) : (width - 540) / 2, height - 153, 540, 124);
 
         private void OnGUI() => DrawHud();
 
         private void DrawHud()
         {
-            if (!mission.IsInitialized || ForestMenu.Visible) { CancelDrag(); return; }
+            if (!mission.IsInitialized || ForestMenu.Visible) return;
             HudStyles();
             var matrix = GUI.matrix; var color = GUI.color; int depth = GUI.depth;
             float scale = HudScale, width = Screen.width / scale, height = Screen.height / scale;
@@ -178,10 +166,7 @@ namespace ShadowVale.Map01
             DrawObjective();
             if (guiding) DrawCompass(width);
             if (!mission.InventoryOpen && !mission.MapOpen) DrawCombatHud(width, height);
-            if (!mission.MapOpen) {
-                if (mission.InventoryOpen) DrawQuickBar(width, height);
-                if (mission.InventoryOpen) DrawInventory(width);
-            }
+            if (!mission.MapOpen && mission.InventoryOpen) DrawInventory(width);
             DrawHudFeedback(width, height);
             if (!mission.InventoryOpen && !mission.MapOpen) {
                 var frame = new Rect(28, 24, 285, 307); HudPanel(frame);
@@ -194,7 +179,6 @@ namespace ShadowVale.Map01
                 GUI.Label(new Rect(width / 2 - 275, 345, 550, 75), mission.PlayerHealth <= 0 ? "NAM ĐÃ GỤC NGÃ" : "HOÀN THÀNH MAP 1", hudCenter);
                 GUI.Label(new Rect(width / 2 - 245, 437, 490, 50), "Enter Chơi lại  ·  F9 Tải bản lưu  ·  Esc Menu", hudSmall);
             }
-            FinishHudDrag(Event.current, width, height);
             GUI.matrix = matrix; GUI.color = color; GUI.depth = depth;
         }
         private void DrawObjective()
@@ -306,7 +290,6 @@ namespace ShadowVale.Map01
                 if (inventory.IsEquipped(item.Id)) GUI.Label(new Rect(rect.x + 5, rect.y + 4, cell - 10, 20), "ĐANG CẦM", hudEquipped);
                 if (ev.type == EventType.MouseDown && ev.button == 0 && rect.Contains(ev.mousePosition)) {
                     selectedStack = i; selectedItem = item.Id;
-                    if (ForestInventory.QuickUsable(item.Id)) dragItem = item.Id;
                     ev.Use();
                 }
             }
@@ -325,52 +308,7 @@ namespace ShadowVale.Map01
                     if (GUI.Button(equipRect, inventory.IsEquipped(selectedItem) ? "ĐANG CẦM" : "TRANG BỊ", hudKey)) inventory.EquipItem(selectedItem);
                 }
             } else GUI.Label(new Rect(detail.x + 24, detail.y + 42, detail.width - 48, 70), "Túi đồ trống. Nhặt vật tư trong màn chơi để bổ sung.", hudBody);
-            GUI.Label(new Rect(panel.x + 27, 811, panel.width - 54, 50), "Tab / Esc Đóng  ·  Kéo đồ hoặc chọn + 1–5 để gán\nChuột phải ô nhanh: bỏ gán", hudSmall);
-        }
-        private Rect QuickCell(Rect bar, int i) => new Rect(bar.x + 10 + i * 105, bar.y + 11, 100, 102);
-        private void DrawQuickBar(float width, float height)
-        {
-            var bar = QuickRect(width, height); HudPanel(bar);
-            var label = new Rect(bar.center.x - 83, bar.y - 31, 166, 36); HudPanel(label);
-            GUI.Label(label, "DÙNG NHANH", hudKey);
-            for (int i = 0; i < 5; i++) {
-                var r = QuickCell(bar, i); string id = inventory.QuickItem(i); int count = string.IsNullOrEmpty(id) ? 0 : inventory.Count(id);
-                HudPanel(r, i == inventory.ActiveQuickSlot);
-                if (!string.IsNullOrEmpty(id)) {
-                    HudIcon(new Rect(r.x + 9, r.y + 9, 82, 82), id, count == 0);
-                    // Weapons don't stack — show whether it's the one currently in hand instead of a count.
-                    if (ForestInventory.IsWeapon(id)) {
-                        // Along the bottom edge: the top-left corner belongs to the slot's key number.
-                        if (inventory.IsEquipped(id)) GUI.Label(new Rect(r.x + 4, r.yMax - 24, r.width - 8, 18), "ĐANG CẦM", hudEquipped);
-                    } else HudNumber(new Rect(r.xMax - 54, r.yMax - 30, 46, 24), "x" + count);
-                } else GUI.Label(new Rect(r.x + 26, r.y + 31, 48, 44), "+", hudCenter);
-                HudFill(new Rect(r.x + 7, r.y + 6, 24, 27), new Color(.045f, .05f, .03f, .95f));
-                GUI.Label(new Rect(r.x + 7, r.y + 6, 24, 27), (i + 1).ToString(), hudKey);
-                if (i == inventory.ActiveQuickSlot) HudBorder(new Rect(r.x + 3, r.y + 3, r.width - 6, r.height - 6), HudGold);
-                if (mission.InventoryOpen && Event.current.type == EventType.MouseDown && Event.current.button == 1 && r.Contains(Event.current.mousePosition)) {
-                    inventory.AssignQuickSlot(i, null); Event.current.Use();
-                }
-                if (GUI.Button(r, GUIContent.none, GUIStyle.none)) {
-                    if (mission.InventoryOpen) { if (inventory.SelectedItem != null) inventory.AssignQuickSlot(i, inventory.SelectedItem); }
-                    else inventory.UseQuickSlot(i);
-                }
-            }
-        }
-        private void FinishHudDrag(Event ev, float width, float height)
-        {
-            if (!mission.InventoryOpen || mission.Stopped) { CancelDrag(); return; }
-            // rawType, not type: the latter resolves through Unity's live GUI dispatch and
-            // collapses mouse events to Ignore outside an active OnGUI pass (e.g. a test driving
-            // this via reflection), even though the physical mouse-up/drag it represents is real.
-            if (dragItem != null && ev.rawType == EventType.MouseDrag) { dragging = true; ev.Use(); }
-            if (dragItem != null && ev.rawType == EventType.MouseUp && ev.button == 0) {
-                if (dragging) {
-                    var bar = QuickRect(width, height);
-                    for (int i = 0; i < 5; i++) if (QuickCell(bar, i).Contains(ev.mousePosition)) inventory.AssignQuickSlot(i, dragItem);
-                }
-                CancelDrag(); ev.Use();
-            }
-            if (dragging && dragItem != null) HudIcon(new Rect(ev.mousePosition.x - 30, ev.mousePosition.y - 30, 60, 60), dragItem);
+            GUI.Label(new Rect(panel.x + 27, 811, panel.width - 54, 50), "Tab / Esc Đóng  ·  Chọn vũ khí rồi bấm TRANG BỊ\n6 Súng  ·  7 Dao  ·  8 Tay không  ·  H Hồi máu  ·  Q Ném đá", hudSmall);
         }
         private void DrawHudFeedback(float width, float height)
         {

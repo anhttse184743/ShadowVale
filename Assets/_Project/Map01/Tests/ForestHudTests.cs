@@ -93,40 +93,53 @@ namespace ShadowVale.Map01.Tests
             yield return new ExitPlayMode();
         }
 
+        /// <summary>Press and release one key through the real input path; Update-driven readers
+        /// see it on the frame after it is queued.</summary>
+        private static IEnumerator Press(Keyboard keyboard, Key key)
+        {
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState(key));
+            yield return null;
+            InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+            yield return null;
+        }
+
         [UnityTest]
-        public IEnumerator WeaponsStartInQuickSlotsAndCanBeDragReassigned()
+        public IEnumerator ItemsUseTheirOwnKeysWithNoShortcutBar()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
             yield return null;
             var mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
             var inventory = mission.GetComponent<Map01Inventory>();
-            var hud = mission.GetComponent<Map01Hud>();
+            foreach (var e in mission.Enemies) e.enabled = false;
+            var routing = RouteInputToGame();
+            var keyboard = InputSystem.AddDevice<Keyboard>();
+            try
+            {
+                Assert.IsTrue(inventory.IsEquipped("rifle_standard"), "PlayerCombat's starting weapon is the rifle.");
+                // Weapons: 6 rifle, 7 knife — the keys the combat HUD shows next to them.
+                yield return Press(keyboard, Key.Digit7);
+                Assert.IsTrue(inventory.IsEquipped("knife"), "7 draws the knife.");
+                // 1–5 were the removed shortcut bar; they must not quietly do anything any more.
+                yield return Press(keyboard, Key.Digit1);
+                Assert.IsTrue(inventory.IsEquipped("knife"), "1 no longer switches to the rifle.");
+                yield return Press(keyboard, Key.Digit6);
+                Assert.IsTrue(inventory.IsEquipped("rifle_standard"), "6 draws the rifle.");
 
-            // Fresh loadout: rifle and knife are already in the quick bar, ready to use without
-            // opening the bag first.
-            Assert.AreEqual("rifle_standard", inventory.QuickItem(0));
-            Assert.AreEqual("knife", inventory.QuickItem(1));
-            Assert.IsTrue(inventory.IsEquipped("rifle_standard"), "PlayerCombat's starting weapon is the rifle.");
-
-            // Pressing a weapon's quick-slot switches weapons, same as any other shortcut.
-            Assert.IsTrue(inventory.UseQuickSlot(1));
-            Assert.IsTrue(inventory.IsEquipped("knife"));
-            Assert.IsFalse(inventory.IsEquipped("rifle_standard"));
-
-            // Drag-and-drop reassignment: the mechanic already used for medkit/stone must also
-            // accept a weapon dragged from the inventory grid onto a different shortcut.
-            mission.SetInventoryOpen(true);
-            SetPrivate(hud, "dragItem", "rifle_standard"); SetPrivate(hud, "dragging", true);
-            var release = new Event { type = EventType.MouseUp, button = 0, mousePosition = new Vector2(636, 804) };
-            typeof(Map01Hud).GetMethod("FinishHudDrag", Private).Invoke(hud, new object[] { release, 1600f, 900f });
-            Assert.AreEqual("rifle_standard", inventory.QuickItem(4), "Dragging a weapon onto an empty shortcut must assign it there.");
-            Assert.AreEqual("rifle_standard", inventory.QuickItem(0), "Dragging must not remove the weapon from its other shortcut.");
+                // Bandages: only H.
+                inventory.Add("medkit_small", 2);
+                mission.Damage(40);
+                yield return Press(keyboard, Key.Digit3);
+                Assert.AreEqual(2, inventory.Count("medkit_small"), "3 no longer uses a bandage.");
+                yield return Press(keyboard, Key.H);
+                Assert.AreEqual(1, inventory.Count("medkit_small"), "H uses a bandage.");
+            }
+            finally { InputSystem.RemoveDevice(keyboard); RestoreInputRouting(routing); }
             yield return new ExitPlayMode();
         }
 
         [UnityTest]
-        public IEnumerator HudQuickUseAndSaveRestoreUseRealInventory()
+        public IEnumerator HudItemUseAndSaveRestoreUseRealInventory()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
@@ -157,19 +170,16 @@ namespace ShadowVale.Map01.Tests
                 stock["herb"] = 8; stock["supplies"] = 1; stock["river_documents"] = 1;
                 stock["ammo_sniper"] = 6; stock["scrap_metal"] = 4;
                 CollectionAssert.AreEqual(new[] { 90, 35 }, inventory.InventoryStacks().Where(s => s.Id == "ammo_rifle").Select(s => s.Count));
-                Assert.IsFalse(inventory.AssignQuickSlot(2, "ammo_rifle"));
-                Assert.IsFalse(inventory.AssignQuickSlot(2, "river_documents"));
-                Assert.IsFalse(inventory.AssignQuickSlot(9, "medkit_small"));
-                Assert.IsTrue(inventory.AssignQuickSlot(2, "medkit_small"));
-                Assert.AreEqual(5, inventory.Count("medkit_small"), "Assigning must not move stock.");
-                Assert.IsFalse(inventory.UseQuickSlot(2), "Full health must not consume a bandage.");
+                Assert.IsFalse(inventory.UseItem("ammo_rifle"), "Ammo is not used directly.");
+                Assert.IsFalse(inventory.UseItem("river_documents"));
+                Assert.IsFalse(inventory.UseItem("medkit_small"), "Full health must not consume a bandage.");
                 Assert.AreEqual(5, inventory.Count("medkit_small"));
                 mission.Damage(50);
                 float before = mission.PlayerHealth;
-                Assert.IsTrue(inventory.UseQuickSlot(2));
+                Assert.IsTrue(inventory.UseItem("medkit_small"));
                 Assert.AreEqual(4, inventory.Count("medkit_small"));
                 Assert.AreEqual(Mathf.Min(mission.Settings.playerHP, before + mission.Settings.medkitHeal), mission.PlayerHealth);
-                Assert.IsFalse(inventory.UseQuickSlot(2), "The same frame must not consume twice.");
+                Assert.IsFalse(inventory.UseItem("medkit_small"), "The same frame must not consume twice.");
                 SetPrivate(inventory, "nextQuickUse", 0f);
                 int stones = inventory.Count("stone");
                 mission.SetInventoryOpen(true);
@@ -181,9 +191,7 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual(stones - 1, inventory.Count("stone"));
                 mission.SetPaused(true);
                 SetPrivate(inventory, "nextQuickUse", 0f);
-                Assert.IsFalse(inventory.UseQuickSlot(2), "Pause must block consumables.");
-                Assert.IsTrue(inventory.AssignQuickSlot(4, "stone"));
-                Assert.IsTrue(inventory.AssignQuickSlot(0, null));
+                Assert.IsFalse(inventory.UseItem("medkit_small"), "Pause must block consumables.");
                 Assert.IsTrue(saveSystem.SaveSlot(1, out var error), error);
                 Map01SaveSystem.BeginGame(1);
                 yield return null;
@@ -194,48 +202,10 @@ namespace ShadowVale.Map01.Tests
                 mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
                 inventory = mission.GetComponent<Map01Inventory>();
                 hud = mission.GetComponent<Map01Hud>();
-                Assert.IsNull(inventory.QuickItem(0));
-                Assert.AreEqual("medkit_small", inventory.QuickItem(2));
-                Assert.AreEqual("stone", inventory.QuickItem(4));
                 Assert.AreEqual(4, inventory.Count("medkit_small"));
                 Assert.AreEqual(125, inventory.Count("ammo_rifle"));
                 Assert.AreEqual(1, inventory.Count("rifle_standard"));
                 Assert.AreEqual(1, inventory.Count("knife"));
-                mission.SetInventoryOpen(true);
-                {
-                    // Release a dragged bandage over the third shortcut, then outside the bar.
-                    inventory.AssignQuickSlot(2, null);
-                    SetPrivate(hud, "dragItem", "medkit_small"); SetPrivate(hud, "dragging", true);
-                    var release = new Event { type = EventType.MouseUp, button = 0, mousePosition = new Vector2(426, 804) };
-                    typeof(Map01Hud).GetMethod("FinishHudDrag", Private).Invoke(hud, new object[] { release, 1600f, 900f });
-                    Assert.AreEqual("medkit_small", inventory.QuickItem(2));
-                    Assert.IsNull(typeof(Map01Hud).GetField("dragItem", Private).GetValue(hud));
-                    SetPrivate(hud, "dragItem", "stone"); SetPrivate(hud, "dragging", true);
-                    release = new Event { type = EventType.MouseUp, button = 0, mousePosition = new Vector2(700, 400) };
-                    typeof(Map01Hud).GetMethod("FinishHudDrag", Private).Invoke(hud, new object[] { release, 1600f, 900f });
-                    Assert.AreEqual("medkit_small", inventory.QuickItem(2), "Dropping outside a shortcut must not change its binding.");
-                    Assert.AreEqual(4, inventory.Count("medkit_small"), "Dragging must not consume inventory.");
-                }
-                var routing = RouteInputToGame();
-                var testKeyboard = InputSystem.AddDevice<Keyboard>();
-                try {
-                    mission.SetInventoryOpen(true); inventory.SelectedItem = "medkit_small";
-                    InputSystem.QueueStateEvent(testKeyboard, new KeyboardState(Key.Digit4)); InputSystem.Update();
-                    inventory.HandleQuickKeys(testKeyboard);
-                    Assert.AreEqual("medkit_small", inventory.QuickItem(3), "Number keys assign while the bag is open.");
-                    Assert.AreEqual(4, inventory.Count("medkit_small"));
-                    InputSystem.QueueStateEvent(testKeyboard, new KeyboardState()); InputSystem.Update();
-                    mission.SetInventoryOpen(false); SetPrivate(inventory, "nextQuickUse", 0f); mission.RestoreHealthFromSave(20f);
-                    InputSystem.QueueStateEvent(testKeyboard, new KeyboardState(Key.Digit4)); InputSystem.Update();
-                    inventory.HandleQuickKeys(testKeyboard);
-                    Assert.AreEqual(3, inventory.Count("medkit_small"), "Number keys consume while playing.");
-                } finally { InputSystem.RemoveDevice(testKeyboard); RestoreInputRouting(routing); }
-                // Also preserve default shortcuts when loading pre-HUD saves.
-                inventory.RestoreQuickSlots(null);
-                Assert.AreEqual("rifle_standard", inventory.QuickItem(0));
-                Assert.AreEqual("knife", inventory.QuickItem(1));
-                Assert.AreEqual("medkit_small", inventory.QuickItem(2));
-                Assert.AreEqual("stone", inventory.QuickItem(3));
 
                 // A real rendered screenshot with deliberately seeded QA inventory; no demo stock ships in gameplay.
                 mission.SetPaused(true); mission.SetInventoryOpen(true);

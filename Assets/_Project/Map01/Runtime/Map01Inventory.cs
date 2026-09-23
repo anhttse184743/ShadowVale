@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,16 +6,15 @@ using UnityEngine.InputSystem;
 namespace ShadowVale.Map01
 {
     /// <summary>
-    /// Everything the player carries: raw counts, the five quick-use shortcuts, and the one
-    /// crafting recipe Map 1 uses. Presentation (names, icons, descriptions, stack splitting)
+    /// Everything the player carries: raw counts and the one crafting recipe Map 1 uses. Items
+    /// are used by their own keys — 6/7/8 weapons (PlayerCombat), H bandage, Q stone — not
+    /// through assignable shortcuts. Presentation (names, icons, descriptions, stack splitting)
     /// stays in the static <see cref="ForestInventory"/> helper; this component only owns state.
     /// </summary>
     public sealed class Map01Inventory : MonoBehaviour
     {
         private readonly Dictionary<string, int> items = new Dictionary<string, int>();
         private int stones;
-        private string[] quickSlots = { "rifle_standard", "knife", "medkit_small", "stone", null };
-        private int activeQuickSlot;
         private string selectedItem;
         private float nextQuickUse;
         private string crafting;
@@ -28,7 +26,6 @@ namespace ShadowVale.Map01
         public bool SuppressFire { get; set; }
         public bool IsCrafting => crafting != null;
         public string SelectedItem { get => selectedItem; set => selectedItem = value; }
-        public int ActiveQuickSlot => activeQuickSlot;
         public float CraftRemaining => Mathf.Max(0, craftUntil - Time.time);
         public string CraftingId => crafting;
 
@@ -87,34 +84,6 @@ namespace ShadowVale.Map01
             return mission.ModernCombat.EquippedKind == kind;
         }
 
-        public bool AssignQuickSlot(int slot, string id)
-        {
-            if (slot < 0 || slot >= quickSlots.Length) return false;
-            if (!string.IsNullOrEmpty(id) && (!ForestInventory.QuickUsable(id) || Count(id) <= 0))
-            {
-                mission.Say("Chỉ vũ khí, băng cứu thương và đá ném có thể gán vào ô nhanh."); return false;
-            }
-            // A shortcut references the total stock; assigning it never moves or duplicates inventory.
-            quickSlots[slot] = string.IsNullOrEmpty(id) ? null : id;
-            return true;
-        }
-        public string QuickItem(int slot) => slot >= 0 && slot < 5 ? quickSlots[slot] : null;
-        public void RestoreQuickSlots(string[] saved)
-        {
-            activeQuickSlot = 0;
-            quickSlots = new[] { "rifle_standard", "knife", "medkit_small", "stone", null };
-            if (saved == null) return; // Old checkpoints retain the useful default layout.
-            Array.Clear(quickSlots, 0, quickSlots.Length);
-            for (int i = 0; i < Math.Min(5, saved.Length); i++)
-                quickSlots[i] = ForestInventory.QuickUsable(saved[i]) ? saved[i] : null;
-        }
-        public bool UseQuickSlot(int slot)
-        {
-            if (slot < 0 || slot >= 5) return false;
-            activeQuickSlot = slot;
-            if (string.IsNullOrEmpty(quickSlots[slot])) { mission.Say("Ô nhanh trống. Mở túi đồ bằng Tab để gán vật phẩm.", 3); return false; }
-            return UseItem(quickSlots[slot]);
-        }
         public bool UseItem(string id, Vector3? throwTarget = null)
         {
             if (!mission.IsInitialized || mission.Stopped || ForestMenu.Visible || Time.time < nextQuickUse) return false;
@@ -140,19 +109,6 @@ namespace ShadowVale.Map01
             nextQuickUse = Time.time + .25f;
             return true;
         }
-        public void HandleQuickKeys(Keyboard keyboard)
-        {
-            var keys = new[] { keyboard.digit1Key, keyboard.digit2Key, keyboard.digit3Key, keyboard.digit4Key, keyboard.digit5Key };
-            for (int i = 0; i < keys.Length; i++) if (keys[i].wasPressedThisFrame)
-            {
-                if (mission.InventoryOpen)
-                {
-                    if (selectedItem != null && AssignQuickSlot(i, selectedItem)) mission.Say("Đã gán vào ô nhanh " + (i + 1) + ".", 3);
-                }
-                else if (!mission.MapOpen) UseQuickSlot(i);
-            }
-        }
-
         public bool NearWorkbench() => mission.Points.Any(p => p.kind == ForestPointKind.Workbench
             && Vector3.Distance(mission.player.position, p.transform.position) < mission.Settings.interactRange);
         public void TryCraft()

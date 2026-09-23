@@ -23,8 +23,7 @@ namespace ShadowVale.Map01
             public ForestIngredient[] items;
             public string crafting;
             public float craftRemaining, playerYaw, hungYaw;
-            public string[] quickSlots;
-            public int equippedWeapon;
+            public int equippedWeapon; // Older saves also carry quickSlots; the shortcut bar is gone and JsonUtility skips it.
             public int scoutedCamps; // Bitmask of camps logged during the scouting order; 0 in older saves.
             public float attackRemaining;
             public Map01EnemyController.Snapshot[] enemies;
@@ -84,7 +83,6 @@ namespace ShadowVale.Map01
                 crafting = inventory.CraftingId, craftRemaining = inventory.CraftRemaining,
                 playerYaw = mission.player.eulerAngles.y, hungYaw = mission.hung.eulerAngles.y,
                 crouched = mission.Crouched,
-                quickSlots = new[] { inventory.QuickItem(0), inventory.QuickItem(1), inventory.QuickItem(2), inventory.QuickItem(3), inventory.QuickItem(4) },
                 equippedWeapon = mission.ModernCombat != null ? (int)mission.ModernCombat.EquippedKind : 0,
                 attackRemaining = mission.ModernCombat != null ? mission.ModernCombat.AttackCooldownRemaining : 0,
                 enemies = mission.Enemies.Select(e => e.Capture()).ToArray(),
@@ -165,7 +163,6 @@ namespace ShadowVale.Map01
                 mission.hung.GetComponent<NavMeshAgent>()?.Warp(data.hung);
                 quest.RestoreStage(data.version >= 5 ? data.stage : Map01Quest.FromV4Stage(data.stage));
                 inventory.RestoreFromSave(data.items, data.stones, data.crafting, data.craftRemaining);
-                inventory.RestoreQuickSlots(data.quickSlots);
                 mission.Alarmed = data.alarmed;
                 mission.RestoreHealthFromSave(Mathf.Clamp(data.hp, 1, mission.Settings.playerHP));
                 mission.SetStamina(data.stamina);

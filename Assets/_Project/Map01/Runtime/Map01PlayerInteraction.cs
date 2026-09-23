@@ -19,7 +19,6 @@ namespace ShadowVale.Map01
         private Map01Mission mission;
         private Map01Quest quest;
         private Map01Inventory inventory;
-        private Map01Hud hud;
         private Map01SaveSystem saveSystem;
         private Map01Scouting scouting;
         private NavMeshAgent companion;
@@ -29,7 +28,6 @@ namespace ShadowVale.Map01
             mission = GetComponent<Map01Mission>();
             quest = GetComponent<Map01Quest>();
             inventory = GetComponent<Map01Inventory>();
-            hud = GetComponent<Map01Hud>();
             saveSystem = GetComponent<Map01SaveSystem>();
         }
 
@@ -49,15 +47,14 @@ namespace ShadowVale.Map01
             if (kb.f9Key.wasPressedThisFrame) saveSystem.Load();
             if (mission.Stopped) return;
             if (kb.tabKey.wasPressedThisFrame)
-            { mission.SetInventoryOpen(!mission.InventoryOpen); hud.CancelDrag(); inventory.SuppressFire = true; }
+            { mission.SetInventoryOpen(!mission.InventoryOpen); inventory.SuppressFire = true; }
             if (kb.mKey.wasPressedThisFrame)
             {
-                mission.SetMapOpen(!mission.MapOpen); hud.CancelDrag(); inventory.SuppressFire = true;
+                mission.SetMapOpen(!mission.MapOpen); inventory.SuppressFire = true;
             }
             if (kb.cKey.wasPressedThisFrame) mission.Crouched = !mission.Crouched;
             if (kb.f5Key.wasPressedThisFrame) saveSystem.SaveSlot(0, out _);
             if (kb.hKey.wasPressedThisFrame) inventory.UseItem("medkit_small");
-            inventory.HandleQuickKeys(kb);
             if (mission.InventoryOpen || mission.MapOpen)
             {
                 // Same gate as below: this used to call UpdateCompanion unconditionally, so opening

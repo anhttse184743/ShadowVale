@@ -60,7 +60,7 @@ namespace ShadowVale.Map01
             switch (id) {
                 case "rifle_standard": return "Trang bị khởi hành. Dùng đạn súng trường. Nhấn 6 để cầm súng.";
                 case "knife": return "Trang bị cận chiến, không tiêu hao đạn. Nhấn 7 để cầm dao.";
-                case "medkit_small": return "Hồi máu cho nhân vật. Dùng bằng H hoặc ô nhanh.";
+                case "medkit_small": return "Hồi máu cho nhân vật. Nhấn H để dùng.";
                 case "stone": return "Ném theo hướng ngắm để đánh lạc hướng lính.";
                 case "cloth": return "Vật liệu chế tạo. Kết hợp thảo dược tại bàn chế tạo.";
                 case "herb": return "Kết hợp 2 vải và 1 thảo dược để làm băng cứu thương.";
