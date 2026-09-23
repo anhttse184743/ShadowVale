@@ -59,6 +59,15 @@ namespace ShadowVale.Map01
             inventory.HandleQuickKeys(kb);
             if (mission.InventoryOpen || mission.MapOpen) { UpdateCompanion(); return; }
 
+            // The panel is shut again, so hand the weapon back — but not until the button that
+            // shut it is released, which is the whole reason the flag exists: a click on the
+            // HUD must not carry through into a shot. Nothing cleared it before, so the first
+            // Tab or M of a run disabled firing, aiming and the 6/7/8 weapon keys for good.
+            if (inventory.SuppressFire && (Mouse.current == null || !Mouse.current.leftButton.isPressed))
+            {
+                inventory.SuppressFire = false;
+            }
+
             if (mission.ModernPlayer != null)
             {
                 mission.ModernPlayer.SurfaceSpeedMultiplier = mission.MovementSurfaceMultiplier;
