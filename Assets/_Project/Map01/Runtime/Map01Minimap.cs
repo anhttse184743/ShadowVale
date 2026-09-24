@@ -121,8 +121,7 @@ namespace ShadowVale.Map01
                 GUI.Label(new Rect(Mathf.Clamp(target.x - 22, area.x, area.xMax - 72), Mathf.Clamp(target.y + 12, area.y + 30, area.yMax - 25), 72, 24), Mathf.RoundToInt(guide.Distance) + " m", label);
             }
             var player = Project(mission.player.position, world, area);
-            var matrix = GUI.matrix;
-            GUIUtility.RotateAroundPivot(mission.player.eulerAngles.y, player);
+            var matrix = Map01Hud.RotateGui(player, mission.player.eulerAngles.y);
             GUI.color = new Color(.98f, .93f, .72f);
             GUI.DrawTexture(new Rect(player.x - 11, player.y - 11, 22, 22), arrow);
             GUI.matrix = matrix; GUI.color = old;

@@ -203,15 +203,18 @@ namespace ShadowVale.Map01
             objectiveBottom = 186 + height + offset;
             GUI.matrix = previousMatrix;
         }
-        /// <summary>Rotates GUI drawing around a point given in the current (scaled) GUI space —
-        /// GUIUtility.RotateAroundPivot takes the pivot in unscaled screen space instead.</summary>
-        private static Matrix4x4 RotateGui(Vector2 pivot, float degrees)
+        /// <summary>Rotates GUI drawing around a point given in the current (scaled) GUI space and
+        /// returns the matrix to restore. Never GUIUtility.RotateAroundPivot here: it takes the
+        /// pivot in unscaled screen space, so under the HUD's scale (any screen but 1600×900)
+        /// whatever it turns swings off its spot — the minimap arrow ended up outside the map.</summary>
+        internal static Matrix4x4 RotateGui(Vector2 pivot, float degrees)
         {
             var previous = GUI.matrix;
-            GUI.matrix = previous * Matrix4x4.TRS(pivot, Quaternion.Euler(0, 0, degrees), Vector3.one)
-                                  * Matrix4x4.TRS(-pivot, Quaternion.identity, Vector3.one);
+            GUI.matrix = RotateAbout(previous, pivot, degrees);
             return previous;
         }
+        public static Matrix4x4 RotateAbout(Matrix4x4 current, Vector2 pivot, float degrees) =>
+            current * Matrix4x4.TRS(pivot, Quaternion.Euler(0, 0, degrees), Vector3.one) * Matrix4x4.TRS(-pivot, Quaternion.identity, Vector3.one);
         private static void HudDiamond(Vector2 center, float radius)
         {
             var previous = RotateGui(center, 45);

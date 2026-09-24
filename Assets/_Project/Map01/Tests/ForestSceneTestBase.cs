@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -17,6 +19,28 @@ namespace ShadowVale.Map01.Tests
         public void RestoreNormalStartup()
         {
             EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/_Project/Scenes/00_Boot.unity");
+        }
+
+        /// <summary>Fix the Game View to <paramref name="width"/>×<paramref name="height"/>: screenshots
+        /// come out at that size, and the HUD scale follows it (1 at 1600×900).</summary>
+        protected static void SetPreviewResolution(int width, int height)
+        {
+            var assembly = typeof(Editor).Assembly;
+            var sizesType = assembly.GetType("UnityEditor.GameViewSizes");
+            var singleton = typeof(ScriptableSingleton<>).MakeGenericType(sizesType);
+            var sizes = singleton.GetProperty("instance").GetValue(null);
+            var groupType = assembly.GetType("UnityEditor.GameViewSizeGroupType");
+            var group = sizesType.GetMethod("GetGroup").Invoke(sizes, new[] { Enum.Parse(groupType, "Standalone") });
+            var sizeType = assembly.GetType("UnityEditor.GameViewSize");
+            var modeType = assembly.GetType("UnityEditor.GameViewSizeType");
+            var size = Activator.CreateInstance(sizeType, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                null, new[] { Enum.Parse(modeType, "FixedResolution"), (object)width, height, "HUD validation" }, null);
+            group.GetType().GetMethod("AddCustomSize").Invoke(group, new[] { size });
+            int count = (int)group.GetType().GetMethod("GetTotalCount").Invoke(group, null);
+            var viewType = assembly.GetType("UnityEditor.GameView");
+            var view = EditorWindow.GetWindow(viewType);
+            viewType.GetProperty("selectedSizeIndex", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).SetValue(view, count - 1);
+            view.Repaint();
         }
 
         /// <summary>WaitForSeconds is a YieldInstruction the Edit Mode runner cannot wait on — it

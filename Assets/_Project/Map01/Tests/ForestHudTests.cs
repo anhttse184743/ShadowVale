@@ -20,26 +20,6 @@ namespace ShadowVale.Map01.Tests
         private static void SetPrivate(object target, string field, object value) =>
             target.GetType().GetField(field, Private).SetValue(target, value);
 
-        private static void SetPreviewResolution(int width, int height)
-        {
-            var assembly = typeof(Editor).Assembly;
-            var sizesType = assembly.GetType("UnityEditor.GameViewSizes");
-            var singleton = typeof(ScriptableSingleton<>).MakeGenericType(sizesType);
-            var sizes = singleton.GetProperty("instance").GetValue(null);
-            var groupType = assembly.GetType("UnityEditor.GameViewSizeGroupType");
-            var group = sizesType.GetMethod("GetGroup").Invoke(sizes, new[] { Enum.Parse(groupType, "Standalone") });
-            var sizeType = assembly.GetType("UnityEditor.GameViewSize");
-            var modeType = assembly.GetType("UnityEditor.GameViewSizeType");
-            var size = Activator.CreateInstance(sizeType, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                null, new[] { Enum.Parse(modeType, "FixedResolution"), (object)width, height, "HUD validation" }, null);
-            group.GetType().GetMethod("AddCustomSize").Invoke(group, new[] { size });
-            int count = (int)group.GetType().GetMethod("GetTotalCount").Invoke(group, null);
-            var viewType = assembly.GetType("UnityEditor.GameView");
-            var view = EditorWindow.GetWindow(viewType);
-            viewType.GetProperty("selectedSizeIndex", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).SetValue(view, count - 1);
-            view.Repaint();
-        }
-
         [Test]
         public void SplittingPreservesAllStockAndOmitsEmptyItems()
         {
