@@ -53,9 +53,53 @@ namespace ShadowVale.Gameplay.Combat
 
         private static readonly Key[] SlotKeys = { Key.Digit1, Key.Digit2, Key.Digit3 };
         public System.Func<bool> InputAllowed { get; set; }
+
+        /// <summary>
+        /// Legacy per-shot ammo gate, kept for scenes that never configured a magazine. Once a
+        /// magazine exists it owns the round count and this is not consulted: the reserve is
+        /// drawn on reload through <see cref="DrawRounds"/> instead, so a shot costs one round
+        /// from the weapon rather than one from the pack.
+        /// </summary>
         public System.Func<bool> TryConsumeRound { get; set; }
+
+        /// <summary>
+        /// Asked for rounds when the magazine reloads; returns how many the reserve could give.
+        /// Left unset, reloads draw on an unlimited supply, which is what a greybox scene wants.
+        /// </summary>
+        public System.Func<int, int> DrawRounds { get; set; }
+
+        /// <summary>Rounds left in the reserve, for the HUD and for refusing a pointless reload.</summary>
+        public System.Func<int> ReserveRounds { get; set; }
         public bool UsesInventoryHotkeys { get; set; }
         public float AttackCooldownRemaining => Mathf.Max(0, _nextAttackTime - Time.time);
+
+        /// <summary>Half-angle of the cone the next shot can land in, in degrees.</summary>
+        public float CurrentSpreadDegrees => _spread.ConeHalfAngle(CurrentStance(), _aiming);
+
+        /// <summary>0 to 1. How far sustained fire has opened the cone.</summary>
+        public float SpreadBloom => _spread.Bloom;
+
+        /// <summary>Shots into the current burst.</summary>
+        public int BurstShotIndex => _spread.ShotIndex;
+
+        /// <summary>Rounds in the weapon right now.</summary>
+        public int RoundsInMagazine => _magazine?.Rounds ?? 0;
+
+        public int MagazineCapacity => _magazine?.Capacity ?? 0;
+        public bool IsReloading => _magazine is { IsReloading: true };
+
+        /// <summary>0 to 1 across a reload, for a HUD bar. 0 when not reloading.</summary>
+        public float ReloadProgress => _magazine?.ReloadProgress ?? 0f;
+
+        /// <summary>Puts a saved round count back in the weapon and clears any reload.</summary>
+        public void RestoreMagazine(int rounds) => _magazine?.Refill(rounds);
+
+        /// <summary>Starts a reload if one is possible. Returns false when it is not.</summary>
+        public bool TryReload()
+        {
+            if (_magazine == null || _equipped == null || !_equipped.IsGun) return false;
+            return _magazine.BeginReload(ReserveRounds != null ? ReserveRounds() : -1);
+        }
         public void RestoreAttackCooldown(float remaining) => _nextAttackTime = Time.time + Mathf.Max(0, remaining);
 
         [Header("Loadout")]
@@ -87,6 +131,16 @@ namespace ShadowVale.Gameplay.Combat
         /// <summary>Raised on equip so the HUD can follow without polling.</summary>
         public event System.Action<WeaponKind> WeaponChanged;
 
+        /// <summary>
+        /// Raised the moment an attack commits — after the round is spent, before the trace.
+        /// Carries the weapon used and where the sound comes from, so audio and anything else
+        /// that reacts to a shot can hang off one place instead of reaching into the internals.
+        /// </summary>
+        public event System.Action<WeaponKind, Vector3> Attacked;
+
+        [Header("Magazine")]
+        [SerializeField] private WeaponTuning tuning = WeaponTuning.Rifle;
+
         [Header("Unarmed")]
         [SerializeField] private float punchDamage = 12f;
         [SerializeField] private float punchRange = 1.5f;
@@ -111,9 +165,12 @@ namespace ShadowVale.Gameplay.Combat
 
         private readonly System.Collections.Generic.Dictionary<WeaponKind, Weapon> _weapons = new();
         private PlayerController _controller;
+        private CharacterController _characterController;
         private Weapon _equipped;
         private WeaponKind _equippedKind;
         private float _nextAttackTime;
+        private Magazine _magazine;
+        private readonly WeaponSpreadState _spread = new();
         private bool _aiming;
         private ShotTracer[] _tracers;
         private int _tracerCursor;
@@ -130,6 +187,7 @@ namespace ShadowVale.Gameplay.Combat
         private void Awake()
         {
             _controller = GetComponent<PlayerController>();
+            _characterController = GetComponent<CharacterController>();
             if (animator == null) animator = GetComponentInChildren<Animator>();
             if (health == null) health = GetComponent<Health>();
             if (cameraRig == null && Camera.main != null)
@@ -141,6 +199,9 @@ namespace ShadowVale.Gameplay.Combat
             {
                 _upperBodyLayer = animator.GetLayerIndex(UpperBodyLayer);
             }
+
+            tuning = tuning.OrDefault();
+            _magazine = tuning.Create();
 
             SpawnWeapons();
             SpawnTracerPool();
@@ -229,7 +290,24 @@ namespace ShadowVale.Gameplay.Combat
 
         private void Update()
         {
-            if ((health != null && health.IsDead) || (InputAllowed != null && !InputAllowed()))
+            bool dead = health != null && health.IsDead;
+
+            // The magazine is ticked before any early return. Dying halfway through a reload
+            // would otherwise leave the timer frozen for good, and a magazine that believes it
+            // is reloading refuses to fire — the weapon would come back from the respawn dead.
+            if (dead)
+            {
+                _magazine?.CancelReload();
+                _spread.Reset();
+                if (cameraRig != null) cameraRig.ClearRecoil();
+            }
+            else
+            {
+                _magazine?.Tick(Time.deltaTime, DrawRounds);
+                _spread.Tick(Time.deltaTime);
+            }
+
+            if (dead || (InputAllowed != null && !InputAllowed()))
             {
                 SetAiming(false);
                 _faceCameraHoldUntil = 0f;
@@ -242,6 +320,7 @@ namespace ShadowVale.Gameplay.Combat
 
             ReadEquipInput();
             ReadAimInput();
+            ReadReloadInput();
             ReadAttackInput();
             UpdateFacing();
             UpdateUpperBodyWeight();
@@ -373,6 +452,25 @@ namespace ShadowVale.Gameplay.Combat
             SetAiming(wants);
         }
 
+        /// <summary>
+        /// Reads how steady the shooter is right now. Feet off the ground beats everything —
+        /// a sneaking player who jumps is not sneaking any more.
+        /// </summary>
+        private ShooterStance CurrentStance()
+        {
+            if (_controller == null) return ShooterStance.Standing;
+            if (_characterController != null && !_characterController.isGrounded) return ShooterStance.Airborne;
+            if (_controller.IsSprinting) return ShooterStance.Running;
+            if (_controller.IsSneaking) return ShooterStance.Sneak;
+            return _controller.IsMoving ? ShooterStance.Walking : ShooterStance.Standing;
+        }
+
+        private void ReadReloadInput()
+        {
+            Keyboard keyboard = Keyboard.current;
+            if (keyboard != null && keyboard.rKey.wasPressedThisFrame) TryReload();
+        }
+
         private void ReadAttackInput()
         {
             Mouse mouse = Mouse.current;
@@ -447,9 +545,43 @@ namespace ShadowVale.Gameplay.Combat
 
         private void Attack()
         {
-            if (_equipped != null && _equipped.IsGun && TryConsumeRound != null && !TryConsumeRound()) return;
+            // Everything that can refuse the shot is settled before a single side effect runs.
+            // Pulling the trigger on an empty magazine used to burn the cooldown and play the
+            // firing animation anyway, so the weapon mimed a shot it never took.
+            bool firingGun = _equipped != null && _equipped.IsGun;
+            if (firingGun)
+            {
+                if (_magazine != null)
+                {
+                    if (!_magazine.TryConsume())
+                    {
+                        // Out, or mid-reload. Reaching for a fresh magazine is what the player
+                        // meant by pulling the trigger on an empty gun.
+                        TryReload();
+                        return;
+                    }
+                }
+                else if (TryConsumeRound != null && !TryConsumeRound())
+                {
+                    return;
+                }
+            }
+
             float cooldown = _equipped != null ? _equipped.Cooldown : punchCooldown;
-            _nextAttackTime = Time.time + cooldown;
+
+            // `Time.time + cooldown` rounds every gap up to a whole frame, quietly turning 600
+            // rounds per minute into 500 at 50 fps. Carrying the remainder forward fixes that
+            // during sustained fire, but only while the weapon is genuinely mid-burst: once the
+            // schedule is more than a cooldown stale the burst is over, and resuming from it
+            // would leave no delay at all before the next shot.
+            _nextAttackTime = Time.time - _nextAttackTime > cooldown
+                ? Time.time + cooldown
+                : _nextAttackTime + cooldown;
+
+            // The muzzle is where a gunshot is heard from; an empty hand has none, so fall back
+            // to the character. Raised before the trace so a listener cannot miss a kill's shot.
+            Transform sound = _equipped != null && _equipped.Muzzle != null ? _equipped.Muzzle : transform;
+            Attacked?.Invoke(_equippedKind, sound.position);
 
             _upperBodyHoldUntil = Time.time + cooldown + attackLayerTail;
             if (animator != null)
@@ -480,13 +612,14 @@ namespace ShadowVale.Gameplay.Combat
             Vector3 origin = cam.transform.position;
             Vector3 direction = cam.transform.forward;
 
-            // Aiming halves the cone; hip fire keeps the full spread.
-            float spread = _aiming ? gun.HipSpread * 0.5f : gun.HipSpread;
-            if (spread > 0f)
-            {
-                direction = Quaternion.Euler(
-                    Random.Range(-spread, spread), Random.Range(-spread, spread), 0f) * direction;
-            }
+            // How steady the shooter is decides the cone, and how long they have held the
+            // trigger widens it. The weapon's own HipSpread is no longer consulted: one flat
+            // number could not tell a crouched aimed tap from a shot fired mid-jump.
+            ShooterStance stance = CurrentStance();
+            direction = WeaponSpreadState.Scatter(direction, _spread.ConeHalfAngle(stance, _aiming));
+
+            Vector2 kick = _spread.Fire(Time.time);
+            if (cameraRig != null) cameraRig.AddRecoil(kick.x, kick.y);
 
             // The trace starts at the camera so the shot lands on the crosshair, but the streak
             // has to come out of the barrel or it looks like the player is firing from their eyes.

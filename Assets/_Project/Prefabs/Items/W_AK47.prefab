@@ -2578,7 +2578,7 @@ MonoBehaviour:
   kind: 2
   damage: 30
   range: 120
-  cooldown: 0.11
+  cooldown: 0.1
   automatic: 1
   sweepRadius: 0.35
   muzzle: {fileID: 5641081258211219156}

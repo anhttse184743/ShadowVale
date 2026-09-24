@@ -50,10 +50,17 @@ namespace ShadowVale.Map01
             }
             GUI.color = tint;
             CombatLabel(new Rect(x + 149, y + 230, 145, 27), $"{mission.PlayerHealth:0} / {mission.Settings.playerHP:0} HP", combatCaption);
-            // The combat system consumes a shared ammo pool, not magazines.
-            // Display the real total instead of inventing a magazine/reserve split.
-            CombatLabel(new Rect(x, y + 158, 143, 49), kind == WeaponKind.Rifle ? inventory.Count("ammo_rifle").ToString() : "—", combatNumber);
-            CombatLabel(new Rect(x + 5, y + 205, 143, 26), kind == WeaponKind.Rifle ? "ĐẠN CÒN LẠI" : "CẬN CHIẾN", combatCaption);
+            // Rounds in the magazine over the reserve in the pack: the magazine decides whether to
+            // push on or break contact, so it reads first. A reload shows its progress instead —
+            // for those seconds the pack total is not what the player needs to know.
+            var combat = mission.ModernCombat;
+            bool reloading = kind == WeaponKind.Rifle && combat != null && combat.IsReloading;
+            string ammo = kind != WeaponKind.Rifle ? "—"
+                : combat == null ? inventory.Count("ammo_rifle").ToString()
+                : reloading ? $"{combat.ReloadProgress * 100f:0}%"
+                : $"{combat.RoundsInMagazine}/{inventory.Count("ammo_rifle")}";
+            CombatLabel(new Rect(x - 20, y + 158, 163, 49), ammo, combatNumber);
+            CombatLabel(new Rect(x + 5, y + 205, 143, 26), kind != WeaponKind.Rifle ? "CẬN CHIẾN" : reloading ? "ĐANG NẠP ĐẠN" : "BĂNG / DỰ TRỮ", combatCaption);
             CombatLabel(new Rect(x, y + 261, 346, 25), $"Sức bền {mission.Stamina:0}  ·  {(mission.Hidden ? "Ẩn nấp" : mission.Crouched ? "Đi khom" : "Sẵn sàng")}", combatCaption);
         }
 

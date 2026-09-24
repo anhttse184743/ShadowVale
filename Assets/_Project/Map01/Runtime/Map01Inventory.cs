@@ -21,8 +21,8 @@ namespace ShadowVale.Map01
         private float craftUntil;
 
         /// <summary>Set when a panel toggles or a weapon is equipped, so the click that did it
-        /// cannot also fire. Clears itself in <see cref="Update"/> once the left button is up —
-        /// it must never outlive that click, or combat input stays blocked for good.</summary>
+        /// cannot also fire. Map01PlayerInteraction clears it once the panels are shut and the
+        /// left button is up — it must never outlive that click, or combat stays blocked for good.</summary>
         public bool SuppressFire { get; set; }
         public bool IsCrafting => crafting != null;
         public string SelectedItem { get => selectedItem; set => selectedItem = value; }
@@ -121,7 +121,6 @@ namespace ShadowVale.Map01
         }
         public void Update()
         {
-            if (SuppressFire && (Mouse.current == null || !Mouse.current.leftButton.isPressed)) SuppressFire = false;
             if (crafting != null && Time.time >= craftUntil)
             {
                 var recipe = mission.Bundle.craft_recipes.First(r => r.id == crafting);

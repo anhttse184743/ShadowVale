@@ -292,6 +292,9 @@ namespace ShadowVale.Map01.Tests
             var combat = mission.player.GetComponent<PlayerCombat>();
             var routing = RouteInputToGame();
             var mouse = InputSystem.AddDevice<Mouse>();
+            // Map01PlayerInteraction, which releases SuppressFire, reads nothing without a
+            // keyboard — and batch mode has none of its own.
+            var keyboard = InputSystem.AddDevice<Keyboard>();
             try
             {
                 interaction.Interact(Object.FindObjectsByType<ForestPoint>(FindObjectsSortMode.None).Single(p => p.id == "tutorial_loot"));
@@ -310,13 +313,15 @@ namespace ShadowVale.Map01.Tests
 
                 // A real trigger pull through PlayerCombat's own input path (the rifle is automatic,
                 // so it reads the held button rather than a this-frame edge).
+                // Shots come out of the magazine, the pack only refills it on a reload: count both.
+                int rounds = combat.RoundsInMagazine + inventory.Count("ammo_rifle");
                 var centre = new Vector2(Screen.width / 2f, Screen.height / 2f);
                 InputSystem.QueueStateEvent(mouse, new MouseState { position = centre }.WithButton(MouseButton.Left)); InputSystem.Update();
                 for (int i = 0; i < 5; i++) yield return null;
                 InputSystem.QueueStateEvent(mouse, new MouseState { position = centre }); InputSystem.Update();
-                Assert.Less(inventory.Count("ammo_rifle"), 60, "Holding fire with the rifle equipped and ammo in the bag must shoot.");
+                Assert.Less(combat.RoundsInMagazine + inventory.Count("ammo_rifle"), rounds, "Holding fire with the rifle equipped and ammo on hand must shoot.");
             }
-            finally { InputSystem.RemoveDevice(mouse); RestoreInputRouting(routing); }
+            finally { InputSystem.RemoveDevice(mouse); InputSystem.RemoveDevice(keyboard); RestoreInputRouting(routing); }
             yield return new ExitPlayMode();
         }
 

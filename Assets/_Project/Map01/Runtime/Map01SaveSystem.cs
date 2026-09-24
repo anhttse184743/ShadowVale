@@ -26,6 +26,7 @@ namespace ShadowVale.Map01
             public int equippedWeapon; // Older saves also carry quickSlots; the shortcut bar is gone and JsonUtility skips it.
             public int scoutedCamps; // Bitmask of camps logged during the scouting order; 0 in older saves.
             public float attackRemaining;
+            public int roundsInMagazine = -1;
             public Map01EnemyController.Snapshot[] enemies;
         }
 
@@ -85,6 +86,7 @@ namespace ShadowVale.Map01
                 crouched = mission.Crouched,
                 equippedWeapon = mission.ModernCombat != null ? (int)mission.ModernCombat.EquippedKind : 0,
                 attackRemaining = mission.ModernCombat != null ? mission.ModernCombat.AttackCooldownRemaining : 0,
+                roundsInMagazine = mission.ModernCombat != null ? mission.ModernCombat.RoundsInMagazine : -1,
                 enemies = mission.Enemies.Select(e => e.Capture()).ToArray(),
                 scoutedCamps = GetComponent<Map01Scouting>().FoundMask
             };
@@ -186,6 +188,9 @@ namespace ShadowVale.Map01
                 if (Enum.IsDefined(typeof(ShadowVale.Gameplay.Combat.WeaponKind), data.equippedWeapon))
                     mission.ModernCombat.Equip((ShadowVale.Gameplay.Combat.WeaponKind)data.equippedWeapon);
                 mission.ModernCombat.RestoreAttackCooldown(data.attackRemaining);
+                // Saves written before magazines existed carry -1; leave the weapon loaded
+                // rather than handing the player an empty rifle out of an old checkpoint.
+                if (data.roundsInMagazine >= 0) mission.ModernCombat.RestoreMagazine(data.roundsInMagazine);
             }
             foreach (var enemy in mission.Enemies)
             {

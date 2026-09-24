@@ -44,6 +44,16 @@ namespace ShadowVale.Gameplay.Player
 
         public bool IsSneaking { get; private set; }
         public bool IsSprinting { get; private set; }
+
+        /// <summary>
+        /// True while the character is actually travelling. Read from the velocity the
+        /// controller produced rather than from the keys held, so walking into a wall counts as
+        /// standing still — which is what a weapon judging how steady its shooter is needs.
+        /// </summary>
+        public bool IsMoving => _planarVelocity.sqrMagnitude > 0.04f;
+
+        /// <summary>Metres per second on the ground plane.</summary>
+        public float PlanarSpeed => _planarVelocity.magnitude;
         public System.Func<bool> InputAllowed { get; set; }
         public System.Func<bool> SprintAllowed { get; set; }
         public float SurfaceSpeedMultiplier { get; set; } = 1;

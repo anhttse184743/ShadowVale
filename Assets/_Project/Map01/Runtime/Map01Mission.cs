@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ShadowVale.Gameplay.Audio;
 using ShadowVale.Gameplay.Combat;
 using ShadowVale.Gameplay.Player;
 using UnityEngine;
@@ -45,7 +46,7 @@ namespace ShadowVale.Map01
         public int ObstructionMask => LayerMask.GetMask("Default", "Obstacle", "Cover", "VisionBlocker");
         public int Stage => quest != null ? quest.Stage : 0;
         public readonly List<ForestPoint> Points = new List<ForestPoint>();
-        private float hp, stamina, nextNoise;
+        private float hp, stamina;
         private bool paused;
         private Map01Quest quest;
         private Map01Inventory inventory;
@@ -124,9 +125,31 @@ namespace ShadowVale.Map01
                     EmitNoise(player.position, Weapon.noise_radius);
                     return true;
                 };
+                // With a magazine in the weapon the pack is a reserve, drawn once per reload
+                // rather than once per shot, so the two hooks below replace the one above.
+                ModernCombat.ReserveRounds = () => inventory.Count("ammo_rifle");
+                ModernCombat.DrawRounds = wanted =>
+                {
+                    int granted = Mathf.Min(wanted, inventory.Count("ammo_rifle"));
+                    if (granted > 0) inventory.Spend("ammo_rifle", granted);
+                    else Say("Hết đạn — nhặt thêm đạn hoặc đổi vũ khí bằng 6 / 7 / 8.", 2);
+                    return granted;
+                };
+                // The shot's noise used to ride along with spending the round. It now hangs off
+                // the attack itself, so a reload does not announce the player thirty times over.
+                ModernCombat.Attacked -= OnPlayerAttacked;
+                ModernCombat.Attacked += OnPlayerAttacked;
             }
             if (gameCamera != null && gameCamera.TryGetComponent<ThirdPersonCamera>(out var cameraRig))
                 cameraRig.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible;
+            if (player.TryGetComponent(out PlayerFootsteps footsteps))
+            {
+                // The river is already tracked for the movement slowdown, so the footsteps ask
+                // the same question rather than raycasting for a surface underneath.
+                footsteps.SurfaceProbe = () => IsWading ? FootSurface.Water : FootSurface.Grass;
+                footsteps.Stepped -= NotifyFootstep;
+                footsteps.Stepped += NotifyFootstep;
+            }
             foreach (var enemy in Enemies) enemy.BindMission(this);
         }
 
@@ -156,6 +179,11 @@ namespace ShadowVale.Map01
             Destroy(trail, .12f);
         }
         public void Say(string text, float seconds = 7) { Dialogue = text; DialogueUntil = Time.time + seconds; }
+        private void OnPlayerAttacked(WeaponKind kind, Vector3 position)
+        {
+            if (kind == WeaponKind.Rifle) EmitNoise(position, Weapon.noise_radius);
+        }
+
         public void EmitNoise(Vector3 position, float radius)
         {
             foreach (var enemy in Enemies) enemy.Hear(position, radius);
@@ -177,11 +205,40 @@ namespace ShadowVale.Map01
         {
             Hidden = Crouched && Points.Any(p => p.kind == ForestPointKind.Hide && Vector3.Distance(player.position, p.transform.position) < p.radius);
         }
-        public void NotifySprintNoise()
+        /// <summary>
+        /// How far a footstep carries, by how the player is moving. Sneaking, walking and
+        /// running have to be three distinct choices rather than "running is loud, everything
+        /// else is free": before this, only a sprint made any sound at all, so walking through
+        /// an outpost in plain view of nobody was silent and the crouch key bought nothing.
+        /// </summary>
+        private static float FootstepNoiseRadius(MoveStance stance) => stance switch
         {
-            if (Time.time <= nextNoise) return;
-            nextNoise = Time.time + .6f;
-            EmitNoise(player.position, 7);
+            MoveStance.Sneak => 3f,
+            MoveStance.Sprint => 16f,
+            _ => 9f,
+        };
+
+        /// <summary>Wading splashes. Multiplies whichever stance the player is in.</summary>
+        private const float WadingNoiseScale = 1.45f;
+
+        /// <summary>Landing from a jump is a single heavy footfall, loud whatever the stance.</summary>
+        private const float LandingNoiseRadius = 12f;
+
+        /// <summary>
+        /// Turns one footfall into a noise the guards can hear.
+        /// <para>
+        /// The rate limit is deliberately per-step rather than per-second: the step itself is
+        /// already paced by distance travelled, so a sprint emits more often than a walk without
+        /// a timer needing to know how fast anyone is going.
+        /// </para>
+        /// </summary>
+        public void NotifyFootstep(PlayerFootsteps.Footstep step)
+        {
+            if (Stopped || Hidden) return;
+
+            float radius = step.Landing ? LandingNoiseRadius : FootstepNoiseRadius(step.Stance);
+            if (step.Surface == FootSurface.Water) radius *= WadingNoiseScale;
+            EmitNoise(step.Position, radius);
         }
         public void AdvancePlaySeconds() { if (!Stopped) PlaySeconds += Time.deltaTime; }
         public void SetPlaySeconds(float value) => PlaySeconds = value;

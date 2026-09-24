@@ -107,6 +107,9 @@ namespace ShadowVale.Map01.Tests
             var mission = Object.FindFirstObjectByType<Map01Mission>();
             var guard = mission.Enemies.First(e => e.name == "Outpost guard 0");
             foreach (var e in mission.Enemies) e.enabled = e == guard;
+            // Sight only. Footsteps carry to the guards too (a teleport lands with a thud he
+            // would hear and turn to), and hearing has tests of its own.
+            if (mission.player.TryGetComponent(out PlayerFootsteps footsteps)) footsteps.enabled = false;
             PinAtPost(guard);
             yield return WaitGameSeconds(4.2f); // ReturnToPost leaves him calm for 4 s.
             Vector3 post = guard.transform.position;

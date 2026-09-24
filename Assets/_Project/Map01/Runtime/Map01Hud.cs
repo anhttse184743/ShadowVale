@@ -328,7 +328,7 @@ namespace ShadowVale.Map01
                 GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), "[E] " + nearby.label, hudBody);
             if (inventory.IsCrafting) GUI.Label(new Rect(47, objectiveBottom + 10, 415, 40), $"Đang chế tạo… {inventory.CraftRemaining:0.0}s", hudBody);
             // Alerted guards are marked by the awareness eye (Map01Hud.Scouting).
-            GUI.Label(new Rect(28, height - 26, width - 430, 24), "Tab Túi đồ  ·  H Hồi máu  ·  Q Ném đá  ·  B Chế tạo  ·  M Bản đồ  ·  Esc Menu", hudSmall);
+            GUI.Label(new Rect(28, height - 26, width - 430, 24), "Tab Túi đồ  ·  R Nạp đạn  ·  H Hồi máu  ·  Q Ném đá  ·  B Chế tạo  ·  M Bản đồ  ·  Esc Menu", hudSmall);
         }
 
         private void DrawMap(float width, float height)
