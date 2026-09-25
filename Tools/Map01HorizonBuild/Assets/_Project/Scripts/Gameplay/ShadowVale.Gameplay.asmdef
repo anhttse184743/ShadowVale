@@ -1,0 +1,14 @@
+{
+    "name": "ShadowVale.Gameplay",
+    "rootNamespace": "ShadowVale.Gameplay",
+    "references": ["ShadowVale.Core","ShadowVale.Data","ShadowVale.AI","ShadowVale.Content","ShadowVale.Persistence","ShadowVale.Telemetry"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

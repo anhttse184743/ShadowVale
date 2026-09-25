@@ -1,0 +1,14 @@
+{
+    "name": "ShadowVale.Debugging",
+    "rootNamespace": "ShadowVale.Debugging",
+    "references": ["ShadowVale.Core","ShadowVale.Data","ShadowVale.Content","ShadowVale.Networking","ShadowVale.Persistence","ShadowVale.Telemetry","ShadowVale.AI","ShadowVale.Gameplay","ShadowVale.UI","ShadowVale.Bootstrap"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": ["UNITY_EDITOR || DEVELOPMENT_BUILD"],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

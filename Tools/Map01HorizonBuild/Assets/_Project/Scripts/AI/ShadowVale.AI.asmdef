@@ -1,0 +1,14 @@
+{
+    "name": "ShadowVale.AI",
+    "rootNamespace": "ShadowVale.AI",
+    "references": ["ShadowVale.Core","ShadowVale.Data","ShadowVale.Networking"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
