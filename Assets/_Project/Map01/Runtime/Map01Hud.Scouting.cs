@@ -25,7 +25,7 @@ namespace ShadowVale.Map01
                 GUI.Label(banner, "BỊ PHÁT HIỆN — TRINH SÁT THẤT BẠI", hudKey);
             }
             else if (quest.Stage == Map01Quest.ScoutStage && !scouting.Binoculars)
-                GUI.Label(new Rect(width / 2 - 220, height - 70, 440, 30), "Giữ [F] dùng ống nhòm  ·  [C] đi khom  ·  nấp bụi để khó bị thấy", hudKey);
+                GUI.Label(new Rect(width / 2 - 330, height - 70, 660, 30), "Giữ [F] ống nhòm  ·  [C] đi khom, nấp bụi  ·  Giữ [Q] ném đá dụ lính ra xa trại", hudKey);
         }
 
         /// <summary>

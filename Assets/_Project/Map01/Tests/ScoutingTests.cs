@@ -95,6 +95,21 @@ namespace ShadowVale.Map01.Tests
             mission.player.rotation = Quaternion.Euler(0, yaw, 0);
         }
 
+        /// <summary>A walkable spot at least <paramref name="distance"/> m from the camp's centre, on the far side from <paramref name="avoid"/>.</summary>
+        private static Vector3 FarFromCamp(Map01Scouting.Camp camp, float distance, Vector3 avoid)
+        {
+            var away = Vector3.ProjectOnPlane(camp.Center - avoid, Vector3.up).normalized;
+            for (int a = 0; a <= 90; a += 15)
+                foreach (int sign in new[] { 1, -1 })
+                {
+                    var p = camp.Center + Quaternion.Euler(0, a * sign, 0) * away * distance;
+                    if (NavMesh.SamplePosition(p, out var hit, 3f, NavMesh.AllAreas) && Vector3.Distance(hit.position, camp.Center) >= distance - 1f)
+                        return hit.position;
+                }
+            Assert.Fail("No walkable spot away from the camp.");
+            return default;
+        }
+
         private static bool NamOutOfView(Map01Mission mission) =>
             mission.player.GetComponentsInChildren<Renderer>().All(r => r.shadowCastingMode == ShadowCastingMode.ShadowsOnly);
 
@@ -210,6 +225,51 @@ namespace ShadowVale.Map01.Tests
             Assert.IsFalse(scouting.Binoculars);
             Assert.IsFalse(NamOutOfView(mission), "Lowering the binoculars brings Nam back.");
             Assert.Greater(Vector3.Distance(mission.gameCamera.transform.position, scouting.Eye), 1f, "Back behind his shoulder.");
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
+        public IEnumerator AQuietKnifeTakedownAwayFromTheCampGoesUnnoticed()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            yield return null;
+            var mission = Object.FindFirstObjectByType<Map01Mission>();
+            var quest = mission.GetComponent<Map01Quest>();
+            var scouting = mission.GetComponent<Map01Scouting>();
+            var inventory = mission.GetComponent<Map01Inventory>();
+            if (mission.player.TryGetComponent(out PlayerFootsteps steps)) steps.enabled = false; // No teleport thuds.
+            quest.RestoreStage(Map01Quest.ScoutStage);
+            var camp = scouting.Camps[0];
+            var lured = camp.Guards[0];
+            var other = camp.Guards[1];
+            foreach (var e in mission.Enemies) e.enabled = e == lured || e == other;
+            PinAtPost(lured); PinAtPost(other);
+            yield return WaitGameSeconds(4.2f); // ReturnToPost leaves them calm for 4 s.
+            scouting.RestoreFound(0b010); // Another camp already logged: it must stay logged.
+            Assert.IsTrue(inventory.EquipItem("knife"));
+            mission.Crouched = true;
+
+            // Drawn well away from the camp (as a thrown stone would), then knifed from behind.
+            Vector3 spot = FarFromCamp(camp, scouting.QuietKillDistance + 5f, other.transform.position);
+            lured.GetComponent<NavMeshAgent>().Warp(spot);
+            lured.transform.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(spot - camp.Center, Vector3.up));
+            Teleport(mission, spot - lured.transform.forward * 1.5f);
+            yield return null;
+            lured.GetComponent<Health>().TakeDamage(45f, lured.transform.position, mission.player.gameObject); // The knife's own blow.
+            for (int i = 0; i < 4; i++) yield return null;
+            Assert.IsFalse(lured.Alive, "A silent takedown from behind.");
+            Assert.IsTrue(float.IsNegativeInfinity(scouting.FailedAt), "Away from the camp, nobody noticed.");
+            Assert.AreEqual(0b010, scouting.FoundMask, "The logged camp stays logged.");
+            Assert.AreEqual(Map01Quest.ScoutStage, quest.Stage);
+
+            // The same takedown at a post inside the camp: his comrades notice.
+            Teleport(mission, other.transform.position - other.transform.forward * 1.5f);
+            yield return null;
+            other.GetComponent<Health>().TakeDamage(45f, other.transform.position, mission.player.gameObject);
+            for (float until = Time.time + 1; float.IsNegativeInfinity(scouting.FailedAt) && Time.time < until;) yield return null;
+            Assert.Less(Time.time - scouting.FailedAt, 1f, "Inside the camp, it is noticed.");
+            Assert.AreEqual(0, scouting.FoundCount, "And the run is lost.");
             yield return new ExitPlayMode();
         }
 

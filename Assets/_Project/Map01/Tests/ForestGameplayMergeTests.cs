@@ -33,7 +33,7 @@ namespace ShadowVale.Map01.Tests
                 var player = mission.player.GetComponent<PlayerController>();
                 var combat = player.GetComponent<PlayerCombat>();
                 var health = player.GetComponent<Health>();
-                Assert.IsTrue(combat.UsesInventoryHotkeys);
+                Assert.IsTrue(combat.DrawsOwnWeaponHud, "Map 1 draws its own weapon HUD.");
                 Assert.IsTrue(player.InputAllowed());
                 mission.SetInventoryOpen(true);
                 Assert.IsFalse(player.InputAllowed());

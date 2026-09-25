@@ -30,9 +30,9 @@ namespace ShadowVale.Map01
             CombatIcon(new Rect(x + 10, y + 10, 146, 118), new Rect(672, 107, 536, 438), kind == WeaponKind.Rifle);
             CombatIcon(new Rect(x + 249, y + 29, 82, 81), new Rect(96, 695, 491, 476), kind == WeaponKind.Knife);
             CombatIcon(new Rect(x + 286, y + 145, 54, 69), new Rect(783, 724, 335, 429), kind == WeaponKind.Unarmed);
-            CombatLabel(new Rect(x + 46, y + 123, 60, 24), "6", combatCaption);
-            CombatLabel(new Rect(x + 260, y + 109, 60, 24), "7", combatCaption);
-            CombatLabel(new Rect(x + 285, y + 215, 60, 24), "8", combatCaption);
+            CombatLabel(new Rect(x + 46, y + 123, 60, 24), "1", combatCaption);
+            CombatLabel(new Rect(x + 260, y + 109, 60, 24), "2", combatCaption);
+            CombatLabel(new Rect(x + 285, y + 215, 60, 24), "3", combatCaption);
 
             var drop = new Rect(x + 166, y + 79, 108, 150);
             float hp = Mathf.Clamp01(mission.PlayerHealth / Mathf.Max(1, mission.Settings.playerHP));

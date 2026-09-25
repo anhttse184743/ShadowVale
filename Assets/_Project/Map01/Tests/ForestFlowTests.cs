@@ -433,7 +433,7 @@ namespace ShadowVale.Map01.Tests
 
             interaction.Interact(points.Single(p => p.id == "tutorial_loot"));
             yield return WaitGameSeconds(.6f);
-            Assert.AreEqual("HÙNG", guide.Label, "With the herb in the bag, the guide turns to Hùng.");
+            Assert.AreEqual("BẾN TÀU — CỨU HÙNG", guide.Label, "With the herb in the bag, the guide turns to Hùng at the jetty.");
             Assert.Less(Vector3.Distance(guide.Target, mission.hung.position), .5f);
 
             // Nam starts at the base, so head for the base from where the rescue leaves him: by Hùng.
@@ -517,10 +517,17 @@ namespace ShadowVale.Map01.Tests
                 mission.CloseGameplayPanel();
                 Assert.Less(Vector3.Distance(mission.hung.position, wounded), .5f, "Wounded Hùng stays where he fell.");
 
-                // Escort: he walks home with Nam (who starts at the base).
+                // Escort: freed at the jetty, he walks with Nam...
+                Vector3 baseFloor = mission.player.position;
+                Assert.IsTrue(UnityEngine.AI.NavMesh.SamplePosition(wounded + Vector3.right * 9f, out var beside, 4f, UnityEngine.AI.NavMesh.AllAreas));
+                controller.enabled = false; mission.player.position = beside.position; controller.enabled = true;
                 quest.RestoreStage(Map01Quest.EscortStage);
-                yield return WaitGameSeconds(6f);
+                yield return WaitGameSeconds(4f);
                 Assert.Less(Vector3.Distance(mission.hung.position, mission.player.position), 6f, "During the escort Hùng follows Nam.");
+                // ...all the way home (the 200 m walk itself is the NavMesh's business).
+                controller.enabled = false; mission.player.position = baseFloor; controller.enabled = true;
+                mission.hung.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(baseFloor + Vector3.right * 2f);
+                yield return null;
                 interaction.Interact(points.Single(p => p.kind == ForestPointKind.Supplies));
                 Assert.AreEqual(Map01Quest.BriefingStage, quest.Stage, "Hùng made it home with Nam.");
 

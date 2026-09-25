@@ -70,7 +70,9 @@ namespace ShadowVale.Gameplay.Combat
 
         /// <summary>Rounds left in the reserve, for the HUD and for refusing a pointless reload.</summary>
         public System.Func<int> ReserveRounds { get; set; }
-        public bool UsesInventoryHotkeys { get; set; }
+        /// <summary>The scene draws the weapon slots in its own HUD, so the stock hotbar row
+        /// (<c>WeaponHotbar</c>) stays hidden. The number keys are 1/2/3 either way.</summary>
+        public bool DrawsOwnWeaponHud { get; set; }
         public float AttackCooldownRemaining => Mathf.Max(0, _nextAttackTime - Time.time);
 
         /// <summary>Half-angle of the cone the next shot can land in, in degrees.</summary>
@@ -432,8 +434,7 @@ namespace ShadowVale.Gameplay.Combat
             int slots = Mathf.Min(SlotOrder.Length, SlotKeys.Length);
             for (int slot = 0; slot < slots; slot++)
             {
-                var key = UsesInventoryHotkeys ? (Key)((int)Key.Digit6 + slot) : SlotKeys[slot];
-                if (kb[key].wasPressedThisFrame)
+                if (kb[SlotKeys[slot]].wasPressedThisFrame)
                 {
                     Equip(SlotOrder[slot]);
                     return;

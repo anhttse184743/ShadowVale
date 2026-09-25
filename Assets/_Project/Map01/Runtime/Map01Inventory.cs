@@ -7,7 +7,7 @@ namespace ShadowVale.Map01
 {
     /// <summary>
     /// Everything the player carries: raw counts and the one crafting recipe Map 1 uses. Items
-    /// are used by their own keys — 6/7/8 weapons (PlayerCombat), H bandage, Q stone — not
+    /// are used by their own keys — 1/2/3 weapons (PlayerCombat), H bandage, Q stone — not
     /// through assignable shortcuts. Presentation (names, icons, descriptions, stack splitting)
     /// stays in the static <see cref="ForestInventory"/> helper; this component only owns state.
     /// </summary>
@@ -100,11 +100,11 @@ namespace ShadowVale.Map01
             }
             else
             {
+                // Only the stone leaves the bag here; its flight and the noise where it lands
+                // belong to Map01StoneThrow.
                 if (mission.InventoryOpen || mission.MapOpen) { mission.Say("Đóng túi đồ để ngắm hướng ném đá.", 3); return false; }
                 if (throwTarget == null) return false;
                 Spend("stone", 1);
-                mission.EmitNoise(throwTarget.Value, mission.Settings.stoneNoise);
-                mission.Say("Tiếng đá rơi — lính gần đó sẽ đến kiểm tra.", 3);
             }
             nextQuickUse = Time.time + .25f;
             return true;

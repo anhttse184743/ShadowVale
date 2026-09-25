@@ -61,8 +61,8 @@ namespace ShadowVale.UI.HUD
 
         private void LateUpdate()
         {
-            if (combat == null || !combat.UsesInventoryHotkeys || hotbarGroup == null) return;
-            // Mission HUD already draws the consumable bar and weapon shortcuts — hide only this
+            if (combat == null || !combat.DrawsOwnWeaponHud || hotbarGroup == null) return;
+            // The mission HUD already draws the weapon slots — hide only this
             // row, never the canvas it shares with the crosshair.
             hotbarGroup.alpha = 0;
             hotbarGroup.blocksRaycasts = false;

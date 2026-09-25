@@ -7,15 +7,17 @@ using UnityEngine.SceneManagement;
 
 namespace ShadowVale.Map01
 {
-    /// <summary>Save/load for Map 1 — checkpoint format v5. v4 (the first without the legacy
+    /// <summary>Save/load for Map 1 — checkpoint format v6. v4 (the first without the legacy
     /// ForestGuard snapshots) still loads: only its stage numbers predate the report-to-Hùng steps
-    /// and are mapped through Map01Quest.FromV4Stage.</summary>
+    /// and are mapped through Map01Quest.FromV4Stage. Saves before v6 predate the jetty rescue
+    /// layout: the guards they place where two camps and the patrol used to be are sent to their
+    /// new posts, and a rescue still in progress finds Hùng held at the jetty.</summary>
     public sealed class Map01SaveSystem : MonoBehaviour
     {
         [Serializable]
         private sealed class CheckpointData
         {
-            public int version = 5, stage, stones;
+            public int version = 6, stage, stones;
             public float hp, stamina;
             public Vector3 player, hung;
             public bool alarmed, crouched;
@@ -27,6 +29,7 @@ namespace ShadowVale.Map01
             public int scoutedCamps; // Bitmask of camps logged during the scouting order; 0 in older saves.
             public float attackRemaining;
             public int roundsInMagazine = -1;
+            public float hungHealth = -1; // -1 in older saves: unhurt.
             public Map01EnemyController.Snapshot[] enemies;
         }
 
@@ -53,6 +56,7 @@ namespace ShadowVale.Map01
         {
             if (pendingCheckpoint != null) return "Đang tải bản lưu. Vui lòng đợi giây lát.";
             if (mission.PlayerHealth <= 0) return "Không thể lưu khi nhân vật đã gục ngã.";
+            if (GetComponent<Map01Rescue>().HungDown) return "Hùng đã hy sinh. Làm lại đoạn giải cứu trước khi lưu.";
             if (quest.Stage == Map01Quest.CompleteStage) return "Màn chơi đã kết thúc. Về menu để tự lưu kết quả.";
             if (quest.Stage == Map01Quest.BossStage) return "Đang đối đầu chỉ huy địch. Hãy thoát nguy hiểm trước khi lưu thủ công.";
             if (inventory.IsCrafting) return "Hãy hoàn thành chế tạo trước khi lưu thủ công.";
@@ -66,8 +70,8 @@ namespace ShadowVale.Map01
         {
             error = null;
             if (pendingCheckpoint != null) { error = "Đang khôi phục bản lưu. Vui lòng thử lại sau giây lát."; return false; }
-            // Never replace a usable checkpoint with a dead character.
-            if (mission.PlayerHealth <= 0) return true;
+            // Never replace a usable checkpoint with a dead character — or a failed rescue.
+            if (mission.PlayerHealth <= 0 || GetComponent<Map01Rescue>().HungDown) return true;
             return SaveSlot(ForestSaveSlots.AutoSlot, out error, true);
         }
 
@@ -87,6 +91,7 @@ namespace ShadowVale.Map01
                 equippedWeapon = mission.ModernCombat != null ? (int)mission.ModernCombat.EquippedKind : 0,
                 attackRemaining = mission.ModernCombat != null ? mission.ModernCombat.AttackCooldownRemaining : 0,
                 roundsInMagazine = mission.ModernCombat != null ? mission.ModernCombat.RoundsInMagazine : -1,
+                hungHealth = GetComponent<Map01Rescue>().HungHealth,
                 enemies = mission.Enemies.Select(e => e.Capture()).ToArray(),
                 scoutedCamps = GetComponent<Map01Scouting>().FoundMask
             };
@@ -172,6 +177,15 @@ namespace ShadowVale.Map01
                 mission.player.rotation = Quaternion.Euler(0, data.playerYaw, 0);
                 mission.hung.rotation = Quaternion.Euler(0, data.hungYaw, 0);
                 RestoreGameplay(data);
+                var rescue = GetComponent<Map01Rescue>();
+                rescue.RestoreHealth(data.hungHealth);
+                if (data.version < 6)
+                {
+                    // The map moved two camps and the patrol since this save; its positions for
+                    // them are stale, so everyone goes to his post as he is (alive or not).
+                    foreach (var enemy in mission.Enemies) enemy.MoveToPost();
+                    if (quest.Stage == Map01Quest.RescueStage) mission.hung.GetComponent<NavMeshAgent>()?.Warp(rescue.CaptivePost);
+                }
                 GetComponent<Map01Scouting>().RestoreFound(data.scoutedCamps);
                 foreach (var point in mission.Points) point.used = data.used.Contains(point.id);
                 mission.Say("Đã khôi phục tiến trình và trạng thái giao chiến.");

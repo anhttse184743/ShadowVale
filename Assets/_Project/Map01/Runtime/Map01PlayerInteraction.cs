@@ -21,6 +21,7 @@ namespace ShadowVale.Map01
         private Map01Inventory inventory;
         private Map01SaveSystem saveSystem;
         private Map01Scouting scouting;
+        private Map01StoneThrow stoneThrow;
         private NavMeshAgent companion;
 
         private void Awake()
@@ -29,6 +30,10 @@ namespace ShadowVale.Map01
             quest = GetComponent<Map01Quest>();
             inventory = GetComponent<Map01Inventory>();
             saveSystem = GetComponent<Map01SaveSystem>();
+            // Added at runtime rather than baked into Map 1.unity, like the scouting order.
+            // Deliberately not "GetComponent() ?? AddComponent()" — see WeaponHotbar.
+            stoneThrow = GetComponent<Map01StoneThrow>();
+            if (stoneThrow == null) stoneThrow = gameObject.AddComponent<Map01StoneThrow>();
         }
 
         private void Start()
@@ -79,7 +84,13 @@ namespace ShadowVale.Map01
                 mission.UpdateHiddenState();
                 mission.SetStamina(mission.Stamina + (mission.ModernPlayer.IsSprinting ? -mission.Settings.staminaDrain : mission.Settings.staminaRecovery) * Time.deltaTime);
             }
-            if (kb.qKey.wasPressedThisFrame) ThrowStone();
+            // Hold [Q] to aim a stone, let go to throw it; right mouse puts it away.
+            if (kb.qKey.wasPressedThisFrame) stoneThrow.BeginAim();
+            else if (stoneThrow.Aiming)
+            {
+                if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame) stoneThrow.Cancel();
+                else if (!kb.qKey.isPressed) stoneThrow.Release();
+            }
             Nearby = mission.Points.Where(p => !p.used && p.kind != ForestPointKind.Hide && p.kind != ForestPointKind.Cover)
                 .OrderBy(p => Vector3.Distance(mission.player.position, p.transform.position))
                 .FirstOrDefault(p => Vector3.Distance(mission.player.position, p.transform.position) < mission.Settings.interactRange);
@@ -95,20 +106,6 @@ namespace ShadowVale.Map01
             companion.stoppingDistance = mission.Settings.followDistance;
             if (NavMesh.SamplePosition(mission.player.position, out var hit, 3, NavMesh.AllAreas))
                 companion.SetDestination(hit.position);
-        }
-
-        private Vector3 AimPoint()
-        {
-            var ray = mission.gameCamera.ViewportPointToRay(new Vector3(.5f, .5f));
-            return Physics.Raycast(ray, out var hit, mission.Weapon.range, mission.ObstructionMask | LayerMask.GetMask("Enemy"), QueryTriggerInteraction.Ignore)
-                ? hit.point : ray.GetPoint(mission.Weapon.range);
-        }
-
-        private void ThrowStone()
-        {
-            var target = mission.player.position + Vector3.ClampMagnitude(AimPoint() - mission.player.position, mission.Settings.stoneRange);
-            if (inventory.UseItem("stone", target))
-                mission.Trace(mission.player.position + Vector3.up, target + Vector3.up * .2f, Color.yellow);
         }
 
         /// <summary>

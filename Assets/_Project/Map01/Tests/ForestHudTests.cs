@@ -97,20 +97,22 @@ namespace ShadowVale.Map01.Tests
             try
             {
                 Assert.IsTrue(inventory.IsEquipped("rifle_standard"), "PlayerCombat's starting weapon is the rifle.");
-                // Weapons: 6 rifle, 7 knife — the keys the combat HUD shows next to them.
-                yield return Press(keyboard, Key.Digit7);
-                Assert.IsTrue(inventory.IsEquipped("knife"), "7 draws the knife.");
-                // 1–5 were the removed shortcut bar; they must not quietly do anything any more.
-                yield return Press(keyboard, Key.Digit1);
-                Assert.IsTrue(inventory.IsEquipped("knife"), "1 no longer switches to the rifle.");
+                // Weapons: 1 rifle, 2 knife, 3 fists — the keys the combat HUD shows next to them.
+                yield return Press(keyboard, Key.Digit2);
+                Assert.IsTrue(inventory.IsEquipped("knife"), "2 draws the knife.");
+                // 6–8 were the weapon keys while 1–5 belonged to the removed shortcut bar.
                 yield return Press(keyboard, Key.Digit6);
-                Assert.IsTrue(inventory.IsEquipped("rifle_standard"), "6 draws the rifle.");
+                Assert.IsTrue(inventory.IsEquipped("knife"), "6 no longer switches to the rifle.");
+                yield return Press(keyboard, Key.Digit3);
+                Assert.AreEqual(ShadowVale.Gameplay.Combat.WeaponKind.Unarmed, mission.ModernCombat.EquippedKind, "3 is bare hands.");
+                yield return Press(keyboard, Key.Digit1);
+                Assert.IsTrue(inventory.IsEquipped("rifle_standard"), "1 draws the rifle.");
 
                 // Bandages: only H.
                 inventory.Add("medkit_small", 2);
                 mission.Damage(40);
-                yield return Press(keyboard, Key.Digit3);
-                Assert.AreEqual(2, inventory.Count("medkit_small"), "3 no longer uses a bandage.");
+                yield return Press(keyboard, Key.Digit4);
+                Assert.AreEqual(2, inventory.Count("medkit_small"), "4 no longer uses a bandage.");
                 yield return Press(keyboard, Key.H);
                 Assert.AreEqual(1, inventory.Count("medkit_small"), "H uses a bandage.");
             }

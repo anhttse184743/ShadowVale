@@ -11,8 +11,8 @@ trong map cũ khi tải checkpoint. Không cần gắn thêm component vào scen
   để xem thêm stack; 24 ô không phải giới hạn tổng sức chứa.
 - Bấm ô để xem tên, mô tả, tổng số lượng và giới hạn mỗi stack.
 - Không có thanh dùng nhanh/ô gán phím: mỗi vật phẩm có phím riêng. H dùng băng cứu thương,
-  Q ném đá, 6 súng trường, 7 dao, 8 tay không (hoặc chọn vũ khí trong túi rồi bấm Trang bị).
-  Phím 1–5 không còn gắn chức năng. C hoặc Ctrl bật/tắt đi khom; Shift bật/tắt chạy.
+  Q ném đá, 1 súng trường, 2 dao, 3 tay không (hoặc chọn vũ khí trong túi rồi bấm Trang bị).
+  Phím 4–8 không gắn chức năng. C hoặc Ctrl bật/tắt đi khom; Shift bật/tắt chạy.
   Đạn súng lấy từ túi đồ; thanh máu và băng cứu thương dùng cùng Health của nhân vật.
 - Máu đầy, hết vật phẩm, đang chế tạo, chết hoặc tạm dừng không tiêu hao băng.
   Đóng túi để ngắm và ném đá. Nguyên liệu, đạn và đồ nhiệm vụ không dùng trực tiếp.
@@ -51,7 +51,7 @@ Extract and recreate a reusable blank UI panel texture inspired by the inventory
 ## Kiểm thử
 
 `ForestHudTests`: chia stack, bảo toàn số lượng, không tiêu hao khi máu đầy/tạm dừng,
-ném đá, khôi phục kho sau lưu/tải, tồn kho vượt 24 ô; phím 6/7 đổi vũ khí, H dùng băng,
+ném đá, khôi phục kho sau lưu/tải, tồn kho vượt 24 ô; phím 1/2/3 đổi vũ khí, H dùng băng,
 phím 1–5 không còn tác dụng (`ItemsUseTheirOwnKeysWithNoShortcutBar`).
 
 Test ảnh dùng kho đồ được điền riêng trong môi trường QA để nhìn đủ icon;
@@ -65,7 +65,7 @@ kiểm tra thả đúng ô/thả ra ngoài, nhóm HUD **2/2 đạt**
 ## Trang bị khởi hành
 
 - Súng trường (rifle_standard) và dao (knife): mỗi món x1 khi chơi mới, tối đa 1/ô.
-- Tab → chọn món → Trang bị; nhãn Đang cầm đồng bộ với PlayerCombat. Phím 6/7 đổi súng/dao.
+- Tab → chọn món → Trang bị; nhãn Đang cầm đồng bộ với PlayerCombat. Phím 1/2/3 đổi súng/dao/tay không.
 - Bản lưu v4 trước khi thêm item được bổ sung khóa còn thiếu, không nhân đôi số lượng đã lưu.
 - Hud/StartingWeapons.png giữ ảnh mẫu đã duyệt; HUD dùng UV lấy hai icon nhỏ không có chữ, số lượng được vẽ từ dữ liệu túi.
 ## Minimap
@@ -80,6 +80,16 @@ kiểm tra thả đúng ô/thả ra ngoài, nhóm HUD **2/2 đạt**
 ## HUD chiến đấu tối giản
 
 - Góc dưới phải: giọt HP trắng ngà không viền, phần mất máu tối đi, kèm HP hiện tại/tối đa. Hình giọt được tạo bằng code và cắt từ dưới lên theo HP thật.
-- Icon súng/dao/tay không đọc từ Hud/CombatIcons.png; phím 6/7/8 đổi trang bị, icon đang cầm sáng hơn. Atlas được tạo bằng công cụ imagegen tích hợp; yêu cầu tạo silhouette súng, dao và nắm tay màu ngà trên nền trong suốt. Phần giọt đỏ trong atlas không được sử dụng.
-- Số đạn là tổng ammo_rifle thực có trong kho; chưa có cơ chế băng đạn/nạp đạn nên không hiển thị tỷ lệ đạn giả.
-- Không có thanh dùng nhanh, kể cả trong túi đồ; dùng H/Q và 6/7/8.
+- Icon súng/dao/tay không đọc từ Hud/CombatIcons.png; phím 1/2/3 đổi trang bị, icon đang cầm sáng hơn. Atlas được tạo bằng công cụ imagegen tích hợp; yêu cầu tạo silhouette súng, dao và nắm tay màu ngà trên nền trong suốt. Phần giọt đỏ trong atlas không được sử dụng.
+- Số đạn hiện "trong băng / dự trữ trong ba lô" (R nạp đạn); lúc đang nạp thì hiện % tiến độ.
+- Không có thanh dùng nhanh, kể cả trong túi đồ; dùng H/Q và 1/2/3 (thanh vũ khí mặc định WeaponHotbar được giấu trong Map 1).
+
+## Ném đá đánh lạc hướng (Map01StoneThrow)
+
+- Giữ Q để ngắm: đường cong quỹ đạo và vòng tròn chỗ đá rơi (tối đa 20 m, cắt ngắn nếu vướng cây/nhà).
+- Mỗi lính Nam nhìn thấy trong 40 m hiện "vùng nghe" bán kính `stoneNoise` (14 m) quanh chân; vòng sáng màu cam nếu chỗ đá rơi nằm trong vùng đó. Bảng dưới màn hình báo bao nhiêu lính sẽ nghe thấy.
+- Thả Q để ném, chuột phải để cất. Đá bay theo đúng quỹ đạo; lúc chạm đất mới phát tiếng động.
+- Lính nghe thấy chạy tới chỗ đá rơi, đứng nhìn quanh `searchSeconds` (8 giây), rồi quay về đúng chỗ cũ (vị trí gác hoặc điểm đang tuần). Mất dấu Nam cũng vậy: tới chỗ thấy Nam lần cuối, tìm quanh rồi về.
+- Hạ gục bằng dao: đâm từ phía sau một lính chưa phát hiện Nam (kể cả khi hắn đang đi kiểm tra tiếng đá) là hạ ngay, không gây tiếng động. Đi khom thì lính chỉ cảm nhận Nam sát sau lưng trong 1,2 m (đứng thẳng: 2,5 m), đủ để áp sát trong tầm dao (2 m). Đâm từ phía trước hoặc khi hắn đã phát hiện chỉ là một nhát thường, và hắn quay sang đánh Nam.
+- Trong nhiệm vụ trinh sát: hạ gục lặng lẽ bằng dao một lính đã bị dụ ra xa tâm doanh trại từ 15 m trở lên (`quietKillDistance`) thì không bị lộ; hạ lính ngay trong trại, đâm trực diện hay nổ súng vẫn làm trinh sát thất bại. Kiểm thử: `ScoutingTests.AQuietKnifeTakedownAwayFromTheCampGoesUnnoticed`.
+- Kiểm thử: `StoneThrowTests` (ngắm/huỷ, lính đi kiểm tra rồi về chỗ cũ, hạ gục bằng dao qua input chuột thật).

@@ -42,7 +42,8 @@ namespace ShadowVale.Map01
         public PlayerCombat ModernCombat { get; private set; }
         public Health ModernHealth { get; private set; }
         public Map01EnemyController[] Enemies { get; private set; } = Array.Empty<Map01EnemyController>();
-        public bool Stopped => (ModernHealth != null ? ModernHealth.IsDead : hp <= 0) || Stage == Map01Quest.CompleteStage || paused || Map01SaveSystem.IsRestoring;
+        public bool Stopped => (ModernHealth != null ? ModernHealth.IsDead : hp <= 0) || Stage == Map01Quest.CompleteStage || paused || Map01SaveSystem.IsRestoring
+            || (rescue != null && rescue.HungDown);
         public int ObstructionMask => LayerMask.GetMask("Default", "Obstacle", "Cover", "VisionBlocker");
         public int Stage => quest != null ? quest.Stage : 0;
         public readonly List<ForestPoint> Points = new List<ForestPoint>();
@@ -50,6 +51,7 @@ namespace ShadowVale.Map01
         private bool paused;
         private Map01Quest quest;
         private Map01Inventory inventory;
+        private Map01Rescue rescue;
 
         public bool IsWading => player != null && player.position.y < .12f &&
             Mathf.Abs(player.position.x - (8 + 12 * Mathf.Sin(player.position.z * .041f) + 4 * Mathf.Sin(player.position.z * .105f))) < 5f;
@@ -102,6 +104,7 @@ namespace ShadowVale.Map01
         private void Start()
         {
             if (!IsInitialized) return;
+            rescue = GetComponent<Map01Rescue>(); // Added by Map01Quest.Awake.
             ModernPlayer = player.GetComponent<PlayerController>();
             ModernCombat = player.GetComponent<PlayerCombat>();
             ModernHealth = player.GetComponent<Health>();
@@ -114,13 +117,14 @@ namespace ShadowVale.Map01
             if (ModernHealth != null) ModernHealth.KeepCheckpointCorpse();
             if (ModernCombat != null)
             {
-                ModernCombat.UsesInventoryHotkeys = true;
+                ModernCombat.DrawsOwnWeaponHud = true; // Map01Hud.Combat shows the weapons on keys 1/2/3.
                 var scouting = GetComponent<Map01Scouting>(); // Added by Map01Quest.Awake.
+                var stones = GetComponent<Map01StoneThrow>(); // Added by Map01PlayerInteraction.Awake.
                 ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting && !inventory.SuppressFire
-                    && !scouting.Binoculars; // Hands are on the binoculars, not the rifle.
+                    && !scouting.Binoculars && !stones.Aiming; // Hands are on the binoculars or a stone, not the rifle.
                 ModernCombat.TryConsumeRound = () =>
                 {
-                    if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 7.", 3); return false; }
+                    if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 2.", 3); return false; }
                     inventory.Spend("ammo_rifle", 1);
                     EmitNoise(player.position, Weapon.noise_radius);
                     return true;
@@ -132,7 +136,7 @@ namespace ShadowVale.Map01
                 {
                     int granted = Mathf.Min(wanted, inventory.Count("ammo_rifle"));
                     if (granted > 0) inventory.Spend("ammo_rifle", granted);
-                    else Say("Hết đạn — nhặt thêm đạn hoặc đổi vũ khí bằng 6 / 7 / 8.", 2);
+                    else Say("Hết đạn — nhặt thêm đạn hoặc đổi vũ khí bằng 1 / 2 / 3.", 2);
                     return granted;
                 };
                 // The shot's noise used to ride along with spending the round. It now hangs off
@@ -184,9 +188,12 @@ namespace ShadowVale.Map01
             if (kind == WeaponKind.Rifle) EmitNoise(position, Weapon.noise_radius);
         }
 
-        public void EmitNoise(Vector3 position, float radius)
+        /// <summary>A noise every guard within <paramref name="radius"/> goes to check; returns how many heard it.</summary>
+        public int EmitNoise(Vector3 position, float radius)
         {
-            foreach (var enemy in Enemies) enemy.Hear(position, radius);
+            int heard = 0;
+            foreach (var enemy in Enemies) if (enemy.Hear(position, radius)) heard++;
+            return heard;
         }
         public void Damage(float amount)
         {
@@ -263,6 +270,7 @@ namespace ShadowVale.Map01
             if (kb == null) return;
             if (ForestMenu.Visible) return;
             if (kb.enterKey.wasPressedThisFrame && (hp <= 0 || Stage == Map01Quest.CompleteStage)) Restart();
+            else if (kb.enterKey.wasPressedThisFrame && rescue != null && rescue.HungDown) rescue.Retry();
         }
 
         private void OnDisable() { Time.timeScale = 1; }

@@ -6,7 +6,8 @@ using UnityEngine.AI;
 namespace ShadowVale.Map01
 {
     /// <summary>
-    /// Map 1's quest line, on its own component. Rescue Hùng and bring him home to the base; from
+    /// Map 1's quest line, on its own component. Rescue Hùng — captured at the north jetty, see
+    /// Map01Rescue — and bring him home to the base; from
     /// then on he stays there and hands out every order, and each finished task must be reported
     /// back to him in person before the next one: log the three enemy outposts through binoculars
     /// unseen (Map01Scouting), destroy them ("Outpost guard N", baked into the scene), then the
@@ -28,10 +29,10 @@ namespace ShadowVale.Map01
         public const int ReportBossStage = 8;
         public const int CompleteStage = 9;
         public static readonly string[] Objectives = {
-            "Tìm Hùng đang bị thương và dùng thảo dược chữa trị cho anh ấy [E]",
-            "Đưa Hùng về căn cứ, nhận hàng tiếp tế [E]",
+            "Giải cứu Hùng bị địch bắt ở bến tàu phía Bắc: lén tiếp cận, cởi trói và chữa trị bằng thảo dược [E] — đừng để Hùng trúng đạn",
+            "Đưa Hùng về căn cứ an toàn, nhận hàng tiếp tế [E]",
             "Gặp Hùng tại căn cứ để nhận nhiệm vụ [E]",
-            "Trinh sát 3 doanh trại địch: giữ [F] dùng ống nhòm ghi vị trí — không để lính phát hiện, không tấn công",
+            "Trinh sát 3 doanh trại địch: giữ [F] dùng ống nhòm ghi vị trí — không để lính phát hiện, không tấn công trong doanh trại",
             "Về căn cứ báo cáo kết quả trinh sát cho Hùng [E]",
             "Chiếm đóng 3 doanh trại của địch — tiêu diệt toàn bộ lính",
             "Về căn cứ báo cáo với Hùng: ba doanh trại đã bị hạ [E]",
@@ -40,7 +41,7 @@ namespace ShadowVale.Map01
             "Hoàn thành Map 1 — Những dấu chân trong rừng"
         };
         public static readonly string[] SaveLocations = {
-            "Đang tìm Hùng", "Trên đường về căn cứ", "Căn cứ chỉ huy", "Trinh sát doanh trại", "Về căn cứ báo cáo",
+            "Giải cứu Hùng ở bến tàu", "Trên đường về căn cứ", "Căn cứ chỉ huy", "Trinh sát doanh trại", "Về căn cứ báo cáo",
             "Doanh trại địch", "Về căn cứ báo cáo", "Đối đầu chỉ huy", "Về căn cứ báo cáo", "Map 1 hoàn tất"
         };
         /// <summary>v4 stages: rescue, escort, scout, camps, boss, complete.</summary>
@@ -58,7 +59,7 @@ namespace ShadowVale.Map01
         public bool HungInRange { get; private set; }
         /// <summary>What [E] does next to Hùng right now, for the HUD prompt.</summary>
         public string HungPrompt => Stage == RescueStage
-            ? (inventory.Count("herb") > 0 ? "[E] Dùng thảo dược chữa trị cho Hùng" : "Cần thảo dược để chữa trị cho Hùng")
+            ? (inventory.Count("herb") > 0 ? "[E] Cởi trói và chữa trị cho Hùng" : "Cần thảo dược để chữa trị cho Hùng")
             : "[E] Báo cáo với Hùng";
         /// <summary>The base's supply point keeps resupplying once Hùng is home.</summary>
         public bool BaseResupplyOpen => Stage > EscortStage;
@@ -79,6 +80,7 @@ namespace ShadowVale.Map01
         private Map01Mission mission;
         private Map01Inventory inventory;
         private Map01Scouting scouting;
+        private Map01Rescue rescue;
         private NavMeshAgent companion;
         private Map01EnemyController boss;
         public bool BossSpawned => boss != null;
@@ -91,33 +93,17 @@ namespace ShadowVale.Map01
             // into Map 1.unity. Deliberately not "GetComponent() ?? AddComponent()" — see WeaponHotbar.
             scouting = GetComponent<Map01Scouting>();
             if (scouting == null) scouting = gameObject.AddComponent<Map01Scouting>();
+            rescue = GetComponent<Map01Rescue>();
+            if (rescue == null) rescue = gameObject.AddComponent<Map01Rescue>();
         }
 
         private void Start()
         {
             if (!mission.IsInitialized) return;
             companion = mission.hung.GetComponent<NavMeshAgent>();
-            PositionHungForRescue();
-            mission.Say("Nam: Hùng đâu rồi? ... Kia! Bị thương rồi. Phải tìm thảo dược cứu anh ấy.", 9);
-        }
-
-        /// <summary>
-        /// Moves Hùng away from the player's spawn point to a nearby, NavMesh-valid spot so the
-        /// briefing's "go rescue Hùng" reads as a real short trek rather than him already standing
-        /// next to Nam. Falls back to wherever the map data placed him if none of the offsets land
-        /// on walkable ground — better an unmoved companion than one warped into a wall.
-        /// </summary>
-        private void PositionHungForRescue()
-        {
-            if (companion == null) return;
-            Vector3[] offsets = {
-                new Vector3(14, 0, 10), new Vector3(-14, 0, 10),
-                new Vector3(10, 0, -14), new Vector3(-10, 0, -14),
-                new Vector3(18, 0, 0), new Vector3(-18, 0, 0),
-            };
-            foreach (var offset in offsets)
-                if (NavMesh.SamplePosition(mission.player.position + offset, out var hit, 6, NavMesh.AllAreas))
-                { companion.Warp(hit.position); return; }
+            // Hùng starts where Map 1.unity holds him: under the shelter at the north jetty.
+            mission.Say("Nam: Hùng đi đưa thư từ tối qua mà chưa về... Trinh sát báo địch bắt được một lính thông tin ở bến tàu phía Bắc. " +
+                "Lấy thảo dược ở thùng vật tư rồi lén tới cứu anh ấy.", 12);
         }
 
         private bool NearHung(float distance) => mission.hung != null
@@ -132,7 +118,8 @@ namespace ShadowVale.Map01
             {
                 case BriefingStage:
                     Stage = ScoutStage;
-                    mission.Say("Hùng: Địch có ba doanh trại quanh đây, anh chỉ biết đại khái khu vực. Lén tới, giữ [F] dùng ống nhòm ghi lại vị trí cả ba. Tuyệt đối không để chúng phát hiện, không nổ súng. Xong thì về báo anh.", 12);
+                    mission.Say("Hùng: Địch có ba doanh trại quanh đây, anh chỉ biết đại khái khu vực. Lén tới, giữ [F] dùng ống nhòm ghi lại vị trí cả ba. Tuyệt đối không để chúng phát hiện, không nổ súng. " +
+                        "Muốn hạ tên nào thì ném đá dụ nó ra xa trại rồi dùng dao từ phía sau. Xong thì về báo anh.", 14);
                     break;
                 case ReportScoutStage:
                     Stage = CampsStage;
@@ -151,15 +138,16 @@ namespace ShadowVale.Map01
         }
 
         /// <summary>
-        /// [E] near wounded Hùng at the start. Needs one herb — the briefing's "kiếm thảo dược chữa
-        /// trị cho Hùng" — and starts the walk home.
+        /// [E] next to captive Hùng: cut him loose and treat the wounds they gave him. Needs one
+        /// herb — the briefing's "lấy thảo dược ở thùng vật tư" — and starts the walk home.
         /// </summary>
         public void TryRescueHung()
         {
             if (Stage != RescueStage || !NearHung(mission.Settings.interactRange)) return;
             if (inventory.Count("herb") <= 0) { mission.Say("Cần thảo dược để chữa trị cho Hùng.", 3); return; }
             inventory.Spend("herb", 1); Stage = EscortStage;
-            mission.Say("Nam: Chịu khó chút, Hùng. Thảo dược này cầm máu được.\nHùng: ...Cảm ơn Nam. Về căn cứ lấy hàng tiếp tế rồi tính tiếp.", 9);
+            mission.Say("Nam: Chịu khó chút, Hùng. Thảo dược này cầm máu được.\nHùng: ...Cảm ơn Nam. Tôi đang mang thư về thì bị chúng phục kích ở bến này. " +
+                "Thư vẫn còn trong người — về căn cứ thôi.", 10);
         }
 
         /// <summary>[E] on the base's supply point with Hùng alongside — he is home, and stays.</summary>
@@ -169,6 +157,7 @@ namespace ShadowVale.Map01
             if (!NearHung(10f)) { mission.Say("Hùng chưa theo kịp — đợi anh ấy về tới căn cứ đã.", 4); return false; }
             Stage = BriefingStage;
             if (companion != null && companion.isOnNavMesh) companion.ResetPath();
+            rescue.ResetSquad(); // The jetty is manned again once the prisoner is gone for good.
             mission.Say("Hùng: Về tới căn cứ rồi. Cảm ơn Nam — nhận hàng tiếp tế đi, rồi gặp anh nhận nhiệm vụ. [E]", 9);
             return true;
         }

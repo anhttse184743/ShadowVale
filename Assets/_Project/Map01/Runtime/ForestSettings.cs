@@ -12,6 +12,10 @@ namespace ShadowVale.Map01
         public float staminaDrain, staminaRecovery, interactRange, stoneRange, stoneNoise;
         public float guardDamageScale, guardShotInterval, detectionSeconds, hiddenVisionScale, crouchVisionScale;
         public float medkitHeal, followDistance;
+        /// <summary>Hùng's health while he is in the line of fire (the rescue and the walk home).</summary>
+        public float hungHP;
+        /// <summary>How long a guard looks around where he heard something before heading back.</summary>
+        public float searchSeconds;
         public int startingStones, guardDropAmmo, guardDropMedkits;
     }
 

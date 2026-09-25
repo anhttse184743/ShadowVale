@@ -11,6 +11,8 @@ namespace ShadowVale.Map01
     /// (hold F while looking at it from within range, with a clear line of sight) without being
     /// noticed. A camp guard spotting Nam, or Nam attacking one, fails the run: the camps are
     /// reinforced (every camp guard back at his post, calm) and all logged positions are lost.
+    /// The one attack a camp does not notice is a silent knife takedown of a guard lured well
+    /// away from it (quietKillDistance), e.g. by a thrown stone.
     /// Until a camp is logged, only a rough area around it is known — offset from the real spot.
     /// </summary>
     public sealed class Map01Scouting : MonoBehaviour
@@ -23,6 +25,9 @@ namespace ShadowVale.Map01
         [SerializeField] private float zoneRadius = 35f;
         [Tooltip("Eye height above Nam's feet, standing and crouched — the binocular view and its line of sight.")]
         [SerializeField] private float eyeHeight = 1.6f, crouchedEyeHeight = 1.15f;
+        [Tooltip("A silent knife takedown at least this far from a camp's centre goes unnoticed by the camp.")]
+        [SerializeField] private float quietKillDistance = 15f;
+        public float QuietKillDistance => quietKillDistance;
 
         public sealed class Camp
         {
@@ -50,7 +55,7 @@ namespace ShadowVale.Map01
         public Vector3 Eye => mission.player.position + Vector3.up * (mission.Crouched ? crouchedEyeHeight : eyeHeight);
 
         private readonly List<Camp> camps = new List<Camp>();
-        private readonly Dictionary<Map01EnemyController, float> lastHealth = new Dictionary<Map01EnemyController, float>();
+        private readonly Dictionary<Map01EnemyController, int> lastHurt = new Dictionary<Map01EnemyController, int>();
         private Map01Mission mission;
         private Map01Quest quest;
         private ThirdPersonCamera cameraRig;
@@ -82,7 +87,7 @@ namespace ShadowVale.Map01
                     Guards = outpostGuards.Where(g => NearestCamp(g.transform.position) == root.transform).ToArray()
                 });
             }
-            TrackHealth();
+            TrackAttacks();
         }
 
         private static Transform NearestCamp(Vector3 position)
@@ -101,12 +106,12 @@ namespace ShadowVale.Map01
         /// <summary>Called every frame by Map01PlayerInteraction with the state of the F key.</summary>
         public void HoldBinoculars(bool pressed) => held = pressed;
 
-        /// <summary>After a checkpoint load, which also restores guard health — take that as the
-        /// new baseline, or a restored wound would read as Nam attacking the camp.</summary>
+        /// <summary>After a checkpoint load: the guards' state as restored is the new baseline, so
+        /// nothing that happened before the save reads as a fresh attack on the camp.</summary>
         public void RestoreFound(int mask)
         {
             foreach (var camp in camps) camp.Found = (mask & (1 << (camp.Number - 1))) != 0;
-            TrackHealth();
+            TrackAttacks();
         }
 
         private void Update()
@@ -115,7 +120,7 @@ namespace ShadowVale.Map01
             bool scouting = quest.Stage == Map01Quest.ScoutStage && !mission.Stopped;
             SetBinoculars(held && scouting && !mission.InventoryOpen && !mission.MapOpen && !ForestMenu.Visible);
             if (cameraRig != null) cameraRig.SetBinoculars(Binoculars, Eye.y - mission.player.position.y);
-            if (!scouting) { TrackHealth(); InScanRange = false; return; }
+            if (!scouting) { TrackAttacks(); InScanRange = false; return; }
             if (CampSpottedOrAttacked(out string reason)) { Fail(reason); return; }
             InScanRange = false;
             foreach (var camp in camps)
@@ -130,10 +135,10 @@ namespace ShadowVale.Map01
             if (!value) { Sighted = null; RecordProgress = 0; }
         }
 
-        private void TrackHealth()
+        private void TrackAttacks()
         {
             foreach (var camp in camps)
-                foreach (var guard in camp.Guards) lastHealth[guard] = guard.GetComponent<Health>().Current;
+                foreach (var guard in camp.Guards) lastHurt[guard] = guard.HurtCount;
         }
 
         private bool CampSpottedOrAttacked(out string reason)
@@ -142,10 +147,16 @@ namespace ShadowVale.Map01
             foreach (var camp in camps)
                 foreach (var guard in camp.Guards)
                 {
-                    float health = guard.GetComponent<Health>().Current;
-                    bool hurt = health < lastHealth[guard];
-                    lastHealth[guard] = health;
-                    if (hurt) { reason = "Không được tấn công lính doanh trại!"; return true; }
+                    if (guard.HurtCount != lastHurt[guard])
+                    {
+                        lastHurt[guard] = guard.HurtCount;
+                        // A silent knife takedown of a guard drawn well away from his camp — by a
+                        // thrown stone, say — goes unnoticed. Anything else is an attack on the camp.
+                        if (!guard.TakenDownSilently) { reason = "Không được tấn công lính doanh trại!"; return true; }
+                        if (Vector3.Distance(guard.transform.position, camp.Center) < quietKillDistance)
+                        { reason = $"Hạ lính ngay trong doanh trại {camp.Number} — đồng đội hắn đã phát hiện!"; return true; }
+                        mission.Say("Hạ gục lặng lẽ, xa doanh trại — không ai hay biết.", 4);
+                    }
                     if (guard.Alive && guard.Engaged) { reason = "Lính doanh trại " + camp.Number + " đã phát hiện cậu!"; return true; }
                 }
             return false;
@@ -158,7 +169,7 @@ namespace ShadowVale.Map01
                 camp.Found = false;
                 foreach (var guard in camp.Guards) guard.ReturnToPost();
             }
-            TrackHealth();
+            TrackAttacks();
             Sighted = null; RecordProgress = 0;
             FailedAt = Time.time;
             mission.Say("Hùng (bộ đàm): " + reason + " Rút ngay! Địch đã tăng cường canh gác — trinh sát lại cả ba doanh trại, lần này đừng để bị phát hiện.", 10);

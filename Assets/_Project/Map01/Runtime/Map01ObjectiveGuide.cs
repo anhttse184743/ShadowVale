@@ -55,7 +55,7 @@ namespace ShadowVale.Map01
                 case Map01Quest.RescueStage:
                     var crate = mission.Points.FirstOrDefault(p => p.id == "tutorial_loot");
                     if (inventory.Count("herb") <= 0 && crate != null) { target = crate.transform.position; label = "THÙNG VẬT TƯ"; }
-                    else { target = mission.hung.position; label = "HÙNG"; }
+                    else { target = mission.hung.position; label = "BẾN TÀU — CỨU HÙNG"; }
                     return true;
                 case Map01Quest.ScoutStage:
                     // Only the rough area of the nearest camp not yet logged — never the camp itself.
