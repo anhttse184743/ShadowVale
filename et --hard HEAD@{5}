@@ -1,0 +1,36 @@
+[33m21ef08a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mTai[m[33m, [m[1;31morigin/dev[m[33m, [m[1;31morigin/Tai[m[33m, [m[1;32mdev[m[33m)[m HEAD@{0}: checkout: moving from Tai to Tai
+[33m21ef08a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mTai[m[33m, [m[1;31morigin/dev[m[33m, [m[1;31morigin/Tai[m[33m, [m[1;32mdev[m[33m)[m HEAD@{1}: checkout: moving from dev to Tai
+[33m21ef08a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mTai[m[33m, [m[1;31morigin/dev[m[33m, [m[1;31morigin/Tai[m[33m, [m[1;32mdev[m[33m)[m HEAD@{2}: merge Tai: Fast-forward
+[33m92f6f98[m HEAD@{3}: checkout: moving from Tai to dev
+[33m21ef08a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mTai[m[33m, [m[1;31morigin/dev[m[33m, [m[1;31morigin/Tai[m[33m, [m[1;32mdev[m[33m)[m HEAD@{4}: 
+[33mce6b792[m HEAD@{5}: commit: Map 2 edit
+[33mbc3b137[m HEAD@{6}: reset: moving to HEAD~1
+[33m1df45e9[m HEAD@{7}: commit: Map 2 edit
+[33mbc3b137[m HEAD@{8}: checkout: moving from dev to Tai
+[33mbc3b137[m HEAD@{9}: merge Tai: Fast-forward
+[33m22c3266[m HEAD@{10}: checkout: moving from Tai to dev
+[33mbc3b137[m HEAD@{11}: commit: Map 1 them hieu ung map
+[33m131e1b4[m HEAD@{12}: commit: Map 1 them hieu ung ranh gioi map
+[33m22c3266[m HEAD@{13}: merge dev: Fast-forward
+[33m029315a[m HEAD@{14}: checkout: moving from dev to Tai
+[33m22c3266[m HEAD@{15}: merge Tai: Merge made by the 'ort' strategy.
+[33m8aff2f6[m HEAD@{16}: pull --tags origin dev: Fast-forward
+[33m5d8b2af[m[33m ([m[1;31mEscape/Tai[m[33m)[m HEAD@{17}: checkout: moving from Tai to dev
+[33m029315a[m HEAD@{18}: checkout: moving from dev to Tai
+[33m5d8b2af[m[33m ([m[1;31mEscape/Tai[m[33m)[m HEAD@{19}: checkout: moving from Tai to dev
+[33m029315a[m HEAD@{20}: commit: Map 2 phac thao
+[33m5d8b2af[m[33m ([m[1;31mEscape/Tai[m[33m)[m HEAD@{21}: checkout: moving from dev to Tai
+[33m5d8b2af[m[33m ([m[1;31mEscape/Tai[m[33m)[m HEAD@{22}: merge Tai: Fast-forward
+[33mb128399[m[33m ([m[1;31mEscape/dev[m[33m)[m HEAD@{23}: checkout: moving from Tai to dev
+[33m5d8b2af[m[33m ([m[1;31mEscape/Tai[m[33m)[m HEAD@{24}: commit: Map 1 fixed
+[33mb128399[m[33m ([m[1;31mEscape/dev[m[33m)[m HEAD@{25}: pull --tags origin dev: Fast-forward
+[33m1fc6291[m HEAD@{26}: checkout: moving from Tai to Tai
+[33m1fc6291[m HEAD@{27}: checkout: moving from Khoa to Tai
+[33m1fc6291[m HEAD@{28}: commit: Map 1 fix thatched house and colider
+[33mac90464[m HEAD@{29}: pull --tags origin Khoa: Fast-forward
+[33m7199223[m HEAD@{30}: commit: add Sky, rendered Map 1
+[33ma0b88f0[m HEAD@{31}: pull --tags origin Khoa: Fast-forward
+[33m821bc6b[m HEAD@{32}: pull --tags origin Khoa: Fast-forward
+[33mf97ef96[m HEAD@{33}: commit: map 1 blueprint
+[33m02c0428[m HEAD@{34}: checkout: moving from main to Khoa
+[33m4fa7d96[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;31mEscape/main[m[33m, [m[1;31mEscape/HEAD[m[33m)[m HEAD@{35}: clone: from https://github.com/anhttse184743/ShadowVale
