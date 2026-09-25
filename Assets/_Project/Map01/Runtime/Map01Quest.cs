@@ -44,6 +44,9 @@ namespace ShadowVale.Map01
             "Giải cứu Hùng ở bến tàu", "Trên đường về căn cứ", "Căn cứ chỉ huy", "Trinh sát doanh trại", "Về căn cứ báo cáo",
             "Doanh trại địch", "Về căn cứ báo cáo", "Đối đầu chỉ huy", "Về căn cứ báo cáo", "Map 1 hoàn tất"
         };
+        /// <summary>Hùng's scouting order — given at the briefing, and again whenever a lost run starts over.</summary>
+        public const string ScoutOrder = "Hùng: Địch có ba doanh trại quanh đây, anh chỉ biết đại khái khu vực. Lén tới, giữ [F] dùng ống nhòm ghi lại vị trí cả ba. " +
+            "Tuyệt đối không để chúng phát hiện, không nổ súng. Muốn hạ tên nào thì ném đá dụ nó ra xa trại rồi dùng dao từ phía sau. Xong thì về báo anh.";
         /// <summary>v4 stages: rescue, escort, scout, camps, boss, complete.</summary>
         public static int FromV4Stage(int stage) =>
             stage <= 1 ? Mathf.Max(0, stage) : stage == 2 ? ScoutStage : stage == 3 ? CampsStage : stage == 4 ? BossStage : CompleteStage;
@@ -118,8 +121,9 @@ namespace ShadowVale.Map01
             {
                 case BriefingStage:
                     Stage = ScoutStage;
-                    mission.Say("Hùng: Địch có ba doanh trại quanh đây, anh chỉ biết đại khái khu vực. Lén tới, giữ [F] dùng ống nhòm ghi lại vị trí cả ba. Tuyệt đối không để chúng phát hiện, không nổ súng. " +
-                        "Muốn hạ tên nào thì ném đá dụ nó ra xa trại rồi dùng dao từ phía sau. Xong thì về báo anh.", 14);
+                    // A lost run starts over from exactly here (Map01Scouting.Restart).
+                    GetComponent<Map01SaveSystem>().MarkScoutingStart();
+                    mission.Say(ScoutOrder, 14);
                     break;
                 case ReportScoutStage:
                     Stage = CampsStage;

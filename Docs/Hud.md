@@ -93,3 +93,10 @@ kiểm tra thả đúng ô/thả ra ngoài, nhóm HUD **2/2 đạt**
 - Hạ gục bằng dao: đâm từ phía sau một lính chưa phát hiện Nam (kể cả khi hắn đang đi kiểm tra tiếng đá) là hạ ngay, không gây tiếng động. Đi khom thì lính chỉ cảm nhận Nam sát sau lưng trong 1,2 m (đứng thẳng: 2,5 m), đủ để áp sát trong tầm dao (2 m). Đâm từ phía trước hoặc khi hắn đã phát hiện chỉ là một nhát thường, và hắn quay sang đánh Nam.
 - Trong nhiệm vụ trinh sát: hạ gục lặng lẽ bằng dao một lính đã bị dụ ra xa tâm doanh trại từ 15 m trở lên (`quietKillDistance`) thì không bị lộ; hạ lính ngay trong trại, đâm trực diện hay nổ súng vẫn làm trinh sát thất bại. Kiểm thử: `ScoutingTests.AQuietKnifeTakedownAwayFromTheCampGoesUnnoticed`.
 - Kiểm thử: `StoneThrowTests` (ngắm/huỷ, lính đi kiểm tra rồi về chỗ cũ, hạ gục bằng dao qua input chuột thật).
+
+## Trinh sát thất bại
+
+- Bị lính doanh trại nhìn thấy, tấn công lính doanh trại, hoặc hạ lính ngay trong trại: game dừng và hiện bảng "BẠN ĐÃ BỊ PHÁT HIỆN — Nhiệm vụ trinh sát thất bại" kèm lý do.
+- Enter: làm lại từ đúng lúc Hùng giao nhiệm vụ. Lúc Hùng giao lệnh, game chụp một checkpoint ẩn (`Map01SaveSystem.MarkScoutingStart`); làm lại là tải lại checkpoint đó: vị trí Nam, túi đồ, máu, lính và các trại về như lúc nhận lệnh, Hùng nhắc lại lời giao nhiệm vụ. F9 tải bản lưu, Esc về menu.
+- Bản lưu tạo trong lúc trinh sát mang theo checkpoint đó (`scoutStart`), nên tải lại rồi thất bại vẫn quay về đúng lúc nhận lệnh. Bản lưu cũ không có checkpoint này thì làm lại tại chỗ: trại được tăng cường, mất hết ghi chép, Nam về cạnh Hùng.
+- Kiểm thử: `ScoutingTests.ScoutingFailureStartsOverFromHungsOrder`, `BeingSpottedOrAttackingACampFailsTheRun`.

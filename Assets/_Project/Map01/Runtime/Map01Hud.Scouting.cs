@@ -3,11 +3,12 @@ using UnityEngine;
 namespace ShadowVale.Map01
 {
     /// <summary>The stealth/scouting layer of the HUD: how aware each nearby guard is, the
-    /// binocular view with its logging progress, and the banner when a scouting run fails.</summary>
+    /// binocular view with its logging progress, and the panel when a scouting run is lost.</summary>
     public sealed partial class Map01Hud
     {
         private Map01Scouting scouting;
         private Texture2D binocularMask, eyeFill, eyeOutline;
+        private GUIStyle hudSmallCentre;
         private static readonly Color Warning = new Color(.9f, .22f, .12f);
 
         /// <summary>Drawn before the other HUD plates, so they stay readable over the mask.</summary>
@@ -17,15 +18,25 @@ namespace ShadowVale.Map01
             if (scouting == null || mission.Stopped || mission.InventoryOpen || mission.MapOpen) return;
             if (scouting.Binoculars) DrawBinoculars(width, height);
             DrawAwareness(width, height, scale);
-            bool failedRecently = Time.time - scouting.FailedAt < 4f;
-            if (failedRecently)
-            {
-                var banner = new Rect(width / 2 - 260, 104, 520, 46);
-                HudFill(banner, new Color(.35f, .05f, .03f, .88f)); HudBorder(banner, Warning);
-                GUI.Label(banner, "BỊ PHÁT HIỆN — TRINH SÁT THẤT BẠI", hudKey);
-            }
-            else if (quest.Stage == Map01Quest.ScoutStage && !scouting.Binoculars)
+            if (quest.Stage == Map01Quest.ScoutStage && !scouting.Binoculars)
                 GUI.Label(new Rect(width / 2 - 330, height - 70, 660, 30), "Giữ [F] ống nhòm  ·  [C] đi khom, nấp bụi  ·  Giữ [Q] ném đá dụ lính ra xa trại", hudKey);
+        }
+
+        /// <summary>Over everything else: the run is lost, and how to start it over.</summary>
+        private void DrawScoutFailure(float width)
+        {
+            if (scouting == null || !scouting.FailedRun) return;
+            if (hudSmallCentre == null) hudSmallCentre = new GUIStyle(hudSmall) { alignment = TextAnchor.MiddleCenter };
+            var panel = new Rect(width / 2 - 340, 290, 680, 230);
+            HudPanel(panel);
+            HudBorder(new Rect(panel.x + 4, panel.y + 4, panel.width - 8, panel.height - 8), Warning, 2);
+            var old = GUI.color;
+            GUI.color = Warning;
+            GUI.Label(new Rect(panel.x + 20, panel.y + 22, panel.width - 40, 60), "BẠN ĐÃ BỊ PHÁT HIỆN", hudCenter);
+            GUI.color = old;
+            GUI.Label(new Rect(panel.x + 20, panel.y + 82, panel.width - 40, 30), "Nhiệm vụ trinh sát thất bại", hudKey);
+            GUI.Label(new Rect(panel.x + 30, panel.y + 116, panel.width - 60, 50), scouting.FailReason, hudSmallCentre);
+            GUI.Label(new Rect(panel.x + 20, panel.y + 176, panel.width - 40, 30), "Enter Làm lại từ lúc Hùng giao nhiệm vụ  ·  F9 Tải bản lưu  ·  Esc Menu", hudSmallCentre);
         }
 
         /// <summary>

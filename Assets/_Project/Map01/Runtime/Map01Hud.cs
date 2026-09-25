@@ -175,6 +175,7 @@ namespace ShadowVale.Map01
             }
             DrawRescue(width); // Map01Hud.Rescue.cs
             DrawStoneAim(width, height); // Map01Hud.Stone.cs
+            DrawScoutFailure(width); // Map01Hud.Scouting.cs
             if (mission.MapOpen) DrawMap(width, height);
             if (mission.PlayerHealth <= 0 || quest.Stage == Map01Quest.CompleteStage) {
                 HudPanel(new Rect(width / 2 - 300, 320, 600, 185));

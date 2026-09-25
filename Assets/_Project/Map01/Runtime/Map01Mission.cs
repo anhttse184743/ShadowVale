@@ -43,7 +43,7 @@ namespace ShadowVale.Map01
         public Health ModernHealth { get; private set; }
         public Map01EnemyController[] Enemies { get; private set; } = Array.Empty<Map01EnemyController>();
         public bool Stopped => (ModernHealth != null ? ModernHealth.IsDead : hp <= 0) || Stage == Map01Quest.CompleteStage || paused || Map01SaveSystem.IsRestoring
-            || (rescue != null && rescue.HungDown);
+            || (rescue != null && rescue.HungDown) || (scouting != null && scouting.FailedRun);
         public int ObstructionMask => LayerMask.GetMask("Default", "Obstacle", "Cover", "VisionBlocker");
         public int Stage => quest != null ? quest.Stage : 0;
         public readonly List<ForestPoint> Points = new List<ForestPoint>();
@@ -52,6 +52,7 @@ namespace ShadowVale.Map01
         private Map01Quest quest;
         private Map01Inventory inventory;
         private Map01Rescue rescue;
+        private Map01Scouting scouting;
 
         public bool IsWading => player != null && player.position.y < .12f &&
             Mathf.Abs(player.position.x - (8 + 12 * Mathf.Sin(player.position.z * .041f) + 4 * Mathf.Sin(player.position.z * .105f))) < 5f;
@@ -104,7 +105,8 @@ namespace ShadowVale.Map01
         private void Start()
         {
             if (!IsInitialized) return;
-            rescue = GetComponent<Map01Rescue>(); // Added by Map01Quest.Awake.
+            rescue = GetComponent<Map01Rescue>(); // Added by Map01Quest.Awake, like the scouting order.
+            scouting = GetComponent<Map01Scouting>();
             ModernPlayer = player.GetComponent<PlayerController>();
             ModernCombat = player.GetComponent<PlayerCombat>();
             ModernHealth = player.GetComponent<Health>();
@@ -118,7 +120,6 @@ namespace ShadowVale.Map01
             if (ModernCombat != null)
             {
                 ModernCombat.DrawsOwnWeaponHud = true; // Map01Hud.Combat shows the weapons on keys 1/2/3.
-                var scouting = GetComponent<Map01Scouting>(); // Added by Map01Quest.Awake.
                 var stones = GetComponent<Map01StoneThrow>(); // Added by Map01PlayerInteraction.Awake.
                 ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting && !inventory.SuppressFire
                     && !scouting.Binoculars && !stones.Aiming; // Hands are on the binoculars or a stone, not the rifle.
@@ -271,6 +272,7 @@ namespace ShadowVale.Map01
             if (ForestMenu.Visible) return;
             if (kb.enterKey.wasPressedThisFrame && (hp <= 0 || Stage == Map01Quest.CompleteStage)) Restart();
             else if (kb.enterKey.wasPressedThisFrame && rescue != null && rescue.HungDown) rescue.Retry();
+            else if (kb.enterKey.wasPressedThisFrame && scouting != null && scouting.FailedRun) scouting.Restart();
         }
 
         private void OnDisable() { Time.timeScale = 1; }

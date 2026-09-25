@@ -52,6 +52,10 @@ namespace ShadowVale.Map01
         /// binoculars log nothing, wherever they point.</summary>
         public bool InScanRange { get; private set; }
         public float FailedAt { get; private set; } = float.NegativeInfinity;
+        /// <summary>The run was lost; the failure panel is up until <see cref="Restart"/>.</summary>
+        public bool FailedRun { get; private set; }
+        /// <summary>Why the run was lost, for the failure panel.</summary>
+        public string FailReason { get; private set; }
         public Vector3 Eye => mission.player.position + Vector3.up * (mission.Crouched ? crouchedEyeHeight : eyeHeight);
 
         private readonly List<Camp> camps = new List<Camp>();
@@ -152,27 +156,52 @@ namespace ShadowVale.Map01
                         lastHurt[guard] = guard.HurtCount;
                         // A silent knife takedown of a guard drawn well away from his camp — by a
                         // thrown stone, say — goes unnoticed. Anything else is an attack on the camp.
-                        if (!guard.TakenDownSilently) { reason = "Không được tấn công lính doanh trại!"; return true; }
+                        if (!guard.TakenDownSilently) { reason = "Nam đã tấn công lính doanh trại — cả trại báo động."; return true; }
                         if (Vector3.Distance(guard.transform.position, camp.Center) < quietKillDistance)
-                        { reason = $"Hạ lính ngay trong doanh trại {camp.Number} — đồng đội hắn đã phát hiện!"; return true; }
+                        { reason = $"Nam hạ lính ngay trong doanh trại {camp.Number} — đồng đội hắn đã phát hiện."; return true; }
                         mission.Say("Hạ gục lặng lẽ, xa doanh trại — không ai hay biết.", 4);
                     }
-                    if (guard.Alive && guard.Engaged) { reason = "Lính doanh trại " + camp.Number + " đã phát hiện cậu!"; return true; }
+                    if (guard.Alive && guard.Engaged) { reason = $"Lính doanh trại {camp.Number} đã nhìn thấy Nam."; return true; }
                 }
             return false;
         }
 
+        /// <summary>Spotted, or caught attacking a camp: the run is over. Everything waits on the
+        /// failure panel (Map01Mission.Stopped) until [Enter] starts it over — <see cref="Restart"/>.</summary>
         private void Fail(string reason)
         {
+            FailedRun = true; FailReason = reason;
+            FailedAt = Time.time;
+            SetBinoculars(false);
+            mission.Say(null, -1f);
+        }
+
+        /// <summary>
+        /// [Enter] on the failure panel: back to the moment Hùng gave the order — Map 1 reloads
+        /// there. Without a recorded moment (a save from before it existed, or a test setting the
+        /// stage directly) the run resets in place instead: the camps reinforced and calm, every
+        /// log lost, and Nam back beside Hùng.
+        /// </summary>
+        public void Restart()
+        {
+            if (!FailedRun) return;
+            if (GetComponent<Map01SaveSystem>().RestartScouting(Map01Quest.ScoutOrder)) return;
             foreach (var camp in camps)
             {
                 camp.Found = false;
                 foreach (var guard in camp.Guards) guard.ReturnToPost();
             }
             TrackAttacks();
+            FailedRun = false; FailReason = null;
             Sighted = null; RecordProgress = 0;
-            FailedAt = Time.time;
-            mission.Say("Hùng (bộ đàm): " + reason + " Rút ngay! Địch đã tăng cường canh gác — trinh sát lại cả ba doanh trại, lần này đừng để bị phát hiện.", 10);
+            mission.Alarmed = false;
+            Vector3 beside = mission.hung.position + mission.hung.forward * 2f;
+            if (UnityEngine.AI.NavMesh.SamplePosition(beside, out var hit, 3f, UnityEngine.AI.NavMesh.AllAreas)) beside = hit.position;
+            var controller = mission.player.GetComponent<CharacterController>();
+            if (controller != null) controller.enabled = false;
+            mission.player.position = beside;
+            if (controller != null) controller.enabled = true;
+            mission.Say(Map01Quest.ScoutOrder, 14);
         }
 
         private void RecordSighting()
