@@ -1,1 +1,0 @@
-4648 connected grass prefab instances; 4 shared grass meshes; house interiors cleared; patches snapped to terrain/hills

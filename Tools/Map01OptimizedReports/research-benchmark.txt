@@ -1,1 +1,0 @@
-PASS: 80 feasible plans; exact optimum checked for 3x5 instances; QIEA improved 21/40 seeded instances; fixed-iteration seed reproducible. Deadline results include best feasible incumbent. This is a synthetic benchmark, not a human playtest or evidence of quantum advantage.

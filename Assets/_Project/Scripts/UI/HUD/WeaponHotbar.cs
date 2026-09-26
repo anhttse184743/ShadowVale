@@ -45,7 +45,7 @@ namespace ShadowVale.UI.HUD
             if (hotbarGroup == null)
             {
                 // Scenes built before hotbarGroup existed have no serialized reference — find the
-                // row HudBuilder always names "Hotbar" instead of falling back to hiding the whole
+                // row named "Hotbar" (as in Map 1's HUD) instead of falling back to hiding the whole
                 // canvas (and the crosshair sitting on it) the way this used to.
                 Transform row = transform.Find("Hotbar");
                 if (row != null)

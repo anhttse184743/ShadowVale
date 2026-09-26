@@ -1,3 +1,0 @@
-Boat waterline: 0.05; origin: (-0.25, 0.17, -10.00); keel below surface, gunwale above.
-Detailed rock instances: 586
-Bunker exit navigation: True

@@ -1,4 +1,0 @@
-Removed original jetty/canoe triangles: 0
-Independent jetty: (5.88, 3.44, 85.00); bank approach: (22.88, 3.28, 85.00)
-PASS north boat keel below / gunwale above water 0.05; origin (1.64, 0.21, 90.00)
-PASS complete bank-to-jetty NavMesh path; deck collider supports player; two solid rails

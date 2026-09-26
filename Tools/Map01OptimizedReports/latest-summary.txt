@@ -1,4 +1,0 @@
-Flush terrain: 8069 painted vertices; 0 raised/obsolete triangles removed.
-Thatch houses: 8, 2 LODs, open veranda and layered roof.
-Mixed grass: 4621 existing instances with 3 near tufts / 2 mid / 1 far; 0 obstructing patches removed.
-Table and shelter wall: smooth box collision; navigation and controller checks PASS.

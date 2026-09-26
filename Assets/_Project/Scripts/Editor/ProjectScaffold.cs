@@ -18,8 +18,7 @@ namespace ShadowVale.Editor
         private const string ScenesRoot = "Assets/_Project/Scenes";
         private const string ProfilePath = "Assets/_Project/ScriptableObjects/SolverProfiles/SolverProfile_Default.asset";
 
-        private static readonly string[] BuildScenes = { "00_Boot", "01_MainMenu", "02_SafeCamp" };
-        private static readonly string[] SandboxScenes = { "AI_CoordinationLab", "Combat_Testbed", "Inventory_Testbed" };
+        private static readonly string[] BuildScenes = { "00_Boot", "01_MainMenu" };
 
         [MenuItem("ShadowVale/Scaffold Project")]
         public static void Run()
@@ -29,8 +28,6 @@ namespace ShadowVale.Editor
             var buildPaths = new List<string>();
             foreach (var name in BuildScenes)
                 buildPaths.Add(EnsureScene($"{ScenesRoot}/{name}.unity", name == "00_Boot" ? profile : null));
-            foreach (var name in SandboxScenes)
-                EnsureScene($"{ScenesRoot}/Sandbox/{name}.unity", null);
 
             var list = new List<EditorBuildSettingsScene>();
             foreach (var p in buildPaths) list.Add(new EditorBuildSettingsScene(p, true));
@@ -38,7 +35,7 @@ namespace ShadowVale.Editor
 
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
-            Debug.Log($"[Scaffold] done: {buildPaths.Count} build scenes, {SandboxScenes.Length} sandbox scenes, profile at {ProfilePath}");
+            Debug.Log($"[Scaffold] done: {buildPaths.Count} build scenes, profile at {ProfilePath}");
         }
 
         private static SolverProfileConfig EnsureSolverProfile()

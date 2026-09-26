@@ -1,5 +1,0 @@
-PASS bunker spawn grounded
-PASS W moves player out of bunker
-PASS continuous bridge railing blocks CharacterController
-PASS wall slide without railing penetration
-PASS wading speed multiplier 0.68 on riverbed

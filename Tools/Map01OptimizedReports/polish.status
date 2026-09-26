@@ -1,4 +1,0 @@
-FAIL System.InvalidOperationException: Open and save Map 1, then exit Play Mode before applying environment changes.
-  at ShadowVale.Map01.Editor.ForestEnvironmentRevision.Apply () [0x00926] in G:\game\ShadowVale\Assets\_Project\Map01\Editor\ForestEnvironmentRevision.cs:123 
-  at ShadowVale.Map01.Editor.Map01Polish.Apply () [0x00000] in G:\game\ShadowVale\Assets\_Project\Map01\Editor\Map01Polish.cs:28 
-  at ShadowVale.Map01.Editor.Map01Polish.Poll () [0x0002c] in G:\game\ShadowVale\Assets\_Project\Map01\Editor\Map01Polish.cs:20 

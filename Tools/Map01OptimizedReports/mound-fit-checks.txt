@@ -1,2 +1,0 @@
-PASS 1404 edge vertices fitted; largest edge above ground = -0.140m
-Grass clumps on mound: 589; around perimeter: 349
