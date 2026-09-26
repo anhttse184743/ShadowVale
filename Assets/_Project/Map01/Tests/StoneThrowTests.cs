@@ -92,7 +92,8 @@ namespace ShadowVale.Map01.Tests
             Assert.IsNotNull(stones, "Map01PlayerInteraction must bring the stone throw along.");
             SetPreviewResolution(1600, 900); // A Game View to take the screenshots from.
             mission.Say(null, -1f);
-            var guard = OnlyGuard(mission, "Outpost guard 0");
+            // Out in the open at the foot of the jetty ramp: no tent or wall in the way of the arc.
+            var guard = OnlyGuard(mission, "patrol_2");
             mission.Crouched = true;
             Vector3 stand = BehindInSight(mission, guard, 14f);
             Teleport(mission, stand, Yaw(stand, guard.transform.position));

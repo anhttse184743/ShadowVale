@@ -11,6 +11,7 @@ namespace ShadowVale.Map01.Editor
     {
         static ForestMenuTools()
         {
+            EditorSceneManager.activeSceneChangedInEditMode += (_, __) => ConfigureStartup();
             EditorApplication.delayCall += ConfigureStartup;
             EditorApplication.delayCall += RecoverAndReport;
             EditorApplication.playModeStateChanged += _ => EditorApplication.delayCall += RecoverAndReport;

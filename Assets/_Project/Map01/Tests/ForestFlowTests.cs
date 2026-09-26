@@ -519,8 +519,20 @@ namespace ShadowVale.Map01.Tests
 
                 // Escort: freed at the jetty, he walks with Nam...
                 Vector3 baseFloor = mission.player.position;
-                Assert.IsTrue(UnityEngine.AI.NavMesh.SamplePosition(wounded + Vector3.right * 9f, out var beside, 4f, UnityEngine.AI.NavMesh.AllAreas));
-                controller.enabled = false; mission.player.position = beside.position; controller.enabled = true;
+                // A few steps down the road home — the way Nam leads him from the jetty.
+                var road = new UnityEngine.AI.NavMeshPath();
+                Assert.IsTrue(UnityEngine.AI.NavMesh.SamplePosition(wounded, out var from, 2f, UnityEngine.AI.NavMesh.AllAreas));
+                Assert.IsTrue(UnityEngine.AI.NavMesh.SamplePosition(baseFloor, out var to, 2f, UnityEngine.AI.NavMesh.AllAreas));
+                Assert.IsTrue(UnityEngine.AI.NavMesh.CalculatePath(from.position, to.position, UnityEngine.AI.NavMesh.AllAreas, road));
+                Vector3 beside = road.corners[road.corners.Length - 1];
+                float walked = 0;
+                for (int i = 1; i < road.corners.Length; i++)
+                {
+                    float leg = Vector3.Distance(road.corners[i - 1], road.corners[i]);
+                    if (walked + leg >= 9f) { beside = Vector3.Lerp(road.corners[i - 1], road.corners[i], (9f - walked) / leg); break; }
+                    walked += leg;
+                }
+                controller.enabled = false; mission.player.position = beside; controller.enabled = true;
                 quest.RestoreStage(Map01Quest.EscortStage);
                 yield return WaitGameSeconds(4f);
                 Assert.Less(Vector3.Distance(mission.hung.position, mission.player.position), 6f, "During the escort Hùng follows Nam.");
@@ -560,12 +572,8 @@ namespace ShadowVale.Map01.Tests
         }
 
         [Test]
-        public void OldCheckpointStagesMapOntoTheReportFlow()
+        public void EveryStageHasAnObjectiveAndASaveLocation()
         {
-            // v4 stages were: rescue, escort, scout, camps, boss, complete.
-            CollectionAssert.AreEqual(
-                new[] { Map01Quest.RescueStage, Map01Quest.EscortStage, Map01Quest.ScoutStage, Map01Quest.CampsStage, Map01Quest.BossStage, Map01Quest.CompleteStage },
-                new[] { 0, 1, 2, 3, 4, 5 }.Select(Map01Quest.FromV4Stage));
             Assert.AreEqual(Map01Quest.CompleteStage + 1, Map01Quest.Objectives.Length, "One objective line per stage.");
             Assert.AreEqual(Map01Quest.CompleteStage + 1, Map01Quest.SaveLocations.Length, "One save-slot location per stage.");
         }
@@ -578,7 +586,7 @@ namespace ShadowVale.Map01.Tests
             yield return null; yield return null;
             var hotbar = Object.FindFirstObjectByType<WeaponHotbar>();
             Assert.IsNotNull(hotbar, "Map 1's migrated HUD must include the weapon hotbar.");
-            // HudBuilder always puts WeaponHotbar directly on the HUD canvas GameObject.
+            // Map 1's HUD has WeaponHotbar directly on the HUD canvas GameObject.
             var canvasRoot = hotbar.GetComponent<Canvas>().transform;
             Assert.IsNotNull(canvasRoot.Find("Crosshair"), "The HUD canvas must still have its crosshair.");
             var rootGroup = canvasRoot.GetComponent<CanvasGroup>();

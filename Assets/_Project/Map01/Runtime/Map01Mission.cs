@@ -54,8 +54,14 @@ namespace ShadowVale.Map01
         private Map01Rescue rescue;
         private Map01Scouting scouting;
 
-        public bool IsWading => player != null && player.position.y < .12f &&
-            Mathf.Abs(player.position.x - (8 + 12 * Mathf.Sin(player.position.z * .041f) + 4 * Mathf.Sin(player.position.z * .105f))) < 5f;
+        [Tooltip("The river's centre line, x = offset + a1·sin(f1·z) + a2·sin(f2·z). Within halfWidth of it " +
+                 "and with his feet below wadeBelowY, Nam is wading. Set by the map's layout tool.")]
+        public float riverOffset = 8, riverAmplitude1 = 12, riverFrequency1 = .041f, riverAmplitude2 = 4, riverFrequency2 = .105f;
+        public float riverHalfWidth = 5, wadeBelowY = .12f;
+
+        public bool IsWading => player != null && player.position.y < wadeBelowY &&
+            Mathf.Abs(player.position.x - (riverOffset + riverAmplitude1 * Mathf.Sin(player.position.z * riverFrequency1)
+                + riverAmplitude2 * Mathf.Sin(player.position.z * riverFrequency2))) < riverHalfWidth;
         public float MovementSurfaceMultiplier => IsWading ? .68f : 1f;
         public bool CameraInputEnabled => IsInitialized && !Stopped && !InventoryOpen && !MapOpen;
         public float PlayerHealth => hp;

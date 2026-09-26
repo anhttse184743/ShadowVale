@@ -14,10 +14,22 @@ namespace ShadowVale.Map01.Tests
         {
             // Gameplay tests intentionally open their own scene; normal editor Play starts at Boot.
             EditorSceneManager.playModeStartScene = null;
+            // Editor tooling (ForestMenuTools) points Play back at Boot whenever the open scene
+            // changes — including the test's own OpenScene, which would then enter Play at the menu
+            // instead of the map. Handlers run in subscription order, so this one, added last, wins.
+            EditorSceneManager.activeSceneChangedInEditMode -= KeepExplicitStart;
+            EditorSceneManager.activeSceneChangedInEditMode += KeepExplicitStart;
+            // A frame cap (Application.targetFrameRate) left behind by an earlier test lets the
+            // editor ticks that advance a test outrun the game's frames, so a "yield return null"
+            // no longer means a frame of Update has run. Every test starts uncapped.
+            UnityEngine.Application.targetFrameRate = -1;
         }
+        private static void KeepExplicitStart(UnityEngine.SceneManagement.Scene from, UnityEngine.SceneManagement.Scene to) =>
+            EditorSceneManager.playModeStartScene = null;
         [TearDown]
         public void RestoreNormalStartup()
         {
+            EditorSceneManager.activeSceneChangedInEditMode -= KeepExplicitStart;
             EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/_Project/Scenes/00_Boot.unity");
         }
 

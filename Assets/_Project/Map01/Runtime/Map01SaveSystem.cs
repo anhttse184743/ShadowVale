@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
@@ -7,17 +8,19 @@ using UnityEngine.SceneManagement;
 
 namespace ShadowVale.Map01
 {
-    /// <summary>Save/load for Map 1 — checkpoint format v6. v4 (the first without the legacy
-    /// ForestGuard snapshots) still loads: only its stage numbers predate the report-to-Hùng steps
-    /// and are mapped through Map01Quest.FromV4Stage. Saves before v6 predate the jetty rescue
-    /// layout: the guards they place where two camps and the patrol used to be are sent to their
-    /// new posts, and a rescue still in progress finds Hùng held at the jetty.</summary>
+    /// <summary>Save/load for Map 1 — checkpoint format v7, the first on the detailed layout (base
+    /// in the underground shelter, jetty B, camps C1–C3). Older saves hold positions on the old
+    /// Map 1's terrain, which no longer exists, so they are refused rather than loaded.</summary>
     public sealed class Map01SaveSystem : MonoBehaviour
     {
+        /// <summary>The first checkpoint version on the current map layout.</summary>
+        public const int LayoutVersion = 7;
+        public const string OldLayoutMessage = "Bản lưu thuộc Map 1 cũ (bản đồ trước khi làm lại) — hãy chọn Chơi mới.";
+
         [Serializable]
         private sealed class CheckpointData
         {
-            public int version = 6, stage, stones;
+            public int version = LayoutVersion, stage, stones;
             public float hp, stamina;
             public Vector3 player, hung;
             public bool alarmed, crouched;
@@ -87,6 +90,30 @@ namespace ShadowVale.Map01
         {
             scoutStart = null; // Not nested into itself.
             scoutStart = JsonUtility.ToJson(Capture());
+        }
+
+        public bool HasScoutStart => !string.IsNullOrEmpty(scoutStart);
+
+        /// <summary>
+        /// No recorded moment of the order (a save from before it was kept): make one as if Hùng
+        /// had just given it — Nam beside him, no camp logged, every one of
+        /// <paramref name="campGuards"/> fresh at his post; everything else as it is now.
+        /// </summary>
+        public void MarkFreshScoutingStart(IEnumerable<Map01EnemyController> campGuards)
+        {
+            scoutStart = null;
+            var data = Capture();
+            Vector3 beside = mission.hung.position + mission.hung.forward * 2f;
+            if (NavMesh.SamplePosition(beside, out var hit, 3f, NavMesh.AllAreas)) beside = hit.position;
+            data.player = beside;
+            var toHung = mission.hung.position - beside;
+            data.playerYaw = Mathf.Atan2(toHung.x, toHung.z) * Mathf.Rad2Deg;
+            data.scoutedCamps = 0;
+            data.alarmed = false;
+            var fresh = campGuards.ToDictionary(g => g.SaveId, g => g.CaptureAtPost());
+            for (int i = 0; i < data.enemies.Length; i++)
+                if (fresh.TryGetValue(data.enemies[i].id, out var atPost)) data.enemies[i] = atPost;
+            scoutStart = JsonUtility.ToJson(data);
         }
 
         /// <summary>Back to the moment Hùng gave the scouting order — Map 1 reloads there, with
@@ -172,6 +199,7 @@ namespace ShadowVale.Map01
                 var data = JsonUtility.FromJson<CheckpointData>(entry.checkpoint);
                 if (data == null || data.version < 4 || data.items == null || data.used == null)
                     throw new IOException("Dữ liệu checkpoint bị hỏng.");
+                if (data.version < LayoutVersion) throw new IOException(OldLayoutMessage);
                 pendingCheckpoint = entry.checkpoint; pendingSeconds = entry.playSeconds;
             }
             Time.timeScale = 1;
@@ -198,11 +226,12 @@ namespace ShadowVale.Map01
                 var data = JsonUtility.FromJson<CheckpointData>(pendingCheckpoint);
                 mission.SetPlaySeconds(pendingSeconds);
                 if (data == null || data.version < 4 || data.items == null || data.used == null) throw new IOException();
+                if (data.version < LayoutVersion) { mission.Say(OldLayoutMessage, 8); return; }
                 var controller = mission.player.GetComponent<CharacterController>();
                 if (controller != null) { controller.enabled = false; mission.player.position = data.player; controller.enabled = true; }
                 else mission.player.position = data.player;
                 mission.hung.GetComponent<NavMeshAgent>()?.Warp(data.hung);
-                quest.RestoreStage(data.version >= 5 ? data.stage : Map01Quest.FromV4Stage(data.stage));
+                quest.RestoreStage(data.stage);
                 inventory.RestoreFromSave(data.items, data.stones, data.crafting, data.craftRemaining);
                 mission.Alarmed = data.alarmed;
                 mission.RestoreHealthFromSave(Mathf.Clamp(data.hp, 1, mission.Settings.playerHP));
@@ -211,15 +240,7 @@ namespace ShadowVale.Map01
                 mission.player.rotation = Quaternion.Euler(0, data.playerYaw, 0);
                 mission.hung.rotation = Quaternion.Euler(0, data.hungYaw, 0);
                 RestoreGameplay(data);
-                var rescue = GetComponent<Map01Rescue>();
-                rescue.RestoreHealth(data.hungHealth);
-                if (data.version < 6)
-                {
-                    // The map moved two camps and the patrol since this save; its positions for
-                    // them are stale, so everyone goes to his post as he is (alive or not).
-                    foreach (var enemy in mission.Enemies) enemy.MoveToPost();
-                    if (quest.Stage == Map01Quest.RescueStage) mission.hung.GetComponent<NavMeshAgent>()?.Warp(rescue.CaptivePost);
-                }
+                GetComponent<Map01Rescue>().RestoreHealth(data.hungHealth);
                 GetComponent<Map01Scouting>().RestoreFound(data.scoutedCamps);
                 foreach (var point in mission.Points) point.used = data.used.Contains(point.id);
                 // Starting a scouting run over keeps the moment it started from; any other load

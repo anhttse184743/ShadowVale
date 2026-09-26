@@ -88,7 +88,10 @@ namespace ShadowVale.Map01
                 var offset = Quaternion.Euler(0, 40 + 120 * number, 0) * Vector3.forward * (zoneRadius * .5f);
                 camps.Add(new Camp {
                     Number = number, Center = center, ZoneCenter = center + offset,
-                    Guards = outpostGuards.Where(g => NearestCamp(g.transform.position) == root.transform).ToArray()
+                    // By name: FindObjectsByType has no order, and a camp's guards should list the
+                    // same way every time the map loads.
+                    Guards = outpostGuards.Where(g => NearestCamp(g.transform.position) == root.transform)
+                        .OrderBy(g => g.name, System.StringComparer.Ordinal).ToArray()
                 });
             }
             TrackAttacks();
@@ -178,30 +181,16 @@ namespace ShadowVale.Map01
 
         /// <summary>
         /// [Enter] on the failure panel: back to the moment Hùng gave the order — Map 1 reloads
-        /// there. Without a recorded moment (a save from before it existed, or a test setting the
-        /// stage directly) the run resets in place instead: the camps reinforced and calm, every
-        /// log lost, and Nam back beside Hùng.
+        /// there. Never a reset in place: that snapped the camp guards back to their posts (and
+        /// Nam to Hùng) right in front of the player. Without a recorded moment (a save from
+        /// before it was kept) one is made as if the order had just been given.
         /// </summary>
         public void Restart()
         {
             if (!FailedRun) return;
-            if (GetComponent<Map01SaveSystem>().RestartScouting(Map01Quest.ScoutOrder)) return;
-            foreach (var camp in camps)
-            {
-                camp.Found = false;
-                foreach (var guard in camp.Guards) guard.ReturnToPost();
-            }
-            TrackAttacks();
-            FailedRun = false; FailReason = null;
-            Sighted = null; RecordProgress = 0;
-            mission.Alarmed = false;
-            Vector3 beside = mission.hung.position + mission.hung.forward * 2f;
-            if (UnityEngine.AI.NavMesh.SamplePosition(beside, out var hit, 3f, UnityEngine.AI.NavMesh.AllAreas)) beside = hit.position;
-            var controller = mission.player.GetComponent<CharacterController>();
-            if (controller != null) controller.enabled = false;
-            mission.player.position = beside;
-            if (controller != null) controller.enabled = true;
-            mission.Say(Map01Quest.ScoutOrder, 14);
+            var save = GetComponent<Map01SaveSystem>();
+            if (!save.HasScoutStart) save.MarkFreshScoutingStart(camps.SelectMany(c => c.Guards));
+            save.RestartScouting(Map01Quest.ScoutOrder);
         }
 
         private void RecordSighting()

@@ -102,16 +102,10 @@ namespace ShadowVale.Map01
             _patrolIndex = 0;
             if (patrolPoints.Length > 0) Go(patrolPoints[0]);
         }
-        /// <summary>To his post as he is — health and all. For checkpoints whose positions predate
-        /// the current layout of the map.</summary>
-        public void MoveToPost()
-        {
-            if (_agent.isOnNavMesh) { _agent.ResetPath(); _agent.Warp(_postPosition); } else transform.position = _postPosition;
-            transform.rotation = _postRotation;
-            _patrolIndex = 0;
-            _alertUntil = 0; _searchUntil = 0; _returning = false;
-            if (Alive && patrolPoints.Length > 0) Go(patrolPoints[0]);
-        }
+        /// <summary>How far he sees Nam standing in the open.</summary>
+        public float VisionRange => visionRange;
+        /// <summary>His patrol loop; empty for a guard who holds his post.</summary>
+        public System.Collections.Generic.IReadOnlyList<Vector3> PatrolPoints => patrolPoints;
         public float DamagePerShot => damage;
         public float FireInterval => fireInterval;
 
@@ -150,6 +144,11 @@ namespace ShadowVale.Map01
             returning = _returning, returnPoint = _returnPoint, returnRotation = _returnRotation,
             destination = _agent.isOnNavMesh && _agent.hasPath ? _agent.destination : transform.position,
             stopped = _agent.isOnNavMesh && _agent.isStopped
+        };
+        /// <summary>This guard as he would be fresh at his post: alive, calm, starting his patrol.</summary>
+        public Snapshot CaptureAtPost() => new Snapshot {
+            id = SaveId, position = _postPosition, rotation = _postRotation, hp = _health.Max,
+            destination = _postPosition, patrolIndex = 0
         };
         public void RestoreSnapshot(Snapshot saved)
         {

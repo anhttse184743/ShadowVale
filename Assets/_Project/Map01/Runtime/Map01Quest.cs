@@ -16,8 +16,7 @@ namespace ShadowVale.Map01
     /// </summary>
     public sealed class Map01Quest : MonoBehaviour
     {
-        // Stage numbers are the checkpoint format (v5) — append, never reorder. v4 saves predate
-        // the report steps and go through FromV4Stage.
+        // Stage numbers are part of the checkpoint format — append, never reorder.
         public const int RescueStage = 0;
         public const int EscortStage = 1;
         public const int BriefingStage = 2;
@@ -47,9 +46,6 @@ namespace ShadowVale.Map01
         /// <summary>Hùng's scouting order — given at the briefing, and again whenever a lost run starts over.</summary>
         public const string ScoutOrder = "Hùng: Địch có ba doanh trại quanh đây, anh chỉ biết đại khái khu vực. Lén tới, giữ [F] dùng ống nhòm ghi lại vị trí cả ba. " +
             "Tuyệt đối không để chúng phát hiện, không nổ súng. Muốn hạ tên nào thì ném đá dụ nó ra xa trại rồi dùng dao từ phía sau. Xong thì về báo anh.";
-        /// <summary>v4 stages: rescue, escort, scout, camps, boss, complete.</summary>
-        public static int FromV4Stage(int stage) =>
-            stage <= 1 ? Mathf.Max(0, stage) : stage == 2 ? ScoutStage : stage == 3 ? CampsStage : stage == 4 ? BossStage : CompleteStage;
 
         public int Stage { get; private set; }
         /// <summary>The objective line for the HUD, with the scouting tally while it runs.</summary>

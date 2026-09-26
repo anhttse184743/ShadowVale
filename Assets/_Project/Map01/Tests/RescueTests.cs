@@ -79,8 +79,8 @@ namespace ShadowVale.Map01.Tests
             Assert.IsNotNull(rescue, "Map01Quest must bring the rescue along.");
             Assert.AreEqual(Map01Quest.RescueStage, quest.Stage);
 
-            var jetty = GameObject.Find("North jetty bank approach").transform.position;
-            Assert.Less(Vector3.Distance(mission.hung.position, jetty), 6f, "Hùng is held at the north jetty.");
+            var jetty = GameObject.Find("B_HungCaptive").transform.position;
+            Assert.Less(Vector3.Distance(mission.hung.position, jetty), 3f, "Hùng is held at the north jetty.");
             Assert.AreEqual(4, rescue.Squad.Count, "Four soldiers hold him.");
             foreach (var guard in rescue.Squad)
                 Assert.Less(Vector3.Distance(guard.transform.position, mission.hung.position), 15f, $"{guard.name} surrounds the prisoner.");
@@ -88,16 +88,22 @@ namespace ShadowVale.Map01.Tests
             yield return WaitGameSeconds(1.5f);
             Assert.Less(Vector3.Distance(mission.hung.position, held), .5f, "A prisoner does not follow Nam.");
 
-            // No camp on the way there: base -> herb crate -> jetty, and none near the jetty.
+            // No camp on the way there: base -> herb crate -> jetty — no camp guard stands or
+            // patrols within sight of that walk — and none near the jetty.
             var herb = mission.Points.Single(p => p.id == "tutorial_loot").transform.position;
             var toHerb = Route(mission.player.position, herb);
             var toJetty = Route(herb, mission.hung.position);
-            for (int number = 1; number <= 3; number++)
+            var scouting = mission.GetComponent<Map01Scouting>();
+            Assert.AreEqual(3, scouting.Camps.Count);
+            foreach (var camp in scouting.Camps)
             {
-                var camp = GameObject.Find("Enemy outpost " + number).transform.position;
-                float off = Mathf.Min(DistanceToPath(camp, toHerb), DistanceToPath(camp, toJetty));
-                Assert.Greater(off, 40f, $"Camp {number} must be well off the rescue route.");
-                Assert.Greater(Vector3.Distance(camp, mission.hung.position), 45f, $"Camp {number} must not overlook the jetty.");
+                Assert.Greater(Vector3.Distance(camp.Center, mission.hung.position), 45f, $"Camp {camp.Number} must not overlook the jetty.");
+                foreach (var guard in camp.Guards)
+                    foreach (var spot in guard.PatrolPoints.Prepend(guard.transform.position))
+                    {
+                        float off = Mathf.Min(DistanceToPath(spot, toHerb), DistanceToPath(spot, toJetty));
+                        Assert.Greater(off, guard.VisionRange + 2f, $"{guard.name} of camp {camp.Number} must not see the rescue route from {spot}.");
+                    }
             }
             Assert.Greater(Vector3.Distance(rescue.RetryPoint, rescue.CaptivePost), 40f, "A failed rescue restarts a way back down the road.");
             yield return new ExitPlayMode();
