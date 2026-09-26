@@ -8,7 +8,7 @@ namespace ShadowVale.Map01
     /// <summary>
     /// Works out where the current objective is and how to walk there, for the HUD's compass,
     /// marker and objective line and the minimap. The target follows the quest — the supply crate
-    /// while Nam still needs a herb, Hùng, the base, the rough area of the nearest camp still to
+    /// while Nam has nothing to treat Hùng with, Hùng, the base, the rough area of the nearest camp still to
     /// scout, Hùng again whenever a task must be reported, the nearest manned outpost, the commander.
     /// </summary>
     public sealed class Map01ObjectiveGuide : MonoBehaviour
@@ -29,7 +29,6 @@ namespace ShadowVale.Map01
 
         private Map01Mission mission;
         private Map01Quest quest;
-        private Map01Inventory inventory;
         private Map01Scouting scouting;
         private readonly List<Vector3> route = new List<Vector3>();
         private readonly List<float> routeDistance = new List<float>();
@@ -40,7 +39,6 @@ namespace ShadowVale.Map01
         {
             mission = GetComponent<Map01Mission>();
             quest = GetComponent<Map01Quest>();
-            inventory = GetComponent<Map01Inventory>();
             path = new NavMeshPath();
         }
 
@@ -53,8 +51,8 @@ namespace ShadowVale.Map01
             switch (quest.Stage)
             {
                 case Map01Quest.RescueStage:
-                    var crate = mission.Points.FirstOrDefault(p => p.id == "tutorial_loot");
-                    if (inventory.Count("herb") <= 0 && crate != null) { target = crate.transform.position; label = "THÙNG VẬT TƯ"; }
+                    var crate = mission.Interactables.FirstOrDefault(p => p.id == "tutorial_loot");
+                    if (!quest.CanTreatHung && crate != null) { target = crate.transform.position; label = "THÙNG VẬT TƯ"; }
                     else { target = mission.hung.position; label = "BẾN TÀU — CỨU HÙNG"; }
                     return true;
                 case Map01Quest.ScoutStage:
@@ -65,7 +63,7 @@ namespace ShadowVale.Map01
                     target = zone.ZoneCenter; label = "KHU VỰC NGHI NGỜ";
                     return true;
                 case Map01Quest.EscortStage:
-                    var supplies = mission.Points.FirstOrDefault(p => p.kind == ForestPointKind.Supplies);
+                    var supplies = mission.Interactables.FirstOrDefault(p => p.kind == ForestPointKind.Supplies);
                     if (supplies == null) return false;
                     target = supplies.transform.position; label = "CĂN CỨ CHỈ HUY";
                     return true;

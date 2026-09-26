@@ -22,6 +22,7 @@ namespace ShadowVale.Map01
         private Map01SaveSystem saveSystem;
         private Map01Scouting scouting;
         private Map01StoneThrow stoneThrow;
+        private Map01Hud hud;
         private NavMeshAgent companion;
 
         private void Awake()
@@ -30,6 +31,7 @@ namespace ShadowVale.Map01
             quest = GetComponent<Map01Quest>();
             inventory = GetComponent<Map01Inventory>();
             saveSystem = GetComponent<Map01SaveSystem>();
+            hud = GetComponent<Map01Hud>();
             // Added at runtime rather than baked into Map 1.unity, like the scouting order.
             // Deliberately not "GetComponent() ?? AddComponent()" — see WeaponHotbar.
             stoneThrow = GetComponent<Map01StoneThrow>();
@@ -49,6 +51,7 @@ namespace ShadowVale.Map01
             if (kb == null) return;
             scouting.HoldBinoculars(kb.fKey.isPressed); // Map01Scouting decides when they actually work.
             if (ForestMenu.Visible) return;
+            if (kb.jKey.wasPressedThisFrame && hud != null) hud.ToggleObjective();
             if (kb.f9Key.wasPressedThisFrame) saveSystem.Load();
             if (mission.Stopped) return;
             if (kb.tabKey.wasPressedThisFrame)
@@ -82,7 +85,9 @@ namespace ShadowVale.Map01
                 mission.ModernPlayer.SurfaceSpeedMultiplier = mission.MovementSurfaceMultiplier;
                 mission.Crouched = mission.ModernPlayer.IsSneaking;
                 mission.UpdateHiddenState();
-                mission.SetStamina(mission.Stamina + (mission.ModernPlayer.IsSprinting ? -mission.Settings.staminaDrain : mission.Settings.staminaRecovery) * Time.deltaTime);
+                // Sprint is a toggle: only running on it costs breath, not standing still with it on.
+                bool running = mission.ModernPlayer.IsSprinting && mission.ModernPlayer.IsMoving;
+                mission.SetStamina(mission.Stamina + (running ? -mission.Settings.staminaDrain : mission.Settings.staminaRecovery) * Time.deltaTime);
             }
             // Hold [Q] to aim a stone, let go to throw it; right mouse puts it away.
             if (kb.qKey.wasPressedThisFrame) stoneThrow.BeginAim();
@@ -91,12 +96,26 @@ namespace ShadowVale.Map01
                 if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame) stoneThrow.Cancel();
                 else if (!kb.qKey.isPressed) stoneThrow.Release();
             }
-            Nearby = mission.Points.Where(p => !p.used && p.kind != ForestPointKind.Hide && p.kind != ForestPointKind.Cover)
-                .OrderBy(p => Vector3.Distance(mission.player.position, p.transform.position))
-                .FirstOrDefault(p => Vector3.Distance(mission.player.position, p.transform.position) < mission.Settings.interactRange);
+            Nearby = NearestUsable();
             if (kb.eKey.wasPressedThisFrame) HandleInteractKey();
             if (kb.bKey.wasPressedThisFrame) inventory.TryCraft();
             if (quest.ShouldFollowPlayer()) UpdateCompanion();
+        }
+
+        /// <summary>The closest unused point within reach, or null. Runs every frame, so a plain loop
+        /// over the few usable points rather than LINQ over every bush.</summary>
+        private ForestPoint NearestUsable()
+        {
+            ForestPoint nearest = null;
+            float best = mission.Settings.interactRange;
+            Vector3 at = mission.player.position;
+            foreach (var point in mission.Interactables)
+            {
+                if (point.used) continue;
+                float distance = Vector3.Distance(at, point.transform.position);
+                if (distance < best) { best = distance; nearest = point; }
+            }
+            return nearest;
         }
 
         private void UpdateCompanion()

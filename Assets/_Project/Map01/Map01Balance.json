@@ -1,7 +1,7 @@
 {
   "playerHP": 100, "stamina": 100,
   "walkSpeed": 4.2, "sprintSpeed": 7, "crouchSpeed": 2.3,
-  "staminaDrain": 22, "staminaRecovery": 16,
+  "staminaDrain": 12, "staminaRecovery": 16,
   "interactRange": 3.5, "stoneRange": 20, "stoneNoise": 14,
   "guardDamageScale": 0.35, "guardShotInterval": 1.6,
   "detectionSeconds": 1.5, "hiddenVisionScale": 0.32, "crouchVisionScale": 0.6,

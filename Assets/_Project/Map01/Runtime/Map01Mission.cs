@@ -44,9 +44,16 @@ namespace ShadowVale.Map01
         public Map01EnemyController[] Enemies { get; private set; } = Array.Empty<Map01EnemyController>();
         public bool Stopped => (ModernHealth != null ? ModernHealth.IsDead : hp <= 0) || Stage == Map01Quest.CompleteStage || paused || Map01SaveSystem.IsRestoring
             || (rescue != null && rescue.HungDown) || (scouting != null && scouting.FailedRun);
-        public int ObstructionMask => LayerMask.GetMask("Default", "Obstacle", "Cover", "VisionBlocker");
+        /// <summary>What blocks sight. Cached: guards ask for it every frame, and GetMask allocates.</summary>
+        public int ObstructionMask => obstructionMask != 0 ? obstructionMask
+            : obstructionMask = LayerMask.GetMask("Default", "Obstacle", "Cover", "VisionBlocker");
+        private int obstructionMask;
         public int Stage => quest != null ? quest.Stage : 0;
         public readonly List<ForestPoint> Points = new List<ForestPoint>();
+        /// <summary>The points Nam can use — all but hiding spots and cover: a dozen or so, against the
+        /// thousands of bushes in Points, for the checks that run every frame.</summary>
+        public readonly List<ForestPoint> Interactables = new List<ForestPoint>();
+        private readonly List<ForestPoint> hideSpots = new List<ForestPoint>();
         private float hp, stamina;
         private bool paused;
         private Map01Quest quest;
@@ -102,7 +109,7 @@ namespace ShadowVale.Map01
                 FailInitialization("Assign player, hung and gameCamera in the Inspector.");
                 return;
             }
-            Points.AddRange(FindObjectsByType<ForestPoint>(FindObjectsSortMode.None));
+            foreach (var point in FindObjectsByType<ForestPoint>(FindObjectsSortMode.None)) RegisterPoint(point);
             hp = Settings.playerHP; stamina = Settings.stamina;
             inventory.SeedStartingLoadout(Settings.startingStones);
             IsInitialized = true;
@@ -171,8 +178,16 @@ namespace ShadowVale.Map01
         }
 
         public Material trailMaterial;
-        public void RegisterPoint(ForestPoint point) => Points.Add(point);
-        public void UnregisterPoint(ForestPoint point) => Points.Remove(point);
+        public void RegisterPoint(ForestPoint point)
+        {
+            Points.Add(point);
+            if (point.kind == ForestPointKind.Hide) hideSpots.Add(point);
+            else if (point.kind != ForestPointKind.Cover) Interactables.Add(point);
+        }
+        public void UnregisterPoint(ForestPoint point)
+        {
+            Points.Remove(point); hideSpots.Remove(point); Interactables.Remove(point);
+        }
         public void AddEnemy(Map01EnemyController enemy) => Enemies = Enemies.Append(enemy).ToArray();
         /// <summary>A brief visible streak — thrown stones, tracers — using the shared trail material.</summary>
         public void Trace(Vector3 start, Vector3 end, Color color)
@@ -217,7 +232,11 @@ namespace ShadowVale.Map01
         }
         public void UpdateHiddenState()
         {
-            Hidden = Crouched && Points.Any(p => p.kind == ForestPointKind.Hide && Vector3.Distance(player.position, p.transform.position) < p.radius);
+            Hidden = false;
+            if (!Crouched) return;
+            Vector3 at = player.position;
+            foreach (var spot in hideSpots)
+                if ((spot.transform.position - at).sqrMagnitude < spot.radius * spot.radius) { Hidden = true; return; }
         }
         /// <summary>
         /// How far a footstep carries, by how the player is moving. Sneaking, walking and
@@ -271,7 +290,7 @@ namespace ShadowVale.Map01
             if (ModernHealth != null) hp = ModernHealth.Current;
             AdvancePlaySeconds();
             // restockAt is not saved, so a checkpoint load refills restockable points straight away.
-            foreach (var point in Points)
+            foreach (var point in Interactables) // Only these restock; the bushes need no look.
                 if (point.used && point.restockSeconds > 0 && Time.time >= point.restockAt) point.used = false;
             var kb = UnityEngine.InputSystem.Keyboard.current;
             if (kb == null) return;

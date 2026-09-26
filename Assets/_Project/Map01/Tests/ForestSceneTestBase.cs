@@ -19,10 +19,11 @@ namespace ShadowVale.Map01.Tests
             // instead of the map. Handlers run in subscription order, so this one, added last, wins.
             EditorSceneManager.activeSceneChangedInEditMode -= KeepExplicitStart;
             EditorSceneManager.activeSceneChangedInEditMode += KeepExplicitStart;
-            // A frame cap (Application.targetFrameRate) left behind by an earlier test lets the
-            // editor ticks that advance a test outrun the game's frames, so a "yield return null"
-            // no longer means a frame of Update has run. Every test starts uncapped.
+            // A frame cap (Application.targetFrameRate) lets the editor ticks that advance a test
+            // outrun the game's frames, so a "yield return null" no longer means a frame of Update
+            // has run. Every test starts uncapped, and the game's own cap stays off (FramePacing).
             UnityEngine.Application.targetFrameRate = -1;
+            SessionState.SetBool(FramePacing.UncappedKey, true);
         }
         private static void KeepExplicitStart(UnityEngine.SceneManagement.Scene from, UnityEngine.SceneManagement.Scene to) =>
             EditorSceneManager.playModeStartScene = null;
@@ -31,6 +32,7 @@ namespace ShadowVale.Map01.Tests
         {
             EditorSceneManager.activeSceneChangedInEditMode -= KeepExplicitStart;
             EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/_Project/Scenes/00_Boot.unity");
+            SessionState.EraseBool(FramePacing.UncappedKey);
         }
 
         /// <summary>Fix the Game View to <paramref name="width"/>×<paramref name="height"/>: screenshots

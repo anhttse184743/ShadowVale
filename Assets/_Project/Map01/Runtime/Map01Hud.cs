@@ -169,9 +169,11 @@ namespace ShadowVale.Map01
             if (!mission.MapOpen && mission.InventoryOpen) DrawInventory(width);
             DrawHudFeedback(width, height);
             if (!mission.InventoryOpen && !mission.MapOpen) {
-                var frame = new Rect(28, 24, 285, 307); HudPanel(frame);
-                minimap.Draw(new Rect(frame.x + 12, frame.y + 12, 261, 261), false, hudSmall);
-                GUI.Label(new Rect(frame.x + 15, frame.yMax - 29, 255, 26), "M  MỞ BẢN ĐỒ", hudKey);
+                var map = new Rect(40, 30, 261, 261);
+                minimap.Draw(map, false, hudSmall); // Round, with its own rim.
+                var hint = new Rect(map.center.x - 95, map.yMax + 9, 190, 27);
+                HudFill(hint, new Color(.02f, .03f, .02f, .5f));
+                GUI.Label(hint, "M  MỞ BẢN ĐỒ", hudKey);
             }
             DrawRescue(width); // Map01Hud.Rescue.cs
             DrawStoneAim(width, height); // Map01Hud.Stone.cs
@@ -189,22 +191,45 @@ namespace ShadowVale.Map01
             var previousMatrix = GUI.matrix;
             float offset = mission.InventoryOpen || mission.MapOpen ? -158 : 160;
             GUI.matrix = previousMatrix * Matrix4x4.Translate(new Vector3(0, offset, 0));
+            if (!ObjectiveShown) {
+                // Tucked away with [J]: only its heading stays, as a reminder of the key.
+                ShadowLabel(new Rect(48, 205, 332, 37), "NHIỆM VỤ  ·  J", hudHeading);
+                objectiveBottom = 186 + 50 + offset;
+                GUI.matrix = previousMatrix;
+                return;
+            }
             // Sized to the text: the longer objectives wrap to three lines and used to be cut off.
             string text = quest.ObjectiveText;
             float textHeight = hudBody.CalcHeight(new GUIContent(text), 328);
             bool guiding = guide.HasTarget && !mission.Stopped;
             float height = Mathf.Max(152, 258 + textHeight + (guiding ? 32 : 0) + 14 - 186);
-            HudPanel(new Rect(28, 186, 373, height));
-            GUI.Label(new Rect(48, 205, 332, 37), "NHIỆM VỤ", hudHeading);
+            // See-through: a faint shade and shadowed lettering instead of the plate, so the
+            // world stays visible behind the objective.
+            HudFill(new Rect(28, 186, 373, height), new Color(.02f, .03f, .02f, .22f));
+            ShadowLabel(new Rect(48, 205, 332, 37), "NHIỆM VỤ", hudHeading);
             HudFill(new Rect(49, 246, 328, 1), new Color(.6f, .51f, .3f, .65f));
-            GUI.Label(new Rect(49, 258, 328, textHeight), text, hudBody);
+            ShadowLabel(new Rect(49, 258, 328, textHeight), text, hudBody);
             if (guiding) {
                 float y = 258 + textHeight + 6;
                 HudDiamond(new Vector2(58, y + 12), 7);
-                GUI.Label(new Rect(72, y, 312, 26), $"{guide.Label}  ·  {guide.Distance:0} m", hudGuide);
+                ShadowLabel(new Rect(72, y, 312, 26), $"{guide.Label}  ·  {guide.Distance:0} m", hudGuide);
             }
             objectiveBottom = 186 + height + offset;
             GUI.matrix = previousMatrix;
+        }
+
+        /// <summary>[J] shows or hides the objective panel.</summary>
+        public bool ObjectiveShown { get; private set; } = true;
+        public void ToggleObjective() => ObjectiveShown = !ObjectiveShown;
+
+        /// <summary>Text with a dark drop shadow, legible without a plate behind it.</summary>
+        private static void ShadowLabel(Rect r, string text, GUIStyle style)
+        {
+            var old = GUI.color;
+            GUI.color = new Color(0, 0, 0, .85f * old.a);
+            GUI.Label(new Rect(r.x + 1.5f, r.y + 1.5f, r.width, r.height), text, style);
+            GUI.color = old;
+            GUI.Label(r, text, style);
         }
         /// <summary>Rotates GUI drawing around a point given in the current (scaled) GUI space and
         /// returns the matrix to restore. Never GUIUtility.RotateAroundPivot here: it takes the
@@ -331,7 +356,7 @@ namespace ShadowVale.Map01
                 GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), "[E] " + nearby.label, hudBody);
             if (inventory.IsCrafting) GUI.Label(new Rect(47, objectiveBottom + 10, 415, 40), $"Đang chế tạo… {inventory.CraftRemaining:0.0}s", hudBody);
             // Alerted guards are marked by the awareness eye (Map01Hud.Scouting).
-            GUI.Label(new Rect(28, height - 26, width - 430, 24), "Tab Túi đồ  ·  R Nạp đạn  ·  H Hồi máu  ·  Giữ Q Ném đá  ·  B Chế tạo  ·  M Bản đồ  ·  Esc Menu", hudSmall);
+            GUI.Label(new Rect(28, height - 26, width - 430, 24), "Tab Túi đồ  ·  R Nạp đạn  ·  H Hồi máu  ·  Giữ Q Ném đá  ·  B Chế tạo  ·  M Bản đồ  ·  J Nhiệm vụ  ·  Esc Menu", hudSmall);
         }
 
         private void DrawMap(float width, float height)

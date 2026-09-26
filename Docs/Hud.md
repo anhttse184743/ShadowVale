@@ -12,8 +12,10 @@ trong map cũ khi tải checkpoint. Không cần gắn thêm component vào scen
 - Bấm ô để xem tên, mô tả, tổng số lượng và giới hạn mỗi stack.
 - Không có thanh dùng nhanh/ô gán phím: mỗi vật phẩm có phím riêng. H dùng băng cứu thương,
   Q ném đá, 1 súng trường, 2 dao, 3 tay không (hoặc chọn vũ khí trong túi rồi bấm Trang bị).
-  Phím 4–8 không gắn chức năng. C hoặc Ctrl bật/tắt đi khom; Shift bật/tắt chạy.
+  Phím 4–8 không gắn chức năng. C hoặc Ctrl bật/tắt đi khom; Shift bật/tắt chạy — sức bền chỉ tụt khi
+  thật sự đang chạy (12/giây, hồi 16/giây), đứng yên với chế độ chạy bật không tốn sức.
   Đạn súng lấy từ túi đồ; thanh máu và băng cứu thương dùng cùng Health của nhân vật.
+- J: ẩn/hiện khung nhiệm vụ. Khung trong suốt (nền mờ nhẹ, chữ có bóng); khi ẩn chỉ còn dòng "NHIỆM VỤ · J".
 - Máu đầy, hết vật phẩm, đang chế tạo, chết hoặc tạm dừng không tiêu hao băng.
   Đóng túi để ngắm và ném đá. Nguyên liệu, đạn và đồ nhiệm vụ không dùng trực tiếp.
 - Mở túi vẫn giữ quy tắc gameplay hiện có: nhân vật dừng di chuyển, thế giới không tạm dừng.
@@ -70,7 +72,8 @@ kiểm tra thả đúng ô/thả ra ngoài, nhóm HUD **2/2 đạt**
 - Hud/StartingWeapons.png giữ ảnh mẫu đã duyệt; HUD dùng UV lấy hai icon nhỏ không có chữ, số lượng được vẽ từ dữ liệu túi.
 ## Minimap
 
-- Góc trái trên: bản đồ hướng Bắc cố định, vùng nhìn 90 m, tự di chuyển theo Nam.
+- Góc trái trên: bản đồ tròn hướng Bắc cố định, vùng nhìn 90 m, tự di chuyển theo Nam. Lính, Hùng và trại ngoài vòng tròn không hiện; mục tiêu ngoài vòng tròn nằm trên viền, chỉ hướng cần đi.
+- IMGUI không có mặt nạ, nên phần bản đồ trong vòng tròn được vẽ thành các dải ngang cắt theo đường tròn (`Map01Minimap.DrawInDisc`); viền vàng che mép bậc thang.
 - M mở bản đồ toàn khu vực từ cùng dữ liệu địa hình; Esc hoặc M đóng. Ẩn minimap khi mở túi hoặc menu.
 - Mũi tên trắng là Nam; chấm xanh là Hùng; hình thoi vàng đọc mục tiêu và khoảng cách từ Map01ObjectiveGuide.
 - Tam giác đỏ chỉ hiện lính còn sống trong 30 m, trong góc nhìn camera và không bị vật cản che; kiểm tra 4 lần/giây.

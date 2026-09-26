@@ -109,7 +109,7 @@ namespace ShadowVale.Map01
             nextQuickUse = Time.time + .25f;
             return true;
         }
-        public bool NearWorkbench() => mission.Points.Any(p => p.kind == ForestPointKind.Workbench
+        public bool NearWorkbench() => mission.Interactables.Any(p => p.kind == ForestPointKind.Workbench
             && Vector3.Distance(mission.player.position, p.transform.position) < mission.Settings.interactRange);
         public void TryCraft()
         {

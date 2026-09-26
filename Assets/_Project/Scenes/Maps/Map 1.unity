@@ -502343,7 +502343,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.08
-  far clip plane: 1100
+  far clip plane: 300
   field of view: 65
   orthographic: 0
   orthographic size: 15

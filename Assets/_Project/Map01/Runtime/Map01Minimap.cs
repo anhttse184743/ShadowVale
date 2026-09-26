@@ -13,6 +13,8 @@ namespace ShadowVale.Map01
         private Map01Scouting scouting;
         private Texture2D chart;
         private Texture2D arrow, circle, diamond, triangle, ring, square;
+        private Texture2D disc, rim; // The round corner map's backing and frame, smooth-edged.
+        private GUIStyle northLabel;
         private readonly List<Map01EnemyController> visibleEnemies = new List<Map01EnemyController>();
         private float nextSense;
         private Vector2 origin;
@@ -31,6 +33,7 @@ namespace ShadowVale.Map01
             span = Mathf.Max(1, Mathf.Max(mission.mapMax.x - mission.mapMin.x, mission.mapMax.y - mission.mapMin.y));
             origin = (mission.mapMin + mission.mapMax) * .5f - Vector2.one * span * .5f;
             arrow = Symbol(0); circle = Symbol(1); diamond = Symbol(2); triangle = Symbol(3); ring = Symbol(4); square = Symbol(5);
+            disc = Disc(256, 0); rim = Disc(256, .955f);
             CaptureChart();
         }
 
@@ -100,47 +103,99 @@ namespace ShadowVale.Map01
             return new Rect(mission.player.position.x - view / 2, mission.player.position.z - view / 2, view, view);
         }
 
+        /// <summary>
+        /// The corner map is round (the disc inscribed in <paramref name="area"/>); the expanded map
+        /// stays square. On the round map, markers out of the circle are hidden — the objective
+        /// instead sits on the rim, pointing the way.
+        /// </summary>
         public void Draw(Rect area, bool expanded, GUIStyle label)
         {
             if (!Ready) { GUI.Label(area, "Đang vẽ bản đồ…", label); return; }
             var world = View(expanded);
-            DrawChart(area, world);
+            var disk = expanded ? (Vector2?)null : area.center;
+            float radius = area.width / 2;
             var old = GUI.color;
+            if (disk != null) {
+                GUI.color = new Color(.02f, .03f, .02f, .55f); // A dark halo keeps the rim readable over bright ground.
+                GUI.DrawTexture(new Rect(area.x - 6, area.y - 6, area.width + 12, area.height + 12), disc);
+            }
+            DrawChart(area, world, disk);
             GUI.color = new Color(.85f, .79f, .52f, .16f);
             for (int i = 1; i < 6; i++) {
-                GUI.DrawTexture(new Rect(area.x + area.width * i / 6, area.y, 1, area.height), Texture2D.whiteTexture);
-                GUI.DrawTexture(new Rect(area.x, area.y + area.height * i / 6, area.width, 1), Texture2D.whiteTexture);
+                float x = area.x + area.width * i / 6, y = area.y + area.height * i / 6;
+                float halfX = disk == null ? area.height / 2 : Chord(radius, x - area.center.x);
+                float halfY = disk == null ? area.width / 2 : Chord(radius, y - area.center.y);
+                GUI.DrawTexture(new Rect(x, area.center.y - halfX, 1, halfX * 2), Texture2D.whiteTexture);
+                GUI.DrawTexture(new Rect(area.center.x - halfY, y, halfY * 2, 1), Texture2D.whiteTexture);
             }
             GUI.color = old;
-            DrawCamps(area, world, label);
+            DrawCamps(area, world, label, disk);
             foreach (var enemy in visibleEnemies) if (enemy != null && enemy.Alive)
-                Mark(area, world, enemy.transform.position, triangle, new Color(.85f, .22f, .13f), 15, false);
-            if (mission.hung != null) Mark(area, world, mission.hung.position, circle, new Color(.3f, .67f, .84f), 13, false);
+                Mark(area, world, enemy.transform.position, triangle, new Color(.85f, .22f, .13f), 15, false, disk);
+            if (mission.hung != null) Mark(area, world, mission.hung.position, circle, new Color(.3f, .67f, .84f), 13, false, disk);
             if (guide != null && guide.HasTarget) {
-                Vector2 target = Mark(area, world, guide.Target, diamond, new Color(1, .77f, .26f), 20, true);
-                GUI.Label(new Rect(Mathf.Clamp(target.x - 22, area.x, area.xMax - 72), Mathf.Clamp(target.y + 12, area.y + 30, area.yMax - 25), 72, 24), Mathf.RoundToInt(guide.Distance) + " m", label);
+                Vector2 target = Mark(area, world, guide.Target, diamond, new Color(1, .77f, .26f), 20, true, disk);
+                var at = target + new Vector2(0, 24);
+                if (disk != null && (at - area.center).magnitude > radius - 28) at = area.center + (at - area.center).normalized * (radius - 28);
+                GUI.Label(new Rect(Mathf.Clamp(at.x - 22, area.x, area.xMax - 72), Mathf.Clamp(at.y - 12, area.y + 30, area.yMax - 25), 72, 24), Mathf.RoundToInt(guide.Distance) + " m", label);
             }
             var player = Project(mission.player.position, world, area);
             var matrix = Map01Hud.RotateGui(player, mission.player.eulerAngles.y);
             GUI.color = new Color(.98f, .93f, .72f);
             GUI.DrawTexture(new Rect(player.x - 11, player.y - 11, 22, 22), arrow);
             GUI.matrix = matrix; GUI.color = old;
-            GUI.Label(new Rect(area.x + 7, area.y + 4, 90, 25), "BẮC ↑", label);
+            if (disk == null) { GUI.Label(new Rect(area.x + 7, area.y + 4, 90, 25), "BẮC ↑", label); return; }
+            // The rim hides the chart's stepped edge (DrawInDisc draws it in thin strips).
+            GUI.color = new Color(.78f, .66f, .38f, .95f);
+            GUI.DrawTexture(new Rect(area.x - 3, area.y - 3, area.width + 6, area.height + 6), rim);
+            GUI.color = old;
+            if (northLabel == null) northLabel = new GUIStyle(label) { alignment = TextAnchor.UpperCenter, wordWrap = false };
+            GUI.Label(new Rect(area.center.x - 40, area.y + 6, 80, 24), "BẮC", northLabel);
         }
 
-        /// <summary>The part of the survey inside <paramref name="world"/>; beyond it, plain ground.</summary>
-        private void DrawChart(Rect area, Rect world)
+        /// <summary>Half the chord of a circle of <paramref name="radius"/> at <paramref name="offset"/> from its centre.</summary>
+        private static float Chord(float radius, float offset) => Mathf.Sqrt(Mathf.Max(0, radius * radius - offset * offset));
+
+        /// <summary>
+        /// The part of the survey inside <paramref name="world"/>; beyond it, plain ground. With a
+        /// <paramref name="disk"/> centre, only what falls inside the circle inscribed in the area.
+        /// </summary>
+        private void DrawChart(Rect area, Rect world, Vector2? disk)
         {
             var old = GUI.color;
             GUI.color = new Color(.14f, .17f, .10f); // The survey's darkest ink.
-            GUI.DrawTexture(area, Texture2D.whiteTexture);
+            GUI.DrawTexture(area, disk == null ? Texture2D.whiteTexture : disc);
             GUI.color = old;
             float x0 = Mathf.Max(world.xMin, origin.x), x1 = Mathf.Min(world.xMax, origin.x + span);
             float z0 = Mathf.Max(world.yMin, origin.y), z1 = Mathf.Min(world.yMax, origin.y + span);
             if (x1 <= x0 || z1 <= z0) return;
             Vector2 min = Project(new Vector3(x0, 0, z1), world, area), max = Project(new Vector3(x1, 0, z0), world, area);
-            GUI.DrawTextureWithTexCoords(Rect.MinMaxRect(min.x, min.y, max.x, max.y), chart,
-                new Rect((x0 - origin.x) / span, (z0 - origin.y) / span, (x1 - x0) / span, (z1 - z0) / span));
+            var target = Rect.MinMaxRect(min.x, min.y, max.x, max.y);
+            var uv = new Rect((x0 - origin.x) / span, (z0 - origin.y) / span, (x1 - x0) / span, (z1 - z0) / span);
+            if (disk == null) GUI.DrawTextureWithTexCoords(target, chart, uv);
+            else DrawInDisc(target, chart, uv, disk.Value, area.width / 2, 2);
+        }
+
+        /// <summary>
+        /// Draws <paramref name="uv"/> of <paramref name="texture"/> into <paramref name="target"/>,
+        /// clipped to a circle. IMGUI has no masks, so it goes in horizontal strips of
+        /// <paramref name="strip"/> pixels, each cut to the circle's chord; the corner map's rim
+        /// covers the small steps this leaves along the edge.
+        /// </summary>
+        private static void DrawInDisc(Rect target, Texture texture, Rect uv, Vector2 center, float radius, float strip)
+        {
+            float top = Mathf.Max(target.yMin, center.y - radius), bottom = Mathf.Min(target.yMax, center.y + radius);
+            for (float y = top; y < bottom; y += strip)
+            {
+                float y1 = Mathf.Min(y + strip, bottom);
+                float half = Chord(radius, (y + y1) / 2 - center.y);
+                float x0 = Mathf.Max(target.xMin, center.x - half), x1 = Mathf.Min(target.xMax, center.x + half);
+                if (x1 <= x0) continue;
+                // Screen y grows downwards, texture v upwards: the target's top shows uv.yMax.
+                float u0 = uv.x + (x0 - target.x) / target.width * uv.width, u1 = uv.x + (x1 - target.x) / target.width * uv.width;
+                float vTop = uv.yMax - (y - target.y) / target.height * uv.height, vBottom = uv.yMax - (y1 - target.y) / target.height * uv.height;
+                GUI.DrawTextureWithTexCoords(new Rect(x0, y, x1 - x0, y1 - y), texture, new Rect(u0, vBottom, u1 - u0, vTop - vBottom));
+            }
         }
 
         /// <summary>
@@ -148,7 +203,7 @@ namespace ShadowVale.Map01
         /// spot, see Map01Scouting); a logged camp — and every camp once the scouting report is
         /// in — is marked where it really is.
         /// </summary>
-        private void DrawCamps(Rect area, Rect world, GUIStyle label)
+        private void DrawCamps(Rect area, Rect world, GUIStyle label, Vector2? disk)
         {
             if (scouting == null) return;
             var old = GUI.color;
@@ -156,8 +211,8 @@ namespace ShadowVale.Map01
             {
                 if (camp.Found || quest.Stage > Map01Quest.ScoutStage)
                 {
-                    var p = Mark(area, world, camp.Center, square, new Color(.78f, .2f, .12f), 14, false);
-                    if (area.Contains(p)) GUI.Label(new Rect(p.x + 9, p.y - 12, 60, 24), "DT" + camp.Number, label);
+                    var p = Mark(area, world, camp.Center, square, new Color(.78f, .2f, .12f), 14, false, disk);
+                    if (Shows(area, p, disk, 14)) GUI.Label(new Rect(p.x + 9, p.y - 12, 60, 24), "DT" + camp.Number, label);
                 }
                 else if (quest.Stage == Map01Quest.ScoutStage)
                 {
@@ -165,6 +220,14 @@ namespace ShadowVale.Map01
                     float size = scouting.ZoneRadius * 2 / world.width * area.width;
                     var zone = new Rect(c.x - size / 2, c.y - size / 2, size, size);
                     if (!zone.Overlaps(area)) continue;
+                    if (disk != null) {
+                        // Cut to the round map like the chart itself.
+                        GUI.color = new Color(1f, .72f, .25f, .22f);
+                        DrawInDisc(zone, circle, new Rect(0, 0, 1, 1), disk.Value, area.width / 2, 3);
+                        GUI.color = new Color(1f, .72f, .25f, .85f);
+                        DrawInDisc(zone, ring, new Rect(0, 0, 1, 1), disk.Value, area.width / 2, 3);
+                        continue;
+                    }
                     GUI.BeginGroup(area); // Clip the circle to the map frame.
                     GUI.color = new Color(1f, .72f, .25f, .22f);
                     GUI.DrawTexture(new Rect(zone.x - area.x, zone.y - area.y, size, size), circle);
@@ -176,10 +239,20 @@ namespace ShadowVale.Map01
             GUI.color = old;
         }
 
-        private static Vector2 Mark(Rect area, Rect world, Vector3 position, Texture2D icon, Color color, float size, bool clamp)
+        /// <summary>A marker of <paramref name="size"/> at <paramref name="p"/> fits on the map: inside
+        /// the area, or with a <paramref name="disk"/> centre, inside its circle.</summary>
+        private static bool Shows(Rect area, Vector2 p, Vector2? disk, float size) =>
+            disk == null ? area.Contains(p) : (p - disk.Value).magnitude <= area.width / 2 - size / 2;
+
+        private static Vector2 Mark(Rect area, Rect world, Vector3 position, Texture2D icon, Color color, float size, bool clamp, Vector2? disk)
         {
             var p = Project(position, world, area);
-            if (!clamp && !area.Contains(p)) return p;
+            if (!clamp && !Shows(area, p, disk, size)) return p;
+            if (disk != null) {
+                // Pinned to the rim, in the direction of the objective.
+                float reach = area.width / 2 - size / 2 - 4;
+                if ((p - disk.Value).magnitude > reach) p = disk.Value + (p - disk.Value).normalized * reach;
+            }
             p.x = Mathf.Clamp(p.x, area.x + size / 2, area.xMax - size / 2);
             p.y = Mathf.Clamp(p.y, area.y + size / 2, area.yMax - size / 2);
             var old = GUI.color; GUI.color = Color.black;
@@ -204,9 +277,25 @@ namespace ShadowVale.Map01
             texture.SetPixels(pixels); texture.Apply(); return texture;
         }
 
+        /// <summary>A white disc <paramref name="size"/> pixels across with a one-pixel soft edge; a
+        /// ring from <paramref name="inner"/> (0..1 of the radius) outwards when that is above 0.</summary>
+        private static Texture2D Disc(int size, float inner)
+        {
+            var texture = new Texture2D(size, size, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
+            var pixels = new Color32[size * size];
+            float r = size / 2f;
+            for (int y = 0; y < size; y++) for (int x = 0; x < size; x++) {
+                float d = new Vector2(x + .5f - r, y + .5f - r).magnitude / r;
+                float a = Mathf.Clamp01((1 - d) * r);
+                if (inner > 0) a *= Mathf.Clamp01((d - inner) * r);
+                pixels[y * size + x] = new Color32(255, 255, 255, (byte)(a * 255));
+            }
+            texture.SetPixels32(pixels); texture.Apply(); return texture;
+        }
+
         private void OnDestroy()
         {
-            foreach (var texture in new[] { chart, arrow, circle, diamond, triangle, ring, square }) if (texture != null) Destroy(texture);
+            foreach (var texture in new[] { chart, arrow, circle, diamond, triangle, ring, square, disc, rim }) if (texture != null) Destroy(texture);
         }
     }
 }

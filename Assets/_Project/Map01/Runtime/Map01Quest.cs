@@ -28,7 +28,7 @@ namespace ShadowVale.Map01
         public const int ReportBossStage = 8;
         public const int CompleteStage = 9;
         public static readonly string[] Objectives = {
-            "Giải cứu Hùng bị địch bắt ở bến tàu phía Bắc: lén tiếp cận, cởi trói và chữa trị bằng thảo dược [E] — đừng để Hùng trúng đạn",
+            "Giải cứu Hùng bị địch bắt ở bến tàu phía Bắc: lén tiếp cận, cởi trói và chữa trị bằng thảo dược hoặc băng cứu thương [E] — đừng để Hùng trúng đạn",
             "Đưa Hùng về căn cứ an toàn, nhận hàng tiếp tế [E]",
             "Gặp Hùng tại căn cứ để nhận nhiệm vụ [E]",
             "Trinh sát 3 doanh trại địch: giữ [F] dùng ống nhòm ghi vị trí — không để lính phát hiện, không tấn công trong doanh trại",
@@ -58,7 +58,7 @@ namespace ShadowVale.Map01
         public bool HungInRange { get; private set; }
         /// <summary>What [E] does next to Hùng right now, for the HUD prompt.</summary>
         public string HungPrompt => Stage == RescueStage
-            ? (inventory.Count("herb") > 0 ? "[E] Cởi trói và chữa trị cho Hùng" : "Cần thảo dược để chữa trị cho Hùng")
+            ? (CanTreatHung ? "[E] Cởi trói và chữa trị cho Hùng" : "Cần thảo dược hoặc băng cứu thương để chữa trị cho Hùng")
             : "[E] Báo cáo với Hùng";
         /// <summary>The base's supply point keeps resupplying once Hùng is home.</summary>
         public bool BaseResupplyOpen => Stage > EscortStage;
@@ -137,17 +137,23 @@ namespace ShadowVale.Map01
             }
         }
 
+        /// <summary>What Nam treats Hùng with: a herb — the briefing's "lấy thảo dược ở thùng vật tư" —
+        /// or, once the herbs have gone into crafting, a bandage made from them. Null: nothing yet.</summary>
+        private string Remedy => inventory.Count("herb") > 0 ? "herb" : inventory.Count("medkit_small") > 0 ? "medkit_small" : null;
+        public bool CanTreatHung => Remedy != null;
+
         /// <summary>
-        /// [E] next to captive Hùng: cut him loose and treat the wounds they gave him. Needs one
-        /// herb — the briefing's "lấy thảo dược ở thùng vật tư" — and starts the walk home.
+        /// [E] next to captive Hùng: cut him loose and treat the wounds they gave him with one
+        /// herb or bandage (<see cref="Remedy"/>), and start the walk home.
         /// </summary>
         public void TryRescueHung()
         {
             if (Stage != RescueStage || !NearHung(mission.Settings.interactRange)) return;
-            if (inventory.Count("herb") <= 0) { mission.Say("Cần thảo dược để chữa trị cho Hùng.", 3); return; }
-            inventory.Spend("herb", 1); Stage = EscortStage;
-            mission.Say("Nam: Chịu khó chút, Hùng. Thảo dược này cầm máu được.\nHùng: ...Cảm ơn Nam. Tôi đang mang thư về thì bị chúng phục kích ở bến này. " +
-                "Thư vẫn còn trong người — về căn cứ thôi.", 10);
+            string remedy = Remedy;
+            if (remedy == null) { mission.Say("Cần thảo dược hoặc băng cứu thương để chữa trị cho Hùng.", 3); return; }
+            inventory.Spend(remedy, 1); Stage = EscortStage;
+            mission.Say((remedy == "herb" ? "Nam: Chịu khó chút, Hùng. Thảo dược này cầm máu được." : "Nam: Chịu khó chút, Hùng. Để tôi băng vết thương lại.") +
+                "\nHùng: ...Cảm ơn Nam. Tôi đang mang thư về thì bị chúng phục kích ở bến này. Thư vẫn còn trong người — về căn cứ thôi.", 10);
         }
 
         /// <summary>[E] on the base's supply point with Hùng alongside — he is home, and stays.</summary>

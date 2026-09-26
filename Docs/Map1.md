@@ -13,7 +13,8 @@ NavMesh nằm ở `Scenes/Maps/Map 1/NavMesh.asset` (bake lại sau khi di chuy�
 - **Căn cứ A** (`A — underground friendly shelter`): Nam bắt đầu trong hầm cạnh bàn họp. Thùng thảo dược
   (`tutorial_loot`) ở đống thùng cạnh cửa, điểm giao hàng tiếp tế (`supplies`) ở kệ trang bị, bàn chế tạo ở bàn họp.
 - **Bến B** (`B_HungCaptive`): Hùng bị giữ trên sàn bến. Tổ 4 lính: 1 canh Hùng trên sàn, 1 ở chân dốc
-  lên bến, 2 tuần tra dọc bờ.
+  lên bến, 2 tuần tra dọc bờ. [E] cạnh Hùng chữa bằng thảo dược, hoặc bằng băng cứu thương nếu thảo dược
+  đã dùng hết khi chế tạo (thùng cho 2 thảo dược, mỗi băng tốn 1).
 - **Trại C1–C3** (`Enemy outpost 1/2/3`, giữ nguyên tên để trinh sát nhận diện): C1 có 2 lính, C2 và C3
   mỗi trại 3 lính — lính gác hướng về lối vào từ căn cứ, lính tuần vòng trong tường bao cát, lính canh phía
   sau bên bếp lửa.

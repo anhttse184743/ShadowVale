@@ -40,7 +40,7 @@ namespace ShadowVale.Map01
         private bool _returning;
         private Vector3 _returnPoint;
         private Quaternion _returnRotation;
-        public bool Alive => !GetComponent<Health>().IsDead;
+        public bool Alive => !(_health != null ? _health : GetComponent<Health>()).IsDead; // Asked every frame, all over.
         /// <summary>Checking out a noise or the last place he saw Nam — there, or looking around.</summary>
         public bool Alerted => Time.time < _alertUntil;
         /// <summary>At the spot, looking around.</summary>

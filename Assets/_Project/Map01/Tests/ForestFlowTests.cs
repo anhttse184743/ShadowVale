@@ -572,6 +572,25 @@ namespace ShadowVale.Map01.Tests
         }
 
         [Test]
+        public void PlayIsCappedAtSixtyFramesASecond()
+        {
+            // Uncapped, a light scene still ran the machine at full power drawing frames nobody sees.
+            // Checked directly rather than in Play: the runner re-runs SetUp after entering Play,
+            // and ForestSceneTestBase's SetUp takes the cap off again for the other tests.
+            var apply = typeof(FramePacing).GetMethod("Apply", BindingFlags.Static | BindingFlags.NonPublic);
+            var startup = apply.GetCustomAttribute<RuntimeInitializeOnLoadMethodAttribute>();
+            Assert.IsNotNull(startup, "The cap is applied as the game starts.");
+            Assert.AreEqual(RuntimeInitializeLoadType.BeforeSceneLoad, startup.loadType);
+            UnityEditor.SessionState.EraseBool(FramePacing.UncappedKey);
+            try
+            {
+                apply.Invoke(null, null);
+                Assert.AreEqual(FramePacing.TargetFps, Application.targetFrameRate);
+            }
+            finally { Application.targetFrameRate = -1; }
+        }
+
+        [Test]
         public void EveryStageHasAnObjectiveAndASaveLocation()
         {
             Assert.AreEqual(Map01Quest.CompleteStage + 1, Map01Quest.Objectives.Length, "One objective line per stage.");

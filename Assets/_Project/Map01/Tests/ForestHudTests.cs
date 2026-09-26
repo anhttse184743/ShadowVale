@@ -84,6 +84,66 @@ namespace ShadowVale.Map01.Tests
         }
 
         [UnityTest]
+        public IEnumerator JTogglesTheSeeThroughObjectivePanelBesideTheRoundMap()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            for (int i = 0; i < 6; i++) yield return null;
+            var mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
+            var hud = mission.GetComponent<Map01Hud>();
+            foreach (var e in mission.Enemies) e.enabled = false;
+            SetPreviewResolution(1600, 900); // A Game View to take the screenshots from.
+            mission.Say(null, -1f);
+            var routing = RouteInputToGame();
+            var keyboard = InputSystem.AddDevice<Keyboard>();
+            try
+            {
+                Assert.IsTrue(hud.ObjectiveShown, "The objective is on show from the start.");
+                Directory.CreateDirectory("Logs/HudPreview");
+                ScreenCapture.CaptureScreenshot("Logs/HudPreview/objective-shown.png");
+                for (int i = 0; i < 4; i++) yield return null;
+                yield return Press(keyboard, Key.J);
+                Assert.IsFalse(hud.ObjectiveShown, "J tucks the objective panel away.");
+                ScreenCapture.CaptureScreenshot("Logs/HudPreview/objective-hidden.png");
+                for (int i = 0; i < 4; i++) yield return null;
+                yield return Press(keyboard, Key.J);
+                Assert.IsTrue(hud.ObjectiveShown, "J brings it back.");
+            }
+            finally { InputSystem.RemoveDevice(keyboard); RestoreInputRouting(routing); }
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
+        public IEnumerator SprintCostsStaminaOnlyWhileRunning()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            yield return null;
+            var mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
+            foreach (var e in mission.Enemies) e.enabled = false;
+            var routing = RouteInputToGame();
+            var keyboard = InputSystem.AddDevice<Keyboard>();
+            try
+            {
+                yield return Press(keyboard, Key.LeftShift); // Sprint is a toggle.
+                Assert.IsTrue(mission.ModernPlayer.IsSprinting);
+                float full = mission.Stamina;
+                yield return WaitGameSeconds(1.5f);
+                Assert.AreEqual(full, mission.Stamina, .01f, "Standing still with sprint on costs no stamina.");
+
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.W)); // Held down.
+                yield return WaitGameSeconds(2f);
+                Assert.IsTrue(mission.ModernPlayer.IsSprinting && mission.ModernPlayer.IsMoving, "Nam is running.");
+                float spent = full - mission.Stamina;
+                Assert.Greater(spent, mission.Settings.staminaDrain * .5f, "Running costs stamina.");
+                Assert.LessOrEqual(spent, mission.Settings.staminaDrain * 2f + 1f, "No faster than the drain rate.");
+                Assert.Greater(mission.Stamina, full * .6f, "Two seconds of running leaves most of the stamina.");
+            }
+            finally { InputSystem.QueueStateEvent(keyboard, new KeyboardState()); InputSystem.RemoveDevice(keyboard); RestoreInputRouting(routing); }
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
         public IEnumerator ItemsUseTheirOwnKeysWithNoShortcutBar()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");

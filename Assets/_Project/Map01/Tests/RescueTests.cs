@@ -223,6 +223,35 @@ namespace ShadowVale.Map01.Tests
         }
 
         [UnityTest]
+        public IEnumerator HungCanBeTreatedWithABandageOnceTheHerbsWentIntoCrafting()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            yield return null;
+            var mission = Object.FindFirstObjectByType<Map01Mission>();
+            var quest = mission.GetComponent<Map01Quest>();
+            var inventory = mission.GetComponent<Map01Inventory>();
+            foreach (var guard in mission.GetComponent<Map01Rescue>().Squad) guard.enabled = false;
+            inventory.Spend("herb", inventory.Count("herb"));
+            inventory.Spend("medkit_small", inventory.Count("medkit_small"));
+            Teleport(mission, mission.hung.position);
+            yield return null;
+
+            Assert.IsFalse(quest.CanTreatHung);
+            StringAssert.Contains("băng cứu thương", quest.HungPrompt, "The prompt says a bandage will do too.");
+            quest.TryRescueHung();
+            Assert.AreEqual(Map01Quest.RescueStage, quest.Stage, "Nothing to treat him with yet.");
+
+            // Both crate herbs went into bandages at the workbench: one of those treats him.
+            inventory.Add("medkit_small", 1);
+            Assert.AreEqual("[E] Cởi trói và chữa trị cho Hùng", quest.HungPrompt);
+            quest.TryRescueHung();
+            Assert.AreEqual(Map01Quest.EscortStage, quest.Stage, "A bandage treats Hùng as well as a herb.");
+            Assert.AreEqual(0, inventory.Count("medkit_small"), "The bandage is used up on him.");
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
         public IEnumerator HungsWoundsSurviveASaveAndLoad()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
