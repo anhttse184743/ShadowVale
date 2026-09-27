@@ -27,6 +27,17 @@ NavMesh nằm ở `Scenes/Maps/Map 1/NavMesh.asset` (bake lại sau khi di chuy�
 Checkpoint phiên bản 7. Bản lưu làm trên Map 1 cũ (bản đồ trước khi làm lại) không mở được, menu báo
 "Bản lưu thuộc Map 1 cũ … — hãy chọn Chơi mới". Map 1 cũ vẫn còn trong lịch sử git nếu cần xem lại.
 
+## Hiệu năng
+
+Cây cối (khoảng 21 nghìn renderer trong LODGroup) chiếm khoảng 85% thời gian vẽ, nên các thiết lập nhắm vào đó:
+- Game giới hạn 60 khung hình/giây (`FramePacing`); test tắt giới hạn này.
+- Bóng mặt trời 2 tầng, SSAO nửa độ phân giải, camera nhìn xa 300 m (sương mù phủ kín từ 240 m).
+- Bụi `CoverShrub_A/B` chỉ đổ bóng ở LOD0.
+- Cỏ và bụi nhỏ ẩn sớm (với `lodBias` 2): GroundGrass khoảng 35 m, Fern 45 m, TallGrass 50 m,
+  CoverShrub khoảng 100 m (nơi sương mù bắt đầu). Trước đó chúng được vẽ tới 115 m–400 m+.
+- Đã đo nhưng chưa áp dụng: SSAO dùng Depth thay vì Normals (tắt SSAO giảm khoảng 40%, phần lớn do lượt
+  vẽ lại pháp tuyến cho mọi cây), GPU occlusion culling (khoảng −12%), vẽ ở 75% độ phân giải (khoảng −16%).
+
 ## Giới hạn
 
 Sông sâu khoảng 1,5 m nhưng chưa có bơi: Nam lội qua lòng sông (chậm và ồn hơn).
