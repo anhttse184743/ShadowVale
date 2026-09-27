@@ -28,6 +28,9 @@ namespace ShadowVale.Map01
         [Tooltip("A silent knife takedown at least this far from a camp's centre goes unnoticed by the camp.")]
         [SerializeField] private float quietKillDistance = 15f;
         public float QuietKillDistance => quietKillDistance;
+        [Tooltip("Within this of a camp that still has a guard standing, the HUD warns Nam.")]
+        [SerializeField] private float warnRadius = 40f;
+        public float WarnRadius => warnRadius;
 
         public sealed class Camp
         {
@@ -108,6 +111,26 @@ namespace ShadowVale.Map01
                 if (d < bestDistance) { bestDistance = d; best = root.transform; }
             }
             return best;
+        }
+
+        /// <summary>
+        /// The nearest camp within <see cref="WarnRadius"/> of Nam that still has a guard standing,
+        /// or null — the HUD's "near an enemy camp" warning, at any stage of the map.
+        /// </summary>
+        public Camp NearCamp(out float distance)
+        {
+            Camp nearest = null;
+            distance = float.MaxValue;
+            if (mission == null || !mission.IsInitialized) return null;
+            foreach (var camp in camps)
+            {
+                float d = Vector3.Distance(mission.player.position, camp.Center);
+                if (d > warnRadius || d >= distance) continue;
+                bool manned = false;
+                foreach (var guard in camp.Guards) manned |= guard.Alive;
+                if (manned) { nearest = camp; distance = d; }
+            }
+            return nearest;
         }
 
         /// <summary>Called every frame by Map01PlayerInteraction with the state of the F key.</summary>

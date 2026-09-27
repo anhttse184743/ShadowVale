@@ -8,6 +8,7 @@ namespace ShadowVale.Map01
     {
         private Map01Scouting scouting;
         private Texture2D binocularMask, eyeFill, eyeOutline;
+        private GUIStyle heardStyle, hudGuideCentre;
         private GUIStyle hudSmallCentre;
         private static readonly Color Warning = new Color(.9f, .22f, .12f);
 
@@ -18,8 +19,32 @@ namespace ShadowVale.Map01
             if (scouting == null || mission.Stopped || mission.InventoryOpen || mission.MapOpen) return;
             if (scouting.Binoculars) DrawBinoculars(width, height);
             DrawAwareness(width, height, scale);
+            DrawCampWarning(width);
             if (quest.Stage == Map01Quest.ScoutStage && !scouting.Binoculars)
                 GUI.Label(new Rect(width / 2 - 330, height - 70, 660, 30), "Giữ [F] ống nhòm  ·  [C] đi khom, nấp bụi  ·  Giữ [Q] ném đá dụ lính ra xa trại", hudKey);
+        }
+
+        /// <summary>
+        /// Near a camp with guards still in it: a warning under the compass, from
+        /// <see cref="Map01Scouting.WarnRadius"/> out; within about half of that it turns red,
+        /// throbs and says what to do.
+        /// </summary>
+        private void DrawCampWarning(float width)
+        {
+            if (scouting.NearCamp(out float distance) == null) return;
+            if (hudSmallCentre == null) hudSmallCentre = new GUIStyle(hudSmall) { alignment = TextAnchor.MiddleCenter };
+            if (hudGuideCentre == null) hudGuideCentre = new GUIStyle(hudGuide) { alignment = TextAnchor.MiddleCenter };
+            bool close = distance < scouting.WarnRadius * .55f;
+            var plate = new Rect(width / 2 - 280, 100, 560, close ? 64 : 40);
+            HudFill(plate, new Color(.22f, .04f, .02f, close ? .78f : .55f));
+            float pulse = close ? .55f + .45f * Mathf.Abs(Mathf.Sin(Time.unscaledTime * 5)) : 1f;
+            var edge = close ? Warning : new Color(1f, .72f, .25f);
+            HudBorder(plate, new Color(edge.r, edge.g, edge.b, pulse));
+            var old = GUI.color;
+            if (close) GUI.color = new Color(1f, .55f, .45f);
+            GUI.Label(new Rect(plate.x, plate.y + 6, plate.width, 28), $"CẢNH BÁO: GẦN DOANH TRẠI ĐỊCH  ·  {distance:0} m", hudGuideCentre);
+            GUI.color = old;
+            if (close) GUI.Label(new Rect(plate.x, plate.y + 34, plate.width, 26), "Khom người [C], nấp sau bụi — đừng để lính nhìn thấy", hudSmallCentre);
         }
 
         /// <summary>Over everything else: the run is lost, and how to start it over.</summary>
@@ -40,9 +65,10 @@ namespace ShadowVale.Map01
         }
 
         /// <summary>
-        /// An eye over each guard who has noticed something: it fills from the bottom, yellow to
-        /// red, as his suspicion builds — at least half full while he hunts down a noise — and
-        /// once he has spotted Nam it is solid red and throbs.
+        /// Over each guard who has noticed something: a question mark while he has only heard
+        /// Nam (a footstep, a stone) and goes to check — Nam is not spotted — and an eye once he
+        /// has seen him, filling from the bottom, yellow to red, as his suspicion builds; solid
+        /// red and throbbing once he has spotted Nam.
         /// </summary>
         private void DrawAwareness(float width, float height, float scale)
         {
@@ -55,7 +81,8 @@ namespace ShadowVale.Map01
                 if (screen.z <= 0) continue;
                 var p = new Vector2(screen.x / scale, (Screen.height - screen.y) / scale);
                 if (p.x < 0 || p.x > width || p.y < 0 || p.y > height) continue;
-                float level = enemy.Engaged ? 1f : enemy.Alerted ? Mathf.Max(.5f, enemy.Suspicion) : enemy.Suspicion;
+                if (!Saw(enemy)) { DrawHeard(p); continue; }
+                float level = enemy.Engaged ? 1f : enemy.Suspicion;
                 float size = enemy.Engaged ? 50 * (1 + .12f * Mathf.Abs(Mathf.Sin(Time.unscaledTime * 7))) : 44;
                 var eye = new Rect(p.x - size / 2, p.y - size / 4, size, size / 2);
                 var old = GUI.color;
@@ -67,6 +94,23 @@ namespace ShadowVale.Map01
                 GUI.DrawTexture(eye, eyeOutline);
                 GUI.color = old;
             }
+        }
+
+        /// <summary>Has seen Nam — spotting him, or still suspicious from a glimpse — rather than
+        /// only heard him. Suspicion only grows while Nam is in sight.</summary>
+        public static bool Saw(Map01EnemyController enemy) => enemy.Engaged || enemy.Suspicion >= .02f;
+
+        /// <summary>Heard, not seen: an amber question mark.</summary>
+        private void DrawHeard(Vector2 p)
+        {
+            if (heardStyle == null) heardStyle = new GUIStyle(hudHeading) { fontSize = 40, alignment = TextAnchor.MiddleCenter, wordWrap = false };
+            var r = new Rect(p.x - 22, p.y - 26, 44, 52);
+            var old = GUI.color;
+            GUI.color = new Color(0, 0, 0, .75f);
+            GUI.Label(new Rect(r.x + 2, r.y + 2, r.width, r.height), "?", heardStyle);
+            GUI.color = new Color(1f, .82f, .32f);
+            GUI.Label(r, "?", heardStyle);
+            GUI.color = old;
         }
 
         /// <summary>A 2:1 almond eye: the solid shape, or its outline with iris and pupil.</summary>

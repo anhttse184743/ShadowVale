@@ -36,16 +36,17 @@ namespace ShadowVale.Map01.Tests
         }
 
         /// <summary>A NavMesh spot about <paramref name="distance"/> m in front of the post, inside
-        /// his cone, that his eyes can actually see.</summary>
-        private static bool FindSpotInView(Vector3 post, Quaternion facing, float distance, out Vector3 spot)
+        /// his cone, that his eyes can actually see — past no wall and no bush.</summary>
+        private static bool FindSpotInView(Map01SightCover cover, Vector3 post, Quaternion facing, float distance, float slack, out Vector3 spot)
         {
             for (int a = 0; a <= 25; a += 5)
                 foreach (int sign in new[] { 1, -1 })
                 {
                     var dir = facing * Quaternion.Euler(0, a * sign, 0) * Vector3.forward;
                     if (!NavMesh.SamplePosition(post + dir * distance, out var hit, 2f, NavMesh.AllAreas)) continue;
-                    if (Mathf.Abs(Vector3.Distance(hit.position, post) - distance) > 2.5f) continue;
+                    if (Mathf.Abs(Vector3.Distance(hit.position, post) - distance) > slack) continue;
                     if (Physics.Linecast(post + Vector3.up * 1.3f, hit.position + Vector3.up * 1.1f, ~0, QueryTriggerInteraction.Ignore)) continue;
+                    if (cover.Blocks(post + Vector3.up * 1.3f, hit.position + Vector3.up * 1.1f)) continue;
                     spot = hit.position; return true;
                 }
             spot = default; return false;
@@ -114,6 +115,36 @@ namespace ShadowVale.Map01.Tests
             mission.player.GetComponentsInChildren<Renderer>().All(r => r.shadowCastingMode == ShadowCastingMode.ShadowsOnly);
 
         [UnityTest]
+        public IEnumerator NearingAMannedCampWarnsNam()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            yield return null;
+            var mission = Object.FindFirstObjectByType<Map01Mission>();
+            var scouting = mission.GetComponent<Map01Scouting>();
+            foreach (var e in mission.Enemies) e.enabled = false;
+            if (mission.player.TryGetComponent(out PlayerFootsteps steps)) steps.enabled = false;
+            SetPreviewResolution(1600, 900);
+            mission.Say(null, -1f);
+            Assert.IsNull(scouting.NearCamp(out _), "At the base, far from every camp: no warning.");
+
+            var camp = scouting.Camps[0];
+            Assert.IsTrue(NavMesh.SamplePosition(camp.Center + Vector3.back * 20, out var near, 4, NavMesh.AllAreas));
+            Teleport(mission, near.position);
+            yield return null;
+            Assert.AreSame(camp, scouting.NearCamp(out float distance), "About 20 m from a manned camp: warned.");
+            Assert.Less(distance, scouting.WarnRadius);
+            Directory.CreateDirectory("Logs/GuidePreview");
+            ScreenCapture.CaptureScreenshot("Logs/GuidePreview/camp-warning.png");
+            for (int i = 0; i < 4; i++) yield return null;
+
+            foreach (var guard in camp.Guards) guard.GetComponent<Health>().TakeDamage(99999, guard.transform.position, null);
+            yield return null;
+            Assert.IsNull(scouting.NearCamp(out _), "Nobody left standing in the camp: nothing to warn of.");
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
         public IEnumerator GuardsSpotNamOnlyInTheirConeAndNeverInstantly()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
@@ -136,8 +167,10 @@ namespace ShadowVale.Map01.Tests
             Assert.AreEqual(0f, guard.Suspicion, "Behind a guard, Nam is not seen.");
             Assert.IsFalse(guard.Engaged);
 
-            // In the cone at 18 m, standing: noticed — but suspicion has to build first.
-            Assert.IsTrue(FindSpotInView(post, facing, 18f, out var spot), "Need a spot in view 18 m out.");
+            // In the cone, standing: noticed — but suspicion has to build first.
+            // 0.8 of his sight, give or take 1.5 m: inside it standing, outside the 0.6 he sees a crouching Nam at.
+            float reach = guard.VisionRange * .8f;
+            Assert.IsTrue(FindSpotInView(mission.SightCover, post, facing, reach, 1.5f, out var spot), $"Need a spot in view {reach:0} m out.");
             Teleport(mission, spot);
             yield return null; yield return null;
             Assert.IsFalse(guard.Engaged, "Being seen is not being spotted on the same frame.");
@@ -151,7 +184,7 @@ namespace ShadowVale.Map01.Tests
             ScreenCapture.CaptureScreenshot("Logs/GuidePreview/guard-eye-spotted.png");
             yield return null;
 
-            // The same spot crouched: 18 m is beyond a crouching Nam's range (24 × 0.6 = 14.4 m).
+            // The same spot crouched: beyond a crouching Nam's range.
             PinAtPost(guard);
             yield return WaitGameSeconds(4.2f);
             mission.Crouched = true;

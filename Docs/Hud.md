@@ -103,3 +103,13 @@ kiểm tra thả đúng ô/thả ra ngoài, nhóm HUD **2/2 đạt**
 - Enter: làm lại từ đúng lúc Hùng giao nhiệm vụ. Lúc Hùng giao lệnh, game chụp một checkpoint ẩn (`Map01SaveSystem.MarkScoutingStart`); làm lại là tải lại checkpoint đó: vị trí Nam, túi đồ, máu, lính và các trại về như lúc nhận lệnh, Hùng nhắc lại lời giao nhiệm vụ. F9 tải bản lưu, Esc về menu.
 - Bản lưu tạo trong lúc trinh sát mang theo checkpoint đó (`scoutStart`), nên tải lại rồi thất bại vẫn quay về đúng lúc nhận lệnh. Bản lưu cũ không có checkpoint này thì game tự dựng một checkpoint "như vừa nhận lệnh" (Nam cạnh Hùng, chưa ghi trại nào, lính doanh trại đủ máu ở chỗ gác) rồi vẫn tải lại màn — không bao giờ đặt lại tại chỗ (trước đây làm vậy khiến lính bị kéo về chỗ gác ngay trước mắt người chơi).
 - Kiểm thử: `ScoutingTests.ScoutingFailureStartsOverFromHungsOrder`, `BeingSpottedOrAttackingACampFailsTheRun`.
+
+## Lính phát hiện Nam
+
+- Trên đầu lính: dấu **?** vàng khi lính chỉ nghe thấy (bước chân, đá ném) và đi kiểm tra — Nam chưa bị thấy;
+  **con mắt** khi lính đã nhìn thấy Nam, đầy dần từ vàng sang đỏ; đỏ đặc và nhấp nháy khi đã phát hiện hẳn.
+- Cây cối che tầm nhìn (`Map01SightCover`): bụi, cỏ cao, dương xỉ che từ mặt đất; cây lớn chỉ che ở tán (thân cây
+  chặn bằng collider như trước). Nam vẫn đi xuyên qua, đạn và camera không bị ảnh hưởng. Trong 3 m lính luôn nhìn
+  thấy; khom trong bụi là chỗ nấp tốt nhất. Khi khom, lính nhắm vào điểm thấp hơn (0,75 m) nên bụi thấp cũng che được.
+- Gần doanh trại còn lính (dưới 40 m, `Map01Scouting.NearCamp`): dải cảnh báo dưới la bàn "CẢNH BÁO: GẦN DOANH TRẠI
+  ĐỊCH · N m"; dưới khoảng 22 m chuyển đỏ, nhấp nháy và nhắc khom người, nấp sau bụi. Hạ hết lính trong trại thì hết cảnh báo.

@@ -42,6 +42,8 @@ namespace ShadowVale.Map01
         public PlayerCombat ModernCombat { get; private set; }
         public Health ModernHealth { get; private set; }
         public Map01EnemyController[] Enemies { get; private set; } = Array.Empty<Map01EnemyController>();
+        /// <summary>Foliage the guards cannot see through.</summary>
+        public Map01SightCover SightCover { get; private set; }
         public bool Stopped => (ModernHealth != null ? ModernHealth.IsDead : hp <= 0) || Stage == Map01Quest.CompleteStage || paused || Map01SaveSystem.IsRestoring
             || (rescue != null && rescue.HungDown) || (scouting != null && scouting.FailedRun);
         /// <summary>What blocks sight. Cached: guards ask for it every frame, and GetMask allocates.</summary>
@@ -112,6 +114,9 @@ namespace ShadowVale.Map01
             foreach (var point in FindObjectsByType<ForestPoint>(FindObjectsSortMode.None)) RegisterPoint(point);
             hp = Settings.playerHP; stamina = Settings.stamina;
             inventory.SeedStartingLoadout(Settings.startingStones);
+            // Added at runtime like the scouting order; guards ask it from their first Update.
+            SightCover = GetComponent<Map01SightCover>();
+            if (SightCover == null) SightCover = gameObject.AddComponent<Map01SightCover>();
             IsInitialized = true;
         }
 

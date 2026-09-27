@@ -346,7 +346,8 @@ namespace ShadowVale.Map01
             distance = float.PositiveInfinity;
             if (_player == null || _playerHealth == null || _playerHealth.IsDead || Time.time < _calmUntil) return false;
             Vector3 origin = transform.position + Vector3.up * 1.3f;
-            Vector3 target = _player.position + Vector3.up * 1.1f;
+            // Crouched, Nam's head and shoulders are lower: low cover hides him then.
+            Vector3 target = _player.position + Vector3.up * (_mission != null && _mission.Crouched ? .75f : 1.1f);
             Vector3 delta = target - origin;
             distance = delta.magnitude;
             if (Engaged)
@@ -363,6 +364,9 @@ namespace ShadowVale.Map01
                 float touch = crouched ? 1.2f : 2.5f;
                 if (distance > touch && Vector3.Angle(transform.forward, Vector3.ProjectOnPlane(delta, Vector3.up)) > visionAngle * .5f) return false;
             }
+            // Bushes and tree crowns hide Nam — even from a guard already hunting him, who then
+            // goes to where he last saw him.
+            if (_mission != null && _mission.SightCover != null && _mission.SightCover.Blocks(origin, target)) return false;
             if (Physics.Raycast(origin, delta.normalized, out var hit, distance, obstructionMask,
                     QueryTriggerInteraction.Ignore))
                 return hit.transform == _player || hit.transform.IsChildOf(_player);
