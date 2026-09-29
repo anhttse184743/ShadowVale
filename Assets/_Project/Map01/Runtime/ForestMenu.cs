@@ -117,7 +117,7 @@ namespace ShadowVale.Map01
             lastFrameAt = now;
             var kb = Keyboard.current;
             if (kb == null || now < ignoreKeysUntil) return;
-            if (Map01OpeningCutscene.Active) return;
+            if (mission != null && mission.Cinematic) return;
             if (visible && question != null) {
                 if (kb.escapeKey.wasPressedThisFrame) { question = null; confirmed = null; }
                 else if (kb.enterKey.wasPressedThisFrame || kb.numpadEnterKey.wasPressedThisFrame) Confirm();

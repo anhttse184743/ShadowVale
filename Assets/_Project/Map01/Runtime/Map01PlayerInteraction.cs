@@ -46,7 +46,7 @@ namespace ShadowVale.Map01
 
         private void Update()
         {
-            if (!mission.IsInitialized) return;
+            if (!mission.IsInitialized || mission.Cinematic) return;
             var kb = Keyboard.current;
             if (kb == null) return;
             scouting.HoldBinoculars(kb.fKey.isPressed); // Map01Scouting decides when they actually work.
