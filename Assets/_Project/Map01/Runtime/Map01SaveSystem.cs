@@ -62,6 +62,7 @@ namespace ShadowVale.Map01
 
         public string ManualSaveBlockReason()
         {
+            if (mission.Cinematic) return "Đang nhận nhiệm vụ. Vui lòng đợi kết thúc hội thoại.";
             if (pendingCheckpoint != null) return "Đang tải bản lưu. Vui lòng đợi giây lát.";
             if (mission.PlayerHealth <= 0) return "Không thể lưu khi nhân vật đã gục ngã.";
             if (GetComponent<Map01Rescue>().HungDown) return "Hùng đã hy sinh. Làm lại đoạn giải cứu trước khi lưu.";
@@ -78,6 +79,7 @@ namespace ShadowVale.Map01
         public bool AutoSaveOnExit(out string error)
         {
             error = null;
+            if (mission.Cinematic) return true;
             if (pendingCheckpoint != null) { error = "Đang khôi phục bản lưu. Vui lòng thử lại sau giây lát."; return false; }
             // Never replace a usable checkpoint with a dead character — or a failed rescue or scouting run.
             if (mission.PlayerHealth <= 0 || GetComponent<Map01Rescue>().HungDown || GetComponent<Map01Scouting>().FailedRun) return true;
@@ -192,6 +194,7 @@ namespace ShadowVale.Map01
             string sceneName = "Map 1";
             if (slot >= 0)
             {
+                Map01OpeningCutscene.CancelPending();
                 var entry = ForestSaveSlots.Read(slot);
                 if (entry == null) throw new IOException("Ô lưu trống.");
                 sceneName = string.IsNullOrEmpty(entry.sceneName) ? "Map 1" : entry.sceneName;

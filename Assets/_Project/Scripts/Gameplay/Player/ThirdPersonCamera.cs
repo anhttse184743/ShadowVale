@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 
@@ -139,6 +139,15 @@ namespace ShadowVale.Gameplay.Player
             SetCursorLocked(true);
         }
 
+        private float cinematicWeight, cinematicFov;
+        private Vector3 cinematicPosition;
+        private Quaternion cinematicRotation;
+        public void SetCinematicView(Vector3 position, Quaternion rotation, float fov, float weight)
+        {
+            cinematicPosition = position; cinematicRotation = rotation;
+            cinematicFov = fov; cinematicWeight = Mathf.Clamp01(weight);
+        }
+        public void ClearCinematicView() => cinematicWeight = 0;
         private void LateUpdate()
         {
             if (target == null)
@@ -185,6 +194,11 @@ namespace ShadowVale.Gameplay.Player
 
             transform.SetPositionAndRotation(
                 pivot - rotation * Vector3.forward * _currentDistance, rotation);
+            if (cinematicWeight > 0) {
+                transform.SetPositionAndRotation(Vector3.Lerp(transform.position, cinematicPosition, cinematicWeight),
+                    Quaternion.Slerp(transform.rotation, cinematicRotation, cinematicWeight));
+                _camera.fieldOfView = Mathf.Lerp(_camera.fieldOfView, cinematicFov, cinematicWeight);
+            }
         }
 
         private void ReadLookInput()

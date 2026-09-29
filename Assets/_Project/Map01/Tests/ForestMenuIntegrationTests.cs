@@ -32,14 +32,14 @@ namespace ShadowVale.Map01.Tests
             var menu = UnityEngine.Object.FindFirstObjectByType<ForestMenu>();
             Call(menu, "MainAction", 1);
             yield return null;
-            Assert.IsTrue((bool)typeof(ForestMenu).GetField("playingIntro", Private).GetValue(menu),
-                "Chơi mới must play the briefing cutscene before Map 1 loads.");
-            Assert.AreEqual("01_MainMenu", SceneManager.GetActiveScene().name, "The cutscene must hold the scene switch, not race it.");
-            // "Chơi mới" plays the briefing cutscene first; skip it the same way Esc/Enter would.
-            Call(menu, "EndIntro");
-            // Map 1 loads synchronously and the screen freezes on this frame for seconds — it must
-            // be drawn as a loading screen, not the title (which read as "skipping sent me back").
-            Assert.IsTrue((bool)typeof(ForestMenu).GetField("loading", Private).GetValue(menu));
+            Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name);
+            Assert.IsTrue(Map01OpeningCutscene.Active, "New game starts a real-time briefing inside Map 1.");
+            Assert.IsNull(UnityEngine.Object.FindFirstObjectByType<UnityEngine.Video.VideoPlayer>());
+            var opening = UnityEngine.Object.FindFirstObjectByType<Map01OpeningCutscene>();
+            Assert.IsFalse(opening.GetComponentInParent<Map01Mission>().CameraInputEnabled);
+            opening.Skip();
+            yield return WaitGameSeconds(1.3f);
+            Assert.IsFalse(Map01OpeningCutscene.Active);
             yield return null;
             Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name);
             Assert.IsFalse(ForestMenu.Visible);
@@ -63,23 +63,13 @@ namespace ShadowVale.Map01.Tests
                 var menu = UnityEngine.Object.FindFirstObjectByType<ForestMenu>();
                 Call(menu, "MainAction", 1);
                 yield return null;
-                Assert.IsTrue((bool)typeof(ForestMenu).GetField("playingIntro", Private).GetValue(menu));
-
-                // A real Esc press skips the intro (queued, so ForestMenu.Update reads it next frame).
+                Assert.IsTrue(Map01OpeningCutscene.Active);
+                Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name);
                 InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.Escape));
-                yield return null;
+                yield return WaitGameSeconds(1.1f);
                 InputSystem.QueueStateEvent(keyboard, new KeyboardState());
-                double deadline = Time.realtimeSinceStartupAsDouble + 10;
-                while (SceneManager.GetActiveScene().name != "Map 1" && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
-                Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name, "Esc during the intro must start Map 1.");
-
-                // An impatient second Esc, the kind pressed during the multi-second load freeze,
-                // lands right after arrival — it must not open the pause menu.
-                yield return null;
-                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.Escape));
-                yield return null; yield return null;
-                InputSystem.QueueStateEvent(keyboard, new KeyboardState());
-                yield return null;
+                yield return WaitGameSeconds(1.3f);
+                Assert.IsFalse(Map01OpeningCutscene.Active);
                 var mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
                 Assert.IsFalse(ForestMenu.Visible, "Skipping the intro must land in the map, not a menu.");
                 Assert.IsFalse(mission.Paused);
@@ -161,8 +151,8 @@ namespace ShadowVale.Map01.Tests
                 for (int i = 0; i < 10; i++) yield return null;
                 Call(menu, "MainAction", 1);
                 yield return null;
-                // "Chơi mới" plays the briefing cutscene first; skip it the same way Esc/Enter would.
-                Call(menu, "EndIntro");
+                UnityEngine.Object.FindFirstObjectByType<Map01OpeningCutscene>().Skip();
+                yield return WaitGameSeconds(1.3f);
                 yield return null;
                 yield return new WaitForSeconds(1);
                 Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name);

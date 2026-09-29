@@ -155,7 +155,7 @@ namespace ShadowVale.Map01
 
         private void DrawHud()
         {
-            if (!mission.IsInitialized || ForestMenu.Visible) return;
+            if (!mission.IsInitialized || mission.Cinematic || ForestMenu.Visible) return;
             HudStyles();
             var matrix = GUI.matrix; var color = GUI.color; int depth = GUI.depth;
             float scale = HudScale, width = Screen.width / scale, height = Screen.height / scale;
