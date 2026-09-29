@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7631558318320121092
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 418326855473198369}
+  - component: {fileID: 2942563668017175515}
+  m_Layer: 0
+  m_Name: Map01Opening
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &418326855473198369
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7631558318320121092}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2942563668017175515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7631558318320121092}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 867c91e118c750c478c4accc89f542c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map01OpeningCutscene
+  idle: {fileID: 7400000, guid: 056bc6ae1dbcee3439a2a8c923225f28, type: 2}
+  talking: {fileID: -203655887218126122, guid: 33e95fe0e9bed664bac54458b3cf41ca, type: 3}
+  pointing: {fileID: -203655887218126122, guid: dcf7cc4229e537e44ada9f50df670db6, type: 3}
+  salute: {fileID: -203655887218126122, guid: b075c499ba9a2ac42af44887bd6866b7, type: 3}
+  commanderVoice: {fileID: 8300000, guid: e2a533a6c62f234439f14738ce8a1117, type: 3}
+  soldierVoice: {fileID: 8300000, guid: 610d912bd7b48444eba138bca497aaea, type: 3}

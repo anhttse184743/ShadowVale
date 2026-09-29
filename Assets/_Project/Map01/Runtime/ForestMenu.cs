@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.Video;
 
 namespace ShadowVale.Map01
 {
@@ -27,11 +26,6 @@ namespace ShadowVale.Map01
         private readonly bool[] damaged = new bool[ForestSaveSlots.Count];
         private string message, question;
         private Action confirmed;
-        // Intro cutscene: plays once on "Chơi mới" before Map 1 loads. Continuing a save skips it.
-        private VideoClip introClip;
-        private VideoPlayer introPlayer;
-        private RenderTexture introTexture;
-        private bool playingIntro;
         // Map 1 loads synchronously and freezes on the last drawn frame for several seconds; that
         // frame must be a loading screen, not the title, or skipping the intro looks like a bounce.
         private bool loading;
@@ -67,7 +61,6 @@ namespace ShadowVale.Map01
             background = Resources.Load<Texture2D>("Menu/Background");
             buttonPlate = Resources.Load<Texture2D>("Menu/ButtonPlate");
             wordmark = Resources.Load<Texture2D>("Menu/Wordmark");
-            introClip = Resources.Load<VideoClip>("Cutscenes/Intro");
             font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             displayFont = Resources.Load<Font>("Menu/Fonts/BlackOpsOne-Regular") ?? font;
             body = small = heading = title = button = mainButton = caption = pointer = null;
@@ -124,11 +117,7 @@ namespace ShadowVale.Map01
             lastFrameAt = now;
             var kb = Keyboard.current;
             if (kb == null || now < ignoreKeysUntil) return;
-            if (playingIntro) {
-                if (kb.escapeKey.wasPressedThisFrame || kb.enterKey.wasPressedThisFrame
-                    || kb.numpadEnterKey.wasPressedThisFrame || kb.spaceKey.wasPressedThisFrame) EndIntro();
-                return;
-            }
+            if (Map01OpeningCutscene.Active) return;
             if (visible && question != null) {
                 if (kb.escapeKey.wasPressedThisFrame) { question = null; confirmed = null; }
                 else if (kb.enterKey.wasPressedThisFrame || kb.numpadEnterKey.wasPressedThisFrame) Confirm();
@@ -158,33 +147,15 @@ namespace ShadowVale.Map01
             try { loading = true; Map01SaveSystem.BeginGame(slot); }
             catch (Exception e) { loading = false; message = "Không thể mở bản lưu: " + e.Message; }
         }
-        /// <summary>"Chơi mới" plays the briefing cutscene once before Map 1 loads. Loading a save
-        /// (existing progress) never replays it — only a fresh start does.</summary>
+        // The map owns the real-time briefing; loading an existing save never requests it.
         private void BeginNewGame()
         {
-            if (introClip == null) { StartGame(-1); return; }
-            playingIntro = true;
-            introTexture = new RenderTexture(Mathf.Max(16, (int)introClip.width), Mathf.Max(16, (int)introClip.height), 0);
-            introPlayer = gameObject.AddComponent<VideoPlayer>();
-            introPlayer.playOnAwake = false;
-            introPlayer.source = VideoSource.VideoClip;
-            introPlayer.clip = introClip;
-            introPlayer.isLooping = false;
-            introPlayer.renderMode = VideoRenderMode.RenderTexture;
-            introPlayer.targetTexture = introTexture;
-            introPlayer.audioOutputMode = VideoAudioOutputMode.Direct;
-            introPlayer.loopPointReached += _ => EndIntro();
-            introPlayer.errorReceived += (_, msg) => { Debug.LogWarning("[Menu] Intro cutscene failed to play: " + msg); EndIntro(); };
-            introPlayer.prepareCompleted += _ => introPlayer.Play();
-            introPlayer.Prepare();
-        }
-        private void EndIntro()
-        {
-            if (!playingIntro) return; // loopPointReached and a manual skip could otherwise both fire.
-            playingIntro = false;
-            if (introPlayer != null) { Destroy(introPlayer); introPlayer = null; }
-            if (introTexture != null) { introTexture.Release(); Destroy(introTexture); introTexture = null; }
+            Map01OpeningCutscene.RequestNewGame();
             StartGame(-1);
+        }
+        public static void SuppressKeysAfterCutscene()
+        {
+            if (instance != null) instance.ignoreKeysUntil = Time.realtimeSinceStartup + .5f;
         }
         private void MainAction(int index)
         {
@@ -309,7 +280,6 @@ namespace ShadowVale.Map01
         }
         private void OnGUI()
         {
-            if (playingIntro) { DrawIntro(); return; }
             if (loading) { DrawLoading(); return; }
             if (!visible) return;
             Styles(); GUI.depth = -100;
@@ -330,22 +300,6 @@ namespace ShadowVale.Map01
                 if (Button(new Rect(820, 475, 310, 65), "HỦY")) { question = null; confirmed = null; }
             }
             GUI.matrix = matrix; GUI.color = color;
-        }
-        private void DrawIntro()
-        {
-            GUI.depth = -100;
-            Fill(new Rect(0, 0, Screen.width, Screen.height), Color.black);
-            if (introTexture != null && introPlayer != null && introPlayer.isPrepared) {
-                float clipAspect = introTexture.width / (float)introTexture.height;
-                float screenAspect = Screen.width / (float)Screen.height;
-                Rect frame = clipAspect > screenAspect
-                    ? new Rect(0, (Screen.height - Screen.width / clipAspect) / 2, Screen.width, Screen.width / clipAspect)
-                    : new Rect((Screen.width - Screen.height * clipAspect) / 2, 0, Screen.height * clipAspect, Screen.height);
-                GUI.DrawTexture(frame, introTexture, ScaleMode.ScaleToFit);
-            }
-            Styles();
-            Fill(new Rect(Screen.width - 300, Screen.height - 54, 280, 40), new Color(0, 0, 0, .55f));
-            GUI.Label(new Rect(Screen.width - 290, Screen.height - 47, 270, 30), "Enter / Esc / Space để bỏ qua", small);
         }
         private void DrawLoading()
         {
@@ -408,7 +362,6 @@ namespace ShadowVale.Map01
             SceneManager.sceneLoaded -= OnScene;
             Application.wantsToQuit -= WantsToQuit;
             foreach (var texture in previews) if (texture != null) Destroy(texture);
-            if (introTexture != null) { introTexture.Release(); Destroy(introTexture); }
             if (instance == this) instance = null;
         }
     }

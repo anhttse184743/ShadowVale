@@ -36,6 +36,7 @@ namespace ShadowVale.Map01
         public float PlaySeconds { get; private set; }
         public string Dialogue { get; private set; }
         public float DialogueUntil { get; private set; }
+        public bool Cinematic { get; set; }
         public bool Paused => paused;
         public void SetPaused(bool value) { paused = value; Time.timeScale = value ? 0 : 1; }
         public PlayerController ModernPlayer { get; private set; }
@@ -44,7 +45,7 @@ namespace ShadowVale.Map01
         public Map01EnemyController[] Enemies { get; private set; } = Array.Empty<Map01EnemyController>();
         /// <summary>Foliage the guards cannot see through.</summary>
         public Map01SightCover SightCover { get; private set; }
-        public bool Stopped => (ModernHealth != null ? ModernHealth.IsDead : hp <= 0) || Stage == Map01Quest.CompleteStage || paused || Map01SaveSystem.IsRestoring
+        public bool Stopped => (ModernHealth != null ? ModernHealth.IsDead : hp <= 0) || Stage == Map01Quest.CompleteStage || paused || Cinematic || Map01SaveSystem.IsRestoring
             || (rescue != null && rescue.HungDown) || (scouting != null && scouting.FailedRun);
         /// <summary>What blocks sight. Cached: guards ask for it every frame, and GetMask allocates.</summary>
         public int ObstructionMask => obstructionMask != 0 ? obstructionMask
@@ -174,6 +175,7 @@ namespace ShadowVale.Map01
                 footsteps.Stepped += NotifyFootstep;
             }
             foreach (var enemy in Enemies) enemy.BindMission(this);
+            Map01OpeningCutscene.Attach(this);
         }
 
         private void FailInitialization(string reason)
