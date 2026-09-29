@@ -69,7 +69,8 @@ namespace ShadowVale.Map01
         /// <summary>Direct-set for restoring a checkpoint; never call this mid-play otherwise.</summary>
         public void RestoreStage(int value)
         {
-            Stage = Mathf.Clamp(value, 0, CompleteStage);
+            // Older saves waiting for the final report are already victorious.
+            Stage = value == ReportBossStage ? CompleteStage : Mathf.Clamp(value, 0, CompleteStage);
             // The commander is spawned at runtime, not baked into the scene — a checkpoint taken
             // mid-fight (the exit autosave allows that) must bring him back, or the objective can
             // never complete. The save system restores his health/position right after this.
@@ -111,6 +112,7 @@ namespace ShadowVale.Map01
         /// <summary>[E] next to Hùng: treat him at the start, otherwise report in for the next order.</summary>
         public void TalkToHung()
         {
+            if (mission.Cinematic) return;
             if (Stage == RescueStage) { TryRescueHung(); return; }
             if (!AwaitingReport || !NearHung(mission.Settings.interactRange)) return;
             switch (Stage)
@@ -208,7 +210,7 @@ namespace ShadowVale.Map01
             var template = mission.Enemies.Where(e => e.name.StartsWith("Outpost guard "))
                 .OrderBy(e => e.SaveId, System.StringComparer.Ordinal).FirstOrDefault();
             if (template == null) { Debug.LogWarning("[Map01] No outpost guard to clone the commander from.", this); return; }
-            var instance = Instantiate(template.gameObject, template.transform.position, template.transform.rotation, template.transform.parent);
+            var instance = Instantiate(template.gameObject, BossSpawnPosition(template), template.transform.rotation, template.transform.parent);
             instance.name = "Chỉ huy địch";
             boss = instance.GetComponent<Map01EnemyController>();
             boss.Configure(System.Array.Empty<Vector3>()); // Holds this position rather than resuming a patrol loop.
@@ -219,11 +221,36 @@ namespace ShadowVale.Map01
             if (bossHealth != null) bossHealth.onDied.AddListener(OnBossDown);
         }
 
+        private Vector3 BossSpawnPosition(Map01EnemyController template)
+        {
+            // The template has already fallen in the real quest route. Keep the new boss
+            // clear of its corpse, while staying on the same camp's walkable NavMesh.
+            foreach (var offset in new[] { template.transform.forward, template.transform.right,
+                -template.transform.right, -template.transform.forward }) {
+                var candidate = template.transform.position + offset * 3.5f;
+                if (!NavMesh.SamplePosition(candidate, out var hit, 1f, NavMesh.AllAreas)) continue;
+                if (mission.Enemies.Any(e => !e.Alive &&
+                    Vector3.Distance(e.transform.position, hit.position) < 2.5f)) continue;
+                return hit.position;
+            }
+            return template.transform.position;
+        }
+
+        public void CompleteBossDefeat()
+        {
+            if (Stage != ReportBossStage) return;
+            Stage = CompleteStage;
+            mission.Say("Chỉ huy địch đã bị tiêu diệt. Nhiệm vụ 4 hoàn tất — Hoàn thành Map 1!", 10);
+        }
+
         private void OnBossDown()
         {
             if (Stage != BossStage) return;
-            Stage = ReportBossStage;
-            mission.Say("Chỉ huy địch đã gục. Về căn cứ báo cáo chiến thắng với Hùng.", 8);
+            Stage = ReportBossStage; // Transitional value kept for checkpoint compatibility.
+            if (Map01SaveSystem.IsRestoring) { CompleteBossDefeat(); return; }
+            var ending = GetComponent<Map01EndingCutscene>();
+            if (ending == null) ending = gameObject.AddComponent<Map01EndingCutscene>();
+            if (!ending.Begin(mission, boss)) CompleteBossDefeat();
         }
     }
 }

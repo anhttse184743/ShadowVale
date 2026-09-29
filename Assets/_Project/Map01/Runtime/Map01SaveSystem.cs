@@ -62,7 +62,7 @@ namespace ShadowVale.Map01
 
         public string ManualSaveBlockReason()
         {
-            if (mission.Cinematic) return "Đang nhận nhiệm vụ. Vui lòng đợi kết thúc hội thoại.";
+            if (mission.Cinematic) return "Đang phát cảnh cinematic. Vui lòng đợi cảnh kết thúc.";
             if (pendingCheckpoint != null) return "Đang tải bản lưu. Vui lòng đợi giây lát.";
             if (mission.PlayerHealth <= 0) return "Không thể lưu khi nhân vật đã gục ngã.";
             if (GetComponent<Map01Rescue>().HungDown) return "Hùng đã hy sinh. Làm lại đoạn giải cứu trước khi lưu.";

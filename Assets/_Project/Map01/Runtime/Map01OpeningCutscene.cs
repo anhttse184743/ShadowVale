@@ -84,7 +84,7 @@ namespace ShadowVale.Map01
             commander.applyRootMotion = false;
             visual.transform.SetPositionAndRotation(origin + forward * 2.1f, Quaternion.LookRotation(-forward));
             DecorateCommander();
-            commanderClips = new ClipPlayer(commander, idle, talking != null ? talking : idle,
+            commanderClips = new ClipPlayer(commander, true, idle, talking != null ? talking : idle,
                 pointing != null ? pointing : idle);
             voice = gameObject.AddComponent<AudioSource>();
             voice.playOnAwake = false; voice.spatialBlend = 0; voice.volume = .9f;
@@ -97,7 +97,7 @@ namespace ShadowVale.Map01
             foreach (var weapon in mission.player.GetComponentsInChildren<Weapon>(true))
                 foreach (var renderer in weapon.GetComponentsInChildren<Renderer>())
                     if (renderer.enabled) { hiddenWeapons.Add(renderer); renderer.enabled = false; }
-            soldierClips = new ClipPlayer(soldier, idle, salute);
+            soldierClips = new ClipPlayer(soldier, false, idle, salute);
             replyAt = Mathf.Max(20.5f, commanderVoice != null ? commanderVoice.length + .5f : 0);
             float saluteTime = Mathf.Max(salute.length, soldierVoice != null ? soldierVoice.length : 0);
             releaseAt = replyAt + saluteTime + .25f;
@@ -241,8 +241,9 @@ namespace ShadowVale.Map01
             private PlayableGraph graph;
             private AnimationMixerPlayable mixer;
             private AnimationClipPlayable[] clips;
+            private AvatarMask relaxedArmMask;
             public int Selected { get; private set; }
-            public ClipPlayer(Animator target, params AnimationClip[] assets)
+            public ClipPlayer(Animator target, bool relaxedArms, params AnimationClip[] assets)
             {
                 graph = PlayableGraph.Create("Briefing " + target.name);
                 mixer = AnimationMixerPlayable.Create(graph, assets.Length);
@@ -253,7 +254,27 @@ namespace ShadowVale.Map01
                     graph.Connect(clips[i], 0, mixer, i);
                     mixer.SetInputWeight(i, i == 0 ? 1 : 0);
                 }
-                AnimationPlayableOutput.Create(graph, "Pose", target).SetSourcePlayable(mixer);
+                var output = AnimationPlayableOutput.Create(graph, "Pose", target);
+                if (relaxedArms) {
+                    // The shared rig's tuned idle already straightens elbows and wrists.
+                    // Reuse only its arms; retain the dialogue clip's torso/head motion.
+                    // This layer belongs to the commander, never the soldier's salute.
+                    relaxedArmMask = new AvatarMask();
+                    for (int i = 0; i < (int)AvatarMaskBodyPart.LastBodyPart; i++)
+                        relaxedArmMask.SetHumanoidBodyPartActive((AvatarMaskBodyPart)i, false);
+                    relaxedArmMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftArm, true);
+                    relaxedArmMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.RightArm, true);
+                    relaxedArmMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftFingers, true);
+                    relaxedArmMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.RightFingers, true);
+                    var relaxedIdle = AnimationClipPlayable.Create(graph, assets[0]);
+                    var layers = AnimationLayerMixerPlayable.Create(graph, 2);
+                    graph.Connect(mixer, 0, layers, 0);
+                    graph.Connect(relaxedIdle, 0, layers, 1);
+                    layers.SetInputWeight(0, 1);
+                    layers.SetInputWeight(1, 1);
+                    layers.SetLayerMaskFromAvatarMask(1, relaxedArmMask);
+                    output.SetSourcePlayable(layers);
+                } else output.SetSourcePlayable(mixer);
                 graph.Play();
             }
             public void Select(int index)
@@ -267,7 +288,11 @@ namespace ShadowVale.Map01
                 for (int i = 0; i < clips.Length; i++)
                     mixer.SetInputWeight(i, Mathf.MoveTowards(mixer.GetInputWeight(i), i == Selected ? 1 : 0, dt * 5));
             }
-            public void Dispose() { if (graph.IsValid()) graph.Destroy(); }
+            public void Dispose()
+            {
+                if (graph.IsValid()) graph.Destroy();
+                if (relaxedArmMask != null) Object.Destroy(relaxedArmMask);
+            }
         }
     }
 }

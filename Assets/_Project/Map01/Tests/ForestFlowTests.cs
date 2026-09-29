@@ -109,9 +109,9 @@ namespace ShadowVale.Map01.Tests
             var boss = Object.FindObjectsByType<Map01EnemyController>(FindObjectsSortMode.None).Single(e => e.name == "Chỉ huy địch");
             Assert.IsTrue(boss.IsBoss);
             boss.GetComponent<Health>().TakeDamage(999999, boss.transform.position, null);
-            Assert.AreEqual(Map01Quest.ReportBossStage, quest.Stage, "The commander's death still has to be reported.");
-            quest.TalkToHung();
-            Assert.AreEqual(Map01Quest.CompleteStage, quest.Stage, "Reporting the victory to Hùng completes Map 1.");
+            Assert.IsTrue(mission.Cinematic, "Boss defeat starts the in-world finale.");
+            mission.GetComponent<Map01EndingCutscene>().Skip();
+            Assert.AreEqual(Map01Quest.CompleteStage, quest.Stage, "The finale completes Map 1 without a return trip.");
             yield return new ExitPlayMode();
         }
 

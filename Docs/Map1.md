@@ -1,7 +1,6 @@
 # Map 1
 
-`Assets/_Project/Scenes/Maps/Map 1.unity` là Map 1 của game (menu → Chơi mới / Tiếp tục, video intro
-vẫn chạy trước khi vào map). Bố cục: đồi, sông uốn qua giữa với ba cầu, hầm căn cứ A ở Tây Nam,
+`Assets/_Project/Scenes/Maps/Map 1.unity` là Map 1 của game (menu → Chơi mới / Tiếp tục, cutscene mở đầu chạy trực tiếp trong map). Bố cục: đồi, sông uốn qua giữa với ba cầu, hầm căn cứ A ở Tây Nam,
 bến B ở phía Bắc, ba doanh trại gọn (khoảng 12 × 10 m) đều ở bờ Đông: C1 phía Nam gần cầu Nam, C2 giữa, C3 Đông Bắc.
 
 Gameplay: nhiệm vụ, cốt truyện và lời thoại, Hùng, tổ 4 lính ở bến, lính 3 doanh trại, trinh sát bằng
@@ -58,3 +57,11 @@ Cây cối (khoảng 21 nghìn renderer trong LODGroup) chiếm khoảng 85% th�
 
 Sông sâu khoảng 1,5 m nhưng chưa có bơi: Nam lội qua lòng sông (chậm và ồn hơn).
 NavMesh không cho Hùng/lính đi qua lòng sông, chỉ qua ba cầu.
+
+## Cutscene kết thúc nhiệm vụ 4
+
+Hạ chỉ huy địch sẽ kích hoạt Map01EndingCutscene và hoàn tất Map 1 ngay sau cảnh; không cần quay về báo cáo Hùng.
+Cảnh tái sử dụng clip Die trong Animator của boss ở tốc độ 0.55, không tạo animation/model mới và không thay đổi Time.timeScale.
+Camera chọn phía thoáng, xoay nhẹ 26 độ, tiến gần và theo thân nhân vật khi gục; giữ khung hình cuối phía sau bảng hoàn thành.
+Giữ Esc 1 giây để bỏ qua. Input và lưu game bị khóa trong cảnh; bỏ qua vẫn đặt boss ở tư thế chết cuối cùng.
+Checkpoint cũ ở bước báo cáo chiến thắng được xem là đã hoàn thành, không phát lại cảnh chết.
