@@ -229,7 +229,7 @@ namespace ShadowVale.Map01
                 -template.transform.right, -template.transform.forward }) {
                 var candidate = template.transform.position + offset * 3.5f;
                 if (!NavMesh.SamplePosition(candidate, out var hit, 1f, NavMesh.AllAreas)) continue;
-                if (mission.Enemies.Any(e => !e.Alive &&
+                if (mission.Enemies.Any(e => e != null && e.GetComponent<Health>() != null && !e.Alive &&
                     Vector3.Distance(e.transform.position, hit.position) < 2.5f)) continue;
                 return hit.position;
             }

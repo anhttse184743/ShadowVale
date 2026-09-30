@@ -19,3 +19,12 @@ OpeningCutsceneTests checks asset reuse and the complete briefing. ForestMenuInt
 
 No Timeline/Cinemachine package is added: existing camera code and Unity animation Playables provide this one short sequence.
 
+
+## Pointing and presentation revision
+Pointing.fbx was refined and rebaked in Blender to five seconds, preserving the humanoid skeleton and asset GUID. Forearm and wrist rotations are softened. The commander idle-arm layer fades out during Pointing. Animation graphs advance manually once per cutscene tick to prevent the gesture finishing ahead of dialogue.
+
+New Game starts with a 3.5-second black Map 1 / northern jetty title, then fades into the briefing before voice playback. Continuing a save skips this introduction.
+
+The river uses the existing URP depth texture for shallow-water transparency and deep-water opacity. The gameplay camera stays above the river surface while wading. No water cutscene is added.
+
+Validation: opening asset/hand-pose/salute/control-return and wading-camera checks; natural finale and skip/legacy save checks. Screenshots and Blender source/backup remain outside Assets to avoid shipping authoring artifacts.

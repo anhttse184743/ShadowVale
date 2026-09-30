@@ -139,6 +139,7 @@ namespace ShadowVale.Gameplay.Player
             SetCursorLocked(true);
         }
 
+        public System.Func<float?> SurfaceCameraFloor { get; set; }
         private float cinematicWeight, cinematicFov;
         private Vector3 cinematicPosition;
         private Quaternion cinematicRotation;
@@ -192,8 +193,13 @@ namespace ShadowVale.Gameplay.Player
                 ? desired
                 : Mathf.Lerp(_currentDistance, desired, 1f - Mathf.Exp(-8f * Time.deltaTime));
 
-            transform.SetPositionAndRotation(
-                pivot - rotation * Vector3.forward * _currentDistance, rotation);
+            Vector3 cameraPosition = pivot - rotation * Vector3.forward * _currentDistance;
+            float? surfaceFloor = SurfaceCameraFloor?.Invoke();
+            if (surfaceFloor.HasValue && cameraPosition.y < surfaceFloor.Value) {
+                cameraPosition.y = surfaceFloor.Value;
+                rotation = Quaternion.LookRotation(pivot - cameraPosition);
+            }
+            transform.SetPositionAndRotation(cameraPosition, rotation);
             if (cinematicWeight > 0) {
                 transform.SetPositionAndRotation(Vector3.Lerp(transform.position, cinematicPosition, cinematicWeight),
                     Quaternion.Slerp(transform.rotation, cinematicRotation, cinematicWeight));

@@ -32,12 +32,19 @@ namespace ShadowVale.Map01
         private readonly List<Material> materials = new();
         private Vector3 origin, forward, right;
         private Quaternion initialRotation;
-        private float clock, skipHeld, replyAt, releaseAt, finishAt;
+        private const float IntroDuration = 3.5f;
+        private float introRemaining, clock, skipHeld, replyAt, releaseAt, finishAt;
         private bool ownsInput, finishing, playerRootMotion;
+        private RuntimeAnimatorController gameplayAnimator;
+        private float[] gameplayLayerWeights;
+        private bool playerWasEnabled, combatWasEnabled;
         private string subtitle;
         private GUIStyle subtitleStyle;
         public bool IsPlaying => ownsInput;
-        public float Duration => finishAt;
+        public float Duration => finishAt + IntroDuration;
+        public float BriefingTime => clock;
+        public float SaluteBeginsAt => replyAt;
+        public bool IsIntroducing => introRemaining > 0;
 
         public static void Attach(Map01Mission mission)
         {
@@ -90,8 +97,19 @@ namespace ShadowVale.Map01
             voice.playOnAwake = false; voice.spatialBlend = 0; voice.volume = .9f;
             if (!play) return;
             ownsInput = Active = true;
+            introRemaining = IntroDuration;
             mission.Cinematic = true;
             playerRootMotion = soldier.applyRootMotion;
+            // Input gating does not stop gameplay's upper-body stance updates.
+            // Give the cutscene exclusive ownership, then restore it on every exit path.
+            playerWasEnabled = mission.ModernPlayer != null && mission.ModernPlayer.enabled;
+            combatWasEnabled = mission.ModernCombat != null && mission.ModernCombat.enabled;
+            if (mission.ModernPlayer != null) mission.ModernPlayer.enabled = false;
+            if (mission.ModernCombat != null) mission.ModernCombat.enabled = false;
+            gameplayAnimator = soldier.runtimeAnimatorController;
+            gameplayLayerWeights = new float[soldier.layerCount];
+            for (int i = 0; i < gameplayLayerWeights.Length; i++) gameplayLayerWeights[i] = soldier.GetLayerWeight(i);
+            soldier.runtimeAnimatorController = null;
             soldier.applyRootMotion = false;
             mission.player.rotation = Quaternion.LookRotation(forward);
             foreach (var weapon in mission.player.GetComponentsInChildren<Weapon>(true))
@@ -103,7 +121,7 @@ namespace ShadowVale.Map01
             releaseAt = replyAt + saluteTime + .25f;
             finishAt = releaseAt + 1.2f;
             SetView(0, 1);
-            if (commanderVoice != null) { voice.clip = commanderVoice; voice.Play(); }
+            // Voice starts after the map title fades out.
         }
 
         private void Update()
@@ -111,10 +129,16 @@ namespace ShadowVale.Map01
             commanderClips?.Tick(Time.deltaTime);
             soldierClips?.Tick(Time.deltaTime);
             if (!ownsInput) return;
-            clock += Time.deltaTime;
             skipHeld = Keyboard.current != null && Keyboard.current.escapeKey.isPressed
                 ? skipHeld + Time.unscaledDeltaTime : 0;
             if (skipHeld >= 1 && !finishing) BeginHandoff();
+            if (introRemaining > 0) {
+                introRemaining = Mathf.Max(0, introRemaining - Mathf.Min(Time.unscaledDeltaTime, .05f));
+                SetView(0, 1);
+                if (introRemaining == 0 && commanderVoice != null) { voice.clip = commanderVoice; voice.Play(); }
+                return;
+            }
+            clock += Time.deltaTime;
             if (finishing) {
                 float weight = 1 - Mathf.Clamp01((clock - releaseAt) / 1.2f);
                 SetView(2, weight);
@@ -158,6 +182,7 @@ namespace ShadowVale.Map01
         private void BeginHandoff()
         {
             if (!ownsInput || finishing) return;
+            introRemaining = 0;
             finishing = true; releaseAt = clock; finishAt = clock + 1.2f;
             voice.Stop(); subtitle = null;
             soldierClips.Select(0); commanderClips.Select(0);
@@ -170,7 +195,12 @@ namespace ShadowVale.Map01
             if (!ownsInput) return;
             ownsInput = Active = false;
             soldierClips?.Dispose(); soldierClips = null;
+            soldier.runtimeAnimatorController = gameplayAnimator;
+            for (int i = 0; i < gameplayLayerWeights.Length && i < soldier.layerCount; i++)
+                soldier.SetLayerWeight(i, gameplayLayerWeights[i]);
             soldier.applyRootMotion = playerRootMotion;
+            if (mission.ModernPlayer != null) mission.ModernPlayer.enabled = playerWasEnabled;
+            if (mission.ModernCombat != null) mission.ModernCombat.enabled = combatWasEnabled;
             foreach (var renderer in hiddenWeapons) if (renderer != null) renderer.enabled = true;
             hiddenWeapons.Clear();
             rig.ClearCinematicView();
@@ -213,6 +243,21 @@ namespace ShadowVale.Map01
         private void OnGUI()
         {
             if (!ownsInput) return;
+            if (introRemaining > 0) {
+                var savedColor = GUI.color; int savedDepth = GUI.depth;
+                GUI.depth = -1000;
+                float alpha = Mathf.Clamp01(introRemaining / .8f);
+                GUI.color = new Color(0, 0, 0, alpha);
+                GUI.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), Texture2D.whiteTexture);
+                GUI.color = new Color(.96f, .92f, .8f, alpha * Mathf.Clamp01((IntroDuration - introRemaining) / .6f));
+                var title = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter,
+                    fontSize = Mathf.RoundToInt(Screen.height * .055f), fontStyle = FontStyle.Bold };
+                GUI.Label(new Rect(0, Screen.height * .39f, Screen.width, Screen.height * .12f), "MAP 1", title);
+                title.fontSize = Mathf.RoundToInt(Screen.height * .027f); title.fontStyle = FontStyle.Normal;
+                GUI.Label(new Rect(0, Screen.height * .52f, Screen.width, Screen.height * .08f), "BẾN TÀU PHÍA BẮC", title);
+                GUI.color = savedColor; GUI.depth = savedDepth;
+                return;
+            }
             subtitleStyle ??= new GUIStyle(GUI.skin.label) {
                 fontSize = Mathf.Max(16, Mathf.RoundToInt(Screen.height / 36f)),
                 alignment = TextAnchor.MiddleCenter, wordWrap = true,
@@ -242,10 +287,12 @@ namespace ShadowVale.Map01
             private AnimationMixerPlayable mixer;
             private AnimationClipPlayable[] clips;
             private AvatarMask relaxedArmMask;
+            private AnimationLayerMixerPlayable armLayers;
             public int Selected { get; private set; }
             public ClipPlayer(Animator target, bool relaxedArms, params AnimationClip[] assets)
             {
                 graph = PlayableGraph.Create("Briefing " + target.name);
+                graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
                 mixer = AnimationMixerPlayable.Create(graph, assets.Length);
                 clips = new AnimationClipPlayable[assets.Length];
                 for (int i = 0; i < assets.Length; i++) {
@@ -267,13 +314,13 @@ namespace ShadowVale.Map01
                     relaxedArmMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.LeftFingers, true);
                     relaxedArmMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.RightFingers, true);
                     var relaxedIdle = AnimationClipPlayable.Create(graph, assets[0]);
-                    var layers = AnimationLayerMixerPlayable.Create(graph, 2);
-                    graph.Connect(mixer, 0, layers, 0);
-                    graph.Connect(relaxedIdle, 0, layers, 1);
-                    layers.SetInputWeight(0, 1);
-                    layers.SetInputWeight(1, 1);
-                    layers.SetLayerMaskFromAvatarMask(1, relaxedArmMask);
-                    output.SetSourcePlayable(layers);
+                    armLayers = AnimationLayerMixerPlayable.Create(graph, 2);
+                    graph.Connect(mixer, 0, armLayers, 0);
+                    graph.Connect(relaxedIdle, 0, armLayers, 1);
+                    armLayers.SetInputWeight(0, 1);
+                    armLayers.SetInputWeight(1, 1);
+                    armLayers.SetLayerMaskFromAvatarMask(1, relaxedArmMask);
+                    output.SetSourcePlayable(armLayers);
                 } else output.SetSourcePlayable(mixer);
                 graph.Play();
             }
@@ -285,8 +332,13 @@ namespace ShadowVale.Map01
             public void Tick(float dt)
             {
                 if (!graph.IsValid()) return;
+                // Let Pointing use its authored arms; keep relaxed arms for dialogue only.
+                if (armLayers.IsValid())
+                    armLayers.SetInputWeight(1, Mathf.MoveTowards(armLayers.GetInputWeight(1),
+                        Selected == 2 ? 0 : 1, dt * 3));
                 for (int i = 0; i < clips.Length; i++)
                     mixer.SetInputWeight(i, Mathf.MoveTowards(mixer.GetInputWeight(i), i == Selected ? 1 : 0, dt * 5));
+                graph.Evaluate(dt);
             }
             public void Dispose()
             {

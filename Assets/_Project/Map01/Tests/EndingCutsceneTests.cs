@@ -23,13 +23,23 @@ namespace ShadowVale.Map01.Tests
             foreach (var guard in mission.Enemies.Where(e => e.name.StartsWith("Outpost guard ")))
                 guard.GetComponent<Health>().TakeDamage(999999, guard.transform.position, null);
             yield return WaitGameSeconds(5);
+            mission = Object.FindFirstObjectByType<Map01Mission>();
+            Assert.IsNotNull(mission, "Mission after wait");
+            quest = mission.GetComponent<Map01Quest>();
+            Assert.IsNotNull(quest, "Quest after wait");
             quest.RestoreStage(Map01Quest.BossStage);
-            var boss = mission.Enemies.Single(e => e.IsBoss);
-            Assert.IsFalse(mission.Enemies.Any(e => e != boss && !e.Alive &&
-                Vector3.Distance(e.transform.position, boss.transform.position) < 2.5f),
-                "The boss must not spawn inside a fallen guard.");
+            Map01EnemyController boss = null;
+            foreach (var enemy in mission.Enemies) if (enemy != null && enemy.IsBoss) { boss = enemy; break; }
+            Assert.IsNotNull(boss, "Boss spawned");
+            Assert.IsNotNull(boss.GetComponent<Health>(), "Boss health");
+            foreach (var enemy in mission.Enemies) {
+                if (enemy == null || enemy == boss || enemy.GetComponent<Health>() == null || enemy.Alive) continue;
+                Assert.GreaterOrEqual(Vector3.Distance(enemy.transform.position, boss.transform.position), 2.5f,
+                    "The boss must not spawn inside a fallen guard.");
+            }
             boss.GetComponent<Health>().TakeDamage(999999, boss.transform.position, null);
             var ending = mission.GetComponent<Map01EndingCutscene>();
+            Assert.IsNotNull(ending, "Ending created after lethal damage");
             Assert.IsTrue(ending.IsPlaying);
             Assert.IsTrue(mission.Cinematic);
             Assert.IsFalse(mission.CameraInputEnabled);
@@ -62,7 +72,10 @@ namespace ShadowVale.Map01.Tests
             var mission = Object.FindFirstObjectByType<Map01Mission>();
             var quest = mission.GetComponent<Map01Quest>();
             quest.RestoreStage(Map01Quest.BossStage);
-            var boss = mission.Enemies.Single(e => e.IsBoss);
+            Map01EnemyController boss = null;
+            foreach (var enemy in mission.Enemies) if (enemy != null && enemy.IsBoss) { boss = enemy; break; }
+            Assert.IsNotNull(boss, "Boss spawned");
+            Assert.IsNotNull(boss.GetComponent<Health>(), "Boss health");
             boss.GetComponent<Health>().TakeDamage(999999, boss.transform.position, null);
             var ending = mission.GetComponent<Map01EndingCutscene>();
             ending.Skip(); ending.Skip();

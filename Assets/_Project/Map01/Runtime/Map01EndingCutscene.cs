@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Collections.Generic;
 using ShadowVale.Gameplay.Combat;
 using ShadowVale.Gameplay.Player;
 using UnityEngine;
@@ -27,6 +28,7 @@ namespace ShadowVale.Map01
         private float initialFov, elapsed, duration, skipHeld, clipLength;
         private bool rootMotion, playing;
         private AnimatorCullingMode culling;
+        private readonly List<Renderer> obscuringFoliage = new();
         public bool IsPlaying => playing;
         public float Duration => duration;
         public AnimationClip ReusedDeathClip { get; private set; }
@@ -53,9 +55,23 @@ namespace ShadowVale.Map01
             initialCameraRotation = owner.gameCamera.transform.rotation;
             initialFov = owner.gameCamera.fieldOfView;
             approach = ChooseApproach(boss.transform.forward);
+            // Plants have no solid colliders. Clear only nearby low foliage for this shot,
+            // retaining gameplay cover and restoring rendering when the finale is dismissed.
+            foreach (var group in FindObjectsByType<LODGroup>(FindObjectsSortMode.None)) {
+                var lods = group.GetLODs();
+                if (lods.Length == 0 || lods[0].renderers.Length == 0) continue;
+                var first = lods[0].renderers.FirstOrDefault(r => r != null);
+                if (first == null || first.bounds.size.y > 4f) continue;
+                if (Vector3.Distance(first.bounds.ClosestPoint(feet + Vector3.up), feet + Vector3.up) > 4.5f) continue;
+                foreach (var lod in lods) foreach (var renderer in lod.renderers) {
+                    if (renderer == null || renderer.forceRenderingOff || obscuringFoliage.Contains(renderer)) continue;
+                    obscuringFoliage.Add(renderer); renderer.forceRenderingOff = true;
+                }
+            }
             rootMotion = actor.applyRootMotion; culling = actor.cullingMode;
             actor.applyRootMotion = false; actor.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             graph = PlayableGraph.Create("Map 1 commander final collapse");
+            graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
             death = AnimationClipPlayable.Create(graph, clip);
             death.SetApplyFootIK(true); death.SetSpeed(DeathSpeed);
             AnimationPlayableOutput.Create(graph, "Existing death animation", actor).SetSourcePlayable(death);
@@ -90,6 +106,7 @@ namespace ShadowVale.Map01
         {
             if (!playing) return;
             elapsed += Time.unscaledDeltaTime;
+            graph.Evaluate(Time.unscaledDeltaTime);
             skipHeld = Keyboard.current != null && Keyboard.current.escapeKey.isPressed
                 ? skipHeld + Time.unscaledDeltaTime : 0;
             if (skipHeld >= 1 || elapsed >= duration) { Finish(); return; }
@@ -166,6 +183,8 @@ namespace ShadowVale.Map01
             if (playing) { playing = false; ReleaseAnimation(); }
             if (mission != null) mission.Cinematic = false;
             if (cameraRig != null) cameraRig.ClearCinematicView();
+            foreach (var renderer in obscuringFoliage) if (renderer != null) renderer.forceRenderingOff = false;
+            obscuringFoliage.Clear();
         }
         private void OnDestroy() { if (graph.IsValid()) graph.Destroy(); }
     }

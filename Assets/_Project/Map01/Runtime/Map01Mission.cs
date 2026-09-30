@@ -165,7 +165,12 @@ namespace ShadowVale.Map01
                 ModernCombat.Attacked += OnPlayerAttacked;
             }
             if (gameCamera != null && gameCamera.TryGetComponent<ThirdPersonCamera>(out var cameraRig))
+                {
                 cameraRig.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible;
+                var riverSurface = GameObject.Find("Winding river")?.GetComponent<Renderer>();
+                float waterHeight = riverSurface != null ? riverSurface.bounds.max.y : wadeBelowY;
+                cameraRig.SurfaceCameraFloor = () => IsWading ? waterHeight + .35f : (float?)null;
+            }
             if (player.TryGetComponent(out PlayerFootsteps footsteps))
             {
                 // The river is already tracked for the movement slowdown, so the footsteps ask

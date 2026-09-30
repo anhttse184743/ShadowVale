@@ -2,10 +2,12 @@ Shader "ShadowVale/Tropical River"
 {
  Properties { _DeepColor("River color",Color)=(.065,.22,.20,1) _ShallowColor("Bank tint",Color)=(.25,.34,.23,1) }
  SubShader {
- Tags { "RenderType"="Opaque" "RenderPipeline"="UniversalPipeline" "Queue"="Geometry+10" }
+ Tags { "RenderType"="Transparent" "RenderPipeline"="UniversalPipeline" "Queue"="Transparent" }
  Pass {
  Tags { "LightMode"="UniversalForward" }
  Cull Off
+ ZWrite Off
+ Blend SrcAlpha OneMinusSrcAlpha
  HLSLPROGRAM
  #pragma vertex vert
  #pragma fragment frag
@@ -14,6 +16,7 @@ Shader "ShadowVale/Tropical River"
  #pragma multi_compile_fragment _ _SHADOWS_SOFT
  #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
  #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
+ #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
  CBUFFER_START(UnityPerMaterial)
  half4 _DeepColor,_ShallowColor;
  CBUFFER_END
@@ -33,7 +36,17 @@ Shader "ShadowVale/Tropical River"
  float3 reflected=reflect(-view,n);float3 sky=lerp(float3(.63,.76,.80),float3(.17,.39,.60),saturate(reflected.y));
  float glint=pow(saturate(dot(n,normalize(sun.direction+view))),160)*sun.shadowAttenuation;
  half3 color=lerp(base,sky,fresnel)+sun.color*glint*.65;
- color+=bank*.028*(.5+.5*sin(a+b));return half4(MixFog(color,i.fog),1);}
+ color+=bank*.028*(.5+.5*sin(a+b));
+ float2 uv=GetNormalizedScreenSpaceUV(i.p);
+ float sceneEye=LinearEyeDepth(SampleSceneDepth(uv),_ZBufferParams);
+ float surfaceEye=-TransformWorldToView(i.world).z;
+ float depth=max(0,sceneEye-surfaceEye);
+ // Shallow submerged limbs remain visible through tinted water; deep river stays opaque.
+ float alpha=lerp(.18,.97,1-exp(-depth*1.7));
+ alpha=max(alpha,fresnel*.8);
+ float edge=(1-smoothstep(.02,.16,depth))*(.5+.5*sin(a+b));
+ color+=edge*.07;
+ return half4(MixFog(color,i.fog),alpha);}
  ENDHLSL
  }
  }
