@@ -25,6 +25,7 @@ namespace ShadowVale.Debugging
         private readonly Action<PlanAppliedEvent> _onPlan;
         private readonly Action<PlanDiscardedEvent> _onDiscard;
         private readonly Action<SolverChangedEvent> _onSolver;
+        private readonly Action<SidecarStatusEvent> _onSidecar;
 
         /// <summary>Also log footsteps nobody heard (very chatty).</summary>
         public bool VerboseNoise { get; set; }
@@ -65,7 +66,10 @@ namespace ShadowVale.Debugging
             EventBus.Subscribe(_onReplan);
             EventBus.Subscribe(_onPlan);
             EventBus.Subscribe(_onDiscard);
+            _onSidecar = e => Add(AiLogCategory.Solver, null,
+                e.Online ? $"SIDECAR  online tại {e.BaseUrl}" : $"SIDECAR  không kết nối được {e.BaseUrl} — dùng greedy tại chỗ");
             EventBus.Subscribe(_onSolver);
+            EventBus.Subscribe(_onSidecar);
         }
 
         private static string RoleLabel(AgentAssignment a) => a.Role switch
@@ -89,6 +93,7 @@ namespace ShadowVale.Debugging
             EventBus.Unsubscribe(_onPlan);
             EventBus.Unsubscribe(_onDiscard);
             EventBus.Unsubscribe(_onSolver);
+            EventBus.Unsubscribe(_onSidecar);
         }
 
         public void Add(AiLogCategory category, string agentId, string text)

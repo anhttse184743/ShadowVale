@@ -71,7 +71,8 @@ namespace ShadowVale.AI.Coordination
                 {
                     InstanceId = instanceId, Seed = seed, AgentCount = agents, NodeCount = n,
                     AgentNodes = new List<int>(sub.AgentLocal), CoverNodes = coverLocal, EscapeRoutes = new List<int>(features.Escape),
-                    QMatrix = q, Offset = offset, WeightCoverage = weights.Coverage, WeightFlanking = weights.Flanking,
+                    QMatrix = q, Offset = offset, WeightCoverage = weights.Coverage, WeightRedundancy = weights.Redundancy,
+                    WeightFlanking = weights.Flanking, WeightCover = weights.Cover, WeightDistance = weights.Distance,
                     PenaltyConflict = lambda, LatencyBudgetMs = budgetMs, Variant = variant,
                 },
             };

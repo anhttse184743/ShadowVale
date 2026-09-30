@@ -84,11 +84,15 @@ namespace ShadowVale.Tests.EditMode.Coordination
         }
 
         [Test]
-        public void SolverFactory_FallsBackToGreedyForRemoteVariantsUntilP4()
+        public void SolverFactory_RemoteVariantsGoToTheSidecar_UnknownOnesToGreedy()
         {
             var s = SolverFactory.Create("sqa", 120, out var reason);
-            Assert.AreEqual("greedy", s.VariantId);
-            StringAssert.Contains("sqa", reason);
+            Assert.IsInstanceOf<ShadowVale.AI.Solvers.Remote.RemoteSolverClient>(s);
+            Assert.AreEqual("sqa", s.VariantId);
+            Assert.IsNull(reason);
+            var unknown = SolverFactory.Create("tabu", 120, out var why);
+            Assert.AreEqual("greedy", unknown.VariantId);
+            StringAssert.Contains("tabu", why);
 
             var g = SolverFactory.Create("greedy", 90, out var none);
             Assert.IsNull(none);
@@ -102,8 +106,9 @@ namespace ShadowVale.Tests.EditMode.Coordination
                 Assert.AreEqual(v == SolverVariant.Greedy, v.IsInProcess(), v.ToId());
 
             var q = SolverFactory.Create("qiea", 120, out var reason);
-            Assert.AreEqual("greedy", q.VariantId);
-            StringAssert.Contains("qiea", reason);
+            Assert.IsInstanceOf<ShadowVale.AI.Solvers.Remote.RemoteSolverClient>(q, "QIEA lives in the Python sidecar now.");
+            Assert.AreEqual("qiea", q.VariantId);
+            Assert.IsNull(reason);
         }
 
         [Test]

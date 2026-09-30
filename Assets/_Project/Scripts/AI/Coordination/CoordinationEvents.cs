@@ -73,6 +73,14 @@ namespace ShadowVale.AI.Coordination
         public PlanDiscardedEvent(string group, string reason) { Group = group; Reason = reason; }
     }
 
+    /// <summary>Whether the solver sidecar answers (checked when a remote variant is chosen).</summary>
+    public readonly struct SidecarStatusEvent : IEvent
+    {
+        public readonly bool Online;
+        public readonly string BaseUrl;
+        public SidecarStatusEvent(bool online, string baseUrl) { Online = online; BaseUrl = baseUrl; }
+    }
+
     /// <summary>The coordinator switched solver (debug console, A/B assignment).</summary>
     public readonly struct SolverChangedEvent : IEvent
     {

@@ -20,7 +20,10 @@ namespace ShadowVale.Data.Coordination
         public double[] QMatrix { get; set; }
         public double Offset { get; set; }
         public double WeightCoverage { get; set; } = 1.0;
+        public double WeightRedundancy { get; set; } = 0.5;
         public double WeightFlanking { get; set; } = 1.0;
+        public double WeightCover { get; set; } = 0.5;
+        public double WeightDistance { get; set; } = 0.1;
         public double PenaltyConflict { get; set; }
         public int LatencyBudgetMs { get; set; } = 120;
         public string Variant { get; set; } = "greedy";

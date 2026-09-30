@@ -108,6 +108,51 @@ namespace ShadowVale.Map01.Tests
             }
         }
 
+        [UnityTest]
+        public IEnumerator WithQieaTheCampIsPlannedByThePythonSidecar()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            yield return SidecarPlanInPlayMode();
+            yield return new ExitPlayMode();
+        }
+
+        private static IEnumerator SidecarPlanInPlayMode()
+        {
+            string url = System.Environment.GetEnvironmentVariable("SVL_TEST_SIDECAR_URL") ?? "http://127.0.0.1:8011";
+            var health = ShadowVale.AI.Solvers.Remote.SidecarLauncher.IsHealthyAsync(url);
+            while (!health.IsCompleted) yield return null;
+            if (!health.Result) Assert.Ignore($"No sidecar at {url} (start: svl-api --port 8011).");
+            string previous = System.Environment.GetEnvironmentVariable("SVL_SOLVER_URL");
+            System.Environment.SetEnvironmentVariable("SVL_SOLVER_URL", url);
+            var plans = new List<PlanAppliedEvent>();
+            System.Action<PlanAppliedEvent> onPlan = plans.Add;
+            EventBus.Subscribe(onPlan);
+            try
+            {
+                yield return null;
+                var mission = Object.FindFirstObjectByType<Map01Mission>();
+                ServiceLocator.TryResolve<SquadCoordinator>(out var coordinator);
+                coordinator.SetVariant("qiea");
+                for (float until = Time.realtimeSinceStartup + 5f; coordinator.SidecarOnline == null && Time.realtimeSinceStartup < until;) yield return null;
+                Assert.AreEqual(true, coordinator.SidecarOnline, "The coordinator found the sidecar.");
+
+                mission.Enemies.First(e => e.SquadId == "C2" && e.Alive).DebugDamage(.1f);
+                for (float until = Time.realtimeSinceStartup + 5f; plans.Count == 0 && Time.realtimeSinceStartup < until;) yield return null;
+                Assert.IsNotEmpty(plans, "A plan came back.");
+                var plan = plans[0];
+                Assert.IsNull(plan.FallbackReason, plan.FallbackReason);
+                Assert.AreEqual("qiea", plan.Variant, "Solved in Python, not by the local fallback.");
+                Assert.AreEqual(plan.Assignments.Length, plan.Assignments.Select(a => a.Node).Distinct().Count());
+                Assert.Less(plan.LatencyMs, 120 + ShadowVale.AI.Solvers.Remote.RemoteSolverClient.NetworkMarginMs, "Within budget.");
+            }
+            finally
+            {
+                EventBus.Unsubscribe(onPlan);
+                System.Environment.SetEnvironmentVariable("SVL_SOLVER_URL", previous);
+            }
+        }
+
         private static IEnumerator InPlayMode()
         {
             yield return null;

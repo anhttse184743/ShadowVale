@@ -8,6 +8,7 @@ using ShadowVale.AI.Contracts;
 using ShadowVale.AI.Fsm;
 using ShadowVale.AI.Solvers;
 using ShadowVale.AI.Solvers.Classical;
+using ShadowVale.AI.Solvers.Remote;
 using ShadowVale.Core.Events;
 using ShadowVale.Core.Services;
 using ShadowVale.Data.Coordination;
@@ -70,6 +71,7 @@ namespace ShadowVale.AI.Coordination
                 if (ServiceLocator.TryResolve<ISquadSolver>(out var shared)) return _solver = shared;
                 _solver = SolverFactory.Create(Settings.Variant, Settings.LatencyBudgetMs, out var reason);
                 SolverFallbackReason = reason;
+                CheckSidecar(_solver);
                 return _solver;
             }
         }
@@ -88,7 +90,30 @@ namespace ShadowVale.AI.Coordination
             _solver = SolverFactory.Create(variantId, Settings.LatencyBudgetMs, out var reason);
             SolverFallbackReason = reason;
             EventBus.Publish(new SolverChangedEvent(_solver.VariantId, reason));
+            CheckSidecar(_solver);
         }
+
+        /// <summary>A remote variant: make sure the sidecar is up (starting it if allowed), report the result.</summary>
+        private void CheckSidecar(ISquadSolver solver)
+        {
+            if (!(solver is RemoteSolverClient)) return;
+            ServiceLocator.TryResolve<SolverProfileConfig>(out var profile);
+            string url = SolverEndpoint.BaseUrl;
+            RemoteSolverClient.ResetBackoff();
+            var check = SidecarLauncher.EnsureRunningAsync(profile, url);
+            check.ContinueWith(t =>
+            {
+                _sidecarOnline = t.Status == TaskStatus.RanToCompletion && t.Result;
+                if (!_sidecarOnline) RemoteSolverClient.MarkOffline();
+            });
+            _sidecarCheck = check; _sidecarUrl = url;
+        }
+
+        private Task<bool> _sidecarCheck;
+        private bool _sidecarOnline;
+        private string _sidecarUrl;
+        /// <summary>Null until checked; whether the sidecar answered /health.</summary>
+        public bool? SidecarOnline => _sidecarCheck == null || !_sidecarCheck.IsCompleted ? (bool?)null : _sidecarOnline;
 
         /// <summary>Re-plan the group containing <paramref name="squadId"/> on the next frame.</summary>
         public void RequestReplan(string squadId) { if (!string.IsNullOrEmpty(squadId)) _forceSquads.Add(squadId); }
@@ -136,6 +161,11 @@ namespace ShadowVale.AI.Coordination
 
         private void Update()
         {
+            if (_sidecarCheck != null && _sidecarCheck.IsCompleted)
+            {
+                EventBus.Publish(new SidecarStatusEvent(_sidecarOnline, _sidecarUrl)); // Main thread.
+                _sidecarCheck = null;
+            }
             if (!ServiceLocator.TryResolve<IWorldQuery>(out var graph)) return;
             float now = Time.time;
             var groups = BuildGroups(now);

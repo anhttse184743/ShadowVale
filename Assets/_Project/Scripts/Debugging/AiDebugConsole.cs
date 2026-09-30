@@ -95,6 +95,7 @@ namespace ShadowVale.Debugging
             string solver = ServiceLocator.TryResolve<SquadCoordinator>(out var coordinator)
                 ? $"{coordinator.Solver.VariantId} (budget {coordinator.Solver.LatencyBudgetMs} ms)"
                   + (coordinator.SolverFallbackReason != null ? " ⚠" : "")
+                  + (coordinator.SidecarOnline == true ? " · sidecar online" : coordinator.SidecarOnline == false ? " · sidecar OFF" : "")
                 : ServiceLocator.TryResolve<ISquadSolver>(out var s) ? $"{s.VariantId} (chưa có coordinator)" : "chưa đăng ký";
             string graph = ServiceLocator.TryResolve<IWorldQuery>(out var g)
                 ? $"{g.NodeCount} node{(g.VisibilityReady ? "" : " (đang tính tầm nhìn…)")}" : "chưa bake";
