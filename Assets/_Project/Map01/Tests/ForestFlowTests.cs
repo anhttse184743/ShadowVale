@@ -341,15 +341,14 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual(mission.Settings.guardShotInterval, enemy.FireInterval, 1e-4f, enemy.name);
             }
 
-            // One real hit through the guard's own Shoot(): exactly the balance damage, and no
+            // One real hit through the guard's own weapon: exactly the balance damage, and no
             // second hit before the interval has passed.
             var guard = mission.Enemies.First(e => e.Alive);
             typeof(Map01EnemyController).GetField("_nextShot", Private).SetValue(guard, 0f);
-            var shoot = typeof(Map01EnemyController).GetMethod("Shoot", Private);
             float before = playerHealth.Current;
-            shoot.Invoke(guard, null);
+            guard.FireAtPlayer();
             Assert.AreEqual(before - expected, playerHealth.Current, 1e-3f);
-            shoot.Invoke(guard, null);
+            guard.FireAtPlayer();
             Assert.AreEqual(before - expected, playerHealth.Current, 1e-3f, "A guard must not fire again before guardShotInterval.");
 
             // The commander keeps his multiplier on top of the baseline rather than being reset by it.

@@ -62,6 +62,9 @@ namespace ShadowVale.Map01
         /// thousands of bushes in Points, for the checks that run every frame.</summary>
         public readonly List<ForestPoint> Interactables = new List<ForestPoint>();
         private readonly List<ForestPoint> hideSpots = new List<ForestPoint>();
+        private readonly List<ForestPoint> coverPoints = new List<ForestPoint>();
+        /// <summary>Placed cover positions a guard can run to on first contact.</summary>
+        public IReadOnlyList<ForestPoint> CoverPoints => coverPoints;
         private float hp, stamina;
         private bool paused;
         private Map01Quest quest;
@@ -197,11 +200,12 @@ namespace ShadowVale.Map01
         {
             Points.Add(point);
             if (point.kind == ForestPointKind.Hide) hideSpots.Add(point);
-            else if (point.kind != ForestPointKind.Cover) Interactables.Add(point);
+            else if (point.kind == ForestPointKind.Cover) coverPoints.Add(point);
+            else Interactables.Add(point);
         }
         public void UnregisterPoint(ForestPoint point)
         {
-            Points.Remove(point); hideSpots.Remove(point); Interactables.Remove(point);
+            Points.Remove(point); hideSpots.Remove(point); coverPoints.Remove(point); Interactables.Remove(point);
         }
         public void AddEnemy(Map01EnemyController enemy) => Enemies = Enemies.Append(enemy).ToArray();
         /// <summary>A brief visible streak — thrown stones, tracers — using the shared trail material.</summary>

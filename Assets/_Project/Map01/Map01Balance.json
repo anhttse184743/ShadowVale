@@ -5,6 +5,6 @@
   "interactRange": 3.5, "stoneRange": 20, "stoneNoise": 14,
   "guardDamageScale": 0.35, "guardShotInterval": 1.6,
   "detectionSeconds": 1.5, "hiddenVisionScale": 0.32, "crouchVisionScale": 0.6,
-  "medkitHeal": 45, "followDistance": 3, "hungHP": 150, "searchSeconds": 8,
+  "medkitHeal": 45, "followDistance": 3, "hungHP": 150, "searchSeconds": 8, "suppressSeconds": 1.5,
   "startingStones": 6, "guardDropAmmo": 30, "guardDropMedkits": 1
 }

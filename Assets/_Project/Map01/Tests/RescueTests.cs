@@ -156,7 +156,7 @@ namespace ShadowVale.Map01.Tests
             // Alarmed, but Nam far out of sight: the guard turns on the prisoner instead.
             float full = rescue.HungHealth;
             Assert.AreEqual(rescue.HungMaxHealth, full);
-            typeof(Map01EnemyController).GetField("_engagedUntil", Private).SetValue(shooter, Time.time + 30f);
+            shooter.EngageFor(30f);
             for (float until = Time.time + 6; rescue.HungHealth >= full && Time.time < until;) yield return null;
             Assert.Less(rescue.HungHealth, full, "An engaged guard with Nam out of sight shoots Hùng.");
             Assert.AreEqual(shooter.DamagePerShot, full - rescue.HungHealth, .01f, "One of his rounds.");

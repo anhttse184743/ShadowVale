@@ -324,8 +324,7 @@ namespace ShadowVale.Map01.Tests
         private static Map01EnemyController CampGuard(Map01Scouting scouting, string name) =>
             scouting.Camps.SelectMany(c => c.Guards).First(g => g.name == name);
 
-        private static void Spot(Map01Scouting scouting) =>
-            typeof(Map01EnemyController).GetField("_engagedUntil", Private).SetValue(scouting.Camps[0].Guards[0], Time.time + 5);
+        private static void Spot(Map01Scouting scouting) => scouting.Camps[0].Guards[0].EngageFor(5);
 
         [UnityTest]
         public IEnumerator ScoutingFailureStartsOverFromHungsOrder()

@@ -16,6 +16,8 @@ namespace ShadowVale.Map01
         public float hungHP;
         /// <summary>How long a guard looks around where he heard something before heading back.</summary>
         public float searchSeconds;
+        /// <summary>How long an engaged guard keeps firing at the spot he last saw Nam before hunting him.</summary>
+        public float suppressSeconds;
         public int startingStones, guardDropAmmo, guardDropMedkits;
     }
 
@@ -36,6 +38,8 @@ namespace ShadowVale.Map01
     {
         public string id;
         public float max_hp, move_speed, vision_range, vision_angle, hearing_range, alert_decay_seconds;
+        /// <summary>Share of max health below which a fighting guard falls back (Retreat state); 0 = never.</summary>
+        public float retreat_hp_threshold;
     }
     [Serializable] public sealed class ForestIngredient { public string item_id; public int count; }
     [Serializable] public sealed class ForestRecipe
