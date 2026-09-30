@@ -69,7 +69,7 @@ namespace ShadowVale.Map01
             foreach (var name in SquadNames)
             {
                 var go = GameObject.Find(name);
-                if (go != null && go.TryGetComponent(out Map01EnemyController guard)) squad.Add(guard);
+                if (go != null && go.TryGetComponent(out Map01EnemyController guard)) { squad.Add(guard); guard.SquadId = "B"; }
             }
             RetryPoint = FindRetryPoint(mission.player.position);
         }

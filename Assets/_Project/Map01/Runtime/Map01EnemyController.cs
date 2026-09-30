@@ -1,3 +1,4 @@
+using ShadowVale.AI.Agents;
 using ShadowVale.AI.Contracts;
 using ShadowVale.AI.Fsm;
 using ShadowVale.AI.Perception;
@@ -18,7 +19,7 @@ namespace ShadowVale.Map01
     /// the rest of Map 1 and its tests rely on.
     /// </summary>
     [RequireComponent(typeof(NavMeshAgent), typeof(Health))]
-    public sealed class Map01EnemyController : MonoBehaviour, INoiseListener, IEnemyWeapon, IEnemyTactics
+    public sealed class Map01EnemyController : MonoBehaviour, INoiseListener, IEnemyWeapon, IEnemyTactics, IEnemyAgent
     {
         [SerializeField] private Vector3[] patrolPoints = System.Array.Empty<Vector3>();
         [SerializeField] private float visionRange = 24f;
@@ -50,8 +51,9 @@ namespace ShadowVale.Map01
         private Vector3 _postPosition;
         private Quaternion _postRotation;
         private float _lastHealth;
+        private bool _sawPlayer;
 
-        private EnemyBrain Brain { get { EnsureBrain(); return _brain; } }
+        public EnemyBrain Brain { get { EnsureBrain(); return _brain; } }
         private EnemyBlackboard Memory => Brain.Memory;
 
         public bool Alive => !(_health != null ? _health : GetComponent<Health>()).IsDead; // Asked every frame, all over.
@@ -72,6 +74,8 @@ namespace ShadowVale.Map01
         public float Suspicion => Memory.Suspicion;
         /// <summary>Spotted Nam and fighting him — refreshed while he stays in sight.</summary>
         public bool Engaged => Memory.Engaged(Time.time);
+        /// <summary>Set by whoever groups Map 1's guards: the camps (C1–C3), the jetty squad (B), the boss.</summary>
+        public string SquadId { get; internal set; } = "";
         public string LegacyId => name.StartsWith("Outpost guard ", System.StringComparison.Ordinal)
             ? "expansion_guard_" + name.Substring("Outpost guard ".Length) : name;
         public string SaveId {
@@ -222,8 +226,23 @@ namespace ShadowVale.Map01
             visionRange *= 1.2f; attackRange *= 1.2f;
             var health = GetComponent<Health>();
             if (health != null) health.SetMaxHealth(health.Max * healthMultiplier);
+            SquadId = "boss";
             SyncTuning();
         }
+
+        // ---- IEnemyAgent: what the coordinator and the debug tools read -------------------------
+
+        string IEnemyAgent.Id => LegacyId;
+        public Vector3 Position => transform.position;
+        public Vector3 Forward => transform.forward;
+        public float HealthFraction => _health != null && _health.Max > 0 ? _health.Current / _health.Max : 0f;
+        public bool SeesPlayer => _sawPlayer;
+        float IEnemyAgent.VisionConeAngle => visionAngle;
+        public void DebugEngage(float seconds) => EngageFor(seconds);
+        public void DebugDamage(float fractionOfMax) => _health.TakeDamage(_health.Max * fractionOfMax, transform.position + Vector3.up, null);
+
+        private void OnEnable() => AgentRegistry.Register(this);
+        private void OnDisable() => AgentRegistry.Unregister(this);
 
         private void Awake()
         {
@@ -279,13 +298,14 @@ namespace ShadowVale.Map01
             _lastHealth = _health.Current;
             if (_health.IsDead)
             {
+                _sawPlayer = false;
                 CreateLoot();
                 _body.Stop();
                 _body.Animate(false);
                 return;
             }
 
-            bool sees = CanSeePlayer(out float distance);
+            bool sees = _sawPlayer = CanSeePlayer(out float distance);
             _brain.Tick(new PerceptionSample(sees, distance, _player != null ? _player.position : transform.position),
                 Time.time, Time.deltaTime);
             if (sees && Engaged && _mission != null) _mission.Alarmed = true;

@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ShadowVale.AI.Contracts;
 using ShadowVale.AI.Perception;
+using ShadowVale.Core.Services;
 using ShadowVale.Gameplay.Audio;
 using ShadowVale.Gameplay.Combat;
 using ShadowVale.Gameplay.Player;
@@ -123,6 +125,9 @@ namespace ShadowVale.Map01
             Stealth = PlayerStealthAdapter.For(player.gameObject);
             Stealth.CrouchProbe = () => Crouched;
             Stealth.HiddenProbe = () => Hidden;
+            // Shared services the map-agnostic AI tools (debug console, coordinator) resolve.
+            ServiceLocator.Register(Noise);
+            ServiceLocator.Register<IPlayerObservable>(Stealth);
             foreach (var point in FindObjectsByType<ForestPoint>(FindObjectsSortMode.None)) RegisterPoint(point);
             hp = Settings.playerHP; stamina = Settings.stamina;
             inventory.SeedStartingLoadout(Settings.startingStones);
@@ -143,7 +148,7 @@ namespace ShadowVale.Map01
             Enemies = FindObjectsByType<Map01EnemyController>(FindObjectsSortMode.None);
             if (ModernPlayer != null)
             {
-                ModernPlayer.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting;
+                ModernPlayer.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting && !InputFocus.OverlayOpen;
                 ModernPlayer.SprintAllowed = () => stamina > 2;
             }
             if (ModernHealth != null) ModernHealth.KeepCheckpointCorpse();
@@ -151,7 +156,7 @@ namespace ShadowVale.Map01
             {
                 ModernCombat.DrawsOwnWeaponHud = true; // Map01Hud.Combat shows the weapons on keys 1/2/3.
                 var stones = GetComponent<Map01StoneThrow>(); // Added by Map01PlayerInteraction.Awake.
-                ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting && !inventory.SuppressFire
+                ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting && !inventory.SuppressFire && !InputFocus.OverlayOpen
                     && !scouting.Binoculars && !stones.Aiming; // Hands are on the binoculars or a stone, not the rifle.
                 ModernCombat.TryConsumeRound = () =>
                 {
@@ -176,7 +181,7 @@ namespace ShadowVale.Map01
                 ModernCombat.Attacked += OnPlayerAttacked;
             }
             if (gameCamera != null && gameCamera.TryGetComponent<ThirdPersonCamera>(out var cameraRig))
-                cameraRig.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible;
+                cameraRig.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !InputFocus.OverlayOpen;
             if (player.TryGetComponent(out PlayerFootsteps footsteps))
             {
                 // The river is already tracked for the movement slowdown, so the footsteps ask
@@ -317,5 +322,11 @@ namespace ShadowVale.Map01
         }
 
         private void OnDisable() { Time.timeScale = 1; }
+
+        private void OnDestroy()
+        {
+            if (ServiceLocator.TryResolve<NoiseSystem>(out var noise) && noise == Noise) ServiceLocator.Unregister<NoiseSystem>();
+            if (ServiceLocator.TryResolve<IPlayerObservable>(out var stealth) && ReferenceEquals(stealth, Stealth)) ServiceLocator.Unregister<IPlayerObservable>();
+        }
     }
 }
