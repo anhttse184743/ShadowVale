@@ -37,19 +37,60 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(mission.Stopped);
             Assert.IsFalse(mission.GetComponent<Map01SaveSystem>().CanSave());
             var start = mission.player.position;
-            yield return WaitGameSeconds(3);
+            double poseDeadline = Time.realtimeSinceStartupAsDouble + 20;
+            while (opening.BriefingTime < 2.5f && Time.realtimeSinceStartupAsDouble < poseDeadline) yield return null;
+            Assert.IsFalse(opening.IsIntroducing);
+            var actor = opening.GetComponentsInChildren<Animator>()[0];
+            var hand = actor.GetBoneTransform(HumanBodyBones.RightHand);
+            var shoulder = actor.GetBoneTransform(HumanBodyBones.RightUpperArm);
+            Assert.Greater(hand.position.y - shoulder.position.y, -.25f, "Pointing must raise the hand, not be hidden by idle.");
+            var nam = mission.player.GetComponentInChildren<Animator>();
+            Assert.IsNull(nam.runtimeAnimatorController, "Gameplay stance must not override the briefing.");
+            Assert.Less(nam.GetBoneTransform(HumanBodyBones.RightHand).position.y,
+                nam.GetBoneTransform(HumanBodyBones.RightUpperArm).position.y - .3f, "Nam must rest his right arm during briefing.");
+            Assert.Less(nam.GetBoneTransform(HumanBodyBones.LeftHand).position.y,
+                nam.GetBoneTransform(HumanBodyBones.LeftUpperArm).position.y - .3f, "Nam must rest his left arm during briefing.");
             Capture(mission.gameCamera, "Logs/Cutscene/wide.png");
-            yield return WaitGameSeconds(18);
+            while (opening.BriefingTime < opening.SaluteBeginsAt + .85f) yield return null;
+            Assert.Less(Vector3.Distance(nam.GetBoneTransform(HumanBodyBones.RightHand).position,
+                nam.GetBoneTransform(HumanBodyBones.Head).position), .42f, "Salute must bring the right hand to the forehead.");
+            Assert.Less(nam.GetBoneTransform(HumanBodyBones.LeftHand).position.y,
+                nam.GetBoneTransform(HumanBodyBones.LeftUpperArm).position.y - .3f, "The other arm must remain down during salute.");
             Capture(mission.gameCamera, "Logs/Cutscene/salute.png");
             double deadline = Time.realtimeSinceStartupAsDouble + 20;
             while (opening.IsPlaying && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
             Assert.IsFalse(opening.IsPlaying);
             Assert.IsFalse(Map01OpeningCutscene.Active);
+            Assert.IsNotNull(nam.runtimeAnimatorController);
+            Assert.IsTrue(mission.ModernPlayer.enabled);
+            Assert.IsTrue(mission.ModernCombat.enabled);
             Assert.IsTrue(mission.CameraInputEnabled);
             Assert.AreEqual(Map01Quest.RescueStage, mission.Stage);
             Assert.Less(Vector3.Distance(start, mission.player.position), .3f);
             Assert.IsTrue(mission.GetComponent<Map01SaveSystem>().CanSave());
             Capture(mission.gameCamera, "Logs/Cutscene/gameplay.png");
+            // Exercise the river from a low camera angle: body must remain tinted, not sliced.
+            mission.ModernPlayer.enabled = false;
+            var controller = mission.player.GetComponent<CharacterController>();
+            if (controller != null) controller.enabled = false;
+            float riverZ = 35;
+            float riverX = mission.riverOffset + mission.riverAmplitude1 * Mathf.Sin(riverZ * mission.riverFrequency1)
+                + mission.riverAmplitude2 * Mathf.Sin(riverZ * mission.riverFrequency2);
+            mission.player.position = new Vector3(riverX, -.7f, riverZ);
+            yield return null;
+            Assert.IsTrue(mission.IsWading);
+            var rig = mission.gameCamera.GetComponent<ShadowVale.Gameplay.Player.ThirdPersonCamera>();
+            Assert.IsTrue(rig.SurfaceCameraFloor.Invoke().HasValue);
+            var flags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
+            typeof(ShadowVale.Gameplay.Player.ThirdPersonCamera).GetField("_pitch", flags).SetValue(rig, -25f);
+            yield return null; yield return null;
+            Assert.GreaterOrEqual(mission.gameCamera.transform.position.y, rig.SurfaceCameraFloor.Invoke().Value - .01f);
+            typeof(ShadowVale.Gameplay.Player.ThirdPersonCamera).GetField("_pitch", flags).SetValue(rig, 12f);
+            typeof(ShadowVale.Gameplay.Player.ThirdPersonCamera).GetField("_yaw", flags).SetValue(rig, 90f);
+            yield return WaitGameSeconds(.5f);
+            Capture(mission.gameCamera, "Logs/Cutscene/wading.png");
+            if (controller != null) controller.enabled = true;
+            mission.ModernPlayer.enabled = true;
             yield return new ExitPlayMode();
         }
         private static void Capture(Camera camera, string path)
