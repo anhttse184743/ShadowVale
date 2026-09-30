@@ -93,13 +93,16 @@ namespace ShadowVale.Debugging
         {
             string solver = ServiceLocator.TryResolve<ISquadSolver>(out var s)
                 ? $"{s.VariantId} (budget {s.LatencyBudgetMs} ms)" : "chưa đăng ký";
+            string graph = ServiceLocator.TryResolve<IWorldQuery>(out var g)
+                ? $"{g.NodeCount} node{(g.VisibilityReady ? "" : " (đang tính tầm nhìn…)")}" : "chưa bake";
             int alive = AgentRegistry.All.Count(a => a.Alive);
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"Solver: <b>{solver}</b>   Lính: {alive}/{AgentRegistry.All.Count}   Overlay: {(AiDebugOverlay.Enabled ? "bật" : "tắt")}", _mono);
+            GUILayout.Label($"Solver: <b>{solver}</b>   Graph: {graph}   Lính: {alive}/{AgentRegistry.All.Count}   Overlay: {(AiDebugOverlay.Enabled ? "bật" : "tắt")}", _mono);
             GUILayout.FlexibleSpace();
             bool paused = GUILayout.Toggle(_gamePaused, "Dừng game");
             if (paused != _gamePaused) { _gamePaused = paused; Time.timeScale = paused ? 0f : 1f; }
             _playerInvulnerable = GUILayout.Toggle(_playerInvulnerable, "Nam bất tử");
+            AiDebugOverlay.ShowGraph = GUILayout.Toggle(AiDebugOverlay.ShowGraph, "Graph");
             GUILayout.EndHorizontal();
         }
 

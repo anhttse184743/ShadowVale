@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using ShadowVale.AI.Agents;
+using ShadowVale.AI.Contracts;
 using ShadowVale.AI.Fsm;
 using ShadowVale.AI.Perception;
 using ShadowVale.Core.Events;
+using ShadowVale.Core.Services;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -16,6 +18,9 @@ namespace ShadowVale.Debugging
     public sealed class AiDebugOverlay : MonoBehaviour
     {
         public static bool Enabled { get; set; }
+        /// <summary>Also draw the map's tactical graph (nodes, edges, cover facing, chokepoints) near the player.</summary>
+        public static bool ShowGraph { get; set; } = true;
+        private const float GraphDrawRadius = 45f;
 
         private const float NoiseFadeSeconds = 1.5f;
         private const int ArcSegments = 14, CircleSegments = 32;
@@ -70,6 +75,7 @@ namespace ShadowVale.Debugging
             GL.LoadProjectionMatrix(camera.projectionMatrix);
             GL.modelview = camera.worldToCameraMatrix;
             GL.Begin(GL.LINES);
+            if (ShowGraph) DrawGraph();
             foreach (var agent in AgentRegistry.All)
             {
                 if (!agent.Alive) continue;
@@ -120,6 +126,28 @@ namespace ShadowVale.Debugging
             {
                 GL.Color(new Color(1f, .85f, .3f, .7f));
                 Line(agent.Position + Vector3.up * .2f, m.InvestigatePoint + Vector3.up * .2f);
+            }
+        }
+
+        private static void DrawGraph()
+        {
+            if (!ServiceLocator.TryResolve<IWorldQuery>(out var graph)) return;
+            Vector3 centre = ServiceLocator.TryResolve<IPlayerObservable>(out var player) ? player.Position : Vector3.zero;
+            float r2 = GraphDrawRadius * GraphDrawRadius;
+            var lift = Vector3.up * .25f;
+            for (int i = 0; i < graph.NodeCount; i++)
+            {
+                Vector3 p = graph.NodePosition(i);
+                if ((p - centre).sqrMagnitude > r2) continue;
+                GL.Color(new Color(1f, 1f, 1f, .25f));
+                foreach (int j in graph.Neighbors(i))
+                    if (j > i) Line(p + lift, graph.NodePosition(j) + lift);
+                bool choke = false;
+                foreach (int e in graph.EscapeRoutes) if (e == i) { choke = true; break; }
+                GL.Color(choke ? new Color(1f, .2f, .2f) : graph.IsCoverNode(i) ? new Color(.2f, .8f, 1f) : new Color(.8f, .8f, .8f));
+                Circle(p + lift, choke ? .5f : .3f);
+                if (graph.IsCoverNode(i))
+                    Line(p + lift, p + lift + Quaternion.Euler(0, graph.CoverFacing(i), 0) * Vector3.forward * 1.2f);
             }
         }
 

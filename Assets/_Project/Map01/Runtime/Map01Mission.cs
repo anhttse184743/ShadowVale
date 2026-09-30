@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ShadowVale.AI.Contracts;
 using ShadowVale.AI.Perception;
+using ShadowVale.AI.Tactical;
 using ShadowVale.Core.Services;
 using ShadowVale.Gameplay.Audio;
 using ShadowVale.Gameplay.Combat;
@@ -134,6 +135,8 @@ namespace ShadowVale.Map01
             // Added at runtime like the scouting order; guards ask it from their first Update.
             SightCover = GetComponent<Map01SightCover>();
             if (SightCover == null) SightCover = gameObject.AddComponent<Map01SightCover>();
+            // The squad coordinator's map: loads Resources/TacticalGraphs/Map 1, visibility through the same foliage.
+            TacticalGraphHost.Attach(gameObject, ObstructionMask, SightCover);
             IsInitialized = true;
         }
 
