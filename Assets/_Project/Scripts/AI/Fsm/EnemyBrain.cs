@@ -103,13 +103,32 @@ namespace ShadowVale.AI.Fsm
             }
         }
 
-        private void OnContact(Vector3 playerPosition, bool seen)
+        private void OnContact(Vector3 playerPosition, bool seen, bool publish = true)
         {
             var m = _ctx.Memory;
             if (!m.HasAssignment && _ctx.Tactics.TryFindCover(_ctx, playerPosition, out var cover))
                 Assign(cover, -1, "cover");
             else if (m.HasAssignment) m.TakeCoverUntil = _ctx.Now + _ctx.Tuning.TakeCoverTimeoutSeconds;
-            EventBus.Publish(new PlayerContactEvent(_ctx.AgentId, playerPosition, seen));
+            if (publish) EventBus.Publish(new PlayerContactEvent(_ctx.AgentId, playerPosition, seen));
+        }
+
+        /// <summary>
+        /// What the squad knows, shared over the radio or by the squad plan: the player was at
+        /// <paramref name="playerPosition"/> at <paramref name="seenAt"/>. Keeps him fighting as long as
+        /// the group has fresh contact. Does not publish a contact of its own, so alerts never cascade.
+        /// </summary>
+        public void ShareContact(Vector3 playerPosition, float seenAt, float now)
+        {
+            var m = _ctx.Memory;
+            float until = seenAt + _ctx.Tuning.EngagedMemorySeconds;
+            if (until <= now || _ctx.Body.IsDead) return;
+            _ctx.Now = now;
+            bool wasEngaged = m.Engaged(now);
+            if (until > m.EngagedUntil) m.EngagedUntil = until;
+            m.Suspicion = 1f;
+            m.LastKnownPlayerPosition = playerPosition;
+            BeginInvestigation(playerPosition, now);
+            if (!wasEngaged) OnContact(playerPosition, seen: false, publish: false);
         }
 
         /// <summary>A noise or a sighting to check. The way back is kept from the first thing he

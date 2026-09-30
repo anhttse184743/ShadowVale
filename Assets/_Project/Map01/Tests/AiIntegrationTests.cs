@@ -4,6 +4,7 @@ using System.Linq;
 using NUnit.Framework;
 using ShadowVale.AI.Agents;
 using ShadowVale.AI.Contracts;
+using ShadowVale.AI.Coordination;
 using ShadowVale.AI.Fsm;
 using ShadowVale.Core.Events;
 using ShadowVale.Core.Services;
@@ -54,6 +55,57 @@ namespace ShadowVale.Map01.Tests
             }
             for (float until = Time.realtimeSinceStartup + 20f; !graph.VisibilityReady && Time.realtimeSinceStartup < until;) yield return null;
             Assert.IsTrue(graph.VisibilityReady, "Visibility is computed within a few seconds of loading.");
+        }
+
+        [UnityTest]
+        public IEnumerator ACampUnderAttackIsPlannedAsOneSquadWithDistinctPositions()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            yield return SquadPlanInPlayMode();
+            yield return new ExitPlayMode();
+        }
+
+        private static IEnumerator SquadPlanInPlayMode()
+        {
+            yield return null;
+            yield return null;
+            var mission = Object.FindFirstObjectByType<Map01Mission>();
+            Assert.IsTrue(ServiceLocator.TryResolve<SquadCoordinator>(out var coordinator), "Map 1 runs a squad coordinator.");
+            var squad = mission.Enemies.Where(e => e.SquadId == "C2" && e.Alive).ToArray();
+            Assert.GreaterOrEqual(squad.Length, 2);
+
+            var alerts = new List<SquadAlertEvent>();
+            var replans = new List<ReplanStartedEvent>();
+            var plans = new List<PlanAppliedEvent>();
+            System.Action<SquadAlertEvent> onAlert = alerts.Add;
+            System.Action<ReplanStartedEvent> onReplan = replans.Add;
+            System.Action<PlanAppliedEvent> onPlan = plans.Add;
+            EventBus.Subscribe(onAlert); EventBus.Subscribe(onReplan); EventBus.Subscribe(onPlan);
+            try
+            {
+                squad[0].DebugDamage(.1f); // Shot at: he knows where Nam is and radios the camp.
+                for (float until = Time.time + 5f; plans.Count == 0 && Time.time < until;) yield return null;
+
+                Assert.IsTrue(alerts.Any(a => a.SourceSquad == "C2" && a.SquadMatesJoined >= squad.Length - 1), "The whole camp is alerted.");
+                Assert.IsTrue(squad.All(g => g.Engaged), "Every C2 guard is fighting.");
+                Assert.IsNotEmpty(replans, "A re-plan started.");
+                Assert.AreEqual("first_contact", replans[0].Trigger);
+                var plan = plans.First(p => p.Group.Split('+').Contains("C2"));
+                Assert.GreaterOrEqual(plan.Assignments.Length, squad.Length);
+                Assert.AreEqual(plan.Assignments.Length, plan.Assignments.Select(a => a.Node).Distinct().Count(), "One node per guard.");
+                Assert.IsNull(plan.FallbackReason);
+                Assert.That(plan.CoordinationScore, Is.InRange(0.0, 1.0));
+                foreach (var guard in squad)
+                {
+                    Assert.IsTrue(guard.Brain.Memory.HasAssignment, guard.name + " got a position.");
+                    Assert.IsTrue(plan.Assignments.Any(a => a.AgentId == guard.LegacyId));
+                }
+            }
+            finally
+            {
+                EventBus.Unsubscribe(onAlert); EventBus.Unsubscribe(onReplan); EventBus.Unsubscribe(onPlan);
+            }
         }
 
         private static IEnumerator InPlayMode()

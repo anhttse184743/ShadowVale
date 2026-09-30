@@ -29,7 +29,7 @@ namespace ShadowVale.AI.Fsm
         public float AttackRange = 18f;
         /// <summary>Suppressive fire at the last-seen point after losing sight; 0 = hunt straight away.</summary>
         public float SuppressSeconds;
-        public float TakeCoverTimeoutSeconds = 5f;
+        public float TakeCoverTimeoutSeconds = 8f;
         public float CoverArriveDistance = 1f;
 
         // Retreat

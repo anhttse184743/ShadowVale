@@ -22,6 +22,7 @@ namespace ShadowVale.Debugging
     {
         private const int WindowId = 0x5A1D;
         private static readonly string[] Tabs = { "Nhật ký", "Lính" };
+        private static readonly string[] Variants = { "greedy", "ga", "sa", "sqa", "qiea", "qaoa" };
 
         public static bool Visible { get; private set; }
 
@@ -91,8 +92,10 @@ namespace ShadowVale.Debugging
 
         private void DrawHeader()
         {
-            string solver = ServiceLocator.TryResolve<ISquadSolver>(out var s)
-                ? $"{s.VariantId} (budget {s.LatencyBudgetMs} ms)" : "chưa đăng ký";
+            string solver = ServiceLocator.TryResolve<SquadCoordinator>(out var coordinator)
+                ? $"{coordinator.Solver.VariantId} (budget {coordinator.Solver.LatencyBudgetMs} ms)"
+                  + (coordinator.SolverFallbackReason != null ? " ⚠" : "")
+                : ServiceLocator.TryResolve<ISquadSolver>(out var s) ? $"{s.VariantId} (chưa có coordinator)" : "chưa đăng ký";
             string graph = ServiceLocator.TryResolve<IWorldQuery>(out var g)
                 ? $"{g.NodeCount} node{(g.VisibilityReady ? "" : " (đang tính tầm nhìn…)")}" : "chưa bake";
             int alive = AgentRegistry.All.Count(a => a.Alive);
@@ -133,7 +136,7 @@ namespace ShadowVale.Debugging
             {
                 var e = _log[i];
                 if (!_showCategory[(int)e.Category]) continue;
-                if (_squadFilter.Length > 0 && e.Squad != _squadFilter) continue;
+                if (_squadFilter.Length > 0 && System.Array.IndexOf(e.Squad.Split('+'), _squadFilter) < 0) continue;
                 GUILayout.Label($"<color=#{ColorOf(e.Category)}>{Escape(e.ToString())}</color>", _mono);
             }
             GUILayout.EndScrollView();
@@ -188,6 +191,18 @@ namespace ShadowVale.Debugging
             GUI.enabled = true;
             if (GUILayout.Button("Tiếng động tại Nam (12 m)")) EmitNoiseAtPlayer(12f);
             GUILayout.EndHorizontal();
+
+            ServiceLocator.TryResolve<SquadCoordinator>(out var coordinator);
+            GUILayout.BeginHorizontal();
+            GUI.enabled = coordinator != null && agent != null && !string.IsNullOrEmpty(agent.SquadId);
+            if (GUILayout.Button("Ép re-plan squad của lính này")) { coordinator.RequestReplan(agent.SquadId); _status = "Re-plan " + agent.SquadId; }
+            GUI.enabled = coordinator != null;
+            GUILayout.Label("Solver:", GUILayout.Width(46));
+            foreach (var id in Variants)
+                if (GUILayout.Button(id, GUILayout.Width(56))) { coordinator.SetVariant(id); _status = "Solver → " + coordinator.Solver.VariantId + (coordinator.SolverFallbackReason != null ? " (" + coordinator.SolverFallbackReason + ")" : ""); }
+            GUI.enabled = true;
+            GUILayout.EndHorizontal();
+            if (coordinator?.RecordPath != null) GUILayout.Label("Ghi instance: " + coordinator.RecordPath, _mono);
         }
 
         private void EmitNoiseAtPlayer(float radius)

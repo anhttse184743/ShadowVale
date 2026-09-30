@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ShadowVale.AI.Contracts;
+using ShadowVale.AI.Coordination;
 using ShadowVale.AI.Perception;
 using ShadowVale.AI.Tactical;
 using ShadowVale.Core.Services;
@@ -137,6 +138,8 @@ namespace ShadowVale.Map01
             if (SightCover == null) SightCover = gameObject.AddComponent<Map01SightCover>();
             // The squad coordinator's map: loads Resources/TacticalGraphs/Map 1, visibility through the same foliage.
             TacticalGraphHost.Attach(gameObject, ObstructionMask, SightCover);
+            // Squad coordination (QUBO over that graph). Map 1 has no content-bundle ai_settings yet: defaults.
+            SquadCoordinator.Attach(gameObject, new CoordinationSettings());
             IsInitialized = true;
         }
 
