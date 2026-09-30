@@ -46,6 +46,16 @@ namespace ShadowVale.Content
                 if (e.MaxHp <= 0) errors.Add($"enemy_archetypes[{e.Id}].max_hp must be > 0");
                 if (e.RetreatHpThreshold < 0 || e.RetreatHpThreshold > 1) errors.Add($"enemy_archetypes[{e.Id}].retreat_hp_threshold must be in [0,1]");
                 if (!string.IsNullOrEmpty(e.LootTableId) && !loot.Contains(e.LootTableId)) errors.Add($"enemy_archetypes[{e.Id}].loot_table_id '{e.LootTableId}' unknown");
+                if (e.Boss != null)
+                {
+                    var p = e.Boss;
+                    if (!e.IsBoss) errors.Add($"enemy_archetypes[{e.Id}].boss is only allowed with is_boss");
+                    if (p.HealthMultiplier <= 0 || p.VisionMultiplier <= 0) errors.Add($"enemy_archetypes[{e.Id}].boss multipliers must be > 0");
+                    if (p.ReinforceHpThreshold < 0 || p.ReinforceHpThreshold > 1 || p.RelocateDamageFraction < 0 || p.RelocateDamageFraction > 1)
+                        errors.Add($"enemy_archetypes[{e.Id}].boss fractions must be in [0,1]");
+                    if (p.RelocateMaxDistance < p.RelocateMinDistance) errors.Add($"enemy_archetypes[{e.Id}].boss relocate_max_distance < relocate_min_distance");
+                    if (p.ReinforceCount < 0 || p.GrenadeRadius < 0 || p.GrenadeDamage < 0) errors.Add($"enemy_archetypes[{e.Id}].boss values must be ≥ 0");
+                }
             }
 
             foreach (var t in b.LootTables)

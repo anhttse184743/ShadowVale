@@ -36,3 +36,19 @@ luôn được ghi vào `persistentDataPath/research/telemetry-sessions.jsonl`.
 
 Muốn đổi hợp đồng thì sửa DTO, chạy test với biến môi trường `SVL_WRITE_CONTRACT=1` để sinh lại file
 mẫu, rồi báo cho cả nhóm.
+
+## Content bundle: `enemy_archetypes[].boss` (thêm ở M8)
+
+Archetype có `is_boss: true` được phép kèm một object `boss` (định nghĩa `boss_profile` trong
+`Assets/StreamingAssets/Content/content.schema.json`). Object này chứa các tham số hành vi boss (A04):
+
+| Nhóm | Trường |
+|---|---|
+| Chỉ số | `health_multiplier`, `damage_multiplier`, `vision_multiplier` |
+| Đổi vị trí | `relocate_interval_seconds`, `relocate_damage_fraction`, `relocate_min_distance`, `relocate_max_distance`, `relocate_min_player_distance` |
+| Lựu đạn | `grenade_camp_seconds`, `grenade_camp_radius`, `grenade_cooldown_seconds`, `grenade_range`, `grenade_radius`, `grenade_damage`, `grenade_fuse_seconds`, `grenade_noise_radius` |
+| Gọi viện | `reinforce_hp_threshold` (0..1), `reinforce_count`, `reinforce_radius` |
+
+- Mọi trường đều tuỳ chọn. Trường nào thiếu thì client dùng giá trị mặc định đã chỉnh cho Map 1 (`BossProfile.cs`).
+- Nếu `boss` nằm trên archetype không phải boss, hoặc tỉ lệ nằm ngoài khoảng [0,1], `SchemaValidator` sẽ từ chối bundle.
+- Web editor và schema phía backend cần thêm định nghĩa `boss_profile` này.

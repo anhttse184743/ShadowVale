@@ -67,7 +67,34 @@
         "alert_decay_seconds": { "type": "number", "minimum": 0 },
         "retreat_hp_threshold": { "type": "number", "minimum": 0, "maximum": 1 },
         "loot_table_id": { "$ref": "#/definitions/id" },
-        "is_boss": { "type": "boolean", "default": false }
+        "is_boss": { "type": "boolean", "default": false },
+        "boss": { "$ref": "#/definitions/boss_profile" }
+      }
+    },
+    "boss_profile": {
+      "description": "Boss behaviour on top of the six-state FSM (A04): relocation, grenades, reinforcements. Only for is_boss archetypes; missing fields use the client defaults.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "health_multiplier": { "type": "number", "exclusiveMinimum": 0 },
+        "damage_multiplier": { "type": "number", "minimum": 0 },
+        "vision_multiplier": { "type": "number", "exclusiveMinimum": 0 },
+        "relocate_interval_seconds": { "type": "number", "minimum": 0 },
+        "relocate_damage_fraction": { "type": "number", "minimum": 0, "maximum": 1 },
+        "relocate_min_distance": { "type": "number", "minimum": 0 },
+        "relocate_max_distance": { "type": "number", "minimum": 0 },
+        "relocate_min_player_distance": { "type": "number", "minimum": 0 },
+        "grenade_camp_seconds": { "type": "number", "minimum": 0 },
+        "grenade_camp_radius": { "type": "number", "minimum": 0 },
+        "grenade_cooldown_seconds": { "type": "number", "minimum": 0 },
+        "grenade_range": { "type": "number", "minimum": 0 },
+        "grenade_radius": { "type": "number", "minimum": 0 },
+        "grenade_damage": { "type": "number", "minimum": 0 },
+        "grenade_fuse_seconds": { "type": "number", "minimum": 0 },
+        "grenade_noise_radius": { "type": "number", "minimum": 0 },
+        "reinforce_hp_threshold": { "type": "number", "minimum": 0, "maximum": 1 },
+        "reinforce_count": { "type": "integer", "minimum": 0 },
+        "reinforce_radius": { "type": "number", "minimum": 0 }
       }
     },
     "loot_table": {

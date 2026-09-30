@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using ShadowVale.AI.Agents;
+using ShadowVale.AI.Boss;
 using ShadowVale.AI.Coordination;
 using ShadowVale.AI.Fsm;
 using ShadowVale.AI.Perception;
@@ -26,6 +27,10 @@ namespace ShadowVale.Debugging
         private readonly Action<PlanDiscardedEvent> _onDiscard;
         private readonly Action<SolverChangedEvent> _onSolver;
         private readonly Action<SidecarStatusEvent> _onSidecar;
+        private readonly Action<BossRelocatedEvent> _onRelocate;
+        private readonly Action<GrenadeThrownEvent> _onThrow;
+        private readonly Action<GrenadeExplodedEvent> _onBlast;
+        private readonly Action<BossReinforcementsEvent> _onReinforce;
 
         /// <summary>Also log footsteps nobody heard (very chatty).</summary>
         public bool VerboseNoise { get; set; }
@@ -70,6 +75,17 @@ namespace ShadowVale.Debugging
                 e.Online ? $"SIDECAR  online tại {e.BaseUrl}" : $"SIDECAR  không kết nối được {e.BaseUrl} — dùng greedy tại chỗ");
             EventBus.Subscribe(_onSolver);
             EventBus.Subscribe(_onSidecar);
+            _onRelocate = e => Add(AiLogCategory.Boss, e.BossId,
+                $"BOSS     đổi vị trí → node {e.Node} {Fmt(e.To)}  ({(e.Reason == "hurt" ? "bị thương" : "đứng lâu")})");
+            _onThrow = e => Add(AiLogCategory.Boss, e.ThrowerId, $"BOSS     ném lựu đạn vào {Fmt(e.Target)} — Nam nấp quá lâu");
+            _onBlast = e => Add(AiLogCategory.Boss, e.ThrowerId,
+                e.PlayerDamage > 0 ? $"BOSS     lựu đạn nổ, Nam mất {e.PlayerDamage:0} HP" : "BOSS     lựu đạn nổ, Nam đã tránh được");
+            _onReinforce = e => Add(AiLogCategory.Boss, e.BossId,
+                $"BOSS     gọi viện: {e.Arrived}/{e.Requested} lính tới ({e.Agents})");
+            EventBus.Subscribe(_onRelocate);
+            EventBus.Subscribe(_onThrow);
+            EventBus.Subscribe(_onBlast);
+            EventBus.Subscribe(_onReinforce);
         }
 
         private static string RoleLabel(AgentAssignment a) => a.Role switch
@@ -94,6 +110,10 @@ namespace ShadowVale.Debugging
             EventBus.Unsubscribe(_onDiscard);
             EventBus.Unsubscribe(_onSolver);
             EventBus.Unsubscribe(_onSidecar);
+            EventBus.Unsubscribe(_onRelocate);
+            EventBus.Unsubscribe(_onThrow);
+            EventBus.Unsubscribe(_onBlast);
+            EventBus.Unsubscribe(_onReinforce);
         }
 
         public void Add(AiLogCategory category, string agentId, string text)

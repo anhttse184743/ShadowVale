@@ -6,7 +6,7 @@
   "build_version": "0.1.0",
   "platform": "editor",
   "started_at": "2026-09-30T08:00:00.0000000Z",
-  "ended_at": "2026-09-30T13:14:53.0464711Z",
+  "ended_at": "2026-09-30T14:04:31.2562243Z",
   "map_id": "map01",
   "duration_seconds": 25.0,
   "mission_result": "failed",
@@ -59,6 +59,10 @@
       "takedown": 1,
       "solver_changed": 1,
       "sidecar_status": 1,
+      "boss_relocated": 1,
+      "grenade_thrown": 1,
+      "grenade_exploded": 1,
+      "boss_reinforcements": 1,
       "player_death": 1,
       "mission_result": 1
     },
@@ -292,6 +296,49 @@
       "map_id": "map01",
       "payload": {
         "online": false
+      }
+    },
+    {
+      "type": "boss_relocated",
+      "t": 15.0,
+      "map_id": "map01",
+      "payload": {
+        "boss": "Chỉ huy địch",
+        "reason": "hurt",
+        "node": 12,
+        "x": 36.0,
+        "z": 66.0
+      }
+    },
+    {
+      "type": "grenade_thrown",
+      "t": 15.0,
+      "map_id": "map01",
+      "payload": {
+        "thrower": "Chỉ huy địch",
+        "x": 40.0,
+        "z": 60.0
+      }
+    },
+    {
+      "type": "grenade_exploded",
+      "t": 15.0,
+      "map_id": "map01",
+      "payload": {
+        "thrower": "Chỉ huy địch",
+        "player_damage": 21.5,
+        "x": 40.0,
+        "z": 60.0
+      }
+    },
+    {
+      "type": "boss_reinforcements",
+      "t": 15.0,
+      "map_id": "map01",
+      "payload": {
+        "boss": "Chỉ huy địch",
+        "requested": 3,
+        "arrived": 3
       }
     },
     {

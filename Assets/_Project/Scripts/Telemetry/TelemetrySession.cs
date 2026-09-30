@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using ShadowVale.AI.Boss;
 using ShadowVale.AI.Coordination;
 using ShadowVale.AI.Fsm;
 using ShadowVale.AI.Perception;
@@ -69,6 +70,12 @@ namespace ShadowVale.Telemetry
             Listen<PlanDiscardedEvent>(e => Add("plan_discarded", ("group", e.Group), ("reason", e.Reason)));
             Listen<SolverChangedEvent>(e => Add("solver_changed", ("variant", e.Variant), ("fallback", e.FallbackReason ?? "")));
             Listen<SidecarStatusEvent>(e => Add("sidecar_status", ("online", e.Online)));
+            Listen<BossRelocatedEvent>(e => Add("boss_relocated", ("boss", e.BossId), ("reason", e.Reason), ("node", e.Node),
+                ("x", R(e.To.x)), ("z", R(e.To.z))));
+            Listen<GrenadeThrownEvent>(e => Add("grenade_thrown", ("thrower", e.ThrowerId), ("x", R(e.Target.x)), ("z", R(e.Target.z))));
+            Listen<GrenadeExplodedEvent>(e => Add("grenade_exploded", ("thrower", e.ThrowerId), ("player_damage", R(e.PlayerDamage)),
+                ("x", R(e.Position.x)), ("z", R(e.Position.z))));
+            Listen<BossReinforcementsEvent>(e => Add("boss_reinforcements", ("boss", e.BossId), ("requested", e.Requested), ("arrived", e.Arrived)));
         }
 
         public void Unsubscribe()

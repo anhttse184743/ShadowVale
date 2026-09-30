@@ -198,7 +198,8 @@ namespace ShadowVale.AI.Coordination
             var bySquad = new Dictionary<string, List<IEnemyAgent>>();
             foreach (var a in AgentRegistry.All)
             {
-                if (!a.Alive || string.IsNullOrEmpty(a.SquadId)) continue;
+                // A boss picks his own positions (BossBehaviour); a squad plan would overrule them.
+                if (!a.Alive || string.IsNullOrEmpty(a.SquadId) || a.Brain.Tuning.IsBoss) continue;
                 var m = a.Brain.Memory;
                 if (!m.Engaged(now) || m.Retreating) continue;
                 if (!bySquad.TryGetValue(a.SquadId, out var list)) bySquad[a.SquadId] = list = new List<IEnemyAgent>();

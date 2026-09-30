@@ -219,16 +219,20 @@ namespace ShadowVale.Map01
         /// Turns a regular outpost guard clone into the map's commander: no different model yet
         /// (Map 1's briefing doesn't have one), just a tougher, longer-sighted stand its ground.
         /// </summary>
-        public void ConfigureAsBoss(float healthMultiplier, float damageMultiplier)
+        public void ConfigureAsBoss(float healthMultiplier, float damageMultiplier, float visionMultiplier = 1.2f)
         {
             IsBoss = true;
             damage *= damageMultiplier;
-            visionRange *= 1.2f; attackRange *= 1.2f;
+            visionRange *= visionMultiplier; attackRange *= visionMultiplier;
             var health = GetComponent<Health>();
             if (health != null) health.SetMaxHealth(health.Max * healthMultiplier);
             SquadId = "boss";
             SyncTuning();
         }
+
+        /// <summary>The commander from his archetype's boss profile (Map01Content.json).</summary>
+        public void ConfigureAsBoss(ShadowVale.Data.Content.BossProfile profile)
+            => ConfigureAsBoss(profile.HealthMultiplier, profile.DamageMultiplier, profile.VisionMultiplier);
 
         // ---- IEnemyAgent: what the coordinator and the debug tools read -------------------------
 

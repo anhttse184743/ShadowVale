@@ -6,6 +6,7 @@ using ShadowVale.AI.Coordination;
 using ShadowVale.AI.Perception;
 using ShadowVale.Core.Services;
 using ShadowVale.Gameplay.Combat;
+using ShadowVale.Gameplay.Enemies.Boss;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -204,6 +205,18 @@ namespace ShadowVale.Debugging
             GUI.enabled = true;
             GUILayout.EndHorizontal();
             if (coordinator?.RecordPath != null) GUILayout.Label("Ghi instance: " + coordinator.RecordPath, _mono);
+
+            var boss = (agent as Component) != null ? ((Component)agent).GetComponent<BossBehaviour>() : null;
+            if (boss != null && agent.Alive)
+            {
+                var m = agent.Brain.Memory;
+                GUILayout.BeginHorizontal();
+                GUILayout.Label($"Boss: đổi chỗ {boss.Relocations}, lựu đạn {boss.GrenadesThrown}, viện {(boss.Director.ReinforcementsCalled ? "đã gọi" : "chưa")}", _mono);
+                if (GUILayout.Button("Đổi vị trí")) _status = boss.Relocate(m.LastKnownPlayerPosition, "debug") ? "Boss đổi vị trí." : "Không có cover phù hợp.";
+                if (GUILayout.Button("Ném lựu đạn vào Nam") && ServiceLocator.TryResolve<IPlayerObservable>(out var nam)) boss.ThrowGrenade(nam.Position);
+                if (GUILayout.Button("Gọi viện")) _status = $"Viện binh: {boss.CallReinforcements(m.LastKnownPlayerPosition, Time.time)} lính.";
+                GUILayout.EndHorizontal();
+            }
         }
 
         private void EmitNoiseAtPlayer(float radius)

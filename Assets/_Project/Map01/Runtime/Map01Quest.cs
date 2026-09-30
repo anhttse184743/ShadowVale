@@ -1,6 +1,8 @@
 using System.Linq;
 using ShadowVale.Core.Events;
+using ShadowVale.Data.Content;
 using ShadowVale.Gameplay.Combat;
+using ShadowVale.Gameplay.Enemies.Boss;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -236,10 +238,21 @@ namespace ShadowVale.Map01
             boss = instance.GetComponent<Map01EnemyController>();
             boss.Configure(System.Array.Empty<Vector3>()); // Holds this position rather than resuming a patrol loop.
             boss.BindMission(mission); // Before ConfigureAsBoss: binding resets damage to the balance baseline.
-            boss.ConfigureAsBoss(3f, 1.6f);
+            var profile = LoadBossProfile();
+            boss.ConfigureAsBoss(profile);
             mission.AddEnemy(boss);
+            // Relocation, grenades and the call for reinforcements (A04), from the same profile.
+            var behaviour = BossBehaviour.Attach(instance, boss, profile, new Map01Reinforcements(mission, template), seed: 1);
+            behaviour.Suspended = () => mission.Stopped;
             var bossHealth = instance.GetComponent<Health>();
             if (bossHealth != null) bossHealth.onDied.AddListener(OnBossDown);
+        }
+
+        /// <summary>The commander's boss profile from Map01Content.json (boss_commander), else the tuned defaults.</summary>
+        private BossProfile LoadBossProfile()
+        {
+            var archetype = mission.Bundle?.enemy_archetypes?.FirstOrDefault(a => a != null && a.is_boss);
+            return archetype?.boss != null ? archetype.boss.ToProfile() : new BossProfile();
         }
 
         private Vector3 BossSpawnPosition(Map01EnemyController template)
