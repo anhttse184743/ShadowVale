@@ -96,6 +96,17 @@ namespace ShadowVale.Tests.EditMode.Coordination
         }
 
         [Test]
+        public void OnlyGreedyRunsInProcess_ResearchSolversBelongToTheSidecar()
+        {
+            foreach (SolverVariant v in System.Enum.GetValues(typeof(SolverVariant)))
+                Assert.AreEqual(v == SolverVariant.Greedy, v.IsInProcess(), v.ToId());
+
+            var q = SolverFactory.Create("qiea", 120, out var reason);
+            Assert.AreEqual("greedy", q.VariantId);
+            StringAssert.Contains("qiea", reason);
+        }
+
+        [Test]
         public void QuboRequest_RoundTripsThroughSnakeCaseJson()
         {
             var req = TwoAgentsThreeNodes();
