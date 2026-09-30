@@ -35,6 +35,14 @@ namespace ShadowVale.Editor
         private const string EnemyFolder = "Assets/_Project/Art/Characters/Enemies";
 
         /// <summary>
+        /// Friendly NPCs. They get a skin and nothing else: Hùng is walked around by a
+        /// NavMeshAgent rather than animated off the shared clip set, so he needs no Humanoid
+        /// avatar and none of the bind-pose surgery the fighting characters get. Keeping them out
+        /// of the main setup pass means unpacking a companion's textures cannot disturb a rig.
+        /// </summary>
+        private const string NpcFolder = "Assets/_Project/Art/Characters/NPCs";
+
+        /// <summary>
         /// Finds the character model instead of hardcoding its filename. Unity's AssetDatabase is
         /// case sensitive even on Windows, so re-exporting as "Player.fbx" instead of "player.fbx"
         /// silently resolved to null and left the built prefab pointing at a deleted mesh — which
@@ -261,6 +269,32 @@ namespace ShadowVale.Editor
 
         /// <summary>Unity's own default, restored on rigs that must stay untouched.</summary>
         private const float DefaultTwist = 0.5f;
+
+        /// <summary>
+        /// Unpacks every NPC model's textures and gives each its own material.
+        /// <para>
+        /// The rig service ships each character's maps under the same names, so a companion
+        /// extracted into a shared folder would end up wearing whichever skin imported last —
+        /// hence a folder and a material per model, bound by path. Same reasoning as the enemies.
+        /// </para>
+        /// Menu <b>ShadowVale ▸ Extract NPC Textures</b>.
+        /// </summary>
+        [MenuItem("ShadowVale/Extract NPC Textures")]
+        public static void SetupNpcMaterials()
+        {
+            if (!Directory.Exists(NpcFolder))
+            {
+                Debug.LogWarning($"[CharacterImport] No NPC folder at {NpcFolder}.");
+                return;
+            }
+
+            foreach (string guid in AssetDatabase.FindAssets("t:Model", new[] { NpcFolder }))
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                ExtractEmbeddedTextures(path);
+                BindExtractedTextures(path);
+            }
+        }
 
         [MenuItem("ShadowVale/Setup Character Import")]
         public static void Run()
