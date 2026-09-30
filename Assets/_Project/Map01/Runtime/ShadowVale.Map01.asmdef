@@ -7,7 +7,8 @@
     "ShadowVale.AI",
     "ShadowVale.Core",
     "ShadowVale.Data",
-    "ShadowVale.Gameplay"
+    "ShadowVale.Gameplay",
+    "ShadowVale.Telemetry"
   ],
   "autoReferenced": true
 }

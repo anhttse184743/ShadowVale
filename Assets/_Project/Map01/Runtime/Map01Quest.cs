@@ -1,4 +1,5 @@
 using System.Linq;
+using ShadowVale.Core.Events;
 using ShadowVale.Gameplay.Combat;
 using UnityEngine;
 using UnityEngine.AI;
@@ -47,7 +48,27 @@ namespace ShadowVale.Map01
         public const string ScoutOrder = "Hùng: Địch có ba doanh trại quanh đây, anh chỉ biết đại khái khu vực. Lén tới, giữ [F] dùng ống nhòm ghi lại vị trí cả ba. " +
             "Tuyệt đối không để chúng phát hiện, không nổ súng. Muốn hạ tên nào thì ném đá dụ nó ra xa trại rồi dùng dao từ phía sau. Xong thì về báo anh.";
 
-        public int Stage { get; private set; }
+        /// <summary>Stable ids of the stages, for telemetry's progression funnel (index = stage number).</summary>
+        public static readonly string[] StageIds = {
+            "rescue_hung", "escort_hung", "briefing", "scout_camps", "report_scouting",
+            "destroy_camps", "report_camps", "defeat_commander", "report_commander", "complete"
+        };
+
+        /// <summary>Moving forward completes the stage left behind (telemetry <c>objective_completed</c>);
+        /// restoring a checkpoint does not.</summary>
+        public int Stage
+        {
+            get => stage;
+            private set
+            {
+                int from = stage;
+                stage = value;
+                if (value <= from || Map01SaveSystem.IsRestoring) return;
+                EventBus.Publish(new ObjectiveCompletedEvent(Map01Mission.MapId, StageIds[Mathf.Clamp(from, 0, CompleteStage)], from));
+                if (value == CompleteStage) EventBus.Publish(new MissionEndedEvent(Map01Mission.MapId, "completed"));
+            }
+        }
+        private int stage;
         /// <summary>The objective line for the HUD, with the scouting tally while it runs.</summary>
         public string ObjectiveText => Stage == ScoutStage
             ? $"{Objectives[Stage]} ({scouting.FoundCount}/{scouting.Camps.Count})"
@@ -70,7 +91,7 @@ namespace ShadowVale.Map01
         public void RestoreStage(int value)
         {
             // Older saves waiting for the final report are already victorious.
-            Stage = value == ReportBossStage ? CompleteStage : Mathf.Clamp(value, 0, CompleteStage);
+            stage = value == ReportBossStage ? CompleteStage : Mathf.Clamp(value, 0, CompleteStage);
             // The commander is spawned at runtime, not baked into the scene — a checkpoint taken
             // mid-fight (the exit autosave allows that) must bring him back, or the objective can
             // never complete. The save system restores his health/position right after this.

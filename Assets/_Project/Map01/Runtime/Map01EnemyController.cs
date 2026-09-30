@@ -327,9 +327,15 @@ namespace ShadowVale.Map01
                 TakenDownSilently = true;
                 if (!_health.IsDead) _health.TakeDamage(_health.Current, transform.position + Vector3.up, _player.gameObject);
                 EventBus.Publish(new TakedownEvent(LegacyId, transform.position));
+                EventBus.Publish(new EnemyKilledEvent(LegacyId, "takedown", "knife", transform.position));
                 return;
             }
-            if (_health.IsDead) return; // Killed outright — by a gun, say: loud, and nothing left to react.
+            if (_health.IsDead) // Killed outright — by a gun, say: loud, and nothing left to react.
+            {
+                string weapon = _mission != null && _mission.ModernCombat != null ? _mission.ModernCombat.EquippedKind.ToString().ToLowerInvariant() : "";
+                EventBus.Publish(new EnemyKilledEvent(LegacyId, "weapon", weapon, transform.position));
+                return;
+            }
             _brain.OnHurtByPlayer(_player.position, Time.time);
         }
 

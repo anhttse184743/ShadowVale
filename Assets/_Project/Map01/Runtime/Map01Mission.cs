@@ -5,10 +5,12 @@ using ShadowVale.AI.Contracts;
 using ShadowVale.AI.Coordination;
 using ShadowVale.AI.Perception;
 using ShadowVale.AI.Tactical;
+using ShadowVale.Core.Events;
 using ShadowVale.Core.Services;
 using ShadowVale.Gameplay.Audio;
 using ShadowVale.Gameplay.Combat;
 using ShadowVale.Gameplay.Player;
+using ShadowVale.Telemetry;
 using UnityEngine;
 
 namespace ShadowVale.Map01
@@ -23,6 +25,9 @@ namespace ShadowVale.Map01
     /// </summary>
     public sealed class Map01Mission : MonoBehaviour
     {
+        /// <summary>The map's id in telemetry and research logs.</summary>
+        public const string MapId = "map01";
+
         public Transform player, hung;
         public Camera gameCamera;
         public Vector2 mapMin = new Vector2(-45, -60), mapMax = new Vector2(45, 88);
@@ -140,6 +145,8 @@ namespace ShadowVale.Map01
             TacticalGraphHost.Attach(gameObject, ObstructionMask, SightCover);
             // Squad coordination (QUBO over that graph). Map 1 has no content-bundle ai_settings yet: defaults.
             SquadCoordinator.Attach(gameObject, new CoordinationSettings());
+            // Anonymous session telemetry: listens to the shared events, ends when this map unloads.
+            TelemetryService.Attach(gameObject, MapId);
             IsInitialized = true;
         }
 
@@ -157,7 +164,12 @@ namespace ShadowVale.Map01
                 ModernPlayer.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting && !InputFocus.OverlayOpen;
                 ModernPlayer.SprintAllowed = () => stamina > 2;
             }
-            if (ModernHealth != null) ModernHealth.KeepCheckpointCorpse();
+            if (ModernHealth != null)
+            {
+                ModernHealth.KeepCheckpointCorpse();
+                ModernHealth.onDied.RemoveListener(OnPlayerDied);
+                ModernHealth.onDied.AddListener(OnPlayerDied);
+            }
             if (ModernCombat != null)
             {
                 ModernCombat.DrawsOwnWeaponHud = true; // Map01Hud.Combat shows the weapons on keys 1/2/3.
@@ -238,7 +250,10 @@ namespace ShadowVale.Map01
         private void OnPlayerAttacked(WeaponKind kind, Vector3 position)
         {
             if (kind == WeaponKind.Rifle) EmitNoise(position, Weapon.noise_radius, NoiseKind.Gunshot);
+            EventBus.Publish(new PlayerAttackEvent(kind.ToString().ToLowerInvariant(), position));
         }
+
+        private void OnPlayerDied() => EventBus.Publish(new PlayerDiedEvent(player != null ? player.position : Vector3.zero));
 
         /// <summary>A noise every guard within <paramref name="radius"/> goes to check; returns how many heard it.</summary>
         public int EmitNoise(Vector3 position, float radius, NoiseKind kind = NoiseKind.Other)
