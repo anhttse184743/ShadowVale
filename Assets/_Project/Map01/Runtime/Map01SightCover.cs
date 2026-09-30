@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ShadowVale.AI.Perception;
 using UnityEngine;
 
 namespace ShadowVale.Map01
@@ -15,7 +16,7 @@ namespace ShadowVale.Map01
     /// own component. Kept in a coarse grid: a check only looks at the plants around the line.
     /// </para>
     /// </summary>
-    public sealed class Map01SightCover : MonoBehaviour
+    public sealed class Map01SightCover : MonoBehaviour, ISightOccluder
     {
         [Tooltip("Plants lower than this (ground grass) hide nothing.")]
         [SerializeField] private float minHeight = .9f;

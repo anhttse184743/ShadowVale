@@ -5,6 +5,7 @@
     "Unity.InputSystem",
     "Unity.AI.Navigation",
     "ShadowVale.AI",
+    "ShadowVale.Core",
     "ShadowVale.Data",
     "ShadowVale.Gameplay"
   ],

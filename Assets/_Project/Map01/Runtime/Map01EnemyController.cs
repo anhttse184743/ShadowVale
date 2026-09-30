@@ -1,11 +1,15 @@
+using ShadowVale.AI.Contracts;
+using ShadowVale.AI.Perception;
+using ShadowVale.Core.Events;
 using ShadowVale.Gameplay.Combat;
+using ShadowVale.Gameplay.Player;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace ShadowVale.Map01
 {
     [RequireComponent(typeof(NavMeshAgent), typeof(Health))]
-    public sealed class Map01EnemyController : MonoBehaviour
+    public sealed class Map01EnemyController : MonoBehaviour, INoiseListener
     {
         [SerializeField] private Vector3[] patrolPoints = System.Array.Empty<Vector3>();
         [SerializeField] private float visionRange = 24f;
@@ -21,6 +25,7 @@ namespace ShadowVale.Map01
         private Health _health;
         private Transform _player;
         private Health _playerHealth;
+        private IPlayerObservable _playerView;
         private int _patrolIndex;
         private float _nextShot;
         private Map01Mission _mission;
@@ -77,6 +82,12 @@ namespace ShadowVale.Map01
             _crouchScale = mission.Settings.crouchVisionScale;
             _searchSeconds = mission.Settings.searchSeconds > 0 ? mission.Settings.searchSeconds : 8f;
             _rescue = mission.GetComponent<Map01Rescue>(); // Added by Map01Quest.Awake, before this runs.
+            mission.Noise.Register(this);
+        }
+
+        private void OnDestroy()
+        {
+            if (_mission != null) _mission.Noise.Unregister(this);
         }
 
         /// <summary>
@@ -113,10 +124,12 @@ namespace ShadowVale.Map01
         /// metres: within it, the guard goes to see what it was. True if he heard it.</summary>
         public bool Hear(Vector3 position, float radius)
         {
-            if (!Alive || Vector3.Distance(position, transform.position) > radius) return false;
+            if (!Alive || !HearingSensor.Hears(transform.position, position, radius)) return false;
             BeginInvestigation(position);
             return true;
         }
+
+        bool INoiseListener.OnNoise(Vector3 position, float radius, NoiseKind kind) => Hear(position, radius);
 
         private void BeginInvestigation(Vector3 position)
         {
@@ -206,6 +219,7 @@ namespace ShadowVale.Map01
             {
                 _player = controller.transform;
                 _playerHealth = controller.GetComponent<Health>();
+                _playerView = PlayerStealthAdapter.For(controller.gameObject);
             }
             if (_animator != null)
             {
@@ -313,13 +327,12 @@ namespace ShadowVale.Map01
             HurtCount++;
             TakenDownSilently = false;
             if (_player == null) return;
-            Vector3 toNam = Vector3.ProjectOnPlane(_player.position - transform.position, Vector3.up);
-            bool fromBehind = toNam.magnitude < 3f && Vector3.Angle(transform.forward, toNam) > 100f;
             bool knife = _mission != null && _mission.ModernCombat != null && _mission.ModernCombat.EquippedKind == WeaponKind.Knife;
-            if (knife && fromBehind && !Engaged && !IsBoss)
+            if (TakedownRule.IsSilent(transform.position, transform.forward, _player.position, knife, Engaged, IsBoss))
             {
                 TakenDownSilently = true;
                 if (!_health.IsDead) _health.TakeDamage(_health.Current, transform.position + Vector3.up, _player.gameObject);
+                EventBus.Publish(new TakedownEvent(LegacyId, transform.position));
                 return;
             }
             if (_health.IsDead) return; // Killed outright — by a gun, say: loud, and nothing left to react.
@@ -341,36 +354,17 @@ namespace ShadowVale.Map01
             if (_baseSpeed > 0f) _agent.speed = _baseSpeed * scale;
         }
 
+        /// <summary>How this guard sees; rebuilt on demand so the boss's longer sight applies at once.</summary>
+        private VisionProfile Vision => new VisionProfile(visionRange, visionAngle, _crouchScale, _hiddenScale);
+
         private bool CanSeePlayer(out float distance)
         {
             distance = float.PositiveInfinity;
-            if (_player == null || _playerHealth == null || _playerHealth.IsDead || Time.time < _calmUntil) return false;
-            Vector3 origin = transform.position + Vector3.up * 1.3f;
-            // Crouched, Nam's head and shoulders are lower: low cover hides him then.
-            Vector3 target = _player.position + Vector3.up * (_mission != null && _mission.Crouched ? .75f : 1.1f);
-            Vector3 delta = target - origin;
-            distance = delta.magnitude;
-            if (Engaged)
-            {
-                if (distance > visionRange) return false;
-            }
-            else
-            {
-                // Unaware: a forward cone, shorter while Nam crouches and far shorter while he
-                // hides in cover; only brushing right past a guard is noticed from any side — and
-                // creeping up crouched gets closer than that, into knife reach behind him.
-                bool hidden = _mission != null && _mission.Hidden, crouched = _mission != null && _mission.Crouched;
-                if (distance > visionRange * (hidden ? _hiddenScale : crouched ? _crouchScale : 1f)) return false;
-                float touch = crouched ? 1.2f : 2.5f;
-                if (distance > touch && Vector3.Angle(transform.forward, Vector3.ProjectOnPlane(delta, Vector3.up)) > visionAngle * .5f) return false;
-            }
+            if (_player == null || _playerHealth == null || Time.time < _calmUntil) return false;
             // Bushes and tree crowns hide Nam — even from a guard already hunting him, who then
             // goes to where he last saw him.
-            if (_mission != null && _mission.SightCover != null && _mission.SightCover.Blocks(origin, target)) return false;
-            if (Physics.Raycast(origin, delta.normalized, out var hit, distance, obstructionMask,
-                    QueryTriggerInteraction.Ignore))
-                return hit.transform == _player || hit.transform.IsChildOf(_player);
-            return true;
+            return VisionSensor.CanSee(transform.position, transform.forward, Engaged, Vision, _playerView,
+                _mission != null ? _mission.SightCover : null, obstructionMask, out distance);
         }
 
         private void Shoot()

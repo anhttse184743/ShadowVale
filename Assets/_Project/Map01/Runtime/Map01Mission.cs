@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ShadowVale.AI.Perception;
 using ShadowVale.Gameplay.Audio;
 using ShadowVale.Gameplay.Combat;
 using ShadowVale.Gameplay.Player;
@@ -43,6 +44,10 @@ namespace ShadowVale.Map01
         public PlayerCombat ModernCombat { get; private set; }
         public Health ModernHealth { get; private set; }
         public Map01EnemyController[] Enemies { get; private set; } = Array.Empty<Map01EnemyController>();
+        /// <summary>Every guard registers here when bound; noises reach them through it, not through <see cref="Enemies"/>.</summary>
+        public NoiseSystem Noise { get; } = new NoiseSystem();
+        /// <summary>The player as the guards' sensors see him: crouch and hiding come from this mission.</summary>
+        public PlayerStealthAdapter Stealth { get; private set; }
         /// <summary>Foliage the guards cannot see through.</summary>
         public Map01SightCover SightCover { get; private set; }
         public bool Stopped => (ModernHealth != null ? ModernHealth.IsDead : hp <= 0) || Stage == Map01Quest.CompleteStage || paused || Cinematic || Map01SaveSystem.IsRestoring
@@ -112,6 +117,9 @@ namespace ShadowVale.Map01
                 FailInitialization("Assign player, hung and gameCamera in the Inspector.");
                 return;
             }
+            Stealth = PlayerStealthAdapter.For(player.gameObject);
+            Stealth.CrouchProbe = () => Crouched;
+            Stealth.HiddenProbe = () => Hidden;
             foreach (var point in FindObjectsByType<ForestPoint>(FindObjectsSortMode.None)) RegisterPoint(point);
             hp = Settings.playerHP; stamina = Settings.stamina;
             inventory.SeedStartingLoadout(Settings.startingStones);
@@ -146,7 +154,7 @@ namespace ShadowVale.Map01
                 {
                     if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 2.", 3); return false; }
                     inventory.Spend("ammo_rifle", 1);
-                    EmitNoise(player.position, Weapon.noise_radius);
+                    EmitNoise(player.position, Weapon.noise_radius, NoiseKind.Gunshot);
                     return true;
                 };
                 // With a magazine in the weapon the pack is a reserve, drawn once per reload
@@ -214,16 +222,12 @@ namespace ShadowVale.Map01
         public void Say(string text, float seconds = 7) { Dialogue = text; DialogueUntil = Time.time + seconds; }
         private void OnPlayerAttacked(WeaponKind kind, Vector3 position)
         {
-            if (kind == WeaponKind.Rifle) EmitNoise(position, Weapon.noise_radius);
+            if (kind == WeaponKind.Rifle) EmitNoise(position, Weapon.noise_radius, NoiseKind.Gunshot);
         }
 
         /// <summary>A noise every guard within <paramref name="radius"/> goes to check; returns how many heard it.</summary>
-        public int EmitNoise(Vector3 position, float radius)
-        {
-            int heard = 0;
-            foreach (var enemy in Enemies) if (enemy.Hear(position, radius)) heard++;
-            return heard;
-        }
+        public int EmitNoise(Vector3 position, float radius, NoiseKind kind = NoiseKind.Other)
+            => Noise.Emit(position, radius, kind);
         public void Damage(float amount)
         {
             if (Stopped) return;
@@ -278,7 +282,8 @@ namespace ShadowVale.Map01
 
             float radius = step.Landing ? LandingNoiseRadius : FootstepNoiseRadius(step.Stance);
             if (step.Surface == FootSurface.Water) radius *= WadingNoiseScale;
-            EmitNoise(step.Position, radius);
+            if (Stealth != null) radius *= Stealth.NoiseScale;
+            EmitNoise(step.Position, radius, step.Landing ? NoiseKind.Landing : NoiseKind.Footstep);
         }
         public void AdvancePlaySeconds() { if (!Stopped) PlaySeconds += Time.deltaTime; }
         public void SetPlaySeconds(float value) => PlaySeconds = value;
