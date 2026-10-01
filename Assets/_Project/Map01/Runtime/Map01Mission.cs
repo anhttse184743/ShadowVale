@@ -181,6 +181,7 @@ namespace ShadowVale.Map01
             }
             foreach (var enemy in Enemies) enemy.BindMission(this);
             Map01OpeningCutscene.Attach(this);
+            Map01HungVisual.Attach(this);
         }
 
         private void FailInitialization(string reason)

@@ -115,6 +115,7 @@ namespace ShadowVale.Map01
             if (mission.Cinematic) return;
             if (Stage == RescueStage) { TryRescueHung(); return; }
             if (!AwaitingReport || !NearHung(mission.Settings.interactRange)) return;
+            mission.hung.GetComponentInChildren<Map01HungVisual>()?.Speak(Stage == BriefingStage ? 14 : 10);
             switch (Stage)
             {
                 case BriefingStage:
