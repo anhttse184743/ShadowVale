@@ -39,3 +39,21 @@ Editable Blender source: `SourceArt/Map02_Village/Map02_Botanical_Models.blend`;
 `VillageRiceInstances.cs` renders shared rice meshes in batches of up to 1,023 GPU instances in both edit mode and play mode under the project's URP pipeline. It uses the detailed mesh near the camera and a reduced mesh farther away. Plant matrices remain serialized in the scene; no multi-million-vertex combined crop mesh is stored. Rice casts no individual shadows. Tree LODs and trunk colliders are retained.
 
 Validation: Unity compilation and generation pass; all seventeen navigation routes pass, including the two bridge destinations and approaches to all fourteen homes. A save/reopen check verifies twenty instanced fields and all 27,548 plants. Reports and screenshots use `botanical-checks.txt`, `map02-botanical-overview.png`, `map02-botanical-village.png`, `map02-banyan.png`, `map02-flamboyant.png` and `map02-rice-close.png` in `Tools/Map02Reports`.
+
+## Clustered village and connected parcels (2026-10-01)
+
+The current revision supersedes the earlier dispersed homestead arrangement. Fourteen existing houses form a western village around a common and two connected lanes. Twenty-five unequal polygonal parcels occupy the eastern bank and the land north and south of the village. The shared deformation curves their boundaries alongside the existing canal. Mature golden crops dominate, with young green parcels interspersed.
+
+`Map02ClusterLayout.cs` provides **ShadowVale > Map 2 > Cluster village and reshape rice parcels**. It backs up the input scene to `Tools/Map02Reports/Map2_before_cluster.unity` and rejects repeat application. Restore that backup before regenerating. Existing house prefabs and nearby household props are relocated together; the ground, crop planting and navigation are rebuilt for the new arrangement. Render and collision geometry share `Cluster_Continuous_Terrain.asset`.
+
+Review images: `map02-cluster-overview.png`, `map02-cluster-village.png`, and `map02-cluster-plan.png`. Generation checks are recorded in `cluster-checks.txt`, including house approaches, both cross-river routes, and serialized crop counts after reopening the saved scene.
+
+## Blender roadside planting (2026-10-01)
+
+The clustered layout now includes 28 flared bamboo clumps at roadside field edges, 33 additional small roadside trees, and 161 low shrubs forming interrupted hedgerows along parcel boundaries. Dry-ground grass increases from 10,556 to 85,134 clumps. House approaches, the common and the two bridge routes remain accessible.
+
+Editable source: `SourceArt/Map02_Village/Map02_Roadside_Details.blend`. Run the self-contained `build_roadside.py` with Blender to regenerate the two mesh detail levels for bamboo, shrubs, roadside trees and meadow grass. `Roadside.meshdata.json.gz` carries indexed, vertex-coloured geometry into Unity; `roadside-budget.json` records mesh costs. Bamboo has segmented leaning culms, raised nodes, upper branches and narrow hanging leaves. Grass uses instanced batches; trees and bamboo use LOD groups and small base colliders.
+
+`Map02RoadsideLayout.cs` exposes **ShadowVale > Map 2 > Add Blender roadside bamboo and lush banks**. It requires the clustered scene, saves `Map2_before_roadside.unity`, and refuses duplicate application. Curved lane splines and blended junctions share one cached road-distance field for soil paint, planting clearance and terrain shaping. A dedicated mask and material add fine earth texture without floating road meshes. Existing house geometry is preserved.
+
+Validation: all 14 house routes and both cross-river routes pass. Saved scene reload preserves all 85,134 meadow instances. See `Tools/Map02Reports/roadside-checks.txt` and the four `map02-roadside-*.png` renders. Runtime frame rate has not been benchmarked; the denser vegetation uses more rendering work despite instancing and LODs.

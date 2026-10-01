@@ -4,6 +4,7 @@
   "references": [
     "ShadowVale.Map01",
     "Unity.AI.Navigation",
+    "Unity.RenderPipelines.Universal.Runtime",
     "Unity.InputSystem",
     "ShadowVale.AI",
     "ShadowVale.Data"
@@ -13,3 +14,4 @@
   ],
   "autoReferenced": true
 }
+
