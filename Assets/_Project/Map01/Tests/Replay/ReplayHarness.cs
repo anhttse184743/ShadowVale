@@ -33,7 +33,9 @@ namespace ShadowVale.Map01.Tests.Replay
     /// </summary>
     public static class ReplayHarness
     {
-        public const string Scene = "Map 1";
+        /// <summary>The map the runs play: Map 1, or e.g. "Test Map 1 AI" via SVL_REPLAY_SCENE (it must be in Build Settings).</summary>
+        public static string Scene => string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("SVL_REPLAY_SCENE"))
+            ? "Map 1" : Environment.GetEnvironmentVariable("SVL_REPLAY_SCENE").Trim();
 
         public sealed class Spec
         {

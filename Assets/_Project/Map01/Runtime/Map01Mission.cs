@@ -147,7 +147,8 @@ namespace ShadowVale.Map01
             // and this map's own coordination entry, if it has one.
             SquadCoordinator.Attach(gameObject, CoordinationSettings.ForScene(gameObject.scene.name));
             // Anonymous session telemetry: listens to the shared events, ends when this map unloads.
-            TelemetryService.Attach(gameObject, MapId);
+            // A sandbox copy (Test Map 1 AI) reports apart, so test sessions never mix with Map 1's numbers.
+            TelemetryService.Attach(gameObject, gameObject.scene.name == Map01SaveSystem.MainScene ? MapId : MapId + "_test");
             IsInitialized = true;
         }
 
