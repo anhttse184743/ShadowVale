@@ -143,8 +143,9 @@ namespace ShadowVale.Map01
             if (SightCover == null) SightCover = gameObject.AddComponent<Map01SightCover>();
             // The squad coordinator's map: loads Resources/TacticalGraphs/Map 1, visibility through the same foliage.
             TacticalGraphHost.Attach(gameObject, ObstructionMask, SightCover);
-            // Squad coordination (QUBO over that graph). Map 1 has no content-bundle ai_settings yet: defaults.
-            SquadCoordinator.Attach(gameObject, new CoordinationSettings());
+            // Squad coordination (QUBO over that graph), configured by the content bundle's ai_settings
+            // and this map's own coordination entry, if it has one.
+            SquadCoordinator.Attach(gameObject, CoordinationSettings.ForScene(gameObject.scene.name));
             // Anonymous session telemetry: listens to the shared events, ends when this map unloads.
             TelemetryService.Attach(gameObject, MapId);
             IsInitialized = true;

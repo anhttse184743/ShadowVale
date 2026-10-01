@@ -168,6 +168,7 @@
         "scene_name": { "type": "string", "description": "Unity scene that owns geometry and the baked NavMesh" },
         "player_start_node": { "type": "integer", "minimum": 0, "default": 0 },
         "boss_archetype_id": { "oneOf": [ { "$ref": "#/definitions/id" }, { "type": "null" } ] },
+        "coordination": { "$ref": "#/definitions/squad_settings" },
         "spawn_groups": { "type": "array", "items": {
           "type": "object", "additionalProperties": false,
           "required": ["squad_id", "archetype_id", "count"],
@@ -217,7 +218,23 @@
         "weight_flanking": { "type": "number", "minimum": 0, "default": 1.0 },
         "weight_cover": { "type": "number", "minimum": 0, "default": 0.5 },
         "weight_distance": { "type": "number", "minimum": 0, "default": 0.1 },
-        "vision_hops": { "type": "integer", "minimum": 1, "default": 2 }
+        "vision_hops": { "type": "integer", "minimum": 1, "default": 2 },
+        "squad": { "$ref": "#/definitions/squad_settings" }
+      }
+    },
+    "squad_settings": {
+      "description": "Squad coordination: combat-group size, radio ranges, re-plan triggers. Every field optional; a map's coordination overrides ai_settings.squad field by field.",
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "subgraph_nodes": { "type": "integer", "minimum": 2 },
+        "max_group_agents": { "type": "integer", "minimum": 1 },
+        "min_group_agents": { "type": "integer", "minimum": 1 },
+        "squad_alert_range": { "type": "number", "minimum": 0 },
+        "reinforcement_range": { "type": "number", "minimum": 0 },
+        "group_merge_range": { "type": "number", "minimum": 0 },
+        "refresh_seconds": { "type": "number", "exclusiveMinimum": 0 },
+        "replan_hop_delta": { "type": "integer", "minimum": 1 },
+        "stale_distance": { "type": "number", "exclusiveMinimum": 0 }
       }
     }
   }

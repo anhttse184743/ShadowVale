@@ -111,6 +111,7 @@ namespace ShadowVale.Content
                 }
                 if (!string.IsNullOrEmpty(m.BossArchetypeId) && !enemies.Contains(m.BossArchetypeId))
                     errors.Add($"maps[{m.Id}].boss_archetype_id '{m.BossArchetypeId}' unknown");
+                ValidateSquad(m.Coordination, $"maps[{m.Id}].coordination", errors);
             }
 
             var ai = b.AiSettings;
@@ -120,9 +121,19 @@ namespace ShadowVale.Content
                 if (string.IsNullOrWhiteSpace(ai.DefaultSolverVariant)) errors.Add("ai_settings.default_solver_variant missing");
                 if (ai.LatencyBudgetMs <= 0) errors.Add("ai_settings.latency_budget_ms must be > 0");
                 if (ai.ReplanCooldownMs < 0) errors.Add("ai_settings.replan_cooldown_ms must be >= 0");
+                ValidateSquad(ai.Squad, "ai_settings.squad", errors);
             }
 
             return errors;
+        }
+
+        private static void ValidateSquad(SquadAiSettings q, string where, List<string> errors)
+        {
+            if (q == null) return;
+            if (q.MinGroupAgents < 1 || q.MaxGroupAgents < 1 || q.SubgraphNodes < 2) errors.Add($"{where}: group sizes must be ≥ 1 (subgraph ≥ 2)");
+            if (q.MinGroupAgents > q.MaxGroupAgents) errors.Add($"{where}.min_group_agents > max_group_agents");
+            if (q.SquadAlertRange < 0 || q.ReinforcementRange < 0 || q.GroupMergeRange < 0) errors.Add($"{where}: ranges must be ≥ 0");
+            if (q.RefreshSeconds <= 0 || q.StaleDistance <= 0 || q.ReplanHopDelta < 1) errors.Add($"{where}: refresh, stale distance and hop delta must be > 0");
         }
 
         private static HashSet<string> UniqueIds(IEnumerable<string> ids, string collection, List<string> errors)

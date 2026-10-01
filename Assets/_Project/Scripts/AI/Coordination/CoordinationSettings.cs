@@ -1,10 +1,15 @@
+using System.Linq;
+using ShadowVale.Content;
+using ShadowVale.Core.Services;
 using ShadowVale.Data.Content;
+using UnityEngine;
 
 namespace ShadowVale.AI.Coordination
 {
     /// <summary>
-    /// Knobs of the squad coordinator. Weights, budget, cooldown and solver come from the content
-    /// bundle's ai_settings (<see cref="From"/>); the ranges are per map.
+    /// Knobs of the squad coordinator, from the content bundle (<see cref="ForScene"/>): weights,
+    /// budget, cooldown and solver from ai_settings; group sizes and radio ranges from
+    /// ai_settings.squad, overridable per map (maps[].coordination). The defaults are Map 1's.
     /// </summary>
     public sealed class CoordinationSettings
     {
@@ -37,15 +42,52 @@ namespace ShadowVale.AI.Coordination
         /// <summary>Write every instance + plan to persistentDataPath/research (benchmark / replay input).</summary>
         public bool Record = true;
 
-        public static CoordinationSettings From(AiSettings ai)
+        /// <param name="mapOverride">The map's own <c>coordination</c>, applied over <c>ai_settings.squad</c>.</param>
+        public static CoordinationSettings From(AiSettings ai, SquadAiSettings mapOverride = null)
         {
             var s = new CoordinationSettings();
-            if (ai == null) return s;
-            s.Weights = CoordinationWeights.From(ai);
-            s.Variant = string.IsNullOrEmpty(ai.DefaultSolverVariant) ? "greedy" : ai.DefaultSolverVariant;
-            s.LatencyBudgetMs = ai.LatencyBudgetMs > 0 ? ai.LatencyBudgetMs : 120;
-            s.ReplanCooldownSeconds = ai.ReplanCooldownMs > 0 ? ai.ReplanCooldownMs / 1000f : .8f;
+            if (ai != null)
+            {
+                s.Weights = CoordinationWeights.From(ai);
+                s.Variant = string.IsNullOrEmpty(ai.DefaultSolverVariant) ? "greedy" : ai.DefaultSolverVariant;
+                s.LatencyBudgetMs = ai.LatencyBudgetMs > 0 ? ai.LatencyBudgetMs : 120;
+                s.ReplanCooldownSeconds = ai.ReplanCooldownMs > 0 ? ai.ReplanCooldownMs / 1000f : .8f;
+                s.Apply(ai.Squad);
+            }
+            s.Apply(mapOverride);
             return s;
+        }
+
+        /// <summary>
+        /// The settings for the map in <paramref name="sceneName"/>: the loaded content bundle (or, when
+        /// a map is opened straight from the editor or a test without going through Boot, the
+        /// fallback bundle), with that map's own coordination over the bundle-wide one.
+        /// </summary>
+        public static CoordinationSettings ForScene(string sceneName)
+        {
+            ContentBundle bundle = null;
+            if (ServiceLocator.TryResolve<ContentService>(out var content)) bundle = content.Bundle;
+            if (bundle == null && !new FallbackBundleProvider().TryLoad(out bundle, out var error))
+            {
+                Debug.LogWarning("[Coordination] no content bundle, default settings: " + error);
+                return new CoordinationSettings();
+            }
+            var map = bundle.Maps?.FirstOrDefault(m => m != null && m.SceneName == sceneName);
+            return From(bundle.AiSettings, map?.Coordination);
+        }
+
+        private void Apply(SquadAiSettings o)
+        {
+            if (o == null) return;
+            if (o.SubgraphNodes > 0) SubgraphNodes = o.SubgraphNodes.Value;
+            if (o.MaxGroupAgents > 0) MaxGroupAgents = o.MaxGroupAgents.Value;
+            if (o.MinGroupAgents > 0) MinGroupAgents = o.MinGroupAgents.Value;
+            if (o.SquadAlertRange >= 0) SquadAlertRange = o.SquadAlertRange.Value;
+            if (o.ReinforcementRange >= 0) ReinforcementRange = o.ReinforcementRange.Value;
+            if (o.GroupMergeRange >= 0) GroupMergeRange = o.GroupMergeRange.Value;
+            if (o.RefreshSeconds > 0) RefreshSeconds = o.RefreshSeconds.Value;
+            if (o.ReplanHopDelta > 0) ReplanHopDelta = o.ReplanHopDelta.Value;
+            if (o.StaleDistance > 0) StaleDistance = o.StaleDistance.Value;
         }
     }
 }
