@@ -52,6 +52,15 @@ namespace ShadowVale.Map01.Tests
             string sandbox = Path.Combine(Application.persistentDataPath, "sandbox", "Test_Map_1_AI-slot-0.json");
             Assert.IsTrue(File.Exists(sandbox), "Saved to the test map's own file.");
             File.Delete(sandbox);
+
+            // Restart (death, failed run) reloads the test map itself, though it is not in Build Settings.
+            Map01Mission.ReloadScene(mission.gameObject.scene);
+            yield return null;
+            yield return null;
+            var again = Object.FindFirstObjectByType<Map01Mission>();
+            Assert.IsNotNull(again);
+            Assert.AreNotSame(mission, again);
+            Assert.AreEqual("Test Map 1 AI", again.gameObject.scene.name);
         }
     }
 }

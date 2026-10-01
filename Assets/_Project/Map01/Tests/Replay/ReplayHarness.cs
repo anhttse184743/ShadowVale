@@ -33,7 +33,7 @@ namespace ShadowVale.Map01.Tests.Replay
     /// </summary>
     public static class ReplayHarness
     {
-        /// <summary>The map the runs play: Map 1, or e.g. "Test Map 1 AI" via SVL_REPLAY_SCENE (it must be in Build Settings).</summary>
+        /// <summary>The map the runs play: Map 1, or a scene in Scenes/Maps such as "Test Map 1 AI" via SVL_REPLAY_SCENE.</summary>
         public static string Scene => string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("SVL_REPLAY_SCENE"))
             ? "Map 1" : Environment.GetEnvironmentVariable("SVL_REPLAY_SCENE").Trim();
 
@@ -69,7 +69,9 @@ namespace ShadowVale.Map01.Tests.Replay
             Time.captureFramerate = Math.Max(10, spec.FramesPerSecond);
             try
             {
-                SceneManager.LoadScene(Scene);
+                if (Scene == "Map 1") SceneManager.LoadScene(Scene);
+                else UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(
+                    $"Assets/_Project/Scenes/Maps/{Scene}.unity", new LoadSceneParameters(LoadSceneMode.Single));
                 yield return null;
                 yield return null;
                 var mission = Object.FindFirstObjectByType<Map01Mission>();

@@ -327,7 +327,24 @@ namespace ShadowVale.Map01
             ModernHealth?.RestoreHealth(hp);
         }
 
-        private void Restart() { Time.timeScale = 1; UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex); }
+        private void Restart() { Time.timeScale = 1; ReloadScene(gameObject.scene); }
+
+        /// <summary>
+        /// Starts <paramref name="scene"/> over. In the editor a scene outside Build Settings (the
+        /// "Test Map 1 AI" sandbox, kept local) is loaded by path; everything else by name as before.
+        /// </summary>
+        public static void ReloadScene(UnityEngine.SceneManagement.Scene scene)
+        {
+#if UNITY_EDITOR
+            if (UnityEngine.SceneManagement.SceneUtility.GetBuildIndexByScenePath(scene.path) < 0)
+            {
+                UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(scene.path,
+                    new UnityEngine.SceneManagement.LoadSceneParameters(UnityEngine.SceneManagement.LoadSceneMode.Single));
+                return;
+            }
+#endif
+            UnityEngine.SceneManagement.SceneManager.LoadScene(scene.name);
+        }
 
         private void Update()
         {

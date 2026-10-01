@@ -133,7 +133,7 @@ namespace ShadowVale.Map01
             if (string.IsNullOrEmpty(scoutStart)) return false;
             pendingCheckpoint = scoutStart; pendingSeconds = mission.PlaySeconds; pendingMessage = message;
             Time.timeScale = 1;
-            SceneManager.LoadScene(SceneName); // Map 1, or the sandbox copy it is running in.
+            Map01Mission.ReloadScene(gameObject.scene); // Map 1, or the sandbox copy it is running in.
             return true;
         }
 
@@ -237,7 +237,7 @@ namespace ShadowVale.Map01
                 {
                     if (!File.Exists(SandboxPath(0))) { mission.Say("Map thử chưa có bản lưu nhanh [F5]."); return; }
                     pendingCheckpoint = File.ReadAllText(SandboxPath(0)); pendingSeconds = 0; pendingMessage = null;
-                    Time.timeScale = 1; SceneManager.LoadScene(SceneName);
+                    Time.timeScale = 1; Map01Mission.ReloadScene(gameObject.scene);
                     return;
                 }
                 if (ForestSaveSlots.Exists(0)) { BeginGame(0); return; }

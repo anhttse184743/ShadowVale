@@ -18,6 +18,7 @@ namespace ShadowVale.Map01.Editor
     /// <item>Its tactical graph is a copy of Map 1's (<c>Resources/TacticalGraphs/Test Map 1 AI</c>); re-bake
     /// it with ShadowVale ▸ AI ▸ Bake Tactical Graph (open scene) after moving things.</item>
     /// <item>In play it saves to its own files (Map01SaveSystem) and reports telemetry as <c>map01_test</c>.</item>
+    /// <item>It stays on this machine (.gitignore) and out of Build Settings: the editor reloads it by path.</item>
     /// </list>
     /// Shared assets outside that folder (prefabs, materials, scripts) stay shared: changing a guard
     /// prefab changes both maps — edit the instances in the scene instead.
@@ -124,17 +125,10 @@ namespace ShadowVale.Map01.Editor
                 EditorUtility.SetDirty(graph);
             }
 
-            // In Build Settings, so restarting the map (it reloads by build index) works in Play.
-            var scenes = EditorBuildSettings.scenes.ToList();
-            if (scenes.All(s => s.path != ScenePath))
-            {
-                scenes.Add(new EditorBuildSettingsScene(ScenePath, true));
-                EditorBuildSettings.scenes = scenes.ToArray();
-            }
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
             return $"Đã tạo {ScenePath}: {remap.Count} asset riêng của map (terrain, NavMesh, cảnh quan) được copy, " +
-                   $"{refs} tham chiếu trong {files} file trỏ sang bản copy; tactical graph riêng; đã thêm vào Build Settings.";
+                   $"{refs} tham chiếu trong {files} file trỏ sang bản copy; tactical graph riêng. Map chỉ ở máy này (.gitignore).";
         }
 
         private static readonly Regex GuidRef = new Regex(@"guid: ([0-9a-f]{32})", RegexOptions.Compiled);
