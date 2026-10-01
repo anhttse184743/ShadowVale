@@ -62,10 +62,15 @@ namespace ShadowVale.Editor
             EditorUtility.DisplayDialog("Tactical graph", report + "\n\n" + path, "OK");
         }
 
-        /// <summary>Headless entry point for Map 1.</summary>
-        public static void BakeMap1()
+        /// <summary>Headless entry points: <c>-executeMethod ShadowVale.Editor.TacticalGraphBaker.BakeMap1</c> (or BakeMap2).</summary>
+        public static void BakeMap1() => BakeScenePath("Assets/_Project/Scenes/Maps/Map 1.unity");
+
+        public static void BakeMap2() => BakeScenePath("Assets/_Project/Scenes/Maps/Map 2.unity");
+
+        /// <summary>Opens the scene, bakes its graph with the default settings and saves it under Resources.</summary>
+        public static void BakeScenePath(string scenePath)
         {
-            var scene = EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity", OpenSceneMode.Single);
+            var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
             var asset = Bake(scene.name, new Settings(), out string report);
             if (asset == null) throw new System.InvalidOperationException(report);
             Debug.Log($"[TacticalGraph] {Save(asset)}\n{report}");

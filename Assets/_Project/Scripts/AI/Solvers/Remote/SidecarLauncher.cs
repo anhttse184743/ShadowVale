@@ -65,6 +65,7 @@ namespace ShadowVale.AI.Solvers.Remote
                 Environment.GetEnvironmentVariable("SVL_SIDECAR_EXE"),
                 Path.Combine(root, profile.SidecarRelativePath ?? ""),
                 // Editor, multi-repo layout: <Capstone>/ShadowVale + <Capstone>/shadowvale-solver.
+                Path.Combine(root, "..", "shadowvale-solver", "dist", "svl-solver.exe"),
                 Path.Combine(root, "..", "shadowvale-solver", ".venv", "Scripts", "svl-api.exe"),
             };
             foreach (var c in candidates)

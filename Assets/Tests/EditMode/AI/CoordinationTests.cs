@@ -50,14 +50,14 @@ namespace ShadowVale.Tests.EditMode.AI
             var r = inst.Request;
             Assert.AreEqual(3, r.AgentCount);
             Assert.LessOrEqual(r.NodeCount, 20);
-            Assert.AreEqual(r.VariableCount * r.VariableCount, r.QMatrix.Length);
+            Assert.AreEqual(r.VariableCount() * r.VariableCount(), r.QMatrix.Length);
             Assert.AreEqual(g.NearestNode(Origin + new Vector3(40, 0, 40)), inst.Sub.Nodes[inst.Sub.PlayerLocal]);
             Assert.IsFalse(inst.Features.Escape.Contains(inst.Sub.PlayerLocal), "The player's own node is not an escape.");
             Assert.IsNotEmpty(inst.Features.Escape);
             Assert.AreEqual(inst.Lambda * 3, r.Offset, 1e-9);
-            for (int i = 0; i < r.VariableCount; i++)
+            for (int i = 0; i < r.VariableCount(); i++)
             for (int j = 0; j < i; j++)
-                Assert.AreEqual(0.0, r.QMatrix[i * r.VariableCount + j], "Upper-triangular.");
+                Assert.AreEqual(0.0, r.QMatrix[i * r.VariableCount() + j], "Upper-triangular.");
         }
 
         [Test]

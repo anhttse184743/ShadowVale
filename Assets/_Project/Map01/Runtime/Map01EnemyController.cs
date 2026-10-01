@@ -52,6 +52,8 @@ namespace ShadowVale.Map01
         private Quaternion _postRotation;
         private float _lastHealth;
         private bool _sawPlayer;
+        private float _lastDistance = float.PositiveInfinity;
+        private PerceptionSchedule _sense;
 
         public EnemyBrain Brain { get { EnsureBrain(); return _brain; } }
         private EnemyBlackboard Memory => Brain.Memory;
@@ -131,6 +133,7 @@ namespace ShadowVale.Map01
             _body.Warp(_postPosition);
             transform.rotation = _postRotation;
             Brain.ResetToPost(Time.time + 4f);
+            _sense.Reset();
             _body.SetPace(1f);
             if (patrolPoints.Length > 0) _body.MoveTo(patrolPoints[0]);
         }
@@ -186,6 +189,7 @@ namespace ShadowVale.Map01
             transform.rotation = saved.rotation;
             _health.RestoreHealth(saved.hp);
             _lastHealth = _health.Current;
+            _sense.Reset();
             m.PatrolIndex = Mathf.Clamp(saved.patrolIndex, 0, Mathf.Max(0, patrolPoints.Length - 1));
             _nextShot = now + saved.shotRemaining;
             m.AlertUntil = now + saved.alertRemaining; m.InvestigatePoint = saved.investigate;
@@ -309,7 +313,11 @@ namespace ShadowVale.Map01
                 return;
             }
 
-            bool sees = _sawPlayer = CanSeePlayer(out float distance);
+            // Calm guards look 10 times a second, staggered; alert ones every frame (PerceptionSchedule).
+            bool alert = Engaged || _sawPlayer || Memory.Suspicion > 0f;
+            if (_sense.Due(Time.time, alert, LegacyId)) _sawPlayer = CanSeePlayer(out _lastDistance);
+            bool sees = _sawPlayer;
+            float distance = _lastDistance;
             _brain.Tick(new PerceptionSample(sees, distance, _player != null ? _player.position : transform.position),
                 Time.time, Time.deltaTime);
             if (sees && Engaged && _mission != null) _mission.Alarmed = true;

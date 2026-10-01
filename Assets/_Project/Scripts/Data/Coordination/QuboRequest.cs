@@ -28,6 +28,7 @@ namespace ShadowVale.Data.Coordination
         public int LatencyBudgetMs { get; set; } = 120;
         public string Variant { get; set; } = "greedy";
 
-        public int VariableCount => AgentCount * NodeCount;
+        /// <summary>A method, not a property: properties go on the wire, and the sidecar has no such field.</summary>
+        public int VariableCount() => AgentCount * NodeCount;
     }
 }

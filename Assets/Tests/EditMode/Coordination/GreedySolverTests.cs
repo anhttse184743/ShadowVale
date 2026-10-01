@@ -72,7 +72,7 @@ namespace ShadowVale.Tests.EditMode.Coordination
         public void Greedy_AcceptsSymmetricMatrixWithSameResult()
         {
             var upper = TwoAgentsThreeNodes();
-            var size = upper.VariableCount;
+            var size = upper.VariableCount();
             var sym = new double[size * size];
             for (var i = 0; i < size; i++)
                 for (var j = 0; j < size; j++)
