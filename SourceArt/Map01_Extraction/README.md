@@ -1,7 +1,7 @@
 # Map 1 extraction authoring
 
 `Map01_Extraction.blend` contains Nam, Hung, the original Mixamo reference actions,
-the jetty mesh reference exported from Map 1, and eight baked actions for each rig.
+the jetty mesh reference exported from Map 1, and thirteen baked actions for each rig.
 Textures are packed. Original character files, rest skeletons and source clips are
 not overwritten. Each exported rig retains 28 bones; no leaf bones are added.
 
@@ -32,7 +32,7 @@ so Nam and Hung's existing Humanoid Animators evaluate their body pose consisten
 Root height is baked into the pose; the extraction controller owns movement through
 the terrain anchors and the boat root.
 
-The small looping engine sound is synthesized locally by the script.
+Paddle splash and covering rifle audio are synthesized locally. The legacy engine asset is retained for serialized compatibility but is not played.
 
 ## Runtime
 
@@ -49,7 +49,7 @@ It does not load Map 2.
 
 `animation-validation.json` records bone counts, fps and foot-target residuals.
 `unity-layout.json` records boarding, blocker and departure positions.
-`departure-clearance.txt` records the sampled hull clearance check.
+`departure-clearance.txt` records the sampled hull and paddle clearance check.
 Unity test results and captures are under `Logs/Extraction`.
 
 ## Takes (each exported for Nam and Hung)
@@ -91,3 +91,34 @@ under `Assets/_Project/Art/Characters/Animations/Extraction`.
 Final verification: **6/6 Unity regression tests passed**. See `VERIFICATION.md`
 and `unity-test-results.xml`. `unity-departure-preview.png` is captured from the
 integrated Unity sequence.
+
+## Revised departure (2026-10-02)
+
+Arrival alone triggers boarding. Hung stows his rifle, takes the paddle and rows
+from the stern. Nam and the allied commander remain armed; their firing sectors
+exclude the other passengers. Boarding takes about 10 seconds and departure 18.
+The original skeletons and Map 2 are unchanged.
+
+`Resources/Characters/Map01ActorAssets.asset` is required: it stores neutral
+body-height calibration and the existing rifle prefab/grip reference. It must be
+published together with the extraction prefab and animation assets. Hung's standing
+visual corrects the evaluated sole plane after Humanoid retargeting; seated poses
+use separate bench anchors. Paddle contact correction accounts for Humanoid arm
+lengths after the Blender keys are applied. These corrections do not alter bones.
+
+Additional takes: Rifle_Stow (1.8s), Oar_Pickup (2s), Row_Start (1.6s),
+Row_Loop (2.4s, loop), Row_Stop (2s), exported for both rigs at 30 fps.
+
+The review video is a silent 10 fps camera capture for animation inspection,
+not a recording of gameplay UI/audio. The animation clips themselves are 30 fps.
+
+## Hung paddle grip correction
+
+The Unity post-retarget contact pass now assigns the left hand to the upper grip
+and the right hand to the lower shaft. Each elbow has its own outward/downward
+pole; chest rotation is limited to 7–17 degrees. Wrist/finger axes come from the
+existing Hand_end transforms, and the paddle follows palm centers rather than
+wrist joints. The cycle separates submerged pulling from lifted recovery.
+This change is in Map01Extraction.cs; it does not replace the underlying FBX takes
+or add finger bones to the original 28-bone rig. Close review video:
+`hung-rowing-close-review.mp4` (silent, 10 fps).

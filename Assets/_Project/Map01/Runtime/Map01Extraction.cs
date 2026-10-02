@@ -39,6 +39,7 @@ namespace ShadowVale.Map01
         private readonly Vector3[] lastTargets=new Vector3[2];
         private float lastStroke=-1, lastSplash, nextEnemyShot;
         private bool oarHeld;
+        private int proceduralFrame=-1;
         private readonly float[] aimUntil=new float[2];
         private Animator namActor, hungActor, commanderActor;
         private PosePlayer namPose, hungPose, commanderPose;
@@ -49,6 +50,8 @@ namespace ShadowVale.Map01
         private Quaternion initialPlayerRotation;
         private AudioSource motor;
         private ParticleSystem wake;
+        private Material wakeMaterial;
+        private Texture2D wakeTexture;
         private string subtitle;
         private int shots;
         private readonly List<(Animator actor, Weapon rifle)> seatedRifles = new();
@@ -125,7 +128,17 @@ namespace ShadowVale.Map01
             main.startColor = new Color(.8f,.88f,.9f,.4f); main.simulationSpace = ParticleSystemSimulationSpace.World;
             var emission = wake.emission; emission.rateOverTime = 22;
             var shape = wake.shape; shape.shapeType = ParticleSystemShapeType.Cone; shape.angle = 35;
-            var renderer = wake.GetComponent<ParticleSystemRenderer>(); renderer.sharedMaterial = mission.trailMaterial;
+            var renderer = wake.GetComponent<ParticleSystemRenderer>(); wakeMaterial = new Material(Shader.Find("Universal Render Pipeline/Particles/Unlit"));
+            wakeTexture = new Texture2D(32,32,TextureFormat.RGBA32,false);
+            for(int y=0;y<32;y++) for(int x=0;x<32;x++) {
+                float r=Vector2.Distance(new Vector2(x,y),new Vector2(15.5f,15.5f))/15.5f;
+                wakeTexture.SetPixel(x,y,new Color(1,1,1,Mathf.Clamp01(1-r)*.45f));
+            }
+            wakeTexture.Apply();wakeMaterial.SetTexture("_BaseMap",wakeTexture);
+            wakeMaterial.SetColor("_BaseColor",new Color(.7f,.85f,.88f,.45f));
+            wakeMaterial.SetFloat("_Surface",1);wakeMaterial.SetFloat("_SrcBlend",5);wakeMaterial.SetFloat("_DstBlend",10);wakeMaterial.SetFloat("_ZWrite",0);
+            wakeMaterial.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");wakeMaterial.renderQueue=3000;
+            renderer.sharedMaterial = wakeMaterial;
             return true;
         }
 
@@ -236,6 +249,9 @@ namespace ShadowVale.Map01
 
         private void LateUpdate()
         {
+            if(CurrentPhase==Phase.Complete || (mission!=null && mission.Paused))return;
+            if(proceduralFrame==Time.frameCount)return;
+            proceduralFrame=Time.frameCount;
             if(CurrentPhase==Phase.Departing) for(int index=0;index<2;index++) {
                 if(Time.unscaledTime>aimUntil[index])continue;
                 var actor=index==0?namActor:commanderActor;
@@ -257,11 +273,22 @@ namespace ShadowVale.Map01
                 }
             }
             if(oar==null || !oarHeld) return;
-            // The baked hands define the shaft axis, so the prop cannot slide through the palms.
-            var a=hungActor.GetBoneTransform(HumanBodyBones.RightHand).position;
-            var b=hungActor.GetBoneTransform(HumanBodyBones.LeftHand).position;
-            float blend=CurrentPhase==Phase.Boarding?Mathf.SmoothStep(0,1,(clock-2.6f)/.7f):1;
-            oar.SetPositionAndRotation(Vector3.Lerp(oar.position,a,blend),Quaternion.Slerp(oar.rotation,Quaternion.LookRotation((b-a).normalized,hungActor.transform.up),blend));
+            // Correct Humanoid arm-length retargeting at the prop contacts; keep the authored torso/legs.
+            float phase=CurrentPhase==Phase.Departing?Mathf.Min(clock,16)*Mathf.PI*2/2.4f:0;
+            float reach=.24f*Mathf.Cos(phase);
+            // Catch -> submerged pull -> lift -> recovery. The inboard hand is the top grip.
+            float lift=Mathf.Max(0,-Mathf.Sin(phase))*.20f;
+            if(CurrentPhase==Phase.Departing && clock>16)lift+=Mathf.SmoothStep(0,.24f,(clock-16)/2);
+            float contact=CurrentPhase==Phase.Boarding?Mathf.SmoothStep(0,1,(clock-2.6f)/.9f):1;
+            var rowingChest=hungActor.GetBoneTransform(HumanBodyBones.Chest);
+            rowingChest.rotation=Quaternion.AngleAxis((12+5*Mathf.Cos(phase))*contact,boat.up)*rowingChest.rotation;
+            PaddleArm(HumanBodyBones.LeftUpperArm,HumanBodyBones.LeftLowerArm,HumanBodyBones.LeftHand,
+                boat.TransformPoint(new Vector3(.08f,1.04f+lift,-1.6f+reach)),contact,-1);
+            PaddleArm(HumanBodyBones.RightUpperArm,HumanBodyBones.RightLowerArm,HumanBodyBones.RightHand,
+                boat.TransformPoint(new Vector3(.48f,.72f+lift,-1.55f+reach)),contact,1);
+            var a=PaddleGrip(hungActor.GetBoneTransform(HumanBodyBones.LeftHand));
+            var b=PaddleGrip(hungActor.GetBoneTransform(HumanBodyBones.RightHand));
+            oar.SetPositionAndRotation(Vector3.Lerp(oar.position,a,contact),Quaternion.Slerp(oar.rotation,Quaternion.LookRotation((b-a).normalized,boat.forward),contact));
             var blade=oar.TransformPoint(new Vector3(0,0,1.4f));
             if(CurrentPhase==Phase.Departing && blade.y<.06f && Time.unscaledTime-lastSplash>.16f) {
                 lastSplash=Time.unscaledTime;
@@ -269,6 +296,31 @@ namespace ShadowVale.Map01
                 wake.Emit(splash,3);
             }
         }
+        private void PaddleArm(HumanBodyBones upperBone,HumanBodyBones lowerBone,HumanBodyBones handBone,Vector3 target,float weight,float side)
+        {
+            var upper=hungActor.GetBoneTransform(upperBone);var lower=hungActor.GetBoneTransform(lowerBone);var hand=hungActor.GetBoneTransform(handBone);
+            target=Vector3.Lerp(hand.position,target,weight);
+            Vector3 origin=upper.position;float a=Vector3.Distance(origin,lower.position),b=Vector3.Distance(lower.position,hand.position);
+            Vector3 direction=(target-origin).normalized;float d=Mathf.Clamp(Vector3.Distance(origin,target),Mathf.Abs(a-b)+.001f,(a+b)*.97f);
+            target=origin+direction*d;
+            Vector3 bend=Vector3.ProjectOnPlane(boat.right*side*.65f+boat.forward*.15f-boat.up*.45f,direction).normalized;
+            float along=(a*a+d*d-b*b)/(2*d);float height=Mathf.Sqrt(Mathf.Max(0,a*a-along*along));
+            Vector3 elbow=origin+direction*along+bend*height;
+            Quaternion wrist=hand.localRotation;
+            upper.rotation=Quaternion.FromToRotation(lower.position-origin,elbow-origin)*upper.rotation;
+            lower.rotation=Quaternion.FromToRotation(hand.position-lower.position,target-lower.position)*lower.rotation;
+            hand.localRotation=wrist;
+            if(hand.childCount>0) {
+                // The hand end defines the actual mesh finger axis, independent of FBX bone axes.
+                Vector3 fingers=hand.GetChild(0).position-hand.position;
+                Vector3 forearm=hand.position-lower.position;
+                Vector3 shaft=boat.TransformDirection(new Vector3(.40f,-.32f,.05f)).normalized;
+                Vector3 gripFacing=Vector3.ProjectOnPlane(forearm,shaft).normalized;
+                if(gripFacing.sqrMagnitude>.1f) hand.rotation=Quaternion.FromToRotation(fingers,gripFacing)*hand.rotation;
+            }
+        }
+        private static Vector3 PaddleGrip(Transform hand) => hand.childCount>0
+            ? Vector3.Lerp(hand.position,hand.GetChild(0).position,.45f) : hand.position;
         private void UpdateRowing()
         {
             if(CurrentPhase==Phase.Approach) hungPose.Play(rifleStow);
@@ -430,6 +482,7 @@ namespace ShadowVale.Map01
             ApplyDeparture(1); wake.Stop(); motor.Stop();
             namPose.Play(travel);hungPose.Play(rowStop);commanderPose.Play(travel);
             namPose.Settle();hungPose.Settle(true);commanderPose.Settle();
+            clock=18;proceduralFrame=-1;LateUpdate(); // Freeze the same final grip for playback and skip.
             foreach(var enemy in pursuit)if(enemy!=null)Destroy(enemy);pursuit.Clear();
             if(mission.ModernHealth!=null)mission.ModernHealth.CinematicInvulnerable=false;
             CurrentPhase=Phase.Complete; subtitle=null; mission.Cinematic=false;
@@ -446,7 +499,11 @@ namespace ShadowVale.Map01
             if(CurrentPhase!=Phase.Departing) StartDeparture();
             FinishDeparture();
         }
-        private void BoardingView() => View(new Vector3(5.4f,3.1f,83.5f),new Vector3(.7f,.7f,87),48);
+        private void BoardingView() {
+            var wide=new Vector3(5.4f,3.1f,83.5f);var close=new Vector3(3.5f,2.1f,84.2f);
+            float detail=CurrentPhase==Phase.Boarding?Mathf.SmoothStep(0,1,clock/2):CurrentPhase==Phase.Seating?1-Mathf.SmoothStep(0,1,clock/sit.length):0;
+            View(Vector3.Lerp(wide,close,detail),Vector3.Lerp(new Vector3(.7f,.7f,87),new Vector3(.25f,.85f,87),detail),Mathf.Lerp(48,44,detail));
+        }
         private void View(Vector3 position,Vector3 focus,float fov) => cameraRig.SetCinematicView(position,Quaternion.LookRotation(focus-position),fov,1);
         public static Vector3 Along(Vector3[] anchors,float progress)
         {
@@ -473,7 +530,7 @@ namespace ShadowVale.Map01
             GUI.Label(new Rect(Screen.width*.1f,Screen.height*.87f,Screen.width*.8f,Screen.height*.1f),subtitle??"",style);
             GUI.color=old; GUI.depth=depth;
         }
-        private void OnDestroy() { namPose?.Dispose(); hungPose?.Dispose(); commanderPose?.Dispose(); if(mission!=null && mission.ModernHealth!=null)mission.ModernHealth.CinematicInvulnerable=false; }
+        private void OnDestroy() { if(wakeMaterial!=null)Destroy(wakeMaterial);if(wakeTexture!=null)Destroy(wakeTexture); namPose?.Dispose(); hungPose?.Dispose(); commanderPose?.Dispose(); if(mission!=null && mission.ModernHealth!=null)mission.ModernHealth.CinematicInvulnerable=false; }
 
         private sealed class PosePlayer : IDisposable
         {

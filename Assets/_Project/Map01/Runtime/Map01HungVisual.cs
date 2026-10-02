@@ -13,6 +13,8 @@ namespace ShadowVale.Map01
         private Renderer[] placeholder;
         private bool down;
         private float talkUntil;
+        private Mesh soleMesh;
+        private readonly System.Collections.Generic.List<Vector3> soleVertices = new System.Collections.Generic.List<Vector3>();
         public void Speak(float seconds = 6) { if (!down) talkUntil = Time.time + seconds; }
         private void ResetPose()
         {
@@ -58,6 +60,15 @@ namespace ShadowVale.Map01
                     ground=Mathf.Max(ground,hit.point.y);
             if(float.IsNegativeInfinity(ground)) ground=mission.hung.position.y;
             transform.position=new Vector3(mission.hung.position.x,ground,mission.hung.position.z);
+            // Humanoid retargeting changes the foot plane after the neutral scale calibration.
+            // Measure the evaluated skin, without changing the skeleton or standing scale.
+            if (soleMesh == null) soleMesh = new Mesh();
+            float sole = float.PositiveInfinity;
+            foreach (var skin in actor.GetComponentsInChildren<SkinnedMeshRenderer>()) {
+                skin.BakeMesh(soleMesh); soleMesh.GetVertices(soleVertices);
+                foreach (var vertex in soleVertices) sole = Mathf.Min(sole, skin.transform.TransformPoint(vertex).y);
+            }
+            if (!float.IsInfinity(sole)) transform.position += Vector3.up * (ground - sole);
         }
 
         private void Update()
@@ -81,6 +92,7 @@ namespace ShadowVale.Map01
 
         private void OnDestroy()
         {
+            if (soleMesh != null) Destroy(soleMesh);
             if (placeholder == null) return;
             foreach (var renderer in placeholder) if (renderer != null) renderer.forceRenderingOff = false;
         }

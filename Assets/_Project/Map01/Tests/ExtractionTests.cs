@@ -45,7 +45,7 @@ namespace ShadowVale.Map01.Tests
             yield return WaitGameSeconds(.3f);
             Assert.IsTrue(mission.Cinematic);
             Assert.AreEqual(Map01Quest.BoardingStage,quest.Stage);
-            Assert.IsFalse(mission.GetComponent<Map01SaveSystem>().SaveSlot(0,out _,true));
+            Assert.IsFalse(mission.GetComponent<Map01SaveSystem>().SaveSlot(0,out var saveError,true),saveError);
             yield return WaitGameSeconds(2);
             Capture(mission,"boarding-start");
             yield return WaitGameSeconds(3);
@@ -55,6 +55,10 @@ namespace ShadowVale.Map01.Tests
             Assert.AreNotEqual(Map01Quest.CompleteStage,quest.Stage);
             yield return WaitGameSeconds(4);
             Capture(mission,"departure");
+            var cameraPosition=mission.gameCamera.transform.position;var cameraRotation=mission.gameCamera.transform.rotation;
+            var rower=mission.hung.position;mission.gameCamera.transform.SetPositionAndRotation(rower+new Vector3(3,1.6f,-1),Quaternion.LookRotation(rower+Vector3.up*.7f-(rower+new Vector3(3,1.6f,-1))));
+            Capture(mission,"rowing-close");mission.gameCamera.transform.SetPositionAndRotation(cameraPosition,cameraRotation);
+            File.WriteAllLines("Logs/Extraction/paddle-diagnostics.txt",Object.FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None).Where(r=>r.name.StartsWith("Oar ")).Select(r=>r.name+" active="+r.gameObject.activeInHierarchy+" enabled="+r.enabled+" hidden="+r.forceRenderingOff+" position="+r.transform.position+" bounds="+r.bounds));
             Assert.AreEqual(Map01Extraction.Phase.Departing,extraction.CurrentPhase);
             yield return WaitGameSeconds(19);
             Assert.IsTrue(extraction.HasDeparted);
@@ -86,7 +90,7 @@ namespace ShadowVale.Map01.Tests
             var guard=mission.Enemies.First(e=>e.name=="Extraction guard 0");
             guard.GetComponent<Health>().TakeDamage(99999,guard.transform.position,null);
             yield return null;
-            Assert.IsTrue(mission.GetComponent<Map01SaveSystem>().SaveSlot(0,out _,true));
+            Assert.IsTrue(mission.GetComponent<Map01SaveSystem>().SaveSlot(0,out var saveError,true),saveError);
             ForestSaveSlots.Entry saved=ForestSaveSlots.Read(0);
             Assert.IsTrue(saved.checkpoint.Contains("Extraction guard 0"));
             Map01SaveSystem.BeginGame(0);
@@ -118,9 +122,21 @@ namespace ShadowVale.Map01.Tests
                     var camera=mission.gameCamera;var previous=camera.targetTexture;var active=RenderTexture.active;
                     var target=RenderTexture.GetTemporary(960,540,24);var texture=new Texture2D(960,540,TextureFormat.RGB24,false);
                     try {
+                        // EditMode coroutines can capture between Update and LateUpdate; finish the procedural contacts first.
+                        var extraction=mission.GetComponentInChildren<Map01Extraction>();
+                        if(extraction!=null)extraction.SendMessage("LateUpdate",SendMessageOptions.DontRequireReceiver);
                         camera.targetTexture=target;camera.Render();RenderTexture.active=target;
                         texture.ReadPixels(new Rect(0,0,960,540),0,0);texture.Apply();
                         File.WriteAllBytes(folder+"/frame-"+(frame++).ToString("D05")+".jpg",texture.EncodeToJPG(85));
+                        if(sequence.CurrentPhase==Map01Extraction.Phase.Departing) {
+                            string closeFolder="Logs/Extraction/RowingCloseFrames";Directory.CreateDirectory(closeFolder);
+                            var position=camera.transform.position;var rotation=camera.transform.rotation;
+                            var root=mission.hung.parent;var focus=mission.hung.position+root.up*.72f;
+                            camera.transform.SetPositionAndRotation(focus+root.right*2.7f+root.up*.65f-root.forward*.6f,Quaternion.LookRotation(-root.right*2.7f-root.up*.65f+root.forward*.6f));
+                            camera.Render();texture.ReadPixels(new Rect(0,0,960,540),0,0);texture.Apply();
+                            File.WriteAllBytes(closeFolder+"/frame-"+frame.ToString("D05")+".jpg",texture.EncodeToJPG(85));
+                            camera.transform.SetPositionAndRotation(position,rotation);
+                        }
                     } finally {camera.targetTexture=previous;RenderTexture.active=active;RenderTexture.ReleaseTemporary(target);Object.Destroy(texture);}
                 }
                 yield return null;
@@ -162,7 +178,7 @@ namespace ShadowVale.Map01.Tests
             mission.ModernPlayer.enabled=false;mission.ModernCombat.enabled=false;
             mission.player.GetComponent<CharacterController>().enabled=false;
             mission.hung.GetComponent<UnityEngine.AI.NavMeshAgent>().enabled=false;
-            var points=new[]{mission.player.position,mission.Interactables.First(p=>p.kind==ForestPointKind.Supplies).transform.position};
+            var points=new[]{mission.player.position,mission.Interactables.First(p=>p.kind==ForestPointKind.Supplies).transform.position,new Vector3(20,4,32)};
             int index=0;
             foreach(var point in points) {
                 var namPosition=point+Vector3.right*2;
@@ -204,8 +220,8 @@ namespace ShadowVale.Map01.Tests
         private static void IsolateSaves()
         {
             UnityEditor.ShaderUtil.allowAsyncCompilation=false;
-            Directory.CreateDirectory("Logs/Extraction/TestSaves");
-            typeof(ForestSaveSlots).GetField("storageRoot",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,Path.GetFullPath("Logs/Extraction/TestSaves"));
+            string isolatedRoot="Logs/Extraction/TestSaves/"+System.Guid.NewGuid().ToString("N"); Directory.CreateDirectory(isolatedRoot);
+            typeof(ForestSaveSlots).GetField("storageRoot",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,Path.GetFullPath(isolatedRoot));
         }
         private static IEnumerator HoldEscape()
         {
@@ -224,7 +240,10 @@ namespace ShadowVale.Map01.Tests
             var camera=mission.gameCamera;var previous=camera.targetTexture;var active=RenderTexture.active;
             var target=RenderTexture.GetTemporary(1280,720,24);var image=new Texture2D(1280,720,TextureFormat.RGB24,false);
             try {
-                camera.targetTexture=target;camera.Render();RenderTexture.active=target;
+                // EditMode coroutines can capture between Update and LateUpdate; finish the procedural contacts first.
+                        var extraction=mission.GetComponentInChildren<Map01Extraction>();
+                        if(extraction!=null)extraction.SendMessage("LateUpdate",SendMessageOptions.DontRequireReceiver);
+                        camera.targetTexture=target;camera.Render();RenderTexture.active=target;
                 image.ReadPixels(new Rect(0,0,1280,720),0,0);image.Apply();
                 File.WriteAllBytes("Logs/Extraction/"+name+".png",image.EncodeToPNG());
                 var actors=mission.player.GetComponentsInChildren<Animator>().Concat(mission.hung.GetComponentsInChildren<Animator>());
