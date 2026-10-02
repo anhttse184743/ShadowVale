@@ -68,6 +68,7 @@ namespace ShadowVale.Map01
         public void BindMission(Map01Mission mission)
         {
             _mission = mission;
+            Map01Rifle.Attach(GetComponentInChildren<Animator>());
             GetComponent<Health>().KeepCheckpointCorpse();
             // Map 1's guard tuning lives in Map01Balance.json, not in each guard's serialized fields.
             damage = mission.Weapon.damage * mission.Settings.guardDamageScale;

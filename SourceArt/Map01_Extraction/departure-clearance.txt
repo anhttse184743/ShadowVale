@@ -1,0 +1,1 @@
+151 full-hull samples (including departure endpoint): clear of solid scene geometry.

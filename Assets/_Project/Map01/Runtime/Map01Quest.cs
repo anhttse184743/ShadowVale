@@ -27,6 +27,9 @@ namespace ShadowVale.Map01
         public const int BossStage = 7;
         public const int ReportBossStage = 8;
         public const int CompleteStage = 9;
+        public const int ExtractionStage = 10;
+        public const int BoardingStage = 11;
+        public const int LastStage = BoardingStage;
         public static readonly string[] Objectives = {
             "Giải cứu Hùng bị địch bắt ở bến tàu phía Bắc: lén tiếp cận, cởi trói và chữa trị bằng thảo dược hoặc băng cứu thương [E] — đừng để Hùng trúng đạn",
             "Đưa Hùng về căn cứ an toàn, nhận hàng tiếp tế [E]",
@@ -37,11 +40,13 @@ namespace ShadowVale.Map01
             "Về căn cứ báo cáo với Hùng: ba doanh trại đã bị hạ [E]",
             "Tiêu diệt chỉ huy địch",
             "Về căn cứ báo cáo chiến thắng với Hùng [E]",
-            "Hoàn thành Map 1 — Những dấu chân trong rừng"
+            "Hoàn thành Map 1 — Những dấu chân trong rừng",
+            "Reach the northern jetty. Board the waiting boat.",
+            "Board the boat and leave the forest."
         };
         public static readonly string[] SaveLocations = {
             "Giải cứu Hùng ở bến tàu", "Trên đường về căn cứ", "Căn cứ chỉ huy", "Trinh sát doanh trại", "Về căn cứ báo cáo",
-            "Doanh trại địch", "Về căn cứ báo cáo", "Đối đầu chỉ huy", "Về căn cứ báo cáo", "Map 1 hoàn tất"
+            "Doanh trại địch", "Về căn cứ báo cáo", "Đối đầu chỉ huy", "Về căn cứ báo cáo", "Map 1 hoàn tất", "Northern jetty extraction", "Boarding the boat"
         };
         /// <summary>Hùng's scouting order — given at the briefing, and again whenever a lost run starts over.</summary>
         public const string ScoutOrder = "Hùng: Địch có ba doanh trại quanh đây, anh chỉ biết đại khái khu vực. Lén tới, giữ [F] dùng ống nhòm ghi lại vị trí cả ba. " +
@@ -51,7 +56,7 @@ namespace ShadowVale.Map01
         /// <summary>The objective line for the HUD, with the scouting tally while it runs.</summary>
         public string ObjectiveText => Stage == ScoutStage
             ? $"{Objectives[Stage]} ({scouting.FoundCount}/{scouting.Camps.Count})"
-            : Objectives[Mathf.Clamp(Stage, 0, CompleteStage)];
+            : Objectives[Mathf.Clamp(Stage, 0, LastStage)];
         public bool AwaitingReport => Stage == BriefingStage || Stage == ReportScoutStage || Stage == ReportCampsStage || Stage == ReportBossStage;
         /// <summary>True while Nam is close enough to Hùng for [E] to mean something: treating him
         /// at the start, or reporting in afterwards.</summary>
@@ -70,11 +75,12 @@ namespace ShadowVale.Map01
         public void RestoreStage(int value)
         {
             // Older saves waiting for the final report are already victorious.
-            Stage = value == ReportBossStage ? CompleteStage : Mathf.Clamp(value, 0, CompleteStage);
+            Stage = value == ReportBossStage ? CompleteStage : value == BoardingStage ? ExtractionStage : Mathf.Clamp(value, 0, LastStage);
             // The commander is spawned at runtime, not baked into the scene — a checkpoint taken
             // mid-fight (the exit autosave allows that) must bring him back, or the objective can
             // never complete. The save system restores his health/position right after this.
             if (Stage == BossStage && boss == null) SpawnBoss();
+            if (Stage == ExtractionStage) Map01Extraction.Get(mission)?.Begin(false);
         }
 
         private Map01Mission mission;
@@ -237,12 +243,15 @@ namespace ShadowVale.Map01
             return template.transform.position;
         }
 
-        public void CompleteBossDefeat()
+        public void CompleteBossDefeat(bool showRadio = true)
         {
             if (Stage != ReportBossStage) return;
-            Stage = CompleteStage;
-            mission.Say("Chỉ huy địch đã bị tiêu diệt. Nhiệm vụ 4 hoàn tất — Hoàn thành Map 1!", 10);
+            Stage = ExtractionStage;
+            Map01Extraction.Get(mission)?.Begin(showRadio && !Map01SaveSystem.IsRestoring);
         }
+
+        public void BeginBoarding() { if (Stage == ExtractionStage) Stage = BoardingStage; }
+        public void CompleteExtraction() { if (Stage == BoardingStage) Stage = CompleteStage; }
 
         private void OnBossDown()
         {
