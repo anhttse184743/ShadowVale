@@ -3,6 +3,7 @@
   "rootNamespace": "ShadowVale.Map01.Editor",
   "references": [
     "ShadowVale.Map01",
+    "ShadowVale.Gameplay",
     "Unity.AI.Navigation",
     "Unity.RenderPipelines.Universal.Runtime",
     "Unity.InputSystem",

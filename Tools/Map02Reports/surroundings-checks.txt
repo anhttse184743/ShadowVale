@@ -1,0 +1,6 @@
+PASS all 1680 perimeter vertices match existing Map 2 ground; max error 0
+PASS north hills / east and west fields / south broad river
+PASS river valley to Map 1 at north; canal mouth at south; scenery only
+PASS no scenery colliders; existing playable environment and navigation retained
+Scenery trees: 1160; distant rice clumps: 22028
+Terrain vertices: 164328; water vertices: 97116

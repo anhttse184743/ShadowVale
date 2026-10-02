@@ -57,3 +57,29 @@ Editable source: `SourceArt/Map02_Village/Map02_Roadside_Details.blend`. Run the
 `Map02RoadsideLayout.cs` exposes **ShadowVale > Map 2 > Add Blender roadside bamboo and lush banks**. It requires the clustered scene, saves `Map2_before_roadside.unity`, and refuses duplicate application. Curved lane splines and blended junctions share one cached road-distance field for soil paint, planting clearance and terrain shaping. A dedicated mask and material add fine earth texture without floating road meshes. Existing house geometry is preserved.
 
 Validation: all 14 house routes and both cross-river routes pass. Saved scene reload preserves all 85,134 meadow instances. See `Tools/Map02Reports/roadside-checks.txt` and the four `map02-roadside-*.png` renders. Runtime frame rate has not been benchmarked; the denser vegetation uses more rendering work despite instancing and LODs.
+
+## Physical river (2026-10-02)
+
+The water implementation uses a bounded wave-height surface, matching CPU buoyancy and shader wave equations. `RiverWater` supplies channel sampling, current velocity and a bounded ripple buffer. `RiverBuoyantBody` applies displaced-volume lift at four hull points, drag and an optional soft mooring. `RiverWaterTrigger` detects eligible rigidbodies and character controllers at water level; bridge traffic is rejected by height.
+
+`Map02PhysicalRiver.cs` installs the water mesh and material, enables depth/opaque textures on Map 2 cameras, adds interaction volumes and converts the two existing canal boats to buoyant moored rigidbodies. The operation retains a pre-water scene backup. The bounded-water, current-driven drift, wave/mooring stability and ripple-buffer checks passed; results are in `Tools/Map02Reports/physical-river-checks.txt`. This is surface-based game water, not a volumetric fluid solver, and does not add swimming controls.
+
+An isolated Unity 6000.3.24f1 Play Mode run also passed for 12 seconds: a dropped Rigidbody acquired buoyancy through a real trigger callback, floated and drifted 5.19 metres downstream; two hull proxies using Map 2 boat mass, collider dimensions and float points stayed near their moorings; interaction and wake ripples populated the bounded buffer. See `Tools/Map02Reports/river-runtime-checks.txt` and the reusable project in `Tools/WaterRuntimeValidation`. This validates runtime physics independently of the main project's startup menu, not a full Map 2 gameplay run. The earlier `river-play-checks.txt` failure records startup routing to the menu instead of Map 2. The new **ShadowVale > Map 2 > Play water preview (skip main menu)** route still needs verification in the main editor.
+
+The saved scene render is `Tools/Map02Reports/map02-physical-river.png`. Vegetation and the village layout remain in the scene; the water shader adds waves, depth tint, reflected light and interaction ripples.
+
+### Closed shoreline (2026-10-02)
+
+The original water strip stopped short of the sloped banks. `RiverShorelineMesh` now extends the rendered surface three metres beyond each physics bank, underneath the opaque terrain. The saved `PhysicalRiver_Surface.asset` is updated in place with the same GUID; regeneration uses the same helper. The channel center, water height, physics sampling bounds and boat settings are preserved.
+
+The isolated Unity geometry check sampled 3,200 points along the expanded edges against the current `Roadside_Continuous_Terrain` mesh. Every sample is covered by terrain, with at least 0.694 m clearance above the highest possible wave crest. See `Tools/Map02Reports/shoreline-checks.txt`. The original mesh is backed up as `PhysicalRiver_Surface_before_shoreline.asset`. The earlier screenshot predates this fix; this validation checks geometry rather than the main editor's rendered view.
+
+## Surrounding landscape and sky (2026-10-02)
+
+Map 2 now has a separate `03 Surroundings • Map 2 landscape` root extending roughly 700 metres beyond its playable footprint. North (+Z) has wooded hills with a river valley suggesting the route toward Map 1. East and west have continuing yellow/green rice parcels and tree belts. South (-Z) has a widening canal mouth opening into a broad river, with a distant opposite bank. This is a visual geographic connection to Map 1; no scene-transfer trigger is added.
+
+The scenery contains 1,160 simple merged distant trees and 22,028 rice clumps in spatial mesh groups. The tropical cloud sky and distance fog replace the empty background; the scene camera's far plane is 1,800 metres. Scenery has no colliders and is outside the playable environment's NavMesh hierarchy. Existing house, planting, path, water-physics and navigation records remain unchanged.
+
+`Map02Surroundings.cs` exposes **ShadowVale > Map 2 > Build surrounding landscape and sky**. It reads the actual half-metre terrain perimeter, preserves all 1,680 edge heights exactly, and saves generated assets under `Map02_Village/Boundary`. Rebuilding replaces its own root and updates assets in place. Save manual scene edits first. The original scene is backed up at `Tools/Map02Reports/Map2_before_surroundings.unity`.
+
+Compilation, generation, repeat generation and three URP review renders passed in an isolated copy of the project before installation. `Tools/prepare_map02_boundary.py` prepares the dependency snapshot; `Tools/install_map02_boundary.py` checks that the main scene did not change during authoring before installing the result. Reports: `surroundings-checks.txt` and `surroundings-install-checks.txt`. Review images: `map02-boundary-overview.png`, `map02-boundary-north.png`, `map02-boundary-south.png`. Runtime performance of the expanded scenery has not been benchmarked.

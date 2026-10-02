@@ -1,0 +1,2 @@
+FAIL System.Exception: River absent in play mode
+  at ShadowVale.Map01.Editor.Map02RiverPlayCheck.Tick () [0x000a4] in C:\Users\Tai Nguyen\Desktop\ShadowVale\ShadowVale\Assets\_Project\Map01\Editor\Map02RiverPlayCheck.cs:25 
