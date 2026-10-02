@@ -1,4 +1,4 @@
-﻿using ShadowVale.Gameplay.Player;
+using ShadowVale.Gameplay.Player;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -185,6 +185,33 @@ namespace ShadowVale.Gameplay.Combat
         public WeaponKind EquippedKind => _equippedKind;
         public WeaponKind StartingWeapon => startingWeapon;
         public bool IsAiming => _aiming;
+
+        // Rebind clears Animator parameters even when the cached aiming flag is unchanged.
+        // Restore gameplay explicitly rather than waiting for another input edge.
+        public void RestoreAfterCinematic()
+        {
+            if (animator == null || animator.runtimeAnimatorController == null) return;
+            animator.Rebind();
+            _upperBodyLayer = animator.GetLayerIndex(UpperBodyLayer);
+            animator.SetInteger(AnimatorParams.Weapon, (int)_equippedKind);
+            animator.SetFloat(AnimatorParams.Speed, 0);
+            animator.SetBool(AnimatorParams.Grounded, true);
+            animator.SetBool(AnimatorParams.Sneaking, _controller != null && _controller.IsSneaking);
+            animator.ResetTrigger(AnimatorParams.Attack); animator.ResetTrigger(AnimatorParams.Die);
+            _aiming = Mouse.current != null && Mouse.current.rightButton.isPressed && _equipped != null && _equipped.IsGun;
+            animator.SetBool(AnimatorParams.Aiming, _aiming);
+            _upperBodyWeight = _equippedKind == WeaponKind.Unarmed ? 0 : 1;
+            if (_upperBodyLayer > 0) {
+                animator.SetLayerWeight(_upperBodyLayer, _upperBodyWeight);
+                string state = _equippedKind == WeaponKind.Rifle ? "Hold_Rifle" : _equippedKind == WeaponKind.Knife ? "Hold_Knife" : "Empty";
+                if (animator.HasState(_upperBodyLayer, Animator.StringToHash(state))) animator.Play(state, _upperBodyLayer, 0);
+            }
+            if (animator.HasState(0, Animator.StringToHash(LocomotionState))) animator.Play(LocomotionState, 0, 0);
+            foreach (var pair in _weapons) pair.Value.gameObject.SetActive(pair.Key == _equippedKind);
+            _aimPoseBlend = _aiming ? 1 : 0;
+            if (cameraRig != null) {cameraRig.ClearRecoil(); cameraRig.SetAiming(_aiming);}
+            UpdateGripPose(); UpdateFacing(); animator.Update(0);
+        }
 
         private void Awake()
         {

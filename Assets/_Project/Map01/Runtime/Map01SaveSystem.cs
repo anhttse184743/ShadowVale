@@ -132,6 +132,7 @@ namespace ShadowVale.Map01
         public bool SaveSlot(int slot, out string error, bool automatic = false)
         {
             error = null;
+            if (mission.Cinematic) { error = "Cannot save during a cinematic."; return false; }
             if (!automatic && (error = ManualSaveBlockReason()) != null) { mission.Say(error); return false; }
             var data = Capture();
             try
@@ -142,7 +143,7 @@ namespace ShadowVale.Map01
                 {
                     sceneName = SceneManager.GetActiveScene().name,
                     savedAt = DateTime.UtcNow.ToString("o"), playSeconds = mission.PlaySeconds,
-                    location = Map01Quest.SaveLocations[Mathf.Clamp(quest.Stage, 0, Map01Quest.CompleteStage)],
+                    location = Map01Quest.SaveLocations[Mathf.Clamp(quest.Stage, 0, Map01Quest.LastStage)],
                     checkpoint = JsonUtility.ToJson(data), thumbnail = thumbnail
                 });
                 mission.Say("Đã lưu tiến trình."); return true;

@@ -31,12 +31,13 @@ namespace ShadowVale.Map01
                 Debug.LogError("Hung requires a valid Humanoid avatar.", visual);
                 Destroy(visual.gameObject); return;
             }
-            // Match standing head height at scene initialization, excluding hats and weapon bounds.
-            // Scale only the visual around its grounded origin; navigation/save transforms stay intact.
-            var playerActor = owner.player.GetComponentInChildren<Animator>();
-            float targetSize = SkeletonSize(playerActor, owner.player), sourceSize = SkeletonSize(visual.actor, owner.hung);
-            if (targetSize > .1f && sourceSize > .1f)
-                visual.transform.localScale *= targetSize / sourceSize;
+            var calibration=Map01ActorAssets.Load();
+            if(calibration!=null) {
+                visual.transform.localScale=Vector3.one;
+                float scale=calibration.namHeight/calibration.hungHeight;
+                visual.actor.transform.localScale=Vector3.one*scale;
+                visual.actor.transform.localPosition=Vector3.up*(-calibration.hungSole*scale);
+            }
             visual.mission = owner;
             visual.rescue = owner.GetComponent<Map01Rescue>();
             visual.agent = owner.hung.GetComponent<NavMeshAgent>();
@@ -46,11 +47,17 @@ namespace ShadowVale.Map01
             visual.ResetPose();
         }
 
-        private static float SkeletonSize(Animator animator, Transform groundedRoot)
+        private void LateUpdate()
         {
-            if (animator == null || !animator.isHuman) return 0;
-            var head = animator.GetBoneTransform(HumanBodyBones.Head);
-            return head != null ? head.position.y - groundedRoot.position.y : 0;
+            if(mission==null || down || mission.Cinematic) return;
+            // Anchor the calibrated sole plane to actual terrain or the raised base floor.
+            float ground=float.NegativeInfinity;
+            foreach(var hit in Physics.RaycastAll(mission.hung.position+Vector3.up*2,Vector3.down,5,~0,QueryTriggerInteraction.Ignore))
+                if(!hit.transform.IsChildOf(mission.hung) && !hit.transform.IsChildOf(mission.player)
+                    && hit.normal.y>.65f && hit.point.y<=mission.hung.position.y+.5f)
+                    ground=Mathf.Max(ground,hit.point.y);
+            if(float.IsNegativeInfinity(ground)) ground=mission.hung.position.y;
+            transform.position=new Vector3(mission.hung.position.x,ground,mission.hung.position.z);
         }
 
         private void Update()

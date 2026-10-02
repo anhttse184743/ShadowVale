@@ -50,6 +50,10 @@ namespace ShadowVale.Map01
             if (quest.AwaitingReport) { target = mission.hung.position; label = "BÁO CÁO HÙNG"; return true; }
             switch (quest.Stage)
             {
+                case Map01Quest.ExtractionStage:
+                    var extraction = mission.GetComponentInChildren<Map01Extraction>();
+                    if (extraction == null) return false;
+                    target = extraction.ObjectivePosition; label = "NORTHERN JETTY"; return true;
                 case Map01Quest.RescueStage:
                     var crate = mission.Interactables.FirstOrDefault(p => p.id == "tutorial_loot");
                     if (!quest.CanTreatHung && crate != null) { target = crate.transform.position; label = "THÙNG VẬT TƯ"; }

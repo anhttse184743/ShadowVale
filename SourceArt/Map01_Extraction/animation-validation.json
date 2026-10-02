@@ -1,0 +1,210 @@
+[
+  {
+    "character": "Nam",
+    "clip": "Radio_Receive",
+    "frames": 211,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.0760093313862777e-06
+  },
+  {
+    "character": "Nam",
+    "clip": "Seated_Rifle_Ready",
+    "frames": 91,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.0901296829087664e-06
+  },
+  {
+    "character": "Nam",
+    "clip": "Seated_Rifle_Fire",
+    "frames": 37,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.196925975562525e-06
+  },
+  {
+    "character": "Nam",
+    "clip": "Seated_Rifle_Reload",
+    "frames": 109,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.196925975562525e-06
+  },
+  {
+    "character": "Nam",
+    "clip": "Seated_Lower_Weapon",
+    "frames": 61,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.0901296829087664e-06
+  },
+  {
+    "character": "Nam",
+    "clip": "Board_Boat_StepDown",
+    "frames": 181,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.735777417823999e-06
+  },
+  {
+    "character": "Nam",
+    "clip": "Boat_Turn_And_Sit",
+    "frames": 97,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.31208510895254e-06
+  },
+  {
+    "character": "Nam",
+    "clip": "Boat_Seated_Travel",
+    "frames": 121,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.0901296829087664e-06
+  },
+  {
+    "character": "Nam",
+    "clip": "Rifle_Stow",
+    "frames": 55,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.196925975562525e-06
+  },
+  {
+    "character": "Nam",
+    "clip": "Oar_Pickup",
+    "frames": 61,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.196925975562525e-06
+  },
+  {
+    "character": "Nam",
+    "clip": "Row_Start",
+    "frames": 49,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.196925975562525e-06
+  },
+  {
+    "character": "Nam",
+    "clip": "Row_Loop",
+    "frames": 73,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.196925975562525e-06
+  },
+  {
+    "character": "Nam",
+    "clip": "Row_Stop",
+    "frames": 61,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.196925975562525e-06
+  },
+  {
+    "character": "Hung",
+    "clip": "Radio_Receive",
+    "frames": 211,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.5093817137099722e-06
+  },
+  {
+    "character": "Hung",
+    "clip": "Seated_Rifle_Ready",
+    "frames": 91,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.0366754013851933e-06
+  },
+  {
+    "character": "Hung",
+    "clip": "Seated_Rifle_Fire",
+    "frames": 37,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.2371553911082636e-06
+  },
+  {
+    "character": "Hung",
+    "clip": "Seated_Rifle_Reload",
+    "frames": 109,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.2371553911082636e-06
+  },
+  {
+    "character": "Hung",
+    "clip": "Seated_Lower_Weapon",
+    "frames": 61,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.0366754013851933e-06
+  },
+  {
+    "character": "Hung",
+    "clip": "Board_Boat_StepDown",
+    "frames": 181,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.597738096667658e-06
+  },
+  {
+    "character": "Hung",
+    "clip": "Boat_Turn_And_Sit",
+    "frames": 97,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.5467268939969715e-06
+  },
+  {
+    "character": "Hung",
+    "clip": "Boat_Seated_Travel",
+    "frames": 121,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.0366754013851933e-06
+  },
+  {
+    "character": "Hung",
+    "clip": "Rifle_Stow",
+    "frames": 55,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.2371553911082636e-06
+  },
+  {
+    "character": "Hung",
+    "clip": "Oar_Pickup",
+    "frames": 61,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.2371553911082636e-06
+  },
+  {
+    "character": "Hung",
+    "clip": "Row_Start",
+    "frames": 49,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.2371553911082636e-06
+  },
+  {
+    "character": "Hung",
+    "clip": "Row_Loop",
+    "frames": 73,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.2371553911082636e-06
+  },
+  {
+    "character": "Hung",
+    "clip": "Row_Stop",
+    "frames": 61,
+    "fps": 30,
+    "bones": 28,
+    "max_ik_error_m": 1.2371553911082636e-06
+  }
+]

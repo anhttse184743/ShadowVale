@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="6" result="Passed" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-01 15:22:21Z" end-time="2026-10-01 15:22:25Z" duration="4.5020651">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="126" result="Passed" start-time="2026-10-01 15:22:21Z" end-time="2026-10-01 15:22:25Z" duration="4.502065" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1085" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="66" result="Passed" start-time="2026-10-01 15:22:22Z" end-time="2026-10-01 15:22:25Z" duration="3.348446" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="5248" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1086" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="66" result="Passed" start-time="2026-10-01 15:22:22Z" end-time="2026-10-01 15:22:25Z" duration="3.343576" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1087" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="66" result="Passed" start-time="2026-10-01 15:22:22Z" end-time="2026-10-01 15:22:25Z" duration="3.341513" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1088" name="Tests" fullname="ShadowVale.Map01.Tests" runstate="Runnable" testcasecount="66" result="Passed" start-time="2026-10-01 15:22:22Z" end-time="2026-10-01 15:22:25Z" duration="3.339499" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1001" name="EndingCutsceneTests" fullname="ShadowVale.Map01.Tests.EndingCutsceneTests" classname="ShadowVale.Map01.Tests.EndingCutsceneTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-01 15:21:09Z" end-time="2026-10-01 15:21:13Z" duration="3.457734" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1002" name="DefeatUsesExistingDeathThenRadioAndExtraction" fullname="ShadowVale.Map01.Tests.EndingCutsceneTests.DefeatUsesExistingDeathThenRadioAndExtraction" methodname="DefeatUsesExistingDeathThenRadioAndExtraction" classname="ShadowVale.Map01.Tests.EndingCutsceneTests" runstate="Runnable" seed="2107162523" result="Passed" start-time="2026-10-01 15:20:20Z" end-time="2026-10-01 15:20:59Z" duration="39.201843" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1003" name="SkipIsIdempotentAndLegacyVictoryDoesNotReplay" fullname="ShadowVale.Map01.Tests.EndingCutsceneTests.SkipIsIdempotentAndLegacyVictoryDoesNotReplay" methodname="SkipIsIdempotentAndLegacyVictoryDoesNotReplay" classname="ShadowVale.Map01.Tests.EndingCutsceneTests" runstate="Runnable" seed="2139195711" result="Passed" start-time="2026-10-01 15:20:59Z" end-time="2026-10-01 15:21:13Z" duration="13.981703" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1004" name="ExtractionTests" fullname="ShadowVale.Map01.Tests.ExtractionTests" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-01 15:22:02Z" end-time="2026-10-01 15:22:11Z" duration="8.550969" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1005" name="NaturalBoardingDepartsBeforeCompletion" fullname="ShadowVale.Map01.Tests.ExtractionTests.NaturalBoardingDepartsBeforeCompletion" methodname="NaturalBoardingDepartsBeforeCompletion" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" seed="977299031" result="Passed" start-time="2026-10-01 15:21:13Z" end-time="2026-10-01 15:21:52Z" duration="39.142663" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <output><![CDATA[Extraction scale Nam=(1.00, 1.00, 1.00) Hung=(0.96, 0.96, 0.96)
+]]></output>
+              </test-case>
+              <test-case id="1006" name="RadioSkipAndExtractionCheckpointAreIdempotent" fullname="ShadowVale.Map01.Tests.ExtractionTests.RadioSkipAndExtractionCheckpointAreIdempotent" methodname="RadioSkipAndExtractionCheckpointAreIdempotent" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" seed="1463463701" result="Passed" start-time="2026-10-01 15:21:52Z" end-time="2026-10-01 15:22:11Z" duration="18.956240" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1007" name="ForestFlowTests" fullname="ShadowVale.Map01.Tests.ForestFlowTests" classname="ShadowVale.Map01.Tests.ForestFlowTests" runstate="Runnable" testcasecount="16" result="Passed" start-time="2026-10-01 15:22:22Z" end-time="2026-10-01 15:22:25Z" duration="3.320992" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1011" name="BriefingRouteRescuesHungClearsOutpostsAndDefeatsCommander" fullname="ShadowVale.Map01.Tests.ForestFlowTests.BriefingRouteRescuesHungClearsOutpostsAndDefeatsCommander" methodname="BriefingRouteRescuesHungClearsOutpostsAndDefeatsCommander" classname="ShadowVale.Map01.Tests.ForestFlowTests" runstate="Runnable" seed="275495968" result="Passed" start-time="2026-10-01 15:22:11Z" end-time="2026-10-01 15:22:25Z" duration="14.448878" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1022" name="EveryStageHasAnObjectiveAndASaveLocation" fullname="ShadowVale.Map01.Tests.ForestFlowTests.EveryStageHasAnObjectiveAndASaveLocation" methodname="EveryStageHasAnObjectiveAndASaveLocation" classname="ShadowVale.Map01.Tests.ForestFlowTests" runstate="Runnable" seed="643183660" result="Passed" start-time="2026-10-01 15:22:25Z" end-time="2026-10-01 15:22:25Z" duration="0.001908" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/dangk/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

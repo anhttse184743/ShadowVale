@@ -83,7 +83,7 @@ namespace ShadowVale.Map01
             // Clone only the visual hierarchy, never the player controller, health or quest.
             var visual = Instantiate(soldier.gameObject, transform);
             visual.name = "Commander (shared player mesh)";
-            foreach (var behaviour in visual.GetComponentsInChildren<MonoBehaviour>()) Destroy(behaviour);
+            foreach (var behaviour in visual.GetComponentsInChildren<MonoBehaviour>()) if (!(behaviour is Weapon)) Destroy(behaviour);
             foreach (var collider in visual.GetComponentsInChildren<Collider>()) Destroy(collider);
             foreach (var weapon in visual.GetComponentsInChildren<Weapon>()) weapon.gameObject.SetActive(false);
             commander = visual.GetComponent<Animator>();
@@ -91,6 +91,7 @@ namespace ShadowVale.Map01
             commander.applyRootMotion = false;
             visual.transform.SetPositionAndRotation(origin + forward * 2.1f, Quaternion.LookRotation(-forward));
             DecorateCommander();
+            Map01Rifle.Attach(commander);
             commanderClips = new ClipPlayer(commander, true, idle, talking != null ? talking : idle,
                 pointing != null ? pointing : idle);
             voice = gameObject.AddComponent<AudioSource>();
@@ -205,9 +206,15 @@ namespace ShadowVale.Map01
             hiddenWeapons.Clear();
             rig.ClearCinematicView();
             mission.Cinematic = false;
+            mission.ModernCombat?.RestoreAfterCinematic();
             ForestMenu.SuppressKeysAfterCutscene();
             mission.Say("Nhiệm vụ: Ra bến tàu phía Bắc, tìm Hùng và đưa anh ấy cùng hàng tiếp tế về căn cứ.", 7);
             Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false;
+        }
+
+        public void ReleaseCommanderForExtraction()
+        {
+            commanderClips?.Dispose(); commanderClips = null;
         }
 
         private void DecorateCommander()
