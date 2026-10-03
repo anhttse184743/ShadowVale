@@ -33,13 +33,34 @@ namespace ShadowVale.Map01.Tests.Replay
             public List<ReplayBot.Step> Steps = new List<ReplayBot.Step>();
             /// <summary>Where the bot counts as through the camp.</summary>
             public Vector3 Exit;
-            /// <summary>What he does the moment a guard spots him — always the same; null = carry on.</summary>
+            /// <summary>What he does once a guard has spotted him — always the same; null = carry on.</summary>
             public List<ReplayBot.Step> OnSpotted;
+            /// <summary>Seconds between being spotted and <see cref="OnSpotted"/> taking over (reaction time).</summary>
+            public float ReactionSeconds;
         }
 
-        /// <param name="approach">Unit vector from the camp towards the side Nam comes from — fixed per camp, the exploited lane.</param>
-        public static Plan Build(string bot, Map01Mission mission, Vector3 campCentre, Vector3 approach, int seed)
+        /// <summary>
+        /// Each bot's one difficulty knob, a plausible player habit, calibrated on the greedy baseline so
+        /// that about half of its runs end in capture (ReplayHarnessTests.CalibrateBots) — a bot that is
+        /// always caught or never caught cannot show a difference between solvers.
+        /// same_route / stone_lure: reaction time before fleeing; same_bush: seconds spent hiding.
+        /// </summary>
+        /// Calibrated 03/10/2026 on Map 1 camp C2, greedy, seeds 500+ (Docs/Experiments/calibration):
+        /// same_route 13 s → 30 %, 14 s → 80 %; same_bush 14 s → 50 %; stone_lure 11 s → 40 %, 13 s → 70 %.
+        public static float DefaultKnob(string bot) => bot switch
         {
+            "same_route" => 13.5f,
+            "same_bush" => 14f,
+            "stone_lure" => 12f,
+            _ => 0f,
+        };
+
+        /// <param name="approach">Unit vector from the camp towards the side Nam comes from — fixed per camp, the exploited lane.</param>
+        /// <param name="knob">The bot's difficulty knob (<see cref="DefaultKnob"/>); NaN = the default.</param>
+        public static Plan Build(string bot, Map01Mission mission, Vector3 campCentre, Vector3 approach, int seed,
+            float knob = float.NaN)
+        {
+            if (float.IsNaN(knob)) knob = DefaultKnob(bot);
             var rng = new System.Random(seed);
             // The lane itself never changes; the seed only nudges it (±6°) and when it starts (0–6 s).
             float jitter = (float)(rng.NextDouble() * 12 - 6);
@@ -63,6 +84,7 @@ namespace ShadowVale.Map01.Tests.Replay
             {
                 case "same_route":
                     plan.OnSpotted = flee;
+                    plan.ReactionSeconds = Mathf.Max(0, knob);
                     plan.Steps.Add(new ReplayBot.MoveTo(plan.Exit, MoveStance.Walk));
                     plan.Steps.Add(new ReplayBot.Hold(8f, crouch: false));
                     break;
@@ -71,10 +93,16 @@ namespace ShadowVale.Map01.Tests.Replay
                     plan.Steps.Add(new ReplayBot.MoveTo(OnNavMesh(campCentre + dir * 12f, campCentre), MoveStance.Walk));
                     plan.Steps.Add(new ReplayBot.Hold(1.5f, crouch: false)); // Long enough to be seen.
                     plan.Steps.Add(new ReplayBot.MoveTo(bush, MoveStance.Sprint));
-                    plan.Steps.Add(new ReplayBot.Hold(45f, crouch: true));
+                    plan.Steps.Add(new ReplayBot.Hold(Mathf.Max(1f, knob), crouch: true));
+                    // Then slip away the way he came, out of the area.
+                    Vector3 back = OnNavMesh(campCentre + dir * (LaneHalfLength + 30f), campCentre);
+                    plan.Steps.Add(new ReplayBot.MoveTo(back, MoveStance.Sprint, maxSeconds: 8f));
+                    plan.Steps.Add(new ReplayBot.MoveTo(back, MoveStance.Walk));
+                    plan.Steps.Add(new ReplayBot.Hold(6f, crouch: true));
                     break;
                 case "stone_lure":
                     plan.OnSpotted = flee;
+                    plan.ReactionSeconds = Mathf.Max(0, knob);
                     float stone = mission.Settings.stoneNoise;
                     Vector3 lure = OnNavMesh(campCentre + side * 20f, campCentre);
                     plan.Steps.Add(new ReplayBot.Noise(lure, stone));

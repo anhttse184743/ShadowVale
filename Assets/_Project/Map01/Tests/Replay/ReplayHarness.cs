@@ -50,6 +50,8 @@ namespace ShadowVale.Map01.Tests.Replay
             public float MaxSeconds = 90f;
             /// <summary>After the script ends, how long a fight may still go on.</summary>
             public float SettleSeconds = 20f;
+            /// <summary>The bot's difficulty knob (ReplayScenario.DefaultKnob); NaN = the calibrated default.</summary>
+            public float Knob = float.NaN;
         }
 
         public sealed class Result
@@ -94,13 +96,15 @@ namespace ShadowVale.Map01.Tests.Replay
                 var camp = scouting.Camps[Mathf.Clamp(spec.Camp, 0, scouting.Camps.Count - 1)];
                 Vector3 approach = spawn - camp.Center; approach.y = 0;
                 approach = approach.sqrMagnitude > 1 ? approach.normalized : Vector3.forward;
-                var plan = ReplayScenario.Build(spec.Bot, mission, camp.Center, approach, spec.Seed);
+                var plan = ReplayScenario.Build(spec.Bot, mission, camp.Center, approach, spec.Seed, spec.Knob);
                 var bot = new ReplayBot(mission, plan.Steps);
                 bot.Place(plan.Start, plan.Facing);
                 var health = mission.player.GetComponent<Health>();
 
-                // The bot's one reaction: the moment a guard spots him, its OnSpotted script takes over.
-                Action<PlayerContactEvent> onContact = _ => bot.Interrupt(plan.OnSpotted);
+                // The bot's one reaction: once a guard has spotted him and his reaction time has passed,
+                // its OnSpotted script takes over.
+                float spottedAt = float.NaN;
+                Action<PlayerContactEvent> onContact = _ => { if (float.IsNaN(spottedAt)) spottedAt = Time.time; };
                 EventBus.Subscribe(onContact);
                 float t = 0, settle = 0;
                 bool timedOut = false;
@@ -112,6 +116,7 @@ namespace ShadowVale.Map01.Tests.Replay
                         float dt = Time.deltaTime;
                         t += dt;
                         if (health != null && health.IsDead) break;
+                        if (!float.IsNaN(spottedAt) && Time.time - spottedAt >= plan.ReactionSeconds) bot.Interrupt(plan.OnSpotted);
                         bool scripted = bot.Tick(dt);
                         if (!scripted)
                         {
@@ -137,6 +142,33 @@ namespace ShadowVale.Map01.Tests.Replay
 
         // ---- Output ------------------------------------------------------------------------------
 
+        private static string _gameVersion;
+
+        /// <summary>The game's git commit (".dirty" with uncommitted changes) — which code produced a run.</summary>
+        public static string GameVersion => _gameVersion ??= ReadGitVersion();
+
+        private static string ReadGitVersion()
+        {
+            try
+            {
+                string Git(string args)
+                {
+                    var p = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("git", args)
+                    {
+                        WorkingDirectory = Path.GetDirectoryName(Application.dataPath), RedirectStandardOutput = true,
+                        UseShellExecute = false, CreateNoWindow = true,
+                    });
+                    string o = p.StandardOutput.ReadToEnd().Trim();
+                    p.WaitForExit(5000);
+                    return o;
+                }
+                string commit = Git("rev-parse --short HEAD");
+                if (string.IsNullOrEmpty(commit)) return Application.version;
+                return commit + (string.IsNullOrEmpty(Git("status --porcelain --untracked-files=no")) ? "" : ".dirty");
+            }
+            catch (Exception) { return Application.version; }
+        }
+
         public static string DefaultOutputPath()
         {
             string env = Environment.GetEnvironmentVariable("SVL_REPLAY_OUT");
@@ -159,6 +191,8 @@ namespace ShadowVale.Map01.Tests.Replay
             {
                 Str("map", s.MapId), Str("bot", r.Spec.Bot), Str("variant", r.Spec.Variant), Num("seed", r.Spec.Seed),
                 Num("run", r.Spec.Run), Num("camp", r.Spec.Camp), Num("fps", r.Spec.FramesPerSecond),
+                Num("knob", float.IsNaN(r.Spec.Knob) ? ReplayScenario.DefaultKnob(r.Spec.Bot) : r.Spec.Knob),
+                Str("scene", Scene), Str("game_version", GameVersion),
                 Str("outcome", r.Outcome), Bool("captured", r.Outcome == "captured"), Bool("timed_out", r.TimedOut),
                 Num("seconds", r.Seconds), Num("player_hp", r.PlayerHealth), Num("distance", r.Distance),
                 Num("encounters", sum.Encounters), Num("captures", sum.Captures), Num("escapes", sum.Escapes), Num("cleared", sum.Cleared),

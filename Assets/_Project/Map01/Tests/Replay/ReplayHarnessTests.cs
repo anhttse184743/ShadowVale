@@ -96,6 +96,70 @@ namespace ShadowVale.Map01.Tests.Replay
             Assert.AreEqual(total, done);
         }
 
+        /// <summary>
+        /// Calibration of the bots' difficulty knobs on the greedy baseline: each bot at a few knob
+        /// values, <c>SVL_CAL_SEEDS</c> (8) seeds each (seeds 500+, apart from the experiment's 1000+).
+        /// Prints capture rate and HP left per value and the value closest to 50 % capture, and writes
+        /// them to research/replay-calibration-&lt;time&gt;.json. The chosen values become
+        /// ReplayScenario.DefaultKnob, fixed before any solver is compared.
+        /// </summary>
+        [UnityTest, Explicit("Calibration run, minutes."), Category("Replay"), Timeout(int.MaxValue)]
+        public IEnumerator CalibrateBots()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            yield return CalibrateInPlayMode();
+            yield return new ExitPlayMode();
+        }
+
+        private static IEnumerator CalibrateInPlayMode()
+        {
+            int seeds = Int("SVL_CAL_SEEDS", 8), camp = Int("SVL_REPLAY_CAMP", 1);
+            // Coarse grid by default; a finer one per bot with e.g. SVL_CAL_GRID_SAME_ROUTE=10,11,12,13.
+            var grid = new Dictionary<string, float[]>
+            {
+                ["same_route"] = Floats("SVL_CAL_GRID_SAME_ROUTE", new[] { 0f, 3f, 6f, 9f }),
+                ["stone_lure"] = Floats("SVL_CAL_GRID_STONE_LURE", new[] { 0f, 3f, 6f, 9f }),
+                ["same_bush"] = Floats("SVL_CAL_GRID_SAME_BUSH", new[] { 5f, 10f, 20f, 40f }),
+            };
+            var report = new List<string>();
+            foreach (var bot in List("SVL_REPLAY_BOTS", string.Join(",", ReplayScenario.Bots)))
+            {
+                float bestKnob = float.NaN, bestDistance = float.MaxValue;
+                var cells = new List<string>();
+                foreach (float knob in grid[bot])
+                {
+                    int caught = 0; float hp = 0;
+                    for (int s = 0; s < seeds; s++)
+                    {
+                        var spec = new ReplayHarness.Spec { Bot = bot, Variant = "greedy", Seed = 500 + s, Run = s, Camp = camp, Knob = knob };
+                        ReplayHarness.Result result = null;
+                        yield return ReplayHarness.RunOne(spec, r => result = r);
+                        if (result.Outcome == "captured") caught++;
+                        hp += result.PlayerHealth;
+                    }
+                    float rate = caught / (float)seeds;
+                    Debug.Log($"[Calibrate] {bot} knob {knob}: capture {rate:P0}, HP left {hp / seeds:0.0}");
+                    cells.Add($"{{\"knob\":{knob.ToString(System.Globalization.CultureInfo.InvariantCulture)},\"capture_rate\":{rate.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture)},\"hp_left\":{(hp / seeds).ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)}}}");
+                    if (Mathf.Abs(rate - .5f) < bestDistance) { bestDistance = Mathf.Abs(rate - .5f); bestKnob = knob; }
+                }
+                Debug.Log($"[Calibrate] {bot}: closest to 50 % capture at knob {bestKnob}");
+                report.Add($"\"{bot}\":{{\"chosen\":{bestKnob.ToString(System.Globalization.CultureInfo.InvariantCulture)},\"grid\":[{string.Join(",", cells)}]}}");
+            }
+            string path = System.IO.Path.Combine(Application.persistentDataPath, "research",
+                "replay-calibration-" + DateTime.Now.ToString("yyyyMMdd-HHmmss") + ".json");
+            System.IO.Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path));
+            System.IO.File.WriteAllText(path, "{\"game_version\":\"" + ReplayHarness.GameVersion + "\",\"seeds\":" + seeds + "," + string.Join(",", report) + "}");
+            Debug.Log("[Calibrate] " + path);
+        }
+
+        private static float[] Floats(string key, float[] fallback)
+        {
+            var raw = Environment.GetEnvironmentVariable(key);
+            if (string.IsNullOrWhiteSpace(raw)) return fallback;
+            return raw.Split(',').Select(v => float.Parse(v.Trim(), System.Globalization.CultureInfo.InvariantCulture)).ToArray();
+        }
+
         private static int Int(string key, int fallback) =>
             int.TryParse(Environment.GetEnvironmentVariable(key), out int v) && v > 0 ? v : fallback;
 

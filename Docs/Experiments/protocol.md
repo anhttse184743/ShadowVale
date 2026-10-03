@@ -7,6 +7,48 @@ Có hai cấp đo, ứng với các câu hỏi nghiên cứu RQ2–RQ4:
 | **A. Solver offline** | Chất lượng nghiệm, độ trễ, vùng khả thi (RQ2, RQ3) | Các instance QUBO mà game **thực sự** gặp (`research/coordination-*.jsonl`) cộng với instance sinh theo seed | Tuyệt đối: cùng instance, cùng seed |
 | **B. Trong game** | Capture rate, escape time, coordination score, độ khó bị khai thác (RQ4) | Replay harness với exploit bot (`research/replay-*.jsonl`) | Theo từng run: bước thời gian cố định, seed cố định; so sánh bằng thống kê trên nhiều run |
 
+## 0. Trước khi chạy số liệu chính thức
+
+1. **Tuning công bằng** (`svl-bench tune`):
+   - GA, SA, SQA và QIEA được thử *cùng số cấu hình* (30, gồm cả cấu hình mặc định), trên một
+     **tập tuning riêng**: 8 bài sinh theo seed 901+ và khoảng ¼ số bài ghi từ game. Bài nào thuộc
+     tập tuning được xác định bằng hash của `instance_id`; `svl-bench game` tự loại các bài này ra.
+   - Mỗi cấu hình được chấm bằng độ lệch trung bình so với nghiệm tối ưu: dùng nghiệm `exact` nếu
+     chứng minh được, nếu không thì dùng nghiệm tốt nhất từng thấy.
+   - 3 cấu hình tốt nhất **cùng với cấu hình mặc định** được chạy lại 3 lần; cấu hình có trung bình
+     tốt nhất thắng.
+   - Báo cáo nằm ở `shadowvale-solver/experiments/tuning/` (`trials.csv`, `tuned.json`). Tham số
+     thắng được đặt làm mặc định trong code solver.
+2. **Hiệu chỉnh bot** (`ReplayHarnessTests.CalibrateBots`):
+   - Mỗi bot có một "núm độ khó" là thói quen tự nhiên của người chơi: thời gian phản ứng trước khi
+     bỏ chạy (`same_route`, `stone_lure`), hoặc số giây nấp trong bụi (`same_bush`).
+   - Núm được hiệu chỉnh **trên greedy**, dùng seed 500+ (tách khỏi seed 1000+ của thí nghiệm), sao
+     cho khoảng 50% số lượt bị bắt. Bot lần nào cũng bị bắt hoặc lần nào cũng thoát thì không thể
+     cho thấy khác biệt giữa các solver.
+   - Giá trị chọn được ghi vào `ReplayScenario.DefaultKnob` **trước khi** so sánh solver.
+3. **Phiên bản code:**
+   - Mỗi dòng CSV của bench có `code_version` (phiên bản package + commit của repo solver, thêm
+     `.dirty` nếu có thay đổi chưa commit).
+   - Mỗi dòng replay có `game_version` (commit của repo game) và `knob`.
+   - Số liệu chính thức chỉ chạy trên commit sạch (không `.dirty`), có gắn tag, ví dụ `exp-v1` ở
+     cả hai repo.
+4. **Cùng một máy cho mọi số liệu về độ trễ.** Không chạy Unity song song với bench hay tuning:
+   budget là thời gian thật, CPU bị chia thì số đo sai.
+
+### Khi nào phải chạy lại
+
+| Thay đổi | Chạy lại |
+|---|---|
+| Công thức QUBO (trọng số, hạng tử, λ) | Tất cả: tuning, cấp A, cấp B. Xuất lại fixture parity |
+| Thuật toán hoặc tham số của một solver | Solver đó: cấp A, và cấp B cho variant đó |
+| Thêm solver mới | Tune solver mới với cùng số lần thử, rồi chạy nó ở cấp A và B |
+| AI trong game (FSM, perception, graph, map) hoặc bot | Hiệu chỉnh bot, rồi chạy lại cấp B cho mọi variant |
+| Đổi máy | Mọi số liệu về độ trễ |
+| Chỉ sửa thống kê hoặc biểu đồ | Không chạy lại, tính lại từ file kết quả |
+
+Với nhiều solver, dùng `svl-bench compare --all greedy,ga,sa,sqa,qiea`: mỗi cặp được kiểm định
+Wilcoxon và có p hiệu chỉnh Holm (`p_holm`), giữ sai số loại I của cả họ phép thử ở mức 5%.
+
 ## A. Solver offline
 
 1. Thu instance: mỗi lần squad re-plan trong game (chơi thật hoặc qua harness), `CoordinationRecorder`
