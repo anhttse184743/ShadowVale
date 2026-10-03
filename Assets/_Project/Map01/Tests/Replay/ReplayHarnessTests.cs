@@ -51,6 +51,12 @@ namespace ShadowVale.Map01.Tests.Replay
             foreach (var key in new[] { "\"bot\":\"same_route\"", "\"variant\":\"greedy\"", "\"seed\":7", "\"outcome\":", "\"coordination_score\":", "\"plan_entropy_bits\":" })
                 StringAssert.Contains(key, json);
 
+            // The resume checkpoint reads back what was written.
+            string tmp = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "svl-replay-" + Guid.NewGuid().ToString("N") + ".jsonl");
+            ReplayHarness.Append(tmp, r);
+            Assert.IsTrue(ReplayHarness.FinishedRuns(tmp).Contains(("same_route", "greedy", 7)), "A finished run is skipped on resume.");
+            System.IO.File.Delete(tmp);
+
             // Same seed, same bot, same variant: the same lane at the same moment.
             var again = new List<ReplayHarness.Result>();
             yield return ReplayHarness.RunOne(spec, again.Add);
@@ -77,7 +83,11 @@ namespace ShadowVale.Map01.Tests.Replay
             foreach (var skipped in variants.Except(usable))
                 Debug.LogWarning($"[Replay] {skipped} skipped: no sidecar at {url} (svl-api --port …, SVL_SOLVER_URL).");
             string output = ReplayHarness.DefaultOutputPath();
-            Debug.Log($"[Replay] {runs} runs × {bots.Count} bots × {usable.Count} variants → {output}");
+            // Checkpoint: the output is append-only, one line per finished run, so a run cut short
+            // (crash, power, Ctrl+C) restarts where it stopped — runs already in the file are skipped.
+            var finished = ReplayHarness.FinishedRuns(output);
+            Debug.Log($"[Replay] {runs} runs × {bots.Count} bots × {usable.Count} variants → {output}" +
+                      (finished.Count > 0 ? $" ({finished.Count} already done, resuming)" : ""));
 
             int done = 0, total = runs * bots.Count * usable.Count;
             // Run-major: run i of every bot and variant before run i+1, so a cut-short experiment stays paired.
@@ -86,6 +96,7 @@ namespace ShadowVale.Map01.Tests.Replay
             foreach (var variant in usable)
             {
                 var spec = new ReplayHarness.Spec { Bot = bot, Variant = variant, Seed = seed0 + i, Run = i, Camp = camp, FramesPerSecond = fps };
+                if (finished.Contains((bot, variant, spec.Seed))) { done++; continue; }
                 ReplayHarness.Result result = null;
                 yield return ReplayHarness.RunOne(spec, r => result = r);
                 ReplayHarness.Append(output, result);

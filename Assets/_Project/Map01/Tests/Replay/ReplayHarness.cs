@@ -177,6 +177,26 @@ namespace ShadowVale.Map01.Tests.Replay
                 "replay-" + DateTime.Now.ToString("yyyyMMdd-HHmmss", CultureInfo.InvariantCulture) + ".jsonl");
         }
 
+        /// <summary>(bot, variant, seed) of every run already in <paramref name="path"/> — the resume checkpoint.</summary>
+        public static HashSet<(string bot, string variant, int seed)> FinishedRuns(string path)
+        {
+            var set = new HashSet<(string, string, int)>();
+            if (!File.Exists(path)) return set;
+            var field = new System.Text.RegularExpressions.Regex("\"(bot|variant|seed)\":\"?([^\",}]*)");
+            foreach (string line in File.ReadLines(path))
+            {
+                string bot = null, variant = null; int seed = int.MinValue;
+                foreach (System.Text.RegularExpressions.Match m in field.Matches(line))
+                {
+                    if (m.Groups[1].Value == "bot") bot = m.Groups[2].Value;
+                    else if (m.Groups[1].Value == "variant") variant = m.Groups[2].Value;
+                    else int.TryParse(m.Groups[2].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out seed);
+                }
+                if (bot != null && variant != null && seed != int.MinValue) set.Add((bot, variant, seed));
+            }
+            return set;
+        }
+
         public static void Append(string path, Result r)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(path));
