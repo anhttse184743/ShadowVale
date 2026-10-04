@@ -22,11 +22,58 @@ namespace ShadowVale.Map01.Tests
             Assert.IsNotNull(skin);
             Assert.IsNotNull(skin.sharedMaterial.GetTexture("_BaseMap"), "Hung must use the supplied skin texture.");
             Assert.IsNotNull(skin.sharedMaterial.GetTexture("_BumpMap"));
-            Assert.AreEqual("Assets/_Project/Art/Characters/NPCs/Materials/hung - Material.001.mat",
+            Assert.AreEqual("Assets/_Project/Art/Characters/NPCs/Materials/hung - Wounded.mat",
                 UnityEditor.AssetDatabase.GetAssetPath(skin.sharedMaterial));
             Assert.IsFalse(visual.actor.applyRootMotion);
             Assert.AreEqual(1, visual.actor.layerCount, "Hung has no weapon/aim layer.");
             foreach (var enemy in mission.Enemies) enemy.enabled = false;
+            var quest = mission.GetComponent<Map01Quest>();
+            var agent = mission.hung.GetComponent<NavMeshAgent>();
+            // Rescue stage: kneeling at the jetty with his wrists roped behind him.
+            Assert.AreEqual(Map01Quest.RescueStage, quest.Stage);
+            yield return WaitGameSeconds(.3f);
+            Assert.IsTrue(visual.actor.GetCurrentAnimatorStateInfo(0).IsName(Map01HungVisual.CaptiveState));
+            Assert.IsTrue(visual.RopeVisible, "Captive Hung wears the rope.");
+            var ropeRenderer = visual.GetComponentInChildren<MeshRenderer>();
+            Assert.IsNotNull(ropeRenderer);
+            Vector3 wrists = (visual.actor.GetBoneTransform(HumanBodyBones.LeftHand).position
+                + visual.actor.GetBoneTransform(HumanBodyBones.RightHand).position) * .5f;
+            Debug.Log("HUNG_ROPE bounds=" + ropeRenderer.bounds + " wrists=" + wrists + " enabled=" + ropeRenderer.enabled
+                + " mat=" + ropeRenderer.sharedMaterial?.shader.name + " lossy=" + ropeRenderer.transform.lossyScale);
+            Assert.Less(Vector3.Distance(ropeRenderer.bounds.center, wrists), .12f, "The rope sits on his wrists.");
+            Assert.Less(visual.actor.GetBoneTransform(HumanBodyBones.Head).position.y - mission.hung.position.y, 1.3f, "He kneels.");
+            float knee = Mathf.Min(visual.actor.GetBoneTransform(HumanBodyBones.LeftLowerLeg).position.y,
+                visual.actor.GetBoneTransform(HumanBodyBones.RightLowerLeg).position.y) - mission.hung.position.y;
+            Debug.Log("HUNG_KNEEL knee joint above ground=" + knee);
+            Assert.Less(Mathf.Abs(knee - .08f), .1f, "His knees rest on the deck, not in the air.");
+            var captiveCamera = new GameObject("Hung captive camera").AddComponent<Camera>();
+            captiveCamera.fieldOfView = 40;
+            captiveCamera.transform.position = mission.hung.position + Vector3.up * 1.1f - mission.hung.forward * 2.4f + mission.hung.right * .9f;
+            captiveCamera.transform.LookAt(mission.hung.position + Vector3.up * .7f);
+            Capture(captiveCamera, "hung-captive-back");
+            captiveCamera.transform.position = mission.hung.position + Vector3.up * 1.1f + mission.hung.forward * 2.4f + mission.hung.right * .9f;
+            captiveCamera.transform.LookAt(mission.hung.position + Vector3.up * .7f);
+            Capture(captiveCamera, "hung-captive-front");
+            // Freed: rope off, he gets up before following, then limps.
+            quest.RestoreStage(Map01Quest.EscortStage);
+            yield return WaitGameSeconds(.5f);
+            Assert.IsFalse(visual.RopeVisible);
+            Assert.IsTrue(visual.actor.GetCurrentAnimatorStateInfo(0).IsName(Map01HungVisual.StandUpState));
+            Assert.IsTrue(agent.isStopped, "He does not slide after Nam while still getting up.");
+            Capture(captiveCamera, "hung-standing-up");
+            yield return WaitGameSeconds(4.5f);
+            Assert.IsTrue(visual.actor.GetCurrentAnimatorStateInfo(0).IsName(Map01HungVisual.WoundedState));
+            Assert.IsFalse(agent.isStopped);
+            yield return WaitGameSeconds(.6f);
+            captiveCamera.transform.position = mission.hung.position + Vector3.up * 1.1f + mission.hung.right * 3f;
+            captiveCamera.transform.LookAt(mission.hung.position + Vector3.up * .9f);
+            Capture(captiveCamera, "hung-limp");
+            Object.Destroy(captiveCamera.gameObject);
+            // Back at base he walks normally; a later stage never replays the stand-up.
+            quest.RestoreStage(Map01Quest.BriefingStage);
+            agent.ResetPath();
+            yield return null; yield return null;
+            Assert.IsTrue(visual.actor.GetCurrentAnimatorStateInfo(0).IsName(Map01HungVisual.LocomotionState));
             var cameraObject = new GameObject("Hung validation camera");
             var camera = cameraObject.AddComponent<Camera>();
             camera.fieldOfView = 40;
@@ -58,7 +105,6 @@ namespace ShadowVale.Map01.Tests
             yield return WaitGameSeconds(.5f);
             Assert.IsTrue(visual.actor.GetCurrentAnimatorStateInfo(0).IsName("Talking"));
             Capture(camera, "hung-talking");
-            var agent = mission.hung.GetComponent<NavMeshAgent>();
             Assert.IsTrue(agent.isOnNavMesh);
             Vector3 start = mission.hung.position;
             Assert.IsTrue(NavMesh.SamplePosition(start + mission.hung.forward * 6, out var goal, 4, NavMesh.AllAreas));
@@ -69,15 +115,20 @@ namespace ShadowVale.Map01.Tests
             Assert.IsFalse(visual.actor.GetBool("Talking"));
             Capture(camera, "hung-walk");
             agent.ResetPath();
+            // He can only be shot while exposed: at the jetty or limping home beside Nam.
+            quest.RestoreStage(Map01Quest.EscortStage);
+            yield return null;
             mission.GetComponent<Map01Rescue>().HitHung(9999);
             yield return WaitGameSeconds(.3f);
             Assert.IsTrue(mission.GetComponent<Map01Rescue>().HungDown);
             yield return WaitGameSeconds(1);
             Assert.IsTrue(visual.actor.GetCurrentAnimatorStateInfo(0).IsName("Die"));
+            Capture(camera, "hung-shot");
             mission.GetComponent<Map01Rescue>().Retry();
             yield return WaitGameSeconds(.3f);
             Assert.IsFalse(mission.GetComponent<Map01Rescue>().HungDown);
             Assert.IsFalse(visual.actor.GetCurrentAnimatorStateInfo(0).IsName("Die"));
+            Assert.IsTrue(visual.actor.GetCurrentAnimatorStateInfo(0).IsName(Map01HungVisual.CaptiveState), "Retry puts him back on his knees.");
             Object.Destroy(cameraObject);
             yield return new ExitPlayMode();
         }

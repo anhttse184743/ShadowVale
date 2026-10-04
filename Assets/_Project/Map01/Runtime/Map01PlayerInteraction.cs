@@ -121,7 +121,8 @@ namespace ShadowVale.Map01
         private void UpdateCompanion()
         {
             if (companion == null || !companion.isOnNavMesh) return;
-            companion.speed = mission.Settings.sprintSpeed;
+            // Beaten and limping: he keeps the pace of his own limp, so Nam has to wait for him.
+            companion.speed = Map01HungVisual.LimpSpeed;
             companion.stoppingDistance = mission.Settings.followDistance;
             if (NavMesh.SamplePosition(mission.player.position, out var hit, 3, NavMesh.AllAreas))
                 companion.SetDestination(hit.position);

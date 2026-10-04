@@ -534,8 +534,11 @@ namespace ShadowVale.Map01.Tests
                 }
                 controller.enabled = false; mission.player.position = beside; controller.enabled = true;
                 quest.RestoreStage(Map01Quest.EscortStage);
-                yield return WaitGameSeconds(4f);
+                // He first gets up off his knees (~4 s, see Map01HungVisual), then limps after Nam.
+                yield return WaitGameSeconds(8f);
                 Assert.Less(Vector3.Distance(mission.hung.position, mission.player.position), 6f, "During the escort Hùng follows Nam.");
+                var hungAgent = mission.hung.GetComponent<UnityEngine.AI.NavMeshAgent>();
+                Assert.AreEqual(Map01HungVisual.LimpSpeed, hungAgent.speed, .01f, "He limps home at his own pace, never sprints.");
                 // ...all the way home (the 200 m walk itself is the NavMesh's business).
                 controller.enabled = false; mission.player.position = baseFloor; controller.enabled = true;
                 mission.hung.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(baseFloor + Vector3.right * 2f);

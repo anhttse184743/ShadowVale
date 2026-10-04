@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map01HungVisual
   actor: {fileID: 4345060416460837583}
+  ropeMaterial: {fileID: 2100000, guid: cabd81431cc27ac4b9d0394571e338e6, type: 2}
 --- !u!1001 &7865067002203926366
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -126,6 +127,10 @@ PrefabInstance:
       propertyPath: m_ApplyRootMotion
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6602508436842350390, guid: d57bd8a6aa7a5c946866445f88c72a08, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e287ead20b291db4bb118ed1e322bb5d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
