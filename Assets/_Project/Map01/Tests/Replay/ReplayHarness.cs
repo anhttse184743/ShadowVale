@@ -284,7 +284,23 @@ namespace ShadowVale.Map01.Tests.Replay
         private static string Tally(Dictionary<string, int> counts) =>
             string.Join(";", counts.OrderBy(p => p.Key, StringComparer.Ordinal).Select(p => p.Key.Replace(";", ",").Replace("=", "-") + "=" + p.Value));
 
-        private static string Str(string k, string v) => $"\"{k}\":\"{(v ?? "").Replace("\\", "\\\\").Replace("\"", "\\\"")}\"";
+        /// <summary>A JSON string field. Control characters are escaped and NULs dropped: an OS error
+        /// message (a fallback reason) once carried "\r\n" and NUL padding and split a record in two.</summary>
+        private static string Str(string k, string v)
+        {
+            var sb = new StringBuilder();
+            foreach (char c in v ?? "")
+            {
+                if (c == '\0') continue;
+                if (c == '"' || c == '\\') sb.Append('\\').Append(c);
+                else if (c == '\n') sb.Append("\\n");
+                else if (c == '\r') sb.Append("\\r");
+                else if (c == '\t') sb.Append("\\t");
+                else if (c < ' ') sb.Append("\\u").Append(((int)c).ToString("x4", CultureInfo.InvariantCulture));
+                else sb.Append(c);
+            }
+            return $"\"{k}\":\"{sb}\"";
+        }
         private static string Num(string k, double v) => $"\"{k}\":{v.ToString("R", CultureInfo.InvariantCulture)}";
         private static string Bool(string k, bool v) => $"\"{k}\":{(v ? "true" : "false")}";
     }
