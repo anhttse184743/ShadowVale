@@ -58,6 +58,7 @@ namespace ShadowVale.Map01
             if (Aiming || !CanAim()) return;
             if (inventory.Count("stone") <= 0) { mission.Say("Hết đá để ném.", 3); return; }
             Aiming = true;
+            Map01NamActions.For(mission)?.Hold(Map01NamActions.ThrowAim, true);   // the stone drawn back
             Plan(AimTarget());
         }
 
@@ -65,6 +66,7 @@ namespace ShadowVale.Map01
         public void Cancel()
         {
             Aiming = false;
+            Map01NamActions.For(mission)?.Hold(Map01NamActions.ThrowAim, false);
             Show(false);
         }
 
@@ -74,7 +76,8 @@ namespace ShadowVale.Map01
             if (!Aiming) return;
             Aiming = false;
             Show(false);
-            Launch();
+            var nam = Map01NamActions.For(mission);
+            if (Launch()) nam?.ThrowNow(); else nam?.Hold(Map01NamActions.ThrowAim, false);
         }
 
         /// <summary>Throw straight at <paramref name="target"/> (as if aimed there). False without a stone to throw.</summary>
@@ -82,7 +85,9 @@ namespace ShadowVale.Map01
         {
             if (!CanAim()) return false;
             Plan(target);
-            return Launch();
+            if (!Launch()) return false;
+            Map01NamActions.For(mission)?.ThrowNow();
+            return true;
         }
 
         private void Update()

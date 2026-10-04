@@ -117,6 +117,8 @@ namespace ShadowVale.Editor
 
             BuildBaseLayer(controller, resolved, idle, walk, run);
             BuildUpperBodyLayer(controller, resolved);
+            // Nam's own AK carry and story moves on top, when they have been exported from Blender.
+            if (StoryAnimationSetup.HasNamClips) StoryAnimationSetup.AugmentPlayer();
 
             EditorUtility.SetDirty(controller);
             AssetDatabase.SaveAssets();

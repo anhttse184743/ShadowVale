@@ -162,6 +162,12 @@ namespace ShadowVale.Map01
         {
             if (Binoculars == value) return;
             Binoculars = value;
+            // Nam raises the glasses to his eyes (standing or crouched, from Blender) for as long as F is held.
+            var nam = Map01NamActions.For(mission);
+            if (nam != null) {
+                nam.Hold(Map01NamActions.Binoculars, false);
+                if (value) nam.Hold(mission.Crouched ? Map01NamActions.BinocularsCrouch : Map01NamActions.Binoculars, true);
+            }
             if (!value) { Sighted = null; RecordProgress = 0; }
         }
 

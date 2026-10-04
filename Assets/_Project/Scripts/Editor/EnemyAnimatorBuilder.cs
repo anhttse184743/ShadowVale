@@ -28,6 +28,8 @@ namespace ShadowVale.Editor
         [MenuItem("ShadowVale/Build Enemy Animator")]
         public static void Build()
         {
+            // The guards' own clips from Blender, when present, replace the shared player set.
+            if (StoryAnimationSetup.HasEnemyClips) { StoryAnimationSetup.BuildEnemy(); return; }
             Dictionary<string, string> resolved = CharacterClipLibrary.ResolveRoleToPath();
 
             // Locomotion goes through the same tuner as the player's, so the enemies inherit the

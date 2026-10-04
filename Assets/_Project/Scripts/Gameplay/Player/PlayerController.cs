@@ -41,6 +41,8 @@ namespace ShadowVale.Gameplay.Player
         private float _faceYawOffset;
         private bool _sprintToggled;
         private bool _sneakToggled;
+        private RuntimeAnimatorController _paramsFor;
+        private bool _hasMoveParams;
 
         public bool IsSneaking { get; private set; }
         public bool IsSprinting { get; private set; }
@@ -154,6 +156,22 @@ namespace ShadowVale.Gameplay.Player
                 // instead of shuffling on the spot. There is no crouch-idle clip to blend to.
                 animator.SetFloat(PlayerCombat.AnimatorParams.SneakCycle,
                     sneakSpeed > 0.01f ? Mathf.Clamp01(_planarVelocity.magnitude / sneakSpeed) : 0f);
+                // Direction of travel in the body's own frame, for a controller that walks 8 ways
+                // (Nam's AK carry): strafing while aiming steps sideways instead of moonwalking.
+                if (_paramsFor != animator.runtimeAnimatorController)
+                {
+                    _paramsFor = animator.runtimeAnimatorController;
+                    _hasMoveParams = false;
+                    if (_paramsFor != null)
+                        foreach (AnimatorControllerParameter p in animator.parameters)
+                            if (p.name == "MoveX") { _hasMoveParams = true; break; }
+                }
+                if (_hasMoveParams)
+                {
+                    Vector3 local = transform.InverseTransformDirection(_planarVelocity);
+                    animator.SetFloat("MoveX", local.x);
+                    animator.SetFloat("MoveZ", local.z);
+                }
             }
         }
 

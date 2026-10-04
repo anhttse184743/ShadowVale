@@ -41,7 +41,9 @@ namespace ShadowVale.Map01
             var controller = actor != null ? actor.runtimeAnimatorController : null;
             var clip = controller != null ? controller.animationClips.FirstOrDefault(c =>
                 c.name.Equals("Die", System.StringComparison.OrdinalIgnoreCase)
-                || c.name.IndexOf("Dying", System.StringComparison.OrdinalIgnoreCase) >= 0) : null;
+                || c.name.IndexOf("Dying", System.StringComparison.OrdinalIgnoreCase) >= 0
+                // the guards' own falls from Blender (Enemy_Death_*), the backward one first
+                || c.name.IndexOf("Death", System.StringComparison.OrdinalIgnoreCase) >= 0) : null;
             if (clip == null || cameraRig == null) {
                 Debug.LogWarning("[Map01] Finale unavailable: existing death clip or camera missing.", this);
                 return false;

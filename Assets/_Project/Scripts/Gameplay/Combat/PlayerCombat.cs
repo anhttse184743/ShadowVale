@@ -100,7 +100,32 @@ namespace ShadowVale.Gameplay.Combat
         public bool TryReload()
         {
             if (_magazine == null || _equipped == null || !_equipped.IsGun) return false;
-            return _magazine.BeginReload(ReserveRounds != null ? ReserveRounds() : -1);
+            bool wasEmpty = _magazine.IsEmpty;
+            if (!_magazine.BeginReload(ReserveRounds != null ? ReserveRounds() : -1)) return false;
+            AnimateReload(wasEmpty);
+            return true;
+        }
+
+        /// <summary>
+        /// Nam's own reload takes (Blender): swapping a part-used magazine, an empty one, or crouched.
+        /// Played at whatever pace makes the take end as the magazine timer does.
+        /// </summary>
+        private void AnimateReload(bool wasEmpty)
+        {
+            if (animator == null || !_hasReloadParams) return;
+            bool crouched = _controller != null && _controller.IsSneaking;
+            float length = ClipLength(crouched ? "Nam_Crouch_Reload" : wasEmpty ? "Nam_Rifle_Reload" : "Nam_Rifle_ReloadTactical");
+            animator.SetBool("ReloadEmpty", wasEmpty);
+            animator.SetFloat("ReloadSpeed", length > 0 ? length / Mathf.Max(0.1f, _magazine.ReloadRemaining) : 1f);
+            animator.SetTrigger("Reload");
+        }
+
+        private float ClipLength(string clipName)
+        {
+            if (animator.runtimeAnimatorController == null) return 0f;
+            foreach (AnimationClip clip in animator.runtimeAnimatorController.animationClips)
+                if (clip != null && clip.name == clipName) return clip.length;
+            return 0f;
         }
         public void RestoreAttackCooldown(float remaining) => _nextAttackTime = Time.time + Mathf.Max(0, remaining);
 
@@ -179,6 +204,10 @@ namespace ShadowVale.Gameplay.Combat
         private int _upperBodyLayer = -1;
         private float _aimPoseBlend;
         private float _upperBodyWeight;
+        /// <summary>Base-layer state holding Nam's own AK carry, when the controller has one.</summary>
+        public const string RifleLocomotionState = "Locomotion_Rifle";
+        private bool _rifleBody, _hasReloadParams, _hasHitParam;
+        private float _lastHealthSeen = -1f;
         private float _upperBodyHoldUntil;
         private float _faceCameraHoldUntil;
 
@@ -227,6 +256,13 @@ namespace ShadowVale.Gameplay.Combat
             if (animator != null)
             {
                 _upperBodyLayer = animator.GetLayerIndex(UpperBodyLayer);
+                _rifleBody = animator.runtimeAnimatorController != null
+                    && animator.HasState(0, Animator.StringToHash(RifleLocomotionState));
+                foreach (AnimatorControllerParameter p in animator.parameters)
+                {
+                    if (p.name == "ReloadSpeed") _hasReloadParams = true;
+                    if (p.name == "Hit") _hasHitParam = true;
+                }
             }
 
             tuning = tuning.OrDefault();
@@ -320,6 +356,18 @@ namespace ShadowVale.Gameplay.Combat
         private void Update()
         {
             bool dead = health != null && health.IsDead;
+
+            // A round that lands and leaves him standing: Nam's own flinch (Blender hit-reaction take).
+            if (health != null)
+            {
+                if (_hasHitParam && !dead && animator != null && _equippedKind == WeaponKind.Rifle
+                    && _lastHealthSeen >= 0f && health.Current < _lastHealthSeen - 0.01f)
+                {
+                    animator.SetTrigger("Hit");
+                    _upperBodyHoldUntil = Mathf.Max(_upperBodyHoldUntil, Time.time + 0.6f);
+                }
+                _lastHealthSeen = health.Current;
+            }
 
             // The magazine is ticked before any early return. Dying halfway through a reload
             // would otherwise leave the timer frozen for good, and a magazine that believes it
@@ -440,7 +488,11 @@ namespace ShadowVale.Gameplay.Combat
             }
 
             bool attacking = Time.time < _upperBodyHoldUntil;
-            float target = _equippedKind != WeaponKind.Unarmed || attacking ? 1f : 0f;
+            // With Nam's own AK carry in the base layer (Locomotion_Rifle), his arms already hold the
+            // rifle: the stance layer only comes up to aim, fire, reload or take a hit.
+            bool carried = _rifleBody && _equippedKind == WeaponKind.Rifle && !_aiming && !attacking
+                && (_magazine == null || !_magazine.IsReloading);
+            float target = (_equippedKind != WeaponKind.Unarmed || attacking) && !carried ? 1f : 0f;
             _upperBodyWeight = Mathf.MoveTowards(
                 _upperBodyWeight, target, Time.deltaTime / Mathf.Max(0.01f, stanceBlendTime));
             animator.SetLayerWeight(_upperBodyLayer, _upperBodyWeight);

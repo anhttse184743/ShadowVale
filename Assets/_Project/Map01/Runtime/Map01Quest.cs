@@ -160,7 +160,10 @@ namespace ShadowVale.Map01
             if (Stage != RescueStage || !NearHung(mission.Settings.interactRange)) return;
             string remedy = Remedy;
             if (remedy == null) { mission.Say("Cần thảo dược hoặc băng cứu thương để chữa trị cho Hùng.", 3); return; }
-            inventory.Spend(remedy, 1); Stage = EscortStage;
+            inventory.Spend(remedy, 1);
+            // Nam kneels at his back and works the rope off (Blender); Hùng gets up once it is off.
+            Map01NamActions.For(mission)?.PlayUntie(mission.hung);
+            Stage = EscortStage;
             mission.Say((remedy == "herb" ? "Nam: Chịu khó chút, Hùng. Thảo dược này cầm máu được." : "Nam: Chịu khó chút, Hùng. Để tôi băng vết thương lại.") +
                 "\nHùng: ...Cảm ơn Nam. Tôi đang mang thư về thì bị chúng phục kích ở bến này. Thư vẫn còn trong người — về căn cứ thôi.", 10);
         }

@@ -148,6 +148,10 @@ namespace ShadowVale.Map01
             return point.restockSeconds > 0 ? taken + $" Tiếp tế lại sau {point.restockSeconds:0} giây." : taken;
         }
 
+        /// <summary>Nam crouches to the pack or opens the crate (Blender clips); walking off cuts it short.</summary>
+        private void Rummage(int action) =>
+            Map01NamActions.For(mission)?.Play(action, action == Map01NamActions.PickUp ? 288f / 30f / 2.4f : 269f / 30f / 2.6f, true);
+
         public void Interact(ForestPoint point)
         {
             switch (point.kind)
@@ -159,13 +163,16 @@ namespace ShadowVale.Map01
                         // Hùng's hand-off line stays on screen; the first resupply comes with it.
                         inventory.Add("supplies", 1);
                         TakeItems(point);
+                        Rummage(Map01NamActions.OpenChest);
                     }
                     // Once Hùng is home, the base keeps resupplying on its restock timer.
-                    else if (quest.BaseResupplyOpen) mission.Say("Căn cứ tiếp tế — " + TakeItems(point), 6);
+                    else if (quest.BaseResupplyOpen) { mission.Say("Căn cứ tiếp tế — " + TakeItems(point), 6); Rummage(Map01NamActions.OpenChest); }
                     break;
                 case ForestPointKind.Loot:
                     if (point.used) return;
                     mission.Say(TakeItems(point) + " Tab mở túi đồ.", 6);
+                    // a fallen guard's pack is picked up off the ground; a crate is opened
+                    Rummage(point.GetComponent<Map01EnemyController>() != null ? Map01NamActions.PickUp : Map01NamActions.OpenChest);
                     break;
                 case ForestPointKind.Workbench:
                     mission.Say("Bàn chế tạo: B để làm băng cứu thương (2 vải + 1 thảo dược). Game tự lưu khi về menu hoặc thoát.");
@@ -174,6 +181,7 @@ namespace ShadowVale.Map01
                     // Side content: useful lore, not on the critical path the briefing laid out.
                     if (point.used) return;
                     point.used = true; inventory.Add("river_documents", 1);
+                    Rummage(Map01NamActions.PickUp);
                     mission.Say("Nam: Tài liệu cũ của đơn vị tuần tra — cất đi, có thể còn hữu ích.", 8);
                     break;
                 case ForestPointKind.Exit:

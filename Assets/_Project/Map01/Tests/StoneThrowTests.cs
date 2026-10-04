@@ -204,6 +204,10 @@ namespace ShadowVale.Map01.Tests
                 for (float until = Time.time + 1; guard.Alive && Time.time < until;) yield return null;
                 Assert.IsFalse(guard.Alive, "One stab from behind takes an unaware guard down.");
                 Assert.IsFalse(AnyAlertedBut(mission, guard), "Silently: no one else heard it.");
+                // The takedown plays as a scene (Nam pulls him back, covers his mouth, cuts): wait it out.
+                var actions = mission.player.GetComponent<Map01NamActions>();
+                for (float until = Time.time + 6; actions != null && actions.Busy && Time.time < until;) yield return null;
+                Assert.IsTrue(actions == null || !actions.Busy, "The takedown scene ends and hands Nam back.");
 
                 // Face to face it is just a stab — and now he knows.
                 var other = OnlyGuard(mission, "Outpost guard 1");

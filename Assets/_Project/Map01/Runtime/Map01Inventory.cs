@@ -97,6 +97,8 @@ namespace ShadowVale.Map01
                 Spend(id, 1);
                 mission.RestoreHealthFromSave(Mathf.Min(mission.Settings.playerHP, mission.PlayerHealth + mission.Settings.medkitHeal));
                 mission.Say("Đã dùng băng cứu thương.", 3);
+                // Down on one knee winding the bandage on (Blender); walking off cuts it short.
+                Map01NamActions.For(mission)?.Play(Map01NamActions.Bandage, 141f / 30f / 1.4f, true);
             }
             else
             {

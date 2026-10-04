@@ -483,8 +483,12 @@ namespace ShadowVale.Map01.Tests
             Assert.Less(Vector3.Distance(guide.Target, boss.transform.position), 2f);
 
             boss.GetComponent<Health>().TakeDamage(999999, boss.transform.position, null);
+            // The commander's fall plays as the finale, which hands straight over to the extraction (no
+            // report trip any more): once it is over the guide points at the boat.
+            mission.GetComponent<Map01EndingCutscene>().Skip();
             yield return WaitGameSeconds(.6f);
-            Assert.AreEqual("BÁO CÁO HÙNG", guide.Label, "The commander's death is reported to Hùng too.");
+            Assert.AreEqual(Map01Quest.ExtractionStage, quest.Stage);
+            Assert.AreEqual("NORTHERN JETTY", guide.Label, "After the commander falls the guide points at the waiting boat.");
 
             quest.RestoreStage(Map01Quest.CompleteStage);
             yield return WaitGameSeconds(.6f);

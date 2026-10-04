@@ -434,9 +434,11 @@ namespace ShadowVale.Editor
 
                 changed |= WriteSkeletonRotation(skeleton, fore.name, corrected, bend, "elbow");
 
-                // Same treatment one joint further out. The hand has no humanoid child bone, so
-                // its direction comes from the leaf marker the exporter left behind.
-                Transform handTip = hand.childCount > 0 ? hand.GetChild(0) : null;
+                // Same treatment one joint further out. The hand's direction comes from the leaf
+                // marker the exporter left behind ("<hand>_end"); Nam's model also has finger bones
+                // under the hand, which must not be taken for it.
+                Transform handTip = hand.Find(hand.name + "_end")
+                                    ?? (hand.childCount > 0 ? hand.GetChild(0) : null);
                 if (handTip == null)
                 {
                     continue;

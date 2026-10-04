@@ -38,6 +38,8 @@ namespace ShadowVale.Map01
         private const float InvestigateTimeout = 45f; // A bound only; the look-around ends it sooner.
         private float _searchUntil, _searchSeconds = 8f, _baseSpeed, _lastHealth;
         private bool _returning;
+        private readonly System.Collections.Generic.HashSet<string> _animatorParams = new System.Collections.Generic.HashSet<string>();
+        private bool _startled;
         private Vector3 _returnPoint;
         private Quaternion _returnRotation;
         public bool Alive => !(_health != null ? _health : GetComponent<Health>()).IsDead; // Asked every frame, all over.
@@ -87,6 +89,7 @@ namespace ShadowVale.Map01
         /// </summary>
         public void ReturnToPost()
         {
+            SetSilent(false); ShowRifle(true); _startled = false;
             if (_health.IsDead) _health.Revive(); else _health.RestoreHealth(_health.Max);
             if (_lootCreated)
             {
@@ -212,6 +215,10 @@ namespace ShadowVale.Map01
             {
                 int upperBody = _animator.GetLayerIndex(PlayerCombat.UpperBodyLayer);
                 if (upperBody > 0) _animator.SetLayerWeight(upperBody, 1f);
+                foreach (AnimatorControllerParameter p in _animator.parameters) _animatorParams.Add(p.name);
+                // One of the guards' five deaths, fixed per guard (by name) so a reload replays the same fall.
+                if (_animatorParams.Contains("DeathIndex"))
+                    _animator.SetInteger("DeathIndex", (int)((uint)Fnv(name) % 5u));
             }
             if (patrolPoints.Length > 0) Go(patrolPoints[0]);
         }
@@ -239,6 +246,8 @@ namespace ShadowVale.Map01
                 // Not an instant spot: suspicion builds while Nam stays in view, faster up close.
                 float closeness = 1f - Mathf.Clamp01(distance / visionRange);
                 _suspicion = Mathf.Min(1f, _suspicion + Time.deltaTime / _detectionSeconds * Mathf.Lerp(.6f, 3f, closeness));
+                // The first moment he catches something: a start, then the stare.
+                if (!_startled && _suspicion > .2f) { _startled = true; Trigger("Startled"); }
                 if (_suspicion < 1f)
                 {
                     // Something's there — stop and stare at it rather than walk on.
@@ -270,6 +279,7 @@ namespace ShadowVale.Map01
             if (Engaged && TryShootHostage()) return;
 
             if (!Engaged) _suspicion = Mathf.Max(0f, _suspicion - Time.deltaTime * .35f);
+            if (_suspicion <= 0f && !Engaged && !Alerted) _startled = false;
             if (Alerted) Investigate();
             else if (_returning) ReturnHome();
             else { if (_agent.isOnNavMesh) _agent.isStopped = false; Patrol(); }
@@ -320,10 +330,16 @@ namespace ShadowVale.Map01
             if (knife && fromBehind && !Engaged && !IsBoss)
             {
                 TakenDownSilently = true;
+                // The paired takedown from Blender: Nam steps in behind, covers his mouth and cuts; he drops
+                // with his own half of the scene instead of a generic death.
+                SetSilent(true); ShowRifle(false);   // grabbed from behind, the rifle drops from his hands
+                if (_agent.isOnNavMesh) { _agent.isStopped = true; _agent.ResetPath(); }
+                Map01NamActions.For(_mission)?.PlayTakedown(transform);
                 if (!_health.IsDead) _health.TakeDamage(_health.Current, transform.position + Vector3.up, _player.gameObject);
                 return;
             }
             if (_health.IsDead) return; // Killed outright — by a gun, say: loud, and nothing left to react.
+            Trigger("Hit");
             _suspicion = 1f; _engagedUntil = Time.time + 6f;
             BeginInvestigation(_player.position);
             Face(_player.position);
@@ -444,6 +460,32 @@ namespace ShadowVale.Map01
         {
             if (_animator == null) return;
             _animator.SetFloat(PlayerCombat.AnimatorParams.Speed, speed);
+            // The guards' own clips (StoryAnimationSetup): rifle up while fighting, a look round at the spot.
+            if (_animatorParams.Contains("Engaged")) _animator.SetBool("Engaged", Engaged);
+            if (_animatorParams.Contains("Searching")) _animator.SetBool("Searching", Searching);
+        }
+
+        private void Trigger(string parameter)
+        {
+            if (_animator != null && _animatorParams.Contains(parameter)) _animator.SetTrigger(parameter);
+        }
+
+        private void SetSilent(bool value)
+        {
+            if (_animator != null && _animatorParams.Contains("Silent")) _animator.SetBool("Silent", value);
+        }
+
+        private void ShowRifle(bool on)
+        {
+            var rifle = GetComponentInChildren<Map01Rifle>(true);
+            if (rifle != null && rifle.weapon != null) rifle.weapon.gameObject.SetActive(on);
+        }
+
+        private static uint Fnv(string text)
+        {
+            uint hash = 2166136261;
+            foreach (char c in text) { hash ^= c; hash *= 16777619; }
+            return hash;
         }
     }
 }

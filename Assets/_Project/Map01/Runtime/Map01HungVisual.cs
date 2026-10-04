@@ -26,6 +26,7 @@ namespace ShadowVale.Map01
         private float talkUntil;
         private int lastStage = -1;
         private bool standingUp;
+        private float untieUntil;
         /// <summary>Ground speed (m/s) at which the Hung_DiKhapKhieng cycle plants its feet.</summary>
         public const float LimpSpeed = 1.8f;
         private GameObject rope;
@@ -138,10 +139,18 @@ namespace ShadowVale.Map01
             }
             if (!down && Stage != lastStage) {
                 bool freed = lastStage == Map01Quest.RescueStage && Stage == Map01Quest.EscortStage;
-                if (freed) { lastStage = Stage; standingUp = true; if (rope != null) rope.SetActive(false); }
+                if (freed) {
+                    lastStage = Stage; standingUp = true;
+                    // If Nam is kneeling at his back working the knot (Map01NamActions), he stays tied
+                    // until the rope comes off, then gets up.
+                    var nam = mission.player != null ? mission.player.GetComponent<Map01NamActions>() : null;
+                    untieUntil = nam != null && nam.Busy ? Time.time + Map01NamActions.UntieSeconds * .85f : 0;
+                    if (untieUntil <= 0 && rope != null) rope.SetActive(false);
+                }
                 else { ReleaseHold(); SnapToStage(); }
             }
-            actor.SetBool("Captive", Captive);
+            if (untieUntil > 0 && (Time.time >= untieUntil || down)) { untieUntil = 0; if (rope != null) rope.SetActive(false); }
+            actor.SetBool("Captive", Captive || untieUntil > 0);
             actor.SetBool("Wounded", Wounded);
             HoldWhileStandingUp();
             float speed = !down && !Captive && agent != null && agent.isOnNavMesh && !agent.isStopped
