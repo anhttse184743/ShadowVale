@@ -43,6 +43,7 @@ Có hai cấp đo, ứng với các câu hỏi nghiên cứu RQ2–RQ4:
 | Thuật toán hoặc tham số của một solver | Solver đó: cấp A, và cấp B cho variant đó |
 | Thêm solver mới | Tune solver mới với cùng số lần thử, rồi chạy nó ở cấp A và B |
 | AI trong game (FSM, perception, graph, map) hoặc bot | Hiệu chỉnh bot, rồi chạy lại cấp B cho mọi variant |
+| Coordinator, sidecar (cách nhận/xếp hàng request) hoặc harness | Cấp B cho mọi variant. Cấp A không đổi: nó gọi thẳng solver, không qua sidecar |
 | Đổi máy | Mọi số liệu về độ trễ |
 | Chỉ sửa thống kê hoặc biểu đồ | Không chạy lại, tính lại từ file kết quả |
 
@@ -84,13 +85,21 @@ NavMesh và phát tiếng bước chân y như người chơi.
 - Lời giải từ solver về vào frame nào thì không cố định tuyệt đối: solver chạy trên luồng phụ,
   remote solver đi qua HTTP. Vì vậy cấp B so sánh bằng thống kê trên nhiều run, còn cấp A mới là
   phép so sánh tất định.
+- **Độ trễ lockstep** (`SquadCoordinator.LockstepLatency`, harness luôn bật). Bước cố định làm game
+  chạy nhanh gấp ~4–5 lần thời gian thật. Nếu để nguyên, một lần giải 110 ms thật sẽ dài gần một
+  giây trong game, và solver từ xa bị phạt bởi một độ trễ mà người chơi thật không bao giờ thấy.
+  Ở chế độ lockstep, game dừng (theo thời gian thật) để chờ các lời giải bắt đầu trong frame đó,
+  rồi áp từng plan sau đúng độ trễ thật của nó, tính bằng thời gian game. Solver chạy trong Unity
+  (greedy) xong ngay nên không đổi gì.
+- **Nhóm đối chứng `none`:** lính vẫn báo nhau qua radio nhưng không ai lập plan (chỉ FSM). Nhờ
+  nhóm này mới trả lời được câu hỏi "điều phối có giúp lính không", chứ không chỉ "solver nào hơn".
 
 Chạy (cần sidecar cho các variant khác greedy, ví dụ `svl-api --port 8001`):
 ```
-SVL_REPLAY_RUNS=30 SVL_REPLAY_VARIANTS=greedy,qiea,sqa \
+SVL_REPLAY_RUNS=30 SVL_REPLAY_VARIANTS=none,greedy,qiea,sqa \
 Unity -batchmode -projectPath . -runTests -testPlatform EditMode -assemblyNames ShadowVale.Map01.Tests \
       -testFilter ShadowVale.Map01.Tests.Replay.ReplayHarnessTests.ExploitBotMatrix
-svl-bench replay <persistentDataPath>/research/replay-*.jsonl --a qiea --b greedy
+svl-bench replay <persistentDataPath>/research/replay-*.jsonl --vs greedy,none
 ```
 
 Các biến môi trường khác:
@@ -115,13 +124,55 @@ Mỗi run cũng ghi thêm instance vào `coordination-*.jsonl`, nên chạy harn
 - **Độ khó bị khai thác:**
   - (a) *plan entropy*: entropy của plan và của vị trí từng lính qua các lần re-plan;
   - (b) capture rate trước từng exploit bot.
+- **Chẩn đoán** (mỗi run): `plans_discarded` và `discard_reasons` (plan bị bỏ vì người chơi đã chạy
+  xa hoặc lính thôi đánh), `fallbacks` và `fallback_reasons`, `first_plan_delay_s` (từ lúc bị phát
+  hiện đến plan đầu tiên, giây game), `lockstep_latency`.
 - **`valid_for_comparison`** là false khi run bị đổi variant giữa chừng, hoặc có hơn 20% plan phải fallback
-  về greedy. Khi đó run đo greedy chứ không đo variant đang xét, nên bị loại khỏi so sánh (trừ khi
-  chạy với `--include-invalid`).
+  về greedy.
+- **Phân tích chính lấy mọi run** (intention-to-treat). Một solver hay timeout khi chơi thì *đúng là*
+  kém hơn khi chơi; bỏ các run xấu của nó sẽ thiên vị có lợi cho nó. Chỉ lấy run hợp lệ
+  (`--valid-only`) là phân tích độ nhạy.
+- `svl-bench replay` in **WARNING** khi file có run ghi không ở chế độ lockstep, hoặc khi một variant
+  gặp lính mà không có plan nào được áp nhiều hơn greedy quá 10 điểm phần trăm.
 
 ### Kiểm định
 
-- `svl-bench replay` so cặp theo (bot, seed) bằng Wilcoxon signed-rank trên `captured`, `player_hp`
-  và `escape_time_mean`, kèm khoảng tin cậy bootstrap 95% của hiệu số.
+- `svl-bench replay --vs greedy,none` so mọi variant với greedy và với `none`, ghép cặp theo
+  (bot, seed) bằng Wilcoxon signed-rank trên `captured`, `player_hp`, `escape_time_mean` và
+  `plan_entropy_bits`, kèm khoảng tin cậy bootstrap 95% của hiệu số và p hiệu chỉnh Holm trên cả họ
+  phép so sánh của mỗi bot và chỉ số.
 - Mỗi tổ hợp bot × variant cần **≥ 30 run**.
 - Báo cáo đủ p-value và khoảng tin cậy, không chỉ báo "có ý nghĩa".
+
+## Nhật ký sai lệch
+
+### exp-v1, replay lần đầu (04/10/2026): bị loại, chạy lại
+
+**Hiện tượng.** 135/450 run có `plans = 0`: variant từ xa gặp lính nhưng không plan nào được áp, và
+tất cả các run đó đều bị bắt. Vì vậy qiea "bắt được 96%" so với greedy 43%. Độ trễ p50 của remote
+solver là ~160 ms, đúng bằng mức timeout. Có 173 run bị loại vì fallback > 20%, nên phần còn lại
+lệch về những run đẹp.
+
+**Nguyên nhân.**
+1. Harness chạy game nhanh gấp ~4,5 lần thời gian thật. Plan về muộn gần một giây game nên bị bỏ
+   ("người chơi đã chạy xa"), và lính đánh không có plan.
+2. Sidecar giải song song nhiều request trên các luồng chung GIL và tính budget từ lúc bắt đầu
+   giải. Hai request cùng lúc mất 130–225 ms với budget 120 ms.
+
+**Sửa.**
+- Coordinator có `LockstepLatency`.
+- Sidecar giải lần lượt trong một tiến trình worker riêng, budget tính từ lúc nhận request:
+  3–4 request cùng lúc nay chậm nhất ~140 ms.
+- Sidecar nhận `--parent-pid` và tự thoát khi game thoát; trước đây bản exe để lại server mồ côi.
+- Harness ghi chẩn đoán; phân tích thêm `audit`, nhóm `none` và kiểm định họ có Holm.
+
+**Ảnh hưởng.** Chỉ cấp B. File cũ giữ lại thành `replay-no-lockstep-9bec9e8.jsonl` để minh bạch,
+không dùng cho kết luận. Hiệu chỉnh bot vẫn giữ: nó chạy trên greedy, solver chạy trong Unity nên
+không bị ảnh hưởng. Kết quả cấp A (game, medium, small, full, Moving AI, QAPLIB) giữ nguyên: cấp A
+gọi thẳng solver, không qua sidecar.
+
+### exp-v1, suite `full` (04/10/2026): chạy lại
+
+SQA trả về `None` khi deadline đã qua trước sweep đầu tiên (bài 640 biến, máy bận), làm bench dừng
+ở dòng 13.586/20.250. Đã sửa ở solver `d59e5aa`: luôn hoàn thành ít nhất một sweep. Suite `full`
+được chạy lại từ đầu; file dở dang giữ thành `full-partial-515b977.csv`.

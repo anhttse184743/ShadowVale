@@ -30,6 +30,13 @@ namespace ShadowVale.Map01.Tests.Replay
     /// compared over many runs with statistics, while the solvers themselves are compared exactly on
     /// the recorded instances (the coordination-*.jsonl this harness also produces).
     /// </para>
+    /// <para>
+    /// Latency: the fixed step runs the game about 4-5x faster than real time, so the coordinator runs
+    /// in <see cref="SquadCoordinator.LockstepLatency"/> — a plan lands after its solve's real latency
+    /// in game time, as in play. (exp-v1's first replay ran without it: a remote plan arrived most of
+    /// a game second late and was usually thrown away.) Variant <c>none</c> is the control: the guards
+    /// still radio contacts, but nobody plans.
+    /// </para>
     /// </summary>
     public static class ReplayHarness
     {
@@ -54,9 +61,16 @@ namespace ShadowVale.Map01.Tests.Replay
             public float Knob = float.NaN;
         }
 
+        /// <summary>The control condition: guards share contacts but the coordinator never plans.</summary>
+        public const string NoCoordination = "none";
+
         public sealed class Result
         {
             public Spec Spec;
+            /// <summary>Plans thrown away before they were applied, by reason; fallbacks to greedy, by reason.</summary>
+            public Dictionary<string, int> Discards = new Dictionary<string, int>(), Fallbacks = new Dictionary<string, int>();
+            /// <summary>Game seconds from the first contact to the first plan applied; NaN if none was.</summary>
+            public float FirstPlanDelay = float.NaN;
             /// <summary>captured (Nam died) | escaped (seen, survived) | undetected (never seen).</summary>
             public string Outcome;
             public float Seconds, PlayerHealth, Distance;
@@ -85,8 +99,13 @@ namespace ShadowVale.Map01.Tests.Replay
 
                 var coordinator = ServiceLocator.Resolve<SquadCoordinator>();
                 coordinator.Settings.Seed = spec.Seed;
-                coordinator.Settings.Variant = spec.Variant;
-                coordinator.SetVariant(spec.Variant);
+                coordinator.LockstepLatency = true;
+                coordinator.PlanningEnabled = spec.Variant != NoCoordination;
+                if (coordinator.PlanningEnabled)
+                {
+                    coordinator.Settings.Variant = spec.Variant;
+                    coordinator.SetVariant(spec.Variant);
+                }
 
                 var running = mission.GetComponent<TelemetryService>();
                 if (running != null) running.End(upload: false);
@@ -103,9 +122,19 @@ namespace ShadowVale.Map01.Tests.Replay
 
                 // The bot's one reaction: once a guard has spotted him and his reaction time has passed,
                 // its OnSpotted script takes over.
-                float spottedAt = float.NaN;
+                float spottedAt = float.NaN, firstPlanAt = float.NaN;
+                var discards = new Dictionary<string, int>();
+                var fallbacks = new Dictionary<string, int>();
                 Action<PlayerContactEvent> onContact = _ => { if (float.IsNaN(spottedAt)) spottedAt = Time.time; };
+                Action<PlanAppliedEvent> onPlan = e =>
+                {
+                    if (float.IsNaN(firstPlanAt)) firstPlanAt = Time.time;
+                    if (!string.IsNullOrEmpty(e.FallbackReason)) Count(fallbacks, Reason(e.FallbackReason));
+                };
+                Action<PlanDiscardedEvent> onDiscard = e => Count(discards, e.Reason);
                 EventBus.Subscribe(onContact);
+                EventBus.Subscribe(onPlan);
+                EventBus.Subscribe(onDiscard);
                 float t = 0, settle = 0;
                 bool timedOut = false;
                 try
@@ -126,7 +155,12 @@ namespace ShadowVale.Map01.Tests.Replay
                         if (t >= spec.MaxSeconds) { timedOut = true; break; }
                     }
                 }
-                finally { EventBus.Unsubscribe(onContact); }
+                finally
+                {
+                    EventBus.Unsubscribe(onContact);
+                    EventBus.Unsubscribe(onPlan);
+                    EventBus.Unsubscribe(onDiscard);
+                }
                 bot.Release();
                 var session = telemetry.End(upload: false);
                 bool dead = health != null && health.IsDead;
@@ -135,9 +169,23 @@ namespace ShadowVale.Map01.Tests.Replay
                     Spec = spec, Session = session, Seconds = t, TimedOut = timedOut, Distance = bot.DistanceWalked,
                     PlayerHealth = health != null ? health.Current : 0,
                     Outcome = dead ? "captured" : session.Summary.Encounters > 0 ? "escaped" : "undetected",
+                    Discards = discards, Fallbacks = fallbacks,
+                    FirstPlanDelay = float.IsNaN(firstPlanAt) || float.IsNaN(spottedAt) ? float.NaN : firstPlanAt - spottedAt,
                 });
             }
             finally { Time.captureFramerate = previousCapture; }
+        }
+
+        private static void Count(Dictionary<string, int> counts, string key) =>
+            counts[key] = counts.TryGetValue(key, out int n) ? n + 1 : 1;
+
+        /// <summary>A fallback reason without its numbers ("qiea: sidecar timeout (160 ms)" -> "sidecar timeout").</summary>
+        public static string Reason(string reason)
+        {
+            int colon = reason.IndexOf(": ", StringComparison.Ordinal);
+            string r = colon >= 0 ? reason.Substring(colon + 2) : reason;
+            int paren = r.IndexOf(" (", StringComparison.Ordinal);
+            return paren >= 0 ? r.Substring(0, paren) : r;
         }
 
         // ---- Output ------------------------------------------------------------------------------
@@ -224,9 +272,17 @@ namespace ShadowVale.Map01.Tests.Replay
                 Str("ai_variant", s.AiVariant), Str("variants_used", sum.Variants), Bool("valid_for_comparison", sum.ValidForComparison),
                 Num("contacts", sum.EventCounts.TryGetValue("player_spotted", out int c) ? c : 0),
                 Str("coordination_log", sum.CoordinationLog ?? ""), Str("session_id", s.SessionId),
+                Bool("lockstep_latency", true),
+                Num("plans_discarded", r.Discards.Values.Sum()), Str("discard_reasons", Tally(r.Discards)),
+                Num("fallbacks", r.Fallbacks.Values.Sum()), Str("fallback_reasons", Tally(r.Fallbacks)),
+                Num("first_plan_delay_s", float.IsNaN(r.FirstPlanDelay) ? -1 : Math.Round(r.FirstPlanDelay, 3)),
             };
             return "{" + string.Join(",", f) + "}";
         }
+
+        /// <summary>"reason=count;reason=count", sorted — flat, so a line stays one JSON object of scalars.</summary>
+        private static string Tally(Dictionary<string, int> counts) =>
+            string.Join(";", counts.OrderBy(p => p.Key, StringComparer.Ordinal).Select(p => p.Key.Replace(";", ",").Replace("=", "-") + "=" + p.Value));
 
         private static string Str(string k, string v) => $"\"{k}\":\"{(v ?? "").Replace("\\", "\\\\").Replace("\"", "\\\"")}\"";
         private static string Num(string k, double v) => $"\"{k}\":{v.ToString("R", CultureInfo.InvariantCulture)}";

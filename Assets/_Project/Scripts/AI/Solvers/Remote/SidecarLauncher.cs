@@ -42,7 +42,11 @@ namespace ShadowVale.AI.Solvers.Remote
                 string exe = FindExecutable(profile);
                 if (exe == null) { Debug.LogWarning("[Sidecar] no svl-solver executable found; remote solvers fall back to greedy."); return false; }
                 int port = new Uri(baseUrl).Port;
-                _process = Process.Start(new ProcessStartInfo(exe, $"--port {port} --log-level warning")
+                // --parent-pid: the sidecar ends itself when the game ends, crash included. Killing
+                // _process alone would leave the server running: the packaged exe is a launcher
+                // whose child is the server (and its solver worker).
+                int self = Process.GetCurrentProcess().Id;
+                _process = Process.Start(new ProcessStartInfo(exe, $"--port {port} --log-level warning --parent-pid {self}")
                     { UseShellExecute = false, CreateNoWindow = true, WorkingDirectory = Path.GetDirectoryName(exe) });
                 Application.quitting -= Stop;
                 Application.quitting += Stop;

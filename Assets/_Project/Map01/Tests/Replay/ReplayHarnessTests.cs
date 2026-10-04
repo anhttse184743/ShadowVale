@@ -17,7 +17,8 @@ namespace ShadowVale.Map01.Tests.Replay
     /// configure it through the environment:
     /// <list type="bullet">
     /// <item><c>SVL_REPLAY_RUNS</c> (30) runs per bot and variant, seeds <c>SVL_REPLAY_SEED</c> (1000) upward;</item>
-    /// <item><c>SVL_REPLAY_VARIANTS</c> (greedy,qiea) — remote ones need the sidecar, skipped if it is down;</item>
+    /// <item><c>SVL_REPLAY_VARIANTS</c> (greedy,qiea) — remote ones need the sidecar, skipped if it is down;
+    /// <c>none</c> is the no-coordination control;</item>
     /// <item><c>SVL_REPLAY_BOTS</c> (same_route,same_bush,stone_lure), <c>SVL_REPLAY_CAMP</c> (1), <c>SVL_REPLAY_FPS</c> (30);</item>
     /// <item><c>SVL_REPLAY_OUT</c> the jsonl to append to (default research/replay-&lt;time&gt;.jsonl).</item>
     /// </list>
@@ -79,7 +80,7 @@ namespace ShadowVale.Map01.Tests.Replay
             var bots = List("SVL_REPLAY_BOTS", string.Join(",", ReplayScenario.Bots));
             string url = SolverEndpoint.BaseUrl;
             bool sidecar = SidecarLauncher.IsHealthyAsync(url).Result;
-            var usable = variants.Where(v => v == "greedy" || sidecar).ToList();
+            var usable = variants.Where(v => v == "greedy" || v == ReplayHarness.NoCoordination || sidecar).ToList();
             foreach (var skipped in variants.Except(usable))
                 Debug.LogWarning($"[Replay] {skipped} skipped: no sidecar at {url} (svl-api --port …, SVL_SOLVER_URL).");
             string output = ReplayHarness.DefaultOutputPath();
@@ -102,7 +103,12 @@ namespace ShadowVale.Map01.Tests.Replay
                 ReplayHarness.Append(output, result);
                 done++;
                 Debug.Log($"[Replay] {done}/{total} {bot} {variant} seed {spec.Seed}: {result.Outcome} in {result.Seconds:0.0} s, " +
-                          $"{result.Session.Summary.Plans} plans, coordination {result.Session.Summary.CoordinationScoreMean:0.00}");
+                          $"{result.Session.Summary.Plans} plans, {result.Discards.Values.Sum()} discarded, " +
+                          $"{result.Fallbacks.Values.Sum()} fallbacks, coordination {result.Session.Summary.CoordinationScoreMean:0.00}");
+                // A planning variant that met the guards but never got a plan through measures no solver.
+                if (variant != ReplayHarness.NoCoordination && result.Session.Summary.Encounters > 0 && result.Session.Summary.Plans == 0)
+                    Debug.LogWarning($"[Replay] {bot} {variant} seed {spec.Seed}: an encounter without a single plan applied " +
+                                     $"(discarded: {string.Join(", ", result.Discards.Select(p => p.Key + " x" + p.Value))}).");
             }
             Assert.AreEqual(total, done);
         }

@@ -153,6 +153,107 @@ namespace ShadowVale.Map01.Tests
             }
         }
 
+        /// <summary>A solver that takes <see cref="DelayMs"/> of real time, then answers greedily.</summary>
+        private sealed class SlowSolver : ISquadSolver
+        {
+            public const int DelayMs = 300;
+            public string VariantId => "slow";
+            public int LatencyBudgetMs => 120;
+            public System.Threading.Tasks.Task<ShadowVale.Data.Coordination.CoordinationPlan> SolveAsync(
+                ShadowVale.Data.Coordination.QuboRequest request, System.Threading.CancellationToken ct) =>
+                System.Threading.Tasks.Task.Run(async () =>
+                {
+                    await System.Threading.Tasks.Task.Delay(DelayMs);
+                    var plan = new ShadowVale.AI.Solvers.Classical.GreedySolver(LatencyBudgetMs).Solve(request);
+                    plan.SolverVariantId = VariantId;
+                    plan.SolveLatencyMs = DelayMs;
+                    return plan;
+                });
+        }
+
+        [UnityTest]
+        public IEnumerator InLockstepAPlanLandsAfterItsRealLatencyInGameTime()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            yield return LockstepInPlayMode();
+            yield return new ExitPlayMode();
+        }
+
+        private static IEnumerator LockstepInPlayMode()
+        {
+            // The replay harness's fixed step: game time no longer follows the wall clock.
+            int previousCapture = Time.captureFramerate;
+            Time.captureFramerate = 30;
+            var replans = new List<float>();
+            var plans = new List<(PlanAppliedEvent plan, float at)>();
+            System.Action<ReplanStartedEvent> onReplan = _ => replans.Add(Time.time);
+            System.Action<PlanAppliedEvent> onPlan = e => plans.Add((e, Time.time));
+            EventBus.Subscribe(onReplan); EventBus.Subscribe(onPlan);
+            try
+            {
+                yield return null;
+                yield return null;
+                var mission = Object.FindFirstObjectByType<Map01Mission>();
+                ServiceLocator.TryResolve<SquadCoordinator>(out var coordinator);
+                coordinator.UseSolver(new SlowSolver());
+                coordinator.LockstepLatency = true;
+
+                float realStart = Time.realtimeSinceStartup;
+                mission.Enemies.First(e => e.SquadId == "C2" && e.Alive).DebugDamage(.1f);
+                for (int frames = 0; plans.Count == 0 && frames < 120; frames++) yield return null;
+
+                Assert.IsNotEmpty(plans, "The slow solver's plan was applied.");
+                Assert.AreEqual("slow", plans[0].plan.Variant);
+                float gameDelay = plans[0].at - replans[0];
+                Assert.That(gameDelay, Is.InRange(SlowSolver.DelayMs / 1000f, SlowSolver.DelayMs / 1000f + 2f / 30f),
+                    "The plan lands after the solve's real latency, measured in game time.");
+                Assert.GreaterOrEqual(Time.realtimeSinceStartup - realStart, SlowSolver.DelayMs / 1000f, "The game waited for the solver.");
+            }
+            finally
+            {
+                EventBus.Unsubscribe(onReplan); EventBus.Unsubscribe(onPlan);
+                Time.captureFramerate = previousCapture;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator WithPlanningOffTheCampStillRadiosButNobodyPlans()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            yield return NoPlanningInPlayMode();
+            yield return new ExitPlayMode();
+        }
+
+        private static IEnumerator NoPlanningInPlayMode()
+        {
+            var alerts = new List<SquadAlertEvent>();
+            var replans = new List<ReplanStartedEvent>();
+            System.Action<SquadAlertEvent> onAlert = alerts.Add;
+            System.Action<ReplanStartedEvent> onReplan = replans.Add;
+            EventBus.Subscribe(onAlert); EventBus.Subscribe(onReplan);
+            try
+            {
+                yield return null;
+                yield return null;
+                var mission = Object.FindFirstObjectByType<Map01Mission>();
+                ServiceLocator.TryResolve<SquadCoordinator>(out var coordinator);
+                coordinator.PlanningEnabled = false;
+                var squad = mission.Enemies.Where(e => e.SquadId == "C2" && e.Alive).ToArray();
+                squad[0].DebugDamage(.1f);
+                for (float until = Time.time + 2f; Time.time < until;) yield return null;
+
+                Assert.IsTrue(alerts.Any(a => a.SourceSquad == "C2"), "The camp is still alerted over the radio.");
+                Assert.IsTrue(squad.All(g => g.Engaged), "Every C2 guard fights.");
+                Assert.IsEmpty(replans, "Nobody plans: the FSM-only control (each guard finds his own cover).");
+            }
+            finally
+            {
+                EventBus.Unsubscribe(onAlert); EventBus.Unsubscribe(onReplan);
+            }
+        }
+
         private static IEnumerator InPlayMode()
         {
             yield return null;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,6 +41,9 @@ namespace ShadowVale.AI.Coordination
             public Vector3 PendingPlayer;
             public float PendingSeenAt;
             public string PendingTrigger;
+            /// <summary>Game time the pending plan may land (lockstep latency); -inf otherwise.</summary>
+            public float ReadyAt = float.NegativeInfinity;
+            public Stopwatch Clock;
         }
 
         private sealed class Group
@@ -55,7 +59,27 @@ namespace ShadowVale.AI.Coordination
         public string SolverFallbackReason { get; private set; }
         public string RecordPath => _recorder?.Path;
 
+        /// <summary>
+        /// False: the squads still radio contacts to each other but never plan — the FSM-only control
+        /// condition of the experiments ("none").
+        /// </summary>
+        public bool PlanningEnabled { get; set; } = true;
+
+        /// <summary>
+        /// For the replay harness, whose fixed game step runs several times faster than real time:
+        /// there a solve of 110 ms real time would span most of a game second, and a remote solver
+        /// would be judged on a delay no player ever sees. With this on, the game waits (in real
+        /// time) for the solves started in a frame, then each plan lands after the real time its
+        /// solve took — measured in game time, exactly what a player at normal speed sees. In-process
+        /// solvers finish at once either way. Off in play.
+        /// </summary>
+        public bool LockstepLatency { get; set; }
+
+        /// <summary>Longest the lockstep waits for a solve (the remote client gives up far sooner).</summary>
+        private const int LockstepWaitLimitMs = 10000;
+
         private readonly Dictionary<string, GroupState> _states = new Dictionary<string, GroupState>();
+        private readonly List<GroupState> _begunThisFrame = new List<GroupState>();
         private readonly HashSet<string> _forceSquads = new HashSet<string>();
         private ISquadSolver _solver;
         private CoordinationRecorder _recorder;
@@ -91,6 +115,14 @@ namespace ShadowVale.AI.Coordination
             SolverFallbackReason = reason;
             EventBus.Publish(new SolverChangedEvent(_solver.VariantId, reason));
             CheckSidecar(_solver);
+        }
+
+        /// <summary>Plan with this solver from now on (tests, a custom backend).</summary>
+        public void UseSolver(ISquadSolver solver)
+        {
+            _solver = solver ?? throw new ArgumentNullException(nameof(solver));
+            SolverFallbackReason = null;
+            EventBus.Publish(new SolverChangedEvent(_solver.VariantId, null));
         }
 
         /// <summary>A remote variant: make sure the sidecar is up (starting it if allowed), report the result.</summary>
@@ -166,7 +198,7 @@ namespace ShadowVale.AI.Coordination
                 EventBus.Publish(new SidecarStatusEvent(_sidecarOnline, _sidecarUrl)); // Main thread.
                 _sidecarCheck = null;
             }
-            if (!ServiceLocator.TryResolve<IWorldQuery>(out var graph)) return;
+            if (!PlanningEnabled || !ServiceLocator.TryResolve<IWorldQuery>(out var graph)) return;
             float now = Time.time;
             var groups = BuildGroups(now);
             var live = new HashSet<string>();
@@ -177,13 +209,16 @@ namespace ShadowVale.AI.Coordination
                 if (group.Members.Any(m => _forceSquads.Contains(m.SquadId))) state.ForceReplan = true;
                 if (state.Pending != null)
                 {
-                    if (state.Pending.IsCompleted) Finish(group.Key, state, graph, now);
+                    if (state.Pending.IsCompleted && now >= state.ReadyAt) Finish(group.Key, state, graph, now);
                     continue;
                 }
                 string trigger = NeedsReplan(state, group, graph, now);
-                if (trigger != null) Begin(group, state, graph, trigger, now);
+                if (trigger == null) continue;
+                Begin(group, state, graph, trigger, now);
+                if (LockstepLatency && state.Pending != null) _begunThisFrame.Add(state);
             }
             _forceSquads.Clear();
+            if (_begunThisFrame.Count > 0) AwaitLockstep(now);
             foreach (var key in _states.Keys.Where(k => !live.Contains(k)).ToList())
             {
                 var stale = _states[key];
@@ -263,6 +298,8 @@ namespace ShadowVale.AI.Coordination
             state.PendingPlayer = group.LastKnown;
             state.PendingSeenAt = group.LastSeenAt;
             state.PendingTrigger = trigger;
+            state.ReadyAt = float.NegativeInfinity;
+            state.Clock = Stopwatch.StartNew();
             try { state.Pending = solver.SolveAsync(inst.Request, state.Cancel.Token); }
             catch (Exception e) { state.Pending = System.Threading.Tasks.Task.FromException<CoordinationPlan>(e); }
             if (state.Pending.IsCompleted) Finish(group.Key, state, graph, now); // In-process solvers finish at once.
@@ -319,6 +356,21 @@ namespace ShadowVale.AI.Coordination
             state.LastPlanTime = now;
             state.LastMembers = members.Select(m => m.Id).ToArray();
             state.LastPlayerNode = inst.PlayerNode;
+        }
+
+        /// <summary>Lockstep: wait for this frame's solves together (they overlap, as in play), then
+        /// schedule each plan at now + its real latency.</summary>
+        private void AwaitLockstep(float now)
+        {
+            try { Task.WaitAll(_begunThisFrame.Select(s => (Task)s.Pending).ToArray(), LockstepWaitLimitMs); }
+            catch (AggregateException) { } // A failed solve falls back to greedy in Finish.
+            foreach (var s in _begunThisFrame)
+            {
+                double ms = s.Pending.Status == TaskStatus.RanToCompletion && s.Pending.Result != null
+                    ? s.Pending.Result.SolveLatencyMs : s.Clock.Elapsed.TotalMilliseconds;
+                s.ReadyAt = now + (float)(ms / 1000.0);
+            }
+            _begunThisFrame.Clear();
         }
 
         private void Discard(string key, GroupState state, string reason, float now)
