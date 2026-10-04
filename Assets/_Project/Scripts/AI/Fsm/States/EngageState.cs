@@ -2,7 +2,8 @@ namespace ShadowVale.AI.Fsm.States
 {
     /// <summary>
     /// Fighting. In sight: aimed fire within range; out of range he closes in — unless he holds a
-    /// position the squad plan gave him. Out of sight: the map's alternative target if any
+    /// position whose role holds (<see cref="EnemyTuning.HoldRoles"/>: blocking an escape route,
+    /// by default). Out of sight: the map's alternative target if any
     /// (Map 1: the hostage), otherwise suppressive fire at the last-seen spot for a moment.
     /// </summary>
     public sealed class EngageState : EnemyStateBase
@@ -18,7 +19,7 @@ namespace ShadowVale.AI.Fsm.States
                     body.Stop(); body.Animate(false);
                     ctx.Weapon.FireAtPlayer();
                 }
-                else if (m.HasAssignment && m.ReachedAssignment)
+                else if (m.HasAssignment && m.ReachedAssignment && t.Holds(m.AssignedRole))
                 {
                     body.Stop(); body.Animate(false);
                 }

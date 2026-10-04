@@ -29,8 +29,48 @@ namespace ShadowVale.AI.Fsm
         public float AttackRange = 18f;
         /// <summary>Suppressive fire at the last-seen point after losing sight; 0 = hunt straight away.</summary>
         public float SuppressSeconds;
-        public float TakeCoverTimeoutSeconds = 8f;
+        /// <summary>
+        /// Longest he walks to an assignment before hunting the player instead. A plan's positions
+        /// are drawn around where the player was last seen; a player on the run is gone from there
+        /// within seconds. Was 8 s until 04/10/2026: on the calibration seeds (500–509, greedy) 3 s
+        /// took same_route's capture rate from 40 % to 100 % with every other rule unchanged.
+        /// </summary>
+        public float TakeCoverTimeoutSeconds = 3f;
         public float CoverArriveDistance = 1f;
+        /// <summary>
+        /// Roles that hold their position while the player is out of range; every other role
+        /// closes in once there. Comma-separated, "*" = all. Default: only a lone guard's own nearby
+        /// cover ("local"). A squad plan's positions — block, cover, flank — are where to deploy,
+        /// not where to stay: the "escape" nodes are the edge of the 24-node subgraph around where
+        /// the player was seen, not the map's exits, and a player on the run passes them. Until
+        /// 04/10/2026 every assignment held (exp-v1.1: planned squads captured 43 %, guards without
+        /// plans 99 %); on the calibration seeds holding block nodes kept same_route at 40 %.
+        /// </summary>
+        public string HoldRoles = "local";
+        /// <summary>
+        /// On a re-plan, a new assignment within this of where he stands counts as reached: a plan
+        /// that barely moves him does not stop his fire to walk a metre. The first assignment is
+        /// always walked to. 0 = always walk.
+        /// </summary>
+        public float ReassignKeepDistance = 3f;
+        /// <summary>
+        /// Fight first: with the player in sight and in range he stops and fires instead of walking
+        /// on to his assignment, and resumes it once he cannot. Off = an assignment is walked to
+        /// whatever happens (the behaviour before 04/10/2026): every re-plan pulled the squad out of
+        /// a fight it was winning — on the calibration seeds that alone cost greedy 20–40 points of
+        /// capture rate against the exploit bots.
+        /// </summary>
+        public bool EngageInRangeFirst = true;
+
+        /// <summary>Whether a guard on an assignment with this role holds it when the player is out of range.</summary>
+        public bool Holds(string role)
+        {
+            if (string.IsNullOrEmpty(HoldRoles)) return false;
+            if (HoldRoles.Trim() == "*") return true;
+            foreach (var r in HoldRoles.Split(','))
+                if (r.Trim() == (role ?? "")) return true;
+            return false;
+        }
 
         // Retreat
         /// <summary>Fall back below this share of max health while fighting; 0 = never.</summary>

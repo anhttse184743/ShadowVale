@@ -45,13 +45,15 @@ namespace ShadowVale.Map01.Tests.Replay
         /// always caught or never caught cannot show a difference between solvers.
         /// same_route / stone_lure: reaction time before fleeing; same_bush: seconds spent hiding.
         /// </summary>
-        /// Calibrated 03/10/2026 on Map 1 camp C2, greedy, seeds 500+ (Docs/Experiments/calibration):
-        /// same_route 13 s → 30 %, 14 s → 80 %; same_bush 14 s → 50 %; stone_lure 11 s → 40 %, 13 s → 70 %.
+        /// Re-calibrated 04/10/2026 after the FSM's fight-first rule (guards became far more lethal), Map 1
+        /// camp C2, greedy, seeds 500+, 10 each (Docs/Experiments/calibration/*-v2.json): same_route 9 s → 50 %;
+        /// same_bush 8 s → 10 %, 8.5 s → 40 %, 9 s → 90 %; stone_lure 7 s → 70 %, 7.5 s → 40 %, 8 s → 80 %.
+        /// (v1, 03/10: 13.5 / 14 / 12.)
         public static float DefaultKnob(string bot) => bot switch
         {
-            "same_route" => 13.5f,
-            "same_bush" => 14f,
-            "stone_lure" => 12f,
+            "same_route" => 9f,
+            "same_bush" => 8.5f,
+            "stone_lure" => 7.5f,
             _ => 0f,
         };
 

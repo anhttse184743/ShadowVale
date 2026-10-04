@@ -59,6 +59,12 @@ namespace ShadowVale.Map01.Tests.Replay
             public float SettleSeconds = 20f;
             /// <summary>The bot's difficulty knob (ReplayScenario.DefaultKnob); NaN = the calibrated default.</summary>
             public float Knob = float.NaN;
+            /// <summary>
+            /// Ablation: EnemyTuning fields set on every guard, "Field=value;Field=value" (e.g.
+            /// "HoldRoles=*;ReassignKeepDistance=0" is the behaviour before 04/10/2026). Empty = the
+            /// game's own. Default from SVL_REPLAY_TUNING; written into every record.
+            /// </summary>
+            public string Tuning = Environment.GetEnvironmentVariable("SVL_REPLAY_TUNING") ?? "";
         }
 
         /// <summary>The control condition: guards share contacts but the coordinator never plans.</summary>
@@ -97,6 +103,7 @@ namespace ShadowVale.Map01.Tests.Replay
                 quest.RestoreStage(Map01Quest.CampsStage);
                 Vector3 spawn = mission.player.position;
 
+                ApplyTuning(spec.Tuning);
                 var coordinator = ServiceLocator.Resolve<SquadCoordinator>();
                 coordinator.Settings.Seed = spec.Seed;
                 coordinator.LockstepLatency = true;
@@ -174,6 +181,23 @@ namespace ShadowVale.Map01.Tests.Replay
                 });
             }
             finally { Time.captureFramerate = previousCapture; }
+        }
+
+        /// <summary>Sets <paramref name="overrides"/> ("Field=value;…") on every registered guard's EnemyTuning.</summary>
+        public static void ApplyTuning(string overrides)
+        {
+            if (string.IsNullOrWhiteSpace(overrides)) return;
+            foreach (var pair in overrides.Split(';'))
+            {
+                if (string.IsNullOrWhiteSpace(pair)) continue;
+                int eq = pair.IndexOf('=');
+                string name = pair.Substring(0, eq).Trim(), raw = pair.Substring(eq + 1).Trim();
+                var field = typeof(EnemyTuning).GetField(name)
+                            ?? throw new ArgumentException($"EnemyTuning has no field '{name}'");
+                object value = field.FieldType == typeof(string) ? raw
+                    : Convert.ChangeType(raw, field.FieldType, CultureInfo.InvariantCulture);
+                foreach (var agent in ShadowVale.AI.Agents.AgentRegistry.All) field.SetValue(agent.Brain.Tuning, value);
+            }
         }
 
         private static void Count(Dictionary<string, int> counts, string key) =>
@@ -272,7 +296,7 @@ namespace ShadowVale.Map01.Tests.Replay
                 Str("ai_variant", s.AiVariant), Str("variants_used", sum.Variants), Bool("valid_for_comparison", sum.ValidForComparison),
                 Num("contacts", sum.EventCounts.TryGetValue("player_spotted", out int c) ? c : 0),
                 Str("coordination_log", sum.CoordinationLog ?? ""), Str("session_id", s.SessionId),
-                Bool("lockstep_latency", true),
+                Bool("lockstep_latency", true), Str("tuning", r.Spec.Tuning),
                 Num("plans_discarded", r.Discards.Values.Sum()), Str("discard_reasons", Tally(r.Discards)),
                 Num("fallbacks", r.Fallbacks.Values.Sum()), Str("fallback_reasons", Tally(r.Fallbacks)),
                 Num("first_plan_delay_s", float.IsNaN(r.FirstPlanDelay) ? -1 : Math.Round(r.FirstPlanDelay, 3)),

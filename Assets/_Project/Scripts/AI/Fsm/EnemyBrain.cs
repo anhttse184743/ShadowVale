@@ -107,7 +107,7 @@ namespace ShadowVale.AI.Fsm
         {
             var m = _ctx.Memory;
             if (!m.HasAssignment && _ctx.Tactics.TryFindCover(_ctx, playerPosition, out var cover))
-                Assign(cover, -1, "cover");
+                Assign(cover, -1, "local");
             else if (m.HasAssignment) m.TakeCoverUntil = _ctx.Now + _ctx.Tuning.TakeCoverTimeoutSeconds;
             if (publish) EventBus.Publish(new PlayerContactEvent(_ctx.AgentId, playerPosition, seen));
         }
@@ -155,11 +155,16 @@ namespace ShadowVale.AI.Fsm
             if (!wasEngaged) OnContact(playerPosition, seen: false);
         }
 
-        /// <summary>Position to fight from, given by the squad plan (node ≥ 0) or local cover (−1).</summary>
+        /// <summary>Position to fight from, given by the squad plan (node ≥ 0; role block, cover or flank) or
+        /// the nearest cover he found himself (−1; role local).</summary>
         public void Assign(Vector3 position, int node, string role)
         {
             var m = _ctx.Memory;
-            m.HasAssignment = true; m.ReachedAssignment = false;
+            // A re-plan that barely moves him keeps him fighting; a first assignment is always walked to.
+            float keep = _ctx.Tuning.ReassignKeepDistance;
+            bool replan = m.HasAssignment;
+            m.HasAssignment = true;
+            m.ReachedAssignment = replan && keep > 0 && (position - _ctx.Body.Position).sqrMagnitude <= keep * keep;
             m.AssignedPosition = position; m.AssignedNode = node; m.AssignedRole = role ?? "";
             m.TakeCoverUntil = _ctx.Now + _ctx.Tuning.TakeCoverTimeoutSeconds;
         }

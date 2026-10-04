@@ -6,7 +6,8 @@ namespace ShadowVale.AI.Fsm
     /// <list type="number">
     /// <item>Retreat — badly hurt while fighting (started by the brain).</item>
     /// <item>SpotPlayer — something in view, suspicion not yet full.</item>
-    /// <item>TakeCover — fighting, with a cover/plan position not yet reached.</item>
+    /// <item>TakeCover — fighting, with a cover/plan position not yet reached (and, by default, the
+    /// player not in sight and range: a guard who can fire fights first).</item>
     /// <item>Engage — fighting and in sight; or just lost sight (suppressing) or another target in reach.</item>
     /// <item>Investigate — checking a noise / hunting the last-seen spot, or walking back.</item>
     /// <item>Patrol.</item>
@@ -22,7 +23,9 @@ namespace ShadowVale.AI.Fsm
             if (sees && !engaged) return EnemyStateId.SpotPlayer;
             if (engaged)
             {
-                if (m.HasAssignment && !m.ReachedAssignment && ctx.Now < m.TakeCoverUntil) return EnemyStateId.TakeCover;
+                bool inRange = sees && ctx.Sense.Distance <= ctx.Tuning.AttackRange;
+                if (m.HasAssignment && !m.ReachedAssignment && ctx.Now < m.TakeCoverUntil
+                    && !(inRange && ctx.Tuning.EngageInRangeFirst)) return EnemyStateId.TakeCover;
                 if (sees) return EnemyStateId.Engage;
                 if (ctx.Tactics.TryGetAlternativeTarget(ctx, out _)) return EnemyStateId.Engage;
                 if (ctx.Now < m.SuppressUntil) return EnemyStateId.Engage;

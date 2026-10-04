@@ -193,6 +193,70 @@ namespace ShadowVale.Tests.EditMode.AI
             Assert.IsTrue(_body.Stopped, "Out of range he holds the cover rather than chasing.");
         }
 
+        [TestCase("block", null, false)]
+        [TestCase("cover", null, false)]
+        [TestCase("flank", null, false)]
+        [TestCase("block", "block,local", true)]
+        [TestCase("flank", "*", true)]
+        public void APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds(string role, string holdRoles, bool holds)
+        {
+            var tuning = new EnemyTuning();
+            if (holdRoles != null) tuning.HoldRoles = holdRoles;
+            Build(tuning);
+            var player = new Vector3(0, 0, 22);           // seen, beyond the 18 m attack range
+            SpotUntilEngaged(player);
+            var node = new Vector3(6, 0, 0);
+            _brain.Assign(node, 7, role);
+            Tick(true, player);
+            Assert.AreEqual(EnemyStateId.TakeCover, _brain.State);
+            _body.Arrive(); Tick(true, player); Tick(true, player);
+            Assert.AreEqual(EnemyStateId.Engage, _brain.State);
+            if (holds)
+                Assert.IsTrue(_body.Stopped, "A holding role stays on its position.");
+            else
+                Assert.AreEqual(player, _body.Destination, "A " + role + " position does not stop him closing in.");
+        }
+
+        [Test]
+        public void ARePlanThatBarelyMovesHimDoesNotSendHimWalking()
+        {
+            Build();
+            var player = new Vector3(0, 0, 22);           // seen, out of range: he walks to his first position
+            SpotUntilEngaged(player);
+            _brain.Assign(new Vector3(5, 0, 0), 2, "cover");
+            Assert.IsFalse(_brain.Memory.ReachedAssignment, "A first assignment is walked to.");
+            Tick(true, player);
+            _body.Arrive(); Tick(true, player);
+            _brain.Assign(new Vector3(6, 0, 1), 3, "cover");      // re-plan, ~1.4 m away
+            Assert.IsTrue(_brain.Memory.ReachedAssignment, "Already there, as far as fighting goes.");
+            Tick(true, player);
+            Assert.AreEqual(EnemyStateId.Engage, _brain.State, "He keeps fighting from where he is.");
+            _brain.Assign(new Vector3(20, 0, 0), 4, "cover");      // 15 m away
+            Assert.IsFalse(_brain.Memory.ReachedAssignment);
+            Tick(false, player);
+            Assert.AreEqual(EnemyStateId.TakeCover, _brain.State, "A real move is a move once he cannot fire.");
+        }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void WithThePlayerInRangeHeFightsBeforeWalkingToHisAssignment(bool engageFirst)
+        {
+            Build(new EnemyTuning { EngageInRangeFirst = engageFirst });
+            var player = new Vector3(0, 0, 10);                    // in sight and in range
+            SpotUntilEngaged(player);
+            _brain.Assign(new Vector3(15, 0, 0), 5, "block");
+            Tick(true, player);
+            if (engageFirst)
+            {
+                Assert.AreEqual(EnemyStateId.Engage, _brain.State, "He keeps shooting while he can.");
+                Assert.Greater(_weapon.Aimed, 0);
+                Tick(false, player, times: 2);                     // lost sight: now the plan matters
+                Assert.AreEqual(EnemyStateId.TakeCover, _brain.State);
+                Assert.AreEqual(new Vector3(15, 0, 0), _body.Destination);
+            }
+            else Assert.AreEqual(EnemyStateId.TakeCover, _brain.State, "The old way: off to the assignment at once.");
+        }
+
         [Test]
         public void BadlyHurtInAFightHeRetreatsOnceThenRejoins()
         {
@@ -237,7 +301,7 @@ namespace ShadowVale.Tests.EditMode.AI
                     new CoverNearby { Cover = new Vector3(3, 0, 0) });
                 _brain.BeginInvestigation(new Vector3(2, 0, 0), _now);
                 Tick();                                        // Investigate
-                var player = new Vector3(0, 0, 10);
+                var player = new Vector3(0, 0, 20);            // seen, but beyond attack range: he moves to cover first
                 SpotUntilEngaged(player);                      // SpotPlayer
                 Tick(true, player);                            // TakeCover
                 _body.Arrive(); Tick(true, player); Tick(true, player); // Engage

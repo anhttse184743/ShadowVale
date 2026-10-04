@@ -176,3 +176,53 @@ gọi thẳng solver, không qua sidecar.
 SQA trả về `None` khi deadline đã qua trước sweep đầu tiên (bài 640 biến, máy bận), làm bench dừng
 ở dòng 13.586/20.250. Đã sửa ở solver `d59e5aa`: luôn hoàn thành ít nhất một sweep. Suite `full`
 được chạy lại từ đầu; file dở dang giữ thành `full-partial-515b977.csv`.
+
+### exp-v1.1, replay sạch (04/10/2026): điều phối làm lính kém hơn → sửa FSM (exp-v1.2)
+
+**Hiện tượng.** Lần chạy lại với lockstep có dữ liệu sạch: không cảnh báo `audit`, 539/540 run hợp
+lệ. Nhưng nhóm đối chứng `none` (không điều phối) bắt được 98,9% người chơi, còn mọi variant có
+điều phối chỉ 36–43%. Giữa các solver không có khác biệt có ý nghĩa sau Holm. Kết quả lưu ở
+`exp-v1/replay.jsonl`, phân tích ở `replay-analysis.txt`. Bản ghi bị tách (stone_lure/sa/1014) được
+nối lại bằng script, file gốc giữ thành `replay-raw.jsonl`.
+
+**Tìm nguyên nhân.** Ablation trên greedy, chỉ dùng **seed hiệu chỉnh 500–509**, không đụng seed
+đánh giá 1000+. Đổi `EnemyTuning` qua `SVL_REPLAY_TUNING`.
+
+| Cấu hình | same_bush | same_route | stone_lure |
+|---|---|---|---|
+| Hành vi cũ (`HoldRoles=*`, `ReassignKeepDistance=0`, TakeCover 8 s) | 60% | 80% | 80% |
+| Giữ chốt chỉ vai `block`, ngưỡng 3 m khi re-plan | 60% | 60% | 80% |
+| c1: không giữ chốt, re-plan không bắt đi lại | 100% | 100% | 100% |
+| c2: bỏ hẳn TakeCover | 100% | 100% | 100% |
+| v3: đánh trước + giữ `block,local` | 100% | 40% | 80% |
+| v4: đánh trước + chỉ giữ `local` | 100% | 40% | 70% |
+| **v5: v4 + đi tới vị trí tối đa 3 s** (chọn) | **100%** | **100%** | **100%** |
+| v6: đánh trước, không giữ, re-plan không đi lại | 100% | 100% | 100% |
+
+`none` ở các seed này: 100% cả ba bot.
+
+**Kết luận.** Lính mất người chơi vì đi tới vị trí của plan sau khi đã mất dấu. Vị trí được tính
+quanh chỗ người chơi bị thấy lần cuối, và "lối thoát" chỉ là biên của đồ thị con 24 node, không
+phải lối ra của bản đồ. Người chơi đang chạy đã rời khỏi đó sau vài giây. Thêm nữa, mỗi lần re-plan
+(~6 lần/run) kéo lính ra khỏi trận đang thắng.
+
+**Sửa (FSM, mọi map dùng chung):**
+- `EngageInRangeFirst`: thấy người chơi trong tầm thì bắn trước, chỉ đi tới vị trí khi không bắn được.
+- `TakeCoverTimeoutSeconds` 8 → 3 s: đi tới vị trí tối đa 3 s rồi chuyển sang truy lùng.
+- `HoldRoles = "local"`: vị trí của plan là chỗ triển khai, không phải chỗ đứng giữ. Chỉ chỗ nấp lính
+  tự tìm khi đánh một mình mới giữ chốt, nên lính đơn lẻ không đổi hành vi.
+- `ReassignKeepDistance` 3 m: re-plan dời lính dưới 3 m thì không bắt lính dừng bắn để đi.
+
+Chọn v5 thay vì v6 vì v6 làm plan vô tác dụng sau lần giao đầu tiên (đi ngược A02). v5 vẫn đưa lính
+tới vị trí mới ở mỗi lần re-plan.
+
+**Hiệu chỉnh lại bot** (greedy, seed 500+, 10 seed mỗi mức; `calibration/coarse-v2.json`,
+`fine-v2.json`). Lính mạnh hơn nhiều nên bot cũ quá dễ bắt.
+- `same_route`: 13,5 → 9 s (50%).
+- `same_bush`: 14 → 8,5 s (40%).
+- `stone_lure`: 12 → 7,5 s (40%). Không đơn điệu theo knob vì nhiễu với 10 seed; chọn theo quy
+  tắc định trước (gần 50% nhất), không chọn tay.
+
+**Ảnh hưởng.** Cấp B chạy lại hoàn toàn (exp-v1.2) cho cả sáu variant. Cấp A giữ nguyên: công thức
+QUBO, các solver và các instance đã ghi không đổi. Instance ghi từ game sau thay đổi này phân bố hơi
+khác (lính đứng ở chỗ khác khi re-plan), nhưng QUBO dựng từ chúng vẫn cùng công thức.
