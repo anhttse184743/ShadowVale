@@ -111,7 +111,7 @@ namespace ShadowVale.Map01.Tests
             boss.GetComponent<Health>().TakeDamage(999999, boss.transform.position, null);
             Assert.IsTrue(mission.Cinematic, "Boss defeat starts the in-world finale.");
             mission.GetComponent<Map01EndingCutscene>().Skip();
-            Assert.AreEqual(Map01Quest.CompleteStage, quest.Stage, "The finale completes Map 1 without a return trip.");
+            Assert.AreEqual(Map01Quest.ExtractionStage, quest.Stage, "The finale starts extraction without a return trip.");
             yield return new ExitPlayMode();
         }
 
@@ -596,8 +596,8 @@ namespace ShadowVale.Map01.Tests
         [Test]
         public void EveryStageHasAnObjectiveAndASaveLocation()
         {
-            Assert.AreEqual(Map01Quest.CompleteStage + 1, Map01Quest.Objectives.Length, "One objective line per stage.");
-            Assert.AreEqual(Map01Quest.CompleteStage + 1, Map01Quest.SaveLocations.Length, "One save-slot location per stage.");
+            Assert.AreEqual(Map01Quest.LastStage + 1, Map01Quest.Objectives.Length, "One objective line per stage.");
+            Assert.AreEqual(Map01Quest.LastStage + 1, Map01Quest.SaveLocations.Length, "One save-slot location per stage.");
         }
 
         [UnityTest]

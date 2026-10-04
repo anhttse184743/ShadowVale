@@ -29,6 +29,8 @@ namespace ShadowVale.Map01
         /// <summary>Ground speed (m/s) at which the Hung_DiKhapKhieng cycle plants its feet.</summary>
         public const float LimpSpeed = 1.8f;
         private GameObject rope;
+        private Mesh soleMesh;
+        private readonly System.Collections.Generic.List<Vector3> soleVertices = new System.Collections.Generic.List<Vector3>();
 
         /// <summary>True while the rope is shown on his wrists (held at the jetty).</summary>
         public bool RopeVisible => rope != null && rope.activeSelf;
@@ -51,12 +53,13 @@ namespace ShadowVale.Map01
                 Debug.LogError("Hung requires a valid Humanoid avatar.", visual);
                 Destroy(visual.gameObject); return;
             }
-            // Match standing head height at scene initialization, excluding hats and weapon bounds.
-            // Scale only the visual around its grounded origin; navigation/save transforms stay intact.
-            var playerActor = owner.player.GetComponentInChildren<Animator>();
-            float targetSize = SkeletonSize(playerActor, owner.player), sourceSize = SkeletonSize(visual.actor, owner.hung);
-            if (targetSize > .1f && sourceSize > .1f)
-                visual.transform.localScale *= targetSize / sourceSize;
+            var calibration=Map01ActorAssets.Load();
+            if(calibration!=null) {
+                visual.transform.localScale=Vector3.one;
+                float scale=calibration.namHeight/calibration.hungHeight;
+                visual.actor.transform.localScale=Vector3.one*scale;
+                visual.actor.transform.localPosition=Vector3.up*(-calibration.hungSole*scale);
+            }
             visual.mission = owner;
             visual.rescue = owner.GetComponent<Map01Rescue>();
             visual.quest = owner.GetComponent<Map01Quest>();
@@ -68,11 +71,36 @@ namespace ShadowVale.Map01
             visual.SnapToStage();
         }
 
-        private static float SkeletonSize(Animator animator, Transform groundedRoot)
+        private void LateUpdate()
         {
-            if (animator == null || !animator.isHuman) return 0;
-            var head = animator.GetBoneTransform(HumanBodyBones.Head);
-            return head != null ? head.position.y - groundedRoot.position.y : 0;
+            if (mission == null) return;
+            if (!down && !mission.Cinematic) AnchorToGround();
+            // The rope is tied once the kneeling pose has been evaluated (and grounded), so it sits on his real wrists.
+            if (rope == null && Captive && ropeMaterial != null
+                && actor.GetCurrentAnimatorStateInfo(0).IsName(CaptiveState))
+                rope = TieRope();
+            if (rope != null && rope.activeSelf) BindWrists();
+        }
+
+        private void AnchorToGround()
+        {
+            // Anchor the calibrated sole plane to actual terrain or the raised base floor.
+            float ground=float.NegativeInfinity;
+            foreach(var hit in Physics.RaycastAll(mission.hung.position+Vector3.up*2,Vector3.down,5,~0,QueryTriggerInteraction.Ignore))
+                if(!hit.transform.IsChildOf(mission.hung) && !hit.transform.IsChildOf(mission.player)
+                    && hit.normal.y>.65f && hit.point.y<=mission.hung.position.y+.5f)
+                    ground=Mathf.Max(ground,hit.point.y);
+            if(float.IsNegativeInfinity(ground)) ground=mission.hung.position.y;
+            transform.position=new Vector3(mission.hung.position.x,ground,mission.hung.position.z);
+            // Humanoid retargeting changes the foot plane after the neutral scale calibration.
+            // Measure the evaluated skin, without changing the skeleton or standing scale.
+            if (soleMesh == null) soleMesh = new Mesh();
+            float sole = float.PositiveInfinity;
+            foreach (var skin in actor.GetComponentsInChildren<SkinnedMeshRenderer>()) {
+                skin.BakeMesh(soleMesh); soleMesh.GetVertices(soleVertices);
+                foreach (var vertex in soleVertices) sole = Mathf.Min(sole, skin.transform.TransformPoint(vertex).y);
+            }
+            if (!float.IsInfinity(sole)) transform.position += Vector3.up * (ground - sole);
         }
 
         private int Stage => quest != null ? quest.Stage : Map01Quest.BriefingStage;
@@ -87,6 +115,9 @@ namespace ShadowVale.Map01
         private void SnapToStage()
         {
             lastStage = Stage;
+            // A jump must not inherit the body offset of the pose it leaves: played straight from the
+            // kneeling captive pose, the standing idle keeps his hips 0.7 m low until rebound.
+            actor.Rebind(); ResetPose();
             actor.SetBool("Captive", Captive); actor.SetBool("Wounded", Wounded);
             actor.Play(Captive ? CaptiveState : Wounded ? WoundedState : LocomotionState, 0, 0);
             actor.Update(0);
@@ -140,15 +171,6 @@ namespace ShadowVale.Map01
         {
             if (standingUp && agent != null && agent.isOnNavMesh) agent.isStopped = false;
             standingUp = false;
-        }
-
-        private void LateUpdate()
-        {
-            // The rope is tied once the kneeling pose has been evaluated, so it sits on his real wrists.
-            if (rope == null && Captive && ropeMaterial != null
-                && actor.GetCurrentAnimatorStateInfo(0).IsName(CaptiveState))
-                rope = TieRope();
-            if (rope != null && rope.activeSelf) BindWrists();
         }
 
         private GameObject TieRope()
@@ -215,6 +237,7 @@ namespace ShadowVale.Map01
 
         private void OnDestroy()
         {
+            if (soleMesh != null) Destroy(soleMesh);
             if (placeholder == null) return;
             foreach (var renderer in placeholder) if (renderer != null) renderer.forceRenderingOff = false;
         }

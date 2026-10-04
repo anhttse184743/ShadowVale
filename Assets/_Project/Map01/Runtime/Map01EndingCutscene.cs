@@ -109,7 +109,7 @@ namespace ShadowVale.Map01
             graph.Evaluate(Time.unscaledDeltaTime);
             skipHeld = Keyboard.current != null && Keyboard.current.escapeKey.isPressed
                 ? skipHeld + Time.unscaledDeltaTime : 0;
-            if (skipHeld >= 1 || elapsed >= duration) { Finish(); return; }
+            if (skipHeld >= 1 || elapsed >= duration) { Finish(skipHeld >= 1); return; }
             // Hold the final frame during the last beat instead of looping the death.
             if (death.IsValid() && death.GetTime() >= clipLength) {
                 death.SetTime(clipLength); death.SetSpeed(0);
@@ -136,9 +136,9 @@ namespace ShadowVale.Map01
                 Mathf.Lerp(initialFov, Mathf.Lerp(50, 43, progress), entry), 1);
         }
 
-        public void Skip() { if (playing) Finish(); }
+        public void Skip() { if (playing) Finish(true); }
 
-        private void Finish()
+        private void Finish(bool skipped = false)
         {
             if (!playing) return;
             // Render the settled pose even if the user skips while the boss is still upright.
@@ -148,10 +148,14 @@ namespace ShadowVale.Map01
             playing = false;
             ReleaseAnimation();
             mission.Cinematic = false;
-            quest.CompleteBossDefeat();
+            if (cameraRig != null) cameraRig.ClearCinematicView();
+            foreach (var renderer in obscuringFoliage) if (renderer != null) renderer.forceRenderingOff = false;
+            obscuringFoliage.Clear();
+            if(skipped) mission.ModernCombat?.RestoreAfterCinematic();
+            quest.CompleteBossDefeat(!skipped);
             ForestMenu.SuppressKeysAfterCutscene();
-            // Keep the final composition behind the existing completion panel.
-            Cursor.lockState = CursorLockMode.None; Cursor.visible = true;
+            // Boss/radio skipping returns to the extraction objective, not completion.
+            Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false;
         }
 
         private void ReleaseAnimation()

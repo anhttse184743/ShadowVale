@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &594453377184542639
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4230131692293893131}
+  - component: {fileID: 6910099957689526216}
+  m_Layer: 0
+  m_Name: Map01Extraction
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4230131692293893131
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 594453377184542639}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6910099957689526216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 594453377184542639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24de27b28c6e5764cb54f9c916a1d25d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map01Extraction
+  radio: {fileID: 7400000, guid: fb77bcc71a4edb1448fca14d7701dd40, type: 2}
+  seatedReady: {fileID: 7400000, guid: 44767e68c1b61ad43a85cca571d2499f, type: 2}
+  seatedFire: {fileID: 7400000, guid: bf059823dffa2584fb171c633eb22612, type: 2}
+  seatedReload: {fileID: 7400000, guid: 88af9f759e2d77740bd9550543d83ce8, type: 2}
+  lowerWeapon: {fileID: 7400000, guid: 25956f5459b15a447b5d486ad4ae3904, type: 2}
+  board: {fileID: 7400000, guid: 375cc2e38141cc44ea9672d54c29d6f1, type: 2}
+  sit: {fileID: 7400000, guid: 4c07db870a2d3cb4a8a6465aea8208d7, type: 2}
+  travel: {fileID: 7400000, guid: 56d3a763ddf9f134eb881c805969a3aa, type: 2}
+  engine: {fileID: 8300000, guid: af7e4be1f820e9a49b4e4f14674abc9c, type: 3}
+  rifleStow: {fileID: 7400000, guid: c1f629730a8d60e4fa7f634815233e75, type: 2}
+  oarPickup: {fileID: 7400000, guid: 935451b19dd4f6045a65cdae447ee225, type: 2}
+  rowStart: {fileID: 7400000, guid: d2c0f4737f218f44ba641c46f82e7c8a, type: 2}
+  rowLoop: {fileID: 7400000, guid: d114180aae41e024a863075d189390a2, type: 2}
+  rowStop: {fileID: 7400000, guid: 2365959009409764ca43d244c8a40303, type: 2}
+  paddleAudio: {fileID: 8300000, guid: c16b70fd46fdfc544b4065aa1bfceee7, type: 3}
+  rifleAudio: {fileID: 8300000, guid: fe44cc19e9564834ba5076730d70cd8e, type: 3}
+  hungClips:
+  - {fileID: 7400000, guid: d73e9a5b04c6f3a449a84f6bcbd1bd3a, type: 2}
+  - {fileID: 7400000, guid: 905653408095099449e39550d62a82ac, type: 2}
+  - {fileID: 7400000, guid: ebc704047361d6d49a4ca292c4eb977e, type: 2}
+  - {fileID: 7400000, guid: 65d0fc7f88c9b75408eafbbc31a56663, type: 2}
+  - {fileID: 7400000, guid: 9132984276599494c913e3128fdac64e, type: 2}
+  - {fileID: 7400000, guid: 8710642245114f54dabf8078f4ffc10d, type: 2}
+  - {fileID: 7400000, guid: 8cf0b1b090f4e344bbad6226cd8d53c5, type: 2}
+  - {fileID: 7400000, guid: bb926badc49292e40b36494a859748cd, type: 2}
+  approach: {x: -0.85, y: 1.48, z: 87}
+  boardingAnchors:
+  - {x: -0.68, y: 1.48, z: 87}
+  - {x: -0.35, y: 1.31, z: 87}
+  - {x: -0.1, y: 1.08, z: 87}
+  - {x: 0.15, y: 0.85, z: 87}
+  - {x: 0.35, y: 0.65, z: 87}
+  - {x: 1, y: 0.145, z: 87}
+  - {x: 1.55, y: -0.13, z: 87}
+  departurePath:
+  - {x: 1.55, y: 0, z: 87}
+  - {x: 1.6, y: 0, z: 90}
+  - {x: 1.35, y: 0, z: 93}
+  - {x: -0.2, y: 0, z: 95}
+  - {x: -1.6, y: 0, z: 96.5}
+  blockingPosts:
+  - {x: 19.930918, y: 4.066804, z: 32.284225}
+  - {x: 21.33092, y: 4.6121407, z: 32.284225}
+  - {x: 3.5929186, y: 1.4700012, z: 65.14448}
+  - {x: 4.9929185, y: 1.4700012, z: 65.14448}

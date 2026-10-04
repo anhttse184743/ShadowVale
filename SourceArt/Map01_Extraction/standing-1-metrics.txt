@@ -1,0 +1,1 @@
+Nam=1.698943 Hung=1.700506 hung sole=0.18 surface=0.18

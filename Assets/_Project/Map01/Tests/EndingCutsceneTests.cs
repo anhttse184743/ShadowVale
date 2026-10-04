@@ -12,7 +12,7 @@ namespace ShadowVale.Map01.Tests
     public sealed class EndingCutsceneTests : ForestSceneTestBase
     {
         [UnityTest]
-        public IEnumerator DefeatUsesExistingDeathAndFinishesMapWithoutReport()
+        public IEnumerator DefeatUsesExistingDeathThenRadioAndExtraction()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
@@ -54,8 +54,10 @@ namespace ShadowVale.Map01.Tests
             double deadline = Time.realtimeSinceStartupAsDouble + ending.Duration + 3;
             while (ending.IsPlaying && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
             Assert.IsFalse(ending.IsPlaying);
+            Assert.AreEqual(Map01Extraction.Phase.Radio,mission.GetComponentInChildren<Map01Extraction>().CurrentPhase);
+            yield return WaitGameSeconds(7.3f);
             Assert.IsFalse(mission.Cinematic);
-            Assert.AreEqual(Map01Quest.CompleteStage, quest.Stage);
+            Assert.AreEqual(Map01Quest.ExtractionStage, quest.Stage);
             Assert.IsTrue(boss.GetComponent<Health>().IsDead);
             Assert.AreEqual(1, Time.timeScale);
             Assert.IsFalse(ForestMenu.Visible);
@@ -80,8 +82,9 @@ namespace ShadowVale.Map01.Tests
             var ending = mission.GetComponent<Map01EndingCutscene>();
             ending.Skip(); ending.Skip();
             Assert.IsFalse(ending.IsPlaying);
+            mission.GetComponentInChildren<Map01Extraction>()?.Skip();
             Assert.IsFalse(mission.Cinematic);
-            Assert.AreEqual(Map01Quest.CompleteStage, quest.Stage);
+            Assert.AreEqual(Map01Quest.ExtractionStage, quest.Stage);
             Assert.AreEqual(1, Time.timeScale);
             quest.RestoreStage(Map01Quest.ReportBossStage);
             Assert.AreEqual(Map01Quest.CompleteStage, quest.Stage);

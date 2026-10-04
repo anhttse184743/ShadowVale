@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace ShadowVale.Gameplay.Combat
@@ -37,6 +37,7 @@ namespace ShadowVale.Gameplay.Combat
         private int _upperBodyLayer = -1;
         private float _upperBodyWeightBeforeDeath;
 
+        public bool CinematicInvulnerable { get; set; }
         public bool IsDead => _current <= 0f;
         public float Current => _current;
         public float Max => maxHealth;
@@ -89,7 +90,7 @@ namespace ShadowVale.Gameplay.Combat
 
         public void TakeDamage(float amount, Vector3 hitPoint, GameObject source)
         {
-            if (IsDead || amount <= 0f)
+            if (CinematicInvulnerable || IsDead || amount <= 0f)
             {
                 return;
             }
