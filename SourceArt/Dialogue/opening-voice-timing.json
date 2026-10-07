@@ -1,0 +1,67 @@
+{
+  "commanderSubtitleStarts": [
+    0,
+    3.69,
+    9.62
+  ],
+  "commanderDuration": 16.66,
+  "replyDuration": 2.1,
+  "entries": [
+    {
+      "id": "m1_open_order",
+      "voice": "Tom",
+      "text": "Đồng chí ra bến tàu phía Bắc nhận tiếp tế cho đơn vị.",
+      "language": "vi",
+      "model": "eleven_v3",
+      "speed": 1,
+      "radio": false,
+      "duration": 3.44,
+      "resource": "Dialogue/VI/m1_open_order",
+      "peak": 0.736729621887207,
+      "rms": 0.10499937832355499,
+      "sha256": "5b22039bb2916a713a75f2658e297ee44b384fa08b1019e715930b1e29c1b3db"
+    },
+    {
+      "id": "m1_open_supplies",
+      "voice": "Tom",
+      "text": "Kiểm tra lương thực, thuốc men và trang bị. Phối hợp bốc dỡ, đưa hàng về điểm tập kết.",
+      "language": "vi",
+      "model": "eleven_v3",
+      "speed": 1,
+      "radio": false,
+      "duration": 5.68,
+      "resource": "Dialogue/VI/m1_open_supplies",
+      "peak": 0.7555567622184753,
+      "rms": 0.10499484091997147,
+      "sha256": "2312b3b575ca608216d67d60b50d1b0ca88f78c11d383a7aeb6167cf7de02e57"
+    },
+    {
+      "id": "m1_open_hung",
+      "voice": "Tom",
+      "text": "Hùng chưa trở về từ bến tàu. Nếu gặp anh ấy, đưa về căn cứ an toàn. Có trở ngại, báo ngay cho tôi!",
+      "language": "vi",
+      "model": "eleven_v3",
+      "speed": 1,
+      "radio": false,
+      "duration": 7.04,
+      "resource": "Dialogue/VI/m1_open_hung",
+      "peak": 0.6901946067810059,
+      "rms": 0.10496921837329865,
+      "sha256": "c3d29445457c710d0ea0848940188fb2722f53dc2d8b8db4035a3155dc1b4502"
+    },
+    {
+      "id": "m1_open_reply",
+      "voice": "Brodie",
+      "text": "Rõ! Tôi sẽ hoàn thành nhiệm vụ!",
+      "language": "vi",
+      "model": "eleven_v3",
+      "speed": 0.9,
+      "radio": false,
+      "duration": 2.1,
+      "resource": "Dialogue/VI/m1_open_reply",
+      "peak": 0.46096205711364746,
+      "rms": 0.10499999672174454,
+      "sha256": "64212dac00fceaa9b05ffc9e8da04a46c63ea52c09ffafff11dbf7f27b1c330f"
+    }
+  ]
+}

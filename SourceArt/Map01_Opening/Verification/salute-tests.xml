@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Passed" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 07:07:31Z" end-time="2026-10-07 07:08:08Z" duration="36.7676027">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="144" result="Passed" start-time="2026-10-07 07:07:31Z" end-time="2026-10-07 07:08:08Z" duration="36.767603" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1106" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/dangk/Documents/Codex/2026-09-20/du/ShadowValeValidation/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="84" result="Passed" start-time="2026-10-07 07:07:31Z" end-time="2026-10-07 07:08:08Z" duration="36.538521" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="26572" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1107" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="84" result="Passed" start-time="2026-10-07 07:07:31Z" end-time="2026-10-07 07:08:08Z" duration="36.534292" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1108" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="84" result="Passed" start-time="2026-10-07 07:07:31Z" end-time="2026-10-07 07:08:08Z" duration="36.528672" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1109" name="Tests" fullname="ShadowVale.Map01.Tests" runstate="Runnable" testcasecount="84" result="Passed" start-time="2026-10-07 07:07:31Z" end-time="2026-10-07 07:08:08Z" duration="36.524510" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1001" name="DialogueVoiceTests" fullname="ShadowVale.Map01.Tests.DialogueVoiceTests" classname="ShadowVale.Map01.Tests.DialogueVoiceTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-07 07:06:17Z" end-time="2026-10-07 07:06:27Z" duration="9.901688" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1008" name="OpeningSkipDoesNotQueueAnotherBriefing" fullname="ShadowVale.Map01.Tests.DialogueVoiceTests.OpeningSkipDoesNotQueueAnotherBriefing" methodname="OpeningSkipDoesNotQueueAnotherBriefing" classname="ShadowVale.Map01.Tests.DialogueVoiceTests" runstate="Runnable" seed="771276256" result="Passed" start-time="2026-10-07 07:06:11Z" end-time="2026-10-07 07:06:27Z" duration="15.983282" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1073" name="OpeningCutsceneTests" fullname="ShadowVale.Map01.Tests.OpeningCutsceneTests" classname="ShadowVale.Map01.Tests.OpeningCutsceneTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-07 07:07:31Z" end-time="2026-10-07 07:08:08Z" duration="36.484807" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1074" name="AssetsUseExistingIdleAndHumanoidClips" fullname="ShadowVale.Map01.Tests.OpeningCutsceneTests.AssetsUseExistingIdleAndHumanoidClips" methodname="AssetsUseExistingIdleAndHumanoidClips" classname="ShadowVale.Map01.Tests.OpeningCutsceneTests" runstate="Runnable" seed="424106889" result="Passed" start-time="2026-10-07 07:06:27Z" end-time="2026-10-07 07:06:28Z" duration="0.176973" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1075" name="AuthoredSaluteSweepsEveryBakedFrame" fullname="ShadowVale.Map01.Tests.OpeningCutsceneTests.AuthoredSaluteSweepsEveryBakedFrame" methodname="AuthoredSaluteSweepsEveryBakedFrame" classname="ShadowVale.Map01.Tests.OpeningCutsceneTests" runstate="Runnable" seed="99171880" result="Passed" start-time="2026-10-07 07:06:28Z" end-time="2026-10-07 07:07:07Z" duration="39.909158" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1076" name="BriefingIsUnarmedThroughSkipAndRestoresGameplayWeapons" fullname="ShadowVale.Map01.Tests.OpeningCutsceneTests.BriefingIsUnarmedThroughSkipAndRestoresGameplayWeapons" methodname="BriefingIsUnarmedThroughSkipAndRestoresGameplayWeapons" classname="ShadowVale.Map01.Tests.OpeningCutsceneTests" runstate="Runnable" seed="2082761548" result="Passed" start-time="2026-10-07 07:07:08Z" end-time="2026-10-07 07:07:24Z" duration="16.974928" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1077" name="FullBriefingSalutesAndReturnsControlWithoutChangingQuest" fullname="ShadowVale.Map01.Tests.OpeningCutsceneTests.FullBriefingSalutesAndReturnsControlWithoutChangingQuest" methodname="FullBriefingSalutesAndReturnsControlWithoutChangingQuest" classname="ShadowVale.Map01.Tests.OpeningCutsceneTests" runstate="Runnable" seed="128913365" result="Passed" start-time="2026-10-07 07:07:25Z" end-time="2026-10-07 07:08:08Z" duration="43.065929" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[SALUTE_RUNTIME_BONES 66 middle=RightHandMiddle3 (UnityEngine.Transform)
+Saving results to: C:/Users/dangk/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

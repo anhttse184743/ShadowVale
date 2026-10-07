@@ -1,0 +1,7 @@
+RightHand.Index.Spread = -0.2
+RightHand.Ring.Spread = -1
+RightHand.Little.Spread = -0.55
+RightHand.Thumb.Spread = 1
+RightHand.Thumb.1 Stretched = -1
+RightHand.Thumb.2 Stretched = -0.5
+RightHand.Thumb.3 Stretched = -1

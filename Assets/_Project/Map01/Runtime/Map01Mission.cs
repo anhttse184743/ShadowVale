@@ -217,7 +217,25 @@ namespace ShadowVale.Map01
             line.endColor = color;
             Destroy(trail, .12f);
         }
-        public void Say(string text, float seconds = 7) { Dialogue = text; DialogueUntil = Time.time + seconds; }
+        public void Say(string text, float seconds = 7) {
+            var speech=DialogueVoice.For(gameObject);
+            speech.CanSpeak=()=>!Cinematic&&!ForestMenu.Visible;
+            speech.LineStarted=line=>{
+                Dialogue=line.caption;DialogueUntil=Time.time+line.clip.length+.2f;
+                if(line.caption.StartsWith("Hùng") && hung!=null)hung.GetComponentInChildren<Map01HungVisual>()?.Speak(line.clip.length+.2f);
+            };
+            Dialogue=text;DialogueUntil=Time.time+seconds;
+            if(string.IsNullOrEmpty(text))speech.Stop();
+            float spoken=string.IsNullOrEmpty(text)?0:speech.SpeakText(text);
+            if(!string.IsNullOrEmpty(text))DialogueUntil=Time.time+Mathf.Max(seconds,spoken+.25f);
+        }
+        public void ReleaseForNextMap() {
+            GetComponent<DialogueVoice>()?.Stop();
+            ModernCombat.Attacked-=OnPlayerAttacked;
+            if(player.TryGetComponent(out PlayerFootsteps footsteps)) {
+                footsteps.Stepped-=NotifyFootstep;footsteps.SurfaceProbe=null;
+            }
+        }
         private void OnPlayerAttacked(WeaponKind kind, Vector3 position)
         {
             if (kind == WeaponKind.Rifle) EmitNoise(position, Weapon.noise_radius);
@@ -308,7 +326,8 @@ namespace ShadowVale.Map01
             var kb = UnityEngine.InputSystem.Keyboard.current;
             if (kb == null) return;
             if (ForestMenu.Visible) return;
-            if (kb.enterKey.wasPressedThisFrame && (hp <= 0 || Stage == Map01Quest.CompleteStage)) Restart();
+            if (kb.enterKey.wasPressedThisFrame && hp <= 0) Restart();
+            else if(kb.enterKey.wasPressedThisFrame && Stage==Map01Quest.CompleteStage) Map01Extraction.Get(this)?.ContinueToMap2();
             else if (kb.enterKey.wasPressedThisFrame && rescue != null && rescue.HungDown) rescue.Retry();
             else if (kb.enterKey.wasPressedThisFrame && scouting != null && scouting.FailedRun) scouting.Restart();
         }

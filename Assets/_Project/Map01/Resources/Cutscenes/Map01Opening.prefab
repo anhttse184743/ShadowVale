@@ -47,6 +47,15 @@ MonoBehaviour:
   idle: {fileID: 7400000, guid: 056bc6ae1dbcee3439a2a8c923225f28, type: 2}
   talking: {fileID: -203655887218126122, guid: 33e95fe0e9bed664bac54458b3cf41ca, type: 3}
   pointing: {fileID: -623603649343465320, guid: dcf7cc4229e537e44ada9f50df670db6, type: 3}
-  salute: {fileID: -203655887218126122, guid: b075c499ba9a2ac42af44887bd6866b7, type: 3}
-  commanderVoice: {fileID: 8300000, guid: e2a533a6c62f234439f14738ce8a1117, type: 3}
-  soldierVoice: {fileID: 8300000, guid: 610d912bd7b48444eba138bca497aaea, type: 3}
+  salute: {fileID: 7400000, guid: 38b0b1a6907c2454bb44ad9e166b1290, type: 2}
+  soldierIdle: {fileID: 7400000, guid: 286f43414e8503c408c0123740b6f306, type: 2}
+  commanderVoice: {fileID: 8300000, guid: 3e81f26567044b14fa86357da186061c, type: 3}
+  soldierVoice: {fileID: 8300000, guid: 9a4077950c2e8c2449877d4a3ab344f2, type: 3}
+  commanderSubtitleStarts:
+  - 0
+  - 3.69
+  - 9.62
+  saluteRaiseSeconds: 0.7
+  saluteLowerSeconds: 1.0000001
+  saluteHoldTime: 0.7
+  saluteLowerStart: 0.9

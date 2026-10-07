@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 01:46:09Z" end-time="2026-10-07 01:46:26Z" duration="16.0529598">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="132" result="Passed" start-time="2026-10-07 01:46:09Z" end-time="2026-10-07 01:46:26Z" duration="16.052960" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1092" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/dangk/Documents/Codex/2026-09-20/du/ShadowValeValidation/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="72" result="Passed" start-time="2026-10-07 01:46:12Z" end-time="2026-10-07 01:46:26Z" duration="13.990471" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="11392" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1093" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="72" result="Passed" start-time="2026-10-07 01:46:12Z" end-time="2026-10-07 01:46:26Z" duration="13.968079" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1094" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="72" result="Passed" start-time="2026-10-07 01:46:12Z" end-time="2026-10-07 01:46:26Z" duration="13.950991" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1095" name="Tests" fullname="ShadowVale.Map01.Tests" runstate="Runnable" testcasecount="72" result="Passed" start-time="2026-10-07 01:46:12Z" end-time="2026-10-07 01:46:26Z" duration="13.936560" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1004" name="ExtractionTests" fullname="ShadowVale.Map01.Tests.ExtractionTests" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-07 01:46:12Z" end-time="2026-10-07 01:46:26Z" duration="13.916198" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1005" name="NaturalBoardingDepartsBeforeCompletion" fullname="ShadowVale.Map01.Tests.ExtractionTests.NaturalBoardingDepartsBeforeCompletion" methodname="NaturalBoardingDepartsBeforeCompletion" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" seed="64080018" result="Passed" start-time="2026-10-07 01:44:49Z" end-time="2026-10-07 01:45:50Z" duration="61.662897" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <output><![CDATA[Extraction scale Nam=(1.00, 1.00, 1.00) Hung=(1.08, 1.08, 1.08)
+]]></output>
+              </test-case>
+              <test-case id="1006" name="RadioSkipAndExtractionCheckpointAreIdempotent" fullname="ShadowVale.Map01.Tests.ExtractionTests.RadioSkipAndExtractionCheckpointAreIdempotent" methodname="RadioSkipAndExtractionCheckpointAreIdempotent" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" seed="1513826611" result="Passed" start-time="2026-10-07 01:45:50Z" end-time="2026-10-07 01:46:25Z" duration="35.273172" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/dangk/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

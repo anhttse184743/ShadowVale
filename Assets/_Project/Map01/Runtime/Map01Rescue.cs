@@ -6,7 +6,7 @@ using UnityEngine.AI;
 namespace ShadowVale.Map01
 {
     /// <summary>
-    /// The opening order. Hùng, a signals runner caught on his way home with the post, is held
+    /// The opening order. Hùng, a supply carrier mistaken for a signals runner, is held
     /// under the shelter at the north jetty by a squad of four ("patrol_…", placed there in
     /// Map 1.unity). Nam gets there however he likes — unseen is easiest, and creeping close lets
     /// him overhear the squad — then frees and treats Hùng and brings him home. Once the squad is
@@ -24,7 +24,7 @@ namespace ShadowVale.Map01
         [SerializeField] private float retryDistance = 45f;
 
         private static readonly string[] Chatter = {
-            "Lính địch: Bắt được thằng lính thông tin của bọn nó rồi. Trong túi toàn thư từ, mật lệnh.",
+            "Lính địch: Tên này mang hàng tiếp tế. Ta nghi nó là lính thông tin của bọn nó. Phải giữ lại tra hỏi.",
             "Lính địch: Trói chặt vào! Sáng mai giải nó về đồn chỉ huy khai thác.",
             "Lính địch: Canh cho kỹ — đồng bọn nó thế nào cũng mò tới cứu.",
             "Lính địch: Để xổng tù binh ở cái bến này thì cả tổ ăn đòn.",
@@ -143,6 +143,7 @@ namespace ShadowVale.Map01
         public void Retry()
         {
             if (!HungDown) return;
+            GetComponent<DialogueVoice>()?.Stop();
             quest.RestoreStage(Map01Quest.RescueStage);
             HungHealth = HungMaxHealth; HungHitAt = float.NegativeInfinity;
             var agent = mission.hung.GetComponent<NavMeshAgent>();

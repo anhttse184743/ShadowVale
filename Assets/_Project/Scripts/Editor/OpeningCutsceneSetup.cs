@@ -9,6 +9,7 @@ namespace ShadowVale.Editor
     /// <summary>One resource prefab references existing clips; no copied meshes or controllers.</summary>
     public static class OpeningCutsceneSetup
     {
+        [System.Serializable] private sealed class OpeningTiming {public float[] commanderSubtitleStarts;}
         public const string Folder = "Assets/_Project/Art/cutsence";
         public const string PrefabPath = "Assets/_Project/Map01/Resources/Cutscenes/Map01Opening.prefab";
         [InitializeOnLoadMethod]
@@ -25,7 +26,7 @@ namespace ShadowVale.Editor
             var idle = AssetDatabase.LoadAssetAtPath<AnimationClip>(
                 "Assets/_Project/Art/Characters/Animations/Generated/Idle_Tuned.anim");
             if (idle == null) { Debug.LogError("Existing Idle_Tuned is missing."); return; }
-            var salute = Import("Salute", false);
+            var salute = AssetDatabase.LoadAssetAtPath<AnimationClip>("Assets/_Project/Art/Characters/Animations/Generated/Nam_Salute_Briefing.anim") ?? Import("Salute", false);
             var talking = Import("Talking", true);
             var pointing = Import("Pointing", false);
             if (salute == null) { Debug.LogError("Salute import failed."); return; }
@@ -33,9 +34,16 @@ namespace ShadowVale.Editor
             try {
                 var cutscene = root.AddComponent<Map01OpeningCutscene>();
                 cutscene.idle = idle; cutscene.salute = salute;
+                cutscene.soldierIdle=AssetDatabase.LoadAssetAtPath<AnimationClip>("Assets/_Project/Art/Characters/Animations/Generated/Nam_Briefing_Idle.anim");
                 cutscene.talking = talking; cutscene.pointing = pointing;
                 cutscene.commanderVoice = AssetDatabase.LoadAssetAtPath<AudioClip>(Folder + "/Commander.mp3");
                 cutscene.soldierVoice = AssetDatabase.LoadAssetAtPath<AudioClip>(Folder + "/Soldier.mp3");
+                var alignedCommander=AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Resources/Dialogue/VI/m1_open_commander.wav");
+                var alignedNam=AssetDatabase.LoadAssetAtPath<AudioClip>("Assets/Resources/Dialogue/VI/m1_open_reply.wav");
+                if(alignedCommander!=null && alignedNam!=null && File.Exists("SourceArt/Dialogue/opening-voice-timing.json")) {
+                    cutscene.commanderVoice=alignedCommander;cutscene.soldierVoice=alignedNam;
+                    cutscene.commanderSubtitleStarts=JsonUtility.FromJson<OpeningTiming>(File.ReadAllText("SourceArt/Dialogue/opening-voice-timing.json")).commanderSubtitleStarts;
+                }
                 Directory.CreateDirectory(Path.GetDirectoryName(PrefabPath));
                 AssetDatabase.Refresh();
                 PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);

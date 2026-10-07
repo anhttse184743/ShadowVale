@@ -15,7 +15,11 @@ namespace ShadowVale.Map01
     public sealed class Map01OpeningCutscene : MonoBehaviour
     {
         public AnimationClip idle, talking, pointing, salute;
+        public AnimationClip soldierIdle;
         public AudioClip commanderVoice, soldierVoice;
+        public float[] commanderSubtitleStarts = { 0, 6, 13 };
+        public float saluteRaiseSeconds=.7f, saluteLowerSeconds=1f;
+        public float saluteHoldTime=.7f, saluteLowerStart=.9f;
         public static bool Pending { get; private set; }
         public static bool Active { get; private set; }
         public static void RequestNewGame() => Pending = true;
@@ -28,12 +32,18 @@ namespace ShadowVale.Map01
         private ThirdPersonCamera rig;
         private ClipPlayer soldierClips, commanderClips;
         private AudioSource voice;
-        private readonly List<Renderer> hiddenWeapons = new();
+        private readonly List<GameObject> hiddenWeapons = new();
         private readonly List<Material> materials = new();
         private Vector3 origin, forward, right;
         private Quaternion initialRotation;
         private const float IntroDuration = 3.5f;
         private float introRemaining, clock, skipHeld, replyAt, releaseAt, finishAt;
+        private float commanderSpeechTime;
+        private float saluteAt,lowerAt=-1,viewBlend=1;
+        private bool replyPlayed;
+        private int previousShot=-1;
+        private Vector3 viewFrom;
+        private Vector3 viewFromFocus,viewFocus;
         private bool ownsInput, finishing, playerRootMotion;
         private RuntimeAnimatorController gameplayAnimator;
         private float[] gameplayLayerWeights;
@@ -43,7 +53,7 @@ namespace ShadowVale.Map01
         public bool IsPlaying => ownsInput;
         public float Duration => finishAt + IntroDuration;
         public float BriefingTime => clock;
-        public float SaluteBeginsAt => replyAt;
+        public float SaluteBeginsAt => saluteAt;
         public bool IsIntroducing => introRemaining > 0;
 
         public static void Attach(Map01Mission mission)
@@ -85,13 +95,13 @@ namespace ShadowVale.Map01
             visual.name = "Commander (shared player mesh)";
             foreach (var behaviour in visual.GetComponentsInChildren<MonoBehaviour>()) if (!(behaviour is Weapon)) Destroy(behaviour);
             foreach (var collider in visual.GetComponentsInChildren<Collider>()) Destroy(collider);
-            foreach (var weapon in visual.GetComponentsInChildren<Weapon>()) weapon.gameObject.SetActive(false);
+            foreach (var weapon in visual.GetComponentsInChildren<Weapon>(true)) weapon.gameObject.SetActive(false);
             commander = visual.GetComponent<Animator>();
             commander.runtimeAnimatorController = null;
             commander.applyRootMotion = false;
             visual.transform.SetPositionAndRotation(origin + forward * 2.1f, Quaternion.LookRotation(-forward));
             DecorateCommander();
-            Map01Rifle.Attach(commander);
+            // Briefing is unarmed; extraction attaches/enables the rifle when seating him.
             commanderClips = new ClipPlayer(commander, true, idle, talking != null ? talking : idle,
                 pointing != null ? pointing : idle);
             voice = gameObject.AddComponent<AudioSource>();
@@ -114,10 +124,15 @@ namespace ShadowVale.Map01
             soldier.applyRootMotion = false;
             mission.player.rotation = Quaternion.LookRotation(forward);
             foreach (var weapon in mission.player.GetComponentsInChildren<Weapon>(true))
-                foreach (var renderer in weapon.GetComponentsInChildren<Renderer>())
-                    if (renderer.enabled) { hiddenWeapons.Add(renderer); renderer.enabled = false; }
-            soldierClips = new ClipPlayer(soldier, false, idle, salute);
-            replyAt = Mathf.Max(20.5f, commanderVoice != null ? commanderVoice.length + .5f : 0);
+                if (weapon.gameObject.activeSelf) {
+                    // Disable the prop itself: gameplay grip/visibility updates cannot
+                    // bring the rifle back during the salute or camera handoff.
+                    hiddenWeapons.Add(weapon.gameObject);
+                    weapon.gameObject.SetActive(false);
+                }
+            soldierClips = new ClipPlayer(soldier, false, soldierIdle != null ? soldierIdle : idle, salute);
+            replyAt = commanderVoice != null ? commanderVoice.length + .95f : 20.95f;
+            saluteAt=replyAt-saluteRaiseSeconds;
             float saluteTime = Mathf.Max(salute.length, soldierVoice != null ? soldierVoice.length : 0);
             releaseAt = replyAt + saluteTime + .25f;
             finishAt = releaseAt + 1.2f;
@@ -146,7 +161,11 @@ namespace ShadowVale.Map01
                 if (clock >= finishAt) Complete();
                 return;
             }
-            int part = clock < 6 ? 0 : clock < 13 ? 1 : clock < replyAt ? 2 : 3;
+            // AudioSource time keeps subtitles on the actual spoken phrase even during slow frames.
+            if(voice.clip==commanderVoice)commanderSpeechTime=Mathf.Max(commanderSpeechTime,voice.time);
+            float speechTime=commanderSpeechTime;
+            int part = speechTime < commanderSubtitleStarts[1] ? 0 : speechTime < commanderSubtitleStarts[2] ? 1 : 2;
+            if(clock>=replyAt && !(voice.clip==commanderVoice && voice.isPlaying))part=3;
             string[] lines = {
                 "Chỉ huy: Đồng chí ra bến tàu phía Bắc nhận tiếp tế cho đơn vị.",
                 "Chỉ huy: Kiểm tra lương thực, thuốc men và trang bị. Phối hợp bốc dỡ, đưa hàng về điểm tập kết.",
@@ -155,21 +174,31 @@ namespace ShadowVale.Map01
             };
             subtitle = lines[part];
             commanderClips.Select(part == 0 ? 2 : part < 3 ? 1 : 0);
-            if (part == 3 && soldierClips.Selected != 1) {
+            if(clock>=saluteAt && !(voice.clip==commanderVoice && voice.isPlaying))soldierClips.Select(1);
+            if (part == 3 && !replyPlayed) {
+                replyPlayed=true;
                 soldierClips.Select(1);
                 voice.Stop();
                 if (soldierVoice != null) { voice.clip = soldierVoice; voice.Play(); }
             }
-            SetView(part == 0 ? 0 : part == 3 ? 2 : 1, 1);
-            if (clock >= releaseAt) BeginHandoff();
+            if(soldierClips.Selected==1) {
+                if(replyPlayed && !voice.isPlaying && lowerAt<0)lowerAt=clock;
+                // The dedicated clip already eases its arm path. Preserve that timing;
+                // hold the authored salute rather than compressing the old clip's release.
+                float clipTime=lowerAt>=0?Mathf.Lerp(saluteLowerStart,salute.length,Mathf.Clamp01((clock-lowerAt)/saluteLowerSeconds))
+                    :Mathf.Lerp(0,saluteHoldTime,Mathf.Clamp01((clock-saluteAt)/saluteRaiseSeconds));
+                soldierClips.SampleSelected(clipTime);
+            }
+            SetView(part == 0 ? 0 : clock>=saluteAt-.4f ? 2 : 1, 1);
+            if (lowerAt>=0 && clock>=lowerAt+saluteLowerSeconds+.15f) BeginHandoff();
         }
 
         private void SetView(int shot, float weight)
         {
             Vector3 focus = origin + forward * 1.05f + Vector3.up * 1.35f;
             Vector3 position = shot == 0 ? origin - forward * 1.6f + right * 2 + Vector3.up * 1.7f
-                : shot == 1 ? origin + right * .75f - forward * .35f + Vector3.up * 1.65f
-                : origin + forward * 1.3f - right * 1.05f + Vector3.up * 1.6f;
+                : shot == 1 ? origin + right * 1.9f + forward * 1.3f + Vector3.up * 1.65f
+                : origin + forward * 1.05f + right * 1.9f + Vector3.up * 1.62f;
             if (shot == 1) focus = commander.transform.position + Vector3.up * 1.4f;
             if (shot == 2) focus = origin + Vector3.up * 1.4f;
             // Keep a shot on the subject's side of shelter walls.
@@ -177,7 +206,11 @@ namespace ShadowVale.Map01
             if (Physics.SphereCast(focus, .12f, direction.normalized, out var hit, direction.magnitude,
                 mission.ObstructionMask, QueryTriggerInteraction.Ignore))
                 position = focus + direction.normalized * Mathf.Max(.4f, hit.distance - .15f);
-            rig.SetCinematicView(position, Quaternion.LookRotation(focus - position), 52, weight);
+            if(previousShot!=shot){viewFromFocus=previousShot<0?focus:viewFocus;previousShot=shot;viewBlend=0;viewFrom=rig.transform.position;}
+            viewBlend=Mathf.Min(1,viewBlend+Time.deltaTime/.65f);
+            float blend=Mathf.SmoothStep(0,1,viewBlend);
+            var eye=Vector3.Lerp(viewFrom,position,blend);viewFocus=Vector3.Lerp(viewFromFocus,focus,blend);
+            rig.SetCinematicView(eye,Quaternion.LookRotation(viewFocus-eye),shot==2?48:52,weight);
         }
 
         private void BeginHandoff()
@@ -200,15 +233,17 @@ namespace ShadowVale.Map01
             for (int i = 0; i < gameplayLayerWeights.Length && i < soldier.layerCount; i++)
                 soldier.SetLayerWeight(i, gameplayLayerWeights[i]);
             soldier.applyRootMotion = playerRootMotion;
+            foreach (var weapon in hiddenWeapons) if (weapon != null) weapon.SetActive(true);
+            hiddenWeapons.Clear();
             if (mission.ModernPlayer != null) mission.ModernPlayer.enabled = playerWasEnabled;
             if (mission.ModernCombat != null) mission.ModernCombat.enabled = combatWasEnabled;
-            foreach (var renderer in hiddenWeapons) if (renderer != null) renderer.enabled = true;
-            hiddenWeapons.Clear();
             rig.ClearCinematicView();
             mission.Cinematic = false;
             mission.ModernCombat?.RestoreAfterCinematic();
             ForestMenu.SuppressKeysAfterCutscene();
-            mission.Say("Nhiệm vụ: Ra bến tàu phía Bắc, tìm Hùng và đưa anh ấy cùng hàng tiếp tế về căn cứ.", 7);
+            // The quest HUD retains the objective. End subtitles and queued speech here,
+            // instead of repeating the briefing after either natural playback or skip.
+            mission.Say(null, 0);
             Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false;
         }
 
@@ -295,9 +330,11 @@ namespace ShadowVale.Map01
             private AnimationClipPlayable[] clips;
             private AvatarMask relaxedArmMask;
             private AnimationLayerMixerPlayable armLayers;
+            private bool commanderArms;
             public int Selected { get; private set; }
             public ClipPlayer(Animator target, bool relaxedArms, params AnimationClip[] assets)
             {
+                commanderArms=relaxedArms;
                 graph = PlayableGraph.Create("Briefing " + target.name);
                 graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
                 mixer = AnimationMixerPlayable.Create(graph, assets.Length);
@@ -328,7 +365,19 @@ namespace ShadowVale.Map01
                     armLayers.SetInputWeight(1, 1);
                     armLayers.SetLayerMaskFromAvatarMask(1, relaxedArmMask);
                     output.SetSourcePlayable(armLayers);
-                } else output.SetSourcePlayable(mixer);
+                } else {
+                    // Keep Nam's standing idle, head and left arm intact. The salute owns
+                    // only his right arm/fingers, so the imported pose cannot tilt his body.
+                    relaxedArmMask=new AvatarMask();
+                    for(int i=0;i<(int)AvatarMaskBodyPart.LastBodyPart;i++)relaxedArmMask.SetHumanoidBodyPartActive((AvatarMaskBodyPart)i,false);
+                    relaxedArmMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.RightArm,true);
+                    relaxedArmMask.SetHumanoidBodyPartActive(AvatarMaskBodyPart.RightFingers,true);
+                    var baseIdle=AnimationClipPlayable.Create(graph,assets[0]);
+                    armLayers=AnimationLayerMixerPlayable.Create(graph,2);
+                    graph.Connect(baseIdle,0,armLayers,0);graph.Connect(mixer,0,armLayers,1);
+                    armLayers.SetInputWeight(0,1);armLayers.SetInputWeight(1,1);
+                    armLayers.SetLayerMaskFromAvatarMask(1,relaxedArmMask);output.SetSourcePlayable(armLayers);
+                }
                 graph.Play();
             }
             public void Select(int index)
@@ -336,11 +385,12 @@ namespace ShadowVale.Map01
                 if (Selected == index) return;
                 Selected = index; clips[index].SetTime(0);
             }
+            public void SampleSelected(float time){clips[Selected].SetTime(time);clips[Selected].SetSpeed(0);graph.Evaluate(0);}
             public void Tick(float dt)
             {
                 if (!graph.IsValid()) return;
                 // Let Pointing use its authored arms; keep relaxed arms for dialogue only.
-                if (armLayers.IsValid())
+                if (commanderArms && armLayers.IsValid())
                     armLayers.SetInputWeight(1, Mathf.MoveTowards(armLayers.GetInputWeight(1),
                         Selected == 2 ? 0 : 1, dt * 3));
                 for (int i = 0; i < clips.Length; i++)
