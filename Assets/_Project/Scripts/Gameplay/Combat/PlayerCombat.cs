@@ -200,6 +200,7 @@ namespace ShadowVale.Gameplay.Combat
         private readonly WeaponSpreadState _spread = new();
         private bool _aiming;
         private ShotTracer[] _tracers;
+        private Transform _tracerRoot;
         private int _tracerCursor;
         private int _upperBodyLayer = -1;
         private float _aimPoseBlend;
@@ -221,6 +222,12 @@ namespace ShadowVale.Gameplay.Combat
         {
             if (animator == null || animator.runtimeAnimatorController == null) return;
             animator.Rebind();
+            _lastHealthSeen=health!=null?health.Current:-1f;
+            _upperBodyHoldUntil=_faceCameraHoldUntil=0;
+            _nextAttackTime=Time.time;
+            _magazine?.CancelReload();_spread.Reset();
+            if(_hasHitParam)animator.ResetTrigger("Hit");
+            _rifleBody=animator.HasState(0,Animator.StringToHash(RifleLocomotionState));
             _upperBodyLayer = animator.GetLayerIndex(UpperBodyLayer);
             animator.SetInteger(AnimatorParams.Weapon, (int)_equippedKind);
             animator.SetFloat(AnimatorParams.Speed, 0);
@@ -229,14 +236,21 @@ namespace ShadowVale.Gameplay.Combat
             animator.ResetTrigger(AnimatorParams.Attack); animator.ResetTrigger(AnimatorParams.Die);
             _aiming = Mouse.current != null && Mouse.current.rightButton.isPressed && _equipped != null && _equipped.IsGun;
             animator.SetBool(AnimatorParams.Aiming, _aiming);
-            _upperBodyWeight = _equippedKind == WeaponKind.Unarmed ? 0 : 1;
+            bool rifleCarry=_rifleBody && _equippedKind==WeaponKind.Rifle && !_aiming;
+            _upperBodyWeight = _equippedKind == WeaponKind.Unarmed || rifleCarry ? 0 : 1;
             if (_upperBodyLayer > 0) {
                 animator.SetLayerWeight(_upperBodyLayer, _upperBodyWeight);
                 string state = _equippedKind == WeaponKind.Rifle ? "Hold_Rifle" : _equippedKind == WeaponKind.Knife ? "Hold_Knife" : "Empty";
                 if (animator.HasState(_upperBodyLayer, Animator.StringToHash(state))) animator.Play(state, _upperBodyLayer, 0);
             }
-            if (animator.HasState(0, Animator.StringToHash(LocomotionState))) animator.Play(LocomotionState, 0, 0);
+            string locomotion=rifleCarry?RifleLocomotionState:LocomotionState;
+            if (animator.HasState(0, Animator.StringToHash(locomotion))) animator.Play(locomotion, 0, 0);
             foreach (var pair in _weapons) pair.Value.gameObject.SetActive(pair.Key == _equippedKind);
+            // Cinematic NPC grips may have reparented/resized this existing gameplay rifle.
+            if(_equipped!=null) {
+                _equipped.transform.SetParent(handAnchor!=null?handAnchor:transform,false);
+                if(gripConfig!=null)gripConfig.Apply(_equipped.transform,_equippedKind,_aiming);
+            }
             _aimPoseBlend = _aiming ? 1 : 0;
             if (cameraRig != null) {cameraRig.ClearRecoil(); cameraRig.SetAiming(_aiming);}
             UpdateGripPose(); UpdateFacing(); animator.Update(0);
@@ -311,8 +325,8 @@ namespace ShadowVale.Gameplay.Combat
 
         /// <summary>
         /// Tracers are pre-made and reused: shots come out fast enough that allocating one per
-        /// bullet would churn. They live under their own root so they are not dragged along by
-        /// the player's movement.
+        /// bullet would churn. The root belongs to this actor so it follows scene transfers;
+        /// world-space line positions keep already-fired streaks fixed when the actor moves.
         /// </summary>
         private void SpawnTracerPool()
         {
@@ -321,17 +335,46 @@ namespace ShadowVale.Gameplay.Combat
                 return;
             }
 
-            var root = new GameObject("ShotTracers");
+            // Adopt an existing pool after an editor script reload instead of duplicating it.
+            if (_tracerRoot == null) _tracerRoot = transform.Find("ShotTracers");
+            if (_tracerRoot == null && _tracers != null)
+                foreach (var tracer in _tracers)
+                    if (tracer != null && tracer.transform.parent != null)
+                    {
+                        _tracerRoot = tracer.transform.parent;
+                        break;
+                    }
+            if (_tracerRoot == null) _tracerRoot = new GameObject("ShotTracers").transform;
+            _tracerRoot.SetParent(transform, false);
+            var existing = _tracerRoot.GetComponentsInChildren<ShotTracer>(true);
             _tracers = new ShotTracer[Mathf.Max(1, tracerPoolSize)];
+            _tracerCursor = 0;
             for (int i = 0; i < _tracers.Length; i++)
             {
-                _tracers[i] = Instantiate(tracerPrefab, root.transform);
+                _tracers[i] = i < existing.Length ? existing[i] : Instantiate(tracerPrefab, _tracerRoot);
             }
+            for (int i = _tracers.Length; i < existing.Length; i++) Destroy(existing[i].gameObject);
+        }
+
+        private ShotTracer GetUsableTracer(int index)
+        {
+            var tracer = _tracers[index];
+            if (tracer != null && tracer.IsUsable) return tracer;
+            // Repair only a lost slot, never allocate a new streak for every shot.
+            if (tracer != null) Destroy(tracer.gameObject);
+            return _tracers[index] = Instantiate(tracerPrefab, _tracerRoot);
+        }
+
+        private void OnDestroy()
+        {
+            if (_tracerRoot != null) Destroy(_tracerRoot.gameObject);
         }
 
         private void ShowTracer(Vector3 from, Vector3 to)
         {
-            if (_tracers == null)
+            if (tracerPrefab == null) return;
+            if (_tracerRoot == null || _tracers == null || _tracers.Length == 0) SpawnTracerPool();
+            if (_tracers == null || _tracers.Length == 0)
             {
                 return;
             }
@@ -340,16 +383,17 @@ namespace ShadowVale.Gameplay.Combat
             for (int i = 0; i < _tracers.Length; i++)
             {
                 int index = (_tracerCursor + i) % _tracers.Length;
-                if (!_tracers[index].IsFree)
+                var tracer = GetUsableTracer(index);
+                if (!tracer.IsFree)
                 {
                     continue;
                 }
                 _tracerCursor = (index + 1) % _tracers.Length;
-                _tracers[index].Play(from, to);
+                tracer.TryPlay(from, to);
                 return;
             }
 
-            _tracers[_tracerCursor].Play(from, to);
+            GetUsableTracer(_tracerCursor).TryPlay(from, to);
             _tracerCursor = (_tracerCursor + 1) % _tracers.Length;
         }
 

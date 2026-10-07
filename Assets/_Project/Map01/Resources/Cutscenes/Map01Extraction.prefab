@@ -89,3 +89,7 @@ MonoBehaviour:
   - {x: 21.33092, y: 4.6121407, z: 32.284225}
   - {x: 3.5929186, y: 1.4700012, z: 65.14448}
   - {x: 4.9929185, y: 1.4700012, z: 65.14448}
+  gameplayRifleRun: {fileID: -623603649343465320, guid: 35e43337f21c2c141aaab6cce2f98538, type: 3}
+  hungTurnSeconds: 0.85
+  paddleReachSeconds: 0.75
+  applyHandContacts: 1

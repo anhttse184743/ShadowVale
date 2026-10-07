@@ -18,27 +18,60 @@ namespace ShadowVale.Gameplay.Combat
 
         /// <summary>True when this tracer is not mid-flash and can be handed out again.</summary>
         public bool IsFree => _elapsed < 0f;
+        public bool IsUsable => EnsureLine();
 
         private void Awake()
         {
             _line = GetComponent<LineRenderer>();
-            _line.enabled = false;
+            if (_line != null)
+            {
+                _line.useWorldSpace = true;
+                _line.enabled = false;
+            }
         }
 
         public void Play(Vector3 from, Vector3 to)
         {
+            TryPlay(from, to);
+        }
+
+        public bool TryPlay(Vector3 from, Vector3 to)
+        {
+            if (!EnsureLine()) return false;
+            _line.useWorldSpace = true;
             _line.positionCount = 2;
             _line.SetPosition(0, from);
             _line.SetPosition(1, to);
             _line.widthMultiplier = startWidth;
             _line.enabled = true;
             _elapsed = 0f;
+            return true;
+        }
+
+        private bool EnsureLine()
+        {
+            // A managed reference can survive after its native scene object is destroyed.
+            if (this == null) return false;
+            if (_line == null) _line = GetComponent<LineRenderer>();
+            return _line != null;
+        }
+
+        private void OnDisable()
+        {
+            _elapsed = -1f;
+            if (_line != null) _line.enabled = false;
         }
 
         private void Update()
         {
             if (_elapsed < 0f)
             {
+                return;
+            }
+
+            if (!EnsureLine())
+            {
+                _elapsed = -1f;
                 return;
             }
 

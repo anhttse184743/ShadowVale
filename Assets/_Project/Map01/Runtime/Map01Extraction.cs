@@ -39,8 +39,24 @@ namespace ShadowVale.Map01
         private readonly Vector3[] lastTargets=new Vector3[2];
         private float lastStroke=-1, lastSplash, nextEnemyShot;
         private bool oarHeld;
-        private int proceduralFrame=-1;
         private readonly float[] aimUntil=new float[2];
+        private readonly Transform[] coverTargets=new Transform[2];
+        private readonly float[] nextCoverShot=new float[2], pendingCoverShot=new float[2], coverReloadUntil=new float[2];
+        private readonly int[] coverRounds=new int[2];
+        private readonly float[] lastCoverShot={-100,-100};
+        private readonly float[] coverAcquiredAt=new float[2];
+        private readonly List<Map01EnemyController> shoreEnemies=new();
+        public int NamCoverShots { get; private set; }
+        public int CommanderCoverShots { get; private set; }
+        public int CoverKills { get; private set; }
+        [Header("Manual animation tuning")]
+        public AnimationClip gameplayRifleRun;
+        [Range(.2f,2f)] public float hungTurnSeconds=.85f;
+        [Range(.2f,2f)] public float paddleReachSeconds=.75f;
+        public bool applyHandContacts=true;
+        private AnimationClip urgentRun,urgentJump;
+        public AnimationClip BoardingRunClip => urgentRun;
+        public const float ApproachSeconds=.55f, BoardingSeconds=2.9f, SeatingSeconds=2.1f;
         private Animator namActor, hungActor, commanderActor;
         private PosePlayer namPose, hungPose, commanderPose;
         private readonly List<Map01EnemyController> blockers = new();
@@ -53,8 +69,71 @@ namespace ShadowVale.Map01
         private Material wakeMaterial;
         private Texture2D wakeTexture;
         private string subtitle;
+        private DialogueVoice speech;
+        private float radioReplyAt,radioEndsAt;
+        private bool radioAnswered;
         private int shots;
         private readonly List<(Animator actor, Weapon rifle)> seatedRifles = new();
+
+
+        [Header("Campaign transition")]
+        public bool autoContinueToMap2=true;
+        private float completionClock;
+        private bool transitionStarted;
+        public Transform BoatRoot => boat;
+        public Transform NamRoot => mission!=null?mission.player:namActor.transform;
+        public Transform HungRoot => hungActor.transform.parent;
+        public Transform CommanderRoot => commander;
+        public Animator NamAnimator => namActor;
+        public Animator HungAnimator => hungActor;
+        public Animator CommanderAnimator => commanderActor;
+        public Transform Paddle => oar;
+        public void ContinueToMap2() {
+            if(transitionStarted || mission==null || quest.Stage!=Map01Quest.CompleteStage)return;
+            if(!Prepare())return;
+            transitionStarted=true;
+            namPose?.Dispose();hungPose?.Dispose();commanderPose?.Dispose();
+            namPose=hungPose=commanderPose=null;
+            var arrival=boat.gameObject.AddComponent<Map02Arrival>();
+            arrival.TakeParty(this,mission);
+            transform.SetParent(boat,true);enabled=false;
+            boat.SetParent(null,true);DontDestroyOnLoad(boat.gameObject);
+            mission.gameCamera.transform.SetParent(boat,true);
+            mission.ReleaseForNextMap();
+            arrival.StartCoroutine(arrival.LoadVillage());
+        }
+        public void ArrivalRestHands(Animator actor,float time,float leftWeight=1,float rightWeight=1) {
+            var hips=actor.GetBoneTransform(HumanBodyBones.Hips);
+            for(int side=-1;side<=1;side+=2) {
+                var upper=side<0?HumanBodyBones.LeftUpperArm:HumanBodyBones.RightUpperArm;
+                var lower=side<0?HumanBodyBones.LeftLowerArm:HumanBodyBones.RightLowerArm;
+                var handId=side<0?HumanBodyBones.LeftHand:HumanBodyBones.RightHand;
+                var hand=actor.GetBoneTransform(handId);var local=hand.localRotation;
+                var target=hips.position+actor.transform.right*(side*.21f)+actor.transform.up*.12f
+                    +actor.transform.forward*(.12f+side*.025f*Mathf.Sin(time*5));
+                SolveCoverArm(actor,upper,lower,handId,target,hand.rotation,side,side<0?leftWeight:rightWeight);hand.localRotation=local;
+            }
+        }
+        public void ArrivalStowContacts(float leftWeight,float rightWeight) {
+            var left=hungActor.GetBoneTransform(HumanBodyBones.LeftHand);
+            var right=hungActor.GetBoneTransform(HumanBodyBones.RightHand);
+            PaddleArm(HumanBodyBones.LeftUpperArm,HumanBodyBones.LeftLowerArm,HumanBodyBones.LeftHand,
+                oar.position-(PaddleGrip(left)-left.position),leftWeight,-1);
+            PaddleArm(HumanBodyBones.RightUpperArm,HumanBodyBones.RightLowerArm,HumanBodyBones.RightHand,
+                oar.TransformPoint(new Vector3(0,0,.45f))-(PaddleGrip(right)-right.position),rightWeight,1);
+        }
+        // Share the tested hand/prop contacts with the arrival, without mission or firing callbacks.
+        public void ArrivalPaddleContacts(float time,float weight) {
+            float phase=time*Mathf.PI*2/2.4f;
+            float reach=.30f+.10f*Mathf.Cos(phase),lift=Mathf.Max(0,-Mathf.Sin(phase))*.035f;
+            PaddleArm(HumanBodyBones.LeftUpperArm,HumanBodyBones.LeftLowerArm,HumanBodyBones.LeftHand,
+                boat.TransformPoint(new Vector3(.12f,.99f+lift,-1.6f+reach)),weight,-1);
+            PaddleArm(HumanBodyBones.RightUpperArm,HumanBodyBones.RightLowerArm,HumanBodyBones.RightHand,
+                boat.TransformPoint(new Vector3(.48f,.73f+lift,-1.55f+reach)),weight,1);
+            var a=PaddleGrip(hungActor.GetBoneTransform(HumanBodyBones.LeftHand));
+            var b=PaddleGrip(hungActor.GetBoneTransform(HumanBodyBones.RightHand));
+            oar.SetPositionAndRotation(a,Quaternion.LookRotation((b-a).normalized,boat.forward));
+        }
 
         public static Map01Extraction Get(Map01Mission owner)
         {
@@ -76,10 +155,14 @@ namespace ShadowVale.Map01
             CurrentPhase = showRadio ? Phase.Radio : Phase.Extraction;
             clock = skipHeld = 0; skipReleased = false;
             if (showRadio) {
+                speech=DialogueVoice.For(gameObject);
+                radioReplyAt=Mathf.Max(4.5f,DialogueVoice.Length("m1_radio_order")+.25f);
+                radioEndsAt=Mathf.Max(7,radioReplyAt+DialogueVoice.Length("m1_radio_reply")+.3f);
+                radioAnswered=false;speech.PlayOnce("m1_radio_order");
                 mission.CloseGameplayPanel(); mission.Cinematic = true;
                 SetPlayerDrivers(false);
                 namPose = new PosePlayer(namActor); namPose.Play(radio);
-                subtitle = "Commander (radio): Nam, move to the northern jetty. Hung and I are aboard. We will cover you.";
+                subtitle = DialogueVoice.Caption("m1_radio_order");
             }
         }
 
@@ -178,6 +261,7 @@ namespace ShadowVale.Map01
         private void EnsureRifle(Animator actor)
         {
             var prop=Map01Rifle.Attach(actor);
+            if(prop!=null)prop.weapon.gameObject.SetActive(true);
             if(prop!=null && !seatedRifles.Any(p=>p.actor==actor)) seatedRifles.Add((actor,prop.weapon));
         }
         private void BuildOar()
@@ -198,7 +282,14 @@ namespace ShadowVale.Map01
 
         private void Update()
         {
-            if (mission == null || CurrentPhase == Phase.Dormant || CurrentPhase == Phase.Complete) return;
+            if (CurrentPhase == Phase.Complete) {
+                if(autoContinueToMap2 && !transitionStarted && !ForestMenu.Visible) {
+                    completionClock+=Time.unscaledDeltaTime;
+                    if(completionClock>=3) ContinueToMap2();
+                }
+                return;
+            }
+            if (mission == null || CurrentPhase == Phase.Dormant) return;
             if (mission.Paused || Map01SaveSystem.IsRestoring) return;
             float dt=Time.unscaledDeltaTime;
             namPose?.Tick(dt); hungPose?.Tick(dt); commanderPose?.Tick(dt);
@@ -216,28 +307,35 @@ namespace ShadowVale.Map01
             if(skipHeld>=1) { Skip(); return; }
             switch(CurrentPhase) {
                 case Phase.Radio:
-                    subtitle = clock<4.5f ? "Commander (radio): Nam, move to the northern jetty. Hung and I are aboard. We will cover you."
-                        : "Nam: Understood. Moving to the boat.";
+                    if(clock>=radioReplyAt && !radioAnswered && !speech.HasSpeech){radioAnswered=true;speech.PlayOnce("m1_radio_reply");}
+                    subtitle=DialogueVoice.Caption(radioAnswered?"m1_radio_reply":"m1_radio_order");
                     var focus = mission.player.position+Vector3.up*1.35f;
                     View(focus-mission.player.forward*2.2f+mission.player.right*1.5f,focus,49);
-                    if(clock>=Mathf.Max(7,radio.length)) EndRadio();
+                    if(clock>=Mathf.Max(radioEndsAt,radio.length)) EndRadio();
                     break;
                 case Phase.Approach:
-                    float p=Mathf.Clamp01(clock/1.2f);
+                    float p=Mathf.Clamp01(clock/ApproachSeconds);
                     mission.player.SetPositionAndRotation(Vector3.Lerp(initialPlayerPosition,boardingAnchors[0],p),
                         Quaternion.Slerp(initialPlayerRotation,Quaternion.Euler(0,90,0),p));
                     BoardingView();
-                    if(p>=1) { ChangePhase(Phase.Boarding); namPose.Play(board); }
+                    if(p>=1) { ChangePhase(Phase.Boarding); namPose.Play(urgentRun??board); }
                     break;
                 case Phase.Boarding:
-                    mission.player.position=Along(boardingAnchors,clock/board.length);
+                    if(clock<1.65f) {
+                        mission.player.position=Along(boardingAnchors.Take(5).ToArray(),clock/1.65f);
+                    } else {
+                        float hop=Mathf.Clamp01((clock-1.65f)/.8f);
+                        namPose.Play(urgentJump??board);namPose.Rate((urgentJump??board).length/.8f);
+                        mission.player.position=Vector3.Lerp(boardingAnchors[4],boardingAnchors[5],hop)+Vector3.up*(.20f*Mathf.Sin(Mathf.PI*hop));
+                    }
                     BoardingView();
-                    if(clock>=board.length) { ChangePhase(Phase.Seating); namPose.Play(sit); }
+                    if(clock>=BoardingSeconds) { ChangePhase(Phase.Seating); namPose.Play(sit);namPose.Rate(sit.length/SeatingSeconds); }
                     break;
                 case Phase.Seating:
-                    mission.player.rotation=Quaternion.Slerp(Quaternion.Euler(0,90,0),Quaternion.Euler(0,270,0),Mathf.SmoothStep(0,1,clock/sit.length));
+                    mission.player.rotation=Quaternion.Slerp(Quaternion.Euler(0,90,0),Quaternion.Euler(0,270,0),Mathf.SmoothStep(0,1,clock/SeatingSeconds));
                     BoardingView();
-                    if(clock>=sit.length) StartDeparture();
+                    mission.player.position=Vector3.Lerp(boardingAnchors[5],boardingAnchors[6],Mathf.SmoothStep(0,1,clock/SeatingSeconds));
+                    if(clock>=SeatingSeconds) StartDeparture();
                     break;
                 case Phase.Departing:
                     ApplyDeparture(Mathf.Clamp01(clock/18f));
@@ -250,42 +348,45 @@ namespace ShadowVale.Map01
         private void LateUpdate()
         {
             if(CurrentPhase==Phase.Complete || (mission!=null && mission.Paused))return;
-            if(proceduralFrame==Time.frameCount)return;
-            proceduralFrame=Time.frameCount;
-            if(CurrentPhase==Phase.Departing) for(int index=0;index<2;index++) {
-                if(Time.unscaledTime>aimUntil[index])continue;
-                var actor=index==0?namActor:commanderActor;
-                var chest=actor.GetBoneTransform(HumanBodyBones.Chest);
-                var direction=lastTargets[index]+Vector3.up-chest.position;
-                float yaw=Mathf.Clamp(Vector3.SignedAngle(actor.transform.forward,Vector3.ProjectOnPlane(direction,Vector3.up),Vector3.up),-55,55);
-                chest.rotation=Quaternion.AngleAxis(yaw,Vector3.up)*chest.rotation;
+            // Re-sample without advancing time. A manual camera capture can run before
+            // Unity's animation update; do not suppress the real LateUpdate in that frame.
+            namPose?.Sample();hungPose?.Sample();commanderPose?.Sample();
+            if(CurrentPhase==Phase.Departing) {
+                for(int index=0;index<2;index++) AimAndFireCover(index);
             }
-            foreach(var pursuer in pursuit) {
-                if(pursuer==null)continue;
-                var agent=pursuer.GetComponent<NavMeshAgent>();var actor=pursuer.GetComponentInChildren<Animator>();
-                actor.SetFloat(PlayerCombat.AnimatorParams.Speed,agent.velocity.magnitude);
-                if(agent.velocity.sqrMagnitude<.01f)pursuer.transform.rotation=Quaternion.LookRotation(Vector3.ProjectOnPlane(boat.position-pursuer.transform.position,Vector3.up));
-                if(Time.unscaledTime>=nextEnemyShot) {
-                    nextEnemyShot=Time.unscaledTime+1.4f;
-                    actor.SetTrigger(PlayerCombat.AnimatorParams.Attack);
-                    var rifle=actor.GetComponent<Map01Rifle>();
-                    if(rifle!=null)mission.Trace(rifle.weapon.Muzzle.position,boat.position+boat.right*1.2f,new Color(1,.7f,.3f));
+            if(applyHandContacts && Prepared && CurrentPhase>=Phase.Radio && CurrentPhase<Phase.Departing) {
+                HoldSeatedRifle(commanderActor,.18f);
+                if(CurrentPhase==Phase.Boarding && clock>=1.65f) {
+                    EnsureRifle(namActor);HoldSeatedRifle(namActor,.16f);
+                }
+                if(!oarHeld) HoldSeatedRifle(hungActor,CurrentPhase>=Phase.Approach?.30f:.18f);
+                if(CurrentPhase==Phase.Boarding && clock<hungTurnSeconds) {
+                    foreach(var side in new[]{-1,1}) {
+                        var hand=hungActor.GetBoneTransform(side<0?HumanBodyBones.LeftHand:HumanBodyBones.RightHand);
+                        var localWrist=hand.localRotation;
+                        SolveCoverArm(hungActor,side<0?HumanBodyBones.LeftUpperArm:HumanBodyBones.RightUpperArm,
+                            side<0?HumanBodyBones.LeftLowerArm:HumanBodyBones.RightLowerArm,
+                            side<0?HumanBodyBones.LeftHand:HumanBodyBones.RightHand,
+                            mission.hung.TransformPoint(new Vector3(side*.20f,.68f,.24f)),hand.rotation,side,1);
+                        hand.localRotation=localWrist;
+                    }
                 }
             }
-            if(oar==null || !oarHeld) return;
+            UpdateShoreActors();
+            if(oar==null || !oarHeld || !applyHandContacts) return;
             // Correct Humanoid arm-length retargeting at the prop contacts; keep the authored torso/legs.
             float phase=CurrentPhase==Phase.Departing?Mathf.Min(clock,16)*Mathf.PI*2/2.4f:0;
-            float reach=.24f*Mathf.Cos(phase);
+            float reach=.30f+.10f*Mathf.Cos(phase);
             // Catch -> submerged pull -> lift -> recovery. The inboard hand is the top grip.
-            float lift=Mathf.Max(0,-Mathf.Sin(phase))*.20f;
-            if(CurrentPhase==Phase.Departing && clock>16)lift+=Mathf.SmoothStep(0,.24f,(clock-16)/2);
-            float contact=CurrentPhase==Phase.Boarding?Mathf.SmoothStep(0,1,(clock-2.6f)/.9f):1;
+            float lift=Mathf.Max(0,-Mathf.Sin(phase))*.035f;
+            if(CurrentPhase==Phase.Departing && clock>16)lift+=Mathf.SmoothStep(0,.10f,(clock-16)/2);
+            float contact=CurrentPhase==Phase.Boarding?Mathf.SmoothStep(0,1,(clock-hungTurnSeconds)/paddleReachSeconds):1;
             var rowingChest=hungActor.GetBoneTransform(HumanBodyBones.Chest);
-            rowingChest.rotation=Quaternion.AngleAxis((12+5*Mathf.Cos(phase))*contact,boat.up)*rowingChest.rotation;
+            rowingChest.rotation=Quaternion.AngleAxis((7+2*Mathf.Cos(phase))*contact,boat.up)*rowingChest.rotation;
             PaddleArm(HumanBodyBones.LeftUpperArm,HumanBodyBones.LeftLowerArm,HumanBodyBones.LeftHand,
-                boat.TransformPoint(new Vector3(.08f,1.04f+lift,-1.6f+reach)),contact,-1);
+                boat.TransformPoint(new Vector3(.12f,.99f+lift,-1.6f+reach)),contact,-1);
             PaddleArm(HumanBodyBones.RightUpperArm,HumanBodyBones.RightLowerArm,HumanBodyBones.RightHand,
-                boat.TransformPoint(new Vector3(.48f,.72f+lift,-1.55f+reach)),contact,1);
+                boat.TransformPoint(new Vector3(.48f,.73f+lift,-1.55f+reach)),contact,1);
             var a=PaddleGrip(hungActor.GetBoneTransform(HumanBodyBones.LeftHand));
             var b=PaddleGrip(hungActor.GetBoneTransform(HumanBodyBones.RightHand));
             oar.SetPositionAndRotation(Vector3.Lerp(oar.position,a,contact),Quaternion.Slerp(oar.rotation,Quaternion.LookRotation((b-a).normalized,boat.forward),contact));
@@ -314,22 +415,43 @@ namespace ShadowVale.Map01
                 // The hand end defines the actual mesh finger axis, independent of FBX bone axes.
                 Vector3 fingers=hand.GetChild(0).position-hand.position;
                 Vector3 forearm=hand.position-lower.position;
-                Vector3 shaft=boat.TransformDirection(new Vector3(.40f,-.32f,.05f)).normalized;
+                Vector3 shaft=boat.TransformDirection(new Vector3(.36f,-.26f,.05f)).normalized;
                 Vector3 gripFacing=Vector3.ProjectOnPlane(forearm,shaft).normalized;
-                if(gripFacing.sqrMagnitude>.1f) hand.rotation=Quaternion.FromToRotation(fingers,gripFacing)*hand.rotation;
+                if(gripFacing.sqrMagnitude>.1f) hand.rotation=Quaternion.Slerp(hand.rotation,Quaternion.FromToRotation(fingers,gripFacing)*hand.rotation,weight);
             }
         }
-        private static Vector3 PaddleGrip(Transform hand) => hand.childCount>0
-            ? Vector3.Lerp(hand.position,hand.GetChild(0).position,.45f) : hand.position;
+        private readonly Dictionary<Transform,Vector3> paddlePalmCenters=new();
+        private Vector3 PaddleGrip(Transform hand)
+        {
+            if(!paddlePalmCenters.TryGetValue(hand,out var contact)) {
+                // Hand_end is a rig endpoint, not the center of Hung's closed fist.
+                // Measure the actual hand surface in bind space once, preserving the source rig.
+                Vector3 sum=Vector3.zero;float total=0;
+                foreach(var renderer in hungActor.GetComponentsInChildren<SkinnedMeshRenderer>()) {
+                    var mesh=renderer.sharedMesh;if(mesh==null || !mesh.isReadable)continue;
+                    int bone=Array.IndexOf(renderer.bones,hand);if(bone<0)continue;
+                    var vertices=mesh.vertices;var weights=mesh.boneWeights;var bind=mesh.bindposes[bone];
+                    for(int i=0;i<weights.Length;i++) {
+                        var w=weights[i];float influence=(w.boneIndex0==bone?w.weight0:0)+(w.boneIndex1==bone?w.weight1:0)
+                            +(w.boneIndex2==bone?w.weight2:0)+(w.boneIndex3==bone?w.weight3:0);
+                        if(influence<.7f)continue;
+                        sum+=bind.MultiplyPoint3x4(vertices[i])*influence;total+=influence;
+                    }
+                }
+                contact=total>0?sum/total:hand.InverseTransformPoint(hand.childCount>0?hand.GetChild(0).position:hand.position)*.8f;
+                paddlePalmCenters[hand]=contact;
+            }
+            return hand.TransformPoint(contact);
+        }
         private void UpdateRowing()
         {
-            if(CurrentPhase==Phase.Approach) hungPose.Play(rifleStow);
+            if(CurrentPhase==Phase.Approach) hungPose.Play(lowerWeapon);
             if(CurrentPhase==Phase.Boarding) {
-                if(clock>1.7f) {
-                    var gun=hungActor.GetComponent<Map01Rifle>();if(gun!=null)gun.weapon.gameObject.SetActive(false);
-                    oarHeld=clock>2.6f;hungPose.Play(oarPickup);
-                    mission.hung.localRotation=Quaternion.Slerp(Quaternion.Euler(0,270,0),Quaternion.identity,Mathf.SmoothStep(0,1,(clock-1.7f)/2));
-                }
+                var gun=hungActor.GetComponent<Map01Rifle>();if(gun!=null)gun.weapon.gameObject.SetActive(false);
+                // Rotate with hands close to the body before reaching for a stationary paddle.
+                mission.hung.localRotation=Quaternion.Slerp(Quaternion.Euler(0,270,0),Quaternion.identity,Mathf.SmoothStep(0,1,clock/hungTurnSeconds));
+                hungPose.Play(travel);
+                oarHeld=clock>=hungTurnSeconds;
             }
             if(CurrentPhase==Phase.Seating) hungPose.Play(rowStart);
             if(CurrentPhase==Phase.Departing) {
@@ -340,7 +462,7 @@ namespace ShadowVale.Map01
         }
         private void SpawnPursuitIfNeeded()
         {
-            if(mission.Enemies.Any(e=>e.Alive && Vector3.Distance(e.transform.position,boat.position)<35)) return;
+            if(mission.Enemies.Any(e=>e.Alive && SafeShot(commanderActor,commanderActor.GetBoneTransform(HumanBodyBones.Chest).position,e.transform.position+Vector3.up*1.3f))) return;
             var template=mission.Enemies.First(e=>e.name.StartsWith("Outpost guard "));
             for(int i=0;i<2;i++) {
                 Vector3 chosen=default;bool found=false;
@@ -358,50 +480,192 @@ namespace ShadowVale.Map01
                 clone.GetComponent<Health>().Revive();
                 var actor=clone.GetComponentInChildren<Animator>();actor.Rebind();actor.Update(0);Map01Rifle.Attach(actor);
                 var agent=clone.GetComponent<NavMeshAgent>();
-                if(agent.isOnNavMesh) {agent.isStopped=false;agent.SetDestination(chosen+Vector3.forward*4);}
+                if(agent.isOnNavMesh && NavMesh.SamplePosition(boatOrigin+new Vector3(-5,2,7+i*2),out var bank,5,NavMesh.AllAreas)) {agent.isStopped=false;agent.SetDestination(bank.position);}
                 pursuit.Add(clone);
             }
         }
+        private void PrepareShoreActors()
+        {
+            foreach(var enemy in mission.Enemies.Where(e=>e.Alive && !e.IsBoss && Vector3.Distance(e.transform.position,boat.position)<70)) {
+                if(!enemy.enabled)continue;
+                shoreEnemies.Add(enemy);enemy.enabled=false;
+                var agent=enemy.GetComponent<NavMeshAgent>();
+                if(agent.isOnNavMesh) {
+                    var destination=boatOrigin+new Vector3(-5,2,2+(shoreEnemies.Count%3)*2);
+                    if(NavMesh.SamplePosition(destination,out var hit,5,NavMesh.AllAreas)) {
+                        agent.isStopped=false;agent.SetDestination(hit.position);
+                    }
+                }
+            }
+        }
+        private void UpdateShoreActors()
+        {
+            foreach(var enemy in shoreEnemies.Where(e=>e!=null).Select(e=>e.gameObject).Concat(pursuit.Where(p=>p!=null))) {
+                var health=enemy.GetComponent<Health>();var agent=enemy.GetComponent<NavMeshAgent>();
+                if(health.IsDead) {if(agent.isOnNavMesh)agent.isStopped=true;continue;}
+                var actor=enemy.GetComponentInChildren<Animator>();
+                actor.SetFloat(PlayerCombat.AnimatorParams.Speed,agent.velocity.magnitude);
+                if(agent.velocity.sqrMagnitude<.01f)enemy.transform.rotation=Quaternion.LookRotation(Vector3.ProjectOnPlane(boat.position-enemy.transform.position,Vector3.up));
+                if(CurrentPhase==Phase.Departing && clock<5 && Time.unscaledTime>=nextEnemyShot) {
+                    nextEnemyShot=Time.unscaledTime+3.5f;actor.SetTrigger(PlayerCombat.AnimatorParams.Attack);
+                    var rifle=actor.GetComponent<Map01Rifle>();
+                    if(rifle!=null) RetreatTrace(rifle.weapon.Muzzle.position,boat.position+boat.right*2.5f);
+                }
+            }
+        }
+        private IEnumerable<Transform> LivingShoreTargets() => mission.Enemies.Where(e=>e.Alive && !e.IsBoss).Select(e=>e.transform)
+            .Concat(pursuit.Where(p=>p!=null && !p.GetComponent<Health>().IsDead).Select(p=>p.transform));
         private void CoverDeparture()
         {
-            if(Time.unscaledTime<nextShot)return;
-            nextShot=Time.unscaledTime+.28f;int index=shots++%2;
-            var actor=index==0?namActor:commanderActor;var pose=index==0?namPose:commanderPose;
-            var candidates=mission.Enemies.Where(e=>e.Alive).Select(e=>e.transform)
-                .Concat(pursuit.Where(p=>p!=null).Select(p=>p.transform));
-            var gun=actor.GetComponent<Map01Rifle>();if(gun==null)return;
+            for(int i=0;i<2;i++) {
+                var actor=i==0?namActor:commanderActor;var pose=i==0?namPose:commanderPose;
+                if(Time.unscaledTime<coverReloadUntil[i] || pendingCoverShot[i]>0)continue;
+                if(coverReloadUntil[i]>0) {
+                    coverReloadUntil[i]=0;coverAcquiredAt[i]=Time.unscaledTime;
+                    nextCoverShot[i]=Time.unscaledTime+.4f;pose.Play(seatedReady);
+                }
+                var origin=actor.GetBoneTransform(HumanBodyBones.RightUpperArm).position;
+                var target=coverTargets[i];
+                if(target==null || target.GetComponent<Health>().IsDead || !SafeShot(actor,origin,target.position+Vector3.up*1.3f)) {
+                    target=LivingShoreTargets().Where(t=>Vector3.Distance(t.position,boat.position)<65)
+                        .OrderBy(t=>Vector3.Distance(t.position,origin)+(t==coverTargets[1-i]?20:0))
+                        .FirstOrDefault(t=>SafeShot(actor,origin,t.position+Vector3.up*1.3f));
+                    coverTargets[i]=target;coverAcquiredAt[i]=Time.unscaledTime;nextCoverShot[i]=Time.unscaledTime+.4f;
+                    if(target!=null)pose.Play(seatedReady);
+                }
+                if(target==null) {pose.Play(coverRounds[i]>0?lowerWeapon:seatedReady);continue;}
+                lastTargets[i]=target.position;aimUntil[i]=Time.unscaledTime+1;
+                if(Time.unscaledTime<nextCoverShot[i])continue;
+                if(coverRounds[i]>0 && coverRounds[i]%12==0) {
+                    pose.Play(seatedReload,true);coverReloadUntil[i]=Time.unscaledTime+seatedReload.length;
+                    coverRounds[i]++;continue;
+                }
+                pose.Play(seatedFire,true);pendingCoverShot[i]=Time.unscaledTime+.06f;
+                nextCoverShot[i]=Time.unscaledTime+(++coverRounds[i]%3==0?2.2f:.48f);
+            }
+        }
+        private void AimAndFireCover(int index)
+        {
+            var target=coverTargets[index];
+            if(target==null || target.GetComponent<Health>().IsDead) {
+                pendingCoverShot[index]=0;
+                var watcher=index==0?namActor:commanderActor;
+                HoldSeatedRifle(watcher,.22f);
+                var head=watcher.GetBoneTransform(HumanBodyBones.Head);
+                head.rotation=Quaternion.AngleAxis(Mathf.Sin(Time.unscaledTime*.7f+index)*8,boat.up)*head.rotation;
+                return;
+            }
+            if(Time.unscaledTime<coverReloadUntil[index])return;
+            var actor=index==0?namActor:commanderActor;var gun=actor.GetComponent<Map01Rifle>();
+            if(gun==null)return;
+            var chest=actor.GetBoneTransform(HumanBodyBones.Chest);var end=target.position+Vector3.up*1.3f;
+            // Seated chest bones sit low on this rig. Aim from the shoulders and solve both grips,
+            // rather than tipping the entire torso (and lowering the muzzle into the jetty).
+            Vector3 direction=(end-actor.GetBoneTransform(HumanBodyBones.RightUpperArm).position).normalized;
+            float yaw=Mathf.Clamp(Vector3.SignedAngle(actor.transform.forward,Vector3.ProjectOnPlane(direction,boat.up),boat.up),-45,45);
+            float aimWeight=Mathf.SmoothStep(0,1,(Time.unscaledTime-coverAcquiredAt[index])/.35f);
+            chest.rotation=Quaternion.AngleAxis(yaw*aimWeight,boat.up)*chest.rotation;
+            float recoil=Mathf.Exp(-Mathf.Max(0,Time.unscaledTime-lastCoverShot[index])*22);
+            var shoulder=actor.GetBoneTransform(HumanBodyBones.RightUpperArm);
+            Vector3 trigger=shoulder.position+direction*(.10f-.025f*recoil)-actor.transform.right*.20f-boat.up*.10f;
+            Quaternion rifleRotation=Quaternion.LookRotation(direction,boat.up)*Quaternion.Euler(0,0,-90);
+            Quaternion handRotation=rifleRotation*Quaternion.Inverse(gun.weapon.transform.localRotation);
+            Vector3 wrist=trigger-handRotation*Vector3.Scale(gun.weapon.transform.localPosition,actor.GetBoneTransform(HumanBodyBones.RightHand).lossyScale);
+            SolveCoverArm(actor,HumanBodyBones.RightUpperArm,HumanBodyBones.RightLowerArm,HumanBodyBones.RightHand,wrist,handRotation,1,aimWeight);
+            SupportRifle(actor,gun,aimWeight);
+            if(pendingCoverShot[index]<=0 || Time.unscaledTime<pendingCoverShot[index])return;
+            pendingCoverShot[index]=0;
             var origin=gun.weapon.Muzzle.position;
-            var target=candidates.Where(t=>Vector3.Distance(t.position,boat.position)<38)
-                .OrderBy(t=>Vector3.Distance(t.position,origin)+(Vector3.Distance(t.position,lastTargets[1-index])<1?12:0))
-                .FirstOrDefault(t=>SafeShot(actor,origin,t.position+Vector3.up));
-            if(target==null) {pose.Play(seatedReady);return;}
-            var end=target.position+Vector3.up;lastTargets[index]=target.position;aimUntil[index]=Time.unscaledTime+1;
-            if(shots%20==0) {pose.Play(seatedReload);nextShot+=2.6f;return;}
-            pose.Play(seatedFire,true);
-            mission.Trace(origin,end,new Color(1,.8f,.35f));
-            if(rifleAudio!=null)motor.PlayOneShot(rifleAudio,.4f);
+            if(!SafeShot(actor,origin,end))return;
+            if(coverRounds[index]%3==1) RetreatTrace(origin,end);
+            if(rifleAudio!=null)motor.PlayOneShot(rifleAudio,.32f);
             var flash=new GameObject("Cinematic muzzle flash");flash.transform.position=origin;
-            var light=flash.AddComponent<Light>();light.color=new Color(1,.7f,.25f);light.range=2;light.intensity=2;Destroy(flash,.045f);
-            if(shots%6==0)nextShot+=.65f;
+            var light=flash.AddComponent<Light>();light.color=new Color(1,.7f,.25f);light.range=.65f;light.intensity=.7f;Destroy(flash,.035f);
+            lastCoverShot[index]=Time.unscaledTime;
+            if(index==0)NamCoverShots++;else CommanderCoverShots++;
+            var health=target.GetComponent<Health>();var enemy=target.GetComponent<Map01EnemyController>();
+            if(enemy!=null)enemy.ReceiveExtractionHit(health.Max*.38f,end);
+            else health.TakeDamage(health.Max*.38f,end,null);
+            if(health.IsDead)CoverKills++;
+        }
+        // Correct contacts during waiting/lowering as well as active fire. The wrist is
+        // behind the palm contact, not at the foregrip itself (these rigs have Hand_end).
+        private void SupportRifle(Animator actor,Map01Rifle gun,float weight)
+        {
+            var hand=actor.GetBoneTransform(HumanBodyBones.LeftHand);
+            var lower=actor.GetBoneTransform(HumanBodyBones.LeftLowerArm);
+            var tip=hand.Cast<Transform>().FirstOrDefault(t=>t.name.IndexOf("end",StringComparison.OrdinalIgnoreCase)>=0);
+            Vector3 localPalm=tip!=null?hand.InverseTransformPoint(tip.position)*.45f:Vector3.zero;
+            Quaternion neutral=lower.rotation;
+            Vector3 localFingers=tip!=null?hand.InverseTransformDirection(tip.position-hand.position).normalized:Vector3.right;
+            // Fingers wrap across the barrel; the forearm supplies a stable roll reference.
+            Quaternion wrist=Quaternion.FromToRotation(neutral*localFingers,gun.weapon.transform.up)*neutral;
+            Vector3 target=gun.support.position-wrist*Vector3.Scale(localPalm,hand.lossyScale);
+            SolveCoverArm(actor,HumanBodyBones.LeftUpperArm,HumanBodyBones.LeftLowerArm,HumanBodyBones.LeftHand,target,wrist,-1,weight);
+        }
+        public void HoldSeatedRifle(Animator actor,float lowering)
+        {
+            var gun=actor.GetComponent<Map01Rifle>();
+            if(gun==null || !gun.weapon.gameObject.activeInHierarchy)return;
+            var shoulder=actor.GetBoneTransform(HumanBodyBones.RightUpperArm);
+            var hand=actor.GetBoneTransform(HumanBodyBones.RightHand);
+            Vector3 direction=(actor.transform.forward-boat.up*.18f).normalized;
+            Quaternion rotation=Quaternion.LookRotation(direction,boat.up)*Quaternion.Euler(0,0,-90)*Quaternion.Inverse(gun.weapon.transform.localRotation);
+            Vector3 trigger=shoulder.position+direction*.08f-actor.transform.right*.20f-boat.up*lowering;
+            Vector3 wrist=trigger-rotation*Vector3.Scale(gun.weapon.transform.localPosition,hand.lossyScale);
+            SolveCoverArm(actor,HumanBodyBones.RightUpperArm,HumanBodyBones.RightLowerArm,HumanBodyBones.RightHand,wrist,rotation,1,1);
+            SupportRifle(actor,gun,1);
+        }
+        private void RetreatTrace(Vector3 from,Vector3 to)
+        {
+            var trail=new GameObject("Extraction faint tracer");
+            var line=trail.AddComponent<LineRenderer>();line.sharedMaterial=mission.trailMaterial;
+            line.positionCount=2;line.SetPosition(0,from);line.SetPosition(1,to);
+            line.startWidth=.012f;line.endWidth=.003f;
+            line.startColor=new Color(.8f,.68f,.4f,.45f);line.endColor=new Color(.8f,.68f,.4f,0);
+            Destroy(trail,.045f);
+        }
+        private void SolveCoverArm(Animator actor,HumanBodyBones upperId,HumanBodyBones lowerId,HumanBodyBones handId,Vector3 target,Quaternion wrist,float side,float weight)
+        {
+            var upper=actor.GetBoneTransform(upperId);var lower=actor.GetBoneTransform(lowerId);var hand=actor.GetBoneTransform(handId);
+            var origin=upper.position;float a=Vector3.Distance(origin,lower.position),b=Vector3.Distance(lower.position,hand.position);
+            var axis=(target-origin).normalized;float d=Mathf.Clamp(Vector3.Distance(origin,target),Mathf.Abs(a-b)+.001f,(a+b)*.97f);
+            target=origin+axis*d;
+            var bend=Vector3.ProjectOnPlane(actor.transform.right*side*.6f-boat.up*.7f,axis).normalized;
+            float along=(a*a+d*d-b*b)/(2*d);
+            var elbow=origin+axis*along+bend*Mathf.Sqrt(Mathf.Max(0,a*a-along*along));
+            upper.rotation=Quaternion.Slerp(upper.rotation,Quaternion.FromToRotation(lower.position-origin,elbow-origin)*upper.rotation,weight);
+            lower.rotation=Quaternion.Slerp(lower.rotation,Quaternion.FromToRotation(hand.position-lower.position,target-lower.position)*lower.rotation,weight);
+            hand.rotation=Quaternion.Slerp(hand.rotation,wrist,weight);
         }
         private bool SafeShot(Animator actor,Vector3 from,Vector3 to)
         {
-            var local=boat.InverseTransformPoint(to);
-            if(local.x>-.9f)return false; // Shore-side sectors only, never down the passenger row.
+            if(Vector3.Distance(from,to)>65)return false;
+            if(Vector3.Angle(actor.transform.forward,Vector3.ProjectOnPlane(to-from,boat.up))>105)return false;
             foreach(var other in new[]{namActor,hungActor,commanderActor}) {
                 if(other==actor)continue;
-                var p=other.GetBoneTransform(HumanBodyBones.Chest).position;
-                var d=to-from;float t=Mathf.Clamp01(Vector3.Dot(p-from,d)/d.sqrMagnitude);
-                if(Vector3.Distance(p,from+d*t)<.5f)return false;
+                var d=to-from;
+                foreach(var bone in new[]{HumanBodyBones.Hips,HumanBodyBones.Chest,HumanBodyBones.Head}) {
+                    var p=other.GetBoneTransform(bone).position;
+                    float t=Mathf.Clamp01(Vector3.Dot(p-from,d)/Mathf.Max(.001f,d.sqrMagnitude));
+                    if(Vector3.Distance(p,from+d*t)<.33f)return false;
+                }
             }
-            if(Physics.Linecast(from,to,out var hit,mission.ObstructionMask,QueryTriggerInteraction.Ignore)
-                && hit.collider.GetComponentInParent<Map01EnemyController>()==null)return false;
-            return Vector3.Angle(actor.transform.forward,to-from)<75;
+            foreach(var hit in Physics.RaycastAll(from,(to-from).normalized,Vector3.Distance(from,to),mission.ObstructionMask,QueryTriggerInteraction.Ignore).OrderBy(h=>h.distance)) {
+                if(hit.transform.IsChildOf(actor.transform))continue;
+                var hitEnemy=hit.collider.GetComponentInParent<Map01EnemyController>();
+                if(hitEnemy!=null) {
+                    if(!hitEnemy.Alive)continue; // The old upright capsule does not match the fallen corpse.
+                    return Vector3.Distance(hitEnemy.transform.position+Vector3.up*1.3f,to)<.3f;
+                }
+                return false;
+            }
+            return true;
         }
         private void CoverShore()
         {
             if(Time.time<nextShot) return;
-            nextShot=Time.time+.9f;
+            nextShot=Time.time+2.5f;
             var actor=shots%2==0?hungActor:commanderActor;
             var pose=shots%2==0?hungPose:commanderPose;
             var origin=actor.GetBoneTransform(HumanBodyBones.Chest).position;
@@ -416,12 +680,13 @@ namespace ShadowVale.Map01
             shots++;
             if(shots%8==0) { pose.Play(seatedReload); nextShot+=seatedReload.length; return; }
             pose.Play(seatedFire,true);
-            mission.Trace(origin,end,new Color(1,.8f,.4f));
+            RetreatTrace(origin,end);
             target.GetComponent<Health>().TakeDamage(8,end,actor.gameObject);
         }
 
         private void EndRadio()
         {
+            speech?.Stop();
             namPose?.Dispose(); namPose=null;
             SetPlayerDrivers(true);
             cameraRig.ClearCinematicView(); mission.Cinematic=false;
@@ -440,11 +705,16 @@ namespace ShadowVale.Map01
             var controller=mission.player.GetComponent<CharacterController>();
             if(controller!=null) controller.enabled=false;
             initialPlayerPosition=mission.player.position; initialPlayerRotation=mission.player.rotation;
-            var walk=namActor.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name.IndexOf("Walk",StringComparison.OrdinalIgnoreCase)>=0);
+            urgentRun=gameplayRifleRun??namActor.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Nam_Rifle_Run");
+            if(urgentRun==null)Debug.LogError("Assign the gameplay Nam_Rifle_Run clip to extraction; a generic run is not suitable.");
+            urgentJump=Resources.Load<AnimationClip>("Cutscenes/Nam_Urgent_Board_Jump");
+            var walk=urgentRun??board;
             namPose=new PosePlayer(namActor);
             namPose.Play(walk);
-            hungPose.Play(rifleStow); commanderPose.Play(lowerWeapon);
-            subtitle="Hung: The route is clear. Come aboard, Nam.";
+            hungPose.Play(lowerWeapon); commanderPose.Play(lowerWeapon);
+            speech=DialogueVoice.For(gameObject);speech.Play("m1_board_invite");
+            subtitle=DialogueVoice.Caption("m1_board_invite");
+            PrepareShoreActors();
             ChangePhase(Phase.Approach);
         }
         private void ChangePhase(Phase phase) { CurrentPhase=phase; clock=0; }
@@ -462,7 +732,8 @@ namespace ShadowVale.Map01
             namPose.Play(seatedReady); hungPose.Play(rowLoop); commanderPose.Play(seatedReady);
             var hg=hungActor.GetComponent<Map01Rifle>();if(hg!=null)hg.weapon.gameObject.SetActive(false);
             oarHeld=true;SpawnPursuitIfNeeded();
-            subtitle="Commander: Everyone aboard. Move out.";
+            speech=DialogueVoice.For(gameObject);speech.Play("m1_depart_order");
+            subtitle=DialogueVoice.Caption("m1_depart_order");
             ChangePhase(Phase.Departing); nextShot=Time.unscaledTime+.8f; wake.Play();
         }
         private void ApplyDeparture(float progress)
@@ -479,11 +750,13 @@ namespace ShadowVale.Map01
         }
         private void FinishDeparture()
         {
+            speech?.Stop();
             ApplyDeparture(1); wake.Stop(); motor.Stop();
             namPose.Play(travel);hungPose.Play(rowStop);commanderPose.Play(travel);
             namPose.Settle();hungPose.Settle(true);commanderPose.Settle();
-            clock=18;proceduralFrame=-1;LateUpdate(); // Freeze the same final grip for playback and skip.
+            clock=18;LateUpdate(); // Freeze the same final grip for playback and skip.
             foreach(var enemy in pursuit)if(enemy!=null)Destroy(enemy);pursuit.Clear();
+            foreach(var enemy in shoreEnemies)if(enemy!=null)enemy.enabled=true;shoreEnemies.Clear();
             if(mission.ModernHealth!=null)mission.ModernHealth.CinematicInvulnerable=false;
             CurrentPhase=Phase.Complete; subtitle=null; mission.Cinematic=false;
             quest.CompleteExtraction();
@@ -501,7 +774,7 @@ namespace ShadowVale.Map01
         }
         private void BoardingView() {
             var wide=new Vector3(5.4f,3.1f,83.5f);var close=new Vector3(3.5f,2.1f,84.2f);
-            float detail=CurrentPhase==Phase.Boarding?Mathf.SmoothStep(0,1,clock/2):CurrentPhase==Phase.Seating?1-Mathf.SmoothStep(0,1,clock/sit.length):0;
+            float detail=CurrentPhase==Phase.Boarding?Mathf.SmoothStep(0,1,clock/2):CurrentPhase==Phase.Seating?1-Mathf.SmoothStep(0,1,clock/SeatingSeconds):0;
             View(Vector3.Lerp(wide,close,detail),Vector3.Lerp(new Vector3(.7f,.7f,87),new Vector3(.25f,.85f,87),detail),Mathf.Lerp(48,44,detail));
         }
         private void View(Vector3 position,Vector3 focus,float fov) => cameraRig.SetCinematicView(position,Quaternion.LookRotation(focus-position),fov,1);
@@ -530,9 +803,9 @@ namespace ShadowVale.Map01
             GUI.Label(new Rect(Screen.width*.1f,Screen.height*.87f,Screen.width*.8f,Screen.height*.1f),subtitle??"",style);
             GUI.color=old; GUI.depth=depth;
         }
-        private void OnDestroy() { if(wakeMaterial!=null)Destroy(wakeMaterial);if(wakeTexture!=null)Destroy(wakeTexture); namPose?.Dispose(); hungPose?.Dispose(); commanderPose?.Dispose(); if(mission!=null && mission.ModernHealth!=null)mission.ModernHealth.CinematicInvulnerable=false; }
+        private void OnDestroy() { foreach(var enemy in shoreEnemies)if(enemy!=null)enemy.enabled=true; if(wakeMaterial!=null)Destroy(wakeMaterial);if(wakeTexture!=null)Destroy(wakeTexture); namPose?.Dispose(); hungPose?.Dispose(); commanderPose?.Dispose(); if(mission!=null && mission.ModernHealth!=null)mission.ModernHealth.CinematicInvulnerable=false; }
 
-        private sealed class PosePlayer : IDisposable
+        public sealed class PosePlayer : IDisposable
         {
             private PlayableGraph graph;
             private AnimationPlayableOutput output;
@@ -568,9 +841,12 @@ namespace ShadowVale.Map01
             public void Tick(float dt) {
                 if(!playable.IsValid()) return;
                 blend=Mathf.Min(1,blend+dt/.18f);mixer.SetInputWeight(0,1-blend);mixer.SetInputWeight(1,blend);
-                if(!selected.isLooping && playable.GetTime()+dt>=selected.length) { playable.SetTime(selected.length); playable.SetSpeed(0); }
+                if(!selected.isLooping && playable.GetTime()+dt*playable.GetSpeed()>=selected.length) { playable.SetTime(selected.length); playable.SetSpeed(0); }
                 graph.Evaluate(dt);
             }
+            public void Rate(float rate) {if(playable.IsValid())playable.SetSpeed(rate);}
+            public double Time => playable.IsValid()?playable.GetTime():0;
+            public void Sample() { if(graph.IsValid()) graph.Evaluate(0); }
             public void Settle(bool end=false) {
                 blend=1;mixer.SetInputWeight(0,0);mixer.SetInputWeight(1,1);
                 if(playable.IsValid()) {playable.SetTime(end?selected.length:0);playable.SetSpeed(0);}

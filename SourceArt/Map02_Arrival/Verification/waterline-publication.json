@@ -1,0 +1,121 @@
+{
+  "scene_unchanged": true,
+  "files": [
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\Map02Arrival.cs",
+      "sha256": "512da9ca744ad61cf6d04fe4a0ac452a1f67fe06a0ee86bcff1401f0d1b51e4e"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\Map01Extraction.cs",
+      "sha256": "f290721816cc1c845a62391943fae15ee8f7cc6e4bcaf883e965a51b8a67fc92"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Tests\\Map02ArrivalTests.cs",
+      "sha256": "897154243b79d4149603c9ebad20c16506cc58498746007d4cb22eb7441f07d8"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Boat_Stand.fbx",
+      "sha256": "23d3d3e43c5f7fc74f51797a1b3de980c6db155c78bf6857deaa278750ad0234"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Boat_Stand.fbx.meta",
+      "sha256": "62f05c28206dc8d8acdf75a1942d477ef80ef607a5b9c70ac060ea493f48810a"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Jetty_StepUp.fbx",
+      "sha256": "ca78007ef4ade211d0a5456077e83d38eb78273ae6c12f53eb571cc7f29084b6"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Oar_Stow.fbx",
+      "sha256": "a98dc54d55bf6900b0d592f0ab4bd336f9936b0dc9470e9e0c0877baebcdc406"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Oar_Stow.fbx.meta",
+      "sha256": "4e5c9745bf76b1e85090adeb5c39cf061f02ce01788959d43129094e032c6606"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Standing_Guard.fbx",
+      "sha256": "52d510763a857ee6d09a706b9a60afa62eaf03f9804d73f1f915e602096a3bea"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Standing_Guard.fbx.meta",
+      "sha256": "32d5c0f2a89f52cd99f75069cfb155f98b9e5487c08ff10a23cac55ce8ebb2e6"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Walk_Ashore.fbx",
+      "sha256": "f8c809b8ea3d389dbceb8e4d3db1c9384cc89d4a6318dba7f6adaead41ba8cb2"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Boat_Stand.fbx",
+      "sha256": "e27082a2f1b69753f6262e5bef4c7e8492d4046d982a69739d56b1aa5efdb1af"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Boat_Stand.fbx.meta",
+      "sha256": "8ecaff76779621ae1395227c0b76e2c7681ba8369c70a26eab3bce8c125830a1"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Jetty_StepUp.fbx",
+      "sha256": "66e091fa2cc2306f31b40784d46592cffc29b49a0c9cde0b1100984750aa5dd7"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Oar_Stow.fbx",
+      "sha256": "a951b1057c09c5efd3cdc4d559f2ddb28670743569d5d0bb4a74f8aaeba78838"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Oar_Stow.fbx.meta",
+      "sha256": "fb9df8bec9ade4e8c6b59a563972973eb960e94e5fe0e54830889e98d6567eff"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Standing_Guard.fbx",
+      "sha256": "53a85277a3b1460c27ffc634d9bc88941ac3422a6877940b2b508869f765b2cf"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Standing_Guard.fbx.meta",
+      "sha256": "771e39840f335d30680774e977565ca4d07592beb38da1bc1b6ee171126a10ff"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Walk_Ashore.fbx",
+      "sha256": "acd61fca58f18443893f2e48f1e5ec8a590fd115c4619bfe08dbb8d2639c42fe"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Hung_Boat_Stand.anim",
+      "sha256": "c5328ac3df73e27effe7227cdad191a721e92c973a2c914f0a2996bb2c145c51"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Hung_Oar_Stow.anim",
+      "sha256": "3f57ee37a1124d5421c296306b487cb9dad3b6d0eed5054572e97172e01b2021"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Nam_Boat_Stand.anim",
+      "sha256": "d97e2757ec126bf85125366890d65d36726bffefe70db5197117dde0e33ebaae"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Nam_Oar_Stow.anim",
+      "sha256": "b26a7af650c90de34bbd44c077ce894b9e71fb141f748d620a08e09e444e5aea"
+    },
+    {
+      "path": "SourceArt\\Map02_Arrival\\Map02_Arrival.blend",
+      "sha256": "82d42fa4ff2a5933e66e979b25b7ae98dacb4a65180464dead4750ff43bc0ea7"
+    },
+    {
+      "path": "SourceArt\\Map02_Arrival\\author_arrival.py",
+      "sha256": "94961c94741a0ec5baf73d52b5a4484cefe21ffdce511c38520c6f5c5dc34013"
+    },
+    {
+      "path": "SourceArt\\Map02_Arrival\\animation-validation.json",
+      "sha256": "85f364811a8b47cd5aea346c4e378097e4062e4b70f806d6899850784073544b"
+    },
+    {
+      "path": "SourceArt\\Map02_Arrival\\MANUAL-ANIMATION-EDIT-VI.md",
+      "sha256": "2e18964fdde290468223c9f86c6029b5607074671e6849fe9616ae7d26b9138c"
+    },
+    {
+      "path": "SourceArt\\Map02_Arrival\\VERIFICATION-VI.md",
+      "sha256": "4aa45e1fe5aab399212b186add8ddcd14b7f53acebcdbe8cfbd768bb3c96ccf3"
+    },
+    {
+      "path": "SourceArt\\Map02_Arrival\\map2-arrival-preview.mp4",
+      "sha256": "b287a2f9a15cb11b6cf7e28c3e21e56228a9d412bbccf773d9d6ebc8de1624f3"
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Passed" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 03:13:52Z" end-time="2026-10-07 03:14:14Z" duration="22.8603721">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="134" result="Passed" start-time="2026-10-07 03:13:52Z" end-time="2026-10-07 03:14:14Z" duration="22.860372" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1095" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/dangk/Documents/Codex/2026-09-20/du/ShadowValeValidation/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="74" result="Passed" start-time="2026-10-07 03:13:55Z" end-time="2026-10-07 03:14:14Z" duration="19.660981" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="23536" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1096" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="74" result="Passed" start-time="2026-10-07 03:13:55Z" end-time="2026-10-07 03:14:14Z" duration="19.598999" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1097" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="74" result="Passed" start-time="2026-10-07 03:13:55Z" end-time="2026-10-07 03:14:14Z" duration="19.557467" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1098" name="Tests" fullname="ShadowVale.Map01.Tests" runstate="Runnable" testcasecount="74" result="Passed" start-time="2026-10-07 03:13:55Z" end-time="2026-10-07 03:14:14Z" duration="19.526374" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1004" name="ExtractionTests" fullname="ShadowVale.Map01.Tests.ExtractionTests" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-07 03:10:24Z" end-time="2026-10-07 03:11:03Z" duration="39.417655" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1009" name="GroundedMatchingActorsAndBoardingWithAllEnemiesAlive" fullname="ShadowVale.Map01.Tests.ExtractionTests.GroundedMatchingActorsAndBoardingWithAllEnemiesAlive" methodname="GroundedMatchingActorsAndBoardingWithAllEnemiesAlive" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" seed="1152590937" result="Passed" start-time="2026-10-07 03:06:22Z" end-time="2026-10-07 03:07:06Z" duration="44.193125" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1005" name="NaturalBoardingDepartsBeforeCompletion" fullname="ShadowVale.Map01.Tests.ExtractionTests.NaturalBoardingDepartsBeforeCompletion" methodname="NaturalBoardingDepartsBeforeCompletion" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" seed="1255179662" result="Passed" start-time="2026-10-07 03:07:06Z" end-time="2026-10-07 03:08:15Z" duration="69.198849" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <output><![CDATA[Extraction scale Nam=(1.00, 1.00, 1.00) Hung=(1.08, 1.08, 1.08)
+]]></output>
+              </test-case>
+              <test-case id="1006" name="RadioSkipAndExtractionCheckpointAreIdempotent" fullname="ShadowVale.Map01.Tests.ExtractionTests.RadioSkipAndExtractionCheckpointAreIdempotent" methodname="RadioSkipAndExtractionCheckpointAreIdempotent" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" seed="1452725061" result="Passed" start-time="2026-10-07 03:08:15Z" end-time="2026-10-07 03:09:11Z" duration="55.896588" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1008" name="RiflesAndAimSurviveRadioHandoff" fullname="ShadowVale.Map01.Tests.ExtractionTests.RiflesAndAimSurviveRadioHandoff" methodname="RiflesAndAimSurviveRadioHandoff" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" seed="287718960" result="Passed" start-time="2026-10-07 03:09:11Z" end-time="2026-10-07 03:09:54Z" duration="42.542391" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1007" name="SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot" fullname="ShadowVale.Map01.Tests.ExtractionTests.SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot" methodname="SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" seed="53828459" result="Passed" start-time="2026-10-07 03:09:54Z" end-time="2026-10-07 03:11:03Z" duration="69.477114" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1056" name="Map02ArrivalTests" fullname="ShadowVale.Map01.Tests.Map02ArrivalTests" classname="ShadowVale.Map01.Tests.Map02ArrivalTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-07 03:13:55Z" end-time="2026-10-07 03:14:14Z" duration="19.443105" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1057" name="NaturalArrivalPreservesPartyAndEquipment" fullname="ShadowVale.Map01.Tests.Map02ArrivalTests.NaturalArrivalPreservesPartyAndEquipment" methodname="NaturalArrivalPreservesPartyAndEquipment" classname="ShadowVale.Map01.Tests.Map02ArrivalTests" runstate="Runnable" seed="1968617370" result="Passed" start-time="2026-10-07 03:11:03Z" end-time="2026-10-07 03:13:23Z" duration="139.942929" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <output><![CDATA[TEST arrival found Extraction boat root (ShadowVale.Map01.Map02Arrival)
+Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+]]></output>
+              </test-case>
+              <test-case id="1058" name="SkippedArrivalUsesSameDrySpawn" fullname="ShadowVale.Map01.Tests.Map02ArrivalTests.SkippedArrivalUsesSameDrySpawn" methodname="SkippedArrivalUsesSameDrySpawn" classname="ShadowVale.Map01.Tests.Map02ArrivalTests" runstate="Runnable" seed="1977548079" result="Passed" start-time="2026-10-07 03:13:23Z" end-time="2026-10-07 03:14:14Z" duration="51.259179" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+Saving results to: C:/Users/dangk/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

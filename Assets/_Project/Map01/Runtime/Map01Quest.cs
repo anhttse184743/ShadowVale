@@ -107,9 +107,8 @@ namespace ShadowVale.Map01
         {
             if (!mission.IsInitialized) return;
             companion = mission.hung.GetComponent<NavMeshAgent>();
-            // Hùng starts where Map 1.unity holds him: under the shelter at the north jetty.
-            mission.Say("Nam: Hùng đi đưa thư từ tối qua mà chưa về... Trinh sát báo địch bắt được một lính thông tin ở bến tàu phía Bắc. " +
-                "Lấy thảo dược ở thùng vật tư rồi lén tới cứu anh ấy.", 12);
+            // The opening briefing already explains the rescue. Keep its objective in the HUD;
+            // do not queue a second spoken briefing behind the cinematic.
         }
 
         private bool NearHung(float distance) => mission.hung != null
@@ -165,7 +164,7 @@ namespace ShadowVale.Map01
             Map01NamActions.For(mission)?.PlayUntie(mission.hung);
             Stage = EscortStage;
             mission.Say((remedy == "herb" ? "Nam: Chịu khó chút, Hùng. Thảo dược này cầm máu được." : "Nam: Chịu khó chút, Hùng. Để tôi băng vết thương lại.") +
-                "\nHùng: ...Cảm ơn Nam. Tôi đang mang thư về thì bị chúng phục kích ở bến này. Thư vẫn còn trong người — về căn cứ thôi.", 10);
+                "\nHùng: ...Cảm ơn Nam. Tôi đang đưa hàng tiếp tế về thì bị chúng phục kích ở bến này. Chúng tưởng tôi là lính thông tin nên giữ lại tra hỏi. Hàng tiếp tế vẫn còn — đưa về căn cứ thôi.", 10);
         }
 
         /// <summary>[E] on the base's supply point with Hùng alongside — he is home, and stays.</summary>

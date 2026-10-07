@@ -1,0 +1,16 @@
+PALM_ERROR=7.698004E-06
+hung hand=(1.31, 0.65, 85.37) support=(1.31, 0.65, 85.43) children=LeftHand_end:(1.31, 0.65, 85.50)
+bl_grip_low_Material #44_0 gunlocal=(0.01, 0.01, 0.00)
+bm_magazine_low_Material #44_0 gunlocal=(0.03, 0.01, 0.17)
+bm_magazineBottom_low_Material #44_0 gunlocal=(0.10, 0.01, 0.22)
+bm_magazinePart1_low_Material #44_0 gunlocal=(-0.05, 0.02, 0.13)
+bm_magazinePart2_low_Material #44_0 gunlocal=(-0.05, 0.00, 0.13)
+bm_magazinePart3_low_Material #44_0 gunlocal=(-0.05, 0.01, 0.10)
+PALM_ERROR=1.884864E-06
+Commander (shared player mesh) hand=(1.34, 0.61, 88.57) support=(1.34, 0.61, 88.63) children=LeftHand_end:(1.34, 0.61, 88.70),LeftHandIndex1:(1.36, 0.61, 88.67),LeftHandMiddle1:(1.34, 0.61, 88.67),LeftHandPinky1:(1.30, 0.60, 88.66),LeftHandRing1:(1.32, 0.61, 88.67),LeftHandThumb1:(1.36, 0.60, 88.60)
+bl_grip_low_Material #44_0 gunlocal=(0.01, 0.01, 0.00)
+bm_magazine_low_Material #44_0 gunlocal=(0.03, 0.01, 0.17)
+bm_magazineBottom_low_Material #44_0 gunlocal=(0.10, 0.01, 0.22)
+bm_magazinePart1_low_Material #44_0 gunlocal=(-0.05, 0.02, 0.13)
+bm_magazinePart2_low_Material #44_0 gunlocal=(-0.05, 0.00, 0.13)
+bm_magazinePart3_low_Material #44_0 gunlocal=(-0.05, 0.01, 0.10)

@@ -51,3 +51,6 @@ an 18-second close camera video. The complete extraction suite passed 4/4; after
 freezing the final grip for completion/pause, natural playback and skip/checkpoint
 checks passed 2/2 (`rowing-final-tests.xml`). Runtime sources match the main project.
 The correction is post-retargeting in Unity; the source FBX takes were not regenerated.
+
+
+Latest follow-up: see OCT6-VERIFICATION.md and oct6-tests.xml (5/5 passed).

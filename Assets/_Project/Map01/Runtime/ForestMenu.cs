@@ -77,7 +77,7 @@ namespace ShadowVale.Map01
             saveSystem = mission != null ? mission.GetComponent<Map01SaveSystem>() : null;
             var name = SceneManager.GetActiveScene().name;
             // A blank/unsaved editor scene has no gameplay. It must show the title rather than just its skybox.
-            visible = mission == null || mission.Paused;
+            visible = mission != null ? mission.Paused : name != "Map 2";
             browser = saving = quitAuthorized = loading = false; selected = 0; question = message = null; confirmed = null;
             ignoreKeysUntil = Time.realtimeSinceStartup + .5f; settleFrames = 10;
             Time.timeScale = mission != null && mission.Paused ? 0 : 1;

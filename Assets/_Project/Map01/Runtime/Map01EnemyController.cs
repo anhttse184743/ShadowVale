@@ -169,6 +169,14 @@ namespace ShadowVale.Map01
             if (_agent.isOnNavMesh) _agent.isStopped = saved.stopped || !Alive;
             if (!Alive) CreateLoot();
         }
+        public void ReceiveExtractionHit(float amount, Vector3 point)
+        {
+            // Film combat changes real health/death state, but grants no extra loot or takedown credit.
+            if(!Alive)return;
+            if(amount>=_health.Current)_lootCreated=true;
+            _health.TakeDamage(amount,point,null);_lastHealth=_health.Current;
+            if(_health.IsDead && _agent.isOnNavMesh) {_agent.ResetPath();_agent.isStopped=true;}
+        }
         private void CreateLoot()
         {
             if (_lootCreated || _mission == null) return;

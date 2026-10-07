@@ -182,7 +182,7 @@ namespace ShadowVale.Map01
             if (mission.PlayerHealth <= 0 || quest.Stage == Map01Quest.CompleteStage) {
                 HudPanel(new Rect(width / 2 - 300, 320, 600, 185));
                 GUI.Label(new Rect(width / 2 - 275, 345, 550, 75), mission.PlayerHealth <= 0 ? "NAM ĐÃ GỤC NGÃ" : "HOÀN THÀNH MAP 1", hudCenter);
-                GUI.Label(new Rect(width / 2 - 245, 437, 490, 50), "Enter Chơi lại  ·  F9 Tải bản lưu  ·  Esc Menu", hudSmall);
+                GUI.Label(new Rect(width / 2 - 245, 437, 490, 50), quest.Stage == Map01Quest.CompleteStage ? "Continuing to Map 2…  Enter: Continue" : "Enter Chơi lại  ·  F9 Tải bản lưu  ·  Esc Menu", hudSmall);
             }
             GUI.matrix = matrix; GUI.color = color; GUI.depth = depth;
         }

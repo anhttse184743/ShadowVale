@@ -225,6 +225,7 @@ namespace ShadowVale.Map01
 
         private void Restore()
         {
+            GetComponent<DialogueVoice>()?.Stop();
             try
             {
                 var data = JsonUtility.FromJson<CheckpointData>(pendingCheckpoint);

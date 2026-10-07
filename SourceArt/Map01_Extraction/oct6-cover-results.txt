@@ -1,0 +1,1 @@
+Nam shots=3, Commander shots=3, Kills=2
