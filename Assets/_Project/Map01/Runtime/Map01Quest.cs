@@ -31,8 +31,8 @@ namespace ShadowVale.Map01
         public const int BoardingStage = 11;
         public const int LastStage = BoardingStage;
         public static readonly string[] Objectives = {
-            "Giải cứu Hùng bị địch bắt ở bến tàu phía Bắc: lén tiếp cận, cởi trói và chữa trị bằng thảo dược hoặc băng cứu thương [E] — đừng để Hùng trúng đạn",
-            "Đưa Hùng về căn cứ an toàn, nhận hàng tiếp tế [E]",
+            "Giải cứu Hùng ở bến phía Bắc: dùng đá đánh lạc hướng và dao ám sát lính giám sát; hạ đủ bốn lính rồi cởi trói [E]",
+            "Yểm hộ Hùng về căn cứ, vượt qua ba đợt truy kích và đưa anh ấy vào hầm trú ẩn",
             "Gặp Hùng tại căn cứ để nhận nhiệm vụ [E]",
             "Trinh sát 3 doanh trại địch: giữ [F] dùng ống nhòm ghi vị trí — không để lính phát hiện, không tấn công trong doanh trại",
             "Về căn cứ báo cáo kết quả trinh sát cho Hùng [E]",
@@ -54,7 +54,9 @@ namespace ShadowVale.Map01
 
         public int Stage { get; private set; }
         /// <summary>The objective line for the HUD, with the scouting tally while it runs.</summary>
-        public string ObjectiveText => Stage == ScoutStage
+        public string ObjectiveText => Stage == RescueStage && rescue != null
+            ? (rescue.CanFree ? "Đã hạ đủ bốn lính. Cởi trói Hùng [E]." : $"{Objectives[0]} — còn {rescue.Remaining}/4 lính; " + (rescue.OverseerAlive ? "chưa được báo động" : "đã hạ lính giám sát, có thể giao chiến"))
+            : Stage == ScoutStage
             ? $"{Objectives[Stage]} ({scouting.FoundCount}/{scouting.Camps.Count})"
             : Objectives[Mathf.Clamp(Stage, 0, LastStage)];
         public bool AwaitingReport => Stage == BriefingStage || Stage == ReportScoutStage || Stage == ReportCampsStage || Stage == ReportBossStage;
@@ -63,19 +65,20 @@ namespace ShadowVale.Map01
         public bool HungInRange { get; private set; }
         /// <summary>What [E] does next to Hùng right now, for the HUD prompt.</summary>
         public string HungPrompt => Stage == RescueStage
-            ? (CanTreatHung ? "[E] Cởi trói và chữa trị cho Hùng" : "Cần thảo dược hoặc băng cứu thương để chữa trị cho Hùng")
+            ? (rescue.CanFree ? "[E] Cởi trói Hùng" : $"Cần hạ hết bốn lính — còn {rescue.Remaining}")
             : "[E] Báo cáo với Hùng";
         /// <summary>The base's supply point keeps resupplying once Hùng is home.</summary>
         public bool BaseResupplyOpen => Stage > EscortStage;
         /// <summary>Hùng walks with Nam only while being brought home; before that he is wounded,
         /// after it he runs the base.</summary>
-        public bool ShouldFollowPlayer() => Stage == EscortStage;
+        public bool ShouldFollowPlayer() => Stage == EscortStage && rescue.CurrentPhase == Map01Rescue.Phase.Escorting;
 
         /// <summary>Direct-set for restoring a checkpoint; never call this mid-play otherwise.</summary>
         public void RestoreStage(int value)
         {
             // Older saves waiting for the final report are already victorious.
             Stage = value == ReportBossStage ? CompleteStage : value == BoardingStage ? ExtractionStage : Mathf.Clamp(value, 0, LastStage);
+            rescue?.SyncRestoredStage(Stage);
             // The commander is spawned at runtime, not baked into the scene — a checkpoint taken
             // mid-fight (the exit autosave allows that) must bring him back, or the objective can
             // never complete. The save system restores his health/position right after this.
@@ -145,39 +148,22 @@ namespace ShadowVale.Map01
             }
         }
 
-        /// <summary>What Nam treats Hùng with: a herb — the briefing's "lấy thảo dược ở thùng vật tư" —
-        /// or, once the herbs have gone into crafting, a bandage made from them. Null: nothing yet.</summary>
-        private string Remedy => inventory.Count("herb") > 0 ? "herb" : inventory.Count("medkit_small") > 0 ? "medkit_small" : null;
-        public bool CanTreatHung => Remedy != null;
-
-        /// <summary>
-        /// [E] next to captive Hùng: cut him loose and treat the wounds they gave him with one
-        /// herb or bandage (<see cref="Remedy"/>), and start the walk home.
-        /// </summary>
+        // Kept for callers from older UI/tests; freeing no longer requires an item.
+        public bool CanTreatHung => rescue != null && rescue.CanFree;
         public void TryRescueHung()
         {
-            if (Stage != RescueStage || !NearHung(mission.Settings.interactRange)) return;
-            string remedy = Remedy;
-            if (remedy == null) { mission.Say("Cần thảo dược hoặc băng cứu thương để chữa trị cho Hùng.", 3); return; }
-            inventory.Spend(remedy, 1);
-            // Nam kneels at his back and works the rope off (Blender); Hùng gets up once it is off.
-            Map01NamActions.For(mission)?.PlayUntie(mission.hung);
-            Stage = EscortStage;
-            mission.Say((remedy == "herb" ? "Nam: Chịu khó chút, Hùng. Thảo dược này cầm máu được." : "Nam: Chịu khó chút, Hùng. Để tôi băng vết thương lại.") +
-                "\nHùng: ...Cảm ơn Nam. Tôi đang đưa hàng tiếp tế về thì bị chúng phục kích ở bến này. Chúng tưởng tôi là lính thông tin nên giữ lại tra hỏi. Hàng tiếp tế vẫn còn — đưa về căn cứ thôi.", 10);
+            if(Stage!=RescueStage||!NearHung(mission.Settings.interactRange))return;
+            if(!rescue.CanFree){mission.Say($"Hạ hết bốn lính trước khi cởi trói Hùng. Còn {rescue.Remaining} tên.",3);return;}
+            rescue.BeginFree();
         }
-
-        /// <summary>[E] on the base's supply point with Hùng alongside — he is home, and stays.</summary>
-        public bool TryDeliverSupplies()
+        public void BeginEscort(){if(Stage==RescueStage)Stage=EscortStage;}
+        public void FinishRescueDelivery()
         {
-            if (Stage != EscortStage) return false;
-            if (!NearHung(10f)) { mission.Say("Hùng chưa theo kịp — đợi anh ấy về tới căn cứ đã.", 4); return false; }
-            Stage = BriefingStage;
-            if (companion != null && companion.isOnNavMesh) companion.ResetPath();
-            rescue.ResetSquad(); // The jetty is manned again once the prisoner is gone for good.
-            mission.Say("Hùng: Về tới căn cứ rồi. Cảm ơn Nam — nhận hàng tiếp tế đi, rồi gặp anh nhận nhiệm vụ. [E]", 9);
-            return true;
+            if(Stage!=EscortStage)return;Stage=BriefingStage;
+            if(companion!=null&&companion.isOnNavMesh){companion.ResetPath();companion.isStopped=true;}
         }
+        // The first reward is committed by the shelter cinematic; E cannot bypass it.
+        public bool TryDeliverSupplies()=>false;
 
         /// <summary>Map01Scouting calls this once all three camps are logged; Hùng wants the report in person.</summary>
         public void CompleteScouting()

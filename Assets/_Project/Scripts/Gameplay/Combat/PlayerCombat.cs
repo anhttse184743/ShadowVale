@@ -215,9 +215,19 @@ namespace ShadowVale.Gameplay.Combat
         public WeaponKind EquippedKind => _equippedKind;
         public WeaponKind StartingWeapon => startingWeapon;
         public bool IsAiming => _aiming;
+        /// <summary>Optional mission-specific melee interaction, before ordinary damage.</summary>
+        public System.Func<bool> TrySpecialMelee { get; set; }
 
         // Rebind clears Animator parameters even when the cached aiming flag is unchanged.
         // Restore gameplay explicitly rather than waiting for another input edge.
+        /// <summary>Seat the equipped prop in its authored carry grip before a locomotion playable takes over.</summary>
+        public void PrepareCinematicCarry()
+        {
+            _aiming=false;_aimPoseBlend=0;_upperBodyHoldUntil=_faceCameraHoldUntil=0;
+            if(animator!=null){animator.SetBool(AnimatorParams.Aiming,false);if(_upperBodyLayer>0)animator.SetLayerWeight(_upperBodyLayer,0);}
+            if(_equipped!=null&&gripConfig!=null)gripConfig.Apply(_equipped.transform,_equippedKind,false);
+        }
+
         public void RestoreAfterCinematic()
         {
             if (animator == null || animator.runtimeAnimatorController == null) return;
@@ -669,6 +679,7 @@ namespace ShadowVale.Gameplay.Combat
 
         private void Attack()
         {
+            if (_equippedKind == WeaponKind.Knife && TrySpecialMelee != null && TrySpecialMelee()) return;
             // Everything that can refuse the shot is settled before a single side effect runs.
             // Pulling the trigger on an empty magazine used to burn the cooldown and play the
             // firing animation anyway, so the weapon mimed a shot it never took.

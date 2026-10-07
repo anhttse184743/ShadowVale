@@ -146,7 +146,7 @@ namespace ShadowVale.Map01
                 {
                     if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 2.", 3); return false; }
                     inventory.Spend("ammo_rifle", 1);
-                    EmitNoise(player.position, Weapon.noise_radius);
+                    EmitNoise(player.position, Weapon.noise_radius, Map01NoiseKind.Gunshot);
                     return true;
                 };
                 // With a magazine in the weapon the pack is a reserve, drawn once per reload
@@ -201,7 +201,8 @@ namespace ShadowVale.Map01
         {
             Points.Remove(point); hideSpots.Remove(point); Interactables.Remove(point);
         }
-        public void AddEnemy(Map01EnemyController enemy) => Enemies = Enemies.Append(enemy).ToArray();
+        public void AddEnemy(Map01EnemyController enemy) { if (enemy != null && !Enemies.Contains(enemy)) Enemies = Enemies.Append(enemy).ToArray(); }
+        public void RemoveEnemy(Map01EnemyController enemy) => Enemies=Enemies.Where(e=>e!=null&&e!=enemy).ToArray();
         /// <summary>A brief visible streak — thrown stones, tracers — using the shared trail material.</summary>
         public void Trace(Vector3 start, Vector3 end, Color color)
         {
@@ -238,14 +239,14 @@ namespace ShadowVale.Map01
         }
         private void OnPlayerAttacked(WeaponKind kind, Vector3 position)
         {
-            if (kind == WeaponKind.Rifle) EmitNoise(position, Weapon.noise_radius);
+            if (kind == WeaponKind.Rifle) EmitNoise(position, Weapon.noise_radius, Map01NoiseKind.Gunshot);
         }
 
         /// <summary>A noise every guard within <paramref name="radius"/> goes to check; returns how many heard it.</summary>
-        public int EmitNoise(Vector3 position, float radius)
+        public int EmitNoise(Vector3 position, float radius, Map01NoiseKind kind = Map01NoiseKind.Other)
         {
             int heard = 0;
-            foreach (var enemy in Enemies) if (enemy.Hear(position, radius)) heard++;
+            foreach (var enemy in Enemies) if (enemy != null && enemy.Hear(position, radius, kind)) heard++;
             return heard;
         }
         public void Damage(float amount)
@@ -302,7 +303,7 @@ namespace ShadowVale.Map01
 
             float radius = step.Landing ? LandingNoiseRadius : FootstepNoiseRadius(step.Stance);
             if (step.Surface == FootSurface.Water) radius *= WadingNoiseScale;
-            EmitNoise(step.Position, radius);
+            EmitNoise(step.Position, radius, step.Landing ? Map01NoiseKind.Landing : Map01NoiseKind.Footstep);
         }
         public void AdvancePlaySeconds() { if (!Stopped) PlaySeconds += Time.deltaTime; }
         public void SetPlaySeconds(float value) => PlaySeconds = value;
@@ -326,7 +327,8 @@ namespace ShadowVale.Map01
             var kb = UnityEngine.InputSystem.Keyboard.current;
             if (kb == null) return;
             if (ForestMenu.Visible) return;
-            if (kb.enterKey.wasPressedThisFrame && hp <= 0) Restart();
+            if (kb.enterKey.wasPressedThisFrame && rescue != null && Stage <= Map01Quest.EscortStage && (rescue.Failed || hp<=0)) rescue.Retry();
+            else if (kb.enterKey.wasPressedThisFrame && hp <= 0) Restart();
             else if(kb.enterKey.wasPressedThisFrame && Stage==Map01Quest.CompleteStage) Map01Extraction.Get(this)?.ContinueToMap2();
             else if (kb.enterKey.wasPressedThisFrame && rescue != null && rescue.HungDown) rescue.Retry();
             else if (kb.enterKey.wasPressedThisFrame && scouting != null && scouting.FailedRun) scouting.Restart();

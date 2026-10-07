@@ -1,0 +1,281 @@
+{
+  "project": "G:\\game\\ShadowVale",
+  "files": [
+    {
+      "path": "Assets/_Project/Map01/Editor/RescueMissionSetup.cs",
+      "before": null,
+      "after": "9551497d88795857d2335ff11550b45c58fa9cd2cb335ce61cde0d1f3274ff21",
+      "bytes": 10674
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/RescueMissionSetup.cs.meta",
+      "before": null,
+      "after": "cac1cb0bc89370688d5ecbbc4e67adefc56ec7786a27a2950f222859f87c80c3",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01EnemyController.cs",
+      "before": "ef78d72037d478f2072b3483536dd89181610761286679353d6baa1007a80aa0",
+      "after": "d7a13fe4ccd308fe1fc77f5fe7bc0515cb46f665abadab50d28b791bef0fd009",
+      "bytes": 32990
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01Hud.Rescue.cs",
+      "before": "ec864a713966499667a51103f151c3312f53d6dbcc6aca2ea592e25750421ad5",
+      "after": "17565f43d7365a7835a1c63cf3c8e0cc520ce0463aab29aa176fe0d315343747",
+      "bytes": 2481
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01HungVisual.cs",
+      "before": "42a6fb71f7f5da103b6074b32fb3a799960f4629e48fd1e17d09ee80b0faff28",
+      "after": "0aa01fcbf0918325dfe35b4c2c89fec660256de63fd704d7caac6ecbf0539671",
+      "bytes": 15124
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01Mission.cs",
+      "before": "9226df8255a985cba595e573d81adfb49624db5fca95ba82e76744834a9b740c",
+      "after": "59a3ed4c4367d11ff905b02f95b5a05ea251892f14154904b1a4be7728fe4516",
+      "bytes": 18701
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01NamActions.cs",
+      "before": "a7451c6d5d19aae9e3e9ea1edb105f4cf57dd79fe8579bc7382d34a0e9ded6c7",
+      "after": "eec5496728ec20e10d4cde716d19e188e0251746e3380eecb7109f2f52dc3752",
+      "bytes": 11745
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01ObjectiveGuide.cs",
+      "before": "9eec06b370bb9a8ddf66440c2809358fae90060820903bb071bada73f5bca0fd",
+      "after": "95100669a6ba371b6eb8c6c7c5f0c49dbe211b18004469d6d3140b69eeaaa0ca",
+      "bytes": 9369
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01PlayerInteraction.cs",
+      "before": "e2858276f4a4aa59e105c6254829f32edc2cd59b59454440419aed4723ac4777",
+      "after": "4aef886840c812fe9978b66b0435819b9fab8c29dc7e7da8977d67ded766f06b",
+      "bytes": 10261
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01Quest.cs",
+      "before": "763e05947ed90d96ece9d5e79b9c73c8e5610fc8ec23d9f0f40a7d722c4b66de",
+      "after": "3f585e80ea2aedf562bfa03e49a93eb90863d2c5e90507e6fe5e0df9153e0c8b",
+      "bytes": 15009
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01Rescue.cs",
+      "before": "624295cd37d49f4f773b0d3a639cf45e90e6a327f9583679b80e277137603564",
+      "after": "81b4cf241aec8af0de7152001370d3871d62ae84866ed21ce160d821c448bb40",
+      "bytes": 17321
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01RescueCinematic.cs",
+      "before": null,
+      "after": "9d44427ae8c592f046c0fb84b1cb43a1d1a4910b0bd77ea4ec432259619a04b0",
+      "bytes": 20238
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01RescueCinematic.cs.meta",
+      "before": null,
+      "after": "01ea07ed74aeb52b9678aed1150a4feb1fa0c35e0db6625a2a9912c3c9e47ef2",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01RescueLayout.cs",
+      "before": null,
+      "after": "3e4daca13bb206c0ad6a0d2e6de95a801d235a960d244c798b44a910cf30a507",
+      "bytes": 2359
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01RescueLayout.cs.meta",
+      "before": null,
+      "after": "57e8738861c74276288bd1b74fde180c7bc226d3973758de9f4545d16f632d26",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01SaveSystem.cs",
+      "before": "695a7ae4c408ae51c55200b4c920c2d695f841bcd91ed3839c7d3afa90b13ff5",
+      "after": "bf41165fed0ab465ea0ad959866ddbb53acc98b31928058b29d76ba211821503",
+      "bytes": 18407
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01SkinContact.cs",
+      "before": null,
+      "after": "c67270d65af105f219f64b6d556da586e8880d58dcdd156eea1af5125a4956cb",
+      "bytes": 2964
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01SkinContact.cs.meta",
+      "before": null,
+      "after": "9321563bfc4d1ed5f4958147a73ca47a525815603e820ad300b1ce57a3aae4b2",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01SkinContactData.cs",
+      "before": null,
+      "after": "5a2f0713fb4f0ab0b8d2d88a0073d9759d1a59bf159b367ef55c8139632d98b2",
+      "bytes": 657
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01SkinContactData.cs.meta",
+      "before": null,
+      "after": "1220ed4b183b44816c615c516f14d2eb5e560da66547a73e86b5dd326f6a9584",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01StoneThrow.cs",
+      "before": "ab16a5b1ed49ff7cd3f7c54fab1bedb632a484d0d30b0459e560147e1e96baec",
+      "after": "1b70b0597e832ffcc991fbf97982dd28bc9120f41a190a27a3edded64af975e0",
+      "bytes": 12238
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/RescueCompatibilityTests.cs",
+      "before": null,
+      "after": "b084ab7ec8b70f78c341b1d9fdbb5ae165812c5e633e71f1cd156da214c4dea1",
+      "bytes": 6807
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/RescueCompatibilityTests.cs.meta",
+      "before": null,
+      "after": "6dac97a55396ab4e651c7954cc20518b0254dc84e734526b119f9fab84e84cbc",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/RescueMotionTests.cs",
+      "before": null,
+      "after": "3b9ebac160f25af3c3ba25dd3d98e0a18d1ae409bd9c7226d927d050e7f90a53",
+      "bytes": 6235
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/RescueMotionTests.cs.meta",
+      "before": null,
+      "after": "abd4321a3dc9c64d4c69cbd154b9d001077b187da85724f9297ac7515df84f54",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/RescueTests.cs",
+      "before": "5d88f68c1be28cbcc80251569b1d514a8ba5cf130de4755f4f8c7c10d98baf9b",
+      "after": "0910577cafa8030d617da7748931ee297212da1b908a0e9a27851ecefdda8cf5",
+      "bytes": 17355
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/RescueVisualTests.cs",
+      "before": null,
+      "after": "73cd509e3a08d8087f85ac8f2268f096dbf8ff9015e9c1ca6603e1ff53b674a4",
+      "bytes": 14512
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/RescueVisualTests.cs.meta",
+      "before": null,
+      "after": "3796ce624ce85d4136d9dd9aef01a18575c635f4b09373e2df7f3c007449abe3",
+      "bytes": 59
+    },
+    {
+      "path": "Assets/_Project/Scripts/Gameplay/Combat/PlayerCombat.cs",
+      "before": "dab5fb0c5eff314411b7d1821487b7c0ece38f0f80e38b6cf9173723d64fc6ab",
+      "after": "c8b0c63ffe1b01db21db2dd13b23afcfc7a8d601c154187e021c65a662b284a2",
+      "bytes": 36465
+    },
+    {
+      "path": "Assets/Resources/Rescue/Hung_Shelter_Idle.anim",
+      "before": null,
+      "after": "c1b8c6150a8615ed7a700b54b3c17794c69e799057f097dc127fc24b88008bc2",
+      "bytes": 3593878
+    },
+    {
+      "path": "Assets/Resources/Rescue/Hung_Shelter_Idle.anim.meta",
+      "before": null,
+      "after": "371bd7f45d4ffae24c2a03ffeb0c13a096916a844fe61d68aa13862398497a9c",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/Resources/Rescue/Hung_Shelter_Run.anim",
+      "before": null,
+      "after": "0448870b62876327414d1e2779372460fb937714b990f747031b3ef078206b3a",
+      "bytes": 1504882
+    },
+    {
+      "path": "Assets/Resources/Rescue/Hung_Shelter_Run.anim.meta",
+      "before": null,
+      "after": "496a01e056899aa24c92532a9a25548877143ee061d0f0fecd927b13fe3bae63",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/Resources/Rescue/Map01RescueLayout.prefab",
+      "before": null,
+      "after": "b48a060a50460983a55194b092ffb0511d07945ddf04780cd3e0edd12a098c40",
+      "bytes": 54399
+    },
+    {
+      "path": "Assets/Resources/Rescue/Map01RescueLayout.prefab.meta",
+      "before": null,
+      "after": "f7daa3611a608400985016f162fdffff50c68e4a673b6b7ae9a5a7c43cf51d91",
+      "bytes": 154
+    },
+    {
+      "path": "Assets/Resources/Rescue/Nam_Shelter_Idle.anim",
+      "before": null,
+      "after": "ef120359498656f04c6cd1376737e0d701d4435027f19a6cec5b548578b3d346",
+      "bytes": 631494
+    },
+    {
+      "path": "Assets/Resources/Rescue/Nam_Shelter_Idle.anim.meta",
+      "before": null,
+      "after": "f0469f050129066dd00b8943ddd4059ac8f31b69adc827ba7d98219ab0fd2599",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/Resources/Rescue/Nam_Shelter_Run.anim",
+      "before": null,
+      "after": "817f06aa5a562f92e03dd1a1ee17f7f96ae690aa2925898ca6b8c8591499ed68",
+      "bytes": 407506
+    },
+    {
+      "path": "Assets/Resources/Rescue/Nam_Shelter_Run.anim.meta",
+      "before": null,
+      "after": "452ab63cb06472405d8f166e446ab609f8f4fcc3f542465607dd56c21322fabe",
+      "bytes": 188
+    },
+    {
+      "path": "Assets/Resources/Rescue/SkinContactData.asset",
+      "before": null,
+      "after": "e49cd178d642f272a6ff6408530cd735cd2f10bc27e204e22bc0fc8a0397ba99",
+      "bytes": 33890676
+    },
+    {
+      "path": "Assets/Resources/Rescue/SkinContactData.asset.meta",
+      "before": null,
+      "after": "00a0b9ea4dcfb9fda5e74c1af4450c00558afcdfef77b1a708175a31c2511c83",
+      "bytes": 189
+    },
+    {
+      "path": "Assets/Resources/Rescue.meta",
+      "before": "1289a9af2fe4d7dfa0fe6c4a8d9abd6325970549e76ce55e53a584af54a24ece",
+      "after": "1289a9af2fe4d7dfa0fe6c4a8d9abd6325970549e76ce55e53a584af54a24ece"
+    }
+  ],
+  "protectedHashes": {
+    "Assets/_Project/Scenes/Maps/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Assets/_Project/Scenes/Maps/Map 1.meta": "a24543094f9d9a7d9a8eccbf577e39a0c2c5dc59e4ec3961b1b5f91447015d96",
+    "Assets/_Project/Scenes/Maps/Map 1.unity": "82e097e24ab5fda359149e13630875030f57247f27a1ba93c22c5e91dc720dc9",
+    "Assets/_Project/Scenes/Maps/Map 1.unity.meta": "e2a19f65acde7d6b8bd86ff8fcd22fcf3af331d191ab682910d504b4edcdf9fc",
+    "Assets/_Project/Scenes/Maps/Map 2.unity": "17b19c6657c479f397b0850ce67ebf2075ff3766b25737d22c2e3861519f07bf",
+    "Assets/_Project/Scenes/Maps/Map 2.unity.meta": "8888a4b7c057d0282425d43252303bbdb5f0d1d32254da29fa5ab94aea962517",
+    "Assets/_Project/Map01/Runtime/Map01EndingCutscene.cs": "7eaab22d1b2f7881a723257b8abc7066e7ded585c6d3cc3dd07fbf06ea4cb7ce",
+    "Assets/_Project/Map01/Runtime/Map01EndingCutscene.cs.meta": "4bf816f23e819b6b0f9b2b25dfbd8dac8a4ec8b9465d88ecd8b3e95e31372413",
+    "Assets/_Project/Map01/Runtime/Map01Extraction.cs": "dc2c6524bd6f7fbd8982378d76debb5dfc93acd4b0b8c983862762645f95ddc8",
+    "Assets/_Project/Map01/Runtime/Map01Extraction.cs.meta": "61b4b739c42310694c3cdb28b69510274ec526ef2ba6e3c5b84669edec55da7d",
+    "Assets/_Project/Map01/Runtime/Map01OpeningCutscene.cs": "a4ffe21f14b438e7ff11a60b21d3c1b0bacd7234f1b5b8b71d996a8a79b19c22",
+    "Assets/_Project/Map01/Runtime/Map01OpeningCutscene.cs.meta": "1a739fea9bef02b1def6778e027f50a30987b683613da61e90a76bb43b2ec94e",
+    "Assets/_Project/Map01/Runtime/Map02Arrival.cs": "bd77f24be10ba29341ee8c143a4f982ac5d8674f8e638a3655d0fcb82cf73d65",
+    "Assets/_Project/Map01/Runtime/Map02Arrival.cs.meta": "83bf0cb234ddaf1ba69c642400d7233d3ee3d2f89a95091eab8b02050d09b60c",
+    "Assets/_Project/Art/Characters/Player/Player.fbx": "c9b339abe1307e12d919c8623cbcd38bfae08339af1ea93d2b3a25da0bff69a7",
+    "Assets/_Project/Art/Characters/Player/Player.fbx.meta": "59b9c7f680b9d428c16ebbba297797f7b29ebcad3ac32a8f3c08fc9eda8a6097",
+    "Assets/_Project/Art/Characters/Player/Y Bot.fbx": "5486a8b67bf1209c35534a9dfdc97669a2098ba173a013ccce9d40a647964780",
+    "Assets/_Project/Art/Characters/Player/Y Bot.fbx.meta": "e1cdcffd602acb38d9d53956c7ba45fe150c99d77e248a8e80a1533cec315c8b",
+    "Assets/_Project/Art/Characters/NPCs/hung.fbx": "713e6f6e45b4524d4ffaa85df9b109f9d1ffe80b28dfd882ce4b22dab33a79ee",
+    "Assets/_Project/Art/Characters/NPCs/hung.fbx.meta": "ddf314f398281452688d4de49e0481cc567a24686526ab8321707c2b234b1000",
+    "Assets/_Project/Scripts/Gameplay/Combat/ShotTracer.cs": "52226c250ab504f0429363bbfed3b00ae7ff1318d0cc94d3abc8622f7289e073"
+  },
+  "backup": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\work\\before-rescue",
+  "status": "Copied and SHA-256 verified"
+}

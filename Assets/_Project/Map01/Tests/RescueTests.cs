@@ -5,285 +5,208 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using ShadowVale.Gameplay.Combat;
-using ShadowVale.Gameplay.Player;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.TestTools;
-using Object = UnityEngine.Object;
+using Object=UnityEngine.Object;
 
 namespace ShadowVale.Map01.Tests
 {
-    public sealed class RescueTests : ForestSceneTestBase
+    public sealed class RescueTests:ForestSceneTestBase
     {
-        private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
-
-        // Lambdas stay in static helpers: one capturing an iterator local breaks after the domain
-        // reload EnterPlayMode triggers (see ForestFlowTests.NearestOutpostGuard).
-
-        private static void Teleport(Map01Mission mission, Vector3 position)
+        private const BindingFlags Private=BindingFlags.Instance|BindingFlags.NonPublic;
+        private static readonly FieldInfo Storage=typeof(ForestSaveSlots).GetField("storageRoot",BindingFlags.Static|BindingFlags.NonPublic);
+        private static Map01Mission Mission=>Object.FindFirstObjectByType<Map01Mission>();
+        private static Map01Rescue Rescue=>Mission.GetComponent<Map01Rescue>();
+        private static Map01Quest Quest=>Mission.GetComponent<Map01Quest>();
+        private static Map01EnemyController GuardById(string id)=>Mission.Enemies.FirstOrDefault(e=>e.SaveId==id);
+        private IEnumerator UnusedOpen()
         {
-            var controller = mission.player.GetComponent<CharacterController>();
-            controller.enabled = false; mission.player.position = position; controller.enabled = true;
+            Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();yield return null;yield return null;
+            Storage.SetValue(null,Path.GetFullPath("Logs/Rescue/saves/"+Guid.NewGuid().ToString("N")));
+            Assert.NotNull(Rescue.Layout);Assert.AreEqual(4,Rescue.Squad.Count);
         }
-
-        private static Vector3 NavPoint(Vector3 near)
+        private static void PlayerAt(Vector3 position,Quaternion rotation)
         {
-            Assert.IsTrue(NavMesh.SamplePosition(near, out var hit, 4f, NavMesh.AllAreas), $"No walkable ground near {near}.");
-            return hit.position;
+            var body=Mission.player.GetComponent<CharacterController>();bool enabled=body.enabled;
+            body.enabled=false;Mission.player.SetPositionAndRotation(position,rotation);body.enabled=enabled;
+            Mission.ModernPlayer.RestoreMotion(true);Mission.Crouched=true;
+            Physics.SyncTransforms();
         }
-
-        private static void AimCamera(Map01Mission mission, Vector3 point)
+        private static void Behind(Map01EnemyController guard)
         {
-            var rig = mission.gameCamera.GetComponent<ThirdPersonCamera>();
-            var dir = point - mission.gameCamera.transform.position;
-            float yaw = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
-            typeof(ThirdPersonCamera).GetField("_yaw", Private).SetValue(rig, yaw);
-            typeof(ThirdPersonCamera).GetField("_pitch", Private).SetValue(rig, 8f);
-            mission.player.rotation = Quaternion.Euler(0, yaw, 0);
+            var spot=guard.transform.position-guard.transform.forward*1.25f;
+            if(NavMesh.SamplePosition(spot,out var hit,1,NavMesh.AllAreas))spot=hit.position;
+            PlayerAt(spot,guard.transform.rotation);Mission.ModernCombat.Equip(WeaponKind.Knife);
         }
-
-        private static float DistanceToPath(Vector3 p, Vector3[] corners)
+        private IEnumerator WaitFree()
         {
-            float best = float.MaxValue;
-            for (int i = 0; i + 1 < corners.Length; i++)
-            {
-                Vector2 a = new Vector2(corners[i].x, corners[i].z), b = new Vector2(corners[i + 1].x, corners[i + 1].z), q = new Vector2(p.x, p.z);
-                var ab = b - a; float t = ab.sqrMagnitude < 1e-4f ? 0 : Mathf.Clamp01(Vector2.Dot(q - a, ab) / ab.sqrMagnitude);
-                best = Mathf.Min(best, Vector2.Distance(q, a + ab * t));
+            float until=Time.time+18;
+            while(Quest.Stage==Map01Quest.RescueStage&&Time.time<until)yield return null;
+            Assert.AreEqual(Map01Quest.EscortStage,Quest.Stage,"Untie and stand-up must finish.");
+        }
+        private IEnumerator ClearAndFree()
+        {
+            foreach(var enemy in Mission.Enemies)enemy.enabled=false;
+            foreach(var guard in Rescue.Squad)guard.GetComponent<Health>().TakeDamage(9999,guard.transform.position,null);
+            PlayerAt(Mission.hung.position-Mission.hung.forward*.7f,Mission.hung.rotation);
+            Quest.TryRescueHung();yield return WaitFree();
+        }
+        private static float RouteLength(Vector3[] points)
+        {float d=0;for(int i=1;i<points.Length;i++)d+=Vector3.Distance(points[i-1],points[i]);return d;}
+        private static Vector3 Along(Vector3[] points,float fraction)
+        {
+            float d=RouteLength(points)*fraction;
+            for(int i=1;i<points.Length;i++){
+                float length=Vector3.Distance(points[i-1],points[i]);if(d<=length)return Vector3.Lerp(points[i-1],points[i],d/length);d-=length;
+            }return points.Last();
+        }
+        private static void EscortAt(Vector3 position)
+        {
+            Mission.hung.GetComponent<NavMeshAgent>().Warp(position);
+            PlayerAt(position+Vector3.left*.7f,Quaternion.identity);
+            // Look away from the forest banks so the test still exercises the offscreen check.
+            var rig=Mission.gameCamera.GetComponent<ShadowVale.Gameplay.Player.ThirdPersonCamera>();
+            rig.SetCinematicView(position+Vector3.up*3-Vector3.forward*5,Quaternion.LookRotation(Vector3.forward+Vector3.down*.4f),45,1);
+        }
+        [UnityTest]public IEnumerator FourGuardsHaveThreeSeparatedConnectedRoutesAndApproaches()
+        {
+            Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
+            Storage.SetValue(null,Path.GetFullPath("Logs/Rescue/saves/"+Guid.NewGuid().ToString("N")));Assert.NotNull(Rescue.Layout);Assert.AreEqual(4,Rescue.Squad.Count);
+            Assert.AreEqual(0,Rescue.Squad[0].PatrolPoints.Count);
+            for(int i=1;i<4;i++){
+                var guard=Rescue.Squad[i];float distance=Vector3.Distance(Rescue.Layout.guardPosts[i].position,Rescue.CaptivePost);
+                Assert.That(distance,Is.InRange(18f,30f));Assert.AreEqual(4,guard.PatrolPoints.Count);
+                foreach(var p in guard.PatrolPoints)Assert.Greater(Map01Rescue.Path(p,Rescue.CaptivePost).Length,1);
             }
-            return best;
+            var approaches=Rescue.Layout.transform.Find("Three approach directions");Assert.AreEqual(3,approaches.childCount);
+            foreach(Transform marker in approaches)Assert.Greater(Map01Rescue.Path(Mission.player.position,marker.position).Length,1);
+            Assert.GreaterOrEqual(Rescue.Layout.pursuitSites.Length,8);
+            yield return new ExitPlayMode();
         }
-
-        private static Vector3[] Route(Vector3 from, Vector3 to)
+        [UnityTest]public IEnumerator FootstepsAndStonesInvestigateWithoutExecutingHung()
         {
-            var path = new NavMeshPath();
-            Assert.IsTrue(NavMesh.CalculatePath(NavPoint(from), NavPoint(to), NavMesh.AllAreas, path), $"No route {from} -> {to}.");
-            Assert.AreEqual(NavMeshPathStatus.PathComplete, path.status, $"Route {from} -> {to} must be complete.");
-            return path.corners;
+            Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
+            Storage.SetValue(null,Path.GetFullPath("Logs/Rescue/saves/"+Guid.NewGuid().ToString("N")));Assert.NotNull(Rescue.Layout);Assert.AreEqual(4,Rescue.Squad.Count);var guard=Rescue.Squad[1];var overseer=Rescue.Squad[0];
+            Assert.IsTrue(guard.Hear(guard.transform.position+Vector3.left*3,9,Map01NoiseKind.Footstep));
+            Assert.IsFalse(guard.Alerted,"A footstep has a short reaction; rocks remain immediate.");Assert.IsTrue(overseer.Hear(overseer.transform.position+Vector3.left*9,14,Map01NoiseKind.Stone));
+            Assert.AreEqual(Map01Rescue.Phase.Captive,Rescue.CurrentPhase);
+            yield return WaitGameSeconds(1.15f);Assert.IsTrue(guard.Alerted);yield return WaitGameSeconds(.85f);
+            Assert.LessOrEqual(Vector3.Distance(overseer.transform.position,Rescue.Layout.guardPosts[0].position),1.5f);
+            Assert.IsFalse(Rescue.Failed);yield return new ExitPlayMode();
         }
-
-        private static Map01EnemyController Nearest(Map01Rescue rescue, Vector3 to) =>
-            rescue.Squad.OrderBy(g => Vector3.Distance(g.transform.position, to)).First();
-        private static bool AllCalmAtPost(Map01Rescue rescue) => rescue.Squad.All(g => g.Alive && !g.Engaged && !g.Alerted);
-
-        [UnityTest]
-        public IEnumerator HungIsHeldAtTheJettyByASquadOfFourWellAwayFromTheCamps()
+        [UnityTest]public IEnumerator RealGunshotCommitsExecutionBeforeLethalHitscanAndRetryRestoresItems()
         {
-            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
-            yield return new EnterPlayMode();
-            yield return null;
-            var mission = Object.FindFirstObjectByType<Map01Mission>();
-            var quest = mission.GetComponent<Map01Quest>();
-            var rescue = mission.GetComponent<Map01Rescue>();
-            Assert.IsNotNull(rescue, "Map01Quest must bring the rescue along.");
-            Assert.AreEqual(Map01Quest.RescueStage, quest.Stage);
-
-            var jetty = GameObject.Find("B_HungCaptive").transform.position;
-            Assert.Less(Vector3.Distance(mission.hung.position, jetty), 3f, "Hùng is held at the north jetty.");
-            Assert.AreEqual(4, rescue.Squad.Count, "Four soldiers hold him.");
-            foreach (var guard in rescue.Squad)
-                Assert.Less(Vector3.Distance(guard.transform.position, mission.hung.position), 15f, $"{guard.name} surrounds the prisoner.");
-            Vector3 held = mission.hung.position;
-            yield return WaitGameSeconds(1.5f);
-            Assert.Less(Vector3.Distance(mission.hung.position, held), .5f, "A prisoner does not follow Nam.");
-
-            // No camp on the way there: base -> herb crate -> jetty — no camp guard stands or
-            // patrols within sight of that walk — and none near the jetty.
-            var herb = mission.Points.Single(p => p.id == "tutorial_loot").transform.position;
-            var toHerb = Route(mission.player.position, herb);
-            var toJetty = Route(herb, mission.hung.position);
-            var scouting = mission.GetComponent<Map01Scouting>();
-            Assert.AreEqual(3, scouting.Camps.Count);
-            foreach (var camp in scouting.Camps)
-            {
-                Assert.Greater(Vector3.Distance(camp.Center, mission.hung.position), 45f, $"Camp {camp.Number} must not overlook the jetty.");
-                foreach (var guard in camp.Guards)
-                    foreach (var spot in guard.PatrolPoints.Prepend(guard.transform.position))
-                    {
-                        float off = Mathf.Min(DistanceToPath(spot, toHerb), DistanceToPath(spot, toJetty));
-                        Assert.Greater(off, guard.VisionRange + 2f, $"{guard.name} of camp {camp.Number} must not see the rescue route from {spot}.");
-                    }
+            Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
+            Storage.SetValue(null,Path.GetFullPath("Logs/Rescue/saves/"+Guid.NewGuid().ToString("N")));Assert.NotNull(Rescue.Layout);Assert.AreEqual(4,Rescue.Squad.Count);var overseer=Rescue.Squad[0];var inventory=Mission.GetComponent<Map01Inventory>();
+            int stones=inventory.Count("stone");Behind(overseer);Mission.ModernCombat.Equip(WeaponKind.Rifle);
+            inventory.Spend("stone",2);
+            typeof(PlayerCombat).GetMethod("Attack",Private).Invoke(Mission.ModernCombat,null);
+            Assert.AreEqual(Map01Rescue.Phase.Alarm,Rescue.CurrentPhase,"Shot event must precede hitscan.");
+            overseer.GetComponent<Health>().TakeDamage(9999,overseer.transform.position,Mission.player.gameObject);
+            Assert.IsTrue(overseer.Alive,"The alarm's execution cannot be cancelled by the same shot.");
+            Assert.IsFalse(Mission.GetComponent<Map01SaveSystem>().SaveSlot(1,out _,true));
+            yield return WaitGameSeconds(1.8f);Assert.IsTrue(Rescue.Failed);
+            Rescue.Retry();yield return WaitGameSeconds(.8f);
+            Assert.AreEqual(Map01Quest.RescueStage,Quest.Stage);Assert.IsFalse(Rescue.Failed);Assert.AreEqual(4,Rescue.Remaining);
+            Assert.AreEqual(stones,Mission.GetComponent<Map01Inventory>().Count("stone"));
+            Assert.IsFalse(Rescue.Squad[0].GetComponent<Health>().CinematicInvulnerable);
+            yield return new ExitPlayMode();
+        }
+        [UnityTest]public IEnumerator ConfirmedSightExecutesButPartialSuspicionDoesNot()
+        {
+            Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
+            Storage.SetValue(null,Path.GetFullPath("Logs/Rescue/saves/"+Guid.NewGuid().ToString("N")));Assert.NotNull(Rescue.Layout);Assert.AreEqual(4,Rescue.Squad.Count);var guard=Rescue.Squad[2];
+            foreach(var g in Mission.Enemies)g.enabled=g==guard;
+            PlayerAt(guard.transform.position+guard.transform.forward*5,Quaternion.LookRotation(-guard.transform.forward));
+            var until=Time.time+6;while(!Rescue.Failed&&Time.time<until)yield return null;
+            Assert.IsTrue(Rescue.Failed);StringAssert.Contains("phát hiện",Rescue.FailureReason);
+            yield return new ExitPlayMode();
+        }
+        [UnityTest]public IEnumerator KnifeUsesPreDamageValidationAndPausesOtherGuardsThenRestoresInput()
+        {
+            Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
+            Storage.SetValue(null,Path.GetFullPath("Logs/Rescue/saves/"+Guid.NewGuid().ToString("N")));Assert.NotNull(Rescue.Layout);Assert.AreEqual(4,Rescue.Squad.Count);var guard=Rescue.Squad[0];
+            PlayerAt(guard.transform.position+guard.transform.forward*1.1f,guard.transform.rotation);Mission.ModernCombat.Equip(WeaponKind.Knife);
+            Assert.IsFalse(guard.CanSilentTakedown());
+            Behind(guard);Assert.IsTrue(guard.CanSilentTakedown());
+            var others=Rescue.Squad.Skip(1).Select(g=>g.transform.position).ToArray();
+            int rounds=Mission.ModernCombat.RoundsInMagazine;
+            typeof(PlayerCombat).GetMethod("Attack",Private).Invoke(Mission.ModernCombat,null);
+            Assert.IsFalse(guard.Alive);Assert.IsTrue(guard.TakenDownSilently);Assert.IsTrue(Mission.Cinematic);
+            Assert.IsFalse(guard.TrySilentTakedown());Assert.IsFalse(Mission.GetComponent<Map01SaveSystem>().SaveSlot(1,out _,true));
+            yield return WaitGameSeconds(2);
+            for(int i=0;i<3;i++)Assert.Less(Vector3.Distance(others[i],Rescue.Squad[i+1].transform.position),.03f);
+            yield return WaitGameSeconds(3);
+            Assert.IsFalse(Mission.Cinematic);Assert.IsTrue(Mission.ModernPlayer.enabled);Assert.IsTrue(Mission.ModernCombat.enabled);
+            Assert.AreEqual(rounds,Mission.ModernCombat.RoundsInMagazine);Assert.IsFalse(Rescue.OverseerAlive);
+            Rescue.Squad[1].Hear(Mission.player.position,100,Map01NoiseKind.Gunshot);
+            Rescue.ReportDetection(new Map01Detection(Rescue.Squad[1],Map01DetectionCause.Sight,Mission.player.position));
+            Assert.IsFalse(Rescue.Failed);Assert.AreEqual(Map01Rescue.Phase.Captive,Rescue.CurrentPhase);
+            yield return new ExitPlayMode();
+        }
+        [UnityTest]public IEnumerator FreeRequiresFourKillsButNoHealingItemAndWaitsForStandingUp()
+        {
+            Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
+            Storage.SetValue(null,Path.GetFullPath("Logs/Rescue/saves/"+Guid.NewGuid().ToString("N")));Assert.NotNull(Rescue.Layout);Assert.AreEqual(4,Rescue.Squad.Count);var inventory=Mission.GetComponent<Map01Inventory>();
+            inventory.Spend("herb",inventory.Count("herb"));inventory.Spend("medkit_small",inventory.Count("medkit_small"));
+            PlayerAt(Mission.hung.position,Mission.hung.rotation);Quest.TryRescueHung();Assert.AreEqual(Map01Rescue.Phase.Captive,Rescue.CurrentPhase);
+            foreach(var guard in Mission.Enemies)guard.enabled=false;
+            foreach(var guard in Rescue.Squad)guard.GetComponent<Health>().TakeDamage(9999,guard.transform.position,null);
+            Quest.TryRescueHung();Assert.AreEqual(Map01Quest.RescueStage,Quest.Stage);Assert.AreEqual(Map01Rescue.Phase.Untying,Rescue.CurrentPhase);
+            yield return WaitGameSeconds(2);Assert.AreEqual(Map01Quest.RescueStage,Quest.Stage);
+            yield return WaitFree();Assert.AreEqual(Map01Rescue.Phase.Escorting,Rescue.CurrentPhase);
+            var visual=Mission.hung.GetComponentInChildren<Map01HungVisual>();Assert.IsFalse(visual.RopeVisible);Assert.IsFalse(visual.IsRising);
+            Assert.Greater(visual.actor.GetBoneTransform(HumanBodyBones.LeftLowerLeg).position.y-Mission.hung.position.y,.3f);
+            Assert.Greater(visual.actor.GetBoneTransform(HumanBodyBones.RightLowerLeg).position.y-Mission.hung.position.y,.3f);
+            Assert.AreEqual(0,inventory.Count("herb"));yield return new ExitPlayMode();
+        }
+        [UnityTest]public IEnumerator ThreeWavesSpawnOnlyOnceOffscreenAndReloadKeepsDefeatedEnemies()
+        {
+            Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
+            Storage.SetValue(null,Path.GetFullPath("Logs/Rescue/saves/"+Guid.NewGuid().ToString("N")));Assert.NotNull(Rescue.Layout);Assert.AreEqual(4,Rescue.Squad.Count);yield return ClearAndFree();
+            var path=Map01Rescue.Path(Rescue.CaptivePost,Rescue.Layout.shelterDoor.position);
+            foreach(float fraction in new[]{.23f,.5f,.76f}){
+                EscortAt(Along(path,fraction));yield return WaitGameSeconds(.8f);
+                foreach(var guard in Rescue.Pursuers)guard.enabled=false;
             }
-            Assert.Greater(Vector3.Distance(rescue.RetryPoint, rescue.CaptivePost), 40f, "A failed rescue restarts a way back down the road.");
+            Assert.AreEqual(7,Rescue.WaveMask);Assert.AreEqual(6,Rescue.Pursuers.Count);
+            var dead=Rescue.Pursuers[0];dead.GetComponent<Health>().TakeDamage(9999,dead.transform.position,Mission.player.gameObject);string id=dead.SaveId;
+            Rescue.HitHung(25);float hp=Rescue.HungHealth;
+            Assert.IsTrue(Mission.GetComponent<Map01SaveSystem>().SaveSlot(2,out var error,true),error);
+            Map01SaveSystem.BeginGame(2);yield return WaitGameSeconds(.8f);
+            Assert.AreEqual(6,Rescue.Pursuers.Count);Assert.AreEqual(7,Rescue.WaveMask);Assert.AreEqual(hp,Rescue.HungHealth);
+            Assert.IsFalse(GuardById(id).Alive);
+            EscortAt(Along(path,.85f));yield return WaitGameSeconds(.8f);Assert.AreEqual(6,Rescue.Pursuers.Count);
             yield return new ExitPlayMode();
         }
-
-        [UnityTest]
-        public IEnumerator CreepingCloseOverhearsTheSquadAndThenHung()
+        [UnityTest]public IEnumerator SafeZoneNeedsBothPassengersAndShelterSkipRewardsExactlyOnce()
         {
-            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
-            yield return new EnterPlayMode();
-            yield return null;
-            var mission = Object.FindFirstObjectByType<Map01Mission>();
-            var rescue = mission.GetComponent<Map01Rescue>();
-            foreach (var guard in rescue.Squad) guard.enabled = false; // Listening is under test, not being seen.
-            mission.Say(null, -1f);
-
-            Vector3 away = (rescue.RetryPoint - rescue.CaptivePost).normalized;
-            Teleport(mission, NavPoint(rescue.CaptivePost + away * 22f));
-            for (float until = Time.time + 3; (mission.Dialogue == null || !mission.Dialogue.StartsWith("Lính địch")) && Time.time < until;) yield return null;
-            StringAssert.StartsWith("Lính địch", mission.Dialogue, "Within earshot the squad is heard.");
-            StringAssert.Contains("lính thông tin", mission.Dialogue, "They talk about the signals runner they caught.");
-            AimCamera(mission, rescue.CaptivePost + Vector3.up);
-            yield return WaitGameSeconds(.4f);
-            Directory.CreateDirectory("Logs/GuidePreview");
-            ScreenCapture.CaptureScreenshot("Logs/GuidePreview/rescue-jetty.png");
-            yield return null; yield return null;
-
-            Teleport(mission, NavPoint(rescue.CaptivePost + away * 8f));
-            typeof(Map01Rescue).GetField("nextChatter", Private).SetValue(rescue, 0f);
-            for (float until = Time.time + 2; !mission.Dialogue.StartsWith("Hùng") && Time.time < until;) yield return null;
-            StringAssert.StartsWith("Hùng (thì thào)", mission.Dialogue, "Right up close, Hùng whispers a warning.");
+            Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
+            Storage.SetValue(null,Path.GetFullPath("Logs/Rescue/saves/"+Guid.NewGuid().ToString("N")));Assert.NotNull(Rescue.Layout);Assert.AreEqual(4,Rescue.Squad.Count);yield return ClearAndFree();
+            var layout=Rescue.Layout;
+            PlayerAt(layout.safeEntry.position,Quaternion.identity);yield return WaitGameSeconds(.6f);Assert.IsFalse(Rescue.SafeReached);
+            EscortAt(layout.shelterDoor.position);yield return WaitGameSeconds(.6f);Assert.IsTrue(Rescue.SafeReached);
+            var cinematic=Mission.GetComponent<Map01RescueCinematic>();Assert.IsTrue(cinematic.IsPlaying);
+            int before=Mission.GetComponent<Map01Inventory>().Count("supplies");
+            cinematic.Skip();Assert.AreEqual(Map01Quest.BriefingStage,Quest.Stage);Assert.IsTrue(Rescue.RewardDelivered);
+            Assert.AreEqual(before+1,Mission.GetComponent<Map01Inventory>().Count("supplies"));Assert.IsFalse(Rescue.CompleteDelivery());
+            Assert.Less(Vector3.Distance(Mission.player.position,layout.reportPoint.position),.15f);
+            Assert.IsTrue(Mission.ModernPlayer.enabled);Assert.IsTrue(Mission.ModernCombat.enabled);
             yield return new ExitPlayMode();
         }
-
-        [UnityTest]
-        public IEnumerator EngagedSquadShootsHungAndHisFallRestartsTheRescue()
+        [UnityTest]public IEnumerator EscortFailureRetriesFromFreedHungWithOriginalInventory()
         {
-            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
-            yield return new EnterPlayMode();
-            yield return null;
-            var mission = Object.FindFirstObjectByType<Map01Mission>();
-            var quest = mission.GetComponent<Map01Quest>();
-            var inventory = mission.GetComponent<Map01Inventory>();
-            var rescue = mission.GetComponent<Map01Rescue>();
-            Vector3[] posts = rescue.Squad.Select(g => g.transform.position).ToArray();
-            var shooter = Nearest(rescue, mission.hung.position);
-            foreach (var guard in rescue.Squad) guard.enabled = guard == shooter;
-            yield return null;
-
-            // Alarmed, but Nam far out of sight: the guard turns on the prisoner instead.
-            float full = rescue.HungHealth;
-            Assert.AreEqual(rescue.HungMaxHealth, full);
-            typeof(Map01EnemyController).GetField("_engagedUntil", Private).SetValue(shooter, Time.time + 30f);
-            for (float until = Time.time + 6; rescue.HungHealth >= full && Time.time < until;) yield return null;
-            Assert.Less(rescue.HungHealth, full, "An engaged guard with Nam out of sight shoots Hùng.");
-            Assert.AreEqual(shooter.DamagePerShot, full - rescue.HungHealth, .01f, "One of his rounds.");
-
-            // Hùng falls: everything stops on the failure panel.
-            rescue.HitHung(9999f);
-            Assert.IsTrue(rescue.HungDown);
-            Assert.IsTrue(mission.Stopped, "Hùng's death stops the mission.");
-            yield return WaitGameSeconds(.3f);
-            Directory.CreateDirectory("Logs/GuidePreview");
-            ScreenCapture.CaptureScreenshot("Logs/GuidePreview/rescue-failed.png");
-            yield return null; yield return null;
-
-            // [Enter]: the rescue starts over from a way back down the road.
-            inventory.Spend("herb", inventory.Count("herb"));
-            rescue.Retry();
-            Assert.IsFalse(rescue.HungDown);
-            Assert.IsFalse(mission.Stopped);
-            Assert.AreEqual(Map01Quest.RescueStage, quest.Stage);
-            Assert.AreEqual(rescue.HungMaxHealth, rescue.HungHealth, "Hùng is back on his feet.");
-            Assert.Less(Vector3.Distance(mission.hung.position, rescue.CaptivePost), .6f, "And held at the jetty again.");
-            Assert.Less(Vector3.Distance(mission.player.position, rescue.RetryPoint), 1f, "Nam restarts a way back down the road.");
-            Assert.AreEqual(1, inventory.Count("herb"), "With a herb to treat Hùng again.");
-            Assert.IsTrue(AllCalmAtPost(rescue), "The squad is calm again.");
-            for (int i = 0; i < posts.Length; i++)
-                Assert.Less(Vector3.Distance(rescue.Squad[i].transform.position, posts[i]), 1.5f, $"{rescue.Squad[i].name} back at his post.");
-            yield return new ExitPlayMode();
+            Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
+            Storage.SetValue(null,Path.GetFullPath("Logs/Rescue/saves/"+Guid.NewGuid().ToString("N")));Assert.NotNull(Rescue.Layout);Assert.AreEqual(4,Rescue.Squad.Count);yield return ClearAndFree();int stones=Mission.GetComponent<Map01Inventory>().Count("stone");
+            Mission.GetComponent<Map01Inventory>().Spend("stone",2);Rescue.HitHung(9999);Assert.IsTrue(Rescue.Failed);
+            Rescue.Retry();yield return WaitGameSeconds(.8f);
+            Assert.AreEqual(Map01Quest.EscortStage,Quest.Stage);Assert.AreEqual(Map01Rescue.Phase.Escorting,Rescue.CurrentPhase);
+            Assert.IsFalse(Rescue.Failed);Assert.AreEqual(stones,Mission.GetComponent<Map01Inventory>().Count("stone"));Assert.AreEqual(0,Rescue.WaveMask);
+            Assert.AreEqual(0,Rescue.Remaining);yield return new ExitPlayMode();
         }
-
-        [UnityTest]
-        public IEnumerator JettySquadIsBackOnceHungIsHome()
-        {
-            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
-            yield return new EnterPlayMode();
-            yield return null;
-            var mission = Object.FindFirstObjectByType<Map01Mission>();
-            var quest = mission.GetComponent<Map01Quest>();
-            var inventory = mission.GetComponent<Map01Inventory>();
-            var interaction = mission.GetComponent<Map01PlayerInteraction>();
-            var rescue = mission.GetComponent<Map01Rescue>();
-            var fallen = rescue.Squad[0];
-            Vector3 post = fallen.transform.position;
-            Vector3 home = mission.player.position;
-            foreach (var guard in rescue.Squad) guard.enabled = false;
-
-            fallen.GetComponent<Health>().TakeDamage(9999, fallen.transform.position, null);
-            Assert.IsFalse(fallen.Alive);
-            inventory.Add("herb", 1);
-            Teleport(mission, mission.hung.position);
-            yield return null;
-            quest.TryRescueHung();
-            Assert.AreEqual(Map01Quest.EscortStage, quest.Stage, "Freed and treated, Hùng heads home with Nam.");
-            Assert.IsTrue(rescue.Exposed, "On the way home he can still be shot.");
-
-            Teleport(mission, home);
-            mission.hung.GetComponent<NavMeshAgent>().Warp(home + Vector3.right);
-            interaction.Interact(mission.Points.Single(p => p.id == "supplies"));
-            Assert.AreEqual(Map01Quest.BriefingStage, quest.Stage, "Home: the rescue is over.");
-            Assert.IsFalse(rescue.Exposed);
-            yield return WaitGameSeconds(.2f);
-            Assert.IsTrue(fallen.Alive, "The jetty post is manned again once Hùng is home.");
-            Assert.Less(Vector3.Distance(fallen.transform.position, post), 1.5f);
-            yield return new ExitPlayMode();
-        }
-
-        [UnityTest]
-        public IEnumerator HungCanBeTreatedWithABandageOnceTheHerbsWentIntoCrafting()
-        {
-            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
-            yield return new EnterPlayMode();
-            yield return null;
-            var mission = Object.FindFirstObjectByType<Map01Mission>();
-            var quest = mission.GetComponent<Map01Quest>();
-            var inventory = mission.GetComponent<Map01Inventory>();
-            foreach (var guard in mission.GetComponent<Map01Rescue>().Squad) guard.enabled = false;
-            inventory.Spend("herb", inventory.Count("herb"));
-            inventory.Spend("medkit_small", inventory.Count("medkit_small"));
-            Teleport(mission, mission.hung.position);
-            yield return null;
-
-            Assert.IsFalse(quest.CanTreatHung);
-            StringAssert.Contains("băng cứu thương", quest.HungPrompt, "The prompt says a bandage will do too.");
-            quest.TryRescueHung();
-            Assert.AreEqual(Map01Quest.RescueStage, quest.Stage, "Nothing to treat him with yet.");
-
-            // Both crate herbs went into bandages at the workbench: one of those treats him.
-            inventory.Add("medkit_small", 1);
-            Assert.AreEqual("[E] Cởi trói và chữa trị cho Hùng", quest.HungPrompt);
-            quest.TryRescueHung();
-            Assert.AreEqual(Map01Quest.EscortStage, quest.Stage, "A bandage treats Hùng as well as a herb.");
-            Assert.AreEqual(0, inventory.Count("medkit_small"), "The bandage is used up on him.");
-            yield return new ExitPlayMode();
-        }
-
-        [UnityTest]
-        public IEnumerator HungsWoundsSurviveASaveAndLoad()
-        {
-            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
-            yield return new EnterPlayMode();
-            yield return null;
-            var rootField = typeof(ForestSaveSlots).GetField("storageRoot", BindingFlags.Static | BindingFlags.NonPublic);
-            string root = Path.Combine(Application.temporaryCachePath, "rescue-test-" + Guid.NewGuid().ToString("N"));
-            rootField.SetValue(null, root);
-            try
-            {
-                var mission = Object.FindFirstObjectByType<Map01Mission>();
-                var rescue = mission.GetComponent<Map01Rescue>();
-                foreach (var guard in rescue.Squad) guard.enabled = false;
-                rescue.HitHung(30f);
-                float wounded = rescue.HungHealth;
-                Assert.AreEqual(rescue.HungMaxHealth - 30f, wounded, .01f);
-                Assert.IsTrue(mission.GetComponent<Map01SaveSystem>().SaveSlot(1, out var error, true), error);
-                Map01SaveSystem.BeginGame(1);
-                yield return null;
-                var pending = typeof(Map01SaveSystem).GetField("pendingCheckpoint", BindingFlags.Static | BindingFlags.NonPublic);
-                double deadline = Time.realtimeSinceStartupAsDouble + 10;
-                while (pending.GetValue(null) != null && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
-                Assert.IsNull(pending.GetValue(null));
-                rescue = Object.FindFirstObjectByType<Map01Mission>().GetComponent<Map01Rescue>();
-                Assert.AreEqual(wounded, rescue.HungHealth, .01f, "Hùng's wounds are part of the checkpoint.");
-            }
-            finally
-            {
-                rootField.SetValue(null, null); Time.timeScale = 1;
-                if (Directory.Exists(root)) Directory.Delete(root, true);
-            }
-            yield return new ExitPlayMode();
-        }
+        [TearDown]public void ResetStorage()=>Storage.SetValue(null,null);
     }
 }

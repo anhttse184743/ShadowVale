@@ -1,0 +1,107 @@
+{
+  "result": "Passed",
+  "total": 22,
+  "passed": 22,
+  "failed": "0",
+  "recording": {
+    "frames": 1079,
+    "duration": 166.6977,
+    "finalPhase": "Delivered",
+    "remainingGuards": "0",
+    "waveMask": "7"
+  },
+  "groundContact": {
+    "frames": 253,
+    "maxErrorMetres": 0.01888132
+  },
+  "tests": [
+    {
+      "name": "ShadowVale.Map01.Tests.OpeningCutsceneTests.AssetsUseExistingIdleAndHumanoidClips",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.OpeningCutsceneTests.AuthoredSaluteSweepsEveryBakedFrame",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.OpeningCutsceneTests.BriefingIsUnarmedThroughSkipAndRestoresGameplayWeapons",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.OpeningCutsceneTests.FullBriefingSalutesAndReturnsControlWithoutChangingQuest",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueCompatibilityTests.KnifeRejectsRangeFrontAndPhysicalObstructionThenKillsOverseerLast",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueCompatibilityTests.LegacyEscortSkipsCrossedThresholdsKeepsDeathsAndCanRetry",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueCompatibilityTests.PursuerCannotShootHungThroughSolidCover",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueMotionTests.DeliveredSaveDoesNotReviveGuardsOrGrantSuppliesAgain",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueMotionTests.UntieAndRiseKeepTheRenderedSkinOnTheJetty",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueTests.ConfirmedSightExecutesButPartialSuspicionDoesNot",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueTests.EscortFailureRetriesFromFreedHungWithOriginalInventory",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueTests.FootstepsAndStonesInvestigateWithoutExecutingHung",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueTests.FourGuardsHaveThreeSeparatedConnectedRoutesAndApproaches",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueTests.FreeRequiresFourKillsButNoHealingItemAndWaitsForStandingUp",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueTests.KnifeUsesPreDamageValidationAndPausesOtherGuardsThenRestoresInput",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueTests.RealGunshotCommitsExecutionBeforeLethalHitscanAndRetryRestoresItems",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueTests.SafeZoneNeedsBothPassengersAndShelterSkipRewardsExactlyOnce",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueTests.ThreeWavesSpawnOnlyOnceOffscreenAndReloadKeepsDefeatedEnemies",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueVisualTests.HeldEscapeShelterMatchesNaturalOutcomeAndPreservesHeldAim",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueVisualTests.RecordRescueAndRealEscortAndNaturalShelterReturn",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.ShotTracerLifecycleTests.DestroyedTracerWrapperDoesNotAccessNativeRenderer",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.ShotTracerLifecycleTests.PoolRepairsLostObjectsWithoutGrowingOrDraggingShots",
+      "result": "Passed"
+    }
+  ]
+}

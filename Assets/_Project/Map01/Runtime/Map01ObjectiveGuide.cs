@@ -55,9 +55,7 @@ namespace ShadowVale.Map01
                     if (extraction == null) return false;
                     target = extraction.ObjectivePosition; label = "NORTHERN JETTY"; return true;
                 case Map01Quest.RescueStage:
-                    var crate = mission.Interactables.FirstOrDefault(p => p.id == "tutorial_loot");
-                    if (!quest.CanTreatHung && crate != null) { target = crate.transform.position; label = "THÙNG VẬT TƯ"; }
-                    else { target = mission.hung.position; label = "BẾN TÀU — CỨU HÙNG"; }
+                    target = mission.hung.position; label = "BẾN TÀU — CỨU HÙNG";
                     return true;
                 case Map01Quest.ScoutStage:
                     // Only the rough area of the nearest camp not yet logged — never the camp itself.
@@ -67,9 +65,9 @@ namespace ShadowVale.Map01
                     target = zone.ZoneCenter; label = "KHU VỰC NGHI NGỜ";
                     return true;
                 case Map01Quest.EscortStage:
-                    var supplies = mission.Interactables.FirstOrDefault(p => p.kind == ForestPointKind.Supplies);
-                    if (supplies == null) return false;
-                    target = supplies.transform.position; label = "CĂN CỨ CHỈ HUY";
+                    var rescue = mission.GetComponent<Map01Rescue>();
+                    if(rescue.Layout==null)return false;
+                    target = rescue.Layout.shelterDoor.position; label = "HẦM TRÚ ẨN — ĐƯA HÙNG VỀ";
                     return true;
                 case Map01Quest.CampsStage:
                     var guard = mission.Enemies.Where(e => e.Alive && e.name.StartsWith("Outpost guard "))

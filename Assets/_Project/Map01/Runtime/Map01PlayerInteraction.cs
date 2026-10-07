@@ -47,6 +47,8 @@ namespace ShadowVale.Map01
         private void Update()
         {
             if (!mission.IsInitialized || mission.Cinematic) return;
+            // Following is world simulation; it must not depend on a keyboard being available.
+            if(!mission.Stopped && quest.ShouldFollowPlayer()) UpdateCompanion();
             var kb = Keyboard.current;
             if (kb == null) return;
             scouting.HoldBinoculars(kb.fKey.isPressed); // Map01Scouting decides when they actually work.
@@ -67,7 +69,6 @@ namespace ShadowVale.Map01
             {
                 // Same gate as below: this used to call UpdateCompanion unconditionally, so opening
                 // the bag or map pulled Hùng to Nam at any stage — wounded, or at his post at base.
-                if (quest.ShouldFollowPlayer()) UpdateCompanion();
                 return;
             }
 
@@ -99,7 +100,6 @@ namespace ShadowVale.Map01
             Nearby = NearestUsable();
             if (kb.eKey.wasPressedThisFrame) HandleInteractKey();
             if (kb.bKey.wasPressedThisFrame) inventory.TryCraft();
-            if (quest.ShouldFollowPlayer()) UpdateCompanion();
         }
 
         /// <summary>The closest unused point within reach, or null. Runs every frame, so a plain loop

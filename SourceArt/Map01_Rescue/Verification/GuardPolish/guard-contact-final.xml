@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-07 18:01:55Z" end-time="2026-10-07 18:02:03Z" duration="8.0309156">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="159" result="Passed" start-time="2026-10-07 18:01:55Z" end-time="2026-10-07 18:02:03Z" duration="8.030916" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1126" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/dangk/Documents/Codex/2026-09-20/du/ShadowValeValidation/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="99" result="Passed" start-time="2026-10-07 18:01:57Z" end-time="2026-10-07 18:02:03Z" duration="5.841209" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="22652" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1127" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="99" result="Passed" start-time="2026-10-07 18:01:57Z" end-time="2026-10-07 18:02:03Z" duration="5.814821" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1128" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="99" result="Passed" start-time="2026-10-07 18:01:57Z" end-time="2026-10-07 18:02:03Z" duration="5.801975" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1129" name="Tests" fullname="ShadowVale.Map01.Tests" runstate="Runnable" testcasecount="99" result="Passed" start-time="2026-10-07 18:01:57Z" end-time="2026-10-07 18:02:03Z" duration="5.790117" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1062" name="GuardApproachTests" fullname="ShadowVale.Map01.Tests.GuardApproachTests" classname="ShadowVale.Map01.Tests.GuardApproachTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-07 18:01:57Z" end-time="2026-10-07 18:02:03Z" duration="5.773255" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1063" name="RecordOverseerContacts" fullname="ShadowVale.Map01.Tests.GuardApproachTests.RecordOverseerContacts" methodname="RecordOverseerContacts" classname="ShadowVale.Map01.Tests.GuardApproachTests" runstate="Runnable" seed="1724594277" result="Passed" start-time="2026-10-07 18:01:38Z" end-time="2026-10-07 18:02:03Z" duration="24.304009" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/dangk/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
