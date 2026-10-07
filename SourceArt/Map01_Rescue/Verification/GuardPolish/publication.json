@@ -1,0 +1,63 @@
+{
+  "status": "Published and SHA-256 verified",
+  "files": [
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01EnemyController.cs",
+      "before": "d7a13fe4ccd308fe1fc77f5fe7bc0515cb46f665abadab50d28b791bef0fd009",
+      "after": "b632e885fdca8b2f34b4a584fb438cb48087cf764508ca03daf4f6362686f470"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01RescueLayout.cs",
+      "before": "3e4daca13bb206c0ad6a0d2e6de95a801d235a960d244c798b44a910cf30a507",
+      "after": "19bac96065011346420ecdee2197bd769a8623000896a6cbb578fbe7c8a1e383"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01OverseerGrip.cs",
+      "before": null,
+      "after": "f6c084cab24571c6345800b3cc8802089aa18ac3104f6a7c21d77999a956f375"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01OverseerGrip.cs.meta",
+      "before": null,
+      "after": "ed09babe525b0488f63f2bd5a3ec6ac212d47bbd467f34d7187eb3875b14562b"
+    },
+    {
+      "path": "Assets/Resources/Rescue/Map01RescueLayout.prefab",
+      "before": "b48a060a50460983a55194b092ffb0511d07945ddf04780cd3e0edd12a098c40",
+      "after": "a36fc96148944bbd0a81270a8b4a6a2148f82e96c2343703718dc6cf54290f9e"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/RescueTests.cs",
+      "before": "0910577cafa8030d617da7748931ee297212da1b908a0e9a27851ecefdda8cf5",
+      "after": "d8c8add29c115cfac02c77b53649c404ba38ade46b822bd8831b1ff0af9191f4"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/GuardApproachTests.cs",
+      "before": null,
+      "after": "a147f14e607676526c5c8ec977cafa68d2dc477d5a66c61fc7c1074212a33e28"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/GuardApproachTests.cs.meta",
+      "before": null,
+      "after": "4eb0d038684e205404dd073874e09df46ae41fe28ee81e3384cebca26de365c2"
+    }
+  ],
+  "protectedHashes": {
+    "Assets/_Project/Scenes/Maps/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Assets/_Project/Scenes/Maps/Map 1.meta": "a24543094f9d9a7d9a8eccbf577e39a0c2c5dc59e4ec3961b1b5f91447015d96",
+    "Assets/_Project/Scenes/Maps/Map 1.unity": "82e097e24ab5fda359149e13630875030f57247f27a1ba93c22c5e91dc720dc9",
+    "Assets/_Project/Scenes/Maps/Map 1.unity.meta": "e2a19f65acde7d6b8bd86ff8fcd22fcf3af331d191ab682910d504b4edcdf9fc",
+    "Assets/_Project/Scenes/Maps/Map 2.unity": "17b19c6657c479f397b0850ce67ebf2075ff3766b25737d22c2e3861519f07bf",
+    "Assets/_Project/Scenes/Maps/Map 2.unity.meta": "8888a4b7c057d0282425d43252303bbdb5f0d1d32254da29fa5ab94aea962517",
+    "Assets/_Project/Map01/Runtime/Map01EndingCutscene.cs": "7eaab22d1b2f7881a723257b8abc7066e7ded585c6d3cc3dd07fbf06ea4cb7ce",
+    "Assets/_Project/Map01/Runtime/Map01EndingCutscene.cs.meta": "4bf816f23e819b6b0f9b2b25dfbd8dac8a4ec8b9465d88ecd8b3e95e31372413",
+    "Assets/_Project/Map01/Runtime/Map01Extraction.cs": "dc2c6524bd6f7fbd8982378d76debb5dfc93acd4b0b8c983862762645f95ddc8",
+    "Assets/_Project/Map01/Runtime/Map01Extraction.cs.meta": "61b4b739c42310694c3cdb28b69510274ec526ef2ba6e3c5b84669edec55da7d",
+    "Assets/_Project/Map01/Runtime/Map01OpeningCutscene.cs": "a4ffe21f14b438e7ff11a60b21d3c1b0bacd7234f1b5b8b71d996a8a79b19c22",
+    "Assets/_Project/Map01/Runtime/Map01OpeningCutscene.cs.meta": "1a739fea9bef02b1def6778e027f50a30987b683613da61e90a76bb43b2ec94e",
+    "Assets/_Project/Map01/Runtime/Map02Arrival.cs": "bd77f24be10ba29341ee8c143a4f982ac5d8674f8e638a3655d0fcb82cf73d65",
+    "Assets/_Project/Map01/Runtime/Map02Arrival.cs.meta": "83bf0cb234ddaf1ba69c642400d7233d3ee3d2f89a95091eab8b02050d09b60c",
+    "Assets/_Project/Map01/Runtime/Map01Rifle.cs": "18ac4c366b83385a52f3308544132a8989ddd9064648355fcec93d68094873d7"
+  },
+  "backup": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\work\\before-guard-polish"
+}

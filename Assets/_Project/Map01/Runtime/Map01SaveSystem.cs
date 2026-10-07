@@ -35,6 +35,8 @@ namespace ShadowVale.Map01
             public float hungHealth = -1; // -1 in older saves: unhurt.
             public string scoutStart; // The checkpoint at Hùng's scouting order, in saves made while scouting.
             public Map01EnemyController.Snapshot[] enemies;
+            public Map01Rescue.Snapshot rescue;
+            public string rescueStart, escortStart;
         }
 
         /// <summary>True while a checkpoint load is pending/applying — blocks manual saves and
@@ -50,6 +52,7 @@ namespace ShadowVale.Map01
         private Map01Mission mission;
         private Map01Quest quest;
         private Map01Inventory inventory;
+        private string rescueStart, escortStart;
         private string SavePath => Path.Combine(Application.persistentDataPath, "shadowvale-map01-checkpoint.json");
 
         private void Awake()
@@ -62,7 +65,7 @@ namespace ShadowVale.Map01
 
         public string ManualSaveBlockReason()
         {
-            if (mission.Cinematic) return "Đang phát cảnh cinematic. Vui lòng đợi cảnh kết thúc.";
+            if (mission.Cinematic || GetComponent<Map01Rescue>().NonSaveable) return "Đang phát cảnh cinematic. Vui lòng đợi cảnh kết thúc.";
             if (pendingCheckpoint != null) return "Đang tải bản lưu. Vui lòng đợi giây lát.";
             if (mission.PlayerHealth <= 0) return "Không thể lưu khi nhân vật đã gục ngã.";
             if (GetComponent<Map01Rescue>().HungDown) return "Hùng đã hy sinh. Làm lại đoạn giải cứu trước khi lưu.";
@@ -79,7 +82,7 @@ namespace ShadowVale.Map01
         public bool AutoSaveOnExit(out string error)
         {
             error = null;
-            if (mission.Cinematic) return true;
+            if (mission.Cinematic || GetComponent<Map01Rescue>().NonSaveable) return true;
             if (pendingCheckpoint != null) { error = "Đang khôi phục bản lưu. Vui lòng thử lại sau giây lát."; return false; }
             // Never replace a usable checkpoint with a dead character — or a failed rescue or scouting run.
             if (mission.PlayerHealth <= 0 || GetComponent<Map01Rescue>().HungDown || GetComponent<Map01Scouting>().FailedRun) return true;
@@ -95,6 +98,32 @@ namespace ShadowVale.Map01
         }
 
         public bool HasScoutStart => !string.IsNullOrEmpty(scoutStart);
+        public void EnsureRescueCheckpoint()
+        {
+            if(string.IsNullOrEmpty(rescueStart)&&!mission.Cinematic&&!IsRestoring)MarkRescueCheckpoint(false);
+        }
+        public void EnsureEscortCheckpoint()
+        {
+            if(string.IsNullOrEmpty(escortStart)&&!mission.Cinematic&&!IsRestoring)MarkRescueCheckpoint(true);
+        }
+        public void MarkRescueCheckpoint(bool escort)
+        {
+            var data=Capture(false);
+            if(!escort){data.player=GetComponent<Map01Rescue>().RetryPoint;data.alarmed=false;}
+            string checkpoint=JsonUtility.ToJson(data);
+            if(escort)escortStart=checkpoint;else rescueStart=checkpoint;
+        }
+        public bool RestartRescue(bool escort)
+        {
+            string checkpoint=escort?escortStart:rescueStart;
+            if(string.IsNullOrEmpty(checkpoint)){mission.Say("Chưa có checkpoint nhiệm vụ. Hãy tải bản lưu hoặc chơi lại.",5);return false;}
+            var data=JsonUtility.FromJson<CheckpointData>(checkpoint);
+            // Keep the non-recursive retry snapshots across repeated retries.
+            data.rescueStart=rescueStart;data.escortStart=escortStart;
+            pendingCheckpoint=JsonUtility.ToJson(data);pendingSeconds=mission.PlaySeconds;
+            pendingMessage=escort?"Làm lại đoạn hộ tống Hùng về căn cứ.":"Làm lại: lén tiếp cận, hạ lính giám sát bằng dao rồi cứu Hùng.";
+            Time.timeScale=1;SceneManager.LoadScene("Map 1");return true;
+        }
 
         /// <summary>
         /// No recorded moment of the order (a save from before it was kept): make one as if Hùng
@@ -132,7 +161,7 @@ namespace ShadowVale.Map01
         public bool SaveSlot(int slot, out string error, bool automatic = false)
         {
             error = null;
-            if (mission.Cinematic) { error = "Cannot save during a cinematic."; return false; }
+            if (mission.Cinematic || GetComponent<Map01Rescue>().NonSaveable || GetComponent<Map01Rescue>().Failed || mission.PlayerHealth<=0) { error = "Cannot save during a cinematic or failed mission."; return false; }
             if (!automatic && (error = ManualSaveBlockReason()) != null) { mission.Say(error); return false; }
             var data = Capture();
             try
@@ -151,7 +180,7 @@ namespace ShadowVale.Map01
             catch (Exception e) { error = "Không thể lưu: " + e.Message; mission.Say(error); return false; }
         }
 
-        private CheckpointData Capture()
+        private CheckpointData Capture(bool includeRetry = true)
         {
             return new CheckpointData
             {
@@ -166,6 +195,8 @@ namespace ShadowVale.Map01
                 attackRemaining = mission.ModernCombat != null ? mission.ModernCombat.AttackCooldownRemaining : 0,
                 roundsInMagazine = mission.ModernCombat != null ? mission.ModernCombat.RoundsInMagazine : -1,
                 hungHealth = GetComponent<Map01Rescue>().HungHealth,
+                rescue = GetComponent<Map01Rescue>().Capture(),
+                rescueStart = includeRetry ? rescueStart : null, escortStart = includeRetry ? escortStart : null,
                 enemies = mission.Enemies.Select(e => e.Capture()).ToArray(),
                 scoutedCamps = GetComponent<Map01Scouting>().FoundMask,
                 // A save made mid-scouting carries the moment the order was given, so a failed
@@ -244,6 +275,8 @@ namespace ShadowVale.Map01
                 mission.Crouched = data.crouched;
                 mission.player.rotation = Quaternion.Euler(0, data.playerYaw, 0);
                 mission.hung.rotation = Quaternion.Euler(0, data.hungYaw, 0);
+                GetComponent<Map01Rescue>().Restore(data.rescue, data.enemies);
+                rescueStart=data.rescueStart;escortStart=data.escortStart;
                 RestoreGameplay(data);
                 GetComponent<Map01Rescue>().RestoreHealth(data.hungHealth);
                 GetComponent<Map01Scouting>().RestoreFound(data.scoutedCamps);

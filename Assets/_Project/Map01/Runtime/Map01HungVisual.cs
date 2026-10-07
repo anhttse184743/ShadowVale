@@ -27,10 +27,13 @@ namespace ShadowVale.Map01
         private int lastStage = -1;
         private bool standingUp;
         private float untieUntil;
+        private float riseStarted;
+        private bool sawRise;
         /// <summary>Ground speed (m/s) at which the Hung_DiKhapKhieng cycle plants its feet.</summary>
         public const float LimpSpeed = 1.8f;
         private GameObject rope;
         private Mesh soleMesh;
+        private Map01SkinContact skinContact;
         private readonly System.Collections.Generic.List<Vector3> soleVertices = new System.Collections.Generic.List<Vector3>();
 
         /// <summary>True while the rope is shown on his wrists (held at the jetty).</summary>
@@ -75,7 +78,8 @@ namespace ShadowVale.Map01
         private void LateUpdate()
         {
             if (mission == null) return;
-            if (!down && !mission.Cinematic) AnchorToGround();
+            bool rescueContact=rescue!=null&&(rescue.CurrentPhase==Map01Rescue.Phase.Untying||rescue.CurrentPhase==Map01Rescue.Phase.Rising);
+            if (!down && (!mission.Cinematic||rescueContact)) AnchorToGround();
             // The rope is tied once the kneeling pose has been evaluated (and grounded), so it sits on his real wrists.
             if (rope == null && Captive && ropeMaterial != null
                 && actor.GetCurrentAnimatorStateInfo(0).IsName(CaptiveState))
@@ -95,17 +99,31 @@ namespace ShadowVale.Map01
             transform.position=new Vector3(mission.hung.position.x,ground,mission.hung.position.z);
             // Humanoid retargeting changes the foot plane after the neutral scale calibration.
             // Measure the evaluated skin, without changing the skeleton or standing scale.
-            if (soleMesh == null) soleMesh = new Mesh();
-            float sole = float.PositiveInfinity;
-            foreach (var skin in actor.GetComponentsInChildren<SkinnedMeshRenderer>()) {
-                skin.BakeMesh(soleMesh); soleMesh.GetVertices(soleVertices);
-                foreach (var vertex in soleVertices) sole = Mathf.Min(sole, skin.transform.TransformPoint(vertex).y);
+            if(skinContact==null)skinContact=new Map01SkinContact(actor);
+            float sole=skinContact.LowestY();
+            if(float.IsInfinity(sole)){
+                if (soleMesh == null) soleMesh = new Mesh();
+                foreach (var skin in actor.GetComponentsInChildren<SkinnedMeshRenderer>()) {
+                    skin.BakeMesh(soleMesh); soleMesh.GetVertices(soleVertices);
+                    foreach (var vertex in soleVertices) sole = Mathf.Min(sole, skin.transform.TransformPoint(vertex).y);
+                }
             }
             if (!float.IsInfinity(sole)) transform.position += Vector3.up * (ground - sole);
         }
 
         private int Stage => quest != null ? quest.Stage : Map01Quest.BriefingStage;
-        private bool Captive => !down && Stage == Map01Quest.RescueStage;
+        private bool Captive => !down && Stage == Map01Quest.RescueStage && (rescue == null || rescue.HoldCaptive);
+        public bool IsRising => standingUp;
+        public void BeginRescueRise()
+        {
+            if(rope!=null)rope.SetActive(false);
+            standingUp=true;sawRise=false;riseStarted=Time.time;untieUntil=0;actor.SetBool("Captive",false);
+            actor.CrossFadeInFixedTime(StandUpState,.18f,0);
+        }
+        public void FinishRescueRise()
+        {
+            ReleaseHold(); SnapToStage(); AnchorToGround();
+        }
         private bool Wounded => !down && Stage == Map01Quest.EscortStage;
 
         /// <summary>
@@ -138,7 +156,7 @@ namespace ShadowVale.Map01
                 }
             }
             if (!down && Stage != lastStage) {
-                bool freed = lastStage == Map01Quest.RescueStage && Stage == Map01Quest.EscortStage;
+                bool freed = lastStage == Map01Quest.RescueStage && Stage == Map01Quest.EscortStage && (rescue == null || rescue.CurrentPhase != Map01Rescue.Phase.Rising);
                 if (freed) {
                     lastStage = Stage; standingUp = true;
                     // If Nam is kneeling at his back working the knot (Map01NamActions), he stays tied
@@ -170,6 +188,10 @@ namespace ShadowVale.Map01
         {
             if (!standingUp || agent == null || !agent.isOnNavMesh) return;
             var now = actor.GetCurrentAnimatorStateInfo(0);
+            if(now.IsName(StandUpState))sawRise=true;
+            // A crossfade is not evaluated until the next animation update. Do not mistake
+            // that initial captive/idle pose for a completed stand-up.
+            if(!sawRise || Time.time-riseStarted<.5f){agent.isStopped=true;return;}
             bool rising = now.IsName(CaptiveState) || now.IsName(StandUpState) || actor.IsInTransition(0);
             if (rising && !down) { agent.isStopped = true; return; }
             ReleaseHold();

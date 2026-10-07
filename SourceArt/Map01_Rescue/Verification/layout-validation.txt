@@ -1,0 +1,3 @@
+Four guards; three closed patrol loops and approach routes connected.
+23 pursuit sites validated. Shelter entrance connected.
+No scene, terrain or navigation assets modified.

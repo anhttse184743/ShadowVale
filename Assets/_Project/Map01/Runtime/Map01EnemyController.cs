@@ -38,6 +38,27 @@ namespace ShadowVale.Map01
         private const float InvestigateTimeout = 45f; // A bound only; the look-around ends it sooner.
         private float _searchUntil, _searchSeconds = 8f, _baseSpeed, _lastHealth;
         private bool _returning;
+        private bool _rescuePost, _overseer, _pursuer, _holdingAI;
+        private Map01RescueLayout _rescueTuning;
+        private float _hearReactionAt;
+        private Vector3 _pendingFootstep;
+        private float _patrolPause, _pauseUntil, _pausedAt, _animatorSpeedBeforeHold;
+        private bool _agentUpdatesPosition;
+        private bool _agentUpdatesRotation;
+        private Quaternion _heldRotation;
+        private Vector3 _heldPosition;
+        public event System.Action<Map01Detection> Detected;
+        public bool IsPursuer => _pursuer;
+        public void PauseForCinematic(bool animate=false)
+        {
+            if(!Alive)return;
+            if(!_holdingAI){_holdingAI=true;_pausedAt=Time.time;_animatorSpeedBeforeHold=_animator!=null?_animator.speed:1;
+                _heldPosition=transform.position;_heldRotation=transform.rotation;_agentUpdatesPosition=_agent!=null&&_agent.updatePosition;_agentUpdatesRotation=_agent!=null&&_agent.updateRotation;}
+            if(_agent!=null&&_agent.isOnNavMesh)_agent.isStopped=true;
+            if(_agent!=null)_agent.updatePosition=false;
+            if(_agent!=null)_agent.updateRotation=false;
+            if(_animator!=null)_animator.speed=animate?1:0;
+        }
         private readonly System.Collections.Generic.HashSet<string> _animatorParams = new System.Collections.Generic.HashSet<string>();
         private bool _startled;
         private Vector3 _returnPoint;
@@ -89,7 +110,7 @@ namespace ShadowVale.Map01
         /// </summary>
         public void ReturnToPost()
         {
-            SetSilent(false); ShowRifle(true); _startled = false;
+            TakenDownSilently=false;SetSilent(false); ShowRifle(true); _startled = false;
             if (_health.IsDead) _health.Revive(); else _health.RestoreHealth(_health.Max);
             if (_lootCreated)
             {
@@ -100,7 +121,7 @@ namespace ShadowVale.Map01
             _lastHealth = _health.Current;
             if (_agent.isOnNavMesh) _agent.Warp(_postPosition); else transform.position = _postPosition;
             transform.rotation = _postRotation;
-            _suspicion = 0; _alertUntil = 0; _engagedUntil = 0;
+            _suspicion = 0; _alertUntil = 0; _engagedUntil = 0; _hearReactionAt=0;
             _searchUntil = 0; _returning = false; SetPace(1f);
             _calmUntil = Time.time + 4f;
             _patrolIndex = 0;
@@ -115,10 +136,23 @@ namespace ShadowVale.Map01
 
         /// <summary>A noise at <paramref name="position"/> that carries <paramref name="radius"/>
         /// metres: within it, the guard goes to see what it was. True if he heard it.</summary>
-        public bool Hear(Vector3 position, float radius)
+        public bool Hear(Vector3 position, float radius, Map01NoiseKind kind = Map01NoiseKind.Other)
         {
+            bool rescueStealth=_rescuePost&&_rescue!=null&&_rescue.CurrentPhase==Map01Rescue.Phase.Captive;
+            if(rescueStealth&&kind==Map01NoiseKind.Footstep&&_mission.Crouched)
+                radius*=(_rescueTuning!=null?_rescueTuning.crouchedFootstepScale:.55f);
             if (!Alive || Vector3.Distance(position, transform.position) > radius) return false;
-            BeginInvestigation(position);
+            if (_mission != null && _mission.Cinematic) return false;
+            if (kind == Map01NoiseKind.Gunshot) ReportDetection(Map01DetectionCause.Gunshot, position);
+            if(rescueStealth&&kind==Map01NoiseKind.Footstep&&!Engaged){
+                // The first audible step starts the reaction clock. Further steps update its
+                // source without extending it indefinitely; rocks and gunshots stay immediate.
+                _pendingFootstep=position;
+                if(_hearReactionAt<=0)_hearReactionAt=Time.time+(_rescueTuning!=null?_rescueTuning.footstepReactionSeconds:1f);
+                return true;
+            }
+            _hearReactionAt=0;
+            if (_mission == null || !_mission.Cinematic) BeginInvestigation(position);
             return true;
         }
 
@@ -128,6 +162,11 @@ namespace ShadowVale.Map01
             // next noise catches him on the way.
             if (!Alerted && !_returning) { _returnPoint = transform.position; _returnRotation = transform.rotation; }
             _returning = false;
+            if (_overseer && _rescue != null && _rescue.CurrentPhase == Map01Rescue.Phase.Captive)
+            {
+                var delta = Vector3.ProjectOnPlane(position - _postPosition, Vector3.up);
+                position = _postPosition + Vector3.ClampMagnitude(delta, 1.25f);
+            }
             _investigate = position; _searchUntil = 0;
             _alertUntil = Time.time + InvestigateTimeout;
         }
@@ -138,10 +177,16 @@ namespace ShadowVale.Map01
             public Quaternion rotation, returnRotation;
             public float hp, shotRemaining, alertRemaining, searchRemaining;
             public int patrolIndex;
-            public bool stopped, returning;
+            public bool stopped, returning, silent, pursuer;
+            public float suspicion, engagedRemaining, pauseRemaining;
+            public float footstepReactionRemaining;
+            public Vector3 pendingFootstep;
         }
         public Snapshot Capture() => new Snapshot {
             id = SaveId, position = transform.position, rotation = transform.rotation, hp = _health.Current,
+            silent = TakenDownSilently, pursuer = _pursuer, suspicion = _suspicion,
+            engagedRemaining = Mathf.Max(0, _engagedUntil-Time.time), pauseRemaining = Mathf.Max(0,_pauseUntil-Time.time),
+            footstepReactionRemaining=_hearReactionAt>0?Mathf.Max(0,_hearReactionAt-Time.time):0,pendingFootstep=_pendingFootstep,
             patrolIndex = _patrolIndex, shotRemaining = Mathf.Max(0, _nextShot - Time.time),
             alertRemaining = Mathf.Max(0, _alertUntil - Time.time), investigate = _investigate,
             searchRemaining = _searchUntil > 0 ? Mathf.Max(.01f, _searchUntil - Time.time) : 0,
@@ -158,7 +203,11 @@ namespace ShadowVale.Map01
         {
             if (_agent.isOnNavMesh) _agent.Warp(saved.position); else transform.position = saved.position;
             transform.rotation = saved.rotation;
+            TakenDownSilently = saved.silent; SetSilent(saved.silent); ShowRifle(!saved.silent);
             _health.RestoreHealth(saved.hp);
+            _suspicion = saved.suspicion; _engagedUntil = Time.time + saved.engagedRemaining;
+            _pauseUntil = Time.time + saved.pauseRemaining; _pursuer = saved.pursuer;
+            _hearReactionAt=saved.footstepReactionRemaining>0?Time.time+saved.footstepReactionRemaining:0;_pendingFootstep=saved.pendingFootstep;
             _lastHealth = _health.Current;
             _patrolIndex = Mathf.Clamp(saved.patrolIndex, 0, Mathf.Max(0, patrolPoints.Length - 1));
             _nextShot = Time.time + saved.shotRemaining;
@@ -191,6 +240,85 @@ namespace ShadowVale.Map01
         }
 
         public void Configure(Vector3[] points) => patrolPoints = points ?? System.Array.Empty<Vector3>();
+
+        public void ConfigureRescuePost(Transform post, Vector3[] points, bool overseer, Map01RescueLayout layout)
+        {
+            _rescuePost=true;_overseer=overseer;_pursuer=false;
+            _rescueTuning=layout;
+            if(overseer){var grip=_animator.GetComponent<Map01OverseerGrip>();if(grip==null)grip=_animator.gameObject.AddComponent<Map01OverseerGrip>();grip.Bind(this);}
+            _postPosition=post.position;_postRotation=post.rotation;
+            _baseSpeed=_agent.speed=layout.patrolSpeed;_patrolPause=layout.patrolPause;
+            visionRange=layout.patrolVision;visionAngle=layout.patrolAngle;
+            Configure(points);if(_agent.isOnNavMesh)_agent.Warp(_postPosition);else transform.position=_postPosition;
+            transform.rotation=_postRotation;if(points.Length>0)Go(points[0]);else if(_agent.isOnNavMesh)_agent.ResetPath();
+        }
+        public void InitializePursuer(Map01Mission owner, Vector3 post, bool pursue)
+        {
+            enabled=true;
+            _rescuePost=_overseer=false;_pursuer=true;_lootCreated=false;
+            _holdingAI=false;_agent.updatePosition=true;_agent.updateRotation=true;
+            _postPosition=post;_postRotation=Quaternion.identity;Configure(System.Array.Empty<Vector3>());BindMission(owner);
+            _health.CinematicInvulnerable=false;_health.Revive();_lastHealth=_health.Current;
+            TakenDownSilently=false;SetSilent(false);ShowRifle(true);
+            _suspicion=0;_alertUntil=0;_searchUntil=0;_engagedUntil=0;
+            if(_animator!=null)_animator.speed=1;
+            if(_agent.isOnNavMesh){_agent.Warp(post);_agent.isStopped=false;}
+            if(pursue)BeginInvestigation(owner.hung.position);
+        }
+        public void CeasePursuit()
+        {
+            _suspicion=_engagedUntil=_alertUntil=_searchUntil=0;
+            if(_agent.isOnNavMesh){_agent.ResetPath();_agent.isStopped=true;}SetSpeed(0);
+        }
+        private void ReportDetection(Map01DetectionCause cause,Vector3 position)
+        {
+            var signal=new Map01Detection(this,cause,position);Detected?.Invoke(signal);_rescue?.ReportDetection(signal);
+        }
+        public bool CanSilentTakedown()
+        {
+            if(!Alive||Engaged||IsBoss||_mission==null||_mission.Stopped||_mission.ModernCombat==null
+                ||_mission.ModernCombat.EquippedKind!=WeaponKind.Knife)return false;
+            var delta=Vector3.ProjectOnPlane(_mission.player.position-transform.position,Vector3.up);
+            var layout=_rescue!=null?_rescue.Layout:null;
+            if(Vector3.Distance(_mission.player.position,transform.position)>(layout!=null?layout.backstabRange:1.6f))return false;
+            if(delta.magnitude>(layout!=null?layout.backstabRange:1.6f)||Vector3.Angle(transform.forward,delta)<(layout!=null?layout.backstabAngle:130))return false;
+            var origin=_mission.player.position+Vector3.up;
+            return !Physics.Linecast(origin,transform.position+Vector3.up,out var hit,_mission.ObstructionMask,QueryTriggerInteraction.Ignore)
+                ||hit.transform==transform||hit.transform.IsChildOf(transform);
+        }
+        public bool TrySilentTakedown()
+        {
+            if(!CanSilentTakedown())return false;
+            if(!Map01NamActions.For(_mission).PlayTakedown(transform))return false;
+            TakenDownSilently=true;SetSilent(true);ShowRifle(false);
+            if(_agent.isOnNavMesh){_agent.ResetPath();_agent.isStopped=true;}
+            _health.TakeDamage(_health.Current,transform.position+Vector3.up,_mission.player.gameObject);
+            var cinematic=_mission.GetComponent<Map01RescueCinematic>();
+            if(cinematic==null)cinematic=_mission.gameObject.AddComponent<Map01RescueCinematic>();
+            cinematic.ShowTakedown(_rescue,this);return true;
+        }
+        public bool SafeShot(Vector3 target)
+        {
+            var rifle=GetComponentInChildren<Map01Rifle>();
+            Vector3 origin=rifle!=null&&rifle.weapon!=null&&rifle.weapon.Muzzle!=null?rifle.weapon.Muzzle.position:transform.position+Vector3.up*1.3f;
+            var end=target+Vector3.up*1.1f;
+            if(Physics.Linecast(origin,end,out var hit,~0,QueryTriggerInteraction.Ignore))
+                return hit.transform==_mission.hung||hit.transform.IsChildOf(_mission.hung);
+            return true;
+        }
+        public void FireAtHostage(Vector3 target,float amount)
+        {
+            FaceImmediate(target);_animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
+            var rifle=GetComponentInChildren<Map01Rifle>();
+            if(rifle!=null&&rifle.weapon!=null&&rifle.weapon.Muzzle!=null)
+                _mission.Trace(rifle.weapon.Muzzle.position,target+Vector3.up*.9f,new Color(1,.85f,.45f));
+            _rescue.HitHung(amount);
+        }
+        public void FaceImmediate(Vector3 point)
+        {
+            var flat=Vector3.ProjectOnPlane(point-transform.position,Vector3.up);
+            if(flat.sqrMagnitude>.001f)transform.rotation=Quaternion.LookRotation(flat);
+        }
 
         public bool IsBoss { get; private set; }
         /// <summary>
@@ -233,9 +361,30 @@ namespace ShadowVale.Map01
 
         private void Update()
         {
-            if (_mission != null && _mission.Stopped) {
-                if (_agent.isOnNavMesh) _agent.isStopped = true;
-                SetSpeed(0); return;
+            bool holding = Alive && _mission != null && (_mission.Stopped || (_rescue != null && _rescue.HoldEnemy(this)));
+            if (holding) {
+                if (!_holdingAI) PauseForCinematic();
+                transform.position=_heldPosition;
+                transform.rotation=_heldRotation;
+                if (_agent.isOnNavMesh) _agent.isStopped=true;
+                if (_animator!=null) {
+                    var cinematic=_mission.GetComponent<Map01RescueCinematic>();
+                    bool owned=cinematic!=null&&cinematic.ControlsEnemy(this);
+                    _animator.speed=!_mission.Stopped||owned?1:0;
+                    if(!_mission.Stopped)SetSpeed(0);
+                }
+                return;
+            }
+            if (_holdingAI) {
+                float delay=Time.time-_pausedAt;_alertUntil+=delay;_engagedUntil+=delay;_nextShot+=delay;_pauseUntil+=delay;
+                if(_hearReactionAt>0)_hearReactionAt+=delay;
+                if(_searchUntil>0)_searchUntil+=delay;
+                if(_animator!=null)_animator.speed=_animatorSpeedBeforeHold;
+                _agent.updatePosition=_agentUpdatesPosition;
+                _agent.updateRotation=_agentUpdatesRotation;
+                if(_agent.isOnNavMesh)_agent.nextPosition=transform.position;
+                if(_agent.isOnNavMesh)_agent.isStopped=!Alive;
+                _holdingAI=false;
             }
             // Before the dead check: a hit that killed him outright is still an attack to account for.
             if (_health.Current < _lastHealth) OnHurt();
@@ -249,11 +398,17 @@ namespace ShadowVale.Map01
             }
 
             bool seesPlayer = CanSeePlayer(out float distance);
+            if(_hearReactionAt>0&&Time.time>=_hearReactionAt){
+                _hearReactionAt=0;BeginInvestigation(_pendingFootstep);
+            }
             if (seesPlayer && !Engaged)
             {
                 // Not an instant spot: suspicion builds while Nam stays in view, faster up close.
                 float closeness = 1f - Mathf.Clamp01(distance / visionRange);
-                _suspicion = Mathf.Min(1f, _suspicion + Time.deltaTime / _detectionSeconds * Mathf.Lerp(.6f, 3f, closeness));
+                bool rescueStealth=_rescuePost&&_rescue!=null&&_rescue.CurrentPhase==Map01Rescue.Phase.Captive;
+                float detectTime=rescueStealth?Mathf.Max(_detectionSeconds,_rescueTuning!=null?_rescueTuning.closeDetectionSeconds:1.6f):_detectionSeconds;
+                float gain=Mathf.Lerp(.6f,rescueStealth?1.4f:3f,closeness);
+                _suspicion = Mathf.Min(1f, _suspicion + Time.deltaTime / detectTime * gain);
                 // The first moment he catches something: a start, then the stare.
                 if (!_startled && _suspicion > .2f) { _startled = true; Trigger("Startled"); }
                 if (_suspicion < 1f)
@@ -267,6 +422,8 @@ namespace ShadowVale.Map01
             }
             if (seesPlayer)
             {
+                ReportDetection(Map01DetectionCause.Sight, _player.position);
+                if (_mission != null && _mission.Cinematic) return;
                 // Once Nam is out of sight again: to where he was last seen, look around, go back.
                 _engagedUntil = Time.time + 6; BeginInvestigation(_player.position);
                 if (_mission != null) _mission.Alarmed = true;
@@ -285,6 +442,9 @@ namespace ShadowVale.Map01
                 return;
             }
             if (Engaged && TryShootHostage()) return;
+            if (_pursuer && _rescue != null && _rescue.Exposed) {
+                GoTo(_mission.hung.position); SetSpeed(_agent.velocity.magnitude); return;
+            }
 
             if (!Engaged) _suspicion = Mathf.Max(0f, _suspicion - Time.deltaTime * .35f);
             if (_suspicion <= 0f && !Engaged && !Alerted) _startled = false;
@@ -330,22 +490,9 @@ namespace ShadowVale.Map01
         private void OnHurt()
         {
             HurtCount++;
-            TakenDownSilently = false;
+            if (TakenDownSilently) return;
             if (_player == null) return;
-            Vector3 toNam = Vector3.ProjectOnPlane(_player.position - transform.position, Vector3.up);
-            bool fromBehind = toNam.magnitude < 3f && Vector3.Angle(transform.forward, toNam) > 100f;
-            bool knife = _mission != null && _mission.ModernCombat != null && _mission.ModernCombat.EquippedKind == WeaponKind.Knife;
-            if (knife && fromBehind && !Engaged && !IsBoss)
-            {
-                TakenDownSilently = true;
-                // The paired takedown from Blender: Nam steps in behind, covers his mouth and cuts; he drops
-                // with his own half of the scene instead of a generic death.
-                SetSilent(true); ShowRifle(false);   // grabbed from behind, the rifle drops from his hands
-                if (_agent.isOnNavMesh) { _agent.isStopped = true; _agent.ResetPath(); }
-                Map01NamActions.For(_mission)?.PlayTakedown(transform);
-                if (!_health.IsDead) _health.TakeDamage(_health.Current, transform.position + Vector3.up, _player.gameObject);
-                return;
-            }
+            ReportDetection(Map01DetectionCause.Sight, _player.position);
             if (_health.IsDead) return; // Killed outright — by a gun, say: loud, and nothing left to react.
             Trigger("Hit");
             _suspicion = 1f; _engagedUntil = Time.time + 6f;
@@ -386,7 +533,7 @@ namespace ShadowVale.Map01
                 // creeping up crouched gets closer than that, into knife reach behind him.
                 bool hidden = _mission != null && _mission.Hidden, crouched = _mission != null && _mission.Crouched;
                 if (distance > visionRange * (hidden ? _hiddenScale : crouched ? _crouchScale : 1f)) return false;
-                float touch = crouched ? 1.2f : 2.5f;
+                float touch = crouched ? (_rescuePost ? .65f : 1.2f) : (_rescuePost ? .9f : 2.5f);
                 if (distance > touch && Vector3.Angle(transform.forward, Vector3.ProjectOnPlane(delta, Vector3.up)) > visionAngle * .5f) return false;
             }
             // Bushes and tree crowns hide Nam — even from a guard already hunting him, who then
@@ -405,7 +552,7 @@ namespace ShadowVale.Map01
             _animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
             // Hùng is in the line of fire while he is being held or walked home: every third
             // round goes his way when he is in reach.
-            if (++_shots % 3 == 0 && HostageInReach(out _)) { _rescue.HitHung(damage); return; }
+            if (++_shots % 3 == 0 && HostageInReach(out var hostage) && SafeShot(hostage)) { FireAtHostage(hostage,damage); return; }
             _playerHealth.TakeDamage(damage, _player.position + Vector3.up, gameObject);
         }
 
@@ -415,14 +562,13 @@ namespace ShadowVale.Map01
         /// </summary>
         private bool TryShootHostage()
         {
-            if (!HostageInReach(out var hostage)) return false;
+            if (!HostageInReach(out var hostage) || !SafeShot(hostage)) return false;
             if (_agent.isOnNavMesh) _agent.isStopped = true;
             SetSpeed(0f);
             Face(hostage);
             if (Time.time < _nextShot) return true;
             _nextShot = Time.time + fireInterval * 2f;
-            _animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
-            _rescue.HitHung(damage);
+            FireAtHostage(hostage, damage);
             return true;
         }
 
@@ -439,11 +585,13 @@ namespace ShadowVale.Map01
 
         private void Patrol()
         {
+            if (Time.time < _pauseUntil) { if(_agent.isOnNavMesh)_agent.isStopped=true;return; }
             if (patrolPoints.Length == 0 || !_agent.isOnNavMesh) return;
             if (!_agent.pathPending && _agent.remainingDistance <= 0.7f)
             {
                 _patrolIndex = (_patrolIndex + 1) % patrolPoints.Length;
                 Go(patrolPoints[_patrolIndex]);
+                if (_rescuePost && _patrolPause > 0) { _pauseUntil=Time.time+_patrolPause;_agent.isStopped=true; }
             }
         }
 

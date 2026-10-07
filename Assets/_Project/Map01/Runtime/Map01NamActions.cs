@@ -40,6 +40,7 @@ namespace ShadowVale.Map01
 
         /// <summary>A full-body move is playing; Nam's own controls are waiting.</summary>
         public bool Busy => locked;
+        public int ActiveAction { get; private set; }
 
         public static Map01NamActions For(Map01Mission mission)
         {
@@ -70,7 +71,7 @@ namespace ShadowVale.Map01
         public bool Play(int id, float seconds, bool canCancel = false)
         {
             if (!ReadyFull || locked) return false;
-            locked = true; cancelable = canCancel; fullUntil = Time.time + seconds;
+            locked = true; ActiveAction=id; cancelable = canCancel; fullUntil = Time.time + seconds;
             modelPosition = actor.transform.localPosition; modelRotation = actor.transform.localRotation;
             rootMotionWas = actor.applyRootMotion; actor.applyRootMotion = true;   // the take's own travel moves his model
             SetControls(false);
@@ -142,7 +143,8 @@ namespace ShadowVale.Map01
         {
             float best = float.NegativeInfinity;
             foreach (var hit in Physics.RaycastAll(spot + Vector3.up * 1.5f, Vector3.down, 4f, ~0, QueryTriggerInteraction.Ignore))
-                if (!hit.transform.IsChildOf(transform) && hit.normal.y > .6f && hit.point.y > best) best = hit.point.y;
+                if (!hit.transform.IsChildOf(transform) && hit.transform.GetComponentInParent<Map01EnemyController>() == null
+                    && hit.transform.GetComponentInParent<Map01HungVisual>() == null && hit.normal.y > .6f && hit.point.y > best) best = hit.point.y;
             return float.IsNegativeInfinity(best) ? fallback : best;
         }
 
@@ -184,8 +186,9 @@ namespace ShadowVale.Map01
                 actor.SetInteger("Action", 0);   // a move cut short leaves its state (StoryAnimationSetup)
             }
             if (actor != null && actor.TryGetComponent(out Map01TakedownIK ik)) ik.End();
-            locked = false; cancelable = false;
+            locked = false; ActiveAction=0; cancelable = false;
             SetControls(true);
+            combat?.RestoreAfterCinematic();
         }
 
         private void Update()
