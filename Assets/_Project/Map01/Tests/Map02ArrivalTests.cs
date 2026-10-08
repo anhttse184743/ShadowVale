@@ -20,7 +20,11 @@ typeof(ForestSaveSlots).GetField("storageRoot",BindingFlags.Static|BindingFlags.
 // A completed checkpoint has not played StartDeparture: Prepare creates the
 // seated guards with rifles. Arrival must establish its own prop state.
 mission.GetComponent<Map01Quest>().RestoreStage(Map01Quest.CompleteStage);
-var extraction=Map01Extraction.Get(mission);extraction.autoContinueToMap2=false;extraction.ContinueToMap2();
+var extraction=Map01Extraction.Get(mission);extraction.autoContinueToMap2=false;
+typeof(Map01Extraction).GetMethod("Prepare",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(extraction,null);
+var originalHull=Object.FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None).First(r=>r.name=="Moored wooden sampan");
+originalHull.enabled=false;originalHull.forceRenderingOff=true;originalHull.gameObject.SetActive(false);
+extraction.ContinueToMap2();
 float deadline=Time.realtimeSinceStartup+90;
 while(SceneManager.GetActiveScene().name!="Map 2"&&Time.realtimeSinceStartup<deadline)yield return null;
 var arrival=Object.FindFirstObjectByType<Map02Arrival>();Assert.NotNull(arrival);
@@ -31,6 +35,9 @@ Directory.CreateDirectory("Logs/Map02/Checkpoint");Capture(Camera.main,"Logs/Map
 var hull=arrival.GetComponentsInChildren<MeshFilter>(true).Single(m=>m.name=="Moored wooden sampan");
 var renderer=hull.GetComponent<MeshRenderer>();
 Assert.IsTrue(renderer.enabled&&renderer.gameObject.activeInHierarchy&&!renderer.forceRenderingOff);
+Assert.IsFalse(renderer.isPartOfStaticBatch);Assert.AreNotSame(originalHull,renderer);
+Assert.IsFalse(originalHull.enabled,"Do not draw duplicate source geometry.");
+Assert.AreEqual(3,arrival.GetComponentsInChildren<MeshRenderer>().Count(r=>r.name=="Boat bench"&&r.enabled));
 Assert.Less(Vector3.Distance(renderer.bounds.center,arrival.transform.position),1,"The visible hull must move with its passengers.");
 Assert.IsFalse(arrival.Passengers[2].GetComponentsInChildren<Weapon>(true).Any(w=>w.IsGun&&w.gameObject.activeInHierarchy),"Hung must have two free hands for the paddle, even after loading a completed checkpoint.");
 LogAssert.Expect(LogType.Log,"Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.");arrival.Skip();
@@ -163,7 +170,7 @@ Assert.NotNull(pump);
 var water=Object.FindObjectsByType<MeshFilter>(FindObjectsSortMode.None).First(m=>m.name=="Winding canal water");
 var vertices=water.sharedMesh.vertices.Select(v=>water.transform.TransformPoint(v)).ToArray();var triangles=water.sharedMesh.triangles;
 var events=new System.Collections.Generic.List<string>();int frame=0;
-var metrics=new System.Collections.Generic.List<string>{"time,actor,head_angle,stair_foot_error,shoe_riser_penetration"};
+var metrics=new System.Collections.Generic.List<string>{"time,actor,head_angle,stair_foot_error,shoe_riser_penetration,walking_foot_pitch"};
 var actors=arrival.Passengers.Select(p=>p.GetComponentInChildren<Animator>()).ToArray();
 var neutralHeads=actors.Select(a=>Quaternion.Inverse(a.transform.rotation)*a.GetBoneTransform(HumanBodyBones.Head).rotation).ToArray();
 var ankle=(float[,])typeof(Map02Arrival).GetField("ankleOffsets",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(arrival);
@@ -178,7 +185,7 @@ float sampled=arrival.CinematicTime;
 for(int i=0;i<3;i++) {
 float headAngle=Quaternion.Angle(neutralHeads[i],Quaternion.Inverse(actors[i].transform.rotation)*actors[i].GetBoneTransform(HumanBodyBones.Head).rotation);
 Assert.Less(headAngle,35,"Arrival gaze must stay restrained, actor "+i+" time "+sampled);
-float footError=0,shoePenetration=0;string penetrationDetail="";
+float footError=0,shoePenetration=0,walkingPitch=0;string penetrationDetail="";
 float localTime=sampled-16-i*3,start=i==0?3:5.4f;
 if(arrival.CurrentPhase==Map02Arrival.Phase.Disembarking && localTime>=start && localTime<start+4.4f) {
 for(int side=0;side<2;side++) {
@@ -206,7 +213,20 @@ if(depth>shoePenetration){shoePenetration=depth;penetrationDetail=tread.name+" "
 }
 Assert.Less(shoePenetration,.02f,"The shoe must clear the stair riser, actor "+i+" time "+sampled+" "+penetrationDetail);
 }
-metrics.Add(sampled+","+i+","+headAngle+","+footError+","+shoePenetration);
+if(arrival.CurrentPhase==Map02Arrival.Phase.Disembarking&&localTime>start+4.4f&&localTime<start+13.4f) {
+for(int side=0;side<2;side++) {
+var foot=actors[i].GetBoneTransform(side==0?HumanBodyBones.LeftFoot:HumanBodyBones.RightFoot);
+var sole=(System.ValueTuple<Transform,Vector3>[,,])typeof(Map02Arrival).GetField("solePlane",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(arrival);
+var heel=sole[i,side,0];var toe=sole[i,side,1];
+var hit=Physics.RaycastAll(foot.position+Vector3.up*1.5f,Vector3.down,3,~0,QueryTriggerInteraction.Ignore)
+    .Where(h=>h.point.y>.5f&&h.normal.y>.5f&&!h.transform.IsChildOf(arrival.transform)&&!arrival.Passengers.Any(p=>h.transform.IsChildOf(p)))
+    .OrderBy(h=>h.distance).FirstOrDefault();
+var normal=hit.collider!=null?hit.normal:Vector3.up;
+walkingPitch=Mathf.Max(walkingPitch,Mathf.Abs(90-Vector3.Angle(toe.Item1.TransformPoint(toe.Item2)-heel.Item1.TransformPoint(heel.Item2),normal)));
+}
+Assert.Less(walkingPitch,6,"Both swinging and planted feet must stay level with the walking surface, actor "+i+" time "+sampled);
+}
+metrics.Add(sampled+","+i+","+headAngle+","+footError+","+shoePenetration+","+walkingPitch);
 }
 Capture(camera,"Logs/Map02/frames/"+frame.ToString("D4")+".png");
 if(frame%2==0 && time>12 && time<34) {
@@ -217,6 +237,15 @@ var target=arrival.Passengers[index].position+Vector3.up*.85f;
 var eye=target+arrival.transform.rotation*new Vector3(3.2f,1.4f,-2.6f);
 camera.transform.SetPositionAndRotation(eye,Quaternion.LookRotation(target-eye));camera.fieldOfView=48;
 Capture(camera,"Logs/Map02/close-"+frame.ToString("D4")+".png");
+camera.transform.SetPositionAndRotation(oldPosition,oldRotation);camera.fieldOfView=fov;
+}
+if(frame%8==0&&time>23.4f&&time<40.8f) {
+int index=time<32.4f?0:time<37.8f?1:2;
+var oldPosition=camera.transform.position;var oldRotation=camera.transform.rotation;float fov=camera.fieldOfView;
+var target=arrival.Passengers[index].position+Vector3.up*.35f;
+var eye=target+arrival.Passengers[index].rotation*new Vector3(1.8f,.35f,-2.2f);
+camera.transform.SetPositionAndRotation(eye,Quaternion.LookRotation(target-eye));camera.fieldOfView=38;
+Capture(camera,"Logs/Map02/feet-"+frame.ToString("D4")+".png");
 camera.transform.SetPositionAndRotation(oldPosition,oldRotation);camera.fieldOfView=fov;
 }
 rendered=true;}catch(System.Exception exception){captureFailure=exception;rendered=true;}};

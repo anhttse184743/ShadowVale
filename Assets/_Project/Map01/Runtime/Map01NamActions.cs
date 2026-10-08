@@ -45,6 +45,14 @@ namespace ShadowVale.Map01
         private bool hasFullMoves;
         private float upperWeight, fullUntil, upperUntil;
         private bool locked, cancelable, holding, rootMotionWas;
+        private bool stonePose;
+        public const float StoneReleaseDelay=.18f;
+        private float stoneReleaseAt;
+        private GameObject handStone;
+        private Material handStoneMaterial;
+        private readonly System.Collections.Generic.Dictionary<Renderer,bool> hiddenWeapons=new();
+        public bool StoneActionPlaying=>stonePose&&(holding||Time.time<upperUntil);
+
         private Vector3 modelPosition; private Quaternion modelRotation;
 
         /// <summary>A full-body move is playing; Nam's own controls are waiting.</summary>
@@ -92,7 +100,7 @@ namespace ShadowVale.Map01
         public void Hold(int id, bool on)
         {
             if (!Ready(upperLayer)) return;
-            if (on && !holding) { holding = true; actor.SetBool("ActionHold", true); Fire(id); }
+            if (on && !holding) { stonePose=id==ThrowAim; holding = true; actor.SetBool("ActionHold", true); Fire(id); }
             else if (!on && holding) { holding = false; actor.SetBool("ActionHold", false); }
         }
 
@@ -100,7 +108,7 @@ namespace ShadowVale.Map01
         public void ThrowNow()
         {
             if (!Ready(upperLayer)) return;
-            holding = false; actor.SetBool("ActionHold", false);
+            stonePose=true;stoneReleaseAt=Time.time+StoneReleaseDelay;holding = false; actor.SetBool("ActionHold", false);
             Fire(Throw); upperUntil = Time.time + 1.1f;
         }
 
@@ -215,6 +223,36 @@ namespace ShadowVale.Map01
             }
         }
 
-        private void OnDisable() { if (locked) Finish(); holding = false; }
+        private void LateUpdate()
+        {
+            // Keep the equipped weapon and ammunition unchanged while freeing the
+            // throwing hand. Renderer overrides also cover weapon switches mid-aim.
+            if(StoneActionPlaying) {
+                foreach(var weapon in GetComponentsInChildren<Weapon>(true))foreach(var r in weapon.GetComponentsInChildren<Renderer>(true)) {
+                    if(!hiddenWeapons.ContainsKey(r))hiddenWeapons.Add(r,r.forceRenderingOff);
+                    r.forceRenderingOff=true;
+                }
+                if(handStone==null) {
+                    handStone=GameObject.CreatePrimitive(PrimitiveType.Sphere);handStone.name="Stone in hand";
+                    Destroy(handStone.GetComponent<Collider>());
+                    handStone.transform.SetParent(actor.GetBoneTransform(HumanBodyBones.RightHand),false);
+                    handStone.transform.localPosition=Vector3.up*.06f;handStone.transform.localScale=Vector3.one*.10f;
+                    var renderer=handStone.GetComponent<Renderer>();handStoneMaterial=new Material(renderer.sharedMaterial);
+                    handStoneMaterial.color=new Color(.46f,.44f,.39f);renderer.sharedMaterial=handStoneMaterial;
+                }
+                handStone.SetActive(holding||Time.time<stoneReleaseAt);
+            }else RestoreWeaponVisibility();
+        }
+        private void RestoreWeaponVisibility() {
+            foreach(var pair in hiddenWeapons)if(pair.Key!=null)pair.Key.forceRenderingOff=pair.Value;
+            hiddenWeapons.Clear();stonePose=false;
+            if(handStone!=null)handStone.SetActive(false);
+        }
+        private void OnDestroy(){if(handStoneMaterial!=null)Destroy(handStoneMaterial);if(handStone!=null)Destroy(handStone);}
+        private void OnDisable() {
+            if (locked) Finish(); holding = false;upperUntil=0;upperWeight=0;
+            if(Ready(upperLayer))actor.SetLayerWeight(upperLayer,0);
+            RestoreWeaponVisibility();
+        }
     }
 }
