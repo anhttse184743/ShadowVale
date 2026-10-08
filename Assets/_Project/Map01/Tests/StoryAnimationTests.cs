@@ -33,7 +33,7 @@ namespace ShadowVale.Map01.Tests
             var nam = player.animationClips.Where(c => c.name.StartsWith("Nam_")).ToList();
             Assert.GreaterOrEqual(nam.Count, 25);
             foreach (var clip in nam) { Assert.IsTrue(clip.humanMotion, clip.name); Assert.AreEqual(30, clip.frameRate, clip.name); }
-            Assert.That(nam.First(c => c.name == "Nam_Takedown").length, Is.EqualTo(Map01NamActions.TakedownSeconds).Within(.05f));
+            Assert.That(nam.First(c => c.name == "Nam_Takedown_Neck").length, Is.EqualTo(Map01NamActions.TakedownSeconds).Within(.05f));
 
             var enemy = AssetDatabase.LoadAssetAtPath<AnimatorController>(Controllers + "AC_Enemy.controller");
             var enemyStates = enemy.layers.SelectMany(l => l.stateMachine.states).Select(s => s.state.name).ToList();
@@ -41,7 +41,7 @@ namespace ShadowVale.Map01.Tests
                 "Die_0", "Die_1", "Die_2", "Die_3", "Die_4" })
                 Assert.Contains(state, enemyStates);
             foreach (var clip in enemy.animationClips) Assert.IsTrue(clip.humanMotion, clip.name);
-            Assert.That(enemy.animationClips.First(c => c.name == "Enemy_Takedown_Victim").length,
+            Assert.That(enemy.animationClips.First(c => c.name == "Enemy_Takedown_Neck_Victim").length,
                 Is.EqualTo(Map01NamActions.TakedownSeconds).Within(.05f), "Both halves of the takedown run the same length.");
         }
 
@@ -53,12 +53,14 @@ namespace ShadowVale.Map01.Tests
         [UnityTest]
         public IEnumerator KnifeTakedownPlaysBothHalvesTogether()
         {
+            Map01OpeningCutscene.CancelPending();
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode(); yield return null;
             IsolateSaves();
             var mission = Object.FindFirstObjectByType<Map01Mission>();
-            mission.GetComponent<Map01Quest>().RestoreStage(Map01Quest.ScoutStage);
+            mission.GetComponent<Map01Quest>().RestoreStage(Map01Quest.BriefingStage);
             yield return WaitGameSeconds(.5f);
+            foreach(var enemy in mission.Enemies)enemy.enabled=false;
             var guard = NearestGuard(mission);   // static: an iterator lambda's closure does not survive EnterPlayMode
             var agent = guard.GetComponent<NavMeshAgent>();
             if (agent.isOnNavMesh) { agent.isStopped = true; agent.ResetPath(); }
@@ -68,10 +70,10 @@ namespace ShadowVale.Map01.Tests
               File.WriteAllText("Logs/Story/heights.txt", "nam head above feet " + (na.GetBoneTransform(HumanBodyBones.Head).position.y - mission.player.position.y).ToString("F3") + " guard head above feet " + (ga.GetBoneTransform(HumanBodyBones.Head).position.y - guard.transform.position.y).ToString("F3") + " nam humanScale " + na.humanScale.ToString("F3") + " guard humanScale " + ga.humanScale.ToString("F3") + " guard model scale " + ga.transform.lossyScale.y.ToString("F3")); }
             var body = mission.player.GetComponent<CharacterController>();
             body.enabled = false;
-            mission.player.SetPositionAndRotation(guard.transform.position - guard.transform.forward * 1.6f, guard.transform.rotation);
+            mission.player.SetPositionAndRotation(guard.transform.position - guard.transform.forward * 1.4f, guard.transform.rotation);
             body.enabled = true;
             yield return null;
-            guard.GetComponent<Health>().TakeDamage(5, guard.transform.position + Vector3.up, mission.player.gameObject);
+            Assert.IsTrue(guard.TrySilentTakedown(),"Validate the silent knife attack before applying lethal damage.");
             yield return null; yield return null;
             var actions = mission.player.GetComponent<Map01NamActions>();
             Assert.IsNotNull(actions, "The takedown runs through Nam's story moves.");
@@ -87,11 +89,11 @@ namespace ShadowVale.Map01.Tests
                 "Both halves share one origin, as baked in Blender: Nam steps onto it, the guard's body stays put.");
 
             var camera = mission.gameCamera;
-            yield return WaitGameSeconds(1f);
+            yield return WaitGameSeconds(.35f);
             Look(camera, guard.transform, guard.transform.right, "takedown-grab");
             // frame 76 of 141 (the thrust): the hand over his mouth, the blade in his neck
             for (float until = Time.time + 4; Time.time < until
-                && !(namActor.GetCurrentAnimatorStateInfo(0).IsName("Act_Takedown") && namActor.GetCurrentAnimatorStateInfo(0).normalizedTime >= 76f / 141f);)
+                && !(namActor.GetCurrentAnimatorStateInfo(0).IsName("Act_Takedown") && Map01NamActions.TakedownSourceFrame(namActor.GetCurrentAnimatorStateInfo(0).normalizedTime*Map01NamActions.TakedownSeconds) >= 76);)
                 yield return null;
             Assert.IsTrue(guardActor.GetCurrentAnimatorStateInfo(0).IsName("TakedownVictim"), "The guard plays his half, not a generic death.");
             Vector3 mouth = guardActor.GetBoneTransform(HumanBodyBones.Head).position + guard.transform.forward * .1f;

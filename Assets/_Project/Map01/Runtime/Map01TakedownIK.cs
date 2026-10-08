@@ -133,7 +133,7 @@ namespace ShadowVale.Map01
             Vector3 left = Vector3.zero, right = Vector3.zero;
             var info = nam.GetCurrentAnimatorStateInfo(0);
             if (guard != null && guardRoot != null && info.shortNameHash == TakedownState) {
-                float frame = 1 + Mathf.Clamp01(info.normalizedTime) * 140f;
+                float frame = Map01NamActions.TakedownSourceFrame(Mathf.Clamp01(info.normalizedTime)*Map01NamActions.TakedownSeconds);
                 lw = Window(frame, 64, 70, 82, 92);      // the hand closes over his mouth, holds, lets go
                 rw = Window(frame, 66, 72, 80, 88);      // the thrust and the rip
                 Transform head = guard.GetBoneTransform(HumanBodyBones.Head), neck = guard.GetBoneTransform(HumanBodyBones.Neck);

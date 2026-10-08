@@ -42,6 +42,8 @@ namespace ShadowVale.Map01
         private Map01RescueLayout _rescueTuning;
         private float _hearReactionAt;
         private Vector3 _pendingFootstep;
+        private bool _stoneLure;
+        private Quaternion _stoneFacing=Quaternion.identity;
         private float _patrolPause, _pauseUntil, _pausedAt, _animatorSpeedBeforeHold;
         private bool _agentUpdatesPosition;
         private bool _agentUpdatesRotation;
@@ -49,6 +51,7 @@ namespace ShadowVale.Map01
         private Vector3 _heldPosition;
         public event System.Action<Map01Detection> Detected;
         public bool IsPursuer => _pursuer;
+        public bool AtHostagePost => _overseer&&Alive&&Vector3.Distance(transform.position,_postPosition)<=(_rescueTuning!=null?_rescueTuning.overseerHostageRadius:1.25f);
         public void PauseForCinematic(bool animate=false)
         {
             if(!Alive)return;
@@ -121,7 +124,7 @@ namespace ShadowVale.Map01
             _lastHealth = _health.Current;
             if (_agent.isOnNavMesh) _agent.Warp(_postPosition); else transform.position = _postPosition;
             transform.rotation = _postRotation;
-            _suspicion = 0; _alertUntil = 0; _engagedUntil = 0; _hearReactionAt=0;
+            _suspicion = 0; _alertUntil = 0; _engagedUntil = 0; _hearReactionAt=0; _stoneLure=false;
             _searchUntil = 0; _returning = false; SetPace(1f);
             _calmUntil = Time.time + 4f;
             _patrolIndex = 0;
@@ -144,6 +147,9 @@ namespace ShadowVale.Map01
             if (!Alive || Vector3.Distance(position, transform.position) > radius) return false;
             if (_mission != null && _mission.Cinematic) return false;
             if (kind == Map01NoiseKind.Gunshot) ReportDetection(Map01DetectionCause.Gunshot, position);
+            // Finish checking a thrown stone instead of immediately cancelling the lure
+            // for a quiet step behind him. Sight and gunshot detection still apply.
+            if(rescueStealth&&kind==Map01NoiseKind.Footstep&&_mission.Crouched&&_stoneLure&&!Engaged)return true;
             if(rescueStealth&&kind==Map01NoiseKind.Footstep&&!Engaged){
                 // The first audible step starts the reaction clock. Further steps update its
                 // source without extending it indefinitely; rocks and gunshots stay immediate.
@@ -152,21 +158,30 @@ namespace ShadowVale.Map01
                 return true;
             }
             _hearReactionAt=0;
-            if (_mission == null || !_mission.Cinematic) BeginInvestigation(position);
+            if (_mission == null || !_mission.Cinematic) BeginInvestigation(position,kind==Map01NoiseKind.Stone);
             return true;
         }
 
-        private void BeginInvestigation(Vector3 position)
+        private void BeginInvestigation(Vector3 position,bool stone=false)
         {
             // Where to come back to is kept from the first thing he heard, not from wherever the
             // next noise catches him on the way.
             if (!Alerted && !_returning) { _returnPoint = transform.position; _returnRotation = transform.rotation; }
             _returning = false;
-            if (_overseer && _rescue != null && _rescue.CurrentPhase == Map01Rescue.Phase.Captive)
+            if (_overseer && _rescue != null && _rescue.CurrentPhase == Map01Rescue.Phase.Captive && !Engaged)
             {
                 var delta = Vector3.ProjectOnPlane(position - _postPosition, Vector3.up);
-                position = _postPosition + Vector3.ClampMagnitude(delta, 1.25f);
+                position = _postPosition + Vector3.ClampMagnitude(delta, stone?(_rescueTuning!=null?_rescueTuning.overseerStoneRadius:12f):1.25f);
+                if(stone){
+                    _stoneFacing=delta.sqrMagnitude>.01f?Quaternion.LookRotation(delta):transform.rotation;
+                    var path=new NavMeshPath();
+                    if(NavMesh.SamplePosition(position,out var hit,1.5f,NavMesh.AllAreas)
+                        &&_agent.isOnNavMesh&&_agent.CalculatePath(hit.position,path)&&path.status==NavMeshPathStatus.PathComplete)
+                        position=hit.position;
+                    else position=_postPosition; // A stone in the river must not draw him into water.
+                }
             }
+            _stoneLure=stone&&_overseer;
             _investigate = position; _searchUntil = 0;
             _alertUntil = Time.time + InvestigateTimeout;
         }
@@ -181,12 +196,14 @@ namespace ShadowVale.Map01
             public float suspicion, engagedRemaining, pauseRemaining;
             public float footstepReactionRemaining;
             public Vector3 pendingFootstep;
+            public bool stoneLure;
+            public Quaternion stoneFacing;
         }
         public Snapshot Capture() => new Snapshot {
             id = SaveId, position = transform.position, rotation = transform.rotation, hp = _health.Current,
             silent = TakenDownSilently, pursuer = _pursuer, suspicion = _suspicion,
             engagedRemaining = Mathf.Max(0, _engagedUntil-Time.time), pauseRemaining = Mathf.Max(0,_pauseUntil-Time.time),
-            footstepReactionRemaining=_hearReactionAt>0?Mathf.Max(0,_hearReactionAt-Time.time):0,pendingFootstep=_pendingFootstep,
+            footstepReactionRemaining=_hearReactionAt>0?Mathf.Max(0,_hearReactionAt-Time.time):0,pendingFootstep=_pendingFootstep,stoneLure=_stoneLure,stoneFacing=_stoneFacing,
             patrolIndex = _patrolIndex, shotRemaining = Mathf.Max(0, _nextShot - Time.time),
             alertRemaining = Mathf.Max(0, _alertUntil - Time.time), investigate = _investigate,
             searchRemaining = _searchUntil > 0 ? Mathf.Max(.01f, _searchUntil - Time.time) : 0,
@@ -208,6 +225,9 @@ namespace ShadowVale.Map01
             _suspicion = saved.suspicion; _engagedUntil = Time.time + saved.engagedRemaining;
             _pauseUntil = Time.time + saved.pauseRemaining; _pursuer = saved.pursuer;
             _hearReactionAt=saved.footstepReactionRemaining>0?Time.time+saved.footstepReactionRemaining:0;_pendingFootstep=saved.pendingFootstep;
+            _stoneLure=saved.stoneLure;
+            var look=Vector3.ProjectOnPlane(saved.investigate-_postPosition,Vector3.up);
+            _stoneFacing=Quaternion.Dot(saved.stoneFacing,saved.stoneFacing)>.1f?saved.stoneFacing:Quaternion.LookRotation(look.sqrMagnitude>.01f?look:transform.forward);
             _lastHealth = _health.Current;
             _patrolIndex = Mathf.Clamp(saved.patrolIndex, 0, Mathf.Max(0, patrolPoints.Length - 1));
             _nextShot = Time.time + saved.shotRemaining;
@@ -270,6 +290,13 @@ namespace ShadowVale.Map01
             _suspicion=_engagedUntil=_alertUntil=_searchUntil=0;
             if(_agent.isOnNavMesh){_agent.ResetPath();_agent.isStopped=true;}SetSpeed(0);
         }
+        public void JoinRescueCombat(Vector3 lastSeen)
+        {
+            if(!Alive||!_rescuePost)return;
+            _suspicion=1f;_engagedUntil=Time.time+10f;_hearReactionAt=0;_stoneLure=false;
+            _searchUntil=0;_returning=false;_investigate=lastSeen;_alertUntil=Time.time+InvestigateTimeout;
+            SetPace(1.5f);GoTo(lastSeen);
+        }
         private void ReportDetection(Map01DetectionCause cause,Vector3 position)
         {
             var signal=new Map01Detection(this,cause,position);Detected?.Invoke(signal);_rescue?.ReportDetection(signal);
@@ -280,8 +307,11 @@ namespace ShadowVale.Map01
                 ||_mission.ModernCombat.EquippedKind!=WeaponKind.Knife)return false;
             var delta=Vector3.ProjectOnPlane(_mission.player.position-transform.position,Vector3.up);
             var layout=_rescue!=null?_rescue.Layout:null;
-            if(Vector3.Distance(_mission.player.position,transform.position)>(layout!=null?layout.backstabRange:1.6f))return false;
-            if(delta.magnitude>(layout!=null?layout.backstabRange:1.6f)||Vector3.Angle(transform.forward,delta)<(layout!=null?layout.backstabAngle:130))return false;
+            bool overseerApproach=_overseer&&_rescue!=null&&_rescue.CurrentPhase==Map01Rescue.Phase.Captive;
+            float range=layout!=null?(overseerApproach?layout.overseerBackstabRange:layout.backstabRange):1.6f;
+            float rear=layout!=null?(overseerApproach?layout.overseerBackstabAngle:layout.backstabAngle):130f;
+            if(Vector3.Distance(_mission.player.position,transform.position)>range)return false;
+            if(delta.magnitude>range||Vector3.Angle(transform.forward,delta)<rear)return false;
             var origin=_mission.player.position+Vector3.up;
             return !Physics.Linecast(origin,transform.position+Vector3.up,out var hit,_mission.ObstructionMask,QueryTriggerInteraction.Ignore)
                 ||hit.transform==transform||hit.transform.IsChildOf(transform);
@@ -461,15 +491,20 @@ namespace ShadowVale.Map01
             {
                 SetPace(1.5f);
                 GoTo(_investigate);
-                if (_agent.isOnNavMesh && !_agent.pathPending && _agent.remainingDistance <= 1.5f)
-                    _searchUntil = Time.time + _searchSeconds;
+                if (_agent.isOnNavMesh && !_agent.pathPending && _agent.remainingDistance <= (_stoneLure?.55f:1.5f))
+                    _searchUntil = Time.time + (_stoneLure?(_rescueTuning!=null?_rescueTuning.overseerStoneFocusSeconds:11f):_searchSeconds);
                 return;
             }
             if (_agent.isOnNavMesh) _agent.isStopped = true;
-            transform.Rotate(0f, Mathf.Sin(Time.time * 1.2f) * 70f * Time.deltaTime, 0f);
+            if(_stoneLure){
+                float seconds=_rescueTuning!=null?_rescueTuning.overseerStoneFocusSeconds:11f;
+                float sweep=_rescueTuning!=null?_rescueTuning.overseerStoneSweepDegrees:8f;
+                var focused=_stoneFacing*Quaternion.Euler(0,Mathf.Sin((Time.time-_searchUntil+seconds)*.8f)*sweep,0);
+                transform.rotation=Quaternion.RotateTowards(transform.rotation,focused,120*Time.deltaTime);
+            }else transform.Rotate(0f, Mathf.Sin(Time.time * 1.2f) * 70f * Time.deltaTime, 0f);
             if (Time.time < _searchUntil) return;
             // Nothing there: back to where he came from.
-            _alertUntil = 0; _searchUntil = 0; _returning = true;
+            _alertUntil = 0; _searchUntil = 0; _returning = true;_stoneLure=false;
             SetPace(1f);
         }
 
@@ -478,6 +513,7 @@ namespace ShadowVale.Map01
             GoTo(_returnPoint);
             if (!_agent.isOnNavMesh || _agent.pathPending || _agent.remainingDistance > .6f) return;
             _returning = false;
+            if(_overseer&&patrolPoints.Length==0&&_agent.isOnNavMesh)_agent.ResetPath();
             transform.rotation = _returnRotation;
             if (patrolPoints.Length > 0) Go(patrolPoints[_patrolIndex]);
         }

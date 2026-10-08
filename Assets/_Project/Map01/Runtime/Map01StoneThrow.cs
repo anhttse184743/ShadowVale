@@ -118,7 +118,9 @@ namespace ShadowVale.Map01
         /// <summary>A lobbed arc from Nam's hand to <paramref name="target"/>, cut short where it hits something.</summary>
         private void Plan(Vector3 target)
         {
-            Vector3 hand = mission.player.position + Vector3.up * 1.5f + mission.player.right * .25f;
+            var actor=mission.player.GetComponentInChildren<Animator>();
+            var wrist=actor!=null&&actor.isHuman?actor.GetBoneTransform(HumanBodyBones.RightHand):null;
+            Vector3 hand=wrist!=null?wrist.TransformPoint(Vector3.up*.06f):mission.player.position+Vector3.up*(mission.Crouched?1:1.5f)+mission.player.right*.25f;
             float distance = Vector3.Distance(hand, target);
             float apex = Mathf.Clamp(distance * .18f, 1f, 3.2f);
             arc.Clear();
@@ -155,6 +157,18 @@ namespace ShadowVale.Map01
 
         private IEnumerator Fly(Vector3[] path, Vector3 landing)
         {
+            // Inventory is spent once on release; flight begins at the authored
+            // hand-opening beat rather than while the arm is still drawn back.
+            float release=0;
+            while(release<Map01NamActions.StoneReleaseDelay) {
+                yield return null;if(!mission.Stopped)release+=Time.deltaTime;
+            }
+            var actor=mission.player.GetComponentInChildren<Animator>();
+            var hand=actor!=null&&actor.isHuman?actor.GetBoneTransform(HumanBodyBones.RightHand):null;
+            if(hand!=null) {
+                var offset=hand.TransformPoint(Vector3.up*.06f)-path[0];
+                for(int i=0;i<path.Length;i++)path[i]+=offset*(1-i/(float)(path.Length-1));
+            }
             var stone = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             stone.name = "Thrown stone";
             Destroy(stone.GetComponent<Collider>());

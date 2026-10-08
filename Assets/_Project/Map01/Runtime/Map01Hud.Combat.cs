@@ -88,6 +88,8 @@ namespace ShadowVale.Map01
             if (healthDroplet != null) Destroy(healthDroplet);
             if (compassArrow != null) Destroy(compassArrow);
             if (compassBadge != null) Destroy(compassBadge);
+            if(takedownBadge!=null)Destroy(takedownBadge);
+            if(takedownKnife!=null)Destroy(takedownKnife);
         }
     }
 }

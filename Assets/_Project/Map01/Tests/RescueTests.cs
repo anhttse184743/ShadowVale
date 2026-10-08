@@ -94,7 +94,7 @@ namespace ShadowVale.Map01.Tests
             Assert.IsFalse(guard.Alerted,"A footstep has a short reaction; rocks remain immediate.");Assert.IsTrue(overseer.Hear(overseer.transform.position+Vector3.left*9,14,Map01NoiseKind.Stone));
             Assert.AreEqual(Map01Rescue.Phase.Captive,Rescue.CurrentPhase);
             yield return WaitGameSeconds(1.15f);Assert.IsTrue(guard.Alerted);yield return WaitGameSeconds(.85f);
-            Assert.LessOrEqual(Vector3.Distance(overseer.transform.position,Rescue.Layout.guardPosts[0].position),1.5f);
+            Assert.LessOrEqual(Vector3.Distance(overseer.transform.position,Rescue.Layout.guardPosts[0].position),6.5f);
             Assert.IsFalse(Rescue.Failed);yield return new ExitPlayMode();
         }
         [UnityTest]public IEnumerator RealGunshotCommitsExecutionBeforeLethalHitscanAndRetryRestoresItems()

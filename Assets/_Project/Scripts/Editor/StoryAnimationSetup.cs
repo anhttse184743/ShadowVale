@@ -242,10 +242,15 @@ namespace ShadowVale.Editor
             AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
         }
 
-        public static AnimationClip Clip(string folder, string name) =>
-            AssetDatabase.LoadAllAssetsAtPath(folder + name + ".fbx").OfType<AnimationClip>()
+        public static AnimationClip Clip(string folder, string name)
+        {
+            if(name=="Nam_Takedown"||name=="Enemy_Takedown_Victim"){
+                var compact=QuickTakedownSetup.ShortClip(name);if(compact!=null)return compact;
+            }
+            return AssetDatabase.LoadAllAssetsAtPath(folder + name + ".fbx").OfType<AnimationClip>()
                 .FirstOrDefault(c => !c.name.StartsWith("__preview__"))
             ?? throw new FileNotFoundException("Clip not imported: " + name, folder + name + ".fbx");
+        }
 
         private static void Param(AnimatorController c, string name, AnimatorControllerParameterType type)
         {

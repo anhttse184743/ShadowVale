@@ -1070,11 +1070,19 @@ MonoBehaviour:
   hungRun: {fileID: 7400000, guid: 8af390f1f418e4d4f8097f5466c4ff0a, type: 2}
   namIdle: {fileID: 7400000, guid: 0d6119d22df42de458e5c07f2dfd476e, type: 2}
   hungIdle: {fileID: 7400000, guid: 8318e0006e635ea4fbfcb7740c7d9c2e, type: 2}
+  namWalk: {fileID: 7400000, guid: bdae9544ea6fe9248b5ad752debb39f2, type: 2}
+  hungWalk: {fileID: 7400000, guid: 4d312da7674330b47b1fda21bac49aab, type: 2}
+  namKnifeWalk: {fileID: 7400000, guid: fc546e8bf1c67bd4d89c0a80f388fd25, type: 2}
+  shelterWalkSpeed: 1.35
+  shelterFollowGap: 1.4
+  namWalkCycleSpeed: 1.8
+  hungWalkCycleSpeed: 1.4496603
+  namKnifeWalkCycleSpeed: 1.94
   gunshot: {fileID: 8300000, guid: e8bcd2df7f0c31c4c90d6fb6857c5e81, type: 3}
   namRunSpeed: 4.34
   hungRunSpeed: 6
   shelterCameraOffset: {x: 3, y: 2.1, z: -4}
-  interiorCameraOffset: {x: -2, y: 1.8, z: -4}
+  interiorCameraOffset: {x: -4, y: 1.8, z: -2}
   shelterCameraFov: 54
   cameraDamping: 0.22
   patrolVision: 20
@@ -1084,10 +1092,17 @@ MonoBehaviour:
   crouchedFootstepScale: 0.55
   footstepReactionSeconds: 1
   closeDetectionSeconds: 1.6
+  overseerStoneRadius: 12
+  overseerStoneFocusSeconds: 11
+  overseerStoneSweepDegrees: 8
+  overseerHostageRadius: 1.25
+  overseerBackstabRange: 2
+  overseerBackstabAngle: 120
   safeRadius: 8
   doorRadius: 3.5
   backstabRange: 1.6
   backstabAngle: 130
+  takedownHintRange: 3.2
   killCameraSeconds: 0.9
   shelterSeconds: 8
   spawnClearance: 18

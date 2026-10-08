@@ -27,6 +27,9 @@ namespace ShadowVale.Map01
         Map01Extraction source;
         DialogueVoice speech;
         readonly List<Material> partyMaterials=new();
+        readonly List<Mesh> boatMeshes=new();
+        readonly List<MeshRenderer> boatRenderers=new();
+        bool boatVisualsPrepared;
         Animator[] actors;
         Map01Extraction.PosePlayer[] poses;
         AnimationClip[] stand,step,walk,turn;
@@ -41,9 +44,13 @@ namespace ShadowVale.Map01
         float clock,skipHeld,fade=1,groundHandoffRemaining;
         readonly bool[] ashore=new bool[3];
         readonly float[,] ankleOffsets=new float[3,2];
+        readonly Quaternion[,] neutralToes=new Quaternion[3,2];
+        readonly Quaternion[,] levelFeet=new Quaternion[3,2];
+        readonly (Transform bone,Vector3 point)[,,] solePlane=new (Transform,Vector3)[3,2,2];
         readonly List<(Transform bone,Vector3 point)>[] shoeContacts=new List<(Transform,Vector3)>[3];
         readonly int[,] plantedCycles={{-999,-999},{-999,-999},{-999,-999}};
         readonly Vector3[,] plantedFeet=new Vector3[3,2];
+        readonly Vector3[,] plantedNormals=new Vector3[3,2];
         bool released,paused;
 #if UNITY_EDITOR
         bool shaderCompilationScoped,previousAsyncShaders,previousAllowAsyncShaders;
@@ -71,7 +78,9 @@ namespace ShadowVale.Map01
         // The sampan interior floor is -0.15 in hull space; keep it above the canal at 0.045.
         const float WaterlineRoot=.24f, StandDuration=3, PassengerDelay=3;
         const float InteriorFloor=-.15f, StairDuration=4.4f, LaneDuration=2.4f, WalkStride=1;
-        static readonly float[] StairX={-.55f,-.95f,-1.21f,-1.47f,-1.73f,-1.99f,-2.35f,-2.35f};
+        // Ankle positions sit near each tread's outer edge: the toe extends
+        // forward along -X and must not be placed inside the following riser.
+        static readonly float[] StairX={-.55f,-.78f,-1.04f,-1.30f,-1.56f,-1.82f,-2.35f,-2.35f};
         static readonly float[] StairY={.15f,.41f-WaterlineRoot,.62f-WaterlineRoot,.83f-WaterlineRoot,1.04f-WaterlineRoot,1.25f-WaterlineRoot,1.25f-WaterlineRoot,1.25f-WaterlineRoot};
         static readonly Vector3 Docked=new(-11.346f,WaterlineRoot,-84.586f);
         static Vector3 DockPoint(Vector3 local)=>Docked+DockRotation*local;
@@ -91,6 +100,8 @@ namespace ShadowVale.Map01
                 var copy=new Material(badge.sharedMaterial);badge.sharedMaterial=copy;partyMaterials.Add(copy);
             }
             paddle=source.Paddle;
+            PrepareBoatRendering();
+            HideRowersRifle();
             for(int i=0;i<3;i++) {
                 Passengers[i].SetParent(transform,true);
                 Passengers[i].localPosition=new Vector3(0,-.13f,i==0?0:i==1?1.6f:-1.6f);
@@ -123,6 +134,9 @@ namespace ShadowVale.Map01
             SceneManager.sceneLoaded-=MuteVillageCameras;
             
             SceneManager.MoveGameObjectToScene(gameObject,SceneManager.GetActiveScene());
+            // The hull changes scene as well as transform. Re-register only this
+            // small moving prop; leave the village's GPU batching untouched.
+            PrepareBoatRendering();
             foreach(var other in FindObjectsByType<Camera>(FindObjectsSortMode.None))if(other!=camera) {
                 other.enabled=false;other.tag="Untagged";
                 var listener=other.GetComponent<AudioListener>();if(listener!=null)listener.enabled=false;
@@ -151,15 +165,13 @@ namespace ShadowVale.Map01
                 if(stand[i]==null || step[i]==null || walk[i]==null || turn[i]==null)throw new InvalidOperationException("Map 2 arrival clips have not been imported.");
                 poses[i]=new Map01Extraction.PosePlayer(actors[i],i==2?source.hungClips:null);
                 poses[i].Play(Resources.Load<AnimationClip>("Cutscenes/Map02/"+who+"_Standing_Guard"));
-                for(int side=0;side<2;side++) {
-                    var foot=actors[i].GetBoneTransform(side==0?HumanBodyBones.LeftFoot:HumanBodyBones.RightFoot);
-                    FlattenFoot(foot);
-                }
+                PrepareBindFeet(i);
                 PrepareShoeContacts(i);
                 poses[i].Dispose();poses[i]=new Map01Extraction.PosePlayer(actors[i],i==2?source.hungClips:null);
                 poses[i].Play(Resources.Load<AnimationClip>("Cutscenes/Map02/"+who+(i==2?"_Arrival_Row_Loop":"_Arrival_Travel")));
                 if(i!=2)Map01Rifle.Attach(actors[i]).weapon.gameObject.SetActive(true);
             }
+            HideRowersRifle();
             stow=Resources.Load<AnimationClip>("Cutscenes/Map02/Hung_Oar_Stow");
             // Park longitudinally inside the starboard gunwale, clear of the aisle and stairs.
             paddlePark=new Vector3(.44f,.18f,-2.4f);paddleParkRotation=Quaternion.identity;
@@ -173,6 +185,43 @@ namespace ShadowVale.Map01
             speech=DialogueVoice.For(gameObject);speech.Play("m2_arrival_sight");
             Cursor.lockState=CursorLockMode.None;Cursor.visible=false;
             ApplyArrival(0);yield return null;
+        }
+        void HideRowersRifle() {
+            // Loading a completed Map 1 checkpoint bypasses StartDeparture,
+            // which used to be the only place that hid Hung's rifle.
+            foreach(var weapon in actors[2].GetComponentsInChildren<Weapon>(true))
+                if(weapon.IsGun)weapon.gameObject.SetActive(false);
+        }
+        void PrepareBoatRendering() {
+            if(!boatVisualsPrepared) {
+                // Scene renderers can retain culling/batch registration after being
+                // moved out of their original scene. Create owned moving geometry
+                // before unloading Map 1 instead of reviving those renderers.
+                foreach(var mesh in GetComponentsInChildren<MeshFilter>(true)) {
+                    if(mesh.name!="Moored wooden sampan"&&mesh.name!="Boat bench"&&!mesh.name.StartsWith("Oar "))continue;
+                    var old=mesh.GetComponent<MeshRenderer>();if(old==null||mesh.sharedMesh==null)continue;
+                    mesh.gameObject.SetActive(true);
+                    var visual=new GameObject(mesh.name);visual.transform.SetParent(mesh.transform,false);
+                    visual.layer=mesh.gameObject.layer;
+                    var copy=Instantiate(mesh.sharedMesh);copy.name=mesh.sharedMesh.name+" (arrival)";boatMeshes.Add(copy);
+                    visual.AddComponent<MeshFilter>().sharedMesh=copy;
+                    var fresh=visual.AddComponent<MeshRenderer>();
+                    fresh.sharedMaterials=old.sharedMaterials.Select(m=>{
+                        if(m==null)return null;
+                        var material=new Material(m);partyMaterials.Add(material);return material;
+                    }).ToArray();
+                    fresh.shadowCastingMode=old.shadowCastingMode;fresh.receiveShadows=old.receiveShadows;
+                    var properties=new MaterialPropertyBlock();old.GetPropertyBlock(properties);
+                    if(fresh.sharedMaterial!=null&&fresh.sharedMaterial.HasProperty("_BaseColor"))
+                        properties.SetColor("_BaseColor",fresh.sharedMaterial.GetColor("_BaseColor"));
+                    fresh.SetPropertyBlock(properties);boatRenderers.Add(fresh);
+                    old.enabled=false;mesh.name="Map 1 source "+mesh.name;
+                }
+                boatVisualsPrepared=true;
+            }
+            foreach(var renderer in boatRenderers)if(renderer!=null) {
+                renderer.gameObject.SetActive(true);renderer.enabled=true;renderer.forceRenderingOff=false;
+            }
         }
         void MuteVillageCameras(Scene scene,LoadSceneMode mode) {
             foreach(var root in scene.GetRootGameObjects())foreach(var other in root.GetComponentsInChildren<Camera>(true))if(other!=camera) {
@@ -268,7 +317,8 @@ namespace ShadowVale.Map01
                 float p=(t-stairStart)/StairDuration;
                 var center=(StairContact(p,0)+StairContact(p,1))*.5f;
                 // Root follows the support feet, including the final gathering step on the landing.
-                passenger.position=DockPoint(new Vector3(center.x,center.y,lane));
+                float supportHeight=(StairSupportHeight(p,0)+StairSupportHeight(p,1))*.5f;
+                passenger.position=DockPoint(new Vector3(center.x,supportHeight,lane));
                 passenger.rotation=DockRotation*Quaternion.Euler(0,270,0);
             } else {
                 pose.Play(walk[index]);
@@ -324,6 +374,7 @@ namespace ShadowVale.Map01
                 if(ashore[i])GroundStandingFeet(i);
                 float t=clock-i*PassengerDelay;
                 float stairStart=i==0?StandDuration:StandDuration+LaneDuration;
+                if(t>=StandDuration && t<stairStart)for(int side=0;side<2;side++)LevelWalkingFoot(i,side,Vector3.up);
                 if(t>=stairStart && t<=stairStart+StairDuration)PlantStairFeet(i,(t-stairStart)/StairDuration);
                 if(t>stairStart+StairDuration && !ashore[i])PlantShoreFeet(i);
             }
@@ -338,10 +389,30 @@ namespace ShadowVale.Map01
             float sole=float.PositiveInfinity;
             for(int side=0;side<2;side++){
                 var foot=actors[index].GetBoneTransform(side==0?HumanBodyBones.LeftFoot:HumanBodyBones.RightFoot);
-                FlattenFoot(foot);
+                var hit=WalkSurfaceBelow(foot.position);
+                LevelWalkingFoot(index,side,hit.collider!=null?hit.normal:Vector3.up);
             }
             foreach(var sample in shoeContacts[index])if(sample.bone!=null)sole=Mathf.Min(sole,sample.bone.TransformPoint(sample.point).y);
             if(!float.IsInfinity(sole))actors[index].transform.position+=Vector3.up*(SpawnPoints[index].y-sole);
+        }
+        void PrepareBindFeet(int index) {
+            var actor=actors[index];
+            Matrix4x4 Bind(Transform bone) {
+                foreach(var skin in actor.GetComponentsInChildren<SkinnedMeshRenderer>()) {
+                    int j=Array.IndexOf(skin.bones,bone);
+                    if(j>=0 && j<skin.sharedMesh.bindposes.Length)
+                        return skin.transform.localToWorldMatrix*skin.sharedMesh.bindposes[j].inverse;
+                }
+                throw new InvalidOperationException("Missing original foot bind pose for "+bone.name);
+            }
+            for(int side=0;side<2;side++) {
+                var foot=actor.GetBoneTransform(side==0?HumanBodyBones.LeftFoot:HumanBodyBones.RightFoot);
+                var toes=actor.GetBoneTransform(side==0?HumanBodyBones.LeftToes:HumanBodyBones.RightToes);
+                var reference=Bind(foot).rotation;
+                levelFeet[index,side]=Quaternion.Inverse(actor.transform.rotation)*reference;
+                if(toes!=null)neutralToes[index,side]=Quaternion.Inverse(Bind(toes.parent).rotation)*Bind(toes).rotation;
+                LevelWalkingFoot(index,side,Vector3.up);
+            }
         }
         void PrepareShoeContacts(int index) {
             var feet=new[]{actors[index].GetBoneTransform(HumanBodyBones.LeftFoot),actors[index].GetBoneTransform(HumanBodyBones.RightFoot)};
@@ -364,37 +435,81 @@ namespace ShadowVale.Map01
             }
             for(int side=0;side<2;side++)ankleOffsets[index,side]=float.IsInfinity(soles[side])?.10f:Mathf.Clamp(feet[side].position.y-soles[side],.03f,.24f);
             if(shoeContacts[index].Count==0)for(int side=0;side<2;side++)shoeContacts[index].Add((feet[side],feet[side].InverseTransformPoint(feet[side].position-Vector3.up*ankleOffsets[index,side])));
+            for(int side=0;side<2;side++) {
+                var points=shoeContacts[index].Where(c=>c.bone==feet[side]||c.bone==toes[side])
+                    .Select(c=>c.bone.TransformPoint(c.point)).ToArray();
+                float lo=points.Min(p=>Vector3.Dot(p-feet[side].position,actors[index].transform.forward));
+                float hi=points.Max(p=>Vector3.Dot(p-feet[side].position,actors[index].transform.forward));
+                for(int end=0;end<2;end++) {
+                    var region=points.Where(p=>end==0?Vector3.Dot(p-feet[side].position,actors[index].transform.forward)<Mathf.Lerp(lo,hi,.35f):
+                        Vector3.Dot(p-feet[side].position,actors[index].transform.forward)>Mathf.Lerp(lo,hi,.65f)).ToArray();
+                    float low=region.Min(p=>p.y);
+                    var bottom=region.Where(p=>p.y<low+.008f).ToArray();
+                    var point=bottom.Aggregate(Vector3.zero,(sum,p)=>sum+p)/bottom.Length;
+                    var bone=end==1&&toes[side]!=null?toes[side]:feet[side];
+                    solePlane[index,side,end]=(bone,bone.InverseTransformPoint(point));
+                }
+            }
         }
         void PlantShoreFeet(int index) {
             float cycles=(float)poses[index].Time/Mathf.Max(.1f,walk[index].length);
             for(int side=0;side<2;side++) {
                 float phase=cycles+side*.5f;int cycle=Mathf.FloorToInt(phase);
                 float contactPhase=phase-cycle;
-                if(contactPhase>=.55f)continue;
                 var foot=actors[index].GetBoneTransform(side==0?HumanBodyBones.LeftFoot:HumanBodyBones.RightFoot);
+                var hit=WalkSurfaceBelow(foot.position);
+                // Swinging feet used to bypass FlattenFoot entirely, retaining
+                // the source clip's excessive upward pitch. Level both ankles
+                // throughout the cycle; the leg animation still provides lift.
+                var normal=hit.collider!=null?hit.normal:Vector3.up;
+                if(contactPhase>=.55f){LevelWalkingFoot(index,side,normal);continue;}
                 if(plantedCycles[index,side]!=cycle) {
                     var point=foot.position;
-                    var hit=Physics.RaycastAll(point+Vector3.up*1.5f,Vector3.down,3,~0,QueryTriggerInteraction.Ignore)
-                        .Where(h=>h.point.y>.5f && !h.transform.IsChildOf(transform) && !Passengers.Any(p=>h.transform.IsChildOf(p)))
-                        .OrderBy(h=>h.distance).FirstOrDefault();
                     point.y=(hit.collider!=null?hit.point.y:Passengers[index].position.y)+ankleOffsets[index,side];
                     plantedFeet[index,side]=point;plantedCycles[index,side]=cycle;
+                    plantedNormals[index,side]=normal;
                 }
                 // Blend contact at heel strike/toe off instead of snapping across the swing pose.
                 float weight=Mathf.Min(Mathf.SmoothStep(0,1,contactPhase/.07f),Mathf.SmoothStep(0,1,(.55f-contactPhase)/.07f));
                 var target=Vector3.Lerp(foot.position,plantedFeet[index,side],weight);
-                FlattenFoot(foot);SolveLeg(actors[index],side==0,target);
+                LevelWalkingFoot(index,side,Vector3.Slerp(normal,plantedNormals[index,side],weight));
+                SolveLeg(actors[index],side==0,target);
             }
+        }
+        RaycastHit WalkSurfaceBelow(Vector3 point) {
+            return Physics.RaycastAll(point+Vector3.up*1.5f,Vector3.down,3,~0,QueryTriggerInteraction.Ignore)
+                .Where(h=>h.point.y>.5f && h.normal.y>.5f && !h.transform.IsChildOf(transform) && !Passengers.Any(p=>h.transform.IsChildOf(p)))
+                .OrderBy(h=>h.distance).FirstOrDefault();
+        }
+        void LevelWalkingFoot(int index,int side,Vector3 normal) {
+            var foot=actors[index].GetBoneTransform(side==0?HumanBodyBones.LeftFoot:HumanBodyBones.RightFoot);
+            var toes=actors[index].GetBoneTransform(side==0?HumanBodyBones.LeftToes:HumanBodyBones.RightToes);
+            if(toes!=null)toes.localRotation=neutralToes[index,side];
+            foot.rotation=Quaternion.FromToRotation(Vector3.up,normal)*actors[index].transform.rotation*levelFeet[index,side];
         }
         public static Vector2 StairContact(float progress,int side) {
             float cycle=Mathf.Clamp(progress,0,.999999f)*StairX.Length;
             int active=(int)cycle;float fraction=cycle-active;
-            float swing=fraction*fraction*fraction*(10+fraction*(-15+6*fraction));
             int completed=active-1;if(completed%2!=side)completed--;
             var from=completed<0?new Vector2(0,InteriorFloor):new Vector2(StairX[completed],StairY[completed]);
             if(active%2!=side)return from;
             var to=new Vector2(StairX[active],StairY[active]);
-            return Vector2.Lerp(from,to,swing)+Vector2.up*(.10f*Mathf.Sin(Mathf.PI*swing));
+            // Clear the riser before translating the shoe. A diagonal ankle
+            // arc let the toe clip the next tread, especially on Hung's sandals.
+            float advance=StepEase((fraction-.22f)/.56f);
+            float clearance=Mathf.Max(from.y,to.y)+.14f;
+            float height=fraction<.30f?Mathf.Lerp(from.y,clearance,StepEase(fraction/.30f)):
+                fraction>.76f?Mathf.Lerp(clearance,to.y,StepEase((fraction-.76f)/.24f)):clearance;
+            return new Vector2(Mathf.Lerp(from.x,to.x,advance),height);
+        }
+        static float StepEase(float value) {
+            float p=Mathf.Clamp01(value);return p*p*p*(10+p*(-15+6*p));
+        }
+        static float StairSupportHeight(float progress,int side) {
+            float cycle=Mathf.Clamp(progress,0,.999999f)*StairX.Length;
+            int active=(int)cycle,completed=active-1;if(completed%2!=side)completed--;
+            float from=completed<0?InteriorFloor:StairY[completed];
+            return active%2==side?Mathf.Lerp(from,StairY[active],StepEase(cycle-active)):from;
         }
         void PlantStairFeet(int index,float progress) {
             float lane=index==0?0:index==1?.8f:-.8f;
@@ -417,41 +532,9 @@ namespace ShadowVale.Map01
             // above leg reach. Transfer weight down before solving both contacts.
             actors[index].GetBoneTransform(HumanBodyBones.Hips).position-=Vector3.up*(pelvisDrop+.0001f);
             for(int side=0;side<2;side++) {
-                FlattenFoot(actors[index].GetBoneTransform(side==0?HumanBodyBones.LeftFoot:HumanBodyBones.RightFoot));
+                LevelWalkingFoot(index,side,Vector3.up);
                 SolveLeg(actors[index],side==0,targets[side]);
             }
-        }
-        static void FlattenFoot(Transform foot) {
-            if(foot.childCount==0)return;
-            var direction=foot.GetChild(0).position-foot.position;
-            var flat=Vector3.ProjectOnPlane(direction,Vector3.up);
-            if(flat.sqrMagnitude>.00001f)foot.rotation=Quaternion.FromToRotation(direction,flat)*foot.rotation;
-        }
-        static float MeasureAnkleOffset(Animator actor,Transform foot) {
-            var descendants=new HashSet<Transform>(foot.GetComponentsInChildren<Transform>());
-            float sole=float.PositiveInfinity;
-            foreach(var skin in actor.GetComponentsInChildren<SkinnedMeshRenderer>()) {
-                if(!skin.sharedMesh.isReadable) {
-                    // BakeMesh is readable even when the original imported mesh
-                    // is not. Measure the neutral shoe region without changing it.
-                    var neutralMesh=new Mesh();skin.BakeMesh(neutralMesh);
-                    foreach(var v in neutralMesh.vertices){
-                        var point=skin.transform.TransformPoint(v);
-                        if(Vector3.ProjectOnPlane(point-foot.position,Vector3.up).sqrMagnitude<.09f)sole=Mathf.Min(sole,point.y);
-                    }
-                    Destroy(neutralMesh);continue;
-                }
-                var indexes=skin.bones.Select((bone,i)=>(bone,i)).Where(p=>descendants.Contains(p.bone)).Select(p=>p.i).ToHashSet();
-                if(indexes.Count==0)continue;
-                var mesh=new Mesh();skin.BakeMesh(mesh);var vertices=mesh.vertices;var weights=skin.sharedMesh.boneWeights;
-                for(int i=0;i<weights.Length;i++) {
-                    var w=weights[i];float influence=(indexes.Contains(w.boneIndex0)?w.weight0:0)+(indexes.Contains(w.boneIndex1)?w.weight1:0)
-                        +(indexes.Contains(w.boneIndex2)?w.weight2:0)+(indexes.Contains(w.boneIndex3)?w.weight3:0);
-                    if(influence>.7f)sole=Mathf.Min(sole,skin.transform.TransformPoint(vertices[i]).y);
-                }
-                Destroy(mesh);
-            }
-            return !float.IsInfinity(sole)?Mathf.Clamp(foot.position.y-sole,.03f,.24f):.10f;
         }
         static void SolveLeg(Animator actor,bool left,Vector3 target) {
             var upper=actor.GetBoneTransform(left?HumanBodyBones.LeftUpperLeg:HumanBodyBones.RightUpperLeg);
@@ -529,6 +612,7 @@ namespace ShadowVale.Map01
 #if UNITY_EDITOR
             EndShaderPreparation();
 #endif
+            foreach(var mesh in boatMeshes)if(mesh!=null)Destroy(mesh);
             foreach(var material in partyMaterials)if(material!=null)Destroy(material);if(poses!=null)foreach(var pose in poses)pose?.Dispose();Time.timeScale=1;}
     }
 }

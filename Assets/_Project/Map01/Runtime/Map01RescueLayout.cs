@@ -7,11 +7,15 @@ namespace ShadowVale.Map01
         public Transform[] guardPosts, patrolRoutes, pursuitSites, shelterRun;
         public Transform safeEntry, shelterDoor, reportPoint;
         public AnimationClip namRun, hungRun, namIdle, hungIdle;
+        public AnimationClip namWalk,hungWalk,namKnifeWalk;
+        [Tooltip("Shelter cutscene only: walking speed and minimum separation between passengers.")]
+        public float shelterWalkSpeed=1.35f,shelterFollowGap=1.4f;
+        public float namWalkCycleSpeed=1.8f,hungWalkCycleSpeed=1.94f,namKnifeWalkCycleSpeed=1.94f;
         public AudioClip gunshot;
         [Tooltip("Authored run-cycle speed in metres per second; playback follows actual path speed.")]
         public float namRunSpeed=4.34f, hungRunSpeed=6f;
         public Vector3 shelterCameraOffset=new Vector3(3,2.1f,-4);
-        public Vector3 interiorCameraOffset=new Vector3(-2,1.8f,-4);
+        public Vector3 interiorCameraOffset=new Vector3(-4,1.8f,-2);
         public float shelterCameraFov=54, cameraDamping=.22f;
         [Range(10,30)] public float patrolVision = 20;
         [Range(45,130)] public float patrolAngle = 95;
@@ -20,8 +24,15 @@ namespace ShadowVale.Map01
         [Range(.3f,1f)] public float crouchedFootstepScale=.55f;
         [Range(.2f,1.5f)] public float footstepReactionSeconds=1f;
         [Range(1f,3f)] public float closeDetectionSeconds=1.6f;
+        [Tooltip("Overseer only: walk out toward the stone, then keep a narrow forward search instead of sweeping behind.")]
+        public float overseerStoneRadius=12f, overseerStoneFocusSeconds=11f, overseerStoneSweepDegrees=8f;
+        [Tooltip("Only an overseer physically within this distance of his guard post can execute the captive.")]
+        public float overseerHostageRadius=1.25f;
+        [Tooltip("Slightly more forgiving rear knife approach for the overseer only.")]
+        public float overseerBackstabRange=2f, overseerBackstabAngle=120f;
         public float safeRadius = 8, doorRadius = 3.5f;
         public float backstabRange = 1.6f, backstabAngle = 130;
+        public float takedownHintRange=3.2f;
         public float killCameraSeconds = .9f, shelterSeconds = 8, spawnClearance = 18;
         public float[] waveThresholds = { .8f, .55f, .3f };
         private void OnDrawGizmosSelected()

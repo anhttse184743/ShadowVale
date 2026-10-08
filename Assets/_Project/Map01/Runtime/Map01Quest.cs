@@ -55,7 +55,7 @@ namespace ShadowVale.Map01
         public int Stage { get; private set; }
         /// <summary>The objective line for the HUD, with the scouting tally while it runs.</summary>
         public string ObjectiveText => Stage == RescueStage && rescue != null
-            ? (rescue.CanFree ? "Đã hạ đủ bốn lính. Cởi trói Hùng [E]." : $"{Objectives[0]} — còn {rescue.Remaining}/4 lính; " + (rescue.OverseerAlive ? "chưa được báo động" : "đã hạ lính giám sát, có thể giao chiến"))
+            ? (rescue.CanFree ? "Đã hạ đủ bốn lính. Cởi trói Hùng [E]." : $"{Objectives[0]} — còn {rescue.Remaining}/4 lính; " + (!rescue.OverseerAlive?"đã hạ lính giám sát, có thể giao chiến":rescue.CombatAlarm?"địch đã báo động, hạ nhóm truy kích":rescue.CanExecuteCaptive?"giám sát đang canh Hùng, giữ im lặng":"giám sát đã rời Hùng; vòng ra sau hoặc giao chiến"))
             : Stage == ScoutStage
             ? $"{Objectives[Stage]} ({scouting.FoundCount}/{scouting.Camps.Count})"
             : Objectives[Mathf.Clamp(Stage, 0, LastStage)];

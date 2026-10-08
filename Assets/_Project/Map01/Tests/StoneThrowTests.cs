@@ -86,6 +86,8 @@ namespace ShadowVale.Map01.Tests
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
             yield return null;
+            var routing=RouteInputToGame();var keyboard=InputSystem.AddDevice<Keyboard>();
+            try {
             var mission = Object.FindFirstObjectByType<Map01Mission>();
             var inventory = mission.GetComponent<Map01Inventory>();
             var stones = mission.GetComponent<Map01StoneThrow>();
@@ -104,6 +106,7 @@ namespace ShadowVale.Map01.Tests
             Vector3 near = Beside(guard, 5f);
             AimCamera(mission, near);
             yield return null; yield return null;
+            InputSystem.QueueStateEvent(keyboard,new KeyboardState(Key.Q));InputSystem.Update();
             stones.BeginAim();
             for (int i = 0; i < 4; i++) { AimCamera(mission, near); yield return null; }
             Assert.IsTrue(stones.Aiming);
@@ -121,6 +124,7 @@ namespace ShadowVale.Map01.Tests
             yield return null;
             Assert.IsFalse(stones.Aiming);
             Assert.AreEqual(carried, inventory.Count("stone"), "Cancelling keeps the stone.");
+            }finally{InputSystem.RemoveDevice(keyboard);RestoreInputRouting(routing);}
             yield return new ExitPlayMode();
         }
 
@@ -158,6 +162,7 @@ namespace ShadowVale.Map01.Tests
             Assert.IsFalse(guard.Engaged, "Nam was never seen.");
             AimCamera(mission, guard.transform.position + Vector3.up);
             yield return WaitGameSeconds(.3f);
+            Directory.CreateDirectory("Logs/GuidePreview");
             ScreenCapture.CaptureScreenshot("Logs/GuidePreview/stone-investigate.png");
 
             // ...a while, then back where he was.

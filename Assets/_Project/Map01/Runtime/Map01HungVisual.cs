@@ -122,6 +122,11 @@ namespace ShadowVale.Map01
         }
         public void FinishRescueRise()
         {
+            RestoreAfterCinematic();
+        }
+        /// <summary>Restore this quest stage immediately; Rebind alone falls back to the captive kneeling state.</summary>
+        public void RestoreAfterCinematic()
+        {
             ReleaseHold(); SnapToStage(); AnchorToGround();
         }
         private bool Wounded => !down && Stage == Map01Quest.EscortStage;
