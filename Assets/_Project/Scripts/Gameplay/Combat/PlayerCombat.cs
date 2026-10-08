@@ -208,6 +208,7 @@ namespace ShadowVale.Gameplay.Combat
         /// <summary>Base-layer state holding Nam's own AK carry, when the controller has one.</summary>
         public const string RifleLocomotionState = "Locomotion_Rifle";
         private bool _rifleBody, _hasReloadParams, _hasHitParam;
+        private bool HasKnifeCarry => animator!=null&&animator.HasState(0,Animator.StringToHash("Locomotion_Knife"));
         private float _lastHealthSeen = -1f;
         private float _upperBodyHoldUntil;
         private float _faceCameraHoldUntil;
@@ -247,13 +248,14 @@ namespace ShadowVale.Gameplay.Combat
             _aiming = Mouse.current != null && Mouse.current.rightButton.isPressed && _equipped != null && _equipped.IsGun;
             animator.SetBool(AnimatorParams.Aiming, _aiming);
             bool rifleCarry=_rifleBody && _equippedKind==WeaponKind.Rifle && !_aiming;
-            _upperBodyWeight = _equippedKind == WeaponKind.Unarmed || rifleCarry ? 0 : 1;
+            bool knifeCarry=HasKnifeCarry&&_equippedKind==WeaponKind.Knife;
+            _upperBodyWeight = _equippedKind == WeaponKind.Unarmed || rifleCarry || knifeCarry ? 0 : 1;
             if (_upperBodyLayer > 0) {
                 animator.SetLayerWeight(_upperBodyLayer, _upperBodyWeight);
                 string state = _equippedKind == WeaponKind.Rifle ? "Hold_Rifle" : _equippedKind == WeaponKind.Knife ? "Hold_Knife" : "Empty";
                 if (animator.HasState(_upperBodyLayer, Animator.StringToHash(state))) animator.Play(state, _upperBodyLayer, 0);
             }
-            string locomotion=rifleCarry?RifleLocomotionState:LocomotionState;
+            string locomotion=knifeCarry?(_controller!=null&&_controller.IsSneaking?"Sneak_Knife":"Locomotion_Knife"):rifleCarry?RifleLocomotionState:LocomotionState;
             if (animator.HasState(0, Animator.StringToHash(locomotion))) animator.Play(locomotion, 0, 0);
             foreach (var pair in _weapons) pair.Value.gameObject.SetActive(pair.Key == _equippedKind);
             // Cinematic NPC grips may have reparented/resized this existing gameplay rifle.
@@ -546,6 +548,8 @@ namespace ShadowVale.Gameplay.Combat
             // rifle: the stance layer only comes up to aim, fire, reload or take a hit.
             bool carried = _rifleBody && _equippedKind == WeaponKind.Rifle && !_aiming && !attacking
                 && (_magazine == null || !_magazine.IsReloading);
+            carried|=HasKnifeCarry&&_equippedKind==WeaponKind.Knife&&!attacking
+                &&(animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion_Knife")||animator.GetCurrentAnimatorStateInfo(0).IsName("Sneak_Knife"));
             float target = (_equippedKind != WeaponKind.Unarmed || attacking) && !carried ? 1f : 0f;
             _upperBodyWeight = Mathf.MoveTowards(
                 _upperBodyWeight, target, Time.deltaTime / Mathf.Max(0.01f, stanceBlendTime));

@@ -15,6 +15,7 @@ namespace ShadowVale.Map01
         [Serializable] public sealed class Snapshot {
             public int revision,phase,waveMask;
             public bool safe,reward;
+            public bool combatAlarm;
             public float escortDistance;
         }
         public IReadOnlyList<Map01EnemyController> Squad=>squad;
@@ -30,6 +31,8 @@ namespace ShadowVale.Map01
         public Vector3 CaptivePost{get;private set;}
         public Vector3 RetryPoint{get;private set;}
         public bool OverseerAlive=>squad.Count==4&&squad[0]!=null&&squad[0].Alive;
+        public bool CombatAlarm{get;private set;}
+        public bool CanExecuteCaptive=>CurrentPhase==Phase.Captive&&!CombatAlarm&&OverseerAlive&&squad[0].AtHostagePost;
         public int Remaining=>squad.Count(g=>g!=null&&g.Alive);
         public bool CanFree=>CurrentPhase==Phase.Captive&&squad.Count==4&&Remaining==0;
         public bool Exposed=>mission.IsInitialized&&!Failed&&CurrentPhase==Phase.Escorting&&!SafeReached;
@@ -44,7 +47,7 @@ namespace ShadowVale.Map01
         private Map01Mission mission;
         private Map01Quest quest;
         private PlayerCombat boundCombat;
-        private float nextChatter,nextWaveCheck,nextHitLine,calmUntil;
+        private float nextChatter,nextWaveCheck,nextHitLine,calmUntil,nextRally;
         private int chatterIndex;
         private bool whispered;
         private Coroutine release;
@@ -92,8 +95,16 @@ namespace ShadowVale.Map01
         public bool HoldEnemy(Map01EnemyController enemy)=>SafeReached&&pursuers.Contains(enemy);
         public void ReportDetection(Map01Detection detection)
         {
-            if(CurrentPhase!=Phase.Captive||!OverseerAlive||!IsRescueGuard(detection.observer)||mission.Cinematic
+            if(CurrentPhase!=Phase.Captive||!IsRescueGuard(detection.observer)||mission.Cinematic
                 ||Map01SaveSystem.IsRestoring||Time.time<calmUntil)return;
+            if(!CanExecuteCaptive){
+                bool first=!CombatAlarm;CombatAlarm=true;mission.Alarmed=true;
+                if(first||Time.time>=nextRally){
+                    nextRally=Time.time+1f;
+                    foreach(var guard in squad)if(guard!=null&&guard.Alive)guard.JoinRescueCombat(detection.position);
+                }
+                return;
+            }
             // Alarm is committed before the hitscan; the same round cannot erase execution.
             CurrentPhase=Phase.Alarm;
             FailureReason=detection.cause==Map01DetectionCause.Gunshot?"Địch đã nghe tiếng súng.":"Nam đã bị phát hiện.";
@@ -112,6 +123,23 @@ namespace ShadowVale.Map01
         {
             if(mission.Cinematic||mission.Stopped)return false;
             return mission.Enemies.Where(e=>e!=null&&e.Alive).OrderBy(e=>(e.transform.position-mission.player.position).sqrMagnitude).Any(e=>e.TrySilentTakedown());
+        }
+        public bool GetTakedownHint(out Map01EnemyController target,out bool ready)
+        {
+            target=null;ready=false;
+            if(mission==null||!mission.IsInitialized||mission.Stopped||mission.InventoryOpen||mission.MapOpen
+                ||mission.ModernCombat==null||mission.ModernCombat.EquippedKind!=WeaponKind.Knife
+                ||(mission.ModernCombat.InputAllowed!=null&&!mission.ModernCombat.InputAllowed()))return false;
+            float range=Layout!=null?Layout.takedownHintRange:3.2f;
+            foreach(var guard in mission.Enemies.Where(e=>e!=null&&e.Alive&&!e.IsBoss
+                &&Vector3.Distance(e.transform.position,mission.player.position)<=range)
+                .OrderByDescending(e=>e.CanSilentTakedown()).ThenBy(e=>(e.transform.position-mission.player.position).sqrMagnitude)){
+                var origin=mission.player.position+Vector3.up;
+                if(Physics.Linecast(origin,guard.transform.position+Vector3.up,out var hit,mission.ObstructionMask,QueryTriggerInteraction.Ignore)
+                    &&hit.transform!=guard.transform&&!hit.transform.IsChildOf(guard.transform))continue;
+                target=guard;ready=guard.CanSilentTakedown()&&mission.ModernCombat.AttackCooldownRemaining<=.01f&&!mission.ModernCombat.IsReloading;return true;
+            }
+            return false;
         }
         public bool BeginFree()
         {
@@ -220,13 +248,14 @@ namespace ShadowVale.Map01
         public void Retry(){if(!Failed&&mission.PlayerHealth>0)return;GetComponent<Map01SaveSystem>().RestartRescue(quest.Stage==Map01Quest.EscortStage);}
         public void ResetSquad(){foreach(var guard in squad)if(guard!=null)guard.ReturnToPost();}
         public void RestoreHealth(float value)=>HungHealth=value<0?HungMaxHealth:Mathf.Clamp(value,0,HungMaxHealth);
-        public Snapshot Capture()=>new Snapshot{revision=1,phase=(int)CurrentPhase,waveMask=WaveMask,safe=SafeReached,reward=RewardDelivered,escortDistance=EscortDistance};
+        public Snapshot Capture()=>new Snapshot{revision=2,phase=(int)CurrentPhase,waveMask=WaveMask,safe=SafeReached,reward=RewardDelivered,escortDistance=EscortDistance,combatAlarm=CombatAlarm};
         public void Restore(Snapshot saved,Map01EnemyController.Snapshot[] enemies)
         {
             if(saved==null||saved.revision<=0){
                 CurrentPhase=quest.Stage==Map01Quest.RescueStage?Phase.Captive:quest.Stage==Map01Quest.EscortStage?Phase.Escorting:Phase.Delivered;RewardDelivered=quest.Stage>Map01Quest.EscortStage;
                 if(CurrentPhase==Phase.Escorting){EscortDistance=PathLength(Path(CaptivePost,Layout.shelterDoor.position));float distance=RemainingHomeDistance();for(int i=0;i<3;i++)if(distance<=EscortDistance*Layout.waveThresholds[i])WaveMask|=1<<i;}
             }else{CurrentPhase=(Phase)saved.phase;WaveMask=saved.waveMask;SafeReached=saved.safe;RewardDelivered=saved.reward;EscortDistance=saved.escortDistance;}
+            CombatAlarm=saved!=null&&saved.combatAlarm&&CurrentPhase==Phase.Captive;nextRally=0;
             foreach(var data in enemies??Array.Empty<Map01EnemyController.Snapshot>()){
                 string shortId=data.id.Substring(data.id.LastIndexOf('/')+1);if(!shortId.StartsWith("rescue_pursuit_",StringComparison.Ordinal))continue;
                 var parts=shortId.Split('_');var guard=SpawnPursuer(int.Parse(parts[2]),int.Parse(parts[3]),data.position,false);guard.RestoreSnapshot(data);if(SafeReached)guard.CeasePursuit();

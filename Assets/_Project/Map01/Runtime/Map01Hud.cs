@@ -176,6 +176,7 @@ namespace ShadowVale.Map01
                 GUI.Label(hint, "M  MỞ BẢN ĐỒ", hudKey);
             }
             DrawRescue(width); // Map01Hud.Rescue.cs
+            DrawTakedownHint(width,height);
             DrawStoneAim(width, height); // Map01Hud.Stone.cs
             DrawScoutFailure(width); // Map01Hud.Scouting.cs
             if (mission.MapOpen) DrawMap(width, height);

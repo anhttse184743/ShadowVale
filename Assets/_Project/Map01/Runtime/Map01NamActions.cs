@@ -21,8 +21,17 @@ namespace ShadowVale.Map01
 
         /// <summary>Where the guard stands as the takedown starts, in Nam's frame (right, forward), from the Blender scene.</summary>
         public static readonly Vector2 TakedownGuardOffset = new Vector2(.028f, 1.038f);
-        /// <summary>Grab, cover the mouth, the cut, let go: 141 frames at 30 fps.</summary>
-        public const float TakedownSeconds = 141f / 30f;
+        /// <summary>Raise the knife, one neck strike, release and recover. No preceding hip stab.</summary>
+        public const float TakedownSeconds = 2.2f;
+        public const float TakedownWindupSeconds=.28f, TakedownStrikeSeconds=.72f;
+        public const float TakedownReadyFrame = 71f;
+        /// <summary>Contact tables come from the source pair; raise directly to the neck-ready pose, omitting the hip strike.</summary>
+        public static float TakedownSourceFrame(float seconds)
+        {
+            if(seconds<TakedownWindupSeconds)return Mathf.Lerp(1,TakedownReadyFrame,Mathf.SmoothStep(0,1,seconds/TakedownWindupSeconds));
+            if(seconds<TakedownWindupSeconds+TakedownStrikeSeconds)return Mathf.Lerp(TakedownReadyFrame,87,(seconds-TakedownWindupSeconds)/TakedownStrikeSeconds);
+            return Mathf.Lerp(87,141,Mathf.Clamp01((seconds-TakedownWindupSeconds-TakedownStrikeSeconds)/(TakedownSeconds-TakedownWindupSeconds-TakedownStrikeSeconds)));
+        }
         /// <summary>Kneeling at Hùng's back working the knot loose (141 frames).</summary>
         public const float UntieSeconds = 141f / 30f;
         private const float Blend = .15f;

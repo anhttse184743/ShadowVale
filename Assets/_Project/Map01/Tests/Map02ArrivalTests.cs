@@ -12,6 +12,31 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 namespace ShadowVale.Map01.Tests {
 public sealed class Map02ArrivalTests:ForestSceneTestBase {
+[UnityTest]public IEnumerator CompletedCheckpointTransfersVisibleBoatAndKeepsRowersHandsFree() {
+EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;
+var mission=Object.FindFirstObjectByType<Map01Mission>();
+string storage=Path.GetFullPath("Logs/Map02/saves/"+System.Guid.NewGuid().ToString("N"));Directory.CreateDirectory(storage);
+typeof(ForestSaveSlots).GetField("storageRoot",BindingFlags.Static|BindingFlags.NonPublic).SetValue(null,storage);
+// A completed checkpoint has not played StartDeparture: Prepare creates the
+// seated guards with rifles. Arrival must establish its own prop state.
+mission.GetComponent<Map01Quest>().RestoreStage(Map01Quest.CompleteStage);
+var extraction=Map01Extraction.Get(mission);extraction.autoContinueToMap2=false;extraction.ContinueToMap2();
+float deadline=Time.realtimeSinceStartup+90;
+while(SceneManager.GetActiveScene().name!="Map 2"&&Time.realtimeSinceStartup<deadline)yield return null;
+var arrival=Object.FindFirstObjectByType<Map02Arrival>();Assert.NotNull(arrival);
+while(arrival.CurrentPhase==Map02Arrival.Phase.Loading&&Time.realtimeSinceStartup<deadline)yield return null;
+Assert.AreEqual(Map02Arrival.Phase.Approaching,arrival.CurrentPhase);
+yield return WaitGameSeconds(.3f);
+Directory.CreateDirectory("Logs/Map02/Checkpoint");Capture(Camera.main,"Logs/Map02/Checkpoint/approach.png");
+var hull=arrival.GetComponentsInChildren<MeshFilter>(true).Single(m=>m.name=="Moored wooden sampan");
+var renderer=hull.GetComponent<MeshRenderer>();
+Assert.IsTrue(renderer.enabled&&renderer.gameObject.activeInHierarchy&&!renderer.forceRenderingOff);
+Assert.Less(Vector3.Distance(renderer.bounds.center,arrival.transform.position),1,"The visible hull must move with its passengers.");
+Assert.IsFalse(arrival.Passengers[2].GetComponentsInChildren<Weapon>(true).Any(w=>w.IsGun&&w.gameObject.activeInHierarchy),"Hung must have two free hands for the paddle, even after loading a completed checkpoint.");
+LogAssert.Expect(LogType.Log,"Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.");arrival.Skip();
+yield return WaitGameSeconds(.2f);AssertDryPartySpawn(arrival);VerifyGameplayRifle(arrival.Passengers[0]);
+Capture(Camera.main,"Logs/Map02/Checkpoint/gameplay.png");yield return new ExitPlayMode();
+}
 [Test]public void StairContactsGatherBothFeetAndKeepSupportPlanted() {
 for(int side=0;side<2;side++) {
 Assert.Less(Vector2.Distance(Map02Arrival.StairContact(0,side),new Vector2(0,-.15f)),.001f);
@@ -138,13 +163,14 @@ Assert.NotNull(pump);
 var water=Object.FindObjectsByType<MeshFilter>(FindObjectsSortMode.None).First(m=>m.name=="Winding canal water");
 var vertices=water.sharedMesh.vertices.Select(v=>water.transform.TransformPoint(v)).ToArray();var triangles=water.sharedMesh.triangles;
 var events=new System.Collections.Generic.List<string>();int frame=0;
-var metrics=new System.Collections.Generic.List<string>{"time,actor,head_angle,stair_foot_error"};
+var metrics=new System.Collections.Generic.List<string>{"time,actor,head_angle,stair_foot_error,shoe_riser_penetration"};
 var actors=arrival.Passengers.Select(p=>p.GetComponentInChildren<Animator>()).ToArray();
 var neutralHeads=actors.Select(a=>Quaternion.Inverse(a.transform.rotation)*a.GetBoneTransform(HumanBodyBones.Head).rotation).ToArray();
 var ankle=(float[,])typeof(Map02Arrival).GetField("ankleOffsets",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(arrival);
 while(arrival.IsPlaying && Time.realtimeSinceStartup<limit) {
-bool rendered=false;var phase=arrival.CurrentPhase;float time=arrival.CinematicTime;
-pump.draw=()=>{
+bool rendered=false;System.Exception captureFailure=null;var phase=arrival.CurrentPhase;float time=arrival.CinematicTime;
+pump.draw=()=>{try {
+if(arrival.IsPlaying)Assert.IsFalse(arrival.Passengers[2].GetComponentsInChildren<Weapon>(true).Any(w=>w.IsGun&&w.gameObject.activeInHierarchy),"Hung's hands must stay free throughout rowing, stowing and disembarking.");
 if(phase==Map02Arrival.Phase.Approaching)foreach(var x in new[]{-.7f,.7f})foreach(var z in new[]{-2.7f,2.7f})
 Assert.IsTrue(InWater(arrival.transform.TransformPoint(new Vector3(x,0,z)),vertices,triangles),"Hull must stay inside the actual canal mesh.");
 Assert.Greater(arrival.transform.TransformPoint(new Vector3(0,-.15f,0)).y,.07f,"Interior floor must stay clear of the canal water.");
@@ -152,7 +178,7 @@ float sampled=arrival.CinematicTime;
 for(int i=0;i<3;i++) {
 float headAngle=Quaternion.Angle(neutralHeads[i],Quaternion.Inverse(actors[i].transform.rotation)*actors[i].GetBoneTransform(HumanBodyBones.Head).rotation);
 Assert.Less(headAngle,35,"Arrival gaze must stay restrained, actor "+i+" time "+sampled);
-float footError=0;
+float footError=0,shoePenetration=0;string penetrationDetail="";
 float localTime=sampled-16-i*3,start=i==0?3:5.4f;
 if(arrival.CurrentPhase==Map02Arrival.Phase.Disembarking && localTime>=start && localTime<start+4.4f) {
 for(int side=0;side<2;side++) {
@@ -165,21 +191,37 @@ var foot=actors[i].GetBoneTransform(side==0?HumanBodyBones.LeftFoot:HumanBodyBon
 footError=Mathf.Max(footError,Vector3.Distance(foot.position,target));
 }
 Assert.Less(footError,.02f,"Foot contact must stay within 2 cm, actor "+i+" time "+sampled);
+// Check the soles against the real timber collider volumes as well as
+// checking ankle targets. An ankle-only test misses toes sweeping a riser.
+var contacts=(System.Collections.Generic.List<(Transform bone,Vector3 point)>[])typeof(Map02Arrival).GetField("shoeContacts",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(arrival);
+foreach(var tread in Object.FindObjectsByType<BoxCollider>(FindObjectsSortMode.None).Where(c=>c.name.StartsWith("Arrival tread "))) {
+foreach(var contact in contacts[i]) {
+var point=tread.transform.InverseTransformPoint(contact.bone.TransformPoint(contact.point));
+var half=tread.size*.5f;point-=tread.center;
+if(Mathf.Abs(point.x)<half.x-.01f&&Mathf.Abs(point.z)<half.z-.01f&&point.y<half.y&&point.y>-half.y) {
+float depth=(half.y-point.y)*tread.transform.lossyScale.y;
+if(depth>shoePenetration){shoePenetration=depth;penetrationDetail=tread.name+" "+contact.bone.name+" hull point "+arrival.transform.InverseTransformPoint(contact.bone.TransformPoint(contact.point));}
 }
-metrics.Add(sampled+","+i+","+headAngle+","+footError);
+}
+}
+Assert.Less(shoePenetration,.02f,"The shoe must clear the stair riser, actor "+i+" time "+sampled+" "+penetrationDetail);
+}
+metrics.Add(sampled+","+i+","+headAngle+","+footError+","+shoePenetration);
 }
 Capture(camera,"Logs/Map02/frames/"+frame.ToString("D4")+".png");
 if(frame%2==0 && time>12 && time<34) {
 var oldPosition=camera.transform.position;var oldRotation=camera.transform.rotation;float fov=camera.fieldOfView;
 int index=time<16?2:time<19?0:time<22?1:2;
+for(int i=0;i<3;i++) {float local=time-16-i*3,start=i==0?3:5.4f;if(local>=start&&local<start+4.4f){index=i;break;}}
 var target=arrival.Passengers[index].position+Vector3.up*.85f;
 var eye=target+arrival.transform.rotation*new Vector3(3.2f,1.4f,-2.6f);
 camera.transform.SetPositionAndRotation(eye,Quaternion.LookRotation(target-eye));camera.fieldOfView=48;
 Capture(camera,"Logs/Map02/close-"+frame.ToString("D4")+".png");
 camera.transform.SetPositionAndRotation(oldPosition,oldRotation);camera.fieldOfView=fov;
 }
-rendered=true;};
+rendered=true;}catch(System.Exception exception){captureFailure=exception;rendered=true;}};
 yield return new WaitUntil(()=>rendered || Time.realtimeSinceStartup>=limit);
+pump.draw=null;if(captureFailure!=null){File.WriteAllText("Logs/Map02/foot-contact-failure.txt",captureFailure.ToString());throw captureFailure;}
 events.Add(frame+","+time+","+phase+","+arrival.Passengers[0].position+","+arrival.Passengers[2].position);frame++;
 // Capture every rendered frame so the review shows the transitions, not a slideshow.
 }

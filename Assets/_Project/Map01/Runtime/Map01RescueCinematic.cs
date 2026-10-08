@@ -24,10 +24,16 @@ namespace ShadowVale.Map01
         private ThirdPersonCamera rig;
         private Vector3 cameraStart, killPosition;
         private Vector3 shelterCameraPosition, cameraVelocity;
+        private bool shelterRoomShot;
         private Quaternion cameraRotation;
         private float cameraFov, duration, skipHeld;
         private bool clearShot, shot, playerEnabled, combatEnabled, characterEnabled, hungVisualEnabled, invulnerable;
         private Vector3[] namPath, hungPath;
+        private Vector3[] hungYieldPath;
+        private float namDistance,hungDistance,yieldDistance,namCovered,hungCovered,namWeight,hungWeight,settleTime;
+        private float namCycleSpeed;
+        private NavMeshAgent hungAgent;
+        private bool hungUpdatesPosition,hungUpdatesRotation;
         private PosePlayer namPose, hungPose;
         private Map01HungVisual hungVisual;
         public bool ControlsEnemy(Map01EnemyController guard) => CurrentMode == Mode.Execution && guard == enemy;
@@ -38,7 +44,7 @@ namespace ShadowVale.Map01
             rig = mission.gameCamera.GetComponent<ThirdPersonCamera>();
             cameraStart = mission.gameCamera.transform.position; cameraRotation = mission.gameCamera.transform.rotation;
             cameraFov = mission.gameCamera.fieldOfView;
-            shelterCameraPosition=cameraStart;cameraVelocity=Vector3.zero;
+            shelterCameraPosition=cameraStart;cameraVelocity=Vector3.zero;shelterRoomShot=false;
             CurrentMode = mode; Elapsed = skipHeld = 0; duration = seconds;
             mission.CloseGameplayPanel(); mission.GetComponent<Map01StoneThrow>()?.Cancel();
             mission.GetComponent<Map01Scouting>()?.HoldBinoculars(false);
@@ -75,24 +81,47 @@ namespace ShadowVale.Map01
             if (IsPlaying || owner.Layout == null) return false;
             var layout = owner.Layout;
             namPath = RouteThrough(owner.GetComponent<Map01Mission>().player.position, layout.shelterRun.Select(t => t.position).ToArray());
-            var end = layout.reportPoint.position;
-            hungPath = RouteThrough(owner.GetComponent<Map01Mission>().hung.position,
-                layout.shelterRun.Take(layout.shelterRun.Length - 1).Select(t => t.position).Append(end + Vector3.right * 1.2f).ToArray());
-            if (namPath.Length < 2 || hungPath.Length < 2 || layout.namRun == null || layout.hungRun == null)
-            { Debug.LogError("Shelter return requires two connected ground routes and run clips.", this); return false; }
-            Begin(owner, Mode.Shelter, layout.shelterSeconds);
+            if(namPath.Length<2)return false;
+            var player=owner.GetComponent<Map01Mission>();
+            float gap=Mathf.Max(1.2f,layout.shelterFollowGap);
+            // Single file in the real narrow ramp. Stop Hung behind Nam inside the room;
+            // independent normalized timelines formerly made him catch and pass through Nam.
+            var hungEnd=AtDistance(namPath,Mathf.Max(0,Length(namPath)-gap),out _);
+            var entranceHeading=layout.shelterRun.Length>1?layout.shelterRun[1].position-layout.shelterDoor.position:namPath[1]-namPath[0];
+            hungYieldPath=YieldRoute(player.player.position,player.hung.position,namPath,entranceHeading,gap);
+            var hungStart=hungYieldPath!=null?hungYieldPath[hungYieldPath.Length-1]:player.hung.position;
+            hungPath=RouteThrough(hungStart,layout.shelterRun.Take(layout.shelterRun.Length-1).Select(t=>t.position).Append(hungEnd).ToArray());
+            bool rifle=player.ModernCombat.EquippedKind==WeaponKind.Rifle;
+            var namClip=rifle?layout.namWalk:layout.namKnifeWalk;
+            if(namClip==null)namClip=Resources.Load<AnimationClip>("Rescue/"+(rifle?"Nam_Shelter_Walk":"Nam_Shelter_Knife_Walk"));
+            var hungClip=layout.hungWalk??Resources.Load<AnimationClip>("Rescue/Hung_Shelter_Walk");
+            if(hungPath.Length<2||namClip==null||hungClip==null){Debug.LogError("Shelter return requires connected ground routes and walk clips.",this);return false;}
+            float walkingSeconds=(Mathf.Max(Length(namPath),Length(hungPath))+(hungYieldPath!=null?Length(hungYieldPath):0)+gap)/Mathf.Max(.5f,layout.shelterWalkSpeed)+2;
+            Begin(owner,Mode.Shelter,Mathf.Max(layout.shelterSeconds,walkingSeconds));
+            namDistance=hungDistance=yieldDistance=namCovered=hungCovered=namWeight=hungWeight=settleTime=0;
+            namCycleSpeed=rifle?layout.namWalkCycleSpeed:layout.namKnifeWalkCycleSpeed;
             playerEnabled = mission.ModernPlayer.enabled; combatEnabled = mission.ModernCombat.enabled;
             mission.ModernCombat.PrepareCinematicCarry();
             var character = mission.player.GetComponent<CharacterController>(); characterEnabled = character != null && character.enabled;
             mission.ModernPlayer.enabled = mission.ModernCombat.enabled = false;
             if (character != null) character.enabled = false;
-            var agent = mission.hung.GetComponent<NavMeshAgent>(); if (agent != null && agent.isOnNavMesh) { agent.ResetPath(); agent.isStopped = true; }
+            hungAgent=mission.hung.GetComponent<NavMeshAgent>();
+            if(hungAgent!=null){
+                hungUpdatesPosition=hungAgent.updatePosition;hungUpdatesRotation=hungAgent.updateRotation;
+                if(hungAgent.isOnNavMesh){hungAgent.ResetPath();hungAgent.isStopped=true;}
+                hungAgent.updatePosition=hungAgent.updateRotation=false;
+            }
             hungVisual = mission.hung.GetComponentInChildren<Map01HungVisual>();
             hungVisualEnabled = hungVisual != null && hungVisual.enabled;
-            if (hungVisual != null) hungVisual.enabled = false;
-            bool rifle=mission.ModernCombat.EquippedKind==WeaponKind.Rifle;
-            namPose = new PosePlayer(mission.player.GetComponentInChildren<Animator>(), mission.player, rifle?layout.namRun:layout.hungRun, rifle?layout.namIdle:layout.hungIdle);
-            hungPose = new PosePlayer(mission.hung.GetComponentInChildren<Animator>(), mission.hung, layout.hungRun, layout.hungIdle);
+            if(hungVisual!=null){
+                // A checkpoint may reach the trigger before the follower's next Update.
+                // Set the freed standing state and hide the captive rope before taking over.
+                hungVisual.RestoreAfterCinematic();
+                if(hungAgent!=null&&hungAgent.isOnNavMesh)hungAgent.isStopped=true;
+                hungVisual.enabled=false;
+            }
+            namPose = new PosePlayer(mission.player.GetComponentInChildren<Animator>(),mission.player,namClip,rifle?layout.namIdle:layout.hungIdle);
+            hungPose = new PosePlayer(mission.hung.GetComponentInChildren<Animator>(),mission.hung,hungClip,layout.hungIdle);
             mission.Say("Nam: Vào hầm thôi, Hùng. Ở đây an toàn rồi.", 4);
             return true;
         }
@@ -106,6 +135,35 @@ namespace ShadowVale.Map01
                 foreach (var p in path.Skip(1)) if (Vector3.Distance(route[route.Count - 1], p) > .02f) route.Add(p);
             }
             return route.ToArray();
+        }
+        private static Vector3[] YieldRoute(Vector3 nam,Vector3 hung,Vector3[] route,Vector3 entranceHeading,float gap)
+        {
+            bool inWay=Vector3.Distance(nam,hung)<gap;
+            float travelled=0;
+            for(int i=1;i<route.Length&&travelled<4;i++){
+                var delta=route[i]-route[i-1];
+                float u=Mathf.Clamp01(Vector3.Dot(hung-route[i-1],delta)/Mathf.Max(.001f,delta.sqrMagnitude));
+                if(Vector3.Distance(hung,route[i-1]+delta*u)<gap)inWay=true;
+                travelled+=delta.magnitude;
+            }
+            if(!inWay)return null;
+            var forward=Vector3.ProjectOnPlane(entranceHeading,Vector3.up).normalized;
+            var right=Vector3.Cross(Vector3.up,forward);
+            float side=Vector3.Dot(nam-hung,right)>0?-1:1;
+            // Prefer stepping back along the approach. Sideways bank points are fallbacks,
+            // since its steep earth shoulders cannot support a comfortable walk.
+            foreach(float lateral in new[]{0,side*1.6f,-side*1.6f,side*2.2f}){
+                var candidate=hung+right*lateral-forward*2.2f;
+                // The ramp top is lower than the surrounding dry bank. A small 3D sample
+                // radius rejects every yielding point even though the bank is connected.
+                if(!NavMesh.SamplePosition(candidate,out var hit,2f,NavMesh.AllAreas)||Vector3.Distance(hit.position,nam)<gap+.3f)continue;
+                var path=Map01Rescue.Path(hung,hit.position);if(path.Length<2)continue;
+                float initial=Vector3.Distance(nam,hung);bool clear=true;
+                for(float d=.2f;d<Length(path);d+=.2f)
+                    if(Vector3.Distance(AtDistance(path,d,out _),nam)<Mathf.Min(gap,initial)-.05f){clear=false;break;}
+                if(clear)return path;
+            }
+            return null;
         }
         private void Update()
         {
@@ -122,8 +180,9 @@ namespace ShadowVale.Map01
             }
             if (CurrentMode == Mode.Shelter)
             {
-                MoveAlong(mission.player, namPath, Elapsed, 0, namPose);
-                MoveAlong(mission.hung, hungPath, Elapsed, .3f, hungPose);
+                WalkShelter(Time.deltaTime);
+                if(skipHeld>=1||settleTime>=.9f)Finish();
+                return;
             }
             if (Elapsed >= duration || skipHeld >= 1)
             {
@@ -132,24 +191,45 @@ namespace ShadowVale.Map01
                 Finish();
             }
         }
-        private void MoveAlong(Transform root, Vector3[] points, float time, float delay, PosePlayer pose)
+        private void WalkShelter(float dt)
         {
-            float travelSeconds = duration - delay - 1.3f;
-            float u = Mathf.Clamp01((time - delay) / travelSeconds);
-            // Gentle acceleration/deceleration, constant pace through the middle of the path.
-            float progress = u < .1f ? u * u / .18f : u > .9f ? 1 - (1-u)*(1-u)/.18f : (u-.05f)/.9f;
-            float length = Length(points), d = Mathf.Clamp01(progress) * length;
+            float speed=Mathf.Clamp(rescue.Layout.shelterWalkSpeed,.5f,1.65f);
+            if(hungYieldPath!=null){
+                yieldDistance=Mathf.Min(Length(hungYieldPath),yieldDistance+speed*dt);
+                WalkAlong(mission.hung,hungYieldPath,yieldDistance,hungPose,ref hungCovered,ref hungWeight,rescue.Layout.hungWalkCycleSpeed);
+                namPose.Sample(namCovered/Mathf.Max(.1f,namCycleSpeed),0);
+                if(yieldDistance>=Length(hungYieldPath)-.001f)hungYieldPath=null;
+                return;
+            }
+            float namNext=Advance(namDistance,Length(namPath),speed,dt);
+            WalkAlong(mission.player,namPath,namNext,namPose,ref namCovered,ref namWeight,namCycleSpeed);namDistance=namNext;
+            float hungNext=Advance(hungDistance,Length(hungPath),speed,dt);
+            var candidate=AtDistance(hungPath,hungNext,out _);
+            float gap=Mathf.Max(1.2f,rescue.Layout.shelterFollowGap);
+            if(Vector3.Distance(candidate,mission.player.position)<gap-.025f)hungNext=hungDistance;
+            WalkAlong(mission.hung,hungPath,hungNext,hungPose,ref hungCovered,ref hungWeight,rescue.Layout.hungWalkCycleSpeed);hungDistance=hungNext;
+            if(namDistance>=Length(namPath)-.001f&&hungDistance>=Length(hungPath)-.001f)settleTime+=dt;
+        }
+        private static float Advance(float distance,float length,float speed,float dt)=>
+            Mathf.Min(length,distance+speed*Mathf.Clamp((length-distance)/.6f,.25f,1)*dt);
+        private void WalkAlong(Transform root,Vector3[] points,float distance,PosePlayer pose,ref float covered,ref float weight,float cycleSpeed)
+        {
+            var position=AtDistance(points,distance,out var delta);
+            float moved=Vector3.Distance(root.position,position);covered+=moved;root.position=position;
+            var facing=Vector3.ProjectOnPlane(delta,Vector3.up);
+            if(moved>.001f&&facing.sqrMagnitude>.001f)root.rotation=Quaternion.RotateTowards(root.rotation,Quaternion.LookRotation(facing),180*Time.deltaTime);
+            weight=Mathf.MoveTowards(weight,moved>.001f?1:0,Time.deltaTime/.18f);
+            pose.Sample(covered/Mathf.Max(.1f,cycleSpeed),weight);
+        }
+        private static Vector3 AtDistance(Vector3[] points,float distance,out Vector3 direction)
+        {
+            float d=Mathf.Clamp(distance,0,Length(points));
             int segment = 1;
             while (segment < points.Length - 1 && d > Vector3.Distance(points[segment-1], points[segment]))
             { d -= Vector3.Distance(points[segment-1], points[segment]); segment++; }
             var delta = points[segment]-points[segment-1];
-            root.position = Vector3.Lerp(points[segment-1], points[segment], delta.magnitude > .001f ? d/delta.magnitude : 1);
-            var facing = Vector3.ProjectOnPlane(delta, Vector3.up);
-            if (facing.sqrMagnitude > .001f) root.rotation = Quaternion.RotateTowards(root.rotation, Quaternion.LookRotation(facing), 260 * Time.deltaTime);
-            float movement = time > delay && u < 1 ? Mathf.Min(Mathf.Clamp01(u/.06f), Mathf.Clamp01((1-u)/.08f)) : 0;
-            // Advance the cycle by distance actually covered, including acceleration on the ramp.
-            float runSpeed=root==mission.player&&mission.ModernCombat.EquippedKind==WeaponKind.Rifle?rescue.Layout.namRunSpeed:rescue.Layout.hungRunSpeed;
-            pose.Sample(Mathf.Clamp01(progress)*length / Mathf.Max(.1f,runSpeed), movement);
+            direction=delta;
+            return Vector3.Lerp(points[segment-1],points[segment],delta.magnitude>.001f?d/delta.magnitude:1);
         }
         private static float Length(Vector3[] p) { float d=0;for(int i=1;i<p.Length;i++)d+=Vector3.Distance(p[i-1],p[i]);return d; }
         private bool CameraClear(Vector3 focus, Vector3 camera)
@@ -157,12 +237,23 @@ namespace ShadowVale.Map01
             if (mission.SightCover != null && mission.SightCover.Blocks(focus, camera)) return false;
             return !Physics.Linecast(focus, camera, mission.ObstructionMask, QueryTriggerInteraction.Ignore);
         }
+        private bool ShelterScenery(Transform obstacle)=>
+            !obstacle.IsChildOf(mission.player)&&!obstacle.IsChildOf(mission.hung)
+            &&obstacle.GetComponentInParent<Health>()==null
+            &&obstacle.GetComponentInParent<Animator>()==null
+            &&obstacle.GetComponentInChildren<Animator>()==null;
+        private bool ShelterCameraClear(Vector3 focus,Vector3 position)
+        {
+            var delta=position-focus;
+            return delta.sqrMagnitude>.001f&&!Physics.SphereCastAll(focus,.18f,delta.normalized,delta.magnitude,mission.ObstructionMask,QueryTriggerInteraction.Ignore)
+                .Any(h=>ShelterScenery(h.transform));
+        }
         private void LateUpdate()
         {
             if (!IsPlaying) return;
             if (CurrentMode == Mode.Takedown)
             {
-                float u = (Elapsed - 2.05f) / rescue.Layout.killCameraSeconds;
+                float u = (Elapsed - .20f) / rescue.Layout.killCameraSeconds;
                 if (!clearShot || u <= 0 || u >= 1) { rig.ClearCinematicView(); return; }
                 var actor = mission.player.GetComponentInChildren<Animator>();
                 var chest = actor.GetBoneTransform(HumanBodyBones.Chest).position;
@@ -182,6 +273,10 @@ namespace ShadowVale.Map01
             }
             else
             {
+                // Unity evaluates the gameplay Animator between Update and LateUpdate.
+                // Apply the cinematic pose afterwards, before skin contacts and camera rendering,
+                // so the idle controller cannot replace a moving character's run cycle.
+                namPose?.Sample(); hungPose?.Sample();
                 namPose?.Ground(); hungPose?.Ground();
                 var target=Vector3.Lerp(mission.player.position,mission.hung.position,.5f)+Vector3.up;
                 var layout=rescue.Layout;
@@ -190,9 +285,19 @@ namespace ShadowVale.Map01
                 var corridor=target-mission.player.forward*2.5f+Vector3.up*1.25f;
                 float entering=1-Mathf.SmoothStep(0,1,(mission.player.position.y-.6f)/1.8f);
                 var desired=Vector3.Lerp(outside,corridor,entering);
-                bool indoors=mission.player.position.y<.6f&&mission.hung.position.y<.6f
-                    &&Vector3.Distance(mission.hung.position,layout.reportPoint.position)<7;
-                if(indoors)desired=layout.reportPoint.position+layout.interiorCameraOffset;
+                bool indoors=mission.player.position.y<.6f
+                    &&Vector3.Distance(mission.player.position,layout.reportPoint.position)<8;
+                if(indoors){
+                    desired=layout.reportPoint.position+layout.interiorCameraOffset;
+                    // Frame Nam from the room as he enters. Waiting for the follower on
+                    // the ramp put the midpoint inside the doorway's retaining wall.
+                    if(mission.hung.position.y>=.6f)target=mission.player.position+Vector3.up;
+                    if(!shelterRoomShot&&ShelterCameraClear(target,desired)){
+                        // The outside and inside shots are on opposite sides of the walkers.
+                        // Make a camera cut at the doorway; a damped crossing passes through Nam.
+                        shelterCameraPosition=desired;cameraVelocity=Vector3.zero;shelterRoomShot=true;
+                    }
+                }
                 shelterCameraPosition=Vector3.SmoothDamp(shelterCameraPosition,desired,ref cameraVelocity,Mathf.Max(.08f,layout.cameraDamping),25,Time.deltaTime);
                 // Validate the blended position as well as its goal, so the camera cannot cross a wall.
                 var offset=shelterCameraPosition-target;
@@ -200,12 +305,14 @@ namespace ShadowVale.Map01
                     // The focus is between two passengers. Their capsules must never push
                     // the lens into a body; only scenery obstructs this cinematic view.
                     var blocking=Physics.SphereCastAll(target,.18f,offset.normalized,offset.magnitude,mission.ObstructionMask,QueryTriggerInteraction.Ignore)
-                        .Where(h=>!h.transform.IsChildOf(mission.player)&&!h.transform.IsChildOf(mission.hung)
-                            &&h.transform.GetComponentInParent<Health>()==null
-                            &&h.transform.GetComponentInParent<Animator>()==null
-                            &&h.transform.GetComponentInChildren<Animator>()==null)
+                        .Where(h=>ShelterScenery(h.transform))
                         .OrderBy(h=>h.distance).ToArray();
-                    if(blocking.Length>0)shelterCameraPosition=target+offset.normalized*Mathf.Max(.3f,blocking[0].distance-.2f);
+                    if(blocking.Length>0){
+                        // Cut to the clear room shot if the damped transition crosses its
+                        // doorway wall, rather than squeezing the lens into a passenger.
+                        if(indoors&&ShelterCameraClear(target,desired)){shelterCameraPosition=desired;cameraVelocity=Vector3.zero;}
+                        else shelterCameraPosition=target+offset.normalized*Mathf.Max(.3f,blocking[0].distance-.2f);
+                    }
                 }
                 float blend=Mathf.SmoothStep(0,1,Elapsed/.45f);
                 rig.SetCinematicView(shelterCameraPosition,Quaternion.Slerp(cameraRotation,Quaternion.LookRotation(target-shelterCameraPosition),blend),Mathf.Lerp(cameraFov,layout.shelterCameraFov,blend),1);
@@ -217,9 +324,17 @@ namespace ShadowVale.Map01
             if (!IsPlaying) return;
             var mode=CurrentMode;
             if(mode==Mode.Execution&&!shot){shot=true;rescue.CompleteExecution();}
-            if(mode==Mode.Shelter){MoveAlong(mission.player,namPath,duration+1,0,namPose);MoveAlong(mission.hung,hungPath,duration+1,.3f,hungPose);}
+            if(mode==Mode.Shelter){
+                mission.player.position=namPath[namPath.Length-1];mission.hung.position=hungPath[hungPath.Length-1];
+                namPose.Sample(namCovered/Mathf.Max(.1f,namCycleSpeed),0);hungPose.Sample(hungCovered/Mathf.Max(.1f,rescue.Layout.hungWalkCycleSpeed),0);
+                namPose.Sample();hungPose.Sample();
+            }
             Cleanup();
-            if(mode==Mode.Shelter){rescue.CompleteDelivery();GetComponent<Map01SaveSystem>().SaveSlot(ForestSaveSlots.AutoSlot,out _,true);}
+            if(mode==Mode.Shelter){
+                rescue.CompleteDelivery();
+                hungVisual?.RestoreAfterCinematic();
+                GetComponent<Map01SaveSystem>().SaveSlot(ForestSaveSlots.AutoSlot,out _,true);
+            }
             ForestMenu.SuppressKeysAfterCutscene();
         }
         private void Cleanup()
@@ -233,7 +348,11 @@ namespace ShadowVale.Map01
                 var cc=mission.player.GetComponent<CharacterController>();if(cc!=null)cc.enabled=characterEnabled;
                 mission.ModernPlayer.enabled=playerEnabled;mission.ModernCombat.enabled=combatEnabled;
                 if(hungVisual!=null)hungVisual.enabled=hungVisualEnabled;
-                var agent=mission.hung.GetComponent<NavMeshAgent>();if(agent!=null&&agent.enabled){agent.Warp(mission.hung.position);agent.ResetPath();}
+                if(hungAgent!=null){
+                    if(hungAgent.enabled){hungAgent.Warp(mission.hung.position);if(hungAgent.isOnNavMesh)hungAgent.ResetPath();}
+                    hungAgent.updatePosition=hungUpdatesPosition;hungAgent.updateRotation=hungUpdatesRotation;
+                }
+                hungVisual?.RestoreAfterCinematic();
             }
             if(mode!=Mode.Takedown)mission.ModernCombat?.RestoreAfterCinematic();
         }
@@ -262,6 +381,8 @@ namespace ShadowVale.Map01
             private PlayableGraph graph;
             private AnimationClipPlayable run,idle;
             private AnimationMixerPlayable mixer;
+            private readonly float runLength,idleLength;
+            private float sampleTime,movementWeight;
             private readonly Mesh baked=new Mesh();
             private readonly SkinnedMeshRenderer[] skins;
             private readonly Map01SkinContact contact;
@@ -272,6 +393,8 @@ namespace ShadowVale.Map01
                 actor.applyRootMotion=false;actor.cullingMode=AnimatorCullingMode.AlwaysAnimate;
                 graph=PlayableGraph.Create("Rescue shelter locomotion");graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
                 run=AnimationClipPlayable.Create(graph,moving);idle=AnimationClipPlayable.Create(graph,resting);run.SetApplyFootIK(true);idle.SetApplyFootIK(true);
+                runLength=moving.length;idleLength=resting.length;
+                run.SetSpeed(0);idle.SetSpeed(0);
                 mixer=AnimationMixerPlayable.Create(graph,2);graph.Connect(idle,0,mixer,0);graph.Connect(run,0,mixer,1);
                 AnimationPlayableOutput.Create(graph,"Run and settle",actor).SetSourcePlayable(mixer);graph.Play();
                 skins=actor.GetComponentsInChildren<SkinnedMeshRenderer>();
@@ -279,7 +402,16 @@ namespace ShadowVale.Map01
             }
             public void Sample(float time,float weight)
             {
-                run.SetTime(time);idle.SetTime(time);mixer.SetInputWeight(0,1-weight);mixer.SetInputWeight(1,weight);graph.Evaluate(0);
+                sampleTime=time;movementWeight=weight;
+            }
+            public void Sample()
+            {
+                if(!graph.IsValid())return;
+                // Distance controls phase. Wrap explicitly so a manually sampled cycle keeps
+                // stepping for the entire route, including after the first clip duration.
+                run.SetTime(runLength>.001f?Mathf.Repeat(sampleTime,runLength):0);
+                idle.SetTime(idleLength>.001f?Mathf.Repeat(sampleTime,idleLength):0);
+                mixer.SetInputWeight(0,1-movementWeight);mixer.SetInputWeight(1,movementWeight);graph.Evaluate(0);
             }
             public void Ground()
             {

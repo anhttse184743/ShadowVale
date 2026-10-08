@@ -41,6 +41,7 @@ namespace ShadowVale.Map01
         float clock,skipHeld,fade=1,groundHandoffRemaining;
         readonly bool[] ashore=new bool[3];
         readonly float[,] ankleOffsets=new float[3,2];
+        readonly Quaternion[,] neutralToes=new Quaternion[3,2];
         readonly List<(Transform bone,Vector3 point)>[] shoeContacts=new List<(Transform,Vector3)>[3];
         readonly int[,] plantedCycles={{-999,-999},{-999,-999},{-999,-999}};
         readonly Vector3[,] plantedFeet=new Vector3[3,2];
@@ -71,7 +72,9 @@ namespace ShadowVale.Map01
         // The sampan interior floor is -0.15 in hull space; keep it above the canal at 0.045.
         const float WaterlineRoot=.24f, StandDuration=3, PassengerDelay=3;
         const float InteriorFloor=-.15f, StairDuration=4.4f, LaneDuration=2.4f, WalkStride=1;
-        static readonly float[] StairX={-.55f,-.95f,-1.21f,-1.47f,-1.73f,-1.99f,-2.35f,-2.35f};
+        // Ankle positions sit near each tread's outer edge: the toe extends
+        // forward along -X and must not be placed inside the following riser.
+        static readonly float[] StairX={-.55f,-.78f,-1.04f,-1.30f,-1.56f,-1.82f,-2.35f,-2.35f};
         static readonly float[] StairY={.15f,.41f-WaterlineRoot,.62f-WaterlineRoot,.83f-WaterlineRoot,1.04f-WaterlineRoot,1.25f-WaterlineRoot,1.25f-WaterlineRoot,1.25f-WaterlineRoot};
         static readonly Vector3 Docked=new(-11.346f,WaterlineRoot,-84.586f);
         static Vector3 DockPoint(Vector3 local)=>Docked+DockRotation*local;
@@ -91,6 +94,8 @@ namespace ShadowVale.Map01
                 var copy=new Material(badge.sharedMaterial);badge.sharedMaterial=copy;partyMaterials.Add(copy);
             }
             paddle=source.Paddle;
+            PrepareBoatRendering();
+            HideRowersRifle();
             for(int i=0;i<3;i++) {
                 Passengers[i].SetParent(transform,true);
                 Passengers[i].localPosition=new Vector3(0,-.13f,i==0?0:i==1?1.6f:-1.6f);
@@ -123,6 +128,9 @@ namespace ShadowVale.Map01
             SceneManager.sceneLoaded-=MuteVillageCameras;
             
             SceneManager.MoveGameObjectToScene(gameObject,SceneManager.GetActiveScene());
+            // The hull changes scene as well as transform. Re-register only this
+            // small moving prop; leave the village's GPU batching untouched.
+            PrepareBoatRendering();
             foreach(var other in FindObjectsByType<Camera>(FindObjectsSortMode.None))if(other!=camera) {
                 other.enabled=false;other.tag="Untagged";
                 var listener=other.GetComponent<AudioListener>();if(listener!=null)listener.enabled=false;
@@ -154,12 +162,15 @@ namespace ShadowVale.Map01
                 for(int side=0;side<2;side++) {
                     var foot=actors[i].GetBoneTransform(side==0?HumanBodyBones.LeftFoot:HumanBodyBones.RightFoot);
                     FlattenFoot(foot);
+                    var toes=actors[i].GetBoneTransform(side==0?HumanBodyBones.LeftToes:HumanBodyBones.RightToes);
+                    if(toes!=null)neutralToes[i,side]=toes.localRotation;
                 }
                 PrepareShoeContacts(i);
                 poses[i].Dispose();poses[i]=new Map01Extraction.PosePlayer(actors[i],i==2?source.hungClips:null);
                 poses[i].Play(Resources.Load<AnimationClip>("Cutscenes/Map02/"+who+(i==2?"_Arrival_Row_Loop":"_Arrival_Travel")));
                 if(i!=2)Map01Rifle.Attach(actors[i]).weapon.gameObject.SetActive(true);
             }
+            HideRowersRifle();
             stow=Resources.Load<AnimationClip>("Cutscenes/Map02/Hung_Oar_Stow");
             // Park longitudinally inside the starboard gunwale, clear of the aisle and stairs.
             paddlePark=new Vector3(.44f,.18f,-2.4f);paddleParkRotation=Quaternion.identity;
@@ -173,6 +184,27 @@ namespace ShadowVale.Map01
             speech=DialogueVoice.For(gameObject);speech.Play("m2_arrival_sight");
             Cursor.lockState=CursorLockMode.None;Cursor.visible=false;
             ApplyArrival(0);yield return null;
+        }
+        void HideRowersRifle() {
+            // Loading a completed Map 1 checkpoint bypasses StartDeparture,
+            // which used to be the only place that hid Hung's rifle.
+            foreach(var weapon in actors[2].GetComponentsInChildren<Weapon>(true))
+                if(weapon.IsGun)weapon.gameObject.SetActive(false);
+        }
+        void PrepareBoatRendering() {
+            foreach(var mesh in GetComponentsInChildren<MeshFilter>(true)) {
+                if(mesh.name!="Moored wooden sampan"&&mesh.name!="Boat bench"&&!mesh.name.StartsWith("Oar "))continue;
+                var renderer=mesh.GetComponent<MeshRenderer>();if(renderer==null||mesh.sharedMesh==null)continue;
+                mesh.gameObject.SetActive(true);renderer.enabled=true;renderer.forceRenderingOff=false;
+                // A per-renderer block keeps this moving cargo out of scene-bound
+                // GPU Resident Drawer data across the unload/load boundary. Keep
+                // its original timber colour and all existing property overrides.
+                var properties=new MaterialPropertyBlock();renderer.GetPropertyBlock(properties);
+                var material=renderer.sharedMaterial;
+                if(material!=null&&material.HasProperty("_BaseColor")&&!properties.HasColor("_BaseColor"))
+                    properties.SetColor("_BaseColor",material.GetColor("_BaseColor"));
+                renderer.SetPropertyBlock(properties);
+            }
         }
         void MuteVillageCameras(Scene scene,LoadSceneMode mode) {
             foreach(var root in scene.GetRootGameObjects())foreach(var other in root.GetComponentsInChildren<Camera>(true))if(other!=camera) {
@@ -268,7 +300,8 @@ namespace ShadowVale.Map01
                 float p=(t-stairStart)/StairDuration;
                 var center=(StairContact(p,0)+StairContact(p,1))*.5f;
                 // Root follows the support feet, including the final gathering step on the landing.
-                passenger.position=DockPoint(new Vector3(center.x,center.y,lane));
+                float supportHeight=(StairSupportHeight(p,0)+StairSupportHeight(p,1))*.5f;
+                passenger.position=DockPoint(new Vector3(center.x,supportHeight,lane));
                 passenger.rotation=DockRotation*Quaternion.Euler(0,270,0);
             } else {
                 pose.Play(walk[index]);
@@ -389,12 +422,26 @@ namespace ShadowVale.Map01
         public static Vector2 StairContact(float progress,int side) {
             float cycle=Mathf.Clamp(progress,0,.999999f)*StairX.Length;
             int active=(int)cycle;float fraction=cycle-active;
-            float swing=fraction*fraction*fraction*(10+fraction*(-15+6*fraction));
             int completed=active-1;if(completed%2!=side)completed--;
             var from=completed<0?new Vector2(0,InteriorFloor):new Vector2(StairX[completed],StairY[completed]);
             if(active%2!=side)return from;
             var to=new Vector2(StairX[active],StairY[active]);
-            return Vector2.Lerp(from,to,swing)+Vector2.up*(.10f*Mathf.Sin(Mathf.PI*swing));
+            // Clear the riser before translating the shoe. A diagonal ankle
+            // arc let the toe clip the next tread, especially on Hung's sandals.
+            float advance=StepEase((fraction-.22f)/.56f);
+            float clearance=Mathf.Max(from.y,to.y)+.14f;
+            float height=fraction<.30f?Mathf.Lerp(from.y,clearance,StepEase(fraction/.30f)):
+                fraction>.76f?Mathf.Lerp(clearance,to.y,StepEase((fraction-.76f)/.24f)):clearance;
+            return new Vector2(Mathf.Lerp(from.x,to.x,advance),height);
+        }
+        static float StepEase(float value) {
+            float p=Mathf.Clamp01(value);return p*p*p*(10+p*(-15+6*p));
+        }
+        static float StairSupportHeight(float progress,int side) {
+            float cycle=Mathf.Clamp(progress,0,.999999f)*StairX.Length;
+            int active=(int)cycle,completed=active-1;if(completed%2!=side)completed--;
+            float from=completed<0?InteriorFloor:StairY[completed];
+            return active%2==side?Mathf.Lerp(from,StairY[active],StepEase(cycle-active)):from;
         }
         void PlantStairFeet(int index,float progress) {
             float lane=index==0?0:index==1?.8f:-.8f;
@@ -417,7 +464,17 @@ namespace ShadowVale.Map01
             // above leg reach. Transfer weight down before solving both contacts.
             actors[index].GetBoneTransform(HumanBodyBones.Hips).position-=Vector3.up*(pelvisDrop+.0001f);
             for(int side=0;side<2;side++) {
-                FlattenFoot(actors[index].GetBoneTransform(side==0?HumanBodyBones.LeftFoot:HumanBodyBones.RightFoot));
+                var foot=actors[index].GetBoneTransform(side==0?HumanBodyBones.LeftFoot:HumanBodyBones.RightFoot);
+                var toes=actors[index].GetBoneTransform(side==0?HumanBodyBones.LeftToes:HumanBodyBones.RightToes);
+                if(toes!=null)toes.localRotation=neutralToes[index,side];
+                FlattenFoot(foot);
+                // Retargeted feet can retain the outgoing turn's yaw. Point
+                // both shoes along the stairs while preserving their sole plane.
+                if(toes!=null) {
+                    var toeDirection=Vector3.ProjectOnPlane(toes.position-foot.position,Vector3.up);
+                    if(toeDirection.sqrMagnitude>.00001f)
+                        foot.rotation=Quaternion.FromToRotation(toeDirection,DockRotation*Vector3.left)*foot.rotation;
+                }
                 SolveLeg(actors[index],side==0,targets[side]);
             }
         }
