@@ -1,0 +1,5 @@
+PASS actual Roadside_Continuous_Terrain geometry: 3200 shoreline samples
+PASS minimum terrain clearance above maximum wave crest: 0.694 m
+Original exposed water-edge samples: 3200/3200
+PASS channel center and water level preserved; physics banks and scene objects unchanged
+PASS mesh 3417 vertices, 6400 triangles
