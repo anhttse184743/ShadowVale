@@ -12,6 +12,80 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 namespace ShadowVale.Map01.Tests {
 public sealed class Map02ArrivalTests:ForestSceneTestBase {
+[UnityTest]public IEnumerator FullNaturalDepartureKeepsBoatVisibleAfterSceneLoad() {
+EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;
+yield return RecordFullTransfer(false);
+yield return new ExitPlayMode();
+}
+[UnityTest]public IEnumerator FullGameViewDepartureKeepsBoatVisibleAfterSceneLoad() {
+EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;
+SetPreviewResolution(960,540);yield return RecordFullTransfer(true);yield return new ExitPlayMode();
+}
+static IEnumerator RecordFullTransfer(bool gameViewOnly) {
+string folder=gameViewOnly?"Logs/GameViewTransfer":"Logs/FullTransfer";
+Directory.CreateDirectory(folder+"/frames");
+string storage=Path.GetFullPath("Logs/FullTransfer/saves/"+System.Guid.NewGuid().ToString("N"));Directory.CreateDirectory(storage);
+typeof(ForestSaveSlots).GetField("storageRoot",BindingFlags.Static|BindingFlags.NonPublic).SetValue(null,storage);
+var mission=Object.FindFirstObjectByType<Map01Mission>();
+var quest=mission.GetComponent<Map01Quest>();
+if(gameViewOnly) {
+// Exercise the actual commander-death -> radio -> extraction handoff too.
+quest.RestoreStage(Map01Quest.BossStage);
+foreach(var enemy in mission.Enemies)if(!enemy.IsBoss)enemy.GetComponent<Health>().TakeDamage(99999,enemy.transform.position,null);
+var boss=mission.Enemies.Single(e=>e.IsBoss);boss.GetComponent<Health>().TakeDamage(99999,boss.transform.position,null);
+float radioDeadline=Time.realtimeSinceStartup+75;
+while((quest.Stage!=Map01Quest.ExtractionStage||mission.Cinematic)&&Time.realtimeSinceStartup<radioDeadline)yield return null;
+Assert.AreEqual(Map01Quest.ExtractionStage,quest.Stage);Assert.IsFalse(mission.Cinematic);
+}else quest.RestoreStage(Map01Quest.ExtractionStage);
+var extraction=mission.GetComponentInChildren<Map01Extraction>();extraction.autoContinueToMap2=true;
+yield return WaitGameSeconds(.3f);Assert.IsTrue(extraction.Prepared);
+foreach(var enemy in mission.Enemies)enemy.GetComponent<Health>().TakeDamage(99999,enemy.transform.position,null);
+mission.ModernHealth.RestoreHealth(72);mission.ModernCombat.RestoreMagazine(17);
+var cc=mission.player.GetComponent<CharacterController>();cc.enabled=false;mission.player.position=extraction.approach;cc.enabled=true;
+var camera=mission.gameCamera;var hull=extraction.BoatRoot.GetComponentsInChildren<MeshRenderer>().Single(r=>r.name=="Moored wooden sampan");
+var pump=camera.gameObject.AddComponent<ExtractionCapturePump>();
+// Simulate stale renderer registrations being invalidated by Map 1 unload.
+// Destination renderers must be created after this cleanup, not just before it.
+if(gameViewOnly)SceneManager.sceneUnloaded+=InvalidateSourceBoatRendering;
+var entries=new System.Collections.Generic.List<string>();int frame=0;float next=0,start=Time.realtimeSinceStartup,deadline=start+180;
+bool complete=false;Map02Arrival arrival=null;
+LogAssert.Expect(LogType.Log,"Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.");
+while(Time.realtimeSinceStartup<deadline) {
+arrival=Object.FindFirstObjectByType<Map02Arrival>();
+if(arrival!=null&&arrival.CurrentPhase==Map02Arrival.Phase.Gameplay)break;
+if(extraction!=null&&extraction.HasDeparted&&!complete){complete=true;Assert.AreEqual(Map01Quest.CompleteStage,mission.GetComponent<Map01Quest>().Stage);Assert.NotNull(ForestSaveSlots.Read(ForestSaveSlots.AutoSlot));}
+if(arrival!=null&&arrival.CurrentPhase!=Map02Arrival.Phase.Loading) {
+hull=arrival.GetComponentsInChildren<MeshRenderer>(true).Single(r=>r.name=="Moored wooden sampan");
+Assert.IsTrue(hull.gameObject.activeInHierarchy&&hull.enabled&&!hull.forceRenderingOff,"Hull must survive scene unload cleanup.");
+Assert.IsTrue(hull.HasPropertyBlock(),"Moving boat must use its own draw properties after transfer.");
+Assert.Less(hull.GetComponent<MeshFilter>().sharedMesh.bounds.center.magnitude,.001f);
+Assert.Less(Vector3.Distance(hull.transform.position,arrival.transform.position),.5f,"Hull pivot must travel with its actual geometry.");
+}
+if(Time.realtimeSinceStartup>=next) {
+next=Time.realtimeSinceStartup+.1f;bool rendered=false;System.Exception failure=null;
+string phase=arrival==null?extraction.CurrentPhase.ToString():"Map2-"+arrival.CurrentPhase;
+float elapsed=Time.realtimeSinceStartup-start;int number=frame++;
+pump.draw=()=>{try{if(gameViewOnly)ScreenCapture.CaptureScreenshot(folder+"/frames/"+number.ToString("D4")+".png");else Capture(camera,folder+"/frames/"+number.ToString("D4")+".png");entries.Add(number+","+elapsed+","+phase+","+hull.enabled+","+hull.forceRenderingOff+","+hull.bounds.center+","+hull.transform.position+","+hull.GetComponent<MeshFilter>().sharedMesh.name);}catch(System.Exception e){failure=e;}rendered=true;};
+yield return new WaitUntil(()=>rendered||Time.realtimeSinceStartup>=deadline);if(failure!=null)throw failure;
+}else yield return null;
+}
+File.WriteAllLines(folder+"/frames.csv",entries);
+SceneManager.sceneUnloaded-=InvalidateSourceBoatRendering;
+Assert.IsTrue(complete,"The full departure must finish without skipping.");Assert.NotNull(arrival);Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);
+AssertDryPartySpawn(arrival);VerifyGameplayRifle(arrival.Passengers[0]);Assert.AreEqual(72,arrival.Passengers[0].GetComponent<Health>().Current);Assert.AreEqual(17,arrival.Passengers[0].GetComponent<PlayerCombat>().RoundsInMagazine);
+if(gameViewOnly){ScreenCapture.CaptureScreenshot(folder+"/gameplay.png");yield return WaitGameSeconds(.3f);}else Capture(camera,folder+"/gameplay.png");
+}
+static void InvalidateSourceBoatRendering(Scene scene) {
+if(scene.name!="Map 1")return;
+var arrival=Object.FindFirstObjectByType<Map02Arrival>();if(arrival==null)return;
+foreach(var mesh in arrival.GetComponentsInChildren<MeshFilter>(true))
+if(mesh.name.StartsWith("Map 1 source "))mesh.gameObject.SetActive(false);
+foreach(var renderer in arrival.GetComponentsInChildren<MeshRenderer>(true))
+if(renderer.name=="Moored wooden sampan"||renderer.name=="Boat bench"||renderer.name.StartsWith("Oar ")) {
+renderer.enabled=false;renderer.forceRenderingOff=true;renderer.gameObject.SetActive(false);
+}
+}
+[TearDown]public void ClearTransferFaultInjection()=>SceneManager.sceneUnloaded-=InvalidateSourceBoatRendering;
 [UnityTest]public IEnumerator CompletedCheckpointTransfersVisibleBoatAndKeepsRowersHandsFree() {
 EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;
 var mission=Object.FindFirstObjectByType<Map01Mission>();

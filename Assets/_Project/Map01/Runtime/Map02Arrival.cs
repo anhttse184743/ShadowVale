@@ -134,9 +134,9 @@ namespace ShadowVale.Map01
             SceneManager.sceneLoaded-=MuteVillageCameras;
             
             SceneManager.MoveGameObjectToScene(gameObject,SceneManager.GetActiveScene());
-            // The hull changes scene as well as transform. Re-register only this
-            // small moving prop; leave the village's GPU batching untouched.
-            PrepareBoatRendering();
+            // Register fresh renderers in the destination scene, after Map 1's
+            // unload callbacks and GPU instance cleanup have finished.
+            PrepareBoatRendering(true);
             foreach(var other in FindObjectsByType<Camera>(FindObjectsSortMode.None))if(other!=camera) {
                 other.enabled=false;other.tag="Untagged";
                 var listener=other.GetComponent<AudioListener>();if(listener!=null)listener.enabled=false;
@@ -192,18 +192,30 @@ namespace ShadowVale.Map01
             foreach(var weapon in actors[2].GetComponentsInChildren<Weapon>(true))
                 if(weapon.IsGun)weapon.gameObject.SetActive(false);
         }
-        void PrepareBoatRendering() {
+        void PrepareBoatRendering(bool destinationScene=false) {
             if(!boatVisualsPrepared) {
-                // Scene renderers can retain culling/batch registration after being
-                // moved out of their original scene. Create owned moving geometry
-                // before unloading Map 1 instead of reviving those renderers.
                 foreach(var mesh in GetComponentsInChildren<MeshFilter>(true)) {
                     if(mesh.name!="Moored wooden sampan"&&mesh.name!="Boat bench"&&!mesh.name.StartsWith("Oar "))continue;
                     var old=mesh.GetComponent<MeshRenderer>();if(old==null||mesh.sharedMesh==null)continue;
-                    mesh.gameObject.SetActive(true);
-                    var visual=new GameObject(mesh.name);visual.transform.SetParent(mesh.transform,false);
-                    visual.layer=mesh.gameObject.layer;
+                    // The authored hull stores Map 1 world coordinates in its
+                    // vertices. Center its mesh and pivot together so moving
+                    // between scenes does not leave the pivot ~87 m away.
+                    var center=mesh.sharedMesh.bounds.center;
                     var copy=Instantiate(mesh.sharedMesh);copy.name=mesh.sharedMesh.name+" (arrival)";boatMeshes.Add(copy);
+                    var subMeshes=Enumerable.Range(0,copy.subMeshCount).Select(copy.GetSubMesh).ToArray();
+                    var vertices=copy.vertices;
+                    for(int i=0;i<vertices.Length;i++)vertices[i]-=center;
+                    copy.vertices=vertices;copy.RecalculateBounds();
+                    for(int i=0;i<copy.subMeshCount;i++) {
+                        var sub=subMeshes[i];var bounds=sub.bounds;bounds.center-=center;sub.bounds=bounds;
+                        copy.SetSubMesh(i,sub,UnityEngine.Rendering.MeshUpdateFlags.DontRecalculateBounds);
+                    }
+                    var visual=new GameObject(mesh.name);
+                    // Independent of the old scene object's active/culling state.
+                    visual.transform.SetParent(mesh.transform.parent,false);
+                    visual.transform.localPosition=mesh.transform.localPosition+mesh.transform.localRotation*Vector3.Scale(mesh.transform.localScale,center);
+                    visual.transform.localRotation=mesh.transform.localRotation;visual.transform.localScale=mesh.transform.localScale;
+                    visual.layer=mesh.gameObject.layer;
                     visual.AddComponent<MeshFilter>().sharedMesh=copy;
                     var fresh=visual.AddComponent<MeshRenderer>();
                     fresh.sharedMaterials=old.sharedMaterials.Select(m=>{
@@ -211,17 +223,38 @@ namespace ShadowVale.Map01
                         var material=new Material(m);partyMaterials.Add(material);return material;
                     }).ToArray();
                     fresh.shadowCastingMode=old.shadowCastingMode;fresh.receiveShadows=old.receiveShadows;
-                    var properties=new MaterialPropertyBlock();old.GetPropertyBlock(properties);
-                    if(fresh.sharedMaterial!=null&&fresh.sharedMaterial.HasProperty("_BaseColor"))
-                        properties.SetColor("_BaseColor",fresh.sharedMaterial.GetColor("_BaseColor"));
-                    fresh.SetPropertyBlock(properties);boatRenderers.Add(fresh);
+                    // Only this small cinematic prop bypasses GPU resident
+                    // instances. Do not inherit Map 1 culling/property blocks.
+                    SetBoatProperties(fresh);boatRenderers.Add(fresh);
                     old.enabled=false;mesh.name="Map 1 source "+mesh.name;
                 }
+                if(!boatRenderers.Any(r=>r.name=="Moored wooden sampan"))
+                    throw new InvalidOperationException("The carried boat has no hull mesh; arrival cannot start.");
                 boatVisualsPrepared=true;
+            }
+            if(destinationScene)for(int i=0;i<boatRenderers.Count;i++) {
+                var previous=boatRenderers[i];
+                var visual=new GameObject(previous.name);visual.layer=previous.gameObject.layer;
+                visual.transform.SetParent(previous.transform.parent,false);
+                visual.transform.SetLocalPositionAndRotation(previous.transform.localPosition,previous.transform.localRotation);
+                visual.transform.localScale=previous.transform.localScale;
+                visual.AddComponent<MeshFilter>().sharedMesh=previous.GetComponent<MeshFilter>().sharedMesh;
+                var fresh=visual.AddComponent<MeshRenderer>();fresh.sharedMaterials=previous.sharedMaterials;
+                fresh.shadowCastingMode=previous.shadowCastingMode;fresh.receiveShadows=previous.receiveShadows;
+                SetBoatProperties(fresh);
+                previous.name="Retired arrival geometry";previous.gameObject.SetActive(false);Destroy(previous.gameObject);boatRenderers[i]=fresh;
             }
             foreach(var renderer in boatRenderers)if(renderer!=null) {
                 renderer.gameObject.SetActive(true);renderer.enabled=true;renderer.forceRenderingOff=false;
             }
+        }
+        static void SetBoatProperties(MeshRenderer renderer) {
+            // A per-renderer property block opts this prop out of GPU Resident
+            // Drawer using the public API. Never copy stale source overrides.
+            var properties=new MaterialPropertyBlock();
+            var material=renderer.sharedMaterial;
+            properties.SetColor("_BaseColor",material!=null&&material.HasProperty("_BaseColor")?material.GetColor("_BaseColor"):Color.white);
+            renderer.SetPropertyBlock(properties);
         }
         void MuteVillageCameras(Scene scene,LoadSceneMode mode) {
             foreach(var root in scene.GetRootGameObjects())foreach(var other in root.GetComponentsInChildren<Camera>(true))if(other!=camera) {
