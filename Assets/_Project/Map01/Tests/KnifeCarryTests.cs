@@ -67,7 +67,7 @@ namespace ShadowVale.Map01.Tests
             foreach(var g in M.Enemies)g.enabled=false;
             var pipeline=UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline;
             var mode=pipeline.GetType().GetProperty("gpuResidentDrawerMode");var previous=mode.GetValue(pipeline);mode.SetValue(pipeline,Enum.ToObject(mode.PropertyType,0));
-            var input=RouteInputToGame();var keyboard=Keyboard.current??InputSystem.AddDevice<Keyboard>();
+            var input=RouteInputToGame();bool addedKeyboard=Keyboard.current==null;var keyboard=Keyboard.current??InputSystem.AddDevice<Keyboard>();
             var cc=M.player.GetComponent<CharacterController>();cc.enabled=false;M.player.position=R.Layout.safeEntry.position;cc.enabled=true;
             var basis=new GameObject("Knife review input basis").transform;basis.rotation=Quaternion.identity;
             var cameraField=typeof(PlayerController).GetField("cameraTransform",BindingFlags.Instance|BindingFlags.NonPublic);
@@ -99,7 +99,9 @@ namespace ShadowVale.Map01.Tests
                 yield return Seconds(.15f);Assert.Greater(actor.GetLayerWeight(actor.GetLayerIndex(PlayerCombat.UpperBodyLayer)),.5f,"Ordinary stabbing still works");
                 yield return Seconds(1.8f);Assert.Less(actor.GetLayerWeight(actor.GetLayerIndex(PlayerCombat.UpperBodyLayer)),.03f);
                 File.WriteAllText("Logs/KnifeCarry/review.txt","Real keyboard movement: knife walking, crouched idle/walking, switch rifle/knife and ordinary attack/recovery passed.");
-            }finally{InputSystem.QueueStateEvent(keyboard,new KeyboardState());RestoreInputRouting(input);mode.SetValue(pipeline,previous);cameraField.SetValue(M.ModernPlayer,oldBasis);Object.Destroy(basis.gameObject);}
+            }finally{InputSystem.QueueStateEvent(keyboard,new KeyboardState());RestoreInputRouting(input);
+                // A keyboard left behind makes later tests' scripts read "no key held" every frame.
+                if(addedKeyboard)InputSystem.RemoveDevice(keyboard);mode.SetValue(pipeline,previous);cameraField.SetValue(M.ModernPlayer,oldBasis);Object.Destroy(basis.gameObject);}
         }
         static IEnumerator Seconds(float seconds){float until=Time.time+seconds;while(Time.time<until)yield return null;}
         static IEnumerator Draw(string path){
