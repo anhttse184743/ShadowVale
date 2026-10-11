@@ -1,9 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ShadowVale.AI.Contracts;
+using ShadowVale.AI.Coordination;
+using ShadowVale.AI.Perception;
+using ShadowVale.AI.Tactical;
+using ShadowVale.Core.Events;
+using ShadowVale.Core.Services;
 using ShadowVale.Gameplay.Audio;
 using ShadowVale.Gameplay.Combat;
 using ShadowVale.Gameplay.Player;
+using ShadowVale.Telemetry;
 using UnityEngine;
 
 namespace ShadowVale.Map01
@@ -18,6 +25,9 @@ namespace ShadowVale.Map01
     /// </summary>
     public sealed class Map01Mission : MonoBehaviour
     {
+        /// <summary>The map's id in telemetry and research logs.</summary>
+        public const string MapId = "map01";
+
         public Transform player, hung;
         public Camera gameCamera;
         public Vector2 mapMin = new Vector2(-45, -60), mapMax = new Vector2(45, 88);
@@ -43,6 +53,10 @@ namespace ShadowVale.Map01
         public PlayerCombat ModernCombat { get; private set; }
         public Health ModernHealth { get; private set; }
         public Map01EnemyController[] Enemies { get; private set; } = Array.Empty<Map01EnemyController>();
+        /// <summary>Every guard registers here when bound; noises reach them through it, not through <see cref="Enemies"/>.</summary>
+        public NoiseSystem Noise { get; } = new NoiseSystem();
+        /// <summary>The player as the guards' sensors see him: crouch and hiding come from this mission.</summary>
+        public PlayerStealthAdapter Stealth { get; private set; }
         /// <summary>Foliage the guards cannot see through.</summary>
         public Map01SightCover SightCover { get; private set; }
         public bool Stopped => (ModernHealth != null ? ModernHealth.IsDead : hp <= 0) || Stage == Map01Quest.CompleteStage || paused || Cinematic || Map01SaveSystem.IsRestoring
@@ -57,6 +71,9 @@ namespace ShadowVale.Map01
         /// thousands of bushes in Points, for the checks that run every frame.</summary>
         public readonly List<ForestPoint> Interactables = new List<ForestPoint>();
         private readonly List<ForestPoint> hideSpots = new List<ForestPoint>();
+        private readonly List<ForestPoint> coverPoints = new List<ForestPoint>();
+        /// <summary>Placed cover positions a guard can run to on first contact.</summary>
+        public IReadOnlyList<ForestPoint> CoverPoints => coverPoints;
         private float hp, stamina;
         private bool paused;
         private Map01Quest quest;
@@ -112,12 +129,26 @@ namespace ShadowVale.Map01
                 FailInitialization("Assign player, hung and gameCamera in the Inspector.");
                 return;
             }
+            Stealth = PlayerStealthAdapter.For(player.gameObject);
+            Stealth.CrouchProbe = () => Crouched;
+            Stealth.HiddenProbe = () => Hidden;
+            // Shared services the map-agnostic AI tools (debug console, coordinator) resolve.
+            ServiceLocator.Register(Noise);
+            ServiceLocator.Register<IPlayerObservable>(Stealth);
             foreach (var point in FindObjectsByType<ForestPoint>(FindObjectsSortMode.None)) RegisterPoint(point);
             hp = Settings.playerHP; stamina = Settings.stamina;
             inventory.SeedStartingLoadout(Settings.startingStones);
             // Added at runtime like the scouting order; guards ask it from their first Update.
             SightCover = GetComponent<Map01SightCover>();
             if (SightCover == null) SightCover = gameObject.AddComponent<Map01SightCover>();
+            // The squad coordinator's map: loads Resources/TacticalGraphs/Map 1, visibility through the same foliage.
+            TacticalGraphHost.Attach(gameObject, ObstructionMask, SightCover);
+            // Squad coordination (QUBO over that graph), configured by the content bundle's ai_settings
+            // and this map's own coordination entry, if it has one.
+            SquadCoordinator.Attach(gameObject, CoordinationSettings.ForScene(gameObject.scene.name));
+            // Anonymous session telemetry: listens to the shared events, ends when this map unloads.
+            // A sandbox copy (Test Map 1 AI) reports apart, so test sessions never mix with Map 1's numbers.
+            TelemetryService.Attach(gameObject, gameObject.scene.name == Map01SaveSystem.MainScene ? MapId : MapId + "_test");
             IsInitialized = true;
         }
 
@@ -132,21 +163,26 @@ namespace ShadowVale.Map01
             Enemies = FindObjectsByType<Map01EnemyController>(FindObjectsSortMode.None);
             if (ModernPlayer != null)
             {
-                ModernPlayer.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting;
+                ModernPlayer.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting && !InputFocus.OverlayOpen;
                 ModernPlayer.SprintAllowed = () => stamina > 2;
             }
-            if (ModernHealth != null) ModernHealth.KeepCheckpointCorpse();
+            if (ModernHealth != null)
+            {
+                ModernHealth.KeepCheckpointCorpse();
+                ModernHealth.onDied.RemoveListener(OnPlayerDied);
+                ModernHealth.onDied.AddListener(OnPlayerDied);
+            }
             if (ModernCombat != null)
             {
                 ModernCombat.DrawsOwnWeaponHud = true; // Map01Hud.Combat shows the weapons on keys 1/2/3.
                 var stones = GetComponent<Map01StoneThrow>(); // Added by Map01PlayerInteraction.Awake.
-                ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting && !inventory.SuppressFire
+                ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting && !inventory.SuppressFire && !InputFocus.OverlayOpen
                     && !scouting.Binoculars && !stones.Aiming; // Hands are on the binoculars or a stone, not the rifle.
                 ModernCombat.TryConsumeRound = () =>
                 {
                     if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 2.", 3); return false; }
                     inventory.Spend("ammo_rifle", 1);
-                    EmitNoise(player.position, Weapon.noise_radius, Map01NoiseKind.Gunshot);
+                    EmitNoise(player.position, Weapon.noise_radius, NoiseKind.Gunshot);
                     return true;
                 };
                 // With a magazine in the weapon the pack is a reserve, drawn once per reload
@@ -166,7 +202,7 @@ namespace ShadowVale.Map01
             }
             if (gameCamera != null && gameCamera.TryGetComponent<ThirdPersonCamera>(out var cameraRig))
                 {
-                cameraRig.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible;
+                cameraRig.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !InputFocus.OverlayOpen;
                 var riverSurface = GameObject.Find("Winding river")?.GetComponent<Renderer>();
                 float waterHeight = riverSurface != null ? riverSurface.bounds.max.y : wadeBelowY;
                 cameraRig.SurfaceCameraFloor = () => IsWading ? waterHeight + .35f : (float?)null;
@@ -195,11 +231,12 @@ namespace ShadowVale.Map01
         {
             Points.Add(point);
             if (point.kind == ForestPointKind.Hide) hideSpots.Add(point);
-            else if (point.kind != ForestPointKind.Cover) Interactables.Add(point);
+            else if (point.kind == ForestPointKind.Cover) coverPoints.Add(point);
+            else Interactables.Add(point);
         }
         public void UnregisterPoint(ForestPoint point)
         {
-            Points.Remove(point); hideSpots.Remove(point); Interactables.Remove(point);
+            Points.Remove(point); hideSpots.Remove(point); coverPoints.Remove(point); Interactables.Remove(point);
         }
         public void AddEnemy(Map01EnemyController enemy) { if (enemy != null && !Enemies.Contains(enemy)) Enemies = Enemies.Append(enemy).ToArray(); }
         public void RemoveEnemy(Map01EnemyController enemy) => Enemies=Enemies.Where(e=>e!=null&&e!=enemy).ToArray();
@@ -239,16 +276,15 @@ namespace ShadowVale.Map01
         }
         private void OnPlayerAttacked(WeaponKind kind, Vector3 position)
         {
-            if (kind == WeaponKind.Rifle) EmitNoise(position, Weapon.noise_radius, Map01NoiseKind.Gunshot);
+            if (kind == WeaponKind.Rifle) EmitNoise(position, Weapon.noise_radius, NoiseKind.Gunshot);
+            EventBus.Publish(new PlayerAttackEvent(kind.ToString().ToLowerInvariant(), position));
         }
 
+        private void OnPlayerDied() => EventBus.Publish(new PlayerDiedEvent(player != null ? player.position : Vector3.zero));
+
         /// <summary>A noise every guard within <paramref name="radius"/> goes to check; returns how many heard it.</summary>
-        public int EmitNoise(Vector3 position, float radius, Map01NoiseKind kind = Map01NoiseKind.Other)
-        {
-            int heard = 0;
-            foreach (var enemy in Enemies) if (enemy != null && enemy.Hear(position, radius, kind)) heard++;
-            return heard;
-        }
+        public int EmitNoise(Vector3 position, float radius, NoiseKind kind = NoiseKind.Other)
+            => Noise.Emit(position, radius, kind);
         public void Damage(float amount)
         {
             if (Stopped) return;
@@ -303,7 +339,8 @@ namespace ShadowVale.Map01
 
             float radius = step.Landing ? LandingNoiseRadius : FootstepNoiseRadius(step.Stance);
             if (step.Surface == FootSurface.Water) radius *= WadingNoiseScale;
-            EmitNoise(step.Position, radius, step.Landing ? Map01NoiseKind.Landing : Map01NoiseKind.Footstep);
+            if (Stealth != null) radius *= Stealth.NoiseScale;
+            EmitNoise(step.Position, radius, step.Landing ? NoiseKind.Landing : NoiseKind.Footstep);
         }
         public void AdvancePlaySeconds() { if (!Stopped) PlaySeconds += Time.deltaTime; }
         public void SetPlaySeconds(float value) => PlaySeconds = value;
@@ -315,7 +352,24 @@ namespace ShadowVale.Map01
             ModernHealth?.RestoreHealth(hp);
         }
 
-        private void Restart() { Time.timeScale = 1; UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex); }
+        private void Restart() { Time.timeScale = 1; ReloadScene(gameObject.scene); }
+
+        /// <summary>
+        /// Starts <paramref name="scene"/> over. In the editor a scene outside Build Settings (the
+        /// "Test Map 1 AI" sandbox, kept local) is loaded by path; everything else by name as before.
+        /// </summary>
+        public static void ReloadScene(UnityEngine.SceneManagement.Scene scene)
+        {
+#if UNITY_EDITOR
+            if (UnityEngine.SceneManagement.SceneUtility.GetBuildIndexByScenePath(scene.path) < 0)
+            {
+                UnityEditor.SceneManagement.EditorSceneManager.LoadSceneInPlayMode(scene.path,
+                    new UnityEngine.SceneManagement.LoadSceneParameters(UnityEngine.SceneManagement.LoadSceneMode.Single));
+                return;
+            }
+#endif
+            UnityEngine.SceneManagement.SceneManager.LoadScene(scene.name);
+        }
 
         private void Update()
         {
@@ -335,5 +389,11 @@ namespace ShadowVale.Map01
         }
 
         private void OnDisable() { Time.timeScale = 1; }
+
+        private void OnDestroy()
+        {
+            if (ServiceLocator.TryResolve<NoiseSystem>(out var noise) && noise == Noise) ServiceLocator.Unregister<NoiseSystem>();
+            if (ServiceLocator.TryResolve<IPlayerObservable>(out var stealth) && ReferenceEquals(stealth, Stealth)) ServiceLocator.Unregister<IPlayerObservable>();
+        }
     }
 }

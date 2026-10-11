@@ -1,7 +1,7 @@
 {
     "name": "ShadowVale.AI",
     "rootNamespace": "ShadowVale.AI",
-    "references": ["ShadowVale.Core","ShadowVale.Data","ShadowVale.Networking"],
+    "references": ["ShadowVale.Core","ShadowVale.Data","ShadowVale.Networking","ShadowVale.Content"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

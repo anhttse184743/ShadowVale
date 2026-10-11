@@ -14,6 +14,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.TestTools;
 using Object=UnityEngine.Object;
+using ShadowVale.AI.Perception;
 namespace ShadowVale.Map01.Tests
 {
     public sealed class KnifeCarryTests:ForestSceneTestBase
@@ -34,7 +35,7 @@ namespace ShadowVale.Map01.Tests
             Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
             var guard=R.Squad[0];foreach(var g in M.Enemies)g.enabled=g==guard;
             var start=guard.transform.position;var facing=guard.transform.rotation;var point=Lure(guard);
-            Assert.IsTrue(guard.Hear(point,14,Map01NoiseKind.Stone));Assert.IsTrue(guard.Alerted);
+            Assert.IsTrue(guard.Hear(point,14,NoiseKind.Stone));Assert.IsTrue(guard.Alerted);
             float max=0;var end=Time.time+23;
             while(Time.time<end){max=Mathf.Max(max,Vector3.Distance(start,guard.transform.position));if(max>2.8f&&!guard.Alerted&&!guard.Capture().returning&&Vector3.Distance(start,guard.transform.position)<.65f)break;yield return null;}
             Assert.Greater(max,2.8f,"Must actually walk away, rather than accept the post as the noise location");
@@ -46,11 +47,11 @@ namespace ShadowVale.Map01.Tests
         {
             Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
             var guard=R.Squad[0];foreach(var g in M.Enemies)g.enabled=g==guard;
-            guard.Hear(Lure(guard),14,Map01NoiseKind.Stone);yield return WaitGameSeconds(.9f);
+            guard.Hear(Lure(guard),14,NoiseKind.Stone);yield return WaitGameSeconds(.9f);
             var cc=M.player.GetComponent<CharacterController>();cc.enabled=false;
             M.player.SetPositionAndRotation(guard.transform.position-guard.transform.forward*1.2f,guard.transform.rotation);cc.enabled=true;
             M.ModernPlayer.RestoreMotion(true);M.Crouched=true;M.ModernCombat.Equip(WeaponKind.Knife);Physics.SyncTransforms();
-            var destination=guard.Capture().investigate;guard.Hear(M.player.position,3,Map01NoiseKind.Footstep);
+            var destination=guard.Capture().investigate;guard.Hear(M.player.position,3,NoiseKind.Footstep);
             Assert.Less(Vector3.Distance(destination,guard.Capture().investigate),.001f);
             Assert.IsTrue(guard.Capture().stoneLure);Assert.IsTrue(guard.CanSilentTakedown());
             Assert.IsTrue(guard.TrySilentTakedown());Assert.IsFalse(guard.Alive);yield return WaitGameSeconds(5);

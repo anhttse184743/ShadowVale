@@ -45,7 +45,6 @@ namespace ShadowVale.Map01
                 }
         }
     }
-    public enum Map01NoiseKind { Other, Gunshot, Footstep, Landing, Stone }
     public enum Map01DetectionCause { Sight, Gunshot }
     public readonly struct Map01Detection
     {

@@ -19,6 +19,8 @@ namespace ShadowVale.Data.Content
         public List<int> EscapeRoutes { get; set; } = new();
         public int PlayerStartNode { get; set; }
         public string BossArchetypeId { get; set; }
+        /// <summary>This map's own squad coordination (combat-group size, radio ranges…) over the bundle's ai_settings.squad; null = the same.</summary>
+        public SquadAiSettings Coordination { get; set; }
     }
 
     public sealed class SpawnGroup

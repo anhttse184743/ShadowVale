@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ShadowVale.AI.Perception;
 using UnityEngine;
 
 namespace ShadowVale.Map01
@@ -187,7 +188,7 @@ namespace ShadowVale.Map01
                 elapsed += Time.deltaTime;
             }
             stone.transform.position = landing + Vector3.up * .06f;
-            int heard = mission.EmitNoise(landing, HearingRadius, Map01NoiseKind.Stone);
+            int heard = mission.EmitNoise(landing, HearingRadius, NoiseKind.Stone);
             mission.Say(heard > 0
                 ? $"Cạch! {heard} lính nghe thấy tiếng đá và bỏ vị trí đi kiểm tra — tranh thủ lúc này."
                 : "Cạch! ...Không lính nào ở đủ gần để nghe thấy.", 4);

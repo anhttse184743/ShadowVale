@@ -16,5 +16,7 @@ namespace ShadowVale.Data.Content
         public float RetreatHpThreshold { get; set; }
         public string LootTableId { get; set; }
         public bool IsBoss { get; set; }
+        /// <summary>Boss behaviour (relocation, grenades, reinforcements); only for <see cref="IsBoss"/>, defaults when absent.</summary>
+        public BossProfile Boss { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.TestTools;
 using Object=UnityEngine.Object;
+using ShadowVale.AI.Perception;
 namespace ShadowVale.Map01.Tests
 {
     public sealed class GuardApproachTests:ForestSceneTestBase
@@ -43,8 +44,8 @@ namespace ShadowVale.Map01.Tests
             M.player.SetPositionAndRotation(guard.transform.position-guard.transform.forward*1.45f,guard.transform.rotation);cc.enabled=true;
             M.ModernPlayer.RestoreMotion(true);M.Crouched=true;M.ModernCombat.Equip(ShadowVale.Gameplay.Combat.WeaponKind.Knife);
             Physics.SyncTransforms();
-            Assert.IsFalse(guard.Hear(guard.transform.position-guard.transform.forward*1.8f,3,Map01NoiseKind.Footstep));
-            Assert.IsTrue(guard.Hear(M.player.position,3,Map01NoiseKind.Footstep));
+            Assert.IsFalse(guard.Hear(guard.transform.position-guard.transform.forward*1.8f,3,NoiseKind.Footstep));
+            Assert.IsTrue(guard.Hear(M.player.position,3,NoiseKind.Footstep));
             Assert.IsFalse(guard.Alerted);yield return WaitGameSeconds(.45f);
             Assert.IsFalse(guard.Alerted);Assert.IsFalse(rescue.Failed);Assert.IsTrue(guard.CanSilentTakedown());
             Assert.IsTrue(guard.TrySilentTakedown());Assert.IsFalse(guard.Alive);Assert.IsFalse(rescue.OverseerAlive);

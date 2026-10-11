@@ -55,6 +55,14 @@ namespace ShadowVale.Map01
         private string rescueStart, escortStart;
         private string SavePath => Path.Combine(Application.persistentDataPath, "shadowvale-map01-checkpoint.json");
 
+        /// <summary>The real map. Any other scene running this mission (the "Test Map 1 AI" copy) is a
+        /// sandbox: it saves to files of its own and never touches the game's slots or checkpoint.</summary>
+        public const string MainScene = "Map 1";
+        private string SceneName => gameObject.scene.name;
+        public bool IsSandbox => SceneName != MainScene;
+        private string SandboxPath(int slot) => Path.Combine(Application.persistentDataPath, "sandbox",
+            string.Concat(SceneName.Select(c => char.IsLetterOrDigit(c) ? c : '_')) + "-slot-" + slot + ".json");
+
         private void Awake()
         {
             mission = GetComponent<Map01Mission>();
@@ -154,7 +162,7 @@ namespace ShadowVale.Map01
             if (string.IsNullOrEmpty(scoutStart)) return false;
             pendingCheckpoint = scoutStart; pendingSeconds = mission.PlaySeconds; pendingMessage = message;
             Time.timeScale = 1;
-            SceneManager.LoadScene("Map 1");
+            Map01Mission.ReloadScene(gameObject.scene); // Map 1, or the sandbox copy it is running in.
             return true;
         }
 
@@ -164,6 +172,17 @@ namespace ShadowVale.Map01
             if (mission.Cinematic || GetComponent<Map01Rescue>().NonSaveable || GetComponent<Map01Rescue>().Failed || mission.PlayerHealth<=0) { error = "Cannot save during a cinematic or failed mission."; return false; }
             if (!automatic && (error = ManualSaveBlockReason()) != null) { mission.Say(error); return false; }
             var data = Capture();
+            if (IsSandbox)
+            {
+                try
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(SandboxPath(slot)));
+                    File.WriteAllText(SandboxPath(slot), JsonUtility.ToJson(data));
+                    if (!automatic) mission.Say($"Đã lưu ({SceneName} — riêng, không đụng tới bản lưu của Map 1).");
+                    return true;
+                }
+                catch (Exception e) { error = "Không thể lưu: " + e.Message; mission.Say(error); return false; }
+            }
             try
             {
                 string thumbnail = null;
@@ -246,6 +265,13 @@ namespace ShadowVale.Map01
         {
             try
             {
+                if (IsSandbox)
+                {
+                    if (!File.Exists(SandboxPath(0))) { mission.Say("Map thử chưa có bản lưu nhanh [F5]."); return; }
+                    pendingCheckpoint = File.ReadAllText(SandboxPath(0)); pendingSeconds = 0; pendingMessage = null;
+                    Time.timeScale = 1; Map01Mission.ReloadScene(gameObject.scene);
+                    return;
+                }
                 if (ForestSaveSlots.Exists(0)) { BeginGame(0); return; }
                 if (!File.Exists(SavePath)) { mission.Say("Chưa có bản lưu nhanh."); return; }
                 pendingCheckpoint = File.ReadAllText(SavePath); pendingSeconds = 0; pendingMessage = null;

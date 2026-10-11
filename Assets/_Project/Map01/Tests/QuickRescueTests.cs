@@ -12,6 +12,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.TestTools;
 using Object=UnityEngine.Object;
+using ShadowVale.AI.Perception;
 namespace ShadowVale.Map01.Tests
 {
     public sealed class QuickRescueTests:ForestSceneTestBase
@@ -33,7 +34,7 @@ namespace ShadowVale.Map01.Tests
             Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
             Isolate();foreach(var g in M.Enemies)g.enabled=g==R.Squad[0];
             var overseer=R.Squad[0];var post=overseer.transform.position;float hungHP=R.HungHealth;
-            Assert.IsTrue(R.CanExecuteCaptive);var rock=FarStone(overseer);Assert.IsTrue(overseer.Hear(rock,14,Map01NoiseKind.Stone));
+            Assert.IsTrue(R.CanExecuteCaptive);var rock=FarStone(overseer);Assert.IsTrue(overseer.Hear(rock,14,NoiseKind.Stone));
             float departure=Time.time+4;while(Vector3.Distance(overseer.transform.position,post)<1.5f&&Time.time<departure)yield return null;
             Assert.IsFalse(R.CanExecuteCaptive,"Leaving the post must remove execution before reaching the stone.");
             float until=Time.time+10;while(Vector3.Distance(overseer.transform.position,post)<10&&Time.time<until)yield return null;

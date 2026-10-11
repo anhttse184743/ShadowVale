@@ -1,5 +1,8 @@
 using System.Linq;
+using ShadowVale.Core.Events;
+using ShadowVale.Data.Content;
 using ShadowVale.Gameplay.Combat;
+using ShadowVale.Gameplay.Enemies.Boss;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -52,7 +55,32 @@ namespace ShadowVale.Map01
         public const string ScoutOrder = "Hùng: Địch có ba doanh trại quanh đây, anh chỉ biết đại khái khu vực. Lén tới, giữ [F] dùng ống nhòm ghi lại vị trí cả ba. " +
             "Tuyệt đối không để chúng phát hiện, không nổ súng. Muốn hạ tên nào thì ném đá dụ nó ra xa trại rồi dùng dao từ phía sau. Xong thì về báo anh.";
 
-        public int Stage { get; private set; }
+        /// <summary>Stable ids of the stages, for telemetry's progression funnel (index = stage number).</summary>
+        public static readonly string[] StageIds = {
+            "rescue_hung", "escort_hung", "briefing", "scout_camps", "report_scouting",
+            "destroy_camps", "report_camps", "defeat_commander", "report_commander", "complete",
+            "extraction", "boarding"
+        };
+
+        /// <summary>Where a stage falls in play: the extraction and the boarding (appended to the
+        /// checkpoint format as 10 and 11) come after the commander and before Complete (9).</summary>
+        public static int PlayOrder(int stage) => stage == CompleteStage ? int.MaxValue : stage;
+
+        /// <summary>Moving forward completes the stage left behind (telemetry <c>objective_completed</c>);
+        /// restoring a checkpoint does not.</summary>
+        public int Stage
+        {
+            get => stage;
+            private set
+            {
+                int from = stage;
+                stage = value;
+                if (PlayOrder(value) <= PlayOrder(from) || Map01SaveSystem.IsRestoring) return;
+                EventBus.Publish(new ObjectiveCompletedEvent(Map01Mission.MapId, StageIds[Mathf.Clamp(from, 0, LastStage)], from));
+                if (value == CompleteStage) EventBus.Publish(new MissionEndedEvent(Map01Mission.MapId, "completed"));
+            }
+        }
+        private int stage;
         /// <summary>The objective line for the HUD, with the scouting tally while it runs.</summary>
         public string ObjectiveText => Stage == RescueStage && rescue != null
             ? (rescue.CanFree ? "Đã hạ đủ bốn lính. Cởi trói Hùng [E]." : $"{Objectives[0]} — còn {rescue.Remaining}/4 lính; " + (!rescue.OverseerAlive?"đã hạ lính giám sát, có thể giao chiến":rescue.CombatAlarm?"địch đã báo động, hạ nhóm truy kích":rescue.CanExecuteCaptive?"giám sát đang canh Hùng, giữ im lặng":"giám sát đã rời Hùng; vòng ra sau hoặc giao chiến"))
@@ -77,7 +105,8 @@ namespace ShadowVale.Map01
         public void RestoreStage(int value)
         {
             // Older saves waiting for the final report are already victorious.
-            Stage = value == ReportBossStage ? CompleteStage : value == BoardingStage ? ExtractionStage : Mathf.Clamp(value, 0, LastStage);
+            // The field, not the setter: restoring is not progress (no objective_completed events).
+            stage = value == ReportBossStage ? CompleteStage : value == BoardingStage ? ExtractionStage : Mathf.Clamp(value, 0, LastStage);
             rescue?.SyncRestoredStage(Stage);
             // The commander is spawned at runtime, not baked into the scene — a checkpoint taken
             // mid-fight (the exit autosave allows that) must bring him back, or the objective can
@@ -210,10 +239,21 @@ namespace ShadowVale.Map01
             boss = instance.GetComponent<Map01EnemyController>();
             boss.Configure(System.Array.Empty<Vector3>()); // Holds this position rather than resuming a patrol loop.
             boss.BindMission(mission); // Before ConfigureAsBoss: binding resets damage to the balance baseline.
-            boss.ConfigureAsBoss(3f, 1.6f);
+            var profile = LoadBossProfile();
+            boss.ConfigureAsBoss(profile);
             mission.AddEnemy(boss);
+            // Relocation, grenades and the call for reinforcements (A04), from the same profile.
+            var behaviour = BossBehaviour.Attach(instance, boss, profile, new Map01Reinforcements(mission, template), seed: 1);
+            behaviour.Suspended = () => mission.Stopped;
             var bossHealth = instance.GetComponent<Health>();
             if (bossHealth != null) bossHealth.onDied.AddListener(OnBossDown);
+        }
+
+        /// <summary>The commander's boss profile from Map01Content.json (boss_commander), else the tuned defaults.</summary>
+        private BossProfile LoadBossProfile()
+        {
+            var archetype = mission.Bundle?.enemy_archetypes?.FirstOrDefault(a => a != null && a.is_boss);
+            return archetype?.boss != null ? archetype.boss.ToProfile() : new BossProfile();
         }
 
         private Vector3 BossSpawnPosition(Map01EnemyController template)
