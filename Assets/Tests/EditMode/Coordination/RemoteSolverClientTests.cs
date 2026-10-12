@@ -34,6 +34,32 @@ namespace ShadowVale.Tests.EditMode.Coordination
         [SetUp] public void Reset() => RemoteSolverClient.ResetBackoff();
 
         [Test]
+        public void WithoutTheBootObjectTheDefaultProfileStillStartsTheSidecar()
+        {
+            ShadowVale.Core.Services.ServiceLocator.TryResolve<SolverProfileConfig>(out var before);
+            ShadowVale.Core.Services.ServiceLocator.Unregister<SolverProfileConfig>();
+            var custom = UnityEngine.ScriptableObject.CreateInstance<SolverProfileConfig>();
+            try
+            {
+                var fallback = SolverProfileConfig.Current;
+                Assert.IsNotNull(fallback, "A map played on its own has no GameBootstrap, yet a profile.");
+                Assert.IsTrue(fallback.AutoLaunchSidecar, "So choosing a remote solver starts the sidecar.");
+                Assert.AreEqual(SolverEndpoint.DefaultBaseUrl, fallback.SolverBaseUrl);
+                Assert.AreSame(fallback, SolverProfileConfig.Current, "One instance, not one per call.");
+
+                custom.AutoLaunchSidecar = false;
+                ShadowVale.Core.Services.ServiceLocator.Register(custom);
+                Assert.AreSame(custom, SolverProfileConfig.Current, "The Boot object's profile wins when there is one.");
+            }
+            finally
+            {
+                ShadowVale.Core.Services.ServiceLocator.Unregister<SolverProfileConfig>();
+                if (before != null) ShadowVale.Core.Services.ServiceLocator.Register(before);
+                UnityEngine.Object.DestroyImmediate(custom);
+            }
+        }
+
+        [Test]
         public void NoSidecarMeansAnImmediateGreedyPlanWithTheReason()
         {
             var clock = Stopwatch.StartNew();

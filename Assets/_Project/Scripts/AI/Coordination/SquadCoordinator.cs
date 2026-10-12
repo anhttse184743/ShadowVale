@@ -129,7 +129,7 @@ namespace ShadowVale.AI.Coordination
         private void CheckSidecar(ISquadSolver solver)
         {
             if (!(solver is RemoteSolverClient)) return;
-            ServiceLocator.TryResolve<SolverProfileConfig>(out var profile);
+            var profile = SolverProfileConfig.Current;
             string url = SolverEndpoint.BaseUrl;
             RemoteSolverClient.ResetBackoff();
             var check = SidecarLauncher.EnsureRunningAsync(profile, url);
