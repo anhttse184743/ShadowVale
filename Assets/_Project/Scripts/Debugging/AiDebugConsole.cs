@@ -29,7 +29,17 @@ namespace ShadowVale.Debugging
 
         private readonly AiConsoleLog _log = new AiConsoleLog();
         private AiConsoleFeed _feed;
-        private Rect _window = new Rect(16, 16, 760, 460);
+        // Laid out in "virtual" pixels at 720p and scaled up to the screen (GUI.matrix), so it reads
+        // the same on a 1080p laptop and a 4K Game view. Placed on the first open, right of the
+        // minimap and the objective panel; drag the title to move it, the corner to resize it.
+        private const float ReferenceHeight = 720f;
+        private const string ScalePref = "svl.aiconsole.scale";
+        private Rect _window;
+        private bool _placed, _resizing;
+        private float _userScale = 1f;
+        private GUIStyle _windowStyle;
+        private Texture2D _background;
+        private int _labelSize, _buttonSize, _toggleSize;
         private int _tab;
         private Vector2 _logScroll, _agentScroll;
         private int _seenVersion = -1;
@@ -40,12 +50,20 @@ namespace ShadowVale.Debugging
         private string _status = "";
         private GUIStyle _mono;
 
-        private void Awake() => _feed = new AiConsoleFeed(_log);
+        private void Awake()
+        {
+            _feed = new AiConsoleFeed(_log);
+            _userScale = Mathf.Clamp(PlayerPrefs.GetFloat(ScalePref, 1f), .6f, 2.5f);
+        }
+
+        /// <summary>Screen pixels per virtual pixel: the screen's height against 720p, times the user's A−/A+.</summary>
+        private float UiScale => Mathf.Max(1f, Screen.height / ReferenceHeight) * _userScale;
 
         private void OnDestroy()
         {
             _feed?.Dispose();
             if (Visible) SetVisible(false);
+            if (_background != null) Destroy(_background);
         }
 
         private void Update()
@@ -78,17 +96,80 @@ namespace ShadowVale.Debugging
         private void OnGUI()
         {
             if (!Visible) return;
-            _mono ??= new GUIStyle(GUI.skin.label) { richText = true, wordWrap = false, fontSize = 12 };
-            _window = GUI.Window(WindowId, _window, DrawWindow, "AI Debug Console — F8 đóng · F7 overlay");
+            EnsureStyles();
+            float scale = UiScale;
+            float width = Screen.width / scale, height = Screen.height / scale;
+            if (!_placed)
+            {
+                // Right half, below the top HUD line: clear of the minimap and the objective panel.
+                _window = new Rect(width * .49f, 56f, width * .49f, height * .62f);
+                _placed = true;
+            }
+            _window.width = Mathf.Clamp(_window.width, 420f, width - 8f);
+            _window.height = Mathf.Clamp(_window.height, 240f, height - 8f);
+            _window.x = Mathf.Clamp(_window.x, 0f, width - 60f);
+            _window.y = Mathf.Clamp(_window.y, 0f, height - 30f);
+            var previous = GUI.matrix;
+            GUI.matrix = Matrix4x4.Scale(new Vector3(scale, scale, 1f));
+            _window = GUI.Window(WindowId, _window, DrawWindow, "AI Debug Console — F8 đóng · F7 overlay", _windowStyle);
+            GUI.matrix = previous;
+        }
+
+        private void EnsureStyles()
+        {
+            if (_windowStyle != null) return;
+            _background = new Texture2D(1, 1) { hideFlags = HideFlags.HideAndDontSave };
+            _background.SetPixel(0, 0, new Color(.06f, .08f, .10f, .94f));
+            _background.Apply();
+            _windowStyle = new GUIStyle(GUI.skin.window) { fontSize = 15, fontStyle = FontStyle.Bold, padding = new RectOffset(10, 10, 28, 10) };
+            _windowStyle.normal.background = _windowStyle.onNormal.background = _background;
+            _windowStyle.normal.textColor = _windowStyle.onNormal.textColor = new Color(.95f, .85f, .55f);
+            _mono = new GUIStyle(GUI.skin.label) { richText = true, wordWrap = false, fontSize = 14 };
+            _mono.normal.textColor = new Color(.88f, .9f, .92f);
+            // Monospaced, so the columns of the Lính tab line up.
+            var font = Font.CreateDynamicFontFromOSFont(new[] { "Consolas", "Cascadia Mono", "Courier New" }, 14);
+            if (font != null) _mono.font = font;
         }
 
         private void DrawWindow(int id)
         {
-            DrawHeader();
-            _tab = GUILayout.Toolbar(_tab, Tabs);
-            if (_tab == 0) DrawLog(); else DrawAgents();
-            if (!string.IsNullOrEmpty(_status)) GUILayout.Label(_status);
-            GUI.DragWindow(new Rect(0, 0, 10000, 20));
+            // The shared skin is the game HUD's too: bigger only inside this window, restored after.
+            _labelSize = GUI.skin.label.fontSize; _buttonSize = GUI.skin.button.fontSize; _toggleSize = GUI.skin.toggle.fontSize;
+            GUI.skin.label.fontSize = GUI.skin.button.fontSize = GUI.skin.toggle.fontSize = 14;
+            try
+            {
+                DrawHeader();
+                _tab = GUILayout.Toolbar(_tab, Tabs, GUILayout.Height(26));
+                if (_tab == 0) DrawLog(); else DrawAgents();
+                if (!string.IsNullOrEmpty(_status)) GUILayout.Label(_status, _mono);
+            }
+            finally
+            {
+                GUI.skin.label.fontSize = _labelSize; GUI.skin.button.fontSize = _buttonSize; GUI.skin.toggle.fontSize = _toggleSize;
+            }
+            DrawResizeGrip();
+            GUI.DragWindow(new Rect(0, 0, 10000, 26));
+        }
+
+        /// <summary>The ◢ in the bottom-right corner: drag it to resize the window.</summary>
+        private void DrawResizeGrip()
+        {
+            var grip = new Rect(_window.width - 20f, _window.height - 20f, 20f, 20f);
+            GUI.Label(grip, "◢", _mono);
+            var e = Event.current;
+            if (e.type == EventType.MouseDown && grip.Contains(e.mousePosition)) { _resizing = true; e.Use(); }
+            else if (_resizing && e.type == EventType.MouseDrag)
+            {
+                _window.width += e.delta.x; _window.height += e.delta.y;
+                e.Use();
+            }
+            else if (e.rawType == EventType.MouseUp) _resizing = false;
+        }
+
+        private void SetUserScale(float value)
+        {
+            _userScale = Mathf.Clamp(value, .6f, 2.5f);
+            try { PlayerPrefs.SetFloat(ScalePref, _userScale); } catch (System.Exception) { /* Not worth failing over. */ }
         }
 
         private void DrawHeader()
@@ -104,6 +185,8 @@ namespace ShadowVale.Debugging
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Solver: <b>{solver}</b>   Graph: {graph}   Lính: {alive}/{AgentRegistry.All.Count}   Overlay: {(AiDebugOverlay.Enabled ? "bật" : "tắt")}", _mono);
             GUILayout.FlexibleSpace();
+            if (GUILayout.Button("A−", GUILayout.Width(34))) SetUserScale(_userScale - .1f);
+            if (GUILayout.Button("A+", GUILayout.Width(34))) SetUserScale(_userScale + .1f);
             bool paused = GUILayout.Toggle(_gamePaused, "Dừng game");
             if (paused != _gamePaused) { _gamePaused = paused; Time.timeScale = paused ? 0f : 1f; }
             _playerInvulnerable = GUILayout.Toggle(_playerInvulnerable, "Nam bất tử");
@@ -133,7 +216,7 @@ namespace ShadowVale.Debugging
             GUILayout.EndHorizontal();
 
             if (_log.Version != _seenVersion && !_log.Paused) { _logScroll.y = float.MaxValue; _seenVersion = _log.Version; }
-            _logScroll = GUILayout.BeginScrollView(_logScroll);
+            _logScroll = GUILayout.BeginScrollView(_logScroll, GUILayout.ExpandHeight(true));
             for (int i = 0; i < _log.Count; i++)
             {
                 var e = _log[i];
@@ -169,7 +252,7 @@ namespace ShadowVale.Debugging
         private void DrawAgents()
         {
             GUILayout.Label("<b>Id                 Squad  State        HP    Nghi   Giao tranh  Thấy  Vị trí được giao</b>", _mono);
-            _agentScroll = GUILayout.BeginScrollView(_agentScroll, GUILayout.Height(250));
+            _agentScroll = GUILayout.BeginScrollView(_agentScroll, GUILayout.Height(Mathf.Max(120f, _window.height - 250f)));
             float now = Time.time;
             foreach (var a in AgentRegistry.All.OrderBy(a => a.SquadId).ThenBy(a => a.Id))
             {

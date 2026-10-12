@@ -12,7 +12,10 @@ namespace ShadowVale.Debugging
 {
     /// <summary>
     /// Turns AI events from the <see cref="EventBus"/> into console lines. The AI never knows the
-    /// console exists; telemetry listens to the same events.
+    /// console exists; telemetry listens to the same events. Every line starts with who decided it:
+    /// [SOLVER x] the squad plan from solver x, [GREEDY] the in-game fallback when x did not answer
+    /// in time, [FSM] one guard's own state machine, [CẢM BIẾN] sight and hearing, [RADIO] the
+    /// coordinator passing a contact on (no solving), [BOSS] the commander's own behaviour.
     /// </summary>
     public sealed class AiConsoleFeed : IDisposable
     {
@@ -38,31 +41,33 @@ namespace ShadowVale.Debugging
         public AiConsoleFeed(AiConsoleLog log)
         {
             _log = log;
-            _onState = e => Add(AiLogCategory.State, e.AgentId, $"{e.AgentId}  {e.From} → {e.To}");
+            _onState = e => Add(AiLogCategory.State, e.AgentId, $"{Fsm} {e.AgentId}  {e.From} → {e.To}{WhyState(e)}");
             _onContact = e => Add(AiLogCategory.Contact, e.AgentId,
-                $"{e.AgentId} {(e.Seen ? "thấy Nam" : "bị Nam tấn công")} tại {Fmt(e.PlayerPosition)}");
+                $"{Sense} {e.AgentId} {(e.Seen ? "thấy Nam" : "bị Nam tấn công")} tại {Fmt(e.PlayerPosition)}");
             _onNoise = e =>
             {
                 if (!VerboseNoise && e.HeardBy == 0 && e.Kind == NoiseKind.Footstep) return;
-                Add(AiLogCategory.Noise, null, $"{e.Kind} r={e.Radius:0.#} m tại {Fmt(e.Position)} — {e.HeardBy} lính nghe");
+                Add(AiLogCategory.Noise, null, $"{Sense} {e.Kind} r={e.Radius:0.#} m tại {Fmt(e.Position)} — {e.HeardBy} lính nghe");
             };
-            _onTakedown = e => Add(AiLogCategory.Combat, e.VictimId, $"{e.VictimId} bị hạ im lặng tại {Fmt(e.Position)}");
+            _onTakedown = e => Add(AiLogCategory.Combat, e.VictimId, $"{Tag("GAMEPLAY")} {e.VictimId} bị hạ im lặng tại {Fmt(e.Position)}");
             _onAlert = e => AddGroup(AiLogCategory.Coordination, e.SourceSquad,
-                $"BÁO ĐỘNG {e.SourceAgent}: {e.SquadMatesJoined} đồng đội vào trận" +
+                $"{Tag("RADIO")} BÁO ĐỘNG {e.SourceAgent}: {e.SquadMatesJoined} đồng đội vào trận" +
                 (e.ReinforcementsJoined > 0 ? $", {e.ReinforcementsJoined} lính tiếp viện từ {e.ReinforcingSquads}" : ""));
             _onReplan = e => AddGroup(AiLogCategory.Coordination, e.Group,
-                $"REPLAN   trigger={e.Trigger}  variant={e.Variant}  agents={e.Agents}  nodes={e.Nodes}  escapes={e.Escapes}  vars={e.Agents * e.Nodes}");
+                $"{Tag("SOLVER " + e.Variant)} REPLAN  trigger={e.Trigger}  agents={e.Agents}  nodes={e.Nodes}  escapes={e.Escapes}  vars={e.Agents * e.Nodes}");
             _onPlan = e =>
             {
+                // Who actually produced this plan: the requested solver, or greedy standing in for it.
+                string by = e.FallbackReason != null ? Tag("GREEDY dự phòng") : Tag("SOLVER " + e.Variant);
                 AddGroup(e.FallbackReason != null || e.HitLatencyBudget ? AiLogCategory.Solver : AiLogCategory.Coordination, e.Group,
-                    $"PLAN     {e.LatencyMs:0.00} ms  energy={e.Energy:0.##}  F={e.Objective:0.##}  coverage={e.CoordinationScore:0.00}" +
-                    (e.FallbackReason != null ? $"  fallback={e.FallbackReason}" : ""));
+                    $"{by} PLAN    {e.LatencyMs:0.00} ms  energy={e.Energy:0.##}  F={e.Objective:0.##}  coverage={e.CoordinationScore:0.00}" +
+                    (e.FallbackReason != null ? $"  (fallback: {e.FallbackReason})" : ""));
                 foreach (var a in e.Assignments)
-                    AddGroup(AiLogCategory.Coordination, e.Group, $"         {a.AgentId} → node {a.Node}  [{RoleLabel(a)}]");
+                    AddGroup(AiLogCategory.Coordination, e.Group, $"{by}   giao {a.AgentId} → node {a.Node}  [{RoleLabel(a)}]");
             };
-            _onDiscard = e => AddGroup(AiLogCategory.Coordination, e.Group, "PLAN bỏ: " + e.Reason);
+            _onDiscard = e => AddGroup(AiLogCategory.Coordination, e.Group, $"{Tag("SOLVER")} PLAN bỏ (không áp dụng): {e.Reason}");
             _onSolver = e => Add(AiLogCategory.Solver, null,
-                $"SOLVER   → {e.Variant}" + (e.FallbackReason != null ? $"  ({e.FallbackReason})" : ""));
+                $"{Tag("SOLVER")} đổi sang {e.Variant}" + (e.FallbackReason != null ? $"  ({e.FallbackReason})" : ""));
             EventBus.Subscribe(_onState);
             EventBus.Subscribe(_onContact);
             EventBus.Subscribe(_onNoise);
@@ -72,16 +77,16 @@ namespace ShadowVale.Debugging
             EventBus.Subscribe(_onPlan);
             EventBus.Subscribe(_onDiscard);
             _onSidecar = e => Add(AiLogCategory.Solver, null,
-                e.Online ? $"SIDECAR  online tại {e.BaseUrl}" : $"SIDECAR  không kết nối được {e.BaseUrl} — dùng greedy tại chỗ");
+                e.Online ? $"{Tag("SOLVER")} sidecar online tại {e.BaseUrl}" : $"{Tag("SOLVER")} không kết nối được sidecar {e.BaseUrl} — dùng greedy tại chỗ");
             EventBus.Subscribe(_onSolver);
             EventBus.Subscribe(_onSidecar);
             _onRelocate = e => Add(AiLogCategory.Boss, e.BossId,
-                $"BOSS     đổi vị trí → node {e.Node} {Fmt(e.To)}  ({(e.Reason == "hurt" ? "bị thương" : "đứng lâu")})");
-            _onThrow = e => Add(AiLogCategory.Boss, e.ThrowerId, $"BOSS     ném lựu đạn vào {Fmt(e.Target)} — Nam nấp quá lâu");
+                $"{Tag("BOSS")} đổi vị trí → node {e.Node} {Fmt(e.To)}  ({BossMoveReason(e.Reason)})");
+            _onThrow = e => Add(AiLogCategory.Boss, e.ThrowerId, $"{Tag("BOSS")} ném lựu đạn vào {Fmt(e.Target)} — Nam nấp quá lâu");
             _onBlast = e => Add(AiLogCategory.Boss, e.ThrowerId,
-                e.PlayerDamage > 0 ? $"BOSS     lựu đạn nổ, Nam mất {e.PlayerDamage:0} HP" : "BOSS     lựu đạn nổ, Nam đã tránh được");
+                e.PlayerDamage > 0 ? $"{Tag("BOSS")} lựu đạn nổ, Nam mất {e.PlayerDamage:0} HP" : $"{Tag("BOSS")} lựu đạn nổ, Nam đã tránh được");
             _onReinforce = e => Add(AiLogCategory.Boss, e.BossId,
-                $"BOSS     gọi viện: {e.Arrived}/{e.Requested} lính tới ({e.Agents})");
+                $"{Tag("BOSS")} gọi viện: {e.Arrived}/{e.Requested} lính tới ({e.Agents})");
             EventBus.Subscribe(_onRelocate);
             EventBus.Subscribe(_onThrow);
             EventBus.Subscribe(_onBlast);
@@ -93,6 +98,41 @@ namespace ShadowVale.Debugging
             "block" => "chặn lối thoát",
             "cover" => "nấp, hướng về Nam",
             _ => $"vòng sườn {a.FlankAngle:0}°",
+        };
+
+        private static string BossMoveReason(string reason) => reason switch
+        {
+            "hurt" => "bị thương",
+            "regroup" => "rút về phía viện binh",
+            "cover" => "tìm chỗ nấp",
+            _ => "đứng lâu",
+        };
+
+        /// <summary>"[WHO]" padded to one width, so the lines line up in the monospaced console.</summary>
+        private static string Tag(string who) => ("[" + who + "]").PadRight(18);
+        private static readonly string Fsm = Tag("FSM"), Sense = Tag("CẢM BIẾN");
+
+        /// <summary>
+        /// For a guard heading to a position (TakeCover): whose position it is — the squad plan's
+        /// (solver) or the nearest cover he found himself. Read off his blackboard at the moment
+        /// he switches, which is when the assignment that sent him there is current.
+        /// </summary>
+        private static string WhyState(EnemyStateChangedEvent e)
+        {
+            if (e.To != EnemyStateId.TakeCover) return "";
+            var m = AgentRegistry.Find(e.AgentId)?.Brain?.Memory;
+            if (m == null || !m.HasAssignment) return "";
+            return m.AssignedNode >= 0
+                ? $"  (vị trí do solver giao: node {m.AssignedNode}, {RoleName(m.AssignedRole)})"
+                : "  (tự tìm chỗ nấp gần nhất)";
+        }
+
+        private static string RoleName(string role) => role switch
+        {
+            "block" => "chặn lối thoát",
+            "cover" => "nấp, hướng về Nam",
+            "flank" => "vòng sườn",
+            _ => role,
         };
 
         private void AddGroup(AiLogCategory category, string group, string text)
