@@ -39,6 +39,7 @@ namespace ShadowVale.Map01
         private Health _health;
         private Transform _player;
         private Health _playerHealth;
+        private EnemyFeedback _feedback;
         private IPlayerObservable _playerView;
         private NavMeshEnemyBody _body;
         private EnemyBrain _brain;
@@ -124,6 +125,8 @@ namespace ShadowVale.Map01
         {
             _mission = mission;
             Map01Rifle.Attach(GetComponentInChildren<Animator>());
+            _feedback = EnemyFeedback.Attach(gameObject, mission.player.GetComponent<PlayerController>());
+            _feedback.CanStep = () => enabled && !_holdingAI && _mission != null && !_mission.Stopped;
             GetComponent<Health>().KeepCheckpointCorpse();
             // Map 1's guard tuning lives in Map01Balance.json and Map01Content.json, not in each
             // guard's serialized fields.
@@ -445,10 +448,12 @@ namespace ShadowVale.Map01
         public void FireAtHostage(Vector3 target, float amount)
         {
             FaceImmediate(target); _animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
-            var rifle = GetComponentInChildren<Map01Rifle>();
-            if (rifle != null && rifle.weapon != null && rifle.weapon.Muzzle != null)
-                _mission.Trace(rifle.weapon.Muzzle.position, target + Vector3.up * .9f, new Color(1, .85f, .45f));
+            if (_rescue == null || _mission == null) return;
+            _feedback ??= EnemyFeedback.Attach(gameObject);
+            if (!_feedback.Fire(target + Vector3.up * .9f, _mission.hung, obstructionMask, out var impact)) return;
+            float before = _rescue.HungHealth;
             _rescue.HitHung(amount);
+            if (_rescue.HungHealth < before) BloodImpact.Play(impact, impact - transform.position);
         }
 
         public void FaceImmediate(Vector3 point)
@@ -707,7 +712,9 @@ namespace ShadowVale.Map01
             // Hùng is in the line of fire while he is being held or walked home: every third
             // round goes his way when he is in reach.
             if (++_shots % 3 == 0 && HostageInReach(out var hostage) && SafeShot(hostage)) { FireAtHostage(hostage, damage); return; }
-            _playerHealth.TakeDamage(damage, _player.position + Vector3.up, gameObject);
+            _feedback ??= EnemyFeedback.Attach(gameObject);
+            if (_feedback.Fire(_player.position + Vector3.up, _player, obstructionMask, out var impact))
+                _playerHealth.TakeBulletDamage(damage, impact, gameObject, impact - transform.position);
         }
 
         /// <summary>Rounds at the spot Nam was last seen: noise and muzzle flash, no hit.</summary>
@@ -716,6 +723,8 @@ namespace ShadowVale.Map01
             if (Time.time < _nextShot) return;
             _nextShot = Time.time + fireInterval;
             _animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
+            _feedback ??= EnemyFeedback.Attach(gameObject);
+            _feedback.Fire(point + Vector3.up, null, obstructionMask, out _);
         }
 
         // ---- IEnemyTactics: Map 1's rules on top of the shared FSM ------------------------------

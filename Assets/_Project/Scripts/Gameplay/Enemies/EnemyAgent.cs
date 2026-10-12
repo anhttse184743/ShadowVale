@@ -37,6 +37,7 @@ namespace ShadowVale.Gameplay.Enemies
         private bool _sawPlayer;
         private float _lastDistance = float.PositiveInfinity, _lastHealth, _nextShot;
         private NoiseSystem _noise;
+        private EnemyFeedback _feedback;
 
         /// <summary>The map's rules on top of the shared FSM (alternative targets, cover, retreat).</summary>
         public IEnemyTactics Tactics { get; set; }
@@ -82,7 +83,12 @@ namespace ShadowVale.Gameplay.Enemies
             return this;
         }
 
-        private void Awake() => EnsureBrain();
+        private void Awake()
+        {
+            EnsureBrain();
+            _feedback = EnemyFeedback.Attach(gameObject);
+            _feedback.CanStep = () => enabled && Alive && _navAgent.enabled && _navAgent.isOnNavMesh && !_navAgent.isStopped;
+        }
 
         private void EnsureBrain()
         {
@@ -146,16 +152,27 @@ namespace ShadowVale.Gameplay.Enemies
         public void FireAtPlayer()
         {
             if (Time.time < _nextShot) return;
+            if (_feedback == null) _feedback = EnemyFeedback.Attach(gameObject);
             _nextShot = Time.time + fireInterval;
             var target = Target ?? ResolvePlayerTarget();
             if (target != null && !target.IsDead && ServiceLocator.TryResolve<IPlayerObservable>(out var player))
-                target.TakeDamage(damage, player.Position + Vector3.up, gameObject);
+            {
+                var victim = target as Component;
+                if (_feedback.Fire(player.Position + Vector3.up, victim != null ? victim.transform : null,
+                    obstructionMask, out var impact))
+                {
+                    if (target is Health health) health.TakeBulletDamage(damage, impact, gameObject, impact - transform.position);
+                    else target.TakeDamage(damage, impact, gameObject);
+                }
+            }
         }
 
         public void FireSuppressive(Vector3 point)
         {
             if (Time.time < _nextShot) return;
+            if (_feedback == null) _feedback = EnemyFeedback.Attach(gameObject);
             _nextShot = Time.time + fireInterval;
+            _feedback.Fire(point + Vector3.up, null, obstructionMask, out _);
         }
 
         private static IDamageable ResolvePlayerTarget() =>

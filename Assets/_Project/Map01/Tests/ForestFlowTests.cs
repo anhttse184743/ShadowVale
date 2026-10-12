@@ -344,6 +344,8 @@ namespace ShadowVale.Map01.Tests
             // One real hit through the guard's own weapon: exactly the balance damage, and no
             // second hit before the interval has passed.
             var guard = mission.Enemies.First(e => e.Alive);
+            // This test isolates damage/cooldown; obstruction behaviour has its own raycast test.
+            typeof(Map01EnemyController).GetField("obstructionMask", Private).SetValue(guard, (LayerMask)0);
             typeof(Map01EnemyController).GetField("_nextShot", Private).SetValue(guard, 0f);
             float before = playerHealth.Current;
             guard.FireAtPlayer();

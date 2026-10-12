@@ -75,14 +75,14 @@ namespace ShadowVale.Tests.EditMode.Gameplay
         }
 
         [Test]
-        public void AThreeRoundBurstClimbsBarelyADegree()
+        public void AThreeRoundBurstStaysUnderOneDegree()
         {
             // The burst length the design is built around. Anything more than about a degree
             // over three rounds and a controlled burst stops landing on a torso at range.
             var spread = new WeaponSpreadState();
             Vector2 total = Dump(spread, 3);
 
-            Assert.That(total.x, Is.InRange(0.9f, 1.3f));
+            Assert.That(total.x, Is.InRange(0.4f, 0.7f));
             Assert.AreEqual(0f, total.y, 1e-4f);
         }
 
@@ -102,8 +102,27 @@ namespace ShadowVale.Tests.EditMode.Gameplay
             var spread = new WeaponSpreadState();
             Vector2 total = Dump(spread, 30);
 
-            Assert.That(total.x, Is.InRange(24f, 28f), "roughly 26 degrees up over 30 rounds");
-            Assert.That(total.y, Is.InRange(6.5f, 8.5f), "and roughly 7.5 to the right");
+            Assert.That(total.x, Is.InRange(10f, 13f), "sustained fire climbs without throwing the view away");
+            Assert.That(total.y, Is.InRange(2f, 3f), "modest predictable sideways pull");
+        }
+
+        [TestCase(false)]
+        [TestCase(true)]
+        public void StationarySprintToggleDoesNotChangeAccuracy(bool sprint)
+        {
+            var stance = WeaponSpreadState.ResolveStance(true, false, sprint, 0f);
+            Assert.AreEqual(ShooterStance.Standing, stance);
+            Assert.LessOrEqual(WeaponSpreadState.StanceCone(stance, false), .4f);
+        }
+
+        [Test]
+        public void SprintPenaltyRequiresActualRunningAndClearsOnStopping()
+        {
+            Assert.AreEqual(ShooterStance.Running, WeaponSpreadState.ResolveStance(true, false, true, 6f));
+            Assert.AreEqual(ShooterStance.Walking, WeaponSpreadState.ResolveStance(true, false, true, 2f));
+            Assert.AreEqual(ShooterStance.Standing, WeaponSpreadState.ResolveStance(true, false, true, .1f));
+            Assert.AreEqual(ShooterStance.Sneak, WeaponSpreadState.ResolveStance(true, true, true, 0f));
+            Assert.AreEqual(ShooterStance.Airborne, WeaponSpreadState.ResolveStance(false, false, true, 0f));
         }
 
         [Test]

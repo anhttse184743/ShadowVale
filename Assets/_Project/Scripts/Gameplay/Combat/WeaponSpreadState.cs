@@ -49,18 +49,18 @@ namespace ShadowVale.Gameplay.Combat
         private const float BloomRecoveryPerSecond = 0.9f;
 
         /// <summary>Degrees of cone added at full bloom, on top of the stance's own.</summary>
-        private const float BloomConeDegrees = 2.5f;
+        private const float BloomConeDegrees = 0.9f;
 
         // The vertical climb starts gentle and steepens, which is what makes the first few
-        // rounds usable and a held trigger not. It totals about 26 degrees over a 30-round
-        // magazine, of which the first three account for barely one.
-        private const float VerticalFirstShot = 0.33f;
-        private const float VerticalPeak = 1.00f;
+        // rounds usable. It totals about 12 degrees over a 30-round magazine,
+        // with the first three accounting for about half a degree.
+        private const float VerticalFirstShot = 0.16f;
+        private const float VerticalPeak = 0.45f;
         private const int VerticalRampShots = 12;
 
-        // Horizontal drift arrives late and settles into a steady pull right — about 7.5 degrees
+        // Horizontal drift arrives late and settles into a steady pull right — about 2.6 degrees
         // across the magazine. Late enough that a burst is a vertical line, not a diagonal.
-        private const float HorizontalPeak = 0.34f;
+        private const float HorizontalPeak = 0.12f;
         private const int HorizontalRampShots = 8;
 
         private float _lastShotTime = float.NegativeInfinity;
@@ -85,12 +85,20 @@ namespace ShadowVale.Gameplay.Combat
         /// </summary>
         public static float StanceCone(ShooterStance stance, bool aiming) => stance switch
         {
-            ShooterStance.Sneak => aiming ? 0.14f : 1.10f,
-            ShooterStance.Standing => aiming ? 0.20f : 1.60f,
-            ShooterStance.Walking => aiming ? 0.55f : 2.40f,
-            ShooterStance.Running => 5.50f,
+            ShooterStance.Sneak => aiming ? 0.06f : 0.25f,
+            ShooterStance.Standing => aiming ? 0.10f : 0.40f,
+            ShooterStance.Walking => aiming ? 0.35f : 1.20f,
+            ShooterStance.Running => 3.00f,
             _ => aiming ? 3.00f : 7.00f,
         };
+
+        public static ShooterStance ResolveStance(bool grounded, bool sneaking, bool sprintEnabled, float speed)
+        {
+            if (!grounded) return ShooterStance.Airborne;
+            if (sneaking) return ShooterStance.Sneak;
+            if (speed <= 0.2f) return ShooterStance.Standing;
+            return sprintEnabled && speed > 2.7f ? ShooterStance.Running : ShooterStance.Walking;
+        }
 
         /// <summary>
         /// Registers a shot and returns the view kick it causes, in degrees: x rises, y pulls

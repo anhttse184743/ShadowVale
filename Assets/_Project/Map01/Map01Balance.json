@@ -1,5 +1,5 @@
 {
-  "playerHP": 100, "stamina": 100,
+  "playerHP": 100, "stamina": 300,
   "walkSpeed": 4.2, "sprintSpeed": 7, "crouchSpeed": 2.3,
   "staminaDrain": 12, "staminaRecovery": 16,
   "interactRange": 3.5, "stoneRange": 20, "stoneNoise": 14,

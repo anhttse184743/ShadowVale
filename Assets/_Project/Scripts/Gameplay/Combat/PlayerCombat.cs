@@ -181,6 +181,7 @@ namespace ShadowVale.Gameplay.Combat
         [Header("Tracers")]
         [Tooltip("Bullet streak spawned per shot. Optional — shooting works without it.")]
         [SerializeField] private ShotTracer tracerPrefab;
+        public ShotTracer TracerPrefab => tracerPrefab;
 
         [Tooltip("How many streaks can overlap. A full pool reuses the oldest.")]
         [SerializeField] private int tracerPoolSize = 12;
@@ -597,10 +598,8 @@ namespace ShadowVale.Gameplay.Combat
         private ShooterStance CurrentStance()
         {
             if (_controller == null) return ShooterStance.Standing;
-            if (_characterController != null && !_characterController.isGrounded) return ShooterStance.Airborne;
-            if (_controller.IsSprinting) return ShooterStance.Running;
-            if (_controller.IsSneaking) return ShooterStance.Sneak;
-            return _controller.IsMoving ? ShooterStance.Walking : ShooterStance.Standing;
+            return WeaponSpreadState.ResolveStance(_characterController == null || _characterController.isGrounded,
+                _controller.IsSneaking, _controller.IsSprinting, _controller.PlanarSpeed);
         }
 
         private void ReadReloadInput()
@@ -755,9 +754,8 @@ namespace ShadowVale.Gameplay.Combat
             // trigger widens it. The weapon's own HipSpread is no longer consulted: one flat
             // number could not tell a crouched aimed tap from a shot fired mid-jump.
             ShooterStance stance = CurrentStance();
-            direction = WeaponSpreadState.Scatter(direction, _spread.ConeHalfAngle(stance, _aiming));
-
             Vector2 kick = _spread.Fire(Time.time);
+            direction = WeaponSpreadState.Scatter(direction, _spread.ConeHalfAngle(stance, _aiming));
             if (cameraRig != null) cameraRig.AddRecoil(kick.x, kick.y);
 
             // The trace starts at the camera so the shot lands on the crosshair, but the streak
@@ -766,7 +764,9 @@ namespace ShadowVale.Gameplay.Combat
             if (Physics.Raycast(origin, direction, out RaycastHit hit, gun.Range,
                     hitMask, QueryTriggerInteraction.Ignore))
             {
-                ApplyDamage(hit.collider, gun.Damage, hit.point);
+                var victim = hit.collider.GetComponentInParent<Health>();
+                if (victim != null) victim.TakeBulletDamage(gun.Damage, hit.point, gameObject, direction);
+                else ApplyDamage(hit.collider, gun.Damage, hit.point);
                 endPoint = hit.point;
             }
             else

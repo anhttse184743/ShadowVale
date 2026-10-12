@@ -80,7 +80,8 @@ namespace ShadowVale.Gameplay.Audio
         }
 
         public void PlayOneShot(AudioClip clip, Vector3 position, float volume = 1f, float pitch = 1f,
-            float pan = 0f, float spatialBlend = 1f, float startTime = 0f, float duration = 0f)
+            float pan = 0f, float spatialBlend = 1f, float startTime = 0f, float duration = 0f,
+            float nearDistance = 2f, float farDistance = 0f)
         {
             if (clip == null || volume <= 0f) return;
 
@@ -90,8 +91,9 @@ namespace ShadowVale.Gameplay.Audio
             source.pitch = pitch;
             source.panStereo = Mathf.Clamp(pan, -1f, 1f);
             source.spatialBlend = Mathf.Clamp01(spatialBlend);
-            source.minDistance = 2f;
-            source.maxDistance = maxDistance;
+            source.minDistance = Mathf.Max(.01f, nearDistance);
+            source.maxDistance = Mathf.Max(source.minDistance + .01f, farDistance > 0f ? farDistance : maxDistance);
+            source.dopplerLevel = 0f;
             source.loop = false;
 
             // Clamp rather than reject: a slice authored against a clip that was later

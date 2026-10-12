@@ -20,6 +20,7 @@ namespace ShadowVale.Core.Services
         /// <param name="startTime">Seconds into the clip to begin. Skips silent lead-in.</param>
         /// <param name="duration">Seconds of clip to play; 0 plays to the end.</param>
         void PlayOneShot(AudioClip clip, Vector3 position, float volume = 1f, float pitch = 1f,
-            float pan = 0f, float spatialBlend = 1f, float startTime = 0f, float duration = 0f);
+            float pan = 0f, float spatialBlend = 1f, float startTime = 0f, float duration = 0f,
+            float nearDistance = 2f, float farDistance = 0f);
     }
 }

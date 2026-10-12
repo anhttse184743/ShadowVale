@@ -16,6 +16,7 @@ namespace ShadowVale.Gameplay.Audio
     public sealed class CombatAudio : MonoBehaviour
     {
         [SerializeField] private AudioSlice gunshot;
+        public AudioSlice Gunshot => gunshot;
         [SerializeField] private AudioSlice melee;
 
         [Range(0f, 1f)] [SerializeField] private float volume = 0.85f;
