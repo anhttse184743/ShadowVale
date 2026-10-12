@@ -41,6 +41,12 @@ namespace ShadowVale.Map01
         private Health _playerHealth;
         private EnemyFeedback _feedback;
         private IPlayerObservable _playerView;
+        private PlayerController _playerController;
+        private ShotAccuracyProfile _accuracy = new ShotAccuracyProfile();
+        /// <summary>How well he shoots (Map01Balance.json guardAccuracy); tests that isolate damage turn it off.</summary>
+        public ShotAccuracyProfile Accuracy { get => _accuracy; set => _accuracy = value ?? new ShotAccuracyProfile(); }
+        private readonly AimTracker _aim = new AimTracker();
+        private System.Random _shotRng;
         private NavMeshEnemyBody _body;
         private EnemyBrain _brain;
         private readonly EnemyTuning _tuning = new EnemyTuning();
@@ -132,6 +138,7 @@ namespace ShadowVale.Map01
             // guard's serialized fields.
             damage = mission.Weapon.damage * mission.Settings.guardDamageScale;
             fireInterval = mission.Settings.guardShotInterval;
+            _accuracy = mission.Settings.guardAccuracy ?? new ShotAccuracyProfile();
             _baseDetectionSeconds = _tuning.DetectionSeconds = Mathf.Max(.1f, mission.Settings.detectionSeconds);
             _hiddenScale = mission.Settings.hiddenVisionScale;
             _crouchScale = mission.Settings.crouchVisionScale;
@@ -522,6 +529,7 @@ namespace ShadowVale.Map01
             if (controller != null)
             {
                 _player = controller.transform;
+                _playerController = controller;
                 _playerHealth = controller.GetComponent<Health>();
                 _playerView = PlayerStealthAdapter.For(controller.gameObject);
             }
@@ -713,7 +721,18 @@ namespace ShadowVale.Map01
             // round goes his way when he is in reach.
             if (++_shots % 3 == 0 && HostageInReach(out var hostage) && SafeShot(hostage)) { FireAtHostage(hostage, damage); return; }
             _feedback ??= EnemyFeedback.Attach(gameObject);
-            if (_feedback.Fire(_player.position + Vector3.up, _player, obstructionMask, out var impact))
+            Vector3 aim = _player.position + Vector3.up;
+            // Not every round finds him (ShotAccuracy): a miss flies past him, tracer and all.
+            var shot = ShotAccuracy.For(transform.position, _agent != null ? _agent.velocity : Vector3.zero, attackRange,
+                _aim.Shot(Time.time), IsBoss, _player.position, _playerView, _playerController);
+            _shotRng ??= ShotAccuracy.RngFor(LegacyId);
+            if (_shotRng.NextDouble() >= ShotAccuracy.HitChance(_accuracy, shot))
+            {
+                Vector3 chest = transform.position + Vector3.up * 1.3f;
+                _feedback.Fire(ShotAccuracy.MissPoint(chest, aim, _shotRng), null, obstructionMask, out _);
+                return;
+            }
+            if (_feedback.Fire(aim, _player, obstructionMask, out var impact))
                 _playerHealth.TakeBulletDamage(damage, impact, gameObject, impact - transform.position);
         }
 

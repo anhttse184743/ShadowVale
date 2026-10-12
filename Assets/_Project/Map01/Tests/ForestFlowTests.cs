@@ -347,11 +347,14 @@ namespace ShadowVale.Map01.Tests
             // This test isolates damage/cooldown; obstruction behaviour has its own raycast test.
             typeof(Map01EnemyController).GetField("obstructionMask", Private).SetValue(guard, (LayerMask)0);
             typeof(Map01EnemyController).GetField("_nextShot", Private).SetValue(guard, 0f);
+            var accuracy = guard.Accuracy;
+            guard.Accuracy = new ShadowVale.Gameplay.Enemies.ShotAccuracyProfile { enabled = false }; // Hit chance: ShotAccuracyTests.
             float before = playerHealth.Current;
             guard.FireAtPlayer();
             Assert.AreEqual(before - expected, playerHealth.Current, 1e-3f);
             guard.FireAtPlayer();
             Assert.AreEqual(before - expected, playerHealth.Current, 1e-3f, "A guard must not fire again before guardShotInterval.");
+            guard.Accuracy = accuracy;
 
             // The commander keeps his multiplier on top of the baseline rather than being reset by it.
             quest.RestoreStage(Map01Quest.BossStage); // Spawns him, as reporting the outposts would.

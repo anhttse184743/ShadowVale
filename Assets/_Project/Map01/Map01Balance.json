@@ -6,5 +6,8 @@
   "guardDamageScale": 0.35, "guardShotInterval": 1.6,
   "detectionSeconds": 1.5, "hiddenVisionScale": 0.32, "crouchVisionScale": 0.6,
   "medkitHeal": 45, "followDistance": 3, "hungHP": 150, "searchSeconds": 8, "suppressSeconds": 1.5,
-  "startingStones": 6, "guardDropAmmo": 30, "guardDropMedkits": 1
+  "startingStones": 6, "guardDropAmmo": 30, "guardDropMedkits": 1,
+  "guardAccuracy": { "enabled": true, "closeHit": 0.85, "closeDistance": 5, "farHit": 0.35,
+    "sprintingTarget": 0.55, "walkingTarget": 0.8, "crouchedTarget": 0.8, "coverTarget": 0.6, "movingShooter": 0.6,
+    "settleSeconds": 2.5, "firstShot": 0.5, "bossSkill": 1.25, "minHit": 0.05, "maxHit": 0.95 }
 }

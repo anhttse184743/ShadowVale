@@ -103,6 +103,7 @@ namespace ShadowVale.Map01.Tests
             typeof(Map01EnemyController).GetField("obstructionMask", Private).SetValue(guard, (LayerMask)0);
             typeof(Map01EnemyController).GetField("_shots", Private).SetValue(guard, 0);
             typeof(Map01EnemyController).GetField("_nextShot", Private).SetValue(guard, 0f);
+            guard.Accuracy = new ShotAccuracyProfile { enabled = false }; // A sure hit; the hit chance has its own tests.
             float hp = mission.ModernHealth.Current;
             guard.FireAtPlayer();
             Assert.Less(mission.ModernHealth.Current, hp);

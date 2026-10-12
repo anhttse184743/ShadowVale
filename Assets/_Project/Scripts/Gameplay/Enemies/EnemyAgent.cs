@@ -27,6 +27,7 @@ namespace ShadowVale.Gameplay.Enemies
         [SerializeField] private float visionRange = 18f, visionAngle = 100f, hearingScale = 1f;
         [SerializeField] private float attackRange = 18f, damage = 4f, fireInterval = 1.2f;
         [SerializeField] private LayerMask obstructionMask = ~0;
+        [SerializeField] private ShotAccuracyProfile accuracy = new ShotAccuracyProfile();
 
         private NavMeshAgent _navAgent;
         private Health _health;
@@ -38,7 +39,11 @@ namespace ShadowVale.Gameplay.Enemies
         private float _lastDistance = float.PositiveInfinity, _lastHealth, _nextShot;
         private NoiseSystem _noise;
         private EnemyFeedback _feedback;
+        private readonly AimTracker _aim = new AimTracker();
+        private System.Random _shotRng;
 
+        /// <summary>How well he shoots; tests that isolate damage turn it off.</summary>
+        public ShotAccuracyProfile Accuracy { get => accuracy; set => accuracy = value ?? new ShotAccuracyProfile(); }
         /// <summary>The map's rules on top of the shared FSM (alternative targets, cover, retreat).</summary>
         public IEnemyTactics Tactics { get; set; }
         /// <summary>Who this enemy shoots: by default the IDamageable on the registered player.</summary>
@@ -158,7 +163,17 @@ namespace ShadowVale.Gameplay.Enemies
             if (target != null && !target.IsDead && ServiceLocator.TryResolve<IPlayerObservable>(out var player))
             {
                 var victim = target as Component;
-                if (_feedback.Fire(player.Position + Vector3.up, victim != null ? victim.transform : null,
+                Vector3 aim = player.Position + Vector3.up;
+                var controller = player is Component pc ? pc.GetComponentInParent<ShadowVale.Gameplay.Player.PlayerController>() : null;
+                var shot = ShotAccuracy.For(transform.position, _navAgent != null ? _navAgent.velocity : Vector3.zero, attackRange,
+                    _aim.Shot(Time.time), _tuning.IsBoss, player.Position, player, controller);
+                _shotRng ??= ShotAccuracy.RngFor(Id);
+                if (_shotRng.NextDouble() >= ShotAccuracy.HitChance(accuracy, shot))
+                {
+                    _feedback.Fire(ShotAccuracy.MissPoint(transform.position + Vector3.up * 1.3f, aim, _shotRng), null, obstructionMask, out _);
+                    return;
+                }
+                if (_feedback.Fire(aim, victim != null ? victim.transform : null,
                     obstructionMask, out var impact))
                 {
                     if (target is Health health) health.TakeBulletDamage(damage, impact, gameObject, impact - transform.position);
