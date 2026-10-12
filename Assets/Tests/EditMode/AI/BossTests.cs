@@ -26,16 +26,44 @@ namespace ShadowVale.Tests.EditMode.AI
         {
             var d = new BossDirector(Profile);
             Assert.IsFalse(d.Tick(Sense(0)).Relocate, "A fight starts where he stands.");
-            Assert.IsFalse(d.Tick(Sense(11.9f)).Relocate);
-            var move = d.Tick(Sense(12f));
+            Assert.IsFalse(d.Tick(Sense(3.4f)).Relocate);
+            var move = d.Tick(Sense(3.5f));
             Assert.IsTrue(move.Relocate);
             Assert.AreEqual("interval", move.RelocateReason);
-            Assert.IsFalse(d.Tick(Sense(13f)).Relocate, "The clock restarts at the new spot.");
+            Assert.IsFalse(d.Tick(Sense(4f)).Relocate, "The clock restarts at the new spot.");
 
-            var hurt = d.Tick(Sense(14f, hp: .84f));
+            var hurt = d.Tick(Sense(5f, hp: .84f));
             Assert.IsTrue(hurt.Relocate, "15% of his health lost in one spot moves him.");
             Assert.AreEqual("hurt", hurt.RelocateReason);
-            Assert.IsFalse(d.Tick(Sense(15f, hp: .8f)).Relocate, "Measured from the spot he moved to.");
+            Assert.IsFalse(d.Tick(Sense(5.5f, hp: .8f)).Relocate, "Measured from the spot he moved to.");
+        }
+
+        [Test]
+        public void TheStopIsCountedFromHisArrivalAndVaries()
+        {
+            var d = new BossDirector(Profile);
+            d.Tick(Sense(0));
+            for (float t = 0; t < 10; t += .5f)
+                Assert.IsFalse(d.Tick(new BossSense(t, true, 1f - t * .02f, Vector3.zero, new Vector3(0, 0, 15), false, settled: false)).Relocate,
+                    "Running to his position, however long, and hit on the way: no new move yet.");
+            Assert.IsFalse(d.Tick(Sense(10f, hp: .8f)).Relocate, "Arrived.");
+            Assert.IsTrue(d.Tick(Sense(13.5f, hp: .8f)).Relocate, "A short stop there, then on the move again.");
+
+            var stops = new HashSet<float>();
+            var jittered = new BossDirector(Profile, new System.Random(3));
+            float now = 0, since = 0;
+            jittered.Tick(Sense(0));
+            while (stops.Count < 5 && now < 100)
+            {
+                now += .05f;
+                if (!jittered.Tick(Sense(now)).Relocate) continue;
+                float stop = now - since;
+                Assert.That(stop, Is.InRange(Profile.RelocateIntervalSeconds * (1 - BossDirector.IntervalJitter) - .06f,
+                    Profile.RelocateIntervalSeconds * (1 + BossDirector.IntervalJitter) + .06f));
+                stops.Add(Mathf.Round(stop * 10));
+                since = now;
+            }
+            Assert.Greater(stops.Count, 2, "Stops of different lengths: the rhythm cannot be timed.");
         }
 
         [Test]
@@ -170,6 +198,47 @@ namespace ShadowVale.Tests.EditMode.AI
             CollectionAssert.DoesNotContain(seen, tooClose);
             CollectionAssert.DoesNotContain(seen, tooFar);
             CollectionAssert.DoesNotContain(seen, atPlayer);
+        }
+
+        [Test]
+        public void CallingReinforcementsHeFallsBackTowardsThem()
+        {
+            var d = new BossDirector(Profile);
+            d.Tick(Sense(0, hp: .6f));
+            var call = d.Tick(Sense(1, hp: .49f));
+            Assert.IsTrue(call.CallReinforcements);
+            Assert.IsTrue(call.Relocate, "He does not hold a spot the player is winning while help is on the way.");
+            Assert.AreEqual("regroup", call.RelocateReason);
+
+            var w = new World();
+            int here = w.Add(Vector3.zero);
+            int forward = w.Add(new Vector3(8, 0, 8));  // 14 m from the player, within his reach.
+            int back = w.Add(new Vector3(0, 0, -10));   // 30 m from the player.
+            var player = new Vector3(0, 0, 20);
+            Assert.IsTrue(BossRelocation.TryPick(w, Profile, Vector3.zero, player, here, null, out int node, out _, fightRange: 18f));
+            Assert.AreEqual(forward, node, "Fighting: a position from which he can hit the player scores higher.");
+            Assert.IsTrue(BossRelocation.TryPick(w, Profile, Vector3.zero, player, here, null, out node, out _, 18f, minPlayerDistance: 20f));
+            Assert.AreEqual(back, node, "Regrouping: never closer to the player than he is.");
+        }
+
+        [Test]
+        public void TheCommanderWearsAStarOverHisHead()
+        {
+            var go = new GameObject("commander");
+            try
+            {
+                var marker = CommanderMarker.Attach(go);
+                Assert.AreSame(marker, CommanderMarker.Attach(go), "Attached twice: still one marker.");
+                var star = go.transform.Find(CommanderMarker.StarName);
+                Assert.IsNotNull(star);
+                Assert.AreEqual(1, go.GetComponentsInChildren<MeshRenderer>().Length, "One star.");
+                Assert.Greater(star.localPosition.y, 2f, "Above his head.");
+                Assert.IsNull(star.GetComponent<Collider>(), "Never blocks a shot or a line of sight.");
+                var mesh = star.GetComponent<MeshFilter>().sharedMesh;
+                Assert.AreEqual(11, mesh.vertexCount, "Centre plus five points and five notches.");
+                Assert.AreEqual(2 * 10 * 3, mesh.triangles.Length, "Both faces.");
+            }
+            finally { Object.DestroyImmediate(go); }
         }
 
         [Test]

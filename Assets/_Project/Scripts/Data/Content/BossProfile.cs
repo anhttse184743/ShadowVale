@@ -13,8 +13,9 @@ namespace ShadowVale.Data.Content
         public float VisionMultiplier { get; set; } = 1.2f;
 
         // Relocation between cover positions.
-        /// <summary>Seconds of fighting in one spot before moving on; 0 = only when hurt.</summary>
-        public float RelocateIntervalSeconds { get; set; } = 12f;
+        /// <summary>Seconds of fighting in one spot (from his arrival, ±30%) before moving on; 0 = only when hurt.
+        /// Short on purpose: a commander on the move, stopping briefly to fire. Was 12 s until 12/10/2026.</summary>
+        public float RelocateIntervalSeconds { get; set; } = 3.5f;
         /// <summary>Share of max health lost since the last move that makes him move at once; 0 = never.</summary>
         public float RelocateDamageFraction { get; set; } = 0.15f;
         public float RelocateMinDistance { get; set; } = 6f;

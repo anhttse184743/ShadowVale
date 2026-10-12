@@ -178,6 +178,32 @@ namespace ShadowVale.Tests.EditMode.AI
         }
 
         [Test]
+        public void ACommanderTakesCoverUnderFireThenWatchesInsteadOfHunting()
+        {
+            var tuning = new EnemyTuning { IsBoss = true };
+            ShadowVale.Gameplay.Enemies.Boss.BossBehaviour.ApplyBossTactics(tuning);
+            var cover = new Vector3(-6, 0, 0);
+            Build(tuning, new CoverNearby { Cover = cover });
+            var player = new Vector3(0, 0, 12);
+            SpotUntilEngaged(player);
+            Tick(true, player);
+            Assert.AreEqual(EnemyStateId.TakeCover, _brain.State, "In range, yet he goes to his cover — firing on the way.");
+            Assert.AreEqual(cover, _body.Destination);
+            Assert.Greater(_weapon.Aimed, 0);
+
+            _body.Arrive(); Tick(true, player); Tick(true, player);
+            Assert.AreEqual(EnemyStateId.Engage, _brain.State);
+            Tick(false, player, times: 30);
+            int suppressed = _weapon.Suppressive;
+            Assert.Greater(suppressed, 0, "Lost sight: he suppresses the spot first.");
+            Tick(false, player, times: 60);
+            Assert.AreEqual(EnemyStateId.Engage, _brain.State, "9 s later he still holds — a rifleman would be hunting by now.");
+            Assert.AreEqual(cover, _body.Destination, "He never set off towards the player.");
+            Assert.AreEqual(player, _body.LastFaced, "Watching where the player went.");
+            Assert.AreEqual(suppressed, _weapon.Suppressive, "Past the suppression window he watches, not wastes fire.");
+        }
+
+        [Test]
         public void WithCoverNearbyHeTakesItThenHoldsItInsteadOfChasing()
         {
             var cover = new Vector3(4, 0, 0);

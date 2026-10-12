@@ -18,12 +18,17 @@ namespace ShadowVale.AI.Boss
         /// <summary>How many of the best-scoring nodes the random pick is made from.</summary>
         public const int Shortlist = 3;
 
+        /// <param name="fightRange">His weapon's reach: a node within it of the player scores higher, so a
+        /// move does not leave him watching a player he cannot hit. 0 = ignore.</param>
+        /// <param name="minPlayerDistance">Keep at least this far from the player, if more than the profile's
+        /// <see cref="BossProfile.RelocateMinPlayerDistance"/> (regrouping: as far as he is now).</param>
         public static bool TryPick(IWorldQuery graph, BossProfile profile, Vector3 from, Vector3 player, int avoidNode,
-            System.Random rng, out int node, out Vector3 position)
+            System.Random rng, out int node, out Vector3 position, float fightRange = 0f, float minPlayerDistance = 0f)
         {
             node = -1; position = from;
             if (graph == null || graph.NodeCount == 0) return false;
             int playerNode = graph.NearestNode(player);
+            float minToPlayer = Mathf.Max(profile.RelocateMinPlayerDistance, minPlayerDistance);
             var scored = new List<(double score, int node)>();
             foreach (int c in graph.CoverNodes)
             {
@@ -31,8 +36,10 @@ namespace ShadowVale.AI.Boss
                 Vector3 at = graph.NodePosition(c);
                 float move = Flat(at - from), toPlayer = Flat(at - player);
                 if (move < profile.RelocateMinDistance || move > profile.RelocateMaxDistance) continue;
-                if (toPlayer < profile.RelocateMinPlayerDistance) continue;
-                scored.Add((Score(graph, c, at, player, playerNode, move, profile), c));
+                if (toPlayer < minToPlayer) continue;
+                double score = Score(graph, c, at, player, playerNode, move, profile);
+                if (fightRange > 0 && toPlayer <= fightRange) score += .5;
+                scored.Add((score, c));
             }
             if (scored.Count == 0) return false;
             scored.Sort((a, b) => b.score != a.score ? b.score.CompareTo(a.score) : a.node.CompareTo(b.node));

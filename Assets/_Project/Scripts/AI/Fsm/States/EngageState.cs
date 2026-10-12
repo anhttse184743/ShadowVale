@@ -39,7 +39,8 @@ namespace ShadowVale.AI.Fsm.States
             }
             body.Stop(); body.Animate(false);
             body.Face(m.LastKnownPlayerPosition);
-            ctx.Weapon.FireSuppressive(m.LastKnownPlayerPosition);
+            // Past the suppression window only one who does not hunt is still here: he watches.
+            if (ctx.Now < m.SuppressUntil) ctx.Weapon.FireSuppressive(m.LastKnownPlayerPosition);
         }
     }
 }

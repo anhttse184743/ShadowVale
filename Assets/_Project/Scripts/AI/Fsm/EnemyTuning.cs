@@ -66,6 +66,13 @@ namespace ShadowVale.AI.Fsm
         /// capture rate against the exploit bots.
         /// </summary>
         public bool EngageInRangeFirst = true;
+        /// <summary>
+        /// Having lost sight while fighting, he walks to where the player was last seen (and on to a
+        /// search). Off (bosses): he stays where he is, watching that spot and suppressing it for
+        /// <see cref="SuppressSeconds"/>, as long as he is fighting — a commander does not walk up to
+        /// the bush the player hides in; he lets grenades and his men do it.
+        /// </summary>
+        public bool HuntWhenLost = true;
 
         /// <summary>Whether a guard on an assignment with this role holds it when the player is out of range.</summary>
         public bool Holds(string role)

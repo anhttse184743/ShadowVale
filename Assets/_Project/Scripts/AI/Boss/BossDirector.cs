@@ -14,11 +14,14 @@ namespace ShadowVale.AI.Boss
         public readonly Vector3 PlayerPosition;
         /// <summary>The player is out of the boss's sight or in cover — sitting it out.</summary>
         public readonly bool PlayerSheltered;
+        /// <summary>At his position (or given up on reaching it), not on the way there.</summary>
+        public readonly bool Settled;
 
-        public BossSense(float now, bool engaged, float healthFraction, Vector3 position, Vector3 playerPosition, bool playerSheltered)
+        public BossSense(float now, bool engaged, float healthFraction, Vector3 position, Vector3 playerPosition, bool playerSheltered,
+            bool settled = true)
         {
             Now = now; Engaged = engaged; HealthFraction = healthFraction; Position = position;
-            PlayerPosition = playerPosition; PlayerSheltered = playerSheltered;
+            PlayerPosition = playerPosition; PlayerSheltered = playerSheltered; Settled = settled;
         }
     }
 
@@ -26,7 +29,7 @@ namespace ShadowVale.AI.Boss
     public struct BossDecision
     {
         public bool Relocate;
-        /// <summary>interval | hurt.</summary>
+        /// <summary>interval | hurt | regroup (falling back towards the reinforcements he just called).</summary>
         public string RelocateReason;
         public bool ThrowGrenade;
         public Vector3 GrenadeTarget;
@@ -39,11 +42,14 @@ namespace ShadowVale.AI.Boss
     /// FSM, not as a seventh state: relocating is a new position handed to TakeCover, the grenade
     /// and the radio call are actions. Pure and clock-driven, so every rule is unit-tested.
     /// <list type="bullet">
-    /// <item>Relocate: after <see cref="BossProfile.RelocateIntervalSeconds"/> of fighting in one spot, or at
-    /// once after losing <see cref="BossProfile.RelocateDamageFraction"/> of his health there.</item>
+    /// <item>Relocate: after <see cref="BossProfile.RelocateIntervalSeconds"/> (±<see cref="IntervalJitter"/>) of
+    /// fighting in one spot, counted from his arrival, or at once after losing
+    /// <see cref="BossProfile.RelocateDamageFraction"/> of his health there. A short interval keeps him
+    /// on the move: run (firing), stop briefly, run on.</item>
     /// <item>Grenade: the player has stayed within <see cref="BossProfile.GrenadeCampRadius"/> for
     /// <see cref="BossProfile.GrenadeCampSeconds"/>, sheltered, in throwing range, cooldown over.</item>
-    /// <item>Reinforcements: once, the first time health falls below <see cref="BossProfile.ReinforceHpThreshold"/> in a fight.</item>
+    /// <item>Reinforcements: once, the first time health falls below <see cref="BossProfile.ReinforceHpThreshold"/> in a fight,
+    /// with a relocation away from the player ("regroup") so he lives until they arrive.</item>
     /// </list>
     /// </summary>
     public sealed class BossDirector
@@ -51,13 +57,29 @@ namespace ShadowVale.AI.Boss
         public BossProfile Profile { get; }
         public bool ReinforcementsCalled { get; private set; }
 
+        /// <summary>Each stop lasts the interval times 1 ± this, so the rhythm cannot be timed.</summary>
+        public const float IntervalJitter = .3f;
+
+        private readonly System.Random _rng;
         private bool _fighting;
-        private float _spotSince, _hpAtSpot = 1f;
+        private float _spotSince, _hpAtSpot = 1f, _interval;
         private float _campSince = float.NaN;
         private Vector3 _campAnchor;
         private float _grenadeReadyAt;
 
-        public BossDirector(BossProfile profile) { Profile = profile ?? new BossProfile(); }
+        /// <param name="rng">Varies each stop's length; null = exactly the profile's interval.</param>
+        public BossDirector(BossProfile profile, System.Random rng = null)
+        {
+            Profile = profile ?? new BossProfile();
+            _rng = rng;
+            _interval = NextInterval();
+        }
+
+        private float NextInterval()
+        {
+            float i = Profile.RelocateIntervalSeconds;
+            return _rng == null ? i : i * (1f + IntervalJitter * (float)(_rng.NextDouble() * 2 - 1));
+        }
 
         public BossDecision Tick(in BossSense s)
         {
@@ -81,15 +103,25 @@ namespace ShadowVale.AI.Boss
             {
                 ReinforcementsCalled = true;
                 d.CallReinforcements = true;
+                // And falls back towards them rather than holding a spot the player is winning.
+                d.Relocate = true;
+                d.RelocateReason = "regroup";
+                _spotSince = s.Now; _hpAtSpot = s.HealthFraction;
+            }
+            else if (!s.Settled)
+            {
+                // On the way: the stop and the damage taken there count from his arrival.
+                _spotSince = s.Now; _hpAtSpot = s.HealthFraction;
             }
 
-            bool overstayed = p.RelocateIntervalSeconds > 0 && s.Now - _spotSince >= p.RelocateIntervalSeconds;
+            bool overstayed = p.RelocateIntervalSeconds > 0 && s.Now - _spotSince >= _interval;
             bool hurtHere = p.RelocateDamageFraction > 0 && _hpAtSpot - s.HealthFraction >= p.RelocateDamageFraction;
             if (overstayed || hurtHere)
             {
                 d.Relocate = true;
                 d.RelocateReason = hurtHere ? "hurt" : "interval";
                 _spotSince = s.Now; _hpAtSpot = s.HealthFraction;
+                _interval = NextInterval();
             }
 
             if (!s.PlayerSheltered || Flat(s.PlayerPosition - _campAnchor) > p.GrenadeCampRadius || float.IsNaN(_campSince))
