@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using ShadowVale.Gameplay.Player;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,8 +10,10 @@ namespace ShadowVale.Editor
     /// Nam's game model, exported from his Blender master (chuyen_dong, blender_scripts/export_nam_model.py):
     /// the rig with its finger bones, the body, the two hands, his webbing gear and the camo pack.
     /// <list type="bullet">
-    /// <item>Its Humanoid avatar gets the 30 finger bones, so the fingers of every Blender clip (the grip on
-    /// the AK, the knife, the binoculars) play in game instead of a closed fist.</item>
+    /// <item>His fingers play straight from the clips: they are left out of the Humanoid avatar, so the clips'
+    /// finger bones come through as plain (generic) curves on the same skeleton, exactly as posed in Blender.
+    /// Mapped as Humanoid fingers they lost 15-35 deg of every middle and end phalanx: Humanoid works out its
+    /// own curl axis from the hand's shape, which is not the axis the rig curls them about.</item>
     /// <item>Player.prefab's "Model" keeps its own GameObject and Animator (PlayerController and PlayerCombat
     /// point at them) but its contents become the new model; the WeaponAnchor moves to the new right hand
     /// with its seat unchanged.</item>
@@ -24,9 +27,7 @@ namespace ShadowVale.Editor
         public const string PrefabPath = "Assets/_Project/Prefabs/Player/Player.prefab";
         private const string TextureFolder = "Assets/_Project/Art/Characters/Player/Textures/";
         private static readonly string[] NormalMaps = { "T_Nam_BaloRanRi_Normal.png" };
-        private static readonly string[] RigFingers = { "Thumb", "Index", "Middle", "Ring", "Pinky" };
         private static readonly string[] HumanFingers = { "Thumb", "Index", "Middle", "Ring", "Little" };
-        private static readonly string[] Phalanges = { "Proximal", "Intermediate", "Distal" };
 
         /// <summary>The model in the project is the one exported with his fingers.</summary>
         public static bool HasFingers
@@ -42,7 +43,7 @@ namespace ShadowVale.Editor
         public static void Run()
         {
             PrepareTextures();
-            MapFingers();
+            SetUpAvatar();
             RebuildPrefabModel();
             AssetDatabase.SaveAssets();
         }
@@ -64,12 +65,12 @@ namespace ShadowVale.Editor
         }
 
         /// <summary>
-        /// Adds the finger bones to the avatar, and makes its reference pose the model's own rest pose. The
+        /// Keeps the fingers out of the avatar (see above) and makes its reference pose the model's own rest pose. The
         /// model and every Nam clip come out of the same Blender rig, whose rest is a clean T-pose; the pose the
         /// avatar kept from the first model (arms 12-19 deg, thighs 21-23 deg and the hips 7.5 cm off that rig)
         /// made the clips read differently in game than in Blender.
         /// </summary>
-        public static void MapFingers()
+        public static void SetUpAvatar()
         {
             var importer = AssetImporter.GetAtPath(ModelPath) as ModelImporter;
             var model = AssetDatabase.LoadAssetAtPath<GameObject>(ModelPath);
@@ -78,22 +79,10 @@ namespace ShadowVale.Editor
             var names = new HashSet<string>(all.Select(t => t.name));
             HumanDescription description = importer.humanDescription;
 
-            List<HumanBone> human = description.human.Where(h => names.Contains(h.boneName)).ToList();
-            bool changed = human.Count != description.human.Length;
-            int added = 0;
-            foreach (string side in new[] { "Left", "Right" })
-                for (int f = 0; f < RigFingers.Length; f++)
-                    for (int p = 0; p < Phalanges.Length; p++)
-                    {
-                        string bone = $"{side}Hand{RigFingers[f]}{p + 1}";
-                        string humanName = $"{side} {HumanFingers[f]} {Phalanges[p]}";
-                        if (!names.Contains(bone) || human.Any(h => h.humanName == humanName)) continue;
-                        var mapped = new HumanBone { boneName = bone, humanName = humanName };
-                        mapped.limit.useDefaultValues = true;
-                        human.Add(mapped);
-                        added++;
-                    }
-            changed |= added > 0;
+            List<HumanBone> human = description.human
+                .Where(h => names.Contains(h.boneName) && !HumanFingers.Any(f => h.humanName.Contains(f))).ToList();
+            int dropped = description.human.Length - human.Count;
+            bool changed = dropped > 0;
 
             var stored = new Dictionary<string, SkeletonBone>();
             foreach (SkeletonBone bone in description.skeleton.Skip(1)) stored[bone.name] = bone;
@@ -115,6 +104,14 @@ namespace ShadowVale.Editor
                 skeleton.Add(Pose(t));
             }
             changed |= drift.Count > 0 || skeleton.Count != description.skeleton.Length;
+            // The model's own twist bones spread the hand's roll along the sleeve (ForearmTwist). Humanoid must then
+            // leave all of that roll on the hand: its own share (0.8 from CharacterImportSetup, for rigs without such
+            // bones) turns the forearm bone at the elbow as well, and the cuff ends up further round than the hand.
+            if (names.Any(StoryAnimationSetup.IsForearmTwist) && !Mathf.Approximately(description.lowerArmTwist, 0f))
+            {
+                description.lowerArmTwist = 0f;
+                changed = true;
+            }
             if (drift.Count > 0)
                 Debug.Log($"[NamModel] Reference pose reset to the Blender rest where the avatar had it elsewhere: {string.Join(", ", drift)}");
             if (!changed) return;
@@ -124,7 +121,7 @@ namespace ShadowVale.Editor
             importer.humanDescription = description;
             importer.SaveAndReimport();
             Avatar avatar = AssetDatabase.LoadAllAssetsAtPath(ModelPath).OfType<Avatar>().FirstOrDefault();
-            Debug.Log($"[NamModel] Avatar: {added} finger bones added, {skeleton.Count} transforms in the reference pose; " +
+            Debug.Log($"[NamModel] Avatar: {dropped} bones dropped (fingers play as generic curves), {skeleton.Count} transforms in the reference pose; " +
                       $"valid={avatar != null && avatar.isValid}, human={avatar != null && avatar.isHuman}.");
         }
 
@@ -169,6 +166,17 @@ namespace ShadowVale.Editor
                     anchor.SetParent(hand, false);
                     anchor.localPosition = anchorPosition; anchor.localRotation = anchorRotation; anchor.localScale = anchorScale;
                 }
+                // Culling bounds: the import gives each mesh a box around its T-pose, under whatever bone it picked.
+                // The hands' box stays out at arm's length while the hands come in onto the gun, and the camera
+                // culls them when it frames the grip. Every piece gets one box on the hips wide enough for any pose.
+                Transform hips = model.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "Hips");
+                foreach (var skin in model.GetComponentsInChildren<SkinnedMeshRenderer>(true))
+                {
+                    if (hips == null) break;
+                    skin.rootBone = hips;
+                    skin.localBounds = new Bounds(Vector3.zero, Vector3.one * 2.4f);
+                }
+                ConfigureForearmTwist(model);
                 var animator = model.GetComponent<Animator>();
                 animator.avatar = AssetDatabase.LoadAllAssetsAtPath(ModelPath).OfType<Avatar>().FirstOrDefault();
                 PrefabUtility.SaveAsPrefabAsset(root, PrefabPath);
@@ -179,6 +187,44 @@ namespace ShadowVale.Editor
             {
                 PrefabUtility.UnloadPrefabContents(root);
             }
+        }
+
+        /// <summary>Share of the hand's roll each forearm twist bone takes, elbow end first (add_twist_bones.py).</summary>
+        private static readonly float[] TwistShares = { .4f, .8f };
+
+        /// <summary>
+        /// Middle of the roll each hand really uses, from its rest (palm down), in degrees. In Blender the support
+        /// hand runs from +77 (turned in on the magazine) to -172 (under the handguard) and the firing hand from -59
+        /// to +214 (winding the bandage); the drivers there count the roll about -45 and +80
+        /// (twist_driver_range.py). Unity's import mirrors the rig, which turns the sign of a roll.
+        /// </summary>
+        private static float TwistCentre(string side) => side == "Left" ? 45f : -80f;
+
+        /// <summary>
+        /// Hands the model's forearm twist bones to <see cref="ForearmTwist"/>, with the rest pose their roll is
+        /// counted from (the model has just been put in, so it stands in it). A model without them gets no driver.
+        /// </summary>
+        private static void ConfigureForearmTwist(Transform model)
+        {
+            Transform[] all = model.GetComponentsInChildren<Transform>(true);
+            var limbs = new List<ForearmTwist.Limb>();
+            foreach (string side in new[] { "Left", "Right" })
+            {
+                Transform hand = all.FirstOrDefault(t => t.name == side + "Hand");
+                Transform[] bones = all.Where(t => t.name.StartsWith(side) && StoryAnimationSetup.IsForearmTwist(t.name))
+                    .OrderBy(t => t.name, System.StringComparer.Ordinal).ToArray();
+                if (hand == null || bones.Length == 0) continue;
+                limbs.Add(new ForearmTwist.Limb
+                {
+                    hand = hand, handRest = hand.localRotation, centre = TwistCentre(side), bones = bones,
+                    bonesRest = bones.Select(b => b.localRotation).ToArray(),
+                    shares = bones.Select((b, i) => TwistShares[Mathf.Min(i, TwistShares.Length - 1)]).ToArray(),
+                });
+            }
+            var driver = model.GetComponent<ForearmTwist>();
+            if (limbs.Count == 0) { if (driver != null) Object.DestroyImmediate(driver); return; }
+            if (driver == null) driver = model.gameObject.AddComponent<ForearmTwist>();
+            driver.Configure(limbs.ToArray());
         }
     }
 }

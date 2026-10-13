@@ -16,12 +16,12 @@ MonoBehaviour:
   anchorEuler: {x: 0, y: 0, z: 0}
   weapons:
   - kind: 2
-    localPosition: {x: 0.08987078, y: -0.023135459, z: 0.022077285}
-    localEuler: {x: 348.548, y: 76.01074, z: 358.3528}
-    aimLocalPosition: {x: 0.08987078, y: -0.023135459, z: 0.022077285}
-    aimLocalEuler: {x: 348.548, y: 76.01074, z: 358.3528}
+    localPosition: {x: 0.09977129, y: -0.025485255, z: -0.004975088}
+    localEuler: {x: 348.54807, y: 76.01074, z: 358.3527}
+    aimLocalPosition: {x: 0.09977129, y: -0.025485255, z: -0.004975088}
+    aimLocalEuler: {x: 348.54807, y: 76.01074, z: 358.3527}
     hasAimPose: 1
-    scale: 1.1918839
+    scale: 1.1918824
   - kind: 1
     localPosition: {x: 0.09310901, y: -0.043052346, z: 0.014027377}
     localEuler: {x: 3.902841, y: 35.154167, z: 18.650005}
