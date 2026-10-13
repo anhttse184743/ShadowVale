@@ -11,10 +11,19 @@ namespace ShadowVale.Map01.Editor
     {
         static ForestMenuTools()
         {
-            EditorSceneManager.activeSceneChangedInEditMode += (_, __) => ConfigureStartup();
-            EditorApplication.delayCall += ConfigureStartup;
+            EditorSceneManager.activeSceneChangedInEditMode += (_, __) => ConfigureForActiveScene();
+            EditorApplication.delayCall += ConfigureForActiveScene;
             EditorApplication.delayCall += RecoverAndReport;
             EditorApplication.playModeStateChanged += _ => EditorApplication.delayCall += RecoverAndReport;
+        }
+        private static void ConfigureForActiveScene()
+        {
+            const string map2 = "Assets/_Project/Scenes/Maps/Map 2.unity";
+            if (SceneManager.GetActiveScene().path == map2 && Object.FindFirstObjectByType<Map02Exploration>() != null) {
+                EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(map2);
+                return;
+            }
+            ConfigureStartup();
         }
         [MenuItem("ShadowVale/Menu/Luôn bắt đầu từ menu chính")]
         public static void ConfigureStartup()

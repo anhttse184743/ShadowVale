@@ -1,0 +1,4 @@
+# Temporary copies of the production geometry for the isolated shoreline check.
+/Assets/ShorelineInput.asset*
+/Assets/ShorelineOutput.asset*
+/Assets/ShorelineTerrain.asset*

@@ -1,0 +1,4 @@
+Target: Grassy irregular landing clearing
+Grass clumps: 10535
+PASS roots on exact clearing mesh; maximum error: 1.583248E-08
+PASS visual grass only: existing navigation and colliders unchanged

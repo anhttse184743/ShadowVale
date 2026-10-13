@@ -1,0 +1,4 @@
+PASS no existing scene records removed
+PASS existing records changed only for RenderSettings, camera draw distance and root list
+PASS installed scene matches rendered scene
+PASS new landscape asset references resolve
