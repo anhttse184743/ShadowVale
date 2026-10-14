@@ -417,10 +417,13 @@ namespace ShadowVale.Map01
             {
                 // Keep the lowest sole on the ramp while retaining authored leg motion.
                 float ground=float.NegativeInfinity;
-                foreach(var hit in Physics.RaycastAll(characterRoot.position+Vector3.up*1.2f,Vector3.down,2.5f,~0,QueryTriggerInteraction.Ignore))
+                int hits=Map01Probe.Raycast(characterRoot.position+Vector3.up*1.2f,Vector3.down,2.5f);
+                for(int i=0;i<hits;i++){
+                    var hit=Map01Probe.Hits[i];
                     if(hit.normal.y>.6f&&hit.point.y<=characterRoot.position.y+.25f&&hit.transform.GetComponentInParent<Health>()==null
                         &&!hit.transform.IsChildOf(characterRoot)&&hit.transform.GetComponentInParent<Map01HungVisual>()==null)
                         ground=Mathf.Max(ground,hit.point.y);
+                }
                 if(float.IsNegativeInfinity(ground))ground=characterRoot.position.y;
                 float sole=contact.LowestY();
                 if(float.IsInfinity(sole))foreach(var skin in skins){skin.BakeMesh(baked);foreach(var v in baked.vertices)sole=Mathf.Min(sole,skin.transform.TransformPoint(v).y);}

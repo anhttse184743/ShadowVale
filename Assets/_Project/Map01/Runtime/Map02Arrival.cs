@@ -413,9 +413,7 @@ namespace ShadowVale.Map01
             }
         }
         float ShoreSurface(Vector3 position) {
-            var hit=Physics.RaycastAll(position+Vector3.up*1.5f,Vector3.down,3,~0,QueryTriggerInteraction.Ignore)
-                .Where(h=>h.point.y>.5f && h.normal.y>.5f && !h.transform.IsChildOf(transform) && !Passengers.Any(p=>h.transform.IsChildOf(p)))
-                .OrderBy(h=>h.distance).FirstOrDefault();
+            var hit=WalkSurfaceBelow(position);
             return hit.collider!=null?hit.point.y:position.y;
         }
         void GroundStandingFeet(int index) {
@@ -509,10 +507,21 @@ namespace ShadowVale.Map01
                 SolveLeg(actors[index],side==0,target);
             }
         }
+        /// <summary>The nearest ground under a point that is neither the boat nor one of the party; no collider when there is none.</summary>
         RaycastHit WalkSurfaceBelow(Vector3 point) {
-            return Physics.RaycastAll(point+Vector3.up*1.5f,Vector3.down,3,~0,QueryTriggerInteraction.Ignore)
-                .Where(h=>h.point.y>.5f && h.normal.y>.5f && !h.transform.IsChildOf(transform) && !Passengers.Any(p=>h.transform.IsChildOf(p)))
-                .OrderBy(h=>h.distance).FirstOrDefault();
+            // The two who stay at the jetty are grounded every frame for the rest of the map: no lists here.
+            RaycastHit nearest=default;
+            int hits=Map01Probe.Raycast(point+Vector3.up*1.5f,Vector3.down,3);
+            for(int i=0;i<hits;i++) {
+                var hit=Map01Probe.Hits[i];
+                if(!(hit.point.y>.5f && hit.normal.y>.5f) || hit.transform.IsChildOf(transform) || IsPassenger(hit.transform))continue;
+                if(nearest.collider==null || hit.distance<nearest.distance)nearest=hit;
+            }
+            return nearest;
+        }
+        bool IsPassenger(Transform part) {
+            foreach(var passenger in Passengers)if(part.IsChildOf(passenger))return true;
+            return false;
         }
         void LevelWalkingFoot(int index,int side,Vector3 normal) {
             var foot=actors[index].GetBoneTransform(side==0?HumanBodyBones.LeftFoot:HumanBodyBones.RightFoot);

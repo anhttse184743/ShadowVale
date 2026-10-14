@@ -55,10 +55,24 @@ namespace ShadowVale.Map01
         public int Stage { get; private set; }
         /// <summary>The objective line for the HUD, with the scouting tally while it runs.</summary>
         public string ObjectiveText => Stage == RescueStage && rescue != null
-            ? (rescue.CanFree ? "Đã hạ đủ bốn lính. Cởi trói Hùng [E]." : $"{Objectives[0]} — còn {rescue.Remaining}/4 lính; " + (!rescue.OverseerAlive?"đã hạ lính giám sát, có thể giao chiến":rescue.CombatAlarm?"địch đã báo động, hạ nhóm truy kích":rescue.CanExecuteCaptive?"giám sát đang canh Hùng, giữ im lặng":"giám sát đã rời Hùng; vòng ra sau hoặc giao chiến"))
+            ? RescueObjective()
             : Stage == ScoutStage
             ? $"{Objectives[Stage]} ({scouting.FoundCount}/{scouting.Camps.Count})"
             : Objectives[Mathf.Clamp(Stage, 0, LastStage)];
+        // The HUD asks for this line on every GUI event: it is put together again only when what it says changes.
+        private string rescueObjective;
+        private int rescueObjectiveKey = -1;
+        private string RescueObjective()
+        {
+            if (rescue.CanFree) return "Đã hạ đủ bốn lính. Cởi trói Hùng [E].";
+            int watch = !rescue.OverseerAlive ? 0 : rescue.CombatAlarm ? 1 : rescue.CanExecuteCaptive ? 2 : 3;
+            int left = rescue.Remaining, key = left * 4 + watch;
+            if (key != rescueObjectiveKey) {
+                rescueObjectiveKey = key;
+                rescueObjective = $"{Objectives[0]} — còn {left}/4 lính; " + (watch == 0 ? "đã hạ lính giám sát, có thể giao chiến" : watch == 1 ? "địch đã báo động, hạ nhóm truy kích" : watch == 2 ? "giám sát đang canh Hùng, giữ im lặng" : "giám sát đã rời Hùng; vòng ra sau hoặc giao chiến");
+            }
+            return rescueObjective;
+        }
         public bool AwaitingReport => Stage == BriefingStage || Stage == ReportScoutStage || Stage == ReportCampsStage || Stage == ReportBossStage;
         /// <summary>True while Nam is close enough to Hùng for [E] to mean something: treating him
         /// at the start, or reporting in afterwards.</summary>

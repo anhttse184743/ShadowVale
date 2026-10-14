@@ -208,10 +208,25 @@ namespace ShadowVale.Gameplay.Combat
         /// <summary>Base-layer state holding Nam's own AK carry, when the controller has one.</summary>
         public const string RifleLocomotionState = "Locomotion_Rifle";
         private bool _rifleBody, _hasReloadParams, _hasHitParam;
-        private bool HasKnifeCarry => animator!=null&&animator.HasState(0,Animator.StringToHash("Locomotion_Knife"));
+        private static readonly int KnifeLocomotionHash = Animator.StringToHash("Locomotion_Knife");
+        private bool HasKnifeCarry => animator!=null&&animator.HasState(0,KnifeLocomotionHash);
         private float _lastHealthSeen = -1f;
         private float _upperBodyHoldUntil;
         private float _faceCameraHoldUntil;
+        private float _fireHoldUntil;
+        private BarrelAim _barrelAim;
+
+        /// <summary>The rifle in hand, or null with anything else out.</summary>
+        internal Weapon Gun => _equipped != null && _equipped.IsGun ? _equipped : null;
+
+        /// <summary>
+        /// True while the takes hold the rifle up to shoot — sights raised, or a round just fired from the hip —
+        /// which is when <see cref="BarrelAim"/> lays the barrel on the crosshair. A flinch raises the stance
+        /// layer too, but leaves the rifle in its carry: that does not count.
+        /// </summary>
+        internal bool RifleLevelled => Gun != null && (_aiming || Time.time < _fireHoldUntil);
+
+        internal int HitMask => hitMask;
 
         public WeaponKind EquippedKind => _equippedKind;
         public WeaponKind StartingWeapon => startingWeapon;
@@ -224,7 +239,7 @@ namespace ShadowVale.Gameplay.Combat
         /// <summary>Seat the equipped prop in its authored carry grip before a locomotion playable takes over.</summary>
         public void PrepareCinematicCarry()
         {
-            _aiming=false;_aimPoseBlend=0;_upperBodyHoldUntil=_faceCameraHoldUntil=0;
+            _aiming=false;_aimPoseBlend=0;_upperBodyHoldUntil=_faceCameraHoldUntil=_fireHoldUntil=0;
             if(animator!=null){animator.SetBool(AnimatorParams.Aiming,false);if(_upperBodyLayer>0)animator.SetLayerWeight(_upperBodyLayer,0);}
             if(_equipped!=null&&gripConfig!=null)gripConfig.Apply(_equipped.transform,_equippedKind,false);
         }
@@ -234,7 +249,7 @@ namespace ShadowVale.Gameplay.Combat
             if (animator == null || animator.runtimeAnimatorController == null) return;
             animator.Rebind();
             _lastHealthSeen=health!=null?health.Current:-1f;
-            _upperBodyHoldUntil=_faceCameraHoldUntil=0;
+            _upperBodyHoldUntil=_faceCameraHoldUntil=_fireHoldUntil=0;
             _nextAttackTime=Time.time;
             _magazine?.CancelReload();_spread.Reset();
             if(_hasHitParam)animator.ResetTrigger("Hit");
@@ -290,6 +305,10 @@ namespace ShadowVale.Gameplay.Combat
                     if (p.name == "Hit") _hasHitParam = true;
                 }
             }
+
+            // Added here rather than on the prefab: every character that shoots through this needs it.
+            if (!TryGetComponent(out _barrelAim)) _barrelAim = gameObject.AddComponent<BarrelAim>();
+            _barrelAim.Bind(this, animator);
 
             tuning = tuning.OrDefault();
             _magazine = tuning.Create();
@@ -444,6 +463,7 @@ namespace ShadowVale.Gameplay.Combat
             {
                 SetAiming(false);
                 _faceCameraHoldUntil = 0f;
+                _fireHoldUntil = 0f;
                 if (_controller != null)
                 {
                     _controller.SetFaceCameraYaw(false);
@@ -523,6 +543,14 @@ namespace ShadowVale.Gameplay.Combat
                 return 0f;
             }
 
+            // The barrel as the take holds it. BarrelAim bends the spine afterwards to put it on the
+            // crosshair, and reading that back would count the correction as the pose's own: the body
+            // would stop turning and leave the spine to twist the whole way.
+            if (_barrelAim != null && _barrelAim.TryGetPoseYaw(out float posed))
+            {
+                return posed;
+            }
+
             Vector3 barrel = Vector3.ProjectOnPlane(muzzle.forward, Vector3.up);
             // Barrel straight up or down carries no yaw; leave the body facing the camera.
             return barrel.sqrMagnitude < 0.0004f
@@ -548,8 +576,11 @@ namespace ShadowVale.Gameplay.Combat
             // rifle: the stance layer only comes up to aim, fire, reload or take a hit.
             bool carried = _rifleBody && _equippedKind == WeaponKind.Rifle && !_aiming && !attacking
                 && (_magazine == null || !_magazine.IsReloading);
-            carried|=HasKnifeCarry&&_equippedKind==WeaponKind.Knife&&!attacking
-                &&(animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion_Knife")||animator.GetCurrentAnimatorStateInfo(0).IsName("Sneak_Knife"));
+            // The cheap tests first: this runs every frame, the animator is only asked with the knife out.
+            if(_equippedKind==WeaponKind.Knife&&!attacking&&HasKnifeCarry) {
+                var state=animator.GetCurrentAnimatorStateInfo(0);
+                carried|=state.IsName("Locomotion_Knife")||state.IsName("Sneak_Knife");
+            }
             float target = (_equippedKind != WeaponKind.Unarmed || attacking) && !carried ? 1f : 0f;
             _upperBodyWeight = Mathf.MoveTowards(
                 _upperBodyWeight, target, Time.deltaTime / Mathf.Max(0.01f, stanceBlendTime));
@@ -731,6 +762,7 @@ namespace ShadowVale.Gameplay.Combat
             if (_equipped != null && _equipped.IsGun)
             {
                 _faceCameraHoldUntil = Time.time + cooldown + faceCameraTail;
+                _fireHoldUntil = _upperBodyHoldUntil;
                 FireGun(_equipped);
             }
             else

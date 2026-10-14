@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using ShadowVale.Gameplay.Combat;
+using ShadowVale.Gameplay.Player;
 using UnityEditor;
 using UnityEditor.Animations;
 using UnityEditor.SceneManagement;
@@ -43,6 +44,45 @@ namespace ShadowVale.Map01.Tests
             foreach (var clip in enemy.animationClips) Assert.IsTrue(clip.humanMotion, clip.name);
             Assert.That(enemy.animationClips.First(c => c.name == "Enemy_Takedown_Neck_Victim").length,
                 Is.EqualTo(Map01NamActions.TakedownSeconds).Within(.05f), "Both halves of the takedown run the same length.");
+        }
+
+        /// <summary>
+        /// Nam's sleeves turn with his hands. His model carries twist bones along each forearm; Humanoid must leave
+        /// the whole roll on the hand (its own forearm share turns the forearm bone too, and the cuff ends up further
+        /// round than the hand); and the driver on the prefab sets the twist bones from the hand, each hand's roll
+        /// counted in the range it really uses: the support hand passes "palm up" (half a turn) in every reload
+        /// and the sleeve must follow it there, not snap round the other way.
+        /// </summary>
+        [Test]
+        public void SleevesTurnWithTheHands()
+        {
+            var nam = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/Player/Player.prefab"));
+            try
+            {
+                var driver = nam.GetComponentInChildren<ForearmTwist>(true);
+                Assert.IsNotNull(driver, "Player.prefab's Model carries the forearm twist driver.");
+                Assert.AreEqual(0f, driver.GetComponent<Animator>().avatar.humanDescription.lowerArmTwist, 1e-4f,
+                    "With twist bones in the model, Humanoid's own forearm share must be 0.");
+                Transform Bone(string name) => driver.GetComponentsInChildren<Transform>(true).First(t => t.name == name);
+                foreach (var (side, from, to) in new[] { ("Left", -120f, 200f), ("Right", -210f, 90f) })
+                {
+                    Transform hand = Bone(side + "Hand"), mid = Bone(side + "ForeArmTwist1"), cuff = Bone(side + "ForeArmTwist2");
+                    Quaternion handRest = hand.localRotation, midRest = mid.localRotation, cuffRest = cuff.localRotation;
+                    for (float roll = from; roll <= to; roll += 10f)
+                    {
+                        // rolled about its own length, and bent at the wrist as well: only the roll is passed on
+                        hand.localRotation = handRest * Quaternion.AngleAxis(roll, Vector3.up) * Quaternion.AngleAxis(25f, Vector3.right);
+                        driver.Apply();
+                        Assert.Less(Quaternion.Angle(mid.localRotation, midRest * Quaternion.AngleAxis(.4f * roll, Vector3.up)), .5f, $"{side} mid-forearm at a hand roll of {roll}");
+                        Assert.Less(Quaternion.Angle(cuff.localRotation, cuffRest * Quaternion.AngleAxis(.8f * roll, Vector3.up)), .5f, $"{side} cuff at a hand roll of {roll}");
+                    }
+                    hand.localRotation = handRest;
+                }
+            }
+            finally
+            {
+                Object.DestroyImmediate(nam);
+            }
         }
 
         /// <summary>

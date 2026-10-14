@@ -33,7 +33,7 @@ namespace ShadowVale.Map01
         public bool OverseerAlive=>squad.Count==4&&squad[0]!=null&&squad[0].Alive;
         public bool CombatAlarm{get;private set;}
         public bool CanExecuteCaptive=>CurrentPhase==Phase.Captive&&!CombatAlarm&&OverseerAlive&&squad[0].AtHostagePost;
-        public int Remaining=>squad.Count(g=>g!=null&&g.Alive);
+        public int Remaining{get{int alive=0;foreach(var guard in squad)if(guard!=null&&guard.Alive)alive++;return alive;}}
         public bool CanFree=>CurrentPhase==Phase.Captive&&squad.Count==4&&Remaining==0;
         public bool Exposed=>mission.IsInitialized&&!Failed&&CurrentPhase==Phase.Escorting&&!SafeReached;
         public bool SafeReached{get;private set;}
@@ -46,6 +46,10 @@ namespace ShadowVale.Map01
         private readonly List<Map01EnemyController> squad=new(),pursuers=new();
         private Map01Mission mission;
         private Map01Quest quest;
+        private Map01SaveSystem saves;
+        private Map01SaveSystem Saves=>saves!=null?saves:saves=GetComponent<Map01SaveSystem>();
+        // Reused by the takedown hint, which the HUD asks for every frame.
+        private readonly List<(Map01EnemyController guard,bool open,float distance)> hintOrder=new();
         private PlayerCombat boundCombat;
         private float nextChatter,nextWaveCheck,nextHitLine,calmUntil,nextRally;
         private int chatterIndex;
@@ -131,13 +135,20 @@ namespace ShadowVale.Map01
                 ||mission.ModernCombat==null||mission.ModernCombat.EquippedKind!=WeaponKind.Knife
                 ||(mission.ModernCombat.InputAllowed!=null&&!mission.ModernCombat.InputAllowed()))return false;
             float range=Layout!=null?Layout.takedownHintRange:3.2f;
-            foreach(var guard in mission.Enemies.Where(e=>e!=null&&e.Alive&&!e.IsBoss
-                &&Vector3.Distance(e.transform.position,mission.player.position)<=range)
-                .OrderByDescending(e=>e.CanSilentTakedown()).ThenBy(e=>(e.transform.position-mission.player.position).sqrMagnitude)){
+            // Guards in reach: those open to a takedown first, then the nearest.
+            hintOrder.Clear();
+            foreach(var enemy in mission.Enemies){
+                if(enemy==null||!enemy.Alive||enemy.IsBoss||!(Vector3.Distance(enemy.transform.position,mission.player.position)<=range))continue;
+                bool open=enemy.CanSilentTakedown();float distance=(enemy.transform.position-mission.player.position).sqrMagnitude;
+                int at=hintOrder.Count;
+                while(at>0&&(open&&!hintOrder[at-1].open||open==hintOrder[at-1].open&&distance<hintOrder[at-1].distance))at--;
+                hintOrder.Insert(at,(enemy,open,distance));
+            }
+            foreach(var (guard,open,_) in hintOrder){
                 var origin=mission.player.position+Vector3.up;
                 if(Physics.Linecast(origin,guard.transform.position+Vector3.up,out var hit,mission.ObstructionMask,QueryTriggerInteraction.Ignore)
                     &&hit.transform!=guard.transform&&!hit.transform.IsChildOf(guard.transform))continue;
-                target=guard;ready=guard.CanSilentTakedown()&&mission.ModernCombat.AttackCooldownRemaining<=.01f&&!mission.ModernCombat.IsReloading;return true;
+                target=guard;ready=open&&mission.ModernCombat.AttackCooldownRemaining<=.01f&&!mission.ModernCombat.IsReloading;return true;
             }
             return false;
         }
@@ -166,9 +177,9 @@ namespace ShadowVale.Map01
         {
             if(!enabled||!mission.IsInitialized||mission.Stopped)return;
             if(mission.ModernCombat!=null&&mission.ModernCombat.TrySpecialMelee==null){boundCombat=mission.ModernCombat;boundCombat.TrySpecialMelee=TryPlayerTakedown;}
-            if(quest.Stage==Map01Quest.RescueStage&&CurrentPhase==Phase.Captive){GetComponent<Map01SaveSystem>().EnsureRescueCheckpoint();Overhear();}
+            if(quest.Stage==Map01Quest.RescueStage&&CurrentPhase==Phase.Captive){Saves.EnsureRescueCheckpoint();Overhear();}
             if(CurrentPhase!=Phase.Escorting||Time.time<nextWaveCheck)return;
-            GetComponent<Map01SaveSystem>().EnsureEscortCheckpoint();
+            Saves.EnsureEscortCheckpoint();
             nextWaveCheck=Time.time+.4f;var nam=mission.player.position;var hung=mission.hung.position;
             if(!SafeReached&&Vector3.Distance(nam,Layout.safeEntry.position)<=Layout.safeRadius&&Vector3.Distance(hung,Layout.safeEntry.position)<=Layout.safeRadius){
                 SafeReached=true;foreach(var guard in pursuers)if(guard!=null&&guard.Alive)guard.CeasePursuit();
@@ -182,7 +193,8 @@ namespace ShadowVale.Map01
         }
         private void Overhear()
         {
-            if(Time.time<nextChatter||squad.Any(g=>g.Alive&&g.Engaged))return;
+            if(Time.time<nextChatter)return;
+            foreach(var guard in squad)if(guard.Alive&&guard.Engaged)return;
             float distance=Vector3.Distance(mission.player.position,CaptivePost);if(distance>34)return;
             if(!whispered&&distance<12){whispered=true;nextChatter=Time.time+8;mission.Say("Hùng (thì thào): ...Nam? Chúng có bốn tên. Hạ tên canh tôi trước, đừng để chúng báo động.",6);return;}
             if(Remaining==0)return;mission.Say(Chatter[chatterIndex++%Chatter.Length],6);nextChatter=Time.time+15;
