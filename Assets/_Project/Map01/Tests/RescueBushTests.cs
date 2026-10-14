@@ -38,8 +38,9 @@ public sealed class RescueBushTests:ForestSceneTestBase {
     [Test]public void AllNewAssetsUseHumanoidMotionAndVietnameseDirectVoices(){
         Assert.IsTrue(Map01CinematicPose.Clip("Nam_Bush_Approach").humanMotion);
         foreach(var who in new[]{"Nam","Enemy"})foreach(var clip in new[]{"GrabPull","StruggleLoop","Finish","Escape"})Assert.IsTrue(Map01CinematicPose.Clip(who+"_Bush_"+clip).humanMotion);
-        foreach(var id in new[]{"m1_rescue_intro_nam","m1_rescue_alarm","m1_rescue_execute_order","m1_rescue_interrogate","m1_rescue_shelter"}){var line=DialogueVoice.Find(id);Assert.NotNull(line.clip);Assert.IsFalse(line.radio);Assert.AreEqual("vi",line.language);}
-        StringAssert.Contains("Bên địch rất đông, mình không thể xông vào như thế được, phải tìm cách đánh lạc hướng thôi.",DialogueVoice.Caption("m1_rescue_intro_nam"));
+        foreach(var id in new[]{"m1_rescue_alarm","m1_rescue_execute_order","m1_rescue_interrogate","m1_rescue_shelter"}){var line=DialogueVoice.Find(id);Assert.NotNull(line.clip);Assert.IsFalse(line.radio);Assert.AreEqual("vi",line.language);}
+        foreach(var id in new[]{"m1_rescue_radio_report","m1_rescue_radio_instruction","m1_rescue_radio_ack"}){var line=DialogueVoice.Find(id);Assert.NotNull(line.clip);Assert.IsTrue(line.radio);Assert.AreEqual("vi",line.language);}
+        StringAssert.Contains("Địch ở đây rất đông, tôi không thể đánh trực diện.",DialogueVoice.Caption("m1_rescue_radio_report"));
     }
     [UnityTest]public IEnumerator IntroAndExecutionStayBoundAndPresentDeathBeforeFailure(){
         Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
@@ -53,7 +54,7 @@ public sealed class RescueBushTests:ForestSceneTestBase {
         var gameplayView=M.gameCamera.transform.position;var gameplayRotation=M.gameCamera.transform.rotation;
         yield return Record("Intro",()=>d.IsPlaying,()=>{
             Assert.IsTrue(h.RopeVisible);Assert.IsFalse(M.GetComponent<Map01SaveSystem>().SaveSlot(1,out _,true));
-            if(d.Elapsed>6.55f){Assert.Less(Vector3.Distance(gameplayView,M.gameCamera.transform.position),.03f,"Nam's whisper belongs to the restored player view.");Assert.Less(Quaternion.Angle(gameplayRotation,M.gameCamera.transform.rotation),.2f);}
+            if(d.Elapsed>6.55f){Assert.Less(Vector3.Distance(gameplayView,M.gameCamera.transform.position),.03f,"The radio conversation belongs to the restored player view.");Assert.Less(Quaternion.Angle(gameplayRotation,M.gameCamera.transform.rotation),.2f);}
         });
         Assert.GreaterOrEqual(d.Elapsed,12);Assert.IsTrue(M.ModernCombat.enabled&&M.ModernPlayer.enabled);
         R.ReportDetection(new Map01Detection(R.Squad[1],Map01DetectionCause.Sight,M.player.position));

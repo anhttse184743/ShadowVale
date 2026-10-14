@@ -47,6 +47,13 @@ namespace ShadowVale.Map01
         private Vector3 interrogatorStart,interrogatorClose;
         private AnimationClip interrogatorWalk;
         private bool canApproach;
+        private Map01CinematicPose introNamPose;
+        private AnimationClip introNamIdle,introNamRadio;
+        private Vector3 introNamPosition;
+        private Quaternion introNamRotation;
+        private float introRadioAt,introReleaseAt;
+        private (Transform bone,Vector3 position,Quaternion rotation)[] introLowerBody;
+        private readonly System.Collections.Generic.List<GameObject> introHiddenWeapons=new();
 
         public bool ControlsEnemy(Map01EnemyController guard) => (CurrentMode == Mode.Execution || CurrentMode==Mode.Intro) && guard == enemy;
 
@@ -90,8 +97,22 @@ namespace ShadowVale.Map01
             mission.ModernPlayer.enabled=mission.ModernCombat.enabled=false;
             captiveVisual=mission.hung.GetComponentInChildren<Map01HungVisual>();captiveVisual.BeginCaptivePresentation();
             captivePose=new Map01CinematicPose(captiveVisual.actor);interrogatorPose=new Map01CinematicPose(enemy.GetComponentInChildren<Animator>());
+            if(CurrentMode==Mode.Intro){
+                introNamPosition=mission.player.position;introNamRotation=mission.player.rotation;
+                introRadioAt=introReleaseAt=0;
+                var actor=mission.player.GetComponentInChildren<Animator>();
+                introNamIdle=ownerIdle();
+                introNamRadio=Resources.Load<Map01Extraction>("Cutscenes/Map01Extraction")?.radio;
+                introNamPose=new Map01CinematicPose(actor);
+                introNamPose.Sample(introNamIdle,0,true);
+                var lower=new[]{HumanBodyBones.Hips,HumanBodyBones.LeftUpperLeg,HumanBodyBones.LeftLowerLeg,HumanBodyBones.LeftFoot,HumanBodyBones.LeftToes,
+                    HumanBodyBones.RightUpperLeg,HumanBodyBones.RightLowerLeg,HumanBodyBones.RightFoot,HumanBodyBones.RightToes};
+                introLowerBody=lower.Select(actor.GetBoneTransform).Where(t=>t!=null).Select(t=>(t,t.localPosition,t.localRotation)).ToArray();
+                foreach(var weapon in mission.player.GetComponentsInChildren<Weapon>(true))if(weapon.gameObject.activeSelf){introHiddenWeapons.Add(weapon.gameObject);weapon.gameObject.SetActive(false);}
+            }
             RenderStory();
         }
+        AnimationClip ownerIdle()=>rescue.Layout.namIdle??Resources.Load<AnimationClip>("Rescue/Nam_Shelter_Idle");
         public bool ShowIntro(Map01Rescue owner,Map01EnemyController overseer){
             if(IsPlaying||Map01CinematicPose.Clip("Hung_Captive_Recoil")==null||Map01CinematicPose.Clip("Enemy_Interrogate_Strike")==null)return false;
             enemy=overseer;Begin(owner,Mode.Intro,Mathf.Max(12,owner.Layout.introSeconds));
@@ -113,8 +134,11 @@ namespace ShadowVale.Map01
         void UpdateStory(){
             if(CurrentMode==Mode.Intro){
                 if(storyBeat==0&&Elapsed>=2){Voice().Play("m1_rescue_interrogate");storyBeat=1;}
-                else if(storyBeat==1&&Elapsed>=6.4f&&!Voice().HasSpeech){Voice().Play("m1_rescue_intro_nam");storyBeat=2;}
-                else if(storyBeat==2&&Elapsed>=duration&&!Voice().HasSpeech)Finish();
+                else if(storyBeat==1&&Elapsed>=6.4f&&!Voice().HasSpeech){introRadioAt=Elapsed;Voice().Play("m1_rescue_radio_report");storyBeat=2;}
+                else if(storyBeat==2&&!Voice().HasSpeech){Voice().Play("m1_rescue_radio_instruction");storyBeat=3;}
+                else if(storyBeat==3&&!Voice().HasSpeech){Voice().Play("m1_rescue_radio_ack");storyBeat=4;}
+                else if(storyBeat==4&&!Voice().HasSpeech){introReleaseAt=Elapsed;storyBeat=5;}
+                else if(storyBeat==5&&Elapsed>=Mathf.Max(duration,introReleaseAt+.8f))Finish();
                 return;
             }
             if(storyBeat==0&&!Voice().HasSpeech){storyBeat=1;Voice().Play("m1_rescue_execute_order");}
@@ -127,6 +151,7 @@ namespace ShadowVale.Map01
             }else if(storyBeat==3&&Elapsed-impactAt>=3+rescue.Layout.executionHoldSeconds)Finish();
         }
         void RenderStory(){
+            if(CurrentMode==Mode.Intro)RenderIntroNam();
             bool walking=false;float travel=0;
             if(CurrentMode==Mode.Intro&&canApproach){
                 float amount=Elapsed<5?Mathf.SmoothStep(0,1,Elapsed/2):1-Mathf.SmoothStep(0,1,(Elapsed-9)/3);
@@ -150,12 +175,31 @@ namespace ShadowVale.Map01
             var rotation=Quaternion.Slerp(cameraRotation,Quaternion.LookRotation(target-position),blend);
             float fov=Mathf.Lerp(cameraFov,50,blend);
             if(CurrentMode==Mode.Intro){
-                // The interrogation belongs to Hung's close view. Nam's quiet
-                // thought starts only after a gentle return to the player's view.
+                // Return to Nam's view before his radio report and the commander's reply.
                 float returning=Mathf.SmoothStep(0,1,(Elapsed-5)/1.4f);
                 position=Vector3.Lerp(position,cameraStart,returning);rotation=Quaternion.Slerp(rotation,cameraRotation,returning);fov=Mathf.Lerp(fov,cameraFov,returning);
             }
             rig.SetCinematicView(position,rotation,fov,1);
+        }
+        void RenderIntroNam(){
+            if(introNamPose==null||introNamIdle==null)return;
+            mission.player.SetPositionAndRotation(introNamPosition,introNamRotation);
+            float idleTime=Mathf.Repeat(Elapsed,Mathf.Max(.01f,introNamIdle.length));
+            if(storyBeat>=2&&introNamRadio!=null){
+                float talkTime=Elapsed-introRadioAt;
+                float weight=storyBeat==5?1-Mathf.SmoothStep(0,1,(Elapsed-introReleaseAt)/.8f):Mathf.SmoothStep(0,1,talkTime/.7f);
+                float total=DialogueVoice.Length("m1_rescue_radio_report")+DialogueVoice.Length("m1_rescue_radio_instruction")+DialogueVoice.Length("m1_rescue_radio_ack")+.4f;
+                float clipTime=Mathf.Min(introNamRadio.length-.02f,introNamRadio.length*talkTime/Mathf.Max(1,total));
+                introNamPose.SampleBlend(introNamIdle,idleTime,introNamRadio,clipTime,weight);
+                // Radio motion belongs to the torso/arms; both legs keep the standing idle.
+                foreach(var part in introLowerBody)part.bone.SetLocalPositionAndRotation(part.position,part.rotation);
+            }else{
+                introNamPose.Sample(introNamIdle,idleTime,true);
+                for(int i=0;i<introLowerBody.Length;i++){
+                    var t=introLowerBody[i].bone;introLowerBody[i]=(t,t.localPosition,t.localRotation);
+                }
+            }
+            introNamPose.Ground(introNamPosition.y);
         }
         void AimExecution(){
             var actor=enemy.GetComponentInChildren<Animator>();var rifle=actor.GetComponent<Map01Rifle>();if(rifle==null||rifle.weapon==null)return;
@@ -441,6 +485,8 @@ namespace ShadowVale.Map01
             var mode=CurrentMode;CurrentMode=Mode.None;
             namPose?.Dispose();hungPose?.Dispose();namPose=hungPose=null;
             storyVoice?.Stop();captivePose?.Dispose();interrogatorPose?.Dispose();captivePose=interrogatorPose=null;
+            introNamPose?.Dispose();introNamPose=null;introLowerBody=null;
+            foreach(var weapon in introHiddenWeapons)if(weapon!=null)weapon.SetActive(true);introHiddenWeapons.Clear();
             if(mode==Mode.Intro||mode==Mode.Execution){
                 if(captiveVisual!=null)captiveVisual.EndCaptivePresentation(mode==Mode.Execution);
                 if(mission!=null&&mission.player!=null&&mission.ModernPlayer!=null&&mission.ModernCombat!=null){
