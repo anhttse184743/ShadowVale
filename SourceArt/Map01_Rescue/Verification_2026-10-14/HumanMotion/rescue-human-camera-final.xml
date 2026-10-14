@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-14 12:32:38Z" end-time="2026-10-14 12:33:08Z" duration="30.2801084">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="182" result="Failed" site="Child" start-time="2026-10-14 12:32:38Z" end-time="2026-10-14 12:33:08Z" duration="30.280108" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1156" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/dangk/Documents/Codex/2026-09-20/du/ShadowValeValidation/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="122" result="Failed" site="Child" start-time="2026-10-14 12:32:39Z" end-time="2026-10-14 12:33:08Z" duration="29.676376" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="2728" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1157" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="122" result="Failed" site="Child" start-time="2026-10-14 12:32:39Z" end-time="2026-10-14 12:33:08Z" duration="29.557066" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1158" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="122" result="Failed" site="Child" start-time="2026-10-14 12:32:39Z" end-time="2026-10-14 12:33:08Z" duration="29.539730" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1159" name="Tests" fullname="ShadowVale.Map01.Tests" runstate="Runnable" testcasecount="122" result="Failed" site="Child" start-time="2026-10-14 12:32:39Z" end-time="2026-10-14 12:33:08Z" duration="29.523417" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1100" name="RescueBushTests" fullname="ShadowVale.Map01.Tests.RescueBushTests" classname="ShadowVale.Map01.Tests.RescueBushTests" runstate="Runnable" testcasecount="7" result="Failed" site="Child" start-time="2026-10-14 12:32:39Z" end-time="2026-10-14 12:33:08Z" duration="29.501658" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1105" name="FlankCatchUsesContactBeforePullAndEnemyCanEscape" fullname="ShadowVale.Map01.Tests.RescueBushTests.FlankCatchUsesContactBeforePullAndEnemyCanEscape" methodname="FlankCatchUsesContactBeforePullAndEnemyCanEscape" classname="ShadowVale.Map01.Tests.RescueBushTests" runstate="Runnable" seed="1375760216" result="Failed" label="Error" start-time="2026-10-14 12:32:13Z" end-time="2026-10-14 12:32:28Z" duration="15.332280" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                  <stack-trace><![CDATA[  at ShadowVale.Map01.Tests.RescueBushTests+<FlankCatchUsesContactBeforePullAndEnemyCanEscape>d__11.MoveNext () [0x000a2] in C:\Users\dangk\Documents\Codex\2026-09-20\du\ShadowValeValidation\Assets\_Project\Map01\Tests\RescueBushTests.cs:97 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44 ]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1103" name="IntroAndExecutionStayBoundAndPresentDeathBeforeFailure" fullname="ShadowVale.Map01.Tests.RescueBushTests.IntroAndExecutionStayBoundAndPresentDeathBeforeFailure" methodname="IntroAndExecutionStayBoundAndPresentDeathBeforeFailure" classname="ShadowVale.Map01.Tests.RescueBushTests" runstate="Runnable" seed="642937505" result="Passed" start-time="2026-10-14 12:32:28Z" end-time="2026-10-14 12:33:08Z" duration="40.315860" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/dangk/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

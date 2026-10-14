@@ -15,7 +15,7 @@ namespace ShadowVale.Map01
         [Serializable] public sealed class Snapshot {
             public int revision,phase,waveMask;
             public bool safe,reward;
-            public bool combatAlarm;
+            public bool combatAlarm,introSeen;
             public float escortDistance;
         }
         public IReadOnlyList<Map01EnemyController> Squad=>squad;
@@ -50,6 +50,8 @@ namespace ShadowVale.Map01
         private float nextChatter,nextWaveCheck,nextHitLine,calmUntil,nextRally;
         private int chatterIndex;
         private bool whispered;
+        public bool IntroSeen{get;private set;}
+        public void MarkIntroSeen(){IntroSeen=true;}
         private Coroutine release;
         private bool protectedRelease,releaseInvulnerability;
         private static readonly string[] Chatter={
@@ -72,6 +74,7 @@ namespace ShadowVale.Map01
                 var points=route==null?Array.Empty<Vector3>():Enumerable.Range(0,route.childCount).Select(j=>route.GetChild(j).position).ToArray();
                 squad[i].ConfigureRescuePost(Layout.guardPosts[i],points,i==0,Layout);
             }
+            Map01RescueStones.Ensure(mission,Layout,CaptivePost);
             RetryPoint=FindRetryPoint(mission.player.position);
             if(mission.ModernCombat!=null){boundCombat=mission.ModernCombat;boundCombat.TrySpecialMelee=TryPlayerTakedown;}
         }
@@ -110,7 +113,7 @@ namespace ShadowVale.Map01
             FailureReason=detection.cause==Map01DetectionCause.Gunshot?"Địch đã nghe tiếng súng.":"Nam đã bị phát hiện.";
             squad[0].GetComponent<Health>().CinematicInvulnerable=true;
             var cinematic=GetComponent<Map01RescueCinematic>();if(cinematic==null)cinematic=gameObject.AddComponent<Map01RescueCinematic>();
-            cinematic.ExecuteHostage(this,squad[0]);
+            cinematic.ExecuteHostage(this,squad[0],detection.observer);
         }
         public void CompleteExecution()
         {
@@ -122,7 +125,10 @@ namespace ShadowVale.Map01
         private bool TryPlayerTakedown()
         {
             if(mission.Cinematic||mission.Stopped)return false;
-            return mission.Enemies.Where(e=>e!=null&&e.Alive).OrderBy(e=>(e.transform.position-mission.player.position).sqrMagnitude).Any(e=>e.TrySilentTakedown());
+            var targets=mission.Enemies.Where(e=>e!=null&&e.Alive).OrderBy(e=>(e.transform.position-mission.player.position).sqrMagnitude).ToArray();
+            var bush=GetComponent<Map01BushTakedown>();
+            if(bush!=null&&targets.Any(bush.TryBegin))return true;
+            return targets.Any(e=>e.TrySilentTakedown());
         }
         public bool GetTakedownHint(out Map01EnemyController target,out bool ready)
         {
@@ -131,13 +137,14 @@ namespace ShadowVale.Map01
                 ||mission.ModernCombat==null||mission.ModernCombat.EquippedKind!=WeaponKind.Knife
                 ||(mission.ModernCombat.InputAllowed!=null&&!mission.ModernCombat.InputAllowed()))return false;
             float range=Layout!=null?Layout.takedownHintRange:3.2f;
-            foreach(var guard in mission.Enemies.Where(e=>e!=null&&e.Alive&&!e.IsBoss
-                &&Vector3.Distance(e.transform.position,mission.player.position)<=range)
-                .OrderByDescending(e=>e.CanSilentTakedown()).ThenBy(e=>(e.transform.position-mission.player.position).sqrMagnitude)){
+            var bush=GetComponent<Map01BushTakedown>();
+            foreach(var guard in mission.Enemies.Where(e=>e!=null&&e.Alive&&!e.IsBoss&&Vector3.Distance(e.transform.position,mission.player.position)<=range)
+                .OrderByDescending(e=>bush!=null&&bush.Qualifies(e,out _)?2:e.CanSilentTakedown()?1:0).ThenBy(e=>(e.transform.position-mission.player.position).sqrMagnitude)){
+                bool open=guard.CanSilentTakedown()||(bush!=null&&bush.Qualifies(guard,out _));
                 var origin=mission.player.position+Vector3.up;
                 if(Physics.Linecast(origin,guard.transform.position+Vector3.up,out var hit,mission.ObstructionMask,QueryTriggerInteraction.Ignore)
                     &&hit.transform!=guard.transform&&!hit.transform.IsChildOf(guard.transform))continue;
-                target=guard;ready=guard.CanSilentTakedown()&&mission.ModernCombat.AttackCooldownRemaining<=.01f&&!mission.ModernCombat.IsReloading;return true;
+                target=guard;ready=open&&mission.ModernCombat.AttackCooldownRemaining<=.01f&&!mission.ModernCombat.IsReloading;return true;
             }
             return false;
         }
@@ -166,20 +173,28 @@ namespace ShadowVale.Map01
         {
             if(!enabled||!mission.IsInitialized||mission.Stopped)return;
             if(mission.ModernCombat!=null&&mission.ModernCombat.TrySpecialMelee==null){boundCombat=mission.ModernCombat;boundCombat.TrySpecialMelee=TryPlayerTakedown;}
-            if(quest.Stage==Map01Quest.RescueStage&&CurrentPhase==Phase.Captive){GetComponent<Map01SaveSystem>().EnsureRescueCheckpoint();Overhear();}
-            if(CurrentPhase!=Phase.Escorting||Time.time<nextWaveCheck)return;
+            if(quest.Stage==Map01Quest.RescueStage&&CurrentPhase==Phase.Captive){GetComponent<Map01SaveSystem>().EnsureRescueCheckpoint();TryApproachIntro();if(!mission.Cinematic)Overhear();}
+            if(CurrentPhase!=Phase.Escorting)return;
             GetComponent<Map01SaveSystem>().EnsureEscortCheckpoint();
-            nextWaveCheck=Time.time+.4f;var nam=mission.player.position;var hung=mission.hung.position;
-            if(!SafeReached&&Vector3.Distance(nam,Layout.safeEntry.position)<=Layout.safeRadius&&Vector3.Distance(hung,Layout.safeEntry.position)<=Layout.safeRadius){
-                SafeReached=true;foreach(var guard in pursuers)if(guard!=null&&guard.Alive)guard.CeasePursuit();
-                mission.Say("Nam: Đến căn cứ rồi. Hùng, vào hầm với tôi!",4);
-            }
-            if(SafeReached&&Vector3.Distance(nam,Layout.shelterDoor.position)<=Layout.doorRadius&&Vector3.Distance(hung,Layout.shelterDoor.position)<=Layout.doorRadius){
-                CurrentPhase=Phase.EnteringShelter;
+            var nam=mission.player.position;var hung=mission.hung.position;
+            bool namFirst=Vector3.Distance(nam,Layout.shelterDoor.position)<=Layout.doorRadius;
+            bool hungFirst=Vector3.Distance(hung,Layout.shelterDoor.position)<=Layout.doorRadius;
+            if(namFirst||hungFirst){
                 var cinematic=GetComponent<Map01RescueCinematic>();if(cinematic==null)cinematic=gameObject.AddComponent<Map01RescueCinematic>();
-                if(!cinematic.RunHome(this))CurrentPhase=Phase.Escorting;
-            }else if(!SafeReached)TrySpawnWaves();
+                if(cinematic.RunHome(this,!namFirst&&hungFirst)){
+                    CurrentPhase=Phase.EnteringShelter;SafeReached=true;
+                    foreach(var guard in pursuers)if(guard!=null&&guard.Alive)guard.CeasePursuit();
+                }
+            }else if(!SafeReached&&Time.time>=nextWaveCheck){nextWaveCheck=Time.time+.4f;TrySpawnWaves();}
         }
+        public void TryApproachIntro(){
+            if(mission==null||!mission.IsInitialized||Layout==null||quest.Stage!=Map01Quest.RescueStage||CurrentPhase!=Phase.Captive||mission.Stopped)return;
+            if(IntroSeen||CombatAlarm||!OverseerAlive||mission.Cinematic||Map01SaveSystem.IsRestoring||Time.time<calmUntil)return;
+            if(Vector3.Distance(mission.player.position,CaptivePost)>Layout.introRadius)return;
+            var cinematic=GetComponent<Map01RescueCinematic>();if(cinematic==null)cinematic=gameObject.AddComponent<Map01RescueCinematic>();
+            if(cinematic.ShowIntro(this,squad[0])){IntroSeen=true;nextChatter=Time.time+20;}
+        }
+
         private void Overhear()
         {
             if(Time.time<nextChatter||squad.Any(g=>g.Alive&&g.Engaged))return;
@@ -248,13 +263,14 @@ namespace ShadowVale.Map01
         public void Retry(){if(!Failed&&mission.PlayerHealth>0)return;GetComponent<Map01SaveSystem>().RestartRescue(quest.Stage==Map01Quest.EscortStage);}
         public void ResetSquad(){foreach(var guard in squad)if(guard!=null)guard.ReturnToPost();}
         public void RestoreHealth(float value)=>HungHealth=value<0?HungMaxHealth:Mathf.Clamp(value,0,HungMaxHealth);
-        public Snapshot Capture()=>new Snapshot{revision=2,phase=(int)CurrentPhase,waveMask=WaveMask,safe=SafeReached,reward=RewardDelivered,escortDistance=EscortDistance,combatAlarm=CombatAlarm};
+        public Snapshot Capture()=>new Snapshot{revision=3,introSeen=IntroSeen,phase=(int)CurrentPhase,waveMask=WaveMask,safe=SafeReached,reward=RewardDelivered,escortDistance=EscortDistance,combatAlarm=CombatAlarm};
         public void Restore(Snapshot saved,Map01EnemyController.Snapshot[] enemies)
         {
             if(saved==null||saved.revision<=0){
                 CurrentPhase=quest.Stage==Map01Quest.RescueStage?Phase.Captive:quest.Stage==Map01Quest.EscortStage?Phase.Escorting:Phase.Delivered;RewardDelivered=quest.Stage>Map01Quest.EscortStage;
                 if(CurrentPhase==Phase.Escorting){EscortDistance=PathLength(Path(CaptivePost,Layout.shelterDoor.position));float distance=RemainingHomeDistance();for(int i=0;i<3;i++)if(distance<=EscortDistance*Layout.waveThresholds[i])WaveMask|=1<<i;}
             }else{CurrentPhase=(Phase)saved.phase;WaveMask=saved.waveMask;SafeReached=saved.safe;RewardDelivered=saved.reward;EscortDistance=saved.escortDistance;}
+            IntroSeen=saved!=null&&saved.revision>=3?saved.introSeen:CurrentPhase!=Phase.Captive||Remaining<4||CombatAlarm;
             CombatAlarm=saved!=null&&saved.combatAlarm&&CurrentPhase==Phase.Captive;nextRally=0;
             foreach(var data in enemies??Array.Empty<Map01EnemyController.Snapshot>()){
                 string shortId=data.id.Substring(data.id.LastIndexOf('/')+1);if(!shortId.StartsWith("rescue_pursuit_",StringComparison.Ordinal))continue;

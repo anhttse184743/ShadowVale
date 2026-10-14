@@ -1,0 +1,122 @@
+{
+  "date": "2026-10-14",
+  "main_project": "G:/game/ShadowVale",
+  "hash_verification": {
+    "published_files": 154,
+    "all_published_sha_match": true,
+    "protected_files": 217,
+    "protected_mismatches": [],
+    "baseline": "Khoa 1f36340"
+  },
+  "editor_compile": {
+    "status": "completed",
+    "failed": false,
+    "errors": []
+  },
+  "editor_asset_probe": {
+    "project": "G:/game/ShadowVale/Assets",
+    "playing": false,
+    "compiling": false,
+    "scene": "",
+    "sceneDirty": false,
+    "recoveryApi": true,
+    "clips": [
+      {
+        "name": "Nam_Bush_GrabPull",
+        "found": true,
+        "human": true,
+        "seconds": 1.80000007
+      },
+      {
+        "name": "Nam_Bush_StruggleLoop",
+        "found": true,
+        "human": true,
+        "seconds": 2.00000024
+      },
+      {
+        "name": "Nam_Bush_Finish",
+        "found": true,
+        "human": true,
+        "seconds": 2.4
+      },
+      {
+        "name": "Nam_Bush_Escape",
+        "found": true,
+        "human": true,
+        "seconds": 1.4000001
+      },
+      {
+        "name": "Nam_Bush_Recovery",
+        "found": true,
+        "human": true,
+        "seconds": 2.10000014
+      },
+      {
+        "name": "Enemy_Bush_GrabPull",
+        "found": true,
+        "human": true,
+        "seconds": 1.80000007
+      },
+      {
+        "name": "Enemy_Bush_StruggleLoop",
+        "found": true,
+        "human": true,
+        "seconds": 2
+      },
+      {
+        "name": "Enemy_Bush_Finish",
+        "found": true,
+        "human": true,
+        "seconds": 2.4
+      },
+      {
+        "name": "Enemy_Bush_Escape",
+        "found": true,
+        "human": true,
+        "seconds": 1.4000001
+      },
+      {
+        "name": "Enemy_Bush_Recovery",
+        "found": true,
+        "human": true,
+        "seconds": 3.10000014
+      },
+      {
+        "name": "Enemy_Interrogate_Strike",
+        "found": true,
+        "human": true,
+        "seconds": 3.00000024
+      },
+      {
+        "name": "Enemy_Interrogate_Walk",
+        "found": true,
+        "human": true,
+        "seconds": 0.6666667
+      },
+      {
+        "name": "Hung_Captive_Recoil",
+        "found": true,
+        "human": true,
+        "seconds": 3.00000024
+      },
+      {
+        "name": "Hung_Bound_Execution",
+        "found": true,
+        "human": true,
+        "seconds": 3.00000024
+      }
+    ],
+    "avatarValid": true,
+    "leftVertices": 40755,
+    "rightVertices": 40914
+  },
+  "validation_tests": {
+    "total": 17,
+    "passed": 17,
+    "failed": 0,
+    "report": "rescue-khoa-complete.xml",
+    "execution": "Isolated checkout from same Khoa 1f36340 baseline, published assets match SHA."
+  },
+  "visual_review": "Inspected front and both sides of pull, struggle, finish and escape on actual Map1 terrain. GameView and diagnostic close videos included.",
+  "limits": "Videos record individual branches, not a single uninterrupted manual whole-mission run; no production FPS benchmark."
+}

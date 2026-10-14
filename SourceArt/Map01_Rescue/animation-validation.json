@@ -1,0 +1,79 @@
+[
+  {
+    "clip": "Hung_Captive_Recoil",
+    "seconds": 3,
+    "fps": 30,
+    "bone_count": 28,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Hung_Bound_Execution",
+    "seconds": 3,
+    "fps": 30,
+    "bone_count": 28,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Enemy_Interrogate_Strike",
+    "seconds": 3,
+    "fps": 30,
+    "bone_count": 28,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Nam_Bush_GrabPull",
+    "seconds": 2.6,
+    "fps": 30,
+    "bone_count": 58,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Enemy_Bush_GrabPull",
+    "seconds": 2.6,
+    "fps": 30,
+    "bone_count": 28,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Nam_Bush_StruggleLoop",
+    "seconds": 2,
+    "fps": 30,
+    "bone_count": 58,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Enemy_Bush_StruggleLoop",
+    "seconds": 2,
+    "fps": 30,
+    "bone_count": 28,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Nam_Bush_Finish",
+    "seconds": 2.4,
+    "fps": 30,
+    "bone_count": 58,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Enemy_Bush_Finish",
+    "seconds": 2.4,
+    "fps": 30,
+    "bone_count": 28,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Nam_Bush_Escape",
+    "seconds": 1.4,
+    "fps": 30,
+    "bone_count": 58,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Enemy_Bush_Escape",
+    "seconds": 1.4,
+    "fps": 30,
+    "bone_count": 28,
+    "rest_preserved": true
+  }
+]

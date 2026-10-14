@@ -1,0 +1,9 @@
+{
+  "checks": {
+    "ShadowVale.Map01.Tests.RescueBushTests.EitherArrivalStartsWalkingFromActualPositions": "Passed",
+    "ShadowVale.Map01.Tests.RescueTests.NamAloneAtDoorStartsShelterAndSkipRewardsExactlyOnce": "Passed",
+    "ShadowVale.Map01.Tests.ShelterAutoFinishTests.HungFirstStartsImmediatelyAndCompletesWhenNamEnters": "Passed",
+    "ShadowVale.Map01.Tests.ShelterAutoFinishTests.NamFirstCompletesInsideWhileHungIsStillFarOutside": "Passed"
+  },
+  "rule": "Either arrival starts; Nam reaching Shelter Run[2] automatically uses Skip finalization, without waiting for Hung or minimum eight seconds."
+}

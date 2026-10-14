@@ -37,7 +37,10 @@ namespace ShadowVale.Map01
             var lower=actor.GetBoneTransform(HumanBodyBones.LeftLowerArm);
             var upper=actor.GetBoneTransform(HumanBodyBones.LeftUpperArm);
             var neutral=lower.rotation;
-            var wrist=Quaternion.FromToRotation(neutral*fingerAxis,rifle.weapon.transform.up)*neutral;
+            var desiredWrist=Quaternion.FromToRotation(neutral*fingerAxis,rifle.weapon.transform.up)*neutral;
+            // Keep the authored wrist orientation as the anatomical reference.
+            // A foregrip must not roll the hand ninety degrees to reach a prop.
+            var wrist=Quaternion.RotateTowards(left.rotation,desiredWrist,35f);
             var target=rifle.support.position-wrist*Vector3.Scale(palm,left.lossyScale);
             var origin=upper.position;float a=Vector3.Distance(origin,lower.position),b=Vector3.Distance(lower.position,left.position);
             var axis=(target-origin).normalized;float d=Mathf.Clamp(Vector3.Distance(origin,target),Mathf.Abs(a-b)+.001f,(a+b)*.97f);

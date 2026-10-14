@@ -294,9 +294,8 @@ namespace ShadowVale.Map01
                 GUI.color = new Color(.96f, .92f, .8f, alpha * Mathf.Clamp01((IntroDuration - introRemaining) / .6f));
                 var title = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter,
                     fontSize = Mathf.RoundToInt(Screen.height * .055f), fontStyle = FontStyle.Bold };
-                GUI.Label(new Rect(0, Screen.height * .39f, Screen.width, Screen.height * .12f), "MAP 1", title);
                 title.fontSize = Mathf.RoundToInt(Screen.height * .027f); title.fontStyle = FontStyle.Normal;
-                GUI.Label(new Rect(0, Screen.height * .52f, Screen.width, Screen.height * .08f), "BẾN TÀU PHÍA BẮC", title);
+                GUI.Label(new Rect(0, Screen.height * .46f, Screen.width, Screen.height * .08f), "BẾN TÀU PHÍA BẮC", title);
                 GUI.color = savedColor; GUI.depth = savedDepth;
                 return;
             }
