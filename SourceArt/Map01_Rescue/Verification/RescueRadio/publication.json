@@ -1,0 +1,86 @@
+[
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01RescueCinematic.cs",
+    "sha256": "161663cb6394a791b15c4e9adea9fcd4c1621c55efce3535c0e3c79d22854c5c"
+  },
+  {
+    "path": "Assets/_Project/Map01/Tests/RescueBushTests.cs",
+    "sha256": "8dbe93a1f15c2f767e4193e02dfa9a46b136374b18211f9dcfffbe9c7e5dd0c5"
+  },
+  {
+    "path": "Assets/_Project/Map01/Tests/RescueRadioIntroTests.cs",
+    "sha256": "765df97de673b7946148c37e2aa0037bb93014e641e074db67aa34d32bac7c9b"
+  },
+  {
+    "path": "Assets/_Project/Map01/Tests/RescueRadioIntroTests.cs.meta",
+    "sha256": "a46f5ab9619951a76a6ca40558b9954378abb51ba8302d01656dcc89b3d6c459"
+  },
+  {
+    "path": "Assets/Resources/Dialogue/voice-catalog.json",
+    "sha256": "7fee1806a4b9d5e6e5d959514788fc1d47a741dbd6de9bda5407a8e023950d9e"
+  },
+  {
+    "path": "SourceArt/Dialogue/voice-catalog.json",
+    "sha256": "7fee1806a4b9d5e6e5d959514788fc1d47a741dbd6de9bda5407a8e023950d9e"
+  },
+  {
+    "path": "SourceArt/Dialogue/rebuild_rescue_radio_audio.py",
+    "sha256": "7ad458634013cbf84f078c8705d3e7c816b26b1f2aaee9c868d8855f4b05edd9"
+  },
+  {
+    "path": "SourceArt/Dialogue/rescue-radio-preview.wav",
+    "sha256": "b8f14957322449fe7bde68dfb34d4892999b3664e7b28db2574ba1cf1800e78d"
+  },
+  {
+    "path": "SourceArt/Dialogue/rescue-radio-validation.json",
+    "sha256": "ba7760df2e59982b366a8d21191394edf4c660987e9eec3df3bf445eae279f82"
+  },
+  {
+    "path": "Assets/Resources/Dialogue/VI/m1_rescue_radio_report.wav",
+    "sha256": "a2740672243d8a6ecc58aa3f6ce666298ac81d304ef5870d6b069d44b568d862"
+  },
+  {
+    "path": "Assets/Resources/Dialogue/VI/m1_rescue_radio_report.wav.meta",
+    "sha256": "1c9d781cd2e2b1bae76c1c2ae776c827405341c92ffd95f3358ad4e536b12751"
+  },
+  {
+    "path": "SourceArt/Dialogue/Raw/m1_rescue_radio_report.mp3",
+    "sha256": "dc8415d2530c305cc45f9f01070998582cec6bfedc6150fd5578811e3b171425"
+  },
+  {
+    "path": "SourceArt/Dialogue/Raw/m1_rescue_radio_report_dry.wav",
+    "sha256": "9e20953ce77ac51ef9764887244d09837d1459a00d9e0f9d482a31e4fb00223f"
+  },
+  {
+    "path": "Assets/Resources/Dialogue/VI/m1_rescue_radio_instruction.wav",
+    "sha256": "fd095da59cca42c876f82a2340e792b554bbe0f247311691aa9b96d3be89e36d"
+  },
+  {
+    "path": "Assets/Resources/Dialogue/VI/m1_rescue_radio_instruction.wav.meta",
+    "sha256": "a41bf52b72032be363f51c88858dba4958e06969e61b5213e543f0c540b7dcd3"
+  },
+  {
+    "path": "SourceArt/Dialogue/Raw/m1_rescue_radio_instruction.mp3",
+    "sha256": "9b1ab499aae1c6c2e219e6c874879fc017882a0fcedba6c16b53b98acb850368"
+  },
+  {
+    "path": "SourceArt/Dialogue/Raw/m1_rescue_radio_instruction_dry.wav",
+    "sha256": "dbfa41279538dba923b4c91fb8eabb447064ed60c149134b31000952dda75351"
+  },
+  {
+    "path": "Assets/Resources/Dialogue/VI/m1_rescue_radio_ack.wav",
+    "sha256": "04cc8c4814032faa92573613138308e51ca818709665cd327bc1bd0753fa1f2f"
+  },
+  {
+    "path": "Assets/Resources/Dialogue/VI/m1_rescue_radio_ack.wav.meta",
+    "sha256": "b0071566062bbfbe06b64d747560cb94b40d68969bbb55fe92fc06a22ed36d13"
+  },
+  {
+    "path": "SourceArt/Dialogue/Raw/m1_rescue_radio_ack.mp3",
+    "sha256": "a2b3e052a52c977ef8fd6943f59eca494408c817cee35fe07b27d734002c264c"
+  },
+  {
+    "path": "SourceArt/Dialogue/Raw/m1_rescue_radio_ack_dry.wav",
+    "sha256": "614456863670613082bab50f763968798e6c0d1df2b916530ccdaddfa7e0918a"
+  }
+]

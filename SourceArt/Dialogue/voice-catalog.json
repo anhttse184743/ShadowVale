@@ -365,20 +365,6 @@
       "resource": "Dialogue/VI/m1_jetty_observation"
     },
     {
-      "id": "m1_rescue_intro_nam",
-      "speaker": "Nam",
-      "voice": "Brodie",
-      "text": "Bên địch rất đông, mình không thể xông vào như thế được, phải tìm cách đánh lạc hướng thôi.",
-      "caption": "Nam: Bên địch rất đông, mình không thể xông vào như thế được, phải tìm cách đánh lạc hướng thôi.",
-      "match": "Nam: Bên địch rất đông, mình không thể xông vào như thế được, phải tìm cách đánh lạc hướng thôi.",
-      "language": "vi",
-      "radio": false,
-      "taskId": "e4a50b8f-564d-4db1-b267-42348b691769",
-      "reportedDuration": 4.64,
-      "duration": 4.64,
-      "resource": "Dialogue/VI/m1_rescue_intro_nam"
-    },
-    {
       "id": "m1_rescue_alarm",
       "speaker": "Lính",
       "voice": "Martin",
@@ -433,6 +419,51 @@
       "reportedDuration": 2.08,
       "duration": 2.08,
       "resource": "Dialogue/VI/m1_rescue_shelter"
+    },
+    {
+      "id": "m1_rescue_radio_report",
+      "speaker": "Nam",
+      "voice": "Brodie",
+      "text": "Chỉ huy, tôi đã tìm thấy Hùng ở bến tàu. Địch ở đây rất đông, tôi không thể đánh trực diện. Xin chỉ thị.",
+      "caption": "Nam (bộ đàm): Chỉ huy, tôi đã tìm thấy Hùng ở bến tàu. Địch ở đây rất đông, tôi không thể đánh trực diện. Xin chỉ thị.",
+      "match": "",
+      "language": "vi",
+      "radio": true,
+      "taskId": "8302fa7d-03ae-4c65-a715-8682a2d0bc30",
+      "model": "eleven_v3",
+      "duration": 7.28,
+      "reportedDuration": 7.28,
+      "resource": "Dialogue/VI/m1_rescue_radio_report"
+    },
+    {
+      "id": "m1_rescue_radio_instruction",
+      "speaker": "Chỉ huy",
+      "voice": "Tom",
+      "text": "Nam, tuyệt đối không nổ súng. Dùng đá đánh lạc hướng, vòng ra sau hạ lính giám sát rồi cứu Hùng.",
+      "caption": "Chỉ huy (bộ đàm): Nam, tuyệt đối không nổ súng. Dùng đá đánh lạc hướng, vòng ra sau hạ lính giám sát rồi cứu Hùng.",
+      "match": "",
+      "language": "vi",
+      "radio": true,
+      "taskId": "3080192e-a025-4934-bf8b-f5c026e238ae",
+      "model": "eleven_v3",
+      "duration": 7.06,
+      "reportedDuration": 7.12,
+      "resource": "Dialogue/VI/m1_rescue_radio_instruction"
+    },
+    {
+      "id": "m1_rescue_radio_ack",
+      "speaker": "Nam",
+      "voice": "Brodie",
+      "text": "Rõ. Tôi sẽ đánh lạc hướng rồi tiếp cận từ phía sau.",
+      "caption": "Nam (bộ đàm): Rõ. Tôi sẽ đánh lạc hướng rồi tiếp cận từ phía sau.",
+      "match": "",
+      "language": "vi",
+      "radio": true,
+      "taskId": "c7608e10-666b-47d4-b190-a0ba4b0f6c83",
+      "model": "eleven_v3",
+      "duration": 3.6,
+      "reportedDuration": 3.6,
+      "resource": "Dialogue/VI/m1_rescue_radio_ack"
     }
   ]
 }
