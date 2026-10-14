@@ -1,0 +1,37 @@
+[
+  {
+    "id": "m1_rescue_intro_nam",
+    "duration": 4.64,
+    "peak": 0.6459537148475647,
+    "rms": 0.10499217361211777,
+    "radio": false
+  },
+  {
+    "id": "m1_rescue_alarm",
+    "duration": 2.48,
+    "peak": 0.6393407583236694,
+    "rms": 0.10500000417232513,
+    "radio": false
+  },
+  {
+    "id": "m1_rescue_execute_order",
+    "duration": 1.92,
+    "peak": 0.6187260150909424,
+    "rms": 0.10499726235866547,
+    "radio": false
+  },
+  {
+    "id": "m1_rescue_interrogate",
+    "duration": 1.52,
+    "peak": 0.53421950340271,
+    "rms": 0.10499923676252365,
+    "radio": false
+  },
+  {
+    "id": "m1_rescue_shelter",
+    "duration": 2.08,
+    "peak": 0.5236939787864685,
+    "rms": 0.10499858856201172,
+    "radio": false
+  }
+]

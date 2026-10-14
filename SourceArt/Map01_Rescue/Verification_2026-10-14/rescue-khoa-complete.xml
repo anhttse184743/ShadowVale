@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="17" result="Passed" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-14 08:05:51Z" end-time="2026-10-14 08:06:11Z" duration="19.406121">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="179" result="Passed" start-time="2026-10-14 08:05:51Z" end-time="2026-10-14 08:06:11Z" duration="19.406121" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1152" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/dangk/Documents/Codex/2026-09-20/du/ShadowValeValidation/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="119" result="Passed" start-time="2026-10-14 08:05:52Z" end-time="2026-10-14 08:06:11Z" duration="18.753251" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="2080" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1153" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="119" result="Passed" start-time="2026-10-14 08:05:52Z" end-time="2026-10-14 08:06:11Z" duration="18.687278" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1154" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="119" result="Passed" start-time="2026-10-14 08:05:52Z" end-time="2026-10-14 08:06:11Z" duration="18.619404" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1155" name="Tests" fullname="ShadowVale.Map01.Tests" runstate="Runnable" testcasecount="119" result="Passed" start-time="2026-10-14 08:05:52Z" end-time="2026-10-14 08:06:11Z" duration="18.560390" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1076" name="Map02ArrivalTests" fullname="ShadowVale.Map01.Tests.Map02ArrivalTests" classname="ShadowVale.Map01.Tests.Map02ArrivalTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-14 08:00:17Z" end-time="2026-10-14 08:00:24Z" duration="6.788042" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1079" name="CompletedCheckpointTransfersVisibleBoatAndKeepsRowersHandsFree" fullname="ShadowVale.Map01.Tests.Map02ArrivalTests.CompletedCheckpointTransfersVisibleBoatAndKeepsRowersHandsFree" methodname="CompletedCheckpointTransfersVisibleBoatAndKeepsRowersHandsFree" classname="ShadowVale.Map01.Tests.Map02ArrivalTests" runstate="Runnable" seed="1096136738" result="Passed" start-time="2026-10-14 07:59:48Z" end-time="2026-10-14 08:00:06Z" duration="18.237117" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <output><![CDATA[Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+]]></output>
+              </test-case>
+              <test-case id="1083" name="SkippedArrivalUsesSameDrySpawn" fullname="ShadowVale.Map01.Tests.Map02ArrivalTests.SkippedArrivalUsesSameDrySpawn" methodname="SkippedArrivalUsesSameDrySpawn" classname="ShadowVale.Map01.Tests.Map02ArrivalTests" runstate="Runnable" seed="1933838331" result="Passed" start-time="2026-10-14 08:00:06Z" end-time="2026-10-14 08:00:24Z" duration="18.123815" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <output><![CDATA[Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1097" name="RescueBushTests" fullname="ShadowVale.Map01.Tests.RescueBushTests" classname="ShadowVale.Map01.Tests.RescueBushTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-14 08:02:24Z" end-time="2026-10-14 08:02:41Z" duration="17.238710" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1099" name="AllNewAssetsUseHumanoidMotionAndVietnameseDirectVoices" fullname="ShadowVale.Map01.Tests.RescueBushTests.AllNewAssetsUseHumanoidMotionAndVietnameseDirectVoices" methodname="AllNewAssetsUseHumanoidMotionAndVietnameseDirectVoices" classname="ShadowVale.Map01.Tests.RescueBushTests" runstate="Runnable" seed="867004916" result="Passed" start-time="2026-10-14 08:00:24Z" end-time="2026-10-14 08:00:25Z" duration="0.509787" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1101" name="BushSuccessAndEscapeKeepEnemyAliveUntilFinisherAndRestoreControls" fullname="ShadowVale.Map01.Tests.RescueBushTests.BushSuccessAndEscapeKeepEnemyAliveUntilFinisherAndRestoreControls" methodname="BushSuccessAndEscapeKeepEnemyAliveUntilFinisherAndRestoreControls" classname="ShadowVale.Map01.Tests.RescueBushTests" runstate="Runnable" seed="284344593" result="Passed" start-time="2026-10-14 08:00:25Z" end-time="2026-10-14 08:01:00Z" duration="35.649684" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <output><![CDATA[Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+]]></output>
+              </test-case>
+              <test-case id="1102" name="EitherArrivalStartsWalkingFromActualPositions" fullname="ShadowVale.Map01.Tests.RescueBushTests.EitherArrivalStartsWalkingFromActualPositions" methodname="EitherArrivalStartsWalkingFromActualPositions" classname="ShadowVale.Map01.Tests.RescueBushTests" runstate="Runnable" seed="1587378433" result="Passed" start-time="2026-10-14 08:01:00Z" end-time="2026-10-14 08:01:33Z" duration="32.596796" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1100" name="IntroAndExecutionStayBoundAndPresentDeathBeforeFailure" fullname="ShadowVale.Map01.Tests.RescueBushTests.IntroAndExecutionStayBoundAndPresentDeathBeforeFailure" methodname="IntroAndExecutionStayBoundAndPresentDeathBeforeFailure" classname="ShadowVale.Map01.Tests.RescueBushTests" runstate="Runnable" seed="459739135" result="Passed" start-time="2026-10-14 08:01:33Z" end-time="2026-10-14 08:02:13Z" duration="40.002296" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1103" name="IntroSkipAndRetryKeepSeenFlagAndBushEscOnlyPauses" fullname="ShadowVale.Map01.Tests.RescueBushTests.IntroSkipAndRetryKeepSeenFlagAndBushEscOnlyPauses" methodname="IntroSkipAndRetryKeepSeenFlagAndBushEscOnlyPauses" classname="ShadowVale.Map01.Tests.RescueBushTests" runstate="Runnable" seed="770501250" result="Passed" start-time="2026-10-14 08:02:13Z" end-time="2026-10-14 08:02:41Z" duration="28.179892" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1098" name="TimingNeedsThreeWinsAllowsOneMissAndFailsOnSecond" fullname="ShadowVale.Map01.Tests.RescueBushTests.TimingNeedsThreeWinsAllowsOneMissAndFailsOnSecond" methodname="TimingNeedsThreeWinsAllowsOneMissAndFailsOnSecond" classname="ShadowVale.Map01.Tests.RescueBushTests" runstate="Runnable" seed="196171898" result="Passed" start-time="2026-10-14 08:02:41Z" end-time="2026-10-14 08:02:41Z" duration="0.001471" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1111" name="RescueTests" fullname="ShadowVale.Map01.Tests.RescueTests" classname="ShadowVale.Map01.Tests.RescueTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-14 08:05:52Z" end-time="2026-10-14 08:06:11Z" duration="18.515655" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1115" name="ConfirmedSightExecutesButPartialSuspicionDoesNot" fullname="ShadowVale.Map01.Tests.RescueTests.ConfirmedSightExecutesButPartialSuspicionDoesNot" methodname="ConfirmedSightExecutesButPartialSuspicionDoesNot" classname="ShadowVale.Map01.Tests.RescueTests" runstate="Runnable" seed="457450897" result="Passed" start-time="2026-10-14 08:02:41Z" end-time="2026-10-14 08:03:04Z" duration="23.143329" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <output><![CDATA[Can't call Animator.Update on inactive object
+]]></output>
+              </test-case>
+              <test-case id="1120" name="EscortFailureRetriesFromFreedHungWithOriginalInventory" fullname="ShadowVale.Map01.Tests.RescueTests.EscortFailureRetriesFromFreedHungWithOriginalInventory" methodname="EscortFailureRetriesFromFreedHungWithOriginalInventory" classname="ShadowVale.Map01.Tests.RescueTests" runstate="Runnable" seed="781338344" result="Passed" start-time="2026-10-14 08:03:04Z" end-time="2026-10-14 08:03:30Z" duration="26.006520" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1113" name="FootstepsAndStonesInvestigateWithoutExecutingHung" fullname="ShadowVale.Map01.Tests.RescueTests.FootstepsAndStonesInvestigateWithoutExecutingHung" methodname="FootstepsAndStonesInvestigateWithoutExecutingHung" classname="ShadowVale.Map01.Tests.RescueTests" runstate="Runnable" seed="775001488" result="Passed" start-time="2026-10-14 08:03:30Z" end-time="2026-10-14 08:03:46Z" duration="15.197422" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1112" name="FourGuardsHaveThreeSeparatedConnectedRoutesAndApproaches" fullname="ShadowVale.Map01.Tests.RescueTests.FourGuardsHaveThreeSeparatedConnectedRoutesAndApproaches" methodname="FourGuardsHaveThreeSeparatedConnectedRoutesAndApproaches" classname="ShadowVale.Map01.Tests.RescueTests" runstate="Runnable" seed="607971305" result="Passed" start-time="2026-10-14 08:03:46Z" end-time="2026-10-14 08:03:59Z" duration="13.201203" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1117" name="FreeRequiresFourKillsButNoHealingItemAndWaitsForStandingUp" fullname="ShadowVale.Map01.Tests.RescueTests.FreeRequiresFourKillsButNoHealingItemAndWaitsForStandingUp" methodname="FreeRequiresFourKillsButNoHealingItemAndWaitsForStandingUp" classname="ShadowVale.Map01.Tests.RescueTests" runstate="Runnable" seed="927858112" result="Passed" start-time="2026-10-14 08:03:59Z" end-time="2026-10-14 08:04:21Z" duration="21.822042" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1116" name="KnifeUsesPreDamageValidationAndPausesOtherGuardsThenRestoresInput" fullname="ShadowVale.Map01.Tests.RescueTests.KnifeUsesPreDamageValidationAndPausesOtherGuardsThenRestoresInput" methodname="KnifeUsesPreDamageValidationAndPausesOtherGuardsThenRestoresInput" classname="ShadowVale.Map01.Tests.RescueTests" runstate="Runnable" seed="2063233333" result="Passed" start-time="2026-10-14 08:04:21Z" end-time="2026-10-14 08:04:39Z" duration="18.798370" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1119" name="NamAloneAtDoorStartsShelterAndSkipRewardsExactlyOnce" fullname="ShadowVale.Map01.Tests.RescueTests.NamAloneAtDoorStartsShelterAndSkipRewardsExactlyOnce" methodname="NamAloneAtDoorStartsShelterAndSkipRewardsExactlyOnce" classname="ShadowVale.Map01.Tests.RescueTests" runstate="Runnable" seed="1345133248" result="Passed" start-time="2026-10-14 08:04:39Z" end-time="2026-10-14 08:05:04Z" duration="24.978954" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1114" name="RealGunshotCommitsExecutionBeforeLethalHitscanAndRetryRestoresItems" fullname="ShadowVale.Map01.Tests.RescueTests.RealGunshotCommitsExecutionBeforeLethalHitscanAndRetryRestoresItems" methodname="RealGunshotCommitsExecutionBeforeLethalHitscanAndRetryRestoresItems" classname="ShadowVale.Map01.Tests.RescueTests" runstate="Runnable" seed="1719527277" result="Passed" start-time="2026-10-14 08:05:04Z" end-time="2026-10-14 08:05:40Z" duration="35.393559" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1118" name="ThreeWavesSpawnOnlyOnceOffscreenAndReloadKeepsDefeatedEnemies" fullname="ShadowVale.Map01.Tests.RescueTests.ThreeWavesSpawnOnlyOnceOffscreenAndReloadKeepsDefeatedEnemies" methodname="ThreeWavesSpawnOnlyOnceOffscreenAndReloadKeepsDefeatedEnemies" classname="ShadowVale.Map01.Tests.RescueTests" runstate="Runnable" seed="435241953" result="Passed" start-time="2026-10-14 08:05:40Z" end-time="2026-10-14 08:06:11Z" duration="30.756801" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/dangk/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

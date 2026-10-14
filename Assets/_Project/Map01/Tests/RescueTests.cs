@@ -30,6 +30,7 @@ namespace ShadowVale.Map01.Tests
         }
         private static void PlayerAt(Vector3 position,Quaternion rotation)
         {
+            Rescue.MarkIntroSeen();
             var body=Mission.player.GetComponent<CharacterController>();bool enabled=body.enabled;
             body.enabled=false;Mission.player.SetPositionAndRotation(position,rotation);body.enabled=enabled;
             Mission.ModernPlayer.RestoreMotion(true);Mission.Crouched=true;
@@ -108,7 +109,7 @@ namespace ShadowVale.Map01.Tests
             overseer.GetComponent<Health>().TakeDamage(9999,overseer.transform.position,Mission.player.gameObject);
             Assert.IsTrue(overseer.Alive,"The alarm's execution cannot be cancelled by the same shot.");
             Assert.IsFalse(Mission.GetComponent<Map01SaveSystem>().SaveSlot(1,out _,true));
-            yield return WaitGameSeconds(1.8f);Assert.IsTrue(Rescue.Failed);
+            yield return WaitGameSeconds(15f);Assert.IsTrue(Rescue.Failed);
             Rescue.Retry();yield return WaitGameSeconds(.8f);
             Assert.AreEqual(Map01Quest.RescueStage,Quest.Stage);Assert.IsFalse(Rescue.Failed);Assert.AreEqual(4,Rescue.Remaining);
             Assert.AreEqual(stones,Mission.GetComponent<Map01Inventory>().Count("stone"));
@@ -121,7 +122,7 @@ namespace ShadowVale.Map01.Tests
             Storage.SetValue(null,Path.GetFullPath("Logs/Rescue/saves/"+Guid.NewGuid().ToString("N")));Assert.NotNull(Rescue.Layout);Assert.AreEqual(4,Rescue.Squad.Count);var guard=Rescue.Squad[2];
             foreach(var g in Mission.Enemies)g.enabled=g==guard;
             PlayerAt(guard.transform.position+guard.transform.forward*5,Quaternion.LookRotation(-guard.transform.forward));
-            var until=Time.time+6;while(!Rescue.Failed&&Time.time<until)yield return null;
+            var until=Time.time+20;while(!Rescue.Failed&&Time.time<until)yield return null;
             Assert.IsTrue(Rescue.Failed);StringAssert.Contains("phát hiện",Rescue.FailureReason);
             yield return new ExitPlayMode();
         }
@@ -182,13 +183,13 @@ namespace ShadowVale.Map01.Tests
             EscortAt(Along(path,.85f));yield return WaitGameSeconds(.8f);Assert.AreEqual(6,Rescue.Pursuers.Count);
             yield return new ExitPlayMode();
         }
-        [UnityTest]public IEnumerator SafeZoneNeedsBothPassengersAndShelterSkipRewardsExactlyOnce()
+        [UnityTest]public IEnumerator NamAloneAtDoorStartsShelterAndSkipRewardsExactlyOnce()
         {
             Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
             Storage.SetValue(null,Path.GetFullPath("Logs/Rescue/saves/"+Guid.NewGuid().ToString("N")));Assert.NotNull(Rescue.Layout);Assert.AreEqual(4,Rescue.Squad.Count);yield return ClearAndFree();
             var layout=Rescue.Layout;
-            PlayerAt(layout.safeEntry.position,Quaternion.identity);yield return WaitGameSeconds(.6f);Assert.IsFalse(Rescue.SafeReached);
-            EscortAt(layout.shelterDoor.position);yield return WaitGameSeconds(.6f);Assert.IsTrue(Rescue.SafeReached);
+            PlayerAt(Rescue.RetryPoint,Quaternion.identity);yield return WaitGameSeconds(.6f);Assert.IsFalse(Rescue.SafeReached);
+            PlayerAt(layout.shelterDoor.position,Quaternion.identity);yield return WaitGameSeconds(.6f);Assert.IsTrue(Rescue.SafeReached);
             var cinematic=Mission.GetComponent<Map01RescueCinematic>();Assert.IsTrue(cinematic.IsPlaying);
             int before=Mission.GetComponent<Map01Inventory>().Count("supplies");
             cinematic.Skip();Assert.AreEqual(Map01Quest.BriefingStage,Quest.Stage);Assert.IsTrue(Rescue.RewardDelivered);

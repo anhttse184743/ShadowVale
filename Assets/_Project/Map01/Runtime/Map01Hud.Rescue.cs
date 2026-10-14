@@ -8,7 +8,7 @@ namespace ShadowVale.Map01
     public sealed partial class Map01Hud
     {
         private Map01Rescue rescue;
-        private Texture2D takedownBadge,takedownKnife;
+        private Texture2D takedownBadge,takedownKnife,takedownLeaf;
         private GUIStyle takedownHint;
         private Map01EnemyController hintGuard;
         private Transform hintHead;
@@ -42,14 +42,30 @@ namespace ShadowVale.Map01
                     return blade||hilt||handle?Color.white:Color.clear;
                 });
                 takedownHint=new GUIStyle(hudSmall){fontSize=16,alignment=TextAnchor.MiddleCenter,wordWrap=false};
+                takedownLeaf=MakeTexture(64,(u,v)=>{
+                    var p=new Vector2((u-.5f)*1.3f,(v-.5f)*.85f);
+                    return p.magnitude<.35f&&Mathf.Abs(p.x+p.y)<.2f?Color.white:Color.clear;
+                });
             }
+            var ambush=GetComponent<Map01BushTakedown>();bool bush=ambush!=null&&(ambush.Qualifies(target,out _)||!ready&&ambush.OffersPullHint(target));
             var tint=ready?new Color(.65f,1f,.36f):new Color(.58f,.61f,.53f,.8f);
             var centre=new Vector2(Mathf.Clamp(view.x*width,130,width-130),Mathf.Clamp((1-view.y)*height,92,height-150));
             var badge=new Rect(centre.x-29,centre.y-29,58,58);
             var old=GUI.color;GUI.color=tint;GUI.DrawTexture(badge,takedownBadge);GUI.DrawTexture(badge,takedownKnife);GUI.color=old;
+            if(bush){GUI.color=tint;GUI.DrawTexture(new Rect(centre.x+14,centre.y-24,24,28),takedownLeaf);GUI.color=old;}
             var label=new Rect(centre.x-130,centre.y+31,260,27);
             HudFill(label,new Color(.025f,.04f,.02f,.8f));takedownHint.normal.textColor=tint;
-            GUI.Label(label,ready?"[CHUỘT TRÁI] KẾT LIỄU":target.Engaged?"ĐỊCH ĐÃ PHÁT HIỆN":"VÒNG RA SAU · ĐẾN GẦN",takedownHint);
+            GUI.Label(label,ready?(bush?"[CHUỘT TRÁI] KÉO VÀO BỤI":"[CHUỘT TRÁI] ĐÂM SAU LƯNG"):target.Engaged?"ĐỊCH ĐÃ PHÁT HIỆN":bush?"KÉO VÀO BỤI · ÁP SÁT BÊN HÔNG":"VÒNG RA SAU · ĐẾN GẦN",takedownHint);
+        }
+
+        private void DrawBushHelp(float y)
+        {
+            if(!rescue.IntroSeen||mission.Stopped||Vector3.Distance(mission.player.position,rescue.CaptivePost)>48)return;
+            var plate=new Rect(28,y,430,128);HudPanel(plate);
+            GUI.Label(new Rect(plate.x+12,plate.y+7,405,23),"PHỤC KÍCH TRONG BỤI",hudKey);
+            GUI.Label(new Rect(plate.x+12,plate.y+32,405,24),"2: Dao  ·  C/Ctrl: Ngồi  ·  Giữ/thả Q: Ném đá",hudSmall);
+            var wrap=new GUIStyle(hudSmall){wordWrap=true};
+            GUI.Label(new Rect(plate.x+12,plate.y+57,405,68),"Ẩn trong bụi đủ rộng. Dụ lính tới ≤ 2 m, từ bên hông/sau. Chuột trái khi icon dao + lá sáng xanh.",wrap);
         }
 
         private void DrawRescue(float width)
@@ -64,6 +80,7 @@ namespace ShadowVale.Map01
                 int alive = Mathf.Clamp(rescue.Remaining, 0, SquadLeft.Length - 1);
                 GUI.Label(new Rect(info.x+12,info.y+8,345,24), SquadLeft[alive] ??= $"LÍNH CÒN LẠI: {alive}/4", hudKey);
                 GUI.Label(new Rect(info.x+12,info.y+34,345,25), !rescue.OverseerAlive?"Đã hạ lính giám sát — có thể giao chiến":rescue.CombatAlarm?"Báo động — địch đang truy kích Nam":rescue.CanExecuteCaptive?"Giám sát đang canh Hùng — giữ im lặng":"Giám sát đã rời Hùng — vòng ra sau", hudSmall);
+                DrawBushHelp(info.yMax+8);
                 return;
             }
             if (rescue.HungDown)

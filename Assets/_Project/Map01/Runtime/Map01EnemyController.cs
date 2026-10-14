@@ -49,6 +49,26 @@ namespace ShadowVale.Map01
         private bool _agentUpdatesRotation;
         private Quaternion _heldRotation;
         private Vector3 _heldPosition;
+        private bool grappleOwned;
+        private int silentKind;
+        private Map01CinematicPose bushCorpse;
+        public void SetGrappleWeaponReady(bool ready){if(grappleOwned&&Alive)ShowRifle(ready);}
+        public void BeginGrapple(){grappleOwned=true;ShowRifle(false);}
+        public void CommitBushKill(){
+            if(!Alive)return;TakenDownSilently=true;silentKind=1;
+            _health.TakeDamage(_health.Current,transform.position+Vector3.up,_mission.player.gameObject);_lastHealth=_health.Current;
+        }
+        public void EndGrapple(bool won){
+            grappleOwned=false;_heldPosition=transform.position;_heldRotation=transform.rotation;if(_agent!=null&&_agent.isOnNavMesh)_agent.nextPosition=transform.position;
+            if(won)HoldBushCorpse();else{TakenDownSilently=false;silentKind=0;SetSilent(false);ShowRifle(true);}
+        }
+        void HoldBushCorpse(){bushCorpse?.Dispose();bushCorpse=new Map01CinematicPose(_animator);var clip=Map01CinematicPose.Clip("Enemy_Bush_Finish");bushCorpse.Sample(clip,clip.length);bushCorpse.Ground(transform.position.y);}
+        void LateUpdate(){if(bushCorpse!=null){var clip=Map01CinematicPose.Clip("Enemy_Bush_Finish");bushCorpse.Sample(clip,clip.length);bushCorpse.Ground(transform.position.y);}}
+        public void ReportGrappleEscape(){
+            if(!Alive||_mission==null)return;_suspicion=1;_engagedUntil=Time.time+10;_investigate=_mission.player.position;_mission.Alarmed=true;
+            ReportDetection(Map01DetectionCause.Sight,_mission.player.position);GoTo(_mission.player.position);
+        }
+
         public event System.Action<Map01Detection> Detected;
         public bool IsPursuer => _pursuer;
         public bool AtHostagePost => _overseer&&Alive&&Vector3.Distance(transform.position,_postPosition)<=(_rescueTuning!=null?_rescueTuning.overseerHostageRadius:1.25f);
@@ -60,7 +80,7 @@ namespace ShadowVale.Map01
             if(_agent!=null&&_agent.isOnNavMesh)_agent.isStopped=true;
             if(_agent!=null)_agent.updatePosition=false;
             if(_agent!=null)_agent.updateRotation=false;
-            if(_animator!=null)_animator.speed=animate?1:0;
+            if(_animator!=null){SetSpeed(0);_animator.speed=animate?1:0;}
         }
         private readonly System.Collections.Generic.HashSet<string> _animatorParams = new System.Collections.Generic.HashSet<string>();
         private bool _startled;
@@ -113,6 +133,7 @@ namespace ShadowVale.Map01
         /// </summary>
         public void ReturnToPost()
         {
+            bushCorpse?.Dispose();bushCorpse=null;silentKind=0;grappleOwned=false;
             TakenDownSilently=false;SetSilent(false); ShowRifle(true); _startled = false;
             if (_health.IsDead) _health.Revive(); else _health.RestoreHealth(_health.Max);
             if (_lootCreated)
@@ -193,6 +214,7 @@ namespace ShadowVale.Map01
             public float hp, shotRemaining, alertRemaining, searchRemaining;
             public int patrolIndex;
             public bool stopped, returning, silent, pursuer;
+            public int silentKind;
             public float suspicion, engagedRemaining, pauseRemaining;
             public float footstepReactionRemaining;
             public Vector3 pendingFootstep;
@@ -201,7 +223,7 @@ namespace ShadowVale.Map01
         }
         public Snapshot Capture() => new Snapshot {
             id = SaveId, position = transform.position, rotation = transform.rotation, hp = _health.Current,
-            silent = TakenDownSilently, pursuer = _pursuer, suspicion = _suspicion,
+            silent = TakenDownSilently, silentKind=silentKind, pursuer = _pursuer, suspicion = _suspicion,
             engagedRemaining = Mathf.Max(0, _engagedUntil-Time.time), pauseRemaining = Mathf.Max(0,_pauseUntil-Time.time),
             footstepReactionRemaining=_hearReactionAt>0?Mathf.Max(0,_hearReactionAt-Time.time):0,pendingFootstep=_pendingFootstep,stoneLure=_stoneLure,stoneFacing=_stoneFacing,
             patrolIndex = _patrolIndex, shotRemaining = Mathf.Max(0, _nextShot - Time.time),
@@ -220,6 +242,7 @@ namespace ShadowVale.Map01
         {
             if (_agent.isOnNavMesh) _agent.Warp(saved.position); else transform.position = saved.position;
             transform.rotation = saved.rotation;
+            bushCorpse?.Dispose();bushCorpse=null;silentKind=saved.silentKind;
             TakenDownSilently = saved.silent; SetSilent(saved.silent); ShowRifle(!saved.silent);
             _health.RestoreHealth(saved.hp);
             _suspicion = saved.suspicion; _engagedUntil = Time.time + saved.engagedRemaining;
@@ -236,7 +259,7 @@ namespace ShadowVale.Map01
             _returning = saved.returning; _returnPoint = saved.returnPoint; _returnRotation = saved.returnRotation;
             Go(saved.destination);
             if (_agent.isOnNavMesh) _agent.isStopped = saved.stopped || !Alive;
-            if (!Alive) CreateLoot();
+            if (!Alive){CreateLoot();if(saved.silent&&saved.silentKind==1)HoldBushCorpse();}
         }
         public void ReceiveExtractionHit(float amount, Vector3 point)
         {
@@ -339,12 +362,12 @@ namespace ShadowVale.Map01
                 return hit.transform==_mission.hung||hit.transform.IsChildOf(_mission.hung);
             return true;
         }
-        public void FireAtHostage(Vector3 target,float amount)
+        public void FireAtHostage(Vector3 target,float amount,bool bodyPoint=false)
         {
-            FaceImmediate(target);_animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
+            FaceImmediate(target);if(_animator!=null&&_animator.runtimeAnimatorController!=null)_animator.SetTrigger(PlayerCombat.AnimatorParams.Attack);
             var rifle=Rifle;
             if(rifle!=null&&rifle.weapon!=null&&rifle.weapon.Muzzle!=null)
-                _mission.Trace(rifle.weapon.Muzzle.position,target+Vector3.up*.9f,new Color(1,.85f,.45f));
+                _mission.Trace(rifle.weapon.Muzzle.position,target+(bodyPoint?Vector3.zero:Vector3.up*.9f),new Color(1,.85f,.45f));
             _rescue.HitHung(amount);
         }
         public void FaceImmediate(Vector3 point)
@@ -394,6 +417,8 @@ namespace ShadowVale.Map01
 
         private void Update()
         {
+            if(grappleOwned)return;
+            if(_rescuePost&&_rescue!=null)_rescue.TryApproachIntro();
             bool holding = Alive && _mission != null && (_mission.Stopped || (_rescue != null && _rescue.HoldEnemy(this)));
             if (holding) {
                 if (!_holdingAI) PauseForCinematic();
@@ -403,7 +428,7 @@ namespace ShadowVale.Map01
                 if (_animator!=null) {
                     var cinematic=_mission.GetComponent<Map01RescueCinematic>();
                     bool owned=cinematic!=null&&cinematic.ControlsEnemy(this);
-                    _animator.speed=!_mission.Stopped||owned?1:0;
+                    _animator.speed=1;SetSpeed(0);
                     if(!_mission.Stopped)SetSpeed(0);
                 }
                 return;
@@ -653,7 +678,7 @@ namespace ShadowVale.Map01
 
         private void SetSpeed(float speed)
         {
-            if (_animator == null) return;
+            if (_animator == null || _animator.runtimeAnimatorController==null) return;
             _animator.SetFloat(PlayerCombat.AnimatorParams.Speed, speed);
             // The guards' own clips (StoryAnimationSetup): rifle up while fighting, a look round at the spot.
             if (_animatorParams.Contains("Engaged")) _animator.SetBool("Engaged", Engaged);
@@ -667,7 +692,7 @@ namespace ShadowVale.Map01
 
         private void SetSilent(bool value)
         {
-            if (_animator != null && _animatorParams.Contains("Silent")) _animator.SetBool("Silent", value);
+            if (_animator != null && _animator.runtimeAnimatorController!=null && _animatorParams.Contains("Silent")) _animator.SetBool("Silent", value);
         }
 
         private void ShowRifle(bool on)
@@ -676,6 +701,7 @@ namespace ShadowVale.Map01
             if (rifle != null && rifle.weapon != null) rifle.weapon.gameObject.SetActive(on);
         }
 
+        private void OnDestroy(){bushCorpse?.Dispose();}
         private static uint Fnv(string text)
         {
             uint hash = 2166136261;

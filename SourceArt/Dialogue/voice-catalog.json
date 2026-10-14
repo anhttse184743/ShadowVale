@@ -363,6 +363,76 @@
       "reportedDuration": 5.04,
       "duration": 5.04,
       "resource": "Dialogue/VI/m1_jetty_observation"
+    },
+    {
+      "id": "m1_rescue_intro_nam",
+      "speaker": "Nam",
+      "voice": "Brodie",
+      "text": "Bên địch rất đông, mình không thể xông vào như thế được, phải tìm cách đánh lạc hướng thôi.",
+      "caption": "Nam: Bên địch rất đông, mình không thể xông vào như thế được, phải tìm cách đánh lạc hướng thôi.",
+      "match": "Nam: Bên địch rất đông, mình không thể xông vào như thế được, phải tìm cách đánh lạc hướng thôi.",
+      "language": "vi",
+      "radio": false,
+      "taskId": "e4a50b8f-564d-4db1-b267-42348b691769",
+      "reportedDuration": 4.64,
+      "duration": 4.64,
+      "resource": "Dialogue/VI/m1_rescue_intro_nam"
+    },
+    {
+      "id": "m1_rescue_alarm",
+      "speaker": "Lính",
+      "voice": "Martin",
+      "text": "Có kẻ đột nhập! Xử lý tên tù binh ngay!",
+      "caption": "Lính: Có kẻ đột nhập! Xử lý tên tù binh ngay!",
+      "match": "Lính: Có kẻ đột nhập! Xử lý tên tù binh ngay!",
+      "language": "vi",
+      "radio": false,
+      "taskId": "465a0f3d-d660-41fc-8a51-95824087fef6",
+      "reportedDuration": 2.48,
+      "duration": 2.48,
+      "resource": "Dialogue/VI/m1_rescue_alarm"
+    },
+    {
+      "id": "m1_rescue_execute_order",
+      "speaker": "Giám sát",
+      "voice": "Martin",
+      "text": "Rõ! Không để hắn cứu được tù binh!",
+      "caption": "Giám sát: Rõ! Không để hắn cứu được tù binh!",
+      "match": "Giám sát: Rõ! Không để hắn cứu được tù binh!",
+      "language": "vi",
+      "radio": false,
+      "taskId": "5d7a9164-df59-4ad3-a598-cb6ec2870acf",
+      "reportedDuration": 1.92,
+      "duration": 1.92,
+      "resource": "Dialogue/VI/m1_rescue_execute_order"
+    },
+    {
+      "id": "m1_rescue_interrogate",
+      "speaker": "Giám sát",
+      "voice": "Martin",
+      "text": "Nói! Đơn vị của mày ở đâu?",
+      "caption": "Giám sát: Nói! Đơn vị của mày ở đâu?",
+      "match": "Giám sát: Nói! Đơn vị của mày ở đâu?",
+      "language": "vi",
+      "radio": false,
+      "taskId": "5feefe86-4ae2-465b-bb94-782f65aba293",
+      "reportedDuration": 1.52,
+      "duration": 1.52,
+      "resource": "Dialogue/VI/m1_rescue_interrogate"
+    },
+    {
+      "id": "m1_rescue_shelter",
+      "speaker": "Nam",
+      "voice": "Brodie",
+      "text": "Vào hầm thôi, Hùng. Ở đây an toàn rồi.",
+      "caption": "Nam: Vào hầm thôi, Hùng. Ở đây an toàn rồi.",
+      "match": "Nam: Vào hầm thôi, Hùng. Ở đây an toàn rồi.",
+      "language": "vi",
+      "radio": false,
+      "taskId": "d8c7d883-b596-4762-aa90-6158671ef2ce",
+      "reportedDuration": 2.08,
+      "duration": 2.08,
+      "resource": "Dialogue/VI/m1_rescue_shelter"
     }
   ]
 }
