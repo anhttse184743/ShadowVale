@@ -104,10 +104,13 @@ namespace ShadowVale.Map01
         {
             // Anchor the calibrated sole plane to actual terrain or the raised base floor.
             float ground=float.NegativeInfinity;
-            foreach(var hit in Physics.RaycastAll(mission.hung.position+Vector3.up*2,Vector3.down,5,~0,QueryTriggerInteraction.Ignore))
+            int hits=Map01Probe.Raycast(mission.hung.position+Vector3.up*2,Vector3.down,5);
+            for(int i=0;i<hits;i++){
+                var hit=Map01Probe.Hits[i];
                 if(!hit.transform.IsChildOf(mission.hung) && !hit.transform.IsChildOf(mission.player)
                     && hit.normal.y>.65f && hit.point.y<=mission.hung.position.y+.5f)
                     ground=Mathf.Max(ground,hit.point.y);
+            }
             if(float.IsNegativeInfinity(ground)) ground=mission.hung.position.y;
             transform.position=new Vector3(mission.hung.position.x,ground,mission.hung.position.z);
             // Humanoid retargeting changes the foot plane after the neutral scale calibration.

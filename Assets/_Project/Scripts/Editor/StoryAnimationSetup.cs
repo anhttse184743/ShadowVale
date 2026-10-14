@@ -85,10 +85,29 @@ namespace ShadowVale.Editor
             if (NamModelSetup.HasFingers) NamModelSetup.Run();   // the clips read the avatar it fills in
             ImportAll();
             PlayerAnimatorBuilder.Build();   // rebuilds the base, then adds Nam's own clips (AugmentPlayer)
+            PassNamFingers(PlayerAnimatorBuilder.EnsureUpperBodyMask());
             AlignNamRifleSeat();
+            SetUpReloadMagazine();
             BuildEnemy();
             AssetDatabase.SaveAssets();
             Debug.Log("[StoryAnimation] Nam, guards and the knife takedown wired to Blender's clips.");
+        }
+
+        /// <summary>
+        /// After Nam's model or clips were exported again from Blender: takes the model in (avatar, prefab), reimports
+        /// the clips through it and re-reads the rifle's seat. The animator controllers are left alone: the clip
+        /// files keep their names, and a rebuild would drop the states other setups add (knife carry, crouched throw).
+        /// </summary>
+        [MenuItem("ShadowVale/Characters/Refresh Nam Model And Clips")]
+        public static void RefreshNam()
+        {
+            NamModelSetup.Run();
+            ImportAll();
+            PassNamFingers(PlayerAnimatorBuilder.EnsureUpperBodyMask());
+            AlignNamRifleSeat();
+            SetUpReloadMagazine();
+            AssetDatabase.SaveAssets();
+            Debug.Log("[StoryAnimation] Nam's model, clips and rifle seat refreshed; controllers untouched.");
         }
 
         /// <summary>
@@ -164,6 +183,101 @@ namespace ShadowVale.Editor
 
         private static Vector3 Divide(Vector3 a, Vector3 b) => new Vector3(a.x / b.x, a.y / b.y, a.z / b.z);
 
+        /// <summary>
+        /// The reloads' magazine moments, as frames of the Blender clips (blender_scripts: magazine_swap_keys.py):
+        /// the hand has closed on the magazine, the old one is put away at the waist, a fresh one is in the hand,
+        /// it is seated. The game reads them as fractions of the state, (frame - 1) / (frames - 1).
+        /// </summary>
+        private static readonly (string state, string clip, int frames, int grabbed, int putAway, int fresh, int seated)[] ReloadMagazineTakes = {
+            ("ReloadEmpty_Rifle", "Nam_Rifle_Reload", 100, 19, 30, 35, 52), ("Reload_Rifle", "Nam_Rifle_ReloadTactical", 78, 19, 30, 35, 52),
+            ("ReloadCrouch_Rifle", "Nam_Crouch_Reload", 207, 32, 61, 66, 80),
+        };
+
+        /// <summary>
+        /// Puts <see cref="ReloadMagazineCarrier"/> on Player.prefab's Model and tells it how the magazine sits in
+        /// Nam's support hand in each reload: his prefab and a copy of his rifle, seated by the grip config, are
+        /// posed at the frame the hand has closed on the magazine, and the magazine is read in the hand's own frame.
+        /// Sampled through his avatar with the game's rifle, so nothing is converted from Blender's axes. Run again
+        /// whenever the model, the reload clips or the rifle's seat change.
+        /// </summary>
+        public static void SetUpReloadMagazine()
+        {
+            const string PlayerPrefab = "Assets/_Project/Prefabs/Player/Player.prefab";
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(PlayerPrefab);
+            var combat = prefab != null ? prefab.GetComponent<PlayerCombat>() : null;
+            if (combat == null) { Debug.LogWarning("[StoryAnimation] Reload magazine not set up: Player.prefab has no PlayerCombat."); return; }
+            var so = new SerializedObject(combat);
+            var grip = so.FindProperty("gripConfig").objectReferenceValue as WeaponGripConfig;
+            Weapon riflePrefab = null;
+            var list = so.FindProperty("weaponPrefabs");
+            for (int i = 0; list != null && i < list.arraySize; i++)
+                if (list.GetArrayElementAtIndex(i).objectReferenceValue is Weapon weapon && weapon.Kind == WeaponKind.Rifle) riflePrefab = weapon;
+            if (grip == null || riflePrefab == null) { Debug.LogWarning("[StoryAnimation] Reload magazine not set up: grip config or rifle prefab missing."); return; }
+
+            var takes = new List<ReloadMagazineCarrier.Take>();
+            GameObject nam = null;
+            try
+            {
+                nam = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+                nam.transform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
+                foreach (var behaviour in nam.GetComponentsInChildren<MonoBehaviour>(true)) behaviour.enabled = false;
+                var actor = nam.GetComponentInChildren<Animator>();
+                Transform anchor = actor.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "WeaponAnchor");
+                Transform hand = actor.GetBoneTransform(HumanBodyBones.LeftHand);
+                if (anchor == null || hand == null) { Debug.LogWarning("[StoryAnimation] Reload magazine not set up: no WeaponAnchor or left hand."); return; }
+                // a plain copy, as PlayerCombat makes at runtime: a linked prefab instance cannot have its children regrouped
+                GameObject rifle = Object.Instantiate(riflePrefab.gameObject, anchor);
+                grip.Apply(rifle.transform, WeaponKind.Rifle);
+                Transform magazine = ReloadMagazineCarrier.GatherMagazine(rifle.transform);
+                if (magazine == null) { Debug.LogWarning("[StoryAnimation] Reload magazine not set up: the rifle has no separate magazine pieces."); return; }
+                AnimationMode.StartAnimationMode();
+                try
+                {
+                    foreach (var (state, clipName, frames, grabbed, putAway, fresh, seated) in ReloadMagazineTakes)
+                    {
+                        AnimationClip clip = Clip(NamFolder, clipName);
+                        float Fraction(int frame) => (frame - 1f) / (frames - 1f);
+                        AnimationMode.BeginSampling();
+                        AnimationMode.SampleAnimationClip(actor.gameObject, clip, Fraction(grabbed) * clip.length);
+                        AnimationMode.EndSampling();
+                        takes.Add(new ReloadMagazineCarrier.Take
+                        {
+                            state = state, leaves = Fraction(grabbed), putAway = Fraction(putAway), fresh = Fraction(fresh), seated = Fraction(seated),
+                            inHandPosition = hand.InverseTransformPoint(magazine.position),
+                            inHandRotation = Quaternion.Inverse(hand.rotation) * magazine.rotation, seatEase = 2f / (frames - 1f),
+                        });
+                    }
+                }
+                finally
+                {
+                    AnimationMode.StopAnimationMode();
+                }
+            }
+            finally
+            {
+                if (nam != null) Object.DestroyImmediate(nam);
+            }
+
+            GameObject root = PrefabUtility.LoadPrefabContents(PlayerPrefab);
+            try
+            {
+                Animator model = root.GetComponentsInChildren<Animator>(true).FirstOrDefault(a => a.name == "Model");
+                Transform[] bones = model != null ? model.GetComponentsInChildren<Transform>(true) : new Transform[0];
+                Transform hand = bones.FirstOrDefault(t => t.name == "LeftHand"), anchor = bones.FirstOrDefault(t => t.name == "WeaponAnchor");
+                if (model == null || hand == null || anchor == null) { Debug.LogWarning("[StoryAnimation] Reload magazine not set up: Model, LeftHand or WeaponAnchor missing in the prefab."); return; }
+                var carrier = model.GetComponent<ReloadMagazineCarrier>();
+                if (carrier == null) carrier = model.gameObject.AddComponent<ReloadMagazineCarrier>();
+                carrier.Configure(model, hand, anchor, takes.ToArray());
+                PrefabUtility.SaveAsPrefabAsset(root, PlayerPrefab);
+                Debug.Log($"[StoryAnimation] Reload magazine carrier on Player.prefab: {takes.Count} reloads, in-hand offsets " +
+                          string.Join(", ", takes.Select(t => $"{t.state} {(t.inHandPosition.magnitude * 100):F1} cm from the wrist")));
+            }
+            finally
+            {
+                PrefabUtility.UnloadPrefabContents(root);
+            }
+        }
+
         /// <summary>Length of Nam's rifle prefab along its barrel (+Z), from its meshes; 0 if it is not there.</summary>
         private static float RifleLength(SerializedObject combat)
         {
@@ -199,7 +313,8 @@ namespace ShadowVale.Editor
         public static void ImportAll()
         {
             var nam = AvatarOf(PlayerModel); var soldier = AvatarOf(SoldierModel); var commander = AvatarOf(CommanderModel);
-            foreach (var (file, loop) in NamClips) ImportClip(NamFolder + file + ".fbx", loop, nam, RootMotionClips.Contains(file));
+            var fingers = NamFingerMask();
+            foreach (var (file, loop) in NamClips) ImportClip(NamFolder + file + ".fbx", loop, nam, RootMotionClips.Contains(file), fingers);
             foreach (var (file, loop) in EnemyClips) ImportClip(EnemyFolder + file + ".fbx", loop, soldier);
             foreach (var (file, loop) in BossClips) ImportClip(EnemyFolder + file + ".fbx", loop, commander);
         }
@@ -216,7 +331,63 @@ namespace ShadowVale.Editor
         private static readonly HashSet<string> RootMotionClips = new HashSet<string> {
             "Nam_Takedown", "Nam_PickUp", "Nam_OpenChest", "Nam_Bandage", "Nam_Untie" };
 
-        private static void ImportClip(string path, bool loop, Avatar avatar, bool rootMotion = false)
+        public const string NamFingerMaskPath = "Assets/_Project/Art/Characters/Animations/Controllers/AM_NamFingers.mask";
+
+        /// <summary>
+        /// Nam's finger bones are not Humanoid bones (NamModelSetup): a Humanoid clip keeps the rotations of
+        /// such bones only when its mask names them. This mask passes the whole Humanoid body plus the 30
+        /// finger bones and the four forearm twist bones, by their paths in his model (the clips share the skeleton).
+        /// </summary>
+        public static AvatarMask NamFingerMask()
+        {
+            var mask = AssetDatabase.LoadAssetAtPath<AvatarMask>(NamFingerMaskPath);
+            if (mask == null) { mask = new AvatarMask(); AssetDatabase.CreateAsset(mask, NamFingerMaskPath); }
+            for (int i = 0; i < (int)AvatarMaskBodyPart.LastBodyPart; i++) mask.SetHumanoidBodyPartActive((AvatarMaskBodyPart)i, true);
+            var model = AssetDatabase.LoadAssetAtPath<GameObject>(PlayerModel);
+            var paths = model.GetComponentsInChildren<Transform>(true).Skip(1)
+                .Select(t => AnimationUtility.CalculateTransformPath(t, model.transform)).ToArray();
+            mask.transformCount = paths.Length;
+            for (int i = 0; i < paths.Length; i++)
+            {
+                string bone = paths[i].Substring(paths[i].LastIndexOf('/') + 1);
+                mask.SetTransformPath(i, paths[i]);
+                mask.SetTransformActive(i, IsGenericBone(bone));
+            }
+            EditorUtility.SetDirty(mask);
+            return mask;
+        }
+
+        /// <summary>
+        /// The upper-body layers (aim, reloads, hit; the stone and the binoculars) play through AM_UpperBody, a
+        /// Humanoid-parts mask: it is given Nam's finger bones too, so their grips come through on those layers.
+        /// The guards share the mask; the paths do not exist on them and change nothing there.
+        /// </summary>
+        private static void PassNamFingers(AvatarMask mask)
+        {
+            var model = AssetDatabase.LoadAssetAtPath<GameObject>(PlayerModel);
+            var fingers = model.GetComponentsInChildren<Transform>(true).Where(t => IsGenericBone(t.name))
+                .Select(t => AnimationUtility.CalculateTransformPath(t, model.transform)).ToArray();
+            mask.transformCount = fingers.Length;
+            for (int i = 0; i < fingers.Length; i++) { mask.SetTransformPath(i, fingers[i]); mask.SetTransformActive(i, true); }
+            EditorUtility.SetDirty(mask);
+        }
+
+        /// <summary>LeftHandIndex1, RightHandPinky3...: the rig's finger bones.</summary>
+        public static bool IsFinger(string bone) =>
+            (bone.StartsWith("LeftHand") || bone.StartsWith("RightHand")) && !bone.EndsWith("_end")
+            && new[] { "Thumb", "Index", "Middle", "Ring", "Pinky" }.Any(f => bone.Contains(f));
+
+        /// <summary>
+        /// LeftForeArmTwist1, RightForeArmTwist2: bones along the forearm that take a share of the hand's roll, so the
+        /// sleeve turns with the wrist instead of collapsing at one joint. Blender drives them from the hand and
+        /// bakes them into every clip it exports; a clip without them (the Humanoid-only ones) leaves them at rest.
+        /// </summary>
+        public static bool IsForearmTwist(string bone) => bone.Contains("ForeArmTwist");
+
+        /// <summary>Bones of Nam's rig outside the Humanoid avatar that his clips animate as plain curves.</summary>
+        public static bool IsGenericBone(string bone) => IsFinger(bone) || IsForearmTwist(bone);
+
+        private static void ImportClip(string path, bool loop, Avatar avatar, bool rootMotion = false, AvatarMask mask = null)
         {
             var importer = (ModelImporter)AssetImporter.GetAtPath(path)
                 ?? throw new FileNotFoundException("Missing clip — export it from chuyen_dong first.", path);
@@ -235,6 +406,7 @@ namespace ShadowVale.Editor
             source.lockRootRotation = true; source.keepOriginalOrientation = true;
             source.lockRootHeightY = true; source.keepOriginalPositionY = false; source.heightFromFeet = true;
             source.lockRootPositionXZ = !rootMotion; source.keepOriginalPositionXZ = true;
+            if (mask != null) { source.maskType = ClipAnimationMaskType.CopyFromOther; source.maskSource = mask; source.ConfigureClipFromMask(mask); }
             importer.clipAnimations = new[] { source };
             importer.SaveAndReimport();
             // the take is converted to muscles through the avatar at import: re-convert even when nothing in

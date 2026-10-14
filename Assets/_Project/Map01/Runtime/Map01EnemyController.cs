@@ -350,9 +350,12 @@ namespace ShadowVale.Map01
             if(cinematic==null)cinematic=_mission.gameObject.AddComponent<Map01RescueCinematic>();
             cinematic.ShowTakedown(_rescue,this);return true;
         }
+        // A guard with the hostage in reach checks his line of fire every frame: the rifle is looked up once.
+        private Map01Rifle _rifle;
+        private Map01Rifle Rifle=>_rifle!=null&&_rifle.gameObject.activeInHierarchy?_rifle:_rifle=GetComponentInChildren<Map01Rifle>();
         public bool SafeShot(Vector3 target)
         {
-            var rifle=GetComponentInChildren<Map01Rifle>();
+            var rifle=Rifle;
             Vector3 origin=rifle!=null&&rifle.weapon!=null&&rifle.weapon.Muzzle!=null?rifle.weapon.Muzzle.position:transform.position+Vector3.up*1.3f;
             var end=target+Vector3.up*1.1f;
             if(Physics.Linecast(origin,end,out var hit,~0,QueryTriggerInteraction.Ignore))
@@ -362,7 +365,7 @@ namespace ShadowVale.Map01
         public void FireAtHostage(Vector3 target,float amount,bool bodyPoint=false)
         {
             FaceImmediate(target);if(_animator!=null&&_animator.runtimeAnimatorController!=null)_animator.SetTrigger(PlayerCombat.AnimatorParams.Attack);
-            var rifle=GetComponentInChildren<Map01Rifle>();
+            var rifle=Rifle;
             if(rifle!=null&&rifle.weapon!=null&&rifle.weapon.Muzzle!=null)
                 _mission.Trace(rifle.weapon.Muzzle.position,target+(bodyPoint?Vector3.zero:Vector3.up*.9f),new Color(1,.85f,.45f));
             _rescue.HitHung(amount);

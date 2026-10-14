@@ -12,6 +12,7 @@ namespace ShadowVale.Map01
         private static ForestMenu instance;
         public static bool Visible => instance != null && instance.visible;
         private bool visible, browser, saving, quitAuthorized;
+        private bool exploringMap2;
         private int selected, latest;
         private Map01Mission mission;
         private Map01SaveSystem saveSystem;
@@ -43,6 +44,7 @@ namespace ShadowVale.Map01
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static void EnsureCreated()
         {
+            if (FindFirstObjectByType<Map02Exploration>() != null) return;
             if (instance != null) return;
             var existing = FindFirstObjectByType<ForestMenu>();
             if (existing != null) { existing.OnEnable(); return; }
@@ -73,6 +75,10 @@ namespace ShadowVale.Map01
         private void OnScene(Scene scene, LoadSceneMode mode) => BindScene();
         private void BindScene()
         {
+            exploringMap2 = FindFirstObjectByType<Map02Exploration>() != null;
+            if (exploringMap2) {
+                CancelInvoke(nameof(GoToTitle)); visible = false; Time.timeScale = 1; return;
+            }
             mission = FindFirstObjectByType<Map01Mission>();
             saveSystem = mission != null ? mission.GetComponent<Map01SaveSystem>() : null;
             var name = SceneManager.GetActiveScene().name;
@@ -112,6 +118,7 @@ namespace ShadowVale.Map01
         }
         private void Update()
         {
+            if (exploringMap2) return;
             float now = Time.realtimeSinceStartup;
             if (settleFrames > 0) { settleFrames--; if (now - lastFrameAt > .2f) ignoreKeysUntil = Mathf.Max(ignoreKeysUntil, now + .5f); }
             lastFrameAt = now;

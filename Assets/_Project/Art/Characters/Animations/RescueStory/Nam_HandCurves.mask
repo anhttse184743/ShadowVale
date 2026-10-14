@@ -47,6 +47,10 @@ AvatarMask:
     m_Weight: 0
   - m_Path: Armature/root/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm
     m_Weight: 0
+  - m_Path: Armature/root/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftForeArmTwist1
+    m_Weight: 1
+  - m_Path: Armature/root/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftForeArmTwist2
+    m_Weight: 1
   - m_Path: Armature/root/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand
     m_Weight: 0
   - m_Path: Armature/root/Hips/Spine/Spine1/Spine2/LeftShoulder/LeftArm/LeftForeArm/LeftHand/LeftHand_end
@@ -93,6 +97,10 @@ AvatarMask:
     m_Weight: 0
   - m_Path: Armature/root/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm
     m_Weight: 0
+  - m_Path: Armature/root/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightForeArmTwist1
+    m_Weight: 1
+  - m_Path: Armature/root/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightForeArmTwist2
+    m_Weight: 1
   - m_Path: Armature/root/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand
     m_Weight: 0
   - m_Path: Armature/root/Hips/Spine/Spine1/Spine2/RightShoulder/RightArm/RightForeArm/RightHand/RightHand_end

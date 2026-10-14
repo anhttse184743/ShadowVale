@@ -10,12 +10,20 @@ namespace ShadowVale.Map01
         private Map01Rescue rescue;
         private Texture2D takedownBadge,takedownKnife,takedownLeaf;
         private GUIStyle takedownHint;
+        private Map01EnemyController hintGuard;
+        private Transform hintHead;
+        private static readonly string[] SquadLeft=new string[5];
         private void DrawTakedownHint(float width,float height)
         {
+            // Nothing here takes input: the search for a guard runs once a frame, not once per GUI event.
+            if(Event.current.type!=EventType.Repaint)return;
             if(rescue==null)rescue=GetComponent<Map01Rescue>();
             if(rescue==null||!rescue.GetTakedownHint(out var target,out var ready))return;
-            var actor=target.GetComponentInChildren<Animator>();
-            var head=actor!=null?actor.GetBoneTransform(HumanBodyBones.Head):null;
+            if(target!=hintGuard){
+                hintGuard=target;var actor=target.GetComponentInChildren<Animator>();
+                hintHead=actor!=null?actor.GetBoneTransform(HumanBodyBones.Head):null;
+            }
+            var head=hintHead;
             var view=mission.gameCamera.WorldToViewportPoint(head!=null?head.position+Vector3.up*.38f:target.transform.position+Vector3.up*2.1f);
             if(view.z<=0||view.x<0||view.x>1||view.y<0||view.y>1)return;
             if(takedownBadge==null){
@@ -64,11 +72,13 @@ namespace ShadowVale.Map01
         {
             if (rescue == null) rescue = GetComponent<Map01Rescue>(); // Added by Map01Quest.Awake.
             if (rescue == null) return;
+            if (Event.current.type != EventType.Repaint) return; // Plates and labels only.
             if (mission.InventoryOpen || mission.MapOpen) return;
             if (quest.Stage == Map01Quest.RescueStage && !rescue.Failed) {
                 var info = new Rect(28, objectiveBottom + 12, 370, 65);
                 HudPanel(info);
-                GUI.Label(new Rect(info.x+12,info.y+8,345,24), $"LÍNH CÒN LẠI: {rescue.Remaining}/4", hudKey);
+                int alive = Mathf.Clamp(rescue.Remaining, 0, SquadLeft.Length - 1);
+                GUI.Label(new Rect(info.x+12,info.y+8,345,24), SquadLeft[alive] ??= $"LÍNH CÒN LẠI: {alive}/4", hudKey);
                 GUI.Label(new Rect(info.x+12,info.y+34,345,25), !rescue.OverseerAlive?"Đã hạ lính giám sát — có thể giao chiến":rescue.CombatAlarm?"Báo động — địch đang truy kích Nam":rescue.CanExecuteCaptive?"Giám sát đang canh Hùng — giữ im lặng":"Giám sát đã rời Hùng — vòng ra sau", hudSmall);
                 DrawBushHelp(info.yMax+8);
                 return;
