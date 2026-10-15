@@ -247,11 +247,19 @@ namespace ShadowVale.Map01
             string checkpoint=escort?escortStart:rescueStart;
             if(string.IsNullOrEmpty(checkpoint)){mission.Say("Chưa có checkpoint nhiệm vụ. Hãy tải bản lưu hoặc chơi lại.",5);return false;}
             var data=PrepareRetry(JsonUtility.FromJson<CheckpointData>(checkpoint));
+            if(!escort&&GetComponent<Map01Rescue>().IntroSeen&&data.rescue!=null)data.rescue.introSeen=true;
             // Keep the non-recursive retry snapshots across repeated retries.
             data.rescueStart=rescueStart;data.escortStart=escortStart;
             pendingCheckpoint=JsonUtility.ToJson(data);pendingSeconds=mission.PlaySeconds;
             pendingMessage=escort?"Làm lại đoạn hộ tống Hùng về căn cứ.":"Làm lại: lén tiếp cận, hạ lính giám sát bằng dao rồi cứu Hùng.";
             Time.timeScale=1;SceneManager.LoadScene("Map 1");return true;
+        }
+        // Kept in memory before an interaction, never written while it is running.
+        public string CaptureInteractionCheckpoint()=>JsonUtility.ToJson(Capture());
+        public void RestartInteractionCheckpoint(string checkpoint){
+            if(string.IsNullOrEmpty(checkpoint))return;
+            pendingCheckpoint=checkpoint;pendingSeconds=mission.PlaySeconds;pendingMessage="Đã trở về trước lúc phục kích.";
+            Time.timeScale=1;SceneManager.LoadScene("Map 1");
         }
 
         /// <summary>

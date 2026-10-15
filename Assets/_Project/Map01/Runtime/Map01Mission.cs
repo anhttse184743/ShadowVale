@@ -58,6 +58,8 @@ namespace ShadowVale.Map01
         /// thousands of bushes in Points, for the checks that run every frame.</summary>
         public readonly List<ForestPoint> Interactables = new List<ForestPoint>();
         private readonly List<ForestPoint> hideSpots = new List<ForestPoint>();
+        private const float HideCell=4;
+        private readonly Dictionary<Vector2Int,List<ForestPoint>> hideGrid=new();
         private float hp, stamina;
         private bool paused;
         private Map01Quest quest;
@@ -187,6 +189,8 @@ namespace ShadowVale.Map01
             foreach (var enemy in Enemies) enemy.BindMission(this);
             Map01OpeningCutscene.Attach(this);
             Map01HungVisual.Attach(this);
+            if(GetComponent<Map01FoliageReveal>()==null)gameObject.AddComponent<Map01FoliageReveal>();
+            if(GetComponent<Map01BushTakedown>()==null)gameObject.AddComponent<Map01BushTakedown>();
         }
 
         private void FailInitialization(string reason)
@@ -199,12 +203,20 @@ namespace ShadowVale.Map01
         public void RegisterPoint(ForestPoint point)
         {
             Points.Add(point);
-            if (point.kind == ForestPointKind.Hide) hideSpots.Add(point);
+            if (point.kind == ForestPointKind.Hide) {
+                hideSpots.Add(point);
+                var p=point.transform.position;
+                for(int x=Mathf.FloorToInt((p.x-point.radius)/HideCell);x<=Mathf.FloorToInt((p.x+point.radius)/HideCell);x++)
+                for(int z=Mathf.FloorToInt((p.z-point.radius)/HideCell);z<=Mathf.FloorToInt((p.z+point.radius)/HideCell);z++){
+                    var key=new Vector2Int(x,z);if(!hideGrid.TryGetValue(key,out var list))hideGrid[key]=list=new();list.Add(point);
+                }
+            }
             else if (point.kind != ForestPointKind.Cover) Interactables.Add(point);
         }
         public void UnregisterPoint(ForestPoint point)
         {
             Points.Remove(point); hideSpots.Remove(point); Interactables.Remove(point);
+            if(point.kind==ForestPointKind.Hide)foreach(var list in hideGrid.Values)list.Remove(point);
         }
         public void AddEnemy(Map01EnemyController enemy) { if (enemy != null && !Enemies.Contains(enemy)) Enemies = Enemies.Append(enemy).ToArray(); }
         public void RemoveEnemy(Map01EnemyController enemy) => Enemies=Enemies.Where(e=>e!=null&&e!=enemy).ToArray();
@@ -272,8 +284,15 @@ namespace ShadowVale.Map01
             Hidden = false;
             if (!Crouched) return;
             Vector3 at = player.position;
-            foreach (var spot in hideSpots)
-                if ((spot.transform.position - at).sqrMagnitude < spot.radius * spot.radius) { Hidden = true; return; }
+            Hidden=TryGetHideSpot(at,out _);
+        }
+        public bool TryGetHideSpot(Vector3 at,out ForestPoint found) {
+            found=null;float best=float.PositiveInfinity;
+            var key=new Vector2Int(Mathf.FloorToInt(at.x/HideCell),Mathf.FloorToInt(at.z/HideCell));
+            if(!hideGrid.TryGetValue(key,out var nearby))return false;
+            foreach(var spot in nearby)if(spot!=null){float distance=(spot.transform.position-at).sqrMagnitude;
+                if(distance<spot.radius*spot.radius&&distance<best){best=distance;found=spot;}}
+            return found!=null;
         }
         /// <summary>
         /// How far a footstep carries, by how the player is moving. Sneaking, walking and

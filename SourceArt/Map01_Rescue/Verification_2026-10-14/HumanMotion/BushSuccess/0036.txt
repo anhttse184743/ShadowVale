@@ -1,0 +1,8 @@
+Pull
+Nam actor (0.00, 0.00, 0.00)
+Enemy actor (0.00, 0.00, 0.00)
+Left torso contact 0.0002219461
+Head penetration 0
+Right contact 0.09108071
+Embracing contact 0.0006251308
+Defender embracing-arm contact 2.384186E-07

@@ -60,7 +60,7 @@ namespace ShadowVale.Gameplay.Combat
             {
                 animator = GetComponentInChildren<Animator>();
             }
-            if (animator != null)
+            if (animator != null && animator.runtimeAnimatorController != null)
             {
                 _upperBodyLayer = animator.GetLayerIndex(UpperBodyLayer);
             }
@@ -72,7 +72,7 @@ namespace ShadowVale.Gameplay.Combat
         /// </summary>
         private void SetUpperBodyActive(bool active)
         {
-            if (animator == null || _upperBodyLayer <= 0)
+            if (animator == null || animator.runtimeAnimatorController == null || _upperBodyLayer <= 0)
             {
                 return;
             }
@@ -102,7 +102,7 @@ namespace ShadowVale.Gameplay.Combat
             }
 
             SetUpperBodyActive(false);
-            if (animator != null)
+            if (animator != null && animator.runtimeAnimatorController != null)
             {
                 animator.SetTrigger(PlayerCombat.AnimatorParams.Die);
             }

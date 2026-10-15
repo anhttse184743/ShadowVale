@@ -503,8 +503,11 @@ namespace ShadowVale.Map01
                 // Blend contact at heel strike/toe off instead of snapping across the swing pose.
                 float weight=Mathf.Min(Mathf.SmoothStep(0,1,contactPhase/.07f),Mathf.SmoothStep(0,1,(.55f-contactPhase)/.07f));
                 var target=Vector3.Lerp(foot.position,plantedFeet[index,side],weight);
-                LevelWalkingFoot(index,side,Vector3.Slerp(normal,plantedNormals[index,side],weight));
                 SolveLeg(actors[index],side==0,target);
+                // IK may plant the shoe on the landing while the unsolved stride
+                // is above sloping ground. Level against the final contact surface.
+                var solvedSurface=WalkSurfaceBelow(foot.position);
+                LevelWalkingFoot(index,side,solvedSurface.collider!=null?solvedSurface.normal:Vector3.Slerp(normal,plantedNormals[index,side],weight));
             }
         }
         /// <summary>The nearest ground under a point that is neither the boat nor one of the party; no collider when there is none.</summary>

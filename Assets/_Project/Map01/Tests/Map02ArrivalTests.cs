@@ -241,8 +241,8 @@ Assert.NotNull(camera);
 var captureHost=arrival.gameObject;
 var pump=captureHost.AddComponent<ExtractionCapturePump>();
 Assert.NotNull(pump);
-var water=Object.FindObjectsByType<MeshFilter>(FindObjectsSortMode.None).First(m=>m.name=="Winding canal water");
-var vertices=water.sharedMesh.vertices.Select(v=>water.transform.TransformPoint(v)).ToArray();var triangles=water.sharedMesh.triangles;
+var waters=Object.FindObjectsByType<RiverWater>(FindObjectsSortMode.None).Where(w=>w.leftBank.Length>=2&&w.rightBank.Length>=2).ToArray();
+Assert.IsNotEmpty(waters,"The dev village uses a bounded physical river, not the legacy canal mesh.");
 var events=new System.Collections.Generic.List<string>();int frame=0;
 var metrics=new System.Collections.Generic.List<string>{"time,actor,head_angle,stair_foot_error,shoe_riser_penetration,walking_foot_pitch"};
 var actors=arrival.Passengers.Select(p=>p.GetComponentInChildren<Animator>()).ToArray();
@@ -253,7 +253,7 @@ bool rendered=false;System.Exception captureFailure=null;var phase=arrival.Curre
 pump.draw=()=>{try {
 if(arrival.IsPlaying)Assert.IsFalse(arrival.Passengers[2].GetComponentsInChildren<Weapon>(true).Any(w=>w.IsGun&&w.gameObject.activeInHierarchy),"Hung's hands must stay free throughout rowing, stowing and disembarking.");
 if(phase==Map02Arrival.Phase.Approaching)foreach(var x in new[]{-.7f,.7f})foreach(var z in new[]{-2.7f,2.7f})
-Assert.IsTrue(InWater(arrival.transform.TransformPoint(new Vector3(x,0,z)),vertices,triangles),"Hull must stay inside the actual canal mesh.");
+Assert.IsTrue(waters.Any(w=>w.TrySample(arrival.transform.TransformPoint(new Vector3(x,0,z)),Time.time,out _)),"Hull must stay inside the actual river banks.");
 Assert.Greater(arrival.transform.TransformPoint(new Vector3(0,-.15f,0)).y,.07f,"Interior floor must stay clear of the canal water.");
 float sampled=arrival.CinematicTime;
 for(int i=0;i<3;i++) {

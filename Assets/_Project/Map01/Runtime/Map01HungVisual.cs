@@ -23,6 +23,16 @@ namespace ShadowVale.Map01
         private NavMeshAgent agent;
         private Renderer[] placeholder;
         private bool down;
+        private bool captivePresentation,boundDead;
+        private Map01CinematicPose corpsePose;
+        public void BeginCaptivePresentation(){captivePresentation=true;talkUntil=0;if(rope==null&&ropeMaterial!=null)rope=TieRope();if(rope!=null)rope.SetActive(true);}
+        public void SampleCaptiveContacts(){if(rope==null&&ropeMaterial!=null)rope=TieRope();if(rope!=null){rope.SetActive(true);BindWrists();}}
+        public void EndCaptivePresentation(bool executed){
+            captivePresentation=false;boundDead=executed;
+            if(executed){down=true;corpsePose?.Dispose();corpsePose=new Map01CinematicPose(actor);corpsePose.Sample(Map01CinematicPose.Clip("Hung_Bound_Execution"),3);corpsePose.Ground(mission.hung.position.y);SampleCaptiveContacts();}
+            else RestoreAfterCinematic();
+        }
+
         private float talkUntil;
         private int lastStage = -1;
         private bool standingUp;
@@ -78,6 +88,9 @@ namespace ShadowVale.Map01
         private void LateUpdate()
         {
             if (mission == null) return;
+            if(boundDead){corpsePose?.Sample(Map01CinematicPose.Clip("Hung_Bound_Execution"),3);corpsePose?.Ground(mission.hung.position.y);SampleCaptiveContacts();return;}
+            if(captivePresentation){SampleCaptiveContacts();return;}
+
             bool rescueContact=rescue!=null&&(rescue.CurrentPhase==Map01Rescue.Phase.Untying||rescue.CurrentPhase==Map01Rescue.Phase.Rising);
             if (!down && (!mission.Cinematic||rescueContact)) AnchorToGround();
             // The rope is tied once the kneeling pose has been evaluated (and grounded), so it sits on his real wrists.
@@ -130,6 +143,7 @@ namespace ShadowVale.Map01
         /// <summary>Restore this quest stage immediately; Rebind alone falls back to the captive kneeling state.</summary>
         public void RestoreAfterCinematic()
         {
+            if(boundDead)return;
             ReleaseHold(); SnapToStage(); AnchorToGround();
         }
         private bool Wounded => !down && Stage == Map01Quest.EscortStage;
@@ -153,7 +167,7 @@ namespace ShadowVale.Map01
 
         private void Update()
         {
-            if (mission == null || actor == null) return;
+            if (mission == null || actor == null || captivePresentation || boundDead) return;
             bool fallen = rescue != null && rescue.HungDown;
             if (fallen != down) {
                 down = fallen;
@@ -276,6 +290,7 @@ namespace ShadowVale.Map01
 
         private void OnDestroy()
         {
+            corpsePose?.Dispose();
             if (soleMesh != null) Destroy(soleMesh);
             if (placeholder == null) return;
             foreach (var renderer in placeholder) if (renderer != null) renderer.forceRenderingOff = false;

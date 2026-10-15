@@ -14,6 +14,26 @@ namespace ShadowVale.Map01.Tests
     {
         private const BindingFlags Private = BindingFlags.NonPublic | BindingFlags.Instance;
 
+        [UnityTest] public IEnumerator BushFinisherAwardsStealthOnceAndFailureStillRollsItBack()
+        {
+            Map01OpeningCutscene.CancelPending();
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode(); yield return null; yield return null;
+            var mission = Object.FindFirstObjectByType<Map01Mission>();
+            foreach (var enemy in mission.Enemies) enemy.enabled = false;
+            var victim = mission.Enemies.First(e => e.Alive && !e.IsBoss);
+            int before = mission.Skills.Xp(SkillKind.Stealth);
+            victim.CommitBushKill();
+            Assert.IsFalse(victim.Alive);
+            Assert.AreEqual(before + 1, mission.Skills.Xp(SkillKind.Stealth));
+            victim.CommitBushKill();
+            Assert.AreEqual(before + 1, mission.Skills.Xp(SkillKind.Stealth), "A finisher may award only once.");
+            mission.Damage(10000); yield return null; yield return null;
+            Assert.IsTrue(mission.Skills.MissionFailed);
+            Assert.AreEqual(before, mission.Skills.Xp(SkillKind.Stealth));
+            yield return new ExitPlayMode();
+        }
+
         [UnityTest] public IEnumerator MissionXpSurvivesResumeButRollsBackOnFailureWhileEngineeringPersists()
         {
             Map01OpeningCutscene.CancelPending();

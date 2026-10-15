@@ -172,7 +172,7 @@ namespace ShadowVale.Map01
                     if (point.used) return;
                     mission.Say(TakeItems(point) + " Tab mở túi đồ.", 6);
                     // a fallen guard's pack is picked up off the ground; a crate is opened
-                    Rummage(point.GetComponent<Map01EnemyController>() != null ? Map01NamActions.PickUp : Map01NamActions.OpenChest);
+                    Rummage(point.GetComponent<Map01EnemyController>() != null || (point.id!=null&&point.id.StartsWith(Map01RescueStones.IdPrefix)) ? Map01NamActions.PickUp : Map01NamActions.OpenChest);
                     break;
                 case ForestPointKind.Workbench:
                     mission.Say("Bàn chế tạo: B để làm băng cứu thương (2 vải + 1 thảo dược). Game tự lưu khi về menu hoặc thoát.");

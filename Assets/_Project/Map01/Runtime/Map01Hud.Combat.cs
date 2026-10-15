@@ -90,6 +90,7 @@ namespace ShadowVale.Map01
             if (compassBadge != null) Destroy(compassBadge);
             if(takedownBadge!=null)Destroy(takedownBadge);
             if(takedownKnife!=null)Destroy(takedownKnife);
+            if(takedownLeaf!=null)Destroy(takedownLeaf);
         }
     }
 }
