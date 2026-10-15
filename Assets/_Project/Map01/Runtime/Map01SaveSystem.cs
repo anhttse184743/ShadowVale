@@ -25,6 +25,7 @@ namespace ShadowVale.Map01
             public ShadowVale.Gameplay.Skills.SkillProgress skills;
             public ShadowVale.Gameplay.Skills.SkillMissionProgress skillMission;
             public string skillRunId, missionStart;
+            public MapExplorationState exploration;
             public float hp, stamina;
             public Vector3 player, hung;
             public bool alarmed, crouched;
@@ -140,6 +141,7 @@ namespace ShadowVale.Map01
             }
             else { data.skills = mission.Skills.Capture(); data.skillMission = null; }
             data.skillRunId = skillCampaign.RunId; data.missionStart = missionStart;
+            data.exploration = GetComponent<Map01Minimap>()?.CaptureExploration();
             if (!skillCampaign.TryFlush(out var error)) throw new IOException(error);
             return data;
         }
@@ -163,6 +165,7 @@ namespace ShadowVale.Map01
             var start = string.IsNullOrEmpty(data.missionStart) ? data : JsonUtility.FromJson<CheckpointData>(data.missionStart);
             start.skills = new ShadowVale.Gameplay.Skills.SkillProgress { shooting = state.shooting, stealth = state.stealth, engineering = record.career.engineering };
             start.skillRunId = runId;
+            start.exploration = data.exploration;
             start.skillMission = new ShadowVale.Gameplay.Skills.SkillMissionProgress
             { id = state.id, attemptId = Guid.NewGuid().ToString("N"), shooting = state.shooting, stealth = state.stealth };
             start.missionStart = data.missionStart; start.rescueStart = data.rescueStart; start.escortStart = data.escortStart; start.scoutStart = data.scoutStart;
@@ -320,6 +323,7 @@ namespace ShadowVale.Map01
                 used = mission.Points.Where(p => p.used).Select(p => p.id).ToArray(),
                 items = inventory.CaptureItems(),
                 skills = mission.Skills.Capture(),
+                exploration = GetComponent<Map01Minimap>()?.CaptureExploration(),
                 skillMission = mission.Skills.CaptureMission(), skillRunId = skillCampaign.RunId,
                 missionStart = includeRetry ? missionStart : null,
                 crafting = inventory.CraftingId, craftRemaining = inventory.CraftRemaining,
@@ -417,6 +421,7 @@ namespace ShadowVale.Map01
                 EnsureSkillCampaign();
                 skillCampaign.Initialize(RunId(data, pendingCheckpoint));
                 skillCampaign.Restore(data.skills, data.skillMission);
+                GetComponent<Map01Minimap>()?.RestoreExploration(data.exploration);
                 missionStart = data.missionStart;
                 mission.Alarmed = data.alarmed;
                 mission.RestoreHealthFromSave(Mathf.Clamp(data.hp, 1, mission.Settings.playerHP));

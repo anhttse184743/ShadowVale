@@ -362,12 +362,12 @@ namespace ShadowVale.Map01
 
         private void DrawMap(float width, float height)
         {
-            float size = Mathf.Min(650, height - 180);
-            var frame = new Rect((width - size - 40) / 2, 65, size + 40, size + 100);
+            float size = Mathf.Min(650, height - 200);
+            var frame = new Rect((width - size - 40) / 2, 65, size + 40, size + 120);
             HudPanel(frame);
             GUI.Label(new Rect(frame.x + 20, frame.y + 10, size, 35), "BẢN ĐỒ ĐỊA HÌNH", hudCenter);
             minimap.Draw(new Rect(frame.x + 20, frame.y + 50, size, size), true, hudSmall);
-            GUI.Label(new Rect(frame.x + 20, frame.yMax - 43, size, 40), "Bạn ▲   Đồng đội ●   Mục tiêu ◇   Địch △   ·   M / Esc Đóng", hudSmall);
+            GUI.Label(new Rect(frame.x + 20, frame.yMax - 62, size, 56), "Nhà xanh: căn cứ A · Vùng tối: chưa khám phá\nBạn ▲  Đồng đội ●  Mục tiêu ◇  Địch △", hudSmall);
         }
         private Vector2 MapPosition(Vector3 p, Rect r) => new Vector2(r.x + Mathf.InverseLerp(mission.mapMin.x, mission.mapMax.x, p.x) * r.width, r.yMax - Mathf.InverseLerp(mission.mapMin.y, mission.mapMax.y, p.z) * r.height);
         private static void Panel(Rect rect) { var old = GUI.color; GUI.color = new Color(.035f, .07f, .06f, .94f); GUI.DrawTexture(rect, Texture2D.whiteTexture); GUI.color = old; }
