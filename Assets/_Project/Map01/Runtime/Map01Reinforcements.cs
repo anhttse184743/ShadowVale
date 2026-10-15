@@ -16,8 +16,11 @@ namespace ShadowVale.Map01
     /// </summary>
     public sealed class Map01Reinforcements : IReinforcementProvider
     {
-        /// <summary>How far behind the commander the fresh men appear.</summary>
-        public const float SpawnDistance = 24f;
+        /// <summary>How far behind the commander the fresh men appear: close enough to reach the fight in a
+        /// few seconds at a run (was 24 m, from where they arrived only after he had fallen).</summary>
+        public const float SpawnDistance = 12f;
+        /// <summary>What Nam hears when the call goes out.</summary>
+        public const string CallLine = "Chỉ huy địch: \"Tiếp viện! Tất cả về đây!\"";
 
         private readonly Map01Mission _mission;
         private readonly Map01EnemyController _template;
@@ -31,6 +34,7 @@ namespace ShadowVale.Map01
 
         public IReadOnlyList<IEnemyAgent> Summon(IEnemyAgent boss, Vector3 playerPosition, int count, float radius, float now)
         {
+            _mission.Say(CallLine, 4f); // The call is heard, so the player knows what is coming.
             var sent = NearbyAgentsReinforcements.Instance.Summon(boss, playerPosition, count, radius, now).ToList();
             if (_template == null) return sent;
             for (int i = sent.Count; i < count; i++)

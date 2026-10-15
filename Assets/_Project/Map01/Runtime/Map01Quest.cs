@@ -239,22 +239,23 @@ namespace ShadowVale.Map01
             boss = instance.GetComponent<Map01EnemyController>();
             boss.Configure(System.Array.Empty<Vector3>()); // Holds this position rather than resuming a patrol loop.
             boss.BindMission(mission); // Before ConfigureAsBoss: binding resets damage to the balance baseline.
-            var profile = LoadBossProfile();
+            var archetype = BossArchetype();
+            var profile = archetype?.boss != null ? archetype.boss.ToProfile() : new BossProfile();
             boss.ConfigureAsBoss(profile);
+            // His health is the boss_commander archetype's (600), not a guard's ×3 (300): at 300 Nam's
+            // rifle took him from half health to dead in about a second, before anyone he called arrived.
+            var bossHealth = instance.GetComponent<Health>();
+            if (bossHealth != null && archetype != null && archetype.max_hp > 0) bossHealth.SetMaxHealth(archetype.max_hp);
             mission.AddEnemy(boss);
             // Relocation, grenades and the call for reinforcements (A04), from the same profile.
             var behaviour = BossBehaviour.Attach(instance, boss, profile, new Map01Reinforcements(mission, template), seed: 1);
             behaviour.Suspended = () => mission.Stopped;
-            var bossHealth = instance.GetComponent<Health>();
             if (bossHealth != null) bossHealth.onDied.AddListener(OnBossDown);
         }
 
-        /// <summary>The commander's boss profile from Map01Content.json (boss_commander), else the tuned defaults.</summary>
-        private BossProfile LoadBossProfile()
-        {
-            var archetype = mission.Bundle?.enemy_archetypes?.FirstOrDefault(a => a != null && a.is_boss);
-            return archetype?.boss != null ? archetype.boss.ToProfile() : new BossProfile();
-        }
+        /// <summary>The commander's archetype in Map01Content.json (boss_commander): health and boss profile.</summary>
+        private ForestArchetype BossArchetype()
+            => mission.Bundle?.enemy_archetypes?.FirstOrDefault(a => a != null && a.is_boss);
 
         private Vector3 BossSpawnPosition(Map01EnemyController template)
         {
