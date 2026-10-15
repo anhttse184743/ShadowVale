@@ -5,10 +5,29 @@
 - Shooting, Stealth, Engineering: cấp nền 0, tối đa 4 nấc, tự lên cấp theo XP.
 - Tab Kho đồ / Kĩ Năng trong balo Map 1. Ô đã đạt xanh, ô đang luyện tô theo XP, ô chưa mở trống; có số XP tới cấp tiếp theo và trạng thái TỐI ĐA.
 - Hover/focus từng nấc mở popout trước → sau; click ghim. Popout có cả ở ô xanh, ghi Đã đạt hoặc Xem trước / Chưa mở, tự đặt trong panel. Dùng Tab/Esc đóng balo như trước.
-- XP được lưu trong checkpoint và save slot Map 1, khôi phục cùng retry. Save cũ thiếu skill trở về cấp nền. Capture sở hữu bản sao, restore không trao XP hay phát thông báo lên cấp.
+- XP được lưu trong checkpoint và save slot Map 1. Shooting/Stealth hoàn tác về đầu nhiệm vụ khi thất bại; Engineering giữ theo lượt chơi, không bị checkpoint cũ ghi đè. Capture sở hữu bản sao, restore không trao XP hay phát thông báo lên cấp.
 - PlayerSkills gắn trên player nên được giữ khi player chuyển sang Map 2 theo luồng hiện có. Không tạo thêm hệ thống balo/save Map 2.
 - Chưa nối database. Không thay schema backend hoặc chỉ số nền.
 - Không bổ sung crafting/repairing. Engineering có XP/state và API hệ số để nối sau, chưa có nguồn XP gameplay và chưa tác động vật phẩm.
+
+## Ghi nhận XP theo nhiệm vụ và qua thoát game
+
+- Bắt đầu nhiệm vụ: lưu XP Shooting/Stealth làm mốc, cùng mã lần thử riêng. XP đang luyện và bonus có hiệu lực ngay.
+- Thành công: ghi nhận toàn bộ XP, kể cả phần chưa đủ tăng cấp. Nhiệm vụ kế tiếp lấy mốc mới.
+- Thất bại: hoàn tác Shooting/Stealth về mốc đầu nhiệm vụ; không chỉ hoàn tác về checkpoint giữa nhiệm vụ. Engineering giữ nguyên cả XP lẫn cấp.
+- Thoát bình thường giữa nhiệm vụ: save lưu XP hiện tại, mốc đầu nhiệm vụ, mã lần thử và checkpoint đầu nhiệm vụ. Vào lại tiếp tục XP tạm; thất bại sau đó vẫn quay về mốc ban đầu.
+- Thoát sau thất bại: autosave ghi trạng thái khỏe mạnh tại đầu nhiệm vụ, không ghi trạng thái nhân vật chết/nhiệm vụ hỏng. Tải một manual save giữa lần thử đã thất bại cũng đưa về đầu nhiệm vụ, không phục hồi XP tạm của lần thử đó.
+- Điều kiện chặn lưu giữa cinematic vẫn được giữ; cưỡng bức tắt game không bảo đảm lưu phần world state chưa ghi.
+
+Ranh giới dùng các chặng đang có trong Map 1: giải cứu (stage 0), hộ tống (1), trinh sát (3), chiếm trại (5), chỉ huy (7), rút lui/lên thuyền (10–11 cùng một chặng). Khi chuyển sang stage hoàn thành/báo cáo, XP được ghi nhận. XP ở các giai đoạn nghỉ/báo cáo không thuộc lần thử đang thất bại.
+
+Checkpoint thêm skillRunId, skillMission và missionStart. Engineering và nhật ký lần thử thất bại lưu riêng trong file `shadowvale-skills-<runId>.json` dưới cùng thư mục save local; các slot cùng lượt chơi dùng chung runId, lượt chơi mới có runId mới. Component SkillCampaignPersistence đi cùng player sang Map 2. Không dùng database cho tiến trình người chơi.
+
+Save cũ vẫn tải được: XP đang có tại lần tải đầu sau cập nhật được dùng làm mốc an toàn vì save cũ không chứa mốc đầu nhiệm vụ. Save cũ chưa có skill mặc định XP 0. Mã lượt chơi legacy suy ra ổn định từ payload cũ, lần lưu mới mang runId rõ ràng.
+
+Hook sửa chữa tương lai phải gửi transactionId ổn định của giao dịch. Nhật ký transaction được giữ cùng Engineering để một giao dịch cũ không trao XP lại sau khi tải checkpoint. Chưa thêm chức năng repairing/crafting.
+
+Popout Shooting/Stealth có chú thích: `Cấp độ tích lũy được sẽ không được ghi nhận nếu nhiệm vụ thất bại`.
 
 ## Cấu hình điều kiện và bonus đã chốt
 
@@ -74,9 +93,14 @@ Sau khi tiêu hao nguyên liệu và sửa từ chưa đầy tới 100% mới g�
 - `Map01Mission.cs`: tạo state, nối XP và thông báo lên cấp; hủy subscription khi kết thúc mission.
 - `Map01EnemyController.cs`: range và XP ám sát.
 - `Map01SaveSystem.cs`: Capture/Restore XP, giữ tương thích checkpoint cũ.
+- `SkillCampaignPersistence.cs`: Engineering và nhật ký các lần thử thất bại theo runId, ghi file local nguyên tử; component gắn trên player để đi theo nhân vật giữa các map.
 - `Map01Hud.Skills.cs`: tab, nấc, XP và popout dùng chỉ số thật.
 
 ## Xác minh
+
+Cập nhật quy tắc theo nhiệm vụ: 32 test liên quan có kết quả cuối Passed trong Unity, gồm unit test XP/baseline, journal Engineering/transaction, tách lượt chơi, save legacy, load một lần thử đã thất bại và chu trình Play Mode lưu giữa nhiệm vụ → tải lại → thất bại → thoát/tải lại → thành công nhiệm vụ trước → thất bại nhiệm vụ sau. Kiểm tra hồi quy thử lại giải cứu/hộ tống/trinh sát, save slot và balo cũng đã qua. Đã xem HUD 720p với chú thích mới, không bị cắt chữ.
+
+Báo cáo: `Logs/skill-mission-core-tests.xml`, `skill-mission-flow-tests.xml`, `skill-mission-regression-tests.xml`, `skill-mission-legacy-tests.xml`, `skill-mission-final-tests.xml`. Báo cáo regression đầu ghi một lần fail kiểm tra save layout cũ do scene Editor chưa Awake; đã sửa null guard và kết quả cuối của case đó là Passed trong báo cáo legacy. Công cụ chạy test tạm đã dọn, không thêm repairing/crafting.
 
 Sau cập nhật điều kiện đã chốt: 24 unit test skill/magazine chạy lại từ bản sao đúng các file nguồn mới trong project Unity kiểm thử tạm đều Passed (`Logs/skill-balance-isolated-tests.xml`). Ba kiểm thử tích hợp trên project thật cũng Passed: gun trace/checkpoint/reload/HUD, range ám sát/tín hiệu/vật cản, và animation băng đạn (`Logs/skill-balance-main-tests.xml`). Báo cáo main còn ghi một unit test dùng dữ liệu mẫu cũ; test đó đã sửa và có kết quả Passed trong báo cáo isolated. Tổng 27 test liên quan có kết quả cuối Passed.
 

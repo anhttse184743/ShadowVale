@@ -14,6 +14,86 @@ namespace ShadowVale.Map01.Tests
     {
         private const BindingFlags Private = BindingFlags.NonPublic | BindingFlags.Instance;
 
+        [UnityTest] public IEnumerator MissionXpSurvivesResumeButRollsBackOnFailureWhileEngineeringPersists()
+        {
+            Map01OpeningCutscene.CancelPending();
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode(); yield return null; yield return null;
+            var rootField = typeof(ForestSaveSlots).GetField("storageRoot", BindingFlags.Static | BindingFlags.NonPublic);
+            object previousRoot = rootField.GetValue(null);
+            string root = System.IO.Path.Combine(Application.temporaryCachePath, "skill-mission-flow-" + System.Guid.NewGuid().ToString("N"));
+            rootField.SetValue(null, root);
+            try
+            {
+                var mission = Object.FindFirstObjectByType<Map01Mission>();
+                var save = mission.GetComponent<Map01SaveSystem>();
+                mission.Cinematic = false;
+                Assert.AreEqual("rescue", mission.Skills.MissionId);
+                mission.Skills.Award(SkillKind.Shooting, 3); mission.Skills.Award(SkillKind.Stealth);
+                mission.Skills.Award(SkillKind.Engineering, 2);
+                string attempt = mission.Skills.CaptureMission().attemptId;
+                Assert.IsTrue(save.SaveSlot(1, out var error, true), error);
+
+                Map01SaveSystem.BeginGame(1); yield return WaitForSkillRestore();
+                mission = Object.FindFirstObjectByType<Map01Mission>(); save = mission.GetComponent<Map01SaveSystem>();
+                Assert.AreEqual(3, mission.Skills.Xp(SkillKind.Shooting));
+                Assert.AreEqual(1, mission.Skills.Xp(SkillKind.Stealth));
+                Assert.AreEqual(2, mission.Skills.Xp(SkillKind.Engineering));
+                Assert.AreEqual(0, mission.Skills.CaptureMission().shooting, "A normal resume must keep the original baseline.");
+                mission.Damage(10000); yield return null; yield return null;
+                Assert.IsTrue(mission.Skills.MissionFailed);
+                Assert.AreEqual(0, mission.Skills.Xp(SkillKind.Shooting));
+                Assert.AreEqual(0, mission.Skills.Xp(SkillKind.Stealth));
+                Assert.AreEqual(2, mission.Skills.Xp(SkillKind.Engineering));
+                Assert.IsTrue(save.AutoSaveOnExit(out error), error);
+
+                // Even the older manual save of the failed attempt must not restore provisional XP.
+                Map01SaveSystem.BeginGame(1); yield return WaitForSkillRestore();
+                mission = Object.FindFirstObjectByType<Map01Mission>(); save = mission.GetComponent<Map01SaveSystem>();
+                Assert.Greater(mission.PlayerHealth, 0);
+                Assert.AreEqual(0, mission.Skills.Xp(SkillKind.Shooting));
+                Assert.AreEqual(0, mission.Skills.Xp(SkillKind.Stealth));
+                Assert.AreEqual(2, mission.Skills.Xp(SkillKind.Engineering));
+                Assert.AreNotEqual(attempt, mission.Skills.CaptureMission().attemptId);
+                Assert.IsFalse(mission.Skills.MissionFailed);
+
+                // Finishing rescue commits its XP; failing escort only removes escort gains.
+                mission.Skills.Award(SkillKind.Shooting, 2); mission.Skills.Award(SkillKind.Stealth);
+                mission.GetComponent<Map01Quest>().RestoreStage(Map01Quest.EscortStage); save.SyncSkillMission();
+                Assert.AreEqual("escort", mission.Skills.MissionId);
+                mission.Skills.Award(SkillKind.Shooting, 5); mission.Skills.Award(SkillKind.Stealth, 2);
+                mission.Skills.Award(SkillKind.Engineering, 2);
+                mission.Damage(10000); yield return null; yield return null;
+                Assert.AreEqual(2, mission.Skills.Xp(SkillKind.Shooting));
+                Assert.AreEqual(1, mission.Skills.Xp(SkillKind.Stealth));
+                Assert.AreEqual(4, mission.Skills.Xp(SkillKind.Engineering));
+                Assert.IsTrue(save.AutoSaveOnExit(out error), error);
+                Map01SaveSystem.BeginGame(ForestSaveSlots.AutoSlot); yield return WaitForSkillRestore();
+                mission = Object.FindFirstObjectByType<Map01Mission>();
+                Assert.AreEqual(Map01Quest.EscortStage, mission.Stage);
+                Assert.AreEqual(2, mission.Skills.Xp(SkillKind.Shooting));
+                Assert.AreEqual(1, mission.Skills.Xp(SkillKind.Stealth));
+                Assert.AreEqual(4, mission.Skills.Xp(SkillKind.Engineering));
+                Assert.IsFalse(mission.Skills.MissionFailed);
+            }
+            finally
+            {
+                rootField.SetValue(null, previousRoot);
+                string full = System.IO.Path.GetFullPath(root), boundary = System.IO.Path.GetFullPath(Application.temporaryCachePath) + System.IO.Path.DirectorySeparatorChar;
+                if (!full.StartsWith(boundary, System.StringComparison.OrdinalIgnoreCase)) throw new System.InvalidOperationException("Invalid test path.");
+                if (System.IO.Directory.Exists(full)) System.IO.Directory.Delete(full, true);
+            }
+            yield return new ExitPlayMode();
+        }
+
+        private static IEnumerator WaitForSkillRestore()
+        {
+            double deadline = Time.realtimeSinceStartupAsDouble + 15;
+            while (Map01SaveSystem.IsRestoring && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
+            Assert.IsFalse(Map01SaveSystem.IsRestoring);
+            yield return null;
+        }
+
         [UnityTest] public IEnumerator CheckpointOwnsXpAndHudRendersHoverAtBothResolutions()
         {
             Map01OpeningCutscene.CancelPending();

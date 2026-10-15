@@ -11,6 +11,7 @@ namespace ShadowVale.Map01
     /// <summary>Save/load for Map 1 — checkpoint format v7, the first on the detailed layout (base
     /// in the underground shelter, jetty B, camps C1–C3). Older saves hold positions on the old
     /// Map 1's terrain, which no longer exists, so they are refused rather than loaded.</summary>
+    [DefaultExecutionOrder(100)]
     public sealed class Map01SaveSystem : MonoBehaviour
     {
         /// <summary>The first checkpoint version on the current map layout.</summary>
@@ -22,6 +23,8 @@ namespace ShadowVale.Map01
         {
             public int version = LayoutVersion, stage, stones;
             public ShadowVale.Gameplay.Skills.SkillProgress skills;
+            public ShadowVale.Gameplay.Skills.SkillMissionProgress skillMission;
+            public string skillRunId, missionStart;
             public float hp, stamina;
             public Vector3 player, hung;
             public bool alarmed, crouched;
@@ -54,6 +57,9 @@ namespace ShadowVale.Map01
         private Map01Quest quest;
         private Map01Inventory inventory;
         private string rescueStart, escortStart;
+        private string missionStart;
+        private SkillCampaignPersistence skillCampaign;
+        private bool syncingSkills;
         private string SavePath => Path.Combine(Application.persistentDataPath, "shadowvale-map01-checkpoint.json");
 
         private void Awake()
@@ -62,7 +68,106 @@ namespace ShadowVale.Map01
             quest = GetComponent<Map01Quest>();
             inventory = GetComponent<Map01Inventory>();
         }
-        private void Start() { if (pendingCheckpoint != null) Invoke(nameof(Restore), .1f); }
+        private void Start()
+        {
+            if (!mission.IsInitialized) return;
+            try { EnsureSkillCampaign(); }
+            catch (Exception e) { mission.Say("Không thể đọc tiến trình kỹ năng: " + e.Message, 12); enabled = false; return; }
+            if (pendingCheckpoint != null) Invoke(nameof(Restore), .1f);
+            else SyncSkillMission();
+        }
+        private void LateUpdate() { if (mission.IsInitialized && skillCampaign != null) SyncSkillMission(); }
+
+        private static string RunId(CheckpointData data, string json)
+        {
+            if (!string.IsNullOrEmpty(data?.skillRunId)) return data.skillRunId;
+            // Stable migration for the same pre-feature save, without rewriting the user's old slot.
+            using var hash = System.Security.Cryptography.SHA256.Create();
+            return BitConverter.ToString(hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(json))).Replace("-", "").ToLowerInvariant();
+        }
+        private void EnsureSkillCampaign()
+        {
+            if (skillCampaign != null && !string.IsNullOrEmpty(skillCampaign.RunId)) return;
+            skillCampaign = mission.player.GetComponent<SkillCampaignPersistence>();
+            if (skillCampaign == null) skillCampaign = mission.player.gameObject.AddComponent<SkillCampaignPersistence>();
+            if (pendingCheckpoint == null) skillCampaign.Initialize(Guid.NewGuid().ToString("N"));
+            else skillCampaign.Initialize(RunId(JsonUtility.FromJson<CheckpointData>(pendingCheckpoint), pendingCheckpoint));
+        }
+        private static string SkillMissionId(int stage) => stage switch
+        {
+            Map01Quest.RescueStage => "rescue", Map01Quest.EscortStage => "escort", Map01Quest.ScoutStage => "scouting",
+            Map01Quest.CampsStage => "camps", Map01Quest.BossStage => "boss",
+            Map01Quest.ExtractionStage or Map01Quest.BoardingStage => "extraction", _ => null
+        };
+        public void SyncSkillMission()
+        {
+            if (syncingSkills || IsRestoring || !mission.IsInitialized) return;
+            EnsureSkillCampaign();
+            syncingSkills = true;
+            try
+            {
+                if (mission.PlayerHealth <= 0 || (mission.ModernHealth != null && mission.ModernHealth.IsDead)
+                    || GetComponent<Map01Rescue>().HungDown || GetComponent<Map01Rescue>().CurrentPhase == Map01Rescue.Phase.Alarm
+                    || GetComponent<Map01Scouting>().FailedRun)
+                { mission.Skills.FailMission(); return; }
+                string id = SkillMissionId(quest.Stage);
+                if (mission.Skills.MissionId == id)
+                {
+                    if (missionStart == null) missionStart = JsonUtility.ToJson(Capture(false));
+                    return;
+                }
+                mission.Skills.CompleteMission();
+                missionStart = null;
+                if (id != null)
+                {
+                    mission.Skills.BeginMission(id);
+                }
+                missionStart = JsonUtility.ToJson(Capture(false));
+            }
+            finally { syncingSkills = false; }
+        }
+
+        private CheckpointData PrepareRetry(CheckpointData data)
+        {
+            SyncSkillMission();
+            var baseline = mission.Skills.CaptureMission();
+            if (baseline != null)
+            {
+                baseline.failed = false; baseline.attemptId = Guid.NewGuid().ToString("N");
+                data.skillMission = baseline;
+                data.skills = new ShadowVale.Gameplay.Skills.SkillProgress
+                { shooting = baseline.shooting, stealth = baseline.stealth, engineering = mission.Skills.Xp(ShadowVale.Gameplay.Skills.SkillKind.Engineering) };
+            }
+            else { data.skills = mission.Skills.Capture(); data.skillMission = null; }
+            data.skillRunId = skillCampaign.RunId; data.missionStart = missionStart;
+            if (!skillCampaign.TryFlush(out var error)) throw new IOException(error);
+            return data;
+        }
+        public bool RestartCurrentMission()
+        {
+            SyncSkillMission();
+            if (string.IsNullOrEmpty(missionStart)) return false;
+            var data = PrepareRetry(JsonUtility.FromJson<CheckpointData>(missionStart));
+            pendingCheckpoint = JsonUtility.ToJson(data); pendingSeconds = mission.PlaySeconds;
+            pendingMessage = "Thử lại nhiệm vụ. Shooting và Stealth đã trở về mốc đầu nhiệm vụ.";
+            Time.timeScale = 1; SceneManager.LoadScene("Map 1"); return true;
+        }
+
+        private static CheckpointData NormalizeFailedAttempt(CheckpointData data, string json)
+        {
+            string runId = RunId(data, json);
+            var record = SkillCampaignPersistence.Read(runId);
+            data.skillRunId = runId;
+            var state = data.skillMission;
+            if (state == null || string.IsNullOrEmpty(state.id) || !record.failedAttempts.Contains(state.attemptId)) return data;
+            var start = string.IsNullOrEmpty(data.missionStart) ? data : JsonUtility.FromJson<CheckpointData>(data.missionStart);
+            start.skills = new ShadowVale.Gameplay.Skills.SkillProgress { shooting = state.shooting, stealth = state.stealth, engineering = record.career.engineering };
+            start.skillRunId = runId;
+            start.skillMission = new ShadowVale.Gameplay.Skills.SkillMissionProgress
+            { id = state.id, attemptId = Guid.NewGuid().ToString("N"), shooting = state.shooting, stealth = state.stealth };
+            start.missionStart = data.missionStart; start.rescueStart = data.rescueStart; start.escortStart = data.escortStart; start.scoutStart = data.scoutStart;
+            return start;
+        }
 
         public string ManualSaveBlockReason()
         {
@@ -83,10 +188,30 @@ namespace ShadowVale.Map01
         public bool AutoSaveOnExit(out string error)
         {
             error = null;
-            if (mission.Cinematic || GetComponent<Map01Rescue>().NonSaveable) return true;
+            if (!mission.IsInitialized) return true;
+            if (mission.IsInitialized)
+            {
+                try { SyncSkillMission(); if (!skillCampaign.TryFlush(out error)) return false; }
+                catch (Exception e) { error = "Không thể lưu tiến trình kỹ năng: " + e.Message; return false; }
+            }
             if (pendingCheckpoint != null) { error = "Đang khôi phục bản lưu. Vui lòng thử lại sau giây lát."; return false; }
-            // Never replace a usable checkpoint with a dead character — or a failed rescue or scouting run.
-            if (mission.PlayerHealth <= 0 || GetComponent<Map01Rescue>().HungDown || GetComponent<Map01Scouting>().FailedRun) return true;
+            // Save a healthy mission-start checkpoint on failure, never the failed world state.
+            if (mission.PlayerHealth <= 0 || GetComponent<Map01Rescue>().HungDown || GetComponent<Map01Scouting>().FailedRun || mission.Skills.MissionFailed)
+            {
+                try
+                {
+                    if (string.IsNullOrEmpty(missionStart)) { error = "Chưa có mốc đầu nhiệm vụ để lưu lại."; return false; }
+                    var data = PrepareRetry(JsonUtility.FromJson<CheckpointData>(missionStart));
+                    ForestSaveSlots.Write(ForestSaveSlots.AutoSlot, new ForestSaveSlots.Entry
+                    {
+                        sceneName = "Map 1", savedAt = DateTime.UtcNow.ToString("o"), playSeconds = mission.PlaySeconds,
+                        location = Map01Quest.SaveLocations[Mathf.Clamp(data.stage, 0, Map01Quest.LastStage)], checkpoint = JsonUtility.ToJson(data)
+                    });
+                    return true;
+                }
+                catch (Exception e) { error = "Không thể lưu mốc đầu nhiệm vụ: " + e.Message; return false; }
+            }
+            if (mission.Cinematic || GetComponent<Map01Rescue>().NonSaveable) return true;
             return SaveSlot(ForestSaveSlots.AutoSlot, out error, true);
         }
 
@@ -118,7 +243,7 @@ namespace ShadowVale.Map01
         {
             string checkpoint=escort?escortStart:rescueStart;
             if(string.IsNullOrEmpty(checkpoint)){mission.Say("Chưa có checkpoint nhiệm vụ. Hãy tải bản lưu hoặc chơi lại.",5);return false;}
-            var data=JsonUtility.FromJson<CheckpointData>(checkpoint);
+            var data=PrepareRetry(JsonUtility.FromJson<CheckpointData>(checkpoint));
             // Keep the non-recursive retry snapshots across repeated retries.
             data.rescueStart=rescueStart;data.escortStart=escortStart;
             pendingCheckpoint=JsonUtility.ToJson(data);pendingSeconds=mission.PlaySeconds;
@@ -153,7 +278,7 @@ namespace ShadowVale.Map01
         public bool RestartScouting(string message)
         {
             if (string.IsNullOrEmpty(scoutStart)) return false;
-            pendingCheckpoint = scoutStart; pendingSeconds = mission.PlaySeconds; pendingMessage = message;
+            pendingCheckpoint = JsonUtility.ToJson(PrepareRetry(JsonUtility.FromJson<CheckpointData>(scoutStart))); pendingSeconds = mission.PlaySeconds; pendingMessage = message;
             Time.timeScale = 1;
             SceneManager.LoadScene("Map 1");
             return true;
@@ -162,7 +287,11 @@ namespace ShadowVale.Map01
         public bool SaveSlot(int slot, out string error, bool automatic = false)
         {
             error = null;
-            if (mission.Cinematic || GetComponent<Map01Rescue>().NonSaveable || GetComponent<Map01Rescue>().Failed || mission.PlayerHealth<=0) { error = "Cannot save during a cinematic or failed mission."; return false; }
+            if (!mission.IsInitialized) { error = "Màn chơi chưa sẵn sàng để lưu."; return false; }
+            try { SyncSkillMission(); if (!skillCampaign.TryFlush(out error)) return false; }
+            catch (Exception e) { error = "Không thể lưu tiến trình kỹ năng: " + e.Message; return false; }
+            if (mission.Cinematic || GetComponent<Map01Rescue>().NonSaveable || GetComponent<Map01Rescue>().Failed
+                || GetComponent<Map01Scouting>().FailedRun || mission.Skills.MissionFailed || mission.PlayerHealth<=0) { error = "Cannot save during a cinematic or failed mission."; return false; }
             if (!automatic && (error = ManualSaveBlockReason()) != null) { mission.Say(error); return false; }
             var data = Capture();
             try
@@ -183,6 +312,7 @@ namespace ShadowVale.Map01
 
         private CheckpointData Capture(bool includeRetry = true)
         {
+            SyncSkillMission();
             return new CheckpointData
             {
                 stage = quest.Stage, stones = inventory.Stones, hp = mission.PlayerHealth, stamina = mission.Stamina,
@@ -190,6 +320,8 @@ namespace ShadowVale.Map01
                 used = mission.Points.Where(p => p.used).Select(p => p.id).ToArray(),
                 items = inventory.CaptureItems(),
                 skills = mission.Skills.Capture(),
+                skillMission = mission.Skills.CaptureMission(), skillRunId = skillCampaign.RunId,
+                missionStart = includeRetry ? missionStart : null,
                 crafting = inventory.CraftingId, craftRemaining = inventory.CraftRemaining,
                 playerYaw = mission.player.eulerAngles.y, hungYaw = mission.hung.eulerAngles.y,
                 crouched = mission.Crouched,
@@ -223,6 +355,7 @@ namespace ShadowVale.Map01
 
         public static void BeginGame(int slot = -1)
         {
+            FlushCurrentSkillRun();
             pendingCheckpoint = null; pendingSeconds = 0; pendingMessage = null;
             if (slot < 0) scoutStart = null;
             string sceneName = "Map 1";
@@ -237,7 +370,7 @@ namespace ShadowVale.Map01
                 if (data == null || data.version < 4 || data.items == null || data.used == null)
                     throw new IOException("Dữ liệu checkpoint bị hỏng.");
                 if (data.version < LayoutVersion) throw new IOException(OldLayoutMessage);
-                pendingCheckpoint = entry.checkpoint; pendingSeconds = entry.playSeconds;
+                pendingCheckpoint = JsonUtility.ToJson(NormalizeFailedAttempt(data, entry.checkpoint)); pendingSeconds = entry.playSeconds;
             }
             Time.timeScale = 1;
             SceneManager.LoadScene(sceneName);
@@ -248,12 +381,22 @@ namespace ShadowVale.Map01
         {
             try
             {
+                FlushCurrentSkillRun();
                 if (ForestSaveSlots.Exists(0)) { BeginGame(0); return; }
                 if (!File.Exists(SavePath)) { mission.Say("Chưa có bản lưu nhanh."); return; }
-                pendingCheckpoint = File.ReadAllText(SavePath); pendingSeconds = 0; pendingMessage = null;
+                string json = File.ReadAllText(SavePath);
+                pendingCheckpoint = JsonUtility.ToJson(NormalizeFailedAttempt(JsonUtility.FromJson<CheckpointData>(json), json)); pendingSeconds = 0; pendingMessage = null;
                 Time.timeScale = 1; SceneManager.LoadScene("Map 1");
             }
             catch (Exception e) { mission.Say("Không thể tải: " + e.Message); }
+        }
+
+        private static void FlushCurrentSkillRun()
+        {
+            var active = FindFirstObjectByType<Map01SaveSystem>();
+            if (active == null || active.mission == null || !active.mission.IsInitialized || IsRestoring) return;
+            active.SyncSkillMission();
+            if (!active.skillCampaign.TryFlush(out var error)) throw new IOException(error);
         }
 
         private void Restore()
@@ -271,7 +414,10 @@ namespace ShadowVale.Map01
                 mission.hung.GetComponent<NavMeshAgent>()?.Warp(data.hung);
                 quest.RestoreStage(data.stage);
                 inventory.RestoreFromSave(data.items, data.stones, data.crafting, data.craftRemaining);
-                mission.Skills.Restore(data.skills);
+                EnsureSkillCampaign();
+                skillCampaign.Initialize(RunId(data, pendingCheckpoint));
+                skillCampaign.Restore(data.skills, data.skillMission);
+                missionStart = data.missionStart;
                 mission.Alarmed = data.alarmed;
                 mission.RestoreHealthFromSave(Mathf.Clamp(data.hp, 1, mission.Settings.playerHP));
                 mission.SetStamina(data.stamina);

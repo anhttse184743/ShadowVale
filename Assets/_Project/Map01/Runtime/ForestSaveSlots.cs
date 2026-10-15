@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace ShadowVale.Map01
@@ -17,6 +18,13 @@ namespace ShadowVale.Map01
         public const int Count = 5;
         private static string storageRoot;
         private static string Root => storageRoot ?? Application.persistentDataPath;
+        public static string SkillCareerPath(string runId)
+        {
+            if (string.IsNullOrEmpty(runId) || (runId.Length != 32 && runId.Length != 64)
+                || runId.Any(c => !(c >= '0' && c <= '9') && !(c >= 'a' && c <= 'f')))
+                throw new ArgumentException("Invalid skill run id.", nameof(runId));
+            return Path.Combine(Root, "shadowvale-skills-" + runId + ".json");
+        }
         public static string PathFor(int slot)
         {
             if (slot < 0 || slot >= Count) throw new ArgumentOutOfRangeException(nameof(slot));

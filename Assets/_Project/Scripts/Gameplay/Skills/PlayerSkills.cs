@@ -11,6 +11,21 @@ namespace ShadowVale.Gameplay.Skills
         public int shooting, stealth, engineering;
     }
 
+    [Serializable]
+    public sealed class SkillMissionProgress
+    {
+        public string id, attemptId;
+        public int shooting, stealth;
+        public bool failed;
+    }
+
+    [Serializable]
+    public sealed class SkillCareerProgress
+    {
+        public int engineering;
+        public string[] repairTransactions;
+    }
+
     /// <summary>Read-only balance input. Replace this input when content is connected, not player XP.</summary>
     [Serializable]
     public sealed class SkillBalance
@@ -65,6 +80,10 @@ namespace ShadowVale.Gameplay.Skills
     {
         private SkillBalance balance;
         private SkillProgress progress = new();
+        private SkillMissionProgress mission;
+        private readonly System.Collections.Generic.HashSet<string> repairTransactions = new(StringComparer.Ordinal);
+        public string MissionId => mission?.id;
+        public bool MissionFailed => mission != null && mission.failed;
         public event Action<SkillKind, int> LevelChanged;
         public event Action ProgressChanged;
 
@@ -113,12 +132,14 @@ namespace ShadowVale.Gameplay.Skills
         public float RepairGain(float baseGain, float maxDurability) => RepairGainAt(baseGain, maxDurability, Level(SkillKind.Engineering));
 
         /// <summary>Future repair transaction hook: only a paid successful repair from damaged to full counts.</summary>
-        public bool RecordFullRepair(float before, float after, float maxDurability, bool materialsConsumed)
+        public bool RecordFullRepair(float before, float after, float maxDurability, bool materialsConsumed, string transactionId = null)
         {
-            if (!materialsConsumed || float.IsNaN(before) || float.IsInfinity(before)
+            if (string.IsNullOrWhiteSpace(transactionId) || !materialsConsumed || float.IsNaN(before) || float.IsInfinity(before)
                 || float.IsNaN(after) || float.IsInfinity(after) || float.IsNaN(maxDurability) || float.IsInfinity(maxDurability)
                 || maxDurability <= 0 || before < 0 || before >= maxDurability || after < maxDurability || after > maxDurability) return false;
+            if (!repairTransactions.Add(transactionId)) return false;
             Award(SkillKind.Engineering);
+            ProgressChanged?.Invoke(); // Persist the transaction even when XP is already capped.
             return true;
         }
 
@@ -126,6 +147,7 @@ namespace ShadowVale.Gameplay.Skills
         public void Award(SkillKind kind, int amount = 1)
         {
             if (amount <= 0) return;
+            if (kind != SkillKind.Engineering && MissionFailed) return;
             if (Level(kind) == MaxLevel(kind)) return;
             int before = Level(kind);
             int xp = (int)Math.Min((long)Threshold(kind, MaxLevel(kind)), (long)Xp(kind) + amount);
@@ -140,6 +162,47 @@ namespace ShadowVale.Gameplay.Skills
             if (Level(kind) > before) LevelChanged?.Invoke(kind, Level(kind));
         }
         public SkillProgress Capture() => new() { shooting = progress.shooting, stealth = progress.stealth, engineering = progress.engineering };
+        public void ResetForNewRun()
+        {
+            progress = new SkillProgress(); mission = null; repairTransactions.Clear(); ProgressChanged?.Invoke();
+        }
+        public void BeginMission(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id)) throw new ArgumentException("Mission id is required.", nameof(id));
+            if (MissionId == id) return;
+            mission = new SkillMissionProgress { id = id, attemptId = Guid.NewGuid().ToString("N"), shooting = progress.shooting, stealth = progress.stealth };
+            ProgressChanged?.Invoke();
+        }
+        public void CompleteMission() { mission = null; ProgressChanged?.Invoke(); }
+        public bool FailMission()
+        {
+            if (mission == null || mission.failed) return false;
+            progress.shooting = mission.shooting; progress.stealth = mission.stealth;
+            mission.failed = true; ProgressChanged?.Invoke(); return true;
+        }
+        public SkillMissionProgress CaptureMission() => mission == null ? null : new SkillMissionProgress
+        {
+            id = mission.id, attemptId = mission.attemptId, shooting = mission.shooting, stealth = mission.stealth, failed = mission.failed
+        };
+        public void RestoreMission(SkillMissionProgress saved)
+        {
+            mission = saved == null || string.IsNullOrEmpty(saved.id) ? null : new SkillMissionProgress
+            {
+                id = saved.id, attemptId = string.IsNullOrEmpty(saved.attemptId) ? Guid.NewGuid().ToString("N") : saved.attemptId,
+                shooting = Math.Max(0, saved.shooting), stealth = Math.Max(0, saved.stealth), failed = saved.failed
+            };
+            if (MissionFailed) { progress.shooting = mission.shooting; progress.stealth = mission.stealth; }
+            ProgressChanged?.Invoke();
+        }
+        public SkillCareerProgress CaptureCareer() => new() { engineering = progress.engineering, repairTransactions = new System.Collections.Generic.List<string>(repairTransactions).ToArray() };
+        public void RestoreCareer(SkillCareerProgress saved)
+        {
+            if (saved == null) return;
+            progress.engineering = Math.Max(progress.engineering, saved.engineering);
+            if (saved.repairTransactions != null)
+                foreach (var id in saved.repairTransactions) if (!string.IsNullOrWhiteSpace(id)) repairTransactions.Add(id);
+            ProgressChanged?.Invoke();
+        }
         public void Restore(SkillProgress saved)
         {
             progress = new SkillProgress

@@ -11,6 +11,7 @@ namespace ShadowVale.Map01
         private static readonly Color SkillGreen = new(.44f, .68f, .32f);
         private static readonly string[] SkillNames = { "Shooting", "Stealth", "Engineering" };
         private static readonly string[] SkillLabels = { "Bắn súng", "Lén lút", "Kỹ thuật" };
+        private const string MissionSkillNotice = "Cấp độ tích lũy được sẽ không được ghi nhận nếu nhiệm vụ thất bại";
 
         private void DrawInventoryTabs(Rect panel)
         {
@@ -72,7 +73,8 @@ namespace ShadowVale.Map01
         private void DrawSkillPopout(Rect panel, Rect anchor, int index, int level)
         {
             var kind = (SkillKind)index; var skills = mission.Skills;
-            const float popWidth = 626, popHeight = 282;
+            const float popWidth = 626;
+            float popHeight = kind == SkillKind.Stealth ? 354 : kind == SkillKind.Shooting ? 306 : 282;
             float y = anchor.y - popHeight - 10;
             if (y < panel.y + 5) y = anchor.yMax + 10;
             var pop = new Rect(Mathf.Clamp(anchor.center.x - popWidth / 2, panel.x + 10, panel.xMax - popWidth - 10),
@@ -90,18 +92,20 @@ namespace ShadowVale.Map01
                 DrawSkillBenefit(new Rect(pop.x + 18, pop.y + 84, 290, 70), "Độ giật", $"Giảm {(1f - after / before) * 100f:0.##}%");
                 float reloadBefore = skills.ReloadMultiplierAt(level - 1), reloadAfter = skills.ReloadMultiplierAt(level);
                 DrawSkillBenefit(new Rect(pop.x + 326, pop.y + 84, 280, 70), "Tốc độ thay đạn", $"Tăng {(1f - reloadAfter / reloadBefore) * 100f:0.##}%");
+                GUI.Label(new Rect(pop.x + 18, pop.y + 165, pop.width - 36, 58), MissionSkillNotice, hudSmall);
             }
             else if (kind == SkillKind.Stealth)
             {
                 DrawSkillBenefit(new Rect(pop.x + 18, pop.y + 84, 580, 75), "Tầm ám sát", $"Tăng {(after / before - 1f) * 100f:0.##}%");
                 GUI.Label(new Rect(pop.x + 18, pop.y + 165, pop.width - 36, 40), "Dùng vũ khí cận chiến để tiếp cận địch từ phía sau lưng", hudSmall);
+                GUI.Label(new Rect(pop.x + 18, pop.y + 211, pop.width - 36, 58), MissionSkillNotice, hudSmall);
             }
             else
             {
                 DrawSkillMetric(new Rect(pop.x + 18, pop.y + 84, 580, 75), "Độ bền cộng thêm ngoài lượng sửa nền", before * 100, after * 100, "% tối đa");
                 GUI.Label(new Rect(pop.x + 18, pop.y + 165, pop.width - 36, 40), "Chưa có nguồn luyện: chờ hệ thống sửa chữa.\nKhông tính các lần sửa chưa đạt đầy độ bền.", hudSmall);
             }
-            GUI.Label(new Rect(pop.x + 18, pop.y + 213, pop.width - 36, 55), SkillCondition(kind, level), hudSmall);
+            GUI.Label(new Rect(pop.x + 18, pop.y + popHeight - 69, pop.width - 36, 55), SkillCondition(kind, level), hudSmall);
         }
 
         private string SkillCondition(SkillKind kind, int level)

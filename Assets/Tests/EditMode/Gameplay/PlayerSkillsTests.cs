@@ -88,20 +88,70 @@ namespace ShadowVale.Tests.EditMode.Gameplay
 
         [Test] public void EngineeringOnlyCountsPaidRepairsThatReachFullDurability()
         {
-            Assert.IsFalse(skills.RecordFullRepair(20, 40, 100, true));
-            Assert.IsFalse(skills.RecordFullRepair(100, 100, 100, true));
-            Assert.IsFalse(skills.RecordFullRepair(80, 100, 100, false));
-            Assert.IsFalse(skills.RecordFullRepair(float.NaN, 100, 100, true));
+            Assert.IsFalse(skills.RecordFullRepair(20, 40, 100, true, "partial"));
+            Assert.IsFalse(skills.RecordFullRepair(100, 100, 100, true, "already-full"));
+            Assert.IsFalse(skills.RecordFullRepair(80, 100, 100, false, "no-materials"));
+            Assert.IsFalse(skills.RecordFullRepair(float.NaN, 100, 100, true, "invalid"));
             Assert.AreEqual(0, skills.Xp(SkillKind.Engineering));
-            Assert.IsTrue(skills.RecordFullRepair(80, 100, 100, true));
+            Assert.IsTrue(skills.RecordFullRepair(80, 100, 100, true, "repair-1"));
             Assert.AreEqual(0, skills.Level(SkillKind.Engineering));
-            Assert.IsTrue(skills.RecordFullRepair(70, 100, 100, true));
+            Assert.IsTrue(skills.RecordFullRepair(70, 100, 100, true, "repair-2"));
             Assert.AreEqual(1, skills.Level(SkillKind.Engineering));
             Assert.AreEqual(40f, skills.RepairGain(20, 100), .00001f);
             skills.Award(SkillKind.Engineering, 4);
             Assert.AreEqual(55f, skills.RepairGain(20, 100), .00001f);
             skills.Award(SkillKind.Engineering, 6);
             Assert.AreEqual(70f, skills.RepairGain(20, 100), .00001f);
+        }
+
+        [Test] public void FailedMissionRestoresBothCombatXpButKeepsEngineering()
+        {
+            skills.Award(SkillKind.Shooting); skills.BeginMission("rescue");
+            skills.Award(SkillKind.Shooting, 6); skills.Award(SkillKind.Stealth, 3); skills.Award(SkillKind.Engineering, 2);
+            Assert.AreEqual(2, skills.Level(SkillKind.Shooting));
+            Assert.IsTrue(skills.FailMission());
+            Assert.AreEqual(1, skills.Xp(SkillKind.Shooting));
+            Assert.AreEqual(0, skills.Xp(SkillKind.Stealth));
+            Assert.AreEqual(2, skills.Xp(SkillKind.Engineering));
+            skills.Award(SkillKind.Shooting, 20); skills.Award(SkillKind.Stealth, 10);
+            Assert.AreEqual(1, skills.Xp(SkillKind.Shooting));
+            Assert.AreEqual(0, skills.Xp(SkillKind.Stealth));
+            Assert.IsFalse(skills.FailMission());
+        }
+
+        [Test] public void SuccessfulMissionCommitsPartialXpForTheNextMission()
+        {
+            skills.BeginMission("rescue"); skills.Award(SkillKind.Shooting, 3); skills.Award(SkillKind.Stealth);
+            skills.CompleteMission(); skills.BeginMission("escort");
+            skills.Award(SkillKind.Shooting, 5); skills.Award(SkillKind.Stealth, 4);
+            skills.FailMission();
+            Assert.AreEqual(3, skills.Xp(SkillKind.Shooting));
+            Assert.AreEqual(1, skills.Xp(SkillKind.Stealth));
+        }
+
+        [Test] public void MidMissionSaveRestoresCurrentXpAndOriginalFailureBaseline()
+        {
+            skills.Award(SkillKind.Shooting); skills.BeginMission("scouting"); skills.Award(SkillKind.Shooting, 2);
+            string xp = JsonUtility.ToJson(skills.Capture()), state = JsonUtility.ToJson(skills.CaptureMission());
+            skills.ResetForNewRun();
+            skills.Restore(JsonUtility.FromJson<SkillProgress>(xp));
+            skills.RestoreMission(JsonUtility.FromJson<SkillMissionProgress>(state));
+            skills.BeginMission("scouting"); // Resume must not re-baseline the in-flight XP.
+            Assert.AreEqual(3, skills.Xp(SkillKind.Shooting));
+            skills.FailMission();
+            Assert.AreEqual(1, skills.Xp(SkillKind.Shooting));
+        }
+
+        [Test] public void PermanentRepairTransactionsPreventReplayAfterLoadingAnOlderCheckpoint()
+        {
+            Assert.IsTrue(skills.RecordFullRepair(80, 100, 100, true, "weapon-1-repair-1"));
+            var career = skills.CaptureCareer();
+            skills.Restore(new SkillProgress()); skills.RestoreCareer(career);
+            Assert.IsFalse(skills.RecordFullRepair(80, 100, 100, true, "weapon-1-repair-1"));
+            Assert.AreEqual(1, skills.Xp(SkillKind.Engineering));
+            skills.ResetForNewRun();
+            Assert.AreEqual(0, skills.Xp(SkillKind.Engineering));
+            Assert.IsTrue(skills.RecordFullRepair(80, 100, 100, true, "weapon-1-repair-1"));
         }
 
         [Test] public void ContentCanBeReplacedWithoutMutatingItOrPlayerProgress()

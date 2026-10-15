@@ -320,7 +320,11 @@ namespace ShadowVale.Map01
             ModernHealth?.RestoreHealth(hp);
         }
 
-        private void Restart() { Time.timeScale = 1; UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex); }
+        private void Restart()
+        {
+            if (GetComponent<Map01SaveSystem>().RestartCurrentMission()) return;
+            Time.timeScale = 1; UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+        }
 
         private void Update()
         {
@@ -341,7 +345,9 @@ namespace ShadowVale.Map01
 
         private void OnGunKilled(GameObject target)
         {
-            if (Stopped || Map01SaveSystem.IsRestoring || target.GetComponent<Map01EnemyController>() == null) return;
+            // A lethal boss hit can start a cinematic inside Health.TakeDamage, before this callback.
+            if (Map01SaveSystem.IsRestoring || Skills.MissionFailed || (ModernHealth != null && ModernHealth.IsDead)
+                || target.GetComponent<Map01EnemyController>() == null) return;
             Skills.Award(ShadowVale.Gameplay.Skills.SkillKind.Shooting);
         }
         private void OnSkillLevelChanged(ShadowVale.Gameplay.Skills.SkillKind kind, int level)
