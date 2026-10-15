@@ -18,21 +18,16 @@ namespace ShadowVale.Gameplay.Combat
         [Tooltip("Rounds in a full magazine.")]
         [Min(1)] public int magazineCapacity;
 
-        [Tooltip("Seconds to swap a part-used magazine, with a round still chambered.")]
+        [Tooltip("Seconds for any reload, whether the magazine is empty or partly loaded.")]
         [Min(0.01f)] public float reloadSeconds;
 
-        [Tooltip("Seconds to reload from dry. Longer because the bolt has to be worked.")]
-        [Min(0.01f)] public float emptyReloadSeconds;
-
         /// <summary>
-        /// Real AK-47 numbers: a 30-round magazine at roughly 600 rounds per minute, and a
-        /// reload a second or so slower when the bolt has locked back.
+        /// A 30-round rifle magazine with one shared reload duration.
         /// </summary>
         public static WeaponTuning Rifle => new()
         {
             magazineCapacity = 30,
             reloadSeconds = 2.4f,
-            emptyReloadSeconds = 2.9f,
         };
 
         /// <summary>
@@ -48,6 +43,6 @@ namespace ShadowVale.Gameplay.Combat
             => magazineCapacity <= 0 || reloadSeconds <= 0f ? Rifle : this;
 
         public Magazine Create()
-            => new(magazineCapacity, reloadSeconds, emptyReloadSeconds);
+            => new(magazineCapacity, reloadSeconds);
     }
 }

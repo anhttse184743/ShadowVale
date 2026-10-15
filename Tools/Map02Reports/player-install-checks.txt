@@ -1,0 +1,3 @@
+PASS saved player scene installed after actual Play Mode checks
+PASS existing environment records unchanged; overview camera/listener replaced by follow camera
+PASS original scene backed up before installation

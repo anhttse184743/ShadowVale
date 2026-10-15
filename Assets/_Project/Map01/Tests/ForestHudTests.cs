@@ -231,6 +231,12 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsFalse(mission.CloseGameplayPanel());
                 Assert.IsTrue(inventory.UseItem("stone", mission.player.position + Vector3.forward * 3f));
                 Assert.AreEqual(stones - 1, inventory.Count("stone"));
+                // Saving is deliberately blocked during the real throw animation. Let it finish
+                // before pausing; otherwise this test freezes the action and can never save.
+                var actions = mission.player.GetComponent<Map01NamActions>();
+                double actionDeadline = Time.realtimeSinceStartupAsDouble + 5;
+                while (actions != null && actions.Busy && Time.realtimeSinceStartupAsDouble < actionDeadline) yield return null;
+                Assert.IsFalse(actions != null && actions.Busy);
                 mission.SetPaused(true);
                 SetPrivate(inventory, "nextQuickUse", 0f);
                 Assert.IsFalse(inventory.UseItem("medkit_small"), "Pause must block consumables.");
