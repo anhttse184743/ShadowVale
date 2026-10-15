@@ -27,6 +27,17 @@ NavMesh nằm ở `Scenes/Maps/Map 1/NavMesh.asset` (bake lại sau khi di chuy�
 
 ## Địa hình bao quanh
 
+Mái hầm căn cứ A khớp cao độ 4,20 m và dùng chung vật liệu, UV, màu đỉnh với lưới đất quanh hầm.
+`ShelterGroundRoof.asset` phủ đúng lỗ địa hình 16 × 14 m; tấm mái kín nối chồng lên tường,
+các vách hồi cửa nối khung với mặt tường mà giữ lối đi. Khi chỉnh lại đất/hầm, mở Map 1 và chạy
+**ShadowVale > Environment > Seal shelter and match ground** để dựng lại các mesh trong prefab `ShelterShell`.
+Công cụ này dành riêng cho vị trí hầm hiện tại trong Map 1, không thay đổi terrain hoặc NavMesh.
+
+Camera góc nhìn thứ ba kiểm tra va chạm cả độ lệch vai và cần camera, co vào ngay khi gặp collider vật lý,
+rồi giãn trở lại khi hết vật cản. Khoảng zoom tối thiểu không giới hạn việc co tránh tường. Bán kính kiểm tra
+bao cả mặt phẳng cắt gần; bỏ qua trigger và collider của người chơi. Áp dụng chung cho Map 1/Map 2,
+còn các góc máy cinematic vẫn do trình điều khiển cinematic quản lý.
+
 `03 Surroundings • outside the playable map` (dựng bằng **ShadowVale > Map 1 > Dựng địa hình bao quanh**; chạy lại
 sẽ thay bản cũ, tài sản ở `Scenes/Maps/Map 1/Surroundings`): vành đất nối liền mép địa hình trong map (trùng từng
 đỉnh ở mép), nhô dần thành đồi ra xa 420 m; sông chảy tiếp ra ngoài phía Bắc và phía Nam. Rừng: trong 28 m sát mép là
