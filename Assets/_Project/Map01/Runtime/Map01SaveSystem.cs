@@ -21,6 +21,7 @@ namespace ShadowVale.Map01
         private sealed class CheckpointData
         {
             public int version = LayoutVersion, stage, stones;
+            public ShadowVale.Gameplay.Skills.SkillProgress skills;
             public float hp, stamina;
             public Vector3 player, hung;
             public bool alarmed, crouched;
@@ -188,6 +189,7 @@ namespace ShadowVale.Map01
                 player = mission.player.position, hung = mission.hung.position, alarmed = mission.Alarmed,
                 used = mission.Points.Where(p => p.used).Select(p => p.id).ToArray(),
                 items = inventory.CaptureItems(),
+                skills = mission.Skills.Capture(),
                 crafting = inventory.CraftingId, craftRemaining = inventory.CraftRemaining,
                 playerYaw = mission.player.eulerAngles.y, hungYaw = mission.hung.eulerAngles.y,
                 crouched = mission.Crouched,
@@ -269,6 +271,7 @@ namespace ShadowVale.Map01
                 mission.hung.GetComponent<NavMeshAgent>()?.Warp(data.hung);
                 quest.RestoreStage(data.stage);
                 inventory.RestoreFromSave(data.items, data.stones, data.crafting, data.craftRemaining);
+                mission.Skills.Restore(data.skills);
                 mission.Alarmed = data.alarmed;
                 mission.RestoreHealthFromSave(Mathf.Clamp(data.hp, 1, mission.Settings.playerHP));
                 mission.SetStamina(data.stamina);

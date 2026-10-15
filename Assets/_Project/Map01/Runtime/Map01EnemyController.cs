@@ -309,6 +309,7 @@ namespace ShadowVale.Map01
             var layout=_rescue!=null?_rescue.Layout:null;
             bool overseerApproach=_overseer&&_rescue!=null&&_rescue.CurrentPhase==Map01Rescue.Phase.Captive;
             float range=layout!=null?(overseerApproach?layout.overseerBackstabRange:layout.backstabRange):1.6f;
+            if (!_overseer && _mission.Skills != null) range = _mission.Skills.TakedownRange(range);
             float rear=layout!=null?(overseerApproach?layout.overseerBackstabAngle:layout.backstabAngle):130f;
             if(Vector3.Distance(_mission.player.position,transform.position)>range)return false;
             if(delta.magnitude>range||Vector3.Angle(transform.forward,delta)<rear)return false;
@@ -323,6 +324,7 @@ namespace ShadowVale.Map01
             TakenDownSilently=true;SetSilent(true);ShowRifle(false);
             if(_agent.isOnNavMesh){_agent.ResetPath();_agent.isStopped=true;}
             _health.TakeDamage(_health.Current,transform.position+Vector3.up,_mission.player.gameObject);
+            if (_health.IsDead) _mission.Skills?.Award(ShadowVale.Gameplay.Skills.SkillKind.Stealth);
             var cinematic=_mission.GetComponent<Map01RescueCinematic>();
             if(cinematic==null)cinematic=_mission.gameObject.AddComponent<Map01RescueCinematic>();
             cinematic.ShowTakedown(_rescue,this);return true;

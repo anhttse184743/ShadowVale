@@ -42,6 +42,7 @@ namespace ShadowVale.Map01
         public PlayerController ModernPlayer { get; private set; }
         public PlayerCombat ModernCombat { get; private set; }
         public Health ModernHealth { get; private set; }
+        public ShadowVale.Gameplay.Skills.PlayerSkills Skills { get; private set; }
         public Map01EnemyController[] Enemies { get; private set; } = Array.Empty<Map01EnemyController>();
         /// <summary>Foliage the guards cannot see through.</summary>
         public Map01SightCover SightCover { get; private set; }
@@ -114,6 +115,9 @@ namespace ShadowVale.Map01
             }
             foreach (var point in FindObjectsByType<ForestPoint>(FindObjectsSortMode.None)) RegisterPoint(point);
             hp = Settings.playerHP; stamina = Settings.stamina;
+            Skills = player.GetComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
+            if (Skills == null) Skills = player.gameObject.AddComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
+            Skills.LevelChanged += OnSkillLevelChanged;
             inventory.SeedStartingLoadout(Settings.startingStones);
             // Added at runtime like the scouting order; guards ask it from their first Update.
             SightCover = GetComponent<Map01SightCover>();
@@ -139,6 +143,7 @@ namespace ShadowVale.Map01
             if (ModernCombat != null)
             {
                 ModernCombat.DrawsOwnWeaponHud = true; // Map01Hud.Combat shows the weapons on keys 1/2/3.
+                ModernCombat.GunKilled += OnGunKilled;
                 var stones = GetComponent<Map01StoneThrow>(); // Added by Map01PlayerInteraction.Awake.
                 ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting && !inventory.SuppressFire
                     && !scouting.Binoculars && !stones.Aiming; // Hands are on the binoculars or a stone, not the rifle.
@@ -334,6 +339,22 @@ namespace ShadowVale.Map01
             else if (kb.enterKey.wasPressedThisFrame && scouting != null && scouting.FailedRun) scouting.Restart();
         }
 
+        private void OnGunKilled(GameObject target)
+        {
+            if (Stopped || Map01SaveSystem.IsRestoring || target.GetComponent<Map01EnemyController>() == null) return;
+            Skills.Award(ShadowVale.Gameplay.Skills.SkillKind.Shooting);
+        }
+        private void OnSkillLevelChanged(ShadowVale.Gameplay.Skills.SkillKind kind, int level)
+        {
+            string name = kind == ShadowVale.Gameplay.Skills.SkillKind.Shooting ? "Bắn súng"
+                : kind == ShadowVale.Gameplay.Skills.SkillKind.Stealth ? "Lén lút" : "Kỹ thuật";
+            Say($"{name} đạt cấp {level}! Xem thông số trong Túi đồ → Kĩ Năng.", 4);
+        }
+        private void OnDestroy()
+        {
+            if (Skills != null) Skills.LevelChanged -= OnSkillLevelChanged;
+            if (ModernCombat != null) ModernCombat.GunKilled -= OnGunKilled;
+        }
         private void OnDisable() { Time.timeScale = 1; }
     }
 }

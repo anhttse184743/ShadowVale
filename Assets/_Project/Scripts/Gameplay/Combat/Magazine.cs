@@ -18,7 +18,6 @@ namespace ShadowVale.Gameplay.Combat
     public sealed class Magazine
     {
         private readonly float _reloadSeconds;
-        private readonly float _emptyReloadSeconds;
         private float _reloadRemaining;
         private float _reloadDuration;
 
@@ -37,16 +36,11 @@ namespace ShadowVale.Gameplay.Combat
 
         public float ReloadRemaining => Mathf.Max(0f, _reloadRemaining);
 
-        /// <param name="reloadSeconds">Swapping a part-used magazine, with a round still chambered.</param>
-        /// <param name="emptyReloadSeconds">
-        /// Reloading from dry. Longer, because the bolt has to be worked as well — that difference
-        /// is what makes running a magazine to the last round a mistake rather than a formality.
-        /// </param>
-        public Magazine(int capacity, float reloadSeconds, float emptyReloadSeconds)
+        /// <param name="reloadSeconds">One base duration for every reload, regardless of rounds left.</param>
+        public Magazine(int capacity, float reloadSeconds)
         {
             Capacity = Mathf.Max(1, capacity);
             _reloadSeconds = Mathf.Max(0.01f, reloadSeconds);
-            _emptyReloadSeconds = Mathf.Max(_reloadSeconds, emptyReloadSeconds);
             Rounds = Capacity;
         }
 
@@ -68,10 +62,11 @@ namespace ShadowVale.Gameplay.Combat
         /// Rounds available to load. Zero refuses the reload; a negative value means the caller
         /// has no reserve to track and the magazine simply fills.
         /// </param>
-        public bool BeginReload(int reserve)
+        public bool BeginReload(int reserve, float durationMultiplier = 1f)
         {
             if (IsReloading || IsFull || reserve == 0) return false;
-            _reloadDuration = IsEmpty ? _emptyReloadSeconds : _reloadSeconds;
+            if (float.IsNaN(durationMultiplier) || float.IsInfinity(durationMultiplier) || durationMultiplier <= 0f) return false;
+            _reloadDuration = Mathf.Max(.01f, _reloadSeconds * durationMultiplier);
             _reloadRemaining = _reloadDuration;
             return true;
         }

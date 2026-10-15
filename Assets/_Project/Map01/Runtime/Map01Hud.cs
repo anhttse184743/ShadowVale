@@ -285,8 +285,8 @@ namespace ShadowVale.Map01
         {
             var panel = InventoryRect(width); HudPanel(panel);
             GUI.Label(new Rect(panel.x + 25, 75, panel.width - 50, 65), "TÚI ĐỒ", hudTitle);
-            GUI.Label(new Rect(panel.x + 230, 144, 256, 42), "VẬT TƯ", hudCenter);
-            HudFill(new Rect(panel.x + 75, 164, 150, 1), HudGold); HudFill(new Rect(panel.xMax - 225, 164, 150, 1), HudGold);
+            DrawInventoryTabs(panel);
+            if (skillsTab) { DrawSkills(panel); return; }
             var stacks = inventory.InventoryStacks();
             string selectedItem = inventory.SelectedItem;
             if (stacks.Count == 0) { selectedItem = null; selectedStack = 0; }
