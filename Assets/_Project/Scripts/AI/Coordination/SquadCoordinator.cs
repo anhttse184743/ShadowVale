@@ -286,8 +286,14 @@ namespace ShadowVale.AI.Coordination
             var solver = Solver;
             int serial = ++_serial;
             string id = $"{gameObject.scene.name}-{_session}-{serial}";
+            // A commander fighting nearby turns the plan into a pincer (Boss.Command); otherwise the bundle's weights.
+            var weights = Settings.Weights;
+            var commander = ShadowVale.AI.Boss.Command.CommanderOf(group.Members, now);
+            if (commander != null) weights = ShadowVale.AI.Boss.Command.Pincer(weights);
             var inst = CoordinationInstance.Build(graph, group.LastKnown, group.Members.Select(m => m.Position).ToList(),
-                CoordinationTask, Settings.Weights, Settings.SubgraphNodes, id, Settings.Seed + serial, solver.LatencyBudgetMs, solver.VariantId);
+                CoordinationTask, weights, Settings.SubgraphNodes, id, Settings.Seed + serial, solver.LatencyBudgetMs, solver.VariantId);
+            if (inst != null && commander != null)
+                EventBus.Publish(new ShadowVale.AI.Boss.BossOrderEvent(commander.Id, "pincer", group.Key));
             if (inst == null) { state.LastPlanTime = now; return; }
 
             EventBus.Publish(new ReplanStartedEvent(group.Key, trigger, solver.VariantId, id,

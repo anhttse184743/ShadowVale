@@ -34,6 +34,7 @@ namespace ShadowVale.Debugging
         private readonly Action<GrenadeThrownEvent> _onThrow;
         private readonly Action<GrenadeExplodedEvent> _onBlast;
         private readonly Action<BossReinforcementsEvent> _onReinforce;
+        private readonly Action<BossOrderEvent> _onOrder;
 
         /// <summary>Also log footsteps nobody heard (very chatty).</summary>
         public bool VerboseNoise { get; set; }
@@ -87,10 +88,12 @@ namespace ShadowVale.Debugging
                 e.PlayerDamage > 0 ? $"{Tag("BOSS")} lựu đạn nổ, Nam mất {e.PlayerDamage:0} HP" : $"{Tag("BOSS")} lựu đạn nổ, Nam đã tránh được");
             _onReinforce = e => Add(AiLogCategory.Boss, e.BossId,
                 $"{Tag("BOSS")} gọi viện: {e.Arrived}/{e.Requested} lính tới ({e.Agents})");
+            _onOrder = e => Add(AiLogCategory.Boss, e.BossId, $"{Tag("BOSS")} {BossOrder(e)}");
             EventBus.Subscribe(_onRelocate);
             EventBus.Subscribe(_onThrow);
             EventBus.Subscribe(_onBlast);
             EventBus.Subscribe(_onReinforce);
+            EventBus.Subscribe(_onOrder);
         }
 
         private static string RoleLabel(AgentAssignment a) => a.Role switch
@@ -100,10 +103,19 @@ namespace ShadowVale.Debugging
             _ => $"vòng sườn {a.FlankAngle:0}°",
         };
 
+        private static string BossOrder(BossOrderEvent e) => e.Order switch
+        {
+            "pincer" => $"chỉ huy nhóm {e.Detail}: kế hoạch gọng kìm (tăng vòng sườn, chặn lối thoát)",
+            "push" => $"Nam đang thay đạn: ra lệnh áp sát ({e.Detail})",
+            "morale_break" => $"chỉ huy ngã: lính mất tinh thần, dễ rút lui hơn ({e.Detail})",
+            _ => e.Order + " " + e.Detail,
+        };
+
         private static string BossMoveReason(string reason) => reason switch
         {
             "hurt" => "bị thương",
             "regroup" => "rút về phía viện binh",
+            "aimed" => "né vì Nam đang ngắm",
             "cover" => "tìm chỗ nấp",
             _ => "đứng lâu",
         };
@@ -154,6 +166,7 @@ namespace ShadowVale.Debugging
             EventBus.Unsubscribe(_onThrow);
             EventBus.Unsubscribe(_onBlast);
             EventBus.Unsubscribe(_onReinforce);
+            EventBus.Unsubscribe(_onOrder);
         }
 
         public void Add(AiLogCategory category, string agentId, string text)

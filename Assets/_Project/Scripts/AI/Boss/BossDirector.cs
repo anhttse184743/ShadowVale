@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ShadowVale.Data.Content;
 using UnityEngine;
 
@@ -16,12 +17,19 @@ namespace ShadowVale.AI.Boss
         public readonly bool PlayerSheltered;
         /// <summary>At his position (or given up on reaching it), not on the way there.</summary>
         public readonly bool Settled;
+        /// <summary>The player is reloading.</summary>
+        public readonly bool PlayerReloading;
+        /// <summary>The player, in his sight, is aiming at him.</summary>
+        public readonly bool AimedAt;
+        /// <summary>Where his men stand (their centre), if any are fighting near him.</summary>
+        public readonly Vector3? Squad;
 
         public BossSense(float now, bool engaged, float healthFraction, Vector3 position, Vector3 playerPosition, bool playerSheltered,
-            bool settled = true)
+            bool settled = true, bool playerReloading = false, bool aimedAt = false, Vector3? squad = null)
         {
             Now = now; Engaged = engaged; HealthFraction = healthFraction; Position = position;
             PlayerPosition = playerPosition; PlayerSheltered = playerSheltered; Settled = settled;
+            PlayerReloading = playerReloading; AimedAt = aimedAt; Squad = squad;
         }
     }
 
@@ -29,12 +37,14 @@ namespace ShadowVale.AI.Boss
     public struct BossDecision
     {
         public bool Relocate;
-        /// <summary>interval | hurt | regroup (falling back towards the reinforcements he just called).</summary>
+        /// <summary>interval | hurt | regroup (falling back towards the reinforcements he just called) | aimed (dodging a raised rifle).</summary>
         public string RelocateReason;
         public bool ThrowGrenade;
         public Vector3 GrenadeTarget;
         public bool CallReinforcements;
-        public bool Any => Relocate || ThrowGrenade || CallReinforcements;
+        /// <summary>The player is reloading: order the men near him to close in now.</summary>
+        public bool Push;
+        public bool Any => Relocate || ThrowGrenade || CallReinforcements || Push;
     }
 
     /// <summary>
@@ -46,8 +56,15 @@ namespace ShadowVale.AI.Boss
     /// fighting in one spot, counted from his arrival, or at once after losing
     /// <see cref="BossProfile.RelocateDamageFraction"/> of his health there. A short interval keeps him
     /// on the move: run (firing), stop briefly, run on.</item>
-    /// <item>Grenade: the player has stayed within <see cref="BossProfile.GrenadeCampRadius"/> for
-    /// <see cref="BossProfile.GrenadeCampSeconds"/>, sheltered, in throwing range, cooldown over.</item>
+    /// <item>Grenade: the player has lingered within <see cref="BossProfile.GrenadeCampRadius"/> of where he settled for
+    /// <see cref="BossProfile.GrenadeCampSeconds"/>, sheltered for at least <see cref="BossProfile.GrenadeShelteredShare"/>
+    /// of that time (peeking out to shoot does not reset it), in throwing range, cooldown over; sooner
+    /// (<see cref="BossProfile.KnownHideCampFactor"/>) where he already hid once. It lands
+    /// <see cref="BossProfile.GrenadeFlushOffset"/> beyond the player, away from the commander's men, so
+    /// running from it means running at them.</item>
+    /// <item>Reading the player (<see cref="BossProfile.ReadsPlayer"/>): aimed at for
+    /// <see cref="BossProfile.AimDodgeSeconds"/>, he relocates; the moment the player starts reloading, he
+    /// orders his men to push.</item>
     /// <item>Reinforcements: once, the first time health falls below <see cref="BossProfile.ReinforceHpThreshold"/> in a fight,
     /// with a relocation away from the player ("regroup") so he lives until they arrive.</item>
     /// </list>
@@ -63,9 +80,17 @@ namespace ShadowVale.AI.Boss
         private readonly System.Random _rng;
         private bool _fighting;
         private float _spotSince, _hpAtSpot = 1f, _interval;
-        private float _campSince = float.NaN;
-        private Vector3 _campAnchor;
+        // The area the player lingers in: where he settled, for how long, how much of it sheltered.
+        private bool _inZone;
+        private Vector3 _zoneAnchor;
+        private float _zoneTime, _zoneSheltered, _lastTick = float.NaN;
         private float _grenadeReadyAt;
+        private readonly List<Vector3> _knownHides = new List<Vector3>();
+        private float _aimedSince = float.NaN, _dodgeReadyAt, _pushReadyAt;
+        private bool _wasReloading;
+
+        /// <summary>Where the player camped long enough to draw a grenade: he is expected there again.</summary>
+        public IReadOnlyList<Vector3> KnownHides => _knownHides;
 
         /// <param name="rng">Varies each stop's length; null = exactly the profile's interval.</param>
         public BossDirector(BossProfile profile, System.Random rng = null)
@@ -88,7 +113,10 @@ namespace ShadowVale.AI.Boss
             if (!s.Engaged)
             {
                 _fighting = false;
-                _campSince = float.NaN;
+                _inZone = false;
+                _lastTick = float.NaN;
+                _aimedSince = float.NaN;
+                _wasReloading = s.PlayerReloading;
                 return d;
             }
             if (!_fighting)
@@ -124,24 +152,77 @@ namespace ShadowVale.AI.Boss
                 _interval = NextInterval();
             }
 
-            if (!s.PlayerSheltered || Flat(s.PlayerPosition - _campAnchor) > p.GrenadeCampRadius || float.IsNaN(_campSince))
+            if (p.ReadsPlayer)
             {
-                _campAnchor = s.PlayerPosition;
-                _campSince = s.PlayerSheltered ? s.Now : float.NaN;
+                // A rifle raised at him: he does not wait to be hit before moving.
+                if (!s.AimedAt) _aimedSince = float.NaN;
+                else if (float.IsNaN(_aimedSince)) _aimedSince = s.Now;
+                else if (!d.Relocate && s.Settled && s.Now - _aimedSince >= p.AimDodgeSeconds && s.Now >= _dodgeReadyAt)
+                {
+                    d.Relocate = true;
+                    d.RelocateReason = "aimed";
+                    _spotSince = s.Now; _hpAtSpot = s.HealthFraction;
+                    _dodgeReadyAt = s.Now + p.DodgeCooldownSeconds;
+                    _aimedSince = float.NaN;
+                }
+                // The first moment of a reload is the window to close in.
+                if (s.PlayerReloading && !_wasReloading && s.Now >= _pushReadyAt)
+                {
+                    d.Push = true;
+                    _pushReadyAt = s.Now + p.PushCooldownSeconds;
+                }
             }
-            else if (s.Now - _campSince >= p.GrenadeCampSeconds && s.Now >= _grenadeReadyAt)
+            _wasReloading = s.PlayerReloading;
+
+            float dt = float.IsNaN(_lastTick) ? 0f : Mathf.Max(0f, s.Now - _lastTick);
+            _lastTick = s.Now;
+            if (!_inZone || Flat(s.PlayerPosition - _zoneAnchor) > p.GrenadeCampRadius)
+            {
+                // Somewhere new: the clock starts here.
+                _inZone = true; _zoneAnchor = s.PlayerPosition; _zoneTime = 0; _zoneSheltered = 0;
+            }
+            else
+            {
+                _zoneTime += dt;
+                if (s.PlayerSheltered) _zoneSheltered += dt;
+            }
+            if (_zoneTime >= CampSecondsAt(_zoneAnchor) && _zoneSheltered >= p.GrenadeShelteredShare * _zoneTime
+                && s.Now >= _grenadeReadyAt)
             {
                 float range = Flat(s.PlayerPosition - s.Position);
                 // Never at his own feet.
                 if (range <= p.GrenadeRange && range > p.GrenadeRadius + 1f)
                 {
                     d.ThrowGrenade = true;
-                    d.GrenadeTarget = s.PlayerPosition;
+                    d.GrenadeTarget = FlushTarget(s.PlayerPosition, s.Squad, p.GrenadeFlushOffset);
                     _grenadeReadyAt = s.Now + p.GrenadeCooldownSeconds;
-                    _campSince = s.Now; // Another one only if he stays put again.
+                    if (!IsKnownHide(_zoneAnchor)) _knownHides.Add(_zoneAnchor);
+                    _zoneTime = 0; _zoneSheltered = 0; // Another one only if he stays on.
                 }
             }
             return d;
+        }
+
+        /// <summary>How long a camp must last before a grenade: shorter where the player already hid.</summary>
+        private float CampSecondsAt(Vector3 anchor)
+            => Profile.GrenadeCampSeconds * (IsKnownHide(anchor) ? Mathf.Clamp01(Profile.KnownHideCampFactor) : 1f);
+
+        private bool IsKnownHide(Vector3 at)
+        {
+            foreach (var h in _knownHides)
+                if (Flat(h - at) <= Profile.GrenadeCampRadius) return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Where to throw so the blast drives the player towards the commander's men: <paramref name="offset"/>
+        /// beyond him on the side away from them (still inside the blast). With no men near, or offset 0, on him.
+        /// </summary>
+        public static Vector3 FlushTarget(Vector3 player, Vector3? squad, float offset)
+        {
+            if (squad == null || offset <= 0) return player;
+            Vector3 away = player - squad.Value; away.y = 0;
+            return away.sqrMagnitude < 1e-4f ? player : player + away.normalized * offset;
         }
 
         /// <summary>After a checkpoint restore: whether he already called for help.</summary>

@@ -11,7 +11,7 @@ namespace ShadowVale.Gameplay.Player
     /// <c>ShadowVale.AI.Perception</c> only read this component.
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class PlayerStealthAdapter : MonoBehaviour, IPlayerObservable
+    public sealed class PlayerStealthAdapter : MonoBehaviour, IPlayerObservable, IPlayerCombatState
     {
         [Tooltip("Height of the point guards must see when the player stands.")]
         [SerializeField] private float standingSightHeight = 1.1f;
@@ -25,6 +25,8 @@ namespace ShadowVale.Gameplay.Player
 
         private Health _health;
         private Health Health => _health != null ? _health : _health = GetComponent<Health>();
+        private PlayerCombat _combat;
+        private PlayerCombat Combat => _combat != null ? _combat : _combat = GetComponent<PlayerCombat>();
 
         /// <summary>The adapter on <paramref name="player"/>, added on first use.</summary>
         public static PlayerStealthAdapter For(GameObject player)
@@ -40,5 +42,7 @@ namespace ShadowVale.Gameplay.Player
         public Vector3 SightPoint => transform.position + Vector3.up * (IsCrouching ? crouchedSightHeight : standingSightHeight);
         public bool IsAlive => Health == null || !Health.IsDead;
         public bool Owns(Transform t) => t != null && (t == transform || t.IsChildOf(transform));
+        public bool IsReloading => Combat != null && Combat.IsReloading;
+        public bool IsAiming => Combat != null && Combat.IsAiming;
     }
 }

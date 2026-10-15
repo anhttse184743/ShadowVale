@@ -222,6 +222,138 @@ namespace ShadowVale.Tests.EditMode.AI
         }
 
         [Test]
+        public void LingeringInAnAreaCountsNotStandingOnOneSpot()
+        {
+            // Sliding 1 m/s along a wall: with a 3 m area the clock restarted at 4 m, now it does not.
+            var wall = new BossDirector(Profile);
+            for (int i = 0; i < 4; i++)
+                Assert.IsFalse(wall.Tick(Sense(i, player: new Vector3(i, 0, 15), sheltered: true)).ThrowGrenade);
+            Assert.IsTrue(wall.Tick(Sense(4.05f, player: new Vector3(4, 0, 15), sheltered: true)).ThrowGrenade,
+                "Four seconds along the same stretch of cover is one hiding place.");
+
+            // Peeking out to shoot every other second used to reset the clock each time he showed himself.
+            var peeker = new BossDirector(Profile);
+            bool thrown = false;
+            for (int i = 0; i <= 5 && !thrown; i++)
+                thrown = peeker.Tick(Sense(i, player: new Vector3(2 + (i % 2) * 4, 0, 15), sheltered: i % 2 == 0)).ThrowGrenade;
+            Assert.IsTrue(thrown, "Half the time behind cover, half peeking out: still camping that spot.");
+        }
+
+        [Test]
+        public void FromCoverHeFightsInBursts()
+        {
+            var c = new PeekCycle(outSeconds: 1.4f, hideSeconds: 1.6f);
+            var fire = new Vector3(0, 0, 0);
+            var duck = new Vector3(0, 0, -1.2f);
+            c.Begin(fire, duck, 7, now: 10f);
+            Assert.IsTrue(c.Active && c.IsOut, "He arrives at the firing point and fires first.");
+            Assert.AreEqual(PeekCycle.Step.None, c.Tick(11.3f));
+            Assert.AreEqual(PeekCycle.Step.Back, c.Tick(11.4f), "Then ducks behind the cover.");
+            Assert.IsFalse(c.IsOut);
+            Assert.AreEqual(PeekCycle.Step.None, c.Tick(12.9f));
+            Assert.AreEqual(PeekCycle.Step.Out, c.Tick(13.0f), "And comes out again.");
+            Assert.AreEqual(7, c.Node);
+            c.Stop();
+            Assert.AreEqual(PeekCycle.Step.None, c.Tick(30f), "Moving on ends it.");
+
+            var varied = new PeekCycle(1.4f, 1.6f, new System.Random(5));
+            varied.Begin(fire, duck, 0, 0);
+            var switches = new List<float>();
+            for (float t = 0; t < 60 && switches.Count < 6; t += .01f)
+                if (varied.Tick(t) != PeekCycle.Step.None) switches.Add(t);
+            var gaps = switches.Zip(switches.Skip(1), (a, b) => Mathf.Round((b - a) * 10)).Distinct().Count();
+            Assert.Greater(gaps, 2, "Bursts of different lengths: no rhythm to time a shot to.");
+        }
+
+        // ---- Commanding ----------------------------------------------------------------------------
+
+        [Test]
+        public void UnderHisCommandASquadIsPlannedAsAPincer()
+        {
+            var w = ShadowVale.AI.Coordination.CoordinationWeights.Default;
+            var p = Command.Pincer(w);
+            Assert.AreEqual(w.Flanking * Command.FlankScale, p.Flanking, 1e-9, "More flanking.");
+            Assert.AreEqual(w.Coverage * Command.CoverageScale, p.Coverage, 1e-9, "More of the ways out covered.");
+            Assert.AreEqual(w.Redundancy, p.Redundancy, 1e-9);
+            Assert.AreEqual(w.Cover, p.Cover, 1e-9);
+            Assert.AreEqual(w.Distance, p.Distance, 1e-9);
+        }
+
+        [Test]
+        public void HisGrenadeDrivesThePlayerTowardsHisMen()
+        {
+            var player = new Vector3(0, 0, 10);
+            Assert.AreEqual(new Vector3(0, 0, 8.5f), BossDirector.FlushTarget(player, new Vector3(0, 0, 20), 1.5f),
+                "Beyond the player, on the side away from the men: running from it means running at them.");
+            Assert.AreEqual(player, BossDirector.FlushTarget(player, null, 1.5f), "No men near: right on him.");
+            Assert.AreEqual(player, BossDirector.FlushTarget(player, new Vector3(0, 0, 20), 0f), "Offset 0: the old throw.");
+
+            var d = new BossDirector(Profile);
+            var hide = new Vector3(2, 0, 15);
+            var men = new Vector3(2, 0, 25);
+            d.Tick(new BossSense(0, true, 1, Vector3.zero, hide, true, squad: men));
+            var t = d.Tick(new BossSense(4.1f, true, 1, Vector3.zero, hide, true, squad: men));
+            Assert.IsTrue(t.ThrowGrenade);
+            Assert.Less(t.GrenadeTarget.z, hide.z, "Thrown on the far side from his men.");
+        }
+
+        [Test]
+        public void WhereThePlayerHidOnceTheGrenadeComesSooner()
+        {
+            var d = new BossDirector(Profile);
+            var hide = new Vector3(2, 0, 15);
+            d.Tick(Sense(0, player: hide, sheltered: true));
+            Assert.IsTrue(d.Tick(Sense(4.1f, player: hide, sheltered: true)).ThrowGrenade);
+            Assert.AreEqual(1, d.KnownHides.Count);
+            d.Tick(Sense(5f, player: new Vector3(15, 0, 15), sheltered: false)); // He leaves...
+            d.Tick(Sense(20f, player: hide, sheltered: true));                   // ...and comes back, cooldown over.
+            float known = Profile.GrenadeCampSeconds * Profile.KnownHideCampFactor;
+            Assert.IsFalse(d.Tick(Sense(20f + known - .1f, player: hide, sheltered: true)).ThrowGrenade);
+            Assert.IsTrue(d.Tick(Sense(20f + known + .05f, player: hide, sheltered: true)).ThrowGrenade,
+                "Half the camp time: he expects him there.");
+        }
+
+        // ---- Reading the player -------------------------------------------------------------------
+
+        private static BossSense Read(float now, bool aimed = false, bool reloading = false)
+            => new BossSense(now, true, 1, Vector3.zero, new Vector3(0, 0, 15), false, true, reloading, aimed);
+
+        [Test]
+        public void ARifleAimedAtHimMovesHimBeforeHeIsHit()
+        {
+            var d = new BossDirector(Profile);
+            d.Tick(Read(0));
+            Assert.IsFalse(d.Tick(Read(1f, aimed: true)).Relocate, "A glance is not a threat.");
+            Assert.IsFalse(d.Tick(Read(1.4f, aimed: true)).Relocate);
+            var dodge = d.Tick(Read(1.5f, aimed: true));
+            Assert.IsTrue(dodge.Relocate, "Aimed at for half a second: he moves.");
+            Assert.AreEqual("aimed", dodge.RelocateReason);
+            for (float t = 1.6f; t < 1.5f + Profile.DodgeCooldownSeconds - .1f; t += .1f)
+                Assert.AreNotEqual("aimed", d.Tick(Read(t, aimed: true)).RelocateReason, "Not every frame: a cooldown.");
+
+            var calm = new BossDirector(new BossProfile { ReadsPlayer = false });
+            calm.Tick(Read(0));
+            for (float t = .1f; t < 3f; t += .1f) Assert.IsFalse(calm.Tick(Read(t, aimed: true)).Relocate, "Switched off.");
+        }
+
+        [Test]
+        public void AReloadIsTheMensCueToPush()
+        {
+            var d = new BossDirector(Profile);
+            d.Tick(Read(0));
+            Assert.IsTrue(d.Tick(Read(1f, reloading: true)).Push, "The moment he starts reloading.");
+            Assert.IsFalse(d.Tick(Read(1.5f, reloading: true)).Push, "Once per reload.");
+            d.Tick(Read(2f));
+            Assert.IsFalse(d.Tick(Read(3f, reloading: true)).Push, "Not again within the cooldown.");
+            d.Tick(Read(6.5f));
+            Assert.IsTrue(d.Tick(Read(1f + Profile.PushCooldownSeconds + .5f, reloading: true)).Push);
+
+            Assert.IsTrue(BossBehaviour.AimsAt(Vector3.zero, Vector3.forward, new Vector3(0, 0, 10), BossBehaviour.AimConeDegrees));
+            Assert.IsFalse(BossBehaviour.AimsAt(Vector3.zero, Vector3.forward, new Vector3(5, 0, 10), BossBehaviour.AimConeDegrees),
+                "27° off: aiming at someone else.");
+        }
+
+        [Test]
         public void TheCommanderWearsAStarOverHisHead()
         {
             var go = new GameObject("commander");

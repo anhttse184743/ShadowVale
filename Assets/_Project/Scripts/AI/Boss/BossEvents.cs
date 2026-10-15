@@ -51,4 +51,19 @@ namespace ShadowVale.AI.Boss
             BossId = bossId; Requested = requested; Arrived = arrived; Agents = agents;
         }
     }
+
+    /// <summary>
+    /// The commander directs his men: <c>pincer</c> (a group planned under his command, detail = the
+    /// group), <c>push</c> (Nam is reloading: close in, detail = agents sent), <c>morale_break</c> (he fell;
+    /// detail = agents who lost heart).
+    /// </summary>
+    public readonly struct BossOrderEvent : IEvent
+    {
+        public readonly string BossId, Order, Detail;
+
+        public BossOrderEvent(string bossId, string order, string detail)
+        {
+            BossId = bossId; Order = order; Detail = detail ?? "";
+        }
+    }
 }

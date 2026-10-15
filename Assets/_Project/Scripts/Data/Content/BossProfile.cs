@@ -24,9 +24,11 @@ namespace ShadowVale.Data.Content
         public float RelocateMinPlayerDistance { get; set; } = 8f;
 
         // Grenades — for a player who stays behind cover.
-        /// <summary>Seconds the player must stay within <see cref="GrenadeCampRadius"/>, out of sight or in cover, before a throw.</summary>
+        /// <summary>Seconds the player must linger within <see cref="GrenadeCampRadius"/> of where he settled, mostly
+        /// sheltered (<see cref="GrenadeShelteredShare"/>), before a throw. Peeking out to shoot does not reset it.</summary>
         public float GrenadeCampSeconds { get; set; } = 4f;
-        public float GrenadeCampRadius { get; set; } = 3f;
+        /// <summary>The area counted as one hiding place. Was 3 m: shifting along a wall or a bush line reset the camp.</summary>
+        public float GrenadeCampRadius { get; set; } = 6f;
         public float GrenadeCooldownSeconds { get; set; } = 10f;
         public float GrenadeRange { get; set; } = 24f;
         public float GrenadeRadius { get; set; } = 4.5f;
@@ -42,5 +44,27 @@ namespace ShadowVale.Data.Content
         public int ReinforceCount { get; set; } = 3;
         /// <summary>Idle enemies within this distance answer first; the map may bring in more.</summary>
         public float ReinforceRadius { get; set; } = 80f;
+
+        // Tactics added 15/10/2026. Code defaults only, not in the content schema yet: each one can be
+        // switched off here to show the difference (0 or false = the behaviour before).
+        /// <summary>A grenade lands this far beyond the player, on the side away from the commander's men,
+        /// so the blast drives him towards them; 0 = right on him.</summary>
+        public float GrenadeFlushOffset { get; set; } = 1.5f;
+        /// <summary>Camping where he already hid once needs only this share of <see cref="GrenadeCampSeconds"/>; 1 = no memory.</summary>
+        public float KnownHideCampFactor { get; set; } = .5f;
+        /// <summary>Reads the player's weapon: presses a reload, dodges a rifle aimed at him.</summary>
+        public bool ReadsPlayer { get; set; } = true;
+        /// <summary>Aimed at for this long (in view), he moves to other cover.</summary>
+        public float AimDodgeSeconds { get; set; } = .5f;
+        public float DodgeCooldownSeconds { get; set; } = 3f;
+        /// <summary>At most one push order per this many seconds.</summary>
+        public float PushCooldownSeconds { get; set; } = 6f;
+        /// <summary>Share of the time in the area the player must have spent sheltered for a grenade: one standing in
+        /// the open gets shot, not grenaded. 0 = any lingering.</summary>
+        public float GrenadeShelteredShare { get; set; } = .5f;
+        /// <summary>From cover he fights in bursts: out to the firing point, back behind the cover, out again.</summary>
+        public bool PeekFromCover { get; set; } = true;
+        public float PeekOutSeconds { get; set; } = 1.4f;
+        public float PeekHideSeconds { get; set; } = 1.6f;
     }
 }
