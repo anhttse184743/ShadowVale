@@ -19,6 +19,12 @@ namespace ShadowVale.Map01
         /// <summary>How long an engaged guard keeps firing at the spot he last saw Nam before hunting him.</summary>
         public float suppressSeconds;
         public int startingStones, guardDropAmmo, guardDropMedkits;
+        public ForestIngredient[] startingItems;
+        public float tutorialSlowScale = .2f, tutorialPulseSeconds = 1.1f;
+        public float tutorialSprintDistance = 8, tutorialCrouchDistance = 4, tutorialScanSeconds = 2;
+        public float tutorialScanRange = 45, tutorialScanAngle = 15, tutorialPracticeDamage = 25;
+        public float tutorialCaptureNoise = 35;
+        public int tutorialMagazine = 10;
         /// <summary>How well guards (and the commander) shoot; missing from the JSON = the shared defaults.</summary>
         public ShadowVale.Gameplay.Enemies.ShotAccuracyProfile guardAccuracy = new ShadowVale.Gameplay.Enemies.ShotAccuracyProfile();
     }

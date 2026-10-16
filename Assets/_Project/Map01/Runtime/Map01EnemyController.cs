@@ -98,6 +98,9 @@ namespace ShadowVale.Map01
         public int HurtCount { get; private set; }
         /// <summary>He went down to a silent knife takedown (<see cref="TrySilentTakedown"/>).</summary>
         public bool TakenDownSilently { get; private set; }
+        public float LastStoneHeardAt { get; private set; } = float.NegativeInfinity;
+        /// <summary>A sentry: a sound makes him look, not walk over to check; only a thrown stone draws him off.</summary>
+        public bool HoldsPost { get; set; }
         /// <summary>0..1 — how sure this guard is that he has seen Nam; 1 means spotted.</summary>
         public float Suspicion => Memory.Suspicion;
         /// <summary>Spotted Nam and fighting him — refreshed while he stays in sight.</summary>
@@ -162,6 +165,7 @@ namespace ShadowVale.Map01
         /// </summary>
         public void ReturnToPost()
         {
+            LastStoneHeardAt = float.NegativeInfinity;
             TakenDownSilently = false; SetSilent(false); ShowRifle(true); _startled = false;
             if (_health.IsDead) _health.Revive(); else _health.RestoreHealth(_health.Max);
             if (_lootCreated)
@@ -178,7 +182,14 @@ namespace ShadowVale.Map01
             _sense.Reset();
             _body.SetPace(1f);
             if (patrolPoints.Length > 0) _body.MoveTo(patrolPoints[0]);
+            RebaseHold();
         }
+
+        /// <summary>
+        /// A reset sets his timers from now. If he is still held (a stopped mission), the time he stood
+        /// still before it must not be added on resume, or he comes back engaged for that long.
+        /// </summary>
+        private void RebaseHold() { if (_holdingAI) _pausedAt = Time.time; }
         /// <summary>How far he sees Nam standing in the open.</summary>
         public float VisionRange => visionRange;
         /// <summary>His patrol loop; empty for a guard who holds his post.</summary>
@@ -194,6 +205,7 @@ namespace ShadowVale.Map01
             if (stealth && kind == NoiseKind.Footstep && _mission.Crouched)
                 radius *= _rescueTuning != null ? _rescueTuning.crouchedFootstepScale : .55f;
             if (!Alive || !HearingSensor.Hears(transform.position, position, radius)) return false;
+            if (kind == NoiseKind.Stone) LastStoneHeardAt = Time.time;
             if (_mission != null && _mission.Cinematic) return false;
             if (kind == NoiseKind.Gunshot) ReportDetection(Map01DetectionCause.Gunshot, position);
             // Finish checking a thrown stone instead of cancelling the lure for a quiet step behind
@@ -235,6 +247,12 @@ namespace ShadowVale.Map01
                         position = hit.position;
                     else position = _postPosition; // A stone in the river must not draw him into water.
                 }
+            }
+            else if (HoldsPost && !stone && !Engaged)
+            {
+                // A sentry turns to look at a sound but stays put; only a stone draws him off.
+                var delta = Vector3.ProjectOnPlane(position - _postPosition, Vector3.up);
+                position = _postPosition + Vector3.ClampMagnitude(delta, .3f);
             }
             _stoneLure = stone && _overseer;
             ApplyLureTuning();
@@ -310,6 +328,7 @@ namespace ShadowVale.Map01
             _body.MoveTo(saved.destination);
             if (_agent.isOnNavMesh) _agent.isStopped = saved.stopped || !Alive;
             if (!Alive) CreateLoot();
+            RebaseHold();
         }
 
         /// <summary>A hit in the extraction film: real health and death, but no extra loot or takedown credit.</summary>
@@ -379,7 +398,7 @@ namespace ShadowVale.Map01
             Brain.ResetToPost(0f);
             if (_animator != null) _animator.speed = 1;
             if (_agent.isOnNavMesh) { _agent.Warp(post); _agent.isStopped = false; }
-            if (pursue) BeginInvestigation(owner.hung.position);
+            if (pursue && owner.hung != null) BeginInvestigation(owner.hung.position);
         }
 
         /// <summary>Hùng is home: a pursuer stops where he is.</summary>
@@ -455,7 +474,7 @@ namespace ShadowVale.Map01
         public void FireAtHostage(Vector3 target, float amount)
         {
             FaceImmediate(target); _animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
-            if (_rescue == null || _mission == null) return;
+            if (_rescue == null || _mission == null || _mission.hung == null) return;
             _feedback ??= EnemyFeedback.Attach(gameObject);
             if (!_feedback.Fire(target + Vector3.up * .9f, _mission.hung, obstructionMask, out var impact)) return;
             float before = _rescue.HungHealth;
@@ -645,7 +664,7 @@ namespace ShadowVale.Map01
             }
 
             // A pursuer with Nam out of sight goes for Hùng while Hùng is out in the open.
-            if (_pursuer && _rescue != null && _rescue.Exposed && !sees && !(Engaged && HostageInReach(out _)))
+            if (_pursuer && _rescue != null && _mission.hung != null && _rescue.Exposed && !sees && !(Engaged && HostageInReach(out _)))
             {
                 _body.MoveTo(_mission.hung.position);
                 _body.Animate(true);

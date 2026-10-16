@@ -20,7 +20,7 @@ namespace ShadowVale.Map01
         private Map01Quest quest;
         private Map01Inventory inventory;
         private Map01SaveSystem saveSystem;
-        private Map01Scouting scouting;
+        private IBinoculars scouting;
         private Map01StoneThrow stoneThrow;
         private Map01Hud hud;
         private NavMeshAgent companion;
@@ -40,21 +40,21 @@ namespace ShadowVale.Map01
 
         private void Start()
         {
-            if (mission.IsInitialized) companion = mission.hung.GetComponent<NavMeshAgent>();
-            scouting = GetComponent<Map01Scouting>(); // Added by Map01Quest.Awake, so only certain from Start.
+            if (mission.IsInitialized && mission.hung != null) companion = mission.hung.GetComponent<NavMeshAgent>();
+            scouting = GetComponents<MonoBehaviour>().OfType<IBinoculars>().FirstOrDefault(); // Added by Map01Quest.Awake, so only certain from Start.
         }
 
         private void Update()
         {
             if (!mission.IsInitialized || mission.Cinematic) return;
             // Following is world simulation; it must not depend on a keyboard being available.
-            if(!mission.Stopped && quest.ShouldFollowPlayer()) UpdateCompanion();
+            if(!mission.Stopped && quest != null && quest.ShouldFollowPlayer()) UpdateCompanion();
             var kb = Keyboard.current;
             if (kb == null) return;
-            scouting.HoldBinoculars(kb.fKey.isPressed); // Map01Scouting decides when they actually work.
+            scouting?.HoldBinoculars(kb.fKey.isPressed); // Map01Scouting decides when they actually work.
             if (ForestMenu.Visible) return;
             if (kb.jKey.wasPressedThisFrame && hud != null) hud.ToggleObjective();
-            if (kb.f9Key.wasPressedThisFrame) saveSystem.Load();
+            if (kb.f9Key.wasPressedThisFrame) saveSystem?.Load();
             if (mission.Stopped) return;
             if (kb.tabKey.wasPressedThisFrame)
             { mission.SetInventoryOpen(!mission.InventoryOpen); inventory.SuppressFire = true; }
@@ -63,7 +63,7 @@ namespace ShadowVale.Map01
                 mission.SetMapOpen(!mission.MapOpen); inventory.SuppressFire = true;
             }
             if (kb.cKey.wasPressedThisFrame) mission.Crouched = !mission.Crouched;
-            if (kb.f5Key.wasPressedThisFrame) saveSystem.SaveSlot(0, out _);
+            if (kb.f5Key.wasPressedThisFrame) saveSystem?.SaveSlot(0, out _);
             if (kb.hKey.wasPressedThisFrame) inventory.UseItem("medkit_small");
             if (mission.InventoryOpen || mission.MapOpen)
             {
@@ -135,7 +135,7 @@ namespace ShadowVale.Map01
         /// </summary>
         private void HandleInteractKey()
         {
-            if (quest.HungInRange) quest.TalkToHung();
+            if (quest != null && quest.HungInRange) quest.TalkToHung();
             else if (Nearby != null) Interact(Nearby);
         }
 
@@ -158,7 +158,7 @@ namespace ShadowVale.Map01
             {
                 case ForestPointKind.Supplies:
                     if (point.used) return;
-                    if (quest.TryDeliverSupplies())
+                    if (quest != null && quest.TryDeliverSupplies())
                     {
                         // Hùng's hand-off line stays on screen; the first resupply comes with it.
                         inventory.Add("supplies", 1);
@@ -166,7 +166,7 @@ namespace ShadowVale.Map01
                         Rummage(Map01NamActions.OpenChest);
                     }
                     // Once Hùng is home, the base keeps resupplying on its restock timer.
-                    else if (quest.BaseResupplyOpen) { mission.Say("Căn cứ tiếp tế — " + TakeItems(point), 6); Rummage(Map01NamActions.OpenChest); }
+                    else if (quest != null && quest.BaseResupplyOpen) { mission.Say("Căn cứ tiếp tế — " + TakeItems(point), 6); Rummage(Map01NamActions.OpenChest); }
                     break;
                 case ForestPointKind.Loot:
                     if (point.used) return;

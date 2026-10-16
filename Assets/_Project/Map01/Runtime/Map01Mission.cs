@@ -48,7 +48,12 @@ namespace ShadowVale.Map01
         public float DialogueUntil { get; private set; }
         public bool Cinematic { get; set; }
         public bool Paused => paused;
-        public void SetPaused(bool value) { paused = value; Time.timeScale = value ? 0 : 1; }
+        public void SetPaused(bool value) { paused = value; RefreshTimeScale(); }
+        public void RefreshTimeScale() { var clock = GetComponent<TutorialTimeControl>(); if (clock != null) clock.Apply(); else Time.timeScale = paused ? 0 : 1; }
+        public IMapObjectives Objectives { get; private set; }
+        public IBinoculars Binoculars { get; private set; }
+        public System.Action RetryRequested { get; set; }
+        public Func<bool> StopRequested { get; set; }
         public PlayerController ModernPlayer { get; private set; }
         public PlayerCombat ModernCombat { get; private set; }
         public Health ModernHealth { get; private set; }
@@ -59,7 +64,7 @@ namespace ShadowVale.Map01
         public PlayerStealthAdapter Stealth { get; private set; }
         /// <summary>Foliage the guards cannot see through.</summary>
         public Map01SightCover SightCover { get; private set; }
-        public bool Stopped => (ModernHealth != null ? ModernHealth.IsDead : hp <= 0) || Stage == Map01Quest.CompleteStage || paused || Cinematic || Map01SaveSystem.IsRestoring
+        public bool Stopped => (ModernHealth != null ? ModernHealth.IsDead : hp <= 0) || (Objectives != null && Objectives.IsComplete) || (StopRequested?.Invoke() ?? false) || paused || Cinematic || Map01SaveSystem.IsRestoring
             || (rescue != null && rescue.HungDown) || (scouting != null && scouting.FailedRun);
         /// <summary>What blocks sight. Cached: guards ask for it every frame, and GetMask allocates.</summary>
         public int ObstructionMask => obstructionMask != 0 ? obstructionMask
@@ -98,6 +103,7 @@ namespace ShadowVale.Map01
         {
             quest = GetComponent<Map01Quest>();
             inventory = GetComponent<Map01Inventory>();
+            Objectives = GetComponents<MonoBehaviour>().OfType<IMapObjectives>().FirstOrDefault();
             if (player == null)
                 player = FindFirstObjectByType<PlayerController>()?.transform;
             // Unity objects can retain a managed wrapper after the asset was deleted.
@@ -124,7 +130,7 @@ namespace ShadowVale.Map01
                 FailInitialization("Mission JSON must contain settings, rifle_standard and grunt.");
                 return;
             }
-            if (player == null || hung == null || gameCamera == null)
+            if (player == null || (quest != null && hung == null) || gameCamera == null)
             {
                 FailInitialization("Assign player, hung and gameCamera in the Inspector.");
                 return;
@@ -138,6 +144,7 @@ namespace ShadowVale.Map01
             foreach (var point in FindObjectsByType<ForestPoint>(FindObjectsSortMode.None)) RegisterPoint(point);
             hp = Settings.playerHP; stamina = Settings.stamina;
             inventory.SeedStartingLoadout(Settings.startingStones);
+            foreach (var item in Settings.startingItems ?? Array.Empty<ForestIngredient>()) inventory.Add(item.item_id, item.count);
             // Added at runtime like the scouting order; guards ask it from their first Update.
             SightCover = GetComponent<Map01SightCover>();
             if (SightCover == null) SightCover = gameObject.AddComponent<Map01SightCover>();
@@ -148,7 +155,7 @@ namespace ShadowVale.Map01
             SquadCoordinator.Attach(gameObject, CoordinationSettings.ForScene(gameObject.scene.name));
             // Anonymous session telemetry: listens to the shared events, ends when this map unloads.
             // A sandbox copy (Test Map 1 AI) reports apart, so test sessions never mix with Map 1's numbers.
-            TelemetryService.Attach(gameObject, gameObject.scene.name == Map01SaveSystem.MainScene ? MapId : MapId + "_test");
+            TelemetryService.Attach(gameObject, gameObject.scene.name == TutorialDirector.SceneName ? "map00_tutorial" : gameObject.scene.name == Map01SaveSystem.MainScene ? MapId : MapId + "_test");
             IsInitialized = true;
         }
 
@@ -157,6 +164,7 @@ namespace ShadowVale.Map01
             if (!IsInitialized) return;
             rescue = GetComponent<Map01Rescue>(); // Added by Map01Quest.Awake, like the scouting order.
             scouting = GetComponent<Map01Scouting>();
+            Binoculars = GetComponents<MonoBehaviour>().OfType<IBinoculars>().FirstOrDefault();
             ModernPlayer = player.GetComponent<PlayerController>();
             ModernCombat = player.GetComponent<PlayerCombat>();
             ModernHealth = player.GetComponent<Health>();
@@ -177,7 +185,7 @@ namespace ShadowVale.Map01
                 ModernCombat.DrawsOwnWeaponHud = true; // Map01Hud.Combat shows the weapons on keys 1/2/3.
                 var stones = GetComponent<Map01StoneThrow>(); // Added by Map01PlayerInteraction.Awake.
                 ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting && !inventory.SuppressFire && !InputFocus.OverlayOpen
-                    && !scouting.Binoculars && !stones.Aiming; // Hands are on the binoculars or a stone, not the rifle.
+                    && !(Binoculars?.Binoculars ?? false) && (stones == null || !stones.Aiming); // Hands are on the binoculars or a stone, not the rifle.
                 ModernCombat.TryConsumeRound = () =>
                 {
                     if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 2.", 3); return false; }
@@ -216,8 +224,7 @@ namespace ShadowVale.Map01
                 footsteps.Stepped += NotifyFootstep;
             }
             foreach (var enemy in Enemies) enemy.BindMission(this);
-            Map01OpeningCutscene.Attach(this);
-            Map01HungVisual.Attach(this);
+            if (hung != null && quest != null) { Map01OpeningCutscene.Attach(this); Map01HungVisual.Attach(this); }
         }
 
         private void FailInitialization(string reason)
@@ -352,7 +359,36 @@ namespace ShadowVale.Map01
             ModernHealth?.RestoreHealth(hp);
         }
 
-        private void Restart() { Time.timeScale = 1; ReloadScene(gameObject.scene); }
+        private void Restart() { if (RetryRequested != null) { RetryRequested(); return; } Time.timeScale = 1; ReloadScene(gameObject.scene); }
+
+        /// <summary>
+        /// The guard the knife badge marks: the nearest one within <paramref name="range"/> in clear line,
+        /// preferring one Nam can take down now; <paramref name="ready"/> when the knife would do it this frame.
+        /// </summary>
+        public bool GetTakedownHint(float range, out Map01EnemyController target, out bool ready)
+        {
+            target = null; ready = false;
+            if (!IsInitialized || Stopped || InventoryOpen || MapOpen || ModernCombat == null || ModernCombat.EquippedKind != WeaponKind.Knife
+                || (ModernCombat.InputAllowed != null && !ModernCombat.InputAllowed())) return false;
+            foreach (var guard in Enemies.Where(e => e != null && e.Alive && !e.IsBoss
+                && Vector3.Distance(e.transform.position, player.position) <= range)
+                .OrderByDescending(e => e.CanSilentTakedown()).ThenBy(e => (e.transform.position - player.position).sqrMagnitude))
+            {
+                var origin = player.position + Vector3.up;
+                if (Physics.Linecast(origin, guard.transform.position + Vector3.up, out var hit, ObstructionMask, QueryTriggerInteraction.Ignore)
+                    && hit.transform != guard.transform && !hit.transform.IsChildOf(guard.transform)) continue;
+                target = guard; ready = guard.CanSilentTakedown() && ModernCombat.AttackCooldownRemaining <= .01f && !ModernCombat.IsReloading;
+                return true;
+            }
+            return false;
+        }
+
+        public void RegisterEnemy(Map01EnemyController enemy)
+        {
+            if (enemy == null) return;
+            if (!Enemies.Contains(enemy)) Enemies = Enemies.Where(e => e != null).Append(enemy).ToArray();
+            enemy.BindMission(this);
+        }
 
         /// <summary>
         /// Starts <paramref name="scene"/> over. In the editor a scene outside Build Settings (the

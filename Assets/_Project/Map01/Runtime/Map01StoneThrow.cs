@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using ShadowVale.AI.Perception;
@@ -39,7 +40,7 @@ namespace ShadowVale.Map01
         private readonly List<LineRenderer> rings = new List<LineRenderer>();
         private Map01Mission mission;
         private Map01Inventory inventory;
-        private Map01Scouting scouting;
+        private IBinoculars scouting;
         private LineRenderer arcLine, landingRing;
 
         private void Awake()
@@ -48,7 +49,7 @@ namespace ShadowVale.Map01
             inventory = GetComponent<Map01Inventory>();
         }
 
-        private void Start() => scouting = GetComponent<Map01Scouting>(); // Added by Map01Quest.Awake.
+        private void Start() => scouting = GetComponents<MonoBehaviour>().OfType<IBinoculars>().FirstOrDefault(); // Added by Map01Quest.Awake.
 
         private bool CanAim() => mission.IsInitialized && !mission.Stopped && !mission.InventoryOpen && !mission.MapOpen
             && !ForestMenu.Visible && (scouting == null || !scouting.Binoculars);

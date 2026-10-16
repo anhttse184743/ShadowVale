@@ -22,6 +22,7 @@ namespace ShadowVale.Map01
         private Map01Mission mission;
         private Map01Minimap minimap;
         private Map01Quest quest;
+        private IMapObjectives objectives;
         private Map01Inventory inventory;
         private Map01PlayerInteraction interaction;
         private Map01ObjectiveGuide guide;
@@ -31,6 +32,7 @@ namespace ShadowVale.Map01
             minimap = GetComponent<Map01Minimap>();
             if (minimap == null) minimap = gameObject.AddComponent<Map01Minimap>();
             quest = GetComponent<Map01Quest>();
+            objectives = GetComponents<MonoBehaviour>().OfType<IMapObjectives>().FirstOrDefault();
             inventory = GetComponent<Map01Inventory>();
             interaction = GetComponent<Map01PlayerInteraction>();
             // Added at runtime rather than baked into Map 1.unity; the HUD is its only reader.
@@ -180,10 +182,10 @@ namespace ShadowVale.Map01
             DrawStoneAim(width, height); // Map01Hud.Stone.cs
             DrawScoutFailure(width); // Map01Hud.Scouting.cs
             if (mission.MapOpen) DrawMap(width, height);
-            if (mission.PlayerHealth <= 0 || quest.Stage == Map01Quest.CompleteStage) {
+            if ((mission.PlayerHealth <= 0 && GetComponent<TutorialDirector>() == null) || (objectives?.IsComplete ?? false)) {
                 HudPanel(new Rect(width / 2 - 300, 320, 600, 185));
                 GUI.Label(new Rect(width / 2 - 275, 345, 550, 75), mission.PlayerHealth <= 0 ? "NAM ĐÃ GỤC NGÃ" : "HOÀN THÀNH MAP 1", hudCenter);
-                GUI.Label(new Rect(width / 2 - 245, 437, 490, 50), quest.Stage == Map01Quest.CompleteStage ? "Continuing to Map 2…  Enter: Continue" : "Enter Chơi lại  ·  F9 Tải bản lưu  ·  Esc Menu", hudSmall);
+                GUI.Label(new Rect(width / 2 - 245, 437, 490, 50), (objectives?.IsComplete ?? false) ? "Continuing to Map 2…  Enter: Continue" : "Enter Chơi lại  ·  F9 Tải bản lưu  ·  Esc Menu", hudSmall);
             }
             GUI.matrix = matrix; GUI.color = color; GUI.depth = depth;
         }
@@ -200,7 +202,7 @@ namespace ShadowVale.Map01
                 return;
             }
             // Sized to the text: the longer objectives wrap to three lines and used to be cut off.
-            string text = quest.ObjectiveText;
+            string text = objectives?.ObjectiveText ?? "";
             float textHeight = hudBody.CalcHeight(new GUIContent(text), 328);
             bool guiding = guide.HasTarget && !mission.Stopped;
             float height = Mathf.Max(152, 258 + textHeight + (guiding ? 32 : 0) + 14 - 186);
@@ -351,7 +353,7 @@ namespace ShadowVale.Map01
                 GUI.Label(new Rect(r.x + 18, r.y + 12, r.width - 36, r.height - 20), mission.Dialogue, hudBody);
             }
             var nearby = interaction.Nearby;
-            if (quest.HungInRange && !mission.Stopped && !mission.InventoryOpen)
+            if (quest != null && quest.HungInRange && !mission.Stopped && !mission.InventoryOpen)
                 GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), quest.HungPrompt, hudBody);
             else if (nearby != null && !nearby.used && !mission.Stopped && !mission.InventoryOpen)
                 GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), "[E] " + nearby.label, hudBody);

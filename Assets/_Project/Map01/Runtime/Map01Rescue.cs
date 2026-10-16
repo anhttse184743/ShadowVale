@@ -127,19 +127,7 @@ namespace ShadowVale.Map01
         public bool GetTakedownHint(out Map01EnemyController target,out bool ready)
         {
             target=null;ready=false;
-            if(mission==null||!mission.IsInitialized||mission.Stopped||mission.InventoryOpen||mission.MapOpen
-                ||mission.ModernCombat==null||mission.ModernCombat.EquippedKind!=WeaponKind.Knife
-                ||(mission.ModernCombat.InputAllowed!=null&&!mission.ModernCombat.InputAllowed()))return false;
-            float range=Layout!=null?Layout.takedownHintRange:3.2f;
-            foreach(var guard in mission.Enemies.Where(e=>e!=null&&e.Alive&&!e.IsBoss
-                &&Vector3.Distance(e.transform.position,mission.player.position)<=range)
-                .OrderByDescending(e=>e.CanSilentTakedown()).ThenBy(e=>(e.transform.position-mission.player.position).sqrMagnitude)){
-                var origin=mission.player.position+Vector3.up;
-                if(Physics.Linecast(origin,guard.transform.position+Vector3.up,out var hit,mission.ObstructionMask,QueryTriggerInteraction.Ignore)
-                    &&hit.transform!=guard.transform&&!hit.transform.IsChildOf(guard.transform))continue;
-                target=guard;ready=guard.CanSilentTakedown()&&mission.ModernCombat.AttackCooldownRemaining<=.01f&&!mission.ModernCombat.IsReloading;return true;
-            }
-            return false;
+            return mission!=null&&mission.GetTakedownHint(Layout!=null?Layout.takedownHintRange:3.2f,out target,out ready);
         }
         public bool BeginFree()
         {

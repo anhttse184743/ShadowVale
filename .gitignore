@@ -59,3 +59,6 @@ Assets/_Project/**/GeneratedContent/
 /Assets/_Project/Scenes/Maps/Test Map 1 AI/
 /Assets/_Project/Scenes/Maps/Test Map 1 AI.meta
 /Assets/_Project/Resources/TacticalGraphs/Test Map 1 AI.*
+
+# Python libraries installed beside the intro shot scripts (pip install --target .deps); reinstall, do not commit
+.deps/

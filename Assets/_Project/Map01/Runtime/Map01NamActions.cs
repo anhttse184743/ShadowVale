@@ -249,6 +249,7 @@ namespace ShadowVale.Map01
             if(handStone!=null)handStone.SetActive(false);
         }
         private void OnDestroy(){if(handStoneMaterial!=null)Destroy(handStoneMaterial);if(handStone!=null)Destroy(handStone);}
+        public void CancelAction() { if (locked) Finish(); holding = false; upperUntil = 0; upperWeight = 0; if (Ready(upperLayer)) actor.SetLayerWeight(upperLayer, 0); RestoreWeaponVisibility(); }
         private void OnDisable() {
             if (locked) Finish(); holding = false;upperUntil=0;upperWeight=0;
             if(Ready(upperLayer))actor.SetLayerWeight(upperLayer,0);

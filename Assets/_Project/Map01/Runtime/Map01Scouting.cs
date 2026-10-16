@@ -15,7 +15,7 @@ namespace ShadowVale.Map01
     /// away from it (quietKillDistance), e.g. by a thrown stone.
     /// Until a camp is logged, only a rough area around it is known — offset from the real spot.
     /// </summary>
-    public sealed class Map01Scouting : MonoBehaviour
+    public sealed class Map01Scouting : MonoBehaviour, IBinoculars
     {
         [SerializeField] private float binocularRange = 45f;
         [Tooltip("How far off the screen centre (degrees) the camp may be while logging it.")]

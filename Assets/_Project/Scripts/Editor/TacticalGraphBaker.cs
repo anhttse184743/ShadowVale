@@ -349,7 +349,7 @@ namespace ShadowVale.Editor
 
         // ---- output ------------------------------------------------------------------------------
 
-        private static string Save(TacticalGraphAsset asset)
+        public static string Save(TacticalGraphAsset asset)
         {
             Directory.CreateDirectory(OutputFolder);
             string path = $"{OutputFolder}/{asset.sceneName}.asset";

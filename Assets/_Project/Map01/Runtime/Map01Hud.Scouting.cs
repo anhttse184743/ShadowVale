@@ -16,7 +16,8 @@ namespace ShadowVale.Map01
         private void DrawScouting(float width, float height, float scale)
         {
             if (scouting == null) scouting = GetComponent<Map01Scouting>(); // Added by Map01Quest.Awake.
-            if (scouting == null || mission.Stopped || mission.InventoryOpen || mission.MapOpen) return;
+            if (mission.Stopped || mission.InventoryOpen || mission.MapOpen) return;
+            if (scouting == null) { DrawAwareness(width, height, scale); return; }
             if (scouting.Binoculars) DrawBinoculars(width, height);
             DrawAwareness(width, height, scale);
             DrawCampWarning(width);

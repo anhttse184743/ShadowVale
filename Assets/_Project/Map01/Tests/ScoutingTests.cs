@@ -8,6 +8,8 @@ using ShadowVale.Gameplay.Player;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.Rendering;
 using UnityEngine.TestTools;
 
@@ -201,63 +203,70 @@ namespace ShadowVale.Map01.Tests
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
             yield return null;
-            var mission = Object.FindFirstObjectByType<Map01Mission>();
-            var quest = mission.GetComponent<Map01Quest>();
-            var scouting = mission.GetComponent<Map01Scouting>();
-            Assert.IsNotNull(scouting, "Map01Quest must bring the scouting order along.");
-            Assert.AreEqual(3, scouting.Camps.Count, "Map 1 has three enemy outposts.");
-            Assert.IsTrue(scouting.Camps.All(c => c.Guards.Length > 0), "Every outpost has its guards.");
-            // Logging is under test here, not stealth. The agent too: it keeps walking a guard down
-            // his last path without the controller, out from under the spot being aimed at.
-            foreach (var e in mission.Enemies) { e.enabled = false; e.GetComponent<NavMeshAgent>().enabled = false; }
-            quest.RestoreStage(Map01Quest.ScoutStage);
-            mission.Say(null, -1f);
+            var routing = RouteInputToGame();
+            var keyboard = InputSystem.AddDevice<Keyboard>();
+            try {
+                // A real keyboard in an interactive Editor otherwise releases the direct HoldBinoculars call every frame.
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.F));
+                var mission = Object.FindFirstObjectByType<Map01Mission>();
+                var quest = mission.GetComponent<Map01Quest>();
+                var scouting = mission.GetComponent<Map01Scouting>();
+                Assert.IsNotNull(scouting, "Map01Quest must bring the scouting order along.");
+                Assert.AreEqual(3, scouting.Camps.Count, "Map 1 has three enemy outposts.");
+                Assert.IsTrue(scouting.Camps.All(c => c.Guards.Length > 0), "Every outpost has its guards.");
+                // Logging is under test here, not stealth. The agent too: it keeps walking a guard down
+                // his last path without the controller, out from under the spot being aimed at.
+                foreach (var e in mission.Enemies) { e.enabled = false; e.GetComponent<NavMeshAgent>().enabled = false; }
+                quest.RestoreStage(Map01Quest.ScoutStage);
+                mission.Say(null, -1f);
 
-            var camp = scouting.Camps[0];
-            Assert.IsTrue(FindVantage(camp, mission.ObstructionMask, out var standAt, out var lookAt), "Need a vantage point over camp 1.");
+                var camp = scouting.Camps[0];
+                Assert.IsTrue(FindVantage(camp, mission.ObstructionMask, out var standAt, out var lookAt), "Need a vantage point over camp 1.");
 
-            // Too far away: aimed straight at the camp, the binoculars still scan nothing.
-            Assert.IsTrue(FindOutOfRange(scouting, camp, out var farAway), "Need a spot beyond scan range.");
-            Teleport(mission, farAway);
-            scouting.HoldBinoculars(true);
-            for (int i = 0; i < 10; i++) { AimCamera(mission, camp.Center + Vector3.up * 1.5f); yield return WaitGameSeconds(.1f); }
-            Assert.IsTrue(scouting.Binoculars);
-            Assert.IsFalse(scouting.InScanRange, "No camp within scan range out here.");
-            Assert.IsNull(scouting.Sighted);
-            Assert.AreEqual(0f, scouting.RecordProgress, "Out of range nothing is logged.");
-            Directory.CreateDirectory("Logs/GuidePreview");
-            ScreenCapture.CaptureScreenshot("Logs/GuidePreview/scouting-out-of-range.png");
-            yield return null; yield return null;
+                // Too far away: aimed straight at the camp, the binoculars still scan nothing.
+                Assert.IsTrue(FindOutOfRange(scouting, camp, out var farAway), "Need a spot beyond scan range.");
+                Teleport(mission, farAway);
+                scouting.HoldBinoculars(true);
+                for (int i = 0; i < 10; i++) { AimCamera(mission, camp.Center + Vector3.up * 1.5f); yield return WaitGameSeconds(.1f); }
+                Assert.IsTrue(scouting.Binoculars);
+                Assert.IsFalse(scouting.InScanRange, "No camp within scan range out here.");
+                Assert.IsNull(scouting.Sighted);
+                Assert.AreEqual(0f, scouting.RecordProgress, "Out of range nothing is logged.");
+                Directory.CreateDirectory("Logs/GuidePreview");
+                ScreenCapture.CaptureScreenshot("Logs/GuidePreview/scouting-out-of-range.png");
+                yield return null; yield return null;
 
-            Teleport(mission, standAt);
-            yield return null; yield return null;
-            Assert.IsTrue(scouting.InScanRange, Diag(mission, scouting, camp, "At the vantage point camp 1 is in range."));
+                Teleport(mission, standAt);
+                yield return null; yield return null;
+                Assert.IsTrue(scouting.InScanRange, Diag(mission, scouting, camp, "At the vantage point camp 1 is in range."));
 
-            // Looking the other way: binoculars up, nothing to log.
-            AimCamera(mission, standAt * 2 - lookAt);
-            yield return WaitGameSeconds(1f);
-            Assert.IsTrue(scouting.Binoculars);
-            Assert.IsNull(scouting.Sighted);
-            Assert.AreEqual(0f, scouting.RecordProgress);
-            Assert.Less(Vector3.Distance(mission.gameCamera.transform.position, scouting.Eye), .3f, "Binoculars look from Nam's eyes, not over his shoulder.");
-            Assert.Less(mission.gameCamera.fieldOfView, 20f, "Binoculars zoom well past the rifle's aim.");
-            Assert.IsTrue(NamOutOfView(mission), "Nam's own model must not show in the binoculars.");
+                // Looking the other way: binoculars up, nothing to log.
+                AimCamera(mission, standAt * 2 - lookAt);
+                yield return WaitGameSeconds(1f);
+                Assert.IsTrue(scouting.Binoculars);
+                Assert.IsNull(scouting.Sighted);
+                Assert.AreEqual(0f, scouting.RecordProgress);
+                Assert.Less(Vector3.Distance(mission.gameCamera.transform.position, scouting.Eye), .3f, "Binoculars look from Nam's eyes, not over his shoulder.");
+                Assert.Less(mission.gameCamera.fieldOfView, 20f, "Binoculars zoom well past the rifle's aim.");
+                Assert.IsTrue(NamOutOfView(mission), "Nam's own model must not show in the binoculars.");
 
-            // On target (re-aimed as the zoomed camera settles): logged after a couple of seconds.
-            for (int i = 0; i < 8; i++) { AimCamera(mission, lookAt); yield return WaitGameSeconds(.1f); }
-            Assert.AreSame(camp, scouting.Sighted, "Camp 1 must be in the binoculars.");
-            yield return WaitGameSeconds(.5f);
-            ScreenCapture.CaptureScreenshot("Logs/GuidePreview/scouting-binoculars.png");
-            for (float until = Time.time + 3; !camp.Found && Time.time < until;) yield return null;
-            Assert.IsTrue(camp.Found, "Holding the binoculars on the camp logs it.");
-            Assert.AreEqual(1, scouting.FoundCount);
-            Assert.AreEqual(Map01Quest.ScoutStage, quest.Stage, "Two camps still to go.");
+                // On target (re-aimed as the zoomed camera settles): logged after a couple of seconds.
+                for (int i = 0; i < 8; i++) { AimCamera(mission, lookAt); yield return WaitGameSeconds(.1f); }
+                Assert.AreSame(camp, scouting.Sighted, "Camp 1 must be in the binoculars.");
+                yield return WaitGameSeconds(.5f);
+                ScreenCapture.CaptureScreenshot("Logs/GuidePreview/scouting-binoculars.png");
+                for (float until = Time.time + 3; !camp.Found && Time.time < until;) yield return null;
+                Assert.IsTrue(camp.Found, "Holding the binoculars on the camp logs it.");
+                Assert.AreEqual(1, scouting.FoundCount);
+                Assert.AreEqual(Map01Quest.ScoutStage, quest.Stage, "Two camps still to go.");
 
-            scouting.HoldBinoculars(false);
-            yield return null; yield return null;
-            Assert.IsFalse(scouting.Binoculars, Diag(mission, scouting, camp, "Binoculars down."));
-            Assert.IsFalse(NamOutOfView(mission), "Lowering the binoculars brings Nam back.");
-            Assert.Greater(Vector3.Distance(mission.gameCamera.transform.position, scouting.Eye), 1f, "Back behind his shoulder.");
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+                scouting.HoldBinoculars(false);
+                yield return null; yield return null;
+                Assert.IsFalse(scouting.Binoculars, Diag(mission, scouting, camp, "Binoculars down."));
+                Assert.IsFalse(NamOutOfView(mission), "Lowering the binoculars brings Nam back.");
+                Assert.Greater(Vector3.Distance(mission.gameCamera.transform.position, scouting.Eye), 1f, "Back behind his shoulder.");
+            } finally { InputSystem.RemoveDevice(keyboard); RestoreInputRouting(routing); }
             yield return new ExitPlayMode();
         }
 

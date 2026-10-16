@@ -13,7 +13,8 @@ namespace ShadowVale.Map01
         private void DrawTakedownHint(float width,float height)
         {
             if(rescue==null)rescue=GetComponent<Map01Rescue>();
-            if(rescue==null||!rescue.GetTakedownHint(out var target,out var ready))return;
+            Map01EnemyController target; bool ready;
+            if(rescue!=null?!rescue.GetTakedownHint(out target,out ready):!mission.GetTakedownHint(3.2f,out target,out ready))return;
             var actor=target.GetComponentInChildren<Animator>();
             var head=actor!=null?actor.GetBoneTransform(HumanBodyBones.Head):null;
             var view=mission.gameCamera.WorldToViewportPoint(head!=null?head.position+Vector3.up*.38f:target.transform.position+Vector3.up*2.1f);

@@ -29,6 +29,7 @@ namespace ShadowVale.Map01
         public float CraftRemaining => Mathf.Max(0, craftUntil - Time.time);
         public string CraftingId => crafting;
 
+        public event System.Action<string> ItemUsed;
         private Map01Mission mission;
         private void Awake() { mission = GetComponent<Map01Mission>(); }
 
@@ -108,6 +109,7 @@ namespace ShadowVale.Map01
                 if (throwTarget == null) return false;
                 Spend("stone", 1);
             }
+            ItemUsed?.Invoke(id);
             nextQuickUse = Time.time + .25f;
             return true;
         }
@@ -133,6 +135,7 @@ namespace ShadowVale.Map01
 
         public void RestoreFromSave(ForestIngredient[] savedItems, int savedStones, string savedCrafting, float craftRemaining)
         {
+            SuppressFire = false; nextQuickUse = 0;
             items.Clear();
             foreach (var i in savedItems) items[i.item_id] = i.count;
             // Earlier saves carried these prefabs without inventory entries. Only migrate missing keys.
