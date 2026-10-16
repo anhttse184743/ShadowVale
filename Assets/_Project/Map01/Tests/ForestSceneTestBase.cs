@@ -3,6 +3,7 @@ using System.Reflection;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace ShadowVale.Map01.Tests
@@ -85,6 +86,65 @@ namespace ShadowVale.Map01.Tests
         {
             InputSystem.settings.editorInputBehaviorInPlayMode = previous.Item1;
             InputSystem.settings.backgroundBehavior = previous.Item2;
+        }
+
+        // ---- Map 1's story (Map01Story): the commander's orders --------------------------------------------------------
+
+        /// <summary>Nam set down at <paramref name="at"/>, standing and still.</summary>
+        protected static void PlaceNam(Map01Mission mission, Vector3 at)
+        {
+            var body = mission.player.GetComponent<CharacterController>();
+            bool enabled = body.enabled;
+            body.enabled = false; mission.player.position = at; body.enabled = enabled;
+            mission.ModernPlayer.RestoreMotion(false); mission.Crouched = false;
+            Physics.SyncTransforms();
+        }
+
+        /// <summary>The running story conversation, confirmed to its end as the player would ("Nhận nhiệm vụ").</summary>
+        protected static System.Collections.IEnumerator ConfirmConversation(Map01Mission mission)
+        {
+            var dialogue = mission.GetComponent<Map01StoryDialogue>();
+            Assert.IsTrue(dialogue.IsPlaying, "A story conversation must be running.");
+            yield return WaitGameSeconds(1.1f);
+            dialogue.Close(true);
+            yield return null;
+        }
+
+        /// <summary>
+        /// The game's first step: [E] beside the commander at the base, his rescue briefing confirmed. Until then Hùng's
+        /// guards are not Nam's job (Map01Rescue ignores sightings, the guide points at the commander).
+        /// </summary>
+        protected static System.Collections.IEnumerator TakeRescueOrder(Map01Mission mission)
+        {
+            var story = mission.GetComponent<Map01Story>();
+            float until = Time.realtimeSinceStartup + 30;
+            while (story.Commander == null && Time.realtimeSinceStartup < until) yield return null;
+            Assert.IsNotNull(story.Commander, "The commander waits at the base.");
+            PlaceNam(mission, story.Commander.position + story.Commander.forward * 1.8f);
+            Assert.IsTrue(story.TryInteract(), "[E] beside the commander starts his briefing.");
+            yield return ConfirmConversation(mission);
+            Assert.IsTrue(mission.GetComponent<Map01Quest>().RescueOrderAccepted, "Confirming the briefing accepts the rescue order.");
+        }
+
+        /// <summary>A save's story with the rescue order taken and nothing more.</summary>
+        protected static Map01Story.Snapshot RescueOrdered() => new Map01Story.Snapshot { rescueAccepted = true };
+
+        /// <summary>A save's story with points 1 and 2 done: the supplies home, the radio silenced.</summary>
+        protected static Map01Story.Snapshot RadioSilenced() => new Map01Story.Snapshot
+        {
+            rescueAccepted = true, supplies = true, keyCollected = true, doorUnlocked = true, chestUnlocked = true,
+            supplyReported = true, suppliesDelivered = true, supplyRewardGranted = true, radioDisabled = true
+        };
+
+        /// <summary>
+        /// A save's story at point 3 with the officer seen through the binoculars and reported: his death then completes
+        /// the objective (Map01Story.CommanderObjectiveComplete) and plays the finale.
+        /// </summary>
+        protected static Map01Story.Snapshot OfficerReported()
+        {
+            var progress = RadioSilenced();
+            progress.commanderAreaReached = progress.commanderConfirmed = progress.commanderReported = progress.commanderDiscovery = true;
+            return progress;
         }
     }
 }

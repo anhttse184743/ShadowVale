@@ -19,15 +19,10 @@ namespace ShadowVale.Map01.Tests
     {
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
 
-        /// <summary>Kept out of the test iterators on purpose: a lambda capturing one of their
-        /// locals moves it into a closure created before EnterPlayMode, and the runner's resume
-        /// after the domain reload skips that creation — the closure is null and the test NREs.</summary>
-        private static bool NearestZoneIs(Map01Scouting scouting, Vector3 target) =>
-            scouting.Camps.Any(c => !c.Found && Vector3.Distance(c.ZoneCenter, target) < .1f && Vector3.Distance(c.Center, target) > 5f);
-
-        private static Map01EnemyController NearestOutpostGuard(Map01Mission mission) =>
-            mission.Enemies.Where(e => e.Alive && e.name.StartsWith("Outpost guard "))
-                .OrderBy(e => Vector3.Distance(e.transform.position, mission.player.position)).First();
+        // Lambdas stay out of the test iterators unless they capture nothing: a lambda capturing one of
+        // their locals moves it into a closure created before EnterPlayMode, and the runner's resume
+        // after the domain reload skips that creation — the closure is null and the test NREs. Such
+        // lambdas go in static helpers (Holds, PackOf, LaidGun… below).
 
         [TestCase(false)]
         [TestCase(true)]
@@ -59,94 +54,130 @@ namespace ShadowVale.Map01.Tests
             }
         }
 
+        /// <summary>
+        /// The whole route, order by order: the commander's rescue briefing, Hùng freed once his four guards are down and
+        /// walked home, the order for point 1, then (points 1 and 2 are driven by Map01OperationsTests) the radio report
+        /// that sends Nam to point 3, the officer's fall and the retreat report that starts the extraction.
+        /// </summary>
         [UnityTest]
-        public IEnumerator BriefingRouteRescuesHungClearsOutpostsAndDefeatsCommander()
+        public IEnumerator CommandersOrdersLeadFromHungsRescueToTheRetreat()
         {
+            Map01OpeningCutscene.CancelPending();
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
             yield return null;
             var mission = Object.FindFirstObjectByType<Map01Mission>();
             var quest = mission.GetComponent<Map01Quest>();
+            var story = mission.GetComponent<Map01Story>();
+            var rescue = mission.GetComponent<Map01Rescue>();
             var inventory = mission.GetComponent<Map01Inventory>();
-            var interaction = mission.GetComponent<Map01PlayerInteraction>();
             Assert.IsTrue(mission.IsInitialized, "The serialized mission content must resolve before guards start.");
-            Assert.AreEqual(0, quest.Stage);
-            var points = Object.FindObjectsByType<ForestPoint>(FindObjectsSortMode.None);
-            var controller = mission.player.GetComponent<CharacterController>();
+            Assert.AreEqual(Map01Quest.RescueStage, quest.Stage);
+            foreach (var e in mission.Enemies) e.enabled = false;
 
-            interaction.Interact(points.Single(p => p.id == "supplies"));
-            Assert.AreEqual(0, quest.Stage, "Reporting to base is gated until Hùng is treated.");
+            // Nothing is Nam's job before the commander's briefing.
+            Assert.IsFalse(quest.RescueOrderAccepted);
+            StringAssert.Contains("nhận nhiệm vụ cứu Hùng", quest.ObjectiveText);
+            yield return TakeRescueOrder(mission);
+            Assert.AreEqual(Map01Quest.RescueStage, quest.Stage, "The order sends Nam out; Hùng is still held at the jetty.");
 
-            inventory.Add("herb", 1);
-            controller.enabled = false; mission.player.position = mission.hung.position; controller.enabled = true;
-            yield return null;
+            // The jetty: Hùng is untied only once all four of his guards are down.
+            rescue.MarkIntroSeen();
+            PlaceNam(mission, mission.hung.position - mission.hung.forward * .7f);
             quest.TryRescueHung();
-            Assert.AreEqual(Map01Quest.EscortStage, quest.Stage, "Treating the wounded Hùng with herb must send Nam back to base.");
-            Assert.AreEqual(0, inventory.Count("herb"), "The herb must be spent on the treatment.");
+            Assert.AreEqual(Map01Rescue.Phase.Captive, rescue.CurrentPhase, "Four guards still stand over him.");
+            foreach (var guard in rescue.Squad) guard.GetComponent<Health>().TakeDamage(9999, guard.transform.position, null);
+            quest.TryRescueHung();
+            for (float until = Time.time + 18; quest.Stage == Map01Quest.RescueStage && Time.time < until;) yield return null;
+            Assert.AreEqual(Map01Quest.EscortStage, quest.Stage, "Untied and on his feet, Hùng goes home with Nam.");
 
-            interaction.Interact(points.Single(p => p.id == "supplies"));
-            Assert.AreEqual(Map01Quest.BriefingStage, quest.Stage, "Bringing Hùng home ends the escort.");
-            Assert.AreEqual(1, inventory.Count("supplies"));
+            // The shelter: arriving ends the escort and hands over the supplies he carried.
+            int supplies = inventory.Count("supplies");
+            PlaceNam(mission, rescue.Layout.shelterDoor.position);
+            yield return WaitGameSeconds(.6f);
+            var home = mission.GetComponent<Map01RescueCinematic>();
+            Assert.IsTrue(home != null && home.IsPlaying, "Reaching the shelter door plays the homecoming.");
+            home.Skip();
+            Assert.AreEqual(Map01Quest.BriefingStage, quest.Stage, "Home with Hùng: report to the commander.");
+            Assert.AreEqual(supplies + 1, inventory.Count("supplies"));
 
-            // Every order comes from Hùng in person, and every finished task is reported back to him.
-            quest.TalkToHung();
-            Assert.AreEqual(Map01Quest.ScoutStage, quest.Stage, "Hùng's first order is to scout.");
-            quest.CompleteScouting(); // The binocular run itself is covered by ScoutingTests.
-            Assert.AreEqual(Map01Quest.ReportScoutStage, quest.Stage, "Logging all three camps finishes the scouting.");
-            quest.TalkToHung();
-            Assert.AreEqual(Map01Quest.CampsStage, quest.Stage);
-
-            var outposts = Object.FindObjectsByType<Map01EnemyController>(FindObjectsSortMode.None)
-                .Where(e => e.name.StartsWith("Outpost guard ")).ToArray();
-            Assert.GreaterOrEqual(outposts.Length, 1, "Map 1's three built-in enemy outposts must still be present.");
-            foreach (var guard in outposts) guard.GetComponent<Health>().TakeDamage(9999, guard.transform.position, null);
+            // The commander, in person, gives point 1.
             yield return null;
-            Assert.AreEqual(Map01Quest.ReportCampsStage, quest.Stage, "Clearing every outpost sends Nam back to report.");
-            Assert.IsFalse(quest.BossSpawned, "The commander only shows up once Hùng has the report.");
-            quest.TalkToHung();
+            PlaceNam(mission, story.Commander.position + story.Commander.forward * 1.8f);
+            Assert.IsTrue(story.TryInteract());
+            yield return ConfirmConversation(mission);
+            Assert.AreEqual(Map01Quest.ScoutStage, quest.Stage, "The commander's next order is point 1, the supply store.");
+
+            // From a save taken once point 2's radio is silenced: the report by radio sends Nam to point 3.
+            quest.RestoreStoryStage(Map01Quest.ReportCampsStage, RadioSilenced());
+            Assert.IsTrue(story.SafeToReport);
+            Assert.IsTrue(story.TryInteract(), "The radio report is made from where Nam stands.");
+            yield return ConfirmConversation(mission);
             Assert.AreEqual(Map01Quest.BossStage, quest.Stage);
 
-            var boss = Object.FindObjectsByType<Map01EnemyController>(FindObjectsSortMode.None).Single(e => e.name == "Chỉ huy địch");
-            Assert.IsTrue(boss.IsBoss);
-            boss.GetComponent<Health>().TakeDamage(999999, boss.transform.position, null);
-            Assert.IsTrue(mission.Cinematic, "Boss defeat starts the in-world finale.");
-            mission.GetComponent<Map01EndingCutscene>().Skip();
-            Assert.AreEqual(Map01Quest.ExtractionStage, quest.Stage, "The finale starts extraction without a return trip.");
+            // Point 3: the officer has been in his headquarters all along; once reported, his fall is the finale.
+            var officer = quest.CommanderEnemy;
+            Assert.IsTrue(officer != null && officer.Alive && officer.IsBoss);
+            quest.RestoreStoryStage(Map01Quest.BossStage, OfficerReported());
+            Assert.AreSame(officer, quest.CommanderEnemy, "The boss stage brings no second commander.");
+            officer.GetComponent<Health>().TakeDamage(999999, officer.transform.position, null);
+            Assert.AreEqual(Map01Quest.ReportBossStage, quest.Stage);
+            var finale = mission.GetComponent<Map01EndingCutscene>();
+            Assert.IsTrue(finale != null && finale.IsPlaying, "The officer's fall plays as the finale.");
+            finale.Skip();
+            Assert.AreEqual(Map01Quest.ReportBossStage, quest.Stage, "After the finale Nam still has to report for the way out.");
+            yield return null;
+            Assert.IsTrue(story.TryInteract());
+            yield return ConfirmConversation(mission);
+            Assert.AreEqual(Map01Quest.ExtractionStage, quest.Stage, "The retreat report starts the extraction.");
+            Assert.IsTrue(mission.GetComponentInChildren<Map01Extraction>().Prepared);
             yield return new ExitPlayMode();
         }
 
         [UnityTest]
-        public IEnumerator InteractKeyTreatsHungWhenInRangeElseFallsBackToNearbyPoint()
+        public IEnumerator InteractKeyFreesHungWhenInRangeElseFallsBackToNearbyPoint()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
             yield return null;
             var mission = Object.FindFirstObjectByType<Map01Mission>();
             var quest = mission.GetComponent<Map01Quest>();
-            var inventory = mission.GetComponent<Map01Inventory>();
+            var rescue = mission.GetComponent<Map01Rescue>();
             var interaction = mission.GetComponent<Map01PlayerInteraction>();
             var loot = Object.FindObjectsByType<ForestPoint>(FindObjectsSortMode.None).Single(p => p.id == "tutorial_loot");
-            var controller = mission.player.GetComponent<CharacterController>();
+            var press = typeof(Map01PlayerInteraction).GetMethod("HandleInteractKey", Private);
+            foreach (var e in mission.Enemies) e.enabled = false;
+            // A save from just after the commander's briefing: the rescue is on.
+            quest.RestoreStoryStage(Map01Quest.RescueStage, RescueOrdered());
+            rescue.MarkIntroSeen();
 
             // Map01PlayerInteraction.Update() (which computes Nearby) bails out with no Keyboard
             // device present, and batchmode Play Mode tests do not attach a real one.
             var testKeyboard = InputSystem.AddDevice<Keyboard>();
             try
             {
-                // Stage 0, standing at a point that is not Hùng: [E] must still trigger it — before
-                // this fix, stage 0 routed every [E] press into the rescue check alone, so the herb
-                // the rescue itself needs could never be picked up.
-                Assert.AreEqual(0, quest.Stage);
-                controller.enabled = false; mission.player.position = loot.transform.position; controller.enabled = true;
+                // Stage 0, standing at a point that is not Hùng: [E] must still trigger it — stage 0 once
+                // routed every [E] press into the rescue check alone.
+                PlaceNam(mission, loot.transform.position);
                 yield return null;
-                typeof(Map01PlayerInteraction).GetMethod("HandleInteractKey", Private).Invoke(interaction, null);
-                Assert.Greater(inventory.Count("herb"), 0, "Standing at a point other than Hùng must still interact with it.");
+                press.Invoke(interaction, null);
+                Assert.IsTrue(loot.used, "Standing at a point other than Hùng must still interact with it.");
+                // Nam takes what the crate held with his hands: [E] waits for that to finish (Map01Story.TryInteract).
+                for (float until = Time.time + 6; Map01NamActions.For(mission).Busy && Time.time < until;) yield return null;
 
-                // Standing at Hùng instead: [E] treats him rather than doing nothing.
-                controller.enabled = false; mission.player.position = mission.hung.position; controller.enabled = true;
+                // At Hùng with his guards still standing: [E] says what is missing and frees nobody.
+                PlaceNam(mission, mission.hung.position - mission.hung.forward * .7f);
                 yield return null;
-                typeof(Map01PlayerInteraction).GetMethod("HandleInteractKey", Private).Invoke(interaction, null);
-                Assert.AreEqual(1, quest.Stage, "[E] near Hùng must treat him, not silently do nothing.");
+                Assert.IsTrue(quest.HungInRange);
+                press.Invoke(interaction, null);
+                Assert.AreEqual(Map01Rescue.Phase.Captive, rescue.CurrentPhase);
+                StringAssert.Contains("Còn 4 tên", mission.Dialogue, "[E] near Hùng must say why he cannot be freed yet.");
+
+                // His four guards down: the same [E] unties him rather than doing nothing.
+                foreach (var guard in rescue.Squad) guard.GetComponent<Health>().TakeDamage(9999, guard.transform.position, null);
+                yield return null;
+                press.Invoke(interaction, null);
+                Assert.AreEqual(Map01Rescue.Phase.Untying, rescue.CurrentPhase, "[E] near Hùng must free him, not silently do nothing.");
             }
             finally { InputSystem.RemoveDevice(testKeyboard); }
             yield return new ExitPlayMode();
@@ -200,7 +231,7 @@ namespace ShadowVale.Map01.Tests
         }
 
         [UnityTest]
-        public IEnumerator KillingAnEnemyDropsLootableAmmoOnce()
+        public IEnumerator KillingAnEnemyDropsHisPackAndHisWornRifleOnce()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
@@ -218,22 +249,53 @@ namespace ShadowVale.Map01.Tests
             Assert.IsNotNull(drop, "A dead guard must drop a lootable ammo point.");
             Assert.AreEqual(ForestPointKind.Loot, drop.kind);
 
-            int ammo = inventory.Count("ammo_rifle"), medkits = inventory.Count("medkit_small");
+            // His pack, rolled from his kind's loot table (Map01Loot.json): his spare rounds at least, nothing off the table.
+            Assert.GreaterOrEqual(Holds(drop, "ammo_rifle"), SpareRounds(guard), "A guard always carries his spare rounds.");
+            Assert.IsEmpty(OffTable(drop, guard), "Everything in the pack comes from his loot table.");
+            var pack = PackOf(drop);
+            var before = Counts(inventory, pack);
             interaction.Interact(drop);
-            Assert.AreEqual(ammo + mission.Settings.guardDropAmmo, inventory.Count("ammo_rifle"), "Looting a dead guard must grant a magazine.");
-            Assert.AreEqual(30, mission.Settings.guardDropAmmo, "Map01Balance.json: one AK magazine per guard.");
-            Assert.AreEqual(medkits + 1, inventory.Count("medkit_small"), "Looting a dead guard must grant a bandage.");
+            for (int i = 0; i < pack.Length; i++) Assert.AreEqual(before[i] + pack[i].count, inventory.Count(pack[i].item), pack[i].item);
 
+            // His rifle lies beside him, worn within his kind's range, and he holds it no more.
+            var gun = LaidGun(mission, guard);
+            Assert.IsNotNull(gun, "A fallen guard drops his rifle.");
+            var kind = Map01Loot.Load().EnemyOf(Map01Logistics.KindOf(guard));
+            Assert.AreEqual(kind.weapon, gun.items[0].item_id);
+            Assert.That(inventory.Fraction(kind.weapon, gun.items[0].condition), Is.InRange(kind.dropMin - 1e-4f, kind.dropMax + 1e-4f));
+            Assert.Less(Vector3.Distance(gun.transform.position, guard.transform.position), 2f, "The rifle lies where he fell.");
+            Assert.IsFalse(HoldsRifle(guard), "The rifle left his hands.");
+            int rifles = inventory.Count(kind.weapon);
+            interaction.Interact(gun);
+            Assert.AreEqual(rifles + 1, inventory.Count(kind.weapon), "The captured rifle goes into the bag.");
+            Assert.IsTrue(gun.used);
+
+            var after = Counts(inventory, pack);
             interaction.Interact(drop);
             yield return WaitGameSeconds(.2f);
             interaction.Interact(drop);
-            Assert.AreEqual(ammo + 30, inventory.Count("ammo_rifle"), "A corpse is searched once — it never restocks.");
-            Assert.AreEqual(medkits + 1, inventory.Count("medkit_small"));
+            CollectionAssert.AreEqual(after, Counts(inventory, pack), "A corpse is searched once — it never restocks.");
             yield return new ExitPlayMode();
         }
 
+        private static int Holds(ForestPoint point, string item) => point.items.Where(i => i.item_id == item).Sum(i => i.count);
+        private static (string item, int count)[] PackOf(ForestPoint point) => point.items.Where(i => i.count > 0).Select(i => (i.item_id, i.count)).ToArray();
+        private static int[] Counts(Map01Inventory inventory, (string item, int count)[] pack) => pack.Select(p => inventory.Count(p.item)).ToArray();
+        private static Map01Loot.Table TableOf(Map01EnemyController guard) => Map01Loot.Load().TableOf(Map01Loot.Load().EnemyOf(Map01Logistics.KindOf(guard)).lootTable);
+        private static int SpareRounds(Map01EnemyController guard) => TableOf(guard).entries.Where(e => e.tier == 5 && e.item == "ammo_rifle").Sum(e => e.min);
+        /// <summary>Items in a guard's pack his table could not give (a dressing may come from the pity rule; the key from the keeper).</summary>
+        private static string[] OffTable(ForestPoint pack, Map01EnemyController guard) =>
+            pack.items.Select(i => i.item_id).Where(id => id != "medkit_small" && id != Map01Story.KeyItem && TableOf(guard).entries.All(e => e.item != id)).ToArray();
+        private static ForestPoint LaidGun(Map01Mission mission, Map01EnemyController guard) =>
+            Map01Drops.For(mission).LaidGuns.FirstOrDefault(p => p.id == Map01Logistics.GunPointPrefix + guard.LegacyId);
+        private static bool HoldsRifle(Map01EnemyController guard)
+        {
+            var rifle = guard.GetComponentInChildren<Map01Rifle>(true);
+            return rifle != null && rifle.weapon != null && rifle.weapon.gameObject.activeSelf;
+        }
+
         [UnityTest]
-        public IEnumerator SupplyCrateAndBaseRestockAmmoAndBandages()
+        public IEnumerator BaseCrateGivesItsKitOnceAndTheShelfOpensTheStoreOnceHungIsHome()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
@@ -242,42 +304,67 @@ namespace ShadowVale.Map01.Tests
             var quest = mission.GetComponent<Map01Quest>();
             var inventory = mission.GetComponent<Map01Inventory>();
             var interaction = mission.GetComponent<Map01PlayerInteraction>();
+            var hud = mission.GetComponent<Map01Hud>();
+            var logistics = Map01Logistics.For(mission);
             var points = Object.FindObjectsByType<ForestPoint>(FindObjectsSortMode.None);
             var crate = points.Single(p => p.id == "tutorial_loot");
             var supplies = points.Single(p => p.id == "supplies");
-            Assert.AreEqual(60, crate.restockSeconds, "The field crate refills every minute.");
-            Assert.AreEqual(90, supplies.restockSeconds, "The base refills every minute and a half.");
+            Assert.AreEqual(0, crate.restockSeconds, "The starting crate gives its kit once: the base no longer refills itself.");
+            Assert.AreEqual(0, supplies.restockSeconds);
 
-            // The crate is empty right after looting, then refills with the same items.
             interaction.Interact(crate);
             interaction.Interact(crate);
-            Assert.AreEqual(60, inventory.Count("ammo_rifle"), "An emptied crate must not pay out again before it restocks.");
-            crate.restockSeconds = .1f; crate.MarkLooted(); // Shorten the wait for the test.
+            Assert.AreEqual(60, inventory.Count("ammo_rifle"), "An emptied crate must not pay out again.");
+            Assert.AreEqual(2, inventory.Count("medkit_small"));
             yield return WaitGameSeconds(.3f);
-            Assert.IsFalse(crate.used, "The crate must restock once its timer runs out.");
-            interaction.Interact(crate);
-            Assert.AreEqual(120, inventory.Count("ammo_rifle"));
-            Assert.AreEqual(4, inventory.Count("medkit_small"));
+            Assert.IsTrue(crate.used, "It never refills.");
 
-            // The base only hands out supplies once Hùng is treated; delivering him opens the
-            // resupply, which then keeps working after the quest has moved on.
+            // The supply shelf is the base store, shut until Hùng is home.
+            Teleport(mission, supplies.transform.position + Vector3.right * 1.2f);
             interaction.Interact(supplies);
-            Assert.AreEqual(120, inventory.Count("ammo_rifle"), "No resupply before Hùng is brought home.");
-            quest.RestoreStage(Map01Quest.EscortStage);
+            Assert.IsFalse(mission.BenchOpen, "No store before Hùng is brought home.");
+            Assert.AreEqual(0, logistics.Credit);
+            quest.RestoreStage(Map01Quest.BriefingStage);
+            yield return null;
+            Assert.AreEqual(Map01Loot.Load().logistics.operationCredit[0], logistics.Credit, "Hùng home: the command sends its first points.");
             interaction.Interact(supplies);
-            Assert.AreEqual(Map01Quest.EscortStage, quest.Stage, "Hùng is still out where he was treated — he has not been brought home.");
-            Assert.AreEqual(120, inventory.Count("ammo_rifle"));
-            mission.hung.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(mission.player.position + Vector3.right);
-            interaction.Interact(supplies);
-            Assert.AreEqual(Map01Quest.BriefingStage, quest.Stage);
-            Assert.AreEqual(180, inventory.Count("ammo_rifle"), "Bringing Hùng home comes with the first resupply.");
-            supplies.restockSeconds = .1f; supplies.MarkLooted();
-            yield return WaitGameSeconds(.3f);
-            quest.RestoreStage(Map01Quest.CampsStage);
-            interaction.Interact(supplies);
-            Assert.AreEqual(240, inventory.Count("ammo_rifle"), "The base keeps resupplying after the quest moves on.");
-            Assert.AreEqual(8, inventory.Count("medkit_small"));
+            Assert.IsTrue(mission.BenchOpen);
+            Assert.AreEqual("store", hud.BenchTab, "The shelf opens the bench screen at the store.");
+            Assert.IsFalse(supplies.used, "The shelf stays in reach.");
+
+            // Points buy what the store issues at its base value; short of points, nothing is given.
+            int credit = logistics.Credit, ammo = inventory.Count("ammo_rifle");
+            var rounds = logistics.Stock.First(o => o.item == "ammo_rifle");
+            Assert.AreEqual(Map01Loot.Load().BaseValue("ammo_rifle") * rounds.count, rounds.price);
+            Assert.IsTrue(logistics.Issue(rounds));
+            Assert.AreEqual(ammo + rounds.count, inventory.Count("ammo_rifle"));
+            Assert.AreEqual(credit - rounds.price, logistics.Credit);
+            var dear = logistics.Stock.OrderByDescending(o => o.price).First();
+            while (logistics.Credit >= dear.price) logistics.Issue(dear);
+            int left = logistics.Credit, dearHeld = inventory.Count(dear.item);
+            Assert.IsFalse(logistics.Issue(dear), "Short of points: refused.");
+            Assert.AreEqual(left, logistics.Credit); Assert.AreEqual(dearHeld, inventory.Count(dear.item));
+
+            // A captured gun handed in: its base value, less as it is worn. The rifle in hand never goes.
+            inventory.Draw(Map01Inventory.Slot.Primary);
+            Assert.IsFalse(logistics.HandIn(Map01Inventory.Gun.InSlot(Map01Inventory.Slot.Primary)), "The rifle in hand is never handed in.");
+            inventory.Receive("rifle_standard", 1, .25f * inventory.MaxCondition("rifle_standard"));
+            var captured = inventory.Guns().First(g => g.Slot == null);
+            int worth = inventory.TurnInValue(captured);
+            Assert.AreEqual(Mathf.RoundToInt(Map01Loot.Load().BaseValue("rifle_standard") * (Map01Loot.Load().logistics.turnInFloor + (1 - Map01Loot.Load().logistics.turnInFloor) * .25f)), worth);
+            Assert.IsTrue(logistics.HandIn(captured));
+            Assert.AreEqual(left + worth, logistics.Credit);
+            Assert.AreEqual(1, logistics.HandedIn);
+            Assert.AreEqual(1, inventory.Count("rifle_standard"));
+            mission.CloseGameplayPanel();
             yield return new ExitPlayMode();
+        }
+
+        private static void Teleport(Map01Mission mission, Vector3 to)
+        {
+            var controller = mission.player.GetComponent<CharacterController>();
+            controller.enabled = false; mission.player.position = to; controller.enabled = true;
+            Physics.SyncTransforms();
         }
 
         [UnityTest]
@@ -335,7 +422,7 @@ namespace ShadowVale.Map01.Tests
             var quest = mission.GetComponent<Map01Quest>();
             var playerHealth = mission.player.GetComponent<Health>();
             float expected = mission.Weapon.damage * mission.Settings.guardDamageScale;
-            foreach (var enemy in mission.Enemies)
+            foreach (var enemy in mission.Enemies.Where(e => !e.IsBoss)) // The commander, there from the start, is checked below.
             {
                 Assert.AreEqual(expected, enemy.DamagePerShot, 1e-4f, enemy.name);
                 Assert.AreEqual(mission.Settings.guardShotInterval, enemy.FireInterval, 1e-4f, enemy.name);
@@ -343,7 +430,7 @@ namespace ShadowVale.Map01.Tests
 
             // One real hit through the guard's own Shoot(): exactly the balance damage, and no
             // second hit before the interval has passed.
-            var guard = mission.Enemies.First(e => e.Alive);
+            var guard = mission.Enemies.First(e => e.Alive && !e.IsBoss);
             typeof(Map01EnemyController).GetField("_nextShot", Private).SetValue(guard, 0f);
             var shoot = typeof(Map01EnemyController).GetMethod("Shoot", Private);
             float before = playerHealth.Current;
@@ -353,7 +440,8 @@ namespace ShadowVale.Map01.Tests
             Assert.AreEqual(before - expected, playerHealth.Current, 1e-3f, "A guard must not fire again before guardShotInterval.");
 
             // The commander keeps his multiplier on top of the baseline rather than being reset by it.
-            quest.RestoreStage(Map01Quest.BossStage); // Spawns him, as reporting the outposts would.
+            // He is in his headquarters from the start (Map01C3Mission); the boss stage brings no second one.
+            quest.RestoreStage(Map01Quest.BossStage);
             yield return null;
             var boss = mission.Enemies.Single(e => e.IsBoss);
             Assert.AreEqual(expected * 1.6f, boss.DamagePerShot, 1e-3f);
@@ -373,15 +461,12 @@ namespace ShadowVale.Map01.Tests
             {
                 var mission = Object.FindFirstObjectByType<Map01Mission>();
                 var quest = mission.GetComponent<Map01Quest>();
-                quest.RestoreStage(Map01Quest.CampsStage);
-                foreach (var g in mission.Enemies.Where(e => e.name.StartsWith("Outpost guard ")))
-                    g.GetComponent<Health>().TakeDamage(9999, g.transform.position, null);
-                yield return null;
-                Assert.AreEqual(Map01Quest.ReportCampsStage, quest.Stage);
-                quest.RestoreStage(Map01Quest.BossStage); // What reporting the outposts to Hùng leads to.
+                // Point 3 with the officer already reported: the fight is on.
+                quest.RestoreStoryStage(Map01Quest.BossStage, OfficerReported());
                 Assert.AreEqual(Map01Quest.BossStage, quest.Stage);
                 var bossHealth = mission.Enemies.Single(e => e.IsBoss).GetComponent<Health>();
-                bossHealth.TakeDamage(100, bossHealth.transform.position, null);
+                // A quarter of his health: short of the half at which he calls his men (Map01C3Mission).
+                bossHealth.TakeDamage(bossHealth.Max * .25f, bossHealth.transform.position, null);
                 float woundedHp = bossHealth.Current;
 
                 // Quitting to the menu mid-fight autosaves at the boss stage (only manual saves are blocked there).
@@ -412,83 +497,104 @@ namespace ShadowVale.Map01.Tests
             yield return new ExitPlayMode();
         }
 
+        /// <summary>The objective guide follows the commander's orders step by step (Map01Story.Target, then the rescue).</summary>
         [UnityTest]
         public IEnumerator ObjectiveGuideFollowsEachQuestStep()
         {
+            Map01OpeningCutscene.CancelPending();
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
             yield return null;
             var mission = Object.FindFirstObjectByType<Map01Mission>();
             var quest = mission.GetComponent<Map01Quest>();
+            var story = mission.GetComponent<Map01Story>();
+            var rescue = mission.GetComponent<Map01Rescue>();
+            var c3 = mission.GetComponent<Map01C3Mission>();
             var interaction = mission.GetComponent<Map01PlayerInteraction>();
             var guide = mission.GetComponent<Map01ObjectiveGuide>();
             Assert.IsNotNull(guide, "The HUD must bring the objective guide along.");
-            var points = Object.FindObjectsByType<ForestPoint>(FindObjectsSortMode.None);
             // Frozen guards cannot wound Nam mid-test (a dead Nam stops the mission, hiding the guide).
             foreach (var e in mission.Enemies) e.enabled = false;
 
+            // First the commander's briefing, then Hùng at the jetty.
             yield return WaitGameSeconds(.6f);
             Assert.IsTrue(guide.HasTarget);
-            Assert.AreEqual("THÙNG VẬT TƯ", guide.Label, "Without a herb, the first stop is the supply crate.");
-
-            interaction.Interact(points.Single(p => p.id == "tutorial_loot"));
+            Assert.AreEqual("CHỈ HUY — NHẬN NHIỆM VỤ", guide.Label, "The game starts with the commander's briefing.");
+            Assert.Less(Vector3.Distance(guide.Target, story.Commander.position), .5f);
+            quest.RestoreStoryStage(Map01Quest.RescueStage, RescueOrdered());
             yield return WaitGameSeconds(.6f);
-            Assert.AreEqual("BẾN TÀU — CỨU HÙNG", guide.Label, "With the herb in the bag, the guide turns to Hùng at the jetty.");
+            Assert.AreEqual("BẾN TÀU — CỨU HÙNG", guide.Label, "Ordered out, the guide turns to Hùng at the jetty.");
             Assert.Less(Vector3.Distance(guide.Target, mission.hung.position), .5f);
 
-            // Nam starts at the base, so head for the base from where the rescue leaves him: by Hùng.
-            var controller = mission.player.GetComponent<CharacterController>();
-            controller.enabled = false; mission.player.position = mission.hung.position + Vector3.right; controller.enabled = true;
+            // From the jetty, home to the shelter on foot.
+            rescue.MarkIntroSeen();
+            PlaceNam(mission, mission.hung.position + Vector3.right);
             quest.RestoreStage(Map01Quest.EscortStage);
             yield return WaitGameSeconds(.6f);
-            var supplies = points.Single(p => p.kind == ForestPointKind.Supplies);
-            Assert.AreEqual("CĂN CỨ CHỈ HUY", guide.Label);
-            Assert.Less(Vector3.Distance(guide.Target, supplies.transform.position), .5f);
-            Assert.Greater(guide.Route.Count, 2, "The base must be reachable on the NavMesh.");
+            var door = rescue.Layout.shelterDoor.position;
+            Assert.AreEqual("HẦM TRÚ ẨN — ĐƯA HÙNG VỀ", guide.Label);
+            Assert.Less(Vector3.Distance(guide.Target, door), .5f);
+            Assert.Greater(guide.Route.Count, 2, "The shelter must be reachable on the NavMesh.");
             Assert.Less(Vector3.Distance(guide.Route[0], mission.player.position), 3f, "The route starts at Nam.");
-            Assert.GreaterOrEqual(guide.Distance + .5f, Vector3.Distance(mission.player.position, supplies.transform.position),
+            Assert.GreaterOrEqual(guide.Distance + .5f, Vector3.Distance(mission.player.position, door),
                 "A walking route is never shorter than the straight line.");
-            Assert.Less(Vector3.Distance(guide.Route[guide.Route.Count - 1], supplies.transform.position), 4f,
-                "The route must end at the base's floor, not on the roof above its supply point.");
+            Assert.Less(Vector3.Distance(guide.Route[guide.Route.Count - 1], door), 4f, "The route ends at the shelter door.");
 
-            // Every report step points back at Hùng, wherever he stands at the base.
-            foreach (int report in new[] { Map01Quest.BriefingStage, Map01Quest.ReportScoutStage, Map01Quest.ReportCampsStage })
-            {
-                quest.RestoreStage(report);
-                yield return WaitGameSeconds(.6f);
-                Assert.AreEqual("BÁO CÁO HÙNG", guide.Label, $"Stage {report} is a report to Hùng.");
-                Assert.Less(Vector3.Distance(guide.Target, mission.hung.position), .5f);
-            }
-
+            // Home: the commander's next order, then point 1's store.
+            quest.RestoreStage(Map01Quest.BriefingStage);
+            yield return WaitGameSeconds(.6f);
+            Assert.AreEqual("CHỈ HUY — NHẬN NHIỆM VỤ", guide.Label);
+            Assert.Less(Vector3.Distance(guide.Target, story.Commander.position), .5f);
             quest.RestoreStage(Map01Quest.ScoutStage);
             yield return WaitGameSeconds(.6f);
-            var scouting = mission.GetComponent<Map01Scouting>();
-            Assert.AreEqual("KHU VỰC NGHI NGỜ", guide.Label, "Scouting points at a rough area, not a camp.");
-            Assert.IsTrue(NearestZoneIs(scouting, guide.Target), "The rough area of a camp still to scout.");
-            scouting.RestoreFound(0b111);
-            yield return WaitGameSeconds(.6f);
-            Assert.IsFalse(guide.HasTarget, "Nothing left to scout once every camp is logged.");
+            Assert.AreEqual("ĐIỂM 1 — KHO TIẾP TẾ", guide.Label, "Point 1 while its guards stand: the store's door.");
+            Assert.Less(Vector3.Distance(guide.Target, story.Layout.doorApproach.position), .5f);
 
+            // The supplies taken: first the radio report from wherever Nam is, then the hand-over at the base.
+            quest.RestoreStage(Map01Quest.ReportScoutStage);
+            yield return WaitGameSeconds(.6f);
+            Assert.AreEqual("TÌM CHỖ KÍN — BÁO CÁO [E]", guide.Label, "A radio report is made where Nam stands.");
+            Assert.Less(Vector3.Distance(guide.Target, mission.player.position), .5f);
+            quest.RestoreStoryStage(Map01Quest.ReportScoutStage, new Map01Story.Snapshot {
+                rescueAccepted = true, supplies = true, keyCollected = true, doorUnlocked = true, chestUnlocked = true, supplyReported = true });
+            yield return WaitGameSeconds(.6f);
+            Assert.AreEqual("HẦM — BÀN GIAO TIẾP TẾ", guide.Label, "Reported: carry the supplies to the commander.");
+            Assert.Less(Vector3.Distance(guide.Target, story.Commander.position), .5f);
+
+            // Point 2's radio, then its report.
             quest.RestoreStage(Map01Quest.CampsStage);
             yield return WaitGameSeconds(.6f);
-            var nearest = NearestOutpostGuard(mission);
-            Assert.AreEqual("DOANH TRẠI ĐỊCH", guide.Label);
-            // Guards and the commander move while the guide re-targets every half second — within 2 m.
-            Assert.Less(Vector3.Distance(guide.Target, nearest.transform.position), 2f, "The nearest manned outpost comes first.");
+            Assert.AreEqual("ĐIỂM 2 — BẢNG MẠCH ĐÀI", guide.Label);
+            Assert.Less(Vector3.Distance(guide.Target, story.Layout.radioApproach.position), .5f);
+            quest.RestoreStage(Map01Quest.ReportCampsStage);
+            yield return WaitGameSeconds(.6f);
+            Assert.AreEqual("TÌM CHỖ KÍN — BÁO CÁO [E]", guide.Label);
 
+            // Point 3: the scouts' Mosin first, then the observation, then the officer himself.
             quest.RestoreStage(Map01Quest.BossStage);
             yield return WaitGameSeconds(.6f);
-            var boss = mission.Enemies.Single(e => e.IsBoss);
-            Assert.AreEqual("CHỈ HUY ĐỊCH", guide.Label);
-            Assert.Less(Vector3.Distance(guide.Target, boss.transform.position), 2f);
+            Assert.AreEqual("ĐỒI ĐÔNG NAM — MOSIN TRINH SÁT", guide.Label, "The order points out the scouts' rifle first.");
+            Assert.Less(Vector3.Distance(guide.Target, c3.CachePoint.transform.position), .5f);
+            interaction.Interact(c3.CachePoint);
+            yield return WaitGameSeconds(.6f);
+            Assert.AreEqual("ĐIỂM 3 — QUAN SÁT DOANH TRẠI [F]", guide.Label);
+            Assert.Less(Vector3.Distance(guide.Target, story.Layout.commanderPost.position), .5f);
+            quest.RestoreStoryStage(Map01Quest.BossStage, OfficerReported());
+            yield return WaitGameSeconds(.6f);
+            var officer = quest.CommanderEnemy;
+            Assert.AreEqual("ĐIỂM 3 — HẠ SĨ QUAN", guide.Label, "Reported, the guide follows the officer himself.");
+            // He walks his rounds while the guide re-targets every half second — within 2 m.
+            Assert.Less(Vector3.Distance(guide.Target, officer.transform.position), 2f);
 
-            boss.GetComponent<Health>().TakeDamage(999999, boss.transform.position, null);
-            // The commander's fall plays as the finale, which hands straight over to the extraction (no
-            // report trip any more): once it is over the guide points at the boat.
+            // His fall plays the finale; then the radio report for the way out, and the boat.
+            officer.GetComponent<Health>().TakeDamage(999999, officer.transform.position, null);
             mission.GetComponent<Map01EndingCutscene>().Skip();
             yield return WaitGameSeconds(.6f);
-            Assert.AreEqual(Map01Quest.ExtractionStage, quest.Stage);
-            Assert.AreEqual("NORTHERN JETTY", guide.Label, "After the commander falls the guide points at the waiting boat.");
+            Assert.AreEqual(Map01Quest.ReportBossStage, quest.Stage);
+            Assert.AreEqual("TÌM CHỖ KÍN — BÁO CÁO [E]", guide.Label, "After the finale Nam reports by radio for the way out.");
+            quest.RestoreStage(Map01Quest.ExtractionStage);
+            yield return WaitGameSeconds(.6f);
+            Assert.AreEqual("NORTHERN JETTY", guide.Label, "The retreat leads to the waiting boat.");
 
             quest.RestoreStage(Map01Quest.CompleteStage);
             yield return WaitGameSeconds(.6f);
@@ -504,29 +610,29 @@ namespace ShadowVale.Map01.Tests
             yield return null;
             var mission = Object.FindFirstObjectByType<Map01Mission>();
             var quest = mission.GetComponent<Map01Quest>();
-            var interaction = mission.GetComponent<Map01PlayerInteraction>();
-            var controller = mission.player.GetComponent<CharacterController>();
+            var story = mission.GetComponent<Map01Story>();
+            var rescue = mission.GetComponent<Map01Rescue>();
             var points = Object.FindObjectsByType<ForestPoint>(FindObjectsSortMode.None);
             foreach (var e in mission.Enemies) e.enabled = false;
             // Map01PlayerInteraction.Update, which drives Hùng, only runs with a keyboard present.
             var keyboard = InputSystem.AddDevice<Keyboard>();
             try
             {
-                // Wounded: opening the bag or the map used to pull him over to Nam.
-                Vector3 wounded = mission.hung.position;
+                // Tied up at the jetty: opening the bag or the map used to pull him over to Nam.
+                Vector3 held = mission.hung.position;
                 mission.SetInventoryOpen(true);
                 yield return WaitGameSeconds(1f);
                 mission.SetMapOpen(true);
                 yield return WaitGameSeconds(1f);
                 mission.CloseGameplayPanel();
-                Assert.Less(Vector3.Distance(mission.hung.position, wounded), .5f, "Wounded Hùng stays where he fell.");
+                Assert.Less(Vector3.Distance(mission.hung.position, held), .5f, "Held at the jetty, Hùng stays where he is tied.");
 
                 // Escort: freed at the jetty, he walks with Nam...
-                Vector3 baseFloor = mission.player.position;
-                // A few steps down the road home — the way Nam leads him from the jetty.
+                Vector3 door = rescue.Layout.shelterDoor.position;
+                // A few steps down the road home — the way Nam leads him from the jetty to the shelter.
                 var road = new UnityEngine.AI.NavMeshPath();
-                Assert.IsTrue(UnityEngine.AI.NavMesh.SamplePosition(wounded, out var from, 2f, UnityEngine.AI.NavMesh.AllAreas));
-                Assert.IsTrue(UnityEngine.AI.NavMesh.SamplePosition(baseFloor, out var to, 2f, UnityEngine.AI.NavMesh.AllAreas));
+                Assert.IsTrue(UnityEngine.AI.NavMesh.SamplePosition(held, out var from, 2f, UnityEngine.AI.NavMesh.AllAreas));
+                Assert.IsTrue(UnityEngine.AI.NavMesh.SamplePosition(door, out var to, 2f, UnityEngine.AI.NavMesh.AllAreas));
                 Assert.IsTrue(UnityEngine.AI.NavMesh.CalculatePath(from.position, to.position, UnityEngine.AI.NavMesh.AllAreas, road));
                 Vector3 beside = road.corners[road.corners.Length - 1];
                 float walked = 0;
@@ -536,25 +642,29 @@ namespace ShadowVale.Map01.Tests
                     if (walked + leg >= 9f) { beside = Vector3.Lerp(road.corners[i - 1], road.corners[i], (9f - walked) / leg); break; }
                     walked += leg;
                 }
-                controller.enabled = false; mission.player.position = beside; controller.enabled = true;
+                rescue.MarkIntroSeen();
+                PlaceNam(mission, beside);
                 quest.RestoreStage(Map01Quest.EscortStage);
                 // He first gets up off his knees (~4 s, see Map01HungVisual), then limps after Nam.
                 yield return WaitGameSeconds(8f);
                 Assert.Less(Vector3.Distance(mission.hung.position, mission.player.position), 6f, "During the escort Hùng follows Nam.");
                 var hungAgent = mission.hung.GetComponent<UnityEngine.AI.NavMeshAgent>();
                 Assert.AreEqual(Map01HungVisual.LimpSpeed, hungAgent.speed, .01f, "He limps home at his own pace, never sprints.");
-                // ...all the way home (the 200 m walk itself is the NavMesh's business).
-                controller.enabled = false; mission.player.position = baseFloor; controller.enabled = true;
-                mission.hung.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(baseFloor + Vector3.right * 2f);
-                yield return null;
-                interaction.Interact(points.Single(p => p.kind == ForestPointKind.Supplies));
+
+                // ...all the way to the shelter (the walk itself is the NavMesh's business).
+                hungAgent.Warp(door + Vector3.right * 2f);
+                PlaceNam(mission, door);
+                yield return WaitGameSeconds(.6f);
+                var homecoming = mission.GetComponent<Map01RescueCinematic>();
+                Assert.IsTrue(homecoming != null && homecoming.IsPlaying, "Reaching the shelter door plays the homecoming.");
+                homecoming.Skip();
                 Assert.AreEqual(Map01Quest.BriefingStage, quest.Stage, "Hùng made it home with Nam.");
 
                 // Home: he stays put however far Nam goes, with the bag or map open or not.
                 yield return WaitGameSeconds(.5f);
                 Vector3 home = mission.hung.position;
                 var crate = points.Single(p => p.id == "tutorial_loot");
-                controller.enabled = false; mission.player.position = crate.transform.position; controller.enabled = true;
+                PlaceNam(mission, crate.transform.position);
                 quest.RestoreStage(Map01Quest.CampsStage);
                 yield return WaitGameSeconds(2f);
                 mission.SetMapOpen(true);
@@ -562,17 +672,16 @@ namespace ShadowVale.Map01.Tests
                 mission.CloseGameplayPanel();
                 Assert.Less(Vector3.Distance(mission.hung.position, home), 1f, "After the escort Hùng stays at the base.");
 
-                // Reports happen in person: from afar nothing, next to him [E] files it and takes the next order.
+                // Reports go to the commander over the radio now, not to Hùng in person.
                 quest.RestoreStage(Map01Quest.ReportCampsStage);
-                quest.TalkToHung();
-                Assert.AreEqual(Map01Quest.ReportCampsStage, quest.Stage, "A report needs Nam standing next to Hùng.");
-                controller.enabled = false; mission.player.position = home + Vector3.right * 1.5f; controller.enabled = true;
+                PlaceNam(mission, home + Vector3.right * 1.5f);
                 yield return null;
-                Assert.IsTrue(quest.HungInRange);
-                Assert.AreEqual("[E] Báo cáo với Hùng", quest.HungPrompt);
-                typeof(Map01PlayerInteraction).GetMethod("HandleInteractKey", Private).Invoke(interaction, null);
-                Assert.AreEqual(Map01Quest.BossStage, quest.Stage, "[E] next to Hùng files the report and takes the next order.");
-                Assert.IsTrue(quest.BossSpawned);
+                Assert.IsFalse(quest.HungInRange, "Hùng no longer takes reports.");
+                quest.TalkToHung();
+                Assert.AreEqual(Map01Quest.ReportCampsStage, quest.Stage, "Talking to Hùng files nothing.");
+                Assert.IsTrue(story.TryInteract(), "[E] calls the commander on the radio.");
+                yield return ConfirmConversation(mission);
+                Assert.AreEqual(Map01Quest.BossStage, quest.Stage, "The radio report takes the next order.");
             }
             finally { InputSystem.RemoveDevice(keyboard); }
             yield return new ExitPlayMode();

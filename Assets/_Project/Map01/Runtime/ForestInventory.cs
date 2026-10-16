@@ -77,7 +77,7 @@ namespace ShadowVale.Map01
         public static string Description(string id)
         {
             switch (id) {
-                case "rifle_standard": return "Súng trường AK, trang bị khởi hành, ở ô 1. Dùng đạn súng trường. Nhấn 1 để cầm súng.";
+                case "rifle_standard": return "Súng trường AK, ở ô 1, đạn 7,62×39. Mỗi phát mòn một ít độ bền; hỏng (0%) thì không bắn được tới khi sửa. Lính địch gục để lại AK đã mòn: sửa, rã lấy linh kiện hoặc nộp ở kho căn cứ.";
                 case "knife": return "Dao, luôn ở ô 3, không vứt được. Cận chiến, hạ gục lặng lẽ từ sau lưng. Nhấn 3 để cầm dao.";
                 case "m1_supply_key": return "Nhặt từ lính gác. Dùng tại cửa kho điểm 1 [E]. Hòm bên trong có khóa mã riêng.";
                 case "m1_supply_cargo": return "Thuốc và vật tư đã thu hồi. Báo cáo qua bộ đàm rồi mang về giao cho chỉ huy tại hầm [E].";
@@ -87,20 +87,20 @@ namespace ShadowVale.Map01
                 case "herb": return "Kết hợp 2 vải và 1 thảo dược để làm băng cứu thương.";
                 case "supplies": return "Vật phẩm nhiệm vụ. Mang hàng tiếp tế đến bến sông.";
                 case "river_documents": return "Vật phẩm nhiệm vụ. Mang tài liệu về điểm rút lui.";
-                case "scrap_metal": return "Vật liệu chế tạo: bộ sửa chữa (3, cùng 1 dầu súng) và đạn (1, cùng thuốc súng).";
-                case "gun_oil": return "Vật liệu bảo dưỡng: cùng 3 kim loại vụn làm bộ sửa chữa.";
-                case "repair_kit": return "Bộ dụng cụ sửa chữa: chế từ 3 kim loại vụn và 1 dầu súng. Thao tác sửa súng chưa có trong bản này.";
-                case "weapon_parts": return "Lò xo, chốt, kim hỏa, trong hòm sắt trại C2. Dùng để sửa súng hỏng — chưa có trong bản này.";
-                case "pistol_k54": return "K-54 (TT-33 bản Trung Quốc), đạn 7,62×25, băng 8 viên. Ở ô 2. Hoạt ảnh cầm đang chờ duyệt, nên chưa rút ra được.";
-                case "rifle_mosin": return "Mosin M91/30, ống ngắm PU 3,5×, đạn 7,62×54R, 5 viên. Kéo vào ô 1 để thay súng trường. Hoạt ảnh cầm đang chờ duyệt, nên chưa rút ra được.";
+                case "scrap_metal": return "Vật liệu chế tạo: bộ sửa chữa (3, cùng 1 dầu súng) và đạn (1, cùng thuốc súng). Rã súng cũng ra kim loại vụn.";
+                case "gun_oil": return "Vật liệu bảo dưỡng: cùng 3 kim loại vụn làm bộ sửa chữa. Sửa súng ở bàn khi đã mất từ một nửa độ bền cũng cần 1 dầu súng.";
+                case "repair_kit": return "Sửa dã chiến ở bất cứ đâu: +35% độ bền cho một khẩu súng (Kỹ thuật cộng thêm), tối đa 80% (Kỹ thuật cao tới 100%). Tab → chuột phải vào súng → Sửa dã chiến. Chế ở bàn: 3 kim loại vụn + 1 dầu súng.";
+                case "weapon_parts": return "Lò xo, chốt, kim hỏa. Sửa súng ở bàn chế tạo lên 100%: 1 linh kiện cho mỗi ¼ độ bền thiếu. Rã súng thu được để có thêm.";
+                case "pistol_k54": return "K-54 (TT-33 bản Trung Quốc), đạn 7,62×25, băng 8 viên. Ở ô 2, có độ bền như mọi khẩu súng. Hoạt ảnh cầm đang chờ duyệt, nên chưa rút ra được.";
+                case "rifle_mosin": return "Mosin M91/30, ống ngắm PU 3,5×, đạn 7,62×54R, 5 viên. Kéo vào ô 1 để thay súng trường. Có độ bền; rã ra cả kính ngắm. Hoạt ảnh cầm đang chờ duyệt, nên chưa rút ra được.";
                 case "ammo_rifle": return "Đạn 7,62×39 cho súng trường. Nhấn R để nạp. Chế ở bàn: 2 thuốc súng + 1 kim loại vụn ra 10 viên.";
-                case "gunpowder": return "Hộp thiếc thuốc súng đen. Chế đạn ở bàn: đạn K-54 (1) và đạn súng trường (2).";
+                case "gunpowder": return "Hộp thiếc thuốc súng đen. Chế đạn ở bàn: đạn K-54 (1), đạn súng trường (2) và đạn Mosin (3) — mỗi hộp chỉ dùng được một lần, nên phải chọn khẩu nào cần đạn hơn.";
                 case "ammo_pistol": return "Đạn 7,62×25 cho K-54. Chế ở bàn: 1 thuốc súng + 1 kim loại vụn ra 8 viên. Chưa bắn được ở bản này.";
-                case "ammo_sniper": return "Đạn 7,62×54R cho Mosin, nạp từng viên (ống ngắm che khe kẹp đạn). Chưa bắn được ở bản này.";
+                case "ammo_sniper": return "Đạn 7,62×54R cho Mosin, nạp từng viên (ống ngắm che khe kẹp đạn). Hiếm: chế ở bàn 3 thuốc súng + 1 kim loại vụn ra 5 viên. Chưa bắn được ở bản này.";
                 case "smoke_module": return "Ống tạo khói, trong hòm sắt trại C2. Kết hợp 1 vải tại bàn chế tạo để làm bom khói.";
                 case "fuse_module": return "Mô-đun kích hoạt, trong hòm sắt trại C2. Chế lựu đạn F1: 1 lõi nổ + 1 mô-đun kích hoạt + 1 kim loại vụn.";
                 case "blast_charge": return "Lõi nổ hiếm, trong hòm sắt trại C3. Chế lựu đạn F1: 1 lõi nổ + 1 mô-đun kích hoạt + 1 kim loại vụn.";
-                case "scope_lens": return "Thấu kính dự phòng cho ống ngắm, trong hòm sắt trại C3. Dùng sửa súng ngắm — chưa có trong bản này.";
+                case "scope_lens": return "Thấu kính dự phòng cho ống ngắm. Rã Mosin sẽ có; hiếm trong hòm trại C3 và đồ của chỉ huy. Chưa dùng vào việc gì ở bản này.";
                 case "smoke_bomb": return "Đồ ném: mây khói bán kính 4 m trong 15 giây, lính không nhìn xuyên qua. Chế từ 1 ống tạo khói + 1 vải. Phím 4 chọn, giữ Q ném.";
                 case "grenade_f1": return "Lựu đạn F1: nổ 3,5 giây sau khi rơi, chết trong 3 m, bị thương tới 7 m, tiếng nổ vang 40 m — cả Nam cũng không tránh được. Phím 4 chọn, giữ Q ném.";
                 default: return id != null && id.StartsWith("ammo_") ? "Đạn cho " + Name(id).Substring(4).ToLowerInvariant() + ". Không dùng trực tiếp từ túi đồ." : "Vật phẩm trong túi đồ.";
@@ -109,15 +109,8 @@ namespace ShadowVale.Map01
         /// <summary>Where a bench material is found, for the bench's "Lấy ở" line when it runs short.</summary>
         public static string Source(string id)
         {
-            switch (id) {
-                case "cloth": return "Thùng vật tư căn cứ A · hòm sắt trại C1, C2";
-                case "herb": return "Thùng vật tư căn cứ A · hòm sắt trại C2";
-                case "scrap_metal": return "Hòm sắt trại C1";
-                case "gun_oil": return "Hòm sắt trại C1";
-                case "smoke_module": return "Hòm sắt trại C2";
-                case "gunpowder": return "Hòm sắt trại C1, C2";
-                default: return "Hòm sắt các trại địch";
-            }
+            // Read off Map01Loot.json, so it never drifts from what the tables give.
+            return Map01Loot.Load().WhereFound(id) ?? "Hòm sắt các trại địch";
         }
         /// <summary>The bench's tab a recipe's output belongs to.</summary>
         public static string BenchGroup(string outputId)
@@ -134,10 +127,11 @@ namespace ShadowVale.Map01
         {
             switch (outputId) {
                 case "medkit_small": return new[] { "Hồi 45 máu", "Phím H" };
-                case "repair_kit": return new[] { "Sửa súng: chưa có" };
+                case "repair_kit": return new[] { "+35% độ bền", "Sửa dã chiến" };
                 case "smoke_bomb": return new[] { "Khói 4 m · 15 giây", "Phím 4, giữ Q" };
                 case "grenade_f1": return new[] { "Chết 3 m · thương 7 m", "Nổ sau 3,5 giây" };
                 case "ammo_pistol": return new[] { "Cho K-54", "Bắn K-54: chưa có" };
+                case "ammo_sniper": return new[] { "Cho Mosin", "Bắn Mosin: chưa có" };
                 case "ammo_rifle": return new[] { "Cho súng trường", "Nạp bằng R" };
                 default: return System.Array.Empty<string>();
             }

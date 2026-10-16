@@ -33,6 +33,9 @@ namespace ShadowVale.Gameplay.Skills
         public int[] shootingThresholds, stealthThresholds, engineeringThresholds;
         public float[] recoilMultipliers, takedownMultipliers, repairBonusFractions;
         public float[] reloadMultipliers;
+        /// <summary>Optional, per Engineering level: how far (0..1 of the maximum) a repair kit can bring a gun in the
+        /// field; a bench repair always goes to full. Absent: 0.8 at every level.</summary>
+        public float[] fieldRepairCaps;
 
         public int[] Thresholds(SkillKind kind) => kind switch
         {
@@ -54,6 +57,13 @@ namespace ShadowVale.Gameplay.Skills
                 for (int i = 0; i < reloadMultipliers.Length; i++)
                     if (float.IsNaN(reloadMultipliers[i]) || float.IsInfinity(reloadMultipliers[i]) || reloadMultipliers[i] <= 0
                         || (i > 0 && reloadMultipliers[i] > reloadMultipliers[i - 1])) return false;
+            }
+            if (fieldRepairCaps != null && fieldRepairCaps.Length > 0)
+            {
+                if (engineeringThresholds == null || fieldRepairCaps.Length != engineeringThresholds.Length) return false;
+                for (int i = 0; i < fieldRepairCaps.Length; i++)
+                    if (float.IsNaN(fieldRepairCaps[i]) || fieldRepairCaps[i] <= 0 || fieldRepairCaps[i] > 1
+                        || (i > 0 && fieldRepairCaps[i] < fieldRepairCaps[i - 1])) return false;
             }
             foreach (SkillKind kind in Enum.GetValues(typeof(SkillKind)))
             {
@@ -123,6 +133,10 @@ namespace ShadowVale.Gameplay.Skills
         public float ReloadMultiplier => ReloadMultiplierAt(Level(SkillKind.Shooting));
         public float TakedownRange(float baseRange) => baseRange * Multiplier(SkillKind.Stealth, Level(SkillKind.Stealth));
         public float RepairBonusAt(int level) => balance.repairBonusFractions[Mathf.Clamp(level, 0, MaxLevel(SkillKind.Engineering))];
+        /// <summary>How far a field repair can bring a gun at Engineering <paramref name="level"/> (0..1 of its maximum).</summary>
+        public float FieldRepairCapAt(int level) => balance.fieldRepairCaps == null || balance.fieldRepairCaps.Length == 0 ? .8f
+            : balance.fieldRepairCaps[Mathf.Clamp(level, 0, balance.fieldRepairCaps.Length - 1)];
+        public float FieldRepairCap => FieldRepairCapAt(Level(SkillKind.Engineering));
         public float RepairGainAt(float baseGain, float maxDurability, int level)
         {
             if (float.IsNaN(baseGain) || float.IsInfinity(baseGain) || baseGain < 0

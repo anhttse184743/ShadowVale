@@ -232,7 +232,12 @@ namespace ShadowVale.Map01
             string text = quest.ObjectiveText;
             float textHeight = hudBody.CalcHeight(new GUIContent(text), 328);
             bool guiding = guide.HasTarget && !mission.Stopped;
-            float height = Mathf.Max(152, 258 + textHeight + (guiding ? 32 : 0) + 14 - 186);
+            // Point 3 (Map01C3Mission): the optional objectives once the order is given, and the camp's state nearby.
+            var c3 = GetComponent<Map01C3Mission>();
+            var optional = c3 != null && quest.Stage == Map01Quest.BossStage ? c3.OptionalObjectives().ToList() : null;
+            string c3Status = c3 != null ? c3.StatusLine() : null;
+            float c3Height = (optional != null ? optional.Count * 22 + 8 : 0) + (c3Status != null ? 28 : 0);
+            float height = Mathf.Max(152, 258 + textHeight + (guiding ? 32 : 0) + c3Height + 14 - 186);
             // See-through: a faint shade and shadowed lettering instead of the plate, so the
             // world stays visible behind the objective.
             HudFill(new Rect(28, 186, 373, height), new Color(.02f, .03f, .02f, .22f));
@@ -244,6 +249,19 @@ namespace ShadowVale.Map01
                 HudDiamond(new Vector2(58, y + 12), 7);
                 ShadowLabel(new Rect(72, y, 312, 26), $"{guide.Label}  ·  {guide.Distance:0} m", hudGuide);
             }
+            float c3y = 258 + textHeight + (guiding ? 32 : 0) + 6;
+            if (optional != null)
+            {
+                var old = GUI.color;
+                foreach (var (what, done) in optional)
+                {
+                    GUI.color = done ? new Color(.72f, .86f, .55f, old.a) : old;
+                    ShadowLabel(new Rect(49, c3y, 328, 22), "• " + what + (done ? " — xong" : ""), hudSmall);
+                    c3y += 22;
+                }
+                GUI.color = old; c3y += 8;
+            }
+            if (c3Status != null) ShadowLabel(new Rect(49, c3y, 328, 26), c3Status, hudGuide);
             objectiveBottom = 186 + height + offset;
             GUI.matrix = previousMatrix;
         }

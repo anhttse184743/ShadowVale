@@ -81,8 +81,9 @@ namespace ShadowVale.Map01
                 for (int i = 0, n = 0; i < Map01Inventory.BagSize; i++) if (inventory.Cell(i) != null && n++ == selectedStack) { bagPick = i; break; }
             }
             if (!mission.InventoryOpen) { dragCell = -1; dragSlot = null; dragging = false; menuOpen = false; askDrop = false; }
-            // Modal first: the drop question takes every click until answered.
-            bool modal = askDrop;
+            if (!mission.InventoryOpen) askSalvage = false;
+            // Modal first: the drop (or salvage) question takes every click until answered.
+            bool modal = askDrop || askSalvage;
 
             DrawEquipColumn(width, ev, modal);
             DrawBagGrid(width, ev, modal);
@@ -93,6 +94,7 @@ namespace ShadowVale.Map01
             GUI.enabled = previousGuiEnabled;
             if (menuOpen) DrawBagMenu(width, ev);
             if (askDrop) DrawDropQuestion(width, ev);
+            if (askSalvage) DrawSalvageQuestion(width, ev);   // Map01Hud.Gunsmith.cs
             if (!modal) HandleDrag(width, ev);
             if (dragging) DrawDragGhost(width, ev);
             // Old field kept in step for the photo tests that pick a stack by index.
@@ -133,7 +135,11 @@ namespace ShadowVale.Map01
             GUI.Label(new Rect(card.x + 58, card.y + 12, 260, 34), title, bagSlotHead);
             var pic = new Rect(card.x + 14, card.y + 52, 150, card.height - 62);
             HudFill(pic, new Color(.06f, .07f, .04f, .7f));
-            if (id != null && !(dragging && dragSlot == slot)) HudIcon(new Rect(pic.x + 4, pic.y + 2, pic.width - 8, pic.height - 4), id);
+            if (id != null && !(dragging && dragSlot == slot))
+            {
+                HudIcon(new Rect(pic.x + 4, pic.y + 2, pic.width - 8, pic.height - 4), id);
+                if (Map01Inventory.HasCondition(id)) GunConditionOverlay(pic, inventory.FractionOf(Map01Inventory.Gun.InSlot(slot)));
+            }
             var text = new Rect(card.x + 178, card.y + 52, card.width - 190, card.height - 58);
             if (id != null)
             {
@@ -227,7 +233,9 @@ namespace ShadowVale.Map01
                     HudIcon(new Rect(r.x + 6, r.y + 6, r.width - 12, r.height - 12), cell.id);
                     int limit = inventory.StackLimit(cell.id);
                     bool full = limit > 1 && cell.count >= limit;
-                    HudNumber(new Rect(r.xMax - (full ? 86 : 54), r.yMax - 27, full ? 82 : 50, 23), "×" + cell.count + (full ? " ĐẦY" : ""));
+                    // A gun shows its condition where a stack shows its count.
+                    if (Map01Inventory.HasCondition(cell.id)) GunConditionOverlay(r, inventory.FractionOf(Map01Inventory.Gun.InCell(i)));
+                    else HudNumber(new Rect(r.xMax - (full ? 86 : 54), r.yMax - 27, full ? 82 : 50, 23), "×" + cell.count + (full ? " ĐẦY" : ""));
                     if (Map01Inventory.IsMissionItem(cell.id)) GUI.Label(new Rect(r.x + 5, r.y + 3, r.width, 16), "NHIỆM VỤ", bagTag);
                     else if (cell.id == inventory.Throwable) GUI.Label(new Rect(r.x + 5, r.y + 3, r.width, 16), "Ô 4", bagTag);
                 }
@@ -265,7 +273,15 @@ namespace ShadowVale.Map01
             GUI.Label(new Rect(d.x + 150, d.y + 42, d.width - 165, 44), ForestInventory.Description(id), bagLine);
             var cell = bagPick >= 0 ? inventory.Cell(bagPick) : null;
             string stack = cell != null ? $"Chồng {cell.count}/{inventory.StackLimit(id)} · tổng {inventory.Count(id)}" : "Trong ô trang bị";
-            GUI.Label(new Rect(d.x + 150, d.y + 86, 300, 20), stack, bagHint);
+            Map01Inventory.Gun? gun = !Map01Inventory.HasCondition(id) ? (Map01Inventory.Gun?)null
+                : cell != null ? Map01Inventory.Gun.InCell(bagPick) : slotPick != null ? Map01Inventory.Gun.InSlot(slotPick.Value) : (Map01Inventory.Gun?)null;
+            if (gun != null)
+            {
+                float f = inventory.FractionOf(gun.Value), wear = inventory.WearPerShot(id), left = f * inventory.MaxCondition(id);
+                stack = $"Độ bền {(f <= 0 ? "HỎNG" : Percent(f))}" + (wear > 0 && f > 0 ? $" · còn khoảng {Mathf.CeilToInt(left / wear - .001f)} phát" : "") + (cell != null ? "" : " · trong ô trang bị");
+                GunConditionOverlay(new Rect(d.x + 14, d.y + 14, 122, 122), f);
+            }
+            GUI.Label(new Rect(d.x + 150, d.y + 86, d.width - 165, 20), stack, bagHint);
             float bx = d.x + 150;
             if (cell != null && Map01Inventory.SlotOf(id) is Slot s && s != Slot.Knife)
                 bx = DetailButton(new Rect(bx, d.yMax - 44, 150, 34), "TRANG BỊ", () => { inventory.EquipFromCell(bagPick); bagPick = -1; slotPick = s; }, ev, modal);
@@ -275,6 +291,12 @@ namespace ShadowVale.Map01
                 bx = DetailButton(new Rect(bx, d.yMax - 44, 130, 34), "TÁCH ĐÔI", () => inventory.Split(bagPick), ev, modal);
             if (slotPick != null && slotPick != Slot.Knife && id != null)
                 bx = DetailButton(new Rect(bx, d.yMax - 44, 150, 34), "CẤT VÀO TÚI", () => { inventory.Unequip(slotPick.Value); slotPick = null; }, ev, modal);
+            if (gun != null)
+            {
+                var g = gun.Value;
+                bx = DetailButton(new Rect(bx, d.yMax - 44, 90, 34), "SỬA", () => inventory.FieldRepair(g), ev, modal);
+                bx = DetailButton(new Rect(bx, d.yMax - 44, 70, 34), "RÃ", () => AskSalvage(g), ev, modal);
+            }
             if (CanDrop(id) && !(slotPick == Slot.Knife))
                 DetailButton(new Rect(bx, d.yMax - 44, 110, 34), "VỨT", () => AskDrop(bagPick, bagPick >= 0 ? null : slotPick), ev, modal, true);
         }
@@ -381,6 +403,12 @@ namespace ShadowVale.Map01
             if (System.Array.IndexOf(Map01Inventory.Throwables, id) >= 0) items.Add(("Chọn làm đồ ném", () => inventory.SelectThrowable(id)));
             if (menuCell >= 0 && inventory.Cell(menuCell).count >= 2) items.Add(("Tách đôi chồng", () => inventory.Split(menuCell)));
             if (menuSlot != null && menuSlot != Slot.Knife) items.Add(("Cất vào túi", () => inventory.Unequip(menuSlot.Value)));
+            if (Map01Inventory.HasCondition(id))
+            {
+                var gun = menuCell >= 0 ? Map01Inventory.Gun.InCell(menuCell) : Map01Inventory.Gun.InSlot(menuSlot.Value);
+                items.Add(("Sửa dã chiến (bộ sửa chữa)", () => inventory.FieldRepair(gun)));
+                items.Add(("Rã lấy linh kiện", () => AskSalvage(gun)));
+            }
             if (CanDrop(id)) items.Add(("Vứt xuống đất", () => AskDrop(menuCell, menuCell >= 0 ? null : menuSlot)));
             if (items.Count == 0) items.Add(("Không có thao tác", () => { }));
             var box = new Rect(menuAt.x + 6, menuAt.y + 6, 240, 18 + items.Count * 38);

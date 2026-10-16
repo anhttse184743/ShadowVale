@@ -15,7 +15,7 @@ namespace ShadowVale.Map01
     /// is not saved; after a load it is shut again (and unlocked, if its camp is still clear).
     /// </para>
     /// The chest model and every item's world model come from <see cref="Map01ItemCatalog"/>; Map 1.unity is
-    /// not touched. The contents below are starting values, to be tuned in playtests.
+    /// not touched. What each chest holds is in Resources/Loot/Map01Loot.json (Map01Logistics rolls it).
     /// </summary>
     public sealed class Map01CampChests : MonoBehaviour
     {
@@ -28,13 +28,15 @@ namespace ShadowVale.Map01
         /// <summary>Height of the packing tray the contents lie on, above the chest's base (build_map01_items.py TRAY_TOP).</summary>
         public const float TrayTop = .36f;
 
-        /// <summary>What each camp's chest holds. The far camp has the best: C1 the K-54, C3 the Mosin.</summary>
-        public static readonly Dictionary<int, (string item, int count)[]> Contents = new Dictionary<int, (string, int)[]>
-        {
-            [1] = new[] { ("pistol_k54", 1), ("ammo_pistol", 16), ("medkit_small", 2), ("cloth", 2), ("scrap_metal", 3), ("gun_oil", 1), ("gunpowder", 2) },
-            [2] = new[] { ("ammo_rifle", 60), ("smoke_module", 2), ("cloth", 2), ("herb", 2), ("weapon_parts", 2), ("fuse_module", 1), ("gunpowder", 3) },
-            [3] = new[] { ("rifle_mosin", 1), ("ammo_sniper", 10), ("scope_lens", 1), ("blast_charge", 1), ("repair_kit", 1), ("medkit_small", 1) },
-        };
+        /// <summary>The camps with a chest. What each holds comes from its container tag's loot table (Map01Loot.json:
+        /// camp_chest_c1..c3): the signature things every time (C1 the K-54, C3 the Mosin, C2 rounds and parts) and a few
+        /// rolls of the camp's table, rolled from the run's seed (Map01Logistics.ContainerLoot).</summary>
+        public static readonly int[] Camps = { 1, 2, 3 };
+        public static string Tag(int camp) => "camp_chest_c" + camp;
+        /// <summary>What camp <paramref name="camp"/>'s chest always holds (its tier-5 entries), whatever the rolls.</summary>
+        public static (string item, int count)[] Guaranteed(int camp) =>
+            (Map01Loot.Load().ContainerTable(Tag(camp))?.entries ?? System.Array.Empty<Map01Loot.Entry>())
+            .Where(e => e.tier == 5).Select(e => (e.item, e.min)).ToArray();
 
         /// <summary>The long slot along the back of the tray (a rifle), then five along the front; chest-local, +Z is the front.</summary>
         private static readonly Vector3 LongSlot = new Vector3(0f, TrayTop, -.11f);
@@ -105,7 +107,7 @@ namespace ShadowVale.Map01
         private void Spawn()
         {
             var root = new GameObject("Camp chests").transform;
-            foreach (var number in Contents.Keys.OrderBy(n => n))
+            foreach (var number in Camps)
             {
                 if (!PlaceFor(number, out var position, out var rotation)) continue;
                 var chest = Instantiate(catalog.chest, position, rotation, root);
@@ -126,7 +128,7 @@ namespace ShadowVale.Map01
                 point.kind = ForestPointKind.Chest;
                 point.radius = 2f;
                 point.restockSeconds = 0f;
-                point.items = Contents[number].Select(c => new ForestIngredient { item_id = c.item, count = c.count }).ToArray();
+                point.items = Map01Logistics.For(mission).ContainerLoot(Tag(number));
                 site.point = point;
                 sites.Add(site);
                 byPoint[point] = site;
@@ -178,7 +180,14 @@ namespace ShadowVale.Map01
                 .OrderBy(g => g.name, System.StringComparer.Ordinal).ToArray();
         }
 
-        private Map01EnemyController[] Guards(Site site) => site.guards ??= GuardsOf(site.camp);
+        /// <summary>Who keeps a chest locked: its camp's guards; C3's (the command post, Map01C3Mission) is the commander's.</summary>
+        private Map01EnemyController[] Guards(Site site)
+        {
+            if (site.camp == 3 && GetComponent<Map01C3Mission>() != null && GetComponent<Map01Quest>()?.CommanderEnemy is Map01EnemyController boss)
+                return new[] { boss };
+            return site.guards ??= GuardsOf(site.camp);
+        }
+        private bool CommanderKeeps(Site site) => site.camp == 3 && GetComponent<Map01C3Mission>() != null;
         public int GuardsLeft(ForestPoint point) => Guards(byPoint[point]).Count(g => g != null && g.Alive);
 
         public State StateOf(ForestPoint point)
@@ -194,7 +203,7 @@ namespace ShadowVale.Map01
         {
             switch (StateOf(point))
             {
-                case State.Locked: return $"Hòm sắt khóa — còn {GuardsLeft(point)} lính trại C{CampOf(point)}";
+                case State.Locked: return CommanderKeeps(byPoint[point]) ? "Hòm sắt khóa — chìa ở chỉ huy địch" : $"Hòm sắt khóa — còn {GuardsLeft(point)} lính trại C{CampOf(point)}";
                 case State.Ready: return "Mở hòm sắt";
                 case State.Open: return "Lấy hết đồ trong hòm";
                 default: return "Hòm trống";
@@ -202,8 +211,15 @@ namespace ShadowVale.Map01
         }
 
         /// <summary>The chest's contents, as a list: "1 súng lục K-54, 16 đạn K-54".</summary>
-        public static string Listing(ForestPoint point) =>
-            string.Join(", ", point.items.Select(i => i.count + " " + ForestInventory.Name(i.item_id).ToLowerInvariant()));
+        public string Listing(ForestPoint point) =>
+            string.Join(", ", point.items.Select(i => i.count + " " + ForestInventory.Name(i.item_id).ToLowerInvariant() + Map01Drops.ConditionTag(mission, i.item_id, i.condition)));
+
+        /// <summary>The run's seed was restored from a save: chests not yet emptied hold what this run rolls.</summary>
+        public void Reroll()
+        {
+            foreach (var site in sites)
+                if (site.point != null && !site.point.used) { site.point.items = Map01Logistics.For(mission).ContainerLoot(Tag(site.camp)); if (site.open) ShowContents(site); }
+        }
 
         /// <summary>[E] at a chest. Locked: says why. Ready: opens it. Open: takes everything. Returns whether anything happened.</summary>
         public bool Use(ForestPoint point)
@@ -212,7 +228,7 @@ namespace ShadowVale.Map01
             switch (StateOf(point))
             {
                 case State.Locked:
-                    mission.Say($"Hòm sắt khóa chặt. Hạ hết lính trại C{site.camp} (còn {GuardsLeft(point)}) rồi quay lại mở.", 4);
+                    mission.Say(CommanderKeeps(site) ? "Hòm sắt khóa chặt. Chìa nằm ở chỉ huy địch trong nhà chỉ huy." : $"Hòm sắt khóa chặt. Hạ hết lính trại C{site.camp} (còn {GuardsLeft(point)}) rồi quay lại mở.", 4);
                     return false;
                 case State.Ready:
                     site.open = true; site.openedAt = Time.time;
@@ -223,7 +239,7 @@ namespace ShadowVale.Map01
                     point.label = Prompt(point);
                     return true;
                 case State.Open:
-                    foreach (var item in point.items) inventory.Receive(item.item_id, item.count);
+                    foreach (var item in point.items) inventory.Receive(item.item_id, item.count, item.condition);
                     point.MarkLooted();
                     Show(site);
                     mission.Say($"Đã lấy: {Listing(point)}. Tab mở túi đồ.", 6);
@@ -255,7 +271,9 @@ namespace ShadowVale.Map01
                 if (longGun) shown.transform.localPosition = LongSlot;
                 else
                 {
-                    shown.transform.localPosition = Slots[Mathf.Min(slot++, Slots.Length - 1)];
+                    // More than the tray has slots (a lucky roll): the rest lie on top of the first ones.
+                    shown.transform.localPosition = Slots[slot % Slots.Length] + Vector3.up * (.06f * (slot / Slots.Length));
+                    slot++;
                     shown.transform.localRotation = Quaternion.Euler(0, (float)(random.NextDouble() * 40 - 20), 0);
                 }
             }
@@ -290,7 +308,7 @@ namespace ShadowVale.Map01
                 bool clear = GuardsLeft(site.point) == 0;
                 // The last guard of a camp falls: tell the player once. Not for a camp found clear on load.
                 if (site.known && clear && !site.wasClear && !site.point.used && !Map01SaveSystem.IsRestoring && Time.timeSinceLevelLoad > 3f)
-                    mission.Say($"Trại C{site.camp} đã sạch lính. Hòm sắt cạnh bạt tiếp tế đã mở được — đến lấy đồ.", 7);
+                    mission.Say(CommanderKeeps(site) ? "Đã có chìa của chỉ huy. Hòm sắt C3 mở được — đến lấy đồ." : $"Trại C{site.camp} đã sạch lính. Hòm sắt cạnh bạt tiếp tế đã mở được — đến lấy đồ.", 7);
                 site.wasClear = clear; site.known = true;
                 site.point.label = Prompt(site.point);
             }

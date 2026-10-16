@@ -89,9 +89,11 @@ namespace ShadowVale.Map01.Tests
             var keyboard = InputSystem.AddDevice<Keyboard>();
             try
             {
+                Assert.AreEqual("pistol_k54", inventory.SlotItem(Slot.Pistol), "Nam starts with his K-54 in slot 2.");
+                Assert.AreEqual(mission.Settings.startingPistolRounds, inventory.Count("ammo_pistol"), "…and two magazines for it.");
                 inventory.Receive("rifle_mosin", 1);
                 inventory.Receive("pistol_k54", 1);
-                Assert.AreEqual("pistol_k54", inventory.SlotItem(Slot.Pistol), "A pistol found with slot 2 empty goes into it.");
+                Assert.GreaterOrEqual(CellOf(inventory, "pistol_k54"), 0, "A second pistol found goes into the bag.");
                 int mosin = CellOf(inventory, "rifle_mosin");
                 Assert.GreaterOrEqual(mosin, 0, "A second long gun goes into the bag.");
                 Assert.IsTrue(inventory.IsEquipped("rifle_standard"));

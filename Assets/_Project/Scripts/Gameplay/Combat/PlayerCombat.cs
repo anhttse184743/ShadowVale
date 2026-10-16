@@ -70,6 +70,12 @@ namespace ShadowVale.Gameplay.Combat
         public System.Func<bool> TryConsumeRound { get; set; }
 
         /// <summary>
+        /// Asked before a gun fires: false when the gun in hand cannot (worn to nothing). Settled before the
+        /// magazine, so a broken gun keeps its rounds and mimes no shot. Left unset, every gun fires.
+        /// </summary>
+        public System.Func<bool> GunUsable { get; set; }
+
+        /// <summary>
         /// Asked for rounds when the magazine reloads; returns how many the reserve could give.
         /// Left unset, reloads draw on an unlimited supply, which is what a greybox scene wants.
         /// </summary>
@@ -734,6 +740,7 @@ namespace ShadowVale.Gameplay.Combat
             bool firingGun = _equipped != null && _equipped.IsGun;
             if (firingGun)
             {
+                if (GunUsable != null && !GunUsable()) return;
                 if (_magazine != null)
                 {
                     if (!_magazine.TryConsume())

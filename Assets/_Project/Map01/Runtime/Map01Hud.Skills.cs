@@ -102,8 +102,12 @@ namespace ShadowVale.Map01
             }
             else
             {
-                DrawSkillMetric(new Rect(pop.x + 18, pop.y + 84, 580, 75), "Độ bền cộng thêm ngoài lượng sửa nền", before * 100, after * 100, "% tối đa");
-                GUI.Label(new Rect(pop.x + 18, pop.y + 165, pop.width - 36, 40), "Chưa có nguồn luyện: chờ hệ thống sửa chữa.\nKhông tính các lần sửa chưa đạt đầy độ bền.", hudSmall);
+                DrawSkillMetric(new Rect(pop.x + 18, pop.y + 84, 290, 75), "Bộ sửa chữa cộng thêm", before * 100, after * 100, "%");
+                DrawSkillMetric(new Rect(pop.x + 326, pop.y + 84, 280, 75), "Sửa dã chiến tối đa", skills.FieldRepairCapAt(level - 1) * 100, skills.FieldRepairCapAt(level) * 100, "%");
+                var repair = Map01Loot.Load().repair;
+                string extra = level == repair.salvageBonusLevel ? " Mở: rã súng thêm 1 kim loại vụn."
+                    : level == repair.benchDiscountLevel ? " Mở: sửa ở bàn bớt 1 linh kiện." : "";
+                GUI.Label(new Rect(pop.x + 18, pop.y + 165, pop.width - 36, 44), "Luyện bằng cách sửa súng tới đầy 100% (ở bàn chế tạo, hoặc bộ sửa chữa khi đủ trần)." + extra, hudSmall);
             }
             GUI.Label(new Rect(pop.x + 18, pop.y + popHeight - 69, pop.width - 36, 55), SkillCondition(kind, level), hudSmall);
         }

@@ -132,6 +132,7 @@ namespace ShadowVale.Map01
             var targets=mission.Enemies.Where(e=>e!=null&&e.Alive).OrderBy(e=>(e.transform.position-mission.player.position).sqrMagnitude).ToArray();
             var bush=GetComponent<Map01BushTakedown>();
             if(bush!=null&&targets.Any(bush.TryBegin))return true;
+            if(GetComponent<Map01C3Mission>()?.TryAmbush()==true)return true; // the C3 commander: wounded, never killed outright
             return targets.Any(e=>e.TrySilentTakedown());
         }
         public bool GetTakedownHint(out Map01EnemyController target,out bool ready)

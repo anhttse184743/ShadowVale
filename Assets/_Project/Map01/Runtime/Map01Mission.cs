@@ -118,7 +118,9 @@ namespace ShadowVale.Map01
             foreach (var point in FindObjectsByType<ForestPoint>(FindObjectsSortMode.None)) RegisterPoint(point);
             // Laid out now, not baked into Map 1.unity: a save restored a moment later finds them among the points.
             Map01StoneSites.Attach(this);
+            Map01Logistics.For(this);     // The run's loot seed and the base store, before anything rolls loot.
             Map01CampChests.Attach(this); // An iron chest in each enemy camp (Map01ItemCatalog).
+            if (GetComponent<Map01C3Mission>() == null) gameObject.AddComponent<Map01C3Mission>(); // Point 3's command post (sets up in Start).
             hp = Settings.playerHP; stamina = Settings.stamina;
             Skills = player.GetComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
             if (Skills == null) Skills = player.gameObject.AddComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
@@ -175,6 +177,19 @@ namespace ShadowVale.Map01
                 // the attack itself, so a reload does not announce the player thirty times over.
                 ModernCombat.Attacked -= OnPlayerAttacked;
                 ModernCombat.Attacked += OnPlayerAttacked;
+                // A gun worn to 0% does not fire (Map01Inventory.Condition): the trigger says why, once a second or so.
+                ModernCombat.GunUsable = () =>
+                {
+                    if (!inventory.HeldGunBroken()) return true;
+                    if (Time.time >= brokenGunSaidAt + 1.5f)
+                    {
+                        brokenGunSaidAt = Time.time;
+                        Say(ForestInventory.Name(inventory.SlotItem(inventory.HeldGun().Value)) + " đã hỏng (0%) — không bắn được. Sửa bằng bộ sửa chữa (Tab, túi đồ) hoặc ở bàn chế tạo căn cứ A; đổi sang dao: phím 3.", 3);
+                    }
+                    return false;
+                };
+                inventory.GunBroke -= OnGunBroke;
+                inventory.GunBroke += OnGunBroke;
             }
             if (gameCamera != null && gameCamera.TryGetComponent<ThirdPersonCamera>(out var cameraRig))
                 {
@@ -269,12 +284,26 @@ namespace ShadowVale.Map01
         }
         private void OnPlayerAttacked(WeaponKind kind, Vector3 position)
         {
-            if (kind == WeaponKind.Rifle) EmitNoise(position, Weapon.noise_radius, Map01NoiseKind.Gunshot);
+            if (kind != WeaponKind.Rifle) return;
+            EmitNoise(position, Weapon.noise_radius, Map01NoiseKind.Gunshot);
+            // Every shot wears the gun in hand by its content's durability_per_shot.
+            var held = inventory.HeldGun();
+            if (held != null) inventory.Wear(held.Value, inventory.WearPerShot(inventory.SlotItem(held.Value)));
+        }
+
+        private float brokenGunSaidAt = -10f;
+        private void OnGunBroke(Map01Inventory.Gun gun, string id)
+        {
+            brokenGunSaidAt = Time.time;
+            Say(ForestInventory.Name(id) + " vừa hỏng hẳn (0%) — kẹt cò. Sửa bằng bộ sửa chữa hoặc về bàn chế tạo; đổi sang dao: phím 3.", 5);
         }
 
         /// <summary>A noise every guard within <paramref name="radius"/> goes to check; returns how many heard it.</summary>
+        /// <summary>Every noise made, for those who listen beyond the guards in <see cref="Enemies"/> (the C3 sleepers).</summary>
+        public event Action<Vector3, float, Map01NoiseKind> NoiseEmitted;
         public int EmitNoise(Vector3 position, float radius, Map01NoiseKind kind = Map01NoiseKind.Other)
         {
+            NoiseEmitted?.Invoke(position, radius, kind);
             int heard = 0;
             foreach (var enemy in Enemies) if (enemy != null && enemy.Hear(position, radius, kind)) heard++;
             return heard;

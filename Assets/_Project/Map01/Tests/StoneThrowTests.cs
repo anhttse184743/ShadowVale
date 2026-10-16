@@ -19,7 +19,7 @@ namespace ShadowVale.Map01.Tests
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
 
         // Lambdas stay in static helpers: one capturing an iterator local breaks after the domain
-        // reload EnterPlayMode triggers (see ForestFlowTests.NearestOutpostGuard).
+        // reload EnterPlayMode triggers (see the note at the top of ForestFlowTests).
 
         private static Map01EnemyController OnlyGuard(Map01Mission mission, string name)
         {

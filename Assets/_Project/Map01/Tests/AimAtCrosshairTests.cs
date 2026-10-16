@@ -22,7 +22,7 @@ namespace ShadowVale.Map01.Tests
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
 
         // Set once Play has started, so they survive the domain reload EnterPlayMode triggers. Lambdas
-        // stay in static helpers for the same reason (see ForestFlowTests.NearestOutpostGuard).
+        // stay in static helpers for the same reason (see the note at the top of ForestFlowTests).
         private static Map01Mission mission;
         private static Mouse mouse;
         private static float ahead;

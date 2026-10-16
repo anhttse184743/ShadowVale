@@ -147,6 +147,7 @@ namespace ShadowVale.Map01
                 _lootCreated = false;
                 var loot = GetComponent<ForestPoint>();
                 if (loot != null) { _mission.UnregisterPoint(loot); Destroy(loot); } // _lootCreated implies a bound mission.
+                Map01Drops.For(_mission).Unlay(GunPoint(0), GunPoint(1));
             }
             _lastHealth = _health.Current;
             if (_agent.isOnNavMesh) _agent.Warp(_postPosition); else transform.position = _postPosition;
@@ -265,7 +266,7 @@ namespace ShadowVale.Map01
             _returning = saved.returning; _returnPoint = saved.returnPoint; _returnRotation = saved.returnRotation;
             Go(saved.destination);
             if (_agent.isOnNavMesh) _agent.isStopped = saved.stopped || !Alive;
-            if (!Alive){CreateLoot();if(saved.silent&&saved.silentKind==1)HoldBushCorpse();}
+            if (!Alive){CreateLoot();FillLoot();if(saved.silent&&saved.silentKind==1)HoldBushCorpse();}
         }
         public void ReceiveExtractionHit(float amount, Vector3 point)
         {
@@ -284,14 +285,38 @@ namespace ShadowVale.Map01
             _lootCreated = true;
             if (suppressOperationLoot) return;
             var loot = gameObject.AddComponent<ForestPoint>();
-            loot.id = "loot_" + LegacyId; loot.label = "Túi lính tuần tra"; loot.kind = ForestPointKind.Loot;
-            loot.items = new[] {
-                new ForestIngredient { item_id = "ammo_rifle", count = _mission.Settings.guardDropAmmo },
-                new ForestIngredient { item_id = "medkit_small", count = _mission.Settings.guardDropMedkits },
-                new ForestIngredient { item_id = "m1_supply_key", count = IsSupplyKeyKeeper ? 1 : 0 }
-            };
-            if(IsSupplyKeyKeeper)loot.label="Lính gác kho — chìa khóa kho tiếp tế";
+            loot.id = "loot_" + LegacyId; loot.kind = ForestPointKind.Loot;
             _mission.RegisterPoint(loot);
+            FillLoot();
+        }
+
+        /// <summary>Gun piles of this guard: his rifle, and the commander's K-54.</summary>
+        private string GunPoint(int index) => Map01Logistics.GunPointPrefix + LegacyId + (index == 0 ? "" : "_sidearm");
+
+        /// <summary>
+        /// His pack, rolled from his kind's loot table (Map01Logistics.GuardPack), and his guns, worn, laid on the ground
+        /// beside him; the rifle in his hands goes with them. Called again after a load, which may bring back the rolls
+        /// of another run.
+        /// </summary>
+        public void FillLoot()
+        {
+            var loot = _lootCreated && !Alive && _mission != null && !suppressOperationLoot ? GetComponent<ForestPoint>() : null;
+            if (loot == null) return;
+            var logistics = Map01Logistics.For(_mission);
+            var pack = new System.Collections.Generic.List<ForestIngredient>(logistics.GuardPack(this, loot.id));
+            if (IsSupplyKeyKeeper) pack.Add(new ForestIngredient { item_id = Map01Story.KeyItem, count = 1 });
+            loot.items = pack.ToArray();
+            loot.label = IsSupplyKeyKeeper ? "Lính gác kho — chìa khóa kho tiếp tế" : logistics.PackName(this);
+            int index = 0;
+            foreach (var gun in logistics.GuardGuns(this, loot.id))
+            {
+                // The rifle drops at his right side, the pistol at his left, lying across his line.
+                float side = index == 0 ? 1f : -1f;
+                var at = transform.position + transform.right * (.75f * side) + transform.forward * .2f;
+                Map01Drops.For(_mission).Lay(GunPoint(index), gun, at, transform.eulerAngles.y + 90f + 25f * index);
+                index++;
+            }
+            if (index > 0) ShowRifle(false);
         }
 
         public void BeginOperationCombat(Vector3 lastSeen,float readySeconds=1.5f)
@@ -304,6 +329,39 @@ namespace ShadowVale.Map01
         }
 
         public void Configure(Vector3[] points) => patrolPoints = points ?? System.Array.Empty<Vector3>();
+
+        // Per point of the beat (Map01C3Mission): how long he stays there and which way he faces meanwhile (NaN: as he came).
+        private float[] _patrolStops, _patrolYaws;
+        private float _stopYaw = float.NaN;
+        /// <summary>
+        /// A new post and beat for this guard, set by a mission's layout (Map 1's C3 command post). A stationary guard
+        /// (a sentry on the watchtower's platform, off the NavMesh) has his agent switched off and only turns and shoots.
+        /// <paramref name="stops"/> and <paramref name="yaws"/> follow <paramref name="points"/>: seconds he waits at each,
+        /// and the yaw he holds there.
+        /// </summary>
+        public void Repost(Vector3 position, float yaw, Vector3[] points = null, float[] stops = null, float[] yaws = null,
+            float vision = 0f, bool stationary = false)
+        {
+            var rotation = Quaternion.Euler(0, yaw, 0);
+            _postPosition = position; _postRotation = rotation; _returnPoint = position; _returnRotation = rotation;
+            patrolPoints = points ?? System.Array.Empty<Vector3>(); _patrolStops = stops; _patrolYaws = yaws; _patrolIndex = 0;
+            if (vision > 0) visionRange = vision;
+            if (stationary && _agent != null) _agent.enabled = false;
+            if (_agent != null && _agent.enabled && _agent.isOnNavMesh) _agent.Warp(position); else transform.position = position;
+            transform.rotation = rotation;
+            if (!stationary && patrolPoints.Length > 0) Go(patrolPoints[0]);
+        }
+        /// <summary>Gives up the fight and walks back to his post (Nam is too far: the camp does not chase deep into the forest).</summary>
+        public void StandDown()
+        {
+            if (!Alive) return;
+            _engagedUntil = 0; _alertUntil = 0; _searchUntil = 0; _hearReactionAt = 0; _stoneLure = false;
+            _suspicion = Mathf.Min(_suspicion, .5f);
+            _returning = true; _returnPoint = _postPosition; _returnRotation = _postRotation;
+            SetPace(1f);
+        }
+        /// <summary>Starts the fight at once from wherever he is (the camp's alarm, a commander's call).</summary>
+        public void Alert(Vector3 lastSeen) => BeginOperationCombat(lastSeen, .8f);
 
         public void ConfigureRescuePost(Transform post, Vector3[] points, bool overseer, Map01RescueLayout layout)
         {
@@ -696,13 +754,24 @@ namespace ShadowVale.Map01
 
         private void Patrol()
         {
-            if (Time.time < _pauseUntil) { if(_agent.isOnNavMesh)_agent.isStopped=true;return; }
+            if (Time.time < _pauseUntil)
+            {
+                if(_agent.isOnNavMesh)_agent.isStopped=true;
+                if(!float.IsNaN(_stopYaw))transform.rotation=Quaternion.RotateTowards(transform.rotation,Quaternion.Euler(0,_stopYaw,0),150*Time.deltaTime);
+                return;
+            }
             if (patrolPoints.Length == 0 || !_agent.isOnNavMesh) return;
             if (!_agent.pathPending && _agent.remainingDistance <= 0.7f)
             {
+                int reached = _patrolIndex;
                 _patrolIndex = (_patrolIndex + 1) % patrolPoints.Length;
                 Go(patrolPoints[_patrolIndex]);
                 if (_rescuePost && _patrolPause > 0) { _pauseUntil=Time.time+_patrolPause;_agent.isStopped=true; }
+                else if (_patrolStops != null && reached < _patrolStops.Length && _patrolStops[reached] > 0)
+                {
+                    _pauseUntil=Time.time+_patrolStops[reached];_agent.isStopped=true;
+                    _stopYaw=_patrolYaws!=null&&reached<_patrolYaws.Length?_patrolYaws[reached]:float.NaN;
+                }
             }
         }
 

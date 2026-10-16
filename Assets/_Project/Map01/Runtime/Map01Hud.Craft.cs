@@ -96,7 +96,8 @@ namespace ShadowVale.Map01
             float ox = (width - 1600) / 2, oy = (height - 900) / 2;
             Rect R(float x, float y, float w, float h) => new Rect(ox + x, oy + y, w, h);
 
-            var shown = recipes.Where(r => benchGroup == "all" || ForestInventory.BenchGroup(r.output_item_id) == benchGroup).ToList();
+            bool special = benchGroup == GunsTab || benchGroup == StoreTab;   // Map01Hud.Gunsmith.cs
+            var shown = special ? recipes : recipes.Where(r => benchGroup == "all" || ForestInventory.BenchGroup(r.output_item_id) == benchGroup).ToList();
             if (shown.Count == 0) { benchGroup = "all"; shown = recipes; }
             if (benchRecipe == null || shown.All(r => r.id != benchRecipe)) benchRecipe = shown[0].id;
             var recipe = recipes.First(r => r.id == benchRecipe);
@@ -127,35 +128,50 @@ namespace ShadowVale.Map01
                 }
                 tx += w + 6;
             }
+            // The guns and the base store, right of the recipe groups.
+            float sx = 1504;
+            foreach (var (id, label) in new[] { (StoreTab, "KHO CĂN CỨ"), (GunsTab, "SỬA SÚNG") })
+            {
+                float w = benchTab.CalcSize(new GUIContent(label)).x + 30;
+                sx -= w;
+                if (BenchButton(R(sx, 150, w, 32), label, benchTab, true, benchGroup == id)) { benchGroup = id; Disarm(); }
+                sx -= 6;
+            }
+            if (benchGroup == GunsTab) { DrawGunsmith(ox, oy, mouse); return; }
+            if (benchGroup == StoreTab) { DrawStore(ox, oy); return; }
 
-            // Recipes.
+            // Recipes. Seven or more no longer fit at full height above the panel's foot: the rows close up.
+            float step = Mathf.Min(112f, 650f / shown.Count), rowHeight = step - 8f, tileSize = Mathf.Min(78f, rowHeight - 16f);
+            bool compact = rowHeight < 104f;
+            float nameY = compact ? 6 : 11, statusY = compact ? 31 : 38, materialsY = compact ? 56 : 64, barY = compact ? rowHeight - 6 : 92;
             for (int k = 0; k < shown.Count; k++)
             {
                 var r = shown[k];
-                var row = R(96, 196 + k * 112, 372, 104);
+                var row = R(96, 196 + k * step, 372, rowHeight);
                 bool selected = r.id == benchRecipe;
                 HudPanel(row, selected);
-                BenchTileIcon(new Rect(row.x + 10, row.y + 13, 78, 78), r.output_item_id);
-                if (r.output_count > 1) GUI.Label(new Rect(row.x + 12, row.y + 66, 72, 22), "×" + r.output_count, benchCount);
-                GUI.Label(new Rect(row.x + 98, row.y + 11, 268, 26), ForestInventory.Name(r.output_item_id).ToUpperInvariant(), benchRowName);
+                var tile = new Rect(row.x + 10, row.y + (rowHeight - tileSize) / 2, tileSize, tileSize);
+                BenchTileIcon(tile, r.output_item_id);
+                if (r.output_count > 1) GUI.Label(new Rect(tile.x + 2, tile.yMax - 25, tileSize - 6, 22), "×" + r.output_count, benchCount);
+                GUI.Label(new Rect(row.x + 98, row.y + nameY, 268, 26), ForestInventory.Name(r.output_item_id).ToUpperInvariant(), benchRowName);
                 int n = inventory.CanMake(r);
                 int missing = r.inputs.Count(i => inventory.Count(i.item_id) < i.count);
-                GUI.Label(new Rect(row.x + 98, row.y + 38, 268, 22), n > 0
+                GUI.Label(new Rect(row.x + 98, row.y + statusY, 268, 22), n > 0
                     ? $"<color=#{Hex(BenchHave)}>Làm được ×{n}</color>" : $"<color=#{Hex(BenchShort)}>Thiếu {missing} loại vật liệu</color>", benchSmallBold);
                 float mx = row.x + 98;
                 foreach (var input in r.inputs)
                 {
                     int have = inventory.Count(input.item_id);
-                    HudIcon(new Rect(mx, row.y + 64, 22, 22), input.item_id);
+                    HudIcon(new Rect(mx, row.y + materialsY, 22, 22), input.item_id);
                     string plain = $"{have}/{input.count}";
                     float tw = benchSmallBold.CalcSize(new GUIContent(plain)).x;
-                    GUI.Label(new Rect(mx + 26, row.y + 66, tw + 6, 22), $"<color=#{Hex(have >= input.count ? BenchHave : BenchShort)}>{plain}</color>", benchSmallBold);
+                    GUI.Label(new Rect(mx + 26, row.y + materialsY + 2, tw + 6, 22), $"<color=#{Hex(have >= input.count ? BenchHave : BenchShort)}>{plain}</color>", benchSmallBold);
                     mx += 26 + tw + 16;
                 }
                 if (queue.Count > 0 && queue[0].recipe.id == r.id)
                 {
-                    HudFill(new Rect(row.x + 98, row.y + 92, 262, 4), new Color(.17f, .18f, .11f));
-                    HudFill(new Rect(row.x + 98, row.y + 92, 262 * inventory.CraftProgress, 4), HudGold);
+                    HudFill(new Rect(row.x + 98, row.y + barY, 262, 4), new Color(.17f, .18f, .11f));
+                    HudFill(new Rect(row.x + 98, row.y + barY, 262 * inventory.CraftProgress, 4), HudGold);
                 }
                 if (GUI.Button(row, GUIContent.none, GUIStyle.none) && !selected) { benchRecipe = r.id; benchQty = 1; }
             }

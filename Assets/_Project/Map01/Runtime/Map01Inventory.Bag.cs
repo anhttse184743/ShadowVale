@@ -22,16 +22,22 @@ namespace ShadowVale.Map01
     {
         public const int BagColumns = 6, BagSize = 24;
         public enum Slot { Primary, Pistol, Knife }
-        public sealed class BagCell { public string id; public int count; }
+        /// <summary>One stack. A gun is a stack of one and carries its own condition (durability points, see
+        /// Map01Inventory.Condition.cs); for anything else <see cref="condition"/> is <see cref="NoCondition"/>.</summary>
+        public sealed class BagCell { public string id; public int count; public float condition = NoCondition; }
         [System.Serializable] public sealed class Layout
         {
             public string[] ids = new string[BagSize];
             public int[] counts = new int[BagSize];
             public string primary, pistol, throwable;
+            /// <summary>Each cell's gun condition (points); absent in saves made before guns wore.</summary>
+            public float[] conditions;
+            public float primaryCondition = NoCondition, pistolCondition = NoCondition;
         }
 
         private readonly BagCell[] bag = new BagCell[BagSize];
         private string primary, pistol, knife;
+        private float primaryCondition = NoCondition, pistolCondition = NoCondition;
         private string throwable = "stone";
         /// <summary>Raised whenever the bag or the slots change, for anything drawn from them.</summary>
         public event System.Action Changed;
@@ -54,18 +60,20 @@ namespace ShadowVale.Map01
         {
             for (int i = 0; i < BagSize; i++) bag[i] = null;
             primary = pistol = knife = null; throwable = "stone";
+            primaryCondition = pistolCondition = NoCondition;
         }
 
         /// <summary>A weapon into its empty slot, then stacks of the same item with room, then empty cells.
-        /// Returns how many did not fit.</summary>
-        private int Store(string id, int amount)
+        /// Returns how many did not fit. A gun goes in with <paramref name="condition"/> (points; NoCondition = new).</summary>
+        private int Store(string id, int amount, float condition = NoCondition)
         {
             if (string.IsNullOrEmpty(id) || amount <= 0) return 0;
             if (id == "stone") amount = Mathf.Min(amount, Mathf.Max(0, StoneCapacity - Stones));
+            float worn = Worn(id, condition);
             var slot = SlotOf(id);
             if (slot != null && SlotItem(slot.Value) == null && amount > 0)
             {
-                SetSlot(slot.Value, id); amount--;
+                SetSlot(slot.Value, id, worn); amount--;
             }
             int limit = StackLimit(id);
             for (int i = 0; i < BagSize && amount > 0; i++)
@@ -77,15 +85,17 @@ namespace ShadowVale.Map01
             for (int i = 0; i < BagSize && amount > 0; i++)
             {
                 if (bag[i] != null) continue;
-                int put = Mathf.Min(amount, limit); bag[i] = new BagCell { id = id, count = put }; amount -= put;
+                int put = Mathf.Min(amount, limit); bag[i] = new BagCell { id = id, count = put, condition = worn }; amount -= put;
             }
             Changed?.Invoke();
             return amount;
         }
 
-        private void SetSlot(Slot slot, string id)
+        private void SetSlot(Slot slot, string id, float condition = NoCondition)
         {
-            if (slot == Slot.Primary) primary = id; else if (slot == Slot.Pistol) pistol = id; else knife = id;
+            if (slot == Slot.Primary) { primary = id; primaryCondition = id == null ? NoCondition : condition; }
+            else if (slot == Slot.Pistol) { pistol = id; pistolCondition = id == null ? NoCondition : condition; }
+            else knife = id;
         }
 
         /// <summary>Moves the stack in <paramref name="from"/> onto <paramref name="to"/>: into it if empty, onto it
@@ -124,11 +134,20 @@ namespace ShadowVale.Map01
         public void Sort()
         {
             var totals = new Dictionary<string, int>();
-            foreach (var c in bag) if (c != null) totals[c.id] = (totals.TryGetValue(c.id, out int n) ? n : 0) + c.count;
+            // Guns keep their own condition, so they are carried over cell by cell (best first), not re-counted.
+            var guns = bag.Where(c => c != null && HasCondition(c.id)).ToList();
+            foreach (var c in bag) if (c != null && !HasCondition(c.id)) totals[c.id] = (totals.TryGetValue(c.id, out int n) ? n : 0) + c.count;
+            foreach (var g in guns) totals[g.id] = totals.TryGetValue(g.id, out int n) ? n : 0;
             for (int i = 0; i < BagSize; i++) bag[i] = null;
             int at = 0;
             foreach (var p in totals.OrderBy(p => SortGroup(p.Key)).ThenBy(p => OrderIndex(p.Key)).ThenBy(p => p.Key, System.StringComparer.Ordinal))
             {
+                if (HasCondition(p.Key))
+                {
+                    foreach (var g in guns.Where(g => g.id == p.Key).OrderByDescending(g => g.condition))
+                        if (at < BagSize) bag[at++] = g;
+                    continue;
+                }
                 int limit = StackLimit(p.Key);
                 for (int left = p.Value; left > 0 && at < BagSize; at++)
                 {
@@ -157,9 +176,10 @@ namespace ShadowVale.Map01
             if (slot == null) { if (cell != null) mission?.Say(ForestInventory.Name(cell.id) + " không trang bị được.", 3); return false; }
             if (slot == Slot.Knife) return false;                          // one knife, always in its slot
             string old = SlotItem(slot.Value);
+            float oldCondition = Condition(slot.Value);
             bool wasHeld = old != null && IsEquipped(old);
-            SetSlot(slot.Value, cell.id);
-            bag[i] = old != null ? new BagCell { id = old, count = 1 } : null;
+            SetSlot(slot.Value, cell.id, cell.condition);
+            bag[i] = old != null ? new BagCell { id = old, count = 1, condition = oldCondition } : null;
             if (wasHeld) Draw(Slot.Knife);
             Changed?.Invoke();
             return true;
@@ -175,7 +195,7 @@ namespace ShadowVale.Map01
             if (to < 0 || Cell(to) != null) to = System.Array.IndexOf(bag, null);
             if (to < 0) { mission?.Say("Túi đã đầy, không cất được.", 3); return false; }
             bool wasHeld = IsEquipped(id);
-            bag[to] = new BagCell { id = id, count = 1 };
+            bag[to] = new BagCell { id = id, count = 1, condition = Condition(slot) };
             SetSlot(slot, null);
             if (wasHeld) Draw(Slot.Knife);
             Changed?.Invoke();
@@ -192,7 +212,7 @@ namespace ShadowVale.Map01
             string id = cell.id;
             cell.count -= amount;
             if (cell.count <= 0) bag[i] = null;
-            Map01Drops.For(mission)?.Put(id, amount);
+            Map01Drops.For(mission)?.Put(id, amount, cell.condition);
             Changed?.Invoke();
             return true;
         }
@@ -203,9 +223,10 @@ namespace ShadowVale.Map01
             if (id == null) return false;
             if (slot == Slot.Knife) { mission?.Say("Dao luôn mang theo, không vứt được.", 3); return false; }
             bool wasHeld = IsEquipped(id);
+            float condition = Condition(slot);
             SetSlot(slot, null);
             if (wasHeld) Draw(Slot.Knife);
-            Map01Drops.For(mission)?.Put(id, 1);
+            Map01Drops.For(mission)?.Put(id, 1, condition);
             Changed?.Invoke();
             return true;
         }
@@ -278,8 +299,9 @@ namespace ShadowVale.Map01
         /// <summary>The bag as saved: every cell, the slots, the throwable picked.</summary>
         public Layout CaptureLayout()
         {
-            var l = new Layout { primary = primary, pistol = pistol, throwable = throwable };
-            for (int i = 0; i < BagSize; i++) { l.ids[i] = bag[i]?.id; l.counts[i] = bag[i]?.count ?? 0; }
+            var l = new Layout { primary = primary, pistol = pistol, throwable = throwable, conditions = new float[BagSize],
+                primaryCondition = primaryCondition, pistolCondition = pistolCondition };
+            for (int i = 0; i < BagSize; i++) { l.ids[i] = bag[i]?.id; l.counts[i] = bag[i]?.count ?? 0; l.conditions[i] = bag[i]?.condition ?? NoCondition; }
             return l;
         }
         /// <summary>Puts a saved layout back over what <see cref="RestoreFromSave"/> loaded: cells where they were,
@@ -291,12 +313,15 @@ namespace ShadowVale.Map01
             var totals = new Dictionary<string, int>(Items);
             for (int i = 0; i < BagSize; i++) bag[i] = null;
             primary = l.primary; pistol = l.pistol;
+            // A save from before guns wore has no conditions at all: every gun in it comes back as new.
+            bool wore = l.conditions != null;
+            primaryCondition = Worn(primary, wore ? l.primaryCondition : NoCondition); pistolCondition = Worn(pistol, wore ? l.pistolCondition : NoCondition);
             knife = totals.ContainsKey("knife") ? "knife" : null;
             throwable = System.Array.IndexOf(Throwables, l.throwable) >= 0 ? l.throwable : "stone";
             var left = new Dictionary<string, int>(totals);
             foreach (var id in new[] { primary, pistol, knife }) if (id != null) left[id] = (left.TryGetValue(id, out int n) ? n : 0) - 1;
-            if (primary != null && (!totals.ContainsKey(primary))) primary = null;
-            if (pistol != null && (!totals.ContainsKey(pistol))) pistol = null;
+            if (primary != null && (!totals.ContainsKey(primary))) SetSlot(Slot.Primary, null);
+            if (pistol != null && (!totals.ContainsKey(pistol))) SetSlot(Slot.Pistol, null);
             for (int i = 0; i < Mathf.Min(BagSize, l.ids.Length, l.counts.Length); i++)
             {
                 string id = l.ids[i];
@@ -304,7 +329,8 @@ namespace ShadowVale.Map01
                 int have = left.TryGetValue(id, out int n) ? n : 0;
                 int put = Mathf.Min(have, l.counts[i]);
                 if (put <= 0) continue;
-                bag[i] = new BagCell { id = id, count = put }; left[id] = have - put;
+                float saved = l.conditions != null && i < l.conditions.Length ? l.conditions[i] : NoCondition;
+                bag[i] = new BagCell { id = id, count = put, condition = Worn(id, saved) }; left[id] = have - put;
             }
             foreach (var p in left) if (p.Value > 0) Store(p.Key, p.Value);
             Changed?.Invoke();

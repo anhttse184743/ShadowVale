@@ -44,13 +44,17 @@ namespace ShadowVale.Map01
         private Map01Mission mission;
         private void Awake() { mission = GetComponent<Map01Mission>(); }
 
-        /// <summary>Nam starts with his rifle (slot 1) and knife (slot 3) but no ammunition — ammo_rifle and herb
-        /// only come from picking up loot in the field (see the "tutorial_loot" point). While
+        /// <summary>Nam starts with his rifle (slot 1), his K-54 (slot 2) with two magazines (Map01Balance.json
+        /// startingPistolRounds) and his knife (slot 3) — rifle rounds and herbs only come from picking up loot in the field
+        /// (see the "tutorial_loot" point). While
         /// Map01Balance.json has testCraftingKit on, he also carries <see cref="TestCraftingKit"/>.</summary>
         public void SeedStartingLoadout(int startingStones)
         {
+            if (mission == null) mission = GetComponent<Map01Mission>(); // Seeded from the mission's Awake, maybe before this Awake.
             ClearAll();
             Add("rifle_standard", 1);
+            Add("pistol_k54", 1);
+            if (mission != null && mission.Settings != null) Add("ammo_pistol", mission.Settings.startingPistolRounds);
             Add("knife", 1);
             Add("stone", Mathf.Min(startingStones, StoneCapacity));
             if (mission != null && mission.Settings != null && mission.Settings.testCraftingKit && !TestKitHeldOff)
@@ -62,8 +66,8 @@ namespace ShadowVale.Map01
         public static readonly (string id, int count)[] TestCraftingKit =
         {
             ("cloth", 12), ("herb", 6), ("scrap_metal", 12), ("gun_oil", 4), ("smoke_module", 4), ("gunpowder", 12),
-            ("ammo_rifle", 60), ("medkit_small", 2), ("pistol_k54", 1), ("ammo_pistol", 16), ("rifle_mosin", 1), ("ammo_sniper", 10),
-            ("weapon_parts", 2), ("fuse_module", 2), ("blast_charge", 2), ("scope_lens", 1), ("smoke_bomb", 2), ("grenade_f1", 1),
+            ("ammo_rifle", 60), ("medkit_small", 2), ("rifle_mosin", 1), ("ammo_sniper", 10),
+            ("weapon_parts", 2), ("fuse_module", 2), ("blast_charge", 2), ("scope_lens", 1), ("smoke_bomb", 2), ("grenade_f1", 1), ("repair_kit", 2),
         };
 
         /// <summary>Editor SessionState flag the test base sets, so tests start with the normal loadout whatever
@@ -94,18 +98,19 @@ namespace ShadowVale.Map01
         }
         /// <summary>Into the slots and the bag, quietly (loading, the starting loadout). What does not fit is lost:
         /// use <see cref="Receive"/> for anything found in the world, which puts what does not fit on the ground.</summary>
-        public void Add(string id, int amount) => Store(id, amount);
+        public void Add(string id, int amount, float condition = NoCondition) => Store(id, amount, condition);
         /// <summary>Something found, picked up or made: what <see cref="Received"/> tells the HUD's pickup feed.
-        /// What the bag has no room for is put down at Nam's feet (Map01Drops), so nothing found is lost.</summary>
-        public void Receive(string id, int amount)
+        /// What the bag has no room for is put down at Nam's feet (Map01Drops), so nothing found is lost. A gun comes
+        /// with its <paramref name="condition"/> (points; NoCondition = new).</summary>
+        public void Receive(string id, int amount, float condition = NoCondition)
         {
             if (amount <= 0) return;
             if (id == "stone") amount = Mathf.Min(amount, StoneRoom);
-            int rest = Store(id, amount);
+            int rest = Store(id, amount, condition);
             if (amount - rest > 0) Received?.Invoke(id, amount - rest);
             if (rest > 0 && mission != null)
             {
-                Map01Drops.For(mission)?.Put(id, rest);
+                Map01Drops.For(mission)?.Put(id, rest, condition);
                 mission.Say($"Túi đã đầy — {rest} {ForestInventory.Name(id).ToLowerInvariant()} để lại dưới chân.", 4);
             }
         }
@@ -122,8 +127,8 @@ namespace ShadowVale.Map01
                 cell.count -= take; amount -= take;
                 if (cell.count <= 0) bag[i] = null;
             }
-            if (amount > 0 && primary == id) { primary = null; amount--; OnSlotEmptied(); }
-            if (amount > 0 && pistol == id) { pistol = null; amount--; }
+            if (amount > 0 && primary == id) { SetSlot(Slot.Primary, null); amount--; OnSlotEmptied(); }
+            if (amount > 0 && pistol == id) { SetSlot(Slot.Pistol, null); amount--; }
             Changed?.Invoke();
         }
         /// <summary>Totals by item (bag and slots), for whatever wants the whole list.</summary>
@@ -206,7 +211,7 @@ namespace ShadowVale.Map01
         public bool NearWorkbench() => mission.Interactables.Any(p => p.kind == ForestPointKind.Workbench
             && Vector3.Distance(mission.player.position, p.transform.position) < mission.Settings.interactRange);
         /// <summary>What the workbench makes on Map 1, in the order the bench lists them.</summary>
-        public static readonly string[] BenchRecipes = { "craft_medkit_small", "craft_repair_kit", "craft_smoke_bomb", "craft_grenade_f1", "craft_ammo_pistol", "craft_ammo_rifle" };
+        public static readonly string[] BenchRecipes = { "craft_medkit_small", "craft_repair_kit", "craft_smoke_bomb", "craft_grenade_f1", "craft_ammo_pistol", "craft_ammo_rifle", "craft_ammo_sniper" };
         public IEnumerable<ForestRecipe> Recipes => BenchRecipes.Select(Recipe).Where(r => r != null);
         public ForestRecipe Recipe(string id) => mission.Bundle?.craft_recipes?.FirstOrDefault(r => r.id == id);
         public bool HasInputs(ForestRecipe recipe) => recipe.inputs.All(i => Count(i.item_id) >= i.count);

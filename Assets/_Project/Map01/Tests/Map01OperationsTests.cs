@@ -66,7 +66,7 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(copied.carriesSupplyKey,"Regression must simulate a copied serialized flag.");Assert.IsFalse(copied.IsSupplyKeyKeeper);
             yield return Clear(new[]{copied,keeper});
             Assert.IsFalse(copied.GetComponent<ForestPoint>().items.Any(i=>i.item_id==Map01Story.KeyItem&&i.count>0));
-            Assert.AreEqual("Túi lính tuần tra",copied.GetComponent<ForestPoint>().label);
+            Assert.AreEqual(Map01Logistics.For(M).PackName(copied),copied.GetComponent<ForestPoint>().label,"Not the keeper: his kind's pack, no key.");
             Assert.AreEqual(1,keeper.GetComponent<ForestPoint>().items.Single(i=>i.item_id==Map01Story.KeyItem).count);
             M.GetComponent<Map01Quest>().RestoreStage(Map01Quest.ExtractionStage);
             var extraction=M.GetComponentInChildren<Map01Extraction>();Assert.IsTrue(extraction.Prepared);extraction.autoContinueToMap2=false;

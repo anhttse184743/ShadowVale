@@ -88,6 +88,9 @@ namespace ShadowVale.Map01
         public void BeginCommanderOrder()
         {
             if(Stage!=ReportCampsStage||!story.Progress.radioDisabled)return;Stage=BossStage;EnsureCommander();
+            // The scouts' rifle (Map01C3Mission): no voiced line yet, so the order's last word is shown, not spoken.
+            if(GetComponent<Map01C3Mission>()?.CachePoint!=null)
+                mission.Say("Chỉ huy (bộ đàm): \"Trinh sát để lại một khẩu Mosin, năm viên, ở vai đồi phía Đông Nam điểm ba. Từ đó nhìn được chòi canh.\"",8);
         }
         // Scanning a camp provides intel only. It cannot complete supply/radio objectives.
         public void CompleteScouting()=>mission.Say("Đã ghi nhận ba vị trí. Tiếp tục mục tiêu chỉ huy đã giao.",5);

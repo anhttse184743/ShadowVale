@@ -19,7 +19,7 @@ namespace ShadowVale.Map01.Tests
     public sealed class StoneSiteTests : ForestSceneTestBase
     {
         // Lambdas stay in static helpers: one capturing an iterator local breaks after the domain
-        // reload EnterPlayMode triggers (see ForestFlowTests.NearestOutpostGuard).
+        // reload EnterPlayMode triggers (see the note at the top of ForestFlowTests).
 
         private static float Flat(Vector3 a, Vector3 b) => new Vector2(a.x - b.x, a.z - b.z).magnitude;
 

@@ -96,7 +96,12 @@ namespace ShadowVale.Map01
                     return "Mở bảng mạch đài [E]. Xoay 20 đoạn dây để nối NGUỒN tới NGẮT ĐÀI thành một đường liền mạch.";
                 }
                 if(quest.Stage==6)return "Đài đã ngừng phát. Rời giao tranh rồi báo cáo chỉ huy qua bộ đàm [E].";
-                if(quest.Stage==7)return Progress.commanderReported?"Địch đã phát hiện! Dùng vật che và hạ sĩ quan tại điểm 3.":"Điểm 3: đứng xa doanh trại ít nhất 18 m, giữ [F] nhìn về khu trại để báo cáo. Không cần nhắm đúng sĩ quan.";
+                if(quest.Stage==7){
+                    var c3=GetComponent<Map01C3Mission>();
+                    if(Progress.commanderReported)return c3!=null&&c3.Alarmed?"Trại C3 báo động! Dùng vật che, hạ sĩ quan tại điểm 3 rồi rút.":"Lẻn vào nhà chỉ huy C3 và hạ sĩ quan. Tùy chọn: hạ lính tháp canh, tháo dùi kẻng ở cổng, cắt dây điện thoại sau trại.";
+                    if(c3!=null&&c3.CachePoint!=null&&!c3.CachePoint.used)return "Điểm 3: lấy khẩu Mosin trinh sát giấu ở vai đồi Đông Nam doanh trại (5 viên), rồi đứng xa trại ít nhất 18 m, giữ [F] quan sát để báo cáo.";
+                    return "Điểm 3: đứng xa doanh trại ít nhất 18 m, giữ [F] nhìn về khu trại để báo cáo. Không cần nhắm đúng sĩ quan.";
+                }
                 if(quest.Stage==8)return "Sĩ quan đã bị hạ. Thoát giao tranh rồi liên lạc chỉ huy [E] để nhận đường rút.";
                 return null;
             }
@@ -223,6 +228,8 @@ namespace ShadowVale.Map01
             if(Progress.commanderDiscovery)return;Progress.commanderDiscovery=true;
             var sentry=Guards(3).Concat(new[]{quest.CommanderEnemy}).FirstOrDefault(e=>e!=null&&e.Alive&&
                 !Physics.Linecast(e.transform.position+Vector3.up*1.3f,mission.player.position+Vector3.up*1.6f,mission.ObstructionMask,QueryTriggerInteraction.Ignore));
+            // The C3 command post is a stealth mission now (Map01C3Mission): reporting in does not give Nam away.
+            if(GetComponent<Map01C3Mission>()!=null)return;
             if(sentry!=null){sentry.FaceImmediate(mission.player.position);mission.Say("Lính địch: Có người ở mé rừng! Bên kia!",2.5f);PlayOperationCue("m1_ops_enemy_spotted",sentry);}
             StartCoroutine(CommanderAlarm());
             foreach(var enemy in Guards(3).Concat(new[]{quest.CommanderEnemy}))if(enemy!=null&&enemy.Alive)enemy.BeginOperationCombat(mission.player.position,1.5f);
@@ -243,6 +250,8 @@ namespace ShadowVale.Map01
             }
             if(quest.Stage==5){at=Layout.radioApproach.position;label=ResponsePending?"TRẠM ĐÀI — NHÓM PHẢN ỨNG":"ĐIỂM 2 — BẢNG MẠCH ĐÀI";return true;}
             if(quest.Stage==7){
+                var c3=GetComponent<Map01C3Mission>();
+                if(c3!=null&&c3.CachePoint!=null&&c3.CachePoint.isActiveAndEnabled&&!c3.CachePoint.used){at=c3.CachePoint.transform.position;label="ĐỒI ĐÔNG NAM — MOSIN TRINH SÁT";return true;}
                 bool hunt=Progress.commanderReported&&quest.CommanderEnemy!=null&&quest.CommanderEnemy.Alive;
                 at=hunt?quest.CommanderEnemy.transform.position:Layout.commanderPost.position;label=hunt?"ĐIỂM 3 — HẠ SĨ QUAN":"ĐIỂM 3 — QUAN SÁT DOANH TRẠI [F]";return true;
             }return false;

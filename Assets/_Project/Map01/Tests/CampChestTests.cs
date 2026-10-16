@@ -22,7 +22,7 @@ namespace ShadowVale.Map01.Tests
     public sealed class CampChestTests : ForestSceneTestBase
     {
         // Lambdas stay in static helpers or capture only static fields: one capturing an iterator local
-        // breaks after the domain reload EnterPlayMode triggers (see ForestFlowTests.NearestOutpostGuard).
+        // breaks after the domain reload EnterPlayMode triggers (see the note at the top of ForestFlowTests).
 
         private static float SegmentToBox(Vector3 a, Vector3 b, Bounds box)
         {
@@ -148,6 +148,20 @@ namespace ShadowVale.Map01.Tests
             yield return null;
         }
 
+        private static int Holds(ForestPoint point, string item) => point.items.Where(i => i.item_id == item).Sum(i => i.count);
+        private static (string item, int count)[] Contents(ForestPoint point) => point.items.Select(i => (i.item_id, i.count)).ToArray();
+
+        /// <summary>Every gun in a chest lies within its item's found range (Map01Loot.json foundMin..foundMax).</summary>
+        private static void AssertFoundCondition(ForestPoint point)
+        {
+            var data = Map01Loot.Load();
+            foreach (var gun in point.items.Where(i => Map01Inventory.HasCondition(i.item_id)))
+            {
+                var item = data.ItemOf(gun.item_id);
+                Assert.That(inventory.Fraction(gun.item_id, gun.condition), Is.InRange(item.foundMin - 1e-4f, item.foundMax + 1e-4f), gun.item_id);
+            }
+        }
+
         private static Dictionary<string, int> Holding() => ForestInventory.Order.ToDictionary(i => i, i => inventory.Count(i));
         private static bool FeedHas(string id) => hud.PickupFeed.Any(p => p.id == id);
         private static int PointsWithId(string id) => mission.Points.Count(p => p.id == id);
@@ -166,7 +180,10 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual(ForestPointKind.Chest, c.kind);
                 Assert.AreEqual(Map01CampChests.IdPrefix + n, c.id);
                 Assert.AreEqual(1, PointsWithId(c.id), "The save tells the chests apart by id.");
-                CollectionAssert.AreEquivalent(Map01CampChests.Contents[n].Select(x => x.item + x.count), c.items.Select(x => x.item_id + x.count));
+                // Its signature things every run, rolls on top; any gun in it used but sound.
+                foreach (var (item, count) in Map01CampChests.Guaranteed(n))
+                    Assert.GreaterOrEqual(Holds(c, item), count, "C" + n + "'s chest always holds " + count + " " + item);
+                AssertFoundCondition(c);
             }
             var routing = RouteInputToGame(); keyboard = InputSystem.AddDevice<Keyboard>();
             yield return WaitGameSeconds(3.2f);   // the camp-cleared line is held back over the first seconds of a load
@@ -201,8 +218,10 @@ namespace ShadowVale.Map01.Tests
             yield return PressE();
             Assert.AreEqual(Map01CampChests.State.Open, chests.StateOf(chest));
             Assert.IsFalse(chests.LockShown(chest));
-            Assert.AreEqual(Map01CampChests.Contents[1].Length, chests.ContentsShown(chest), "Every item lies on the tray.");
-            StringAssert.Contains("Trong hòm: 1 súng lục k-54, 16 đạn k-54", mission.Dialogue);
+            Assert.AreEqual(chest.items.Length, chests.ContentsShown(chest), "Every item lies on the tray.");
+            StringAssert.Contains("Trong hòm: ", mission.Dialogue);   // C1 no longer holds the K-54: Nam starts with it
+            StringAssert.Contains("đạn k-54", mission.Dialogue);
+            var inChest = Contents(chest);
             CollectionAssert.AreEqual(before, Holding(), "Opening shows; it does not take.");
             yield return WaitGameSeconds(.9f);
             Assert.IsTrue(chests.LidOpen(chest), "The lid has swung open.");
@@ -211,7 +230,7 @@ namespace ShadowVale.Map01.Tests
             // Second [E]: everything into the bag, each in the pickup feed.
             yield return WaitGameSeconds(3.5f);    // Nam's opening take
             yield return PressE();
-            foreach (var (item, count) in Map01CampChests.Contents[1])
+            foreach (var (item, count) in inChest)
             {
                 Assert.AreEqual(before[item] + count, inventory.Count(item), item);
                 Assert.IsTrue(FeedHas(item), item + " shows in the pickup feed.");
@@ -423,7 +442,7 @@ namespace ShadowVale.Map01.Tests
             FreeCamera();
             ClearFeed();
             int shot = 10;
-            foreach (var id in new[] { "pistol_k54", "rifle_mosin", "ammo_pistol", "ammo_sniper" })
+            foreach (var id in new[] { "ammo_pistol", "ammo_sniper" })
             {
                 mission.Say(null, -1f);
                 mission.SetPaused(true); mission.SetInventoryOpen(true);

@@ -123,7 +123,7 @@ namespace ShadowVale.Map01
             Vector3 at = mission.player.position;
             foreach (var point in mission.Interactables)
             {
-                if (point.used) continue;
+                if (point.used || !point.isActiveAndEnabled) continue;   // a hidden point (the C3 Mosin cache before its order)
                 float distance = Vector3.Distance(at, point.transform.position);
                 if (distance < best) { best = distance; nearest = point; }
             }
@@ -167,8 +167,8 @@ namespace ShadowVale.Map01
                 int count = item.item_id == "stone" ? Mathf.Min(item.count, inventory.StoneRoom) : item.count;
                 if (item.item_id == "stone") leftStones += item.count - count;
                 if (count <= 0) continue;
-                inventory.Receive(item.item_id, count);
-                taken.Add(count + " " + ForestInventory.Name(item.item_id).ToLowerInvariant());
+                inventory.Receive(item.item_id, count, item.condition);
+                taken.Add(count + " " + ForestInventory.Name(item.item_id).ToLowerInvariant() + Map01Drops.ConditionTag(mission, item.item_id, item.condition));
             }
             any = taken.Count > 0;
             if (leftStones > 0)
@@ -185,6 +185,20 @@ namespace ShadowVale.Map01
         }
         private string TakeItems(ForestPoint point) => TakeItems(point, out _);
 
+        /// <summary>The first time Nam picks up a badly worn gun: what he can do with it.</summary>
+        private string WornGunHint(ForestPoint point)
+        {
+            if (wornHintShown || point.items == null) return "";
+            foreach (var item in point.items)
+                if (Map01Inventory.HasCondition(item.item_id) && inventory.Fraction(item.item_id, item.condition) < Map01Inventory.WornBelow)
+                {
+                    wornHintShown = true;
+                    return " Súng địch đã mòn: vẫn bắn được tới khi hỏng — sửa bằng bộ sửa chữa (túi đồ) hoặc ở bàn chế tạo, hay rã lấy linh kiện.";
+                }
+            return "";
+        }
+        private bool wornHintShown;
+
         /// <summary>Nam crouches to the pack or opens the crate (Blender clips); walking off cuts it short.</summary>
         private void Rummage(int action) =>
             Map01NamActions.For(mission)?.Play(action, action == Map01NamActions.PickUp ? 288f / 30f / 2.4f : 269f / 30f / 2.6f, true);
@@ -194,24 +208,18 @@ namespace ShadowVale.Map01
             switch (point.kind)
             {
                 case ForestPointKind.Supplies:
-                    if (point.used) return;
-                    if (quest.TryDeliverSupplies())
-                    {
-                        // Hùng's hand-off line stays on screen; the first resupply comes with it.
-                        inventory.Receive("supplies", 1);
-                        TakeItems(point);
-                        Rummage(Map01NamActions.OpenChest);
-                    }
-                    // Once Hùng is home, the base keeps resupplying on its restock timer.
-                    else if (quest.BaseResupplyOpen) { mission.Say("Căn cứ tiếp tế — " + TakeItems(point), 6); Rummage(Map01NamActions.OpenChest); }
+                    // The base store (Map01Logistics): opens once Hùng is home; what it issues is paid in logistics points.
+                    point.used = false;
+                    if (quest.BaseResupplyOpen) { hud?.OpenStore(); inventory.SuppressFire = true; }
+                    else mission.Say("Kho căn cứ A chưa cấp phát — đưa Hùng về căn cứ an toàn trước.", 4);
                     break;
                 case ForestPointKind.Loot:
                     if (point.used) return;
                     string took = TakeItems(point, out bool any);
-                    mission.Say(any ? took + " Tab mở túi đồ." : took, 6);
+                    mission.Say(any ? took + WornGunHint(point) + " Tab mở túi đồ." : took, 6);
                     if (!any) break; // A full bag at a pile of stones: no stooping for nothing.
-                    // a fallen guard's pack is picked up off the ground; a crate is opened
-                    Rummage(point.GetComponent<Map01EnemyController>() != null || (point.id!=null&&(point.id.StartsWith(Map01RescueStones.IdPrefix)||point.id.StartsWith(Map01Drops.IdPrefix))) ? Map01NamActions.PickUp : Map01NamActions.OpenChest);
+                    // a fallen guard's pack or gun is picked up off the ground; a crate is opened
+                    Rummage(point.GetComponent<Map01EnemyController>() != null || (point.id!=null&&(point.id.StartsWith(Map01RescueStones.IdPrefix)||point.id.StartsWith(Map01Drops.IdPrefix)||point.id.StartsWith(Map01Logistics.GunPointPrefix))) ? Map01NamActions.PickUp : Map01NamActions.OpenChest);
                     break;
                 case ForestPointKind.Workbench:
                     // [E] opens the bench screen (Map01Hud.Bench) and shuts it again.
@@ -236,6 +244,10 @@ namespace ShadowVale.Map01
                 case ForestPointKind.Chest:
                     if (chests == null) chests = GetComponent<Map01CampChests>();
                     chests?.Use(point);
+                    break;
+                case ForestPointKind.Sabotage:
+                    // C3: the kẻng's striker, the field telephone line.
+                    GetComponent<Map01C3Mission>()?.Use(point);
                     break;
             }
         }

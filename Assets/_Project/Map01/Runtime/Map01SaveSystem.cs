@@ -45,6 +45,8 @@ namespace ShadowVale.Map01
             public string rescueStart, escortStart, operationStart;
             public Map01Inventory.Layout bag;      // Where each stack sits, the slots and the throwable picked; null in older saves.
             public Map01Drops.Pile[] dropped;     // What Nam put on the ground and has not picked up again.
+            public Map01Logistics.State logistics; // The run's loot seed, rolled guard packs, the base store's points; seed 0 in older saves.
+            public Map01C3Mission.State c3;        // The C3 command post: kẻng, telephone line, check-ins, who has been called; null in older saves.
         }
 
         /// <summary>True while a checkpoint load is pending/applying — blocks manual saves and
@@ -351,6 +353,8 @@ namespace ShadowVale.Map01
                 items = inventory.CaptureItems(),
                 bag = inventory.CaptureLayout(),
                 dropped = Map01Drops.For(mission).Capture(),
+                logistics = Map01Logistics.For(mission).Capture(),
+                c3 = GetComponent<Map01C3Mission>()?.Capture(),
                 skills = mission.Skills.Capture(),
                 exploration = GetComponent<Map01Minimap>()?.CaptureExploration(),
                 skillMission = mission.Skills.CaptureMission(), skillRunId = skillCampaign.RunId,
@@ -447,6 +451,12 @@ namespace ShadowVale.Map01
                 else mission.player.position = data.player;
                 mission.hung.GetComponent<NavMeshAgent>()?.Warp(data.hung);
                 quest.RestoreStoryStage(data.stage, data.story);
+                // Before anything rolls loot: the run's seed and the packs already rolled come first (Map01Logistics).
+                Map01Logistics.For(mission).Restore(data.logistics);
+                GetComponent<Map01CampChests>()?.Reroll();
+                var c3 = GetComponent<Map01C3Mission>();
+                c3?.RerollCache();
+                c3?.Restore(data.c3);   // before the guards' snapshots: a woken sleeper is back on the field to receive his
                 inventory.RestoreFromSave(data.items, data.stones, data.crafting, data.craftRemaining);
                 if (data.bag != null) inventory.RestoreLayout(data.bag);
                 Map01Drops.For(mission).Restore(data.dropped);

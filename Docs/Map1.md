@@ -53,16 +53,20 @@ Mỗi trại C1–C3 có một hòm sắt (`Map01CampChests`), đặt trước b
 Lính cuối cùng ngã thì game báo một lần và bản đồ nhỏ hiện ô vuông vàng ở trại. [E] lần 1 mở hòm (ổ khóa rơi, nắp bật,
 đồ hiện trên khay); [E] lần 2 lấy hết vào túi. Hòm đã lấy được lưu là đã dùng; hòm mở mà chưa lấy thì tải lại sẽ đóng.
 
-| Trại | Trong hòm |
-|---|---|
-| C1 | súng lục K-54, 16 đạn K-54, 2 băng cứu thương, 2 vải, 3 kim loại vụn, 1 dầu súng, 2 thuốc súng |
-| C2 | 60 đạn súng trường, 2 ống tạo khói, 2 vải, 2 thảo dược, 2 linh kiện súng, 1 mô-đun kích hoạt, 3 thuốc súng |
-| C3 (xa nhất) | súng Mosin ống ngắm PU, 10 đạn Mosin, 1 kính ngắm, 1 lõi nổ, 1 bộ sửa chữa, 1 băng cứu thương |
+Mỗi hòm luôn có đồ "đặc trưng" (bậc 5 trong bảng rớt) cộng vài lượt quay ngẫu nhiên từ bảng của trại
+(`Resources/Loot/Map01Loot.json`, các bảng `lt_m1_chest_c1..c3`), quay theo hạt giống của lượt chơi nên mỗi lần Chơi mới
+khác nhau, còn tải lại bản lưu thì vẫn như cũ:
 
-Số lượng là giá trị khởi đầu, chỉnh sau khi chơi thử. Súng lục K-54 (TT-33 bản Trung Quốc, đạn 7,62×25, băng 8 viên) và
-súng Mosin M91/30 ống ngắm PU 3,5× (đạn 7,62×54R, 5 viên) nhặt được và có trong túi đồ nhưng **chưa cầm lên bắn được**:
-việc đó cần hoạt ảnh mới cho Nam. Bom khói chưa ném được, bộ sửa chữa chưa sửa được súng, linh kiện súng, mô-đun kích
-hoạt, lõi nổ và kính ngắm chưa có công thức dùng; mô tả trong túi đồ ghi rõ điều đó.
+| Trại | Luôn có | Quay thêm |
+|---|---|---|
+| C1 | 1 dầu súng, 16 đạn K-54, 1 băng cứu thương, 2 thuốc súng | 2 lượt |
+| C2 | 60 đạn súng trường, 2 ống tạo khói, 2 linh kiện súng, 1 mô-đun kích hoạt, 3 thuốc súng | 2–3 lượt |
+| C3 (xa nhất) | 10 đạn Mosin, 1 kính ngắm, 1 lõi nổ, 1 bộ sửa chữa, 1 băng cứu thương — khóa tới khi chỉ huy địch chết | 3 lượt |
+
+Nam bắt đầu game với súng lục K-54 (TT-33 bản Trung Quốc, đạn 7,62×25, băng 8 viên) ở ô 2 và 16 viên
+(`startingPistolRounds` trong `Map01Balance.json`). Súng Mosin M91/30 ống ngắm PU 3,5× (đạn 7,62×54R, 5 viên) do trinh sát
+giấu ở ổ bắn của điểm 3 (xem phần dưới). Cả hai có trong túi đồ nhưng **chưa cầm lên bắn được**: việc đó cần hoạt ảnh mới
+cho Nam. Mô-đun kích hoạt, lõi nổ dùng chế F1; kính ngắm chưa có việc dùng.
 
 Mỗi món nhận được (nhặt, mở hòm, chế tạo) hiện một dòng ở mép phải màn hình: icon, "+số lượng", tên. Món mới nằm trên
 cùng, nhặt cùng món trong 2 giây thì cộng dồn, tối đa 7 dòng, mờ đi sau 4 giây (`Map01Hud.Pickup.cs`).
@@ -82,12 +86,13 @@ game giữ món đang làm và trả lại vật liệu của các món còn ch�
 | Bom khói ×1 | 1 ống tạo khói + 1 vải | 4 giây |
 | Đạn K-54 ×8 | 1 thuốc súng + 1 kim loại vụn | 3 giây |
 | Đạn súng trường ×10 | 2 thuốc súng + 1 kim loại vụn | 5 giây |
+| Đạn Mosin ×5 | 3 thuốc súng + 1 kim loại vụn | 6 giây |
 
-Thuốc súng (hộp thiếc) có trong hòm sắt trại C1 (2) và C2 (3). Hình lớn của các món ở bàn nằm trong
+Thuốc súng (hộp thiếc) có chắc chắn trong hòm sắt trại C1 (2) và C2 (3), và hay rơi trong túi lính (cả lượt chơi khoảng 12 hộp). Ba loại đạn dùng chung thuốc súng: K-54 1/8 hộp mỗi viên, AK 1/5, Mosin 3/5, nên viên Mosin đắt nhất. Hình lớn của các món ở bàn nằm trong
 `Map01/Resources/Hud/ItemRenders` (script Blender xuất cùng icon).
 
 **Đồ test (tạm thời):** `"testCraftingKit": true` trong `Map01Balance.json` cho Nam bắt đầu Chơi mới với đủ vật liệu chế mỗi
-món nhiều lần, thêm K-54, Mosin và đạn (`Map01Inventory.TestCraftingKit`). Đổi thành `false` là trở lại bình thường. Bài
+món nhiều lần, thêm K-54, Mosin, đạn và 2 bộ sửa chữa (`Map01Inventory.TestCraftingKit`). Đổi thành `false` là trở lại bình thường. Bài
 kiểm thử luôn bắt đầu không có đồ test.
 
 **Mô hình:** hòm sắt và mô hình ngoài thế giới của 19 vật phẩm dựng bằng Blender từ
@@ -98,6 +103,70 @@ mới vào `Map01/Resources/Hud/ItemIcons`, và ảnh thiết kế (ảnh chính
 **ShadowVale > Map 1 > Nhập mô hình vật phẩm** để tạo vật liệu và cập nhật `Map01/Resources/Items/Map01ItemCatalog.asset`.
 `CampChestTests` kiểm tra chỗ đặt hòm, khóa/mở/lấy, lưu và dòng báo nhặt; bài `[Explicit]` trong đó chụp ảnh 1920×1080
 vào `Docs/Previews/Map01Items`.
+
+## Điểm 3 — đột kích sở chỉ huy C3
+
+Thiết kế đã duyệt "Đột kích Sở chỉ huy C3" (17/10/2026), đặt trên khu C3 đã duyệt (`C3_MainGarrison_Art`, gốc (68, 58)).
+Code `Map01C3Mission.cs`, số liệu và tọa độ `Map01/Resources/Missions/Map01C3Layout.json`. Không sửa `Map 1.unity`
+hay mô hình C3: lính được đặt lại vị trí lúc chạy, kẻng và cột điện thoại là đạo cụ dựng lúc chạy bằng vật liệu của C3.
+
+- **Lính:** chòi canh (sàn 4,2 m, nhìn 30 m về Tây Nam; đứng mép Nam sàn (82, 48,55) vì mái thấp của tháp che giữa sàn khỏi ổ A), gác cổng (cạnh kẻng; `rbl_east_3` cũ đã bị tắt khi ghép mô hình C3 nên lính này là bản sao tạo lúc chạy, "C3 gate guard"), lính đi tuần trong sân, cận vệ hiên
+  nhà chỉ huy (đứng 45 giây rồi ra sau nhà, cạnh máy phát, 15 giây), hai tổ tuần tra ngoài rào. Vòng tuần tra đi xuyên
+  các bụi ẩn nấp có sẵn: (60,1, 33), (90,6, 39,3) ở sườn Nam và (41,7, 57), (56,7, 81,7) ở Tây Bắc.
+- **Chỉ huy** có mặt từ đầu game trong nhà chỉ huy (không còn nhân bản lúc giao nhiệm vụ). Vòng khoảng 75 giây gồm cả đường đi: đứng xem bản
+  đồ ở bàn (lưng quay về cửa trước) 40 giây, đứng bàn phụ 15 giây, ra hiên 8 giây. Dao từ phía sau chỉ lấy 35% máu,
+  rồi hắn vùng ra đánh. Báo cáo bằng ống nhòm không còn làm lộ Nam.
+- **Mosin trinh sát:** từ lúc nhận lệnh điểm 3, khẩu Mosin + 5 viên nằm trên tấm bạt cạnh tảng đá ở vai đồi Đông Nam
+  (106, 22). Từ đó thấy sàn chòi, cách 36 m, ngoài tầm 30 m của tiếng Mosin.
+- **Điểm danh:** mỗi 90 giây lính gác cổng gọi bộ đàm hai tổ tuần tra; một tổ không trả lời thì trại "cảnh giác":
+  tuần tra còn lại đứng trước cổng, lính sân và cận vệ giữ cửa nhà chỉ huy, chỉ huy ở bàn phụ.
+- **Kẻng:** trại báo động thì sau 4 giây một lính gõ kẻng, 3 lính ngủ ở hai dãy nhà ra đánh. Tháo dùi kẻng ([E] ở cổng)
+  thì khi chỉ huy còn nửa máu và gọi lính, chỉ 1 lính ngủ nghe tiếng, 8 giây sau. Súng nổ trong 10 m quanh dãy nhà cũng
+  đánh thức họ.
+- **Dây điện thoại:** cột sau rào phía Bắc (68, 76,6). Còn dây thì 25 giây sau lúc chỉ huy gọi, 2 lính từ chốt đường
+  bến chạy tới. Cắt dây ([E]) thì không có.
+- **Không truy kích sâu:** Nam ra ngoài rào quá 40 m thì lính về chỗ gác.
+- Hòm sắt C3 khóa tới khi chỉ huy chết. Lưu game giữ kẻng, dây, cảnh giác, ai đã được gọi.
+- Phần chiến đấu của chỉ huy (nấp, lựu đạn, lùi sau lính) để AI riêng: gọi `CallReinforcements()` và dùng
+  `CoverPoints` (15 điểm nấp); tắt `AutoCallAtHalfHealth` khi AI tự gọi.
+- Kiểm thử: `C3MissionTests`.
+
+## Độ bền súng, rớt đồ và kho căn cứ
+
+Số liệu ở `Map01/Resources/Loot/Map01Loot.json` (sắp theo bảng của database website), độ bền mỗi súng ở
+`Map01Content.json` (`durability_max`, `durability_per_shot`). Code: `Map01Inventory.Condition.cs`, `Map01Loot.cs`,
+`Map01Logistics.cs`, giao diện `Map01Hud.Gunsmith.cs`.
+
+**Độ bền.** Mỗi khẩu súng có độ bền riêng: AK 100 điểm (−0,35/phát, ~285 phát), K-54 80 (−0,4), Mosin 110 (−1). Còn độ
+bền thì bắn như súng mới; về 0% thì kẹt, không bắn được tới khi sửa (băng đạn giữ nguyên). Thanh độ bền hiện dưới súng ở
+ô túi, ô trang bị và HUD chiến đấu: xanh, vàng dưới 50%, đỏ dưới 25%, HỎNG ở 0.
+
+| Cách sửa | Ở đâu | Tốn | Kết quả |
+|---|---|---|---|
+| Sửa dã chiến | bất cứ đâu (Tab → chuột phải vào súng, hoặc nút SỬA) | 1 bộ sửa chữa | +35% (+ thưởng Kỹ thuật), tối đa 80% ở Kỹ thuật 0 → 100% ở nấc 4 |
+| Sửa ở bàn | bàn chế tạo căn cứ A, thẻ SỬA SÚNG | 1 linh kiện mỗi ¼ thiếu, thêm 1 dầu súng nếu thiếu từ ½ | 100%, tính 1 XP Kỹ thuật |
+| Rã súng | bất cứ đâu, hỏi xác nhận | mất khẩu súng | AK: 2 kim loại vụn + 1 linh kiện (+1 nếu còn từ 50%); Mosin thêm kính ngắm |
+
+Kỹ thuật nấc 2: rã thêm 1 kim loại vụn; nấc 3: sửa ở bàn bớt 1 linh kiện. Chỉ lần sửa lên đủ 100% mới tính XP.
+
+**Lính rơi đồ.** Lính gục để lại túi (bảng theo loại: tuần tra, gác trại, canh điểm nhiệm vụ, chỉ huy) và khẩu AK của
+hắn nằm cạnh xác, đã mòn 15–35% (chỉ huy 35–55%, thêm K-54 60–80%). Túi luôn có vài viên đạn dự phòng (tuần tra 6–12), cộng
+lượt quay theo bậc 60/26/11/3%. Lính canh điểm nhiệm vụ đôi khi có sẵn bom khói (bậc 2) và rất hiếm
+một quả F1 (bậc 4). Đạn dễ ra hơn ×2 khi Nam còn dưới 30 viên; băng cứu thương ×2 khi máu dưới 60% mà không còn
+băng, và 6 túi liền không có thì túi sau chắc chắn có. Súng nhặt về: sửa để dùng, rã lấy linh kiện, hoặc nộp kho.
+
+**Kho căn cứ.** Thùng vật tư căn cứ A chỉ cho bộ đồ khởi đầu một lần (60 đạn, 2 băng, 2 thảo dược, 4 vải); kệ tiếp tế
+không còn tự đầy mỗi 90 giây. Khi Hùng về căn cứ, kệ tiếp tế mở **KHO CĂN CỨ** (cũng là một thẻ ở bàn chế tạo): cấp trên gửi
+điểm hậu cần khi xong từng việc (đưa Hùng về 40, giao hàng tiếp tế 40, phá đài 40, hạ chỉ huy 60), và mỗi khẩu súng thu được
+nộp vào đổi được giá trị của nó (AK 60 điểm khi mới, còn 30% giá trị khi hỏng hẳn). Điểm đổi lấy đạn, băng, bộ sửa chữa,
+dầu, linh kiện, bom khói theo giá cơ bản. Khẩu súng đang cầm không nộp được.
+
+**Lưu game** giữ độ bền từng súng (ô túi, ô trang bị, đống đồ dưới đất), hạt giống lượt chơi, các túi đã quay, điểm hậu cần.
+Bản lưu cũ (trước khi có độ bền) tải lên thì mọi súng như mới, điểm hậu cần bắt đầu từ 0.
+
+**Database:** `Docs/Architecture/Supabase/004_map01_durability_loot.sql` ghi toàn bộ vào một phiên bản nội dung **Draft**
+(sinh lại bằng `Export-Map01Loot.ps1` sau khi chỉnh JSON). Kiểm thử: `LootRollerTests` (không cần cảnh),
+`DurabilityTests`, và các bài cũ đã sửa theo (`ForestFlowTests`, `CampChestTests`, `BenchTests`, `Map01OperationsTests`).
 
 ## Trang bị, túi đồ và đồ ném
 
