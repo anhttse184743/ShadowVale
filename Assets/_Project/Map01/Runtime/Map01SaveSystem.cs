@@ -37,6 +37,8 @@ namespace ShadowVale.Map01
             public Map01EnemyController.Snapshot[] enemies;
             public Map01Rescue.Snapshot rescue;
             public string rescueStart, escortStart;
+            public Map01Inventory.Layout bag;      // Where each stack sits, the slots and the throwable picked; null in older saves.
+            public Map01Drops.Pile[] dropped;     // What Nam put on the ground and has not picked up again.
         }
 
         /// <summary>True while a checkpoint load is pending/applying — blocks manual saves and
@@ -196,6 +198,8 @@ namespace ShadowVale.Map01
                 player = mission.player.position, hung = mission.hung.position, alarmed = mission.Alarmed,
                 used = mission.Points.Where(p => p.used).Select(p => p.id).ToArray(),
                 items = inventory.CaptureItems(),
+                bag = inventory.CaptureLayout(),
+                dropped = Map01Drops.For(mission).Capture(),
                 crafting = inventory.CraftingId, craftRemaining = inventory.CraftRemaining,
                 playerYaw = mission.player.eulerAngles.y, hungYaw = mission.hung.eulerAngles.y,
                 crouched = mission.Crouched,
@@ -277,6 +281,10 @@ namespace ShadowVale.Map01
                 mission.hung.GetComponent<NavMeshAgent>()?.Warp(data.hung);
                 quest.RestoreStage(data.stage);
                 inventory.RestoreFromSave(data.items, data.stones, data.crafting, data.craftRemaining);
+                if (data.bag != null) inventory.RestoreLayout(data.bag);
+                Map01Drops.For(mission).Restore(data.dropped);
+                Map01Smoke.ClearAll();
+                Map01Blast.ClearAll();
                 mission.Alarmed = data.alarmed;
                 mission.RestoreHealthFromSave(Mathf.Clamp(data.hp, 1, mission.Settings.playerHP));
                 mission.SetStamina(data.stamina);

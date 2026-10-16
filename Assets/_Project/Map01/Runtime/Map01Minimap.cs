@@ -11,6 +11,14 @@ namespace ShadowVale.Map01
         private Map01ObjectiveGuide guide;
         private Map01Quest quest;
         private Map01Scouting scouting;
+        private Map01Inventory inventory;
+        private Map01StoneSites stoneSites;
+        private Map01CampChests chests;
+        /// <summary>With this many stones or fewer, the map shows where the nearest ones lie.</summary>
+        public const int LowOnStones = 2;
+        /// <summary>The stone site the map is pointing out, or null: only while he is running low, and only one within 30 m.</summary>
+        public ForestPoint StoneHint => stoneSites != null && inventory != null && inventory.Stones <= LowOnStones
+            ? stoneSites.Nearest(mission.player.position, 30f) : null;
         private Texture2D chart;
         private Texture2D arrow, circle, diamond, triangle, ring, square;
         private Texture2D disc, rim; // The round corner map's backing and frame, smooth-edged.
@@ -28,8 +36,10 @@ namespace ShadowVale.Map01
             guide = GetComponent<Map01ObjectiveGuide>();
             quest = GetComponent<Map01Quest>();
             scouting = GetComponent<Map01Scouting>();
+            inventory = GetComponent<Map01Inventory>();
             yield return null;
             if (!mission.IsInitialized) yield break;
+            stoneSites = GetComponent<Map01StoneSites>(); // Added by Map01Mission.Awake when the map has stone data.
             span = Mathf.Max(1, Mathf.Max(mission.mapMax.x - mission.mapMin.x, mission.mapMax.y - mission.mapMin.y));
             origin = (mission.mapMin + mission.mapMax) * .5f - Vector2.one * span * .5f;
             arrow = Symbol(0); circle = Symbol(1); diamond = Symbol(2); triangle = Symbol(3); ring = Symbol(4); square = Symbol(5);
@@ -130,6 +140,12 @@ namespace ShadowVale.Map01
             }
             GUI.color = old;
             DrawCamps(area, world, label, disk);
+            // Nearly out of stones: a grey dot where the nearest ones lie. Not shown otherwise — thirty dots would bury the map.
+            var stones = StoneHint;
+            if (stones != null) Mark(area, world, stones.transform.position, circle, new Color(.72f, .7f, .64f), 10, false, disk);
+            // A camp taken, its chest not yet emptied: a gold square on the camp.
+            if (chests == null) chests = GetComponent<Map01CampChests>();
+            if (chests != null) foreach (var at in chests.Waiting()) Mark(area, world, at, Texture2D.whiteTexture, new Color(.95f, .76f, .3f), 11, false, disk);
             foreach (var enemy in visibleEnemies) if (enemy != null && enemy.Alive)
                 Mark(area, world, enemy.transform.position, triangle, new Color(.85f, .22f, .13f), 15, false, disk);
             if (mission.hung != null) Mark(area, world, mission.hung.position, circle, new Color(.3f, .67f, .84f), 13, false, disk);

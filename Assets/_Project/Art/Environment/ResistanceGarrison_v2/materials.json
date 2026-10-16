@@ -1,0 +1,180 @@
+{
+  "items": [
+    {
+      "name": "RG_AgedTeak",
+      "albedo": "Textures/RG_AgedTeak_BaseColor.png",
+      "normal": "Textures/RG_AgedTeak_Normal.png",
+      "mask": "Textures/RG_AgedTeak_MetalSmooth.png",
+      "smoothness": 0.15000000000000002,
+      "metallic": 0
+    },
+    {
+      "name": "RG_WeatheredTimber",
+      "albedo": "Textures/RG_WeatheredTimber_BaseColor.png",
+      "normal": "Textures/RG_WeatheredTimber_Normal.png",
+      "mask": "Textures/RG_WeatheredTimber_MetalSmooth.png",
+      "smoothness": 0.06000000000000005,
+      "metallic": 0
+    },
+    {
+      "name": "RG_EndgrainRepair",
+      "albedo": "Textures/RG_EndgrainRepair_BaseColor.png",
+      "normal": "Textures/RG_EndgrainRepair_Normal.png",
+      "mask": "Textures/RG_EndgrainRepair_MetalSmooth.png",
+      "smoothness": 0.15000000000000002,
+      "metallic": 0
+    },
+    {
+      "name": "RG_OliveCanvas",
+      "albedo": "Textures/RG_OliveCanvas_BaseColor.png",
+      "normal": "Textures/RG_OliveCanvas_Normal.png",
+      "mask": "Textures/RG_OliveCanvas_MetalSmooth.png",
+      "smoothness": 0.040000000000000036,
+      "metallic": 0
+    },
+    {
+      "name": "RG_FadedKhaki",
+      "albedo": "Textures/RG_FadedKhaki_BaseColor.png",
+      "normal": "Textures/RG_FadedKhaki_Normal.png",
+      "mask": "Textures/RG_FadedKhaki_MetalSmooth.png",
+      "smoothness": 0.06000000000000005,
+      "metallic": 0
+    },
+    {
+      "name": "RG_Linen",
+      "albedo": "Textures/RG_Linen_BaseColor.png",
+      "normal": "Textures/RG_Linen_Normal.png",
+      "mask": "Textures/RG_Linen_MetalSmooth.png",
+      "smoothness": 0.030000000000000027,
+      "metallic": 0
+    },
+    {
+      "name": "RG_CorrugatedZinc",
+      "albedo": "Textures/RG_CorrugatedZinc_BaseColor.png",
+      "normal": "Textures/RG_CorrugatedZinc_Normal.png",
+      "mask": "Textures/RG_CorrugatedZinc_MetalSmooth.png",
+      "smoothness": 0.30000000000000004,
+      "metallic": 0.65
+    },
+    {
+      "name": "RG_PaintedSteel",
+      "albedo": "Textures/RG_PaintedSteel_BaseColor.png",
+      "normal": "Textures/RG_PaintedSteel_Normal.png",
+      "mask": "Textures/RG_PaintedSteel_MetalSmooth.png",
+      "smoothness": 0.38,
+      "metallic": 0.48
+    },
+    {
+      "name": "RG_BlackSteel",
+      "albedo": "Textures/RG_BlackSteel_BaseColor.png",
+      "normal": "Textures/RG_BlackSteel_Normal.png",
+      "mask": "Textures/RG_BlackSteel_MetalSmooth.png",
+      "smoothness": 0.5,
+      "metallic": 0.72
+    },
+    {
+      "name": "RG_WornBrass",
+      "albedo": "Textures/RG_WornBrass_BaseColor.png",
+      "normal": "Textures/RG_WornBrass_Normal.png",
+      "mask": "Textures/RG_WornBrass_MetalSmooth.png",
+      "smoothness": 0.5700000000000001,
+      "metallic": 0.8
+    },
+    {
+      "name": "RG_Bakelite",
+      "albedo": "Textures/RG_Bakelite_BaseColor.png",
+      "normal": "Textures/RG_Bakelite_Normal.png",
+      "mask": "Textures/RG_Bakelite_MetalSmooth.png",
+      "smoothness": 0.6,
+      "metallic": 0
+    },
+    {
+      "name": "RG_Earth",
+      "albedo": "Textures/RG_Earth_BaseColor.png",
+      "normal": "Textures/RG_Earth_Normal.png",
+      "mask": "Textures/RG_Earth_MetalSmooth.png",
+      "smoothness": 0.15000000000000002,
+      "metallic": 0
+    },
+    {
+      "name": "RG_TrampledEarth",
+      "albedo": "Textures/RG_TrampledEarth_BaseColor.png",
+      "normal": "Textures/RG_TrampledEarth_Normal.png",
+      "mask": "Textures/RG_TrampledEarth_MetalSmooth.png",
+      "smoothness": 0.08999999999999997,
+      "metallic": 0
+    },
+    {
+      "name": "RG_WetMud",
+      "albedo": "Textures/RG_WetMud_BaseColor.png",
+      "normal": "Textures/RG_WetMud_Normal.png",
+      "mask": "Textures/RG_WetMud_MetalSmooth.png",
+      "smoothness": 0.75,
+      "metallic": 0
+    },
+    {
+      "name": "RG_Grass",
+      "albedo": "Textures/RG_Grass_BaseColor.png",
+      "normal": "Textures/RG_Grass_Normal.png",
+      "mask": "Textures/RG_Grass_MetalSmooth.png",
+      "smoothness": 0.040000000000000036,
+      "metallic": 0
+    },
+    {
+      "name": "RG_Foliage",
+      "albedo": "Textures/RG_Foliage_BaseColor.png",
+      "normal": "Textures/RG_Foliage_Normal.png",
+      "mask": "Textures/RG_Foliage_MetalSmooth.png",
+      "smoothness": 0.17000000000000004,
+      "metallic": 0
+    },
+    {
+      "name": "RG_Bark",
+      "albedo": "Textures/RG_Bark_BaseColor.png",
+      "normal": "Textures/RG_Bark_Normal.png",
+      "mask": "Textures/RG_Bark_MetalSmooth.png",
+      "smoothness": 0.050000000000000044,
+      "metallic": 0
+    },
+    {
+      "name": "RG_RedBrick",
+      "albedo": "Textures/RG_RedBrick_BaseColor.png",
+      "normal": "Textures/RG_RedBrick_Normal.png",
+      "mask": "Textures/RG_RedBrick_MetalSmooth.png",
+      "smoothness": 0.050000000000000044,
+      "metallic": 0
+    },
+    {
+      "name": "RG_Paper",
+      "albedo": "Textures/RG_Paper_BaseColor.png",
+      "normal": "Textures/RG_Paper_Normal.png",
+      "mask": "Textures/RG_Paper_MetalSmooth.png",
+      "smoothness": 0.09999999999999998,
+      "metallic": 0
+    },
+    {
+      "name": "RG_FieldMap",
+      "albedo": "Textures/RG_FieldMap_BaseColor.png",
+      "normal": "Textures/RG_FieldMap_Normal.png",
+      "mask": "Textures/RG_FieldMap_MetalSmooth.png",
+      "smoothness": 0.09999999999999998,
+      "metallic": 0
+    },
+    {
+      "name": "RG_Stencil",
+      "albedo": "Textures/RG_Stencil_BaseColor.png",
+      "normal": "Textures/RG_Stencil_Normal.png",
+      "mask": "Textures/RG_Stencil_MetalSmooth.png",
+      "smoothness": 0.19999999999999996,
+      "metallic": 0
+    },
+    {
+      "name": "RG_LampGlass",
+      "albedo": "Textures/RG_LampGlass_BaseColor.png",
+      "normal": "Textures/RG_LampGlass_Normal.png",
+      "mask": "Textures/RG_LampGlass_MetalSmooth.png",
+      "smoothness": 0.8,
+      "metallic": 0
+    }
+  ]
+}

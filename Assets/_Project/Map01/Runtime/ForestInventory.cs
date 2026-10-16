@@ -8,10 +8,17 @@ namespace ShadowVale.Map01
     public static class ForestInventory
     {
         public static readonly string[] Order = {
-            "rifle_standard", "knife",
-            "ammo_rifle", "medkit_small", "cloth", "herb", "stone", "supplies", "river_documents",
-            "ammo_sniper", "scrap_metal", "gun_oil", "repair_kit", "ammo_smg", "ammo_pistol", "ammo_shotgun"
+            "rifle_standard", "knife", "pistol_k54", "rifle_mosin",
+            "ammo_rifle", "ammo_pistol", "ammo_sniper", "medkit_small", "smoke_bomb", "grenade_f1", "cloth", "herb", "stone", "supplies", "river_documents",
+            "scrap_metal", "gunpowder", "gun_oil", "repair_kit", "weapon_parts", "smoke_module", "fuse_module", "blast_charge", "scope_lens",
+            "ammo_smg", "ammo_shotgun"
         };
+
+        /// <summary>
+        /// Items whose bag icon is rendered from their 3D model (Resources/Hud/ItemIcons) rather than painted on the
+        /// art board: what the camp chests (Map01CampChests) brought in. A test holds each to having an icon and a name.
+        /// </summary>
+        public static readonly string[] RenderedIcons = { "pistol_k54", "rifle_mosin", "ammo_pistol", "ammo_sniper", "gunpowder", "weapon_parts", "smoke_module", "fuse_module", "blast_charge", "scope_lens", "smoke_bomb", "grenade_f1" };
         public struct Stack
         {
             public string Id;
@@ -31,8 +38,8 @@ namespace ShadowVale.Map01
             }
             return result;
         }
-        public static bool IsWeapon(string id) => id == "rifle_standard" || id == "knife";
-        public static bool QuickUsable(string id) => id == "medkit_small" || id == "stone" || IsWeapon(id);
+        public static bool IsWeapon(string id) => id == "rifle_standard" || id == "knife" || id == "pistol_k54" || id == "rifle_mosin";
+        public static bool QuickUsable(string id) => id == "medkit_small" || id == "stone" || id == "smoke_bomb" || id == "grenade_f1" || IsWeapon(id);
         public static string Name(string id)
         {
             switch (id) {
@@ -40,9 +47,11 @@ namespace ShadowVale.Map01
                 case "knife": return "Dao";
                 case "ammo_rifle": return "Đạn súng trường";
                 case "ammo_smg": return "Đạn tiểu liên";
-                case "ammo_pistol": return "Đạn súng ngắn";
+                case "ammo_pistol": return "Đạn K-54";
                 case "ammo_shotgun": return "Đạn shotgun";
-                case "ammo_sniper": return "Đạn bắn tỉa";
+                case "ammo_sniper": return "Đạn Mosin";
+                case "pistol_k54": return "Súng lục K-54";
+                case "rifle_mosin": return "Súng Mosin ống ngắm PU";
                 case "medkit_small": return "Băng cứu thương";
                 case "cloth": return "Vải";
                 case "herb": return "Thảo dược";
@@ -52,24 +61,81 @@ namespace ShadowVale.Map01
                 case "scrap_metal": return "Kim loại vụn";
                 case "gun_oil": return "Dầu súng";
                 case "repair_kit": return "Bộ sửa chữa";
+                case "weapon_parts": return "Linh kiện súng";
+                case "smoke_module": return "Ống tạo khói";
+                case "fuse_module": return "Mô-đun kích hoạt";
+                case "blast_charge": return "Lõi nổ";
+                case "scope_lens": return "Kính ngắm";
+                case "smoke_bomb": return "Bom khói";
+                case "grenade_f1": return "Lựu đạn F1";
+                case "gunpowder": return "Thuốc súng";
                 default: return id ?? "Ô trống";
             }
         }
         public static string Description(string id)
         {
             switch (id) {
-                case "rifle_standard": return "Trang bị khởi hành. Dùng đạn súng trường. Nhấn 1 để cầm súng.";
-                case "knife": return "Trang bị cận chiến, không tiêu hao đạn. Nhấn 2 để cầm dao.";
+                case "rifle_standard": return "Súng trường AK, trang bị khởi hành, ở ô 1. Dùng đạn súng trường. Nhấn 1 để cầm súng.";
+                case "knife": return "Dao, luôn ở ô 3, không vứt được. Cận chiến, hạ gục lặng lẽ từ sau lưng. Nhấn 3 để cầm dao.";
                 case "medkit_small": return "Hồi máu cho nhân vật. Nhấn H để dùng.";
-                case "stone": return "Ném theo hướng ngắm để đánh lạc hướng lính.";
-                case "cloth": return "Vật liệu chế tạo. Kết hợp thảo dược tại bàn chế tạo.";
+                case "stone": return "Đồ ném: rơi xuống gây tiếng động 14 m, lính nghe thấy bỏ vị trí đi kiểm tra. Phím 4 chọn, giữ Q ngắm, thả Q ném.";
+                case "cloth": return "Vật liệu chế tạo: băng cứu thương (2 vải + 1 thảo dược) và bom khói (1 vải + 1 ống tạo khói).";
                 case "herb": return "Kết hợp 2 vải và 1 thảo dược để làm băng cứu thương.";
                 case "supplies": return "Vật phẩm nhiệm vụ. Mang hàng tiếp tế đến bến sông.";
                 case "river_documents": return "Vật phẩm nhiệm vụ. Mang tài liệu về điểm rút lui.";
-                case "scrap_metal": return "Vật liệu chế tạo và sửa chữa trang bị.";
-                case "gun_oil": return "Vật liệu bảo dưỡng trang bị.";
-                case "repair_kit": return "Bộ dụng cụ sửa chữa. Map hiện tại chưa có thao tác sử dụng.";
+                case "scrap_metal": return "Vật liệu chế tạo: bộ sửa chữa (3, cùng 1 dầu súng) và đạn (1, cùng thuốc súng).";
+                case "gun_oil": return "Vật liệu bảo dưỡng: cùng 3 kim loại vụn làm bộ sửa chữa.";
+                case "repair_kit": return "Bộ dụng cụ sửa chữa: chế từ 3 kim loại vụn và 1 dầu súng. Thao tác sửa súng chưa có trong bản này.";
+                case "weapon_parts": return "Lò xo, chốt, kim hỏa, trong hòm sắt trại C2. Dùng để sửa súng hỏng — chưa có trong bản này.";
+                case "pistol_k54": return "K-54 (TT-33 bản Trung Quốc), đạn 7,62×25, băng 8 viên. Ở ô 2. Hoạt ảnh cầm đang chờ duyệt, nên chưa rút ra được.";
+                case "rifle_mosin": return "Mosin M91/30, ống ngắm PU 3,5×, đạn 7,62×54R, 5 viên. Kéo vào ô 1 để thay súng trường. Hoạt ảnh cầm đang chờ duyệt, nên chưa rút ra được.";
+                case "ammo_rifle": return "Đạn 7,62×39 cho súng trường. Nhấn R để nạp. Chế ở bàn: 2 thuốc súng + 1 kim loại vụn ra 10 viên.";
+                case "gunpowder": return "Hộp thiếc thuốc súng đen. Chế đạn ở bàn: đạn K-54 (1) và đạn súng trường (2).";
+                case "ammo_pistol": return "Đạn 7,62×25 cho K-54. Chế ở bàn: 1 thuốc súng + 1 kim loại vụn ra 8 viên. Chưa bắn được ở bản này.";
+                case "ammo_sniper": return "Đạn 7,62×54R cho Mosin, nạp từng viên (ống ngắm che khe kẹp đạn). Chưa bắn được ở bản này.";
+                case "smoke_module": return "Ống tạo khói, trong hòm sắt trại C2. Kết hợp 1 vải tại bàn chế tạo để làm bom khói.";
+                case "fuse_module": return "Mô-đun kích hoạt, trong hòm sắt trại C2. Chế lựu đạn F1: 1 lõi nổ + 1 mô-đun kích hoạt + 1 kim loại vụn.";
+                case "blast_charge": return "Lõi nổ hiếm, trong hòm sắt trại C3. Chế lựu đạn F1: 1 lõi nổ + 1 mô-đun kích hoạt + 1 kim loại vụn.";
+                case "scope_lens": return "Thấu kính dự phòng cho ống ngắm, trong hòm sắt trại C3. Dùng sửa súng ngắm — chưa có trong bản này.";
+                case "smoke_bomb": return "Đồ ném: mây khói bán kính 4 m trong 15 giây, lính không nhìn xuyên qua. Chế từ 1 ống tạo khói + 1 vải. Phím 4 chọn, giữ Q ném.";
+                case "grenade_f1": return "Lựu đạn F1: nổ 3,5 giây sau khi rơi, chết trong 3 m, bị thương tới 7 m, tiếng nổ vang 40 m — cả Nam cũng không tránh được. Phím 4 chọn, giữ Q ném.";
                 default: return id != null && id.StartsWith("ammo_") ? "Đạn cho " + Name(id).Substring(4).ToLowerInvariant() + ". Không dùng trực tiếp từ túi đồ." : "Vật phẩm trong túi đồ.";
+            }
+        }
+        /// <summary>Where a bench material is found, for the bench's "Lấy ở" line when it runs short.</summary>
+        public static string Source(string id)
+        {
+            switch (id) {
+                case "cloth": return "Thùng vật tư căn cứ A · hòm sắt trại C1, C2";
+                case "herb": return "Thùng vật tư căn cứ A · hòm sắt trại C2";
+                case "scrap_metal": return "Hòm sắt trại C1";
+                case "gun_oil": return "Hòm sắt trại C1";
+                case "smoke_module": return "Hòm sắt trại C2";
+                case "gunpowder": return "Hòm sắt trại C1, C2";
+                default: return "Hòm sắt các trại địch";
+            }
+        }
+        /// <summary>The bench's tab a recipe's output belongs to.</summary>
+        public static string BenchGroup(string outputId)
+        {
+            switch (outputId) {
+                case "medkit_small": return "heal";
+                case "smoke_bomb": case "grenade_f1": return "throw";
+                case "ammo_pistol": case "ammo_rifle": case "ammo_sniper": return "ammo";
+                default: return "tool";
+            }
+        }
+        /// <summary>Short facts about a bench output, shown as chips on the bench screen.</summary>
+        public static string[] BenchFacts(string outputId)
+        {
+            switch (outputId) {
+                case "medkit_small": return new[] { "Hồi 45 máu", "Phím H" };
+                case "repair_kit": return new[] { "Sửa súng: chưa có" };
+                case "smoke_bomb": return new[] { "Khói 4 m · 15 giây", "Phím 4, giữ Q" };
+                case "grenade_f1": return new[] { "Chết 3 m · thương 7 m", "Nổ sau 3,5 giây" };
+                case "ammo_pistol": return new[] { "Cho K-54", "Bắn K-54: chưa có" };
+                case "ammo_rifle": return new[] { "Cho súng trường", "Nạp bằng R" };
+                default: return System.Array.Empty<string>();
             }
         }
         public static int IconIndex(string id)
@@ -78,8 +144,8 @@ namespace ShadowVale.Map01
                 case "ammo_rifle": return 0; case "cloth": return 1; case "herb": return 2;
                 case "medkit_small": return 3; case "supplies": return 4; case "river_documents": return 5;
                 case "stone": return 6; case "scrap_metal": return 7; case "gun_oil": return 8;
-                case "repair_kit": return 9; case "ammo_smg": return 10; case "ammo_pistol": return 11;
-                case "ammo_shotgun": return 12; case "ammo_sniper": return 13; default: return -1;
+                case "repair_kit": return 9; case "ammo_smg": return 10;
+                case "ammo_shotgun": return 12; default: return -1; // ammo_pistol (11) and ammo_sniper (13) now have rendered icons
             }
         }
     }

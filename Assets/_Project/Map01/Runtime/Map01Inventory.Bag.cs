@@ -1,0 +1,312 @@
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using ShadowVale.Gameplay.Combat;
+
+namespace ShadowVale.Map01
+{
+    /// <summary>
+    /// The bag grid and the equipment slots (the approved "Trang bị" design, 16/10/2026):
+    /// <list type="bullet">
+    /// <item>1 long gun (AK or Mosin), 2 pistol (K-54), 3 knife, 4 throwable picked for [Q]. There are no bare
+    /// hands: the knife never leaves slot 3, so something is always in hand.</item>
+    /// <item>The bag is 6 x 4 = 24 cells, one stack each, at most the item's stack size. Dropping a stack on an
+    /// empty cell moves it, on the same item merges up to the limit (the rest stays), on anything else swaps.</item>
+    /// <item>Split puts half a stack in the first empty cell; Sort merges stacks and orders them guns, rounds,
+    /// throwables, healing, materials, mission things.</item>
+    /// <item>A weapon goes into its slot from the bag and the one that was there takes its cell.</item>
+    /// <item>Anything but mission things and the knife can be put on the ground (Map01Drops) and picked up again.</item>
+    /// </list>
+    /// </summary>
+    public sealed partial class Map01Inventory
+    {
+        public const int BagColumns = 6, BagSize = 24;
+        public enum Slot { Primary, Pistol, Knife }
+        public sealed class BagCell { public string id; public int count; }
+        [System.Serializable] public sealed class Layout
+        {
+            public string[] ids = new string[BagSize];
+            public int[] counts = new int[BagSize];
+            public string primary, pistol, throwable;
+        }
+
+        private readonly BagCell[] bag = new BagCell[BagSize];
+        private string primary, pistol, knife;
+        private string throwable = "stone";
+        /// <summary>Raised whenever the bag or the slots change, for anything drawn from them.</summary>
+        public event System.Action Changed;
+
+        public static readonly string[] Throwables = { "stone", "smoke_bomb", "grenade_f1" };
+        public BagCell Cell(int i) => i >= 0 && i < BagSize ? bag[i] : null;
+        public string SlotItem(Slot slot) => slot == Slot.Primary ? primary : slot == Slot.Pistol ? pistol : knife;
+        /// <summary>The slot a weapon goes in, or null for anything that is not one.</summary>
+        public static Slot? SlotOf(string id) => id == "rifle_standard" || id == "rifle_mosin" ? Slot.Primary
+            : id == "pistol_k54" ? Slot.Pistol : id == "knife" ? Slot.Knife : (Slot?)null;
+        /// <summary>The throwable [Q] uses; key 4 goes round the ones he has.</summary>
+        public string Throwable => throwable;
+        public int FreeCells => bag.Count(c => c == null);
+        public static bool IsMissionItem(string id) => id == "supplies" || id == "river_documents";
+        /// <summary>Weapons with Nam's own animations so far: the others go in their slot but stay holstered.</summary>
+        public static bool Drawable(string id) => id == "rifle_standard" || id == "knife";
+
+        private void ClearAll()
+        {
+            for (int i = 0; i < BagSize; i++) bag[i] = null;
+            primary = pistol = knife = null; throwable = "stone";
+        }
+
+        /// <summary>A weapon into its empty slot, then stacks of the same item with room, then empty cells.
+        /// Returns how many did not fit.</summary>
+        private int Store(string id, int amount)
+        {
+            if (string.IsNullOrEmpty(id) || amount <= 0) return 0;
+            if (id == "stone") amount = Mathf.Min(amount, Mathf.Max(0, StoneCapacity - Stones));
+            var slot = SlotOf(id);
+            if (slot != null && SlotItem(slot.Value) == null && amount > 0)
+            {
+                SetSlot(slot.Value, id); amount--;
+            }
+            int limit = StackLimit(id);
+            for (int i = 0; i < BagSize && amount > 0; i++)
+            {
+                var cell = bag[i];
+                if (cell == null || cell.id != id || cell.count >= limit) continue;
+                int put = Mathf.Min(amount, limit - cell.count); cell.count += put; amount -= put;
+            }
+            for (int i = 0; i < BagSize && amount > 0; i++)
+            {
+                if (bag[i] != null) continue;
+                int put = Mathf.Min(amount, limit); bag[i] = new BagCell { id = id, count = put }; amount -= put;
+            }
+            Changed?.Invoke();
+            return amount;
+        }
+
+        private void SetSlot(Slot slot, string id)
+        {
+            if (slot == Slot.Primary) primary = id; else if (slot == Slot.Pistol) pistol = id; else knife = id;
+        }
+
+        /// <summary>Moves the stack in <paramref name="from"/> onto <paramref name="to"/>: into it if empty, onto it
+        /// if it is the same item with room (what does not fit stays behind), else the two swap.</summary>
+        public bool Move(int from, int to)
+        {
+            if (from == to || Cell(from) == null || to < 0 || to >= BagSize) return false;
+            var a = bag[from]; var b = bag[to];
+            if (b == null) { bag[to] = a; bag[from] = null; }
+            else if (b.id == a.id && b.count < StackLimit(a.id))
+            {
+                int put = Mathf.Min(a.count, StackLimit(a.id) - b.count);
+                b.count += put; a.count -= put;
+                if (a.count <= 0) bag[from] = null;
+            }
+            else { bag[to] = a; bag[from] = b; }
+            Changed?.Invoke();
+            return true;
+        }
+
+        /// <summary>Half the stack (rounded down) into the first empty cell.</summary>
+        public bool Split(int i)
+        {
+            var cell = Cell(i);
+            if (cell == null || cell.count < 2) return false;
+            int to = System.Array.IndexOf(bag, null);
+            if (to < 0) { mission?.Say("Túi hết ô trống để tách.", 3); return false; }
+            int half = cell.count / 2; cell.count -= half;
+            bag[to] = new BagCell { id = cell.id, count = half };
+            Changed?.Invoke();
+            return true;
+        }
+
+        /// <summary>SẮP XẾP: stacks of an item merged, then guns, rounds, throwables, healing, materials and
+        /// mission things, in the bench's own item order within each group.</summary>
+        public void Sort()
+        {
+            var totals = new Dictionary<string, int>();
+            foreach (var c in bag) if (c != null) totals[c.id] = (totals.TryGetValue(c.id, out int n) ? n : 0) + c.count;
+            for (int i = 0; i < BagSize; i++) bag[i] = null;
+            int at = 0;
+            foreach (var p in totals.OrderBy(p => SortGroup(p.Key)).ThenBy(p => OrderIndex(p.Key)).ThenBy(p => p.Key, System.StringComparer.Ordinal))
+            {
+                int limit = StackLimit(p.Key);
+                for (int left = p.Value; left > 0 && at < BagSize; at++)
+                {
+                    int put = Mathf.Min(left, limit); bag[at] = new BagCell { id = p.Key, count = put }; left -= put;
+                }
+            }
+            Changed?.Invoke();
+        }
+        public static int SortGroup(string id)
+        {
+            if (ForestInventory.IsWeapon(id)) return 0;
+            if (id.StartsWith("ammo_")) return 1;
+            if (System.Array.IndexOf(Throwables, id) >= 0) return 2;
+            if (id == "medkit_small" || id == "herb") return 3;
+            if (IsMissionItem(id)) return 5;
+            return 4;
+        }
+        private static int OrderIndex(string id) { int i = System.Array.IndexOf(ForestInventory.Order, id); return i < 0 ? int.MaxValue : i; }
+
+        /// <summary>The weapon in cell <paramref name="i"/> into its slot; the one that was there takes the cell.
+        /// A drawn weapon taken out of the slot leaves the knife in hand.</summary>
+        public bool EquipFromCell(int i)
+        {
+            var cell = Cell(i);
+            var slot = cell != null ? SlotOf(cell.id) : null;
+            if (slot == null) { if (cell != null) mission?.Say(ForestInventory.Name(cell.id) + " không trang bị được.", 3); return false; }
+            if (slot == Slot.Knife) return false;                          // one knife, always in its slot
+            string old = SlotItem(slot.Value);
+            bool wasHeld = old != null && IsEquipped(old);
+            SetSlot(slot.Value, cell.id);
+            bag[i] = old != null ? new BagCell { id = old, count = 1 } : null;
+            if (wasHeld) Draw(Slot.Knife);
+            Changed?.Invoke();
+            return true;
+        }
+
+        /// <summary>The weapon in <paramref name="slot"/> back into the bag: into cell <paramref name="to"/> (onto a
+        /// weapon of the same kind, they swap) or the first empty one. The knife stays.</summary>
+        public bool Unequip(Slot slot, int to = -1)
+        {
+            string id = SlotItem(slot);
+            if (id == null || slot == Slot.Knife) return false;
+            if (to >= 0 && Cell(to) != null && SlotOf(Cell(to).id) == slot) return EquipFromCell(to);
+            if (to < 0 || Cell(to) != null) to = System.Array.IndexOf(bag, null);
+            if (to < 0) { mission?.Say("Túi đã đầy, không cất được.", 3); return false; }
+            bool wasHeld = IsEquipped(id);
+            bag[to] = new BagCell { id = id, count = 1 };
+            SetSlot(slot, null);
+            if (wasHeld) Draw(Slot.Knife);
+            Changed?.Invoke();
+            return true;
+        }
+
+        /// <summary>Puts <paramref name="amount"/> from cell <paramref name="i"/> on the ground at Nam's feet.</summary>
+        public bool Drop(int i, int amount)
+        {
+            var cell = Cell(i);
+            if (cell == null || amount <= 0) return false;
+            if (IsMissionItem(cell.id)) { mission?.Say("Đồ nhiệm vụ không vứt được.", 3); return false; }
+            amount = Mathf.Min(amount, cell.count);
+            string id = cell.id;
+            cell.count -= amount;
+            if (cell.count <= 0) bag[i] = null;
+            Map01Drops.For(mission)?.Put(id, amount);
+            Changed?.Invoke();
+            return true;
+        }
+        /// <summary>The weapon in <paramref name="slot"/> on the ground. The knife cannot go.</summary>
+        public bool DropSlot(Slot slot)
+        {
+            string id = SlotItem(slot);
+            if (id == null) return false;
+            if (slot == Slot.Knife) { mission?.Say("Dao luôn mang theo, không vứt được.", 3); return false; }
+            bool wasHeld = IsEquipped(id);
+            SetSlot(slot, null);
+            if (wasHeld) Draw(Slot.Knife);
+            Map01Drops.For(mission)?.Put(id, 1);
+            Changed?.Invoke();
+            return true;
+        }
+
+        /// <summary>Puts the weapon in <paramref name="slot"/> in Nam's hands. K-54 and Mosin have no animations of
+        /// their own yet (the hold design is waiting for approval): asking for them says so and keeps what he holds.</summary>
+        public bool Draw(Slot slot)
+        {
+            string id = SlotItem(slot);
+            if (id == null || mission == null || mission.ModernCombat == null) return false;
+            if (!Drawable(id))
+            {
+                mission.Say(ForestInventory.Name(id) + ": chưa có hoạt ảnh cầm (bản thiết kế đang chờ duyệt). Vẫn giữ " +
+                    (mission.ModernCombat.EquippedKind == WeaponKind.Knife ? "dao" : "súng trường") + " trên tay.", 4);
+                return false;
+            }
+            var kind = id == "knife" ? WeaponKind.Knife : WeaponKind.Rifle;
+            SuppressFire = true;
+            return mission.ModernCombat.Equip(kind) && mission.ModernCombat.EquippedKind == kind;
+        }
+
+        /// <summary>What a weapon slot emptied under him leaves in hand: the knife.</summary>
+        private void OnSlotEmptied()
+        {
+            if (mission != null && mission.ModernCombat != null && mission.ModernCombat.EquippedKind == WeaponKind.Rifle && primary != "rifle_standard")
+                Draw(Slot.Knife);
+        }
+
+        /// <summary>Number keys, as PlayerCombat.SlotPressed: 1 long gun, 2 pistol, 3 knife, 4 next throwable.</summary>
+        public bool OnSlotKey(int key)
+        {
+            switch (key)
+            {
+                case 0: Draw(Slot.Primary); return true;
+                case 1: Draw(Slot.Pistol); return true;
+                case 2: Draw(Slot.Knife); return true;
+                case 3: CycleThrowable(); return true;
+                default: return false;
+            }
+        }
+
+        /// <summary>Key 4: the next throwable he has any of (stone, smoke bomb, F1). With only one kind left the
+        /// choice stays on it.</summary>
+        public void CycleThrowable()
+        {
+            var have = Throwables.Where(t => Count(t) > 0).ToList();
+            if (have.Count == 0) { mission?.Say("Không còn đồ ném nào.", 2); return; }
+            int at = have.IndexOf(throwable);
+            throwable = have[(at + 1) % have.Count];
+            ThrowableChosenAt = Time.time;
+            mission?.Say("Đồ ném: " + ForestInventory.Name(throwable) + " (" + Count(throwable) + ")", 1.6f);
+            Changed?.Invoke();
+        }
+        public void SelectThrowable(string id)
+        {
+            if (System.Array.IndexOf(Throwables, id) < 0) return;
+            throwable = id; ThrowableChosenAt = Time.time; Changed?.Invoke();
+        }
+        /// <summary>When key 4 last changed the throwable, for the hotbar's short highlight.</summary>
+        public float ThrowableChosenAt { get; private set; } = -10f;
+        /// <summary>The picked throwable, or the next one he has if it ran out.</summary>
+        public string ReadyThrowable()
+        {
+            if (Count(throwable) > 0) return throwable;
+            var next = Throwables.FirstOrDefault(t => Count(t) > 0);
+            if (next != null) { throwable = next; Changed?.Invoke(); }
+            return next;
+        }
+
+        /// <summary>The bag as saved: every cell, the slots, the throwable picked.</summary>
+        public Layout CaptureLayout()
+        {
+            var l = new Layout { primary = primary, pistol = pistol, throwable = throwable };
+            for (int i = 0; i < BagSize; i++) { l.ids[i] = bag[i]?.id; l.counts[i] = bag[i]?.count ?? 0; }
+            return l;
+        }
+        /// <summary>Puts a saved layout back over what <see cref="RestoreFromSave"/> loaded: cells where they were,
+        /// then anything the totals have beyond the layout (materials of crafts still queued at save time) stored
+        /// as usual. Totals win where the two disagree.</summary>
+        public void RestoreLayout(Layout l)
+        {
+            if (l == null || l.ids == null || l.counts == null) return;
+            var totals = new Dictionary<string, int>(Items);
+            for (int i = 0; i < BagSize; i++) bag[i] = null;
+            primary = l.primary; pistol = l.pistol;
+            knife = totals.ContainsKey("knife") ? "knife" : null;
+            throwable = System.Array.IndexOf(Throwables, l.throwable) >= 0 ? l.throwable : "stone";
+            var left = new Dictionary<string, int>(totals);
+            foreach (var id in new[] { primary, pistol, knife }) if (id != null) left[id] = (left.TryGetValue(id, out int n) ? n : 0) - 1;
+            if (primary != null && (!totals.ContainsKey(primary))) primary = null;
+            if (pistol != null && (!totals.ContainsKey(pistol))) pistol = null;
+            for (int i = 0; i < Mathf.Min(BagSize, l.ids.Length, l.counts.Length); i++)
+            {
+                string id = l.ids[i];
+                if (string.IsNullOrEmpty(id) || l.counts[i] <= 0) continue;
+                int have = left.TryGetValue(id, out int n) ? n : 0;
+                int put = Mathf.Min(have, l.counts[i]);
+                if (put <= 0) continue;
+                bag[i] = new BagCell { id = id, count = put }; left[id] = have - put;
+            }
+            foreach (var p in left) if (p.Value > 0) Store(p.Key, p.Value);
+            Changed?.Invoke();
+        }
+    }
+}

@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace ShadowVale.Map01
 {
-    public enum ForestPointKind { Supplies, Loot, Workbench, Documents, Exit, Hide, Cover }
+    // Stones and Chest are last: the scene stores these as numbers.
+    public enum ForestPointKind { Supplies, Loot, Workbench, Documents, Exit, Hide, Cover, Stones, Chest }
 
     public sealed class ForestPoint : MonoBehaviour
     {

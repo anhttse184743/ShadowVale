@@ -603,6 +603,8 @@ namespace ShadowVale.Map01
             // Bushes and tree crowns hide Nam — even from a guard already hunting him, who then
             // goes to where he last saw him.
             if (_mission != null && _mission.SightCover != null && _mission.SightCover.Blocks(origin, target)) return false;
+            // A smoke bomb's cloud hides him the same way, from either side of it.
+            if (Map01Smoke.Blocks(origin, target)) return false;
             if (Physics.Raycast(origin, delta.normalized, out var hit, distance, obstructionMask,
                     QueryTriggerInteraction.Ignore))
                 return hit.transform == _player || hit.transform.IsChildOf(_player);

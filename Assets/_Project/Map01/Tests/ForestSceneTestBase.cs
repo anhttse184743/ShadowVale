@@ -24,6 +24,8 @@ namespace ShadowVale.Map01.Tests
             // has run. Every test starts uncapped, and the game's own cap stays off (FramePacing).
             UnityEngine.Application.targetFrameRate = -1;
             SessionState.SetBool(FramePacing.UncappedKey, true);
+            // Tests start with the normal loadout whatever Map01Balance.json says about the bench test kit.
+            SessionState.SetBool(Map01Inventory.NoTestKitKey, true);
         }
         private static void KeepExplicitStart(UnityEngine.SceneManagement.Scene from, UnityEngine.SceneManagement.Scene to) =>
             EditorSceneManager.playModeStartScene = null;
@@ -33,6 +35,7 @@ namespace ShadowVale.Map01.Tests
             EditorSceneManager.activeSceneChangedInEditMode -= KeepExplicitStart;
             EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/_Project/Scenes/00_Boot.unity");
             SessionState.EraseBool(FramePacing.UncappedKey);
+            SessionState.EraseBool(Map01Inventory.NoTestKitKey);
         }
 
         /// <summary>Fix the Game View to <paramref name="width"/>×<paramref name="height"/>: screenshots

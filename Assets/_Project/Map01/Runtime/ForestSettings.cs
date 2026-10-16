@@ -17,6 +17,11 @@ namespace ShadowVale.Map01
         /// <summary>How long a guard looks around where he heard something before heading back.</summary>
         public float searchSeconds;
         public int startingStones, guardDropAmmo, guardDropMedkits;
+        /// <summary>How many stones fit in his pockets. More lie around the map (Map01StoneSites).</summary>
+        public int stoneCapacity;
+        /// <summary>TEMPORARY, for testing the bench: Nam starts with plenty of every material and the camp
+        /// chests' weapons (Map01Inventory.TestCraftingKit). Set false in Map01Balance.json to play normally.</summary>
+        public bool testCraftingKit;
     }
 
     [Serializable] public sealed class ForestBundle

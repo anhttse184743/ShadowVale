@@ -12,7 +12,6 @@ namespace ShadowVale.Map01
     {
         private Texture2D hudItems, hudPlate, hudWeapons, compassArrow, compassBadge;
         private GUIStyle hudTitle, hudHeading, hudBody, hudSmall, hudCount, hudKey, hudCenter, hudEquipped, hudGuide;
-        private float hudScroll;
         private float objectiveBottom;
         private int selectedStack;
         private static readonly Color HudPaper = new Color(.9f, .85f, .68f);
@@ -37,6 +36,7 @@ namespace ShadowVale.Map01
             // Deliberately not "GetComponent() ?? AddComponent()" — see WeaponHotbar.
             guide = GetComponent<Map01ObjectiveGuide>();
             if (guide == null) guide = gameObject.AddComponent<Map01ObjectiveGuide>();
+            HookPickups(); // Map01Hud.Pickup.cs: from the start, not from the first OnGUI
         }
 
         private void HudStyles()
@@ -116,8 +116,13 @@ namespace ShadowVale.Map01
                         for (float ty = 0; ty < target.height; ty += 256)
                             for (float tx = 0; tx < target.width; tx += 256) {
                                 float tw = Mathf.Min(256, target.width - tx), th = Mathf.Min(256, target.height - ty);
+                                // Every other tile mirrored, so neighbouring tiles meet edge to matching edge
+                                // and a large panel (the bench screen) shows no seams.
+                                float u = .32f * tw / 256, v = .32f * th / 256;
+                                bool flipU = ((int)(tx / 256)) % 2 == 1, flipV = ((int)(ty / 256)) % 2 == 1;
                                 GUI.DrawTextureWithTexCoords(new Rect(target.x + tx, target.y + ty, tw, th), hudPlate,
-                                    new Rect(.2f, .2f, .32f * tw / 256, .32f * th / 256));
+                                    // (u runs left to right from the left edge; v is anchored at each tile's top edge.)
+                                    new Rect(flipU ? .52f : .2f, flipV ? .2f + v : .52f - v, flipU ? -u : u, flipV ? -v : v));
                             }
                     } else GUI.DrawTextureWithTexCoords(target, hudPlate, uv, true);
                 }
@@ -125,19 +130,37 @@ namespace ShadowVale.Map01
             } else { HudFill(r, new Color(.08f, .10f, .065f, .97f)); HudBorder(r, HudGold); }
             if (selected) HudBorder(new Rect(r.x + 3, r.y + 3, r.width - 6, r.height - 6), HudGold, 3);
         }
+        private readonly System.Collections.Generic.Dictionary<string, Texture2D> itemIcons = new System.Collections.Generic.Dictionary<string, Texture2D>();
+        /// <summary>The icon an item has of its own, if any (null for the ones on the art board).</summary>
+        public Texture2D ItemIcon(string id)
+        {
+            if (id == null) return null;
+            if (!itemIcons.TryGetValue(id, out var icon)) itemIcons[id] = icon = Resources.Load<Texture2D>("Hud/ItemIcons/" + id);
+            return icon;
+        }
         private void HudIcon(Rect r, string id, bool dim = false)
         {
-            if (ForestInventory.IsWeapon(id) && hudWeapons != null) {
+            if ((id == "rifle_standard" || id == "knife") && hudWeapons != null) {
                 // Use the text-free inventory previews from the approved art board.
                 float left = id == "rifle_standard" ? 57 : 240;
                 var weaponUv = new Rect(left / 1536f, 1 - 850f / 1024f, 148f / 1536f, 120f / 1024f);
                 var tint = GUI.color;
                 if (dim) GUI.color = new Color(.55f, .55f, .55f, .75f);
-                GUI.DrawTextureWithTexCoords(new Rect(r.x, r.center.y - r.width * 120f / 148f / 2, r.width, r.width * 120f / 148f), hudWeapons, weaponUv);
+                // Fitted inside the rect both ways (a wide, low slot card must not spill over its own title).
+                float ih = Mathf.Min(r.height, r.width * 120f / 148f), iw = ih * 148f / 120f;
+                GUI.DrawTextureWithTexCoords(new Rect(r.center.x - iw / 2, r.center.y - ih / 2, iw, ih), hudWeapons, weaponUv);
                 GUI.color = tint;
                 return;
             }
             int index = ForestInventory.IconIndex(id);
+            if (index < 0 && ItemIcon(id) is Texture2D own) {
+                // Items added after the art board have an icon of their own, rendered from their model (Resources/Hud/ItemIcons).
+                var tinted = GUI.color; if (dim) GUI.color = new Color(.55f, .55f, .55f, .75f);
+                HudFill(r, new Color(.11f, .12f, .09f, .9f));
+                GUI.DrawTexture(new Rect(r.x - r.width * .08f, r.y - r.height * .08f, r.width * 1.16f, r.height * 1.16f), own, ScaleMode.ScaleToFit);
+                GUI.color = tinted;
+                return;
+            }
             if (hudItems == null || index < 0) { GUI.Label(r, "?", hudCenter); return; }
             float x = 23 + index % 7 * 218.3f, y = index < 7 ? 179 : 614;
             var uv = new Rect(x / 1536f, 1 - (y + 218) / 1024f, 190f / 1536f, 218f / 1024f);
@@ -149,7 +172,8 @@ namespace ShadowVale.Map01
             HudFill(r, new Color(.025f, .03f, .02f, .8f)); GUI.Label(r, text, hudCount);
         }
         private float HudScale => Mathf.Min(Screen.width / 1600f, Screen.height / 900f);
-        private Rect InventoryRect(float width) => new Rect(width - 748, 52, 716, 816);
+        /// <summary>The bag screen's two plates together (Map01Hud.Bag.cs); messages sit to their left while it is open.</summary>
+        private Rect InventoryRect(float width) => new Rect(width - 1175, 60, 1132, 805);
 
         private void OnGUI() => DrawHud();
 
@@ -157,17 +181,21 @@ namespace ShadowVale.Map01
         {
             if (!mission.IsInitialized || mission.Cinematic || ForestMenu.Visible) return;
             HudStyles();
+            HookPickups(); // Map01Hud.Pickup.cs
             var matrix = GUI.matrix; var color = GUI.color; int depth = GUI.depth;
             float scale = HudScale, width = Screen.width / scale, height = Screen.height / scale;
             GUI.matrix = Matrix4x4.Scale(new Vector3(scale, scale, 1)); GUI.color = Color.white; GUI.depth = -10;
             DrawScouting(width, height, scale); // Map01Hud.Scouting.cs — first, under every other plate.
+            DrawStoneMarkers(width, height); // Map01Hud.Stone.cs — dots in the world, under the plates too.
             bool guiding = guide.HasTarget && !mission.Stopped && !mission.InventoryOpen && !mission.MapOpen;
             if (guiding) DrawTargetMarker(width, height, scale); // First, so every HUD plate sits on top of it.
-            DrawObjective();
+            if (!mission.BenchOpen) DrawObjective(); // The bench screen covers the screen; nothing peeks out at its edge.
             if (guiding) DrawCompass(width);
             if (!mission.InventoryOpen && !mission.MapOpen) DrawCombatHud(width, height);
-            if (!mission.MapOpen && mission.InventoryOpen) DrawInventory(width);
+            if (mission.BenchOpen) DrawBench(width, height); // Map01Hud.Craft.cs
+            else if (!mission.MapOpen && mission.InventoryOpen) DrawInventory(width);
             DrawHudFeedback(width, height);
+            if (!mission.InventoryOpen && !mission.MapOpen) DrawPickups(width);
             if (!mission.InventoryOpen && !mission.MapOpen) {
                 var map = new Rect(40, 30, 261, 261);
                 minimap.Draw(map, false, hudSmall); // Round, with its own rim.
@@ -281,69 +309,9 @@ namespace ShadowVale.Map01
             HudFill(tag, new Color(.025f, .03f, .02f, .7f));
             GUI.Label(tag, $"{guide.Distance:0} m", hudKey);
         }
-        private void DrawInventory(float width)
-        {
-            var panel = InventoryRect(width); HudPanel(panel);
-            GUI.Label(new Rect(panel.x + 25, 75, panel.width - 50, 65), "TÚI ĐỒ", hudTitle);
-            GUI.Label(new Rect(panel.x + 230, 144, 256, 42), "VẬT TƯ", hudCenter);
-            HudFill(new Rect(panel.x + 75, 164, 150, 1), HudGold); HudFill(new Rect(panel.xMax - 225, 164, 150, 1), HudGold);
-            var stacks = inventory.InventoryStacks();
-            string selectedItem = inventory.SelectedItem;
-            if (stacks.Count == 0) { selectedItem = null; selectedStack = 0; }
-            else {
-                selectedStack = Mathf.Clamp(selectedStack, 0, stacks.Count - 1);
-                selectedItem = stacks[selectedStack].Id;
-            }
-            const float step = 111, cell = 104;
-            var viewport = new Rect(panel.x + 19, 195, 666, 437);
-            float contentHeight = Mathf.Max(viewport.height, Mathf.Ceil(stacks.Count / 6f) * step - 7);
-            float maxScroll = contentHeight - viewport.height;
-            hudScroll = Mathf.Clamp(hudScroll, 0, maxScroll);
-            var ev = Event.current;
-            if (ev.type == EventType.ScrollWheel && viewport.Contains(ev.mousePosition)) {
-                hudScroll = Mathf.Clamp(hudScroll + ev.delta.y * 35, 0, maxScroll); ev.Use();
-            }
-            var scrollTint = GUI.color; GUI.color = new Color(.72f, .65f, .42f);
-            hudScroll = GUI.VerticalScrollbar(new Rect(panel.xMax - 26, 196, 14, 435), hudScroll, viewport.height, 0, contentHeight);
-            GUI.color = scrollTint;
-            GUI.BeginGroup(viewport);
-            int total = Mathf.Max(24, Mathf.CeilToInt(stacks.Count / 6f) * 6);
-            for (int i = 0; i < total; i++) {
-                var rect = new Rect(i % 6 * step, i / 6 * step - hudScroll, cell, cell);
-                if (rect.yMax < 0 || rect.y > viewport.height) continue;
-                bool occupied = i < stacks.Count;
-                bool chosen = occupied && i == selectedStack;
-                HudPanel(rect, chosen);
-                if (!occupied) continue;
-                var item = stacks[i];
-                HudIcon(new Rect(rect.x + 8, rect.y + 8, cell - 16, cell - 16), item.Id);
-                if (chosen) HudBorder(new Rect(rect.x + 3, rect.y + 3, cell - 6, cell - 6), HudGold, 3);
-                HudNumber(new Rect(rect.xMax - 59, rect.yMax - 32, 51, 25), "x" + item.Count);
-                if (inventory.IsEquipped(item.Id)) GUI.Label(new Rect(rect.x + 5, rect.y + 4, cell - 10, 20), "ĐANG CẦM", hudEquipped);
-                if (ev.type == EventType.MouseDown && ev.button == 0 && rect.Contains(ev.mousePosition)) {
-                    selectedStack = i; selectedItem = item.Id;
-                    ev.Use();
-                }
-            }
-            GUI.EndGroup();
-            inventory.SelectedItem = selectedItem;
-            var detail = new Rect(panel.x + 19, 648, panel.width - 38, 155); HudPanel(detail);
-            if (selectedItem != null) {
-                HudIcon(new Rect(detail.x + 11, detail.y + 12, 126, 129), selectedItem);
-                GUI.Label(new Rect(detail.x + 151, detail.y + 12, 499, 43), ForestInventory.Name(selectedItem).ToUpperInvariant(), hudHeading);
-                HudFill(new Rect(detail.x + 154, detail.y + 57, 492, 1), HudGold);
-                GUI.Label(new Rect(detail.x + 153, detail.y + 67, 490, 55), ForestInventory.Description(selectedItem), hudSmall);
-                GUI.Label(new Rect(detail.x + 153, detail.y + 122, ForestInventory.IsWeapon(selectedItem) ? 310 : 490, 29), $"Tổng: {inventory.Count(selectedItem)}  ·  Tối đa {inventory.StackLimit(selectedItem)}/ô", hudSmall);
-                if (ForestInventory.IsWeapon(selectedItem)) {
-                    var equipRect = new Rect(detail.xMax - 173, detail.y + 116, 158, 34);
-                    HudPanel(equipRect, inventory.IsEquipped(selectedItem));
-                    if (GUI.Button(equipRect, inventory.IsEquipped(selectedItem) ? "ĐANG CẦM" : "TRANG BỊ", hudKey)) inventory.EquipItem(selectedItem);
-                }
-            } else GUI.Label(new Rect(detail.x + 24, detail.y + 42, detail.width - 48, 70), "Túi đồ trống. Nhặt vật tư trong màn chơi để bổ sung.", hudBody);
-            GUI.Label(new Rect(panel.x + 27, 811, panel.width - 54, 50), "Tab / Esc Đóng  ·  Chọn vũ khí rồi bấm TRANG BỊ\n1 Súng  ·  2 Dao  ·  3 Tay không  ·  H Hồi máu  ·  Q Ném đá", hudSmall);
-        }
         private void DrawHudFeedback(float width, float height)
         {
+            if (mission.BenchOpen) return; // The bench screen shows its own messages (Map01Hud.Craft.cs).
             float areaWidth = mission.InventoryOpen ? InventoryRect(width).x - 56 : Mathf.Min(770, width - 100);
             float x = mission.InventoryOpen ? 28 : (width - areaWidth) / 2;
             if (Time.time < mission.DialogueUntil) {
@@ -355,9 +323,9 @@ namespace ShadowVale.Map01
                 GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), quest.HungPrompt, hudBody);
             else if (nearby != null && !nearby.used && !mission.Stopped && !mission.InventoryOpen)
                 GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), "[E] " + nearby.label, hudBody);
-            if (inventory.IsCrafting) GUI.Label(new Rect(47, objectiveBottom + 10, 415, 40), $"Đang chế tạo… {inventory.CraftRemaining:0.0}s", hudBody);
+            // The bench's progress while Nam is away from it: Map01Hud.Pickup.cs, above the pickup feed.
             // Alerted guards are marked by the awareness eye (Map01Hud.Scouting).
-            GUI.Label(new Rect(28, height - 26, width - 430, 24), "Tab Túi đồ  ·  R Nạp đạn  ·  H Hồi máu  ·  Giữ Q Ném đá  ·  B Chế tạo  ·  M Bản đồ  ·  J Nhiệm vụ  ·  Esc Menu", hudSmall);
+            GUI.Label(new Rect(28, height - 26, width - 430, 24), "Tab Túi đồ  ·  1 Súng chính  ·  2 Súng ngắn  ·  3 Dao  ·  4 Đổi đồ ném  ·  Giữ Q Ném  ·  R Nạp đạn  ·  H Hồi máu  ·  M Bản đồ  ·  Esc Menu", hudSmall);
         }
 
         private void DrawMap(float width, float height)

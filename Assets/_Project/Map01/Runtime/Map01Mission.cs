@@ -115,6 +115,9 @@ namespace ShadowVale.Map01
                 return;
             }
             foreach (var point in FindObjectsByType<ForestPoint>(FindObjectsSortMode.None)) RegisterPoint(point);
+            // Laid out now, not baked into Map 1.unity: a save restored a moment later finds them among the points.
+            Map01StoneSites.Attach(this);
+            Map01CampChests.Attach(this); // An iron chest in each enemy camp (Map01ItemCatalog).
             hp = Settings.playerHP; stamina = Settings.stamina;
             inventory.SeedStartingLoadout(Settings.startingStones);
             // Added at runtime like the scouting order; guards ask it from their first Update.
@@ -134,19 +137,21 @@ namespace ShadowVale.Map01
             Enemies = FindObjectsByType<Map01EnemyController>(FindObjectsSortMode.None);
             if (ModernPlayer != null)
             {
-                ModernPlayer.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting;
+                // The bench works on through its queue while Nam walks off, so crafting does not hold him.
+                ModernPlayer.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible;
                 ModernPlayer.SprintAllowed = () => stamina > 2;
             }
             if (ModernHealth != null) ModernHealth.KeepCheckpointCorpse();
             if (ModernCombat != null)
             {
-                ModernCombat.DrawsOwnWeaponHud = true; // Map01Hud.Combat shows the weapons on keys 1/2/3.
+                ModernCombat.DrawsOwnWeaponHud = true; // Map01Hud.Combat shows the slots on keys 1-4.
+                ModernCombat.SlotPressed = inventory.OnSlotKey; // 1 long gun, 2 pistol, 3 knife, 4 next throwable (Map01Inventory.Bag).
                 var stones = GetComponent<Map01StoneThrow>(); // Added by Map01PlayerInteraction.Awake.
-                ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting && !inventory.SuppressFire
+                ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.SuppressFire
                     && !scouting.Binoculars && !stones.Aiming; // Hands are on the binoculars or a stone, not the rifle.
                 ModernCombat.TryConsumeRound = () =>
                 {
-                    if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 2.", 3); return false; }
+                    if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 3.", 3); return false; }
                     inventory.Spend("ammo_rifle", 1);
                     EmitNoise(player.position, Weapon.noise_radius, Map01NoiseKind.Gunshot);
                     return true;
@@ -158,7 +163,7 @@ namespace ShadowVale.Map01
                 {
                     int granted = Mathf.Min(wanted, inventory.Count("ammo_rifle"));
                     if (granted > 0) inventory.Spend("ammo_rifle", granted);
-                    else Say("Hết đạn — nhặt thêm đạn hoặc đổi vũ khí bằng 1 / 2 / 3.", 2);
+                    else Say("Hết đạn — nhặt thêm đạn hoặc đổi vũ khí bằng phím 1 – 3.", 2);
                     return granted;
                 };
                 // The shot's noise used to ride along with spending the round. It now hangs off
@@ -267,12 +272,16 @@ namespace ShadowVale.Map01
             if (ModernHealth != null) { ModernHealth.TakeDamage(amount, player.position, gameObject); hp = ModernHealth.Current; }
             else hp = Mathf.Max(0, hp - amount);
         }
-        public void SetInventoryOpen(bool open) { InventoryOpen = open; MapOpen = false; }
-        public void SetMapOpen(bool open) { MapOpen = open; InventoryOpen = false; }
+        public void SetInventoryOpen(bool open) { InventoryOpen = open; MapOpen = false; BenchOpen = false; }
+        /// <summary>The workbench screen (Map01Hud.Bench). It is the bag's panel slot showing the bench, so
+        /// everything that stops play while the bag is open stops it here too.</summary>
+        public bool BenchOpen { get; private set; }
+        public void SetBenchOpen(bool open) { InventoryOpen = open; BenchOpen = open; MapOpen = false; }
+        public void SetMapOpen(bool open) { MapOpen = open; InventoryOpen = false; BenchOpen = false; }
         public bool CloseGameplayPanel()
         {
             if (!InventoryOpen && !MapOpen) return false;
-            InventoryOpen = MapOpen = false; return true;
+            InventoryOpen = MapOpen = BenchOpen = false; return true;
         }
         public void UpdateHiddenState()
         {

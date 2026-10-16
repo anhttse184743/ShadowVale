@@ -41,18 +41,25 @@ namespace ShadowVale.Gameplay.Combat
         public const string LocomotionState = "Locomotion";
 
         /// <summary>
-        /// Hotbar order, left to right: 1 rifle, 2 knife, 3 fists. The HUD reads this, so the
-        /// slots on screen and the number keys can never drift apart.
+        /// Default hotbar order, left to right: 1 rifle, 2 knife. There is no bare-hands slot any
+        /// more: something is always in hand. The HUD reads this, so the slots on screen and the
+        /// number keys can never drift apart. A scene with its own loadout takes the keys over
+        /// through <see cref="SlotPressed"/> (Map 1: 1 long gun, 2 pistol, 3 knife, 4 throwable).
         /// </summary>
         public static readonly WeaponKind[] SlotOrder =
         {
             WeaponKind.Rifle,
             WeaponKind.Knife,
-            WeaponKind.Unarmed,
         };
 
-        private static readonly Key[] SlotKeys = { Key.Digit1, Key.Digit2, Key.Digit3 };
+        private static readonly Key[] SlotKeys = { Key.Digit1, Key.Digit2, Key.Digit3, Key.Digit4 };
         public System.Func<bool> InputAllowed { get; set; }
+
+        /// <summary>
+        /// A number key (0 for "1") goes to the scene first; returning true means the scene handled
+        /// it and the default <see cref="SlotOrder"/> is not consulted.
+        /// </summary>
+        public System.Func<int, bool> SlotPressed { get; set; }
 
         /// <summary>
         /// Legacy per-shot ammo gate, kept for scenes that never configured a magazine. Once a
@@ -597,16 +604,13 @@ namespace ShadowVale.Gameplay.Combat
                 return;
             }
 
-            // Guard the shorter of the two: a weapon added to SlotOrder without a key would
-            // otherwise index past the end.
-            int slots = Mathf.Min(SlotOrder.Length, SlotKeys.Length);
-            for (int slot = 0; slot < slots; slot++)
+            for (int slot = 0; slot < SlotKeys.Length; slot++)
             {
-                if (kb[SlotKeys[slot]].wasPressedThisFrame)
-                {
-                    Equip(SlotOrder[slot]);
-                    return;
-                }
+                if (!kb[SlotKeys[slot]].wasPressedThisFrame) continue;
+                if (SlotPressed != null && SlotPressed(slot)) return;
+                // A key past the end of SlotOrder has nothing to draw.
+                if (slot < SlotOrder.Length) Equip(SlotOrder[slot]);
+                return;
             }
         }
 
@@ -660,25 +664,29 @@ namespace ShadowVale.Gameplay.Combat
 
         // ---- Actions --------------------------------------------------------
 
-        public void Equip(WeaponKind kind)
+        /// <summary>
+        /// Puts <paramref name="kind"/> in hand. There are no bare hands to fall back to: asking for a
+        /// weapon there is no prefab for keeps the one in hand and returns false.
+        /// </summary>
+        public bool Equip(WeaponKind kind)
         {
+            _weapons.TryGetValue(kind, out Weapon next);
+            if (next == null)
+            {
+                // Only a scene with no weapons at all ends up empty-handed (the Unarmed default).
+                if (kind != WeaponKind.Unarmed) Debug.LogWarning($"[Combat] No prefab for {kind}: keeping {_equippedKind} in hand.", this);
+                return false;
+            }
+            if (next == _equipped) return true;
+
             if (_equipped != null)
             {
                 _equipped.gameObject.SetActive(false);
             }
 
-            _weapons.TryGetValue(kind, out Weapon next);
-            _equipped = next; // null for Unarmed, which has no prefab.
-            _equippedKind = next != null ? next.Kind : WeaponKind.Unarmed;
-
-            if (_equipped != null)
-            {
-                _equipped.gameObject.SetActive(true);
-            }
-            else if (kind != WeaponKind.Unarmed)
-            {
-                Debug.LogWarning($"[Combat] No prefab for {kind} — falling back to unarmed.", this);
-            }
+            _equipped = next;
+            _equippedKind = next.Kind;
+            _equipped.gameObject.SetActive(true);
 
             if (animator != null)
             {
@@ -686,12 +694,13 @@ namespace ShadowVale.Gameplay.Combat
             }
 
             // Sights belong to the gun that was holstered.
-            if (_equipped == null || !_equipped.IsGun)
+            if (!_equipped.IsGun)
             {
                 SetAiming(false);
             }
 
             WeaponChanged?.Invoke(_equippedKind);
+            return true;
         }
 
         private void SetAiming(bool value)
@@ -714,6 +723,8 @@ namespace ShadowVale.Gameplay.Combat
 
         private void Attack()
         {
+            // Nothing in hand (a scene without weapon prefabs): there is no punch any more.
+            if (_equipped == null) return;
             if (_equippedKind == WeaponKind.Knife && TrySpecialMelee != null && TrySpecialMelee()) return;
             // Everything that can refuse the shot is settled before a single side effect runs.
             // Pulling the trigger on an empty magazine used to burn the cooldown and play the

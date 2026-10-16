@@ -157,22 +157,29 @@ namespace ShadowVale.Map01.Tests
             try
             {
                 Assert.IsTrue(inventory.IsEquipped("rifle_standard"), "PlayerCombat's starting weapon is the rifle.");
-                // Weapons: 1 rifle, 2 knife, 3 fists — the keys the combat HUD shows next to them.
+                // The approved loadout: 1 long gun, 2 pistol, 3 knife, 4 throwable. No bare hands any more.
+                yield return Press(keyboard, Key.Digit3);
+                Assert.IsTrue(inventory.IsEquipped("knife"), "3 draws the knife.");
                 yield return Press(keyboard, Key.Digit2);
-                Assert.IsTrue(inventory.IsEquipped("knife"), "2 draws the knife.");
+                Assert.IsTrue(inventory.IsEquipped("knife"), "2 with no pistol in its slot leaves the knife in hand.");
                 // 6–8 were the weapon keys while 1–5 belonged to the removed shortcut bar.
                 yield return Press(keyboard, Key.Digit6);
                 Assert.IsTrue(inventory.IsEquipped("knife"), "6 no longer switches to the rifle.");
-                yield return Press(keyboard, Key.Digit3);
-                Assert.AreEqual(ShadowVale.Gameplay.Combat.WeaponKind.Unarmed, mission.ModernCombat.EquippedKind, "3 is bare hands.");
                 yield return Press(keyboard, Key.Digit1);
                 Assert.IsTrue(inventory.IsEquipped("rifle_standard"), "1 draws the rifle.");
+                yield return Press(keyboard, Key.Digit1);
+                Assert.IsTrue(inventory.IsEquipped("rifle_standard"), "Pressing the key of what is in hand puts nothing away: there are no bare hands.");
+                Assert.AreNotEqual(ShadowVale.Gameplay.Combat.WeaponKind.Unarmed, mission.ModernCombat.EquippedKind);
 
-                // Bandages: only H.
+                // Bandages: only H. 4 goes round the throwables instead.
                 inventory.Add("medkit_small", 2);
+                inventory.Add("smoke_bomb", 1);
                 mission.Damage(40);
                 yield return Press(keyboard, Key.Digit4);
                 Assert.AreEqual(2, inventory.Count("medkit_small"), "4 no longer uses a bandage.");
+                Assert.AreEqual("smoke_bomb", inventory.Throwable, "4 picks the next throwable he has.");
+                yield return Press(keyboard, Key.Digit4);
+                Assert.AreEqual("stone", inventory.Throwable, "…and comes back round to the stone.");
                 yield return Press(keyboard, Key.H);
                 Assert.AreEqual(1, inventory.Count("medkit_small"), "H uses a bandage.");
             }
@@ -207,10 +214,8 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual(1, inventory.Count("knife"), "Equipping does not consume the weapon.");
                 Assert.IsNotNull(Resources.Load<Texture2D>("Hud/Items"));
                 Assert.IsNotNull(Resources.Load<Texture2D>("Hud/HealthFrame"));
-                var stock = (Dictionary<string, int>)typeof(Map01Inventory).GetField("items", Private).GetValue(inventory);
-                stock["ammo_rifle"] = 125; stock["medkit_small"] = 5; stock["cloth"] = 12;
-                stock["herb"] = 8; stock["supplies"] = 1; stock["river_documents"] = 1;
-                stock["ammo_sniper"] = 6; stock["scrap_metal"] = 4;
+                foreach (var (id, n) in new[] { ("ammo_rifle", 125), ("medkit_small", 5), ("cloth", 12), ("herb", 8), ("supplies", 1), ("river_documents", 1), ("ammo_sniper", 6), ("scrap_metal", 4) })
+                    inventory.Add(id, n);
                 CollectionAssert.AreEqual(new[] { 90, 35 }, inventory.InventoryStacks().Where(s => s.Id == "ammo_rifle").Select(s => s.Count));
                 Assert.IsFalse(inventory.UseItem("ammo_rifle"), "Ammo is not used directly.");
                 Assert.IsFalse(inventory.UseItem("river_documents"));
@@ -234,6 +239,11 @@ namespace ShadowVale.Map01.Tests
                 mission.SetPaused(true);
                 SetPrivate(inventory, "nextQuickUse", 0f);
                 Assert.IsFalse(inventory.UseItem("medkit_small"), "Pause must block consumables.");
+                // The bandage take is still playing (Map01NamActions.Busy): no save mid-action. Let it finish first.
+                mission.SetPaused(false);
+                double actionEnd = Time.realtimeSinceStartupAsDouble + 8;
+                while (mission.GetComponent<Map01Rescue>().NonSaveable && Time.realtimeSinceStartupAsDouble < actionEnd) yield return null;
+                mission.SetPaused(true);
                 Assert.IsTrue(saveSystem.SaveSlot(1, out var error), error);
                 Map01SaveSystem.BeginGame(1);
                 yield return null;
@@ -257,15 +267,15 @@ namespace ShadowVale.Map01.Tests
                 for (int i = 0; i < 5; i++) yield return null;
                 ScreenCapture.CaptureScreenshot("Logs/HudPreview/inventory.png");
                 for (int i = 0; i < 10; i++) yield return null;
-                stock = (Dictionary<string, int>)typeof(Map01Inventory).GetField("items", Private).GetValue(inventory);
-                stock["ammo_rifle"] = 2700;
-                Assert.Greater(inventory.InventoryStacks().Count, 24, "Overflow must remain accessible beyond the visible grid.");
-                SetPrivate(hud, "hudScroll", 444f);
+                // The bag is 24 cells; what it has no room for is put on the ground, not lost.
+                inventory.Receive("ammo_rifle", 2700);
+                Assert.LessOrEqual(inventory.InventoryStacks().Count, Map01Inventory.BagSize, "The bag never holds more than its 24 cells.");
+                Assert.Greater(Map01Drops.For(mission).Piles.Count(), 0, "What did not fit lies at Nam's feet.");
                 for (int i = 0; i < 3; i++) yield return null;
                 ScreenCapture.CaptureScreenshot("Logs/HudPreview/scrolled.png");
                 for (int i = 0; i < 10; i++) yield return null;
                 mission.SetInventoryOpen(false);
-                stock["ammo_rifle"] = 125;
+                inventory.Spend("ammo_rifle", inventory.Count("ammo_rifle") - 125);
                 for (int i = 0; i < 3; i++) yield return null;
                 ScreenCapture.CaptureScreenshot("Logs/HudPreview/gameplay.png");
                 for (int i = 0; i < 10; i++) yield return null;
