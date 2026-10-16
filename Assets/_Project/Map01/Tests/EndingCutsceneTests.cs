@@ -11,32 +11,29 @@ namespace ShadowVale.Map01.Tests
 {
     public sealed class EndingCutsceneTests : ForestSceneTestBase
     {
+        /// <summary>
+        /// The officer of point 3, seen and reported, falls: his own death clip plays as the finale (world time
+        /// untouched, no saving meanwhile); after it Nam reports by radio for the way out, and that starts the extraction.
+        /// </summary>
         [UnityTest]
-        public IEnumerator DefeatUsesExistingDeathThenRadioAndExtraction()
+        public IEnumerator DefeatUsesExistingDeathThenTheRetreatReportStartsExtraction()
         {
+            Map01OpeningCutscene.CancelPending();
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
             yield return null;
             var mission = Object.FindFirstObjectByType<Map01Mission>();
             var quest = mission.GetComponent<Map01Quest>();
-            // Match the real route: all outpost guards have fallen before the boss arrives.
-            foreach (var guard in mission.Enemies.Where(e => e.name.StartsWith("Outpost guard ")))
-                guard.GetComponent<Health>().TakeDamage(999999, guard.transform.position, null);
-            yield return WaitGameSeconds(5);
-            mission = Object.FindFirstObjectByType<Map01Mission>();
-            Assert.IsNotNull(mission, "Mission after wait");
-            quest = mission.GetComponent<Map01Quest>();
-            Assert.IsNotNull(quest, "Quest after wait");
-            quest.RestoreStage(Map01Quest.BossStage);
-            Map01EnemyController boss = null;
-            foreach (var enemy in mission.Enemies) if (enemy != null && enemy.IsBoss) { boss = enemy; break; }
-            Assert.IsNotNull(boss, "Boss spawned");
+            var story = mission.GetComponent<Map01Story>();
+            foreach (var enemy in mission.Enemies) enemy.enabled = false;
+            // He holds his headquarters from the map's start (Map01C3Mission), never spawned at the boss stage.
+            var boss = quest.CommanderEnemy;
+            Assert.IsNotNull(boss, "The officer is at point 3 from the start.");
+            quest.RestoreStoryStage(Map01Quest.BossStage, OfficerReported());
+            Assert.AreSame(boss, quest.CommanderEnemy, "The boss stage brings no second officer.");
+            Assert.AreEqual(1, mission.Enemies.Count(e => e.IsBoss));
             Assert.IsNotNull(boss.GetComponent<Health>(), "Boss health");
-            foreach (var enemy in mission.Enemies) {
-                if (enemy == null || enemy == boss || enemy.GetComponent<Health>() == null || enemy.Alive) continue;
-                Assert.GreaterOrEqual(Vector3.Distance(enemy.transform.position, boss.transform.position), 2.5f,
-                    "The boss must not spawn inside a fallen guard.");
-            }
+
             boss.GetComponent<Health>().TakeDamage(999999, boss.transform.position, null);
             var ending = mission.GetComponent<Map01EndingCutscene>();
             Assert.IsNotNull(ending, "Ending created after lethal damage");
@@ -54,38 +51,52 @@ namespace ShadowVale.Map01.Tests
             double deadline = Time.realtimeSinceStartupAsDouble + ending.Duration + 3;
             while (ending.IsPlaying && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
             Assert.IsFalse(ending.IsPlaying);
-            Assert.AreEqual(Map01Extraction.Phase.Radio,mission.GetComponentInChildren<Map01Extraction>().CurrentPhase);
-            yield return WaitGameSeconds(7.3f);
             Assert.IsFalse(mission.Cinematic);
-            Assert.AreEqual(Map01Quest.ExtractionStage, quest.Stage);
             Assert.IsTrue(boss.GetComponent<Health>().IsDead);
+            Assert.AreEqual(Map01Quest.ReportBossStage, quest.Stage, "The finale leaves the retreat report to Nam.");
+            var early = mission.GetComponentInChildren<Map01Extraction>();
+            Assert.IsTrue(early == null || early.CurrentPhase == Map01Extraction.Phase.Dormant, "No extraction before the report.");
+            Capture(mission.gameCamera, "collapse-final");
+
+            // The radio report from where he stands gives the way out.
+            Assert.IsTrue(story.SafeToReport);
+            Assert.IsTrue(story.TryInteract());
+            yield return ConfirmConversation(mission);
+            Assert.AreEqual(Map01Quest.ExtractionStage, quest.Stage);
+            Assert.AreEqual(Map01Extraction.Phase.Extraction, mission.GetComponentInChildren<Map01Extraction>().CurrentPhase,
+                "The report was the radio call: straight on to the boat.");
+            Assert.IsFalse(mission.Cinematic);
             Assert.AreEqual(1, Time.timeScale);
             Assert.IsFalse(ForestMenu.Visible);
-            Capture(mission.gameCamera, "collapse-final");
             yield return new ExitPlayMode();
         }
 
         [UnityTest]
         public IEnumerator SkipIsIdempotentAndLegacyVictoryDoesNotReplay()
         {
+            Map01OpeningCutscene.CancelPending();
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
             yield return null;
             var mission = Object.FindFirstObjectByType<Map01Mission>();
             var quest = mission.GetComponent<Map01Quest>();
-            quest.RestoreStage(Map01Quest.BossStage);
-            Map01EnemyController boss = null;
-            foreach (var enemy in mission.Enemies) if (enemy != null && enemy.IsBoss) { boss = enemy; break; }
-            Assert.IsNotNull(boss, "Boss spawned");
-            Assert.IsNotNull(boss.GetComponent<Health>(), "Boss health");
+            foreach (var enemy in mission.Enemies) enemy.enabled = false;
+            quest.RestoreStoryStage(Map01Quest.BossStage, OfficerReported());
+            var boss = quest.CommanderEnemy;
+            Assert.IsNotNull(boss, "The officer is at point 3.");
             boss.GetComponent<Health>().TakeDamage(999999, boss.transform.position, null);
             var ending = mission.GetComponent<Map01EndingCutscene>();
+            Assert.IsNotNull(ending, "Ending created after lethal damage");
+            Assert.IsTrue(ending.IsPlaying);
             ending.Skip(); ending.Skip();
             Assert.IsFalse(ending.IsPlaying);
-            mission.GetComponentInChildren<Map01Extraction>()?.Skip();
             Assert.IsFalse(mission.Cinematic);
-            Assert.AreEqual(Map01Quest.ExtractionStage, quest.Stage);
             Assert.AreEqual(1, Time.timeScale);
+            Assert.AreEqual(Map01Quest.ReportBossStage, quest.Stage, "Skipping the finale does not skip the retreat report.");
+            quest.TryCompleteCommanderObjective(true);
+            Assert.IsFalse(ending.IsPlaying, "The objective completes once: no second finale.");
+
+            // A save that was already won before the reports existed (no story progress kept): it is done, no replay.
             quest.RestoreStage(Map01Quest.ReportBossStage);
             Assert.AreEqual(Map01Quest.CompleteStage, quest.Stage);
             Assert.IsFalse(ending.IsPlaying, "An old victorious save must not replay the death.");
@@ -109,4 +120,3 @@ namespace ShadowVale.Map01.Tests
         }
     }
 }
-

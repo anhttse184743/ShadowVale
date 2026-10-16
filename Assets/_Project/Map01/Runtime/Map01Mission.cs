@@ -57,6 +57,7 @@ namespace ShadowVale.Map01
         public PlayerController ModernPlayer { get; private set; }
         public PlayerCombat ModernCombat { get; private set; }
         public Health ModernHealth { get; private set; }
+        public ShadowVale.Gameplay.Skills.PlayerSkills Skills { get; private set; }
         public Map01EnemyController[] Enemies { get; private set; } = Array.Empty<Map01EnemyController>();
         /// <summary>Every guard registers here when bound; noises reach them through it, not through <see cref="Enemies"/>.</summary>
         public NoiseSystem Noise { get; } = new NoiseSystem();
@@ -79,6 +80,8 @@ namespace ShadowVale.Map01
         private readonly List<ForestPoint> coverPoints = new List<ForestPoint>();
         /// <summary>Placed cover positions a guard can run to on first contact.</summary>
         public IReadOnlyList<ForestPoint> CoverPoints => coverPoints;
+        private const float HideCell=4;
+        private readonly Dictionary<Vector2Int,List<ForestPoint>> hideGrid=new();
         private float hp, stamina;
         private bool paused;
         private Map01Quest quest;
@@ -142,7 +145,16 @@ namespace ShadowVale.Map01
             ServiceLocator.Register(Noise);
             ServiceLocator.Register<IPlayerObservable>(Stealth);
             foreach (var point in FindObjectsByType<ForestPoint>(FindObjectsSortMode.None)) RegisterPoint(point);
+            // Laid out now, not baked into Map 1.unity: a save restored a moment later finds them among the points.
+            Map01StoneSites.Attach(this);
+            Map01Logistics.For(this);     // The run's loot seed and the base store, before anything rolls loot.
+            Map01CampChests.Attach(this); // An iron chest in each enemy camp (Map01ItemCatalog).
+            // Point 3's command post (sets up in Start); Map 1's story only, not the tutorial.
+            if (quest != null && GetComponent<Map01C3Mission>() == null) gameObject.AddComponent<Map01C3Mission>();
             hp = Settings.playerHP; stamina = Settings.stamina;
+            Skills = player.GetComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
+            if (Skills == null) Skills = player.gameObject.AddComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
+            Skills.LevelChanged += OnSkillLevelChanged;
             inventory.SeedStartingLoadout(Settings.startingStones);
             foreach (var item in Settings.startingItems ?? Array.Empty<ForestIngredient>()) inventory.Add(item.item_id, item.count);
             // Added at runtime like the scouting order; guards ask it from their first Update.
@@ -171,7 +183,8 @@ namespace ShadowVale.Map01
             Enemies = FindObjectsByType<Map01EnemyController>(FindObjectsSortMode.None);
             if (ModernPlayer != null)
             {
-                ModernPlayer.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting && !InputFocus.OverlayOpen;
+                // The bench works on through its queue while Nam walks off, so crafting does not hold him.
+                ModernPlayer.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !InputFocus.OverlayOpen;
                 ModernPlayer.SprintAllowed = () => stamina > 2;
             }
             if (ModernHealth != null)
@@ -182,13 +195,15 @@ namespace ShadowVale.Map01
             }
             if (ModernCombat != null)
             {
-                ModernCombat.DrawsOwnWeaponHud = true; // Map01Hud.Combat shows the weapons on keys 1/2/3.
+                ModernCombat.DrawsOwnWeaponHud = true; // Map01Hud.Combat shows the slots on keys 1-4.
+                ModernCombat.SlotPressed = inventory.OnSlotKey; // 1 long gun, 2 pistol, 3 knife, 4 next throwable (Map01Inventory.Bag).
+                ModernCombat.GunKilled += OnGunKilled;
                 var stones = GetComponent<Map01StoneThrow>(); // Added by Map01PlayerInteraction.Awake.
-                ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.IsCrafting && !inventory.SuppressFire && !InputFocus.OverlayOpen
+                ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.SuppressFire && !InputFocus.OverlayOpen
                     && !(Binoculars?.Binoculars ?? false) && (stones == null || !stones.Aiming); // Hands are on the binoculars or a stone, not the rifle.
                 ModernCombat.TryConsumeRound = () =>
                 {
-                    if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 2.", 3); return false; }
+                    if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 3.", 3); return false; }
                     inventory.Spend("ammo_rifle", 1);
                     EmitNoise(player.position, Weapon.noise_radius, NoiseKind.Gunshot);
                     return true;
@@ -200,13 +215,26 @@ namespace ShadowVale.Map01
                 {
                     int granted = Mathf.Min(wanted, inventory.Count("ammo_rifle"));
                     if (granted > 0) inventory.Spend("ammo_rifle", granted);
-                    else Say("Hết đạn — nhặt thêm đạn hoặc đổi vũ khí bằng 1 / 2 / 3.", 2);
+                    else Say("Hết đạn — nhặt thêm đạn hoặc đổi vũ khí bằng phím 1 – 3.", 2);
                     return granted;
                 };
                 // The shot's noise used to ride along with spending the round. It now hangs off
                 // the attack itself, so a reload does not announce the player thirty times over.
                 ModernCombat.Attacked -= OnPlayerAttacked;
                 ModernCombat.Attacked += OnPlayerAttacked;
+                // A gun worn to 0% does not fire (Map01Inventory.Condition): the trigger says why, once a second or so.
+                ModernCombat.GunUsable = () =>
+                {
+                    if (!inventory.HeldGunBroken()) return true;
+                    if (Time.time >= brokenGunSaidAt + 1.5f)
+                    {
+                        brokenGunSaidAt = Time.time;
+                        Say(ForestInventory.Name(inventory.SlotItem(inventory.HeldGun().Value)) + " đã hỏng (0%) — không bắn được. Sửa bằng bộ sửa chữa (Tab, túi đồ) hoặc ở bàn chế tạo căn cứ A; đổi sang dao: phím 3.", 3);
+                    }
+                    return false;
+                };
+                inventory.GunBroke -= OnGunBroke;
+                inventory.GunBroke += OnGunBroke;
             }
             if (gameCamera != null && gameCamera.TryGetComponent<ThirdPersonCamera>(out var cameraRig))
                 {
@@ -224,7 +252,13 @@ namespace ShadowVale.Map01
                 footsteps.Stepped += NotifyFootstep;
             }
             foreach (var enemy in Enemies) enemy.BindMission(this);
-            if (hung != null && quest != null) { Map01OpeningCutscene.Attach(this); Map01HungVisual.Attach(this); }
+            // Map 1's story pieces; the tutorial (no Hùng to rescue, no quest) has none of them.
+            if (hung != null && quest != null) Map01OpeningCutscene.Attach(this);
+            GetComponent<Map01Story>()?.Initialize();
+            GetComponent<Map01Quest>()?.EnsureCommander();
+            if (hung != null && quest != null) Map01HungVisual.Attach(this);
+            if(GetComponent<Map01FoliageReveal>()==null)gameObject.AddComponent<Map01FoliageReveal>();
+            if(GetComponent<Map01BushTakedown>()==null)gameObject.AddComponent<Map01BushTakedown>();
         }
 
         private void FailInitialization(string reason)
@@ -237,13 +271,21 @@ namespace ShadowVale.Map01
         public void RegisterPoint(ForestPoint point)
         {
             Points.Add(point);
-            if (point.kind == ForestPointKind.Hide) hideSpots.Add(point);
+            if (point.kind == ForestPointKind.Hide) {
+                hideSpots.Add(point);
+                var p=point.transform.position;
+                for(int x=Mathf.FloorToInt((p.x-point.radius)/HideCell);x<=Mathf.FloorToInt((p.x+point.radius)/HideCell);x++)
+                for(int z=Mathf.FloorToInt((p.z-point.radius)/HideCell);z<=Mathf.FloorToInt((p.z+point.radius)/HideCell);z++){
+                    var key=new Vector2Int(x,z);if(!hideGrid.TryGetValue(key,out var list))hideGrid[key]=list=new();list.Add(point);
+                }
+            }
             else if (point.kind == ForestPointKind.Cover) coverPoints.Add(point);
             else Interactables.Add(point);
         }
         public void UnregisterPoint(ForestPoint point)
         {
             Points.Remove(point); hideSpots.Remove(point); coverPoints.Remove(point); Interactables.Remove(point);
+            if(point.kind==ForestPointKind.Hide)foreach(var list in hideGrid.Values)list.Remove(point);
         }
         public void AddEnemy(Map01EnemyController enemy) { if (enemy != null && !Enemies.Contains(enemy)) Enemies = Enemies.Append(enemy).ToArray(); }
         public void RemoveEnemy(Map01EnemyController enemy) => Enemies=Enemies.Where(e=>e!=null&&e!=enemy).ToArray();
@@ -266,13 +308,19 @@ namespace ShadowVale.Map01
             var speech=DialogueVoice.For(gameObject);
             speech.CanSpeak=()=>!Cinematic&&!ForestMenu.Visible;
             speech.LineStarted=line=>{
-                Dialogue=line.caption;DialogueUntil=Time.time+line.clip.length+.2f;
+                Dialogue=GameplayCaption(line.caption);DialogueUntil=Time.time+line.clip.length+.2f;
                 if(line.caption.StartsWith("Hùng") && hung!=null)hung.GetComponentInChildren<Map01HungVisual>()?.Speak(line.clip.length+.2f);
             };
-            Dialogue=text;DialogueUntil=Time.time+seconds;
+            Dialogue=GameplayCaption(text);DialogueUntil=Time.time+seconds;
             if(string.IsNullOrEmpty(text))speech.Stop();
             float spoken=string.IsNullOrEmpty(text)?0:speech.SpeakText(text);
             if(!string.IsNullOrEmpty(text))DialogueUntil=Time.time+Mathf.Max(seconds,spoken+.25f);
+        }
+        public static string GameplayCaption(string text)
+        {
+            if(string.IsNullOrEmpty(text))return text;
+            // Keep objective/interaction notices; ambient character speech is audio only.
+            return text.StartsWith("Lính")||text.StartsWith("Sĩ quan")||text.StartsWith("Hùng:")||text.StartsWith("Hùng (")||text.StartsWith("Nam:")?null:text;
         }
         public void ReleaseForNextMap() {
             GetComponent<DialogueVoice>()?.Stop();
@@ -283,35 +331,63 @@ namespace ShadowVale.Map01
         }
         private void OnPlayerAttacked(WeaponKind kind, Vector3 position)
         {
-            if (kind == WeaponKind.Rifle) EmitNoise(position, Weapon.noise_radius, NoiseKind.Gunshot);
             EventBus.Publish(new PlayerAttackEvent(kind.ToString().ToLowerInvariant(), position));
+            if (kind != WeaponKind.Rifle) return;
+            EmitNoise(position, Weapon.noise_radius, NoiseKind.Gunshot);
+            // Every shot wears the gun in hand by its content's durability_per_shot.
+            var held = inventory.HeldGun();
+            if (held != null) inventory.Wear(held.Value, inventory.WearPerShot(inventory.SlotItem(held.Value)));
+        }
+
+        private float brokenGunSaidAt = -10f;
+        private void OnGunBroke(Map01Inventory.Gun gun, string id)
+        {
+            brokenGunSaidAt = Time.time;
+            Say(ForestInventory.Name(id) + " vừa hỏng hẳn (0%) — kẹt cò. Sửa bằng bộ sửa chữa hoặc về bàn chế tạo; đổi sang dao: phím 3.", 5);
         }
 
         private void OnPlayerDied() => EventBus.Publish(new PlayerDiedEvent(player != null ? player.position : Vector3.zero));
 
         /// <summary>A noise every guard within <paramref name="radius"/> goes to check; returns how many heard it.</summary>
+        /// <summary>Every noise made, for those who listen beyond the guards in <see cref="Enemies"/> (the C3 sleepers).
+        /// The guards themselves hear it through <see cref="Noise"/>, the shared AI's noise system.</summary>
+        public event Action<Vector3, float, NoiseKind> NoiseEmitted;
         public int EmitNoise(Vector3 position, float radius, NoiseKind kind = NoiseKind.Other)
-            => Noise.Emit(position, radius, kind);
+        {
+            NoiseEmitted?.Invoke(position, radius, kind);
+            return Noise.Emit(position, radius, kind);
+        }
         public void Damage(float amount)
         {
             if (Stopped) return;
             if (ModernHealth != null) { ModernHealth.TakeDamage(amount, player.position, gameObject); hp = ModernHealth.Current; }
             else hp = Mathf.Max(0, hp - amount);
         }
-        public void SetInventoryOpen(bool open) { InventoryOpen = open; MapOpen = false; }
-        public void SetMapOpen(bool open) { MapOpen = open; InventoryOpen = false; }
+        public void SetInventoryOpen(bool open) { InventoryOpen = open; MapOpen = false; BenchOpen = false; }
+        /// <summary>The workbench screen (Map01Hud.Bench). It is the bag's panel slot showing the bench, so
+        /// everything that stops play while the bag is open stops it here too.</summary>
+        public bool BenchOpen { get; private set; }
+        public void SetBenchOpen(bool open) { InventoryOpen = open; BenchOpen = open; MapOpen = false; }
+        public void SetMapOpen(bool open) { MapOpen = open; InventoryOpen = false; BenchOpen = false; }
         public bool CloseGameplayPanel()
         {
             if (!InventoryOpen && !MapOpen) return false;
-            InventoryOpen = MapOpen = false; return true;
+            InventoryOpen = MapOpen = BenchOpen = false; return true;
         }
         public void UpdateHiddenState()
         {
             Hidden = false;
             if (!Crouched) return;
             Vector3 at = player.position;
-            foreach (var spot in hideSpots)
-                if ((spot.transform.position - at).sqrMagnitude < spot.radius * spot.radius) { Hidden = true; return; }
+            Hidden=TryGetHideSpot(at,out _);
+        }
+        public bool TryGetHideSpot(Vector3 at,out ForestPoint found) {
+            found=null;float best=float.PositiveInfinity;
+            var key=new Vector2Int(Mathf.FloorToInt(at.x/HideCell),Mathf.FloorToInt(at.z/HideCell));
+            if(!hideGrid.TryGetValue(key,out var nearby))return false;
+            foreach(var spot in nearby)if(spot!=null){float distance=(spot.transform.position-at).sqrMagnitude;
+                if(distance<spot.radius*spot.radius&&distance<best){best=distance;found=spot;}}
+            return found!=null;
         }
         /// <summary>
         /// How far a footstep carries, by how the player is moving. Sneaking, walking and
@@ -359,7 +435,13 @@ namespace ShadowVale.Map01
             ModernHealth?.RestoreHealth(hp);
         }
 
-        private void Restart() { if (RetryRequested != null) { RetryRequested(); return; } Time.timeScale = 1; ReloadScene(gameObject.scene); }
+        private void Restart()
+        {
+            if (RetryRequested != null) { RetryRequested(); return; } // The tutorial retries one lesson.
+            var save = GetComponent<Map01SaveSystem>();
+            if (save != null && save.RestartCurrentMission()) return;
+            Time.timeScale = 1; ReloadScene(gameObject.scene);
+        }
 
         /// <summary>
         /// The guard the knife badge marks: the nearest one within <paramref name="range"/> in clear line,
@@ -424,12 +506,31 @@ namespace ShadowVale.Map01
             else if (kb.enterKey.wasPressedThisFrame && scouting != null && scouting.FailedRun) scouting.Restart();
         }
 
-        private void OnDisable() { Time.timeScale = 1; }
-
+        private void OnGunKilled(GameObject target)
+        {
+            // A lethal boss hit can start a cinematic inside Health.TakeDamage, before this callback.
+            if (Map01SaveSystem.IsRestoring || Skills.MissionFailed || (ModernHealth != null && ModernHealth.IsDead)
+                || target.GetComponent<Map01EnemyController>() == null) return;
+            Skills.Award(ShadowVale.Gameplay.Skills.SkillKind.Shooting);
+        }
+        private void OnSkillLevelChanged(ShadowVale.Gameplay.Skills.SkillKind kind, int level)
+        {
+            string name = kind == ShadowVale.Gameplay.Skills.SkillKind.Shooting ? "Bắn súng"
+                : kind == ShadowVale.Gameplay.Skills.SkillKind.Stealth ? "Lén lút" : "Kỹ thuật";
+            Say($"{name} đạt cấp {level}! Xem thông số trong Túi đồ → Kĩ Năng.", 4);
+        }
         private void OnDestroy()
         {
+            if (Skills != null) Skills.LevelChanged -= OnSkillLevelChanged;
+            if (ModernCombat != null) {
+                ModernCombat.GunKilled -= OnGunKilled;
+                if (ModernCombat.SlotPressed?.Target is Map01Inventory) ModernCombat.SlotPressed = null;
+            }
+            // The shared AI services this mission registered.
             if (ServiceLocator.TryResolve<NoiseSystem>(out var noise) && noise == Noise) ServiceLocator.Unregister<NoiseSystem>();
             if (ServiceLocator.TryResolve<IPlayerObservable>(out var stealth) && ReferenceEquals(stealth, Stealth)) ServiceLocator.Unregister<IPlayerObservable>();
         }
+        private void OnDisable() { Time.timeScale = 1; }
+
     }
 }

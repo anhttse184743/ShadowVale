@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
@@ -22,6 +23,8 @@ namespace ShadowVale.Map01
         private Map01SaveSystem saveSystem;
         private IBinoculars scouting;
         private Map01StoneThrow stoneThrow;
+        private Map01StoneSites stoneSites;
+        private Map01CampChests chests;
         private Map01Hud hud;
         private NavMeshAgent companion;
 
@@ -42,6 +45,8 @@ namespace ShadowVale.Map01
         {
             if (mission.IsInitialized && mission.hung != null) companion = mission.hung.GetComponent<NavMeshAgent>();
             scouting = GetComponents<MonoBehaviour>().OfType<IBinoculars>().FirstOrDefault(); // Added by Map01Quest.Awake, so only certain from Start.
+            stoneSites = GetComponent<Map01StoneSites>(); // Added by Map01Mission.Awake; none on a map without stone data.
+            chests = GetComponent<Map01CampChests>();     // Likewise.
         }
 
         private void Update()
@@ -57,7 +62,10 @@ namespace ShadowVale.Map01
             if (kb.f9Key.wasPressedThisFrame) saveSystem?.Load();
             if (mission.Stopped) return;
             if (kb.tabKey.wasPressedThisFrame)
-            { mission.SetInventoryOpen(!mission.InventoryOpen); inventory.SuppressFire = true; }
+            {
+                // From the bench screen, Tab goes over to the bag; otherwise it opens or shuts the bag.
+                mission.SetInventoryOpen(mission.BenchOpen || !mission.InventoryOpen); inventory.SuppressFire = true;
+            }
             if (kb.mKey.wasPressedThisFrame)
             {
                 mission.SetMapOpen(!mission.MapOpen); inventory.SuppressFire = true;
@@ -67,6 +75,8 @@ namespace ShadowVale.Map01
             if (kb.hKey.wasPressedThisFrame) inventory.UseItem("medkit_small");
             if (mission.InventoryOpen || mission.MapOpen)
             {
+                // [E] shuts the bench screen it opened.
+                if (mission.BenchOpen && kb.eKey.wasPressedThisFrame) mission.CloseGameplayPanel();
                 // Same gate as below: this used to call UpdateCompanion unconditionally, so opening
                 // the bag or map pulled Hùng to Nam at any stage — wounded, or at his post at base.
                 return;
@@ -98,6 +108,8 @@ namespace ShadowVale.Map01
                 else if (!kb.qKey.isPressed) stoneThrow.Release();
             }
             Nearby = NearestUsable();
+            // A stone site's offer depends on the room left in the bag, so its prompt is worded as he stands there.
+            if (Nearby != null && Nearby.kind == ForestPointKind.Stones && stoneSites != null) Nearby.label = stoneSites.Prompt(Nearby);
             if (kb.eKey.wasPressedThisFrame) HandleInteractKey();
             if (kb.bKey.wasPressedThisFrame) inventory.TryCraft();
         }
@@ -111,7 +123,7 @@ namespace ShadowVale.Map01
             Vector3 at = mission.player.position;
             foreach (var point in mission.Interactables)
             {
-                if (point.used) continue;
+                if (point.used || !point.isActiveAndEnabled) continue;   // a hidden point (the C3 Mosin cache before its order)
                 float distance = Vector3.Distance(at, point.transform.position);
                 if (distance < best) { best = distance; nearest = point; }
             }
@@ -135,18 +147,57 @@ namespace ShadowVale.Map01
         /// </summary>
         private void HandleInteractKey()
         {
+            if (Nearby != null && Nearby.kind == ForestPointKind.Workbench) { Interact(Nearby); return; }
+            if (GetComponent<Map01Story>()?.TryInteract() == true) return;
             if (quest != null && quest.HungInRange) quest.TalkToHung();
             else if (Nearby != null) Interact(Nearby);
         }
 
-        /// <summary>Grants the point's items and starts its restock timer; returns what was taken.</summary>
-        private string TakeItems(ForestPoint point)
+        /// <summary>
+        /// Grants the point's items and starts its restock timer; returns what was taken. Stones go in only
+        /// while his pockets have room (Map01Inventory.StoneCapacity): any that do not fit stay at the point,
+        /// which then stays open with just those. <paramref name="any"/> is false when nothing could be taken.
+        /// </summary>
+        private string TakeItems(ForestPoint point, out bool any)
         {
-            foreach (var item in point.items) inventory.Add(item.item_id, item.count);
+            var taken = new List<string>();
+            int leftStones = 0;
+            foreach (var item in point.items)
+            {
+                int count = item.item_id == "stone" ? Mathf.Min(item.count, inventory.StoneRoom) : item.count;
+                if (item.item_id == "stone") leftStones += item.count - count;
+                if (count <= 0) continue;
+                inventory.Receive(item.item_id, count, item.condition);
+                taken.Add(count + " " + ForestInventory.Name(item.item_id).ToLowerInvariant() + Map01Drops.ConditionTag(mission, item.item_id, item.condition));
+            }
+            any = taken.Count > 0;
+            if (leftStones > 0)
+            {
+                // Everything else is in the bag now: only the stones that did not fit are left here.
+                foreach (var item in point.items) item.count = item.item_id == "stone" ? Mathf.Min(item.count, leftStones) : 0;
+                if (point.id != null && point.id.StartsWith(Map01RescueStones.IdPrefix)) point.label = $"Đá ném — {leftStones} viên";
+                string full = $"Túi đá đã đầy ({inventory.Stones}/{inventory.StoneCapacity}), còn {leftStones} viên ở đây.";
+                return any ? "Nhận " + string.Join(", ", taken) + ". " + full : full;
+            }
             point.MarkLooted();
-            string taken = "Nhận " + string.Join(", ", point.items.Select(i => i.count + " " + ForestInventory.Name(i.item_id).ToLowerInvariant())) + ".";
-            return point.restockSeconds > 0 ? taken + $" Tiếp tế lại sau {point.restockSeconds:0} giây." : taken;
+            string all = "Nhận " + string.Join(", ", taken) + ".";
+            return point.restockSeconds > 0 ? all + $" Tiếp tế lại sau {point.restockSeconds:0} giây." : all;
         }
+        private string TakeItems(ForestPoint point) => TakeItems(point, out _);
+
+        /// <summary>The first time Nam picks up a badly worn gun: what he can do with it.</summary>
+        private string WornGunHint(ForestPoint point)
+        {
+            if (wornHintShown || point.items == null) return "";
+            foreach (var item in point.items)
+                if (Map01Inventory.HasCondition(item.item_id) && inventory.Fraction(item.item_id, item.condition) < Map01Inventory.WornBelow)
+                {
+                    wornHintShown = true;
+                    return " Súng địch đã mòn: vẫn bắn được tới khi hỏng — sửa bằng bộ sửa chữa (túi đồ) hoặc ở bàn chế tạo, hay rã lấy linh kiện.";
+                }
+            return "";
+        }
+        private bool wornHintShown;
 
         /// <summary>Nam crouches to the pack or opens the crate (Blender clips); walking off cuts it short.</summary>
         private void Rummage(int action) =>
@@ -157,35 +208,46 @@ namespace ShadowVale.Map01
             switch (point.kind)
             {
                 case ForestPointKind.Supplies:
-                    if (point.used) return;
-                    if (quest != null && quest.TryDeliverSupplies())
-                    {
-                        // Hùng's hand-off line stays on screen; the first resupply comes with it.
-                        inventory.Add("supplies", 1);
-                        TakeItems(point);
-                        Rummage(Map01NamActions.OpenChest);
-                    }
-                    // Once Hùng is home, the base keeps resupplying on its restock timer.
-                    else if (quest != null && quest.BaseResupplyOpen) { mission.Say("Căn cứ tiếp tế — " + TakeItems(point), 6); Rummage(Map01NamActions.OpenChest); }
+                    // The base store (Map01Logistics): opens once Hùng is home; what it issues is paid in logistics points.
+                    point.used = false;
+                    if (quest != null && quest.BaseResupplyOpen) { hud?.OpenStore(); inventory.SuppressFire = true; }
+                    else mission.Say("Kho căn cứ A chưa cấp phát — đưa Hùng về căn cứ an toàn trước.", 4);
                     break;
                 case ForestPointKind.Loot:
                     if (point.used) return;
-                    mission.Say(TakeItems(point) + " Tab mở túi đồ.", 6);
-                    // a fallen guard's pack is picked up off the ground; a crate is opened
-                    Rummage(point.GetComponent<Map01EnemyController>() != null ? Map01NamActions.PickUp : Map01NamActions.OpenChest);
+                    string took = TakeItems(point, out bool any);
+                    mission.Say(any ? took + WornGunHint(point) + " Tab mở túi đồ." : took, 6);
+                    if (!any) break; // A full bag at a pile of stones: no stooping for nothing.
+                    // a fallen guard's pack or gun is picked up off the ground; a crate is opened
+                    Rummage(point.GetComponent<Map01EnemyController>() != null || (point.id!=null&&(point.id.StartsWith(Map01RescueStones.IdPrefix)||point.id.StartsWith(Map01Drops.IdPrefix)||point.id.StartsWith(Map01Logistics.GunPointPrefix))) ? Map01NamActions.PickUp : Map01NamActions.OpenChest);
                     break;
                 case ForestPointKind.Workbench:
-                    mission.Say("Bàn chế tạo: B để làm băng cứu thương (2 vải + 1 thảo dược). Game tự lưu khi về menu hoặc thoát.");
+                    // [E] opens the bench screen (Map01Hud.Bench) and shuts it again.
+                    mission.SetBenchOpen(!mission.BenchOpen); inventory.SuppressFire = true;
                     break;
                 case ForestPointKind.Documents:
                     // Side content: useful lore, not on the critical path the briefing laid out.
                     if (point.used) return;
-                    point.used = true; inventory.Add("river_documents", 1);
+                    point.used = true; inventory.Receive("river_documents", 1);
                     Rummage(Map01NamActions.PickUp);
                     mission.Say("Nam: Tài liệu cũ của đơn vị tuần tra — cất đi, có thể còn hữu ích.", 8);
                     break;
                 case ForestPointKind.Exit:
                     mission.Say("Bến sông vắng lặng. Đường rút lui vẫn còn đó, nhưng nhiệm vụ chưa xong.", 6);
+                    break;
+                case ForestPointKind.Stones:
+                    // Straight into the pocket, crouched or standing: no rummaging take to sit through
+                    // a few metres from a guard.
+                    if (stoneSites == null) stoneSites = GetComponent<Map01StoneSites>();
+                    stoneSites?.PickUp(point);
+                    break;
+                case ForestPointKind.Chest:
+                    if (chests == null) chests = GetComponent<Map01CampChests>();
+                    chests?.Use(point);
+                    break;
+                case ForestPointKind.Sabotage:
+                    // C3: the kẻng's striker, the field telephone line.
+                    GetComponent<Map01C3Mission>()?.Use(point);
                     break;
             }
         }

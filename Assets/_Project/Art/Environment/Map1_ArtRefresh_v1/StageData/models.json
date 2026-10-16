@@ -1,0 +1,1911 @@
+{
+  "items": [
+    {
+      "name": "C1_ApprovedArt",
+      "approval": "C1/C2 massing approved 2026-10-16",
+      "colliders": [
+        {
+          "name": "COLLIDER_Floor",
+          "size": [
+            5.0,
+            4.2,
+            0.16
+          ]
+        },
+        {
+          "name": "COLLIDER_Front",
+          "size": [
+            1.5,
+            0.1,
+            2.5
+          ]
+        },
+        {
+          "name": "COLLIDER_Front.001",
+          "size": [
+            1.5,
+            0.1,
+            2.5
+          ]
+        },
+        {
+          "name": "COLLIDER_InventoryDesk",
+          "size": [
+            1.15,
+            0.65,
+            0.85
+          ]
+        },
+        {
+          "name": "COLLIDER_Rear",
+          "size": [
+            5.0,
+            0.1,
+            2.5
+          ]
+        },
+        {
+          "name": "COLLIDER_Shelf",
+          "size": [
+            4.3,
+            0.7,
+            1.8
+          ]
+        },
+        {
+          "name": "COLLIDER_Side",
+          "size": [
+            0.1,
+            4.2,
+            2.5
+          ]
+        },
+        {
+          "name": "COLLIDER_Side.001",
+          "size": [
+            0.1,
+            4.2,
+            2.5
+          ]
+        },
+        {
+          "name": "COLLIDER_Step",
+          "size": [
+            2.35,
+            0.28,
+            0.08
+          ]
+        },
+        {
+          "name": "COLLIDER_Step.001",
+          "size": [
+            2.35,
+            0.28,
+            0.08
+          ]
+        },
+        {
+          "name": "COLLIDER_OpenDoor",
+          "size": [
+            1.0,
+            0.05,
+            2.03
+          ]
+        },
+        {
+          "name": "COLLIDER_OpenDoor.001",
+          "size": [
+            1.0,
+            0.05,
+            2.03
+          ]
+        },
+        {
+          "name": "COLLIDER_Cargo",
+          "size": [
+            0.74,
+            0.55,
+            0.65
+          ]
+        },
+        {
+          "name": "COLLIDER_Cargo.001",
+          "size": [
+            0.74,
+            0.55,
+            0.65
+          ]
+        },
+        {
+          "name": "COLLIDER_Cargo.002",
+          "size": [
+            0.74,
+            0.55,
+            0.65
+          ]
+        },
+        {
+          "name": "COLLIDER_ShelterPost",
+          "size": [
+            0.12,
+            0.12,
+            2.35
+          ]
+        },
+        {
+          "name": "COLLIDER_ShelterPost.001",
+          "size": [
+            0.12,
+            0.12,
+            2.35
+          ]
+        },
+        {
+          "name": "COLLIDER_ShelterPost.002",
+          "size": [
+            0.12,
+            0.12,
+            1.9820000000000002
+          ]
+        },
+        {
+          "name": "COLLIDER_ShelterPost.003",
+          "size": [
+            0.12,
+            0.12,
+            1.9820000000000002
+          ]
+        }
+      ],
+      "mesh_objects": 187,
+      "triangles": 70813,
+      "enemy_slots": 0,
+      "mission_changes": false
+    },
+    {
+      "name": "C2_ApprovedArt",
+      "approval": "C1/C2 massing approved 2026-10-16",
+      "colliders": [
+        {
+          "name": "COLLIDER_DutyDesk",
+          "size": [
+            1.8,
+            0.75,
+            0.85
+          ]
+        },
+        {
+          "name": "COLLIDER_DutyDesk.001",
+          "size": [
+            1.5,
+            0.75,
+            0.85
+          ]
+        },
+        {
+          "name": "COLLIDER_Floor.001",
+          "size": [
+            6.8,
+            3.6,
+            0.16
+          ]
+        },
+        {
+          "name": "COLLIDER_Front.002",
+          "size": [
+            0.10000000000000009,
+            0.1,
+            2.5
+          ]
+        },
+        {
+          "name": "COLLIDER_Rear.001",
+          "size": [
+            6.8,
+            0.1,
+            2.5
+          ]
+        },
+        {
+          "name": "COLLIDER_Side.002",
+          "size": [
+            0.1,
+            3.6,
+            2.5
+          ]
+        },
+        {
+          "name": "COLLIDER_Side.003",
+          "size": [
+            0.1,
+            3.6,
+            2.5
+          ]
+        },
+        {
+          "name": "COLLIDER_Step.002",
+          "size": [
+            1.75,
+            0.28,
+            0.08
+          ]
+        },
+        {
+          "name": "COLLIDER_Step.003",
+          "size": [
+            1.75,
+            0.28,
+            0.08
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowSill",
+          "size": [
+            5.3,
+            0.1,
+            0.8
+          ]
+        },
+        {
+          "name": "COLLIDER_OpenDoor.002",
+          "size": [
+            1.4,
+            0.05,
+            2.03
+          ]
+        },
+        {
+          "name": "COLLIDER_Generator",
+          "size": [
+            1.2,
+            0.8,
+            0.9
+          ]
+        },
+        {
+          "name": "COLLIDER_ShelterPost.008",
+          "size": [
+            0.12,
+            0.12,
+            2.05
+          ]
+        },
+        {
+          "name": "COLLIDER_ShelterPost.009",
+          "size": [
+            0.12,
+            0.12,
+            2.05
+          ]
+        },
+        {
+          "name": "COLLIDER_ShelterPost.010",
+          "size": [
+            0.12,
+            0.12,
+            1.7299999999999998
+          ]
+        },
+        {
+          "name": "COLLIDER_ShelterPost.011",
+          "size": [
+            0.12,
+            0.12,
+            1.7299999999999998
+          ]
+        },
+        {
+          "name": "COLLIDER_Cot",
+          "size": [
+            0.86,
+            1.92,
+            0.64
+          ]
+        },
+        {
+          "name": "COLLIDER_Cot.001",
+          "size": [
+            0.86,
+            1.92,
+            0.64
+          ]
+        },
+        {
+          "name": "COLLIDER_ShelterPost.004",
+          "size": [
+            0.12,
+            0.12,
+            2.2
+          ]
+        },
+        {
+          "name": "COLLIDER_ShelterPost.005",
+          "size": [
+            0.12,
+            0.12,
+            2.2
+          ]
+        },
+        {
+          "name": "COLLIDER_ShelterPost.006",
+          "size": [
+            0.12,
+            0.12,
+            1.9760000000000002
+          ]
+        },
+        {
+          "name": "COLLIDER_ShelterPost.007",
+          "size": [
+            0.12,
+            0.12,
+            1.9760000000000002
+          ]
+        }
+      ],
+      "mesh_objects": 132,
+      "triangles": 67883,
+      "enemy_slots": 0,
+      "mission_changes": false
+    },
+    {
+      "name": "C3_MainGarrison_Art",
+      "colliders": [
+        {
+          "name": "COLLIDER_ClinicEntryRamp",
+          "size": [
+            2.2,
+            1.635726138447387,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_DoorHeader",
+          "size": [
+            1.44,
+            0.12,
+            0.14
+          ]
+        },
+        {
+          "name": "COLLIDER_EntryStep",
+          "size": [
+            1.45,
+            0.34,
+            0.13
+          ]
+        },
+        {
+          "name": "COLLIDER_EntryStep.001",
+          "size": [
+            1.45,
+            0.34,
+            0.13
+          ]
+        },
+        {
+          "name": "COLLIDER_Floor.001",
+          "size": [
+            5.0,
+            4.8,
+            0.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontPier",
+          "size": [
+            0.4500000000000002,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontPier.001",
+          "size": [
+            0.42999999999999994,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontPier.002",
+          "size": [
+            0.42999999999999994,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontPier.003",
+          "size": [
+            0.4500000000000002,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontWindowLower",
+          "size": [
+            0.8999999999999999,
+            0.09,
+            0.82
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontWindowLower.001",
+          "size": [
+            0.8999999999999999,
+            0.09,
+            0.82
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontWindowUpper",
+          "size": [
+            0.8999999999999999,
+            0.09,
+            0.55
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontWindowUpper.001",
+          "size": [
+            0.8999999999999999,
+            0.09,
+            0.55
+          ]
+        },
+        {
+          "name": "COLLIDER_PorchFloor",
+          "size": [
+            5.0,
+            1.0,
+            0.34
+          ]
+        },
+        {
+          "name": "COLLIDER_Rear.001",
+          "size": [
+            5.0,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall",
+          "size": [
+            0.09,
+            0.45399999999999974,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.001",
+          "size": [
+            0.09,
+            1.292,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.002",
+          "size": [
+            0.09,
+            0.45399999999999974,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.003",
+          "size": [
+            0.09,
+            0.45399999999999974,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.004",
+          "size": [
+            0.09,
+            1.292,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.005",
+          "size": [
+            0.09,
+            0.45399999999999974,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowLower",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.81
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowLower.001",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.81
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowLower.002",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.81
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowLower.003",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.81
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowUpper",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.66
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowUpper.001",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.66
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowUpper.002",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.66
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowUpper.003",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.66
+          ]
+        },
+        {
+          "name": "COLLIDER_EntryPost",
+          "size": [
+            0.12,
+            0.12,
+            2.4
+          ]
+        },
+        {
+          "name": "COLLIDER_EntryPost.001",
+          "size": [
+            0.12,
+            0.12,
+            2.4
+          ]
+        },
+        {
+          "name": "COLLIDER_OpenDoor.002",
+          "size": [
+            1.4,
+            0.05,
+            2.03
+          ]
+        },
+        {
+          "name": "COLLIDER_DoorHeader.001",
+          "size": [
+            1.44,
+            0.12,
+            0.14
+          ]
+        },
+        {
+          "name": "COLLIDER_EntryStep.002",
+          "size": [
+            1.45,
+            0.34,
+            0.13
+          ]
+        },
+        {
+          "name": "COLLIDER_EntryStep.003",
+          "size": [
+            1.45,
+            0.34,
+            0.13
+          ]
+        },
+        {
+          "name": "COLLIDER_Floor.002",
+          "size": [
+            9.0,
+            6.0,
+            0.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontPier.004",
+          "size": [
+            0.4500000000000002,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontPier.005",
+          "size": [
+            0.42999999999999994,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontPier.006",
+          "size": [
+            0.42999999999999994,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontPier.007",
+          "size": [
+            0.4500000000000002,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontWindowLower.002",
+          "size": [
+            2.9,
+            0.09,
+            0.82
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontWindowLower.003",
+          "size": [
+            2.9,
+            0.09,
+            0.82
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontWindowUpper.002",
+          "size": [
+            2.9,
+            0.09,
+            0.55
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontWindowUpper.003",
+          "size": [
+            2.9,
+            0.09,
+            0.55
+          ]
+        },
+        {
+          "name": "COLLIDER_PorchFloor.001",
+          "size": [
+            9.0,
+            2.0,
+            0.34
+          ]
+        },
+        {
+          "name": "COLLIDER_Rear.002",
+          "size": [
+            9.0,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.006",
+          "size": [
+            0.09,
+            0.73,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.007",
+          "size": [
+            0.09,
+            1.9400000000000002,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.008",
+          "size": [
+            0.09,
+            0.73,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.009",
+          "size": [
+            0.09,
+            0.73,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.010",
+          "size": [
+            0.09,
+            1.9400000000000002,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.011",
+          "size": [
+            0.09,
+            0.73,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowLower.004",
+          "size": [
+            0.09,
+            1.2999999999999998,
+            0.81
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowLower.005",
+          "size": [
+            0.09,
+            1.2999999999999998,
+            0.81
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowLower.006",
+          "size": [
+            0.09,
+            1.2999999999999998,
+            0.81
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowLower.007",
+          "size": [
+            0.09,
+            1.2999999999999998,
+            0.81
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowUpper.004",
+          "size": [
+            0.09,
+            1.2999999999999998,
+            0.66
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowUpper.005",
+          "size": [
+            0.09,
+            1.2999999999999998,
+            0.66
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowUpper.006",
+          "size": [
+            0.09,
+            1.2999999999999998,
+            0.66
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowUpper.007",
+          "size": [
+            0.09,
+            1.2999999999999998,
+            0.66
+          ]
+        },
+        {
+          "name": "COLLIDER_EntryPost.002",
+          "size": [
+            0.12,
+            0.12,
+            2.4
+          ]
+        },
+        {
+          "name": "COLLIDER_EntryPost.003",
+          "size": [
+            0.12,
+            0.12,
+            2.4
+          ]
+        },
+        {
+          "name": "COLLIDER_OpenDoor.003",
+          "size": [
+            1.4,
+            0.05,
+            2.03
+          ]
+        },
+        {
+          "name": "COLLIDER_Floor",
+          "size": [
+            4.8,
+            3.4,
+            0.16
+          ]
+        },
+        {
+          "name": "COLLIDER_Front",
+          "size": [
+            1.4,
+            0.1,
+            2.5
+          ]
+        },
+        {
+          "name": "COLLIDER_Front.001",
+          "size": [
+            1.4,
+            0.1,
+            2.5
+          ]
+        },
+        {
+          "name": "COLLIDER_Rear",
+          "size": [
+            4.8,
+            0.1,
+            2.5
+          ]
+        },
+        {
+          "name": "COLLIDER_Side",
+          "size": [
+            0.1,
+            3.4,
+            2.5
+          ]
+        },
+        {
+          "name": "COLLIDER_Side.001",
+          "size": [
+            0.1,
+            3.4,
+            2.5
+          ]
+        },
+        {
+          "name": "COLLIDER_Step",
+          "size": [
+            2.35,
+            0.28,
+            0.08
+          ]
+        },
+        {
+          "name": "COLLIDER_Step.001",
+          "size": [
+            2.35,
+            0.28,
+            0.08
+          ]
+        },
+        {
+          "name": "COLLIDER_OpenDoor",
+          "size": [
+            1.0,
+            0.05,
+            2.03
+          ]
+        },
+        {
+          "name": "COLLIDER_OpenDoor.001",
+          "size": [
+            1.0,
+            0.05,
+            2.03
+          ]
+        },
+        {
+          "name": "COLLIDER_Floor.003",
+          "size": [
+            2.1,
+            2.0,
+            0.34
+          ]
+        },
+        {
+          "name": "COLLIDER_Post",
+          "size": [
+            0.16,
+            0.16,
+            2.6
+          ]
+        },
+        {
+          "name": "COLLIDER_Post.001",
+          "size": [
+            0.16,
+            0.16,
+            2.6
+          ]
+        },
+        {
+          "name": "COLLIDER_Post.002",
+          "size": [
+            0.16,
+            0.16,
+            2.6
+          ]
+        },
+        {
+          "name": "COLLIDER_Post.003",
+          "size": [
+            0.16,
+            0.16,
+            2.6
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontFence",
+          "size": [
+            15.65,
+            0.12,
+            1.3
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontFence.001",
+          "size": [
+            15.65,
+            0.12,
+            1.3
+          ]
+        },
+        {
+          "name": "COLLIDER_RearFence",
+          "size": [
+            36.0,
+            0.12,
+            1.3
+          ]
+        },
+        {
+          "name": "COLLIDER_SideFence",
+          "size": [
+            0.12,
+            31.0,
+            1.3
+          ]
+        },
+        {
+          "name": "COLLIDER_SideFence.001",
+          "size": [
+            0.12,
+            31.0,
+            1.3
+          ]
+        },
+        {
+          "name": "COLLIDER_Floor.004",
+          "size": [
+            8.4,
+            7.0,
+            0.34
+          ]
+        },
+        {
+          "name": "COLLIDER_Post.004",
+          "size": [
+            0.16,
+            0.16,
+            2.6
+          ]
+        },
+        {
+          "name": "COLLIDER_Post.005",
+          "size": [
+            0.16,
+            0.16,
+            2.6
+          ]
+        },
+        {
+          "name": "COLLIDER_Post.006",
+          "size": [
+            0.16,
+            0.16,
+            2.6
+          ]
+        },
+        {
+          "name": "COLLIDER_Post.007",
+          "size": [
+            0.16,
+            0.16,
+            2.6
+          ]
+        },
+        {
+          "name": "COLLIDER_DoorHeader.002",
+          "size": [
+            1.44,
+            0.12,
+            0.14
+          ]
+        },
+        {
+          "name": "COLLIDER_EntryStep.004",
+          "size": [
+            1.45,
+            0.34,
+            0.13
+          ]
+        },
+        {
+          "name": "COLLIDER_EntryStep.005",
+          "size": [
+            1.45,
+            0.34,
+            0.13
+          ]
+        },
+        {
+          "name": "COLLIDER_Floor.005",
+          "size": [
+            5.6,
+            7.2,
+            0.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontPier.008",
+          "size": [
+            0.4500000000000002,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontPier.009",
+          "size": [
+            0.42999999999999994,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontPier.010",
+          "size": [
+            0.42999999999999994,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontPier.011",
+          "size": [
+            0.4500000000000002,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontWindowLower.004",
+          "size": [
+            1.1999999999999997,
+            0.09,
+            0.82
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontWindowLower.005",
+          "size": [
+            1.1999999999999997,
+            0.09,
+            0.82
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontWindowUpper.004",
+          "size": [
+            1.1999999999999997,
+            0.09,
+            0.55
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontWindowUpper.005",
+          "size": [
+            1.1999999999999997,
+            0.09,
+            0.55
+          ]
+        },
+        {
+          "name": "COLLIDER_PorchFloor.002",
+          "size": [
+            5.6,
+            1.2,
+            0.34
+          ]
+        },
+        {
+          "name": "COLLIDER_Rear.003",
+          "size": [
+            5.6,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.012",
+          "size": [
+            0.09,
+            1.0059999999999998,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.013",
+          "size": [
+            0.09,
+            2.588,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.014",
+          "size": [
+            0.09,
+            1.0059999999999998,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.015",
+          "size": [
+            0.09,
+            1.0059999999999998,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.016",
+          "size": [
+            0.09,
+            2.588,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.017",
+          "size": [
+            0.09,
+            1.0059999999999998,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowLower.008",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.81
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowLower.009",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.81
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowLower.010",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.81
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowLower.011",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.81
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowUpper.008",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.66
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowUpper.009",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.66
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowUpper.010",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.66
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowUpper.011",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.66
+          ]
+        },
+        {
+          "name": "COLLIDER_EntryPost.004",
+          "size": [
+            0.12,
+            0.12,
+            2.4
+          ]
+        },
+        {
+          "name": "COLLIDER_EntryPost.005",
+          "size": [
+            0.12,
+            0.12,
+            2.4
+          ]
+        },
+        {
+          "name": "COLLIDER_OpenDoor.004",
+          "size": [
+            1.4,
+            0.05,
+            2.03
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerFloor",
+          "size": [
+            2.9,
+            2.9,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerPost",
+          "size": [
+            0.18,
+            0.18,
+            5.6
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerPost.001",
+          "size": [
+            0.18,
+            0.18,
+            5.6
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerPost.002",
+          "size": [
+            0.18,
+            0.18,
+            5.6
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerPost.003",
+          "size": [
+            0.18,
+            0.18,
+            5.6
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerStep",
+          "size": [
+            1.4,
+            0.31,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerStep.001",
+          "size": [
+            1.4,
+            0.31,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerStep.002",
+          "size": [
+            1.4,
+            0.31,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerStep.003",
+          "size": [
+            1.4,
+            0.31,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerStep.004",
+          "size": [
+            1.4,
+            0.31,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerStep.005",
+          "size": [
+            1.4,
+            0.31,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerStep.006",
+          "size": [
+            1.4,
+            0.31,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerStep.007",
+          "size": [
+            1.4,
+            0.31,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerStep.008",
+          "size": [
+            1.4,
+            0.31,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerStep.009",
+          "size": [
+            1.4,
+            0.31,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerStep.010",
+          "size": [
+            1.4,
+            0.31,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerStep.011",
+          "size": [
+            1.4,
+            0.31,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerStep.012",
+          "size": [
+            1.4,
+            0.31,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerStep.013",
+          "size": [
+            1.4,
+            0.31,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerStep.014",
+          "size": [
+            1.4,
+            0.31,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerStep.015",
+          "size": [
+            1.4,
+            0.31,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_TowerStep.016",
+          "size": [
+            1.4,
+            0.31,
+            0.12
+          ]
+        },
+        {
+          "name": "COLLIDER_Floor.006",
+          "size": [
+            1.35,
+            1.5,
+            0.34
+          ]
+        },
+        {
+          "name": "COLLIDER_Post.008",
+          "size": [
+            0.16,
+            0.16,
+            2.6
+          ]
+        },
+        {
+          "name": "COLLIDER_Post.009",
+          "size": [
+            0.16,
+            0.16,
+            2.6
+          ]
+        },
+        {
+          "name": "COLLIDER_Post.010",
+          "size": [
+            0.16,
+            0.16,
+            2.6
+          ]
+        },
+        {
+          "name": "COLLIDER_Post.011",
+          "size": [
+            0.16,
+            0.16,
+            2.6
+          ]
+        },
+        {
+          "name": "COLLIDER_Floor.007",
+          "size": [
+            1.35,
+            1.5,
+            0.34
+          ]
+        },
+        {
+          "name": "COLLIDER_Post.012",
+          "size": [
+            0.16,
+            0.16,
+            2.6
+          ]
+        },
+        {
+          "name": "COLLIDER_Post.013",
+          "size": [
+            0.16,
+            0.16,
+            2.6
+          ]
+        },
+        {
+          "name": "COLLIDER_Post.014",
+          "size": [
+            0.16,
+            0.16,
+            2.6
+          ]
+        },
+        {
+          "name": "COLLIDER_Post.015",
+          "size": [
+            0.16,
+            0.16,
+            2.6
+          ]
+        },
+        {
+          "name": "COLLIDER_DoorHeader.003",
+          "size": [
+            1.44,
+            0.12,
+            0.14
+          ]
+        },
+        {
+          "name": "COLLIDER_EntryStep.006",
+          "size": [
+            1.45,
+            0.34,
+            0.13
+          ]
+        },
+        {
+          "name": "COLLIDER_EntryStep.007",
+          "size": [
+            1.45,
+            0.34,
+            0.13
+          ]
+        },
+        {
+          "name": "COLLIDER_Floor.008",
+          "size": [
+            5.6,
+            7.2,
+            0.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontPier.012",
+          "size": [
+            0.4500000000000002,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontPier.013",
+          "size": [
+            0.42999999999999994,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontPier.014",
+          "size": [
+            0.42999999999999994,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontPier.015",
+          "size": [
+            0.4500000000000002,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontWindowLower.006",
+          "size": [
+            1.1999999999999997,
+            0.09,
+            0.82
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontWindowLower.007",
+          "size": [
+            1.1999999999999997,
+            0.09,
+            0.82
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontWindowUpper.006",
+          "size": [
+            1.1999999999999997,
+            0.09,
+            0.55
+          ]
+        },
+        {
+          "name": "COLLIDER_FrontWindowUpper.007",
+          "size": [
+            1.1999999999999997,
+            0.09,
+            0.55
+          ]
+        },
+        {
+          "name": "COLLIDER_PorchFloor.003",
+          "size": [
+            5.6,
+            1.2,
+            0.34
+          ]
+        },
+        {
+          "name": "COLLIDER_Rear.004",
+          "size": [
+            5.6,
+            0.09,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.018",
+          "size": [
+            0.09,
+            1.0059999999999998,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.019",
+          "size": [
+            0.09,
+            2.588,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.020",
+          "size": [
+            0.09,
+            1.0059999999999998,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.021",
+          "size": [
+            0.09,
+            1.0059999999999998,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.022",
+          "size": [
+            0.09,
+            2.588,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_SideWall.023",
+          "size": [
+            0.09,
+            1.0059999999999998,
+            2.34
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowLower.012",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.81
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowLower.013",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.81
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowLower.014",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.81
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowLower.015",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.81
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowUpper.012",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.66
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowUpper.013",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.66
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowUpper.014",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.66
+          ]
+        },
+        {
+          "name": "COLLIDER_WindowUpper.015",
+          "size": [
+            0.09,
+            1.3000000000000003,
+            0.66
+          ]
+        },
+        {
+          "name": "COLLIDER_EntryPost.006",
+          "size": [
+            0.12,
+            0.12,
+            2.4
+          ]
+        },
+        {
+          "name": "COLLIDER_EntryPost.007",
+          "size": [
+            0.12,
+            0.12,
+            2.4
+          ]
+        },
+        {
+          "name": "COLLIDER_OpenDoor.005",
+          "size": [
+            1.4,
+            0.05,
+            2.03
+          ]
+        }
+      ],
+      "buildings": [
+        {
+          "name": "Aid post",
+          "position": [
+            9.300000190734863,
+            -6.800000190734863,
+            0.0
+          ],
+          "width": 5,
+          "depth": 4.8
+        },
+        {
+          "name": "C3 / command house",
+          "position": [
+            0.0,
+            8.0,
+            0.0
+          ],
+          "width": 9.0,
+          "depth": 6.0
+        },
+        {
+          "name": "C3 / garrison equipment store",
+          "position": [
+            12.0,
+            13.0,
+            0.0
+          ],
+          "width": 4.8,
+          "depth": 3.4
+        },
+        {
+          "name": "Gate duty shelter.002",
+          "position": [
+            4.599999904632568,
+            0.800000011920929,
+            0.0
+          ],
+          "width": 2.1,
+          "depth": 2.0
+        },
+        {
+          "name": "Cookhouse and covered mess.002",
+          "position": [
+            -7.0,
+            -7.0,
+            0.0
+          ],
+          "width": 8.4,
+          "depth": 7.0
+        },
+        {
+          "name": "East quarters / ten berths",
+          "position": [
+            11.100000381469727,
+            4.0,
+            0.0
+          ],
+          "width": 5.6,
+          "depth": 7.2
+        },
+        {
+          "name": "Screened latrine.004",
+          "position": [
+            -0.75,
+            2.0999999046325684,
+            0.0
+          ],
+          "width": 1.35,
+          "depth": 1.5
+        },
+        {
+          "name": "Screened latrine.005",
+          "position": [
+            0.75,
+            2.0999999046325684,
+            0.0
+          ],
+          "width": 1.35,
+          "depth": 1.5
+        },
+        {
+          "name": "West quarters / ten berths",
+          "position": [
+            -11.100000381469727,
+            4.0,
+            0.0
+          ],
+          "width": 5.6,
+          "depth": 7.2
+        }
+      ],
+      "footprint_m": [
+        36,
+        31
+      ],
+      "enemy_count_changes": false,
+      "source": "Original C3 palm-roof garrison; equipment store and clinic entry ramp added. Original gate duty shelter retained; redundant second hut removed."
+    }
+  ]
+}

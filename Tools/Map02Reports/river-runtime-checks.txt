@@ -1,0 +1,5 @@
+PASS isolated Unity Play Mode, 12 seconds
+PASS real trigger callback adds buoyancy to dropped Rigidbody
+PASS dropped body floats and drifts: (0.00, -0.18, 19.81)
+PASS two moored hulls with Map 2 boat mass, float points and colliders remain stable
+PASS interaction and wake ripples: 16

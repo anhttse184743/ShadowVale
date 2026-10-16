@@ -20,7 +20,7 @@ namespace ShadowVale.Map01.Tests
         static Map01Mission M=>Object.FindFirstObjectByType<Map01Mission>();
         static Map01Rescue R=>M.GetComponent<Map01Rescue>();
         static readonly BindingFlags Private=BindingFlags.Instance|BindingFlags.NonPublic;
-        static void Isolate(){typeof(ForestSaveSlots).GetField("storageRoot",BindingFlags.Static|BindingFlags.NonPublic).SetValue(null,Path.GetFullPath("Logs/QuickRescue/saves/"+Guid.NewGuid().ToString("N")));}
+        static void Isolate(){R.MarkIntroSeen();typeof(ForestSaveSlots).GetField("storageRoot",BindingFlags.Static|BindingFlags.NonPublic).SetValue(null,Path.GetFullPath("Logs/QuickRescue/saves/"+Guid.NewGuid().ToString("N")));}
         static void Place(Vector3 p,Quaternion q){var cc=M.player.GetComponent<CharacterController>();cc.enabled=false;M.player.SetPositionAndRotation(p,q);cc.enabled=true;M.ModernPlayer.RestoreMotion(true);M.Crouched=true;Physics.SyncTransforms();}
         static Vector3 FarStone(Map01EnemyController g){
             for(int i=0;i<16;i++){

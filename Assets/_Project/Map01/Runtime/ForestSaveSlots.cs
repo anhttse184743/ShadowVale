@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace ShadowVale.Map01
@@ -15,8 +16,30 @@ namespace ShadowVale.Map01
         }
         public const int AutoSlot = 4;
         public const int Count = 5;
+#if UNITY_EDITOR
+        public const string EditorTestRootKey = "ShadowVale.MergeDev.IsolatedSaveRoot";
+#endif
         private static string storageRoot;
-        private static string Root => storageRoot ?? Application.persistentDataPath;
+        private static string Root
+        {
+            get
+            {
+                if (storageRoot != null) return storageRoot;
+#if UNITY_EDITOR
+                // Survives EnterPlayMode's domain reload and fixture cleanup during Play exit.
+                var testRoot = UnityEditor.SessionState.GetString(EditorTestRootKey, "");
+                if (!string.IsNullOrEmpty(testRoot)) return testRoot;
+#endif
+                return Application.persistentDataPath;
+            }
+        }
+        public static string SkillCareerPath(string runId)
+        {
+            if (string.IsNullOrEmpty(runId) || (runId.Length != 32 && runId.Length != 64)
+                || runId.Any(c => !(c >= '0' && c <= '9') && !(c >= 'a' && c <= 'f')))
+                throw new ArgumentException("Invalid skill run id.", nameof(runId));
+            return Path.Combine(Root, "shadowvale-skills-" + runId + ".json");
+        }
         public static string PathFor(int slot)
         {
             if (slot < 0 || slot >= Count) throw new ArgumentOutOfRangeException(nameof(slot));

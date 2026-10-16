@@ -12,6 +12,18 @@ namespace ShadowVale.Map01
         public float shelterWalkSpeed=1.35f,shelterFollowGap=1.4f;
         public float namWalkCycleSpeed=1.8f,hungWalkCycleSpeed=1.94f,namKnifeWalkCycleSpeed=1.94f;
         public AudioClip gunshot;
+        [Header("Rescue story pacing")]
+        public float introRadius=40, introSeconds=12, executionCameraSeconds=3, executionAimSeconds=.8f, executionHoldSeconds=2;
+
+        [Header("Distraction stone pickups")]
+        [Min(1)] public int stonesPerPile=3;
+        [Tooltip("World X/Z offsets from Hung's captive post; sampled onto safe ground. Stable index = save ID.")]
+        public Vector3[] stoneOffsets={
+            new(-9,0,-44),new(9,0,-44),new(-18,0,-32),new(16,0,-32),
+            new(-22,0,-20),new(20,0,-20),new(-16,0,-9),new(12,0,-12),
+            new(-28,0,5),new(24,0,7),new(-12,0,18),new(12,0,20)
+        };
+
         [Tooltip("Authored run-cycle speed in metres per second; playback follows actual path speed.")]
         public float namRunSpeed=4.34f, hungRunSpeed=6f;
         public Vector3 shelterCameraOffset=new Vector3(3,2.1f,-4);

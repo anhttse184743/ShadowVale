@@ -4,15 +4,27 @@ using UnityEngine;
 
 namespace ShadowVale.Map01
 {
-    /// <summary>North-up scene survey, captured once; actors and objectives are live overlays.</summary>
+    /// <summary>Baked north-up scene survey with saved exploration; live markers are overlays.</summary>
     public sealed class Map01Minimap : MonoBehaviour
     {
         private Map01Mission mission;
         private Map01ObjectiveGuide guide;
         private Map01Quest quest;
         private Map01Scouting scouting;
+        private Map01Inventory inventory;
+        private Map01StoneSites stoneSites;
+        private Map01CampChests chests;
+        /// <summary>With this many stones or fewer, the map shows where the nearest ones lie.</summary>
+        public const int LowOnStones = 2;
+        /// <summary>The stone site the map is pointing out, or null: only while he is running low, and only one within 30 m.</summary>
+        public ForestPoint StoneHint => stoneSites != null && inventory != null && inventory.Stones <= LowOnStones
+            ? stoneSites.Nearest(mission.player.position, 30f) : null;
         private Texture2D chart;
-        private Texture2D arrow, circle, diamond, triangle, ring, square;
+        private Texture2D fog;
+        private MapExploration exploration;
+        private Map01MapSurvey survey;
+        [SerializeField, Min(1)] private float explorationRadius = 14;
+        private Texture2D arrow, circle, diamond, triangle, ring, square, campIcon;
         private Texture2D disc, rim; // The round corner map's backing and frame, smooth-edged.
         private GUIStyle northLabel;
         private readonly List<Map01EnemyController> visibleEnemies = new List<Map01EnemyController>();
@@ -21,6 +33,45 @@ namespace ShadowVale.Map01
         private float span;
         public bool Ready => chart != null;
         public int VisibleEnemyCount => visibleEnemies.Count;
+        public Rect WorldBounds { get { EnsureExploration(); return exploration.Bounds; } }
+        public Vector3 SafeCamp => survey != null ? survey.safeCamp : Vector3.zero;
+        public bool IsExplored(Vector3 point) { EnsureExploration(); return exploration.IsExplored(point); }
+
+        private void EnsureExploration()
+        {
+            if (exploration != null) return;
+            mission = GetComponent<Map01Mission>();
+            survey = Resources.Load<Map01MapSurvey>("Maps/Map01Survey");
+            var bounds = survey != null ? survey.bounds : Rect.MinMaxRect(mission.mapMin.x, mission.mapMin.y, mission.mapMax.x, mission.mapMax.y);
+            exploration = new MapExploration(bounds);
+            fog = new Texture2D(MapExploration.Resolution, MapExploration.Resolution, TextureFormat.RGBA32, false)
+                { name = "Unexplored forest", wrapMode = TextureWrapMode.Clamp, filterMode = FilterMode.Bilinear };
+            RefreshFog();
+        }
+        public MapExplorationState CaptureExploration()
+        {
+            EnsureExploration();
+            if (!Map01SaveSystem.IsRestoring && mission.player != null) Reveal(mission.player.position);
+            return exploration.Capture();
+        }
+        public void RestoreExploration(MapExplorationState state)
+        {
+            EnsureExploration(); exploration.Restore(state);
+            if (mission.player != null) exploration.Reveal(mission.player.position, explorationRadius);
+            RefreshFog();
+        }
+        public void Reveal(Vector3 position)
+        {
+            EnsureExploration();
+            if (exploration.Reveal(position, explorationRadius)) RefreshFog();
+        }
+        private void RefreshFog()
+        {
+            var pixels = new Color32[MapExploration.Resolution * MapExploration.Resolution];
+            for (int y = 0; y < MapExploration.Resolution; y++) for (int x = 0; x < MapExploration.Resolution; x++)
+                pixels[y * MapExploration.Resolution + x] = new Color32(18, 23, 19, exploration.Cell(x, y) ? (byte)0 : (byte)255);
+            fog.SetPixels32(pixels); fog.Apply(false);
+        }
 
         private IEnumerator Start()
         {
@@ -28,52 +79,26 @@ namespace ShadowVale.Map01
             guide = GetComponent<Map01ObjectiveGuide>();
             quest = GetComponent<Map01Quest>();
             scouting = GetComponent<Map01Scouting>();
+            inventory = GetComponent<Map01Inventory>();
             yield return null;
             if (!mission.IsInitialized) yield break;
-            span = Mathf.Max(1, Mathf.Max(mission.mapMax.x - mission.mapMin.x, mission.mapMax.y - mission.mapMin.y));
-            origin = (mission.mapMin + mission.mapMax) * .5f - Vector2.one * span * .5f;
+            stoneSites = GetComponent<Map01StoneSites>(); // Added by Map01Mission.Awake when the map has stone data.
+            EnsureExploration();
+            span = Mathf.Max(exploration.Bounds.width, exploration.Bounds.height);
+            origin = exploration.Bounds.center - Vector2.one * span * .5f;
             arrow = Symbol(0); circle = Symbol(1); diamond = Symbol(2); triangle = Symbol(3); ring = Symbol(4); square = Symbol(5);
             disc = Disc(256, 0); rim = Disc(256, .955f);
-            CaptureChart();
-        }
-
-        private void CaptureChart()
-        {
-            var root = new GameObject("Minimap survey camera");
-            var camera = root.AddComponent<Camera>();
-            var rt = RenderTexture.GetTemporary(1024, 1024, 24);
-            var previous = RenderTexture.active;
-            try {
-                camera.enabled = false;
-                camera.orthographic = true; camera.orthographicSize = span * .5f;
-                camera.aspect = 1; camera.nearClipPlane = .1f; camera.farClipPlane = 1200;
-                camera.clearFlags = CameraClearFlags.SolidColor;
-                camera.backgroundColor = new Color(.23f, .25f, .15f);
-                camera.cullingMask = ~LayerMask.GetMask("Player", "Enemy", "UI");
-                camera.allowHDR = false; camera.allowMSAA = false;
-                root.transform.SetPositionAndRotation(new Vector3(origin.x + span / 2, 600, origin.y + span / 2), Quaternion.Euler(90, 0, 0));
-                camera.targetTexture = rt; camera.Render(); RenderTexture.active = rt;
-                chart = new Texture2D(1024, 1024, TextureFormat.RGB24, false) { name = "Field map survey", wrapMode = TextureWrapMode.Clamp };
-                chart.ReadPixels(new Rect(0, 0, 1024, 1024), 0, 0);
-                var pixels = chart.GetPixels32();
-                for (int i = 0; i < pixels.Length; i++) {
-                    Color c = pixels[i];
-                    float value = Mathf.Clamp01(c.grayscale * 1.4f);
-                    var ink = Color.Lerp(new Color(.14f, .17f, .10f), new Color(.64f, .59f, .38f), value);
-                    if (c.b > c.r * 1.15f && c.g > c.r * 1.05f) ink = Color.Lerp(ink, new Color(.23f, .38f, .34f), .6f);
-                    pixels[i] = ink;
-                }
-                chart.SetPixels32(pixels); chart.Apply(false, true);
-            } finally {
-                camera.targetTexture = null; RenderTexture.active = previous;
-                RenderTexture.ReleaseTemporary(rt); Destroy(root);
-            }
+            campIcon = Symbol(6);
+            chart = survey != null ? survey.chart : null;
+            if (chart == null) Debug.LogError("Map 1 minimap survey is missing. Bake it with ShadowVale > Map 1 > Bake minimap survey.", this);
+            if (!Map01SaveSystem.IsRestoring) Reveal(mission.player.position);
         }
 
         private void Update()
         {
-            if (mission == null || !mission.IsInitialized || Time.unscaledTime < nextSense) return;
+            if (mission == null || !mission.IsInitialized || Map01SaveSystem.IsRestoring || Time.unscaledTime < nextSense) return;
             nextSense = Time.unscaledTime + .25f;
+            Reveal(mission.player.position);
             visibleEnemies.Clear();
             foreach (var enemy in mission.Enemies) {
                 if (enemy == null || !enemy.Alive) continue;
@@ -119,6 +144,7 @@ namespace ShadowVale.Map01
                 GUI.color = new Color(.02f, .03f, .02f, .55f); // A dark halo keeps the rim readable over bright ground.
                 GUI.DrawTexture(new Rect(area.x - 6, area.y - 6, area.width + 12, area.height + 12), disc);
             }
+            GUI.color = old;
             DrawChart(area, world, disk);
             GUI.color = new Color(.85f, .79f, .52f, .16f);
             for (int i = 1; i < 6; i++) {
@@ -129,10 +155,20 @@ namespace ShadowVale.Map01
                 GUI.DrawTexture(new Rect(area.center.x - halfY, y, halfY * 2, 1), Texture2D.whiteTexture);
             }
             GUI.color = old;
+            if (survey != null) {
+                var camp = Mark(area, world, survey.safeCamp, campIcon, new Color(.35f, .87f, .64f), 19, true, disk);
+                if (expanded) GUI.Label(new Rect(Mathf.Clamp(camp.x + 12, area.x, area.xMax - 105), Mathf.Clamp(camp.y - 12, area.y, area.yMax - 24), 105, 24), "CĂN CỨ A", label);
+            }
             DrawCamps(area, world, label, disk);
+            // Nearly out of stones: a grey dot where the nearest ones lie. Not shown otherwise — thirty dots would bury the map.
+            var stones = StoneHint;
+            if (stones != null) Mark(area, world, stones.transform.position, circle, new Color(.72f, .7f, .64f), 10, false, disk);
+            // A camp taken, its chest not yet emptied: a gold square on the camp.
+            if (chests == null) chests = GetComponent<Map01CampChests>();
+            if (chests != null) foreach (var at in chests.Waiting()) Mark(area, world, at, Texture2D.whiteTexture, new Color(.95f, .76f, .3f), 11, false, disk);
             foreach (var enemy in visibleEnemies) if (enemy != null && enemy.Alive)
                 Mark(area, world, enemy.transform.position, triangle, new Color(.85f, .22f, .13f), 15, false, disk);
-            if (mission.hung != null) Mark(area, world, mission.hung.position, circle, new Color(.3f, .67f, .84f), 13, false, disk);
+            if (mission.hung != null && IsExplored(mission.hung.position)) Mark(area, world, mission.hung.position, circle, new Color(.3f, .67f, .84f), 13, false, disk);
             if (guide != null && guide.HasTarget) {
                 Vector2 target = Mark(area, world, guide.Target, diamond, new Color(1, .77f, .26f), 20, true, disk);
                 var at = target + new Vector2(0, 24);
@@ -166,14 +202,21 @@ namespace ShadowVale.Map01
             GUI.color = new Color(.14f, .17f, .10f); // The survey's darkest ink.
             GUI.DrawTexture(area, disk == null ? Texture2D.whiteTexture : disc);
             GUI.color = old;
-            float x0 = Mathf.Max(world.xMin, origin.x), x1 = Mathf.Min(world.xMax, origin.x + span);
-            float z0 = Mathf.Max(world.yMin, origin.y), z1 = Mathf.Min(world.yMax, origin.y + span);
+            DrawMapTexture(area, world, disk, chart);
+            DrawMapTexture(area, world, disk, fog);
+        }
+
+        private void DrawMapTexture(Rect area, Rect world, Vector2? disk, Texture texture)
+        {
+            var bounds = exploration.Bounds;
+            float x0 = Mathf.Max(world.xMin, bounds.xMin), x1 = Mathf.Min(world.xMax, bounds.xMax);
+            float z0 = Mathf.Max(world.yMin, bounds.yMin), z1 = Mathf.Min(world.yMax, bounds.yMax);
             if (x1 <= x0 || z1 <= z0) return;
             Vector2 min = Project(new Vector3(x0, 0, z1), world, area), max = Project(new Vector3(x1, 0, z0), world, area);
             var target = Rect.MinMaxRect(min.x, min.y, max.x, max.y);
-            var uv = new Rect((x0 - origin.x) / span, (z0 - origin.y) / span, (x1 - x0) / span, (z1 - z0) / span);
-            if (disk == null) GUI.DrawTextureWithTexCoords(target, chart, uv);
-            else DrawInDisc(target, chart, uv, disk.Value, area.width / 2, 2);
+            var uv = new Rect((x0 - bounds.x) / bounds.width, (z0 - bounds.y) / bounds.height, (x1 - x0) / bounds.width, (z1 - z0) / bounds.height);
+            if (disk == null) GUI.DrawTextureWithTexCoords(target, texture, uv);
+            else DrawInDisc(target, texture, uv, disk.Value, area.width / 2, 2);
         }
 
         /// <summary>
@@ -268,7 +311,8 @@ namespace ShadowVale.Map01
             for (int y = 0; y < 32; y++) for (int x = 0; x < 32; x++) {
                 float u = (x + .5f) / 16 - 1, v = (y + .5f) / 16 - 1;
                 float r = Mathf.Sqrt(u * u + v * v);
-                bool on = kind == 4 ? r < .98f && r > .88f : kind == 5 ? Mathf.Abs(u) < .7f && Mathf.Abs(v) < .7f
+                bool on = kind == 6 ? (v > .15f && v < .85f && Mathf.Abs(u) < (.95f-v)) || (v <= .15f && v > -.75f && Mathf.Abs(u) < .62f && !(v < -.1f && Mathf.Abs(u) < .18f))
+                    : kind == 4 ? r < .98f && r > .88f : kind == 5 ? Mathf.Abs(u) < .7f && Mathf.Abs(v) < .7f
                     : kind == 1 ? u * u + v * v < .7f : kind == 2 ? Mathf.Abs(u) + Mathf.Abs(v) < .95f && Mathf.Abs(u) + Mathf.Abs(v) > .55f
                     : kind == 3 ? v > -.7f && Mathf.Abs(u) < (.9f - v) * .5f && (v < -.4f || Mathf.Abs(u) > (.6f - v) * .5f)
                     : Mathf.Abs(u) < (.95f - v) * .48f && v > -.85f + (1 - Mathf.Abs(u)) * .5f;
@@ -295,7 +339,7 @@ namespace ShadowVale.Map01
 
         private void OnDestroy()
         {
-            foreach (var texture in new[] { chart, arrow, circle, diamond, triangle, ring, square, disc, rim }) if (texture != null) Destroy(texture);
+            foreach (var texture in new[] { fog, arrow, circle, diamond, triangle, ring, square, campIcon, disc, rim }) if (texture != null) Destroy(texture);
         }
     }
 }

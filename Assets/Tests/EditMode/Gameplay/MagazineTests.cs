@@ -7,9 +7,33 @@ namespace ShadowVale.Tests.EditMode.Gameplay
     {
         private const int Capacity = 30;
         private const float PartialReload = 2.4f;
-        private const float EmptyReload = 2.9f;
+        private const float EmptyReload = PartialReload;
 
-        private static Magazine Fresh() => new(Capacity, PartialReload, EmptyReload);
+        private static Magazine Fresh() => new(Capacity, PartialReload);
+
+        [Test] public void ReloadModifierUsesOneDurationWithoutChangingBaseOrActiveReload()
+        {
+            var magazine = Fresh(); magazine.TryConsume();
+            Assert.IsTrue(magazine.BeginReload(90, .99f));
+            Assert.AreEqual(2.376f, magazine.ReloadRemaining, .00001f);
+            Assert.IsFalse(magazine.BeginReload(90, .5f));
+            Assert.AreEqual(2.376f, magazine.ReloadRemaining, .00001f);
+            magazine.CancelReload();
+            Assert.IsTrue(magazine.BeginReload(90));
+            Assert.AreEqual(2.4f, magazine.ReloadRemaining, .00001f);
+            magazine.Refill(0); Assert.IsTrue(magazine.BeginReload(90, .99f));
+            Assert.AreEqual(2.376f, magazine.ReloadRemaining, .00001f);
+            magazine.Tick(2.377f, wanted => wanted);
+            Assert.IsTrue(magazine.IsFull);
+        }
+
+        [Test] public void InvalidReloadModifierCannotStartAReload()
+        {
+            var magazine = Fresh(); magazine.TryConsume();
+            foreach (float factor in new[] { 0f, -1f, float.NaN, float.PositiveInfinity })
+                Assert.IsFalse(magazine.BeginReload(90, factor));
+            Assert.IsFalse(magazine.IsReloading);
+        }
 
         [Test]
         public void StartsLoaded()
@@ -34,7 +58,7 @@ namespace ShadowVale.Tests.EditMode.Gameplay
         }
 
         [Test]
-        public void ReloadingFromEmptyTakesLongerThanToppingUp()
+        public void ReloadingFromEmptyTakesTheSameTimeAsToppingUp()
         {
             var empty = Fresh();
             for (var i = 0; i < Capacity; i++) empty.TryConsume();
@@ -44,8 +68,8 @@ namespace ShadowVale.Tests.EditMode.Gameplay
             partial.TryConsume();
             partial.BeginReload(reserve: 90);
 
-            Assert.Greater(empty.ReloadRemaining, partial.ReloadRemaining,
-                "running dry has to cost more than swapping early, or there is no reason to reload in cover");
+            Assert.AreEqual(empty.ReloadRemaining, partial.ReloadRemaining,
+                "all reloads must use the single configured duration");
             Assert.AreEqual(EmptyReload, empty.ReloadRemaining, 1e-4f);
             Assert.AreEqual(PartialReload, partial.ReloadRemaining, 1e-4f);
         }

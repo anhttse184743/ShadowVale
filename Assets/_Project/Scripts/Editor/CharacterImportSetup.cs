@@ -532,6 +532,11 @@ namespace ShadowVale.Editor
             // Always written, not just when tuning: a rig that should keep Unity's defaults has
             // to be restored to them, or a value left over from an earlier run silently sticks.
             float wantForeArm = tuneTwist ? ForeArmTwist : DefaultTwist;
+            // A rig with its own forearm twist bones (Nam's, driven by ForearmTwist) spreads the roll itself:
+            // Humanoid keeps all of it on the hand there (NamModelSetup), and this must not put a share back.
+            var rigged = AssetDatabase.LoadAssetAtPath<GameObject>(modelPath);
+            if (rigged != null && System.Array.Exists(rigged.GetComponentsInChildren<Transform>(true), t => StoryAnimationSetup.IsForearmTwist(t.name)))
+                wantForeArm = 0f;
             float wantArm = tuneTwist ? ArmTwist : DefaultTwist;
             HumanDescription description = importer.humanDescription;
             if (!Mathf.Approximately(description.lowerArmTwist, wantForeArm)

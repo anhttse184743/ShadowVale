@@ -19,7 +19,7 @@ namespace ShadowVale.Map01.Tests
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
 
         // Lambdas stay in static helpers: one capturing an iterator local breaks after the domain
-        // reload EnterPlayMode triggers (see ForestFlowTests.NearestOutpostGuard).
+        // reload EnterPlayMode triggers (see the note at the top of ForestFlowTests).
 
         private static Map01EnemyController OnlyGuard(Map01Mission mission, string name)
         {
@@ -89,6 +89,7 @@ namespace ShadowVale.Map01.Tests
             var routing=RouteInputToGame();var keyboard=InputSystem.AddDevice<Keyboard>();
             try {
             var mission = Object.FindFirstObjectByType<Map01Mission>();
+            mission.GetComponent<Map01Rescue>().MarkIntroSeen(); // Near jetty B the overseer's intro would take the camera and stop the throw.
             var inventory = mission.GetComponent<Map01Inventory>();
             var stones = mission.GetComponent<Map01StoneThrow>();
             Assert.IsNotNull(stones, "Map01PlayerInteraction must bring the stone throw along.");
@@ -135,6 +136,7 @@ namespace ShadowVale.Map01.Tests
             yield return new EnterPlayMode();
             yield return null;
             var mission = Object.FindFirstObjectByType<Map01Mission>();
+            mission.GetComponent<Map01Rescue>().MarkIntroSeen(); // Near jetty B the overseer's intro would take the camera and stop the throw.
             var inventory = mission.GetComponent<Map01Inventory>();
             var stones = mission.GetComponent<Map01StoneThrow>();
             var guard = OnlyGuard(mission, "Outpost guard 0");
@@ -184,6 +186,7 @@ namespace ShadowVale.Map01.Tests
             yield return new EnterPlayMode();
             yield return null;
             var mission = Object.FindFirstObjectByType<Map01Mission>();
+            mission.GetComponent<Map01Rescue>().MarkIntroSeen(); // Near jetty B the overseer's intro would take the camera and stop the throw.
             var inventory = mission.GetComponent<Map01Inventory>();
             var routing = RouteInputToGame();
             var mouse = InputSystem.AddDevice<Mouse>();

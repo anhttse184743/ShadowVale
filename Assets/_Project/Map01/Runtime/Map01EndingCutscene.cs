@@ -156,7 +156,7 @@ namespace ShadowVale.Map01
             if(skipped) mission.ModernCombat?.RestoreAfterCinematic();
             quest.CompleteBossDefeat(!skipped);
             ForestMenu.SuppressKeysAfterCutscene();
-            // Boss/radio skipping returns to the extraction objective, not completion.
+            // Both endings leave the required commander report pending until Nam actually reports.
             Cursor.lockState = CursorLockMode.Locked; Cursor.visible = false;
         }
 

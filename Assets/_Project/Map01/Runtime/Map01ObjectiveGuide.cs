@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
@@ -46,9 +46,11 @@ namespace ShadowVale.Map01
 
         private bool PickTarget(out Vector3 target, out string label)
         {
+            target = default; label = null;
+            if (GetComponent<Map01Story>()?.Target(out target, out label) == true) return true;
+            // The map's own objectives: Map01Quest in Map 1, TutorialDirector in the tutorial.
             var objectives = mission.Objectives;
-            if (objectives != null) return objectives.TryGetObjectiveTarget(out target, out label);
-            target = default; label = null; return false;
+            return objectives != null && objectives.TryGetObjectiveTarget(out target, out label);
         }
 
         private void Update()

@@ -20,6 +20,8 @@
   "searchSeconds": 8,
   "suppressSeconds": 1.5,
   "startingStones": 6,
+  "stoneCapacity": 15,
+  "startingPistolRounds": 0,
   "guardDropAmmo": 30,
   "guardDropMedkits": 1,
   "guardAccuracy": {

@@ -18,7 +18,17 @@ namespace ShadowVale.Map01
         public float searchSeconds;
         /// <summary>How long an engaged guard keeps firing at the spot he last saw Nam before hunting him.</summary>
         public float suppressSeconds;
-        public int startingStones, guardDropAmmo, guardDropMedkits;
+        public int startingStones;
+        /// <summary>Rounds for the K-54 Nam starts with in slot 2.</summary>
+        public int startingPistolRounds;
+        /// <summary>No longer read: a fallen guard's pack is rolled from his loot table (Resources/Loot/Map01Loot.json).
+        /// Kept so older balance files still parse.</summary>
+        public int guardDropAmmo, guardDropMedkits;
+        /// <summary>How many stones fit in his pockets. More lie around the map (Map01StoneSites).</summary>
+        public int stoneCapacity;
+        /// <summary>TEMPORARY, for testing the bench: Nam starts with plenty of every material and the camp
+        /// chests' weapons (Map01Inventory.TestCraftingKit). Set false in Map01Balance.json to play normally.</summary>
+        public bool testCraftingKit;
         public ForestIngredient[] startingItems;
         public float tutorialSlowScale = .2f, tutorialPulseSeconds = 1.1f;
         public float tutorialSprintDistance = 8, tutorialCrouchDistance = 4, tutorialScanSeconds = 2;
@@ -41,6 +51,9 @@ namespace ShadowVale.Map01
     {
         public string id;
         public float damage, range, noise_radius, fire_rate;
+        /// <summary>Full condition in durability points, and what one shot takes off it (database weapons.max_durability,
+        /// durability_per_use).</summary>
+        public float durability_max, durability_per_shot;
     }
     [Serializable] public sealed class ForestArchetype
     {
@@ -79,7 +92,9 @@ namespace ShadowVale.Map01
             ReinforceHpThreshold = reinforce_hp_threshold, ReinforceCount = reinforce_count, ReinforceRadius = reinforce_radius,
         };
     }
-    [Serializable] public sealed class ForestIngredient { public string item_id; public int count; }
+    /// <summary>An item and how many. A gun lying somewhere (a chest, a fallen guard, a pile) also carries its condition in
+    /// durability points; -1 (anything else, or a new gun) means none (Map01Inventory.Condition.cs).</summary>
+    [Serializable] public sealed class ForestIngredient { public string item_id; public int count; public float condition = -1f; }
     [Serializable] public sealed class ForestRecipe
     {
         public string id, output_item_id;

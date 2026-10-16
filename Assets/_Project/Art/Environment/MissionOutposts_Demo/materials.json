@@ -1,0 +1,220 @@
+{
+  "items": [
+    {
+      "name": "RG_AgedTeak",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_AgedTeak_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_AgedTeak_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_AgedTeak_MetalSmooth.png",
+      "smoothness": 0.15000000000000002,
+      "metallic": 0
+    },
+    {
+      "name": "RG_WeatheredTimber",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WeatheredTimber_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WeatheredTimber_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WeatheredTimber_MetalSmooth.png",
+      "smoothness": 0.06000000000000005,
+      "metallic": 0
+    },
+    {
+      "name": "RG_EndgrainRepair",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_EndgrainRepair_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_EndgrainRepair_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_EndgrainRepair_MetalSmooth.png",
+      "smoothness": 0.15000000000000002,
+      "metallic": 0
+    },
+    {
+      "name": "RG_OliveCanvas",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_OliveCanvas_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_OliveCanvas_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_OliveCanvas_MetalSmooth.png",
+      "smoothness": 0.040000000000000036,
+      "metallic": 0
+    },
+    {
+      "name": "RG_FadedKhaki",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_FadedKhaki_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_FadedKhaki_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_FadedKhaki_MetalSmooth.png",
+      "smoothness": 0.06000000000000005,
+      "metallic": 0
+    },
+    {
+      "name": "RG_Linen",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Linen_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Linen_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Linen_MetalSmooth.png",
+      "smoothness": 0.030000000000000027,
+      "metallic": 0
+    },
+    {
+      "name": "RG_CorrugatedZinc",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_CorrugatedZinc_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_CorrugatedZinc_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_CorrugatedZinc_MetalSmooth.png",
+      "smoothness": 0.30000000000000004,
+      "metallic": 0.65
+    },
+    {
+      "name": "RG_PaintedSteel",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_PaintedSteel_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_PaintedSteel_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_PaintedSteel_MetalSmooth.png",
+      "smoothness": 0.38,
+      "metallic": 0.48
+    },
+    {
+      "name": "RG_BlackSteel",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_BlackSteel_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_BlackSteel_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_BlackSteel_MetalSmooth.png",
+      "smoothness": 0.5,
+      "metallic": 0.72
+    },
+    {
+      "name": "RG_WornBrass",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WornBrass_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WornBrass_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WornBrass_MetalSmooth.png",
+      "smoothness": 0.5700000000000001,
+      "metallic": 0.8
+    },
+    {
+      "name": "RG_Bakelite",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Bakelite_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Bakelite_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Bakelite_MetalSmooth.png",
+      "smoothness": 0.6,
+      "metallic": 0
+    },
+    {
+      "name": "RG_Earth",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Earth_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Earth_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Earth_MetalSmooth.png",
+      "smoothness": 0.15000000000000002,
+      "metallic": 0
+    },
+    {
+      "name": "RG_TrampledEarth",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_TrampledEarth_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_TrampledEarth_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_TrampledEarth_MetalSmooth.png",
+      "smoothness": 0.08999999999999997,
+      "metallic": 0
+    },
+    {
+      "name": "RG_WetMud",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WetMud_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WetMud_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WetMud_MetalSmooth.png",
+      "smoothness": 0.75,
+      "metallic": 0
+    },
+    {
+      "name": "RG_Grass",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Grass_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Grass_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Grass_MetalSmooth.png",
+      "smoothness": 0.040000000000000036,
+      "metallic": 0
+    },
+    {
+      "name": "RG_Foliage",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Foliage_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Foliage_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Foliage_MetalSmooth.png",
+      "smoothness": 0.17000000000000004,
+      "metallic": 0
+    },
+    {
+      "name": "RG_Bark",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Bark_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Bark_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Bark_MetalSmooth.png",
+      "smoothness": 0.050000000000000044,
+      "metallic": 0
+    },
+    {
+      "name": "RG_RedBrick",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_RedBrick_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_RedBrick_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_RedBrick_MetalSmooth.png",
+      "smoothness": 0.050000000000000044,
+      "metallic": 0
+    },
+    {
+      "name": "RG_Paper",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Paper_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Paper_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Paper_MetalSmooth.png",
+      "smoothness": 0.09999999999999998,
+      "metallic": 0
+    },
+    {
+      "name": "RG_FieldMap",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_FieldMap_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_FieldMap_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_FieldMap_MetalSmooth.png",
+      "smoothness": 0.09999999999999998,
+      "metallic": 0
+    },
+    {
+      "name": "RG_Stencil",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Stencil_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Stencil_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Stencil_MetalSmooth.png",
+      "smoothness": 0.19999999999999996,
+      "metallic": 0
+    },
+    {
+      "name": "RG_LampGlass",
+      "albedo": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_LampGlass_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_LampGlass_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_LampGlass_MetalSmooth.png",
+      "smoothness": 0.8,
+      "metallic": 0
+    },
+    {
+      "name": "RG_PalmDry",
+      "albedo": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmDry_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmDry_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmDry_MetalSmooth.png",
+      "smoothness": 0.075,
+      "metallic": 0
+    },
+    {
+      "name": "RG_PalmOld",
+      "albedo": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmOld_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmOld_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmOld_MetalSmooth.png",
+      "smoothness": 0.075,
+      "metallic": 0
+    },
+    {
+      "name": "RG_PalmRepair",
+      "albedo": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmRepair_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmRepair_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmRepair_MetalSmooth.png",
+      "smoothness": 0.075,
+      "metallic": 0
+    },
+    {
+      "name": "RG_PalmWeave",
+      "albedo": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmWeave_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmWeave_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmWeave_MetalSmooth.png",
+      "smoothness": 0.075,
+      "metallic": 0
+    },
+    {
+      "name": "RG_RoofBamboo",
+      "albedo": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_RoofBamboo_BaseColor.png",
+      "normal": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_RoofBamboo_Normal.png",
+      "mask": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_RoofBamboo_MetalSmooth.png",
+      "smoothness": 0.075,
+      "metallic": 0
+    }
+  ]
+}

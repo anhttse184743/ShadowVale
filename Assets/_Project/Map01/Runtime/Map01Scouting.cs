@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using ShadowVale.Gameplay.Combat;
 using ShadowVale.Gameplay.Player;
@@ -160,12 +160,15 @@ namespace ShadowVale.Map01
         private void Update()
         {
             if (!mission.IsInitialized) return;
-            bool scouting = quest.Stage == Map01Quest.ScoutStage && !mission.Stopped;
+            bool scouting = quest.Stage >= Map01Quest.ScoutStage && quest.Stage <= Map01Quest.BossStage && !mission.Stopped;
             SetBinoculars(held && scouting && !mission.InventoryOpen && !mission.MapOpen && !ForestMenu.Visible);
             if (cameraRig != null) cameraRig.SetBinoculars(Binoculars, Eye.y - mission.player.position.y);
             if (!scouting) { TrackAttacks(); InScanRange = false; return; }
-            if (CampSpottedOrAttacked(out string reason)) { Fail(reason); return; }
+            // Outpost combat is allowed; only hostage rules can fail the rescue.
+            TrackAttacks();
             InScanRange = false;
+            // The new operations use binoculars to observe the officer, not to log three camps.
+            if(mission.GetComponent<Map01Story>()?.Layout!=null){Sighted=null;RecordProgress=0;return;}
             foreach (var camp in camps)
                 if (!camp.Found && Vector3.Distance(mission.player.position, camp.Center) <= binocularRange) InScanRange = true;
             RecordSighting();

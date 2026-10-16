@@ -6,7 +6,7 @@ namespace ShadowVale.Map01
     public sealed partial class Map01Hud
     {
         private Texture2D combatIcons, healthDroplet;
-        private GUIStyle combatNumber, combatCaption;
+        private GUIStyle combatNumber, combatCaption, combatBroken;
 
         private void DrawCombatHud(float width, float height)
         {
@@ -26,13 +26,32 @@ namespace ShadowVale.Map01
                 combatCaption = new GUIStyle(hudSmall) { fontSize = 17, alignment = TextAnchor.MiddleCenter, wordWrap = false };
             }
             float x = width - 370, y = height - 292;
-            var kind = mission.ModernCombat != null ? mission.ModernCombat.EquippedKind : WeaponKind.Unarmed;
-            CombatIcon(new Rect(x + 10, y + 10, 146, 118), new Rect(672, 107, 536, 438), kind == WeaponKind.Rifle);
-            CombatIcon(new Rect(x + 249, y + 29, 82, 81), new Rect(96, 695, 491, 476), kind == WeaponKind.Knife);
-            CombatIcon(new Rect(x + 286, y + 145, 54, 69), new Rect(783, 724, 335, 429), kind == WeaponKind.Unarmed);
+            var kind = mission.ModernCombat != null ? mission.ModernCombat.EquippedKind : WeaponKind.Knife;
+            // The four slots (Map01Inventory.Bag): 1 long gun, 2 pistol, 3 knife on the right, 4 the throwable [Q] uses.
+            // What is in hand is drawn bright; the rest dimmed; an empty slot shows only its number.
+            string primary = inventory.SlotItem(Map01Inventory.Slot.Primary), pistol = inventory.SlotItem(Map01Inventory.Slot.Pistol);
+            if (primary == "rifle_standard") CombatIcon(new Rect(x + 10, y + 10, 146, 118), new Rect(672, 107, 536, 438), kind == WeaponKind.Rifle);
+            else if (primary != null) HotbarIcon(new Rect(x + 4, y + 44, 156, 49), primary, false);
             CombatLabel(new Rect(x + 46, y + 123, 60, 24), "1", combatCaption);
-            CombatLabel(new Rect(x + 260, y + 109, 60, 24), "2", combatCaption);
-            CombatLabel(new Rect(x + 285, y + 215, 60, 24), "3", combatCaption);
+            if (pistol != null) HotbarIcon(new Rect(x + 274, y + 8, 70, 52), pistol, false);
+            CombatLabel(new Rect(x + 238, y + 22, 30, 24), "2", combatCaption);
+            // Each gun's condition under its picture (Map01Hud.Gunsmith.cs).
+            if (Map01Inventory.HasCondition(primary)) ConditionBar(new Rect(x + 22, y + 148, 122, 5), inventory.FractionOf(Map01Inventory.Gun.InSlot(Map01Inventory.Slot.Primary)));
+            if (Map01Inventory.HasCondition(pistol)) ConditionBar(new Rect(x + 276, y + 62, 66, 4), inventory.FractionOf(Map01Inventory.Gun.InSlot(Map01Inventory.Slot.Pistol)));
+            CombatIcon(new Rect(x + 270, y + 72, 66, 66), new Rect(96, 695, 491, 476), kind == WeaponKind.Knife);
+            CombatLabel(new Rect(x + 238, y + 94, 30, 24), "3", combatCaption);
+            string throwable = inventory.ReadyThrowable() ?? inventory.Throwable;
+            int throwCount = inventory.Count(throwable);
+            var throwRect = new Rect(x + 286, y + 148, 52, 46);
+            if (Time.time - inventory.ThrowableChosenAt < 1.6f) HudBorder(new Rect(throwRect.x - 6, throwRect.y - 4, throwRect.width + 12, throwRect.height + 8), HudGold, 2);
+            HotbarIcon(throwRect, throwable, throwCount > 0);
+            CombatLabel(new Rect(x + 290, y + 186, 46, 20), "×" + throwCount, new GUIStyle(combatCaption) { fontSize = 15, alignment = TextAnchor.MiddleRight });
+            for (int k = 0; k < Map01Inventory.Throwables.Length; k++)
+            {
+                bool on = Map01Inventory.Throwables[k] == throwable;
+                HudFill(new Rect(x + 290 + k * 14, y + 206, 8, 8), on ? HudGold : new Color(.85f, .85f, .8f, inventory.Count(Map01Inventory.Throwables[k]) > 0 ? .6f : .2f));
+            }
+            CombatLabel(new Rect(x + 238, y + 160, 30, 24), "4", combatCaption);
 
             var drop = new Rect(x + 166, y + 79, 108, 150);
             float hp = Mathf.Clamp01(mission.PlayerHealth / Mathf.Max(1, mission.Settings.playerHP));
@@ -60,8 +79,24 @@ namespace ShadowVale.Map01
                 : reloading ? $"{combat.ReloadProgress * 100f:0}%"
                 : $"{combat.RoundsInMagazine}/{inventory.Count("ammo_rifle")}";
             CombatLabel(new Rect(x - 20, y + 158, 163, 49), ammo, combatNumber);
-            CombatLabel(new Rect(x + 5, y + 205, 143, 26), kind != WeaponKind.Rifle ? "CẬN CHIẾN" : reloading ? "ĐANG NẠP ĐẠN" : "BĂNG / DỰ TRỮ", combatCaption);
+            bool broken = kind == WeaponKind.Rifle && inventory.HeldGunBroken();
+            var caption = broken ? combatBroken ??= new GUIStyle(combatCaption) { normal = { textColor = ConditionBroken } } : combatCaption;
+            CombatLabel(new Rect(x + 5, y + 205, 143, 26), kind != WeaponKind.Rifle ? "CẬN CHIẾN" : broken ? "SÚNG HỎNG · SỬA" : reloading ? "ĐANG NẠP ĐẠN" : "BĂNG / DỰ TRỮ", caption);
             CombatLabel(new Rect(x, y + 261, 346, 25), $"Sức bền {mission.Stamina:0}  ·  {(mission.Hidden ? "Ẩn nấp" : mission.Crouched ? "Đi khom" : "Sẵn sàng")}", combatCaption);
+        }
+
+        private readonly System.Collections.Generic.Dictionary<string, Texture2D> hotbarIcons = new System.Collections.Generic.Dictionary<string, Texture2D>();
+        /// <summary>A slot picture cut out like the painted board's (Resources/Hud/HotbarIcons, rendered in Blender):
+        /// the Mosin, the K-54 and the three throwables. Bright when <paramref name="lit"/>.</summary>
+        private void HotbarIcon(Rect rect, string id, bool lit)
+        {
+            if (id == null) return;
+            if (!hotbarIcons.TryGetValue(id, out var icon)) hotbarIcons[id] = icon = Resources.Load<Texture2D>("Hud/HotbarIcons/" + id);
+            if (icon == null) return;
+            var old = GUI.color;
+            GUI.color = lit ? Color.white : new Color(.59f, .61f, .59f, .8f);
+            GUI.DrawTexture(rect, icon, ScaleMode.ScaleToFit);
+            GUI.color = old;
         }
 
         private void CombatIcon(Rect rect, Rect pixels, bool selected)
@@ -90,6 +125,8 @@ namespace ShadowVale.Map01
             if (compassBadge != null) Destroy(compassBadge);
             if(takedownBadge!=null)Destroy(takedownBadge);
             if(takedownKnife!=null)Destroy(takedownKnife);
+            if(takedownLeaf!=null)Destroy(takedownLeaf);
+            if (stoneDot != null) Destroy(stoneDot);
         }
     }
 }

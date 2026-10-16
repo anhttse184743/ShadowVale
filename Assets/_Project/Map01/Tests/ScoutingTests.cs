@@ -20,7 +20,7 @@ namespace ShadowVale.Map01.Tests
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
 
         // Lambdas stay in these static helpers: one capturing a test-iterator local breaks after the
-        // domain reload that EnterPlayMode triggers (see ForestFlowTests.NearestOutpostGuard).
+        // domain reload that EnterPlayMode triggers (see the note at the top of ForestFlowTests).
 
         private static void Teleport(Map01Mission mission, Vector3 position)
         {
@@ -71,19 +71,6 @@ namespace ShadowVale.Map01.Tests
                     }
                 }
             standAt = lookAt = default; return false;
-        }
-
-        /// <summary>Somewhere a little beyond scan range of <paramref name="camp"/> and of every other camp.</summary>
-        private static bool FindOutOfRange(Map01Scouting scouting, Map01Scouting.Camp camp, out Vector3 standAt)
-        {
-            for (int a = 0; a < 360; a += 15)
-            {
-                var p = camp.Center + Quaternion.Euler(0, a, 0) * Vector3.forward * (scouting.ScanRange + 10);
-                if (!NavMesh.SamplePosition(p, out var hit, 4f, NavMesh.AllAreas)) continue;
-                if (scouting.Camps.Min(c => Vector3.Distance(hit.position, c.Center)) < scouting.ScanRange + 3) continue;
-                standAt = hit.position; return true;
-            }
-            standAt = default; return false;
         }
 
         /// <summary>Turn the orbit camera so it looks at <paramref name="point"/>.</summary>
@@ -186,19 +173,28 @@ namespace ShadowVale.Map01.Tests
             ScreenCapture.CaptureScreenshot("Logs/GuidePreview/guard-eye-spotted.png");
             yield return null;
 
-            // The same spot crouched: beyond a crouching Nam's range.
+            // The same spot crouched: beyond a crouching Nam's range. He crouches before the guard's calm runs out —
+            // left standing in view meanwhile, the guard grew suspicious and walked up to him. And he crouches for
+            // real: Map01PlayerInteraction copies the player's own stance (IsSneaking) into mission.Crouched.
             PinAtPost(guard);
-            yield return WaitGameSeconds(4.2f);
+            mission.ModernPlayer.RestoreMotion(true);
             mission.Crouched = true;
             Teleport(mission, spot);
-            yield return WaitGameSeconds(3f);
-            Assert.IsFalse(guard.Engaged, "Crouching keeps Nam unseen beyond the shortened range.");
+            yield return WaitGameSeconds(4.2f + 3f);
+            Assert.IsFalse(guard.Engaged, "Crouching keeps Nam unseen beyond the shortened range. " +
+                $"(crouched={mission.Crouched} sneaking={mission.ModernPlayer.IsSneaking} suspicion={guard.Suspicion:0.00} " +
+                $"distance={Vector3.Distance(guard.transform.position, mission.player.position):0.0} sight={guard.VisionRange:0.0})");
             Assert.AreEqual(0f, guard.Suspicion);
             yield return new ExitPlayMode();
         }
 
+        /// <summary>
+        /// F raises the binoculars from Nam's own eyes, zoomed and without his model in the view. They no longer log
+        /// the three camps: in the operations they are for watching the officer at point 3 from afar (Map01Story,
+        /// see Map01OperationsTests.OfficerNeedsDistantBinocularsAndRestoresCombatBeforeDiscovery).
+        /// </summary>
         [UnityTest]
-        public IEnumerator BinocularsLogACampOnlyWhenAimedAtIt()
+        public IEnumerator BinocularsLookFromNamsEyesButNoLongerLogCamps()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
@@ -211,54 +207,37 @@ namespace ShadowVale.Map01.Tests
                 var mission = Object.FindFirstObjectByType<Map01Mission>();
                 var quest = mission.GetComponent<Map01Quest>();
                 var scouting = mission.GetComponent<Map01Scouting>();
-                Assert.IsNotNull(scouting, "Map01Quest must bring the scouting order along.");
+                Assert.IsNotNull(scouting, "Map01Quest must bring the binoculars along.");
                 Assert.AreEqual(3, scouting.Camps.Count, "Map 1 has three enemy outposts.");
                 Assert.IsTrue(scouting.Camps.All(c => c.Guards.Length > 0), "Every outpost has its guards.");
-                // Logging is under test here, not stealth. The agent too: it keeps walking a guard down
+                // The view is under test here, not stealth. The agent too: it keeps walking a guard down
                 // his last path without the controller, out from under the spot being aimed at.
                 foreach (var e in mission.Enemies) { e.enabled = false; e.GetComponent<NavMeshAgent>().enabled = false; }
-                quest.RestoreStage(Map01Quest.ScoutStage);
+                quest.RestoreStage(Map01Quest.ScoutStage); // Point 1: the operations carry the binoculars.
                 mission.Say(null, -1f);
 
                 var camp = scouting.Camps[0];
                 Assert.IsTrue(FindVantage(camp, mission.ObstructionMask, out var standAt, out var lookAt), "Need a vantage point over camp 1.");
-
-                // Too far away: aimed straight at the camp, the binoculars still scan nothing.
-                Assert.IsTrue(FindOutOfRange(scouting, camp, out var farAway), "Need a spot beyond scan range.");
-                Teleport(mission, farAway);
-                scouting.HoldBinoculars(true);
-                for (int i = 0; i < 10; i++) { AimCamera(mission, camp.Center + Vector3.up * 1.5f); yield return WaitGameSeconds(.1f); }
-                Assert.IsTrue(scouting.Binoculars);
-                Assert.IsFalse(scouting.InScanRange, "No camp within scan range out here.");
-                Assert.IsNull(scouting.Sighted);
-                Assert.AreEqual(0f, scouting.RecordProgress, "Out of range nothing is logged.");
-                Directory.CreateDirectory("Logs/GuidePreview");
-                ScreenCapture.CaptureScreenshot("Logs/GuidePreview/scouting-out-of-range.png");
-                yield return null; yield return null;
-
                 Teleport(mission, standAt);
                 yield return null; yield return null;
-                Assert.IsTrue(scouting.InScanRange, Diag(mission, scouting, camp, "At the vantage point camp 1 is in range."));
 
-                // Looking the other way: binoculars up, nothing to log.
-                AimCamera(mission, standAt * 2 - lookAt);
-                yield return WaitGameSeconds(1f);
-                Assert.IsTrue(scouting.Binoculars);
-                Assert.IsNull(scouting.Sighted);
-                Assert.AreEqual(0f, scouting.RecordProgress);
+                // Up and on the camp (re-aimed as the zoomed camera settles): the view is Nam's own.
+                for (int i = 0; i < 8; i++) { scouting.HoldBinoculars(true); AimCamera(mission, lookAt); yield return WaitGameSeconds(.1f); }
+                Assert.IsTrue(scouting.Binoculars, Diag(mission, scouting, camp, "Binoculars up."));
                 Assert.Less(Vector3.Distance(mission.gameCamera.transform.position, scouting.Eye), .3f, "Binoculars look from Nam's eyes, not over his shoulder.");
                 Assert.Less(mission.gameCamera.fieldOfView, 20f, "Binoculars zoom well past the rifle's aim.");
                 Assert.IsTrue(NamOutOfView(mission), "Nam's own model must not show in the binoculars.");
-
-                // On target (re-aimed as the zoomed camera settles): logged after a couple of seconds.
-                for (int i = 0; i < 8; i++) { AimCamera(mission, lookAt); yield return WaitGameSeconds(.1f); }
-                Assert.AreSame(camp, scouting.Sighted, "Camp 1 must be in the binoculars.");
-                yield return WaitGameSeconds(.5f);
+                Directory.CreateDirectory("Logs/GuidePreview");
                 ScreenCapture.CaptureScreenshot("Logs/GuidePreview/scouting-binoculars.png");
-                for (float until = Time.time + 3; !camp.Found && Time.time < until;) yield return null;
-                Assert.IsTrue(camp.Found, "Holding the binoculars on the camp logs it.");
-                Assert.AreEqual(1, scouting.FoundCount);
-                Assert.AreEqual(Map01Quest.ScoutStage, quest.Stage, "Two camps still to go.");
+
+                // Held on the camp well past the two seconds a log once took: nothing is logged, nothing completes.
+                yield return WaitGameSeconds(3f);
+                Assert.IsFalse(camp.Found, "Camps are no longer logged through the binoculars.");
+                Assert.AreEqual(0, scouting.FoundCount);
+                Assert.IsNull(scouting.Sighted);
+                Assert.AreEqual(0f, scouting.RecordProgress);
+                Assert.IsFalse(scouting.InScanRange, "No scan to be in range of.");
+                Assert.AreEqual(Map01Quest.ScoutStage, quest.Stage, "Looking at a camp completes no order.");
 
                 InputSystem.QueueStateEvent(keyboard, new KeyboardState());
                 scouting.HoldBinoculars(false);
@@ -270,8 +249,12 @@ namespace ShadowVale.Map01.Tests
             yield return new ExitPlayMode();
         }
 
+        /// <summary>
+        /// The camp guards are fair game in the operations: a knife from behind kills silently, the guard drawn away
+        /// from his camp or standing in it, and either way no run is lost (the scouting run and its failure are gone).
+        /// </summary>
         [UnityTest]
-        public IEnumerator AQuietKnifeTakedownAwayFromTheCampGoesUnnoticed()
+        public IEnumerator AKnifeTakedownOfACampGuardIsSilentAndFailsNothing()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
@@ -288,32 +271,78 @@ namespace ShadowVale.Map01.Tests
             foreach (var e in mission.Enemies) e.enabled = e == lured || e == other;
             PinAtPost(lured); PinAtPost(other);
             yield return WaitGameSeconds(4.2f); // ReturnToPost leaves them calm for 4 s.
-            scouting.RestoreFound(0b010); // Another camp already logged: it must stay logged.
             Assert.IsTrue(inventory.EquipItem("knife"));
+            mission.ModernPlayer.RestoreMotion(true);
             mission.Crouched = true;
 
             // Drawn well away from the camp (as a thrown stone would), then knifed from behind.
             Vector3 spot = FarFromCamp(camp, scouting.QuietKillDistance + 5f, other.transform.position);
-            lured.GetComponent<NavMeshAgent>().Warp(spot);
             lured.transform.rotation = Quaternion.LookRotation(Vector3.ProjectOnPlane(spot - camp.Center, Vector3.up));
-            Teleport(mission, spot - lured.transform.forward * 1.5f);
-            yield return null;
-            lured.GetComponent<Health>().TakeDamage(45f, lured.transform.position, mission.player.gameObject); // The knife's own blow.
-            for (int i = 0; i < 4; i++) yield return null;
+            OnOpenGround(mission, lured, spot);
+            StandBehind(mission, lured);
+            // Drawing the knife is a move of Nam's own; a takedown starts once his hands are free.
+            for (float until = Time.time + 6; Map01NamActions.For(mission).Busy && Time.time < until;) yield return null;
+            Assert.IsTrue(lured.CanSilentTakedown(), "Close behind him, knife in hand.");
+            bool took = Strike(mission);
+            // A plain takedown kills at once; next to a bush Nam may pull him in instead, a kill once the take ends.
+            for (float until = Time.time + 8; mission.Cinematic && Time.time < until;) yield return null;
+            Assert.IsTrue(took, $"The knife goes for the takedown. (busy={Map01NamActions.For(mission).Busy})");
             Assert.IsFalse(lured.Alive, "A silent takedown from behind.");
-            Assert.IsTrue(float.IsNegativeInfinity(scouting.FailedAt), "Away from the camp, nobody noticed.");
-            Assert.AreEqual(0b010, scouting.FoundMask, "The logged camp stays logged.");
-            Assert.AreEqual(Map01Quest.ScoutStage, quest.Stage);
+            Assert.IsTrue(lured.TakenDownSilently);
+            Assert.IsFalse(other.Engaged, "Away from the camp, nobody noticed.");
+            Assert.IsFalse(scouting.FailedRun);
 
-            // The same takedown at a post inside the camp: his comrades notice.
-            Teleport(mission, other.transform.position - other.transform.forward * 1.5f);
-            yield return null;
-            other.GetComponent<Health>().TakeDamage(45f, other.transform.position, mission.player.gameObject);
-            for (float until = Time.time + 1; float.IsNegativeInfinity(scouting.FailedAt) && Time.time < until;) yield return null;
-            Assert.Less(Time.time - scouting.FailedAt, 1f, "Inside the camp, it is noticed.");
-            Assert.IsTrue(scouting.FailedRun, "And the run is lost.");
-            StringAssert.Contains("ngay trong doanh trại", scouting.FailReason);
+            // The same takedown on his comrade, at his post inside the camp: a kill, and still no run to lose.
+            OnOpenGround(mission, other, other.transform.position);
+            StandBehind(mission, other);
+            for (float until = Time.time + 6; Map01NamActions.For(mission).Busy && Time.time < until;) yield return null;
+            Assert.IsTrue(other.CanSilentTakedown(), "Behind the second guard at his post.");
+            Assert.IsTrue(Strike(mission), "The knife goes for the takedown.");
+            for (float until = Time.time + 8; mission.Cinematic && Time.time < until;) yield return null;
+            Assert.IsFalse(other.Alive);
+            Assert.IsTrue(other.TakenDownSilently);
+            Assert.IsFalse(scouting.FailedRun, "Fighting at an outpost no longer fails anything.");
+            Assert.IsFalse(mission.Stopped);
+            Assert.AreEqual(Map01Quest.ScoutStage, quest.Stage);
             yield return new ExitPlayMode();
+        }
+
+        /// <summary>
+        /// <paramref name="guard"/> moved to open ground near <paramref name="around"/>: beside a bush a crouched knife
+        /// pulls him into it instead (Map01BushTakedown), a struggle of its own that needs the player's keys.
+        /// </summary>
+        private static void OnOpenGround(Map01Mission mission, Map01EnemyController guard, Vector3 around)
+        {
+            for (int r = 0; r <= 8; r++)
+                for (int a = 0; a < 360; a += 45)
+                {
+                    var p = around + Quaternion.Euler(0, a, 0) * Vector3.forward * r;
+                    if (!NavMesh.SamplePosition(p, out var hit, 1.5f, NavMesh.AllAreas)) continue;
+                    var behind = hit.position - guard.transform.forward * 1.25f;
+                    if (mission.TryGetHideSpot(hit.position, out _) || mission.TryGetHideSpot(behind, out _)) continue;
+                    if (!NavMesh.SamplePosition(behind, out _, .6f, NavMesh.AllAreas)) continue;
+                    guard.GetComponent<NavMeshAgent>().Warp(hit.position);
+                    return;
+                }
+            Assert.Fail("No open ground near " + around);
+        }
+
+        /// <summary>Crouched 1.25 m behind <paramref name="guard"/>, facing the way he faces.</summary>
+        private static void StandBehind(Map01Mission mission, Map01EnemyController guard)
+        {
+            var at = guard.transform.position - guard.transform.forward * 1.25f;
+            if (NavMesh.SamplePosition(at, out var hit, 1f, NavMesh.AllAreas)) at = hit.position;
+            Teleport(mission, at);
+            mission.player.rotation = guard.transform.rotation;
+            Physics.SyncTransforms();
+        }
+
+        /// <summary>The attack button with the knife in hand: the takedown is tried first (Map01Rescue.TryPlayerTakedown).
+        /// True when one started.</summary>
+        private static bool Strike(Map01Mission mission)
+        {
+            typeof(PlayerCombat).GetMethod("Attack", Private).Invoke(mission.ModernCombat, null);
+            return mission.Cinematic;
         }
 
         private static IEnumerator WaitForRestore()
@@ -327,7 +356,6 @@ namespace ShadowVale.Map01.Tests
 
         private static string Diag(Map01Mission mission, Map01Scouting scouting, Map01Scouting.Camp camp, string what) =>
             $"{what} (stopped={mission.Stopped} restoring={Map01SaveSystem.IsRestoring} stage={mission.GetComponent<Map01Quest>().Stage} scoutingEnabled={scouting.isActiveAndEnabled} " +
-            $"sameScouting={ReferenceEquals(scouting, Object.FindFirstObjectByType<Map01Scouting>())} kb={UnityEngine.InputSystem.Keyboard.current != null} f={(UnityEngine.InputSystem.Keyboard.current != null && UnityEngine.InputSystem.Keyboard.current.fKey.isPressed)} " +
             $"toCamp={Vector3.Distance(mission.player.position, camp.Center):0.0} bino={scouting.Binoculars} found={camp.Found} fps={1f / Mathf.Max(.0001f, Time.unscaledDeltaTime):0} rate={Application.targetFrameRate})";
 
         private static Map01EnemyController CampGuard(Map01Scouting scouting, string name) =>
@@ -335,73 +363,80 @@ namespace ShadowVale.Map01.Tests
 
         private static void Spot(Map01Scouting scouting) => scouting.Camps[0].Guards[0].EngageFor(5);
 
+        /// <summary>
+        /// What replaced the scouting run's restart: an order taken from the commander keeps that moment (an operation
+        /// checkpoint), and when Nam falls during the operation, [Enter] brings Map 1 back exactly there — every time.
+        /// </summary>
         [UnityTest]
-        public IEnumerator ScoutingFailureStartsOverFromHungsOrder()
+        public IEnumerator AFallenNamStartsOverFromTheCommandersLastOrder()
         {
+            Map01OpeningCutscene.CancelPending();
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
             yield return null;
-            SetPreviewResolution(1600, 900); // A Game View for the screenshot.
-            var mission = Object.FindFirstObjectByType<Map01Mission>();
-            var quest = mission.GetComponent<Map01Quest>();
-            var inventory = mission.GetComponent<Map01Inventory>();
-            var scouting = mission.GetComponent<Map01Scouting>();
+            var storage = typeof(ForestSaveSlots).GetField("storageRoot", BindingFlags.Static | BindingFlags.NonPublic);
+            storage.SetValue(null, Path.GetFullPath("Logs/Scouting/saves/" + System.Guid.NewGuid().ToString("N")));
+            try
+            {
+                var mission = Object.FindFirstObjectByType<Map01Mission>();
+                var quest = mission.GetComponent<Map01Quest>();
+                var story = mission.GetComponent<Map01Story>();
+                var inventory = mission.GetComponent<Map01Inventory>();
+                var save = mission.GetComponent<Map01SaveSystem>();
+                foreach (var e in mission.Enemies) e.enabled = false;
 
-            // Home at the base, Hùng gives the order in person.
-            quest.RestoreStage(Map01Quest.BriefingStage);
-            Vector3 home = mission.player.position;
-            mission.hung.GetComponent<NavMeshAgent>().Warp(home + Vector3.right * 2f);
-            yield return null;
-            quest.TalkToHung();
-            Assert.AreEqual(Map01Quest.ScoutStage, quest.Stage);
-            Vector3 orderedAt = mission.player.position;
-            int stones = inventory.Count("stone");
+                // Home at the base, the commander gives point 1 in person.
+                quest.RestoreStage(Map01Quest.BriefingStage);
+                PlaceNam(mission, story.Commander.position + story.Commander.forward * 1.8f);
+                Assert.IsTrue(story.TryInteract());
+                yield return ConfirmConversation(mission);
+                Assert.AreEqual(Map01Quest.ScoutStage, quest.Stage);
+                for (float until = Time.time + 3; !save.HasOperationCheckpoint && Time.time < until;) yield return null;
+                Assert.IsTrue(save.HasOperationCheckpoint, "Taking the order keeps the moment.");
+                Vector3 orderedAt = mission.player.position;
+                int stones = inventory.Count("stone");
 
-            // Out in the field: stones thrown, a camp logged — then spotted.
-            inventory.Spend("stone", 2);
-            scouting.RestoreFound(0b001);
-            Teleport(mission, mission.Points.Single(p => p.id == "tutorial_loot").transform.position);
-            Spot(scouting);
-            yield return null; yield return null;
-            Assert.IsTrue(scouting.FailedRun, "Spotted: the run is lost.");
-            Assert.IsTrue(mission.Stopped, "The failure panel holds the game.");
-            yield return WaitGameSeconds(.3f);
-            Directory.CreateDirectory("Logs/GuidePreview");
-            ScreenCapture.CaptureScreenshot("Logs/GuidePreview/scouting-failed.png");
-            yield return null; yield return null;
+                // Out in the field: stones thrown, then Nam falls.
+                inventory.Spend("stone", 2);
+                PlaceNam(mission, mission.Points.Single(p => p.id == "tutorial_loot").transform.position);
+                mission.ModernHealth.TakeDamage(99999, mission.player.position, null);
+                yield return null;
+                Assert.LessOrEqual(mission.PlayerHealth, 0f, "Nam has fallen.");
 
-            // [Enter]: Map 1 again, exactly as it was when Hùng gave the order.
-            scouting.Restart();
-            yield return WaitForRestore();
-            mission = Object.FindFirstObjectByType<Map01Mission>();
-            quest = mission.GetComponent<Map01Quest>();
-            inventory = mission.GetComponent<Map01Inventory>();
-            scouting = mission.GetComponent<Map01Scouting>();
-            Assert.AreEqual(Map01Quest.ScoutStage, quest.Stage);
-            Assert.IsFalse(scouting.FailedRun);
-            Assert.IsFalse(mission.Stopped);
-            Assert.AreEqual(0, scouting.FoundCount, "Nothing logged yet.");
-            Assert.AreEqual(stones, inventory.Count("stone"), "The stones thrown are back in the bag.");
-            Assert.Less(Vector3.Distance(mission.player.position, orderedAt), 1f, "Nam is where he took the order.");
-            StringAssert.StartsWith("Hùng: Địch có ba doanh trại", mission.Dialogue, "Hùng gives the order again.");
+                // [Enter] on "NAM ĐÃ GỤC NGÃ": Map 1 again, exactly as it was when the order was given.
+                Assert.IsTrue(save.RestartCurrentMission());
+                yield return WaitForRestore();
+                mission = Object.FindFirstObjectByType<Map01Mission>();
+                quest = mission.GetComponent<Map01Quest>();
+                inventory = mission.GetComponent<Map01Inventory>();
+                save = mission.GetComponent<Map01SaveSystem>();
+                Assert.AreEqual(Map01Quest.ScoutStage, quest.Stage, "Back at point 1's order, not at the start of the map.");
+                Assert.Greater(mission.PlayerHealth, 0f);
+                Assert.IsFalse(mission.Stopped);
+                Assert.AreEqual(stones, inventory.Count("stone"), "The stones thrown are back in the bag.");
+                Assert.Less(Vector3.Distance(mission.player.position, orderedAt), 1f, "Nam is where he took the order.");
 
-            // A second lost run starts over from that same moment.
-            scouting.RestoreFound(0b010);
-            Spot(scouting);
-            yield return null; yield return null;
-            Assert.IsTrue(scouting.FailedRun);
-            scouting.Restart();
-            yield return WaitForRestore();
-            mission = Object.FindFirstObjectByType<Map01Mission>();
-            scouting = mission.GetComponent<Map01Scouting>();
-            Assert.AreEqual(Map01Quest.ScoutStage, mission.GetComponent<Map01Quest>().Stage);
-            Assert.AreEqual(0, scouting.FoundCount);
-            Assert.Less(Vector3.Distance(mission.player.position, orderedAt), 1f);
+                // A second fall starts over from that same moment.
+                inventory.Spend("stone", 1);
+                mission.ModernHealth.TakeDamage(99999, mission.player.position, null);
+                yield return null;
+                Assert.IsTrue(save.RestartCurrentMission());
+                yield return WaitForRestore();
+                mission = Object.FindFirstObjectByType<Map01Mission>();
+                Assert.AreEqual(Map01Quest.ScoutStage, mission.GetComponent<Map01Quest>().Stage);
+                Assert.AreEqual(stones, mission.GetComponent<Map01Inventory>().Count("stone"));
+                Assert.Less(Vector3.Distance(mission.player.position, orderedAt), 1f);
+            }
+            finally { storage.SetValue(null, null); }
             yield return new ExitPlayMode();
         }
 
+        /// <summary>
+        /// The scouting run's failure panel is gone: in the operations a camp that spots Nam, or a camp guard he shoots,
+        /// is a fight to win — the game goes on and the order stands.
+        /// </summary>
         [UnityTest]
-        public IEnumerator BeingSpottedOrAttackingACampFailsTheRun()
+        public IEnumerator SpottedOrAttackingACampIsAFightNotAFailure()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
@@ -409,73 +444,28 @@ namespace ShadowVale.Map01.Tests
             var mission = Object.FindFirstObjectByType<Map01Mission>();
             var quest = mission.GetComponent<Map01Quest>();
             var scouting = mission.GetComponent<Map01Scouting>();
-            // Straight into the order, as a save from before its start was kept would be.
             quest.RestoreStage(Map01Quest.ScoutStage);
             var guard = scouting.Camps[0].Guards[0];
-            string guardName = guard.name; // Found by name after each reload.
-            var health = guard.GetComponent<Health>();
-            Vector3 post = guard.transform.position;
+            foreach (var e in mission.Enemies) e.enabled = false;
+            mission.ModernHealth.CinematicInvulnerable = true; // The fight itself is not under test.
             yield return null;
 
-            // Shooting a camp guard is being noticed: the run is lost and the game holds on the
-            // panel — with nobody snapping back anywhere while it is up.
-            scouting.RestoreFound(0b011);
-            health.TakeDamage(10, guard.transform.position, null);
-            yield return null; yield return null;
-            Assert.IsTrue(scouting.FailedRun, $"Attacking a camp loses the scouting run. (stopped={mission.Stopped} paused={mission.Paused} restoring={Map01SaveSystem.IsRestoring} menu={ForestMenu.Visible} hurtCount={guard.HurtCount} alive={guard.Alive} enabled={guard.enabled})");
-            Assert.IsTrue(mission.Stopped, "The failure panel holds the game.");
-            Assert.Less(Time.time - scouting.FailedAt, 1f);
-            StringAssert.Contains("tấn công", scouting.FailReason);
-            Vector3 hit = guard.transform.position;
-            Vector3 nam = mission.player.position;
+            // Shooting a camp guard: he is hurt, and that is all.
+            var health = guard.GetComponent<Health>();
+            health.TakeDamage(10, guard.transform.position, mission.player.gameObject);
             yield return WaitGameSeconds(.5f);
-            Assert.Less(Vector3.Distance(guard.transform.position, hit), .2f, "The attacked guard stays put while the panel is up.");
-            Assert.Less(Vector3.Distance(mission.player.position, nam), .2f);
+            Assert.Less(health.Current, health.Max, "The shot hurt him.");
+            Assert.IsFalse(scouting.FailedRun, "Attacking a camp no longer loses a run.");
+            Assert.IsFalse(mission.Stopped, "No failure panel holds the game.");
 
-            // [Enter]: Map 1 reloads as if the order had just been given (no moment was kept).
-            scouting.Restart();
-            yield return WaitForRestore();
-            Assert.AreNotSame(mission, Object.FindFirstObjectByType<Map01Mission>(), "A reload, not a reset in place.");
-            mission = Object.FindFirstObjectByType<Map01Mission>();
-            scouting = mission.GetComponent<Map01Scouting>();
-            guard = CampGuard(scouting, guardName);
-            health = guard.GetComponent<Health>();
-            Assert.AreEqual(Map01Quest.ScoutStage, mission.GetComponent<Map01Quest>().Stage, "Only the scouting restarts, not the map.");
-            Assert.IsFalse(scouting.FailedRun);
-            Assert.IsFalse(mission.Stopped);
-            Assert.AreEqual(0, scouting.FoundCount, "Every log is lost.");
-            Assert.AreEqual(health.Max, health.Current, "The camp is back to strength.");
-            Assert.Less(Vector3.Distance(guard.transform.position, post), 1.5f, "At his post.");
-            Assert.Less(Vector3.Distance(mission.player.position, mission.hung.position), 4f, "Nam starts beside Hùng.");
-            StringAssert.StartsWith("Hùng: Địch có ba doanh trại", mission.Dialogue);
-
-            // A camp guard spotting Nam does the same — and from now on the moment is kept.
-            Assert.IsTrue(mission.GetComponent<Map01SaveSystem>().HasScoutStart);
-            scouting.RestoreFound(0b001);
+            // Spotted by a camp guard: the same.
             Spot(scouting);
             yield return null; yield return null;
-            Assert.IsTrue(scouting.FailedRun, "Being spotted loses the run.");
-            StringAssert.Contains("nhìn thấy Nam", scouting.FailReason);
-            scouting.Restart();
-            yield return WaitForRestore();
-            mission = Object.FindFirstObjectByType<Map01Mission>();
-            scouting = mission.GetComponent<Map01Scouting>();
-            Assert.AreEqual(0, scouting.FoundCount);
-            Assert.IsFalse(CampGuard(scouting, guardName).Engaged, "The camp is calm again.");
-
-            // A guard Nam killed is back at his post — his corpse loot gone with the corpse.
-            guard = CampGuard(scouting, guardName);
-            yield return WaitGameSeconds(.2f);
-            guard.GetComponent<Health>().TakeDamage(9999, guard.transform.position, null);
-            yield return WaitGameSeconds(.3f);
-            Assert.IsTrue(scouting.FailedRun);
-            scouting.Restart();
-            yield return WaitForRestore();
-            mission = Object.FindFirstObjectByType<Map01Mission>();
-            guard = CampGuard(mission.GetComponent<Map01Scouting>(), guardName);
-            Assert.IsTrue(guard.Alive, "A killed camp guard is back when the run starts over.");
-            Assert.IsNull(guard.GetComponent<ForestPoint>(), "No loot left on a guard who is back on duty.");
-            Assert.Less(Vector3.Distance(guard.transform.position, post), 1.5f, "Back at his post.");
+            Assert.IsTrue(guard.Engaged);
+            Assert.IsFalse(scouting.FailedRun, "Being spotted no longer loses a run either.");
+            Assert.IsFalse(mission.Stopped);
+            Assert.IsTrue(mission.ModernPlayer.enabled && mission.ModernCombat.enabled, "Nam fights on.");
+            Assert.AreEqual(Map01Quest.ScoutStage, quest.Stage, "The order stands.");
             yield return new ExitPlayMode();
         }
     }

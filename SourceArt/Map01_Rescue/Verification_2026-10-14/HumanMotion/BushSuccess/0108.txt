@@ -1,0 +1,13 @@
+Struggle
+Nam actor (0.00, 0.00, 0.00)
+Enemy actor (0.00, 0.00, 0.00)
+Left torso contact 0.01439806
+Head penetration 0
+Right contact 0.02494612
+Embracing contact 0.006857231
+Defender embracing-arm contact 1.192093E-06
+Nam root (-12.80, 1.23, 92.64)
+Enemy root (-12.65, 1.12, 93.07)
+Nam shoulder (-13.04, 2.60, 92.82)
+Enemy head (-12.60, 2.49, 93.11)
+Arm span 0.5282693

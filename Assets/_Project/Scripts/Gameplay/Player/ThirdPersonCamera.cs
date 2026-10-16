@@ -85,6 +85,7 @@ namespace ShadowVale.Gameplay.Player
         private float _recoilPitchOwed;
         private float _recoilYawOwed;
         private float _currentDistance;
+        private readonly RaycastHit[] _obstructionHits = new RaycastHit[64];
         private float _aimBlend; // 0 = hip, 1 = aiming
         private bool _aiming;
         private bool _binoculars;
@@ -184,17 +185,16 @@ namespace ShadowVale.Gameplay.Player
             _camera.fieldOfView = Mathf.Lerp(hipFov, aimFov, _aimBlend);
 
             Quaternion rotation = Quaternion.Euler(_pitch, _yaw, 0f);
-            Vector3 pivot = target.position
-                            + Vector3.up * pivotHeight
-                            + rotation * Vector3.right * Mathf.Lerp(shoulderOffset, aimShoulderOffset, _aimBlend);
+            Vector3 head = target.position + Vector3.up * pivotHeight;
+            Vector3 shoulder = rotation * Vector3.right * Mathf.Lerp(shoulderOffset, aimShoulderOffset, _aimBlend);
+            float radius = CameraCollisionRadius();
+            Vector3 pivot = head + shoulder.normalized * ClearDistance(head, shoulder.normalized, shoulder.magnitude, radius);
 
             // Spring arm: shorten instantly on a hit, ease back out when clear.
             float desired = Mathf.Lerp(distance, aimDistance, _aimBlend);
-            if (Physics.SphereCast(pivot, 0.2f, -(rotation * Vector3.forward), out RaycastHit hit,
-                    desired, obstructionMask, QueryTriggerInteraction.Ignore))
-            {
-                desired = Mathf.Max(minDistance, hit.distance - collisionPadding);
-            }
+            // minDistance limits player-controlled zoom only. A nearby wall must be able
+            // to retract the arm all the way to the pivot, including when aiming.
+            desired = ClearDistance(pivot, -(rotation * Vector3.forward), desired, radius);
 
             _currentDistance = desired < _currentDistance
                 ? desired
@@ -204,6 +204,8 @@ namespace ShadowVale.Gameplay.Player
             float? surfaceFloor = SurfaceCameraFloor?.Invoke();
             if (surfaceFloor.HasValue && cameraPosition.y < surfaceFloor.Value) {
                 cameraPosition.y = surfaceFloor.Value;
+                var raised = cameraPosition - pivot;
+                cameraPosition = pivot + raised.normalized * ClearDistance(pivot, raised.normalized, raised.magnitude, radius);
                 rotation = Quaternion.LookRotation(pivot - cameraPosition);
             }
             transform.SetPositionAndRotation(cameraPosition, rotation);
@@ -212,6 +214,36 @@ namespace ShadowVale.Gameplay.Player
                     Quaternion.Slerp(transform.rotation, cinematicRotation, cinematicWeight));
                 _camera.fieldOfView = Mathf.Lerp(_camera.fieldOfView, cinematicFov, cinematicWeight);
             }
+        }
+
+        private float CameraCollisionRadius()
+        {
+            // Enclose the near plane as well as the camera centre, so screen corners
+            // cannot look through a wall at wide FOV/aspect ratios.
+            float halfHeight = _camera.nearClipPlane * Mathf.Tan(_camera.fieldOfView * .5f * Mathf.Deg2Rad);
+            return Mathf.Max(.2f, Mathf.Sqrt(halfHeight * halfHeight * (1f + _camera.aspect * _camera.aspect)
+                                           + _camera.nearClipPlane * _camera.nearClipPlane));
+        }
+
+        private float ClearDistance(Vector3 origin, Vector3 direction, float length, float radius)
+        {
+            if (length <= 0f) return 0f;
+            int count = Physics.SphereCastNonAlloc(origin, radius, direction, _obstructionHits,
+                length, obstructionMask, QueryTriggerInteraction.Ignore);
+            // Dense foliage/compound buildings must not hide a wall behind a full buffer.
+            var hits = count == _obstructionHits.Length
+                ? Physics.SphereCastAll(origin, radius, direction, length, obstructionMask, QueryTriggerInteraction.Ignore)
+                : _obstructionHits;
+            if (hits != _obstructionHits) count = hits.Length;
+            float clear = length;
+            for (int i = 0; i < count; i++)
+            {
+                var obstacle = hits[i].collider;
+                if (obstacle == null || obstacle.transform.IsChildOf(target) || obstacle.transform == transform
+                    || target.IsChildOf(obstacle.transform)) continue;
+                clear = Mathf.Min(clear, Mathf.Max(0f, hits[i].distance - collisionPadding));
+            }
+            return clear;
         }
 
         private void ReadLookInput()

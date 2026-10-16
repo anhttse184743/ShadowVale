@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ShadowVale.Gameplay.Combat;
@@ -50,6 +50,8 @@ namespace ShadowVale.Map01
         private bool playerWasEnabled, combatWasEnabled;
         private string subtitle;
         private GUIStyle subtitleStyle;
+        public Transform CommanderTransform => commander != null ? commander.transform : null;
+        public void SetDialogueSpeaking(bool speaking) { commanderClips?.Select(speaking ? 1 : 0); }
         public bool IsPlaying => ownsInput;
         public float Duration => finishAt + IntroDuration;
         public float BriefingTime => clock;
@@ -65,8 +67,8 @@ namespace ShadowVale.Map01
                 return;
             }
             var instance = Instantiate(prefab, mission.transform);
-            instance.name = "Map 1 briefing";
-            instance.Initialize(mission, requested);
+            instance.name = "Map 1 allied commander";
+            instance.Initialize(mission, false); // Main orders are now E conversations, including New Game.
         }
 
         private void Initialize(Map01Mission owner, bool play)
@@ -294,9 +296,8 @@ namespace ShadowVale.Map01
                 GUI.color = new Color(.96f, .92f, .8f, alpha * Mathf.Clamp01((IntroDuration - introRemaining) / .6f));
                 var title = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter,
                     fontSize = Mathf.RoundToInt(Screen.height * .055f), fontStyle = FontStyle.Bold };
-                GUI.Label(new Rect(0, Screen.height * .39f, Screen.width, Screen.height * .12f), "MAP 1", title);
                 title.fontSize = Mathf.RoundToInt(Screen.height * .027f); title.fontStyle = FontStyle.Normal;
-                GUI.Label(new Rect(0, Screen.height * .52f, Screen.width, Screen.height * .08f), "BẾN TÀU PHÍA BẮC", title);
+                GUI.Label(new Rect(0, Screen.height * .46f, Screen.width, Screen.height * .08f), "BẾN TÀU PHÍA BẮC", title);
                 GUI.color = savedColor; GUI.depth = savedDepth;
                 return;
             }

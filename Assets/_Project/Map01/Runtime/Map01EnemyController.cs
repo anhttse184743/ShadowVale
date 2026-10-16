@@ -30,6 +30,9 @@ namespace ShadowVale.Map01
         [SerializeField] private float damage = 10f;
         [SerializeField] private float fireInterval = 0.65f;
         [SerializeField] private LayerMask obstructionMask = ~0;
+        [Header("Map 1 operation membership; 0 leaves other missions unchanged")]
+        public int operationIndex;
+        public bool carriesSupplyKey, suppressOperationLoot;
 
         /// <summary>A guard on first contact runs to a Map 1 cover point only if one is this close.</summary>
         private const float CoverSearchRadius = 10f;
@@ -125,6 +128,47 @@ namespace ShadowVale.Map01
             <= (_rescueTuning != null ? _rescueTuning.overseerHostageRadius : 1.25f);
 
         /// <summary>The jetty squad while Hùng is still held: quieter steps, slower to spot, closer to touch.</summary>
+        // ---- The bush pull (Map01BushTakedown) --------------------------------------------------
+        private bool grappleOwned;
+        public bool WeaponPoseAvailable => !grappleOwned && !TakenDownSilently && (_mission == null || !_mission.Cinematic);
+        /// <summary>Rounds fired with their sound (tests count them).</summary>
+        public int AudibleShots { get; private set; }
+        private int silentKind;
+        private Map01CinematicPose bushCorpse;
+        public void SetGrappleWeaponReady(bool ready) { if (grappleOwned && Alive) ShowRifle(ready); }
+        public void BeginGrapple() { grappleOwned = true; ShowRifle(false); }
+        public void CommitBushKill()
+        {
+            if (!Alive) return; TakenDownSilently = true; silentKind = 1;
+            _health.TakeDamage(_health.Current, transform.position + Vector3.up, _mission.player.gameObject); _lastHealth = _health.Current;
+            if (_health.IsDead) _mission.Skills?.Award(ShadowVale.Gameplay.Skills.SkillKind.Stealth);
+        }
+        public void EndGrapple(bool won)
+        {
+            grappleOwned = false; _heldPosition = transform.position; _heldRotation = transform.rotation;
+            if (_agent != null && _agent.isOnNavMesh) _agent.nextPosition = transform.position;
+            if (won) HoldBushCorpse(); else { TakenDownSilently = false; silentKind = 0; SetSilent(false); ShowRifle(true); }
+        }
+        private void HoldBushCorpse()
+        {
+            bushCorpse?.Dispose(); bushCorpse = new Map01CinematicPose(_animator);
+            var clip = Map01CinematicPose.Clip("Enemy_Bush_Finish"); bushCorpse.Sample(clip, clip.length); bushCorpse.Ground(transform.position.y);
+        }
+        private void LateUpdate()
+        {
+            if (bushCorpse == null) return;
+            var clip = Map01CinematicPose.Clip("Enemy_Bush_Finish"); bushCorpse.Sample(clip, clip.length); bushCorpse.Ground(transform.position.y);
+        }
+        /// <summary>He broke free of the bush pull: straight into the fight, where Nam is.</summary>
+        public void ReportGrappleEscape()
+        {
+            if (!Alive || _mission == null) return;
+            var m = Memory; float now = Time.time; var at = _mission.player.position;
+            m.Suspicion = 1f; m.EngagedUntil = now + 10f; m.LastKnownPlayerPosition = at;
+            Brain.BeginInvestigation(at, now); _mission.Alarmed = true;
+            ReportDetection(Map01DetectionCause.Sight, at);
+        }
+
         private bool RescueStealth => _rescuePost && _rescue != null && _rescue.CurrentPhase == Map01Rescue.Phase.Captive;
 
         /// <summary>Treat him as fighting Nam for <paramref name="seconds"/> (debug console, tests).</summary>
@@ -133,7 +177,7 @@ namespace ShadowVale.Map01
         public void BindMission(Map01Mission mission)
         {
             _mission = mission;
-            Map01Rifle.Attach(GetComponentInChildren<Animator>());
+            Map01EnemyGrip.Bind(this);
             _feedback = EnemyFeedback.Attach(gameObject, mission.player.GetComponent<PlayerController>());
             _feedback.CanStep = () => enabled && !_holdingAI && _mission != null && !_mission.Stopped;
             GetComponent<Health>().KeepCheckpointCorpse();
@@ -156,6 +200,7 @@ namespace ShadowVale.Map01
         private void OnDestroy()
         {
             if (_mission != null) _mission.Noise.Unregister(this);
+            bushCorpse?.Dispose();
         }
 
         /// <summary>
@@ -166,6 +211,7 @@ namespace ShadowVale.Map01
         public void ReturnToPost()
         {
             LastStoneHeardAt = float.NegativeInfinity;
+            bushCorpse?.Dispose(); bushCorpse = null; silentKind = 0; grappleOwned = false;
             TakenDownSilently = false; SetSilent(false); ShowRifle(true); _startled = false;
             if (_health.IsDead) _health.Revive(); else _health.RestoreHealth(_health.Max);
             if (_lootCreated)
@@ -173,6 +219,7 @@ namespace ShadowVale.Map01
                 _lootCreated = false;
                 var loot = GetComponent<ForestPoint>();
                 if (loot != null) { _mission.UnregisterPoint(loot); Destroy(loot); } // _lootCreated implies a bound mission.
+                Map01Drops.For(_mission).Unlay(GunPoint(0), GunPoint(1));
             }
             _lastHealth = _health.Current;
             _body.Warp(_postPosition);
@@ -274,6 +321,7 @@ namespace ShadowVale.Map01
             public float hp, shotRemaining, alertRemaining, searchRemaining;
             public int patrolIndex;
             public bool stopped, returning, silent, pursuer;
+            public int silentKind;
             public float suspicion, engagedRemaining, pauseRemaining;
             public float footstepReactionRemaining;
             public Vector3 pendingFootstep;
@@ -285,7 +333,7 @@ namespace ShadowVale.Map01
             var m = Memory; float now = Time.time;
             return new Snapshot {
                 id = SaveId, position = transform.position, rotation = transform.rotation, hp = _health.Current,
-                silent = TakenDownSilently, pursuer = _pursuer, suspicion = m.Suspicion,
+                silent = TakenDownSilently, silentKind = silentKind, pursuer = _pursuer, suspicion = m.Suspicion,
                 engagedRemaining = Mathf.Max(0, m.EngagedUntil - now), pauseRemaining = Mathf.Max(0, m.PatrolPauseUntil - now),
                 footstepReactionRemaining = _hearReactionAt > 0 ? Mathf.Max(0, _hearReactionAt - now) : 0,
                 pendingFootstep = _pendingFootstep, stoneLure = _stoneLure, stoneFacing = _stoneFacing,
@@ -307,6 +355,7 @@ namespace ShadowVale.Map01
             var m = Memory; float now = Time.time;
             _body.Warp(saved.position);
             transform.rotation = saved.rotation;
+            bushCorpse?.Dispose(); bushCorpse = null; silentKind = saved.silentKind;
             TakenDownSilently = saved.silent; SetSilent(saved.silent); ShowRifle(!saved.silent);
             _health.RestoreHealth(saved.hp);
             _lastHealth = _health.Current;
@@ -327,7 +376,7 @@ namespace ShadowVale.Map01
             m.Returning = saved.returning; m.ReturnPoint = saved.returnPoint; m.ReturnRotation = saved.returnRotation;
             _body.MoveTo(saved.destination);
             if (_agent.isOnNavMesh) _agent.isStopped = saved.stopped || !Alive;
-            if (!Alive) CreateLoot();
+            if (!Alive) { CreateLoot(); FillLoot(); if (saved.silent && saved.silentKind == 1) HoldBushCorpse(); }
             RebaseHold();
         }
 
@@ -340,17 +389,116 @@ namespace ShadowVale.Map01
             if (_health.IsDead && _agent.isOnNavMesh) { _agent.ResetPath(); _agent.isStopped = true; }
         }
 
+        public bool IsSupplyKeyKeeper => carriesSupplyKey && operationIndex == 1 && _mission != null &&
+            _mission.GetComponent<Map01Story>()?.Layout?.keyKeeper == this;
+
         private void CreateLoot()
         {
             if (_lootCreated || _mission == null) return;
             _lootCreated = true;
+            if (suppressOperationLoot) return;
             var loot = gameObject.AddComponent<ForestPoint>();
-            loot.id = "loot_" + LegacyId; loot.label = "Túi lính tuần tra"; loot.kind = ForestPointKind.Loot;
-            loot.items = new[] {
-                new ForestIngredient { item_id = "ammo_rifle", count = _mission.Settings.guardDropAmmo },
-                new ForestIngredient { item_id = "medkit_small", count = _mission.Settings.guardDropMedkits }
-            };
+            loot.id = "loot_" + LegacyId; loot.kind = ForestPointKind.Loot;
             _mission.RegisterPoint(loot);
+            FillLoot();
+        }
+
+        /// <summary>Gun piles of this guard: his rifle, and the commander's K-54.</summary>
+        private string GunPoint(int index) => Map01Logistics.GunPointPrefix + LegacyId + (index == 0 ? "" : "_sidearm");
+
+        /// <summary>
+        /// His pack, rolled from his kind's loot table (Map01Logistics.GuardPack), and his guns, worn, laid on the ground
+        /// beside him; the rifle in his hands goes with them. Called again after a load, which may bring back the rolls
+        /// of another run.
+        /// </summary>
+        public void FillLoot()
+        {
+            var loot = _lootCreated && !Alive && _mission != null && !suppressOperationLoot ? GetComponent<ForestPoint>() : null;
+            if (loot == null) return;
+            var logistics = Map01Logistics.For(_mission);
+            var pack = new System.Collections.Generic.List<ForestIngredient>(logistics.GuardPack(this, loot.id));
+            if (IsSupplyKeyKeeper) pack.Add(new ForestIngredient { item_id = Map01Story.KeyItem, count = 1 });
+            loot.items = pack.ToArray();
+            loot.label = IsSupplyKeyKeeper ? "Lính gác kho — chìa khóa kho tiếp tế" : logistics.PackName(this);
+            int index = 0;
+            foreach (var gun in logistics.GuardGuns(this, loot.id))
+            {
+                // The rifle drops at his right side, the pistol at his left, lying across his line.
+                float side = index == 0 ? 1f : -1f;
+                var at = transform.position + transform.right * (.75f * side) + transform.forward * .2f;
+                Map01Drops.For(_mission).Lay(GunPoint(index), gun, at, transform.eulerAngles.y + 90f + 25f * index);
+                index++;
+            }
+            if (index > 0) ShowRifle(false);
+        }
+
+        // ---- Map 1's operations (Map01Story, Map01C3Mission), on the shared FSM's memory ---------
+
+        /// <summary>Into the fight at once, towards <paramref name="lastSeen"/>, holding fire for <paramref name="readySeconds"/>.</summary>
+        public void BeginOperationCombat(Vector3 lastSeen, float readySeconds = 1.5f)
+        {
+            if (!Alive) return;
+            var m = Memory; float now = Time.time;
+            _hearReactionAt = 0; _stoneLure = false; ApplyLureTuning();
+            m.Suspicion = 1f; m.EngagedUntil = now + 15f; m.LastKnownPlayerPosition = lastSeen;
+            Brain.BeginInvestigation(lastSeen, now);
+            _nextShot = Mathf.Max(_nextShot, now + readySeconds);
+        }
+        /// <summary>Starts the fight at once from wherever he is (the camp's alarm, a commander's call).</summary>
+        public void Alert(Vector3 lastSeen) => BeginOperationCombat(lastSeen, .8f);
+        /// <summary>Gives up the fight and walks back to his post (Nam is too far: the camp does not chase deep into the forest).</summary>
+        public void StandDown()
+        {
+            if (!Alive) return;
+            var m = Memory;
+            m.EngagedUntil = 0; m.AlertUntil = 0; m.SearchUntil = 0; m.SuppressUntil = 0; _hearReactionAt = 0; _stoneLure = false;
+            m.Suspicion = Mathf.Min(m.Suspicion, .5f); m.ClearAssignment();
+            m.Returning = true; m.ReturnPoint = _postPosition; m.ReturnRotation = _postRotation;
+            _body.SetPace(1f);
+        }
+
+        // Per point of the beat (Map01C3Mission): how long he stays there and which way he faces meanwhile (NaN: as he came).
+        private float[] _patrolStops, _patrolYaws;
+        private float _stopYaw = float.NaN;
+        private int _lastPatrolIndex = -1;
+        /// <summary>
+        /// A new post and beat for this guard, set by a mission's layout (Map 1's C3 command post). A stationary guard
+        /// (a sentry on the watchtower's platform, off the NavMesh) has his agent switched off and only turns and shoots.
+        /// <paramref name="stops"/> and <paramref name="yaws"/> follow <paramref name="points"/>: seconds he waits at each,
+        /// and the yaw he holds there.
+        /// </summary>
+        public void Repost(Vector3 position, float yaw, Vector3[] points = null, float[] stops = null, float[] yaws = null,
+            float vision = 0f, bool stationary = false)
+        {
+            var rotation = Quaternion.Euler(0, yaw, 0);
+            _postPosition = position; _postRotation = rotation;
+            var m = Memory; m.ReturnPoint = position; m.ReturnRotation = rotation; m.PatrolIndex = 0; _lastPatrolIndex = 0;
+            Configure(points); _patrolStops = stops; _patrolYaws = yaws; _stopYaw = float.NaN;
+            if (vision > 0) { visionRange = vision; SyncTuning(); }
+            if (stationary && _agent != null) _agent.enabled = false;
+            _body.Warp(position);
+            transform.rotation = rotation;
+            if (!stationary && patrolPoints.Length > 0) _body.MoveTo(patrolPoints[0]);
+        }
+
+        /// <summary>The per-point stops of a Repost beat: the shared patrol only knows one pause for every point.</summary>
+        private void ApplyPatrolStops()
+        {
+            var m = Memory;
+            if (_patrolStops == null || patrolPoints.Length == 0) return;
+            if (m.PatrolIndex != _lastPatrolIndex)
+            {
+                int reached = (m.PatrolIndex - 1 + patrolPoints.Length) % patrolPoints.Length;
+                _lastPatrolIndex = m.PatrolIndex;
+                if (reached < _patrolStops.Length && _patrolStops[reached] > 0)
+                {
+                    m.PatrolPauseUntil = Time.time + _patrolStops[reached];
+                    _stopYaw = _patrolYaws != null && reached < _patrolYaws.Length ? _patrolYaws[reached] : float.NaN;
+                }
+                else _stopYaw = float.NaN;
+            }
+            if (Time.time < m.PatrolPauseUntil && !Engaged && !Alerted && !float.IsNaN(_stopYaw))
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, _stopYaw, 0), 150 * Time.deltaTime);
         }
 
         public void Configure(Vector3[] points)
@@ -390,6 +538,7 @@ namespace ShadowVale.Map01
             enabled = true;
             EnsureBrain();
             _rescuePost = _overseer = false; _pursuer = true; _lootCreated = false;
+            carriesSupplyKey = false; operationIndex = 0;
             _holdingAI = false; _agent.updatePosition = true; _agent.updateRotation = true;
             _postPosition = post; _postRotation = Quaternion.identity; Configure(System.Array.Empty<Vector3>()); BindMission(owner);
             _health.CinematicInvulnerable = false; _health.Revive(); _lastHealth = _health.Current;
@@ -436,6 +585,7 @@ namespace ShadowVale.Map01
             var layout = _rescue != null ? _rescue.Layout : null;
             bool overseerApproach = _overseer && _rescue != null && _rescue.CurrentPhase == Map01Rescue.Phase.Captive;
             float range = layout != null ? (overseerApproach ? layout.overseerBackstabRange : layout.backstabRange) : 1.6f;
+            if (!_overseer && _mission.Skills != null) range = _mission.Skills.TakedownRange(range);
             float rear = layout != null ? (overseerApproach ? layout.overseerBackstabAngle : layout.backstabAngle) : 130f;
             if (Vector3.Distance(_mission.player.position, transform.position) > range) return false;
             if (delta.magnitude > range || Vector3.Angle(transform.forward, delta) < rear) return false;
@@ -452,6 +602,7 @@ namespace ShadowVale.Map01
             TakenDownSilently = true; SetSilent(true); ShowRifle(false);
             if (_agent.isOnNavMesh) { _agent.ResetPath(); _agent.isStopped = true; }
             _health.TakeDamage(_health.Current, transform.position + Vector3.up, _mission.player.gameObject);
+            if (_health.IsDead) _mission.Skills?.Award(ShadowVale.Gameplay.Skills.SkillKind.Stealth);
             EventBus.Publish(new TakedownEvent(LegacyId, transform.position));
             EventBus.Publish(new EnemyKilledEvent(LegacyId, "takedown", "knife", transform.position));
             var cinematic = _mission.GetComponent<Map01RescueCinematic>();
@@ -460,10 +611,13 @@ namespace ShadowVale.Map01
             return true;
         }
 
+        // A guard with the hostage in reach checks his line of fire every frame: the rifle is looked up once.
+        private Map01Rifle _rifle;
+        private Map01Rifle Rifle => _rifle != null && _rifle.gameObject.activeInHierarchy ? _rifle : _rifle = GetComponentInChildren<Map01Rifle>();
         /// <summary>Whether a round at <paramref name="target"/> would reach Hùng and nobody else.</summary>
         public bool SafeShot(Vector3 target)
         {
-            var rifle = GetComponentInChildren<Map01Rifle>();
+            var rifle = Rifle;
             Vector3 origin = rifle != null && rifle.weapon != null && rifle.weapon.Muzzle != null ? rifle.weapon.Muzzle.position : transform.position + Vector3.up * 1.3f;
             var end = target + Vector3.up * 1.1f;
             if (Physics.Linecast(origin, end, out var hit, ~0, QueryTriggerInteraction.Ignore))
@@ -471,12 +625,15 @@ namespace ShadowVale.Map01
             return true;
         }
 
-        public void FireAtHostage(Vector3 target, float amount)
+        /// <param name="bodyPoint">Aim at <paramref name="target"/> itself (a bone, in the execution film) rather than his chest above it.</param>
+        public void FireAtHostage(Vector3 target, float amount, bool bodyPoint = false)
         {
-            FaceImmediate(target); _animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
+            FaceImmediate(target);
+            if (_animator != null && _animator.runtimeAnimatorController != null) _animator.SetTrigger(PlayerCombat.AnimatorParams.Attack);
             if (_rescue == null || _mission == null || _mission.hung == null) return;
             _feedback ??= EnemyFeedback.Attach(gameObject);
-            if (!_feedback.Fire(target + Vector3.up * .9f, _mission.hung, obstructionMask, out var impact)) return;
+            AudibleShots++;
+            if (!_feedback.Fire(target + (bodyPoint ? Vector3.zero : Vector3.up * .9f), _mission.hung, obstructionMask, out var impact)) return;
             float before = _rescue.HungHealth;
             _rescue.HitHung(amount);
             if (_rescue.HungHealth < before) BloodImpact.Play(impact, impact - transform.position);
@@ -588,6 +745,8 @@ namespace ShadowVale.Map01
 
         private void Update()
         {
+            if (grappleOwned) return; // Map01BushTakedown moves him.
+            if (_rescuePost && _rescue != null) _rescue.TryApproachIntro();
             // A stopped mission or a cinematic holds him exactly where he is; his timers resume after.
             bool holding = Alive && _mission != null && (_mission.Stopped || (_rescue != null && _rescue.HoldEnemy(this)));
             if (holding)
@@ -640,6 +799,7 @@ namespace ShadowVale.Map01
             float distance = _lastDistance;
             _brain.Tick(new PerceptionSample(sees, distance, _player != null ? _player.position : transform.position),
                 Time.time, Time.deltaTime);
+            ApplyPatrolStops();
 
             if (sees && Engaged)
             {
@@ -731,10 +891,14 @@ namespace ShadowVale.Map01
 
         // ---- IEnemyWeapon: how a Map 1 guard fires ----------------------------------------------
 
+        /// <summary>The old name of <see cref="FireAtPlayer"/>, kept for tests that still call it.</summary>
+        private void Shoot() => FireAtPlayer();
+
         public void FireAtPlayer()
         {
             if (Time.time < _nextShot || _player == null) return;
             _nextShot = Time.time + fireInterval;
+            AudibleShots++;
             _animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
             // Hùng is in the line of fire while he is being held or walked home: every third
             // round goes his way when he is in reach.
@@ -760,6 +924,7 @@ namespace ShadowVale.Map01
         {
             if (Time.time < _nextShot) return;
             _nextShot = Time.time + fireInterval;
+            AudibleShots++;
             _animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
             _feedback ??= EnemyFeedback.Attach(gameObject);
             _feedback.Fire(point + Vector3.up, null, obstructionMask, out _);

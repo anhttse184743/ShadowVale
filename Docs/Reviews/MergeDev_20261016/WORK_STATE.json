@@ -1,0 +1,32 @@
+{
+  "task": "Merge latest dev into thinh, preserve current art/items, adapt logic games to map; ask user before conflict/gameplay choices.",
+  "fetched_dev": "800a26b7c1fd3cf189eb559c517f77898d357a88",
+  "fetched_thinh": "89191db2f652e617cd916581d368e36fb892f5b3",
+  "fetch_complete": true,
+  "commits_ahead_in_dev": 14,
+  "game_files_changed_by_this_task": true,
+  "merge_applied": true,
+  "tracked_modified_before_merge": 26,
+  "overlapping_paths": 12,
+  "csharp_conflict_files": 6,
+  "csharp_conflict_blocks": 11,
+  "scene_conflict": "Resolved on preserved art scene; fresh private IntegratedNavMesh 4.asset baked. Navigation and 19 authored agent/interaction positions passed review. Two redundant legacy camp actors disabled to honor approved 4/5/5 roster.",
+  "pending_user_input": [],
+  "safety": "5840-file safety snapshot and checkpoint ce9ea0585e5e0ff2984860b4c44f59c2f8607851 retained. Existing manual saves preserved and hash verified. No push. Unsaved Blender work untouched.",
+  "reviews": "PHUONG_AN_HOP_NHAT.md; preflight.json; TextPreview; ScenePreview",
+  "research": "Official Git and Unity Smart Merge/docs/course read. Brackeys GitHub-with-Unity video identified but YouTube fetch failed; do not claim to have watched it.",
+  "approved_guard_counts": "4/5/5 plus 3 C2 response",
+  "validation": {
+    "distinct_tests_passed": 70,
+    "unresolved_failures": 0,
+    "navigation_failures": 0,
+    "clearance_failures": 0,
+    "save_isolation": "2 targeted checks passed; three real default slot hashes unchanged after isolation tests and standalone benchmark",
+    "benchmark": "focused standalone 1920x1080; six main views 45.9–53.0 FPS; C2 response 45.6; C3 repeat 64.2; not stable 60 FPS",
+    "game_build": "Succeeded; 0 errors; Boot/Menu/Map1/Map2; 854492457 bytes"
+  },
+  "player_save_issue": "Initial inherited tests overwrote real automatic slot 4 before isolation. User informed and explicitly needs only existing manual saves. Manual 0/1 unchanged. Subsequent tests and benchmark use isolated saves; final three default hashes unchanged.",
+  "player_save_user_decision": "User explicitly needs only the existing manual saves; old automatic save recovery is not required. Verify manual slot 0 and 1 hashes remain unchanged.",
+  "checkpoint_before_merge": "ce9ea0585e5e0ff2984860b4c44f59c2f8607851",
+  "phase": "content validated and delivered; merge finalizer records resulting two-parent commit in merge_complete.json"
+}

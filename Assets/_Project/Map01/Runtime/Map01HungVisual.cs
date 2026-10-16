@@ -23,6 +23,16 @@ namespace ShadowVale.Map01
         private NavMeshAgent agent;
         private Renderer[] placeholder;
         private bool down;
+        private bool captivePresentation,boundDead;
+        private Map01CinematicPose corpsePose;
+        public void BeginCaptivePresentation(){captivePresentation=true;talkUntil=0;if(rope==null&&ropeMaterial!=null)rope=TieRope();if(rope!=null)rope.SetActive(true);}
+        public void SampleCaptiveContacts(){if(rope==null&&ropeMaterial!=null)rope=TieRope();if(rope!=null){rope.SetActive(true);BindWrists();}}
+        public void EndCaptivePresentation(bool executed){
+            captivePresentation=false;boundDead=executed;
+            if(executed){down=true;corpsePose?.Dispose();corpsePose=new Map01CinematicPose(actor);corpsePose.Sample(Map01CinematicPose.Clip("Hung_Bound_Execution"),3);corpsePose.Ground(mission.hung.position.y);SampleCaptiveContacts();}
+            else RestoreAfterCinematic();
+        }
+
         private float talkUntil;
         private int lastStage = -1;
         private bool standingUp;
@@ -34,6 +44,8 @@ namespace ShadowVale.Map01
         private GameObject rope;
         private Mesh soleMesh;
         private Map01SkinContact skinContact;
+        private AnimatorCullingMode rescueCulling;
+        private bool rescueContactActive;
         private readonly System.Collections.Generic.List<Vector3> soleVertices = new System.Collections.Generic.List<Vector3>();
 
         /// <summary>True while the rope is shown on his wrists (held at the jetty).</summary>
@@ -78,6 +90,9 @@ namespace ShadowVale.Map01
         private void LateUpdate()
         {
             if (mission == null) return;
+            if(boundDead){corpsePose?.Sample(Map01CinematicPose.Clip("Hung_Bound_Execution"),3);corpsePose?.Ground(mission.hung.position.y);SampleCaptiveContacts();return;}
+            if(captivePresentation){SampleCaptiveContacts();return;}
+
             bool rescueContact=rescue!=null&&(rescue.CurrentPhase==Map01Rescue.Phase.Untying||rescue.CurrentPhase==Map01Rescue.Phase.Rising);
             if (!down && (!mission.Cinematic||rescueContact)) AnchorToGround();
             // The rope is tied once the kneeling pose has been evaluated (and grounded), so it sits on his real wrists.
@@ -87,14 +102,27 @@ namespace ShadowVale.Map01
             if (rope != null && rope.activeSelf) BindWrists();
         }
 
+        public void BeginRescueContacts()
+        {
+            if(mission==null||down)return;
+            if(!rescueContactActive){rescueCulling=actor.cullingMode;rescueContactActive=true;}
+            actor.cullingMode=AnimatorCullingMode.AlwaysAnimate;
+            actor.Update(0);AnchorToGround();
+        }
+        private void RestoreContactCulling(){if(rescueContactActive&&actor!=null)actor.cullingMode=rescueCulling;rescueContactActive=false;}
+        private void OnDisable(){RestoreContactCulling();}
+
         private void AnchorToGround()
         {
             // Anchor the calibrated sole plane to actual terrain or the raised base floor.
             float ground=float.NegativeInfinity;
-            foreach(var hit in Physics.RaycastAll(mission.hung.position+Vector3.up*2,Vector3.down,5,~0,QueryTriggerInteraction.Ignore))
+            int hits=Map01Probe.Raycast(mission.hung.position+Vector3.up*2,Vector3.down,5);
+            for(int i=0;i<hits;i++){
+                var hit=Map01Probe.Hits[i];
                 if(!hit.transform.IsChildOf(mission.hung) && !hit.transform.IsChildOf(mission.player)
                     && hit.normal.y>.65f && hit.point.y<=mission.hung.position.y+.5f)
                     ground=Mathf.Max(ground,hit.point.y);
+            }
             if(float.IsNegativeInfinity(ground)) ground=mission.hung.position.y;
             transform.position=new Vector3(mission.hung.position.x,ground,mission.hung.position.z);
             // Humanoid retargeting changes the foot plane after the neutral scale calibration.
@@ -122,11 +150,13 @@ namespace ShadowVale.Map01
         }
         public void FinishRescueRise()
         {
+            RestoreContactCulling();
             RestoreAfterCinematic();
         }
         /// <summary>Restore this quest stage immediately; Rebind alone falls back to the captive kneeling state.</summary>
         public void RestoreAfterCinematic()
         {
+            if(boundDead)return;
             ReleaseHold(); SnapToStage(); AnchorToGround();
         }
         private bool Wounded => !down && Stage == Map01Quest.EscortStage;
@@ -150,7 +180,7 @@ namespace ShadowVale.Map01
 
         private void Update()
         {
-            if (mission == null || actor == null) return;
+            if (mission == null || actor == null || captivePresentation || boundDead) return;
             bool fallen = rescue != null && rescue.HungDown;
             if (fallen != down) {
                 down = fallen;
@@ -273,6 +303,7 @@ namespace ShadowVale.Map01
 
         private void OnDestroy()
         {
+            corpsePose?.Dispose();
             if (soleMesh != null) Destroy(soleMesh);
             if (placeholder == null) return;
             foreach (var renderer in placeholder) if (renderer != null) renderer.forceRenderingOff = false;

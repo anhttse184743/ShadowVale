@@ -8,220 +8,114 @@ using UnityEngine.AI;
 
 namespace ShadowVale.Map01
 {
-    /// <summary>
-    /// Map 1's quest line, on its own component. Rescue Hùng — captured at the north jetty, see
-    /// Map01Rescue — and bring him home to the base; from
-    /// then on he stays there and hands out every order, and each finished task must be reported
-    /// back to him in person before the next one: log the three enemy outposts through binoculars
-    /// unseen (Map01Scouting), destroy them ("Outpost guard N", baked into the scene), then the
-    /// commander who shows up once they fall. Reads Map01Mission for shared state and
-    /// Map01Inventory for the rescue's herb.
-    /// </summary>
+    /// <summary>Commander-led rescue, supply recovery, communications disruption and extraction.</summary>
     public sealed class Map01Quest : MonoBehaviour, IMapObjectives
     {
+        // Save-format IDs. The former scouting/camp/report IDs now carry distinct operations.
+        public const int RescueStage=0, EscortStage=1, BriefingStage=2, ScoutStage=3, ReportScoutStage=4,
+            CampsStage=5, ReportCampsStage=6, BossStage=7, ReportBossStage=8, CompleteStage=9,
+            ExtractionStage=10, BoardingStage=11, LastStage=BoardingStage;
+
         public bool IsComplete => Stage == CompleteStage;
 
+        /// <summary>Where the objective marker points for each stage (the story's own targets come first,
+        /// in Map01ObjectiveGuide).</summary>
         public bool TryGetObjectiveTarget(out Vector3 target, out string label)
         {
             target = default; label = null;
-            if (AwaitingReport) { target = mission.hung.position; label = "BÁO CÁO HÙNG"; return true; }
             switch (Stage)
             {
-                case Map01Quest.ExtractionStage:
+                case ExtractionStage:
                     var extraction = mission.GetComponentInChildren<Map01Extraction>();
                     if (extraction == null) return false;
                     target = extraction.ObjectivePosition; label = "NORTHERN JETTY"; return true;
-                case Map01Quest.RescueStage:
+                case RescueStage:
                     target = mission.hung.position; label = "BẾN TÀU — CỨU HÙNG";
                     return true;
-                case Map01Quest.ScoutStage:
+                case ScoutStage:
                     // Only the rough area of the nearest camp not yet logged — never the camp itself.
-                    var zone = GetComponent<Map01Scouting>().Camps.Where(c => !c.Found)
+                    var scoutingOrder = GetComponent<Map01Scouting>();
+                    var zone = scoutingOrder == null ? null : scoutingOrder.Camps.Where(c => !c.Found)
                         .OrderBy(c => (c.ZoneCenter - mission.player.position).sqrMagnitude).FirstOrDefault();
                     if (zone == null) return false;
                     target = zone.ZoneCenter; label = "KHU VỰC NGHI NGỜ";
                     return true;
-                case Map01Quest.EscortStage:
-                    var rescue = mission.GetComponent<Map01Rescue>();
-                    if(rescue.Layout==null)return false;
-                    target = rescue.Layout.shelterDoor.position; label = "HẦM TRÚ ẨN — ĐƯA HÙNG VỀ";
+                case EscortStage:
+                    var rescueRun = mission.GetComponent<Map01Rescue>();
+                    if (rescueRun == null || rescueRun.Layout == null) return false;
+                    target = rescueRun.Layout.shelterDoor.position; label = "HẦM TRÚ ẨN — ĐƯA HÙNG VỀ";
                     return true;
-                case Map01Quest.CampsStage:
+                case CampsStage:
                     var guard = mission.Enemies.Where(e => e.Alive && e.name.StartsWith("Outpost guard "))
                         .OrderBy(e => (e.transform.position - mission.player.position).sqrMagnitude).FirstOrDefault();
                     if (guard == null) return false;
                     target = guard.transform.position; label = "DOANH TRẠI ĐỊCH";
                     return true;
-                case Map01Quest.BossStage:
-                    var boss = mission.Enemies.FirstOrDefault(e => e.IsBoss && e.Alive);
-                    if (boss == null) return false;
-                    target = boss.transform.position; label = "CHỈ HUY ĐỊCH";
+                case BossStage:
+                    var commander = mission.Enemies.FirstOrDefault(e => e.IsBoss && e.Alive);
+                    if (commander == null) return false;
+                    target = commander.transform.position; label = "CHỈ HUY ĐỊCH";
                     return true;
                 default:
                     return false; // The complete stage has nowhere left to go.
             }
         }
-
-        // Stage numbers are part of the checkpoint format — append, never reorder.
-        public const int RescueStage = 0;
-        public const int EscortStage = 1;
-        public const int BriefingStage = 2;
-        public const int ScoutStage = 3;
-        public const int ReportScoutStage = 4;
-        public const int CampsStage = 5;
-        public const int ReportCampsStage = 6;
-        public const int BossStage = 7;
-        public const int ReportBossStage = 8;
-        public const int CompleteStage = 9;
-        public const int ExtractionStage = 10;
-        public const int BoardingStage = 11;
-        public const int LastStage = BoardingStage;
         public static readonly string[] Objectives = {
-            "Giải cứu Hùng ở bến phía Bắc: dùng đá đánh lạc hướng và dao ám sát lính giám sát; hạ đủ bốn lính rồi cởi trói [E]",
-            "Yểm hộ Hùng về căn cứ, vượt qua ba đợt truy kích và đưa anh ấy vào hầm trú ẩn",
-            "Gặp Hùng tại căn cứ để nhận nhiệm vụ [E]",
-            "Trinh sát 3 doanh trại địch: giữ [F] dùng ống nhòm ghi vị trí — không để lính phát hiện, không tấn công trong doanh trại",
-            "Về căn cứ báo cáo kết quả trinh sát cho Hùng [E]",
-            "Chiếm đóng 3 doanh trại của địch — tiêu diệt toàn bộ lính",
-            "Về căn cứ báo cáo với Hùng: ba doanh trại đã bị hạ [E]",
-            "Tiêu diệt chỉ huy địch",
-            "Về căn cứ báo cáo chiến thắng với Hùng [E]",
-            "Hoàn thành Map 1 — Những dấu chân trong rừng",
-            "Reach the northern jetty. Board the waiting boat.",
-            "Board the boat and leave the forest."
+            "Giải cứu Hùng tại bến phía bắc: giữ im lặng khi giám sát còn canh Hùng; hạ đủ bốn lính rồi cởi trói [E]",
+            "Yểm hộ Hùng về hầm trú ẩn, vượt qua ba đợt truy kích",
+            "Gặp chỉ huy tại căn cứ để báo cáo và nhận lệnh [E]",
+            "Điểm 1: hạ bốn lính bảo vệ, lấy chìa mở kho rồi giải khóa hòm tiếp tế [E]",
+            "Báo cáo đã lấy hàng qua đàm, mang túi về hầm và bàn giao chỉ huy [E]",
+            "Điểm 2: hạ năm lính bảo vệ, đấu bảng mạch để vô hiệu hóa đài [E]",
+            "Rời giao tranh rồi báo cáo đài đã bị vô hiệu với chỉ huy [E]",
+            "Điểm 3: đứng xa doanh trại ít nhất 18 m, giữ ống nhòm [F] nhìn về khu trại rồi báo cáo",
+            "Sĩ quan đã bị hạ. Thoát giao tranh rồi báo cáo để nhận đường rút [E]",
+            "Đã rời bến. Tiếp tục tới điểm liên lạc ở làng ven sông",
+            "Tới bến phía bắc, lên thuyền cùng Hùng và chỉ huy",
+            "Lên thuyền và rút khỏi khu rừng"
         };
         public static readonly string[] SaveLocations = {
-            "Giải cứu Hùng ở bến tàu", "Trên đường về căn cứ", "Căn cứ chỉ huy", "Trinh sát doanh trại", "Về căn cứ báo cáo",
-            "Doanh trại địch", "Về căn cứ báo cáo", "Đối đầu chỉ huy", "Về căn cứ báo cáo", "Map 1 hoàn tất", "Northern jetty extraction", "Boarding the boat"
+            "Giải cứu Hùng ở bến tàu", "Hộ tống về hầm", "Báo cáo chỉ huy", "Điểm 1 — tiếp tế", "Mang tiếp tế về hầm",
+            "Điểm 2 — đài liên lạc", "Báo cáo qua bộ đàm", "Điểm 3 — chỉ huy địch", "Lệnh rút lui", "Đã rời bến", "Bến phía bắc", "Lên thuyền"
         };
-        /// <summary>Hùng's scouting order — given at the briefing, and again whenever a lost run starts over.</summary>
-        public const string ScoutOrder = "Hùng: Địch có ba doanh trại quanh đây, anh chỉ biết đại khái khu vực. Lén tới, giữ [F] dùng ống nhòm ghi lại vị trí cả ba. " +
-            "Tuyệt đối không để chúng phát hiện, không nổ súng. Muốn hạ tên nào thì ném đá dụ nó ra xa trại rồi dùng dao từ phía sau. Xong thì về báo anh.";
-
-        /// <summary>Stable ids of the stages, for telemetry's progression funnel (index = stage number).</summary>
-        public static readonly string[] StageIds = {
-            "rescue_hung", "escort_hung", "briefing", "scout_camps", "report_scouting",
-            "destroy_camps", "report_camps", "defeat_commander", "report_commander", "complete",
-            "extraction", "boarding"
-        };
-
-        /// <summary>Where a stage falls in play: the extraction and the boarding (appended to the
-        /// checkpoint format as 10 and 11) come after the commander and before Complete (9).</summary>
-        public static int PlayOrder(int stage) => stage == CompleteStage ? int.MaxValue : stage;
-
-        /// <summary>Moving forward completes the stage left behind (telemetry <c>objective_completed</c>);
-        /// restoring a checkpoint does not.</summary>
-        public int Stage
-        {
-            get => stage;
-            private set
-            {
-                int from = stage;
-                stage = value;
-                if (PlayOrder(value) <= PlayOrder(from) || Map01SaveSystem.IsRestoring) return;
-                EventBus.Publish(new ObjectiveCompletedEvent(Map01Mission.MapId, StageIds[Mathf.Clamp(from, 0, LastStage)], from));
-                if (value == CompleteStage) EventBus.Publish(new MissionEndedEvent(Map01Mission.MapId, "completed"));
-            }
-        }
-        private int stage;
-        /// <summary>The objective line for the HUD, with the scouting tally while it runs.</summary>
-        public string ObjectiveText => Stage == RescueStage && rescue != null
-            ? (rescue.CanFree ? "Đã hạ đủ bốn lính. Cởi trói Hùng [E]." : $"{Objectives[0]} — còn {rescue.Remaining}/4 lính; " + (!rescue.OverseerAlive?"đã hạ lính giám sát, có thể giao chiến":rescue.CombatAlarm?"địch đã báo động, hạ nhóm truy kích":rescue.CanExecuteCaptive?"giám sát đang canh Hùng, giữ im lặng":"giám sát đã rời Hùng; vòng ra sau hoặc giao chiến"))
-            : Stage == ScoutStage
-            ? $"{Objectives[Stage]} ({scouting.FoundCount}/{scouting.Camps.Count})"
-            : Objectives[Mathf.Clamp(Stage, 0, LastStage)];
-        public bool AwaitingReport => Stage == BriefingStage || Stage == ReportScoutStage || Stage == ReportCampsStage || Stage == ReportBossStage;
-        /// <summary>True while Nam is close enough to Hùng for [E] to mean something: treating him
-        /// at the start, or reporting in afterwards.</summary>
+        // Kept for old menu/test callers; binoculars are now a tool, not a forced perfect-stealth mission.
+        public const string ScoutOrder="Chỉ huy: Hạ nhóm bảo vệ điểm một, lấy lại thuốc rồi mang về hầm.";
+        public int Stage { get; private set; }
+        public bool RescueOrderAccepted => story != null && story.Progress.rescueAccepted;
+        public bool AwaitingReport => Stage == BriefingStage;
         public bool HungInRange { get; private set; }
-        /// <summary>What [E] does next to Hùng right now, for the HUD prompt.</summary>
-        public string HungPrompt => Stage == RescueStage
-            ? (rescue.CanFree ? "[E] Cởi trói Hùng" : $"Cần hạ hết bốn lính — còn {rescue.Remaining}")
-            : "[E] Báo cáo với Hùng";
-        /// <summary>The base's supply point keeps resupplying once Hùng is home.</summary>
+        public string HungPrompt => rescue.CanFree ? "[E] Cởi trói Hùng" : $"Cần hạ hết bốn lính — còn {rescue.Remaining}";
         public bool BaseResupplyOpen => Stage > EscortStage;
-        /// <summary>Hùng walks with Nam only while being brought home; before that he is wounded,
-        /// after it he runs the base.</summary>
-        public bool ShouldFollowPlayer() => Stage == EscortStage && rescue.CurrentPhase == Map01Rescue.Phase.Escorting;
-
-        /// <summary>Direct-set for restoring a checkpoint; never call this mid-play otherwise.</summary>
-        public void RestoreStage(int value)
-        {
-            // Older saves waiting for the final report are already victorious.
-            // The field, not the setter: restoring is not progress (no objective_completed events).
-            stage = value == ReportBossStage ? CompleteStage : value == BoardingStage ? ExtractionStage : Mathf.Clamp(value, 0, LastStage);
-            rescue?.SyncRestoredStage(Stage);
-            // The commander is spawned at runtime, not baked into the scene — a checkpoint taken
-            // mid-fight (the exit autosave allows that) must bring him back, or the objective can
-            // never complete. The save system restores his health/position right after this.
-            if (Stage == BossStage && boss == null) SpawnBoss();
-            if (Stage == ExtractionStage) Map01Extraction.Get(mission)?.Begin(false);
-        }
-
-        private Map01Mission mission;
-        private Map01Inventory inventory;
-        private Map01Scouting scouting;
-        private Map01Rescue rescue;
-        private NavMeshAgent companion;
-        private Map01EnemyController boss;
         public bool BossSpawned => boss != null;
-
-        private void Awake()
-        {
-            mission = GetComponent<Map01Mission>();
-            inventory = GetComponent<Map01Inventory>();
-            // The scouting order's own component comes along at runtime rather than being baked
-            // into Map 1.unity. Deliberately not "GetComponent() ?? AddComponent()" — see WeaponHotbar.
-            scouting = GetComponent<Map01Scouting>();
-            if (scouting == null) scouting = gameObject.AddComponent<Map01Scouting>();
-            rescue = GetComponent<Map01Rescue>();
-            if (rescue == null) rescue = gameObject.AddComponent<Map01Rescue>();
-        }
-
-        private void Start()
-        {
-            if (!mission.IsInitialized) return;
-            companion = mission.hung.GetComponent<NavMeshAgent>();
-            // The opening briefing already explains the rescue. Keep its objective in the HUD;
-            // do not queue a second spoken briefing behind the cinematic.
-        }
-
-        private bool NearHung(float distance) => mission.hung != null
-            && Vector3.Distance(mission.player.position, mission.hung.position) <= distance;
-
-        /// <summary>[E] next to Hùng: treat him at the start, otherwise report in for the next order.</summary>
-        public void TalkToHung()
-        {
-            if (mission.Cinematic) return;
-            if (Stage == RescueStage) { TryRescueHung(); return; }
-            if (!AwaitingReport || !NearHung(mission.Settings.interactRange)) return;
-            mission.hung.GetComponentInChildren<Map01HungVisual>()?.Speak(Stage == BriefingStage ? 14 : 10);
-            switch (Stage)
-            {
-                case BriefingStage:
-                    Stage = ScoutStage;
-                    // A lost run starts over from exactly here (Map01Scouting.Restart).
-                    GetComponent<Map01SaveSystem>().MarkScoutingStart();
-                    mission.Say(ScoutOrder, 14);
-                    break;
-                case ReportScoutStage:
-                    Stage = CampsStage;
-                    mission.Say("Hùng: Ba doanh trại, đúng vị trí cậu ghi. Giờ thì khác: tiêu diệt cả ba, hạ toàn bộ lính gác. Xong thì về đây.", 10);
-                    break;
-                case ReportCampsStage:
-                    Stage = BossStage;
-                    SpawnBoss();
-                    mission.Say("Hùng: Làm tốt lắm, Nam. Nhưng chỉ huy của chúng vừa lộ diện ở doanh trại — hạ hắn đi.", 9);
-                    break;
-                case ReportBossStage:
-                    Stage = CompleteStage;
-                    mission.Say("Hùng: Chỉ huy địch đã gục, khu rừng này an toàn rồi. Map 1 hoàn tất, Nam!", 10);
-                    break;
+        public Map01EnemyController CommanderEnemy => boss;
+        public string ObjectiveText {
+            get {
+                if (Stage == RescueStage && !RescueOrderAccepted) return "Gặp chỉ huy tại hầm để nhận nhiệm vụ cứu Hùng [E]";
+                if (Stage == RescueStage && rescue != null) {
+                    if (rescue.CanFree) return "Đã hạ đủ bốn lính. Cởi trói Hùng [E].";
+                    return Objectives[0]+$" — còn {rescue.Remaining}/4 lính; "+(!rescue.OverseerAlive?"đã hạ giám sát, có thể giao chiến":rescue.CanExecuteCaptive?"giám sát đang canh Hùng":"giám sát đã rời Hùng");
+                }
+                if (story!=null && story.Objective!=null) return story.Objective;
+                return Objectives[Mathf.Clamp(Stage,0,LastStage)];
             }
         }
-
-        // Kept for callers from older UI/tests; freeing no longer requires an item.
-        public bool CanTreatHung => rescue != null && rescue.CanFree;
+        Map01Mission mission;
+        Map01Rescue rescue;
+        Map01Story story;
+        NavMeshAgent companion;
+        Map01EnemyController boss;
+        void Awake()
+        {
+            mission=GetComponent<Map01Mission>();
+            if(GetComponent<Map01Scouting>()==null)gameObject.AddComponent<Map01Scouting>();
+            rescue=GetComponent<Map01Rescue>();if(rescue==null)rescue=gameObject.AddComponent<Map01Rescue>();
+            story=GetComponent<Map01Story>();if(story==null)story=gameObject.AddComponent<Map01Story>();
+        }
+        void Start(){if(mission.IsInitialized)companion=mission.hung.GetComponent<NavMeshAgent>();}
+        public bool ShouldFollowPlayer()=>Stage==EscortStage&&rescue.CurrentPhase==Map01Rescue.Phase.Escorting;
+        bool NearHung(float distance)=>mission.hung!=null&&Vector3.Distance(mission.player.position,mission.hung.position)<=distance;
+        public void TalkToHung(){if(Stage==RescueStage&&!mission.Cinematic)TryRescueHung();}
+        public bool CanTreatHung=>rescue!=null&&rescue.CanFree;
         public void TryRescueHung()
         {
             if(Stage!=RescueStage||!NearHung(mission.Settings.interactRange))return;
@@ -234,105 +128,80 @@ namespace ShadowVale.Map01
             if(Stage!=EscortStage)return;Stage=BriefingStage;
             if(companion!=null&&companion.isOnNavMesh){companion.ResetPath();companion.isStopped=true;}
         }
-        // The first reward is committed by the shelter cinematic; E cannot bypass it.
         public bool TryDeliverSupplies()=>false;
-
-        /// <summary>Map01Scouting calls this once all three camps are logged; Hùng wants the report in person.</summary>
-        public void CompleteScouting()
+        public void BeginSupplyOrder(){if(Stage==BriefingStage){Stage=ScoutStage;mission.Say("Điểm 1: thu hồi thuốc và vật tư tiếp tế [E].",6);}}
+        public void SuppliesRecovered(){if(Stage==ScoutStage){Stage=ReportScoutStage;mission.Say("Đã thu hồi vật tư. Rời giao tranh rồi liên lạc với chỉ huy [E].",6);}}
+        public void BeginRadioOrder(){if(Stage==ReportScoutStage&&story.Progress.suppliesDelivered&&story.Progress.supplyReported)Stage=CampsStage;}
+        public void RadioDisabled(){if(Stage==CampsStage){Stage=ReportCampsStage;mission.Say("Đài liên lạc đã ngừng hoạt động. Rút khỏi trại rồi báo cáo chỉ huy [E].",6);}}
+        public void BeginCommanderOrder()
         {
-            if (Stage != ScoutStage) return;
-            Stage = ReportScoutStage;
-            mission.Say("Đã ghi chép vị trí cả 3 doanh trại mà không bị phát hiện. Về căn cứ báo cáo với Hùng.", 8);
+            if(Stage!=ReportCampsStage||!story.Progress.radioDisabled)return;Stage=BossStage;EnsureCommander();
+            // The scouts' rifle (Map01C3Mission): no voiced line yet, so the order's last word is shown, not spoken.
+            if(GetComponent<Map01C3Mission>()?.CachePoint!=null)
+                mission.Say("Chỉ huy (bộ đàm): \"Trinh sát để lại một khẩu Mosin, năm viên, ở vai đồi phía Đông Nam điểm ba. Từ đó nhìn được chòi canh.\"",8);
         }
+        // Scanning a camp provides intel only. It cannot complete supply/radio objectives.
+        public void CompleteScouting()=>mission.Say("Đã ghi nhận ba vị trí. Tiếp tục mục tiêu chỉ huy đã giao.",5);
+        void Update(){if(mission.IsInitialized)HungInRange=Stage==RescueStage&&RescueOrderAccepted&&!mission.Stopped&&NearHung(mission.Settings.interactRange);}
 
-        private void Update()
+        public void RestoreStage(int value)=>RestoreStoryStage(value,null);
+        public void RestoreStoryStage(int value,Map01Story.Snapshot snapshot)
         {
-            if (mission.Stopped) return;
-            HungInRange = (Stage == RescueStage || AwaitingReport) && NearHung(mission.Settings.interactRange);
-            HandleCampObjective();
+            story.Restore(snapshot,value);
+            Stage=snapshot==null&&value==ReportBossStage?CompleteStage:value==BoardingStage?ExtractionStage:Mathf.Clamp(value,0,LastStage);
+            rescue?.SyncRestoredStage(Stage);
+            EnsureCommander();
+            if(Stage==ExtractionStage)Map01Extraction.Get(mission)?.Begin(false);
+            if(Stage==ReportBossStage&&story.Progress.retreatReported)CompleteBossDefeat(false);
         }
-
-        /// <summary>
-        /// The outposts are done once every already-placed outpost guard is down. Requires at
-        /// least one to exist so an empty/edited scene cannot skip the objective by vacuous truth.
-        /// </summary>
-        private void HandleCampObjective()
+        /// <summary>Exists at the third outpost from map start, never materializes beside a corpse.</summary>
+        public void EnsureCommander()
         {
-            if (Stage != CampsStage) return;
-            var outpostGuards = mission.Enemies.Where(e => e.name.StartsWith("Outpost guard ")).ToArray();
-            if (outpostGuards.Length == 0 || outpostGuards.Any(e => e.Alive)) return;
-            Stage = ReportCampsStage;
-            mission.Say("Ba doanh trại đã im tiếng. Về căn cứ báo cáo với Hùng.", 8);
-        }
-
-        /// <summary>
-        /// Clones an outpost guard as the commander — same rig and stats as a starting point,
-        /// boosted, standing ground instead of patrolling. No dedicated boss model yet, so this
-        /// is placeholder-look on purpose; swap in real art later without touching this logic.
-        /// </summary>
-        private void SpawnBoss()
-        {
-            // Deterministic pick: the commander inherits the template's parent, which is part of
-            // his checkpoint SaveId, so it must be the same guard on every run.
-            var template = mission.Enemies.Where(e => e.name.StartsWith("Outpost guard "))
-                .OrderBy(e => e.SaveId, System.StringComparer.Ordinal).FirstOrDefault();
-            if (template == null) { Debug.LogWarning("[Map01] No outpost guard to clone the commander from.", this); return; }
-            var instance = Instantiate(template.gameObject, BossSpawnPosition(template), template.transform.rotation, template.transform.parent);
-            instance.name = "Chỉ huy địch";
-            boss = instance.GetComponent<Map01EnemyController>();
-            boss.Configure(System.Array.Empty<Vector3>()); // Holds this position rather than resuming a patrol loop.
+            if(boss!=null||story.Layout==null||story.Layout.commanderPost==null||mission.Enemies.Length==0)return;
+            var template=mission.Enemies.Where(e=>e!=null&&e.name.StartsWith("Outpost guard "))
+                .OrderBy(e=>e.SaveId,System.StringComparer.Ordinal).FirstOrDefault();
+            if(template==null)return;
+            var marker=story.Layout.commanderPost;
+            var instance=Instantiate(template.gameObject,marker.position,marker.rotation,story.Layout.transform);
+            instance.name="Chỉ huy địch";
+            boss=instance.GetComponent<Map01EnemyController>();boss.Configure(System.Array.Empty<Vector3>());
+            boss.operationIndex=3;boss.carriesSupplyKey=false;boss.suppressOperationLoot=false;
             boss.BindMission(mission); // Before ConfigureAsBoss: binding resets damage to the balance baseline.
-            var archetype = BossArchetype();
-            var profile = archetype?.boss != null ? archetype.boss.ToProfile() : new BossProfile();
+            // The boss_commander archetype (Map01Content.json): his boss profile, and his health (600) rather
+            // than a guard's x3, so he lives long enough for the men he calls to arrive.
+            var archetype=mission.Bundle?.enemy_archetypes?.FirstOrDefault(a=>a!=null&&a.is_boss);
+            var profile=archetype?.boss!=null?archetype.boss.ToProfile():new BossProfile();
             boss.ConfigureAsBoss(profile);
-            // His health is the boss_commander archetype's (600), not a guard's ×3 (300): at 300 Nam's
-            // rifle took him from half health to dead in about a second, before anyone he called arrived.
-            var bossHealth = instance.GetComponent<Health>();
-            if (bossHealth != null && archetype != null && archetype.max_hp > 0) bossHealth.SetMaxHealth(archetype.max_hp);
+            var bossHealth=instance.GetComponent<Health>();
+            if(archetype!=null&&archetype.max_hp>0)bossHealth.SetMaxHealth(archetype.max_hp);
             mission.AddEnemy(boss);
-            // Relocation, grenades and the call for reinforcements (A04), from the same profile.
-            var behaviour = BossBehaviour.Attach(instance, boss, profile, new Map01Reinforcements(mission, template), seed: 1);
-            behaviour.Suspended = () => mission.Stopped;
-            if (bossHealth != null) bossHealth.onDied.AddListener(OnBossDown);
+            // Relocation, grenades, the pincer and the call for reinforcements (A04), from the same profile.
+            var behaviour=BossBehaviour.Attach(instance,boss,profile,new Map01Reinforcements(mission,template),seed:1);
+            behaviour.Suspended=()=>mission.Stopped;
+            bossHealth.onDied.AddListener(OnBossDown);
         }
-
-        /// <summary>The commander's archetype in Map01Content.json (boss_commander): health and boss profile.</summary>
-        private ForestArchetype BossArchetype()
-            => mission.Bundle?.enemy_archetypes?.FirstOrDefault(a => a != null && a.is_boss);
-
-        private Vector3 BossSpawnPosition(Map01EnemyController template)
+        public void CompleteBossDefeat(bool showRadio=true)
         {
-            // The template has already fallen in the real quest route. Keep the new boss
-            // clear of its corpse, while staying on the same camp's walkable NavMesh.
-            foreach (var offset in new[] { template.transform.forward, template.transform.right,
-                -template.transform.right, -template.transform.forward }) {
-                var candidate = template.transform.position + offset * 3.5f;
-                if (!NavMesh.SamplePosition(candidate, out var hit, 1f, NavMesh.AllAreas)) continue;
-                if (mission.Enemies.Any(e => e != null && e.GetComponent<Health>() != null && !e.Alive &&
-                    Vector3.Distance(e.transform.position, hit.position) < 2.5f)) continue;
-                return hit.position;
-            }
-            return template.transform.position;
+            if(!story.Progress.retreatReported)return;
+            if(Stage!=ReportBossStage || !story.CommanderObjectiveComplete)return;Stage=ExtractionStage;
+            Map01Extraction.Get(mission)?.Begin(showRadio&&!Map01SaveSystem.IsRestoring);
         }
-
-        public void CompleteBossDefeat(bool showRadio = true)
+        public void BeginBoarding(){if(Stage==ExtractionStage)Stage=BoardingStage;}
+        public void CompleteExtraction(){if(Stage==BoardingStage)Stage=CompleteStage;}
+        void OnBossDown()
         {
-            if (Stage != ReportBossStage) return;
-            Stage = ExtractionStage;
-            Map01Extraction.Get(mission)?.Begin(showRadio && !Map01SaveSystem.IsRestoring);
+            story.Progress.commanderKilled=true;
+            TryCompleteCommanderObjective(true);
         }
-
-        public void BeginBoarding() { if (Stage == ExtractionStage) Stage = BoardingStage; }
-        public void CompleteExtraction() { if (Stage == BoardingStage) Stage = CompleteStage; }
-
-        private void OnBossDown()
+        public void TryCompleteCommanderObjective(bool playDeath=false)
         {
-            if (Stage != BossStage) return;
-            Stage = ReportBossStage; // Transitional value kept for checkpoint compatibility.
-            if (Map01SaveSystem.IsRestoring) { CompleteBossDefeat(); return; }
-            var ending = GetComponent<Map01EndingCutscene>();
-            if (ending == null) ending = gameObject.AddComponent<Map01EndingCutscene>();
-            if (!ending.Begin(mission, boss)) CompleteBossDefeat();
+            if(Stage!=BossStage || !story.CommanderObjectiveComplete)return;
+            Stage=ReportBossStage;
+            // A body inspected after an earlier fight must not replay its death animation.
+            if(!playDeath){CompleteBossDefeat(!Map01SaveSystem.IsRestoring);return;}
+            if(Map01SaveSystem.IsRestoring||boss==null||!boss.gameObject.activeInHierarchy){CompleteBossDefeat(false);return;}
+            var ending=GetComponent<Map01EndingCutscene>();if(ending==null)ending=gameObject.AddComponent<Map01EndingCutscene>();
+            if(!ending.Begin(mission,boss))CompleteBossDefeat();
         }
     }
 }

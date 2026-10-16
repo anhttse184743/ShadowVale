@@ -1,0 +1,109 @@
+{
+  "items": [
+    {
+      "name": "RFK_WornWood",
+      "albedo": "Textures/RFK_WornWood_Albedo.png",
+      "normal": "Textures/RFK_WornWood_Normal.png",
+      "smoothness": 0.19999999999999996,
+      "metallic": 0
+    },
+    {
+      "name": "RFK_DarkWood",
+      "albedo": "Textures/RFK_DarkWood_Albedo.png",
+      "normal": "Textures/RFK_DarkWood_Normal.png",
+      "smoothness": 0.19999999999999996,
+      "metallic": 0
+    },
+    {
+      "name": "RFK_RepairWood",
+      "albedo": "Textures/RFK_RepairWood_Albedo.png",
+      "normal": "Textures/RFK_RepairWood_Normal.png",
+      "smoothness": 0.19999999999999996,
+      "metallic": 0
+    },
+    {
+      "name": "RFK_OliveSteel",
+      "albedo": "Textures/RFK_OliveSteel_Albedo.png",
+      "normal": "Textures/RFK_OliveSteel_Normal.png",
+      "smoothness": 0.43000000000000005,
+      "metallic": 0.42
+    },
+    {
+      "name": "RFK_DullIron",
+      "albedo": "Textures/RFK_DullIron_Albedo.png",
+      "normal": "Textures/RFK_DullIron_Normal.png",
+      "smoothness": 0.5,
+      "metallic": 0.7
+    },
+    {
+      "name": "RFK_OliveCanvas",
+      "albedo": "Textures/RFK_OliveCanvas_Albedo.png",
+      "normal": "Textures/RFK_OliveCanvas_Normal.png",
+      "smoothness": 0.06000000000000005,
+      "metallic": 0
+    },
+    {
+      "name": "RFK_KhakiCloth",
+      "albedo": "Textures/RFK_KhakiCloth_Albedo.png",
+      "normal": "Textures/RFK_KhakiCloth_Normal.png",
+      "smoothness": 0.07999999999999996,
+      "metallic": 0
+    },
+    {
+      "name": "RFK_Gauze",
+      "albedo": "Textures/RFK_Gauze_Albedo.png",
+      "normal": "Textures/RFK_Gauze_Normal.png",
+      "smoothness": 0.040000000000000036,
+      "metallic": 0
+    },
+    {
+      "name": "RFK_Hemp",
+      "albedo": "Textures/RFK_Hemp_Albedo.png",
+      "normal": "Textures/RFK_Hemp_Normal.png",
+      "smoothness": 0.050000000000000044,
+      "metallic": 0
+    },
+    {
+      "name": "RFK_Earth",
+      "albedo": "Textures/RFK_Earth_Albedo.png",
+      "normal": "Textures/RFK_Earth_Normal.png",
+      "smoothness": 0.19999999999999996,
+      "metallic": 0
+    },
+    {
+      "name": "RFK_Leaf",
+      "albedo": "Textures/RFK_Leaf_Albedo.png",
+      "normal": "Textures/RFK_Leaf_Normal.png",
+      "smoothness": 0.12,
+      "metallic": 0
+    },
+    {
+      "name": "RFK_GalvanizedTin",
+      "albedo": "Textures/RFK_GalvanizedTin_Albedo.png",
+      "normal": "Textures/RFK_GalvanizedTin_Normal.png",
+      "smoothness": 0.36,
+      "metallic": 0.55
+    },
+    {
+      "name": "RFK_FieldMap",
+      "albedo": "Textures/RFK_FieldMap_Albedo.png",
+      "normal": "Textures/RFK_FieldMap_Normal.png",
+      "smoothness": 0.09999999999999998,
+      "metallic": 0
+    },
+    {
+      "name": "RFK_BlackBakelite",
+      "albedo": "Textures/RFK_BlackBakelite_Albedo.png",
+      "normal": "Textures/RFK_BlackBakelite_Normal.png",
+      "smoothness": 0.52,
+      "metallic": 0
+    },
+    {
+      "name": "RFK_LanternAmber",
+      "albedo": "Textures/RFK_LanternAmber_Albedo.png",
+      "normal": "Textures/RFK_LanternAmber_Normal.png",
+      "smoothness": 0.64,
+      "metallic": 0
+    }
+  ]
+}
