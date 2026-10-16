@@ -19,7 +19,7 @@ yield return new ExitPlayMode();
 }
 [UnityTest,Timeout(300000)]public IEnumerator FullGameViewDepartureKeepsBoatVisibleAfterSceneLoad() {
 EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;
-SetPreviewResolution(960,540);yield return RecordFullTransfer(true);yield return new ExitPlayMode();
+SetPreviewResolution(1920,1080);yield return RecordFullTransfer(true);yield return new ExitPlayMode();
 }
 static IEnumerator RecordFullTransfer(bool gameViewOnly) {
 string folder=gameViewOnly?"Logs/GameViewTransfer":"Logs/FullTransfer";
@@ -64,7 +64,7 @@ Assert.Less(hull.GetComponent<MeshFilter>().sharedMesh.bounds.center.magnitude,.
 Assert.Less(Vector3.Distance(hull.transform.position,arrival.transform.position),.5f,"Hull pivot must travel with its actual geometry.");
 }
 if(Time.realtimeSinceStartup>=next) {
-next=Time.realtimeSinceStartup+.1f;bool rendered=false;System.Exception failure=null;
+next=Time.realtimeSinceStartup+.5f;bool rendered=false;System.Exception failure=null;
 string phase=arrival==null?extraction.CurrentPhase.ToString():"Map2-"+arrival.CurrentPhase;
 float elapsed=Time.realtimeSinceStartup-start;int number=frame++;
 pump.draw=()=>{try{if(gameViewOnly)ScreenCapture.CaptureScreenshot(folder+"/frames/"+number.ToString("D4")+".png");else Capture(camera,folder+"/frames/"+number.ToString("D4")+".png");entries.Add(number+","+elapsed+","+phase+","+hull.enabled+","+hull.forceRenderingOff+","+hull.bounds.center+","+hull.transform.position+","+hull.GetComponent<MeshFilter>().sharedMesh.name);}catch(System.Exception e){failure=e;}rendered=true;};
@@ -75,6 +75,10 @@ File.WriteAllLines(folder+"/frames.csv",entries);
 SceneManager.sceneUnloaded-=InvalidateSourceBoatRendering;
 Assert.IsTrue(complete,"The full departure must finish without skipping.");Assert.NotNull(arrival);Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);
 AssertDryPartySpawn(arrival);VerifyGameplayRifle(arrival.Passengers[0]);Assert.AreEqual(72,arrival.Passengers[0].GetComponent<Health>().Current);Assert.AreEqual(17,arrival.Passengers[0].GetComponent<PlayerCombat>().RoundsInMagazine);
+var session=Object.FindFirstObjectByType<Map02Mission>();
+float bindDeadline=Time.realtimeSinceStartup+10;
+while(session!=null&&!session.Ready&&Time.realtimeSinceStartup<bindDeadline)yield return null;
+Assert.NotNull(session);Assert.IsTrue(session.Ready);Assert.Greater(session.AvailableObjectiveCount,0);Assert.IsTrue(session.HasCheckpoint);
 if(gameViewOnly){ScreenCapture.CaptureScreenshot(folder+"/gameplay.png");yield return WaitGameSeconds(.3f);}else Capture(camera,folder+"/gameplay.png");
 }
 static void InvalidateSourceBoatRendering(Scene scene) {
