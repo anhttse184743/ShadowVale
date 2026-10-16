@@ -82,10 +82,12 @@ namespace ShadowVale.Map01 {
             return true;
         }
         public bool TryBegin(Map01EnemyController enemy) {
+            var watch=System.Diagnostics.Stopwatch.StartNew();
             if(!Qualifies(enemy,out var plan))return false;
+            if(!Map01InteractionWarmup.For(mission).BushReady){mission.Say("Đang chuẩn bị tương tác…",1);return false;}
             foreach(var who in new[]{"Nam","Enemy"})foreach(var clip in new[]{"GrabPull","StruggleLoop","Finish","Escape","Recovery"})
                 if(Map01CinematicPose.Clip(who+"_Bush_"+clip)==null)return false;
-            var cinematicAvatar=Resources.Load<Avatar>("Rescue/Story/Nam_Bush_Avatar");if(cinematicAvatar==null||!cinematicAvatar.isValid)return false;
+            var cinematicAvatar=Map01InteractionWarmup.Asset<Avatar>("Rescue/Story/Nam_Bush_Avatar");if(cinematicAvatar==null||!cinematicAvatar.isValid)return false;
             interactionCheckpoint=GetComponent<Map01SaveSystem>().CaptureInteractionCheckpoint();
             Victim=enemy;Timing=new Map01BushTiming();CurrentPhase=Phase.Pull;clock=0;armed=hit=false;
             mission.CloseGameplayPanel();GetComponent<Map01StoneThrow>()?.Cancel();GetComponent<Map01Scouting>()?.HoldBinoculars(false);DialogueVoice.StopAll();
@@ -115,7 +117,7 @@ namespace ShadowVale.Map01 {
                 .Select(t=>(t,neutral[t.name],t.localRotation)).ToArray();
             namPose=new Map01CinematicPose(nam,cinematicAvatar);enemyPose=new Map01CinematicPose(enemy.GetComponentInChildren<Animator>());
             hugHands=new Map01HugHands(nam);
-            GetComponent<Map01FoliageReveal>().ExtraFocus=enemy.transform;return true;
+            GetComponent<Map01FoliageReveal>().ExtraFocus=enemy.transform;Map01InteractionWarmup.Record("bush",watch.Elapsed.TotalMilliseconds);return true;
         }
         void Update() {
             if(!Active)return;
@@ -286,18 +288,23 @@ namespace ShadowVale.Map01 {
         void OnDisable(){if(Active&&mission!=null)End(hit,false);}
         void OnGUI() {
             if(!Active)return;
-            var style=new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter,fontSize=20,wordWrap=true};
-            GUI.color=new Color(0,0,0,.8f);GUI.DrawTexture(new Rect(Screen.width*.22f,Screen.height*.77f,Screen.width*.56f,Screen.height*.16f),Texture2D.whiteTexture);GUI.color=Color.white;
+            var matrix=GUI.matrix;var color=GUI.color;float scale=Mathf.Max(.65f,Mathf.Min(Screen.width/1600f,Screen.height/900f));
+            float width=Screen.width/scale,height=Screen.height/scale;GUI.matrix=Matrix4x4.Scale(Vector3.one*scale);
+            var style=new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter,fontSize=26,wordWrap=true};
+            var button=new GUIStyle(GUI.skin.button){fontSize=22};
+            try{
+            GUI.color=new Color(0,0,0,.8f);GUI.DrawTexture(new Rect(width*.18f,height*.76f,width*.64f,height*.18f),Texture2D.whiteTexture);GUI.color=Color.white;
             if(Paused) {
-                GUI.Label(new Rect(Screen.width*.25f,Screen.height*.78f,Screen.width*.5f,30),"TẠM DỪNG GIẰNG CO",style);
-                if(GUI.Button(new Rect(Screen.width/2-155,Screen.height*.84f,145,35),"Tiếp tục"))PauseInteraction(false);
-                if(GUI.Button(new Rect(Screen.width/2+10,Screen.height*.84f,145,35),"Về checkpoint"))RetryCheckpoint();return;
+                GUI.Label(new Rect(width*.25f,height*.78f,width*.5f,36),"TẠM DỪNG GIẰNG CO",style);
+                if(GUI.Button(new Rect(width/2-230,height*.84f,220,44),"Tiếp tục",button))PauseInteraction(false);
+                if(GUI.Button(new Rect(width/2+10,height*.84f,220,44),"Về checkpoint",button))RetryCheckpoint();return;
             }
-            GUI.Label(new Rect(Screen.width*.24f,Screen.height*.78f,Screen.width*.52f,32),CurrentPhase==Phase.Struggle?"CHUỘT TRÁI khi kim vào vùng sáng · "+Timing.Successes+"/3 · Lỗi "+Timing.Misses+"/2":"Kéo vào bụi — giữ im lặng",style);
+            GUI.Label(new Rect(width*.2f,height*.78f,width*.6f,42),CurrentPhase==Phase.Struggle?"CHUỘT TRÁI khi kim vào vùng sáng · "+Timing.Successes+"/3 · Lỗi "+Timing.Misses+"/2":CurrentPhase==Phase.Pull?"Nam đang chộp và kéo lính vào bụi…":CurrentPhase==Phase.Escape?"Lính đang vùng thoát!":"Đang kết liễu",style);
             if(CurrentPhase!=Phase.Struggle)return;
-            var bar=new Rect(Screen.width*.3f,Screen.height*.86f,Screen.width*.4f,18);GUI.color=new Color(.22f,.25f,.2f);GUI.DrawTexture(bar,Texture2D.whiteTexture);
+            var bar=new Rect(width*.3f,height*.86f,width*.4f,18);GUI.color=new Color(.22f,.25f,.2f);GUI.DrawTexture(bar,Texture2D.whiteTexture);
             GUI.color=new Color(.65f,.9f,.35f);GUI.DrawTexture(new Rect(bar.x+(Timing.Center-.12f)*bar.width,bar.y,bar.width*.24f,bar.height),Texture2D.whiteTexture);
             GUI.color=Color.white;GUI.DrawTexture(new Rect(bar.x+Timing.Cursor*bar.width-2,bar.y-5,4,bar.height+10),Texture2D.whiteTexture);
+            }finally{GUI.matrix=matrix;GUI.color=color;}
         }
     }
 }

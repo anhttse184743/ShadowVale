@@ -45,10 +45,10 @@ namespace ShadowVale.Map01
         private bool storyPlayerEnabled,storyCombatEnabled,storyActionsEnabled,storyCCEnabled,storySneaking;
         private Map01NamActions storyActions;
         private Vector3 interrogatorStart,interrogatorClose;
-        private AnimationClip interrogatorWalk;
+        private AnimationClip interrogatorWalk, executionAim;
         private bool canApproach;
         private Map01CinematicPose introNamPose;
-        private AnimationClip introNamIdle,introNamRadio;
+        private AnimationClip introNamIdle;
         private Vector3 introNamPosition;
         private Quaternion introNamRotation;
         private float introRadioAt,introReleaseAt;
@@ -96,13 +96,14 @@ namespace ShadowVale.Map01
             storyActions=Map01NamActions.For(mission);storyActionsEnabled=storyActions.enabled;storyActions.enabled=false;
             mission.ModernPlayer.enabled=mission.ModernCombat.enabled=false;
             captiveVisual=mission.hung.GetComponentInChildren<Map01HungVisual>();captiveVisual.BeginCaptivePresentation();
-            captivePose=new Map01CinematicPose(captiveVisual.actor);interrogatorPose=new Map01CinematicPose(enemy.GetComponentInChildren<Animator>());
-            if(CurrentMode==Mode.Intro){
+            var guardActor=enemy.GetComponentInChildren<Animator>();
+            executionAim=guardActor.runtimeAnimatorController?.animationClips.FirstOrDefault(c=>c.name=="Enemy_Rifle_AimIdle");
+            captivePose=new Map01CinematicPose(captiveVisual.actor);interrogatorPose=new Map01CinematicPose(guardActor);
+            if(CurrentMode==Mode.Intro || CurrentMode==Mode.Execution){
                 introNamPosition=mission.player.position;introNamRotation=mission.player.rotation;
                 introRadioAt=introReleaseAt=0;
                 var actor=mission.player.GetComponentInChildren<Animator>();
                 introNamIdle=ownerIdle();
-                introNamRadio=Resources.Load<Map01Extraction>("Cutscenes/Map01Extraction")?.radio;
                 introNamPose=new Map01CinematicPose(actor);
                 introNamPose.Sample(introNamIdle,0,true);
                 var lower=new[]{HumanBodyBones.Hips,HumanBodyBones.LeftUpperLeg,HumanBodyBones.LeftLowerLeg,HumanBodyBones.LeftFoot,HumanBodyBones.LeftToes,
@@ -115,7 +116,7 @@ namespace ShadowVale.Map01
         AnimationClip ownerIdle()=>rescue.Layout.namIdle??Resources.Load<AnimationClip>("Rescue/Nam_Shelter_Idle");
         public bool ShowIntro(Map01Rescue owner,Map01EnemyController overseer){
             if(IsPlaying||Map01CinematicPose.Clip("Hung_Captive_Recoil")==null||Map01CinematicPose.Clip("Enemy_Interrogate_Strike")==null)return false;
-            enemy=overseer;Begin(owner,Mode.Intro,Mathf.Max(12,owner.Layout.introSeconds));
+            enemy=overseer;Begin(owner,Mode.Intro,Mathf.Max(8,DialogueVoice.Length("m1_v2_rescue_approach_01")+DialogueVoice.Length("m1_v2_rescue_approach_02")+DialogueVoice.Length("m1_v2_rescue_approach_03")+1.8f));
             interrogatorStart=enemy.transform.position;
             var direction=Vector3.ProjectOnPlane(interrogatorStart-mission.hung.position,Vector3.up).normalized;
             var desired=mission.hung.position+direction*1.05f;
@@ -127,88 +128,71 @@ namespace ShadowVale.Map01
         public void ExecuteHostage(Map01Rescue owner,Map01EnemyController overseer,Map01EnemyController reporter=null){
             if(IsPlaying)return;
             enemy=overseer;Begin(owner,Mode.Execution,20);OwnStoryActors();
-            if(reporter!=null&&reporter!=overseer&&reporter.Alive)Voice().Play("m1_rescue_alarm");
-            else{storyBeat=1;Voice().Play("m1_rescue_execute_order");}
+            storyBeat=1;
+            Voice().Play(reporter!=null&&reporter!=overseer&&reporter.Alive?"m1_rescue_alarm":"m1_rescue_execute_order");
             overseer.FaceImmediate(mission.hung.position);
         }
         void UpdateStory(){
             if(CurrentMode==Mode.Intro){
-                if(storyBeat==0&&Elapsed>=2){Voice().Play("m1_rescue_interrogate");storyBeat=1;}
-                else if(storyBeat==1&&Elapsed>=6.4f&&!Voice().HasSpeech){introRadioAt=Elapsed;Voice().Play("m1_rescue_radio_report");storyBeat=2;}
-                else if(storyBeat==2&&!Voice().HasSpeech){Voice().Play("m1_rescue_radio_instruction");storyBeat=3;}
-                else if(storyBeat==3&&!Voice().HasSpeech){Voice().Play("m1_rescue_radio_ack");storyBeat=4;}
+                if(storyBeat==0&&Elapsed>=.7f){introRadioAt=Elapsed;Voice().Play("m1_v2_rescue_approach_01");storyBeat=2;}
+                else if(storyBeat==2&&!Voice().HasSpeech){Voice().Play("m1_v2_rescue_approach_02");storyBeat=3;}
+                else if(storyBeat==3&&!Voice().HasSpeech){Voice().Play("m1_v2_rescue_approach_03");storyBeat=4;}
                 else if(storyBeat==4&&!Voice().HasSpeech){introReleaseAt=Elapsed;storyBeat=5;}
                 else if(storyBeat==5&&Elapsed>=Mathf.Max(duration,introReleaseAt+.8f))Finish();
                 return;
             }
-            if(storyBeat==0&&!Voice().HasSpeech){storyBeat=1;Voice().Play("m1_rescue_execute_order");}
-            else if(storyBeat==1&&!Voice().HasSpeech){storyBeat=2;beatAt=Elapsed;}
-            else if(storyBeat==2&&Elapsed-beatAt>=rescue.Layout.executionCameraSeconds+rescue.Layout.executionAimSeconds){
+            if(storyBeat==1&&!Voice().HasSpeech){storyBeat=2;beatAt=Elapsed;}
+            else if(storyBeat==2&&Elapsed-beatAt>=Mathf.Max(.65f,rescue.Layout.executionAimSeconds)){
                 shot=true;impactAt=Elapsed;storyBeat=3;
                 enemy.FireAtHostage(captiveVisual.actor.GetBoneTransform(HumanBodyBones.Chest).position,0,true);
-                if(rescue.Layout.gunshot!=null)AudioSource.PlayClipAtPoint(rescue.Layout.gunshot,enemy.transform.position,.65f);
                 rescue.CompleteExecution();
             }else if(storyBeat==3&&Elapsed-impactAt>=3+rescue.Layout.executionHoldSeconds)Finish();
         }
         void RenderStory(){
-            if(CurrentMode==Mode.Intro)RenderIntroNam();
+            RenderIntroNam();
             bool walking=false;float travel=0;
-            if(CurrentMode==Mode.Intro&&canApproach){
-                float amount=Elapsed<5?Mathf.SmoothStep(0,1,Elapsed/2):1-Mathf.SmoothStep(0,1,(Elapsed-9)/3);
-                enemy.transform.position=Vector3.Lerp(interrogatorStart,interrogatorClose,amount);
-                walking=Elapsed<2||(Elapsed>9&&Elapsed<12);travel=Elapsed<2?Elapsed:Elapsed-9;
-            }
             enemy.FaceImmediate(mission.hung.position);
             float captiveTime=CurrentMode==Mode.Execution?(shot?Elapsed-impactAt:0):Mathf.Clamp(Elapsed-2,0,3);
             captivePose.Sample(Map01CinematicPose.Clip(shot?"Hung_Bound_Execution":"Hung_Captive_Recoil"),captiveTime);
             interrogatorPose.Sample(walking&&interrogatorWalk!=null?interrogatorWalk:Map01CinematicPose.Clip("Enemy_Interrogate_Strike"),walking?travel*.65f:CurrentMode==Mode.Intro?Mathf.Clamp(Elapsed-2,0,3):0,walking);
             captivePose.Ground(mission.hung.position.y);interrogatorPose.Ground(enemy.transform.position.y);captiveVisual.SampleCaptiveContacts();
-            if(CurrentMode==Mode.Execution&&storyBeat>=2)AimExecution();
-            var target=CurrentMode==Mode.Intro?mission.hung.position+Vector3.up*.95f:Vector3.Lerp(enemy.transform.position,mission.hung.position,.65f)+Vector3.up*.8f;
-            var close=ClearStoryView(target,3);
-            Vector3 desired;float blend;
-            if(CurrentMode==Mode.Intro){
-                var wide=ClearStoryView(target,4.5f);float detail=Mathf.SmoothStep(0,1,(Elapsed-2)/2);
-                desired=Vector3.Lerp(wide,close,detail);blend=Mathf.SmoothStep(0,1,Elapsed/2);
-            }else{desired=close;blend=storyBeat<2?0:Mathf.SmoothStep(0,1,(Elapsed-beatAt)/Mathf.Max(1,rescue.Layout.executionCameraSeconds));}
-            var position=Vector3.Lerp(cameraStart,desired,blend);
-            var rotation=Quaternion.Slerp(cameraRotation,Quaternion.LookRotation(target-position),blend);
-            float fov=Mathf.Lerp(cameraFov,50,blend);
-            if(CurrentMode==Mode.Intro){
-                // Return to Nam's view before his radio report and the commander's reply.
-                float returning=Mathf.SmoothStep(0,1,(Elapsed-5)/1.4f);
-                position=Vector3.Lerp(position,cameraStart,returning);rotation=Quaternion.Slerp(rotation,cameraRotation,returning);fov=Mathf.Lerp(fov,cameraFov,returning);
+            if(CurrentMode==Mode.Execution&&storyBeat>=2){
+                if(executionAim!=null)interrogatorPose.Sample(executionAim,Elapsed-beatAt,true);
+                AimExecution();
             }
-            rig.SetCinematicView(position,rotation,fov,1);
+            // Rescue approach and alarm remain in Nam's existing view. The execution
+            // happens at its real position off camera; never reveal the captive by a cut.
+            rig.SetCinematicView(cameraStart,cameraRotation,cameraFov,1);
         }
         void RenderIntroNam(){
             if(introNamPose==null||introNamIdle==null)return;
             mission.player.SetPositionAndRotation(introNamPosition,introNamRotation);
             float idleTime=Mathf.Repeat(Elapsed,Mathf.Max(.01f,introNamIdle.length));
-            if(storyBeat>=2&&introNamRadio!=null){
-                float talkTime=Elapsed-introRadioAt;
-                float weight=storyBeat==5?1-Mathf.SmoothStep(0,1,(Elapsed-introReleaseAt)/.8f):Mathf.SmoothStep(0,1,talkTime/.7f);
-                float total=DialogueVoice.Length("m1_rescue_radio_report")+DialogueVoice.Length("m1_rescue_radio_instruction")+DialogueVoice.Length("m1_rescue_radio_ack")+.4f;
-                float clipTime=Mathf.Min(introNamRadio.length-.02f,introNamRadio.length*talkTime/Mathf.Max(1,total));
-                introNamPose.SampleBlend(introNamIdle,idleTime,introNamRadio,clipTime,weight);
-                // Radio motion belongs to the torso/arms; both legs keep the standing idle.
-                foreach(var part in introLowerBody)part.bone.SetLocalPositionAndRotation(part.position,part.rotation);
-            }else{
-                introNamPose.Sample(introNamIdle,idleTime,true);
-                for(int i=0;i<introLowerBody.Length;i++){
-                    var t=introLowerBody[i].bone;introLowerBody[i]=(t,t.localPosition,t.localRotation);
-                }
+            introNamPose.Sample(introNamIdle,idleTime,true);
+            if(CurrentMode==Mode.Intro&&storyBeat>=2){
+                float weight=storyBeat==5?1-Mathf.SmoothStep(0,1,(Elapsed-introReleaseAt)/.8f):Mathf.SmoothStep(0,1,(Elapsed-introRadioAt)/.7f);
+                Map01ArmContact.Radio(mission.player.GetComponentInChildren<Animator>(),weight);
             }
             introNamPose.Ground(introNamPosition.y);
         }
         void AimExecution(){
-            var actor=enemy.GetComponentInChildren<Animator>();var rifle=actor.GetComponent<Map01Rifle>();if(rifle==null||rifle.weapon==null)return;
+            var actor=enemy.GetComponentInChildren<Animator>();
+            var rifle=actor.GetComponent<Map01Rifle>();var grip=actor.GetComponent<Map01EnemyGrip>();
+            if(rifle==null||rifle.weapon==null||grip==null)return;
+            grip.Apply();
             var target=captiveVisual.actor.GetBoneTransform(HumanBodyBones.Chest).position;
-            var chest=actor.GetBoneTransform(HumanBodyBones.Chest).position;var direction=(target-chest).normalized;
-            Map01BushTakedown.SolveArm(actor,HumanBodyBones.RightUpperArm,HumanBodyBones.RightLowerArm,HumanBodyBones.RightHand,chest+actor.transform.right*.13f+direction*.25f,1);
-            var hand=actor.GetBoneTransform(HumanBodyBones.RightHand);var muzzle=rifle.weapon.Muzzle;
-            if(muzzle!=null)for(int i=0;i<3;i++)hand.rotation=Quaternion.FromToRotation(muzzle.forward,(target-muzzle.position).normalized)*hand.rotation;
-            if(rifle.support!=null)Map01BushTakedown.SolveArm(actor,HumanBodyBones.LeftUpperArm,HumanBodyBones.LeftLowerArm,HumanBodyBones.LeftHand,rifle.support.position,-1);
+            var muzzle=rifle.weapon.Muzzle;var upper=actor.GetBoneTransform(HumanBodyBones.RightUpperArm);
+            if(muzzle!=null&&upper!=null){
+                var neutral=upper.rotation;
+                // Rotating the arm also moves the muzzle: solve again after each
+                // grip update instead of leaving the barrel pointed past Hung.
+                for(int pass=0;pass<5;pass++){
+                    var correction=Quaternion.FromToRotation(muzzle.forward,(target-muzzle.position).normalized);
+                    upper.rotation=Quaternion.RotateTowards(neutral,correction*upper.rotation,75);
+                    grip.Apply();
+                    if(Vector3.Angle(muzzle.forward,target-muzzle.position)<1)break;
+                }
+            }
         }
         Vector3 ClearStoryView(Vector3 target,float radius){
             foreach(var side in new[]{new Vector3(-1,.65f,-1),new Vector3(1,.65f,-1),new Vector3(-1,.7f,1),new Vector3(1,.7f,1)}){
@@ -516,9 +500,10 @@ namespace ShadowVale.Map01
             var color=GUI.color;int depth=GUI.depth;GUI.depth=-90;GUI.color=Color.black;
             GUI.DrawTexture(new Rect(0,0,Screen.width,Screen.height*.09f),Texture2D.whiteTexture);
             GUI.DrawTexture(new Rect(0,Screen.height*.91f,Screen.width,Screen.height*.09f),Texture2D.whiteTexture);
-            GUI.color=Color.white;GUI.Label(new Rect(Screen.width-245,14,240,30),"Giữ Esc 1 giây để bỏ qua");GUI.color=color;GUI.depth=depth;
-            if(storyVoice!=null&&!string.IsNullOrEmpty(storyVoice.CurrentCaption)){
-                var subtitle=new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter,wordWrap=true,fontSize=Mathf.RoundToInt(Screen.height*.026f)};
+            var skipStyle=new GUIStyle(GUI.skin.label){fontSize=Mathf.RoundToInt(Screen.height*.022f),alignment=TextAnchor.MiddleRight};
+            GUI.color=Color.white;GUI.Label(new Rect(Screen.width*.65f,Screen.height*.014f,Screen.width*.33f,Screen.height*.05f),"Giữ Esc 1 giây để bỏ qua",skipStyle);GUI.color=color;GUI.depth=depth;
+            if(CurrentMode==Mode.Intro&&storyVoice!=null&&!string.IsNullOrEmpty(storyVoice.CurrentCaption)){
+                var subtitle=new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter,wordWrap=true,fontSize=Mathf.RoundToInt(Screen.height*.031f)};
                 GUI.color=Color.white;GUI.Label(new Rect(Screen.width*.12f,Screen.height*.91f,Screen.width*.76f,Screen.height*.08f),storyVoice.CurrentCaption,subtitle);GUI.color=color;
             }
         }

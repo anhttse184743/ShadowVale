@@ -27,12 +27,20 @@ namespace ShadowVale.Map01 {
         public bool HasSpeech=>pending.Count>0 || source!=null && (source.isPlaying || paused);
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void Reset(){catalog=null;active=null;}
-        public static Line Find(string id) {
+        static Line Metadata(string id) {
             if(catalog==null) {
                 var json=Resources.Load<TextAsset>("Dialogue/voice-catalog");
                 catalog=json!=null?JsonUtility.FromJson<Catalog>(json.text):new Catalog{entries=Array.Empty<Line>()};
             }
-            var line=catalog.entries.FirstOrDefault(e=>e.id==id);
+            return catalog.entries.FirstOrDefault(e=>e.id==id);
+        }
+        public static System.Collections.IEnumerator Preload(string id){
+            var line=Metadata(id);if(line==null||line.clip!=null)yield break;
+            var request=Resources.LoadAsync<AudioClip>(line.resource);yield return request;line.clip=request.asset as AudioClip;
+            if(line.clip!=null)line.clip.LoadAudioData();
+        }
+        public static Line Find(string id) {
+            var line=Metadata(id);
             if(line!=null && line.clip==null)line.clip=Resources.Load<AudioClip>(line.resource);
             return line;
         }

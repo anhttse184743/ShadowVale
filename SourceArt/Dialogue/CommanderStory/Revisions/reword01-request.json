@@ -1,0 +1,15 @@
+{
+  "status": "submitted",
+  "targetId": "m1_story_rescue_order_02",
+  "text": "Có mấy tên lính canh?",
+  "voice": "Brodie",
+  "model": "eleven_v3",
+  "languageCode": "vi",
+  "speed": 0.9,
+  "name": "m1_story_rescue_order_02_vi_reword01",
+  "maximumCredits": 1,
+  "reason": "User asked to replace bao nhieu after repeated pronunciation errors. Replace subtitle and voice together, preserve other lines.",
+  "taskId": "77de51bc-e968-4cbf-aa23-bab3dde1eb82",
+  "approvedCeiling": 1,
+  "creditsSpent": 1
+}

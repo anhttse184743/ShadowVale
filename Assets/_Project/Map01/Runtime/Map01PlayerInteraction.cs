@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -135,6 +135,7 @@ namespace ShadowVale.Map01
         /// </summary>
         private void HandleInteractKey()
         {
+            if (GetComponent<Map01Story>()?.TryInteract() == true) return;
             if (quest.HungInRange) quest.TalkToHung();
             else if (Nearby != null) Interact(Nearby);
         }
@@ -142,9 +143,9 @@ namespace ShadowVale.Map01
         /// <summary>Grants the point's items and starts its restock timer; returns what was taken.</summary>
         private string TakeItems(ForestPoint point)
         {
-            foreach (var item in point.items) inventory.Add(item.item_id, item.count);
+            foreach (var item in point.items) if(item.count>0)inventory.Add(item.item_id, item.count);
             point.MarkLooted();
-            string taken = "Nhận " + string.Join(", ", point.items.Select(i => i.count + " " + ForestInventory.Name(i.item_id).ToLowerInvariant())) + ".";
+            string taken = "Nhận " + string.Join(", ", point.items.Where(i=>i.count>0).Select(i => i.count + " " + ForestInventory.Name(i.item_id).ToLowerInvariant())) + ".";
             return point.restockSeconds > 0 ? taken + $" Tiếp tế lại sau {point.restockSeconds:0} giây." : taken;
         }
 

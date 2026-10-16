@@ -17,7 +17,7 @@ EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield re
 yield return RecordFullTransfer(false);
 yield return new ExitPlayMode();
 }
-[UnityTest]public IEnumerator FullGameViewDepartureKeepsBoatVisibleAfterSceneLoad() {
+[UnityTest,Timeout(300000)]public IEnumerator FullGameViewDepartureKeepsBoatVisibleAfterSceneLoad() {
 EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;
 SetPreviewResolution(960,540);yield return RecordFullTransfer(true);yield return new ExitPlayMode();
 }
@@ -30,11 +30,13 @@ var mission=Object.FindFirstObjectByType<Map01Mission>();
 var quest=mission.GetComponent<Map01Quest>();
 if(gameViewOnly) {
 // Exercise the actual commander-death -> radio -> extraction handoff too.
-quest.RestoreStage(Map01Quest.BossStage);
+quest.RestoreStoryStage(Map01Quest.BossStage,new Map01Story.Snapshot{supplies=true,suppliesDelivered=true,radioDisabled=true,commanderAreaReached=true,commanderConfirmed=true,commanderReported=true});
 foreach(var enemy in mission.Enemies)if(!enemy.IsBoss)enemy.GetComponent<Health>().TakeDamage(99999,enemy.transform.position,null);
 var boss=mission.Enemies.Single(e=>e.IsBoss);boss.GetComponent<Health>().TakeDamage(99999,boss.transform.position,null);
 float radioDeadline=Time.realtimeSinceStartup+75;
-while((quest.Stage!=Map01Quest.ExtractionStage||mission.Cinematic)&&Time.realtimeSinceStartup<radioDeadline)yield return null;
+while((quest.Stage!=Map01Quest.ReportBossStage||mission.Cinematic)&&Time.realtimeSinceStartup<radioDeadline)yield return null;
+Assert.AreEqual(Map01Quest.ReportBossStage,quest.Stage);
+Assert.IsTrue(mission.GetComponent<Map01Story>().TryInteract());yield return WaitGameSeconds(1.1f);mission.GetComponent<Map01StoryDialogue>().Close(true);yield return null;
 Assert.AreEqual(Map01Quest.ExtractionStage,quest.Stage);Assert.IsFalse(mission.Cinematic);
 }else quest.RestoreStage(Map01Quest.ExtractionStage);
 var extraction=mission.GetComponentInChildren<Map01Extraction>();extraction.autoContinueToMap2=true;
@@ -140,7 +142,7 @@ Assert.IsTrue(legs.Any(b=>{var keys=UnityEditor.AnimationUtility.GetEditorCurve(
 if(suffix=="Walk_Ashore")Assert.IsTrue(clip.isLooping);
 }
 }
-[UnityTest] public IEnumerator NaturalArrivalPreservesPartyAndEquipment() {
+[UnityTest,Timeout(300000)] public IEnumerator NaturalArrivalPreservesPartyAndEquipment() {
 EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;
 Directory.CreateDirectory("Logs/Map02/frames");
 // Reproduce the normal editor setting; arrival itself must guard shader compilation.

@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -127,6 +127,7 @@ namespace ShadowVale.Map01
         }
         private void HudIcon(Rect r, string id, bool dim = false)
         {
+            if(id==Map01Story.KeyItem||id==Map01Story.CargoItem){var texture=id==Map01Story.KeyItem?Map01OperationHints.KeyIcon:Map01OperationHints.CargoIcon;if(texture!=null){GUI.DrawTexture(r,texture,ScaleMode.ScaleToFit);return;}}
             if (ForestInventory.IsWeapon(id) && hudWeapons != null) {
                 // Use the text-free inventory previews from the approved art board.
                 float left = id == "rifle_standard" ? 57 : 240;
@@ -346,12 +347,15 @@ namespace ShadowVale.Map01
         {
             float areaWidth = mission.InventoryOpen ? InventoryRect(width).x - 56 : Mathf.Min(770, width - 100);
             float x = mission.InventoryOpen ? 28 : (width - areaWidth) / 2;
-            if (Time.time < mission.DialogueUntil) {
+            if (Time.time < mission.DialogueUntil && !string.IsNullOrEmpty(mission.Dialogue)) {
                 var r = new Rect(x, height - 289, areaWidth, 86); HudPanel(r);
                 GUI.Label(new Rect(r.x + 18, r.y + 12, r.width - 36, r.height - 20), mission.Dialogue, hudBody);
             }
             var nearby = interaction.Nearby;
-            if (quest.HungInRange && !mission.Stopped && !mission.InventoryOpen)
+            var storyPrompt = GetComponent<Map01Story>()?.Prompt;
+            if (!string.IsNullOrEmpty(storyPrompt) && !mission.Stopped && !mission.InventoryOpen)
+                GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), storyPrompt, hudBody);
+            else if (quest.HungInRange && !mission.Stopped && !mission.InventoryOpen)
                 GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), quest.HungPrompt, hudBody);
             else if (nearby != null && !nearby.used && !mission.Stopped && !mission.InventoryOpen)
                 GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), "[E] " + nearby.label, hudBody);

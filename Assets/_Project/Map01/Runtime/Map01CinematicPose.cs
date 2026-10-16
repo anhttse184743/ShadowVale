@@ -24,11 +24,11 @@ namespace ShadowVale.Map01 {
         AnimationClipPlayable secondary;
         AnimationMixerPlayable mixer;
         bool mixed;
-        public Map01CinematicPose(Animator target,Avatar poseAvatar=null) {
+        public Map01CinematicPose(Animator target,Avatar poseAvatar=null,bool skinGrounding=true) {
             actor=target;originalAvatar=target.avatar;controller=actor.runtimeAnimatorController;rootMotion=actor.applyRootMotion;culling=actor.cullingMode;
             localPosition=actor.transform.localPosition;localRotation=actor.transform.localRotation;
-            layers=new float[actor.layerCount];for(int i=0;i<layers.Length;i++)layers[i]=actor.GetLayerWeight(i);
-            contact=new Map01SkinContact(actor);skins=actor.GetComponentsInChildren<SkinnedMeshRenderer>();
+            layers=new float[controller!=null?actor.layerCount:0];for(int i=0;i<layers.Length;i++)layers[i]=actor.GetLayerWeight(i);
+            contact=skinGrounding?Map01InteractionWarmup.Contact(actor):null;skins=actor.GetComponentsInChildren<SkinnedMeshRenderer>();
             actor.runtimeAnimatorController=null;actor.applyRootMotion=false;actor.cullingMode=AnimatorCullingMode.AlwaysAnimate;
             if(poseAvatar!=null&&poseAvatar!=actor.avatar)BindAvatar(poseAvatar);
             graph=PlayableGraph.Create("Map 1 rescue pose");graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);graph.Play();
@@ -81,13 +81,14 @@ namespace ShadowVale.Map01 {
             if(actor.avatar!=originalAvatar)BindAvatar(originalAvatar);
             actor.runtimeAnimatorController=controller;actor.applyRootMotion=rootMotion;actor.cullingMode=culling;
             actor.transform.SetLocalPositionAndRotation(localPosition,localRotation);actor.Rebind();if(actor.isActiveAndEnabled)actor.Update(0);
-            for(int i=0;i<Mathf.Min(layers.Length,actor.layerCount);i++)actor.SetLayerWeight(i,layers[i]);
+            if(controller!=null)for(int i=0;i<Mathf.Min(layers.Length,actor.layerCount);i++)actor.SetLayerWeight(i,layers[i]);
         }
         public void Ground(float floor) {
+            if(contact==null)return;
             float sole=contact.LowestY();
             if(float.IsInfinity(sole))foreach(var skin in skins)if(skin!=null){skin.BakeMesh(baked);foreach(var p in baked.vertices)sole=Mathf.Min(sole,skin.transform.TransformPoint(p).y);}
             if(!float.IsInfinity(sole))actor.transform.position+=Vector3.up*Mathf.Clamp(floor-sole,-.4f,.4f);
         }
-        public static AnimationClip Clip(string name)=>Resources.Load<AnimationClip>("Rescue/Story/"+name);
+        public static AnimationClip Clip(string name)=>Map01InteractionWarmup.Asset<AnimationClip>("Rescue/Story/"+name);
     }
 }

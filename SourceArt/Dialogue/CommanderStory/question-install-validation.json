@@ -1,0 +1,10 @@
+{
+  "id": "m1_story_rescue_order_02",
+  "text": "Có mấy tên lính canh?",
+  "pronunciationReview": "approved_by_user",
+  "metaPresent": true,
+  "waveHashMatches": true,
+  "subtitleMatches": true,
+  "runtimePlaybackTest": "interrupted: Unity Editor shut down before final results were written",
+  "totalCreditsIncludingApprovedRevisions": 38
+}

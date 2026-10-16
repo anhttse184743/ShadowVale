@@ -1,3 +1,5 @@
+> Cập nhật Map 1 ngày 15/10/2026: hướng dẫn dưới đây ghi đợt thoại cũ. Tuyến giao nhiệm vụ qua chỉ huy, tám câu bổ sung, chữ/camera mới và độ phủ hiện tại xem `Docs/Map01_DialogueVoiceCoverage.md` cùng `Docs/Map01_RemainingDialogue.md`.
+
 # Bộ thoại tiếng Việt
 
 26 câu thoại bổ sung cho Map 1 và đoạn cập bến Map 2. Giọng Nam, Hùng, chỉ huy và lính địch được phân riêng. Giữ nguyên script mở đầu; giọng chỉ huy và Nam trong phần mở đầu đã đổi sang cùng giọng ở phần sau. Không đọc thành tiếng các thông báo lưu game, lỗi kỹ thuật, inventory hoặc tên phím.

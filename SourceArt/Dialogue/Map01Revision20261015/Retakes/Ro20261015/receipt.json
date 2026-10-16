@@ -1,0 +1,38 @@
+{
+  "taskId": "1865e989-b795-4b98-b840-fac4cf81099e",
+  "text": "Tôi đã nghe rõ. Rõ, thưa chỉ huy.",
+  "voice": "Brodie",
+  "model": "eleven_v3",
+  "language": "vi",
+  "speed": 0.85,
+  "duration": 2.24,
+  "sourceSha256": "acfc74770cdee70bc20733b08a596bc9cedeec5ee1ec059abc17ac8ae4621447",
+  "voicedRegions": [
+    [
+      0.11,
+      0.87
+    ],
+    [
+      1.26,
+      1.55
+    ],
+    [
+      1.62,
+      2.18
+    ]
+  ],
+  "pronunciationReview": "user_approved",
+  "creditsUsedThisInvocation": 1,
+  "totalScopeCreditsUsed": 23,
+  "approvedScopeCeiling": 23,
+  "cropSeconds": [
+    1.22,
+    1.6
+  ],
+  "auditionFile": "ro-moi.wav",
+  "auditionSha256": "cad689268b4f64b4dee1c584580e81c1aa379c8aafebf87e6eb059cdc8d10b3c",
+  "gameInstalled": true,
+  "approval": "Đã đúng, thay vào ba đoạn đang dùng",
+  "resource": "Dialogue/VI/m1_v2_rescue_approach_03_clean",
+  "guidPreserved": true
+}
