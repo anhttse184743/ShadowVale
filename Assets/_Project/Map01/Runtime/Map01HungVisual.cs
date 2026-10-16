@@ -44,6 +44,8 @@ namespace ShadowVale.Map01
         private GameObject rope;
         private Mesh soleMesh;
         private Map01SkinContact skinContact;
+        private AnimatorCullingMode rescueCulling;
+        private bool rescueContactActive;
         private readonly System.Collections.Generic.List<Vector3> soleVertices = new System.Collections.Generic.List<Vector3>();
 
         /// <summary>True while the rope is shown on his wrists (held at the jetty).</summary>
@@ -100,6 +102,16 @@ namespace ShadowVale.Map01
             if (rope != null && rope.activeSelf) BindWrists();
         }
 
+        public void BeginRescueContacts()
+        {
+            if(mission==null||down)return;
+            if(!rescueContactActive){rescueCulling=actor.cullingMode;rescueContactActive=true;}
+            actor.cullingMode=AnimatorCullingMode.AlwaysAnimate;
+            actor.Update(0);AnchorToGround();
+        }
+        private void RestoreContactCulling(){if(rescueContactActive&&actor!=null)actor.cullingMode=rescueCulling;rescueContactActive=false;}
+        private void OnDisable(){RestoreContactCulling();}
+
         private void AnchorToGround()
         {
             // Anchor the calibrated sole plane to actual terrain or the raised base floor.
@@ -138,6 +150,7 @@ namespace ShadowVale.Map01
         }
         public void FinishRescueRise()
         {
+            RestoreContactCulling();
             RestoreAfterCinematic();
         }
         /// <summary>Restore this quest stage immediately; Rebind alone falls back to the captive kneeling state.</summary>

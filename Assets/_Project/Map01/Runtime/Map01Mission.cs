@@ -42,6 +42,7 @@ namespace ShadowVale.Map01
         public PlayerController ModernPlayer { get; private set; }
         public PlayerCombat ModernCombat { get; private set; }
         public Health ModernHealth { get; private set; }
+        public ShadowVale.Gameplay.Skills.PlayerSkills Skills { get; private set; }
         public Map01EnemyController[] Enemies { get; private set; } = Array.Empty<Map01EnemyController>();
         /// <summary>Foliage the guards cannot see through.</summary>
         public Map01SightCover SightCover { get; private set; }
@@ -119,6 +120,9 @@ namespace ShadowVale.Map01
             Map01StoneSites.Attach(this);
             Map01CampChests.Attach(this); // An iron chest in each enemy camp (Map01ItemCatalog).
             hp = Settings.playerHP; stamina = Settings.stamina;
+            Skills = player.GetComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
+            if (Skills == null) Skills = player.gameObject.AddComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
+            Skills.LevelChanged += OnSkillLevelChanged;
             inventory.SeedStartingLoadout(Settings.startingStones);
             // Added at runtime like the scouting order; guards ask it from their first Update.
             SightCover = GetComponent<Map01SightCover>();
@@ -146,6 +150,7 @@ namespace ShadowVale.Map01
             {
                 ModernCombat.DrawsOwnWeaponHud = true; // Map01Hud.Combat shows the slots on keys 1-4.
                 ModernCombat.SlotPressed = inventory.OnSlotKey; // 1 long gun, 2 pistol, 3 knife, 4 next throwable (Map01Inventory.Bag).
+                ModernCombat.GunKilled += OnGunKilled;
                 var stones = GetComponent<Map01StoneThrow>(); // Added by Map01PlayerInteraction.Awake.
                 ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.SuppressFire
                     && !scouting.Binoculars && !stones.Aiming; // Hands are on the binoculars or a stone, not the rifle.
@@ -188,6 +193,8 @@ namespace ShadowVale.Map01
             }
             foreach (var enemy in Enemies) enemy.BindMission(this);
             Map01OpeningCutscene.Attach(this);
+            GetComponent<Map01Story>()?.Initialize();
+            GetComponent<Map01Quest>()?.EnsureCommander();
             Map01HungVisual.Attach(this);
             if(GetComponent<Map01FoliageReveal>()==null)gameObject.AddComponent<Map01FoliageReveal>();
             if(GetComponent<Map01BushTakedown>()==null)gameObject.AddComponent<Map01BushTakedown>();
@@ -239,13 +246,19 @@ namespace ShadowVale.Map01
             var speech=DialogueVoice.For(gameObject);
             speech.CanSpeak=()=>!Cinematic&&!ForestMenu.Visible;
             speech.LineStarted=line=>{
-                Dialogue=line.caption;DialogueUntil=Time.time+line.clip.length+.2f;
+                Dialogue=GameplayCaption(line.caption);DialogueUntil=Time.time+line.clip.length+.2f;
                 if(line.caption.StartsWith("Hùng") && hung!=null)hung.GetComponentInChildren<Map01HungVisual>()?.Speak(line.clip.length+.2f);
             };
-            Dialogue=text;DialogueUntil=Time.time+seconds;
+            Dialogue=GameplayCaption(text);DialogueUntil=Time.time+seconds;
             if(string.IsNullOrEmpty(text))speech.Stop();
             float spoken=string.IsNullOrEmpty(text)?0:speech.SpeakText(text);
             if(!string.IsNullOrEmpty(text))DialogueUntil=Time.time+Mathf.Max(seconds,spoken+.25f);
+        }
+        public static string GameplayCaption(string text)
+        {
+            if(string.IsNullOrEmpty(text))return text;
+            // Keep objective/interaction notices; ambient character speech is audio only.
+            return text.StartsWith("Lính")||text.StartsWith("Sĩ quan")||text.StartsWith("Hùng:")||text.StartsWith("Hùng (")||text.StartsWith("Nam:")?null:text;
         }
         public void ReleaseForNextMap() {
             GetComponent<DialogueVoice>()?.Stop();
@@ -343,7 +356,11 @@ namespace ShadowVale.Map01
             ModernHealth?.RestoreHealth(hp);
         }
 
-        private void Restart() { Time.timeScale = 1; UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex); }
+        private void Restart()
+        {
+            if (GetComponent<Map01SaveSystem>().RestartCurrentMission()) return;
+            Time.timeScale = 1; UnityEngine.SceneManagement.SceneManager.LoadScene(UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex);
+        }
 
         private void Update()
         {
@@ -362,6 +379,27 @@ namespace ShadowVale.Map01
             else if (kb.enterKey.wasPressedThisFrame && scouting != null && scouting.FailedRun) scouting.Restart();
         }
 
+        private void OnGunKilled(GameObject target)
+        {
+            // A lethal boss hit can start a cinematic inside Health.TakeDamage, before this callback.
+            if (Map01SaveSystem.IsRestoring || Skills.MissionFailed || (ModernHealth != null && ModernHealth.IsDead)
+                || target.GetComponent<Map01EnemyController>() == null) return;
+            Skills.Award(ShadowVale.Gameplay.Skills.SkillKind.Shooting);
+        }
+        private void OnSkillLevelChanged(ShadowVale.Gameplay.Skills.SkillKind kind, int level)
+        {
+            string name = kind == ShadowVale.Gameplay.Skills.SkillKind.Shooting ? "Bắn súng"
+                : kind == ShadowVale.Gameplay.Skills.SkillKind.Stealth ? "Lén lút" : "Kỹ thuật";
+            Say($"{name} đạt cấp {level}! Xem thông số trong Túi đồ → Kĩ Năng.", 4);
+        }
+        private void OnDestroy()
+        {
+            if (Skills != null) Skills.LevelChanged -= OnSkillLevelChanged;
+            if (ModernCombat != null) {
+                ModernCombat.GunKilled -= OnGunKilled;
+                if (ModernCombat.SlotPressed?.Target is Map01Inventory) ModernCombat.SlotPressed = null;
+            }
+        }
         private void OnDisable() { Time.timeScale = 1; }
     }
 }

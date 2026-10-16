@@ -1,0 +1,20 @@
+{
+  "kind": "audio",
+  "taskId": "25d48ec1-0a91-4c0f-8e6c-dcaa8181ef5e",
+  "prompt": "m1_story_rescue_order_02_vi_fix01",
+  "meta": {
+    "durationSeconds": 1.44
+  },
+  "text": "Có bao nhiêu lính canh?",
+  "model": "eleven_v3",
+  "voice": "Brodie",
+  "languageCode": "vi",
+  "speed": 0.9,
+  "creditCeiling": 1,
+  "creditsSpent": 1,
+  "status": "rejected_by_user",
+  "sourceSha256": "380c999871853a3355b0475f033c1fa5ac8467f33f5e525cd742c88e41daf664",
+  "cleanSha256": "6ed87a1a0965e86db3901ee72faa3c0e185b2037a1169c1202c120a75dc09271",
+  "duration": 1.44,
+  "reason": "The word bao is still pronounced incorrectly. Do not publish this take."
+}

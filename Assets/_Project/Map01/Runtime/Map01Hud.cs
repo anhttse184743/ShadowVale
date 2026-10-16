@@ -140,6 +140,7 @@ namespace ShadowVale.Map01
         }
         private void HudIcon(Rect r, string id, bool dim = false)
         {
+            if(id==Map01Story.KeyItem||id==Map01Story.CargoItem){var texture=id==Map01Story.KeyItem?Map01OperationHints.KeyIcon:Map01OperationHints.CargoIcon;if(texture!=null){GUI.DrawTexture(r,texture,ScaleMode.ScaleToFit);return;}}
             if ((id == "rifle_standard" || id == "knife") && hudWeapons != null) {
                 // Use the text-free inventory previews from the approved art board.
                 float left = id == "rifle_standard" ? 57 : 240;
@@ -314,12 +315,17 @@ namespace ShadowVale.Map01
             if (mission.BenchOpen) return; // The bench screen shows its own messages (Map01Hud.Craft.cs).
             float areaWidth = mission.InventoryOpen ? InventoryRect(width).x - 56 : Mathf.Min(770, width - 100);
             float x = mission.InventoryOpen ? 28 : (width - areaWidth) / 2;
-            if (Time.time < mission.DialogueUntil) {
+            if (Time.time < mission.DialogueUntil && !string.IsNullOrEmpty(mission.Dialogue)) {
                 var r = new Rect(x, height - 289, areaWidth, 86); HudPanel(r);
                 GUI.Label(new Rect(r.x + 18, r.y + 12, r.width - 36, r.height - 20), mission.Dialogue, hudBody);
             }
             var nearby = interaction.Nearby;
-            if (quest.HungInRange && !mission.Stopped && !mission.InventoryOpen)
+            var storyPrompt = GetComponent<Map01Story>()?.Prompt;
+            if (nearby != null && !nearby.used && nearby.kind == ForestPointKind.Workbench && !mission.Stopped && !mission.InventoryOpen)
+                GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), "[E] " + nearby.label, hudBody);
+            else if (!string.IsNullOrEmpty(storyPrompt) && !mission.Stopped && !mission.InventoryOpen)
+                GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), storyPrompt, hudBody);
+            else if (quest.HungInRange && !mission.Stopped && !mission.InventoryOpen)
                 GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), quest.HungPrompt, hudBody);
             else if (nearby != null && !nearby.used && !mission.Stopped && !mission.InventoryOpen)
                 GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), "[E] " + nearby.label, hudBody);
@@ -330,12 +336,12 @@ namespace ShadowVale.Map01
 
         private void DrawMap(float width, float height)
         {
-            float size = Mathf.Min(650, height - 180);
-            var frame = new Rect((width - size - 40) / 2, 65, size + 40, size + 100);
+            float size = Mathf.Min(650, height - 200);
+            var frame = new Rect((width - size - 40) / 2, 65, size + 40, size + 120);
             HudPanel(frame);
             GUI.Label(new Rect(frame.x + 20, frame.y + 10, size, 35), "BẢN ĐỒ ĐỊA HÌNH", hudCenter);
             minimap.Draw(new Rect(frame.x + 20, frame.y + 50, size, size), true, hudSmall);
-            GUI.Label(new Rect(frame.x + 20, frame.yMax - 43, size, 40), "Bạn ▲   Đồng đội ●   Mục tiêu ◇   Địch △   ·   M / Esc Đóng", hudSmall);
+            GUI.Label(new Rect(frame.x + 20, frame.yMax - 62, size, 56), "Nhà xanh: căn cứ A · Vùng tối: chưa khám phá\nBạn ▲  Đồng đội ●  Mục tiêu ◇  Địch △", hudSmall);
         }
         private Vector2 MapPosition(Vector3 p, Rect r) => new Vector2(r.x + Mathf.InverseLerp(mission.mapMin.x, mission.mapMax.x, p.x) * r.width, r.yMax - Mathf.InverseLerp(mission.mapMin.y, mission.mapMax.y, p.z) * r.height);
         private static void Panel(Rect rect) { var old = GUI.color; GUI.color = new Color(.035f, .07f, .06f, .94f); GUI.DrawTexture(rect, Texture2D.whiteTexture); GUI.color = old; }

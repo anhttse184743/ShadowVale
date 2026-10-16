@@ -138,6 +138,21 @@ Theo bản thiết kế "Trang bị" đã duyệt (16/10/2026), bỏ hẳn tay k
 
 ## Địa hình bao quanh
 
+Nền rừng Map 1 không còn các dải đường mòn vẽ sẵn trong `Map01Detailed/GroundTexture.asset`.
+Màu đất rừng loang tự nhiên, bờ sông chuyển mềm sang nền rừng; cầu, dốc vào hầm, collider và NavMesh giữ nguyên.
+Có thể dựng lại bằng **ShadowVale > Map 1 > Remove painted forest trails**; mái hầm dùng chung texture nên tự đồng bộ.
+
+Mái hầm căn cứ A khớp cao độ 4,20 m và dùng chung vật liệu, UV, màu đỉnh với lưới đất quanh hầm.
+`ShelterGroundRoof.asset` phủ đúng lỗ địa hình 16 × 14 m; tấm mái kín nối chồng lên tường,
+các vách hồi cửa nối khung với mặt tường mà giữ lối đi. Khi chỉnh lại đất/hầm, mở Map 1 và chạy
+**ShadowVale > Environment > Seal shelter and match ground** để dựng lại các mesh trong prefab `ShelterShell`.
+Công cụ này dành riêng cho vị trí hầm hiện tại trong Map 1, không thay đổi terrain hoặc NavMesh.
+
+Camera góc nhìn thứ ba kiểm tra va chạm cả độ lệch vai và cần camera, co vào ngay khi gặp collider vật lý,
+rồi giãn trở lại khi hết vật cản. Khoảng zoom tối thiểu không giới hạn việc co tránh tường. Bán kính kiểm tra
+bao cả mặt phẳng cắt gần; bỏ qua trigger và collider của người chơi. Áp dụng chung cho Map 1/Map 2,
+còn các góc máy cinematic vẫn do trình điều khiển cinematic quản lý.
+
 `03 Surroundings • outside the playable map` (dựng bằng **ShadowVale > Map 1 > Dựng địa hình bao quanh**; chạy lại
 sẽ thay bản cũ, tài sản ở `Scenes/Maps/Map 1/Surroundings`): vành đất nối liền mép địa hình trong map (trùng từng
 đỉnh ở mép), nhô dần thành đồi ra xa 420 m; sông chảy tiếp ra ngoài phía Bắc và phía Nam. Rừng: trong 28 m sát mép là
@@ -145,6 +160,24 @@ sẽ thay bản cũ, tài sản ở `Scenes/Maps/Map 1/Surroundings`): vành đ�
 Chỉ là cảnh: tường vô hình ở mép vẫn giữ Nam trong map, không nằm dưới môi trường bake NavMesh, cây xa không đổ bóng.
 Tốn thêm khoảng 2–4 ms khi nhìn ra ngoài (tổng vẫn chỉ 4–6 ms), khoảng 2 ms ở góc nhìn nặng nhất trong rừng.
 Cây low-poly ở dải xa trông khác cây trong map khi nhìn gần (khoảng 30–60 m); nới dải prefab rộng hơn sẽ đẹp hơn nhưng nặng hơn.
+
+## Minimap và khám phá
+
+Minimap dùng ảnh quét scene thật (`Map01Detailed/Map01Survey.png`) với metadata
+`Resources/Maps/Map01Survey.asset`. Quét đúng mép trong bốn collider `Boundary`: X −110…110 m,
+Z −100…100 m; không lấy vành địa hình ngoài khu vực chơi. Căn cứ A là biểu tượng nhà xanh,
+luôn được định vị cả khi ngoài cửa sổ minimap tròn. Nhấn M xem bản đồ lớn, hướng Bắc ở trên.
+
+Nhân vật mở vùng trong bán kính 14 m khi di chuyển; phần chưa đi tới được che tối trên cả hai kiểu bản đồ.
+Lưới khám phá 128 × 128 dùng khoảng 2,7 KB chuỗi Base64 trong checkpoint. Save/load và tự lưu khi thoát
+qua menu giữ vùng đã mở; thử lại nhiệm vụ giữ kiến thức bản đồ hiện tại. Tải bản lưu cũ chưa có dữ liệu
+khám phá bắt đầu mở từ vị trí nhân vật, không tự mở toàn bộ map. Chơi mới có lưới khám phá riêng.
+
+Sau khi thay địa hình, cây, công trình hoặc boundary, mở Map 1 ngoài Play mode và chạy
+**ShadowVale > Map 1 > Bake minimap survey**. Công cụ đọc boundary vật lý, loại nhân vật/lính khỏi ảnh,
+chờ shader và tạm tắt sương/occlusion khi quét; các thiết lập và renderer được khôi phục sau khi chụp.
+Ảnh được tạo sẵn nên lúc chơi không phát sinh camera quét cảnh. Mục tiêu nhiệm vụ vẫn hiện để dẫn đường;
+đồng đội chỉ hiện trên vùng đã khám phá, doanh trại giữ quy tắc thông tin trinh sát hiện có.
 
 ## Bản lưu
 

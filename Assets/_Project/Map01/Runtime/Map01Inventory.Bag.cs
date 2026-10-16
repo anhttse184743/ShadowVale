@@ -45,7 +45,8 @@ namespace ShadowVale.Map01
         /// <summary>The throwable [Q] uses; key 4 goes round the ones he has.</summary>
         public string Throwable => throwable;
         public int FreeCells => bag.Count(c => c == null);
-        public static bool IsMissionItem(string id) => id == "supplies" || id == "river_documents";
+        public static bool IsMissionItem(string id) => id == "supplies" || id == "river_documents"
+            || id == Map01Story.KeyItem || id == Map01Story.CargoItem;
         /// <summary>Weapons with Nam's own animations so far: the others go in their slot but stay holstered.</summary>
         public static bool Drawable(string id) => id == "rifle_standard" || id == "knife";
 

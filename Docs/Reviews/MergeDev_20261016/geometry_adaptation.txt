@@ -1,0 +1,3 @@
+DynamicDoors expected=1736 near removed=987 far removed=0
+DynamicDoors expected=1736 near removed=1736 far removed=0
+RadioChairMoved expected=308 near removed=308 far removed=0

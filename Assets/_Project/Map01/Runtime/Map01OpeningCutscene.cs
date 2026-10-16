@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ShadowVale.Gameplay.Combat;
@@ -50,6 +50,8 @@ namespace ShadowVale.Map01
         private bool playerWasEnabled, combatWasEnabled;
         private string subtitle;
         private GUIStyle subtitleStyle;
+        public Transform CommanderTransform => commander != null ? commander.transform : null;
+        public void SetDialogueSpeaking(bool speaking) { commanderClips?.Select(speaking ? 1 : 0); }
         public bool IsPlaying => ownsInput;
         public float Duration => finishAt + IntroDuration;
         public float BriefingTime => clock;
@@ -65,8 +67,8 @@ namespace ShadowVale.Map01
                 return;
             }
             var instance = Instantiate(prefab, mission.transform);
-            instance.name = "Map 1 briefing";
-            instance.Initialize(mission, requested);
+            instance.name = "Map 1 allied commander";
+            instance.Initialize(mission, false); // Main orders are now E conversations, including New Game.
         }
 
         private void Initialize(Map01Mission owner, bool play)

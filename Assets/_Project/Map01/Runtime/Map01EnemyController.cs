@@ -15,6 +15,9 @@ namespace ShadowVale.Map01
         [SerializeField] private float damage = 10f;
         [SerializeField] private float fireInterval = 0.65f;
         [SerializeField] private LayerMask obstructionMask = ~0;
+        [Header("Map 1 operation membership; 0 leaves other missions unchanged")]
+        public int operationIndex;
+        public bool carriesSupplyKey, suppressOperationLoot;
 
         private NavMeshAgent _agent;
         private Animator _animator;
@@ -50,6 +53,8 @@ namespace ShadowVale.Map01
         private Quaternion _heldRotation;
         private Vector3 _heldPosition;
         private bool grappleOwned;
+        public bool WeaponPoseAvailable => !grappleOwned && !TakenDownSilently && (_mission == null || !_mission.Cinematic);
+        public int AudibleShots { get; private set; }
         private int silentKind;
         private Map01CinematicPose bushCorpse;
         public void SetGrappleWeaponReady(bool ready){if(grappleOwned&&Alive)ShowRifle(ready);}
@@ -57,13 +62,14 @@ namespace ShadowVale.Map01
         public void CommitBushKill(){
             if(!Alive)return;TakenDownSilently=true;silentKind=1;
             _health.TakeDamage(_health.Current,transform.position+Vector3.up,_mission.player.gameObject);_lastHealth=_health.Current;
+            if (_health.IsDead) _mission.Skills?.Award(ShadowVale.Gameplay.Skills.SkillKind.Stealth);
         }
         public void EndGrapple(bool won){
             grappleOwned=false;_heldPosition=transform.position;_heldRotation=transform.rotation;if(_agent!=null&&_agent.isOnNavMesh)_agent.nextPosition=transform.position;
             if(won)HoldBushCorpse();else{TakenDownSilently=false;silentKind=0;SetSilent(false);ShowRifle(true);}
         }
         void HoldBushCorpse(){bushCorpse?.Dispose();bushCorpse=new Map01CinematicPose(_animator);var clip=Map01CinematicPose.Clip("Enemy_Bush_Finish");bushCorpse.Sample(clip,clip.length);bushCorpse.Ground(transform.position.y);}
-        void LateUpdate(){if(bushCorpse!=null){var clip=Map01CinematicPose.Clip("Enemy_Bush_Finish");bushCorpse.Sample(clip,clip.length);bushCorpse.Ground(transform.position.y);}}
+        void LateUpdate(){if(shotLight!=null&&Time.time>=flashUntil)shotLight.enabled=false;if(bushCorpse!=null){var clip=Map01CinematicPose.Clip("Enemy_Bush_Finish");bushCorpse.Sample(clip,clip.length);bushCorpse.Ground(transform.position.y);}}
         public void ReportGrappleEscape(){
             if(!Alive||_mission==null)return;_suspicion=1;_engagedUntil=Time.time+10;_investigate=_mission.player.position;_mission.Alarmed=true;
             ReportDetection(Map01DetectionCause.Sight,_mission.player.position);GoTo(_mission.player.position);
@@ -114,7 +120,7 @@ namespace ShadowVale.Map01
         public void BindMission(Map01Mission mission)
         {
             _mission = mission;
-            Map01Rifle.Attach(GetComponentInChildren<Animator>());
+            Map01EnemyGrip.Bind(this);
             GetComponent<Health>().KeepCheckpointCorpse();
             // Map 1's guard tuning lives in Map01Balance.json, not in each guard's serialized fields.
             damage = mission.Weapon.damage * mission.Settings.guardDamageScale;
@@ -269,17 +275,32 @@ namespace ShadowVale.Map01
             _health.TakeDamage(amount,point,null);_lastHealth=_health.Current;
             if(_health.IsDead && _agent.isOnNavMesh) {_agent.ResetPath();_agent.isStopped=true;}
         }
+        public bool IsSupplyKeyKeeper => carriesSupplyKey && operationIndex == 1 && _mission != null &&
+            _mission.GetComponent<Map01Story>()?.Layout?.keyKeeper == this;
+
         private void CreateLoot()
         {
             if (_lootCreated || _mission == null) return;
             _lootCreated = true;
+            if (suppressOperationLoot) return;
             var loot = gameObject.AddComponent<ForestPoint>();
             loot.id = "loot_" + LegacyId; loot.label = "Túi lính tuần tra"; loot.kind = ForestPointKind.Loot;
             loot.items = new[] {
                 new ForestIngredient { item_id = "ammo_rifle", count = _mission.Settings.guardDropAmmo },
-                new ForestIngredient { item_id = "medkit_small", count = _mission.Settings.guardDropMedkits }
+                new ForestIngredient { item_id = "medkit_small", count = _mission.Settings.guardDropMedkits },
+                new ForestIngredient { item_id = "m1_supply_key", count = IsSupplyKeyKeeper ? 1 : 0 }
             };
+            if(IsSupplyKeyKeeper)loot.label="Lính gác kho — chìa khóa kho tiếp tế";
             _mission.RegisterPoint(loot);
+        }
+
+        public void BeginOperationCombat(Vector3 lastSeen,float readySeconds=1.5f)
+        {
+            if(!Alive)return;
+            _suspicion=1;_engagedUntil=Time.time+15;_alertUntil=Time.time+InvestigateTimeout;
+            _searchUntil=0;_returning=false;_investigate=lastSeen;
+            _nextShot=Mathf.Max(_nextShot,Time.time+readySeconds);
+            GoTo(lastSeen);
         }
 
         public void Configure(Vector3[] points) => patrolPoints = points ?? System.Array.Empty<Vector3>();
@@ -299,6 +320,7 @@ namespace ShadowVale.Map01
         {
             enabled=true;
             _rescuePost=_overseer=false;_pursuer=true;_lootCreated=false;
+            carriesSupplyKey=false;operationIndex=0;
             _holdingAI=false;_agent.updatePosition=true;_agent.updateRotation=true;
             _postPosition=post;_postRotation=Quaternion.identity;Configure(System.Array.Empty<Vector3>());BindMission(owner);
             _health.CinematicInvulnerable=false;_health.Revive();_lastHealth=_health.Current;
@@ -332,6 +354,7 @@ namespace ShadowVale.Map01
             var layout=_rescue!=null?_rescue.Layout:null;
             bool overseerApproach=_overseer&&_rescue!=null&&_rescue.CurrentPhase==Map01Rescue.Phase.Captive;
             float range=layout!=null?(overseerApproach?layout.overseerBackstabRange:layout.backstabRange):1.6f;
+            if (!_overseer && _mission.Skills != null) range = _mission.Skills.TakedownRange(range);
             float rear=layout!=null?(overseerApproach?layout.overseerBackstabAngle:layout.backstabAngle):130f;
             if(Vector3.Distance(_mission.player.position,transform.position)>range)return false;
             if(delta.magnitude>range||Vector3.Angle(transform.forward,delta)<rear)return false;
@@ -346,6 +369,7 @@ namespace ShadowVale.Map01
             TakenDownSilently=true;SetSilent(true);ShowRifle(false);
             if(_agent.isOnNavMesh){_agent.ResetPath();_agent.isStopped=true;}
             _health.TakeDamage(_health.Current,transform.position+Vector3.up,_mission.player.gameObject);
+            if (_health.IsDead) _mission.Skills?.Award(ShadowVale.Gameplay.Skills.SkillKind.Stealth);
             var cinematic=_mission.GetComponent<Map01RescueCinematic>();
             if(cinematic==null)cinematic=_mission.gameObject.AddComponent<Map01RescueCinematic>();
             cinematic.ShowTakedown(_rescue,this);return true;
@@ -368,6 +392,7 @@ namespace ShadowVale.Map01
             var rifle=Rifle;
             if(rifle!=null&&rifle.weapon!=null&&rifle.weapon.Muzzle!=null)
                 _mission.Trace(rifle.weapon.Muzzle.position,target+(bodyPoint?Vector3.zero:Vector3.up*.9f),new Color(1,.85f,.45f));
+            ShotFeedback(target+(bodyPoint?Vector3.zero:Vector3.up*.9f),false);
             _rescue.HitHung(amount);
         }
         public void FaceImmediate(Vector3 point)
@@ -611,6 +636,25 @@ namespace ShadowVale.Map01
             return true;
         }
 
+        AudioClip shotClip;
+        Light shotLight;
+        float flashUntil;
+        void ShotFeedback(Vector3 target,bool trace)
+        {
+            if(shotClip==null)shotClip=Resources.Load<Map01Extraction>("Cutscenes/Map01Extraction")?.rifleAudio;
+            var muzzle=Rifle!=null&&Rifle.weapon!=null?Rifle.weapon.Muzzle:null;
+            var from=muzzle!=null?muzzle.position:transform.position+Vector3.up*1.3f;
+            if(shotClip!=null){
+                ShadowVale.Gameplay.Audio.PooledAudioService.Resolve().PlayOneShot(shotClip,from,.8f,UnityEngine.Random.Range(.97f,1.03f),0,.85f);
+                AudibleShots++;
+            }
+            if(trace)_mission.Trace(from,target,new Color(1,.85f,.45f));
+            if(muzzle!=null){
+                if(shotLight==null){var go=new GameObject("Rifle muzzle flash");go.transform.SetParent(muzzle,false);shotLight=go.AddComponent<Light>();shotLight.color=new Color(1,.7f,.25f);shotLight.range=1.5f;shotLight.intensity=1.6f;}
+                shotLight.enabled=true;flashUntil=Time.time+.045f;
+            }
+        }
+
         private void Shoot()
         {
             if (Time.time < _nextShot) return;
@@ -619,6 +663,7 @@ namespace ShadowVale.Map01
             // Hùng is in the line of fire while he is being held or walked home: every third
             // round goes his way when he is in reach.
             if (++_shots % 3 == 0 && HostageInReach(out var hostage) && SafeShot(hostage)) { FireAtHostage(hostage,damage); return; }
+            ShotFeedback(_player.position + Vector3.up,true);
             _playerHealth.TakeDamage(damage, _player.position + Vector3.up, gameObject);
         }
 
@@ -663,6 +708,8 @@ namespace ShadowVale.Map01
 
         private void Go(Vector3 destination)
         {
+            // The officer defends his own command post; he cannot chase Nam to point two.
+            if(IsBoss) destination=_postPosition+Vector3.ClampMagnitude(Vector3.ProjectOnPlane(destination-_postPosition,Vector3.up),14);
             if (!_agent.isOnNavMesh) return;
             _agent.isStopped = false;
             if (NavMesh.SamplePosition(destination, out var hit, 2f, NavMesh.AllAreas))

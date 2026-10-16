@@ -9,7 +9,7 @@ namespace ShadowVale.Map01
     {
         public static readonly string[] Order = {
             "rifle_standard", "knife", "pistol_k54", "rifle_mosin",
-            "ammo_rifle", "ammo_pistol", "ammo_sniper", "medkit_small", "smoke_bomb", "grenade_f1", "cloth", "herb", "stone", "supplies", "river_documents",
+            "ammo_rifle", "ammo_pistol", "ammo_sniper", "medkit_small", "smoke_bomb", "grenade_f1", "cloth", "herb", "stone", "m1_supply_key", "m1_supply_cargo", "supplies", "river_documents",
             "scrap_metal", "gunpowder", "gun_oil", "repair_kit", "weapon_parts", "smoke_module", "fuse_module", "blast_charge", "scope_lens",
             "ammo_smg", "ammo_shotgun"
         };
@@ -45,6 +45,8 @@ namespace ShadowVale.Map01
             switch (id) {
                 case "rifle_standard": return "Súng trường";
                 case "knife": return "Dao";
+                case "m1_supply_key": return "Chìa khóa kho — Điểm 1";
+                case "m1_supply_cargo": return "Túi thuốc của Hùng";
                 case "ammo_rifle": return "Đạn súng trường";
                 case "ammo_smg": return "Đạn tiểu liên";
                 case "ammo_pistol": return "Đạn K-54";
@@ -77,6 +79,8 @@ namespace ShadowVale.Map01
             switch (id) {
                 case "rifle_standard": return "Súng trường AK, trang bị khởi hành, ở ô 1. Dùng đạn súng trường. Nhấn 1 để cầm súng.";
                 case "knife": return "Dao, luôn ở ô 3, không vứt được. Cận chiến, hạ gục lặng lẽ từ sau lưng. Nhấn 3 để cầm dao.";
+                case "m1_supply_key": return "Nhặt từ lính gác. Dùng tại cửa kho điểm 1 [E]. Hòm bên trong có khóa mã riêng.";
+                case "m1_supply_cargo": return "Thuốc và vật tư đã thu hồi. Báo cáo qua bộ đàm rồi mang về giao cho chỉ huy tại hầm [E].";
                 case "medkit_small": return "Hồi máu cho nhân vật. Nhấn H để dùng.";
                 case "stone": return "Đồ ném: rơi xuống gây tiếng động 14 m, lính nghe thấy bỏ vị trí đi kiểm tra. Phím 4 chọn, giữ Q ngắm, thả Q ném.";
                 case "cloth": return "Vật liệu chế tạo: băng cứu thương (2 vải + 1 thảo dược) và bom khói (1 vải + 1 ống tạo khói).";

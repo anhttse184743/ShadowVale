@@ -96,6 +96,7 @@ namespace ShadowVale.Gameplay.Combat
 
         public int MagazineCapacity => _magazine?.Capacity ?? 0;
         public bool IsReloading => _magazine is { IsReloading: true };
+        public float BaseReloadSeconds => tuning.OrDefault().reloadSeconds;
 
         /// <summary>0 to 1 across a reload, for a HUD bar. 0 when not reloading.</summary>
         public float ReloadProgress => _magazine?.ReloadProgress ?? 0f;
@@ -108,7 +109,8 @@ namespace ShadowVale.Gameplay.Combat
         {
             if (_magazine == null || _equipped == null || !_equipped.IsGun) return false;
             bool wasEmpty = _magazine.IsEmpty;
-            if (!_magazine.BeginReload(ReserveRounds != null ? ReserveRounds() : -1)) return false;
+            var skills = GetComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
+            if (!_magazine.BeginReload(ReserveRounds != null ? ReserveRounds() : -1, skills != null ? skills.ReloadMultiplier : 1f)) return false;
             AnimateReload(wasEmpty);
             return true;
         }
@@ -801,6 +803,8 @@ namespace ShadowVale.Gameplay.Combat
             direction = WeaponSpreadState.Scatter(direction, _spread.ConeHalfAngle(stance, _aiming));
 
             Vector2 kick = _spread.Fire(Time.time);
+            var skills = GetComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
+            if (skills != null) kick *= skills.RecoilMultiplier;
             if (cameraRig != null) cameraRig.AddRecoil(kick.x, kick.y);
 
             // The trace starts at the camera so the shot lands on the crosshair, but the streak
@@ -809,7 +813,10 @@ namespace ShadowVale.Gameplay.Combat
             if (Physics.Raycast(origin, direction, out RaycastHit hit, gun.Range,
                     hitMask, QueryTriggerInteraction.Ignore))
             {
+                var health = hit.collider.GetComponentInParent<Health>();
+                bool alive = health != null && !health.IsDead;
                 ApplyDamage(hit.collider, gun.Damage, hit.point);
+                if (alive && health != null && health.IsDead) GunKilled?.Invoke(health.gameObject);
                 endPoint = hit.point;
             }
             else
@@ -834,6 +841,9 @@ namespace ShadowVale.Gameplay.Combat
                 ApplyDamage(hit.collider, damage, hit.point);
             }
         }
+
+        /// <summary>A lethal gun hit, never melee, corpse hits, restores or scripted damage.</summary>
+        public event System.Action<GameObject> GunKilled;
 
         private void ApplyDamage(Collider target, float amount, Vector3 point)
         {

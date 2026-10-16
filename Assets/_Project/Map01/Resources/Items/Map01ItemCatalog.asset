@@ -86,3 +86,9 @@ MonoBehaviour:
   - id: weapon_parts
     model: {fileID: 919132149155446097, guid: d2a98bb51aa40fc43ba8bb70e34dd219, type: 3}
     scale: 0
+  - id: m1_supply_key
+    model: {fileID: 919132149155446097, guid: 8974ec30c76e3fc44b5762160f849f94, type: 3}
+    scale: 1
+  - id: m1_supply_cargo
+    model: {fileID: 919132149155446097, guid: a704ee5169366a84db5322852badc8b1, type: 3}
+    scale: 1

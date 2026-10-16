@@ -52,6 +52,7 @@ namespace ShadowVale.Map01
         readonly Vector3[,] plantedFeet=new Vector3[3,2];
         readonly Vector3[,] plantedNormals=new Vector3[3,2];
         bool released,paused;
+        Map02Mission sceneMission;
 #if UNITY_EDITOR
         bool shaderCompilationScoped,previousAsyncShaders,previousAllowAsyncShaders;
         void BeginShaderPreparation() {
@@ -134,6 +135,9 @@ namespace ShadowVale.Map01
             SceneManager.sceneLoaded-=MuteVillageCameras;
             
             SceneManager.MoveGameObjectToScene(gameObject,SceneManager.GetActiveScene());
+            // Let the destination finish its first scene/GPU culling update while
+            // the loading fade is still black, before registering moving geometry.
+            yield return null;
             // Register fresh renderers in the destination scene, after Map 1's
             // unload callbacks and GPU instance cleanup have finished.
             PrepareBoatRendering(true);
@@ -220,7 +224,7 @@ namespace ShadowVale.Map01
                     var fresh=visual.AddComponent<MeshRenderer>();
                     fresh.sharedMaterials=old.sharedMaterials.Select(m=>{
                         if(m==null)return null;
-                        var material=new Material(m);partyMaterials.Add(material);return material;
+                        var material=new Material(m);material.enableInstancing=false;partyMaterials.Add(material);return material;
                     }).ToArray();
                     fresh.shadowCastingMode=old.shadowCastingMode;fresh.receiveShadows=old.receiveShadows;
                     // Only this small cinematic prop bypasses GPU resident
@@ -254,7 +258,10 @@ namespace ShadowVale.Map01
             var properties=new MaterialPropertyBlock();
             var material=renderer.sharedMaterial;
             properties.SetColor("_BaseColor",material!=null&&material.HasProperty("_BaseColor")?material.GetColor("_BaseColor"):Color.white);
+            properties.SetFloat("_InstanceTone",1);
             renderer.SetPropertyBlock(properties);
+            // A moving hull must not inherit visibility from baked village cells.
+            renderer.allowOcclusionWhenDynamic=false;
         }
         void MuteVillageCameras(Scene scene,LoadSceneMode mode) {
             foreach(var root in scene.GetRootGameObjects())foreach(var other in root.GetComponentsInChildren<Camera>(true))if(other!=camera) {
@@ -279,7 +286,7 @@ namespace ShadowVale.Map01
             if(CurrentPhase==Phase.Loading)return;
             if(CurrentPhase==Phase.Gameplay) {
                 for(int i=1;i<3;i++)poses[i]?.Tick(Time.deltaTime);
-                if(Keyboard.current!=null && Keyboard.current.escapeKey.wasPressedThisFrame) {
+                if(sceneMission==null && Keyboard.current!=null && Keyboard.current.escapeKey.wasPressedThisFrame) {
                     paused=!paused;Time.timeScale=paused?0:1;Cursor.visible=paused;Cursor.lockState=paused?CursorLockMode.None:CursorLockMode.Locked;
                 }
                 return;
@@ -618,6 +625,7 @@ namespace ShadowVale.Map01
             foreach(var ps in GetComponentsInChildren<ParticleSystem>())ps.Stop();
             foreach(var audio in GetComponentsInChildren<AudioSource>())audio.Stop();
             CurrentPhase=Phase.Gameplay;groundHandoffRemaining=1;health.CinematicInvulnerable=false;
+            sceneMission=FindFirstObjectByType<Map02Mission>();
             var footsteps=Passengers[0].GetComponent<PlayerFootsteps>();if(footsteps!=null)footsteps.enabled=true;
             var cc=Passengers[0].GetComponent<CharacterController>();if(cc!=null){cc.enabled=true;cc.Move(Vector3.down*.08f);}
             player.enabled=combat.enabled=true;player.RestoreMotion(false);combat.RestoreAfterCinematic();GroundSkin(actors[0],SpawnPoints[0].y);
@@ -646,6 +654,7 @@ namespace ShadowVale.Map01
                 GUI.Label(new Rect(0,Screen.height*.9f,Screen.width,40),line,new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter,fontSize=18});
                 if(fade>0){GUI.color=new Color(0,0,0,fade);GUI.DrawTexture(new Rect(0,0,Screen.width,Screen.height),Texture2D.whiteTexture);GUI.color=Color.white;}
             } else {
+                if(sceneMission!=null)return;
                 GUI.Label(new Rect(20,20,430,60),paused?"Paused — Esc to resume":"MAP 2 — VILLAGE ARRIVAL\nReach the village command post.");
                 if(paused && GUI.Button(new Rect(Screen.width/2-100,Screen.height/2,200,40),"Return to main menu")) {
                     Time.timeScale=1;SceneManager.LoadScene("01_MainMenu");

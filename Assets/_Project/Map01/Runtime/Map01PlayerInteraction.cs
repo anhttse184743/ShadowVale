@@ -147,6 +147,8 @@ namespace ShadowVale.Map01
         /// </summary>
         private void HandleInteractKey()
         {
+            if (Nearby != null && Nearby.kind == ForestPointKind.Workbench) { Interact(Nearby); return; }
+            if (GetComponent<Map01Story>()?.TryInteract() == true) return;
             if (quest.HungInRange) quest.TalkToHung();
             else if (Nearby != null) Interact(Nearby);
         }

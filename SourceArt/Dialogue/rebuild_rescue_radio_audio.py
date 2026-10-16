@@ -1,4 +1,4 @@
-"""Rebuild only the rescue introduction's three Vietnamese radio cues from Raw MP3s."""
+﻿"""Rebuild only the rescue introduction's three Vietnamese radio cues from Raw MP3s."""
 from pathlib import Path
 import json,subprocess,hashlib,uuid
 import numpy as np,soundfile as sf,imageio_ffmpeg
@@ -30,16 +30,18 @@ for id,speaker,voice,text,task in LINES:
  noise=np.random.default_rng(1401).normal(0,.0026,len(band)).astype(np.float32)
  energy=np.convolve(np.abs(band),np.ones(480)/480,mode='same')
  x=band+noise*np.clip(.2+energy*6,.2,1);x[:720]*=np.linspace(0,1,720);x[-720:]*=np.linspace(1,0,720)
+ radio=speaker!='Nam'
+ if not radio:x=normalize(dry[start:end].copy())
  output=OUT/(id+'.wav');sf.write(output,x,RATE,subtype='PCM_16')
  meta=Path(str(output)+'.meta')
  if not meta.exists():
   template=(OUT/'m1_rescue_intro_nam.wav.meta').read_text(encoding='utf-8')
   import re
   meta.write_text(re.sub(r'guid: [0-9a-f]+','guid: '+uuid.uuid4().hex,template),encoding='utf-8')
- entries[id]=dict(id=id,speaker=speaker,voice=voice,text=text,caption=speaker+' (bộ đàm): '+text,match='',language='vi',radio=True,
+ entries[id]=dict(id=id,speaker=speaker,voice=voice,text=text,caption=speaker+(' (bộ đàm): ' if radio else ': ')+text,match='',language='vi',radio=radio,
                  taskId=task,model='eleven_v3',duration=round(len(x)/RATE,5),reportedDuration=round(len(dry)/RATE,5),resource='Dialogue/VI/'+id)
  assert np.max(np.abs(x))<.99 and np.sqrt(np.mean(x*x))>.01
- report.append(dict(id=id,radio=True,duration=entries[id]['duration'],peak=float(np.max(np.abs(x))),rms=float(np.sqrt(np.mean(x*x))),sha256=hashlib.sha256(output.read_bytes()).hexdigest(),taskId=task))
+ report.append(dict(id=id,radio=radio,duration=entries[id]['duration'],peak=float(np.max(np.abs(x))),rms=float(np.sqrt(np.mean(x*x))),sha256=hashlib.sha256(output.read_bytes()).hexdigest(),taskId=task))
  preview.extend([x,np.zeros(round(RATE*.25),dtype=np.float32)])
 catalog['entries']=list(entries.values())
 for path in [ART/'voice-catalog.json',ROOT/'Assets/Resources/Dialogue/voice-catalog.json']:path.write_text(json.dumps(catalog,ensure_ascii=False,indent=2),encoding='utf-8')

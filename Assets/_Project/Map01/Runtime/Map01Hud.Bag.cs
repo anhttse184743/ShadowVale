@@ -64,6 +64,16 @@ namespace ShadowVale.Map01
         {
             BagStyles();
             var ev = Event.current;
+            var skillPanel = BagPlate(width);
+            if (skillsTab)
+            {
+                DrawEquipColumn(width, ev, true);
+                HudPanel(skillPanel);
+                GUI.Label(new Rect(skillPanel.x + 25, 75, skillPanel.width - 50, 65), "KĨ NĂNG", hudTitle);
+                DrawInventoryTabs(skillPanel);
+                DrawSkills(skillPanel);
+                return;
+            }
             // The photo tests pick a stack by its place in InventoryStacks (selectedStack): the n-th non-empty cell.
             if (selectedStack != lastSelectedStack)
             {
@@ -77,6 +87,10 @@ namespace ShadowVale.Map01
             DrawEquipColumn(width, ev, modal);
             DrawBagGrid(width, ev, modal);
             DrawBagDetail(width, ev, modal);
+            bool previousGuiEnabled = GUI.enabled;
+            GUI.enabled = previousGuiEnabled && !modal && !dragging && !menuOpen;
+            DrawInventoryTabs(skillPanel);
+            GUI.enabled = previousGuiEnabled;
             if (menuOpen) DrawBagMenu(width, ev);
             if (askDrop) DrawDropQuestion(width, ev);
             if (!modal) HandleDrag(width, ev);

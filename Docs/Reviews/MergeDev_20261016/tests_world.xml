@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="12" result="Failed(Child)" total="12" passed="8" failed="4" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-16 14:42:00Z" end-time="2026-10-16 14:42:48Z" duration="47,9819156">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="313" result="Failed" site="Child" start-time="2026-10-16 14:42:00Z" end-time="2026-10-16 14:42:48Z" duration="47.981916" total="12" passed="8" failed="4" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1305" name="ShadowVale.Map01.Tests.dll" fullname="D:/DO_AN_GAME/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="235" result="Failed" site="Child" start-time="2026-10-16 14:42:00Z" end-time="2026-10-16 14:42:48Z" duration="47.298152" total="12" passed="8" failed="4" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="202460" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1306" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="235" result="Failed" site="Child" start-time="2026-10-16 14:42:01Z" end-time="2026-10-16 14:42:48Z" duration="47.249825" total="12" passed="8" failed="4" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1307" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="235" result="Failed" site="Child" start-time="2026-10-16 14:42:01Z" end-time="2026-10-16 14:42:48Z" duration="47.211512" total="12" passed="8" failed="4" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1308" name="Tests" fullname="ShadowVale.Map01.Tests" runstate="Runnable" testcasecount="235" result="Failed" site="Child" start-time="2026-10-16 14:42:01Z" end-time="2026-10-16 14:42:48Z" duration="47.168259" total="12" passed="8" failed="4" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1005" name="BenchTests" fullname="ShadowVale.Map01.Tests.BenchTests" classname="ShadowVale.Map01.Tests.BenchTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-16 14:31:40Z" end-time="2026-10-16 14:31:52Z" duration="11.827247" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1006" name="BenchOpensWithEQueuesCraftsAndGunpowderMakesRounds" fullname="ShadowVale.Map01.Tests.BenchTests.BenchOpensWithEQueuesCraftsAndGunpowderMakesRounds" methodname="BenchOpensWithEQueuesCraftsAndGunpowderMakesRounds" classname="ShadowVale.Map01.Tests.BenchTests" runstate="Runnable" seed="701440846" result="Failed" start-time="2026-10-16 14:30:51Z" end-time="2026-10-16 14:31:52Z" duration="60.646647" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.BenchTests+<BenchOpensWithEQueuesCraftsAndGunpowderMakesRounds>d__11.MoveNext () [0x002a9] in D:\DO_AN_GAME\ShadowVale\Assets\_Project\Map01\Tests\BenchTests.cs:95
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Can't call Animator.Update on inactive object
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1008" name="CampChestTests" fullname="ShadowVale.Map01.Tests.CampChestTests" classname="ShadowVale.Map01.Tests.CampChestTests" runstate="Runnable" testcasecount="4" result="Failed" site="Child" start-time="2026-10-16 14:31:52Z" end-time="2026-10-16 14:31:59Z" duration="7.016927" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1009" name="EachCampHasOneChestThatStandsClearAndCanBeReached" fullname="ShadowVale.Map01.Tests.CampChestTests.EachCampHasOneChestThatStandsClearAndCanBeReached" methodname="EachCampHasOneChestThatStandsClearAndCanBeReached" classname="ShadowVale.Map01.Tests.CampChestTests" runstate="Runnable" seed="1432327096" result="Failed" start-time="2026-10-16 14:31:52Z" end-time="2026-10-16 14:31:59Z" duration="6.546475" asserts="0">
+                <properties />
+                <failure>
+                  <message><![CDATA[  No world model for m1_supply_key.
+  Expected: not null
+  But was:  null
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.CampChestTests.EachCampHasOneChestThatStandsClearAndCanBeReached () [0x00071] in D:\DO_AN_GAME\ShadowVale\Assets\_Project\Map01\Tests\CampChestTests.cs:42
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1088" name="LoadoutTests" fullname="ShadowVale.Map01.Tests.LoadoutTests" classname="ShadowVale.Map01.Tests.LoadoutTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-16 14:33:43Z" end-time="2026-10-16 14:34:12Z" duration="29.225955" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1089" name="BagMovesSwapsMergesSplitsAndSorts" fullname="ShadowVale.Map01.Tests.LoadoutTests.BagMovesSwapsMergesSplitsAndSorts" methodname="BagMovesSwapsMergesSplitsAndSorts" classname="ShadowVale.Map01.Tests.LoadoutTests" runstate="Runnable" seed="587223620" result="Passed" start-time="2026-10-16 14:32:00Z" end-time="2026-10-16 14:32:54Z" duration="54.421019" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1091" name="DroppedThingsLieOnTheGroundAndComeBackWithASave" fullname="ShadowVale.Map01.Tests.LoadoutTests.DroppedThingsLieOnTheGroundAndComeBackWithASave" methodname="DroppedThingsLieOnTheGroundAndComeBackWithASave" classname="ShadowVale.Map01.Tests.LoadoutTests" runstate="Runnable" seed="862016362" result="Passed" start-time="2026-10-16 14:32:54Z" end-time="2026-10-16 14:34:12Z" duration="77.774581" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <output><![CDATA[Can't call Animator.Update on inactive object
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1111" name="Map01OperationsTests" fullname="ShadowVale.Map01.Tests.Map01OperationsTests" classname="ShadowVale.Map01.Tests.Map01OperationsTests" runstate="Runnable" testcasecount="16" result="Failed" site="Child" start-time="2026-10-16 14:37:34Z" end-time="2026-10-16 14:38:11Z" duration="37.388340" total="4" passed="3" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1129" name="OfficerNeedsDistantBinocularsAndRestoresCombatBeforeDiscovery" fullname="ShadowVale.Map01.Tests.Map01OperationsTests.OfficerNeedsDistantBinocularsAndRestoresCombatBeforeDiscovery" methodname="OfficerNeedsDistantBinocularsAndRestoresCombatBeforeDiscovery" classname="ShadowVale.Map01.Tests.Map01OperationsTests" runstate="Runnable" seed="2125520546" result="Passed" start-time="2026-10-16 14:34:12Z" end-time="2026-10-16 14:35:10Z" duration="57.818303" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1126" name="OnlyOriginalSupplyKeeperDropsKeyEvenWhenClonedForExtraction" fullname="ShadowVale.Map01.Tests.Map01OperationsTests.OnlyOriginalSupplyKeeperDropsKeyEvenWhenClonedForExtraction" methodname="OnlyOriginalSupplyKeeperDropsKeyEvenWhenClonedForExtraction" classname="ShadowVale.Map01.Tests.Map01OperationsTests" runstate="Runnable" seed="1981565080" result="Passed" start-time="2026-10-16 14:35:10Z" end-time="2026-10-16 14:36:02Z" duration="52.525255" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1128" name="RadioFailureCallsOnlyOneSavedSquadAndSuccessDoesNotExtract" fullname="ShadowVale.Map01.Tests.Map01OperationsTests.RadioFailureCallsOnlyOneSavedSquadAndSuccessDoesNotExtract" methodname="RadioFailureCallsOnlyOneSavedSquadAndSuccessDoesNotExtract" classname="ShadowVale.Map01.Tests.Map01OperationsTests" runstate="Runnable" seed="999560246" result="Failed" start-time="2026-10-16 14:36:02Z" end-time="2026-10-16 14:36:54Z" duration="51.735264" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Right fingers must touch the actual radio dial.
+  Expected: less than 0.0700000003f
+  But was:  0.314715177f
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.Map01OperationsTests+<RadioFlow>d__23.MoveNext () [0x00301] in D:\DO_AN_GAME\ShadowVale\Assets\_Project\Map01\Tests\Map01OperationsTests.cs:155
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Can't call Animator.Update on inactive object
+]]></output>
+              </test-case>
+              <test-case id="1127" name="SupplyRequiresKeyPuzzleReportAndPhysicalHandoff" fullname="ShadowVale.Map01.Tests.Map01OperationsTests.SupplyRequiresKeyPuzzleReportAndPhysicalHandoff" methodname="SupplyRequiresKeyPuzzleReportAndPhysicalHandoff" classname="ShadowVale.Map01.Tests.Map01OperationsTests" runstate="Runnable" seed="964988574" result="Passed" start-time="2026-10-16 14:36:54Z" end-time="2026-10-16 14:38:11Z" duration="77.318863" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1186" name="MergedCheckpointTests" fullname="ShadowVale.Map01.Tests.MergedCheckpointTests" classname="ShadowVale.Map01.Tests.MergedCheckpointTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-16 14:38:50Z" end-time="2026-10-16 14:39:13Z" duration="23.957123" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1187" name="OneCheckpointKeepsBagDropsStorySkillsAndExplorationTogether" fullname="ShadowVale.Map01.Tests.MergedCheckpointTests.OneCheckpointKeepsBagDropsStorySkillsAndExplorationTogether" methodname="OneCheckpointKeepsBagDropsStorySkillsAndExplorationTogether" classname="ShadowVale.Map01.Tests.MergedCheckpointTests" runstate="Runnable" seed="1723790425" result="Passed" start-time="2026-10-16 14:38:11Z" end-time="2026-10-16 14:39:13Z" duration="61.995361" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1222" name="RescueMotionTests" fullname="ShadowVale.Map01.Tests.RescueMotionTests" classname="ShadowVale.Map01.Tests.RescueMotionTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-16 14:39:51Z" end-time="2026-10-16 14:40:29Z" duration="37.409350" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1223" name="UntieAndRiseKeepTheRenderedSkinOnTheJetty" fullname="ShadowVale.Map01.Tests.RescueMotionTests.UntieAndRiseKeepTheRenderedSkinOnTheJetty" methodname="UntieAndRiseKeepTheRenderedSkinOnTheJetty" classname="ShadowVale.Map01.Tests.RescueMotionTests" runstate="Runnable" seed="699685157" result="Failed" start-time="2026-10-16 14:39:14Z" end-time="2026-10-16 14:40:29Z" duration="75.268199" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Rendered knee/shoe support must stay within 2 cm through the rise.
+  Expected: less than or equal to 0.0199999996f
+  But was:  0.18524313f
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.RescueMotionTests+<RecordGround>d__10.MoveNext () [0x00142] in D:\DO_AN_GAME\ShadowVale\Assets\_Project\Map01\Tests\RescueMotionTests.cs:53
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1231" name="RescueTests" fullname="ShadowVale.Map01.Tests.RescueTests" classname="ShadowVale.Map01.Tests.RescueTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-16 14:41:08Z" end-time="2026-10-16 14:41:20Z" duration="12.484891" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1232" name="FourGuardsHaveThreeSeparatedConnectedRoutesAndApproaches" fullname="ShadowVale.Map01.Tests.RescueTests.FourGuardsHaveThreeSeparatedConnectedRoutesAndApproaches" methodname="FourGuardsHaveThreeSeparatedConnectedRoutesAndApproaches" classname="ShadowVale.Map01.Tests.RescueTests" runstate="Runnable" seed="826199725" result="Passed" start-time="2026-10-16 14:40:29Z" end-time="2026-10-16 14:41:20Z" duration="51.141698" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1277" name="SkillIntegrationTests" fullname="ShadowVale.Map01.Tests.SkillIntegrationTests" classname="ShadowVale.Map01.Tests.SkillIntegrationTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-16 14:42:01Z" end-time="2026-10-16 14:42:48Z" duration="47.097728" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1279" name="MissionXpSurvivesResumeButRollsBackOnFailureWhileEngineeringPersists" fullname="ShadowVale.Map01.Tests.SkillIntegrationTests.MissionXpSurvivesResumeButRollsBackOnFailureWhileEngineeringPersists" methodname="MissionXpSurvivesResumeButRollsBackOnFailureWhileEngineeringPersists" classname="ShadowVale.Map01.Tests.SkillIntegrationTests" runstate="Runnable" seed="1151870225" result="Passed" start-time="2026-10-16 14:41:20Z" end-time="2026-10-16 14:42:48Z" duration="87.223836" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/Admin/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

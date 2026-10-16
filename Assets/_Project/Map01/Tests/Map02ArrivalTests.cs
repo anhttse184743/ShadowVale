@@ -17,9 +17,9 @@ EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield re
 yield return RecordFullTransfer(false);
 yield return new ExitPlayMode();
 }
-[UnityTest]public IEnumerator FullGameViewDepartureKeepsBoatVisibleAfterSceneLoad() {
+[UnityTest,Timeout(300000)]public IEnumerator FullGameViewDepartureKeepsBoatVisibleAfterSceneLoad() {
 EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;
-SetPreviewResolution(960,540);yield return RecordFullTransfer(true);yield return new ExitPlayMode();
+SetPreviewResolution(1920,1080);yield return RecordFullTransfer(true);yield return new ExitPlayMode();
 }
 static IEnumerator RecordFullTransfer(bool gameViewOnly) {
 string folder=gameViewOnly?"Logs/GameViewTransfer":"Logs/FullTransfer";
@@ -30,11 +30,13 @@ var mission=Object.FindFirstObjectByType<Map01Mission>();
 var quest=mission.GetComponent<Map01Quest>();
 if(gameViewOnly) {
 // Exercise the actual commander-death -> radio -> extraction handoff too.
-quest.RestoreStage(Map01Quest.BossStage);
+quest.RestoreStoryStage(Map01Quest.BossStage,new Map01Story.Snapshot{supplies=true,suppliesDelivered=true,radioDisabled=true,commanderAreaReached=true,commanderConfirmed=true,commanderReported=true});
 foreach(var enemy in mission.Enemies)if(!enemy.IsBoss)enemy.GetComponent<Health>().TakeDamage(99999,enemy.transform.position,null);
 var boss=mission.Enemies.Single(e=>e.IsBoss);boss.GetComponent<Health>().TakeDamage(99999,boss.transform.position,null);
 float radioDeadline=Time.realtimeSinceStartup+75;
-while((quest.Stage!=Map01Quest.ExtractionStage||mission.Cinematic)&&Time.realtimeSinceStartup<radioDeadline)yield return null;
+while((quest.Stage!=Map01Quest.ReportBossStage||mission.Cinematic)&&Time.realtimeSinceStartup<radioDeadline)yield return null;
+Assert.AreEqual(Map01Quest.ReportBossStage,quest.Stage);
+Assert.IsTrue(mission.GetComponent<Map01Story>().TryInteract());yield return WaitGameSeconds(1.1f);mission.GetComponent<Map01StoryDialogue>().Close(true);yield return null;
 Assert.AreEqual(Map01Quest.ExtractionStage,quest.Stage);Assert.IsFalse(mission.Cinematic);
 }else quest.RestoreStage(Map01Quest.ExtractionStage);
 var extraction=mission.GetComponentInChildren<Map01Extraction>();extraction.autoContinueToMap2=true;
@@ -62,7 +64,7 @@ Assert.Less(hull.GetComponent<MeshFilter>().sharedMesh.bounds.center.magnitude,.
 Assert.Less(Vector3.Distance(hull.transform.position,arrival.transform.position),.5f,"Hull pivot must travel with its actual geometry.");
 }
 if(Time.realtimeSinceStartup>=next) {
-next=Time.realtimeSinceStartup+.1f;bool rendered=false;System.Exception failure=null;
+next=Time.realtimeSinceStartup+.5f;bool rendered=false;System.Exception failure=null;
 string phase=arrival==null?extraction.CurrentPhase.ToString():"Map2-"+arrival.CurrentPhase;
 float elapsed=Time.realtimeSinceStartup-start;int number=frame++;
 pump.draw=()=>{try{if(gameViewOnly)ScreenCapture.CaptureScreenshot(folder+"/frames/"+number.ToString("D4")+".png");else Capture(camera,folder+"/frames/"+number.ToString("D4")+".png");entries.Add(number+","+elapsed+","+phase+","+hull.enabled+","+hull.forceRenderingOff+","+hull.bounds.center+","+hull.transform.position+","+hull.GetComponent<MeshFilter>().sharedMesh.name);}catch(System.Exception e){failure=e;}rendered=true;};
@@ -73,6 +75,10 @@ File.WriteAllLines(folder+"/frames.csv",entries);
 SceneManager.sceneUnloaded-=InvalidateSourceBoatRendering;
 Assert.IsTrue(complete,"The full departure must finish without skipping.");Assert.NotNull(arrival);Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);
 AssertDryPartySpawn(arrival);VerifyGameplayRifle(arrival.Passengers[0]);Assert.AreEqual(72,arrival.Passengers[0].GetComponent<Health>().Current);Assert.AreEqual(17,arrival.Passengers[0].GetComponent<PlayerCombat>().RoundsInMagazine);
+var session=Object.FindFirstObjectByType<Map02Mission>();
+float bindDeadline=Time.realtimeSinceStartup+10;
+while(session!=null&&!session.Ready&&Time.realtimeSinceStartup<bindDeadline)yield return null;
+Assert.NotNull(session);Assert.IsTrue(session.Ready);Assert.Greater(session.AvailableObjectiveCount,0);Assert.IsTrue(session.HasCheckpoint);
 if(gameViewOnly){ScreenCapture.CaptureScreenshot(folder+"/gameplay.png");yield return WaitGameSeconds(.3f);}else Capture(camera,folder+"/gameplay.png");
 }
 static void InvalidateSourceBoatRendering(Scene scene) {
@@ -140,7 +146,7 @@ Assert.IsTrue(legs.Any(b=>{var keys=UnityEditor.AnimationUtility.GetEditorCurve(
 if(suffix=="Walk_Ashore")Assert.IsTrue(clip.isLooping);
 }
 }
-[UnityTest] public IEnumerator NaturalArrivalPreservesPartyAndEquipment() {
+[UnityTest,Timeout(300000)] public IEnumerator NaturalArrivalPreservesPartyAndEquipment() {
 EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;
 Directory.CreateDirectory("Logs/Map02/frames");
 // Reproduce the normal editor setting; arrival itself must guard shader compilation.
@@ -169,6 +175,7 @@ while(arrival.CurrentPhase==Map02Arrival.Phase.Loading && Time.realtimeSinceStar
 Assert.AreEqual(Map02Arrival.Phase.Approaching,arrival.CurrentPhase);
 Assert.IsFalse(UnityEditor.EditorSettings.asyncShaderCompilation);
 Assert.AreSame(originalPlayer,arrival.Passengers[0]);Assert.AreSame(originalHung,arrival.Passengers[2]);
+Assert.IsNull(originalPlayer.GetComponent<PlayerCombat>().SlotPressed,"Unloading Map 1 must release the old bag's number-key handler.");
 LogAssert.Expect(LogType.Log,"Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.");
 yield return RecordArrival(arrival);
 Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);

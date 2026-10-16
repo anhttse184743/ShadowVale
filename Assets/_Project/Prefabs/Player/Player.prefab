@@ -2800,7 +2800,6 @@ MonoBehaviour:
   tuning:
     magazineCapacity: 30
     reloadSeconds: 2.4
-    emptyReloadSeconds: 2.9
   punchDamage: 12
   punchRange: 1.5
   punchCooldown: 0.45
