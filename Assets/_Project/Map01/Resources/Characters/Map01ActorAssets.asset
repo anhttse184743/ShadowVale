@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47c914ccb6132c545a691d172a3295d0, type: 3}
+  m_Name: Map01ActorAssets
+  m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map01ActorAssets
+  rifle: {fileID: 4962573079660159442, guid: 9a48efb4e0c45d649bc5db052fd00ea6, type: 3}
+  namHeight: 1.7526859
+  hungHeight: 1.6224272
+  hungSole: -0.0392634
+  riflePosition: {x: -0.017505407, y: -0.021296972, z: -0.031843364}
+  rifleEuler: {x: 311.75693, y: 287.58932, z: 355.8599}

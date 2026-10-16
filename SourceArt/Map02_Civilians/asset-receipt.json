@@ -1,0 +1,170 @@
+{
+  "status": "REJECTED_BY_USER_DO_NOT_INTEGRATE",
+  "method": "Local Blender Python mesh authoring, no paid provider",
+  "source_rig": "G:\\game\\ShadowVale\\Assets\\_Project\\Art\\Characters\\Player\\Player.fbx",
+  "source_sha256": "f9c408f25947283e4a6d495251f472b5d61a9403b2443b4003d662dc69cd01c8",
+  "characters": [
+    {
+      "id": "Villager_01_farmer",
+      "gender_presentation": "male",
+      "elder": false,
+      "height_m": 1.7,
+      "vertices": 11596,
+      "triangles": 22980,
+      "bones": 62,
+      "unweighted_vertices": 0,
+      "non_normalized_input_weights": 0,
+      "fbx": "G:\\game\\ShadowVale\\SourceArt\\Map02_Civilians\\exports\\Villager_01_farmer.fbx"
+    },
+    {
+      "id": "Villager_02_boat_worker",
+      "gender_presentation": "male",
+      "elder": false,
+      "height_m": 1.73,
+      "vertices": 10312,
+      "triangles": 20404,
+      "bones": 62,
+      "unweighted_vertices": 0,
+      "non_normalized_input_weights": 0,
+      "fbx": "G:\\game\\ShadowVale\\SourceArt\\Map02_Civilians\\exports\\Villager_02_boat_worker.fbx"
+    },
+    {
+      "id": "Villager_03_storage_worker",
+      "gender_presentation": "male",
+      "elder": false,
+      "height_m": 1.65,
+      "vertices": 11904,
+      "triangles": 23596,
+      "bones": 62,
+      "unweighted_vertices": 0,
+      "non_normalized_input_weights": 0,
+      "fbx": "G:\\game\\ShadowVale\\SourceArt\\Map02_Civilians\\exports\\Villager_03_storage_worker.fbx"
+    },
+    {
+      "id": "Villager_04_field_worker",
+      "gender_presentation": "male",
+      "elder": false,
+      "height_m": 1.76,
+      "vertices": 11456,
+      "triangles": 22636,
+      "bones": 62,
+      "unweighted_vertices": 0,
+      "non_normalized_input_weights": 0,
+      "fbx": "G:\\game\\ShadowVale\\SourceArt\\Map02_Civilians\\exports\\Villager_04_field_worker.fbx"
+    },
+    {
+      "id": "Villager_05_woman_caregiver",
+      "gender_presentation": "female",
+      "elder": false,
+      "height_m": 1.59,
+      "vertices": 11772,
+      "triangles": 23320,
+      "bones": 62,
+      "unweighted_vertices": 0,
+      "non_normalized_input_weights": 0,
+      "fbx": "G:\\game\\ShadowVale\\SourceArt\\Map02_Civilians\\exports\\Villager_05_woman_caregiver.fbx"
+    },
+    {
+      "id": "Villager_06_woman_farmer",
+      "gender_presentation": "female",
+      "elder": false,
+      "height_m": 1.62,
+      "vertices": 11880,
+      "triangles": 23476,
+      "bones": 62,
+      "unweighted_vertices": 0,
+      "non_normalized_input_weights": 0,
+      "fbx": "G:\\game\\ShadowVale\\SourceArt\\Map02_Civilians\\exports\\Villager_06_woman_farmer.fbx"
+    },
+    {
+      "id": "Villager_07_woman_storage",
+      "gender_presentation": "female",
+      "elder": false,
+      "height_m": 1.57,
+      "vertices": 12006,
+      "triangles": 23788,
+      "bones": 62,
+      "unweighted_vertices": 0,
+      "non_normalized_input_weights": 0,
+      "fbx": "G:\\game\\ShadowVale\\SourceArt\\Map02_Civilians\\exports\\Villager_07_woman_storage.fbx"
+    },
+    {
+      "id": "Villager_08_woman_field",
+      "gender_presentation": "female",
+      "elder": false,
+      "height_m": 1.65,
+      "vertices": 11534,
+      "triangles": 22844,
+      "bones": 62,
+      "unweighted_vertices": 0,
+      "non_normalized_input_weights": 0,
+      "fbx": "G:\\game\\ShadowVale\\SourceArt\\Map02_Civilians\\exports\\Villager_08_woman_field.fbx"
+    },
+    {
+      "id": "Villager_09_elder_father",
+      "gender_presentation": "male",
+      "elder": true,
+      "height_m": 1.61,
+      "vertices": 11234,
+      "triangles": 22256,
+      "bones": 62,
+      "unweighted_vertices": 0,
+      "non_normalized_input_weights": 0,
+      "fbx": "G:\\game\\ShadowVale\\SourceArt\\Map02_Civilians\\exports\\Villager_09_elder_father.fbx"
+    },
+    {
+      "id": "Villager_10_elder_woman",
+      "gender_presentation": "female",
+      "elder": true,
+      "height_m": 1.51,
+      "vertices": 11690,
+      "triangles": 23156,
+      "bones": 62,
+      "unweighted_vertices": 0,
+      "non_normalized_input_weights": 0,
+      "fbx": "G:\\game\\ShadowVale\\SourceArt\\Map02_Civilians\\exports\\Villager_10_elder_woman.fbx"
+    },
+    {
+      "id": "Villager_11_young_worker",
+      "gender_presentation": "male",
+      "elder": false,
+      "height_m": 1.68,
+      "vertices": 9938,
+      "triangles": 19656,
+      "bones": 62,
+      "unweighted_vertices": 0,
+      "non_normalized_input_weights": 0,
+      "fbx": "G:\\game\\ShadowVale\\SourceArt\\Map02_Civilians\\exports\\Villager_11_young_worker.fbx"
+    },
+    {
+      "id": "Villager_12_woman_boat_worker",
+      "gender_presentation": "female",
+      "elder": false,
+      "height_m": 1.61,
+      "vertices": 11878,
+      "triangles": 23532,
+      "bones": 62,
+      "unweighted_vertices": 0,
+      "non_normalized_input_weights": 0,
+      "fbx": "G:\\game\\ShadowVale\\SourceArt\\Map02_Civilians\\exports\\Villager_12_woman_boat_worker.fbx"
+    }
+  ],
+  "limits": {
+    "max_triangles_per_character": 30000,
+    "retains_all_62_bones": true
+  },
+  "files": {
+    "Villager_01_farmer.fbx": "c1ce091d96c98b331df8cd0fb88db79daae0b3b8002c9852007fa5b4129700c9",
+    "Villager_02_boat_worker.fbx": "3ef36e9c3a5f6217e98350df0afdafbc661ab92d3a46944b1580ed10fc3b6536",
+    "Villager_03_storage_worker.fbx": "851446c26527f6bb8bf66c586c1a232b194470ce3ea26b7d32e770e7cc44ca67",
+    "Villager_04_field_worker.fbx": "15ccaf15d42e4132c1c80cd6bd60ff164d21e7ccd3e73c7cc833dd88b572f920",
+    "Villager_05_woman_caregiver.fbx": "da7cdbd18ab30e8956e08ced06ffb1dd16508d03c40d85db0469afed20cec34f",
+    "Villager_06_woman_farmer.fbx": "5467c0a59b8ba324161a9e1930c11fd8e04c7ef558c987317ecc55108bbbbbb4",
+    "Villager_07_woman_storage.fbx": "3de94292c143935e051c882dfe01d9f8838e45fd813a5d43a6d2133570db7666",
+    "Villager_08_woman_field.fbx": "1417c6cdfebc00431b457375d3e6f4889d6dabb30933aa21c46f745da3b6cb21",
+    "Villager_09_elder_father.fbx": "8dd127766ca5ae96b1d8064634d018547fc3a33a1f734dd1b59748a6cb2ab87b",
+    "Villager_10_elder_woman.fbx": "e49fb0d838277ee03043b86dac937a23e84fd4a40e0b22bbaf62d5f990002414",
+    "Villager_11_young_worker.fbx": "adb689b2f34d781599d73ab7d3c4d2b0c3d888b0c237b9467f61ce1722fbe6a1",
+    "Villager_12_woman_boat_worker.fbx": "6846efbe62f8d548d1255da989794baf3edba989b4a5067fbdbf0d488fb7426b"
+  }
+}

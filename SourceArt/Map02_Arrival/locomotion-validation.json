@@ -1,0 +1,30 @@
+[
+  {
+    "clip": "Nam_Walk_Ashore",
+    "bones": 28,
+    "fps": 30,
+    "left_leg_variation_radians": 0.7359399199485779,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Nam_Jetty_StepUp",
+    "bones": 28,
+    "fps": 30,
+    "left_leg_variation_radians": 0.7349773049354553,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Hung_Walk_Ashore",
+    "bones": 28,
+    "fps": 30,
+    "left_leg_variation_radians": 0.7359392642974854,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Hung_Jetty_StepUp",
+    "bones": 28,
+    "fps": 30,
+    "left_leg_variation_radians": 0.7280012965202332,
+    "rest_preserved": true
+  }
+]

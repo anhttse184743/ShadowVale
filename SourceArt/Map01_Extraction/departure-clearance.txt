@@ -1,0 +1,1 @@
+151 hull and starboard paddle sweep samples (including endpoint): clear of solid scene geometry.

@@ -1,0 +1,3 @@
+PASS observation 0 (68.000,14.793,30.000)
+PASS observation 1 (70.232,14.578,30.078)
+PASS observation 2 (65.768,14.751,30.078)

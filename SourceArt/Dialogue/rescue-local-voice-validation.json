@@ -1,0 +1,18 @@
+[
+  {
+    "id": "m1_rescue_radio_report",
+    "radio": false,
+    "master": "SourceArt\\Dialogue\\Raw\\m1_rescue_radio_report_dry.wav",
+    "sha256": "9e20953ce77ac51ef9764887244d09837d1459a00d9e0f9d482a31e4fb00223f",
+    "duration": 7.28,
+    "peak": 0.59332275390625
+  },
+  {
+    "id": "m1_rescue_radio_ack",
+    "radio": false,
+    "master": "SourceArt\\Dialogue\\Raw\\m1_rescue_radio_ack_dry.wav",
+    "sha256": "614456863670613082bab50f763968798e6c0d1df2b916530ccdaddfa7e0918a",
+    "duration": 3.6,
+    "peak": 0.547882080078125
+  }
+]

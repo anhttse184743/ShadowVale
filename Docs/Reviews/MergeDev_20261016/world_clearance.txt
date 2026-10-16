@@ -1,0 +1,22 @@
+clearance failures=0; approved operation guards=14; active scene agents=19
+Disabled overlapping legacy camp actor 02 Mission • Nam & Hung/Outpost guards/rbl_east_2; approved operation roster retained
+Disabled overlapping legacy camp actor 02 Mission • Nam & Hung/Outpost guards/rbl_east_3; approved operation roster retained
+PASS C1 Door — use guard key body clearance 
+PASS C1 Chest — combination puzzle body clearance 
+PASS C2 Radio interaction body clearance 
+PASS C3 Commander post body clearance 
+PASS Supply handoff — shelter body clearance 
+PASS Outpost guard 0 body clearance 
+PASS Outpost guard 1 body clearance 
+PASS Operation guard 1_2 body clearance 
+PASS Operation guard 1_3 body clearance 
+PASS Outpost guard 2 body clearance 
+PASS Outpost guard 3 body clearance 
+PASS Operation guard 2_2 body clearance 
+PASS Operation guard 2_3 body clearance 
+PASS Operation guard 2_4 body clearance 
+PASS Outpost guard 4 body clearance 
+PASS Outpost guard 5 body clearance 
+PASS Operation guard 3_2 body clearance 
+PASS Operation guard 3_3 body clearance 
+PASS Operation guard 3_4 body clearance 

@@ -1,0 +1,922 @@
+Assets/_Project/Art/Characters/Animations/Clips/Dying.fbx
+Assets/_Project/Art/Characters/Animations/Clips/Gunplay.fbx
+Assets/_Project/Art/Characters/Animations/Clips/Jump.fbx
+Assets/_Project/Art/Characters/Animations/Clips/Punching.fbx
+Assets/_Project/Art/Characters/Animations/Clips/Stabbing.fbx
+Assets/_Project/Art/Characters/Animations/Controllers/AC_Enemy.controller
+Assets/_Project/Art/Characters/Animations/Controllers/AC_Player.controller
+Assets/_Project/Art/Characters/Animations/Controllers/AM_NamFingers.mask
+Assets/_Project/Art/Characters/Animations/Controllers/AM_UpperBody.mask
+Assets/_Project/Art/Characters/Animations/Enemy/Enemy_Death_Backward.fbx
+Assets/_Project/Art/Characters/Animations/Enemy/Enemy_Death_Forward.fbx
+Assets/_Project/Art/Characters/Animations/Enemy/Enemy_Death_Knees.fbx
+Assets/_Project/Art/Characters/Animations/Enemy/Enemy_Death_Shot.fbx
+Assets/_Project/Art/Characters/Animations/Enemy/Enemy_Death_Stomach.fbx
+Assets/_Project/Art/Characters/Animations/Enemy/Enemy_Guard_Idle.fbx
+Assets/_Project/Art/Characters/Animations/Enemy/Enemy_HitReaction.fbx
+Assets/_Project/Art/Characters/Animations/Enemy/Enemy_Patrol_Walk.fbx
+Assets/_Project/Art/Characters/Animations/Enemy/Enemy_Rifle_AimIdle.fbx
+Assets/_Project/Art/Characters/Animations/Enemy/Enemy_Rifle_Fire.fbx
+Assets/_Project/Art/Characters/Animations/Enemy/Enemy_Rifle_Run.fbx
+Assets/_Project/Art/Characters/Animations/Enemy/Enemy_Search_LookAround.fbx
+Assets/_Project/Art/Characters/Animations/Enemy/Enemy_Startled.fbx
+Assets/_Project/Art/Characters/Animations/Generated/Idle_Tuned.anim
+Assets/_Project/Art/Characters/Animations/Generated/Run_Tuned.anim
+Assets/_Project/Art/Characters/Animations/Generated/Sneak_Tuned.anim
+Assets/_Project/Art/Characters/Animations/Generated/Walk_Tuned.anim
+Assets/_Project/Art/Characters/Animations/KnifeCarry/Enemy_Takedown_Neck_Victim.anim
+Assets/_Project/Art/Characters/Animations/KnifeCarry/Nam_Knife_Idle.anim
+Assets/_Project/Art/Characters/Animations/KnifeCarry/Nam_Knife_Run.anim
+Assets/_Project/Art/Characters/Animations/KnifeCarry/Nam_Knife_Sneak_Idle.anim
+Assets/_Project/Art/Characters/Animations/KnifeCarry/Nam_Knife_Sneak_Walk.anim
+Assets/_Project/Art/Characters/Animations/KnifeCarry/Nam_Knife_Walk.anim
+Assets/_Project/Art/Characters/Animations/KnifeCarry/Nam_Takedown_Neck.anim
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Bandage.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Binoculars_Crouch.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Binoculars_Stand.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Crouch_AimIdle.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Crouch_Idle.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Crouch_Reload.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Crouch_Walk_F.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_HitReaction.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_OpenChest.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_PickUp.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Rifle_AimIdle.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Rifle_Fire.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Rifle_Idle.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Rifle_Reload.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Rifle_ReloadTactical.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Rifle_Run.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Rifle_Walk_B.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Rifle_Walk_BL.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Rifle_Walk_BR.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Rifle_Walk_F.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Rifle_Walk_FL.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Rifle_Walk_FR.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Rifle_Walk_L.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Rifle_Walk_R.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Throw.fbx
+Assets/_Project/Art/Characters/Animations/Nam/Nam_Untie.fbx
+Assets/_Project/Art/Characters/Animations/StoneThrow/Nam_Crouch_Throw.anim
+Assets/_Project/Art/Characters/Animations/StoneThrow/Nam_Crouch_ThrowAim.anim
+Assets/_Project/Art/Characters/Enemies/Materials/lính rig - Material.mat
+Assets/_Project/Art/Characters/Enemies/lính rig Textures/texture_pbr_20250901.png
+Assets/_Project/Art/Characters/Enemies/lính rig Textures/texture_pbr_20250901_metallic.png
+Assets/_Project/Art/Characters/Enemies/lính rig Textures/texture_pbr_20250901_normal.png
+Assets/_Project/Art/Characters/Enemies/lính rig.fbx
+Assets/_Project/Art/Characters/Player/Player.fbx
+Assets/_Project/Art/Characters/Player/Textures/T_Nam_BaloRanRi.png
+Assets/_Project/Art/Characters/Player/Textures/T_Nam_BaloRanRi_Normal.png
+Assets/_Project/Art/Characters/Player/Textures/T_Nam_Gear.png
+Assets/_Project/Art/Characters/Player/Textures/texture_pbr_20250901.png
+Assets/_Project/Art/Characters/Player/Textures/texture_pbr_20250901_normal.png
+Assets/_Project/Art/Characters/Player/Y Bot.fbx
+Assets/_Project/Art/Environment/AnGiangRocks/GraniteRock.shader
+Assets/_Project/Art/Environment/AnGiangRocks/Materials/01_BroadBoulder.mat
+Assets/_Project/Art/Environment/AnGiangRocks/Materials/02_UprightBoulder.mat
+Assets/_Project/Art/Environment/AnGiangRocks/Materials/05_MossBoulder.mat
+Assets/_Project/Art/Environment/AnGiangRocks/Meshes/01_BroadBoulder_LOD0.asset
+Assets/_Project/Art/Environment/AnGiangRocks/Meshes/01_BroadBoulder_LOD1.asset
+Assets/_Project/Art/Environment/AnGiangRocks/Meshes/01_BroadBoulder_LOD2.asset
+Assets/_Project/Art/Environment/AnGiangRocks/Meshes/02_UprightBoulder_LOD0.asset
+Assets/_Project/Art/Environment/AnGiangRocks/Meshes/02_UprightBoulder_LOD1.asset
+Assets/_Project/Art/Environment/AnGiangRocks/Meshes/02_UprightBoulder_LOD2.asset
+Assets/_Project/Art/Environment/AnGiangRocks/Meshes/05_MossBoulder_LOD0.asset
+Assets/_Project/Art/Environment/AnGiangRocks/Meshes/05_MossBoulder_LOD1.asset
+Assets/_Project/Art/Environment/AnGiangRocks/Meshes/05_MossBoulder_LOD2.asset
+Assets/_Project/Art/Environment/AnGiangRocks/Prefabs/01_BroadBoulder.prefab
+Assets/_Project/Art/Environment/AnGiangRocks/Prefabs/02_UprightBoulder.prefab
+Assets/_Project/Art/Environment/AnGiangRocks/Prefabs/03_HillsideCluster.prefab
+Assets/_Project/Art/Environment/AnGiangRocks/Prefabs/05_MossBoulder.prefab
+Assets/_Project/Art/Environment/DetailedJetty/Jetty timber.mat
+Assets/_Project/Art/Environment/DetailedJetty/Sampan.asset
+Assets/_Project/Art/Environment/FieldCamp/Materials/Aged paper.mat
+Assets/_Project/Art/Environment/FieldCamp/Materials/Aged paperTexture.asset
+Assets/_Project/Art/Environment/FieldCamp/Materials/Charcoal.mat
+Assets/_Project/Art/Environment/FieldCamp/Materials/CharcoalTexture.asset
+Assets/_Project/Art/Environment/FieldCamp/Materials/Fire particles.mat
+Assets/_Project/Art/Environment/FieldCamp/Materials/Fire particlesSprite.asset
+Assets/_Project/Art/Environment/FieldCamp/Materials/Fire ring stone.mat
+Assets/_Project/Art/Environment/FieldCamp/Materials/Fire ring stoneTexture.asset
+Assets/_Project/Art/Environment/FieldCamp/Materials/Hemp rope.mat
+Assets/_Project/Art/Environment/FieldCamp/Materials/Hemp ropeTexture.asset
+Assets/_Project/Art/Environment/FieldCamp/Materials/Olive field metal.mat
+Assets/_Project/Art/Environment/FieldCamp/Materials/Olive field metalTexture.asset
+Assets/_Project/Art/Environment/FieldCamp/Materials/PlanningMap.asset
+Assets/_Project/Art/Environment/FieldCamp/Materials/PlanningMap.mat
+Assets/_Project/Art/Environment/FieldCamp/Materials/Sandbag canvas.mat
+Assets/_Project/Art/Environment/FieldCamp/Materials/Sandbag canvasTexture.asset
+Assets/_Project/Art/Environment/FieldCamp/Materials/Smoke particles.mat
+Assets/_Project/Art/Environment/FieldCamp/Materials/Smoke particlesSprite.asset
+Assets/_Project/Art/Environment/FieldCamp/Materials/Weathered olive canvas.mat
+Assets/_Project/Art/Environment/FieldCamp/Materials/Weathered olive canvasTexture.asset
+Assets/_Project/Art/Environment/FieldCamp/Materials/Worn timber.mat
+Assets/_Project/Art/Environment/FieldCamp/Materials/Worn timberTexture.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/CampfireKitchen_Combined0.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/CampfireKitchen_Combined1.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/CampfireKitchen_Combined2.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/CampfireKitchen_Combined3.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/CommandTent_Combined0.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/CommandTent_Combined1.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/CommandTent_Combined2.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/PlanningTable_Combined0.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/PlanningTable_Combined1.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/PlanningTable_Combined2.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/PlanningTable_Combined3.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/PlanningTable_Combined4.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/RadioStation_Combined0.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/RadioStation_Combined1.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/RadioStation_Combined2.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/RadioStation_Combined3.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/SandbagWall_Combined0.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/SandbagWall_Combined1.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/SandbagWall_Combined2.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/SupplyStack_Combined0.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/SupplyStack_Combined1.asset
+Assets/_Project/Art/Environment/FieldCamp/Meshes/SupplyStack_Combined2.asset
+Assets/_Project/Art/Environment/FieldCamp/Prefabs/CampfireKitchen.prefab
+Assets/_Project/Art/Environment/FieldCamp/Prefabs/CommandTent.prefab
+Assets/_Project/Art/Environment/FieldCamp/Prefabs/PlanningTable.prefab
+Assets/_Project/Art/Environment/FieldCamp/Prefabs/RadioStation.prefab
+Assets/_Project/Art/Environment/FieldCamp/Prefabs/SandbagWall.prefab
+Assets/_Project/Art/Environment/FieldCamp/Prefabs/SupplyStack.prefab
+Assets/_Project/Art/Environment/ForestV2/Materials/Bamboo culm.mat
+Assets/_Project/Art/Environment/ForestV2/Materials/Bamboo culmDetail.asset
+Assets/_Project/Art/Environment/ForestV2/Materials/Forest floorDetail.asset
+Assets/_Project/Art/Environment/ForestV2/Materials/Forest leaves.mat
+Assets/_Project/Art/Environment/ForestV2/Materials/Forest leavesDetail.asset
+Assets/_Project/Art/Environment/ForestV2/Materials/ForestSky.mat
+Assets/_Project/Art/Environment/ForestV2/Materials/Grass blades.mat
+Assets/_Project/Art/Environment/ForestV2/Materials/Grass bladesDetail.asset
+Assets/_Project/Art/Environment/ForestV2/Materials/Rough bark.mat
+Assets/_Project/Art/Environment/ForestV2/Materials/Rough barkDetail.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BambooClump_Leaves0.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BambooClump_Leaves1.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BambooClump_Leaves2.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BambooClump_Wood0.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BambooClump_Wood1.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BambooClump_Wood2.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BroadleafTall_A_Leaves0.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BroadleafTall_A_Leaves1.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BroadleafTall_A_Leaves2.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BroadleafTall_A_Wood0.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BroadleafTall_A_Wood1.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BroadleafTall_A_Wood2.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BroadleafTall_B_Leaves0.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BroadleafTall_B_Leaves1.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BroadleafTall_B_Leaves2.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BroadleafTall_B_Wood0.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BroadleafTall_B_Wood1.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/BroadleafTall_B_Wood2.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/CoverShrub_A_Leaves0.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/CoverShrub_A_Leaves1.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/CoverShrub_A_Leaves2.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/CoverShrub_A_Wood0.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/CoverShrub_A_Wood1.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/CoverShrub_A_Wood2.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/CoverShrub_B_Leaves0.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/CoverShrub_B_Leaves1.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/CoverShrub_B_Leaves2.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/CoverShrub_B_Wood0.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/CoverShrub_B_Wood1.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/CoverShrub_B_Wood2.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/Fern_Leaves0.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/Fern_Leaves1.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/Fern_Leaves2.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/GroundGrass_Leaves0.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/GroundGrass_Leaves1.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/GroundGrass_Leaves2.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/Sapling_Leaves0.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/Sapling_Leaves1.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/Sapling_Leaves2.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/Sapling_Wood0.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/Sapling_Wood1.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/Sapling_Wood2.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/SpreadingTree_Leaves0.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/SpreadingTree_Leaves1.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/SpreadingTree_Leaves2.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/SpreadingTree_Wood0.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/SpreadingTree_Wood1.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/SpreadingTree_Wood2.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/TallGrass_Leaves0.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/TallGrass_Leaves1.asset
+Assets/_Project/Art/Environment/ForestV2/Meshes/TallGrass_Leaves2.asset
+Assets/_Project/Art/Environment/ForestV2/Prefabs/BambooClump.prefab
+Assets/_Project/Art/Environment/ForestV2/Prefabs/BroadleafTall_A.prefab
+Assets/_Project/Art/Environment/ForestV2/Prefabs/BroadleafTall_B.prefab
+Assets/_Project/Art/Environment/ForestV2/Prefabs/CoverShrub_A.prefab
+Assets/_Project/Art/Environment/ForestV2/Prefabs/CoverShrub_B.prefab
+Assets/_Project/Art/Environment/ForestV2/Prefabs/Fern.prefab
+Assets/_Project/Art/Environment/ForestV2/Prefabs/GroundGrass.prefab
+Assets/_Project/Art/Environment/ForestV2/Prefabs/Sapling.prefab
+Assets/_Project/Art/Environment/ForestV2/Prefabs/SpreadingTree.prefab
+Assets/_Project/Art/Environment/ForestV2/Prefabs/TallGrass.prefab
+Assets/_Project/Art/Environment/LayoutTest/Materials/Broadleaf.mat
+Assets/_Project/Art/Environment/LayoutTest/Materials/Canvas.mat
+Assets/_Project/Art/Environment/LayoutTest/Materials/Dark timber.mat
+Assets/_Project/Art/Environment/LayoutTest/Materials/Earth grain.asset
+Assets/_Project/Art/Environment/LayoutTest/Materials/Earth.mat
+Assets/_Project/Art/Environment/LayoutTest/Materials/Ground grain.asset
+Assets/_Project/Art/Environment/LayoutTest/Materials/Ground.mat
+Assets/_Project/Art/Environment/LayoutTest/Materials/Olive metal.mat
+Assets/_Project/Art/Environment/LayoutTest/Materials/Paper.mat
+Assets/_Project/Art/Environment/LayoutTest/Materials/Timber grain.asset
+Assets/_Project/Art/Environment/LayoutTest/Materials/Timber.mat
+Assets/_Project/Art/Environment/LayoutTest/Meshes/BriefingTable_0.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/BriefingTable_1.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/BriefingTable_2.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/BriefingTable_3.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/CamouflageNet_0.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/Cot_0.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/Cot_1.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/EquipmentShelf_0.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/EquipmentShelf_1.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/EquipmentShelf_2.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/EquipmentShelf_3.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/Lantern_0.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/Lantern_1.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/MissionBoard_0.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/MissionBoard_1.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/MissionBoard_2.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/RadioDesk_0.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/RadioDesk_1.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/RadioDesk_2.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/RifleRack_0.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/RifleRack_1.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/RifleRack_2.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/ShelterBanks.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/ShelterGroundRoof.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/ShelterRetainingWalls.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/ShelterShell_0.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/ShelterShell_2.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/SupplyCrates_0.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/SupplyCrates_1.asset
+Assets/_Project/Art/Environment/LayoutTest/Meshes/SupplyCrates_2.asset
+Assets/_Project/Art/Environment/LayoutTest/Prefabs/BriefingTable.prefab
+Assets/_Project/Art/Environment/LayoutTest/Prefabs/CamouflageNet.prefab
+Assets/_Project/Art/Environment/LayoutTest/Prefabs/Cot.prefab
+Assets/_Project/Art/Environment/LayoutTest/Prefabs/EquipmentShelf.prefab
+Assets/_Project/Art/Environment/LayoutTest/Prefabs/Lantern.prefab
+Assets/_Project/Art/Environment/LayoutTest/Prefabs/MissionBoard.prefab
+Assets/_Project/Art/Environment/LayoutTest/Prefabs/RadioDesk.prefab
+Assets/_Project/Art/Environment/LayoutTest/Prefabs/RifleRack.prefab
+Assets/_Project/Art/Environment/LayoutTest/Prefabs/ShelterShell.prefab
+Assets/_Project/Art/Environment/LayoutTest/Prefabs/SupplyCrates.prefab
+Assets/_Project/Art/Environment/Map01Detailed/Dry soil.mat
+Assets/_Project/Art/Environment/Map01Detailed/Ground.mat
+Assets/_Project/Art/Environment/Map01Detailed/GroundTexture.asset
+Assets/_Project/Art/Environment/Map01Detailed/Mesh_1.asset
+Assets/_Project/Art/Environment/Map01Detailed/River water.mat
+Assets/_Project/Art/Environment/Map01Detailed/Weathered timber.mat
+Assets/_Project/Art/Environment/Map01Operations/RadioWorkbench.fbx
+Assets/_Project/Art/Environment/Map01Operations/SV_Brass.mat
+Assets/_Project/Art/Environment/Map01Operations/SV_Cloth.mat
+Assets/_Project/Art/Environment/Map01Operations/SV_Edge.mat
+Assets/_Project/Art/Environment/Map01Operations/SV_Iron.mat
+Assets/_Project/Art/Environment/Map01Operations/SV_RedCloth.mat
+Assets/_Project/Art/Environment/Map01Operations/SV_Strap.mat
+Assets/_Project/Art/Environment/Map01Operations/SV_Wood.mat
+Assets/_Project/Art/Environment/Map01Operations/SV_WoodEdge.mat
+Assets/_Project/Art/Environment/Map01Operations/SupplyBag.fbx
+Assets/_Project/Art/Environment/Map01Operations/SupplyChest.fbx
+Assets/_Project/Art/Environment/Map01Operations/Warehouse.fbx
+Assets/_Project/Art/Environment/Map01_Optimized/MapVertexColor.shader
+Assets/_Project/Art/Environment/Map01_Optimized/Materials/Actor_Hung.mat
+Assets/_Project/Art/Environment/Map01_Optimized/Materials/Actor_patrol_0.mat
+Assets/_Project/Art/Environment/Map01_Optimized/Materials/MapPalette.mat
+Assets/_Project/Art/Environment/Map01_Optimized/Materials/Tracer.mat
+Assets/_Project/Art/Environment/Map01_Optimized/Meshes/Prop_Crate.asset
+Assets/_Project/Art/Environment/Map01_Optimized/Prefabs/Prop_Crate.prefab
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Map1_ArtStage.unity
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/MR_BarkBrown.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/MR_Grass_0.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/MR_Grass_1.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/MR_Grass_2.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/MR_Grass_3.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/MR_Leaves_0.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/MR_Leaves_1.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/MR_Leaves_2.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/MR_Leaves_3.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/MR_WeatheredPlanks.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_AgedTeak.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_Bakelite.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_BlackSteel.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_CorrugatedZinc.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_EndgrainRepair.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_FadedKhaki.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_FieldMap.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_LampGlass.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_Linen.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_OliveCanvas.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_PaintedSteel.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_PalmDry.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_PalmOld.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_PalmRepair.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_PalmWeave.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_Paper.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_RedBrick.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_RoofBamboo.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_Stencil.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_WeatheredTimber.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_WetMud.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Materials/RG_WornBrass.mat
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/IntegratedNavMesh 4.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/Map 1.unity
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/Meshes/C1_LOD0_10_DynamicDoors 1.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/Meshes/C1_LOD0_11_DynamicDoors 1.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/Meshes/C1_LOD0_12_DynamicDoors 1.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/Meshes/C1_LOD0_9_DynamicDoors 1.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/Meshes/C2_LOD0_4_RadioChairMoved.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/Meshes/C2_LOD0_5_RadioChairMoved.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/Meshes/C2_LOD0_6_RadioChairMoved.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Meshes/C1_ApprovedArt.fbx
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Meshes/C2_ApprovedArt.fbx
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Meshes/C3_MainGarrison_Art.fbx
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Runtime/Map01ArtNavigationReady.cs
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/GateCollision_0.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/GateCollision_1.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/GateCollision_2.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/GateCollision_3.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/GateCollision_4.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/GateCollision_5.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_0.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_1.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_10.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_11.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_12.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_13.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_14.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_15.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_16.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_17.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_18.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_19.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_2.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_20.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_21.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_22.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_23.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_24.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_25.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_26.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_27.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_28.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_29.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_3.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_30.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_31.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_32.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_33.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_34.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_35.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_36.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_37.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_38.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_39.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_4.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_40.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_41.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_42.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_43.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_44.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_45.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_46.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_47.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_48.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_49.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_5.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_50.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_51.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_52.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_53.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_54.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_55.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_56.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_57.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_58.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_59.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_6.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_60.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_61.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_62.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_63.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_64.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_65.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_66.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_67.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_68.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_69.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_7.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_70.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_71.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_8.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/Meshes/JettyGrain_9.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_0.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_1.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_13.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_14.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_15.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_16.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_17.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_18.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_19.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_2.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_20.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_21.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_22.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_23.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_24.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_25.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_26.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_27.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_28.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_29.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_3.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_30.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_31.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_32.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_33.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_34.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_35.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_4.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_5.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_6.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_7.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD0_8.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD1_36.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD1_37.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD1_38.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD1_39.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD1_40.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C1_LOD1_41.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_0.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_1.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_10.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_11.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_12.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_13.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_14.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_15.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_16.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_17.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_18.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_19.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_2.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_20.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_21.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_22.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_23.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_24.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_25.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_26.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_27.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_28.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_29.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_3.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_30.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_31.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_32.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_33.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_34.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_35.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_36.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_37.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_38.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_39.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_40.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_41.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_42.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_43.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_44.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_45.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_46.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_47.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_48.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_49.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_7.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_8.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD0_9.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD1_50.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD1_51.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD1_52.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD1_53.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD1_54.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD1_55.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD1_56.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD1_57.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C2_LOD1_58.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_0.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_1.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_10.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_100.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_101.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_102.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_103.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_104.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_105.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_106.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_107.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_108.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_109.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_11.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_110.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_111.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_112.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_113.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_114.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_115.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_116.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_117.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_118.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_119.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_12.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_120.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_121.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_122.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_123.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_124.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_125.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_126.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_127.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_128.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_129.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_13.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_130.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_131.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_132.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_133.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_134.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_135.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_136.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_137.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_138.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_139.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_14.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_140.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_141.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_142.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_143.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_144.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_145.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_146.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_147.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_148.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_149.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_15.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_150.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_151.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_152.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_153.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_154.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_155.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_156.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_157.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_158.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_159.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_16.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_160.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_161.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_162.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_163.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_164.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_165.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_166.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_167.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_168.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_169.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_17.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_170.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_171.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_172.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_173.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_174.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_175.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_176.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_177.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_178.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_179.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_18.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_180.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_181.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_182.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_183.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_184.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_185.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_186.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_187.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_188.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_19.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_2.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_20.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_21.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_22.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_23.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_24.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_25.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_26.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_27.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_28.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_29.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_3.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_30.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_31.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_32.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_33.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_34.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_35.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_36.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_37.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_38.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_39.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_4.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_40.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_41.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_42.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_43.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_44.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_45.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_46.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_47.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_48.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_49.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_5.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_50.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_51.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_52.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_53.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_54.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_55.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_56.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_57.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_58.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_59.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_6.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_60.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_61.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_62.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_63.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_64.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_65.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_66.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_67.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_68.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_69.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_7.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_70.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_71.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_72.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_73.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_74.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_75.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_76.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_77.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_78.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_79.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_8.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_80.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_81.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_82.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_83.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_84.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_85.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_86.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_87.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_88.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_89.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_9.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_90.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_91.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_92.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_93.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_94.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_95.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_96.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_97.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_98.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD0_99.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD1_189.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD1_190.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD1_191.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD1_192.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD1_193.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD1_194.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD1_195.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD1_196.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD1_197.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD1_198.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD1_199.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD1_200.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/PlatformBatches_v6/C3_LOD1_201.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/StageTerrain.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Textures/bark_brown_02_MetalSmooth.png
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Textures/bark_brown_02_diff_2k.jpg
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Textures/bark_brown_02_nor_gl_2k.png
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Textures/weathered_planks_MetalSmooth.png
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Textures/weathered_planks_diff_2k.jpg
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Textures/weathered_planks_nor_gl_2k.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_AgedTeak_BaseColor.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_AgedTeak_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_AgedTeak_Normal.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Bakelite_BaseColor.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Bakelite_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Bakelite_Normal.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_BlackSteel_BaseColor.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_BlackSteel_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_BlackSteel_Normal.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_CorrugatedZinc_BaseColor.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_CorrugatedZinc_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_CorrugatedZinc_Normal.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_EndgrainRepair_BaseColor.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_EndgrainRepair_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_EndgrainRepair_Normal.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_FadedKhaki_BaseColor.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_FadedKhaki_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_FadedKhaki_Normal.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_FieldMap_BaseColor.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_FieldMap_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_FieldMap_Normal.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_LampGlass_BaseColor.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_LampGlass_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_LampGlass_Normal.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Linen_BaseColor.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Linen_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Linen_Normal.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_OliveCanvas_BaseColor.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_OliveCanvas_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_OliveCanvas_Normal.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_PaintedSteel_BaseColor.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_PaintedSteel_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_PaintedSteel_Normal.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Paper_BaseColor.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Paper_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Paper_Normal.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_RedBrick_BaseColor.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_RedBrick_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_RedBrick_Normal.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Stencil_BaseColor.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Stencil_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_Stencil_Normal.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WeatheredTimber_BaseColor.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WeatheredTimber_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WeatheredTimber_Normal.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WetMud_BaseColor.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WetMud_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WetMud_Normal.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WornBrass_BaseColor.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WornBrass_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Textures/RG_WornBrass_Normal.png
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmDry_BaseColor.png
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmDry_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmDry_Normal.png
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmOld_BaseColor.png
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmOld_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmOld_Normal.png
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmRepair_BaseColor.png
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmRepair_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmRepair_Normal.png
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmWeave_BaseColor.png
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmWeave_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_PalmWeave_Normal.png
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_RoofBamboo_BaseColor.png
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_RoofBamboo_MetalSmooth.png
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Textures/RG_RoofBamboo_Normal.png
+Assets/_Project/Art/Items/ak-47.glb
+Assets/_Project/Art/Items/ka-bar_knife.glb
+Assets/_Project/Art/Materials/M_Tracer.mat
+Assets/_Project/Audio/FootstepBank.asset
+Assets/_Project/Audio/SFX/Footsteps/running_in_grass.mp3
+Assets/_Project/Audio/SFX/Footsteps/step_water_1.mp3
+Assets/_Project/Audio/SFX/Footsteps/step_water_2.mp3
+Assets/_Project/Audio/SFX/Weapons/gun.mp3
+Assets/_Project/Audio/SFX/Weapons/knife.mp3
+Assets/_Project/Map01/Generated/Map01Content.json
+Assets/_Project/Map01/Map01Balance.json
+Assets/_Project/Map01/Prefabs/RBL_RifleGuard.prefab
+Assets/_Project/Map01/Resources/Story/Radio_power_—_off.mat
+Assets/_Project/Map01/Resources/Story/Radio_power_—_on.mat
+Assets/_Project/Map01/Runtime/ForestInstanceTint.cs
+Assets/_Project/Map01/Runtime/ForestPoint.cs
+Assets/_Project/Map01/Runtime/Map01EnemyController.cs
+Assets/_Project/Map01/Runtime/Map01Hud.cs
+Assets/_Project/Map01/Runtime/Map01Inventory.cs
+Assets/_Project/Map01/Runtime/Map01Mission.cs
+Assets/_Project/Map01/Runtime/Map01OperationHints.cs
+Assets/_Project/Map01/Runtime/Map01OperationsLayout.cs
+Assets/_Project/Map01/Runtime/Map01PlayerInteraction.cs
+Assets/_Project/Map01/Runtime/Map01Quest.cs
+Assets/_Project/Map01/Runtime/Map01SaveSystem.cs
+Assets/_Project/Map01/Runtime/Map01SupplyProps.cs
+Assets/_Project/Prefabs/Items/W_AK47.prefab
+Assets/_Project/Prefabs/Items/W_Knife.prefab
+Assets/_Project/Prefabs/Player/Player.prefab
+Assets/_Project/Prefabs/VFX/FX_ShotTracer.prefab
+Assets/_Project/Scenes/Maps/Map 1.unity
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant bark.mat
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -1,-2.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -1,-3.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -1,-4.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -1,1.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -1,2.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -1,3.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -2,-1.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -2,-2.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -2,-3.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -2,-4.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -2,0.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -2,1.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -2,2.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -2,3.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -3,-1.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -3,-2.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -3,-3.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -3,-4.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -3,0.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -3,1.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -3,2.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -3,3.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -4,-1.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -4,-2.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -4,-3.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -4,0.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest -4,1.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 0,-2.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 0,-3.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 0,-4.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 0,1.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 0,2.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 0,3.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 1,-1.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 1,-2.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 1,-3.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 1,-4.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 1,0.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 1,1.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 1,2.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 1,3.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 2,-1.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 2,-2.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 2,-3.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 2,-4.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 2,0.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 2,1.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 2,2.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 3,-1.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 3,-2.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 3,-3.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 3,0.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 3,1.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant forest 3,2.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant leaves dark.mat
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Distant leaves.mat
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Ground ring.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/River beyond the map.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Surrounding ground.asset
+Assets/_Project/Scenes/Maps/Map 1/Surroundings/Surrounding ground.mat
+Assets/_Project/ScriptableObjects/GameSettings/WeaponGripConfig.asset
+Assets/_Project/Scripts/Gameplay/Audio/CombatAudio.cs
+Assets/_Project/Scripts/Gameplay/Audio/FootstepBank.cs
+Assets/_Project/Scripts/Gameplay/Combat/Health.cs
+Assets/_Project/Scripts/Gameplay/Combat/PlayerCombat.cs
+Assets/_Project/Scripts/Gameplay/Combat/ReloadMagazineCarrier.cs
+Assets/_Project/Scripts/Gameplay/Combat/ShotTracer.cs
+Assets/_Project/Scripts/Gameplay/Combat/Weapon.cs
+Assets/_Project/Scripts/Gameplay/Combat/WeaponGripConfig.cs
+Assets/_Project/Scripts/Gameplay/Player/ForearmTwist.cs
+Assets/_Project/Scripts/Gameplay/Player/PlayerController.cs
+Assets/_Project/Scripts/Gameplay/Player/PlayerFootsteps.cs
+Assets/_Project/Scripts/Gameplay/Player/ThirdPersonCamera.cs
+Assets/_Project/Scripts/UI/HUD/WeaponHotbar.cs
+Packages/com.unity.ai.navigation/Gizmos/NavMeshModifier Icon.png
+Packages/com.unity.ai.navigation/Gizmos/NavMeshModifierVolume Icon.png
+Packages/com.unity.ai.navigation/Gizmos/NavMeshSurface Icon.png
+Packages/com.unity.ai.navigation/Runtime/NavMeshModifier.cs
+Packages/com.unity.ai.navigation/Runtime/NavMeshModifierVolume.cs
+Packages/com.unity.ai.navigation/Runtime/NavMeshSurface.cs
+Packages/com.unity.cloud.gltfast/Editor/Scripts/GltfImporter.cs
+Packages/com.unity.cloud.gltfast/Runtime/Shader/Includes/Emission.cginc
+Packages/com.unity.cloud.gltfast/Runtime/Shader/Includes/Normal.cginc
+Packages/com.unity.cloud.gltfast/Runtime/Shader/SubGraphs/BaseColor.shadersubgraph
+Packages/com.unity.cloud.gltfast/Runtime/Shader/SubGraphs/Emission.shadersubgraph
+Packages/com.unity.cloud.gltfast/Runtime/Shader/SubGraphs/MetallicRoughness.shadersubgraph
+Packages/com.unity.cloud.gltfast/Runtime/Shader/SubGraphs/Normal.shadersubgraph
+Packages/com.unity.cloud.gltfast/Runtime/Shader/SubGraphs/Occlusion.shadersubgraph
+Packages/com.unity.cloud.gltfast/Runtime/Shader/SubGraphs/PBR_metallic_roughness.shadersubgraph
+Packages/com.unity.cloud.gltfast/Runtime/Shader/SubGraphs/ScreenGrab.shadersubgraph
+Packages/com.unity.cloud.gltfast/Runtime/Shader/SubGraphs/TextureTransform.shadersubgraph
+Packages/com.unity.cloud.gltfast/Runtime/Shader/glTF-pbrMetallicRoughness.shadergraph
+Packages/com.unity.render-pipelines.universal/Editor/AssetVersion.cs
+Packages/com.unity.render-pipelines.universal/Editor/ShaderGraph/UniversalMetadata.cs
+Packages/com.unity.render-pipelines.universal/Runtime/UniversalAdditionalLightData.cs
+Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+Packages/com.unity.render-pipelines.universal/Shaders/Particles/ParticlesUnlit.shader
+Packages/com.unity.render-pipelines.universal/Shaders/Unlit.shader
+Packages/com.unity.shadergraph/Editor/Data/SubGraph/SubGraphAsset.cs
+Packages/com.unity.shadergraph/Editor/Generation/Targets/BuiltIn/Editor/ShaderGraph/BuiltInMetadata.cs
+Packages/com.unity.shadergraph/Editor/Importers/ShaderGraphImporter.cs
+Packages/com.unity.shadergraph/Editor/Importers/ShaderGraphMetadata.cs
+Packages/com.unity.shadergraph/Editor/Importers/ShaderSubGraphImporter.cs
+Packages/com.unity.shadergraph/Editor/Importers/ShaderSubGraphMetadata.cs
+Packages/com.unity.ugui/Runtime/UGUI/UI/Core/GraphicRaycaster.cs
+Packages/com.unity.ugui/Runtime/UGUI/UI/Core/Image.cs
+Packages/com.unity.ugui/Runtime/UGUI/UI/Core/Layout/CanvasScaler.cs
+Packages/com.unity.ugui/Runtime/UGUI/UI/Core/Text.cs

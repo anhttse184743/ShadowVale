@@ -1,0 +1,100 @@
+{
+  "passed": 10,
+  "failed": 0,
+  "tests": [
+    {
+      "name": "ShadowVale.Map01.Tests.Map02ArrivalTests.NaturalArrivalPreservesPartyAndEquipment",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02ArrivalTests.SkippedArrivalUsesSameDrySpawn",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueApproachTests.SideBushHintIsReadyAndUsesActualPullAction",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueBushTests.AllNewAssetsUseHumanoidMotionAndVietnameseDirectVoices",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueBushTests.BushSuccessAndEscapeKeepEnemyAliveUntilFinisherAndRestoreControls",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueBushTests.EitherArrivalStartsWalkingFromActualPositions",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueBushTests.IntroAndExecutionStayBoundAndPresentDeathBeforeFailure",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueBushTests.IntroSkipAndRetryKeepSeenFlagAndBushEscOnlyPauses",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueBushTests.TimingNeedsThreeWinsAllowsOneMissAndFailsOnSecond",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueBushTests.FlankCatchUsesContactBeforePullAndEnemyCanEscape",
+      "result": "Passed"
+    }
+  ],
+  "verification": "Broad run: eight passes, collapse check failed. Hung execution was revised; bound/skip and grapple reruns passed. Execution was checked again with real audio timing. The flank fixture was corrected to retain scene actor references after entering Play and finish the established alarm scene before asserting gameplay input. All ten distinct checks passed. Production runtime did not change during those fixture corrections.",
+  "clips": [
+    "Hung_Bound_Execution",
+    "Nam_Bush_GrabPull",
+    "Enemy_Bush_GrabPull",
+    "Nam_Bush_Approach"
+  ],
+  "fps": 30,
+  "pullSeconds": 2.6,
+  "gripAt": 1.2,
+  "mainEditor": {
+    "compile": {
+      "status": "completed",
+      "failed": false,
+      "errors": []
+    },
+    "resources": {
+      "project": "G:/game/ShadowVale/Assets",
+      "playing": false,
+      "compiling": false,
+      "clips": [
+        {
+          "name": "Nam_Bush_Approach",
+          "found": true,
+          "human": true,
+          "seconds": 0.99999994
+        },
+        {
+          "name": "Nam_Bush_GrabPull",
+          "found": true,
+          "human": true,
+          "seconds": 2.60000014
+        },
+        {
+          "name": "Enemy_Bush_GrabPull",
+          "found": true,
+          "human": true,
+          "seconds": 2.60000014
+        },
+        {
+          "name": "Hung_Bound_Execution",
+          "found": true,
+          "human": true,
+          "seconds": 3.00000024
+        }
+      ],
+      "pull": 2.6,
+      "gripAt": 1.2,
+      "feet": true,
+      "introRadius": 40,
+      "stonesPerPile": 3,
+      "stoneSlots": 12
+    }
+  }
+}

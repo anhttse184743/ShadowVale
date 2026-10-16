@@ -1,0 +1,8 @@
+Finish
+Nam actor (0.00, 0.00, 0.00)
+Enemy actor (0.00, 0.00, 0.00)
+Left torso contact 0.003378334
+Head penetration 0
+Right contact 0.02305536
+Embracing contact 0.00116052
+Defender embracing-arm contact 1.922192E-06

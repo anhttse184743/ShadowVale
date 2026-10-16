@@ -9,6 +9,8 @@ namespace ShadowVale.Data.Coordination
     public sealed class CoordinationPlan
     {
         /// <summary>Target node index per agent, same order as <c>QuboRequest.AgentNodes</c>.</summary>
+        public int SamplesEvaluated { get; set; }
+        public int RawFeasibleSamples { get; set; }
         public int[] AgentToTarget { get; set; }
         /// <summary>−(energy + offset); equals the reference objective F for feasible plans.</summary>
         public double ObjectiveValue { get; set; }

@@ -1,0 +1,135 @@
+[
+  {
+    "name": "ShadowVale.Map01.Tests.AimAtCrosshairTests.BarrelStaysOnTheCrosshairWhileAimingSweepingAndFiring",
+    "result": "Passed",
+    "duration": "32.776127",
+    "finished": "2026-10-14 14:53:05Z",
+    "run": "khoa-dev-tests.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.AimAtCrosshairTests.TheBendComesAndGoesWithTheShotAndSurvivesAPauseAndAReload",
+    "result": "Passed",
+    "duration": "24.896604",
+    "finished": "2026-10-14 14:53:30Z",
+    "run": "khoa-dev-tests.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.Map02ArrivalTests.NaturalArrivalPreservesPartyAndEquipment",
+    "result": "Passed",
+    "duration": "113.377249",
+    "finished": "2026-10-14 15:11:18Z",
+    "run": "khoa-dev-arrival-contacts.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.Map02ArrivalTests.SkippedArrivalUsesSameDrySpawn",
+    "result": "Passed",
+    "duration": "22.993238",
+    "finished": "2026-10-14 15:11:41Z",
+    "run": "khoa-dev-arrival-contacts.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.ReloadMagazineTests.MagazineLeavesTheRifleRidesTheHandAndGoesBack",
+    "result": "Passed",
+    "duration": "0.142393",
+    "finished": "2026-10-14 14:55:27Z",
+    "run": "khoa-dev-tests.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.RescueApproachTests.FortyMetreIntroPreemptsGuardAndStonesAreFiniteSavedLoot",
+    "result": "Passed",
+    "duration": "21.416242",
+    "finished": "2026-10-14 14:55:49Z",
+    "run": "khoa-dev-tests.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.RescueApproachTests.SideBushHintIsReadyAndUsesActualPullAction",
+    "result": "Passed",
+    "duration": "17.216601",
+    "finished": "2026-10-14 14:56:06Z",
+    "run": "khoa-dev-tests.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.RescueBushTests.BushSuccessAndEscapeKeepEnemyAliveUntilFinisherAndRestoreControls",
+    "result": "Passed",
+    "duration": "109.698733",
+    "finished": "2026-10-14 14:57:55Z",
+    "run": "khoa-dev-tests.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.RescueBushTests.IntroAndExecutionStayBoundAndPresentDeathBeforeFailure",
+    "result": "Passed",
+    "duration": "40.956456",
+    "finished": "2026-10-14 14:58:36Z",
+    "run": "khoa-dev-tests.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.RescueRigCompatibilityTests.BushAvatarIncludesEveryBoneOfTheCurrentPlayerRig",
+    "result": "Passed",
+    "duration": "0.008847",
+    "finished": "2026-10-14 15:03:31Z",
+    "run": "khoa-dev-final-tests.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.RescueRigCompatibilityTests.RefinedHugHandsUseTheCurrentPlayerBoneBindings",
+    "result": "Passed",
+    "duration": "1.034089",
+    "finished": "2026-10-14 15:03:32Z",
+    "run": "khoa-dev-final-tests.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.RescueTests.ThreeWavesSpawnOnlyOnceOffscreenAndReloadKeepsDefeatedEnemies",
+    "result": "Passed",
+    "duration": "30.488156",
+    "finished": "2026-10-14 14:59:07Z",
+    "run": "khoa-dev-tests.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.ShelterAutoFinishTests.HungFirstStartsImmediatelyAndCompletesWhenNamEnters",
+    "result": "Passed",
+    "duration": "28.138843",
+    "finished": "2026-10-14 14:59:35Z",
+    "run": "khoa-dev-tests.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.ShelterAutoFinishTests.NamFirstCompletesInsideWhileHungIsStillFarOutside",
+    "result": "Passed",
+    "duration": "21.417029",
+    "finished": "2026-10-14 14:59:57Z",
+    "run": "khoa-dev-tests.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.ShotTracerLifecycleTests.DestroyedTracerWrapperDoesNotAccessNativeRenderer",
+    "result": "Passed",
+    "duration": "0.003340",
+    "finished": "2026-10-14 14:59:57Z",
+    "run": "khoa-dev-tests.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.ShotTracerLifecycleTests.PoolRepairsLostObjectsWithoutGrowingOrDraggingShots",
+    "result": "Passed",
+    "duration": "17.063628",
+    "finished": "2026-10-14 15:00:14Z",
+    "run": "khoa-dev-tests.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.SkinContactTests.BakedSamplesMatchTheModelsInUse",
+    "result": "Passed",
+    "duration": "0.534618",
+    "finished": "2026-10-14 15:00:14Z",
+    "run": "khoa-dev-tests.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.SkinContactTests.OnHisFeetOrKneesMostOfTheBodyIsSkipped",
+    "result": "Passed",
+    "duration": "2.595532",
+    "finished": "2026-10-14 15:00:17Z",
+    "run": "khoa-dev-tests.xml"
+  },
+  {
+    "name": "ShadowVale.Map01.Tests.SkinContactTests.SkippingBodyPartsNeverChangesTheContactHeight",
+    "result": "Passed",
+    "duration": "0.074947",
+    "finished": "2026-10-14 15:00:17Z",
+    "run": "khoa-dev-tests.xml"
+  }
+]

@@ -1,0 +1,1080 @@
+frame,time,phase,label,remaining,waves
+0,0.1368064,Captive,Approach guard 0,4,0
+1,0.5034731,Captive,Silent takedown 0,3,0
+2,0.6034731,Captive,Silent takedown 0,3,0
+3,0.6701397,Captive,Silent takedown 0,3,0
+4,0.7368065,Captive,Silent takedown 0,3,0
+5,0.8368065,Captive,Silent takedown 0,3,0
+6,0.9034731,Captive,Silent takedown 0,3,0
+7,1.003473,Captive,Silent takedown 0,3,0
+8,1.103473,Captive,Silent takedown 0,3,0
+9,1.17014,Captive,Silent takedown 0,3,0
+10,1.236806,Captive,Silent takedown 0,3,0
+11,1.303473,Captive,Silent takedown 0,3,0
+12,1.37014,Captive,Silent takedown 0,3,0
+13,1.436806,Captive,Silent takedown 0,3,0
+14,1.503473,Captive,Silent takedown 0,3,0
+15,1.57014,Captive,Silent takedown 0,3,0
+16,1.636806,Captive,Silent takedown 0,3,0
+17,1.703473,Captive,Silent takedown 0,3,0
+18,1.77014,Captive,Silent takedown 0,3,0
+19,1.836806,Captive,Silent takedown 0,3,0
+20,1.903473,Captive,Silent takedown 0,3,0
+21,1.97014,Captive,Silent takedown 0,3,0
+22,2.036806,Captive,Silent takedown 0,3,0
+23,2.103473,Captive,Silent takedown 0,3,0
+24,2.17014,Captive,Silent takedown 0,3,0
+25,2.236806,Captive,Silent takedown 0,3,0
+26,2.303473,Captive,Silent takedown 0,3,0
+27,2.37014,Captive,Silent takedown 0,3,0
+28,2.436806,Captive,Silent takedown 0,3,0
+29,2.503473,Captive,Silent takedown 0,3,0
+30,2.57014,Captive,Silent takedown 0,3,0
+31,2.636806,Captive,Silent takedown 0,3,0
+32,2.703473,Captive,Silent takedown 0,3,0
+33,2.77014,Captive,Silent takedown 0,3,0
+34,2.836806,Captive,Silent takedown 0,3,0
+35,2.903473,Captive,Silent takedown 0,3,0
+36,2.97014,Captive,Silent takedown 0,3,0
+37,3.036806,Captive,Silent takedown 0,3,0
+38,3.103473,Captive,Silent takedown 0,3,0
+39,3.17014,Captive,Silent takedown 0,3,0
+40,3.236806,Captive,Silent takedown 0,3,0
+41,3.303473,Captive,Silent takedown 0,3,0
+42,3.37014,Captive,Silent takedown 0,3,0
+43,3.436806,Captive,Silent takedown 0,3,0
+44,3.503473,Captive,Silent takedown 0,3,0
+45,3.57014,Captive,Silent takedown 0,3,0
+46,3.636806,Captive,Silent takedown 0,3,0
+47,3.703473,Captive,Silent takedown 0,3,0
+48,3.77014,Captive,Silent takedown 0,3,0
+49,3.836807,Captive,Silent takedown 0,3,0
+50,3.903473,Captive,Silent takedown 0,3,0
+51,3.97014,Captive,Silent takedown 0,3,0
+52,4.036807,Captive,Silent takedown 0,3,0
+53,4.103473,Captive,Silent takedown 0,3,0
+54,4.17014,Captive,Silent takedown 0,3,0
+55,4.236806,Captive,Silent takedown 0,3,0
+56,4.303473,Captive,Silent takedown 0,3,0
+57,4.37014,Captive,Silent takedown 0,3,0
+58,4.436807,Captive,Silent takedown 0,3,0
+59,4.503473,Captive,Silent takedown 0,3,0
+60,4.57014,Captive,Silent takedown 0,3,0
+61,4.636806,Captive,Silent takedown 0,3,0
+62,4.703473,Captive,Silent takedown 0,3,0
+63,4.77014,Captive,Silent takedown 0,3,0
+64,4.836807,Captive,Silent takedown 0,3,0
+65,4.903473,Captive,Silent takedown 0,3,0
+66,4.97014,Captive,Silent takedown 0,3,0
+67,5.036807,Captive,Silent takedown 0,3,0
+68,5.103473,Captive,Silent takedown 0,3,0
+69,5.17014,Captive,Silent takedown 0,3,0
+70,5.214646,Captive,Silent takedown 0,3,0
+71,5.38477,Captive,Silent takedown 0,3,0
+72,5.557166,Captive,Silent takedown 0,3,0
+73,5.745071,Captive,Approach guard 1,3,0
+74,5.911508,Captive,Approach guard 1,3,0
+75,6.107322,Captive,Silent takedown 1,2,0
+76,6.173989,Captive,Silent takedown 1,2,0
+77,6.240655,Captive,Silent takedown 1,2,0
+78,6.307322,Captive,Silent takedown 1,2,0
+79,6.373989,Captive,Silent takedown 1,2,0
+80,6.440656,Captive,Silent takedown 1,2,0
+81,6.507322,Captive,Silent takedown 1,2,0
+82,6.573989,Captive,Silent takedown 1,2,0
+83,6.640656,Captive,Silent takedown 1,2,0
+84,6.707322,Captive,Silent takedown 1,2,0
+85,6.773989,Captive,Silent takedown 1,2,0
+86,6.840655,Captive,Silent takedown 1,2,0
+87,6.907322,Captive,Silent takedown 1,2,0
+88,6.973989,Captive,Silent takedown 1,2,0
+89,7.040656,Captive,Silent takedown 1,2,0
+90,7.107322,Captive,Silent takedown 1,2,0
+91,7.173989,Captive,Silent takedown 1,2,0
+92,7.240656,Captive,Silent takedown 1,2,0
+93,7.307323,Captive,Silent takedown 1,2,0
+94,7.373989,Captive,Silent takedown 1,2,0
+95,7.440656,Captive,Silent takedown 1,2,0
+96,7.507322,Captive,Silent takedown 1,2,0
+97,7.573989,Captive,Silent takedown 1,2,0
+98,7.640656,Captive,Silent takedown 1,2,0
+99,7.707322,Captive,Silent takedown 1,2,0
+100,7.773989,Captive,Silent takedown 1,2,0
+101,7.840655,Captive,Silent takedown 1,2,0
+102,7.907322,Captive,Silent takedown 1,2,0
+103,7.973989,Captive,Silent takedown 1,2,0
+104,8.040655,Captive,Silent takedown 1,2,0
+105,8.107322,Captive,Silent takedown 1,2,0
+106,8.173989,Captive,Silent takedown 1,2,0
+107,8.240656,Captive,Silent takedown 1,2,0
+108,8.307323,Captive,Silent takedown 1,2,0
+109,8.373989,Captive,Silent takedown 1,2,0
+110,8.440656,Captive,Silent takedown 1,2,0
+111,8.507322,Captive,Silent takedown 1,2,0
+112,8.573989,Captive,Silent takedown 1,2,0
+113,8.640656,Captive,Silent takedown 1,2,0
+114,8.707322,Captive,Silent takedown 1,2,0
+115,8.773989,Captive,Silent takedown 1,2,0
+116,8.840655,Captive,Silent takedown 1,2,0
+117,8.907322,Captive,Silent takedown 1,2,0
+118,8.973989,Captive,Silent takedown 1,2,0
+119,9.040655,Captive,Silent takedown 1,2,0
+120,9.107322,Captive,Silent takedown 1,2,0
+121,9.173989,Captive,Silent takedown 1,2,0
+122,9.240656,Captive,Silent takedown 1,2,0
+123,9.307323,Captive,Silent takedown 1,2,0
+124,9.373989,Captive,Silent takedown 1,2,0
+125,9.440656,Captive,Silent takedown 1,2,0
+126,9.507322,Captive,Silent takedown 1,2,0
+127,9.573989,Captive,Silent takedown 1,2,0
+128,9.640656,Captive,Silent takedown 1,2,0
+129,9.707322,Captive,Silent takedown 1,2,0
+130,9.773989,Captive,Silent takedown 1,2,0
+131,9.840655,Captive,Silent takedown 1,2,0
+132,9.907322,Captive,Silent takedown 1,2,0
+133,9.973989,Captive,Silent takedown 1,2,0
+134,10.04066,Captive,Silent takedown 1,2,0
+135,10.10732,Captive,Silent takedown 1,2,0
+136,10.17399,Captive,Silent takedown 1,2,0
+137,10.24066,Captive,Silent takedown 1,2,0
+138,10.30732,Captive,Silent takedown 1,2,0
+139,10.37399,Captive,Silent takedown 1,2,0
+140,10.44066,Captive,Silent takedown 1,2,0
+141,10.50732,Captive,Silent takedown 1,2,0
+142,10.57399,Captive,Silent takedown 1,2,0
+143,10.64066,Captive,Silent takedown 1,2,0
+144,10.70732,Captive,Silent takedown 1,2,0
+145,10.77399,Captive,Silent takedown 1,2,0
+146,10.81746,Captive,Silent takedown 1,2,0
+147,11.00726,Captive,Silent takedown 1,2,0
+148,11.18614,Captive,Silent takedown 1,2,0
+149,11.38305,Captive,Approach guard 2,2,0
+150,11.55323,Captive,Approach guard 2,2,0
+151,11.74661,Captive,Silent takedown 2,1,0
+152,11.81328,Captive,Silent takedown 2,1,0
+153,11.87995,Captive,Silent takedown 2,1,0
+154,11.94661,Captive,Silent takedown 2,1,0
+155,12.01328,Captive,Silent takedown 2,1,0
+156,12.07995,Captive,Silent takedown 2,1,0
+157,12.14661,Captive,Silent takedown 2,1,0
+158,12.21328,Captive,Silent takedown 2,1,0
+159,12.27995,Captive,Silent takedown 2,1,0
+160,12.34661,Captive,Silent takedown 2,1,0
+161,12.41328,Captive,Silent takedown 2,1,0
+162,12.47995,Captive,Silent takedown 2,1,0
+163,12.54661,Captive,Silent takedown 2,1,0
+164,12.61328,Captive,Silent takedown 2,1,0
+165,12.67995,Captive,Silent takedown 2,1,0
+166,12.74661,Captive,Silent takedown 2,1,0
+167,12.81328,Captive,Silent takedown 2,1,0
+168,12.87995,Captive,Silent takedown 2,1,0
+169,12.94661,Captive,Silent takedown 2,1,0
+170,13.01328,Captive,Silent takedown 2,1,0
+171,13.07995,Captive,Silent takedown 2,1,0
+172,13.14661,Captive,Silent takedown 2,1,0
+173,13.21328,Captive,Silent takedown 2,1,0
+174,13.27995,Captive,Silent takedown 2,1,0
+175,13.34661,Captive,Silent takedown 2,1,0
+176,13.41328,Captive,Silent takedown 2,1,0
+177,13.47995,Captive,Silent takedown 2,1,0
+178,13.54661,Captive,Silent takedown 2,1,0
+179,13.61328,Captive,Silent takedown 2,1,0
+180,13.67995,Captive,Silent takedown 2,1,0
+181,13.74661,Captive,Silent takedown 2,1,0
+182,13.81328,Captive,Silent takedown 2,1,0
+183,13.87995,Captive,Silent takedown 2,1,0
+184,13.94661,Captive,Silent takedown 2,1,0
+185,14.01328,Captive,Silent takedown 2,1,0
+186,14.07995,Captive,Silent takedown 2,1,0
+187,14.14661,Captive,Silent takedown 2,1,0
+188,14.21328,Captive,Silent takedown 2,1,0
+189,14.27995,Captive,Silent takedown 2,1,0
+190,14.34661,Captive,Silent takedown 2,1,0
+191,14.41328,Captive,Silent takedown 2,1,0
+192,14.47995,Captive,Silent takedown 2,1,0
+193,14.54661,Captive,Silent takedown 2,1,0
+194,14.61328,Captive,Silent takedown 2,1,0
+195,14.67995,Captive,Silent takedown 2,1,0
+196,14.74661,Captive,Silent takedown 2,1,0
+197,14.81328,Captive,Silent takedown 2,1,0
+198,14.87995,Captive,Silent takedown 2,1,0
+199,14.94661,Captive,Silent takedown 2,1,0
+200,15.01328,Captive,Silent takedown 2,1,0
+201,15.07995,Captive,Silent takedown 2,1,0
+202,15.14661,Captive,Silent takedown 2,1,0
+203,15.21328,Captive,Silent takedown 2,1,0
+204,15.31328,Captive,Silent takedown 2,1,0
+205,15.41328,Captive,Silent takedown 2,1,0
+206,15.47995,Captive,Silent takedown 2,1,0
+207,15.57995,Captive,Silent takedown 2,1,0
+208,15.67995,Captive,Silent takedown 2,1,0
+209,15.77995,Captive,Silent takedown 2,1,0
+210,15.84661,Captive,Silent takedown 2,1,0
+211,15.94661,Captive,Silent takedown 2,1,0
+212,16.04661,Captive,Silent takedown 2,1,0
+213,16.11328,Captive,Silent takedown 2,1,0
+214,16.17995,Captive,Silent takedown 2,1,0
+215,16.27995,Captive,Silent takedown 2,1,0
+216,16.34661,Captive,Silent takedown 2,1,0
+217,16.44661,Captive,Silent takedown 2,1,0
+218,16.61577,Captive,Silent takedown 2,1,0
+219,16.78468,Captive,Silent takedown 2,1,0
+220,16.96929,Captive,Approach guard 3,1,0
+221,17.11786,Captive,Approach guard 3,1,0
+222,17.29199,Captive,Silent takedown 3,0,0
+223,17.39199,Captive,Silent takedown 3,0,0
+224,17.49199,Captive,Silent takedown 3,0,0
+225,17.59199,Captive,Silent takedown 3,0,0
+226,17.65866,Captive,Silent takedown 3,0,0
+227,17.75866,Captive,Silent takedown 3,0,0
+228,17.85866,Captive,Silent takedown 3,0,0
+229,17.92532,Captive,Silent takedown 3,0,0
+230,17.99199,Captive,Silent takedown 3,0,0
+231,18.09199,Captive,Silent takedown 3,0,0
+232,18.15866,Captive,Silent takedown 3,0,0
+233,18.25866,Captive,Silent takedown 3,0,0
+234,18.35866,Captive,Silent takedown 3,0,0
+235,18.42532,Captive,Silent takedown 3,0,0
+236,18.49199,Captive,Silent takedown 3,0,0
+237,18.59199,Captive,Silent takedown 3,0,0
+238,18.65866,Captive,Silent takedown 3,0,0
+239,18.75866,Captive,Silent takedown 3,0,0
+240,18.85866,Captive,Silent takedown 3,0,0
+241,18.92532,Captive,Silent takedown 3,0,0
+242,18.99199,Captive,Silent takedown 3,0,0
+243,19.09199,Captive,Silent takedown 3,0,0
+244,19.15866,Captive,Silent takedown 3,0,0
+245,19.25866,Captive,Silent takedown 3,0,0
+246,19.35866,Captive,Silent takedown 3,0,0
+247,19.42532,Captive,Silent takedown 3,0,0
+248,19.49199,Captive,Silent takedown 3,0,0
+249,19.59199,Captive,Silent takedown 3,0,0
+250,19.65866,Captive,Silent takedown 3,0,0
+251,19.75866,Captive,Silent takedown 3,0,0
+252,19.85866,Captive,Silent takedown 3,0,0
+253,19.92532,Captive,Silent takedown 3,0,0
+254,19.99199,Captive,Silent takedown 3,0,0
+255,20.09199,Captive,Silent takedown 3,0,0
+256,20.15866,Captive,Silent takedown 3,0,0
+257,20.25866,Captive,Silent takedown 3,0,0
+258,20.35866,Captive,Silent takedown 3,0,0
+259,20.42532,Captive,Silent takedown 3,0,0
+260,20.49199,Captive,Silent takedown 3,0,0
+261,20.59199,Captive,Silent takedown 3,0,0
+262,20.65866,Captive,Silent takedown 3,0,0
+263,20.75866,Captive,Silent takedown 3,0,0
+264,20.85866,Captive,Silent takedown 3,0,0
+265,20.92532,Captive,Silent takedown 3,0,0
+266,20.99199,Captive,Silent takedown 3,0,0
+267,21.09199,Captive,Silent takedown 3,0,0
+268,21.15866,Captive,Silent takedown 3,0,0
+269,21.25866,Captive,Silent takedown 3,0,0
+270,21.35866,Captive,Silent takedown 3,0,0
+271,21.42532,Captive,Silent takedown 3,0,0
+272,21.49199,Captive,Silent takedown 3,0,0
+273,21.59199,Captive,Silent takedown 3,0,0
+274,21.65866,Captive,Silent takedown 3,0,0
+275,21.75866,Captive,Silent takedown 3,0,0
+276,21.85866,Captive,Silent takedown 3,0,0
+277,21.92532,Captive,Silent takedown 3,0,0
+278,21.99199,Captive,Silent takedown 3,0,0
+279,22.15977,Captive,Silent takedown 3,0,0
+280,22.3203,Captive,Silent takedown 3,0,0
+281,22.50516,Untying,Untie and stand,0,0
+282,22.60516,Untying,Untie and stand,0,0
+283,22.67183,Untying,Untie and stand,0,0
+284,22.73849,Untying,Untie and stand,0,0
+285,22.8385,Untying,Untie and stand,0,0
+286,22.90516,Untying,Untie and stand,0,0
+287,23.00516,Untying,Untie and stand,0,0
+288,23.10516,Untying,Untie and stand,0,0
+289,23.17183,Untying,Untie and stand,0,0
+290,23.23849,Untying,Untie and stand,0,0
+291,23.3385,Untying,Untie and stand,0,0
+292,23.40516,Untying,Untie and stand,0,0
+293,23.50516,Untying,Untie and stand,0,0
+294,23.60516,Untying,Untie and stand,0,0
+295,23.67183,Untying,Untie and stand,0,0
+296,23.73849,Untying,Untie and stand,0,0
+297,23.8385,Untying,Untie and stand,0,0
+298,23.90516,Untying,Untie and stand,0,0
+299,24.00516,Untying,Untie and stand,0,0
+300,24.10516,Untying,Untie and stand,0,0
+301,24.17183,Untying,Untie and stand,0,0
+302,24.23849,Untying,Untie and stand,0,0
+303,24.3385,Untying,Untie and stand,0,0
+304,24.40516,Untying,Untie and stand,0,0
+305,24.50516,Untying,Untie and stand,0,0
+306,24.60516,Untying,Untie and stand,0,0
+307,24.67183,Untying,Untie and stand,0,0
+308,24.73849,Untying,Untie and stand,0,0
+309,24.8385,Untying,Untie and stand,0,0
+310,24.90516,Untying,Untie and stand,0,0
+311,25.00516,Untying,Untie and stand,0,0
+312,25.10516,Untying,Untie and stand,0,0
+313,25.17183,Untying,Untie and stand,0,0
+314,25.23849,Untying,Untie and stand,0,0
+315,25.3385,Untying,Untie and stand,0,0
+316,25.40516,Untying,Untie and stand,0,0
+317,25.50516,Untying,Untie and stand,0,0
+318,25.60516,Untying,Untie and stand,0,0
+319,25.67183,Untying,Untie and stand,0,0
+320,25.73849,Untying,Untie and stand,0,0
+321,25.8385,Untying,Untie and stand,0,0
+322,25.90516,Untying,Untie and stand,0,0
+323,26.00516,Untying,Untie and stand,0,0
+324,26.10516,Untying,Untie and stand,0,0
+325,26.17183,Untying,Untie and stand,0,0
+326,26.23849,Untying,Untie and stand,0,0
+327,26.3385,Untying,Untie and stand,0,0
+328,26.40516,Untying,Untie and stand,0,0
+329,26.50516,Untying,Untie and stand,0,0
+330,26.60516,Untying,Untie and stand,0,0
+331,26.67183,Untying,Untie and stand,0,0
+332,26.73849,Untying,Untie and stand,0,0
+333,26.8385,Untying,Untie and stand,0,0
+334,26.90516,Untying,Untie and stand,0,0
+335,27.00516,Untying,Untie and stand,0,0
+336,27.10516,Untying,Untie and stand,0,0
+337,27.17183,Untying,Untie and stand,0,0
+338,27.23849,Rising,Untie and stand,0,0
+339,27.3385,Rising,Untie and stand,0,0
+340,27.40516,Rising,Untie and stand,0,0
+341,27.50516,Rising,Untie and stand,0,0
+342,27.60516,Rising,Untie and stand,0,0
+343,27.67183,Rising,Untie and stand,0,0
+344,27.73849,Rising,Untie and stand,0,0
+345,27.8385,Rising,Untie and stand,0,0
+346,27.90516,Rising,Untie and stand,0,0
+347,28.00516,Rising,Untie and stand,0,0
+348,28.10516,Rising,Untie and stand,0,0
+349,28.17183,Rising,Untie and stand,0,0
+350,28.23849,Rising,Untie and stand,0,0
+351,28.3385,Rising,Untie and stand,0,0
+352,28.40516,Rising,Untie and stand,0,0
+353,28.50516,Rising,Untie and stand,0,0
+354,28.60516,Rising,Untie and stand,0,0
+355,28.67183,Rising,Untie and stand,0,0
+356,28.73849,Rising,Untie and stand,0,0
+357,28.8385,Rising,Untie and stand,0,0
+358,28.90516,Rising,Untie and stand,0,0
+359,29.00516,Rising,Untie and stand,0,0
+360,29.10516,Rising,Untie and stand,0,0
+361,29.17183,Rising,Untie and stand,0,0
+362,29.23849,Rising,Untie and stand,0,0
+363,29.3385,Rising,Untie and stand,0,0
+364,29.40516,Rising,Untie and stand,0,0
+365,29.50516,Rising,Untie and stand,0,0
+366,29.60516,Rising,Untie and stand,0,0
+367,29.67183,Rising,Untie and stand,0,0
+368,29.73849,Rising,Untie and stand,0,0
+369,29.8385,Rising,Untie and stand,0,0
+370,29.90516,Rising,Untie and stand,0,0
+371,30.00516,Rising,Untie and stand,0,0
+372,30.10516,Rising,Untie and stand,0,0
+373,30.17183,Rising,Untie and stand,0,0
+374,30.23849,Rising,Untie and stand,0,0
+375,30.3385,Rising,Untie and stand,0,0
+376,30.40516,Rising,Untie and stand,0,0
+377,30.50516,Rising,Untie and stand,0,0
+378,30.60516,Rising,Untie and stand,0,0
+379,30.67183,Rising,Untie and stand,0,0
+380,30.73849,Rising,Untie and stand,0,0
+381,30.8385,Rising,Untie and stand,0,0
+382,30.90516,Rising,Untie and stand,0,0
+383,30.97115,Escorting,Untie and stand,0,0
+384,31.12232,Escorting,Untie and stand,0,0
+385,31.28337,Escorting,Untie and stand,0,0
+386,31.44122,Escorting,Untie and stand,0,0
+387,31.5955,Escorting,Untie and stand,0,0
+388,31.75315,Escorting,Untie and stand,0,0
+389,31.9153,Escorting,Untie and stand,0,0
+390,32.07842,Escorting,Untie and stand,0,0
+391,32.37053,Escorting,Untie and stand,0,0
+392,32.52922,Escorting,Untie and stand,0,0
+393,32.69088,Escorting,Untie and stand,0,0
+394,32.8536,Escorting,Untie and stand,0,0
+395,33.02163,Escorting,Untie and stand,0,0
+396,33.18267,Escorting,Untie and stand,0,0
+397,33.34705,Escorting,Untie and stand,0,0
+398,33.50809,Escorting,Untie and stand,0,0
+399,33.67023,Escorting,Untie and stand,0,0
+400,33.83645,Escorting,Untie and stand,0,0
+401,34.00195,Escorting,Untie and stand,0,0
+402,34.1643,Escorting,Untie and stand,0,0
+403,34.34038,Escorting,Untie and stand,0,0
+404,34.51339,Escorting,Untie and stand,0,0
+405,34.68684,Escorting,Untie and stand,0,0
+406,34.8693,Escorting,Untie and stand,0,0
+407,35.05572,Escorting,Untie and stand,0,0
+408,35.24495,Escorting,Untie and stand,0,0
+409,35.43995,Escorting,Untie and stand,0,0
+410,35.65347,Escorting,Escort home,0,0
+411,35.87127,Escorting,Escort home,0,0
+412,36.08381,Escorting,Escort home,0,0
+413,36.29573,Escorting,Escort home,0,0
+414,36.51339,Escorting,Escort home,0,0
+415,36.72402,Escorting,Escort home,0,0
+416,36.93639,Escorting,Escort home,0,0
+417,37.16938,Escorting,Escort home,0,0
+418,37.39853,Escorting,Escort home,0,0
+419,37.62978,Escorting,Escort home,0,0
+420,37.84398,Escorting,Escort home,0,0
+421,38.20104,Escorting,Escort home,0,0
+422,38.4118,Escorting,Escort home,0,0
+423,38.61705,Escorting,Escort home,0,0
+424,38.82033,Escorting,Escort home,0,0
+425,39.02827,Escorting,Escort home,0,0
+426,39.2322,Escorting,Escort home,0,0
+427,39.46345,Escorting,Escort home,0,0
+428,39.66844,Escorting,Escort home,0,0
+429,39.88093,Escorting,Escort home,0,0
+430,40.09787,Escorting,Escort home,0,0
+431,40.31031,Escorting,Escort home,0,0
+432,40.58028,Escorting,Escort home,0,0
+433,40.84946,Escorting,Escort home,0,0
+434,41.1152,Escorting,Escort home,0,0
+435,41.31428,Escorting,Escort home,0,0
+436,41.5148,Escorting,Escort home,0,0
+437,41.72114,Escorting,Escort home,0,0
+438,41.92226,Escorting,Escort home,0,0
+439,42.12078,Escorting,Escort home,0,0
+440,42.32541,Escorting,Escort home,0,0
+441,42.52969,Escorting,Escort home,0,0
+442,42.73978,Escorting,Escort home,0,0
+443,42.95156,Escorting,Escort home,0,0
+444,43.15508,Escorting,Escort home,0,0
+445,43.36188,Escorting,Escort home,0,0
+446,43.57569,Escorting,Escort home,0,0
+447,43.79593,Escorting,Escort home,0,0
+448,44.07615,Escorting,Escort home,0,0
+449,44.28642,Escorting,Escort home,0,0
+450,44.49711,Escorting,Escort home,0,0
+451,44.8537,Escorting,Escort home,0,0
+452,45.06847,Escorting,Escort home,0,0
+453,45.28452,Escorting,Escort home,0,0
+454,45.50941,Escorting,Escort home,0,0
+455,45.72669,Escorting,Escort home,0,0
+456,45.94066,Escorting,Escort home,0,0
+457,46.15528,Escorting,Escort home,0,0
+458,46.38071,Escorting,Escort home,0,0
+459,46.63521,Escorting,Escort home,0,0
+460,46.91987,Escorting,Escort home,0,0
+461,47.13474,Escorting,Escort home,0,0
+462,47.35055,Escorting,Escort home,0,0
+463,47.56475,Escorting,Escort home,0,0
+464,47.7814,Escorting,Escort home,0,0
+465,47.9912,Escorting,Escort home,0,0
+466,48.1966,Escorting,Escort home,0,0
+467,48.4032,Escorting,Escort home,0,0
+468,48.61856,Escorting,Escort home,0,0
+469,48.82717,Escorting,Escort home,0,0
+470,49.03436,Escorting,Escort home,0,0
+471,49.24827,Escorting,Escort home,0,0
+472,49.47123,Escorting,Escort home,0,0
+473,49.67758,Escorting,Escort home,0,0
+474,49.89105,Escorting,Escort home,0,0
+475,50.10085,Escorting,Escort home,0,0
+476,50.30925,Escorting,Escort home,0,0
+477,50.51442,Escorting,Escort home,0,0
+478,50.71821,Escorting,Escort home,0,0
+479,50.92088,Escorting,Escort home,0,0
+480,51.12954,Escorting,Escort home,0,0
+481,51.48399,Escorting,Escort home,0,0
+482,51.69764,Escorting,Escort home,0,0
+483,51.91553,Escorting,Escort home,0,0
+484,52.13128,Escorting,Escort home,0,0
+485,52.35966,Escorting,Escort home,0,0
+486,52.59286,Escorting,Escort home,0,0
+487,52.80849,Escorting,Escort home,0,0
+488,53.09682,Escorting,Escort home,0,0
+489,53.30883,Escorting,Escort home,0,0
+490,53.52369,Escorting,Escort home,0,0
+491,53.74446,Escorting,Escort home,0,0
+492,53.95943,Escorting,Escort home,0,0
+493,54.17184,Escorting,Escort home,0,0
+494,54.38338,Escorting,Escort home,0,0
+495,54.58566,Escorting,Escort home,0,0
+496,54.78566,Escorting,Escort home,0,0
+497,54.9974,Escorting,Escort home,0,0
+498,55.20954,Escorting,Escort home,0,0
+499,55.41991,Escorting,Escort home,0,0
+500,55.62352,Escorting,Escort home,0,0
+501,55.82807,Escorting,Escort home,0,0
+502,56.03277,Escorting,Escort home,0,0
+503,56.25869,Escorting,Escort home,0,0
+504,56.47398,Escorting,Escort home,0,0
+505,56.68566,Escorting,Escort home,0,0
+506,56.91439,Escorting,Escort home,0,0
+507,57.12501,Escorting,Escort home,0,0
+508,57.33891,Escorting,Escort home,0,0
+509,57.55118,Escorting,Escort home,0,0
+510,57.76833,Escorting,Escort home,0,0
+511,58.12378,Escorting,Escort home,0,0
+512,58.33391,Escorting,Escort home,0,0
+513,58.58337,Escorting,Escort home,0,1
+514,58.80372,Escorting,Escort home,0,1
+515,59.03305,Escorting,Escort home,0,1
+516,59.25523,Escorting,Escort home,0,1
+517,59.47619,Escorting,Escort home,0,1
+518,59.69014,Escorting,Escort home,0,1
+519,59.90789,Escorting,Escort home,0,1
+520,60.12663,Escorting,Escort home,0,1
+521,60.3545,Escorting,Escort home,0,1
+522,60.57004,Escorting,Escort home,0,1
+523,60.78767,Escorting,Escort home,0,1
+524,61.01155,Escorting,Escort home,0,1
+525,61.24601,Escorting,Escort home,0,1
+526,61.48449,Escorting,Escort home,0,1
+527,61.7058,Escorting,Escort home,0,1
+528,61.93398,Escorting,Escort home,0,1
+529,62.1592,Escorting,Escort home,0,1
+530,62.38002,Escorting,Escort home,0,1
+531,62.6228,Escorting,Cover Hung,0,1
+532,62.87066,Escorting,Cover Hung,0,1
+533,63.10695,Escorting,Cover Hung,0,1
+534,63.33731,Escorting,Cover Hung,0,1
+535,63.5715,Escorting,Cover Hung,0,1
+536,63.803,Escorting,Cover Hung,0,1
+537,64.03984,Escorting,Cover Hung,0,1
+538,64.27639,Escorting,Cover Hung,0,1
+539,64.50333,Escorting,Cover Hung,0,1
+540,64.73161,Escorting,Cover Hung,0,1
+541,65.09557,Escorting,Cover Hung,0,1
+542,65.32889,Escorting,Cover Hung,0,1
+543,65.55963,Escorting,Cover Hung,0,1
+544,65.78951,Escorting,Cover Hung,0,1
+545,66.02822,Escorting,Cover Hung,0,1
+546,66.28482,Escorting,Cover Hung,0,1
+547,66.52075,Escorting,Cover Hung,0,1
+548,66.74831,Escorting,Cover Hung,0,1
+549,66.97713,Escorting,Cover Hung,0,1
+550,67.20293,Escorting,Cover Hung,0,1
+551,67.43183,Escorting,Cover Hung,0,1
+552,67.66101,Escorting,Cover Hung,0,1
+553,67.88857,Escorting,Cover Hung,0,1
+554,68.11505,Escorting,Cover Hung,0,1
+555,68.34351,Escorting,Cover Hung,0,1
+556,68.57393,Escorting,Cover Hung,0,1
+557,68.80676,Escorting,Cover Hung,0,1
+558,69.03709,Escorting,Cover Hung,0,1
+559,69.27235,Escorting,Cover Hung,0,1
+560,69.50356,Escorting,Cover Hung,0,1
+561,69.7354,Escorting,Cover Hung,0,1
+562,69.97292,Escorting,Cover Hung,0,1
+563,70.20459,Escorting,Cover Hung,0,1
+564,70.43899,Escorting,Cover Hung,0,1
+565,70.67229,Escorting,Cover Hung,0,1
+566,70.90163,Escorting,Cover Hung,0,1
+567,71.13322,Escorting,Cover Hung,0,1
+568,71.36367,Escorting,Cover Hung,0,1
+569,71.59308,Escorting,Cover Hung,0,1
+570,71.82423,Escorting,Cover Hung,0,1
+571,72.18337,Escorting,Cover Hung,0,1
+572,72.41348,Escorting,Cover Hung,0,1
+573,72.64939,Escorting,Cover Hung,0,1
+574,72.87992,Escorting,Cover Hung,0,1
+575,73.10976,Escorting,Cover Hung,0,1
+576,73.31582,Escorting,Cover Hung,0,1
+577,73.52435,Escorting,Cover Hung,0,1
+578,73.72352,Escorting,Cover Hung,0,1
+579,73.92296,Escorting,Cover Hung,0,1
+580,74.12177,Escorting,Cover Hung,0,1
+581,74.32433,Escorting,Cover Hung,0,1
+582,74.53339,Escorting,Cover Hung,0,1
+583,74.73865,Escorting,Cover Hung,0,1
+584,74.9445,Escorting,Cover Hung,0,1
+585,75.14726,Escorting,Cover Hung,0,1
+586,75.35013,Escorting,Cover Hung,0,1
+587,75.5566,Escorting,Escort home,0,1
+588,75.75262,Escorting,Escort home,0,1
+589,75.98155,Escorting,Escort home,0,1
+590,76.20241,Escorting,Escort home,0,1
+591,76.42339,Escorting,Escort home,0,1
+592,76.72977,Escorting,Escort home,0,1
+593,76.8903,Escorting,Escort home,0,1
+594,77.04832,Escorting,Escort home,0,1
+595,77.20464,Escorting,Escort home,0,1
+596,77.37379,Escorting,Escort home,0,1
+597,77.54363,Escorting,Escort home,0,1
+598,77.70813,Escorting,Escort home,0,1
+599,77.87395,Escorting,Escort home,0,1
+600,78.03436,Escorting,Escort home,0,1
+601,78.29064,Escorting,Escort home,0,1
+602,78.4543,Escorting,Escort home,0,1
+603,78.6284,Escorting,Escort home,0,1
+604,78.80187,Escorting,Escort home,0,1
+605,78.9842,Escorting,Escort home,0,1
+606,79.17076,Escorting,Escort home,0,1
+607,79.37601,Escorting,Escort home,0,1
+608,79.56167,Escorting,Escort home,0,1
+609,79.74378,Escorting,Escort home,0,1
+610,79.92422,Escorting,Escort home,0,1
+611,80.10706,Escorting,Escort home,0,1
+612,80.29311,Escorting,Escort home,0,1
+613,80.48269,Escorting,Escort home,0,1
+614,80.67485,Escorting,Escort home,0,1
+615,80.87042,Escorting,Escort home,0,1
+616,81.06165,Escorting,Escort home,0,1
+617,81.26165,Escorting,Escort home,0,1
+618,81.4624,Escorting,Escort home,0,1
+619,81.66219,Escorting,Escort home,0,1
+620,81.86426,Escorting,Escort home,0,1
+621,82.06206,Escorting,Escort home,0,1
+622,82.2679,Escorting,Escort home,0,1
+623,82.4703,Escorting,Escort home,0,1
+624,82.67676,Escorting,Escort home,0,1
+625,82.8869,Escorting,Escort home,0,1
+626,83.12191,Escorting,Escort home,0,1
+627,83.34747,Escorting,Escort home,0,1
+628,83.5763,Escorting,Escort home,0,1
+629,83.80838,Escorting,Escort home,0,1
+630,84.04353,Escorting,Escort home,0,1
+631,84.39896,Escorting,Escort home,0,1
+632,84.63757,Escorting,Escort home,0,1
+633,84.86402,Escorting,Escort home,0,1
+634,85.08977,Escorting,Escort home,0,1
+635,85.31206,Escorting,Escort home,0,1
+636,85.53632,Escorting,Escort home,0,1
+637,85.75777,Escorting,Escort home,0,1
+638,85.97803,Escorting,Escort home,0,1
+639,86.19709,Escorting,Escort home,0,1
+640,86.41555,Escorting,Escort home,0,1
+641,86.6312,Escorting,Escort home,0,1
+642,86.85265,Escorting,Escort home,0,1
+643,87.07981,Escorting,Escort home,0,1
+644,87.31088,Escorting,Escort home,0,1
+645,87.53201,Escorting,Escort home,0,1
+646,87.75711,Escorting,Escort home,0,1
+647,87.97964,Escorting,Escort home,0,1
+648,88.20065,Escorting,Escort home,0,1
+649,88.42362,Escorting,Escort home,0,1
+650,88.65626,Escorting,Escort home,0,1
+651,88.88367,Escorting,Escort home,0,1
+652,89.112,Escorting,Escort home,0,1
+653,89.33868,Escorting,Escort home,0,1
+654,89.60149,Escorting,Escort home,0,1
+655,89.82787,Escorting,Escort home,0,1
+656,90.05299,Escorting,Escort home,0,1
+657,90.27603,Escorting,Escort home,0,1
+658,90.5144,Escorting,Escort home,0,1
+659,90.7362,Escorting,Escort home,0,1
+660,90.96677,Escorting,Escort home,0,1
+661,91.32654,Escorting,Escort home,0,1
+662,91.56606,Escorting,Escort home,0,1
+663,91.80562,Escorting,Escort home,0,1
+664,92.03713,Escorting,Escort home,0,1
+665,92.28115,Escorting,Escort home,0,1
+666,92.52199,Escorting,Escort home,0,1
+667,92.76817,Escorting,Escort home,0,1
+668,93.01691,Escorting,Escort home,0,1
+669,93.27464,Escorting,Escort home,0,1
+670,93.5151,Escorting,Escort home,0,1
+671,93.75401,Escorting,Escort home,0,1
+672,93.98725,Escorting,Escort home,0,1
+673,94.21297,Escorting,Escort home,0,1
+674,94.43079,Escorting,Escort home,0,1
+675,94.65114,Escorting,Escort home,0,1
+676,94.87865,Escorting,Escort home,0,1
+677,95.0998,Escorting,Escort home,0,1
+678,95.32565,Escorting,Escort home,0,1
+679,95.55415,Escorting,Escort home,0,1
+680,95.78175,Escorting,Escort home,0,1
+681,96.01254,Escorting,Escort home,0,1
+682,96.24119,Escorting,Escort home,0,1
+683,96.46461,Escorting,Escort home,0,1
+684,96.70744,Escorting,Escort home,0,3
+685,96.94548,Escorting,Escort home,0,3
+686,97.17899,Escorting,Escort home,0,3
+687,97.413,Escorting,Escort home,0,3
+688,97.64919,Escorting,Escort home,0,3
+689,97.87947,Escorting,Escort home,0,3
+690,98.11643,Escorting,Escort home,0,3
+691,98.47388,Escorting,Escort home,0,3
+692,98.70169,Escorting,Escort home,0,3
+693,98.93092,Escorting,Escort home,0,3
+694,99.15981,Escorting,Escort home,0,3
+695,99.39241,Escorting,Escort home,0,3
+696,99.6307,Escorting,Escort home,0,3
+697,99.85896,Escorting,Escort home,0,3
+698,100.097,Escorting,Cover Hung,0,3
+699,100.3263,Escorting,Cover Hung,0,3
+700,100.5599,Escorting,Cover Hung,0,3
+701,100.7895,Escorting,Cover Hung,0,3
+702,101.0105,Escorting,Escort home,0,3
+703,101.2423,Escorting,Escort home,0,3
+704,101.4683,Escorting,Escort home,0,3
+705,101.6912,Escorting,Escort home,0,3
+706,101.9192,Escorting,Escort home,0,3
+707,102.1445,Escorting,Escort home,0,3
+708,102.371,Escorting,Escort home,0,3
+709,102.5979,Escorting,Escort home,0,3
+710,102.8264,Escorting,Escort home,0,3
+711,103.0548,Escorting,Escort home,0,3
+712,103.2814,Escorting,Escort home,0,3
+713,103.5059,Escorting,Escort home,0,3
+714,103.7293,Escorting,Escort home,0,3
+715,103.9527,Escorting,Escort home,0,3
+716,104.176,Escorting,Escort home,0,3
+717,104.4008,Escorting,Escort home,0,3
+718,104.6236,Escorting,Escort home,0,3
+719,104.8474,Escorting,Escort home,0,3
+720,105.0704,Escorting,Escort home,0,3
+721,105.4284,Escorting,Escort home,0,3
+722,105.6512,Escorting,Escort home,0,3
+723,105.8722,Escorting,Escort home,0,3
+724,106.0992,Escorting,Escort home,0,3
+725,106.3162,Escorting,Escort home,0,3
+726,106.5354,Escorting,Escort home,0,3
+727,106.778,Escorting,Escort home,0,3
+728,106.9998,Escorting,Escort home,0,3
+729,107.2167,Escorting,Escort home,0,3
+730,107.4314,Escorting,Escort home,0,3
+731,107.6527,Escorting,Escort home,0,3
+732,107.8661,Escorting,Escort home,0,3
+733,108.0843,Escorting,Escort home,0,3
+734,108.301,Escorting,Escort home,0,3
+735,108.5252,Escorting,Escort home,0,3
+736,108.7416,Escorting,Escort home,0,3
+737,108.9548,Escorting,Escort home,0,3
+738,109.1741,Escorting,Escort home,0,3
+739,109.3924,Escorting,Escort home,0,3
+740,109.6135,Escorting,Escort home,0,3
+741,109.8324,Escorting,Escort home,0,3
+742,110.0577,Escorting,Escort home,0,3
+743,110.2772,Escorting,Escort home,0,3
+744,110.5025,Escorting,Escort home,0,3
+745,110.7338,Escorting,Escort home,0,3
+746,110.9577,Escorting,Escort home,0,3
+747,111.1854,Escorting,Escort home,0,3
+748,111.4091,Escorting,Escort home,0,3
+749,111.6291,Escorting,Escort home,0,3
+750,111.8471,Escorting,Escort home,0,3
+751,112.201,Escorting,Escort home,0,3
+752,112.4262,Escorting,Escort home,0,3
+753,112.6506,Escorting,Escort home,0,3
+754,112.8746,Escorting,Escort home,0,3
+755,113.1003,Escorting,Escort home,0,3
+756,113.321,Escorting,Escort home,0,3
+757,113.5424,Escorting,Escort home,0,3
+758,113.7754,Escorting,Escort home,0,3
+759,113.9992,Escorting,Escort home,0,3
+760,114.2317,Escorting,Escort home,0,3
+761,114.4586,Escorting,Escort home,0,3
+762,114.683,Escorting,Escort home,0,3
+763,114.9085,Escorting,Escort home,0,3
+764,115.135,Escorting,Escort home,0,3
+765,115.3609,Escorting,Escort home,0,3
+766,115.5821,Escorting,Escort home,0,3
+767,115.7994,Escorting,Escort home,0,3
+768,116.0219,Escorting,Escort home,0,3
+769,116.2461,Escorting,Escort home,0,3
+770,116.4632,Escorting,Escort home,0,3
+771,116.6845,Escorting,Escort home,0,3
+772,116.9074,Escorting,Escort home,0,3
+773,117.1323,Escorting,Escort home,0,3
+774,117.3588,Escorting,Escort home,0,3
+775,117.5914,Escorting,Escort home,0,3
+776,117.8222,Escorting,Escort home,0,3
+777,118.0481,Escorting,Escort home,0,3
+778,118.2718,Escorting,Escort home,0,3
+779,118.4965,Escorting,Escort home,0,3
+780,118.7281,Escorting,Escort home,0,3
+781,119.0849,Escorting,Escort home,0,3
+782,119.3276,Escorting,Escort home,0,3
+783,119.5547,Escorting,Escort home,0,3
+784,119.7849,Escorting,Escort home,0,3
+785,120.0141,Escorting,Escort home,0,3
+786,120.243,Escorting,Escort home,0,3
+787,120.4744,Escorting,Escort home,0,3
+788,120.7297,Escorting,Escort home,0,3
+789,120.9563,Escorting,Escort home,0,3
+790,121.1816,Escorting,Escort home,0,3
+791,121.4146,Escorting,Escort home,0,3
+792,121.6476,Escorting,Escort home,0,3
+793,121.8774,Escorting,Escort home,0,3
+794,122.1106,Escorting,Escort home,0,3
+795,122.3409,Escorting,Escort home,0,3
+796,122.5846,Escorting,Escort home,0,7
+797,122.8201,Escorting,Escort home,0,7
+798,123.0627,Escorting,Escort home,0,7
+799,123.3024,Escorting,Escort home,0,7
+800,123.5464,Escorting,Escort home,0,7
+801,123.7837,Escorting,Escort home,0,7
+802,124.0212,Escorting,Escort home,0,7
+803,124.2589,Escorting,Escort home,0,7
+804,124.4929,Escorting,Escort home,0,7
+805,124.7303,Escorting,Escort home,0,7
+806,124.9646,Escorting,Escort home,0,7
+807,125.2003,Escorting,Escort home,0,7
+808,125.4359,Escorting,Escort home,0,7
+809,125.6777,Escorting,Escort home,0,7
+810,125.9188,Escorting,Escort home,0,7
+811,126.2809,Escorting,Escort home,0,7
+812,126.5168,Escorting,Escort home,0,7
+813,126.7551,Escorting,Escort home,0,7
+814,126.9939,Escorting,Cover Hung,0,7
+815,127.2229,Escorting,Cover Hung,0,7
+816,127.4463,Escorting,Cover Hung,0,7
+817,127.6757,Escorting,Cover Hung,0,7
+818,127.9,Escorting,Cover Hung,0,7
+819,128.121,Escorting,Cover Hung,0,7
+820,128.3424,Escorting,Cover Hung,0,7
+821,128.5681,Escorting,Cover Hung,0,7
+822,128.7918,Escorting,Cover Hung,0,7
+823,129.0179,Escorting,Cover Hung,0,7
+824,129.2393,Escorting,Cover Hung,0,7
+825,129.4699,Escorting,Cover Hung,0,7
+826,129.6915,Escorting,Cover Hung,0,7
+827,129.9052,Escorting,Cover Hung,0,7
+828,130.1183,Escorting,Cover Hung,0,7
+829,130.3309,Escorting,Cover Hung,0,7
+830,130.5479,Escorting,Cover Hung,0,7
+831,130.7565,Escorting,Cover Hung,0,7
+832,130.9662,Escorting,Cover Hung,0,7
+833,131.1776,Escorting,Cover Hung,0,7
+834,131.3893,Escorting,Cover Hung,0,7
+835,131.5977,Escorting,Cover Hung,0,7
+836,131.809,Escorting,Cover Hung,0,7
+837,132.0265,Escorting,Cover Hung,0,7
+838,132.2412,Escorting,Cover Hung,0,7
+839,132.4528,Escorting,Cover Hung,0,7
+840,132.6676,Escorting,Cover Hung,0,7
+841,133.0177,Escorting,Cover Hung,0,7
+842,133.2317,Escorting,Cover Hung,0,7
+843,133.4773,Escorting,Cover Hung,0,7
+844,133.697,Escorting,Cover Hung,0,7
+845,133.9231,Escorting,Cover Hung,0,7
+846,134.1381,Escorting,Cover Hung,0,7
+847,134.3485,Escorting,Escort home,0,7
+848,134.5738,Escorting,Escort home,0,7
+849,134.8003,Escorting,Escort home,0,7
+850,135.0269,Escorting,Escort home,0,7
+851,135.2579,Escorting,Escort home,0,7
+852,135.4931,Escorting,Escort home,0,7
+853,135.7322,Escorting,Escort home,0,7
+854,135.9492,Escorting,Escort home,0,7
+855,136.1673,Escorting,Escort home,0,7
+856,136.3851,Escorting,Escort home,0,7
+857,136.6028,Escorting,Escort home,0,7
+858,136.8239,Escorting,Escort home,0,7
+859,137.0513,Escorting,Escort home,0,7
+860,137.265,Escorting,Escort home,0,7
+861,137.4748,Escorting,Escort home,0,7
+862,137.6874,Escorting,Escort home,0,7
+863,137.905,Escorting,Escort home,0,7
+864,138.1201,Escorting,Escort home,0,7
+865,138.3408,Escorting,Escort home,0,7
+866,138.5643,Escorting,Escort home,0,7
+867,138.7979,Escorting,Escort home,0,7
+868,139.0248,Escorting,Escort home,0,7
+869,139.2439,Escorting,Escort home,0,7
+870,139.4685,Escorting,Escort home,0,7
+871,139.8101,Escorting,Escort home,0,7
+872,140.0383,Escorting,Escort home,0,7
+873,140.2559,Escorting,Escort home,0,7
+874,140.4841,Escorting,Escort home,0,7
+875,140.7174,Escorting,Escort home,0,7
+876,140.9474,Escorting,Escort home,0,7
+877,141.1748,Escorting,Escort home,0,7
+878,141.3942,Escorting,Escort home,0,7
+879,141.616,Escorting,Escort home,0,7
+880,141.8363,Escorting,Escort home,0,7
+881,142.0598,Escorting,Escort home,0,7
+882,142.2812,Escorting,Escort home,0,7
+883,142.4944,Escorting,Escort home,0,7
+884,142.7088,Escorting,Escort home,0,7
+885,142.9216,Escorting,Escort home,0,7
+886,143.1371,Escorting,Escort home,0,7
+887,143.3456,Escorting,Escort home,0,7
+888,143.5524,Escorting,Escort home,0,7
+889,143.7598,Escorting,Escort home,0,7
+890,143.9782,Escorting,Escort home,0,7
+891,144.1884,Escorting,Escort home,0,7
+892,144.4002,Escorting,Escort home,0,7
+893,144.613,Escorting,Escort home,0,7
+894,144.8282,Escorting,Escort home,0,7
+895,145.0448,Escorting,Escort home,0,7
+896,145.2605,Escorting,Escort home,0,7
+897,145.476,Escorting,Escort home,0,7
+898,145.6976,Escorting,Escort home,0,7
+899,145.9092,Escorting,Escort home,0,7
+900,146.1221,Escorting,Escort home,0,7
+901,146.4405,Escorting,Escort home,0,7
+902,146.6597,Escorting,Escort home,0,7
+903,146.8721,Escorting,Escort home,0,7
+904,147.0843,Escorting,Escort home,0,7
+905,147.2985,Escorting,Escort home,0,7
+906,147.5082,Escorting,Escort home,0,7
+907,147.7246,Escorting,Escort home,0,7
+908,147.9419,Escorting,Escort home,0,7
+909,148.1566,Escorting,Escort home,0,7
+910,148.3674,Escorting,Escort home,0,7
+911,148.5817,Escorting,Escort home,0,7
+912,148.7916,Escorting,Escort home,0,7
+913,149.0025,Escorting,Escort home,0,7
+914,149.2451,Escorting,Escort home,0,7
+915,149.4573,Escorting,Escort home,0,7
+916,149.6677,Escorting,Escort home,0,7
+917,149.8814,Escorting,Escort home,0,7
+918,150.0918,Escorting,Escort home,0,7
+919,150.3061,Escorting,Escort home,0,7
+920,150.5202,Escorting,Escort home,0,7
+921,150.7312,Escorting,Escort home,0,7
+922,150.9478,Escorting,Escort home,0,7
+923,151.1603,Escorting,Escort home,0,7
+924,151.3721,Escorting,Escort home,0,7
+925,151.5844,Escorting,Escort home,0,7
+926,151.7996,Escorting,Escort home,0,7
+927,152.0092,Escorting,Escort home,0,7
+928,152.2222,Escorting,Escort home,0,7
+929,152.4382,Escorting,Escort home,0,7
+930,152.6479,Escorting,Escort home,0,7
+931,152.9615,Escorting,Escort home,0,7
+932,153.1673,Escorting,Escort home,0,7
+933,153.3771,Escorting,Escort home,0,7
+934,153.5866,Escorting,Escort home,0,7
+935,153.7953,Escorting,Escort home,0,7
+936,154.0037,Escorting,Escort home,0,7
+937,154.2119,Escorting,Escort home,0,7
+938,154.4354,Escorting,Escort home,0,7
+939,154.6451,Escorting,Escort home,0,7
+940,154.8575,Escorting,Escort home,0,7
+941,155.0669,Escorting,Escort home,0,7
+942,155.2787,Escorting,Escort home,0,7
+943,155.4882,Escorting,Escort home,0,7
+944,155.7135,Escorting,Escort home,0,7
+945,155.9326,Escorting,Escort home,0,7
+946,156.1569,Escorting,Escort home,0,7
+947,156.3685,Escorting,Escort home,0,7
+948,156.5749,Escorting,Escort home,0,7
+949,156.7805,Escorting,Escort home,0,7
+950,156.9949,Escorting,Escort home,0,7
+951,157.2027,Escorting,Escort home,0,7
+952,157.4279,EnteringShelter,Shelter return,0,7
+953,157.4946,EnteringShelter,Shelter return,0,7
+954,157.5613,EnteringShelter,Shelter return,0,7
+955,157.6279,EnteringShelter,Shelter return,0,7
+956,157.6946,EnteringShelter,Shelter return,0,7
+957,157.7613,EnteringShelter,Shelter return,0,7
+958,157.8279,EnteringShelter,Shelter return,0,7
+959,157.8946,EnteringShelter,Shelter return,0,7
+960,157.9613,EnteringShelter,Shelter return,0,7
+961,158.0279,EnteringShelter,Shelter return,0,7
+962,158.0946,EnteringShelter,Shelter return,0,7
+963,158.1613,EnteringShelter,Shelter return,0,7
+964,158.2279,EnteringShelter,Shelter return,0,7
+965,158.2946,EnteringShelter,Shelter return,0,7
+966,158.3613,EnteringShelter,Shelter return,0,7
+967,158.4279,EnteringShelter,Shelter return,0,7
+968,158.4946,EnteringShelter,Shelter return,0,7
+969,158.5613,EnteringShelter,Shelter return,0,7
+970,158.6279,EnteringShelter,Shelter return,0,7
+971,158.6946,EnteringShelter,Shelter return,0,7
+972,158.7613,EnteringShelter,Shelter return,0,7
+973,158.8279,EnteringShelter,Shelter return,0,7
+974,158.8946,EnteringShelter,Shelter return,0,7
+975,158.9613,EnteringShelter,Shelter return,0,7
+976,159.0279,EnteringShelter,Shelter return,0,7
+977,159.0946,EnteringShelter,Shelter return,0,7
+978,159.1613,EnteringShelter,Shelter return,0,7
+979,159.2279,EnteringShelter,Shelter return,0,7
+980,159.2946,EnteringShelter,Shelter return,0,7
+981,159.3613,EnteringShelter,Shelter return,0,7
+982,159.4279,EnteringShelter,Shelter return,0,7
+983,159.4946,EnteringShelter,Shelter return,0,7
+984,159.5613,EnteringShelter,Shelter return,0,7
+985,159.6279,EnteringShelter,Shelter return,0,7
+986,159.6946,EnteringShelter,Shelter return,0,7
+987,159.7613,EnteringShelter,Shelter return,0,7
+988,159.8279,EnteringShelter,Shelter return,0,7
+989,159.8946,EnteringShelter,Shelter return,0,7
+990,159.9613,EnteringShelter,Shelter return,0,7
+991,160.0279,EnteringShelter,Shelter return,0,7
+992,160.0946,EnteringShelter,Shelter return,0,7
+993,160.1613,EnteringShelter,Shelter return,0,7
+994,160.2279,EnteringShelter,Shelter return,0,7
+995,160.2946,EnteringShelter,Shelter return,0,7
+996,160.3613,EnteringShelter,Shelter return,0,7
+997,160.4279,EnteringShelter,Shelter return,0,7
+998,160.4946,EnteringShelter,Shelter return,0,7
+999,160.5613,EnteringShelter,Shelter return,0,7
+1000,160.6279,EnteringShelter,Shelter return,0,7
+1001,160.6946,EnteringShelter,Shelter return,0,7
+1002,160.7613,EnteringShelter,Shelter return,0,7
+1003,160.8279,EnteringShelter,Shelter return,0,7
+1004,160.8946,EnteringShelter,Shelter return,0,7
+1005,160.9613,EnteringShelter,Shelter return,0,7
+1006,161.0279,EnteringShelter,Shelter return,0,7
+1007,161.0946,EnteringShelter,Shelter return,0,7
+1008,161.1613,EnteringShelter,Shelter return,0,7
+1009,161.2279,EnteringShelter,Shelter return,0,7
+1010,161.2946,EnteringShelter,Shelter return,0,7
+1011,161.3613,EnteringShelter,Shelter return,0,7
+1012,161.4279,EnteringShelter,Shelter return,0,7
+1013,161.4946,EnteringShelter,Shelter return,0,7
+1014,161.5613,EnteringShelter,Shelter return,0,7
+1015,161.6279,EnteringShelter,Shelter return,0,7
+1016,161.6946,EnteringShelter,Shelter return,0,7
+1017,161.7613,EnteringShelter,Shelter return,0,7
+1018,161.8279,EnteringShelter,Shelter return,0,7
+1019,161.8946,EnteringShelter,Shelter return,0,7
+1020,161.9613,EnteringShelter,Shelter return,0,7
+1021,162.0279,EnteringShelter,Shelter return,0,7
+1022,162.0946,EnteringShelter,Shelter return,0,7
+1023,162.1613,EnteringShelter,Shelter return,0,7
+1024,162.2279,EnteringShelter,Shelter return,0,7
+1025,162.2946,EnteringShelter,Shelter return,0,7
+1026,162.3613,EnteringShelter,Shelter return,0,7
+1027,162.4279,EnteringShelter,Shelter return,0,7
+1028,162.4946,EnteringShelter,Shelter return,0,7
+1029,162.5613,EnteringShelter,Shelter return,0,7
+1030,162.6279,EnteringShelter,Shelter return,0,7
+1031,162.6946,EnteringShelter,Shelter return,0,7
+1032,162.7613,EnteringShelter,Shelter return,0,7
+1033,162.8279,EnteringShelter,Shelter return,0,7
+1034,162.8946,EnteringShelter,Shelter return,0,7
+1035,162.9613,EnteringShelter,Shelter return,0,7
+1036,163.0279,EnteringShelter,Shelter return,0,7
+1037,163.0946,EnteringShelter,Shelter return,0,7
+1038,163.1613,EnteringShelter,Shelter return,0,7
+1039,163.2279,EnteringShelter,Shelter return,0,7
+1040,163.2946,EnteringShelter,Shelter return,0,7
+1041,163.3613,EnteringShelter,Shelter return,0,7
+1042,163.4279,EnteringShelter,Shelter return,0,7
+1043,163.4946,EnteringShelter,Shelter return,0,7
+1044,163.5613,EnteringShelter,Shelter return,0,7
+1045,163.6279,EnteringShelter,Shelter return,0,7
+1046,163.6946,EnteringShelter,Shelter return,0,7
+1047,163.7613,EnteringShelter,Shelter return,0,7
+1048,163.8279,EnteringShelter,Shelter return,0,7
+1049,163.8946,EnteringShelter,Shelter return,0,7
+1050,163.9613,EnteringShelter,Shelter return,0,7
+1051,164.0279,EnteringShelter,Shelter return,0,7
+1052,164.0946,EnteringShelter,Shelter return,0,7
+1053,164.1613,EnteringShelter,Shelter return,0,7
+1054,164.2279,EnteringShelter,Shelter return,0,7
+1055,164.2946,EnteringShelter,Shelter return,0,7
+1056,164.3613,EnteringShelter,Shelter return,0,7
+1057,164.4279,EnteringShelter,Shelter return,0,7
+1058,164.4946,EnteringShelter,Shelter return,0,7
+1059,164.5613,EnteringShelter,Shelter return,0,7
+1060,164.6279,EnteringShelter,Shelter return,0,7
+1061,164.6946,EnteringShelter,Shelter return,0,7
+1062,164.7613,EnteringShelter,Shelter return,0,7
+1063,164.8279,EnteringShelter,Shelter return,0,7
+1064,164.8946,EnteringShelter,Shelter return,0,7
+1065,164.9613,EnteringShelter,Shelter return,0,7
+1066,165.0279,EnteringShelter,Shelter return,0,7
+1067,165.0946,EnteringShelter,Shelter return,0,7
+1068,165.1613,EnteringShelter,Shelter return,0,7
+1069,165.2279,Delivered,Shelter return,0,7
+1070,165.479,Delivered,Delivered at base,0,7
+1071,165.6269,Delivered,Delivered at base,0,7
+1072,165.7751,Delivered,Delivered at base,0,7
+1073,165.9378,Delivered,Delivered at base,0,7
+1074,166.0896,Delivered,Delivered at base,0,7
+1075,166.2381,Delivered,Delivered at base,0,7
+1076,166.3967,Delivered,Delivered at base,0,7
+1077,166.5568,Delivered,Delivered at base,0,7
+1078,166.6977,Delivered,Delivered at base,0,7

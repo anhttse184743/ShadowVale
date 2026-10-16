@@ -1,0 +1,519 @@
+{
+  "original_opening_and_map2_scene_preserved": {
+    "Assets/_Project/Map01/Runtime/Map01OpeningCutscene.cs": "2fdfbf1b865de8b756505cfda1e0cabe81b86f81cf3f7fa578c3dbd686815e4b",
+    "Assets/_Project/Map01/Resources/Cutscenes/Map01Opening.prefab": "4f0af4f8d3d51d5bd389fea55cf0bd28e56996a19ee69626fd45ef02e8f66ce3",
+    "Assets/_Project/Art/cutsence/Commander.mp3": "c2adf6ba5602c4dfec4171648a4a706f1922df2fee6f8ee7c49022bfc63295d5",
+    "Assets/_Project/Art/cutsence/Soldier.mp3": "63727eb09cf7362491f0b03ecd8cffd7c5b741bad51f5d9358c7671d6e6127fa",
+    "Assets/_Project/Scenes/Maps/Map 2.unity": "17b19c6657c479f397b0850ce67ebf2075ff3766b25737d22c2e3861519f07bf"
+  },
+  "files": [
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\DialogueVoice.cs",
+      "sha256": "dc826abf333c4a69e3074d3fdddfe07ede11b3a8f219342515e47e5902ddb061"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\DialogueVoice.cs.meta",
+      "sha256": "4cc70d3440e2cb8919d0776a40bb2ebb7d6b3ce80eb83caa0c267d425a29a574"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\Map01Mission.cs",
+      "sha256": "9226df8255a985cba595e573d81adfb49624db5fca95ba82e76744834a9b740c"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\Map01Extraction.cs",
+      "sha256": "be1489f558dda024d28f6ebf402ea86ebea874f0715a7b984bf03a923975b9ec"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\Map02Arrival.cs",
+      "sha256": "3c806b23f2d21e3470d60662ea50b2600eacb6d30de2f0ec4ee0af3cd9089f37"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\Map01Quest.cs",
+      "sha256": "90a34c2ac6b023a7da798ac0ba8bc2cce9f3f8c4d01f65d2288d21876667c3ae"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\Map01Rescue.cs",
+      "sha256": "624295cd37d49f4f773b0d3a639cf45e90e6a327f9583679b80e277137603564"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\Map01SaveSystem.cs",
+      "sha256": "695a7ae4c408ae51c55200b4c920c2d695f841bcd91ed3839c7d3afa90b13ff5"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Editor\\DialogueVoiceSetup.cs",
+      "sha256": "0e59a509e0c637e3804ec812f425faa76ac68b79543f63c1e29440d3d2b14b8e"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Editor\\DialogueVoiceSetup.cs.meta",
+      "sha256": "978099d5695e7aa9fd7f608d53f5b1edae295bf14f963e56a090cacb53de6995"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Tests\\DialogueVoiceTests.cs",
+      "sha256": "4c565c354f7960908e6820baa99404859efadff23290cbe159a472c0098571d4"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Tests\\DialogueVoiceTests.cs.meta",
+      "sha256": "5d5f357a8910f99b9938ecf633e1e5d140afed61adf9fe24cb5e4535c859bf8d"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\voice-catalog.json",
+      "sha256": "29254d9f8a4ec283690fc41ef750134b90b8c68455a8b782bdec82bc0afaefa8"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\voice-catalog.json.meta",
+      "sha256": "e687efded774efbbc2697ccdccf786425111777102805e43d0c4072c558d57da"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI.meta",
+      "sha256": "1726a873d96e268e1caf22deb06ba5a0da23ee29b4d81e59baf3b539d07a3bd0"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_01.wav",
+      "sha256": "b1f9755a54e312f56f86ad768b11f5a7c0b638547e40a2834cd2f0fa9bc2475b"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_01.wav.meta",
+      "sha256": "f7fcce187f2325a2936b158b721673d67b392d2284925eb8ca50c3af304f9120"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_02.wav",
+      "sha256": "9eccef3319951726ca302f045bb76822105ec8d1aa71b2b53b96476577d31338"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_02.wav.meta",
+      "sha256": "07621629f4335916a8dbaf5bca1271b18be0a0eb1d6476d7a107c19dc18de91d"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_03.wav",
+      "sha256": "d1fa99b087ea568584d2de43b3313323cb3f19df6df36690355aa25c2cbac51f"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_03.wav.meta",
+      "sha256": "d241c2ffc38833d9ccee686ec8dcc39cd728ef9c8a6796e6696a9b3cd1a11f49"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_04.wav",
+      "sha256": "84612c993c9bc548baa64125764a99fc7d194036c7afd1ff115c0fd20dc11dfe"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_04.wav.meta",
+      "sha256": "e0142ed727b893c9dedb5039a78ee31055557ef4de3c57f58763e62175277f69"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_05.wav",
+      "sha256": "46fb2450fe1637625afe359c47aed521af63de8e4894ae65af2451a2e572cf70"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_05.wav.meta",
+      "sha256": "afc20a3a3d56064f88ef7b7bf5a18198afce9dc73a60fd531d3972028349cd6a"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_06.wav",
+      "sha256": "8af564c254ccb46a8312f52200e4be1bf424dd1efc7a6832e3cecb0fb53d6a06"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_06.wav.meta",
+      "sha256": "20f9f5b7591f5282bed05fd3b7477484e90599d5ddc70d27229a94135199f066"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_07.wav",
+      "sha256": "9b75a88f71f4bb69a6d2c26d9650ca23402ff52dd43726ca31ae4d0fd3ef9a77"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_07.wav.meta",
+      "sha256": "373457aa2404d09934ecd0b7c00de22714d4463dabd4ea5c9f5c96af7c79ea3c"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_08.wav",
+      "sha256": "aaad17c012bc4f98116c2c4a8b912b198ec6e185655e7e151e3ac7a5a7b3eab3"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_08.wav.meta",
+      "sha256": "e33172f889be51bc8f26b3ac6d76af59aabd0e529b4db5c4119fa8572d76ee3d"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_09.wav",
+      "sha256": "e14963cd57243bed05bfbc81b28498c9bc59cc5e6e43440956161a1934507287"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_09.wav.meta",
+      "sha256": "fbb33fdad009cd8031421951e427ca2011727443dd3ba6365d2d19b06019f039"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_10.wav",
+      "sha256": "f39c75fb693d226fdd3147900cd32159e8e6addfe8a0465f0d50abec44684a5d"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_10.wav.meta",
+      "sha256": "6f1ca5c4f12d7296635e41e53e067d64f827697c8956393cf8569c7d5cb8d436"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_11.wav",
+      "sha256": "984800254dc1e21d6154b2a8cb05077501f08171e6d9f9767b38b08ac4ccad41"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_11.wav.meta",
+      "sha256": "27b2d5d54742f6c3e06d84dbd1d291d0cf27c83fded9180292160579d6d48fe2"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_12.wav",
+      "sha256": "41ced4a4b7c008458fa1ef8492194ea20fa27810814d2c121d8e1fed92534fb3"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_12.wav.meta",
+      "sha256": "f4dfcf735244159f1710ee8b57089bb60f696f2e1ceafa66b25674a8125ab634"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_13.wav",
+      "sha256": "8854d00e2a686609b2e55749b9e676d058f1f189b8e4861db522b51a6f449a1a"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_13.wav.meta",
+      "sha256": "7582e75379e06b3e51df86ac15c9c0eba189a1112b5e80f3160a190131b2b53f"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_14.wav",
+      "sha256": "104adbf944367074270cde4b2300fe15f15d463940a9669cabc0de695f364d3e"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_14.wav.meta",
+      "sha256": "2daa3c263990ff810a78988664753af4fc9aaf43a315ea0a4edeba628db39a15"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_15.wav",
+      "sha256": "999f5e47ef9d6d894db6e794fc1bc502cd2808bbe1ecbb6403ffdb763725f158"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_15.wav.meta",
+      "sha256": "1e488b4a8a484cec42c4ed80f8fcf3925ca5cbe11fea047a20002a026eb3016a"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_16.wav",
+      "sha256": "0b4cc663b51d8b970583b9133e21c1ccb623db68fd1ef93480834fc31bc01031"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_story_16.wav.meta",
+      "sha256": "024fdaf1e7ed7b433edd2aa4dd1928d6a2514755dbd28ddb9f37eceb2848500e"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_rescue_thanks.wav",
+      "sha256": "1b004f920e95e1d729f81bf70ae867f6fdb0ff366699f6c60bb6287c3bc5985b"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_rescue_thanks.wav.meta",
+      "sha256": "a1775476ea1d2b8b22d63254d0b67671ea96cac556519d575bcc5b551fbe6364"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_radio_order.wav",
+      "sha256": "ebf6daab981633cb88478c8952d7dc143b06aa12d9d41f88596110e91a46a35f"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_radio_order.wav.meta",
+      "sha256": "04e6a87b53d6dc982cf24c34ae2c8ad755526d70834e600c696c249d8a0d268a"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_radio_reply.wav",
+      "sha256": "0b375682cfdd317a67e25bce086641a1f5ae7a910a3c9dd2bba9716dbe182423"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_radio_reply.wav.meta",
+      "sha256": "b60a4c60fcedc4aad998bb0561a3fbe5ec06e222dc4df094f69ff84615b6d9f7"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_board_invite.wav",
+      "sha256": "ed587c7d55f9377d4bbac4969f114bfd73e3cced13c75a93ce9c6f1545021c0d"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_board_invite.wav.meta",
+      "sha256": "f909172d3b77db734e8861f4005c198120a9ea37f1e5216da072ea5be05a6c84"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_depart_order.wav",
+      "sha256": "68079981fa3a27ea5d2767062f91f67c622cd7f50db726e12da7e0a7f638bcec"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_depart_order.wav.meta",
+      "sha256": "30e9084d200296c40afde42176f2dcce4e5c1493f9bee0cf3a070e2d01f14a86"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m2_arrival_sight.wav",
+      "sha256": "871686236afea959527756dd209689834679e8f96bbd9fcc79258889e63ce58b"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m2_arrival_sight.wav.meta",
+      "sha256": "5c91ef4df31e8419b0811530688b592531d6646b83f79b313a572bbda5c83829"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m2_moor_order.wav",
+      "sha256": "e70c5c8d439c89a82aa62ed6e5e4fe74dae2229119c58008c7cc3488abd02ad3"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m2_moor_order.wav.meta",
+      "sha256": "9a7dd9e418359567e4b34a6b393535f955abc75fccdb79665992b8f51726c30b"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m2_ashore_order.wav",
+      "sha256": "ebf4787b6c94e2dd03bd30816918ec1bb582b480bc6d6263f9e1fa1decfc6e08"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m2_ashore_order.wav.meta",
+      "sha256": "c9146fb9ae29af173f86747c5562483f4bc79afe24ca756b1c777293b0c711e5"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_scout_silent.wav",
+      "sha256": "1eb55bd78cb53ed1ede4d8cebf37545517609e1056a59c2e6376e94b69f1246b"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_scout_silent.wav.meta",
+      "sha256": "410836592b3fbce53dfe690c5cae310060399e7599c39f6ead45bf38b9af8f57"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_jetty_observation.wav",
+      "sha256": "942e72c4635da4ac29b7e8b01890133f027c986dd8015baf603d42c1755480a3"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue\\VI\\m1_jetty_observation.wav.meta",
+      "sha256": "e2371b971e70bd1823b6b3d041a44301441ccb061be23f38a346b3a5f370f18b"
+    },
+    {
+      "path": "Assets\\Resources\\Dialogue.meta",
+      "sha256": "42c5209fcfb68af894f1865f253ac7c526cfd04e983857179321bcf6535f19ee"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\voice-catalog.json",
+      "sha256": "29254d9f8a4ec283690fc41ef750134b90b8c68455a8b782bdec82bc0afaefa8"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\audio-validation.json",
+      "sha256": "c2419b22da9d203daec18c041c3e91ffcbea178d791477b7905ad4f9de694dbc"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\voice-radio-preview.wav",
+      "sha256": "b7eab479fc51bbaf788ed48279bea8f66f6d554458ef32e96724265ebe8f1da8"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\rebuild_voice_audio.py",
+      "sha256": "7b95d7dd884469da7851c8d2a02228d88dfca95b048d174ef8b89ce14f1c098b"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\requirements.txt",
+      "sha256": "a44b6e31a6a14e5a490edd3711b2e4cc70b4ccfd541eb1719487721c1126f8f5"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\HUONG-DAN-LOI-THOAI.md",
+      "sha256": "a15c3c560faa09e148a9c01b5c6956329fd521fdfaa237d88e73204df98874ad"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\KIEM-CHUNG.md",
+      "sha256": "5fcfc1e1c344d1e7c0dc14036133746b75172d4ce2b16b6963f4568a8e9983d0"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_01.mp3",
+      "sha256": "e057371c778398999ce88e5fca9920ee73342573f596cdee36abbc85e5089e88"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_01_dry.wav",
+      "sha256": "b1f9755a54e312f56f86ad768b11f5a7c0b638547e40a2834cd2f0fa9bc2475b"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_02.mp3",
+      "sha256": "9e2bd834c922458d7dd5cf11447b06bfee42d238b1a42e5a511bb796b6f46159"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_02_dry.wav",
+      "sha256": "9eccef3319951726ca302f045bb76822105ec8d1aa71b2b53b96476577d31338"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_03.mp3",
+      "sha256": "888c71ae696f9a42d8a1b72012f720d9b83a77f3309c38f587902e6e77ca0d56"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_03_dry.wav",
+      "sha256": "d1fa99b087ea568584d2de43b3313323cb3f19df6df36690355aa25c2cbac51f"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_04.mp3",
+      "sha256": "a52468b70d52067cf75229277273a94e9e503e0ad0400d46a005f057aabe226f"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_04_dry.wav",
+      "sha256": "84612c993c9bc548baa64125764a99fc7d194036c7afd1ff115c0fd20dc11dfe"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_05.mp3",
+      "sha256": "7cccf709ad31a3209f37ebd8a665664fb98de448b3804f68c1692fe61270c56f"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_05_dry.wav",
+      "sha256": "46fb2450fe1637625afe359c47aed521af63de8e4894ae65af2451a2e572cf70"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_06.mp3",
+      "sha256": "03bb11bce765b06d396375ebea70515d72083162103c371bb6d8154da7199f2b"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_06_dry.wav",
+      "sha256": "8af564c254ccb46a8312f52200e4be1bf424dd1efc7a6832e3cecb0fb53d6a06"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_07.mp3",
+      "sha256": "5933ef640be94a26e0d9747e2def94917bfa86a1b50b4bf87f2570b842cf8659"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_07_dry.wav",
+      "sha256": "9b75a88f71f4bb69a6d2c26d9650ca23402ff52dd43726ca31ae4d0fd3ef9a77"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_08.mp3",
+      "sha256": "82e7f2e7d03008872c948063e5902ea611b7658ab49e3cc35d041c85a9b7353b"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_08_dry.wav",
+      "sha256": "aaad17c012bc4f98116c2c4a8b912b198ec6e185655e7e151e3ac7a5a7b3eab3"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_09.mp3",
+      "sha256": "dd1bb3096721bfeae1275a97f4f49c948af3ef9d2eb3636bfa20f797607d48f0"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_09_dry.wav",
+      "sha256": "e14963cd57243bed05bfbc81b28498c9bc59cc5e6e43440956161a1934507287"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_10.mp3",
+      "sha256": "59494194adc8de3511b1fb5f2a54f06be2e5cde157681ea117425586a7081fbe"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_10_dry.wav",
+      "sha256": "f39c75fb693d226fdd3147900cd32159e8e6addfe8a0465f0d50abec44684a5d"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_11.mp3",
+      "sha256": "9d99faad8a51e48a66fb5730e7cd2a3c07f9d0efba2304a312e657a8e86ce879"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_11_dry.wav",
+      "sha256": "984800254dc1e21d6154b2a8cb05077501f08171e6d9f9767b38b08ac4ccad41"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_12.mp3",
+      "sha256": "36f12c32ca43a27c9a7572c4a2f4a8dc6af6b39becc1b542fed5dce3ec8c4eb8"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_12_dry.wav",
+      "sha256": "41ced4a4b7c008458fa1ef8492194ea20fa27810814d2c121d8e1fed92534fb3"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_13.mp3",
+      "sha256": "1e963dc22dafb3ed007bd5e9728f6e7c37c34c743665151e010a16cc68502ac9"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_13_dry.wav",
+      "sha256": "8854d00e2a686609b2e55749b9e676d058f1f189b8e4861db522b51a6f449a1a"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_14.mp3",
+      "sha256": "c143d19860c00f429434282a98e861adeef756b00b86d944cbbf3483ae98df6c"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_14_dry.wav",
+      "sha256": "104adbf944367074270cde4b2300fe15f15d463940a9669cabc0de695f364d3e"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_15.mp3",
+      "sha256": "111578404e57a3d29bcb7fca81dd407a11ea522f7a5a9f798a7d7cd08d88a675"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_15_dry.wav",
+      "sha256": "999f5e47ef9d6d894db6e794fc1bc502cd2808bbe1ecbb6403ffdb763725f158"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_16.mp3",
+      "sha256": "0a32ecc85e2443b29472f5317dbc9829170f3d6f66d12950ffde9fabdb6e6ca5"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_story_16_dry.wav",
+      "sha256": "0b4cc663b51d8b970583b9133e21c1ccb623db68fd1ef93480834fc31bc01031"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_rescue_thanks.mp3",
+      "sha256": "feef26afff73636ebafa29c5c8bab484d7d62ba9ae82953793d881cd95ea9c0a"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_rescue_thanks_dry.wav",
+      "sha256": "1b004f920e95e1d729f81bf70ae867f6fdb0ff366699f6c60bb6287c3bc5985b"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_radio_order.mp3",
+      "sha256": "70d8f5eca566cfa6b8fd147b628b777fbdd8f04d5d2d76b971c44a81594d627b"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_radio_order_dry.wav",
+      "sha256": "a195679fbe33fe916577f8a9e86e25992baf55ced95ca3ee0e3a1f13d607a8f4"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_radio_reply.mp3",
+      "sha256": "eebc1a28c366f3dd87c61732809c973f46f33fb7151601181f34cae2c672120c"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_radio_reply_dry.wav",
+      "sha256": "cf96cd1377bb257164d6fca2bc46207b8d3476e6de164edbfe2089b3e7b17d51"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_board_invite.mp3",
+      "sha256": "d062d7c65bfcfef8a6c159edd17b943511072ce7883fd45f434cbd9345cbb264"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_board_invite_dry.wav",
+      "sha256": "ed587c7d55f9377d4bbac4969f114bfd73e3cced13c75a93ce9c6f1545021c0d"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_depart_order.mp3",
+      "sha256": "91203351dc42247d05d789c014f62aa5ef4ba9167ca87e455418ea3a43121e18"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_depart_order_dry.wav",
+      "sha256": "68079981fa3a27ea5d2767062f91f67c622cd7f50db726e12da7e0a7f638bcec"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m2_arrival_sight.mp3",
+      "sha256": "492974337057c1b3fdeb0d8796d82c3664b52d0e7d530d377c74f070cb2e8ee6"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m2_arrival_sight_dry.wav",
+      "sha256": "871686236afea959527756dd209689834679e8f96bbd9fcc79258889e63ce58b"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m2_moor_order.mp3",
+      "sha256": "489a4c882fc734bd044350e6e85f0b20af7f7c6bd7db265da6a7fe751397368f"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m2_moor_order_dry.wav",
+      "sha256": "e70c5c8d439c89a82aa62ed6e5e4fe74dae2229119c58008c7cc3488abd02ad3"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m2_ashore_order.mp3",
+      "sha256": "b4381e84f22790a7501e9281ef31de42db57d5a9c74a185187da9f86d659623f"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m2_ashore_order_dry.wav",
+      "sha256": "ebf4787b6c94e2dd03bd30816918ec1bb582b480bc6d6263f9e1fa1decfc6e08"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_scout_silent.mp3",
+      "sha256": "de6377494299719e90e8e1a760da6ce233730dca675565e5f35902ea6761826c"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_scout_silent_dry.wav",
+      "sha256": "1eb55bd78cb53ed1ede4d8cebf37545517609e1056a59c2e6376e94b69f1246b"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_jetty_observation.mp3",
+      "sha256": "956ee2d93ce9be53ec7a6c161fb70d03344499fdaabafd942cbe3382e396b964"
+    },
+    {
+      "path": "SourceArt\\Dialogue\\Raw\\m1_jetty_observation_dry.wav",
+      "sha256": "942e72c4635da4ac29b7e8b01890133f027c986dd8015baf603d42c1755480a3"
+    }
+  ]
+}

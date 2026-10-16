@@ -1,0 +1,22 @@
+{
+  "Assets/_Project/Map01/Runtime/Map01OpeningCutscene.cs": "a4ffe21f14b438e7ff11a60b21d3c1b0bacd7234f1b5b8b71d996a8a79b19c22",
+  "Assets/_Project/Map01/Tests/OpeningCutsceneTests.cs": "1d1fe1169f9b14591ae88d8caf6542e3d6ecbbb5970247dc5d7b2cb61679a162",
+  "Assets/_Project/Map01/Editor/Map01SaluteSetup.cs": "bb7e5856ac100c9ffa1cbb290a638af754c3cc532641e1d19f7642ff08206053",
+  "Assets/_Project/Map01/Editor/Map01SaluteSetup.cs.meta": "8bf06c53bdc4f5a59cba6af6b042f65634228f993560a6fe6cbf49d608a646bf",
+  "Assets/_Project/Scripts/Editor/OpeningCutsceneSetup.cs": "783324ce6c15eb89d28b3c76c9b0677f85812a8b7f9ece56f9cdd737cc542921",
+  "Assets/_Project/Map01/Resources/Cutscenes/Map01Opening.prefab": "a442783d98572e044e520da927750aed7a559fd7e93087dfc04e27d010850641",
+  "Assets/_Project/Art/Characters/Animations/Opening.meta": "a0d88426f6f2ba8745d1558bf4cfe10036684938ff7f723b24b9e3568b6f1f2d",
+  "Assets/_Project/Art/Characters/Animations/Opening/Nam_Salute_Briefing.fbx": "2277dda988c0c1e7fb39e9b8cbea9587a9eec7fcfc950c31abef330aedf5f0a6",
+  "Assets/_Project/Art/Characters/Animations/Opening/Nam_Salute_Briefing.fbx.meta": "67f069bff9166847c6150fc79d1d70df5fa26bc2ed3e3a85745084e288a3834b",
+  "Assets/_Project/Art/Characters/Animations/Generated/Nam_Salute_Briefing.anim": "c1f4d2f2589ab6de4e244eb9ac1dc4ca9b939358a421566d94b51b4359adbde7",
+  "Assets/_Project/Art/Characters/Animations/Generated/Nam_Salute_Briefing.anim.meta": "dd6e088d3b26634a13568a8ef02c3c1c1511f01deeff661611cc65b4fc96f3a3",
+  "Assets/_Project/Art/Characters/Animations/Generated/Nam_Briefing_Idle.anim": "3bee5b0ae56b35b26eaaf8c1bf99b5808c07532620eb34f47c8b126cd0600523",
+  "Assets/_Project/Art/Characters/Animations/Generated/Nam_Briefing_Idle.anim.meta": "ec9a189c349b9b52e9530834cff04c4ea254ced6b5d5a138cec8f26fdcbf3253",
+  "SourceArt/Map01_Opening/author_salute.py": "7dd7c5abea6bab82e582fb78e9d55d96d85037651737e9d40ca5df794883a75b",
+  "SourceArt/Map01_Opening/Nam_Salute_Briefing.blend": "a23eca70d5fb9c2ea8c814c663562583eb9e253513bb0f136a0b4d9876d69d33",
+  "SourceArt/Map01_Opening/salute-validation.json": "5e8e2b8a134266913f72766dfe42e796853e2283e336bb1a70db0f6f421e4ce9",
+  "SourceArt/Map01_Opening/finger-calibration.txt": "726818755f613c429781ddb989e1884b575497a5f919c60448fb84dd2c9a0ced",
+  "SourceArt/Map01_Opening/elbow-calibration.txt": "2ce7747b6b08b9788403401039affbd75f0c438a18028498a43c426f78650249",
+  "SourceArt/Map01_Opening/README.md": "fc651b47ecb09067883a39460f92a90dde3440b82dda4320a8643b34e00384e3",
+  "SourceArt/Map02_Arrival/LOCOMOTION_EDITING.md": "5b1179c596800966402bcff23d133ab86bf9a11dd16a6ba811a011ecd79f0d91"
+}

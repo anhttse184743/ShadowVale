@@ -1,0 +1,29 @@
+[
+  {
+    "id": "m1_rescue_radio_report",
+    "radio": true,
+    "duration": 7.28,
+    "peak": 0.5213832816807553,
+    "rms": 0.09759267347774139,
+    "sha256": "a2740672243d8a6ecc58aa3f6ce666298ac81d304ef5870d6b069d44b568d862",
+    "taskId": "8302fa7d-03ae-4c65-a715-8682a2d0bc30"
+  },
+  {
+    "id": "m1_rescue_radio_instruction",
+    "radio": true,
+    "duration": 7.06,
+    "peak": 0.5314582969585048,
+    "rms": 0.07428032985936579,
+    "sha256": "fd095da59cca42c876f82a2340e792b554bbe0f247311691aa9b96d3be89e36d",
+    "taskId": "3080192e-a025-4934-bf8b-f5c026e238ae"
+  },
+  {
+    "id": "m1_rescue_radio_ack",
+    "radio": true,
+    "duration": 3.6,
+    "peak": 0.4691447996458452,
+    "rms": 0.09908502366229505,
+    "sha256": "04cc8c4814032faa92573613138308e51ca818709665cd327bc1bd0753fa1f2f",
+    "taskId": "c7608e10-666b-47d4-b190-a0ba4b0f6c83"
+  }
+]

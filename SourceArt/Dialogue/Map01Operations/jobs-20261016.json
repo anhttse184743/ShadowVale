@@ -1,0 +1,566 @@
+{
+  "creditsReserved": 30,
+  "ceiling": 30,
+  "jobs": [
+    {
+      "id": "m1_ops_supply_order_01",
+      "estimatedCredits": 2,
+      "kind": "task_pending",
+      "taskId": "250fbfe7-55f1-4997-bed3-186d680c6edb",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Số thuốc của Hùng còn ở điểm một. Lấy lại rồi mang về hầm, anh em đang cần.",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Số thuốc của Hùng còn ở điểm một. Lấy lại rồi mang về hầm, anh em đang cần.",
+          "voice": "Tom",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_supply_order_01",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 335,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_supply_order_02",
+      "estimatedCredits": 1,
+      "kind": "task_pending",
+      "taskId": "932af441-c63e-4392-a67f-36687b21a3d2",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Hàng nằm trong kho. Chìa do tên gác giữ.",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Hàng nằm trong kho. Chìa do tên gác giữ.",
+          "voice": "Clint",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_supply_order_02",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 334,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_supply_order_03",
+      "estimatedCredits": 1,
+      "kind": "task_pending",
+      "taskId": "8a54aff1-663f-4989-96f3-3c2c15c0d5d1",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Tôi sẽ mang về.",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Tôi sẽ mang về.",
+          "voice": "Brodie",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_supply_order_03",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 333,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_supply_report_01",
+      "estimatedCredits": 2,
+      "kind": "task_pending",
+      "taskId": "b7885962-d27c-4b10-8d6a-29c7264166f6",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Tôi lấy được túi tiếp tế rồi. Thuốc vẫn còn nguyên.",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Tôi lấy được túi tiếp tế rồi. Thuốc vẫn còn nguyên.",
+          "voice": "Brodie",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_supply_report_01",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 331,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_supply_report_02",
+      "estimatedCredits": 2,
+      "kind": "task_pending",
+      "taskId": "440b3888-c482-45ac-8fce-68d674f586c9",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Mang về hầm. Đi cẩn thận, chúng có thể còn lính ngoài đường.",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Mang về hầm. Đi cẩn thận, chúng có thể còn lính ngoài đường.",
+          "voice": "Tom",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_supply_report_02",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 329,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_handoff_01",
+      "estimatedCredits": 1,
+      "kind": "task_pending",
+      "taskId": "b717e975-ca69-454e-ba8d-d0e27259e069",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Hàng đây. Tôi đã kiểm tra, thuốc còn dùng được.",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Hàng đây. Tôi đã kiểm tra, thuốc còn dùng được.",
+          "voice": "Brodie",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_handoff_01",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 328,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_handoff_02",
+      "estimatedCredits": 1,
+      "kind": "task_pending",
+      "taskId": "46b7295c-0039-4061-9e69-2f4311332288",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Đúng số hàng của tôi rồi.",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Đúng số hàng của tôi rồi.",
+          "voice": "Clint",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_handoff_02",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 327,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_handoff_03",
+      "estimatedCredits": 3,
+      "kind": "task_pending",
+      "taskId": "6402ee24-d54f-402d-8946-458e69f3591d",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Đài ở điểm hai vẫn đang điều lính ra các chốt. Nam, tới đó vô hiệu hóa nó, cắt đường gọi viện của chúng.",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Đài ở điểm hai vẫn đang điều lính ra các chốt. Nam, tới đó vô hiệu hóa nó, cắt đường gọi viện của chúng.",
+          "voice": "Tom",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_handoff_03",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 324,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_handoff_04",
+      "estimatedCredits": 1,
+      "kind": "task_pending",
+      "taskId": "90a81815-0931-4111-8cb0-c8f5ee0047d6",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Tôi xử lý xong sẽ báo.",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Tôi xử lý xong sẽ báo.",
+          "voice": "Brodie",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_handoff_04",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 323,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_radio_report_01",
+      "estimatedCredits": 2,
+      "kind": "task_pending",
+      "taskId": "cac6f747-9270-4421-bb3c-620e7bb3f9e5",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Đài đã ngừng phát. Chúng không gọi viện qua trạm này được nữa.",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Đài đã ngừng phát. Chúng không gọi viện qua trạm này được nữa.",
+          "voice": "Brodie",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_radio_report_01",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 321,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_radio_report_02",
+      "estimatedCredits": 2,
+      "kind": "task_pending",
+      "taskId": "689235fa-c9c3-420a-a34d-194752df63ab",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Tên sĩ quan điều quân đang ở điểm ba. Quan sát từ xa rồi báo tôi trước khi đánh.",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Tên sĩ quan điều quân đang ở điểm ba. Quan sát từ xa rồi báo tôi trước khi đánh.",
+          "voice": "Tom",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_radio_report_02",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 319,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_commander_report_01",
+      "estimatedCredits": 2,
+      "kind": "task_pending",
+      "taskId": "f7154aab-b032-4af9-9bcf-20c99f9915dd",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Tôi thấy tên sĩ quan rồi. Hắn ở trong chốt, có lính bảo vệ.",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Tôi thấy tên sĩ quan rồi. Hắn ở trong chốt, có lính bảo vệ.",
+          "voice": "Brodie",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_commander_report_01",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 317,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_commander_report_02",
+      "estimatedCredits": 2,
+      "kind": "task_pending",
+      "taskId": "38ce0f4e-0825-4720-95ff-82700ed4de18",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Hắn đang siết đường ra bến. Chọn vị trí có vật che, hạ hắn rồi rút.",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Hắn đang siết đường ra bến. Chọn vị trí có vật che, hạ hắn rồi rút.",
+          "voice": "Tom",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_commander_report_02",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 315,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_commander_early_01",
+      "estimatedCredits": 2,
+      "kind": "task_pending",
+      "taskId": "8f24cd1d-2cd7-4845-879f-0dab0d5fbbff",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Tôi đã xác nhận. Tên sĩ quan bị hạ trong lúc giao tranh.",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Tôi đã xác nhận. Tên sĩ quan bị hạ trong lúc giao tranh.",
+          "voice": "Brodie",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_commander_early_01",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 313,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_retreat_01",
+      "estimatedCredits": 1,
+      "kind": "task_pending",
+      "taskId": "ef09afe4-e2af-4c92-b3ea-77a2f3884079",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Tên sĩ quan đã bị hạ. Tôi đang rời chốt.",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Tên sĩ quan đã bị hạ. Tôi đang rời chốt.",
+          "voice": "Brodie",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_retreat_01",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 312,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_retreat_02",
+      "estimatedCredits": 1,
+      "kind": "task_pending",
+      "taskId": "f883bb54-2655-43c5-b69a-ac4626a903f0",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Ra bến phía bắc. Tôi và Hùng chờ cậu trên thuyền.",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Ra bến phía bắc. Tôi và Hùng chờ cậu trên thuyền.",
+          "voice": "Tom",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_retreat_02",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 311,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_retreat_03",
+      "estimatedCredits": 1,
+      "kind": "task_pending",
+      "taskId": "f6c1de27-0d4f-4fc2-b7b4-452c604372ec",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Tôi tới ngay.",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Tôi tới ngay.",
+          "voice": "Brodie",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_retreat_03",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 310,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_radio_alarm",
+      "estimatedCredits": 1,
+      "kind": "task_pending",
+      "taskId": "e5d5c5db-5216-44e8-a9ff-284296f04b22",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Báo động ở trạm đài! Tới kiểm tra ngay!",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Báo động ở trạm đài! Tới kiểm tra ngay!",
+          "voice": "Martin",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_radio_alarm",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 309,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_enemy_spotted",
+      "estimatedCredits": 1,
+      "kind": "task_pending",
+      "taskId": "2515225f-5a1a-4b72-a56e-e1f20fb41898",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Có người ở mé rừng! Bên kia!",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Có người ở mé rừng! Bên kia!",
+          "voice": "Martin",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_enemy_spotted",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 308,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    },
+    {
+      "id": "m1_ops_enemy_order",
+      "estimatedCredits": 1,
+      "kind": "task_pending",
+      "taskId": "a66e53ad-cca7-4a5b-bbc9-669855ae92b7",
+      "taskType": "workflow_text_to_speech",
+      "outputKind": "audio",
+      "prompt": "Tản ra! Chặn đường hắn!",
+      "meta": {
+        "modelId": "eleven_v3",
+        "modelLabel": "Eleven v3"
+      },
+      "_regenerate": {
+        "tool": "generate_speech",
+        "arguments": {
+          "text": "Tản ra! Chặn đường hắn!",
+          "voice": "Martin",
+          "model": "eleven_v3",
+          "speed": 0.9,
+          "languageCode": "vi",
+          "name": "m1_ops_enemy_order",
+          "rationale": "User clicked Re-generate in the inline viewer to create another variation with the same parameters."
+        }
+      },
+      "creditsRemaining": 307,
+      "isFreePlan": true,
+      "upgradeUrl": "https://runway.com/pricing?utm_source=mcp&utm_medium=mcp_app&utm_campaign=free_plan_nudge&utm_content=chatgpt-web"
+    }
+  ]
+}

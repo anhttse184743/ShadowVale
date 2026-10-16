@@ -1,0 +1,32 @@
+[
+  {
+    "name": "shadowvale-slot-0.json",
+    "before_sha256": "8377A1533838ECD34C83F3E2C8E0356097E1B95D79320AC2EE66EE4F010AD716",
+    "after_sha256": "8377A1533838ECD34C83F3E2C8E0356097E1B95D79320AC2EE66EE4F010AD716",
+    "unchanged": true,
+    "manual": true,
+    "last_write_utc": "2026-09-22T03:11:31.7530979Z",
+    "after_benchmark_sha256": "8377A1533838ECD34C83F3E2C8E0356097E1B95D79320AC2EE66EE4F010AD716",
+    "unchanged_after_benchmark": true
+  },
+  {
+    "name": "shadowvale-slot-1.json",
+    "before_sha256": "23EA39864EC972A0FA6B8A12C198EF663EB625AFD6D5058405B48D42A472BFC9",
+    "after_sha256": "23EA39864EC972A0FA6B8A12C198EF663EB625AFD6D5058405B48D42A472BFC9",
+    "unchanged": true,
+    "manual": true,
+    "last_write_utc": "2026-09-22T03:25:36.1708911Z",
+    "after_benchmark_sha256": "23EA39864EC972A0FA6B8A12C198EF663EB625AFD6D5058405B48D42A472BFC9",
+    "unchanged_after_benchmark": true
+  },
+  {
+    "name": "shadowvale-slot-4.json",
+    "before_sha256": "2BB6A87D184836424244B60C0941A3EA1CF6058E0CD2F778347B91CEB0124EFE",
+    "after_sha256": "2BB6A87D184836424244B60C0941A3EA1CF6058E0CD2F778347B91CEB0124EFE",
+    "unchanged": true,
+    "manual": false,
+    "last_write_utc": "2026-10-16T15:13:03.4735449Z",
+    "after_benchmark_sha256": "2BB6A87D184836424244B60C0941A3EA1CF6058E0CD2F778347B91CEB0124EFE",
+    "unchanged_after_benchmark": true
+  }
+]

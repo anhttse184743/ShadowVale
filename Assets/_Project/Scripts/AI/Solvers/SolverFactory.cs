@@ -4,8 +4,8 @@ using ShadowVale.AI.Solvers.Classical;
 namespace ShadowVale.AI.Solvers
 {
     /// <summary>
-    /// Chooses the solver for the session from the bundle's ai_settings (UC-13). Until the
-    /// RemoteSolverClient lands (P4, W8) every non-greedy id resolves to greedy and reports why,
+    /// Chooses local Greedy or QIEA for the session. Until the
+    /// RemoteSolverClient lands, unsupported remote ids resolve to greedy and report why,
     /// so telemetry can mark the session as not valid for comparison.
     /// </summary>
     public static class SolverFactory
@@ -18,6 +18,7 @@ namespace ShadowVale.AI.Solvers
                 fallbackReason = $"unknown solver variant '{variantId}', using greedy";
                 return new GreedySolver(latencyBudgetMs);
             }
+            if (variant == SolverVariant.Qiea) return new QieaSolver(latencyBudgetMs);
             if (variant.IsInProcess())
                 return new GreedySolver(latencyBudgetMs);
 

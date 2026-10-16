@@ -1,0 +1,31 @@
+Depression: 0.62m; smooth banks: 3m; shared height function for ground, parcels, roads and rice.
+Grass clumps: 36688
+Additional trees: 44
+Rice preserved: 27548
+Surface meshes: 274
+PASS route (33.52, 1.00, 2.91)
+PASS route (57.36, 1.00, -62.33)
+PASS route (-49.60, 1.00, 55.96)
+PASS route (-85.04, 2.35, 26.54)
+PASS route (-50.12, 1.48, 27.12)
+PASS route (-86.53, 1.48, -2.15)
+PASS route (-62.77, 2.35, -2.72)
+PASS route (-83.32, 1.48, -29.05)
+PASS route (-57.32, 1.48, -31.37)
+PASS route (-72.11, 2.35, -58.77)
+PASS route (-53.60, 1.48, -59.85)
+PASS route (33.75, 1.48, 37.95)
+PASS route (74.84, 2.35, 1.34)
+PASS route (86.24, 1.48, 26.34)
+PASS route (25.38, 1.48, -26.15)
+PASS route (100.04, 2.35, -33.37)
+PASS route (52.75, 1.48, -56.14)
+PASS saved scene reload and grounded grass: 36688
+Textured dirt ribbons: 159
+Shared grass meshes: 4; 20m spatial tiles, GPU instancing, distant LOD, no grass shadows/colliders.
+PASS saved scene reload and grounded grass: 36688
+Textured dirt ribbons: 159
+Shared grass meshes: 4; 20m spatial tiles, GPU instancing, distant LOD, no grass shadows/colliders.
+PASS saved scene reload and grounded grass: 36688
+Textured dirt ribbons: 159
+Shared grass meshes: 4; 20m spatial tiles, GPU instancing, distant LOD, no grass shadows/colliders.

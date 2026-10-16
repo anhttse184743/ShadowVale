@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f125d2c040164bc438a88e4b9ca34faf, type: 3}
+  m_Name: Map01ItemCatalog
+  m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map01ItemCatalog
+  chest: {fileID: 919132149155446097, guid: 7d6fdba552f51984d8ddec6934fa189e, type: 3}
+  items:
+  - id: rifle_standard
+    model: {fileID: 2480269976496290961, guid: 9a48efb4e0c45d649bc5db052fd00ea6, type: 3}
+    scale: 1
+  - id: knife
+    model: {fileID: 8214855720835714814, guid: f794159a64534b64186f7a70163bb8f4, type: 3}
+    scale: 1
+  - id: stone
+    model: {fileID: 975813191051239624, guid: aa1ebc04978feb74a8c30d586e450475, type: 3}
+    scale: 0.45
+  - id: ammo_pistol
+    model: {fileID: 919132149155446097, guid: 7dbb829d3ac65f34bb567145b1132954, type: 3}
+    scale: 0
+  - id: ammo_rifle
+    model: {fileID: 919132149155446097, guid: a52be4737b208a745beca6ef01faf1ef, type: 3}
+    scale: 0
+  - id: ammo_sniper
+    model: {fileID: 919132149155446097, guid: 74c4562e87c62dd48ba8317609f29e57, type: 3}
+    scale: 0
+  - id: blast_charge
+    model: {fileID: 919132149155446097, guid: abf834784cd7baa4dac50a4d8e733d0b, type: 3}
+    scale: 0
+  - id: cloth
+    model: {fileID: 919132149155446097, guid: c14181ea9a8b3ed41b13f8eb7097e5bb, type: 3}
+    scale: 0
+  - id: fuse_module
+    model: {fileID: 919132149155446097, guid: 71bb8922fd8cedb4d9213f8c8d508e74, type: 3}
+    scale: 0
+  - id: grenade_f1
+    model: {fileID: 919132149155446097, guid: 7c718d7201c73cf4bb84048bf91a8aad, type: 3}
+    scale: 0
+  - id: gun_oil
+    model: {fileID: 919132149155446097, guid: 316edd562d2960148b72ff4e9c67d6ef, type: 3}
+    scale: 0
+  - id: gunpowder
+    model: {fileID: 919132149155446097, guid: 24734c972f714df45a0a205164bb58e7, type: 3}
+    scale: 0
+  - id: herb
+    model: {fileID: 919132149155446097, guid: 6ed2a1652d240914bb424d0073f61e6c, type: 3}
+    scale: 0
+  - id: medkit_small
+    model: {fileID: 919132149155446097, guid: d8ce09b26e98aa14d8a11b77e5588e05, type: 3}
+    scale: 0
+  - id: pistol_k54
+    model: {fileID: 919132149155446097, guid: 5b46a0ee6644ac947bf4d134331867f3, type: 3}
+    scale: 0
+  - id: repair_kit
+    model: {fileID: 919132149155446097, guid: 7b461f2b6163c364dafa5da90722eeb8, type: 3}
+    scale: 0
+  - id: rifle_mosin
+    model: {fileID: 919132149155446097, guid: cae97766b4682fb4e8b0218376f03976, type: 3}
+    scale: 0
+  - id: river_documents
+    model: {fileID: 919132149155446097, guid: f81798571cde95e4a9b6c4f2debc40cf, type: 3}
+    scale: 0
+  - id: scope_lens
+    model: {fileID: 919132149155446097, guid: edc2717b50861e94cbbe3f3bb3513838, type: 3}
+    scale: 0
+  - id: scrap_metal
+    model: {fileID: 919132149155446097, guid: 0dcdb828199989d42ae98db33b2acdc1, type: 3}
+    scale: 0
+  - id: smoke_bomb
+    model: {fileID: 919132149155446097, guid: 3d71a48fd3fe8a940bddec8df4df9f45, type: 3}
+    scale: 0
+  - id: smoke_module
+    model: {fileID: 919132149155446097, guid: ddb847182eaab4448b25a70cdbe1638d, type: 3}
+    scale: 0
+  - id: supplies
+    model: {fileID: 919132149155446097, guid: 7eab40994451c294aa2640e7982aa9aa, type: 3}
+    scale: 0
+  - id: weapon_parts
+    model: {fileID: 919132149155446097, guid: d2a98bb51aa40fc43ba8bb70e34dd219, type: 3}
+    scale: 0
+  - id: m1_supply_key
+    model: {fileID: 919132149155446097, guid: 8974ec30c76e3fc44b5762160f849f94, type: 3}
+    scale: 1
+  - id: m1_supply_cargo
+    model: {fileID: 919132149155446097, guid: a704ee5169366a84db5322852badc8b1, type: 3}
+    scale: 1

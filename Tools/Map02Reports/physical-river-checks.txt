@@ -1,0 +1,5 @@
+PASS wet channel / dry bank / end cap sampling
+PASS 12-second force simulation: stable buoyancy and downstream drift (0.00, 0.00, -7.23)
+PASS 12-second wave and soft-mooring stability
+PASS bounded ripple buffer and dry-bank rejection
+PASS saved physical river, 2 moored boats, 50 interaction volumes

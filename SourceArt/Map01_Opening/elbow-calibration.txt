@@ -1,0 +1,3 @@
+Original stretch: 0.9858496
+Straight stretch: 1.19
+Rest elbow bend degrees: 5.571196

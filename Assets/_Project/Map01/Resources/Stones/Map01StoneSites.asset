@@ -1,0 +1,127 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f9387abd4a94ff4398394d1e6cf9c2c, type: 3}
+  m_Name: Map01StoneSites
+  m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map01StoneSiteData
+  sites:
+  - position: {x: -7.286333, y: 1.0578308, z: -92}
+    source: 0
+    stones: 3
+  - position: {x: 3.948878, y: 1.2246416, z: -72}
+    source: 0
+    stones: 3
+  - position: {x: -16.032547, y: 0.19029665, z: -54}
+    source: 0
+    stones: 3
+  - position: {x: -0.5797994, y: 0.19481707, z: -34}
+    source: 0
+    stones: 3
+  - position: {x: -13.374148, y: 0.7275947, z: -16}
+    source: 0
+    stones: 3
+  - position: {x: 10.620001, y: 0.368714, z: 9.892245}
+    source: 0
+    stones: 3
+  - position: {x: -2.0294492, y: 0.90632606, z: 22}
+    source: 0
+    stones: 3
+  - position: {x: 16.039227, y: 2.474943, z: -81.668304}
+    source: 1
+    stones: 2
+  - position: {x: -101.876884, y: 9.704921, z: -73.64851}
+    source: 1
+    stones: 2
+  - position: {x: 60.02496, y: 3.37062, z: -68.43133}
+    source: 1
+    stones: 2
+  - position: {x: 26.1, y: 2.284309, z: -47.665535}
+    source: 1
+    stones: 2
+  - position: {x: 87.3279, y: 7.995091, z: -45.832615}
+    source: 1
+    stones: 2
+  - position: {x: -74.06995, y: 3.540001, z: -31.68}
+    source: 1
+    stones: 2
+  - position: {x: 92.70795, y: 13.550191, z: -27.625076}
+    source: 1
+    stones: 2
+  - position: {x: 61.37384, y: 15.281093, z: 21.006304}
+    source: 1
+    stones: 2
+  - position: {x: -11.886366, y: 3.409573, z: 30.866589}
+    source: 1
+    stones: 2
+  - position: {x: 47.623974, y: 10.000732, z: 34.92092}
+    source: 1
+    stones: 2
+  - position: {x: 91.11269, y: 20.825281, z: 44.27331}
+    source: 1
+    stones: 2
+  - position: {x: 66.62983, y: 8.553773, z: 79.102295}
+    source: 1
+    stones: 2
+  - position: {x: 50.328705, y: 5.0228834, z: 94.876945}
+    source: 1
+    stones: 2
+  - position: {x: 86.12194, y: 3.8206625, z: -99.03633}
+    source: 2
+    stones: 2
+  - position: {x: 45.10286, y: 3.5142868, z: -98.485725}
+    source: 2
+    stones: 2
+  - position: {x: -77.216354, y: 10.875473, z: -98.18843}
+    source: 2
+    stones: 2
+  - position: {x: -40.54712, y: 5.8447037, z: -73.6065}
+    source: 2
+    stones: 2
+  - position: {x: -47.345043, y: 4.360885, z: -61.724434}
+    source: 2
+    stones: 2
+  - position: {x: 55.20788, y: 5.401849, z: -43.622723}
+    source: 2
+    stones: 2
+  - position: {x: -35.039925, y: 3.994069, z: -11.670973}
+    source: 2
+    stones: 2
+  - position: {x: 21.599392, y: 4.346251, z: 2.413753}
+    source: 2
+    stones: 2
+  - position: {x: -61.560005, y: 5.1600018, z: 5.46}
+    source: 2
+    stones: 2
+  - position: {x: 109.02617, y: 22.937351, z: 12.777944}
+    source: 2
+    stones: 2
+  - position: {x: -52.599796, y: 7.679037, z: 34.509277}
+    source: 2
+    stones: 2
+  - position: {x: 30.28786, y: 4.3260937, z: 63.122528}
+    source: 2
+    stones: 2
+  - position: {x: -55.73807, y: 7.8290358, z: 86.983215}
+    source: 2
+    stones: 2
+  - position: {x: 100.06619, y: 5.779784, z: 97.6109}
+    source: 2
+    stones: 2
+  riverbankRestockSeconds: 90
+  pebbles:
+  - {fileID: 975813191051239624, guid: aa1ebc04978feb74a8c30d586e450475, type: 3}
+  - {fileID: 2278544918937362947, guid: f59a34231652235438ca097c57141fa8, type: 3}
+  - {fileID: 5177360998280463420, guid: fae673cc2c8b83f47bc623b5ef96706b, type: 3}
+  - {fileID: 3309739403427379983, guid: ba8023513f9007d4ca863832ed431fc5, type: 3}
+  - {fileID: 7744092181908283642, guid: cab78bc02e3704c48b640b29ca9c2fca, type: 3}
+  - {fileID: 1901069912584730569, guid: 520233b6c7cb21b428a5fbdf960275c2, type: 3}
+  - {fileID: 1876840527665323905, guid: 5eb264dd029e7234198e8ef3aecb2aab, type: 3}
+  - {fileID: 3120342237059055896, guid: df1010193de8a844586e3d3aaa8e32cb, type: 3}

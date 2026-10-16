@@ -1,0 +1,298 @@
+{
+  "map2_scene_unchanged": true,
+  "map2_scene_sha256": "17b19c6657c479f397b0850ce67ebf2075ff3766b25737d22c2e3861519f07bf",
+  "files": [
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\Map02Arrival.cs",
+      "sha256": "de4cb7685ebbdc6f943327da3baf2a1ce634a635bb980a7b7d38433200a6f491"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\Map02Arrival.cs.meta",
+      "sha256": "83bf0cb234ddaf1ba69c642400d7233d3ee3d2f89a95091eab8b02050d09b60c"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\Map01Mission.cs",
+      "sha256": "e25d5c7238798129d84120ac727435736aa36d713eacdea5eab36cbd7056cceb"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\Map01Mission.cs.meta",
+      "sha256": "0e70d5cc8142654af63c2096b074e7c7e5672053ef4169044699d138c816482b"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\Map01Hud.cs",
+      "sha256": "16d5005318f01fbd8b3bdddc190a54ccc2c4deb54a7ab7cf44c92691d14e1a31"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\Map01Hud.cs.meta",
+      "sha256": "682d13cfdb9b98d0fde5a4a0d77702ff64bfba58d2657800ddf1ed8a1e0c5d80"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\Map01Extraction.cs",
+      "sha256": "170606ac45fe82c11f76ce2766c6f8d99cdb989b8940f3a2db0139419a81d799"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\Map01Extraction.cs.meta",
+      "sha256": "61b4b739c42310694c3cdb28b69510274ec526ef2ba6e3c5b84669edec55da7d"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\ForestMenu.cs",
+      "sha256": "b5723d1c9741ccc256f8f9e807f60fafbf0d39c99eb6b3334390c6aef630089d"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Runtime\\ForestMenu.cs.meta",
+      "sha256": "893d339d18b45a6c635ebbf71215e12079aacaa305cd396e18d710140f950eee"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Editor\\Map02ArrivalSurvey.cs",
+      "sha256": "ab2e6f3149aafd6cb2b1038ddab4ab7be0004f6e407ac896124669d3063765a7"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Editor\\Map02ArrivalSurvey.cs.meta",
+      "sha256": "327c39be3eec4df7d4323df6676dcdf5f24c7f8caa625a8957f251de87f1e8e6"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Editor\\Map02ArrivalSetup.cs",
+      "sha256": "6706be1643c84e49bd0dee1edf40874bcae9a3770b4582f8a3afe1ba85f11aa6"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Editor\\Map02ArrivalSetup.cs.meta",
+      "sha256": "258d900d3ada6e598114fa8e59d0efa66405b485e8cf26294122c880d2a4778b"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Editor\\Map02ArrivalPreview.cs",
+      "sha256": "6929dfbff4e8703cc42244dfb28a7b42e24f962fc76339a488c68ee821a541fb"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Editor\\Map02ArrivalPreview.cs.meta",
+      "sha256": "1bf47ec25edc669520a2bbe162414dad2238efda9fdff303a90627cb78f2a233"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Tests\\ExtractionTests.cs",
+      "sha256": "80728bf09a903cd7044eb4038d13038c73b4413395a9687dc98d0cdbed8ea4bd"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Tests\\ExtractionTests.cs.meta",
+      "sha256": "9f52e58ef89983921882e93f0f848d0c5ad3a91f9012efc58767191eb94299c1"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Tests\\Map02ArrivalTests.cs",
+      "sha256": "fc09f3c7f7fc1deabbb0f01ae7fdee59811f99b726b0d55628ab824fe1c3e4ab"
+    },
+    {
+      "path": "Assets\\_Project\\Map01\\Tests\\Map02ArrivalTests.cs.meta",
+      "sha256": "e33ee4c120dcc67d0546566cb1b5192633f41734a9e63a4547c3cce1f4efb6d9"
+    },
+    {
+      "path": "ProjectSettings\\EditorBuildSettings.asset",
+      "sha256": "4189729e0fc0d3c5afbdaa9d1d5d13e8b3586f3cb220278ceaf42fba7e478e52"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Boat_Stand.fbx",
+      "sha256": "7d1b580509dcae799ebf52707620d1018928d1bea2ea2a01545920b151ac2a67"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Boat_Stand.fbx.meta",
+      "sha256": "a830e9ef1af580d9d0b8d8eab79865e1681bc91e8d0249f27bdd74be2b2ec39a"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Jetty_StepUp.fbx",
+      "sha256": "4a3746fe4c8cfd42b81df323be904419569b705e648b75ed4be5e3eb821ddd57"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Jetty_StepUp.fbx.meta",
+      "sha256": "d4204519992dbbf2ca0c600a334b2bfe522abea90513c0c01da2bdd25f60358a"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Oar_Stow.fbx",
+      "sha256": "2728ae9c5034b20da4e66fd2fa6d690b5cfd249e419f488f55d5322ef0fc704b"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Oar_Stow.fbx.meta",
+      "sha256": "91465f9a287ca22ce8ab981d4d9c07b506f7f0bc30f067d66dce07da01c499aa"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Standing_Guard.fbx",
+      "sha256": "1a29838f377a5dfbf438bb97530ada292cd928a29ed15912343e112d394b0920"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Standing_Guard.fbx.meta",
+      "sha256": "614b7a3bb618f5d119c73f15fd08a6889e41adaeef6e9082272661f42101ec16"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Walk_Ashore.fbx",
+      "sha256": "513ea17cdf2f1eb3019be4f3da38dfc84c78b62d3943bbd6a17af8da63ef2a56"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Hung_Walk_Ashore.fbx.meta",
+      "sha256": "10c46fefc29bcf462f92585ee7609dc731e96c6b394e87a5e8b8a359d91fd1f4"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Boat_Stand.fbx",
+      "sha256": "7e40b209be3cd7d9f7c755f5728d57cb2f8503617d17e586dff0df48bfd69e64"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Boat_Stand.fbx.meta",
+      "sha256": "0c188ecb856dda4a4f0d6a24385becb0c779706fa3352c447a0203d7898a1334"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Jetty_StepUp.fbx",
+      "sha256": "a168b697c15409a50613a4d09b6a6fd11d141003c5da9db57ac274cd0a8de2a6"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Jetty_StepUp.fbx.meta",
+      "sha256": "424c5fdbb2256efee6f4ba888d4213b5ad3663e7edfac53c4585d0f9f4417eaa"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Oar_Stow.fbx",
+      "sha256": "9eec3bf976b05373f0cfba706e9b4ed65d29ae97594b365c080c6c00de65c663"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Oar_Stow.fbx.meta",
+      "sha256": "53796e152ad15c407901a457c3a77c4f91a25f9ee01674668562de3dbd61ca23"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Standing_Guard.fbx",
+      "sha256": "95d422e37682e8a9e092eb46dad99fe54dc36c9b2ba032d237f1435b008d9bbe"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Standing_Guard.fbx.meta",
+      "sha256": "c2722ee1a78624c3b546ffe042fc4d54b9a864c039b4b81b26ec52933721e884"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Walk_Ashore.fbx",
+      "sha256": "a0141d240d9bfb6cf99a898845ebd501b98dbac4ed92151bf7b4dd1325befb7f"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival\\Nam_Walk_Ashore.fbx.meta",
+      "sha256": "5f2e1b0e70662f8659d63eddeb6486605e0a13b65d2bed24218124091e4c401d"
+    },
+    {
+      "path": "Assets\\_Project\\Art\\Characters\\Animations\\Map02Arrival.meta",
+      "sha256": "4ef8e105d0ff924e6521b7bd0c8be46e70d82fa72faa54ca9247b08ea3af701d"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Hung_Boat_Stand.anim",
+      "sha256": "0e58af62cb78be5094f3276acc97337da3521dd39f58734f945137110b709805"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Hung_Boat_Stand.anim.meta",
+      "sha256": "54e2656cfcec76a6b012034d6b7876289f4ffef4ce9188fa8425fba981a9099a"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Hung_Jetty_StepUp.anim",
+      "sha256": "321b00df5b2ee13abd38ea2e42aca43abca617c0da198ff633d05b9bda3e2320"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Hung_Jetty_StepUp.anim.meta",
+      "sha256": "fb64fdaaf159f025a0b33ff1e08b3b88d10504c6da803d81a10853016388fa05"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Hung_Oar_Stow.anim",
+      "sha256": "a19003a1d9697919b367ce1be44ef8179827192336a7ccea6ad62b1777ac9632"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Hung_Oar_Stow.anim.meta",
+      "sha256": "25c59cb88637cc183bcf63da488533c6eec46decb7c78c4550d79be52707224a"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Hung_Standing_Guard.anim",
+      "sha256": "7745255542bc5c7a59cc20ab76dd9ad4766ec2b86548a7e9bfadbed4a2837d23"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Hung_Standing_Guard.anim.meta",
+      "sha256": "f12f330a022897c7bc38a77e8ba197238da78ba267623ac3157bd07f155f2274"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Hung_Walk_Ashore.anim",
+      "sha256": "7a3e88bdc5271e093edaeccd4d20e0cc1d133be8ab685b882897e72cf5244827"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Hung_Walk_Ashore.anim.meta",
+      "sha256": "c1d7075b3fa25b063200259ed9067a4af0b92e3bbb877933275b3ba326f41ce1"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Nam_Boat_Stand.anim",
+      "sha256": "c5a8e3cbc276388b9628f53690e5f1661146fe275825cd9383e4aad49d85daa7"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Nam_Boat_Stand.anim.meta",
+      "sha256": "ea6a58827699d27a8657be47eb53827c9c2508e68d7389c02ad6375cb252f160"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Nam_Jetty_StepUp.anim",
+      "sha256": "4b53b9d62f68c6119acb63a2a5f5af0e3184cc0bad1a42809e4548486e6c2b21"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Nam_Jetty_StepUp.anim.meta",
+      "sha256": "3a436ffe14181f7c8d891c5380c075cffc82aff38eac201b4aa59bb8f39a86d7"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Nam_Oar_Stow.anim",
+      "sha256": "ec2e86154cf265d39bdc5b1dfd1c23ffd307cd3fd31d39c64cbdce72b2c4d7b9"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Nam_Oar_Stow.anim.meta",
+      "sha256": "ed6bdcadb5b92cf45d1b4fbb0ae3c458e535fef0a341fc9d6f89c33a81eb4c67"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Nam_Standing_Guard.anim",
+      "sha256": "4432e6839fb24bb542e1e5923b14a99024cc5c60bf0c598dfc11454d06e56438"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Nam_Standing_Guard.anim.meta",
+      "sha256": "8c645e172545b8d722e13acef702365e8acb4998d0673be238199c7c33cb9525"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Nam_Walk_Ashore.anim",
+      "sha256": "30a188c2a58bb6c60d910da706aa87359afb6ab8d66a1b3750b64a17ec2faa24"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02\\Nam_Walk_Ashore.anim.meta",
+      "sha256": "a2deaf277bdf515cc1a370e519ea1a42d018cca1b322ecd1e3e44b986adbe186"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes\\Map02.meta",
+      "sha256": "dc83b9d70443d307b504998fe22dcda95297229bebf3003039120a430e68e949"
+    },
+    {
+      "path": "Assets\\Resources\\Cutscenes.meta",
+      "sha256": "26d9fa6ab57584051cf07b580e597bdae88e3be36fc09afc5d67c07b569f5a71"
+    },
+    {
+      "path": "Assets\\Resources.meta",
+      "sha256": "cc4672599ee01771d45230f2773adc18c84518f003387139f3238aa47f1945d6"
+    },
+    {
+      "path": "SourceArt\\Map02_Arrival\\Map02_Arrival.blend",
+      "sha256": "a6cf2d4dd126922dec534b8c289d079cc928044cfce5a8544b689bf162792dcb"
+    },
+    {
+      "path": "SourceArt\\Map02_Arrival\\author_arrival.py",
+      "sha256": "de4ab3511437d3d64629e69ccc7d163adfd753f1cc47f6650286269f8f59bf7e"
+    },
+    {
+      "path": "SourceArt\\Map02_Arrival\\export_selected_action.py",
+      "sha256": "8cbb1b2eccc13f37c477cd2c9855988701c7c81e9209c31bc8323068c61b62ab"
+    },
+    {
+      "path": "SourceArt\\Map02_Arrival\\MANUAL-ANIMATION-EDIT-VI.md",
+      "sha256": "c01a127bbfce2b3bf9a9aad1077d0a9b1309b0865826ea71d90644e7c5fc5b28"
+    },
+    {
+      "path": "SourceArt\\Map02_Arrival\\arrival-reference.json",
+      "sha256": "131e79e80690a8134e43b26a06e42fe76061524beb09fe5d7e55861be0ac27f2"
+    },
+    {
+      "path": "SourceArt\\Map02_Arrival\\animation-validation.json",
+      "sha256": "add6c131d02638693c6e95c8c0262b2d6c2a5a07dce790da38ad354cfba1a784"
+    },
+    {
+      "path": "SourceArt\\Map02_Arrival\\VERIFICATION-VI.md",
+      "sha256": "9e34c9691a23757f0c8675831be7c86e0507294fe4399e17c401a26136acdb0a"
+    },
+    {
+      "path": "SourceArt\\Map02_Arrival\\map2-arrival-preview.mp4",
+      "sha256": "a67f46b975a2bf19366f4e5f15ceb99932845cc6e2fb09ab03b817c6ba485d83"
+    }
+  ]
+}
