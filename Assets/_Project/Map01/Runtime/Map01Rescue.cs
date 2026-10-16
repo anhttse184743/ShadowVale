@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,7 +102,7 @@ namespace ShadowVale.Map01
         public bool HoldEnemy(Map01EnemyController enemy)=>SafeReached&&pursuers.Contains(enemy);
         public void ReportDetection(Map01Detection detection)
         {
-            if(CurrentPhase!=Phase.Captive||!IsRescueGuard(detection.observer)||mission.Cinematic
+            if(CurrentPhase!=Phase.Captive||!quest.RescueOrderAccepted||!IsRescueGuard(detection.observer)||mission.Cinematic
                 ||Map01SaveSystem.IsRestoring||Time.time<calmUntil)return;
             if(!CanExecuteCaptive){
                 bool first=!CombatAlarm;CombatAlarm=true;mission.Alarmed=true;
@@ -202,6 +202,7 @@ namespace ShadowVale.Map01
             }else if(!SafeReached&&Time.time>=nextWaveCheck){nextWaveCheck=Time.time+.4f;TrySpawnWaves();}
         }
         public void TryApproachIntro(){
+            if(!quest.RescueOrderAccepted)return;
             if(mission==null||!mission.IsInitialized||Layout==null||quest.Stage!=Map01Quest.RescueStage||CurrentPhase!=Phase.Captive||mission.Stopped)return;
             if(IntroSeen||CombatAlarm||!OverseerAlive||mission.Cinematic||Map01SaveSystem.IsRestoring||Time.time<calmUntil)return;
             if(Vector3.Distance(mission.player.position,CaptivePost)>Layout.introRadius)return;
@@ -211,11 +212,11 @@ namespace ShadowVale.Map01
 
         private void Overhear()
         {
+            if(Remaining==0)return;
             if(Time.time<nextChatter)return;
             foreach(var guard in squad)if(guard.Alive&&guard.Engaged)return;
             float distance=Vector3.Distance(mission.player.position,CaptivePost);if(distance>34)return;
-            if(!whispered&&distance<12){whispered=true;nextChatter=Time.time+8;mission.Say("Hùng (thì thào): ...Nam? Chúng có bốn tên. Hạ tên canh tôi trước, đừng để chúng báo động.",6);return;}
-            if(Remaining==0)return;mission.Say(Chatter[chatterIndex++%Chatter.Length],6);nextChatter=Time.time+15;
+            mission.Say(Chatter[chatterIndex++%Chatter.Length],6);nextChatter=Time.time+15;
         }
         public static Vector3[] Path(Vector3 from,Vector3 to)
         {
@@ -273,7 +274,7 @@ namespace ShadowVale.Map01
             var supplies=mission.Interactables.FirstOrDefault(p=>p.kind==ForestPointKind.Supplies);var inventory=GetComponent<Map01Inventory>();
             inventory.Add("supplies",1);
             if(supplies!=null&&!supplies.used){foreach(var item in supplies.items)inventory.Add(item.item_id,item.count);supplies.MarkLooted();}
-            mission.Say("Hùng: Về tới căn cứ rồi. Cảm ơn Nam! Hàng tiếp tế đã bàn giao. Gặp anh để nhận nhiệm vụ tiếp theo.",9);return true;
+            mission.Say("Hùng: Về tới căn cứ rồi. Cảm ơn Nam! Hàng tiếp tế đã bàn giao. Gặp chỉ huy để nhận nhiệm vụ tiếp theo.",9);return true;
         }
         public void Retry(){if(!Failed&&mission.PlayerHealth>0)return;Saves.RestartRescue(quest.Stage==Map01Quest.EscortStage);}
         public void ResetSquad(){foreach(var guard in squad)if(guard!=null)guard.ReturnToPost();}

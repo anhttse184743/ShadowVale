@@ -188,6 +188,8 @@ namespace ShadowVale.Map01
             }
             foreach (var enemy in Enemies) enemy.BindMission(this);
             Map01OpeningCutscene.Attach(this);
+            GetComponent<Map01Story>()?.Initialize();
+            GetComponent<Map01Quest>()?.EnsureCommander();
             Map01HungVisual.Attach(this);
             if(GetComponent<Map01FoliageReveal>()==null)gameObject.AddComponent<Map01FoliageReveal>();
             if(GetComponent<Map01BushTakedown>()==null)gameObject.AddComponent<Map01BushTakedown>();
@@ -239,13 +241,19 @@ namespace ShadowVale.Map01
             var speech=DialogueVoice.For(gameObject);
             speech.CanSpeak=()=>!Cinematic&&!ForestMenu.Visible;
             speech.LineStarted=line=>{
-                Dialogue=line.caption;DialogueUntil=Time.time+line.clip.length+.2f;
+                Dialogue=GameplayCaption(line.caption);DialogueUntil=Time.time+line.clip.length+.2f;
                 if(line.caption.StartsWith("Hùng") && hung!=null)hung.GetComponentInChildren<Map01HungVisual>()?.Speak(line.clip.length+.2f);
             };
-            Dialogue=text;DialogueUntil=Time.time+seconds;
+            Dialogue=GameplayCaption(text);DialogueUntil=Time.time+seconds;
             if(string.IsNullOrEmpty(text))speech.Stop();
             float spoken=string.IsNullOrEmpty(text)?0:speech.SpeakText(text);
             if(!string.IsNullOrEmpty(text))DialogueUntil=Time.time+Mathf.Max(seconds,spoken+.25f);
+        }
+        public static string GameplayCaption(string text)
+        {
+            if(string.IsNullOrEmpty(text))return text;
+            // Keep objective/interaction notices; ambient character speech is audio only.
+            return text.StartsWith("Lính")||text.StartsWith("Sĩ quan")||text.StartsWith("Hùng:")||text.StartsWith("Hùng (")||text.StartsWith("Nam:")?null:text;
         }
         public void ReleaseForNextMap() {
             GetComponent<DialogueVoice>()?.Stop();

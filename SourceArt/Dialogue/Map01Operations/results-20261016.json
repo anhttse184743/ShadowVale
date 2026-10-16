@@ -1,0 +1,104 @@
+{
+  "results": [
+    {
+      "id": "m1_ops_supply_order_01",
+      "kind": "audio",
+      "taskId": "250fbfe7-55f1-4997-bed3-186d680c6edb"
+    },
+    {
+      "id": "m1_ops_supply_order_02",
+      "kind": "audio",
+      "taskId": "932af441-c63e-4392-a67f-36687b21a3d2"
+    },
+    {
+      "id": "m1_ops_supply_order_03",
+      "kind": "audio",
+      "taskId": "8a54aff1-663f-4989-96f3-3c2c15c0d5d1"
+    },
+    {
+      "id": "m1_ops_supply_report_01",
+      "kind": "audio",
+      "taskId": "b7885962-d27c-4b10-8d6a-29c7264166f6"
+    },
+    {
+      "id": "m1_ops_supply_report_02",
+      "kind": "audio",
+      "taskId": "440b3888-c482-45ac-8fce-68d674f586c9"
+    },
+    {
+      "id": "m1_ops_handoff_01",
+      "kind": "audio",
+      "taskId": "b717e975-ca69-454e-ba8d-d0e27259e069"
+    },
+    {
+      "id": "m1_ops_handoff_02",
+      "kind": "audio",
+      "taskId": "46b7295c-0039-4061-9e69-2f4311332288"
+    },
+    {
+      "id": "m1_ops_handoff_03",
+      "kind": "audio",
+      "taskId": "6402ee24-d54f-402d-8946-458e69f3591d"
+    },
+    {
+      "id": "m1_ops_handoff_04",
+      "kind": "audio",
+      "taskId": "90a81815-0931-4111-8cb0-c8f5ee0047d6"
+    },
+    {
+      "id": "m1_ops_radio_report_01",
+      "kind": "audio",
+      "taskId": "cac6f747-9270-4421-bb3c-620e7bb3f9e5"
+    },
+    {
+      "id": "m1_ops_radio_report_02",
+      "kind": "audio",
+      "taskId": "689235fa-c9c3-420a-a34d-194752df63ab"
+    },
+    {
+      "id": "m1_ops_commander_report_01",
+      "kind": "audio",
+      "taskId": "f7154aab-b032-4af9-9bcf-20c99f9915dd"
+    },
+    {
+      "id": "m1_ops_commander_report_02",
+      "kind": "audio",
+      "taskId": "38ce0f4e-0825-4720-95ff-82700ed4de18"
+    },
+    {
+      "id": "m1_ops_commander_early_01",
+      "kind": "audio",
+      "taskId": "8f24cd1d-2cd7-4845-879f-0dab0d5fbbff"
+    },
+    {
+      "id": "m1_ops_retreat_01",
+      "kind": "audio",
+      "taskId": "ef09afe4-e2af-4c92-b3ea-77a2f3884079"
+    },
+    {
+      "id": "m1_ops_retreat_02",
+      "kind": "audio",
+      "taskId": "f883bb54-2655-43c5-b69a-ac4626a903f0"
+    },
+    {
+      "id": "m1_ops_retreat_03",
+      "kind": "audio",
+      "taskId": "f6c1de27-0d4f-4fc2-b7b4-452c604372ec"
+    },
+    {
+      "id": "m1_ops_radio_alarm",
+      "kind": "audio",
+      "taskId": "e5d5c5db-5216-44e8-a9ff-284296f04b22"
+    },
+    {
+      "id": "m1_ops_enemy_spotted",
+      "kind": "audio",
+      "taskId": "2515225f-5a1a-4b72-a56e-e1f20fb41898"
+    },
+    {
+      "id": "m1_ops_enemy_order",
+      "kind": "audio",
+      "taskId": "a66e53ad-cca7-4a5b-bbc9-669855ae92b7"
+    }
+  ]
+}

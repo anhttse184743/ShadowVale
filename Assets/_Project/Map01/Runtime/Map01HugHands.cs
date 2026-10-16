@@ -10,7 +10,7 @@ namespace ShadowVale.Map01 {
         public Map01HugHands(Animator actor){
             foreach(string side in new[]{"Left","Right"}){
                 var original=actor.GetComponentsInChildren<SkinnedMeshRenderer>(true).FirstOrDefault(r=>r.name=="Player_"+side+"Hand");
-                var mesh=Resources.Load<Mesh>("Rescue/Story/Nam_Hug_"+side+"Hand");
+                var mesh=Map01InteractionWarmup.Asset<Mesh>("Rescue/Story/Nam_Hug_"+side+"Hand");
                 if(original==null||mesh==null)continue;
                 var obj=new GameObject("Hug_"+side+"Hand");obj.SetActive(false);obj.layer=original.gameObject.layer;
                 obj.transform.SetParent(original.transform.parent,false);

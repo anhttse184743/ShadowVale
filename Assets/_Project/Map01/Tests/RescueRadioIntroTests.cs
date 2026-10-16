@@ -59,11 +59,11 @@ public sealed class RescueRadioIntroTests:ForestSceneTestBase {
                     Assert.Less(Vector3.ProjectOnPlane(l-left.Value,Vector3.up).magnitude,.03f,"Left foot remains planted, not running in place.");
                     Assert.Less(Vector3.ProjectOnPlane(r-right.Value,Vector3.up).magnitude,.03f,"Right foot remains planted, not running in place.");
                 }
-                if(skip&&id=="m1_rescue_radio_instruction"){d.Skip();break;}
+                if(skip&&id=="m1_v2_rescue_approach_02"){d.Skip();break;}
                 yield return null;
             }
             Assert.IsFalse(d.IsPlaying);Assert.IsTrue(rescue.IntroSeen);Assert.IsFalse(rescue.Failed||m.Cinematic);
-            if(!skip){CollectionAssert.AreEqual(new[]{"m1_rescue_interrogate","m1_rescue_radio_report","m1_rescue_radio_instruction","m1_rescue_radio_ack"},heard);Assert.Greater(d.Elapsed,23);}
+            if(!skip){CollectionAssert.AreEqual(new[]{"m1_v2_rescue_approach_01","m1_v2_rescue_approach_02","m1_v2_rescue_approach_03"},heard);Assert.Greater(d.Elapsed,8);Assert.Less(d.Elapsed,13);}
             Assert.IsFalse(heard.Contains("m1_rescue_intro_nam"));
             Assert.AreSame(controller,actor.runtimeAnimatorController);Assert.AreSame(avatar,actor.avatar);
             Assert.IsTrue(m.ModernPlayer.enabled&&m.ModernCombat.enabled&&m.player.GetComponent<CharacterController>().enabled);

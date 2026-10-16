@@ -9,7 +9,7 @@ namespace ShadowVale.Map01
     {
         public static readonly string[] Order = {
             "rifle_standard", "knife",
-            "ammo_rifle", "medkit_small", "cloth", "herb", "stone", "supplies", "river_documents",
+            "ammo_rifle", "medkit_small", "cloth", "herb", "stone", "m1_supply_key", "m1_supply_cargo", "supplies", "river_documents",
             "ammo_sniper", "scrap_metal", "gun_oil", "repair_kit", "ammo_smg", "ammo_pistol", "ammo_shotgun"
         };
         public struct Stack
@@ -38,6 +38,8 @@ namespace ShadowVale.Map01
             switch (id) {
                 case "rifle_standard": return "Súng trường";
                 case "knife": return "Dao";
+                case "m1_supply_key": return "Chìa khóa kho — Điểm 1";
+                case "m1_supply_cargo": return "Túi thuốc của Hùng";
                 case "ammo_rifle": return "Đạn súng trường";
                 case "ammo_smg": return "Đạn tiểu liên";
                 case "ammo_pistol": return "Đạn súng ngắn";
@@ -60,6 +62,8 @@ namespace ShadowVale.Map01
             switch (id) {
                 case "rifle_standard": return "Trang bị khởi hành. Dùng đạn súng trường. Nhấn 1 để cầm súng.";
                 case "knife": return "Trang bị cận chiến, không tiêu hao đạn. Nhấn 2 để cầm dao.";
+                case "m1_supply_key": return "Nhặt từ lính gác. Dùng tại cửa kho điểm 1 [E]. Hòm bên trong có khóa mã riêng.";
+                case "m1_supply_cargo": return "Thuốc và vật tư đã thu hồi. Báo cáo qua bộ đàm rồi mang về giao cho chỉ huy tại hầm [E].";
                 case "medkit_small": return "Hồi máu cho nhân vật. Nhấn H để dùng.";
                 case "stone": return "Ném theo hướng ngắm để đánh lạc hướng lính.";
                 case "cloth": return "Vật liệu chế tạo. Kết hợp thảo dược tại bàn chế tạo.";

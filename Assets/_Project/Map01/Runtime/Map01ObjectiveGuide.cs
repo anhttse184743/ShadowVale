@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
@@ -47,7 +47,7 @@ namespace ShadowVale.Map01
         private bool PickTarget(out Vector3 target, out string label)
         {
             target = default; label = null;
-            if (quest.AwaitingReport) { target = mission.hung.position; label = "BÁO CÁO HÙNG"; return true; }
+            if (GetComponent<Map01Story>()?.Target(out target, out label) == true) return true;
             switch (quest.Stage)
             {
                 case Map01Quest.ExtractionStage:

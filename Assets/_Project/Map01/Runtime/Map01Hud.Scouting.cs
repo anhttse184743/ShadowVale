@@ -150,6 +150,16 @@ namespace ShadowVale.Map01
             if (x > 0) { HudFill(new Rect(0, 0, x, height), Color.black); HudFill(new Rect(width - x, 0, x, height), Color.black); }
 
             var plate = new Rect(width / 2 - 250, height - 150, 500, 64);
+            var operation=GetComponent<Map01Story>();
+            if(operation?.Layout!=null){
+                plate=new Rect(width/2-285,height-178,570,90);HudPanel(plate);
+                if(quest.Stage==Map01Quest.BossStage&&!operation.Progress.commanderReported){
+                    GUI.Label(new Rect(plate.x+16,plate.y+5,plate.width-32,26),$"QUAN SÁT DOANH TRẠI  {operation.ObservationProgress*100:0}%",hudGuide);
+                    GUI.Label(new Rect(plate.x+16,plate.y+32,plate.width-32,36),operation.ObservationHint??"Đứng xa ít nhất 18 m, hướng ống nhòm về doanh trại.",hudSmall);
+                    var progress=new Rect(plate.x+18,plate.y+72,plate.width-36,10);HudFill(progress,new Color(0,0,0,.6f));HudFill(new Rect(progress.x,progress.y,progress.width*operation.ObservationProgress,progress.height),HudGold);
+                }else GUI.Label(new Rect(plate.x+16,plate.y+15,plate.width-32,60),"ỐNG NHÒM · Quan sát lính, vật che và đường tiếp cận.\nThả [F] để trở lại góc nhìn thường.",hudSmall);
+                return;
+            }
             HudPanel(plate);
             if (scouting.Sighted != null)
             {

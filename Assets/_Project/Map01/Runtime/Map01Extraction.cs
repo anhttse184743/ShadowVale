@@ -72,6 +72,17 @@ namespace ShadowVale.Map01
         private DialogueVoice speech;
         private float radioReplyAt,radioEndsAt;
         private bool radioAnswered;
+        private int radioVoiceIndex;
+        private float nextRadioAt;
+        private readonly List<GameObject> radioHiddenWeapons=new();
+        private bool radioActionsEnabled;
+        private Map01NamActions radioActions;
+        private static readonly string[] RadioVoiceIds={"m1_v2_extraction_01","m1_v2_extraction_02","m1_v2_extraction_03"};
+        private int departureVoiceIndex;
+        private float nextDepartureVoiceAt;
+        private static readonly string[] DepartureVoiceIds = {
+            "m1_depart_destination_question", "m1_depart_destination_order", "m1_depart_bank_reply"
+        };
         private int shots;
         private readonly List<(Animator actor, Weapon rifle)> seatedRifles = new();
 
@@ -150,19 +161,23 @@ namespace ShadowVale.Map01
 
         public void Begin(bool showRadio)
         {
-            if (CurrentPhase != Phase.Dormant) return;
+            if (CurrentPhase != Phase.Dormant || quest==null || quest.Stage!=Map01Quest.ExtractionStage) return;
             if (!Prepare()) { Debug.LogError("Extraction setup incomplete; completion remains locked."); return; }
             CurrentPhase = showRadio ? Phase.Radio : Phase.Extraction;
             clock = skipHeld = 0; skipReleased = false;
             if (showRadio) {
                 speech=DialogueVoice.For(gameObject);
-                radioReplyAt=Mathf.Max(4.5f,DialogueVoice.Length("m1_radio_order")+.25f);
-                radioEndsAt=Mathf.Max(7,radioReplyAt+DialogueVoice.Length("m1_radio_reply")+.3f);
-                radioAnswered=false;speech.PlayOnce("m1_radio_order");
-                mission.CloseGameplayPanel(); mission.Cinematic = true;
+                radioVoiceIndex=0;nextRadioAt=DialogueVoice.Length(RadioVoiceIds[0])+.35f;
+                DialogueVoice.StopAll();speech.CanSpeak=()=>mission!=null&&!mission.Paused&&!ForestMenu.Visible;
+                speech.Play(RadioVoiceIds[0]);
+                mission.CloseGameplayPanel();mission.Cinematic=true;
+                initialPlayerPosition=mission.player.position;initialPlayerRotation=mission.player.rotation;
+                radioActions=Map01NamActions.For(mission);radioActionsEnabled=radioActions!=null&&radioActions.enabled;
+                if(radioActions!=null)radioActions.enabled=false;
+                foreach(var weapon in namActor.GetComponentsInChildren<Weapon>(true))if(weapon.gameObject.activeSelf){radioHiddenWeapons.Add(weapon.gameObject);weapon.gameObject.SetActive(false);}
                 SetPlayerDrivers(false);
-                namPose = new PosePlayer(namActor); namPose.Play(radio);
-                subtitle = DialogueVoice.Caption("m1_radio_order");
+                namPose=new PosePlayer(namActor);namPose.Play(Resources.Load<AnimationClip>("Rescue/Nam_Shelter_Idle"));
+                subtitle=DialogueVoice.Caption(RadioVoiceIds[0]);
             }
         }
 
@@ -237,10 +252,14 @@ namespace ShadowVale.Map01
                     var inheritedLoot = clone.GetComponent<ForestPoint>();
                     if (inheritedLoot != null) { inheritedLoot.enabled = false; Destroy(inheritedLoot); }
                     guard = clone.GetComponent<Map01EnemyController>();
+                    guard.carriesSupplyKey=false;guard.operationIndex=0;
                     guard.Configure(Array.Empty<Vector3>()); guard.BindMission(mission);
                     clone.GetComponent<Health>().RestoreHealth(clone.GetComponent<Health>().Max);
                     mission.AddEnemy(guard);
                 }
+                guard.carriesSupplyKey=false;guard.operationIndex=0;
+                var staleLoot=guard.GetComponent<ForestPoint>();
+                if(staleLoot!=null){staleLoot.items=staleLoot.items.Where(item=>item.item_id!=Map01Story.KeyItem).ToArray();if(staleLoot.label=="Lính gác kho — chìa khóa kho tiếp tế")staleLoot.label="Túi lính tuần tra";}
                 blockers.Add(guard);
             }
         }
@@ -307,11 +326,14 @@ namespace ShadowVale.Map01
             if(skipHeld>=1) { Skip(); return; }
             switch(CurrentPhase) {
                 case Phase.Radio:
-                    if(clock>=radioReplyAt && !radioAnswered && !speech.HasSpeech){radioAnswered=true;speech.PlayOnce("m1_radio_reply");}
-                    subtitle=DialogueVoice.Caption(radioAnswered?"m1_radio_reply":"m1_radio_order");
-                    var focus = mission.player.position+Vector3.up*1.35f;
+                    mission.player.SetPositionAndRotation(initialPlayerPosition,initialPlayerRotation);
+                    if(clock>=nextRadioAt&&!speech.HasSpeech){
+                        if(radioVoiceIndex+1<RadioVoiceIds.Length){radioVoiceIndex++;speech.Play(RadioVoiceIds[radioVoiceIndex]);nextRadioAt=clock+DialogueVoice.Length(RadioVoiceIds[radioVoiceIndex])+.35f;}
+                        else {EndRadio();break;}
+                    }
+                    subtitle=DialogueVoice.Caption(RadioVoiceIds[radioVoiceIndex]);
+                    var focus=mission.player.position+Vector3.up*1.35f;
                     View(focus-mission.player.forward*2.2f+mission.player.right*1.5f,focus,49);
-                    if(clock>=Mathf.Max(radioEndsAt,radio.length)) EndRadio();
                     break;
                 case Phase.Approach:
                     float p=Mathf.Clamp01(clock/ApproachSeconds);
@@ -340,7 +362,8 @@ namespace ShadowVale.Map01
                 case Phase.Departing:
                     ApplyDeparture(Mathf.Clamp01(clock/18f));
                     CoverDeparture();
-                    if(clock>=18) FinishDeparture();
+                    bool dialogueFinished=UpdateDepartureDialogue();
+                    if(clock>=18 && dialogueFinished) FinishDeparture();
                     break;
             }
         }
@@ -351,6 +374,7 @@ namespace ShadowVale.Map01
             // Re-sample without advancing time. A manual camera capture can run before
             // Unity's animation update; do not suppress the real LateUpdate in that frame.
             namPose?.Sample();hungPose?.Sample();commanderPose?.Sample();
+            if(CurrentPhase==Phase.Radio)Map01ArmContact.Radio(namActor,Mathf.SmoothStep(0,1,clock/.7f));
             if(CurrentPhase==Phase.Departing) {
                 for(int index=0;index<2;index++) AimAndFireCover(index);
             }
@@ -476,7 +500,7 @@ namespace ShadowVale.Map01
                 if(!found) continue; // Never materialize a soldier in the camera frustum.
                 var clone=Instantiate(template.gameObject,chosen,Quaternion.identity,transform);clone.name="Cinematic pursuer "+i;
                 foreach(var loot in clone.GetComponents<ForestPoint>())Destroy(loot);
-                var enemy=clone.GetComponent<Map01EnemyController>();enemy.enabled=false;
+                var enemy=clone.GetComponent<Map01EnemyController>();enemy.carriesSupplyKey=false;enemy.operationIndex=0;enemy.enabled=false;
                 clone.GetComponent<Health>().Revive();
                 var actor=clone.GetComponentInChildren<Animator>();actor.Rebind();actor.Update(0);Map01Rifle.Attach(actor);
                 var agent=clone.GetComponent<NavMeshAgent>();
@@ -688,13 +712,15 @@ namespace ShadowVale.Map01
         {
             speech?.Stop();
             namPose?.Dispose(); namPose=null;
+            foreach(var prop in radioHiddenWeapons)if(prop!=null)prop.SetActive(true);radioHiddenWeapons.Clear();
+            if(radioActions!=null)radioActions.enabled=radioActionsEnabled;
             SetPlayerDrivers(true);
             cameraRig.ClearCinematicView(); mission.Cinematic=false;
             mission.ModernCombat?.RestoreAfterCinematic();
             CurrentPhase=Phase.Extraction; subtitle=null;
             ForestMenu.SuppressKeysAfterCutscene();
             Cursor.lockState=CursorLockMode.Locked; Cursor.visible=false;
-            mission.Say("Reach the northern jetty. Board the waiting boat.",8);
+            mission.Say("Tới bến phía bắc, lên thuyền cùng Hùng và chỉ huy.",8);
         }
         private void BeginBoarding()
         {
@@ -712,8 +738,9 @@ namespace ShadowVale.Map01
             namPose=new PosePlayer(namActor);
             namPose.Play(walk);
             hungPose.Play(lowerWeapon); commanderPose.Play(lowerWeapon);
-            speech=DialogueVoice.For(gameObject);speech.Play("m1_board_invite");
-            subtitle=DialogueVoice.Caption("m1_board_invite");
+            speech=DialogueVoice.For(gameObject);
+            speech.Play("m1_board_invite_current");
+            subtitle=DialogueVoice.Caption("m1_board_invite_current");
             PrepareShoreActors();
             ChangePhase(Phase.Approach);
         }
@@ -734,7 +761,17 @@ namespace ShadowVale.Map01
             oarHeld=true;SpawnPursuitIfNeeded();
             speech=DialogueVoice.For(gameObject);speech.Play("m1_depart_order");
             subtitle=DialogueVoice.Caption("m1_depart_order");
+            departureVoiceIndex=0;nextDepartureVoiceAt=6;
             ChangePhase(Phase.Departing); nextShot=Time.unscaledTime+.8f; wake.Play();
+        }
+        private bool UpdateDepartureDialogue()
+        {
+            if(departureVoiceIndex<DepartureVoiceIds.Length && clock>=nextDepartureVoiceAt && !speech.HasSpeech) {
+                string id=DepartureVoiceIds[departureVoiceIndex++];
+                speech.Play(id);subtitle=DialogueVoice.Caption(id);
+                nextDepartureVoiceAt=clock+DialogueVoice.Length(id)+.3f;
+            }
+            return departureVoiceIndex==DepartureVoiceIds.Length && !speech.HasSpeech && clock>=nextDepartureVoiceAt;
         }
         private void ApplyDeparture(float progress)
         {

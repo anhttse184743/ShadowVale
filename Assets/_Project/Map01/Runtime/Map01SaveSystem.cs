@@ -41,7 +41,8 @@ namespace ShadowVale.Map01
             public string scoutStart; // The checkpoint at Hùng's scouting order, in saves made while scouting.
             public Map01EnemyController.Snapshot[] enemies;
             public Map01Rescue.Snapshot rescue;
-            public string rescueStart, escortStart;
+            public Map01Story.Snapshot story;
+            public string rescueStart, escortStart, operationStart;
         }
 
         /// <summary>True while a checkpoint load is pending/applying — blocks manual saves and
@@ -61,6 +62,20 @@ namespace ShadowVale.Map01
         private string missionStart;
         private SkillCampaignPersistence skillCampaign;
         private bool syncingSkills;
+        private string operationStart;
+        public bool HasOperationCheckpoint=>!string.IsNullOrEmpty(operationStart);
+        public void MarkOperationCheckpoint()
+        {
+            if(IsRestoring||mission.Cinematic||mission.PlayerHealth<=0||GetComponent<Map01Story>().Operating||Map01NamActions.For(mission).Busy)return;
+            operationStart=JsonUtility.ToJson(Capture(false));
+            SaveSlot(ForestSaveSlots.AutoSlot,out _,true);
+        }
+        public bool RestartOperation()
+        {
+            if(!HasOperationCheckpoint)return false;
+            var data=PrepareRetry(JsonUtility.FromJson<CheckpointData>(operationStart));data.operationStart=operationStart;
+            RestartInteractionCheckpoint(JsonUtility.ToJson(data));return true;
+        }
         private string SavePath => Path.Combine(Application.persistentDataPath, "shadowvale-map01-checkpoint.json");
 
         private void Awake()
@@ -147,6 +162,7 @@ namespace ShadowVale.Map01
         }
         public bool RestartCurrentMission()
         {
+            if(quest.Stage>=Map01Quest.ScoutStage&&quest.Stage<=Map01Quest.ReportBossStage&&HasOperationCheckpoint)return RestartOperation();
             SyncSkillMission();
             if (string.IsNullOrEmpty(missionStart)) return false;
             var data = PrepareRetry(JsonUtility.FromJson<CheckpointData>(missionStart));
@@ -168,13 +184,13 @@ namespace ShadowVale.Map01
             start.exploration = data.exploration;
             start.skillMission = new ShadowVale.Gameplay.Skills.SkillMissionProgress
             { id = state.id, attemptId = Guid.NewGuid().ToString("N"), shooting = state.shooting, stealth = state.stealth };
-            start.missionStart = data.missionStart; start.rescueStart = data.rescueStart; start.escortStart = data.escortStart; start.scoutStart = data.scoutStart;
+            start.operationStart = data.operationStart; start.missionStart = data.missionStart; start.rescueStart = data.rescueStart; start.escortStart = data.escortStart; start.scoutStart = data.scoutStart;
             return start;
         }
 
         public string ManualSaveBlockReason()
         {
-            if (mission.Cinematic || GetComponent<Map01Rescue>().NonSaveable) return "Đang phát cảnh cinematic. Vui lòng đợi cảnh kết thúc.";
+            if (mission.Cinematic || GetComponent<Map01Rescue>().NonSaveable || GetComponent<Map01Story>().Operating || Map01NamActions.For(mission).Busy) return "Đang thao tác hoặc phát cảnh. Vui lòng đợi cảnh kết thúc.";
             if (pendingCheckpoint != null) return "Đang tải bản lưu. Vui lòng đợi giây lát.";
             if (mission.PlayerHealth <= 0) return "Không thể lưu khi nhân vật đã gục ngã.";
             if (GetComponent<Map01Rescue>().HungDown) return "Hùng đã hy sinh. Làm lại đoạn giải cứu trước khi lưu.";
@@ -214,7 +230,7 @@ namespace ShadowVale.Map01
                 }
                 catch (Exception e) { error = "Không thể lưu mốc đầu nhiệm vụ: " + e.Message; return false; }
             }
-            if (mission.Cinematic || GetComponent<Map01Rescue>().NonSaveable) return true;
+            if (mission.Cinematic || GetComponent<Map01Rescue>().NonSaveable || GetComponent<Map01Story>().Operating || Map01NamActions.For(mission).Busy) return true;
             return SaveSlot(ForestSaveSlots.AutoSlot, out error, true);
         }
 
@@ -301,7 +317,7 @@ namespace ShadowVale.Map01
             if (!mission.IsInitialized) { error = "Màn chơi chưa sẵn sàng để lưu."; return false; }
             try { SyncSkillMission(); if (!skillCampaign.TryFlush(out error)) return false; }
             catch (Exception e) { error = "Không thể lưu tiến trình kỹ năng: " + e.Message; return false; }
-            if (mission.Cinematic || GetComponent<Map01Rescue>().NonSaveable || GetComponent<Map01Rescue>().Failed
+            if (mission.Cinematic || GetComponent<Map01Story>().Operating || Map01NamActions.For(mission).Busy || GetComponent<Map01Rescue>().NonSaveable || GetComponent<Map01Rescue>().Failed
                 || GetComponent<Map01Scouting>().FailedRun || mission.Skills.MissionFailed || mission.PlayerHealth<=0) { error = "Cannot save during a cinematic or failed mission."; return false; }
             if (!automatic && (error = ManualSaveBlockReason()) != null) { mission.Say(error); return false; }
             var data = Capture();
@@ -326,6 +342,7 @@ namespace ShadowVale.Map01
             SyncSkillMission();
             return new CheckpointData
             {
+                story = GetComponent<Map01Story>()?.Capture(),
                 stage = quest.Stage, stones = inventory.Stones, hp = mission.PlayerHealth, stamina = mission.Stamina,
                 player = mission.player.position, hung = mission.hung.position, alarmed = mission.Alarmed,
                 used = mission.Points.Where(p => p.used).Select(p => p.id).ToArray(),
@@ -343,6 +360,7 @@ namespace ShadowVale.Map01
                 hungHealth = GetComponent<Map01Rescue>().HungHealth,
                 rescue = GetComponent<Map01Rescue>().Capture(),
                 rescueStart = includeRetry ? rescueStart : null, escortStart = includeRetry ? escortStart : null,
+                operationStart=includeRetry?operationStart:null,
                 enemies = mission.Enemies.Select(e => e.Capture()).ToArray(),
                 scoutedCamps = GetComponent<Map01Scouting>().FoundMask,
                 // A save made mid-scouting carries the moment the order was given, so a failed
@@ -424,13 +442,16 @@ namespace ShadowVale.Map01
                 if (controller != null) { controller.enabled = false; mission.player.position = data.player; controller.enabled = true; }
                 else mission.player.position = data.player;
                 mission.hung.GetComponent<NavMeshAgent>()?.Warp(data.hung);
-                quest.RestoreStage(data.stage);
+                quest.RestoreStoryStage(data.stage, data.story);
                 inventory.RestoreFromSave(data.items, data.stones, data.crafting, data.craftRemaining);
                 EnsureSkillCampaign();
                 skillCampaign.Initialize(RunId(data, pendingCheckpoint));
                 skillCampaign.Restore(data.skills, data.skillMission);
                 GetComponent<Map01Minimap>()?.RestoreExploration(data.exploration);
                 missionStart = data.missionStart;
+                GetComponent<Map01Story>().AfterInventoryRestore();
+                GetComponent<Map01Story>().RestoreOperationActors(data.enemies);
+                operationStart=data.operationStart;
                 mission.Alarmed = data.alarmed;
                 mission.RestoreHealthFromSave(Mathf.Clamp(data.hp, 1, mission.Settings.playerHP));
                 mission.SetStamina(data.stamina);
@@ -468,7 +489,14 @@ namespace ShadowVale.Map01
             foreach (var enemy in mission.Enemies)
             {
                 var saved = data.enemies?.FirstOrDefault(e => e.id == enemy.SaveId);
+                // The previous runtime boss inherited an arbitrary camp parent. Import its
+                // existing snapshot into the stable third-outpost actor, never duplicate him.
+                if (saved == null && enemy.IsBoss && data.story == null)
+                    saved = data.enemies?.FirstOrDefault(e => e.id != null && e.id.EndsWith("/Chỉ huy địch", StringComparison.Ordinal));
                 if (saved != null) enemy.RestoreSnapshot(saved);
+                else if (enemy.IsBoss && GetComponent<Map01Story>().Progress.commanderKilled) {
+                    var state = enemy.Capture(); state.hp = 0; enemy.RestoreSnapshot(state);
+                }
             }
         }
 

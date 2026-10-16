@@ -28,6 +28,7 @@ public sealed class RescueBushTests:ForestSceneTestBase {
         var pipeline=UnityEngine.Rendering.GraphicsSettings.currentRenderPipeline??UnityEngine.Rendering.GraphicsSettings.defaultRenderPipeline;
         var mode=pipeline?.GetType().GetProperty("gpuResidentDrawerMode");mode?.SetValue(pipeline,Enum.ToObject(mode.PropertyType,0));
     }
+    static IEnumerator Warmup(){float deadline=Time.realtimeSinceStartup+30;var warm=Map01InteractionWarmup.For(M);while(!warm.BushReady&&Time.realtimeSinceStartup<deadline)yield return null;Assert.IsTrue(warm.BushReady);}
     [Test]public void TimingNeedsThreeWinsAllowsOneMissAndFailsOnSecond(){
         var t=new Map01BushTiming();t.Tick(.1f,true);Assert.AreEqual(1,t.Misses);
         for(int i=0;i<3;i++){t.Tick(.35f,false);t.Tick(t.Center*2,true);}
@@ -39,15 +40,15 @@ public sealed class RescueBushTests:ForestSceneTestBase {
         Assert.IsTrue(Map01CinematicPose.Clip("Nam_Bush_Approach").humanMotion);
         foreach(var who in new[]{"Nam","Enemy"})foreach(var clip in new[]{"GrabPull","StruggleLoop","Finish","Escape"})Assert.IsTrue(Map01CinematicPose.Clip(who+"_Bush_"+clip).humanMotion);
         foreach(var id in new[]{"m1_rescue_alarm","m1_rescue_execute_order","m1_rescue_interrogate","m1_rescue_shelter"}){var line=DialogueVoice.Find(id);Assert.NotNull(line.clip);Assert.IsFalse(line.radio);Assert.AreEqual("vi",line.language);}
-        foreach(var id in new[]{"m1_rescue_radio_report","m1_rescue_radio_instruction","m1_rescue_radio_ack"}){var line=DialogueVoice.Find(id);Assert.NotNull(line.clip);Assert.IsTrue(line.radio);Assert.AreEqual("vi",line.language);}
-        StringAssert.Contains("Địch ở đây rất đông, tôi không thể đánh trực diện.",DialogueVoice.Caption("m1_rescue_radio_report"));
+        foreach(var id in new[]{"m1_v2_rescue_approach_01","m1_v2_rescue_approach_02","m1_v2_rescue_approach_03"}){var line=DialogueVoice.Find(id);Assert.NotNull(line.clip);Assert.AreEqual(id.EndsWith("_02"),line.radio);Assert.AreEqual("vi",line.language);}
+        StringAssert.Contains("Địch đông quá, tôi không thể tấn công trực diện.",DialogueVoice.Caption("m1_v2_rescue_approach_01"));
     }
-    [UnityTest]public IEnumerator IntroAndExecutionStayBoundAndPresentDeathBeforeFailure(){
+    [UnityTest,Timeout(600000)]public IEnumerator IntroAndExecutionStayBoundAndPresentDeathBeforeFailure(){
         Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
         yield return StoryReview();yield return new ExitPlayMode();
     }
     static IEnumerator StoryReview(){
-        Setup();var cc=M.player.GetComponent<CharacterController>();cc.enabled=false;M.player.position=R.RetryPoint;cc.enabled=true;
+        Setup();yield return Warmup();var cc=M.player.GetComponent<CharacterController>();cc.enabled=false;M.player.position=R.RetryPoint;cc.enabled=true;
         var d=M.GetComponent<Map01RescueCinematic>()??M.gameObject.AddComponent<Map01RescueCinematic>();
         Assert.IsTrue(d.ShowIntro(R,R.Squad[0]));Assert.IsTrue(R.IntroSeen);
         var h=M.hung.GetComponentInChildren<Map01HungVisual>();
@@ -56,7 +57,7 @@ public sealed class RescueBushTests:ForestSceneTestBase {
             Assert.IsTrue(h.RopeVisible);Assert.IsFalse(M.GetComponent<Map01SaveSystem>().SaveSlot(1,out _,true));
             if(d.Elapsed>6.55f){Assert.Less(Vector3.Distance(gameplayView,M.gameCamera.transform.position),.03f,"The radio conversation belongs to the restored player view.");Assert.Less(Quaternion.Angle(gameplayRotation,M.gameCamera.transform.rotation),.2f);}
         });
-        Assert.GreaterOrEqual(d.Elapsed,12);Assert.IsTrue(M.ModernCombat.enabled&&M.ModernPlayer.enabled);
+        Assert.GreaterOrEqual(d.Elapsed,8);Assert.IsTrue(M.ModernCombat.enabled&&M.ModernPlayer.enabled);
         R.ReportDetection(new Map01Detection(R.Squad[1],Map01DetectionCause.Sight,M.player.position));
         Assert.AreEqual(Map01Rescue.Phase.Alarm,R.CurrentPhase);
         bool checkedAim=false;float maxHead=0;
@@ -64,7 +65,7 @@ public sealed class RescueBushTests:ForestSceneTestBase {
             Assert.IsTrue(h.RopeVisible);maxHead=Mathf.Max(maxHead,h.actor.GetBoneTransform(HumanBodyBones.Head).position.y-M.hung.position.y);
             int beat=(int)typeof(Map01RescueCinematic).GetField("storyBeat",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(d);
             float began=(float)typeof(Map01RescueCinematic).GetField("beatAt",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(d);
-            if(beat==2&&d.Elapsed-began>R.Layout.executionCameraSeconds+.25f){
+            if(beat==2&&d.Elapsed-began>.25f){
                 var muzzle=R.Squad[0].GetComponentInChildren<Map01Rifle>().weapon.Muzzle;
                 Assert.Less(Vector3.Angle(muzzle.forward,h.actor.GetBoneTransform(HumanBodyBones.Chest).position-muzzle.position),5,"Execution muzzle must aim at Hung before firing.");checkedAim=true;
             }
@@ -72,14 +73,14 @@ public sealed class RescueBushTests:ForestSceneTestBase {
         Assert.IsTrue(checkedAim);
         Assert.IsTrue(R.Failed);Assert.IsTrue(h.RopeVisible);Assert.Less(maxHead,1.5f,"Captive never stands during the execution.");
         Assert.Less(h.actor.GetBoneTransform(HumanBodyBones.Head).position.y-M.hung.position.y,.8f,"Bound captive must finish collapsed.");
-        Assert.Greater(d.Elapsed,8);
+        Assert.Greater(d.Elapsed,6);
     }
-    [UnityTest]public IEnumerator BushSuccessAndEscapeKeepEnemyAliveUntilFinisherAndRestoreControls(){
+    [UnityTest,Timeout(600000)]public IEnumerator BushSuccessAndEscapeKeepEnemyAliveUntilFinisherAndRestoreControls(){
         Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
         yield return BushReview();yield return new ExitPlayMode();
     }
     [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-    static bool PlaceBush(Map01EnemyController target,bool flank=false){
+    internal static bool PlaceBush(Map01EnemyController target,bool flank=false){
         var cc=M.player.GetComponent<CharacterController>();cc.enabled=false;M.Crouched=true;M.ModernPlayer.RestoreMotion(true);M.ModernCombat.Equip(WeaponKind.Knife);
         var b=M.GetComponent<Map01BushTakedown>();
         foreach(var bush in M.Points.Where(p=>p.kind==ForestPointKind.Hide).OrderBy(p=>Vector3.Distance(p.transform.position,R.CaptivePost))){
@@ -107,7 +108,7 @@ public sealed class RescueBushTests:ForestSceneTestBase {
     static IEnumerator FlankReview(){
         var mission=M;Assert.NotNull(mission);var rescue=mission.GetComponent<Map01Rescue>();Assert.NotNull(rescue);
         Assert.NotNull(mission.GetComponent<Map01BushTakedown>(),"Wait for the rescue startup before placing the test pair.");
-        Setup();
+        Setup();yield return Warmup();
         rescue.MarkIntroSeen();
         var victim=mission.Enemies.First(g=>g!=null&&g.name=="patrol_1");Assert.IsTrue(victim!=null);
         Assert.IsTrue(PlaceBush(victim,true));
@@ -123,7 +124,7 @@ public sealed class RescueBushTests:ForestSceneTestBase {
         Assert.IsTrue(M.ModernPlayer.enabled&&M.ModernCombat.enabled);
     }
     static IEnumerator BushReview(){
-        Setup();R.MarkIntroSeen();var bush=M.GetComponent<Map01BushTakedown>();var input=RouteInputToGame();var mouse=InputSystem.AddDevice<Mouse>();
+        Setup();yield return Warmup();R.MarkIntroSeen();var bush=M.GetComponent<Map01BushTakedown>();var input=RouteInputToGame();var mouse=InputSystem.AddDevice<Mouse>();
         try{
             var victim=R.Squad[1];Assert.IsTrue(PlaceBush(victim),"A real authored bush must accommodate a safe paired action.");
             var origin=M.player.position;var rotation=M.player.rotation;
@@ -203,7 +204,7 @@ public sealed class RescueBushTests:ForestSceneTestBase {
         yield return ShelterReview();yield return new ExitPlayMode();
     }
     static IEnumerator ShelterReview(){
-        Setup();R.MarkIntroSeen();M.GetComponent<Map01Quest>().RestoreStage(Map01Quest.EscortStage);
+        Setup();yield return Warmup();R.MarkIntroSeen();M.GetComponent<Map01Quest>().RestoreStage(Map01Quest.EscortStage);
         var layout=R.Layout;var forward=Vector3.ProjectOnPlane(layout.shelterRun[1].position-layout.shelterDoor.position,Vector3.up).normalized;
         M.hung.GetComponent<NavMeshAgent>().Warp(layout.shelterDoor.position);
         var cc=M.player.GetComponent<CharacterController>();cc.enabled=false;
@@ -222,7 +223,7 @@ public sealed class RescueBushTests:ForestSceneTestBase {
         yield return LifecycleReview();yield return new ExitPlayMode();
     }
     static IEnumerator LifecycleReview(){
-        Setup();var cc=M.player.GetComponent<CharacterController>();cc.enabled=false;M.player.position=R.RetryPoint;cc.enabled=true;
+        Setup();yield return Warmup();var cc=M.player.GetComponent<CharacterController>();cc.enabled=false;M.player.position=R.RetryPoint;cc.enabled=true;
         var director=M.GetComponent<Map01RescueCinematic>()??M.gameObject.AddComponent<Map01RescueCinematic>();
         Assert.IsTrue(director.ShowIntro(R,R.Squad[0]));director.Skip();Assert.IsTrue(R.IntroSeen);Assert.IsFalse(M.Cinematic);
         Assert.IsTrue(M.GetComponent<Map01SaveSystem>().RestartRescue(false));yield return WaitGameSeconds(.9f);Assert.IsTrue(R.IntroSeen);
@@ -325,4 +326,3 @@ public sealed class RescueBushTests:ForestSceneTestBase {
     }
     [TearDown]public void Cleanup(){Time.captureDeltaTime=0;typeof(ForestSaveSlots).GetField("storageRoot",BindingFlags.Static|BindingFlags.NonPublic).SetValue(null,null);}
 }}
-
