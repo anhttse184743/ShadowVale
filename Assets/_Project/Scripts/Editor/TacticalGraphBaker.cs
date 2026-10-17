@@ -78,7 +78,7 @@ namespace ShadowVale.Editor
 
         public static TacticalGraphAsset Bake(string sceneName, Settings s, out string report)
         {
-            CoverCache.Clear();
+            CoverCache.Clear(); sceneRenderers = null;
             var triangulation = NavMesh.CalculateTriangulation();
             if (triangulation.vertices.Length == 0) { report = "Scene has no baked NavMesh."; return null; }
             var bounds = new Bounds(triangulation.vertices[0], Vector3.zero);
@@ -107,6 +107,7 @@ namespace ShadowVale.Editor
                 bool cover = TryCover(points[i], s, mask, out float facing);
                 nodes[i] = new TacticalGraphAsset.Node { position = points[i], cover = cover, coverFacing = facing, neighbors = frozen[i] };
             }
+            MarkCoverMarkers(nodes, spacing * .5f);
             foreach (int c in Chokepoints(points, frozen, portals, s)) nodes[c].chokepoint = true;
 
             var asset = ScriptableObject.CreateInstance<TacticalGraphAsset>();
@@ -135,6 +136,28 @@ namespace ShadowVale.Editor
             return points;
         }
 
+        /// <summary>
+        /// A Cover marker makes the node nearest it (within <paramref name="reach"/>) cover, facing the marker's
+        /// forward, as <see cref="TacticalNodeMarker"/> promises: cover the probes cannot see (collision on invisible
+        /// boxes far from any renderer of their group, as in Map 1's C3 art) is still cover.
+        /// </summary>
+        private static void MarkCoverMarkers(TacticalGraphAsset.Node[] nodes, float reach)
+        {
+            foreach (var marker in Object.FindObjectsByType<TacticalNodeMarker>(FindObjectsSortMode.None).OrderBy(m => m.name))
+            {
+                if (marker.kind != TacticalNodeMarker.Kind.Cover) continue;
+                int best = -1; float bestD = reach * reach;
+                for (int i = 0; i < nodes.Length; i++)
+                {
+                    Vector3 d = nodes[i].position - marker.transform.position; d.y = 0;
+                    if (d.sqrMagnitude < bestD) { bestD = d.sqrMagnitude; best = i; }
+                }
+                if (best < 0 || nodes[best].cover) continue;
+                nodes[best].cover = true;
+                nodes[best].coverFacing = marker.transform.eulerAngles.y;
+            }
+        }
+
         private static int AddUnique(List<Vector3> points, Vector3 p, float minDistance)
         {
             for (int i = 0; i < points.Count; i++) if ((points[i] - p).sqrMagnitude < minDistance * minDistance) return i;
@@ -143,11 +166,24 @@ namespace ShadowVale.Editor
         }
 
         private static readonly Dictionary<Collider, bool> CoverCache = new Dictionary<Collider, bool>();
+        private static List<Bounds> sceneRenderers;
+
+        /// <summary>
+        /// Renderers of a prop's size or a building's, anywhere in the scene: static batching moves an art kit's
+        /// meshes into combined renderers of their own ("LOD1 / static material batches" in Map 1's approved C1–C3
+        /// art) and leaves the collision proxies (COLLIDER_*) under the buildings, with no renderer in their group.
+        /// Ground and horizon meshes (60 m and wider) are left out: they lie under every invisible wall.
+        /// </summary>
+        private static List<Bounds> SceneRenderers()
+            => sceneRenderers ??= Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None)
+                .Where(r => r.enabled && r.gameObject.activeInHierarchy && r.bounds.size.x < 60f && r.bounds.size.z < 60f)
+                .Select(r => r.bounds).ToList();
 
         /// <summary>
         /// A visible, solid, person-sized obstacle — not an invisible boundary wall, not the ground.
         /// Props often keep their collision on an invisible child ("Cover collider" under a sandbag wall),
-        /// so "visible" means a renderer in the same group overlapping the collider.
+        /// so "visible" means a renderer in the same group overlapping the collider — or, for a statically
+        /// batched kit, a combined renderer overlapping it (<see cref="SceneRenderers"/>).
         /// </summary>
         private static bool IsCoverCollider(Collider c, Settings s)
         {
@@ -164,6 +200,9 @@ namespace ShadowVale.Editor
                     var group = c.transform.parent != null ? c.transform.parent : c.transform;
                     foreach (var r in group.GetComponentsInChildren<Renderer>())
                         if (r.bounds.Intersects(area)) { result = true; break; }
+                    if (!result)
+                        foreach (var r in SceneRenderers())
+                            if (r.Intersects(area)) { result = true; break; }
                 }
             }
             CoverCache[c] = result;
