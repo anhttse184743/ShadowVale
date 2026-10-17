@@ -217,6 +217,14 @@ các vách hồi cửa nối khung với mặt tường mà giữ lối đi. Khi
 **ShadowVale > Environment > Seal shelter and match ground** để dựng lại các mesh trong prefab `ShelterShell`.
 Công cụ này dành riêng cho vị trí hầm hiện tại trong Map 1, không thay đổi terrain hoặc NavMesh.
 
+Lối xuống hầm dùng `ShelterEntranceTerrain.asset`: dốc nội suy theo độ cao đường đi hiện có,
+bờ đất uốn mềm nối đến ngưỡng cửa và có mép chôn sâu 0,8 m để che kín phần cắt địa hình.
+Texture đất có normal map, trải UV theo chiều dài bề mặt để giảm kéo giãn trên vách dốc, chuyển màu
+sang nền rừng ở mép trên; 18 đá thường/đá rêu từ bộ `AnGiangRocks` chôn ở hai bên và giữ trống giữa lối.
+Các thanh ngang cũ đã được ẩn. **ShadowVale > Environment > Rebuild natural shelter entrance**
+dựng lại phần này, thay đúng mảng terrain bên dưới, bake NavMesh và cập nhật ảnh minimap.
+Công cụ lưu scene Map 1 nên cần thực hiện ngoài Play mode khi sẵn sàng lưu các chỉnh sửa trong scene.
+
 Camera góc nhìn thứ ba kiểm tra va chạm cả độ lệch vai và cần camera, co vào ngay khi gặp collider vật lý,
 rồi giãn trở lại khi hết vật cản. Khoảng zoom tối thiểu không giới hạn việc co tránh tường. Bán kính kiểm tra
 bao cả mặt phẳng cắt gần; bỏ qua trigger và collider của người chơi. Áp dụng chung cho Map 1/Map 2,
