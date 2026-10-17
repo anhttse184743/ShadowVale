@@ -22,8 +22,10 @@ namespace ShadowVale.AI.Boss
         /// move does not leave him watching a player he cannot hit. 0 = ignore.</param>
         /// <param name="minPlayerDistance">Keep at least this far from the player, if more than the profile's
         /// <see cref="BossProfile.RelocateMinPlayerDistance"/> (regrouping: as far as he is now).</param>
+        /// <param name="allowed">The map's bounds for him (Map 1: inside the command post's fence). Null = anywhere.</param>
         public static bool TryPick(IWorldQuery graph, BossProfile profile, Vector3 from, Vector3 player, int avoidNode,
-            System.Random rng, out int node, out Vector3 position, float fightRange = 0f, float minPlayerDistance = 0f)
+            System.Random rng, out int node, out Vector3 position, float fightRange = 0f, float minPlayerDistance = 0f,
+            Func<Vector3, bool> allowed = null)
         {
             node = -1; position = from;
             if (graph == null || graph.NodeCount == 0) return false;
@@ -37,6 +39,7 @@ namespace ShadowVale.AI.Boss
                 float move = Flat(at - from), toPlayer = Flat(at - player);
                 if (move < profile.RelocateMinDistance || move > profile.RelocateMaxDistance) continue;
                 if (toPlayer < minToPlayer) continue;
+                if (allowed != null && !allowed(at)) continue;
                 double score = Score(graph, c, at, player, playerNode, move, profile);
                 if (fightRange > 0 && toPlayer <= fightRange) score += .5;
                 scored.Add((score, c));

@@ -1,4 +1,5 @@
 using System.Linq;
+using ShadowVale.AI.Boss;
 using ShadowVale.Core.Events;
 using ShadowVale.Data.Content;
 using ShadowVale.Gameplay.Combat;
@@ -202,9 +203,18 @@ namespace ShadowVale.Map01
             var bossHealth=instance.GetComponent<Health>();
             if(archetype!=null&&archetype.max_hp>0)bossHealth.SetMaxHealth(archetype.max_hp);
             mission.AddEnemy(boss);
-            // Relocation, grenades, the pincer and the call for reinforcements (A04), from the same profile.
-            var behaviour=BossBehaviour.Attach(instance,boss,profile,new Map01Reinforcements(mission,template),seed:1);
+            // Relocation, grenades, the pincer and the call for reinforcements (A04), from the same profile. At C3 the
+            // call is answered by the command post itself (Map01C3Reinforcements: its men not yet fighting, the kẻng's
+            // sleepers, the runners down the phone line), and he fights from its cover, never off into the forest.
+            var c3=GetComponent<Map01C3Mission>();
+            IReinforcementProvider men=c3!=null?new Map01C3Reinforcements(c3):new Map01Reinforcements(mission,template);
+            var behaviour=BossBehaviour.Attach(instance,boss,profile,men,seed:1);
             behaviour.Suspended=()=>mission.Stopped;
+            if(c3!=null){
+                c3.AutoCallAtHalfHealth=false; // BossBehaviour makes the call now (reinforce_hp_threshold).
+                behaviour.AllowedPosition=p=>c3.Data==null||c3.InsideFence(p);
+                boss.ConfineMoves=c3.ClampIntoFence; // Without cover in reach the FSM closes in on Nam: up to the fence.
+            }
             bossHealth.onDied.AddListener(OnBossDown);
         }
         public void CompleteBossDefeat(bool showRadio=true)

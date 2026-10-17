@@ -51,6 +51,14 @@ namespace ShadowVale.Map01
         private readonly AimTracker _aim = new AimTracker();
         private System.Random _shotRng;
         private NavMeshEnemyBody _body;
+        private Map01ConfinedBody _brainBody;
+        private System.Func<Vector3, Vector3> _confineMoves;
+        /// <summary>Where the FSM may walk him (the C3 commander: inside the fence); null = anywhere.</summary>
+        public System.Func<Vector3, Vector3> ConfineMoves
+        {
+            get => _confineMoves;
+            set { _confineMoves = value; if (_brainBody != null) _brainBody.Confine = value; }
+        }
         private EnemyBrain _brain;
         private readonly EnemyTuning _tuning = new EnemyTuning();
         private float _nextShot;
@@ -729,8 +737,9 @@ namespace ShadowVale.Map01
             if (_health == null) _health = GetComponent<Health>();
             if (_animator == null) _animator = GetComponentInChildren<Animator>();
             _body = new NavMeshEnemyBody(transform, _agent, _animator, _health);
+            _brainBody = new Map01ConfinedBody(_body) { Confine = _confineMoves };
             _baseInvestigateArrive = _tuning.InvestigateArriveDistance;
-            _brain = new EnemyBrain(LegacyId, _body, this, _tuning, this);
+            _brain = new EnemyBrain(LegacyId, _brainBody, this, _tuning, this);
             _brain.Memory.PatrolPoints = patrolPoints;
             SyncTuning();
         }

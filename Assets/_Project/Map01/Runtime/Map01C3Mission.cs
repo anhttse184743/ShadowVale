@@ -2,6 +2,8 @@ using ShadowVale.AI.Perception;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ShadowVale.AI.Agents;
+using ShadowVale.AI.Boss;
 using ShadowVale.Gameplay.Combat;
 using UnityEngine;
 using UnityEngine.AI;
@@ -335,7 +337,8 @@ namespace ShadowVale.Map01
 
         // ---- play ------------------------------------------------------------------------------------------------------
 
-        private IEnumerable<Map01EnemyController> Garrison()
+        /// <summary>Every man of the command post on the map now: the posts, the sleepers and runners called out, the commander.</summary>
+        internal IEnumerable<Map01EnemyController> Garrison()
         {
             foreach (var g in guards.Values) yield return g;
             foreach (var s in sleepers) if (s.gameObject.activeSelf) yield return s;
@@ -343,6 +346,18 @@ namespace ShadowVale.Map01
             if (Commander != null) yield return Commander;
         }
         private bool Near => mission.player != null && Vector3.Distance(mission.player.position, At(Data.anchor[0], Data.anchor[1])) < Data.nearMeters;
+        /// <summary>Inside the command post's fence (the commander's cover positions stay there). False before the layout loads.</summary>
+        public bool InsideFence(Vector3 p) => Data != null && OutsideFence(p) <= 0f;
+        /// <summary>The nearest walkable point inside the fence (a metre in from it) to <paramref name="p"/>; p itself when inside.</summary>
+        public Vector3 ClampIntoFence(Vector3 p)
+        {
+            if (Data == null || OutsideFence(p) <= 0f) return p;
+            const float inset = 1f;
+            var c = new Vector3(Mathf.Clamp(p.x, Data.fenceMin[0] + inset, Data.fenceMax[0] - inset), p.y,
+                                Mathf.Clamp(p.z, Data.fenceMin[1] + inset, Data.fenceMax[1] - inset));
+            c = At(c.x, c.z);
+            return NavMesh.SamplePosition(c, out var hit, 3f, NavMesh.AllAreas) && OutsideFence(hit.position) <= 0f ? hit.position : c;
+        }
         private float OutsideFence(Vector3 p)
         {
             float dx = Mathf.Max(Data.fenceMin[0] - p.x, 0f, p.x - Data.fenceMax[0]);
@@ -621,6 +636,30 @@ namespace ShadowVale.Map01
             yield return ("Hạ lính tháp canh", tower != null && !tower.Alive);
             yield return ("Tháo dùi kẻng ở cổng", Current.kiengRemoved);
             yield return ("Cắt dây điện thoại sau trại", Current.phoneCut);
+        }
+    }
+    /// <summary>
+    /// Who answers the C3 commander's call (BossBehaviour, at its reinforce_hp_threshold). The men of the command post
+    /// not yet in the fight come first (never the guards of points 1 and 2, nor the jetty: the call is shouted, not
+    /// radioed); the post's own reserve follows on its own terms (<see cref="Map01C3Mission.CallReinforcements"/>):
+    /// the kẻng wakes the sleepers in the barracks (only one, and late, if Nam took its striker) and the runners come
+    /// down the telephone line unless Nam cut it. No one is cloned out of thin air.
+    /// </summary>
+    public sealed class Map01C3Reinforcements : IReinforcementProvider
+    {
+        private readonly Map01C3Mission c3;
+        public Map01C3Reinforcements(Map01C3Mission c3) { this.c3 = c3; }
+
+        public IReadOnlyList<IEnemyAgent> Summon(IEnemyAgent boss, Vector3 playerPosition, int count, float radius, float now)
+        {
+            float r2 = radius * radius;
+            var sent = c3.Garrison().Where(g => g != null && !ReferenceEquals(g, boss) && g.Alive && !g.IsBoss
+                                              && !g.Brain.Memory.Engaged(now) && (g.Position - boss.Position).sqrMagnitude <= r2)
+                .OrderBy(g => (g.Position - boss.Position).sqrMagnitude).ThenBy(g => ((IEnemyAgent)g).Id, StringComparer.Ordinal)
+                .Take(Mathf.Max(0, count)).Cast<IEnemyAgent>().ToList();
+            foreach (var g in sent) NearbyAgentsReinforcements.Send(g, playerPosition, now);
+            c3.CallReinforcements(); // the reserve arrives on the kẻng's and the phone line's own timing
+            return sent;
         }
     }
 }
