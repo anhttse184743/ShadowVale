@@ -59,7 +59,7 @@ namespace ShadowVale.Map01
         private Coroutine release;
         private bool protectedRelease,releaseInvulnerability;
         private static readonly string[] Chatter={
-            "Lính địch: Tên này mang hàng tiếp tế. Ta nghi nó là lính thông tin của bọn nó. Phải giữ lại tra hỏi.",
+            "Lính địch: Tên này rình kiện hàng trên cầu. Chắc là trinh sát của bọn nó. Phải giữ lại tra hỏi.",
             "Lính địch: Trói chặt vào! Sáng mai giải nó về đồn chỉ huy khai thác.",
             "Lính địch: Canh cho kỹ — đồng bọn nó thế nào cũng mò tới cứu.",
             "Lính địch: Để xổng tù binh ở cái bến này thì cả tổ ăn đòn."
@@ -184,7 +184,7 @@ namespace ShadowVale.Map01
             EscortDistance=RemainingHomeDistance();WaveMask=0;SafeReached=false;release=null;mission.Cinematic=false;
             mission.ModernHealth.CinematicInvulnerable=releaseInvulnerability;protectedRelease=false;
             mission.ModernCombat?.RestoreAfterCinematic();
-            mission.Say("Hùng: Cảm ơn Nam. Tôi đang đưa hàng tiếp tế thì bị bắt. Chúng tưởng tôi là lính thông tin. Đưa tôi về căn cứ nhé.",9);
+            mission.Say("Hùng: Cảm ơn Nam. Tôi trinh sát kiện hàng trên cầu thì bị lộ, trúng đạn tay phải rồi bị đánh ngất. Đưa tôi về căn cứ nhé.",9);
             Saves.MarkRescueCheckpoint(true);
         }
         private void Update()
@@ -278,7 +278,7 @@ namespace ShadowVale.Map01
             var supplies=mission.Interactables.FirstOrDefault(p=>p.kind==ForestPointKind.Supplies);var inventory=GetComponent<Map01Inventory>();
             inventory.Add("supplies",1);
             if(supplies!=null&&!supplies.used){foreach(var item in supplies.items)inventory.Add(item.item_id,item.count);supplies.MarkLooted();}
-            mission.Say("Hùng: Về tới căn cứ rồi. Cảm ơn Nam! Hàng tiếp tế đã bàn giao. Gặp chỉ huy để nhận nhiệm vụ tiếp theo.",9);return true;
+            mission.Say("Hùng: Về tới căn cứ rồi. Cảm ơn Nam! Tôi sẽ báo chỉ huy về kiện hàng trên cầu. Cậu gặp chỉ huy để nhận nhiệm vụ tiếp theo.",9);return true;
         }
         public void Retry(){if(!Failed&&mission.PlayerHealth>0)return;Saves.RestartRescue(quest.Stage==Map01Quest.EscortStage);}
         public void ResetSquad(){foreach(var guard in squad)if(guard!=null)guard.ReturnToPost();}

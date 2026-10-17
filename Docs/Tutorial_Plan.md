@@ -28,7 +28,7 @@ Màn có hai lượt:
 | **1 — Chuẩn bị** | vùng an toàn gần căn cứ | 0. Di chuyển và camera (WASD, chuột) | thực sự di chuyển và xoay camera theo chỉ dẫn |
 | | | 1. Chạy nhanh (Shift) | chạy được khoảng 8 m trong bước này |
 | | | 2. Ngồi lén (Ctrl/C) | đi khom khoảng 4 m |
-| | | 3. Đổi vũ khí (1/2/3) | đã cầm cả súng lẫn dao |
+| | | 3. Đổi vũ khí (3 dao, 1 AK — ô của Map 1) | đã cầm cả súng lẫn dao |
 | **2 — Lén lút và chiến đấu** | khoảng trống và chỗ nấp giữa căn cứ với cầu | 4. Khom (Ctrl), ẩn vào bụi cây, lẻn ra sau lưng lính hạ bằng dao; ném đá (Q) tuỳ chọn | lính của bước này (đứng ngay trước bụi, quay lưng lại) bị hạ bằng dao từ sau lưng; bị phát hiện là thất bại |
 | | | 5. Ngắm, bắn và nạp đạn | ngắm chuột phải, hạ lính tập bằng súng với chuột trái và hoàn tất một lần nạp đạn R; lính tập có bắn trả |
 | | | 6. Hồi máu (H) | dùng băng thành công khi máu chưa đầy. Có sẵn 2 băng theo cấu hình trong `tutorial_balance.json` vì chưa có bước craft |
@@ -90,7 +90,7 @@ Ví dụ chú thích phải khớp cách điều khiển đang có trong Map 1:
 | Quan sát | biểu tượng chuột | Di chuyển chuột để nhìn xung quanh |
 | Chạy nhanh | Shift | Nhấn Shift để bật chạy nhanh. Nhấn lại để tắt. |
 | Đi khom | Ctrl hoặc C | Nhấn Ctrl hoặc C để đi khom. Nhấn lại để đứng lên. |
-| Đổi vũ khí | 1 rồi 2, theo lượt | Nhấn 1 để cầm súng / Nhấn 2 để cầm dao |
+| Đổi vũ khí | 3 rồi 1, theo lượt | Nhấn 3 để cầm dao / Nhấn 1 để chuyển lại súng AK |
 | Ném đá | Q, trạng thái giữ rồi thả | Giữ Q để ngắm hướng ném → Thả Q để ném đá |
 | Ngắm và bắn | chuột phải rồi chuột trái | Giữ chuột phải để ngắm → Nhấn chuột trái để bắn |
 | Nạp đạn | R | Nhấn R để nạp đạn |
