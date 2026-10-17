@@ -29,6 +29,8 @@ namespace ShadowVale.Map01
         public const string MapId = "map01";
 
         public Transform player, hung;
+        [Tooltip("Authored allied commander position and facing in the shelter.")]
+        public Transform alliedCommanderPost;
         public Camera gameCamera;
         public Vector2 mapMin = new Vector2(-45, -60), mapMax = new Vector2(45, 88);
         public TextAsset balanceJson, contentBundle;

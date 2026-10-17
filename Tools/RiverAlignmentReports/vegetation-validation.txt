@@ -1,0 +1,3 @@
+PASS saved-scene reload, grass instances=95669, canal patches=143, actual root samples=1451447
+PASS both near and far grass LODs; worst root gap=-0.0080 m; no retained grass roots below wave clearance
+PASS saved woody vegetation roots in all LODs: 359 trees / bamboo / shrubs / coconut / banana
