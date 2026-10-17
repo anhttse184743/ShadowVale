@@ -237,8 +237,9 @@ namespace ShadowVale.Map01
         private static bool Floor(Vector3 point, out RaycastHit floor)
         {
             foreach (var hit in Physics.RaycastAll(point + Vector3.up * 12, Vector3.down, 30, ~0, QueryTriggerInteraction.Ignore).OrderBy(h => h.distance))
-                if (hit.normal.y > .55f && hit.transform.root.name.StartsWith("Detailed layout") &&
-                    (hit.transform.name.StartsWith("Continuous hills") || hit.transform.name.IndexOf("ramp", StringComparison.OrdinalIgnoreCase) >= 0 || hit.transform.name.IndexOf("deck", StringComparison.OrdinalIgnoreCase) >= 0))
+                // The ground itself: hills, ramps, decks and the shelter's earth entrance (ShelterEntranceSetup), not props on it.
+                if (hit.normal.y > .55f && (hit.transform.name == "Natural entrance" || hit.transform.root.name.StartsWith("Detailed layout") &&
+                    (hit.transform.name.StartsWith("Continuous hills") || hit.transform.name.IndexOf("ramp", StringComparison.OrdinalIgnoreCase) >= 0 || hit.transform.name.IndexOf("deck", StringComparison.OrdinalIgnoreCase) >= 0)))
                     { floor = hit; return true; }
             floor = default; return false;
         }
