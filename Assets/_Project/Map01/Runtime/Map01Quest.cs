@@ -81,11 +81,12 @@ namespace ShadowVale.Map01
         };
         // Kept for old menu/test callers; binoculars are now a tool, not a forced perfect-stealth mission.
         public const string ScoutOrder="Chỉ huy: Hạ nhóm bảo vệ điểm một, lấy lại thuốc rồi mang về hầm.";
-        /// <summary>Stable ids of the stages, for telemetry's progression funnel (index = stage number).
-        /// The ids keep their names across the operations rework: they are part of the research data's format.</summary>
+        /// <summary>Stable ids of the stages, for telemetry's progression funnel (index = stage number). They name the
+        /// commander-led operations the stage numbers carry now (17/10/2026; before: scout_camps, report_scouting,
+        /// destroy_camps, report_camps, defeat_commander, report_commander). The save format keeps the numbers.</summary>
         public static readonly string[] StageIds = {
-            "rescue_hung", "escort_hung", "briefing", "scout_camps", "report_scouting",
-            "destroy_camps", "report_camps", "defeat_commander", "report_commander", "complete",
+            "rescue_hung", "escort_hung", "briefing", "op1_supplies", "report_supplies",
+            "op2_radio", "report_radio", "op3_commander", "report_retreat", "complete",
             "extraction", "boarding"
         };
 
