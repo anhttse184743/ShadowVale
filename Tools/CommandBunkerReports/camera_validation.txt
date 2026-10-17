@@ -1,0 +1,3 @@
+PASS commander diagonal shot includes mission board centre in viewport.
+PASS Nam approaches from the left without obscuring the officer or board centre.
+PASS Nam camera position matches original framing rule and FOV remains 48 degrees.

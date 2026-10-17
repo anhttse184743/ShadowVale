@@ -124,6 +124,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3719807147956865941}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1056614088172982004
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8891700114436669376}
+  m_Layer: 0
+  m_Name: "Shelter return \u2014 left aisle"
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8891700114436669376
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1056614088172982004}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -68.1, y: 0.20000076, z: -65.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3719807147956865941}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1068775311251416226
 GameObject:
   m_ObjectHideFlags: 0
@@ -401,7 +432,7 @@ Transform:
   m_GameObject: {fileID: 2749052703882163674}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -61, y: 0.2505724, z: -63}
+  m_LocalPosition: {x: -67.05, y: 0.21843855, z: -59.955498}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1010,6 +1041,7 @@ Transform:
   - {fileID: 7687415769415459658}
   - {fileID: 1596311436640283062}
   - {fileID: 1972611118581632607}
+  - {fileID: 8891700114436669376}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4698663359047520014
@@ -1062,6 +1094,7 @@ MonoBehaviour:
   - {fileID: 9192000143044240458}
   - {fileID: 8269587489131761575}
   - {fileID: 7899668628835279719}
+  - {fileID: 8891700114436669376}
   - {fileID: 2083432921716540117}
   safeEntry: {fileID: 8787001506982659413}
   shelterDoor: {fileID: 433000111307903606}
@@ -1079,10 +1112,29 @@ MonoBehaviour:
   hungWalkCycleSpeed: 1.4496603
   namKnifeWalkCycleSpeed: 1.94
   gunshot: {fileID: 8300000, guid: e8bcd2df7f0c31c4c90d6fb6857c5e81, type: 3}
+  introRadius: 40
+  introSeconds: 12
+  executionCameraSeconds: 3
+  executionAimSeconds: 0.8
+  executionHoldSeconds: 2
+  stonesPerPile: 3
+  stoneOffsets:
+  - {x: -9, y: 0, z: -44}
+  - {x: 9, y: 0, z: -44}
+  - {x: -18, y: 0, z: -32}
+  - {x: 16, y: 0, z: -32}
+  - {x: -22, y: 0, z: -20}
+  - {x: 20, y: 0, z: -20}
+  - {x: -16, y: 0, z: -9}
+  - {x: 12, y: 0, z: -12}
+  - {x: -28, y: 0, z: 5}
+  - {x: 24, y: 0, z: 7}
+  - {x: -12, y: 0, z: 18}
+  - {x: 12, y: 0, z: 20}
   namRunSpeed: 4.34
   hungRunSpeed: 6
   shelterCameraOffset: {x: 3, y: 2.1, z: -4}
-  interiorCameraOffset: {x: -4, y: 1.8, z: -2}
+  interiorCameraOffset: {x: 2.6, y: 1.8, z: -2.1}
   shelterCameraFov: 54
   cameraDamping: 0.22
   patrolVision: 20
@@ -1759,7 +1811,7 @@ Transform:
   m_GameObject: {fileID: 8774583522714831130}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -61, y: 0.2505724, z: -63}
+  m_LocalPosition: {x: -67.05, y: 0.21843855, z: -59.955498}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

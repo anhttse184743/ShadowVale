@@ -1,0 +1,1 @@
+PASS shared PhysicalRiver.mat, RiverWater simulation, amplitude=0.055, flow=0.65, 401 fitted bank rows; terrain and river level preserved.

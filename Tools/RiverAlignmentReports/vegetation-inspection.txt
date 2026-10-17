@@ -1,0 +1,650 @@
+BATCH Dense grass under clearing trees n=10535 gap=0.063..0.064 floating=10535 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Connected rice parcel 1 n=1954 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Young_LOD0 minY=-0.0005899668 farMinY=-0.0005899668
+BATCH Connected rice parcel 2 n=1644 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 3 n=1218 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 4 n=1764 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 5 n=1861 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Young_LOD0 minY=-0.0005899668 farMinY=-0.0005899668
+BATCH Connected rice parcel 6 n=2024 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 7 n=161 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 8 n=1328 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 9 n=1894 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Young_LOD0 minY=-0.0005899668 farMinY=-0.0005899668
+BATCH Connected rice parcel 10 n=2271 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 11 n=1993 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 12 n=1940 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 13 n=3087 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Young_LOD0 minY=-0.0005899668 farMinY=-0.0005899668
+BATCH Connected rice parcel 14 n=3541 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 15 n=3509 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 16 n=3112 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 17 n=1686 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Young_LOD0 minY=-0.0005899668 farMinY=-0.0005899668
+BATCH Connected rice parcel 18 n=2934 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 19 n=2542 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 20 n=3073 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 21 n=3873 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Young_LOD0 minY=-0.0005899668 farMinY=-0.0005899668
+BATCH Connected rice parcel 22 n=2649 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 23 n=3151 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 24 n=1882 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Ripe_LOD0 minY=-0.0005500317 farMinY=-0.0005300045
+BATCH Connected rice parcel 25 n=1554 gap=0.008..0.008 floating=0 wet=0 meshes=Botanical_Rice_Young_LOD0 minY=-0.0005899668 farMinY=-0.0005899668
+BATCH Dense Blender meadow (-6, -5) n=244 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-6, -4) n=237 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-6, -3) n=244 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-6, -2) n=891 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-6, -1) n=2006 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-6, 0) n=1848 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-6, 1) n=1724 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-6, 2) n=1041 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-6, 3) n=423 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-6, 4) n=320 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-5, 3) n=566 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-5, -2) n=1505 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-5, 2) n=2150 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-5, -4) n=97 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-5, -1) n=1845 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-5, -5) n=217 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-5, 1) n=2030 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-5, 4) n=407 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-5, 0) n=1563 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-5, -3) n=50 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-4, 2) n=1517 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-4, 3) n=475 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-4, -2) n=1595 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-4, -3) n=516 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-4, -4) n=388 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-4, 1) n=1760 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-4, -5) n=367 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-4, 0) n=938 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-4, 4) n=390 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-4, -1) n=1643 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-3, 2) n=1305 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-3, 3) n=646 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-3, -3) n=688 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-3, -2) n=2113 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-3, -4) n=470 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-3, 1) n=1234 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-3, 0) n=1142 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-3, -5) n=345 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-3, -1) n=1310 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-2, 3) n=1416 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-2, 2) n=2449 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-2, -4) n=495 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-2, 1) n=1788 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-2, 0) n=1971 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-3, 4) n=32 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-2, -3) n=1492 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-2, -5) n=303 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-2, 4) n=444 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-2, -2) n=2097 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-2, -1) n=2008 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-1, -5) n=259 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-1, 1) n=2548 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-1, 0) n=1988 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-1, 2) n=2558 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-1, 3) n=1421 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-1, -1) n=131 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-1, 4) n=260 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-1, -4) n=212 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (0, -5) n=253 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-1, -3) n=178 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (-1, -2) n=288 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (0, -4) n=252 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (0, 4) n=518 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (0, 0) n=249 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (0, -1) n=100 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (0, -2) n=322 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (0, 1) n=206 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (0, 3) n=376 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (0, 2) n=220 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (1, 1) n=303 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (1, 2) n=126 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (1, -5) n=519 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (1, 0) n=412 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (1, -4) n=388 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (1, 4) n=685 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (1, 3) n=439 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (1, -2) n=439 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (1, -3) n=468 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (2, 0) n=166 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (2, 1) n=703 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (2, -5) n=268 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (2, -1) n=764 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (2, 4) n=510 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (2, -2) n=71 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (2, 2) n=584 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (2, -4) n=315 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (2, -3) n=98 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (3, 1) n=203 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (3, -1) n=319 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (3, 0) n=160 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (3, -5) n=418 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (2, 3) n=331 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (3, -4) n=609 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (3, 4) n=465 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (3, -2) n=415 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (3, 3) n=467 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (3, 2) n=522 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (3, -3) n=674 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (4, 0) n=509 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (4, -1) n=341 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (4, -5) n=302 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (4, -4) n=734 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (4, 4) n=736 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (4, 1) n=585 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (4, 3) n=644 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (4, -2) n=291 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (4, -3) n=6 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (4, 2) n=56 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (5, -1) n=543 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (5, -2) n=483 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (5, -5) n=394 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (5, 4) n=550 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (5, -4) n=303 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (5, 1) n=382 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (5, -3) n=345 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (5, 0) n=336 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (5, 2) n=334 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+BATCH Dense Blender meadow (5, 3) n=335 gap=0.007..0.007 floating=0 wet=0 meshes=Roadside_Meadow_LOD0 minY=0 farMinY=0
+PATCH 158 pos=(-2.122, 1.000, 19.652) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 159 pos=(13.566, 1.000, 43.770) gap=0.000..1.784 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 160 pos=(-1.536, 1.000, 25.223) gap=0.000..0.880 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 161 pos=(-1.814, 1.000, -95.958) gap=0.000..1.594 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 162 pos=(-23.818, 1.000, -57.526) gap=0.000..1.359 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 163 pos=(-9.219, 1.000, -22.119) gap=0.000..1.785 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 164 pos=(-2.965, 1.000, -96.231) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 165 pos=(-1.748, 1.000, 32.483) gap=0.000..1.742 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 166 pos=(13.915, 1.000, 17.782) gap=0.000..0.994 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 167 pos=(-27.606, 1.000, -31.097) gap=0.000..0.601 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 168 pos=(16.221, 1.000, 28.211) gap=0.000..1.779 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 169 pos=(-9.214, 1.000, -68.020) gap=0.000..1.729 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 170 pos=(-17.556, 1.000, 90.740) gap=0.000..1.794 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 171 pos=(-1.951, 1.000, 95.941) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 172 pos=(-23.280, 1.000, -65.835) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 173 pos=(2.719, 1.000, 86.224) gap=0.000..1.797 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 174 pos=(-2.162, 1.000, 95.328) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 175 pos=(-9.260, 1.000, -58.821) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 176 pos=(-18.297, 1.000, -91.367) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 177 pos=(-8.097, 1.000, -70.112) gap=0.000..0.946 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 178 pos=(-25.756, 1.000, -42.302) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 179 pos=(-2.099, 1.000, -95.890) gap=0.000..1.351 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 180 pos=(-3.580, 1.000, 12.210) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 181 pos=(-8.975, 1.000, -46.095) gap=0.000..1.025 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 182 pos=(-5.052, 1.000, 10.118) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 183 pos=(16.560, 1.000, 32.111) gap=0.000..0.808 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 184 pos=(-5.000, 1.000, 55.922) gap=0.000..1.350 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 185 pos=(15.289, 1.000, 24.700) gap=0.000..1.783 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 186 pos=(-2.984, 1.000, 16.495) gap=0.000..1.550 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 187 pos=(-8.996, 1.000, -59.461) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 188 pos=(-10.840, 0.460, 6.130) gap=-0.540..0.025 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 189 pos=(-8.272, 1.000, -57.818) gap=0.000..1.783 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 190 pos=(-27.593, 1.000, -33.647) gap=0.000..1.200 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 191 pos=(12.385, 1.000, 52.349) gap=0.000..1.223 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 192 pos=(-25.732, 1.000, -44.968) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 193 pos=(3.935, 1.000, 82.357) gap=0.000..1.777 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 194 pos=(-16.510, 1.000, 96.490) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 195 pos=(1.408, 1.000, 87.330) gap=0.000..1.790 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 196 pos=(-18.609, 1.000, 95.199) gap=0.000..1.760 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 197 pos=(11.437, 1.000, 54.943) gap=0.000..1.797 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 198 pos=(-4.410, 1.000, 56.412) gap=0.000..1.358 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 199 pos=(-10.142, 1.000, -36.617) gap=0.000..1.584 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 200 pos=(-2.469, 1.000, 38.472) gap=0.000..1.789 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 201 pos=(-9.501, 1.000, -48.629) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 202 pos=(-1.090, 1.000, 34.624) gap=0.000..1.555 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 203 pos=(-24.411, 1.000, -48.268) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 204 pos=(13.563, 1.000, 46.817) gap=0.000..1.212 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 205 pos=(-23.186, 1.000, -58.062) gap=0.000..1.757 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 206 pos=(16.481, 1.000, 27.838) gap=0.000..1.484 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 207 pos=(-23.881, 1.000, -53.949) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 208 pos=(15.962, 1.000, 30.544) gap=0.000..1.798 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 209 pos=(-18.357, 1.000, 91.752) gap=0.000..1.658 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 210 pos=(-2.854, 1.000, 95.372) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 211 pos=(-23.375, 1.000, -63.315) gap=0.000..1.667 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 212 pos=(13.045, 1.000, 48.958) gap=0.000..1.496 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 213 pos=(-23.369, 1.000, -55.548) gap=0.000..1.758 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 214 pos=(14.865, 1.000, 19.782) gap=0.000..1.714 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 215 pos=(-11.553, 1.000, 80.529) gap=0.000..1.636 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 216 pos=(-4.628, 1.000, -96.967) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 217 pos=(-9.207, 1.000, -52.025) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 218 pos=(-1.867, 1.000, 23.289) gap=0.000..0.726 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 219 pos=(11.307, 1.000, 12.074) gap=0.000..1.604 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 220 pos=(-19.893, 1.000, -93.321) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 221 pos=(-5.626, 1.000, -14.326) gap=0.000..1.798 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 222 pos=(-27.626, 1.000, -31.926) gap=0.000..1.054 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 223 pos=(14.106, 1.000, 19.559) gap=0.000..1.718 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 224 pos=(-6.290, 1.000, 7.281) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 225 pos=(-10.389, 1.000, -38.182) gap=0.000..1.673 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 226 pos=(-12.668, 1.000, 83.173) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 227 pos=(-4.986, 1.000, -84.481) gap=0.000..1.113 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 228 pos=(-25.175, 1.000, -23.608) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 229 pos=(-9.542, 1.000, -49.447) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 230 pos=(11.623, 1.000, 53.932) gap=0.000..1.770 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 231 pos=(-27.073, 1.000, -33.457) gap=0.000..1.778 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 232 pos=(14.927, 1.000, 39.676) gap=0.000..1.392 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 233 pos=(-0.573, 1.000, 26.648) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 234 pos=(-1.084, 1.000, -94.990) gap=0.000..1.234 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 235 pos=(-15.436, 1.000, 87.786) gap=0.000..1.795 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 236 pos=(10.675, 1.000, 56.930) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 237 pos=(-26.371, 1.000, -25.207) gap=0.000..1.781 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 238 pos=(-8.644, 1.000, -21.265) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 239 pos=(-21.574, 1.000, -79.690) gap=0.000..1.782 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 240 pos=(-26.066, 1.000, -24.799) gap=0.000..1.775 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 241 pos=(-7.365, 1.000, 72.544) gap=0.000..1.684 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 242 pos=(-10.256, 1.000, -35.503) gap=0.000..1.759 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 243 pos=(-11.084, 1.000, 79.327) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 244 pos=(12.930, 1.000, 47.090) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 245 pos=(-25.857, 1.000, -42.747) gap=0.000..1.627 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 246 pos=(12.700, 1.000, 16.593) gap=0.000..1.798 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 247 pos=(-8.916, 1.000, -66.812) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 248 pos=(-4.814, 1.000, 54.497) gap=0.000..1.793 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 249 pos=(-2.288, 1.000, 94.393) gap=0.000..1.623 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 250 pos=(-14.141, 1.000, 84.978) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 251 pos=(-8.798, 1.000, -67.733) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 252 pos=(-19.318, 1.000, -91.937) gap=0.000..1.265 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 253 pos=(-23.595, 1.000, -64.017) gap=0.000..1.796 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 254 pos=(15.685, 1.000, 31.154) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 255 pos=(-21.813, 1.000, -80.673) gap=0.000..1.789 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 256 pos=(14.029, 1.000, 17.536) gap=0.000..1.660 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 257 pos=(-18.384, 1.000, 92.951) gap=0.000..1.711 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 258 pos=(-7.591, 1.000, -17.973) gap=0.000..1.409 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 259 pos=(-24.699, 1.000, -21.097) gap=0.000..1.489 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 260 pos=(16.504, 1.000, 32.829) gap=0.000..0.836 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 261 pos=(-24.673, 1.000, -21.518) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 262 pos=(10.423, 1.000, 11.418) gap=0.000..1.798 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 263 pos=(-23.976, 1.000, -61.361) gap=0.000..1.453 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 264 pos=(13.594, 1.000, 46.210) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 265 pos=(-8.505, 1.000, 75.462) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 266 pos=(-0.107, 1.000, 96.992) gap=0.000..1.797 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 267 pos=(-2.841, 1.000, 15.945) gap=0.000..1.451 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 268 pos=(-4.561, 1.000, -96.832) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 269 pos=(-23.977, 1.000, -57.548) gap=0.000..1.473 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 270 pos=(15.710, 1.000, 25.118) gap=0.000..1.215 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 271 pos=(-3.821, 1.000, 54.829) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 272 pos=(-2.748, 1.000, 95.685) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 273 pos=(-8.166, 1.000, -18.503) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 274 pos=(-4.504, 1.000, 60.056) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 275 pos=(9.811, 1.000, 63.433) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 276 pos=(-23.498, 1.000, -53.707) gap=0.000..1.700 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 277 pos=(-5.647, 1.000, -84.361) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 278 pos=(-5.277, 1.000, -11.970) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 279 pos=(-20.339, 1.000, -93.693) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 280 pos=(13.454, 1.000, 16.338) gap=0.000..1.702 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 281 pos=(-9.713, 1.000, -37.413) gap=0.000..1.572 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 282 pos=(4.514, 1.000, 83.103) gap=0.000..1.646 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 283 pos=(-17.268, 1.000, 89.262) gap=0.000..1.383 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 284 pos=(0.600, 1.000, 89.793) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 285 pos=(-19.002, 1.000, -91.460) gap=0.000..1.786 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 286 pos=(9.890, 1.000, 10.216) gap=0.000..1.684 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 287 pos=(-10.005, 1.000, -31.587) gap=0.000..1.058 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 288 pos=(-5.273, 1.000, 9.383) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 289 pos=(7.779, 1.000, 7.763) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 290 pos=(-3.312, 1.000, 49.101) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 291 pos=(16.445, 1.000, 33.407) gap=0.000..1.646 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 292 pos=(-7.884, 1.000, 73.527) gap=0.000..1.750 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 293 pos=(11.602, 1.000, 51.902) gap=0.000..1.798 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 294 pos=(11.594, 1.000, 13.295) gap=0.000..1.467 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 295 pos=(-26.661, 1.000, -28.476) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 296 pos=(10.886, 1.000, 60.036) gap=0.000..1.781 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 297 pos=(-6.027, 1.000, 8.479) gap=0.000..1.644 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 298 pos=(-9.814, 1.000, -32.162) gap=0.000..0.775 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 299 pos=(-26.550, 1.000, -38.423) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+PATCH 300 pos=(10.515, 1.000, 12.121) gap=0.000..1.800 n=1875 bounds=Center: (-0.02, 0.32, -0.04), Extents: (1.64, 0.32, 1.51)
+GARDEN Tree_0 at=(-32.818, 0.912, -42.240) meshes=Forest_0_LOD0,Forest_0_LOD1,Forest_0_LOD2
+GARDEN Tree_1 at=(-34.403, 0.903, -32.034) meshes=Forest_1_LOD0,Forest_1_LOD1,Forest_1_LOD2
+GARDEN Tree_3 at=(-10.333, 0.908, 63.510) meshes=Forest_3_LOD0,Forest_3_LOD1,Forest_3_LOD2
+GARDEN Tree_4 at=(-32.602, 0.901, -35.697) meshes=Forest_4_LOD0,Forest_4_LOD1,Forest_4_LOD2
+GARDEN Tree_1 at=(-31.659, 0.915, -44.295) meshes=Forest_1_LOD0,Forest_1_LOD1,Forest_1_LOD2
+GARDEN Tree_3 at=(-35.263, 0.914, -34.135) meshes=Forest_3_LOD0,Forest_3_LOD1,Forest_3_LOD2
+GARDEN Tree_0 at=(-32.847, 0.952, -43.316) meshes=Forest_0_LOD0,Forest_0_LOD1,Forest_0_LOD2
+GARDEN Tree_2 at=(-8.138, 0.906, 22.964) meshes=Forest_2_LOD0,Forest_2_LOD1,Forest_2_LOD2
+GARDEN Tree_4 at=(-31.672, 0.953, -46.017) meshes=Forest_4_LOD0,Forest_4_LOD1,Forest_4_LOD2
+GARDEN Tree_3 at=(-31.917, 0.954, -28.506) meshes=Forest_3_LOD0,Forest_3_LOD1,Forest_3_LOD2
+GARDEN Tree_0 at=(-10.697, 0.908, 56.749) meshes=Forest_0_LOD0,Forest_0_LOD1,Forest_0_LOD2
+GARDEN Tree_1 at=(-33.609, 0.953, -34.311) meshes=Forest_1_LOD0,Forest_1_LOD1,Forest_1_LOD2
+GARDEN Tree_3 at=(-30.636, 0.954, -42.221) meshes=Forest_3_LOD0,Forest_3_LOD1,Forest_3_LOD2
+GARDEN Tree_0 at=(-11.164, 0.952, 59.719) meshes=Forest_0_LOD0,Forest_0_LOD1,Forest_0_LOD2
+GARDEN Tree_2 at=(-6.540, 0.902, 33.485) meshes=Forest_2_LOD0,Forest_2_LOD1,Forest_2_LOD2
+GARDEN Tree_1 at=(-13.711, 0.952, 69.568) meshes=Forest_1_LOD0,Forest_1_LOD1,Forest_1_LOD2
+GARDEN Tree_2 at=(-32.340, 0.953, -22.467) meshes=Forest_2_LOD0,Forest_2_LOD1,Forest_2_LOD2
+GARDEN Tree_4 at=(-30.015, 0.911, -20.241) meshes=Forest_4_LOD0,Forest_4_LOD1,Forest_4_LOD2
+GARDEN Tree_3 at=(-13.077, 0.953, 65.015) meshes=Forest_3_LOD0,Forest_3_LOD1,Forest_3_LOD2
+GARDEN Tree_0 at=(-11.480, 0.952, 47.108) meshes=Forest_0_LOD0,Forest_0_LOD1,Forest_0_LOD2
+GARDEN Tree_4 at=(-7.888, 0.907, 42.931) meshes=Forest_4_LOD0,Forest_4_LOD1,Forest_4_LOD2
+GARDEN Tree_3 at=(-8.916, 0.903, 21.776) meshes=Forest_3_LOD0,Forest_3_LOD1,Forest_3_LOD2
+GARDEN Tree_2 at=(-29.973, 0.907, -42.858) meshes=Forest_2_LOD0,Forest_2_LOD1,Forest_2_LOD2
+GARDEN Tree_1 at=(-13.413, 0.952, 66.379) meshes=Forest_1_LOD0,Forest_1_LOD1,Forest_1_LOD2
+GARDEN Tree_3 at=(-8.220, 0.954, 30.453) meshes=Forest_3_LOD0,Forest_3_LOD1,Forest_3_LOD2
+GARDEN Tree_0 at=(-29.874, 0.953, -44.292) meshes=Forest_0_LOD0,Forest_0_LOD1,Forest_0_LOD2
+GARDEN Tree_4 at=(-30.637, 0.954, -43.548) meshes=Forest_4_LOD0,Forest_4_LOD1,Forest_4_LOD2
+GARDEN Tree_3 at=(-12.009, 0.954, 53.331) meshes=Forest_3_LOD0,Forest_3_LOD1,Forest_3_LOD2
+GARDEN Tree_0 at=(-12.360, 0.952, 6.898) meshes=Forest_0_LOD0,Forest_0_LOD1,Forest_0_LOD2
+GARDEN Tree_1 at=(-20.010, 0.909, -5.890) meshes=Forest_1_LOD0,Forest_1_LOD1,Forest_1_LOD2
+GARDEN Tree_0 at=(83.497, 0.907, -76.373) meshes=Forest_0_LOD0,Forest_0_LOD1,Forest_0_LOD2
+GARDEN Tree_2 at=(-10.814, 0.953, 77.195) meshes=Forest_2_LOD0,Forest_2_LOD1,Forest_2_LOD2
+GARDEN Tree_3 at=(-20.160, 0.921, -92.101) meshes=Forest_3_LOD0,Forest_3_LOD1,Forest_3_LOD2
+GARDEN Tree_2 at=(-22.476, 0.878, -93.979) meshes=Forest_2_LOD0,Forest_2_LOD1,Forest_2_LOD2
+GARDEN Tree_2 at=(-12.068, 0.901, 80.317) meshes=Forest_2_LOD0,Forest_2_LOD1,Forest_2_LOD2
+GARDEN Coconut at field edge at=(-88.235, 1.000, -53.927) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(-93.842, 1.000, -21.505) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(-99.280, 1.000, 7.704) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(-94.760, 1.000, 35.028) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(-85.519, 1.000, 60.908) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(-36.195, 1.000, -59.322) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(-45.621, 1.000, -31.423) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(-41.876, 1.000, -0.901) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(-35.831, 1.000, 32.947) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(-35.665, 1.000, 66.937) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(16.011, 1.000, -60.510) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(12.967, 1.000, -23.751) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(24.020, 1.000, 12.397) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(21.859, 1.000, 45.960) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(16.576, 1.000, 74.395) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(74.896, 1.000, -50.886) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(82.492, 1.000, -22.497) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(89.506, 1.000, 4.677) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(77.713, 1.000, 32.931) meshes=Coconut_LOD1
+GARDEN Coconut at field edge at=(78.107, 1.000, 62.002) meshes=Coconut_LOD1
+GARDEN Defensive sandbag position at=(81.439, 1.000, 77.821) meshes=Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube
+GARDEN Defensive sandbag position at=(78.710, 1.000, -74.122) meshes=Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube,Cube
+GARDEN Timber evacuation landing at=(-3.936, 1.150, 67.546) meshes=Cube
+GARDEN Canal boat at=(0.450, 0.210, 68.876) meshes=Boat_Floating
+GARDEN Timber evacuation landing at=(-17.745, 1.150, -86.194) meshes=Cube
+GARDEN Canal boat at=(-12.725, 0.210, -87.810) meshes=Boat_Floating
+GARDEN Grassy irregular landing clearing at=(0.000, 0.000, 0.000) meshes=Natural_Patch_259
+GARDEN Blender banyan 1 at=(-91.725, -0.350, -15.671) meshes=Botanical_Banyan_LOD0,Botanical_Banyan_LOD1
+GARDEN Banana garden clump at=(-89.436, -0.350, -18.153) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-94.104, -0.350, -33.545) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-90.883, -0.350, -17.872) meshes=Banana_LOD1
+GARDEN Harvest haystack at=(-84.000, 0.060, -20.860) meshes=Natural_Haystack
+GARDEN Weathered garden fence post at=(-79.285, 0.225, -30.309) meshes=Cube
+GARDEN Bamboo garden rail at=(-79.209, 0.375, -29.916) meshes=Cube
+GARDEN Weathered garden fence post at=(-79.133, 0.225, -29.523) meshes=Cube
+GARDEN Bamboo garden rail at=(-79.056, 0.375, -29.131) meshes=Cube
+GARDEN Weathered garden fence post at=(-78.980, 0.225, -28.738) meshes=Cube
+GARDEN Bamboo garden rail at=(-78.904, 0.375, -28.345) meshes=Cube
+GARDEN Weathered garden fence post at=(-78.828, 0.225, -27.953) meshes=Cube
+GARDEN Bamboo garden rail at=(-78.752, 0.375, -27.560) meshes=Cube
+GARDEN Weathered garden fence post at=(-78.675, 0.225, -27.167) meshes=Cube
+GARDEN Banana garden clump at=(-58.375, 0.520, -20.911) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-74.186, 0.520, -23.459) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-58.038, 0.520, -23.793) meshes=Banana_LOD1
+GARDEN Harvest haystack at=(-59.739, 0.520, -30.752) meshes=Natural_Haystack
+GARDEN Blender banyan 3 at=(-33.666, 0.520, -37.956) meshes=Botanical_Banyan_LOD0,Botanical_Banyan_LOD1
+GARDEN Banana garden clump at=(-35.843, 0.520, -37.077) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-44.906, 0.520, -23.880) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-37.824, 0.520, -38.536) meshes=Banana_LOD1
+GARDEN Harvest haystack at=(-43.581, 0.520, -39.672) meshes=Natural_Haystack
+GARDEN Weathered garden fence post at=(-51.818, 1.095, -38.605) meshes=Cube
+GARDEN Bamboo garden rail at=(-51.580, 1.245, -38.927) meshes=Cube
+GARDEN Weathered garden fence post at=(-51.343, 1.095, -39.249) meshes=Cube
+GARDEN Bamboo garden rail at=(-51.106, 1.245, -39.571) meshes=Cube
+GARDEN Weathered garden fence post at=(-50.869, 1.095, -39.893) meshes=Cube
+GARDEN Bamboo garden rail at=(-50.631, 1.245, -40.215) meshes=Cube
+GARDEN Weathered garden fence post at=(-50.394, 1.095, -40.537) meshes=Cube
+GARDEN Bamboo garden rail at=(-50.157, 1.245, -40.859) meshes=Cube
+GARDEN Weathered garden fence post at=(-49.920, 1.095, -41.181) meshes=Cube
+GARDEN Banana garden clump at=(-97.705, -0.350, 3.531) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-103.303, -0.350, -11.458) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-95.652, -0.350, 2.774) meshes=Banana_LOD1
+GARDEN Harvest haystack at=(-90.955, -0.350, -1.622) meshes=Natural_Haystack
+GARDEN Weathered garden fence post at=(-88.402, 0.225, -12.047) meshes=Cube
+GARDEN Bamboo garden rail at=(-88.264, 0.375, -11.672) meshes=Cube
+GARDEN Weathered garden fence post at=(-88.125, 0.225, -11.297) meshes=Cube
+GARDEN Bamboo garden rail at=(-87.987, 0.375, -10.922) meshes=Cube
+GARDEN Weathered garden fence post at=(-87.849, 0.225, -10.546) meshes=Cube
+GARDEN Bamboo garden rail at=(-87.710, 0.375, -10.171) meshes=Cube
+GARDEN Weathered garden fence post at=(-87.572, 0.225, -9.796) meshes=Cube
+GARDEN Bamboo garden rail at=(-87.433, 0.375, -9.420) meshes=Cube
+GARDEN Weathered garden fence post at=(-87.295, 0.225, -9.045) meshes=Cube
+GARDEN Blender banyan 5 at=(-62.565, 0.520, -5.245) meshes=Botanical_Banyan_LOD0,Botanical_Banyan_LOD1
+GARDEN Banana garden clump at=(-65.196, 0.520, -7.990) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-80.777, 0.520, -4.339) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-64.348, 0.520, -4.016) meshes=Banana_LOD1
+GARDEN Harvest haystack at=(-68.844, 0.520, -13.108) meshes=Natural_Haystack
+GARDEN Blender banyan 6 at=(-65.011, 0.520, -17.855) meshes=Botanical_Banyan_LOD0,Botanical_Banyan_LOD1
+GARDEN Banana garden clump at=(-40.281, 0.520, -22.725) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-45.328, 0.520, -7.533) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-37.243, 0.520, -21.829) meshes=Banana_LOD1
+GARDEN Harvest haystack at=(-48.406, 0.520, -22.517) meshes=Natural_Haystack
+GARDEN Weathered garden fence post at=(-56.916, 1.095, -14.871) meshes=Cube
+GARDEN Bamboo garden rail at=(-56.803, 1.245, -15.255) meshes=Cube
+GARDEN Weathered garden fence post at=(-56.689, 1.095, -15.639) meshes=Cube
+GARDEN Bamboo garden rail at=(-56.576, 1.245, -16.022) meshes=Cube
+GARDEN Weathered garden fence post at=(-56.463, 1.095, -16.406) meshes=Cube
+GARDEN Bamboo garden rail at=(-56.350, 1.245, -16.790) meshes=Cube
+GARDEN Weathered garden fence post at=(-56.236, 1.095, -17.173) meshes=Cube
+GARDEN Bamboo garden rail at=(-56.123, 1.245, -17.557) meshes=Cube
+GARDEN Weathered garden fence post at=(-56.010, 1.095, -17.940) meshes=Cube
+GARDEN Blender banyan 7 at=(-98.987, -0.350, 22.626) meshes=Botanical_Banyan_LOD0,Botanical_Banyan_LOD1
+GARDEN Banana garden clump at=(-100.463, -0.350, 20.789) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-99.363, -0.350, 4.542) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-99.598, -0.350, 20.685) meshes=Banana_LOD1
+GARDEN Weathered garden fence post at=(-85.524, 0.225, 8.924) meshes=Cube
+GARDEN Bamboo garden rail at=(-85.477, 0.375, 9.321) meshes=Cube
+GARDEN Weathered garden fence post at=(-85.429, 0.225, 9.718) meshes=Cube
+GARDEN Bamboo garden rail at=(-85.381, 0.375, 10.115) meshes=Cube
+GARDEN Weathered garden fence post at=(-85.334, 0.225, 10.512) meshes=Cube
+GARDEN Bamboo garden rail at=(-85.286, 0.375, 10.909) meshes=Cube
+GARDEN Weathered garden fence post at=(-85.238, 0.225, 11.307) meshes=Cube
+GARDEN Bamboo garden rail at=(-85.190, 0.375, 11.704) meshes=Cube
+GARDEN Weathered garden fence post at=(-85.143, 0.225, 12.101) meshes=Cube
+GARDEN Blender banyan 8 at=(-30.017, 0.520, 18.099) meshes=Botanical_Banyan_LOD0,Botanical_Banyan_LOD1
+GARDEN Banana garden clump at=(-26.897, 0.520, 0.298) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-28.378, 0.520, 16.230) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-26.715, 0.520, 0.313) meshes=Banana_LOD1
+GARDEN Harvest haystack at=(-37.486, 0.520, 1.303) meshes=Natural_Haystack
+GARDEN Blender banyan 9 at=(-91.259, 0.520, 44.964) meshes=Botanical_Banyan_LOD0,Botanical_Banyan_LOD1
+GARDEN Banana garden clump at=(-90.882, 0.520, 42.603) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-95.739, 0.520, 27.245) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-91.170, 0.520, 42.732) meshes=Banana_LOD1
+GARDEN Harvest haystack at=(-84.890, 0.520, 37.174) meshes=Natural_Haystack
+GARDEN Weathered garden fence post at=(-82.850, 1.095, 27.395) meshes=Cube
+GARDEN Bamboo garden rail at=(-82.687, 1.245, 27.760) meshes=Cube
+GARDEN Weathered garden fence post at=(-82.523, 1.095, 28.124) meshes=Cube
+GARDEN Bamboo garden rail at=(-82.359, 1.245, 28.489) meshes=Cube
+GARDEN Weathered garden fence post at=(-82.195, 1.095, 28.854) meshes=Cube
+GARDEN Bamboo garden rail at=(-82.032, 1.245, 29.219) meshes=Cube
+GARDEN Weathered garden fence post at=(-81.868, 1.095, 29.584) meshes=Cube
+GARDEN Bamboo garden rail at=(-81.704, 1.245, 29.949) meshes=Cube
+GARDEN Weathered garden fence post at=(-81.541, 1.095, 30.314) meshes=Cube
+GARDEN Banana garden clump at=(-51.162, -0.350, 31.595) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-66.704, -0.350, 36.233) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-51.077, -0.350, 32.271) meshes=Banana_LOD1
+GARDEN Harvest haystack at=(-54.372, -0.350, 26.122) meshes=Natural_Haystack
+GARDEN Weathered garden fence post at=(-62.564, 0.225, 21.108) meshes=Cube
+GARDEN Bamboo garden rail at=(-62.167, 0.375, 21.058) meshes=Cube
+GARDEN Weathered garden fence post at=(-61.771, 0.225, 21.008) meshes=Cube
+GARDEN Bamboo garden rail at=(-61.374, 0.375, 20.957) meshes=Cube
+GARDEN Weathered garden fence post at=(-60.977, 0.225, 20.907) meshes=Cube
+GARDEN Bamboo garden rail at=(-60.580, 0.375, 20.857) meshes=Cube
+GARDEN Weathered garden fence post at=(-60.183, 0.225, 20.807) meshes=Cube
+GARDEN Bamboo garden rail at=(-59.786, 0.375, 20.757) meshes=Cube
+GARDEN Weathered garden fence post at=(-59.389, 0.225, 20.707) meshes=Cube
+GARDEN Blender banyan 11 at=(-23.310, 0.520, 26.582) meshes=Botanical_Banyan_LOD0,Botanical_Banyan_LOD1
+GARDEN Banana garden clump at=(-23.460, 0.520, 28.730) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-29.603, 0.520, 43.530) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-26.333, 0.520, 27.347) meshes=Banana_LOD1
+GARDEN Harvest haystack at=(-33.371, 0.520, 26.736) meshes=Natural_Haystack
+GARDEN Blender banyan 12 at=(-89.260, 0.520, 41.077) meshes=Botanical_Banyan_LOD0,Botanical_Banyan_LOD1
+GARDEN Banana garden clump at=(-89.614, 0.520, 59.137) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-89.791, 0.520, 43.115) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-86.304, 0.520, 58.923) meshes=Banana_LOD1
+GARDEN Harvest haystack at=(-79.282, 0.520, 55.966) meshes=Natural_Haystack
+GARDEN Weathered garden fence post at=(-73.776, 1.095, 48.095) meshes=Cube
+GARDEN Bamboo garden rail at=(-73.751, 1.245, 48.494) meshes=Cube
+GARDEN Weathered garden fence post at=(-73.725, 1.095, 48.894) meshes=Cube
+GARDEN Bamboo garden rail at=(-73.699, 1.245, 49.293) meshes=Cube
+GARDEN Weathered garden fence post at=(-73.674, 1.095, 49.692) meshes=Cube
+GARDEN Bamboo garden rail at=(-73.648, 1.245, 50.091) meshes=Cube
+GARDEN Weathered garden fence post at=(-73.622, 1.095, 50.490) meshes=Cube
+GARDEN Bamboo garden rail at=(-73.596, 1.245, 50.890) meshes=Cube
+GARDEN Weathered garden fence post at=(-73.571, 1.095, 51.289) meshes=Cube
+GARDEN Blender banyan 13 at=(-50.554, -0.350, 57.547) meshes=Botanical_Banyan_LOD0,Botanical_Banyan_LOD1
+GARDEN Banana garden clump at=(-52.564, -0.350, 57.501) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-69.710, 0.840, 53.850) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-52.284, -0.350, 55.261) meshes=Banana_LOD1
+GARDEN Harvest haystack at=(-53.904, -0.350, 48.059) meshes=Natural_Haystack
+GARDEN Weathered garden fence post at=(-58.712, 0.225, 41.188) meshes=Cube
+GARDEN Weathered garden fence post (1) at=(-58.712, 0.225, 41.188) meshes=Cube
+GARDEN Bamboo garden rail at=(-58.287, 0.375, 41.237) meshes=Cube
+GARDEN Bamboo garden rail (1) at=(-58.287, 0.375, 41.237) meshes=Cube
+GARDEN Weathered garden fence post at=(-57.918, 0.225, 41.287) meshes=Cube
+GARDEN Weathered garden fence post (2) at=(-57.918, 0.225, 41.287) meshes=Cube
+GARDEN Bamboo garden rail at=(-57.521, 0.375, 41.336) meshes=Cube
+GARDEN Bamboo garden rail (2) at=(-57.521, 0.375, 41.336) meshes=Cube
+GARDEN Weathered garden fence post at=(-57.124, 0.225, 41.386) meshes=Cube
+GARDEN Weathered garden fence post (3) at=(-57.124, 0.225, 41.386) meshes=Cube
+GARDEN Bamboo garden rail at=(-58.682, 0.520, 41.905) meshes=Cube
+GARDEN Weathered garden fence post at=(-56.330, 0.225, 41.485) meshes=Cube
+GARDEN Weathered garden fence post (4) at=(-56.330, 0.225, 41.485) meshes=Cube
+GARDEN Bamboo garden rail at=(-55.933, 0.375, 41.535) meshes=Cube
+GARDEN Bamboo garden rail (3) at=(-55.933, 0.375, 41.535) meshes=Cube
+GARDEN Weathered garden fence post at=(-55.536, 0.225, 41.584) meshes=Cube
+GARDEN Weathered garden fence post (5) at=(-55.536, 0.225, 41.584) meshes=Cube
+GARDEN Banana garden clump at=(-25.321, 0.520, 53.689) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-32.018, 0.520, 68.230) meshes=Banana_LOD1
+GARDEN Banana garden clump at=(-26.317, 0.520, 53.190) meshes=Banana_LOD1
+GARDEN Harvest haystack at=(-35.531, 0.520, 51.366) meshes=Natural_Haystack
+GARDEN Blender banyan 19 at=(-31.142, 0.520, -5.757) meshes=Botanical_Banyan_LOD0,Botanical_Banyan_LOD1
+GARDEN Blender banyan 20 at=(-26.992, 0.520, -3.148) meshes=Botanical_Banyan_LOD0,Botanical_Banyan_LOD1
+GARDEN Blender banyan 27 at=(-69.497, 0.520, 24.053) meshes=Botanical_Banyan_LOD0,Botanical_Banyan_LOD1
+GARDEN Blender banyan 29 at=(-66.991, 0.520, 21.387) meshes=Botanical_Banyan_LOD0,Botanical_Banyan_LOD1
+GARDEN Patchy canal grasses at=(-2.122, 1.000, 19.652) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(13.566, 1.000, 43.770) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-1.536, 1.000, 25.223) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-1.814, 1.000, -95.958) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-23.818, 1.000, -57.526) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-9.219, 1.000, -22.119) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-2.965, 1.000, -96.231) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-1.748, 1.000, 32.483) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(13.915, 1.000, 17.782) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-27.606, 1.000, -31.097) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(16.221, 1.000, 28.211) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-9.214, 1.000, -68.020) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-17.556, 1.000, 90.740) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-1.951, 1.000, 95.941) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-23.280, 1.000, -65.835) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(2.719, 1.000, 86.224) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-2.162, 1.000, 95.328) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-9.260, 1.000, -58.821) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-18.297, 1.000, -91.367) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-8.097, 1.000, -70.112) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-25.756, 1.000, -42.302) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-2.099, 1.000, -95.890) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-3.580, 1.000, 12.210) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-8.975, 1.000, -46.095) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-5.052, 1.000, 10.118) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(16.560, 1.000, 32.111) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-5.000, 1.000, 55.922) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(15.289, 1.000, 24.700) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-2.984, 1.000, 16.495) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-8.996, 1.000, -59.461) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-10.840, 0.460, 6.130) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-8.272, 1.000, -57.818) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-27.593, 1.000, -33.647) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(12.385, 1.000, 52.349) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-25.732, 1.000, -44.968) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(3.935, 1.000, 82.357) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-16.510, 1.000, 96.490) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(1.408, 1.000, 87.330) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-18.609, 1.000, 95.199) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(11.437, 1.000, 54.943) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-4.410, 1.000, 56.412) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-10.142, 1.000, -36.617) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-2.469, 1.000, 38.472) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-9.501, 1.000, -48.629) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-1.090, 1.000, 34.624) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-24.411, 1.000, -48.268) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(13.563, 1.000, 46.817) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-23.186, 1.000, -58.062) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(16.481, 1.000, 27.838) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-23.881, 1.000, -53.949) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(15.962, 1.000, 30.544) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-18.357, 1.000, 91.752) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-2.854, 1.000, 95.372) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-23.375, 1.000, -63.315) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(13.045, 1.000, 48.958) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-23.369, 1.000, -55.548) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(14.865, 1.000, 19.782) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-11.553, 1.000, 80.529) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-4.628, 1.000, -96.967) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-9.207, 1.000, -52.025) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-1.867, 1.000, 23.289) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(11.307, 1.000, 12.074) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-19.893, 1.000, -93.321) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-5.626, 1.000, -14.326) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-27.626, 1.000, -31.926) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(14.106, 1.000, 19.559) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-6.290, 1.000, 7.281) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-10.389, 1.000, -38.182) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-12.668, 1.000, 83.173) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-4.986, 1.000, -84.481) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-25.175, 1.000, -23.608) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-9.542, 1.000, -49.447) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(11.623, 1.000, 53.932) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-27.073, 1.000, -33.457) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(14.927, 1.000, 39.676) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-0.573, 1.000, 26.648) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-1.084, 1.000, -94.990) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-15.436, 1.000, 87.786) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(10.675, 1.000, 56.930) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-26.371, 1.000, -25.207) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-8.644, 1.000, -21.265) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-21.574, 1.000, -79.690) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-26.066, 1.000, -24.799) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-7.365, 1.000, 72.544) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-10.256, 1.000, -35.503) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-11.084, 1.000, 79.327) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(12.930, 1.000, 47.090) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-25.857, 1.000, -42.747) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(12.700, 1.000, 16.593) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-8.916, 1.000, -66.812) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-4.814, 1.000, 54.497) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-2.288, 1.000, 94.393) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-14.141, 1.000, 84.978) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-8.798, 1.000, -67.733) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-19.318, 1.000, -91.937) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-23.595, 1.000, -64.017) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(15.685, 1.000, 31.154) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-21.813, 1.000, -80.673) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(14.029, 1.000, 17.536) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-18.384, 1.000, 92.951) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-7.591, 1.000, -17.973) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-24.699, 1.000, -21.097) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(16.504, 1.000, 32.829) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-24.673, 1.000, -21.518) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(10.423, 1.000, 11.418) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-23.976, 1.000, -61.361) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(13.594, 1.000, 46.210) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-8.505, 1.000, 75.462) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-0.107, 1.000, 96.992) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-2.841, 1.000, 15.945) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-4.561, 1.000, -96.832) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-23.977, 1.000, -57.548) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(15.710, 1.000, 25.118) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-3.821, 1.000, 54.829) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-2.748, 1.000, 95.685) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-8.166, 1.000, -18.503) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-4.504, 1.000, 60.056) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(9.811, 1.000, 63.433) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-23.498, 1.000, -53.707) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-5.647, 1.000, -84.361) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-5.277, 1.000, -11.970) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-20.339, 1.000, -93.693) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(13.454, 1.000, 16.338) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-9.713, 1.000, -37.413) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(4.514, 1.000, 83.103) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-17.268, 1.000, 89.262) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(0.600, 1.000, 89.793) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-19.002, 1.000, -91.460) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(9.890, 1.000, 10.216) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-10.005, 1.000, -31.587) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-5.273, 1.000, 9.383) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(7.779, 1.000, 7.763) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-3.312, 1.000, 49.101) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(16.445, 1.000, 33.407) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-7.884, 1.000, 73.527) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(11.602, 1.000, 51.902) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(11.594, 1.000, 13.295) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-26.661, 1.000, -28.476) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(10.886, 1.000, 60.036) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-6.027, 1.000, 8.479) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-9.814, 1.000, -32.162) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(-26.550, 1.000, -38.423) meshes=Prop_Grass2
+GARDEN Patchy canal grasses at=(10.515, 1.000, 12.121) meshes=Prop_Grass2

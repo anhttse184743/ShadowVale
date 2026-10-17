@@ -1,0 +1,9 @@
+C1 expected=308 removed LOD0=308 LOD1=0
+C1 / C1 / requisitioned small warehouse / Chair rotated 180.0
+C2 expected=308 removed LOD0=308 LOD1=0
+Retained radio chair position; rotated 180
+C2 / C2 / communications duty house / Chair.002 rotated 180.0
+C3 expected=1512 removed LOD0=1512 LOD1=0
+C3 / C3 / command house / Chair.008 rotated 90.0
+C3 / Gate duty shelter.002 / Chair.009 rotated 180.0
+Corrected scene chairs=5; source chair corrections=19 across 11 models.
