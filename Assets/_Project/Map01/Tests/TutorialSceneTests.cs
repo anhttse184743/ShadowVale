@@ -257,6 +257,35 @@ namespace ShadowVale.Map01.Tests
             yield return new ExitPlayMode();
         }
         [UnityTest]
+        public IEnumerator WeaponsLessonTeachesKnifeOnThreeThenTheRifleOnOne()
+        {
+            EditorSceneManager.OpenScene(Scene); EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(Scene);
+            yield return new EnterPlayMode(); UnityEngine.SceneManagement.SceneManager.LoadScene(TutorialDirector.SceneName); yield return WaitForTutorial();
+            yield return null; yield return null; yield return null;
+            var director = Object.FindFirstObjectByType<TutorialDirector>(); var mission = director.GetComponent<Map01Mission>();
+            var routing = RouteInputToGame();
+            var keyboard = InputSystem.AddDevice<Keyboard>();
+            try {
+                StartLesson(director, TutorialStep.Weapons);
+                double deadline = Time.realtimeSinceStartupAsDouble + 15;
+                while ((director.RevealingTargets || director.AwaitingArrival) && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
+                mission.ModernCombat.Equip(WeaponKind.Rifle); yield return null; yield return null;
+                // Map 1's slots: 1 the AK, 2 the pistol Hùng does not have, 3 the knife.
+                Assert.AreEqual("3", director.KeyLabel, "The AK in hand counts for nothing yet: the knife comes first.");
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.Digit3)); yield return null;
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState()); yield return null; yield return null;
+                Assert.AreEqual(WeaponKind.Knife, mission.ModernCombat.EquippedKind, "Key 3 draws the knife.");
+                Assert.AreEqual("1", director.KeyLabel, "Then back to the AK.");
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.Digit1)); yield return null;
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState()); yield return null; yield return null;
+                Assert.AreEqual(WeaponKind.Rifle, mission.ModernCombat.EquippedKind, "Key 1 brings the AK back.");
+                deadline = Time.realtimeSinceStartupAsDouble + 5;
+                while (director.Step == TutorialStep.Weapons && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
+                Assert.AreEqual(TutorialStep.StoneKnife, director.Step, "Both keys done: on to the knife lesson.");
+            } finally { InputSystem.RemoveDevice(keyboard); RestoreInputRouting(routing); }
+            yield return new ExitPlayMode();
+        }
+        [UnityTest]
         public IEnumerator SpottedDuringTheKnifeLessonRetriesWithEnter()
         {
             EditorSceneManager.OpenScene(Scene); EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>(Scene);
@@ -320,7 +349,7 @@ namespace ShadowVale.Map01.Tests
                 body.enabled = false; mission.player.position = director.knifeBush.position; body.enabled = true;
                 yield return null; yield return null; steps.enabled = true; yield return null;
                 Assert.IsTrue(mission.Hidden, "Crouched in the bush, Hùng is hidden.");
-                Assert.AreEqual("2", director.KeyLabel, "Hidden, the next hint is the knife.");
+                Assert.AreEqual("3", director.KeyLabel, "Hidden, the next hint is the knife (slot 3).");
                 mission.ModernCombat.Equip(WeaponKind.Knife); yield return null;
                 // Sneak out towards his back at sneaking pace, footsteps and all.
                 double deadline = Time.realtimeSinceStartupAsDouble + 10;

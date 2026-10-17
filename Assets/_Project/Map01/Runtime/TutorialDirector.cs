@@ -213,8 +213,10 @@ namespace ShadowVale.Map01
                     if (player.IsSneaking) distance += travel;
                     Progress = distance / mission.Settings.tutorialCrouchDistance; done = Progress >= 1; break;
                 case TutorialStep.Weapons:
-                    rifle |= combat.EquippedKind == WeaponKind.Rifle; knife |= combat.EquippedKind == WeaponKind.Knife;
-                    Cue(rifle ? "2" : "1", rifle ? "Nhấn 2 để cầm dao" : "Nhấn 1 để cầm súng", rifle && knife);
+                    // Map 1's slots: 1 long gun (the AK), 2 pistol (Hùng has none), 3 knife. Knife, then back to the AK:
+                    // the switch counts only after the knife, so starting with the AK in hand still teaches key 1.
+                    knife |= combat.EquippedKind == WeaponKind.Knife; rifle |= knife && combat.EquippedKind == WeaponKind.Rifle;
+                    Cue(knife ? "1" : "3", knife ? "Nhấn 1 để chuyển lại súng AK" : "Nhấn 3 để cầm dao", rifle && knife);
                     Progress = (rifle ? .5f : 0) + (knife ? .5f : 0); done = rifle && knife; break;
                 case TutorialStep.StoneKnife:
                     // Hide in the bush first, then out behind the guard. The stone is optional; no slow motion here.
@@ -225,7 +227,7 @@ namespace ShadowVale.Map01
                     Tip = "Tuỳ chọn: giữ Q rồi thả để ném đá ra xa — lính sẽ quay đi xem";
                     if (!player.IsSneaking) Cue("CTRL", "Nhấn Ctrl để khom — đi thẳng người sẽ gây tiếng động", false, slow: false);
                     else if (!hid) Cue("BỤI CÂY", "Khom người đi vào bụi cây phía trước để ẩn nấp", false, slow: false);
-                    else if (combat.EquippedKind != WeaponKind.Knife) Cue("2", "Nhấn 2 để cầm dao", false, slow: false);
+                    else if (combat.EquippedKind != WeaponKind.Knife) Cue("3", "Nhấn 3 để cầm dao", false, slow: false);
                     else if (knifeGuard.CanSilentTakedown()) Cue("CHUỘT TRÁI", "Nhấn chuột trái để ám sát", false, slow: false);
                     else Cue("SAU LƯNG", "Lẻn ra sau lưng lính, tới thật gần để ám sát", false, slow: false);
                     if (!knifeGuard.Alive && !knifeGuard.TakenDownSilently) Fail("Phải ám sát bằng dao từ sau lưng. Thử lại bước này.");
@@ -235,7 +237,7 @@ namespace ShadowVale.Map01
                     aimed |= combat.IsAiming;
                     if (combat.IsReloading && !reloading) { reloadReserveBefore = inventory.Count("ammo_rifle"); reloading = true; }
                     if (reloading && !combat.IsReloading) { reloaded |= inventory.Count("ammo_rifle") < reloadReserveBefore; reloading = false; }
-                    if (combat.EquippedKind != WeaponKind.Rifle) Cue("1", "Nhấn 1 để cầm súng", false);
+                    if (combat.EquippedKind != WeaponKind.Rifle) Cue("1", "Nhấn 1 để cầm súng AK", false);
                     else if (!aimed) Cue("CHUỘT PHẢI", "Giữ chuột phải để ngắm vào lính", combat.IsAiming);
                     else if (shootingGuard.Alive) Cue("CHUỘT TRÁI", "Nhấn chuột trái để bắn hạ lính", mouse != null && mouse.leftButton.isPressed);
                     else Cue("R", "Nhấn R để nạp đạn", reloading);
