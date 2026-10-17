@@ -66,6 +66,34 @@ namespace ShadowVale.Map01.Tests
         }
 
         [UnityTest]
+        public IEnumerator NamDoesNotFlinchWhenARoundLands()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            yield return NoFlinchInPlay();
+            yield return new ExitPlayMode();
+        }
+
+        private static IEnumerator NoFlinchInPlay()
+        {
+            yield return null; yield return null;
+            var mission = Object.FindFirstObjectByType<Map01Mission>();
+            foreach (var guard in mission.Enemies) guard.enabled = false;
+            mission.ModernCombat.Equip(WeaponKind.Rifle);
+            for (int i = 0; i < 10; i++) yield return null;
+            var actor = mission.player.GetComponentInChildren<Animator>();
+            float before = mission.ModernHealth.Current;
+            mission.ModernHealth.TakeBulletDamage(5f, mission.player.position + Vector3.up, null, Vector3.forward);
+            Assert.Less(mission.ModernHealth.Current, before, "The round lands.");
+            for (int i = 0; i < 6; i++) {
+                yield return null;
+                for (int layer = 0; layer < actor.layerCount; layer++)
+                    Assert.IsFalse(actor.GetCurrentAnimatorStateInfo(layer).IsName("Hit") || actor.GetNextAnimatorStateInfo(layer).IsName("Hit"),
+                        "No hit reaction: Nam keeps his aim when shot.");
+            }
+        }
+
+        [UnityTest]
         public IEnumerator GuardsUsePlayerAssetsAndHitsProducePooledFeedback()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
