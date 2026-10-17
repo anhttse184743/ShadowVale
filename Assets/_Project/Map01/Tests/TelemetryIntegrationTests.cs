@@ -59,7 +59,7 @@ namespace ShadowVale.Map01.Tests
 
                 var quest = mission.GetComponent<Map01Quest>();
                 quest.RestoreStage(Map01Quest.ScoutStage); // A checkpoint restore: not an objective.
-                quest.CompleteScouting();                  // Played: the scouting objective is done.
+                quest.SuppliesRecovered();                 // Played: point 1's supplies are back, its objective is done.
 
                 var dto = service.End();
                 Assert.AreEqual("map01", dto.MapId);

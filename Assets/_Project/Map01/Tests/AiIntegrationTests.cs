@@ -206,7 +206,8 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsNotEmpty(plans, "The slow solver's plan was applied.");
                 Assert.AreEqual("slow", plans[0].plan.Variant);
                 float gameDelay = plans[0].at - replans[0];
-                Assert.That(gameDelay, Is.InRange(SlowSolver.DelayMs / 1000f, SlowSolver.DelayMs / 1000f + 2f / 30f),
+                // Lower bound less a float ulp: two game-time stamps subtracted can land 1e-8 s short of it.
+                Assert.That(gameDelay, Is.InRange(SlowSolver.DelayMs / 1000f - 1e-4f, SlowSolver.DelayMs / 1000f + 2f / 30f),
                     "The plan lands after the solve's real latency, measured in game time.");
                 Assert.GreaterOrEqual(Time.realtimeSinceStartup - realStart, SlowSolver.DelayMs / 1000f, "The game waited for the solver.");
             }

@@ -37,7 +37,8 @@ namespace ShadowVale.Map01.Tests
             var mission = Object.FindFirstObjectByType<Map01Mission>();
             var quest = mission.GetComponent<Map01Quest>();
             // As in the real quest line: every camp has fallen before the commander shows up.
-            foreach (var guard in mission.Enemies) guard.GetComponent<Health>().TakeDamage(9999, guard.transform.position, null);
+            // The commander already stands at point 3 from the start of the map (Map01Quest.EnsureCommander): spare him.
+            foreach (var guard in mission.Enemies.Where(e => !e.IsBoss)) guard.GetComponent<Health>().TakeDamage(9999, guard.transform.position, null);
             yield return null;
             quest.RestoreStage(Map01Quest.BossStage); // Spawns the commander, as a checkpoint at this stage does.
             var boss = mission.Enemies.Single(e => e.IsBoss);
@@ -65,11 +66,13 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsTrue(behaviour.Relocate(mission.player.position, "test"), "A cover node within reach of his camp.");
                 var m = boss.Brain.Memory;
                 Assert.AreEqual("relocate", m.AssignedRole);
-                float moved = Vector3.Distance(boss.transform.position, m.AssignedPosition);
+                // Measured flat, as BossRelocation picks it: Map 1's C3 stands on terraces.
+                float moved = Vector3.ProjectOnPlane(m.AssignedPosition - boss.transform.position, Vector3.up).magnitude;
                 Assert.That(moved, Is.InRange(behaviour.Profile.RelocateMinDistance - .5f, behaviour.Profile.RelocateMaxDistance + .5f));
                 yield return null;
                 yield return null;
-                Assert.AreEqual(EnemyStateId.TakeCover, boss.State, "He runs to the new spot — the shared TakeCover state, no seventh state.");
+                Assert.AreEqual(EnemyStateId.TakeCover, boss.State, "He runs to the new spot — the shared TakeCover state, no seventh state." +
+                    $" (stopped={mission.Stopped}, cinematic={mission.Cinematic}, paused={mission.Paused}, enabled={boss.enabled}, engaged={boss.Engaged})");
                 Assert.AreEqual(1, relocated.Count);
 
                 var nam = mission.player.GetComponent<Health>();

@@ -80,7 +80,33 @@ namespace ShadowVale.Map01
         };
         // Kept for old menu/test callers; binoculars are now a tool, not a forced perfect-stealth mission.
         public const string ScoutOrder="Chỉ huy: Hạ nhóm bảo vệ điểm một, lấy lại thuốc rồi mang về hầm.";
-        public int Stage { get; private set; }
+        /// <summary>Stable ids of the stages, for telemetry's progression funnel (index = stage number).
+        /// The ids keep their names across the operations rework: they are part of the research data's format.</summary>
+        public static readonly string[] StageIds = {
+            "rescue_hung", "escort_hung", "briefing", "scout_camps", "report_scouting",
+            "destroy_camps", "report_camps", "defeat_commander", "report_commander", "complete",
+            "extraction", "boarding"
+        };
+
+        /// <summary>Where a stage falls in play: the extraction and the boarding (appended to the
+        /// checkpoint format as 10 and 11) come after the commander and before Complete (9).</summary>
+        public static int PlayOrder(int stage) => stage == CompleteStage ? int.MaxValue : stage;
+
+        /// <summary>Moving forward completes the stage left behind (telemetry <c>objective_completed</c>);
+        /// restoring a checkpoint does not.</summary>
+        public int Stage
+        {
+            get => stage;
+            private set
+            {
+                int from = stage;
+                stage = value;
+                if (PlayOrder(value) <= PlayOrder(from) || Map01SaveSystem.IsRestoring) return;
+                EventBus.Publish(new ObjectiveCompletedEvent(Map01Mission.MapId, StageIds[Mathf.Clamp(from, 0, LastStage)], from));
+                if (value == CompleteStage) EventBus.Publish(new MissionEndedEvent(Map01Mission.MapId, "completed"));
+            }
+        }
+        private int stage;
         public bool RescueOrderAccepted => story != null && story.Progress.rescueAccepted;
         public bool AwaitingReport => Stage == BriefingStage;
         public bool HungInRange { get; private set; }
@@ -148,7 +174,8 @@ namespace ShadowVale.Map01
         public void RestoreStoryStage(int value,Map01Story.Snapshot snapshot)
         {
             story.Restore(snapshot,value);
-            Stage=snapshot==null&&value==ReportBossStage?CompleteStage:value==BoardingStage?ExtractionStage:Mathf.Clamp(value,0,LastStage);
+            // The field, not the setter: restoring is not progress (no objective_completed events).
+            stage=snapshot==null&&value==ReportBossStage?CompleteStage:value==BoardingStage?ExtractionStage:Mathf.Clamp(value,0,LastStage);
             rescue?.SyncRestoredStage(Stage);
             EnsureCommander();
             if(Stage==ExtractionStage)Map01Extraction.Get(mission)?.Begin(false);

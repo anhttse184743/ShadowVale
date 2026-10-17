@@ -86,11 +86,16 @@ namespace ShadowVale.Map01.Tests
                     Assert.Less(grip.PalmError,.035f,name);Assert.Less(grip.WristBend,1,name);
                 }
             }
+            // Shots are heard within 65 m of Nam (EnemyFeedback): stand within earshot of the jetty guard.
+            At(guard.transform.position+guard.transform.forward*8);yield return null;
             int before=guard.AudibleShots;
             typeof(Map01EnemyController).GetField("_nextShot",Hidden).SetValue(guard,0f);
             typeof(Map01EnemyController).GetMethod("Shoot",Hidden).Invoke(guard,null);
             Assert.AreEqual(before+1,guard.AudibleShots);
-            Assert.IsTrue(Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None).Any(a=>a.isPlaying&&a.clip==Resources.Load<Map01Extraction>("Cutscenes/Map01Extraction").rifleAudio));
+            // A guard's round sounds through the shared enemy feedback (EnemyFeedback): the rifle's own report.
+            var report=M.player.GetComponent<ShadowVale.Gameplay.Audio.CombatAudio>().Gunshot.clip;
+            Assert.IsNotNull(report);
+            Assert.IsTrue(Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None).Any(a=>a.isPlaying&&a.clip==report),"The guard's shot is heard.");
             yield return null;
         }
         static IEnumerator CheckCamera()

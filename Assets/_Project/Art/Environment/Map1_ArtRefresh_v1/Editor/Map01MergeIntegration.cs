@@ -21,7 +21,13 @@ namespace ShadowVale.EnvironmentReview
         public const string Map="Assets/_Project/Scenes/Maps/Map 1.unity";
         public const string Stage=Root+"/MergeReview/Map 1.unity";
         static double next;
-        static Map01MergeIntegration(){Directory.CreateDirectory(Work);File.WriteAllText(Work+"/tool_version.txt","12");EditorApplication.update+=Check;}
+        static Map01MergeIntegration()
+        {
+            // A locked or read-only review folder must not break every editor start: the version stamp is best effort.
+            try{Directory.CreateDirectory(Work);File.WriteAllText(Work+"/tool_version.txt","12");}
+            catch(IOException e){Debug.LogWarning("[Map01MergeIntegration] "+e.Message);}
+            EditorApplication.update+=Check;
+        }
         static void Check()
         {
             if(EditorApplication.timeSinceStartup<next)return;next=EditorApplication.timeSinceStartup+2;

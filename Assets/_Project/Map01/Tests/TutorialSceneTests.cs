@@ -238,12 +238,18 @@ namespace ShadowVale.Map01.Tests
                 body.enabled = false; mission.player.position = start; body.enabled = true;
                 yield return null; yield return null;
                 Assert.IsFalse(director.AwaitingArrival);
+                // The lesson first shows its target (TutorialDirector.TargetReveal); the hints follow.
+                double revealEnds = Time.realtimeSinceStartupAsDouble + 15;
+                while (director.RevealingTargets && Time.realtimeSinceStartupAsDouble < revealEnds) yield return null;
+                Assert.IsFalse(director.RevealingTargets); yield return null;
                 Assert.AreEqual("CTRL", director.KeyLabel, "Standing at the lesson, sneaking comes first.");
                 InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.LeftCtrl));
                 yield return null;
                 InputSystem.QueueStateEvent(keyboard, new KeyboardState());
                 yield return null; yield return null;
-                Assert.IsTrue(mission.ModernPlayer.IsSneaking);
+                Assert.IsTrue(mission.ModernPlayer.IsSneaking, $"Ctrl toggles sneaking (input allowed={mission.ModernPlayer.InputAllowed?.Invoke()}, " +
+                    $"camera input={mission.CameraInputEnabled}, stopped={mission.Stopped}, inventory={mission.InventoryOpen}, map={mission.MapOpen}, " +
+                    $"menu={ForestMenu.Visible}, overlay={ShadowVale.Core.Services.InputFocus.OverlayOpen}, cinematic={mission.Cinematic})");
                 Assert.AreEqual("BỤI CÂY", director.KeyLabel, "Sneaking, the next hint is the bush.");
                 Assert.IsFalse(Time.timeScale < 1, "The knife lesson never slows time.");
                 Assert.IsFalse(director.Failed);

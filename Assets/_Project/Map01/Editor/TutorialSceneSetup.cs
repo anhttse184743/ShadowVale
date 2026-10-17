@@ -76,6 +76,12 @@ namespace ShadowVale.Map01.Editor
                 if (!useful) Object.DestroyImmediate(point.gameObject);
             }
             Object.DestroyImmediate(mission.GetComponent<Map01Quest>()); Object.DestroyImmediate(mission.GetComponent<Map01SaveSystem>());
+            // Map 1's operations story (commander orders, point props, hints) is not the tutorial's: its scenery stays, its logic goes.
+            foreach (var story in mission.GetComponents<MonoBehaviour>().Where(c => c is Map01Story || c is Map01OperationHints
+                         || c is Map01StoryDialogue || c is Map01OperationPuzzleUI || c is Map01C3Mission).ToArray())
+                Object.DestroyImmediate(story);
+            foreach (var operations in Object.FindObjectsByType<Map01OperationsLayout>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+                Object.DestroyImmediate(operations);
             var oldPlayer = mission.player != null ? mission.player.gameObject : Object.FindFirstObjectByType<PlayerController>().gameObject;
             if (!File.Exists(HungPlayerSetup.PrefabPath)) HungPlayerSetup.Run();
             var player = (GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(HungPlayerSetup.PrefabPath), scene);
