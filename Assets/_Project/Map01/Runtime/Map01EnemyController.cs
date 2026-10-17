@@ -164,6 +164,7 @@ namespace ShadowVale.Map01
         }
         private void LateUpdate()
         {
+            if (_muzzleFlash != null && Time.time >= _flashUntil) _muzzleFlash.enabled = false;
             if (bushCorpse == null) return;
             var clip = Map01CinematicPose.Clip("Enemy_Bush_Finish"); bushCorpse.Sample(clip, clip.length); bushCorpse.Ground(transform.position.y);
         }
@@ -187,6 +188,7 @@ namespace ShadowVale.Map01
             _mission = mission;
             Map01EnemyGrip.Bind(this);
             _feedback = EnemyFeedback.Attach(gameObject, mission.player.GetComponent<PlayerController>());
+            _feedback.GunshotClip = RifleReport;
             _feedback.CanStep = () => enabled && !_holdingAI && _mission != null && !_mission.Stopped;
             GetComponent<Health>().KeepCheckpointCorpse();
             // Map 1's guard tuning lives in Map01Balance.json and Map01Content.json, not in each
@@ -639,9 +641,8 @@ namespace ShadowVale.Map01
             FaceImmediate(target);
             if (_animator != null && _animator.runtimeAnimatorController != null) _animator.SetTrigger(PlayerCombat.AnimatorParams.Attack);
             if (_rescue == null || _mission == null || _mission.hung == null) return;
-            _feedback ??= EnemyFeedback.Attach(gameObject);
             AudibleShots++;
-            if (!_feedback.Fire(target + (bodyPoint ? Vector3.zero : Vector3.up * .9f), _mission.hung, obstructionMask, out var impact)) return;
+            if (!FireRound(target + (bodyPoint ? Vector3.zero : Vector3.up * .9f), _mission.hung, out var impact)) return;
             float before = _rescue.HungHealth;
             _rescue.HitHung(amount);
             if (_rescue.HungHealth < before) BloodImpact.Play(impact, impact - transform.position);
@@ -912,7 +913,6 @@ namespace ShadowVale.Map01
             // Hùng is in the line of fire while he is being held or walked home: every third
             // round goes his way when he is in reach.
             if (++_shots % 3 == 0 && HostageInReach(out var hostage) && SafeShot(hostage)) { FireAtHostage(hostage, damage); return; }
-            _feedback ??= EnemyFeedback.Attach(gameObject);
             Vector3 aim = _player.position + Vector3.up;
             // Not every round finds him (ShotAccuracy): a miss flies past him, tracer and all.
             var shot = ShotAccuracy.For(transform.position, _agent != null ? _agent.velocity : Vector3.zero, attackRange,
@@ -921,10 +921,10 @@ namespace ShadowVale.Map01
             if (_shotRng.NextDouble() >= ShotAccuracy.HitChance(_accuracy, shot))
             {
                 Vector3 chest = transform.position + Vector3.up * 1.3f;
-                _feedback.Fire(ShotAccuracy.MissPoint(chest, aim, _shotRng), null, obstructionMask, out _);
+                FireRound(ShotAccuracy.MissPoint(chest, aim, _shotRng), null, out _);
                 return;
             }
-            if (_feedback.Fire(aim, _player, obstructionMask, out var impact))
+            if (FireRound(aim, _player, out var impact))
                 _playerHealth.TakeBulletDamage(damage, impact, gameObject, impact - transform.position);
         }
 
@@ -935,8 +935,33 @@ namespace ShadowVale.Map01
             _nextShot = Time.time + fireInterval;
             AudibleShots++;
             _animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
+            FireRound(point + Vector3.up, null, out _);
+        }
+
+        private static AudioClip rifleReport;
+        /// <summary>The guards' rifle report: the AK of the extraction film, not Nam's own gunshot.</summary>
+        private static AudioClip RifleReport => rifleReport != null ? rifleReport
+            : rifleReport = Resources.Load<Map01Extraction>("Cutscenes/Map01Extraction")?.rifleAudio;
+        private Light _muzzleFlash;
+        private float _flashUntil;
+
+        /// <summary>One round through the shared feedback (tracer, report heard within 65 m), with his rifle's muzzle flash.</summary>
+        private bool FireRound(Vector3 at, Transform victim, out Vector3 impact)
+        {
             _feedback ??= EnemyFeedback.Attach(gameObject);
-            _feedback.Fire(point + Vector3.up, null, obstructionMask, out _);
+            _feedback.GunshotClip ??= RifleReport;
+            bool reached = _feedback.Fire(at, victim, obstructionMask, out impact);
+            var muzzle = GetComponentInChildren<Map01Rifle>()?.weapon?.Muzzle;
+            if (muzzle != null)
+            {
+                if (_muzzleFlash == null)
+                {
+                    var go = new GameObject("Rifle muzzle flash"); go.transform.SetParent(muzzle, false);
+                    _muzzleFlash = go.AddComponent<Light>(); _muzzleFlash.color = new Color(1f, .7f, .25f); _muzzleFlash.range = 1.5f; _muzzleFlash.intensity = 1.6f;
+                }
+                _muzzleFlash.enabled = true; _flashUntil = Time.time + .045f;
+            }
+            return reached;
         }
 
         // ---- IEnemyTactics: Map 1's rules on top of the shared FSM ------------------------------
