@@ -79,7 +79,11 @@ namespace ShadowVale.Map01.Tests
                 while(cinematic.IsPlaying&&Time.time<deadline){
                     Assert.IsFalse(mission.hung.GetComponentInChildren<Map01HungVisual>().RopeVisible,"A freed escort must not carry the captive rope into the shelter.");
                     bool done=false;pump.draw=()=>{
-                        float step=Vector3.Distance(lastPosition,mission.player.position);lastPosition=mission.player.position;walked+=step;
+                        float step=Vector3.Distance(lastPosition,mission.player.position);lastPosition=mission.player.position;
+                        // Auto-finish deliberately places the actors at the report point.
+                        // Measure walking until that handoff, which ShelterAutoFinishTests covers.
+                        if(!cinematic.IsPlaying)step=0;
+                        walked+=step;
                         float separation=mission.player.InverseTransformPoint(left.position).z-mission.player.InverseTransformPoint(right.position).z;
                         float hungSeparation=mission.hung.InverseTransformPoint(hungLeft.position).z-mission.hung.InverseTransformPoint(hungRight.position).z;
                         float headHeight=hungActor.GetBoneTransform(HumanBodyBones.Head).position.y-mission.hung.position.y;
