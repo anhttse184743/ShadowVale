@@ -336,17 +336,31 @@ namespace ShadowVale.EnvironmentReview
         static double next;
         static Map01ArtStageRequest()
         {
-            // The art-stage tool works from its folder under SourceArt, which only exists on the artist's machine.
-            // Without it there is nothing to watch; writing into it would throw on every editor update.
             if(!Directory.Exists(Map01ArtStage.Work))return;
-            Directory.CreateDirectory(Map01ArtStage.Work+"/Audit");
-            File.WriteAllText(Map01ArtStage.Work+"/Audit/stage_tool_version.txt","28");
-            EditorApplication.update+=Check;
+            // Optional review output may be absent on a fresh checkout. Never let
+            // an I/O failure poison this InitializeOnLoad type or its update loop.
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(Status));
+                File.WriteAllText(Map01ArtStage.Work+"/Audit/stage_tool_version.txt","28");
+                EditorApplication.update+=Check;
+            }
+            catch(Exception e){Debug.LogWarning("Map 1 art review watcher disabled: "+e.Message);}
         }
         static void Check()
         {
+            try{CheckRequest();}
+            catch(Exception e)
+            {
+                EditorApplication.update-=Check;
+                Debug.LogWarning("Map 1 art review watcher disabled: "+e.Message);
+            }
+        }
+        static void CheckRequest()
+        {
             if(EditorApplication.timeSinceStartup<next)return;next=EditorApplication.timeSinceStartup+2;
             if(!File.Exists(Request)||EditorApplication.isCompiling||EditorApplication.isUpdating)return;
+            Directory.CreateDirectory(Path.GetDirectoryName(Status));
             string action=File.ReadAllText(Request).Trim().TrimStart('\uFEFF');
             for(int i=0;i<SceneManager.sceneCount;i++)
             {
@@ -377,7 +391,14 @@ namespace ShadowVale.EnvironmentReview
                     else throw new Exception("Unknown stage request: "+action);
                     File.WriteAllText(Status,"COMPLETE "+DateTime.UtcNow.ToString("O"));
                 }
-                catch(Exception e){File.WriteAllText(Status,"FAILED "+e);Debug.LogException(e);}
+                catch(Exception e)
+                {
+                    // Report the original operation error even if its output
+                    // directory was removed while the delayed action was pending.
+                    try{Directory.CreateDirectory(Path.GetDirectoryName(Status));File.WriteAllText(Status,"FAILED "+e);}
+                    catch(Exception statusError){Debug.LogWarning("Could not write art review status: "+statusError.Message);}
+                    Debug.LogException(e);
+                }
             };
         }
     }
