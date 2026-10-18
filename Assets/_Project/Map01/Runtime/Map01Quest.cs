@@ -1,17 +1,65 @@
 using System.Linq;
+using ShadowVale.Core.Events;
+using ShadowVale.Data.Content;
 using ShadowVale.Gameplay.Combat;
+using ShadowVale.Gameplay.Enemies.Boss;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace ShadowVale.Map01
 {
     /// <summary>Commander-led rescue, supply recovery, communications disruption and extraction.</summary>
-    public sealed class Map01Quest : MonoBehaviour
+    public sealed class Map01Quest : MonoBehaviour, IMapObjectives
     {
         // Save-format IDs. The former scouting/camp/report IDs now carry distinct operations.
         public const int RescueStage=0, EscortStage=1, BriefingStage=2, ScoutStage=3, ReportScoutStage=4,
             CampsStage=5, ReportCampsStage=6, BossStage=7, ReportBossStage=8, CompleteStage=9,
             ExtractionStage=10, BoardingStage=11, LastStage=BoardingStage;
+
+        public bool IsComplete => Stage == CompleteStage;
+
+        /// <summary>Where the objective marker points for each stage (the story's own targets come first,
+        /// in Map01ObjectiveGuide).</summary>
+        public bool TryGetObjectiveTarget(out Vector3 target, out string label)
+        {
+            target = default; label = null;
+            switch (Stage)
+            {
+                case ExtractionStage:
+                    var extraction = mission.GetComponentInChildren<Map01Extraction>();
+                    if (extraction == null) return false;
+                    target = extraction.ObjectivePosition; label = "NORTHERN JETTY"; return true;
+                case RescueStage:
+                    target = mission.hung.position; label = "BẾN TÀU — CỨU HÙNG";
+                    return true;
+                case ScoutStage:
+                    // Only the rough area of the nearest camp not yet logged — never the camp itself.
+                    var scoutingOrder = GetComponent<Map01Scouting>();
+                    var zone = scoutingOrder == null ? null : scoutingOrder.Camps.Where(c => !c.Found)
+                        .OrderBy(c => (c.ZoneCenter - mission.player.position).sqrMagnitude).FirstOrDefault();
+                    if (zone == null) return false;
+                    target = zone.ZoneCenter; label = "KHU VỰC NGHI NGỜ";
+                    return true;
+                case EscortStage:
+                    var rescueRun = mission.GetComponent<Map01Rescue>();
+                    if (rescueRun == null || rescueRun.Layout == null) return false;
+                    target = rescueRun.Layout.shelterDoor.position; label = "HẦM TRÚ ẨN — ĐƯA HÙNG VỀ";
+                    return true;
+                case CampsStage:
+                    var guard = mission.Enemies.Where(e => e.Alive && e.name.StartsWith("Outpost guard "))
+                        .OrderBy(e => (e.transform.position - mission.player.position).sqrMagnitude).FirstOrDefault();
+                    if (guard == null) return false;
+                    target = guard.transform.position; label = "DOANH TRẠI ĐỊCH";
+                    return true;
+                case BossStage:
+                    var commander = mission.Enemies.FirstOrDefault(e => e.IsBoss && e.Alive);
+                    if (commander == null) return false;
+                    target = commander.transform.position; label = "CHỈ HUY ĐỊCH";
+                    return true;
+                default:
+                    return false; // The complete stage has nowhere left to go.
+            }
+        }
         public static readonly string[] Objectives = {
             "Giải cứu Hùng tại bến phía bắc: giữ im lặng khi giám sát còn canh Hùng; hạ đủ bốn lính rồi cởi trói [E]",
             "Yểm hộ Hùng về hầm trú ẩn, vượt qua ba đợt truy kích",
@@ -32,7 +80,33 @@ namespace ShadowVale.Map01
         };
         // Kept for old menu/test callers; binoculars are now a tool, not a forced perfect-stealth mission.
         public const string ScoutOrder="Chỉ huy: Hạ nhóm bảo vệ điểm một, lấy lại thuốc rồi mang về hầm.";
-        public int Stage { get; private set; }
+        /// <summary>Stable ids of the stages, for telemetry's progression funnel (index = stage number).
+        /// The ids keep their names across the operations rework: they are part of the research data's format.</summary>
+        public static readonly string[] StageIds = {
+            "rescue_hung", "escort_hung", "briefing", "scout_camps", "report_scouting",
+            "destroy_camps", "report_camps", "defeat_commander", "report_commander", "complete",
+            "extraction", "boarding"
+        };
+
+        /// <summary>Where a stage falls in play: the extraction and the boarding (appended to the
+        /// checkpoint format as 10 and 11) come after the commander and before Complete (9).</summary>
+        public static int PlayOrder(int stage) => stage == CompleteStage ? int.MaxValue : stage;
+
+        /// <summary>Moving forward completes the stage left behind (telemetry <c>objective_completed</c>);
+        /// restoring a checkpoint does not.</summary>
+        public int Stage
+        {
+            get => stage;
+            private set
+            {
+                int from = stage;
+                stage = value;
+                if (PlayOrder(value) <= PlayOrder(from) || Map01SaveSystem.IsRestoring) return;
+                EventBus.Publish(new ObjectiveCompletedEvent(Map01Mission.MapId, StageIds[Mathf.Clamp(from, 0, LastStage)], from));
+                if (value == CompleteStage) EventBus.Publish(new MissionEndedEvent(Map01Mission.MapId, "completed"));
+            }
+        }
+        private int stage;
         public bool RescueOrderAccepted => story != null && story.Progress.rescueAccepted;
         public bool AwaitingReport => Stage == BriefingStage;
         public bool HungInRange { get; private set; }
@@ -100,7 +174,8 @@ namespace ShadowVale.Map01
         public void RestoreStoryStage(int value,Map01Story.Snapshot snapshot)
         {
             story.Restore(snapshot,value);
-            Stage=snapshot==null&&value==ReportBossStage?CompleteStage:value==BoardingStage?ExtractionStage:Mathf.Clamp(value,0,LastStage);
+            // The field, not the setter: restoring is not progress (no objective_completed events).
+            stage=snapshot==null&&value==ReportBossStage?CompleteStage:value==BoardingStage?ExtractionStage:Mathf.Clamp(value,0,LastStage);
             rescue?.SyncRestoredStage(Stage);
             EnsureCommander();
             if(Stage==ExtractionStage)Map01Extraction.Get(mission)?.Begin(false);
@@ -118,9 +193,19 @@ namespace ShadowVale.Map01
             instance.name="Chỉ huy địch";
             boss=instance.GetComponent<Map01EnemyController>();boss.Configure(System.Array.Empty<Vector3>());
             boss.operationIndex=3;boss.carriesSupplyKey=false;boss.suppressOperationLoot=false;
-            boss.BindMission(mission);boss.ConfigureAsBoss(3f,1.6f);
+            boss.BindMission(mission); // Before ConfigureAsBoss: binding resets damage to the balance baseline.
+            // The boss_commander archetype (Map01Content.json): his boss profile, and his health (600) rather
+            // than a guard's x3, so he lives long enough for the men he calls to arrive.
+            var archetype=mission.Bundle?.enemy_archetypes?.FirstOrDefault(a=>a!=null&&a.is_boss);
+            var profile=archetype?.boss!=null?archetype.boss.ToProfile():new BossProfile();
+            boss.ConfigureAsBoss(profile);
+            var bossHealth=instance.GetComponent<Health>();
+            if(archetype!=null&&archetype.max_hp>0)bossHealth.SetMaxHealth(archetype.max_hp);
             mission.AddEnemy(boss);
-            instance.GetComponent<Health>().onDied.AddListener(OnBossDown);
+            // Relocation, grenades, the pincer and the call for reinforcements (A04), from the same profile.
+            var behaviour=BossBehaviour.Attach(instance,boss,profile,new Map01Reinforcements(mission,template),seed:1);
+            behaviour.Suspended=()=>mission.Stopped;
+            bossHealth.onDied.AddListener(OnBossDown);
         }
         public void CompleteBossDefeat(bool showRadio=true)
         {

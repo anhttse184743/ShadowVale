@@ -52,16 +52,17 @@ namespace ShadowVale.Gameplay.Player
         /// controller produced rather than from the keys held, so walking into a wall counts as
         /// standing still — which is what a weapon judging how steady its shooter is needs.
         /// </summary>
-        public bool IsMoving => _planarVelocity.sqrMagnitude > 0.04f;
+        public bool IsMoving => PlanarSpeed > 0.2f;
 
         /// <summary>Metres per second on the ground plane.</summary>
-        public float PlanarSpeed => _planarVelocity.magnitude;
+        public float PlanarSpeed { get; private set; }
         public System.Func<bool> InputAllowed { get; set; }
         public System.Func<bool> SprintAllowed { get; set; }
         public float SurfaceSpeedMultiplier { get; set; } = 1;
         public void RestoreMotion(bool sneaking)
         {
             _planarVelocity = Vector3.zero;
+            PlanarSpeed = 0f;
             _verticalVelocity = 0;
             _sprintToggled = false;
             _sneakToggled = IsSneaking = sneaking;
@@ -105,6 +106,7 @@ namespace ShadowVale.Gameplay.Player
             if (InputAllowed != null && !InputAllowed())
             {
                 _planarVelocity = Vector3.zero;
+                PlanarSpeed = 0f;
                 if (animator != null) animator.SetFloat(PlayerCombat.AnimatorParams.Speed, 0);
                 return;
             }
@@ -145,7 +147,10 @@ namespace ShadowVale.Gameplay.Player
 
             Vector3 velocity = _planarVelocity;
             velocity.y = _verticalVelocity;
+            Vector3 beforeMove = transform.position;
             _controller.Move(velocity * Time.deltaTime);
+            PlanarSpeed = Time.deltaTime > 0f
+                ? Vector3.ProjectOnPlane(transform.position - beforeMove, Vector3.up).magnitude / Time.deltaTime : 0f;
 
             if (animator != null)
             {

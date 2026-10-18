@@ -1,7 +1,7 @@
 {
     "name": "ShadowVale.Debugging",
     "rootNamespace": "ShadowVale.Debugging",
-    "references": ["ShadowVale.Core","ShadowVale.Data","ShadowVale.Content","ShadowVale.Networking","ShadowVale.Persistence","ShadowVale.Telemetry","ShadowVale.AI","ShadowVale.Gameplay","ShadowVale.UI","ShadowVale.Bootstrap"],
+    "references": ["ShadowVale.Core","ShadowVale.Data","ShadowVale.Content","ShadowVale.Networking","ShadowVale.Persistence","ShadowVale.Telemetry","ShadowVale.AI","ShadowVale.Gameplay","ShadowVale.UI","ShadowVale.Bootstrap","Unity.InputSystem"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

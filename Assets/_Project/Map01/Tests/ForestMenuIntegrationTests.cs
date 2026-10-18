@@ -30,7 +30,8 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(ForestMenu.Visible);
             Assert.IsNull(UnityEngine.Object.FindFirstObjectByType<Map01Mission>(), "No gameplay should run behind the title on startup.");
             var menu = UnityEngine.Object.FindFirstObjectByType<ForestMenu>();
-            Call(menu, "MainAction", 1);
+            Call(menu, "MainAction", 1); // New game opens the tutorial choice.
+                Call(menu, "MainAction", 1); // Skip tutorial to exercise Map 1's opening below.
             yield return null;
             Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name);
             Assert.IsTrue(Map01OpeningCutscene.Active, "New game starts a real-time briefing inside Map 1.");
@@ -61,7 +62,8 @@ namespace ShadowVale.Map01.Tests
                 yield return null; yield return null;
                 yield return new WaitForSecondsRealtime(.6f); // Past the title's own key grace.
                 var menu = UnityEngine.Object.FindFirstObjectByType<ForestMenu>();
-                Call(menu, "MainAction", 1);
+                Call(menu, "MainAction", 1); // New game opens the tutorial choice.
+                Call(menu, "MainAction", 1); // Skip tutorial to exercise Map 1's opening below.
                 yield return null;
                 Assert.IsTrue(Map01OpeningCutscene.Active);
                 Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name);
@@ -149,7 +151,8 @@ namespace ShadowVale.Map01.Tests
                 Directory.CreateDirectory("Logs/MenuPreview");
                 ScreenCapture.CaptureScreenshot("Logs/MenuPreview/main.png");
                 for (int i = 0; i < 10; i++) yield return null;
-                Call(menu, "MainAction", 1);
+                Call(menu, "MainAction", 1); // New game opens the tutorial choice.
+                Call(menu, "MainAction", 1); // Skip tutorial to exercise Map 1's opening below.
                 yield return null;
                 UnityEngine.Object.FindFirstObjectByType<Map01OpeningCutscene>().Skip();
                 yield return WaitGameSeconds(1.3f);

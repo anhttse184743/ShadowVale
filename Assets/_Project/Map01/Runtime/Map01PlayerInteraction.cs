@@ -21,7 +21,7 @@ namespace ShadowVale.Map01
         private Map01Quest quest;
         private Map01Inventory inventory;
         private Map01SaveSystem saveSystem;
-        private Map01Scouting scouting;
+        private IBinoculars scouting;
         private Map01StoneThrow stoneThrow;
         private Map01StoneSites stoneSites;
         private Map01CampChests chests;
@@ -43,8 +43,8 @@ namespace ShadowVale.Map01
 
         private void Start()
         {
-            if (mission.IsInitialized) companion = mission.hung.GetComponent<NavMeshAgent>();
-            scouting = GetComponent<Map01Scouting>(); // Added by Map01Quest.Awake, so only certain from Start.
+            if (mission.IsInitialized && mission.hung != null) companion = mission.hung.GetComponent<NavMeshAgent>();
+            scouting = GetComponents<MonoBehaviour>().OfType<IBinoculars>().FirstOrDefault(); // Added by Map01Quest.Awake, so only certain from Start.
             stoneSites = GetComponent<Map01StoneSites>(); // Added by Map01Mission.Awake; none on a map without stone data.
             chests = GetComponent<Map01CampChests>();     // Likewise.
         }
@@ -53,13 +53,13 @@ namespace ShadowVale.Map01
         {
             if (!mission.IsInitialized || mission.Cinematic) return;
             // Following is world simulation; it must not depend on a keyboard being available.
-            if(!mission.Stopped && quest.ShouldFollowPlayer()) UpdateCompanion();
+            if(!mission.Stopped && quest != null && quest.ShouldFollowPlayer()) UpdateCompanion();
             var kb = Keyboard.current;
             if (kb == null) return;
-            scouting.HoldBinoculars(kb.fKey.isPressed); // Map01Scouting decides when they actually work.
+            scouting?.HoldBinoculars(kb.fKey.isPressed); // Map01Scouting decides when they actually work.
             if (ForestMenu.Visible) return;
             if (kb.jKey.wasPressedThisFrame && hud != null) hud.ToggleObjective();
-            if (kb.f9Key.wasPressedThisFrame) saveSystem.Load();
+            if (kb.f9Key.wasPressedThisFrame) saveSystem?.Load();
             if (mission.Stopped) return;
             if (kb.tabKey.wasPressedThisFrame)
             {
@@ -71,7 +71,7 @@ namespace ShadowVale.Map01
                 mission.SetMapOpen(!mission.MapOpen); inventory.SuppressFire = true;
             }
             if (kb.cKey.wasPressedThisFrame) mission.Crouched = !mission.Crouched;
-            if (kb.f5Key.wasPressedThisFrame) saveSystem.SaveSlot(0, out _);
+            if (kb.f5Key.wasPressedThisFrame) saveSystem?.SaveSlot(0, out _);
             if (kb.hKey.wasPressedThisFrame) inventory.UseItem("medkit_small");
             if (mission.InventoryOpen || mission.MapOpen)
             {
@@ -149,7 +149,7 @@ namespace ShadowVale.Map01
         {
             if (Nearby != null && Nearby.kind == ForestPointKind.Workbench) { Interact(Nearby); return; }
             if (GetComponent<Map01Story>()?.TryInteract() == true) return;
-            if (quest.HungInRange) quest.TalkToHung();
+            if (quest != null && quest.HungInRange) quest.TalkToHung();
             else if (Nearby != null) Interact(Nearby);
         }
 
@@ -210,7 +210,7 @@ namespace ShadowVale.Map01
                 case ForestPointKind.Supplies:
                     // The base store (Map01Logistics): opens once Hùng is home; what it issues is paid in logistics points.
                     point.used = false;
-                    if (quest.BaseResupplyOpen) { hud?.OpenStore(); inventory.SuppressFire = true; }
+                    if (quest != null && quest.BaseResupplyOpen) { hud?.OpenStore(); inventory.SuppressFire = true; }
                     else mission.Say("Kho căn cứ A chưa cấp phát — đưa Hùng về căn cứ an toàn trước.", 4);
                     break;
                 case ForestPointKind.Loot:

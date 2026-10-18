@@ -89,12 +89,19 @@ namespace ShadowVale.Gameplay.Player
         private float _aimBlend; // 0 = hip, 1 = aiming
         private bool _aiming;
         private bool _binoculars;
+        private float _activeBinocularFov;
         private float _eyeHeight;
         private Renderer[] _hidden = System.Array.Empty<Renderer>();
         private ShadowCastingMode[] _hiddenModes = System.Array.Empty<ShadowCastingMode>();
 
         public bool IsAiming => _aiming;
         public bool IsBinoculars => _binoculars;
+        public void RestoreLook(Quaternion rotation)
+        {
+            _yaw = rotation.eulerAngles.y;
+            _pitch = Mathf.Clamp(Mathf.DeltaAngle(0, rotation.eulerAngles.x), minPitch, maxPitch);
+            ClearRecoil(); transform.rotation = rotation;
+        }
 
         /// <summary>Degrees of recoil still sitting in the view, for tests and for the HUD.</summary>
         public Vector2 RecoilOwed => new(_recoilPitchOwed, _recoilYawOwed);
@@ -169,7 +176,7 @@ namespace ShadowVale.Gameplay.Player
             {
                 // Straight from the eyes: no arm, no shoulder, so nothing of the character in view.
                 Quaternion look = Quaternion.Euler(_pitch, _yaw, 0f);
-                _camera.fieldOfView = Mathf.Lerp(_camera.fieldOfView, binocularFov, 1f - Mathf.Exp(-binocularZoomSpeed * Time.deltaTime));
+                _camera.fieldOfView = Mathf.Lerp(_camera.fieldOfView, _activeBinocularFov, 1f - Mathf.Exp(-binocularZoomSpeed * Time.deltaTime));
                 transform.SetPositionAndRotation(target.position + Vector3.up * _eyeHeight + look * Vector3.forward * 0.15f, look);
                 return;
             }
@@ -260,7 +267,7 @@ namespace ShadowVale.Gameplay.Player
 
             if (Cursor.lockState == CursorLockMode.Locked)
             {
-                float sensitivity = mouseSensitivity * (_binoculars ? binocularFov / hipFov : Mathf.Lerp(1f, aimSensitivityScale, _aimBlend));
+                float sensitivity = mouseSensitivity * (_binoculars ? _activeBinocularFov / hipFov : Mathf.Lerp(1f, aimSensitivityScale, _aimBlend));
                 Vector2 delta = mouse.delta.ReadValue();
 
                 float yawDelta = delta.x * sensitivity;
@@ -341,9 +348,10 @@ namespace ShadowVale.Gameplay.Player
         /// screen from there, so it only casts its shadow until they come down. Safe to call
         /// every frame (the eye height follows crouching).
         /// </summary>
-        public void SetBinoculars(bool value, float eyeHeight)
+        public void SetBinoculars(bool value, float eyeHeight, float? fieldOfView = null)
         {
             _eyeHeight = eyeHeight;
+            if (value) _activeBinocularFov = Mathf.Clamp(fieldOfView ?? binocularFov, 5, 90);
             if (_binoculars == value || target == null) return;
             _binoculars = value;
             if (value)

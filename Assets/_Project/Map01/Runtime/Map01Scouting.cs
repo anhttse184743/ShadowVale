@@ -15,7 +15,7 @@ namespace ShadowVale.Map01
     /// away from it (quietKillDistance), e.g. by a thrown stone.
     /// Until a camp is logged, only a rough area around it is known — offset from the real spot.
     /// </summary>
-    public sealed class Map01Scouting : MonoBehaviour
+    public sealed class Map01Scouting : MonoBehaviour, IBinoculars
     {
         [SerializeField] private float binocularRange = 45f;
         [Tooltip("How far off the screen centre (degrees) the camp may be while logging it.")]
@@ -96,9 +96,22 @@ namespace ShadowVale.Map01
                     Guards = outpostGuards.Where(g => NearestCamp(g.transform.position) == root.transform)
                         .OrderBy(g => g.name, System.StringComparer.Ordinal).ToArray()
                 });
+                foreach (var guard in camps[camps.Count - 1].Guards) guard.SquadId = "C" + number;
+            }
+            // Gate guards (rbl_east_N) stand at a camp without being part of the scouting log: they
+            // fight with that camp's squad.
+            foreach (var guard in FindObjectsByType<Map01EnemyController>(FindObjectsSortMode.None))
+            {
+                if (guard.SquadId.Length > 0 || guard.name.StartsWith("Outpost guard ")) continue;
+                var camp = NearestCamp(guard.transform.position);
+                if (camp != null && (camp.position - guard.transform.position).sqrMagnitude < GateGuardRadius * GateGuardRadius)
+                    guard.SquadId = "C" + camp.name.Substring("Enemy outpost ".Length);
             }
             TrackAttacks();
         }
+
+        /// <summary>A guard this close to a camp that is not one of its logged guards is its gate guard.</summary>
+        private const float GateGuardRadius = 30f;
 
         private static Transform NearestCamp(Vector3 position)
         {

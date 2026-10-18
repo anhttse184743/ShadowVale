@@ -428,16 +428,20 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual(mission.Settings.guardShotInterval, enemy.FireInterval, 1e-4f, enemy.name);
             }
 
-            // One real hit through the guard's own Shoot(): exactly the balance damage, and no
+            // One real hit through the guard's own weapon: exactly the balance damage, and no
             // second hit before the interval has passed.
             var guard = mission.Enemies.First(e => e.Alive && !e.IsBoss);
+            // This test isolates damage/cooldown; obstruction behaviour has its own raycast test.
+            typeof(Map01EnemyController).GetField("obstructionMask", Private).SetValue(guard, (LayerMask)0);
             typeof(Map01EnemyController).GetField("_nextShot", Private).SetValue(guard, 0f);
-            var shoot = typeof(Map01EnemyController).GetMethod("Shoot", Private);
+            var accuracy = guard.Accuracy;
+            guard.Accuracy = new ShadowVale.Gameplay.Enemies.ShotAccuracyProfile { enabled = false }; // Hit chance: ShotAccuracyTests.
             float before = playerHealth.Current;
-            shoot.Invoke(guard, null);
+            guard.FireAtPlayer();
             Assert.AreEqual(before - expected, playerHealth.Current, 1e-3f);
-            shoot.Invoke(guard, null);
+            guard.FireAtPlayer();
             Assert.AreEqual(before - expected, playerHealth.Current, 1e-3f, "A guard must not fire again before guardShotInterval.");
+            guard.Accuracy = accuracy;
 
             // The commander keeps his multiplier on top of the baseline rather than being reset by it.
             // He is in his headquarters from the start (Map01C3Mission); the boss stage brings no second one.

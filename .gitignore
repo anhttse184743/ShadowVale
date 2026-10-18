@@ -52,3 +52,13 @@ Assets/_Project/**/GeneratedContent/
 # Unity unpacks FBX-embedded textures here during extraction. Pure duplicates of
 # whatever ended up in the model's own Textures folder, ~30 MB per character.
 *.fbm/
+
+# Local AI sandbox: a full copy of Map 1 (~43 MB), regenerated with ShadowVale > Test Map 1 AI > Tạo
+/Assets/_Project/Scenes/Maps/Test Map 1 AI.unity
+/Assets/_Project/Scenes/Maps/Test Map 1 AI.unity.meta
+/Assets/_Project/Scenes/Maps/Test Map 1 AI/
+/Assets/_Project/Scenes/Maps/Test Map 1 AI.meta
+/Assets/_Project/Resources/TacticalGraphs/Test Map 1 AI.*
+
+# Python libraries installed beside the intro shot scripts (pip install --target .deps); reinstall, do not commit
+.deps/

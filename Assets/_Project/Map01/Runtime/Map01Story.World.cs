@@ -1,3 +1,4 @@
+using ShadowVale.AI.Perception;
 using System;
 using System.Collections;
 using System.Linq;
@@ -34,7 +35,7 @@ namespace ShadowVale.Map01
             var oldLoot=instance.GetComponent<ForestPoint>();if(oldLoot!=null){mission.UnregisterPoint(oldLoot);Destroy(oldLoot);}
             var enemy=instance.GetComponent<Map01EnemyController>();enemy.carriesSupplyKey=false;enemy.suppressOperationLoot=true;enemy.operationIndex=0;
             enemy.InitializePursuer(mission,at,false);mission.AddEnemy(enemy);
-            if(investigate)enemy.Hear(Layout.radio.position,100,Map01NoiseKind.Other);return enemy;
+            if(investigate)enemy.Hear(Layout.radio.position,100,NoiseKind.Other);return enemy;
         }
         public void RestoreOperationActors(Map01EnemyController.Snapshot[] states)
         {

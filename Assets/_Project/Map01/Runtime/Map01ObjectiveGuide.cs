@@ -48,41 +48,9 @@ namespace ShadowVale.Map01
         {
             target = default; label = null;
             if (GetComponent<Map01Story>()?.Target(out target, out label) == true) return true;
-            switch (quest.Stage)
-            {
-                case Map01Quest.ExtractionStage:
-                    var extraction = mission.GetComponentInChildren<Map01Extraction>();
-                    if (extraction == null) return false;
-                    target = extraction.ObjectivePosition; label = "NORTHERN JETTY"; return true;
-                case Map01Quest.RescueStage:
-                    target = mission.hung.position; label = "BẾN TÀU — CỨU HÙNG";
-                    return true;
-                case Map01Quest.ScoutStage:
-                    // Only the rough area of the nearest camp not yet logged — never the camp itself.
-                    var zone = scouting.Camps.Where(c => !c.Found)
-                        .OrderBy(c => (c.ZoneCenter - mission.player.position).sqrMagnitude).FirstOrDefault();
-                    if (zone == null) return false;
-                    target = zone.ZoneCenter; label = "KHU VỰC NGHI NGỜ";
-                    return true;
-                case Map01Quest.EscortStage:
-                    var rescue = mission.GetComponent<Map01Rescue>();
-                    if(rescue.Layout==null)return false;
-                    target = rescue.Layout.shelterDoor.position; label = "HẦM TRÚ ẨN — ĐƯA HÙNG VỀ";
-                    return true;
-                case Map01Quest.CampsStage:
-                    var guard = mission.Enemies.Where(e => e.Alive && e.name.StartsWith("Outpost guard "))
-                        .OrderBy(e => (e.transform.position - mission.player.position).sqrMagnitude).FirstOrDefault();
-                    if (guard == null) return false;
-                    target = guard.transform.position; label = "DOANH TRẠI ĐỊCH";
-                    return true;
-                case Map01Quest.BossStage:
-                    var boss = mission.Enemies.FirstOrDefault(e => e.IsBoss && e.Alive);
-                    if (boss == null) return false;
-                    target = boss.transform.position; label = "CHỈ HUY ĐỊCH";
-                    return true;
-                default:
-                    return false; // The complete stage has nowhere left to go.
-            }
+            // The map's own objectives: Map01Quest in Map 1, TutorialDirector in the tutorial.
+            var objectives = mission.Objectives;
+            return objectives != null && objectives.TryGetObjectiveTarget(out target, out label);
         }
 
         private void Update()

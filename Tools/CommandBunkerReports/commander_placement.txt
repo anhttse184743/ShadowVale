@@ -1,0 +1,6 @@
+Player root=(-67.50, 0.21, -66.50) report before=(-62.95, 0.20, -59.96)
+PASS return segment 1 (-64.44, 2.64, -77.40) -> (-64.44, 0.21, -69.66) corners=3
+PASS return segment 2 (-64.44, 0.21, -69.66) -> (-64.08, 0.21, -68.58) corners=2
+PASS return segment 3 (-64.08, 0.21, -68.58) -> (-68.10, 0.20, -65.60) corners=2
+PASS return segment 4 (-68.10, 0.20, -65.60) -> (-67.05, 0.22, -59.96) corners=2
+Commander=(-67.05, 0.21, -58.16) facing=(0.00, 0.00, -1.00) Nam report=(-67.05, 0.22, -59.96) distance=1.800019

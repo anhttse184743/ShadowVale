@@ -16,14 +16,18 @@ namespace ShadowVale.Map01
         private int selected, latest;
         private Map01Mission mission;
         private Map01SaveSystem saveSystem;
+        private TutorialDirector tutorial;
+        private bool choosingTutorial;
         private Map02Mission map2;
         private bool HasGameplay => mission != null || map2 != null;
         private bool GameplayPaused => mission != null ? mission.Paused : map2 != null && map2.Paused;
         private void PauseGameplay(bool value) { if(mission!=null)mission.SetPaused(value);else map2?.SetPaused(value); }
         private bool ClosePanel() => mission != null ? mission.CloseGameplayPanel() : map2 != null && map2.CloseGameplayPanel();
-        private bool CanSaveSession() => mission != null ? saveSystem.CanSave() : map2 != null && map2.CanSave();
-        private string SaveReason() => mission != null ? saveSystem.ManualSaveBlockReason() : map2 != null ? map2.SaveBlockReason() : "Hãy vào màn chơi trước khi lưu.";
-        private bool SaveSession(int slot,out string error) { if(mission!=null)return saveSystem.SaveSlot(slot,out error);if(map2!=null)return map2.SaveSlot(slot,out error);error="Không có phiên màn chơi.";return false; }
+        // The tutorial runs a Map01Mission without a save system: it keeps no save.
+        private const string TutorialNoSave = "Hướng dẫn không lưu game.";
+        private bool CanSaveSession() => mission != null ? saveSystem != null && saveSystem.CanSave() : map2 != null && map2.CanSave();
+        private string SaveReason() => mission != null ? (saveSystem != null ? saveSystem.ManualSaveBlockReason() : TutorialNoSave) : map2 != null ? map2.SaveBlockReason() : "Hãy vào màn chơi trước khi lưu.";
+        private bool SaveSession(int slot,out string error) { if(mission!=null){if(saveSystem==null){error=TutorialNoSave;return false;}return saveSystem.SaveSlot(slot,out error);}if(map2!=null)return map2.SaveSlot(slot,out error);error="Không có phiên màn chơi.";return false; }
         public static void RefreshGameplayBinding() { EnsureCreated(); if(instance!=null)instance.BindScene(); }
         private Texture2D background, buttonPlate, wordmark;
         private Font font, displayFont;
@@ -84,19 +88,21 @@ namespace ShadowVale.Map01
         private void OnScene(Scene scene, LoadSceneMode mode) => BindScene();
         private void BindScene()
         {
+            CancelInvoke(nameof(GoToTitle)); // A Boot timer must not redirect a scene explicitly loaded afterwards.
             map2=FindFirstObjectByType<Map02Mission>();
             exploringMap2 = FindFirstObjectByType<Map02Exploration>() != null && map2 == null;
             if (exploringMap2) {
-                CancelInvoke(nameof(GoToTitle)); visible = false; Time.timeScale = 1; return;
+                visible = false; Time.timeScale = 1; return;
             }
             mission = FindFirstObjectByType<Map01Mission>();
             saveSystem = mission != null ? mission.GetComponent<Map01SaveSystem>() : null;
+            tutorial = mission != null ? mission.GetComponent<TutorialDirector>() : null; choosingTutorial = false;
             var name = SceneManager.GetActiveScene().name;
             // A blank/unsaved editor scene has no gameplay. It must show the title rather than just its skybox.
             visible = HasGameplay ? GameplayPaused : name != "Map 2";
             browser = saving = quitAuthorized = loading = false; selected = 0; question = message = null; confirmed = null;
             ignoreKeysUntil = Time.realtimeSinceStartup + .5f; settleFrames = 10;
-            Time.timeScale = HasGameplay && GameplayPaused ? 0 : 1;
+            if (mission != null) mission.RefreshTimeScale(); else Time.timeScale = HasGameplay && GameplayPaused ? 0 : 1;
             Refresh();
             if (!HasGameplay && latest < 0) selected = 1;
             if (name == "00_Boot") Invoke(nameof(GoToTitle), .01f);
@@ -105,6 +111,7 @@ namespace ShadowVale.Map01
         private bool SaveBeforeExit()
         {
             if (!HasGameplay) return true;
+            if (mission != null && saveSystem == null) return true; // The tutorial keeps no save.
             string error;
             bool saved=mission!=null?saveSystem.AutoSaveOnExit(out error):map2.AutoSaveOnExit(out error);
             if (saved) return true;
@@ -136,14 +143,15 @@ namespace ShadowVale.Map01
             lastFrameAt = now;
             var kb = Keyboard.current;
             if (kb == null || now < ignoreKeysUntil) return;
-            if (mission != null && mission.Cinematic || map2 != null && map2.Cinematic) return;
+            if (mission != null && mission.Cinematic && tutorial == null || map2 != null && map2.Cinematic) return;
             if (visible && question != null) {
-                if (kb.escapeKey.wasPressedThisFrame) { question = null; confirmed = null; }
+                if (mission != null && mission.Cinematic ? kb.escapeKey.wasReleasedThisFrame : kb.escapeKey.wasPressedThisFrame) { question = null; confirmed = null; }
                 else if (kb.enterKey.wasPressedThisFrame || kb.numpadEnterKey.wasPressedThisFrame) Confirm();
                 return;
             }
-            if (kb.escapeKey.wasPressedThisFrame) {
+            if (mission != null && mission.Cinematic ? kb.escapeKey.wasReleasedThisFrame : kb.escapeKey.wasPressedThisFrame) {
                 if (question != null) { question = null; confirmed = null; }
+                else if (choosingTutorial) { choosingTutorial = false; selected = 1; }
                 else if (browser) { browser = false; selected = 0; }
                 else if (HasGameplay) {
                     if (!visible && ClosePanel()) return;
@@ -151,7 +159,7 @@ namespace ShadowVale.Map01
                 }
             }
             if (!visible || question != null) return;
-            int count = browser ? ForestSaveSlots.Count : HasGameplay ? 5 : 4;
+            int count = choosingTutorial ? 3 : browser ? ForestSaveSlots.Count : HasGameplay ? 5 : 4;
             if (kb.downArrowKey.wasPressedThisFrame) selected = (selected + 1) % count;
             if (kb.upArrowKey.wasPressedThisFrame) selected = (selected + count - 1) % count;
             if (kb.enterKey.wasPressedThisFrame) { if (browser) SlotAction(); else MainAction(selected); }
@@ -169,8 +177,7 @@ namespace ShadowVale.Map01
         // The map owns the real-time briefing; loading an existing save never requests it.
         private void BeginNewGame()
         {
-            Map01OpeningCutscene.RequestNewGame();
-            StartGame(-1);
+            choosingTutorial = true; selected = 0;
         }
         public static void SuppressKeysAfterCutscene()
         {
@@ -178,6 +185,20 @@ namespace ShadowVale.Map01
         }
         private void MainAction(int index)
         {
+            if (choosingTutorial) {
+                if (index == 0) { loading = true; Map01OpeningCutscene.CancelPending(); Time.timeScale = 1; SceneManager.LoadScene(TutorialDirector.SceneName); }
+                if (index == 1) { Map01OpeningCutscene.RequestNewGame(); StartGame(-1); }
+                if (index == 2) { choosingTutorial = false; selected = 1; }
+                return;
+            }
+            if (tutorial != null) {
+                if (index == 0) Resume();
+                if (index == 1) { Resume(); tutorial.RetryStep(); }
+                if (index == 2) tutorial.SkipAll();
+                if (index == 3) Ask("Về menu chính? Tiến trình hướng dẫn không được lưu.", GoToTitle);
+                if (index == 4) Ask("Thoát game? Tiến trình hướng dẫn không được lưu.", Quit);
+                return;
+            }
             if (!HasGameplay) {
                 if (index == 0 && latest >= 0) StartGame(latest);
                 if (index == 1) BeginNewGame();
@@ -338,13 +359,15 @@ namespace ShadowVale.Map01
             else GUI.Label(new Rect(75, 48, 730, 134), "SHADOWVALE", title);
             Fill(new Rect(145, 201, 150, 2), Ink); Fill(new Rect(560, 201, 150, 2), Ink);
             GUI.Label(new Rect(300, 180, 255, 45), HasGameplay ? "TẠM DỪNG" : "MENU CHÍNH", caption);
-            var labels = !HasGameplay ? new[] { "TIẾP TỤC", "CHƠI MỚI", "TẢI GAME", "THOÁT GAME" }
+            var labels = choosingTutorial ? new[] { "CHƠI HƯỚNG DẪN", "BỎ QUA HƯỚNG DẪN", "QUAY LẠI" }
+                : tutorial != null ? new[] { "TIẾP TỤC", "THỬ LẠI BƯỚC NÀY", "BỎ QUA HƯỚNG DẪN", "MENU CHÍNH", "THOÁT GAME" }
+                : !HasGameplay ? new[] { "TIẾP TỤC", "CHƠI MỚI", "TẢI GAME", "THOÁT GAME" }
                 : new[] { "TIẾP TỤC", "LƯU GAME", "TẢI GAME", "MENU CHÍNH", "THOÁT GAME" };
             for (int i = 0; i < labels.Length; i++)
-                if (Button(new Rect(115, 244 + (!HasGameplay ? 115 : 92) * i, 535, !HasGameplay ? 102 : 82), labels[i], selected == i, !(!HasGameplay && i == 0 && latest < 0), true)) { selected = i; MainAction(i); }
+                if (Button(new Rect(115, 244 + (!HasGameplay ? 115 : 92) * i, 535, !HasGameplay ? 102 : 82), labels[i], selected == i, !(!HasGameplay && !choosingTutorial && i == 0 && latest < 0), true)) { selected = i; MainAction(i); }
             string summary = latest >= 0 && entries[latest] != null ? "Điểm lưu: " + entries[latest].location + "\nThời gian chơi: " + ForestSaveSlots.Duration(entries[latest].playSeconds) : "Chưa có bản lưu";
             Plate(new Rect(115, 737, 535, 72));
-            GUI.Label(new Rect(143, 752, 480, 54), message ?? summary, small);
+            GUI.Label(new Rect(143, 752, 480, 54), message ?? (tutorial != null ? "Hướng dẫn chỉ có checkpoint trong phiên chơi." : choosingTutorial ? "Học điều khiển cùng Hùng trước khi vào Map 1." : summary), small);
             Plate(new Rect(75, 833, 685, 48));
             GUI.Label(new Rect(110, 846, 640, 32), "↑ ↓ Chọn     Enter Xác nhận     Esc Quay lại", small);
         }

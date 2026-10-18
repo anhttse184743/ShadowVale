@@ -5,9 +5,13 @@
     "Unity.InputSystem",
     "Unity.AI.Navigation",
     "ShadowVale.AI",
+    "ShadowVale.Core",
     "ShadowVale.Data",
     "ShadowVale.Gameplay",
-    "ShadowVale.Core"
+    "ShadowVale.Telemetry",
+    "UnityEngine.UI",
+    "Unity.RenderPipelines.Core.Runtime",
+    "Unity.RenderPipelines.Universal.Runtime"
   ],
   "autoReferenced": true
 }

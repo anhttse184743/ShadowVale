@@ -1,0 +1,99 @@
+{
+    "entries": [
+        {
+            "asset": "Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Meshes/C1_ApprovedArt.fbx",
+            "node": "C1 / requisitioned small warehouse/Chair",
+            "degrees": 180.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Meshes/C2_ApprovedArt.fbx",
+            "node": "C2 / communications duty house/Chair.001",
+            "degrees": 180.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Meshes/C2_ApprovedArt.fbx",
+            "node": "C2 / communications duty house/Chair.002",
+            "degrees": 180.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Meshes/C3_MainGarrison_Art.fbx",
+            "node": "C3 / command house/Chair.008",
+            "degrees": 90.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Meshes/C3_MainGarrison_Art.fbx",
+            "node": "Checkpoint and duty post.002/Gate duty shelter.002/Chair.009",
+            "degrees": 180.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Meshes/A_ResistanceWorkshop.fbx",
+            "node": "Repair workshop / craft art preview/Chair",
+            "degrees": 180.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Meshes/C1_QuartermasterDepot.fbx",
+            "node": "Checkpoint and duty post/Gate duty shelter/Chair.001",
+            "degrees": 180.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Meshes/C2_SignalDetachment.fbx",
+            "node": "C2 / signal duty house/Chair.002",
+            "degrees": 180.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Meshes/C2_SignalDetachment.fbx",
+            "node": "C2 / signal duty house/Chair.003",
+            "degrees": 180.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Meshes/C2_SignalDetachment.fbx",
+            "node": "Checkpoint and duty post.001/Gate duty shelter.001/Chair.004",
+            "degrees": 180.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Meshes/C3_CommandGarrison.fbx",
+            "node": "C3 / command house/Chair.008",
+            "degrees": 90.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/ResistanceGarrison_v2/Meshes/C3_CommandGarrison.fbx",
+            "node": "Checkpoint and duty post.002/Gate duty shelter.002/Chair.009",
+            "degrees": 180.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Meshes/A_ResistanceWorkshop.fbx",
+            "node": "Repair workshop / craft art preview/Chair",
+            "degrees": 180.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Meshes/C1_QuartermasterDepot.fbx",
+            "node": "Checkpoint and duty post/Gate duty shelter/Chair.001",
+            "degrees": 180.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Meshes/C2_SignalDetachment.fbx",
+            "node": "C2 / signal duty house/Chair.002",
+            "degrees": 180.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Meshes/C2_SignalDetachment.fbx",
+            "node": "C2 / signal duty house/Chair.003",
+            "degrees": 180.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Meshes/C2_SignalDetachment.fbx",
+            "node": "Checkpoint and duty post.001/Gate duty shelter.001/Chair.004",
+            "degrees": 180.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Meshes/C3_CommandGarrison.fbx",
+            "node": "C3 / command house/Chair.008",
+            "degrees": 90.0
+        },
+        {
+            "asset": "Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Meshes/C3_CommandGarrison.fbx",
+            "node": "Checkpoint and duty post.002/Gate duty shelter.002/Chair.009",
+            "degrees": 180.0
+        }
+    ]
+}

@@ -8,6 +8,8 @@ using ShadowVale.Gameplay.Player;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.Rendering;
 using UnityEngine.TestTools;
 
@@ -197,46 +199,53 @@ namespace ShadowVale.Map01.Tests
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
             yield return null;
-            var mission = Object.FindFirstObjectByType<Map01Mission>();
-            var quest = mission.GetComponent<Map01Quest>();
-            var scouting = mission.GetComponent<Map01Scouting>();
-            Assert.IsNotNull(scouting, "Map01Quest must bring the binoculars along.");
-            Assert.AreEqual(3, scouting.Camps.Count, "Map 1 has three enemy outposts.");
-            Assert.IsTrue(scouting.Camps.All(c => c.Guards.Length > 0), "Every outpost has its guards.");
-            // The view is under test here, not stealth. The agent too: it keeps walking a guard down
-            // his last path without the controller, out from under the spot being aimed at.
-            foreach (var e in mission.Enemies) { e.enabled = false; e.GetComponent<NavMeshAgent>().enabled = false; }
-            quest.RestoreStage(Map01Quest.ScoutStage); // Point 1: the operations carry the binoculars.
-            mission.Say(null, -1f);
+            var routing = RouteInputToGame();
+            var keyboard = InputSystem.AddDevice<Keyboard>();
+            try {
+                // A real keyboard in an interactive Editor otherwise releases the direct HoldBinoculars call every frame.
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.F));
+                var mission = Object.FindFirstObjectByType<Map01Mission>();
+                var quest = mission.GetComponent<Map01Quest>();
+                var scouting = mission.GetComponent<Map01Scouting>();
+                Assert.IsNotNull(scouting, "Map01Quest must bring the binoculars along.");
+                Assert.AreEqual(3, scouting.Camps.Count, "Map 1 has three enemy outposts.");
+                Assert.IsTrue(scouting.Camps.All(c => c.Guards.Length > 0), "Every outpost has its guards.");
+                // The view is under test here, not stealth. The agent too: it keeps walking a guard down
+                // his last path without the controller, out from under the spot being aimed at.
+                foreach (var e in mission.Enemies) { e.enabled = false; e.GetComponent<NavMeshAgent>().enabled = false; }
+                quest.RestoreStage(Map01Quest.ScoutStage); // Point 1: the operations carry the binoculars.
+                mission.Say(null, -1f);
 
-            var camp = scouting.Camps[0];
-            Assert.IsTrue(FindVantage(camp, mission.ObstructionMask, out var standAt, out var lookAt), "Need a vantage point over camp 1.");
-            Teleport(mission, standAt);
-            yield return null; yield return null;
+                var camp = scouting.Camps[0];
+                Assert.IsTrue(FindVantage(camp, mission.ObstructionMask, out var standAt, out var lookAt), "Need a vantage point over camp 1.");
+                Teleport(mission, standAt);
+                yield return null; yield return null;
 
-            // Up and on the camp (re-aimed as the zoomed camera settles): the view is Nam's own.
-            for (int i = 0; i < 8; i++) { scouting.HoldBinoculars(true); AimCamera(mission, lookAt); yield return WaitGameSeconds(.1f); }
-            Assert.IsTrue(scouting.Binoculars, Diag(mission, scouting, camp, "Binoculars up."));
-            Assert.Less(Vector3.Distance(mission.gameCamera.transform.position, scouting.Eye), .3f, "Binoculars look from Nam's eyes, not over his shoulder.");
-            Assert.Less(mission.gameCamera.fieldOfView, 20f, "Binoculars zoom well past the rifle's aim.");
-            Assert.IsTrue(NamOutOfView(mission), "Nam's own model must not show in the binoculars.");
-            Directory.CreateDirectory("Logs/GuidePreview");
-            ScreenCapture.CaptureScreenshot("Logs/GuidePreview/scouting-binoculars.png");
+                // Up and on the camp (re-aimed as the zoomed camera settles): the view is Nam's own.
+                for (int i = 0; i < 8; i++) { scouting.HoldBinoculars(true); AimCamera(mission, lookAt); yield return WaitGameSeconds(.1f); }
+                Assert.IsTrue(scouting.Binoculars, Diag(mission, scouting, camp, "Binoculars up."));
+                Assert.Less(Vector3.Distance(mission.gameCamera.transform.position, scouting.Eye), .3f, "Binoculars look from Nam's eyes, not over his shoulder.");
+                Assert.Less(mission.gameCamera.fieldOfView, 20f, "Binoculars zoom well past the rifle's aim.");
+                Assert.IsTrue(NamOutOfView(mission), "Nam's own model must not show in the binoculars.");
+                Directory.CreateDirectory("Logs/GuidePreview");
+                ScreenCapture.CaptureScreenshot("Logs/GuidePreview/scouting-binoculars.png");
 
-            // Held on the camp well past the two seconds a log once took: nothing is logged, nothing completes.
-            yield return WaitGameSeconds(3f);
-            Assert.IsFalse(camp.Found, "Camps are no longer logged through the binoculars.");
-            Assert.AreEqual(0, scouting.FoundCount);
-            Assert.IsNull(scouting.Sighted);
-            Assert.AreEqual(0f, scouting.RecordProgress);
-            Assert.IsFalse(scouting.InScanRange, "No scan to be in range of.");
-            Assert.AreEqual(Map01Quest.ScoutStage, quest.Stage, "Looking at a camp completes no order.");
+                // Held on the camp well past the two seconds a log once took: nothing is logged, nothing completes.
+                yield return WaitGameSeconds(3f);
+                Assert.IsFalse(camp.Found, "Camps are no longer logged through the binoculars.");
+                Assert.AreEqual(0, scouting.FoundCount);
+                Assert.IsNull(scouting.Sighted);
+                Assert.AreEqual(0f, scouting.RecordProgress);
+                Assert.IsFalse(scouting.InScanRange, "No scan to be in range of.");
+                Assert.AreEqual(Map01Quest.ScoutStage, quest.Stage, "Looking at a camp completes no order.");
 
-            scouting.HoldBinoculars(false);
-            yield return null; yield return null;
-            Assert.IsFalse(scouting.Binoculars, Diag(mission, scouting, camp, "Binoculars down."));
-            Assert.IsFalse(NamOutOfView(mission), "Lowering the binoculars brings Nam back.");
-            Assert.Greater(Vector3.Distance(mission.gameCamera.transform.position, scouting.Eye), 1f, "Back behind his shoulder.");
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+                scouting.HoldBinoculars(false);
+                yield return null; yield return null;
+                Assert.IsFalse(scouting.Binoculars, Diag(mission, scouting, camp, "Binoculars down."));
+                Assert.IsFalse(NamOutOfView(mission), "Lowering the binoculars brings Nam back.");
+                Assert.Greater(Vector3.Distance(mission.gameCamera.transform.position, scouting.Eye), 1f, "Back behind his shoulder.");
+            } finally { InputSystem.RemoveDevice(keyboard); RestoreInputRouting(routing); }
             yield return new ExitPlayMode();
         }
 
@@ -349,8 +358,10 @@ namespace ShadowVale.Map01.Tests
             $"{what} (stopped={mission.Stopped} restoring={Map01SaveSystem.IsRestoring} stage={mission.GetComponent<Map01Quest>().Stage} scoutingEnabled={scouting.isActiveAndEnabled} " +
             $"toCamp={Vector3.Distance(mission.player.position, camp.Center):0.0} bino={scouting.Binoculars} found={camp.Found} fps={1f / Mathf.Max(.0001f, Time.unscaledDeltaTime):0} rate={Application.targetFrameRate})";
 
-        private static void Spot(Map01Scouting scouting) =>
-            typeof(Map01EnemyController).GetField("_engagedUntil", Private).SetValue(scouting.Camps[0].Guards[0], Time.time + 5);
+        private static Map01EnemyController CampGuard(Map01Scouting scouting, string name) =>
+            scouting.Camps.SelectMany(c => c.Guards).First(g => g.name == name);
+
+        private static void Spot(Map01Scouting scouting) => scouting.Camps[0].Guards[0].EngageFor(5);
 
         /// <summary>
         /// What replaced the scouting run's restart: an order taken from the commander keeps that moment (an operation

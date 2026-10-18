@@ -18,6 +18,7 @@ namespace ShadowVale.Gameplay.Player
     public sealed class PlayerFootsteps : MonoBehaviour
     {
         [SerializeField] private FootstepBank bank;
+        public FootstepBank Bank => bank;
         [SerializeField] private PlayerController controller;
 
         [Header("Metres between footfalls")]

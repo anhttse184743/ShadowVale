@@ -16,7 +16,8 @@ namespace ShadowVale.Map01
         private void DrawScouting(float width, float height, float scale)
         {
             if (scouting == null) scouting = GetComponent<Map01Scouting>(); // Added by Map01Quest.Awake.
-            if (scouting == null || mission.Stopped || mission.InventoryOpen || mission.MapOpen) return;
+            if (mission.Stopped || mission.InventoryOpen || mission.MapOpen) return;
+            if (scouting == null) { DrawAwareness(width, height, scale); return; }
             if (scouting.Binoculars) DrawBinoculars(width, height);
             DrawAwareness(width, height, scale);
             DrawCampWarning(width);
@@ -153,7 +154,7 @@ namespace ShadowVale.Map01
             var operation=GetComponent<Map01Story>();
             if(operation?.Layout!=null){
                 plate=new Rect(width/2-285,height-178,570,90);HudPanel(plate);
-                if(quest.Stage==Map01Quest.BossStage&&!operation.Progress.commanderReported){
+                if(quest!=null&&quest.Stage==Map01Quest.BossStage&&!operation.Progress.commanderReported){
                     GUI.Label(new Rect(plate.x+16,plate.y+5,plate.width-32,26),$"QUAN SÁT DOANH TRẠI  {operation.ObservationProgress*100:0}%",hudGuide);
                     GUI.Label(new Rect(plate.x+16,plate.y+32,plate.width-32,36),operation.ObservationHint??"Đứng xa ít nhất 18 m, hướng ống nhòm về doanh trại.",hudSmall);
                     var progress=new Rect(plate.x+18,plate.y+72,plate.width-36,10);HudFill(progress,new Color(0,0,0,.6f));HudFill(new Rect(progress.x,progress.y,progress.width*operation.ObservationProgress,progress.height),HudGold);

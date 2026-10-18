@@ -1,5 +1,7 @@
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using ShadowVale.AI.Perception;
 using UnityEngine;
 
 namespace ShadowVale.Map01
@@ -51,7 +53,7 @@ namespace ShadowVale.Map01
         private readonly List<LineRenderer> rings = new List<LineRenderer>();
         private Map01Mission mission;
         private Map01Inventory inventory;
-        private Map01Scouting scouting;
+        private IBinoculars scouting;
         private LineRenderer arcLine, landingRing, killRing;
 
         private void Awake()
@@ -60,7 +62,7 @@ namespace ShadowVale.Map01
             inventory = GetComponent<Map01Inventory>();
         }
 
-        private void Start() => scouting = GetComponent<Map01Scouting>(); // Added by Map01Quest.Awake.
+        private void Start() => scouting = GetComponents<MonoBehaviour>().OfType<IBinoculars>().FirstOrDefault(); // Added by Map01Quest.Awake.
 
         private bool CanAim() => mission.IsInitialized && !mission.Stopped && !mission.InventoryOpen && !mission.MapOpen
             && !ForestMenu.Visible && (scouting == null || !scouting.Binoculars);
@@ -255,7 +257,7 @@ namespace ShadowVale.Map01
                 Explode(landing);
                 yield break;
             }
-            int heard = mission.EmitNoise(landing, mission.Settings.stoneNoise, Map01NoiseKind.Stone);
+            int heard = mission.EmitNoise(landing, mission.Settings.stoneNoise, NoiseKind.Stone);
             mission.Say(heard > 0
                 ? $"Cạch! {heard} lính nghe thấy tiếng đá và bỏ vị trí đi kiểm tra — tranh thủ lúc này."
                 : "Cạch! ...Không lính nào ở đủ gần để nghe thấy.", 4);
@@ -281,7 +283,7 @@ namespace ShadowVale.Map01
             float self = Vector3.Distance(mission.player.position, at);
             if (self <= KillRadius) mission.Damage(mission.Settings.playerHP * 4f);
             else if (self <= WoundRadius) mission.Damage(mission.Settings.playerHP * .45f);
-            mission.EmitNoise(at, GrenadeNoise, Map01NoiseKind.Gunshot);
+            mission.EmitNoise(at, GrenadeNoise, NoiseKind.Gunshot);
             Vector3 up = Physics.Raycast(at + Vector3.up * 1.5f, Vector3.down, out var ground, 4f, mission.ObstructionMask, QueryTriggerInteraction.Ignore)
                 ? ground.normal : Vector3.up;
             Map01Blast.Spawn(at, up, mission.gameCamera);

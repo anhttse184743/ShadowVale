@@ -1,6 +1,6 @@
 {
   "name": "ShadowVale.Map01.Tests",
-  "references": ["ShadowVale.Map01", "UnityEngine.TestRunner", "UnityEditor.TestRunner", "Unity.InputSystem", "ShadowVale.AI", "ShadowVale.Data", "ShadowVale.Gameplay", "ShadowVale.UI"],
+  "references": ["ShadowVale.Map01", "UnityEngine.TestRunner", "UnityEditor.TestRunner", "Unity.InputSystem", "ShadowVale.AI", "ShadowVale.Core", "ShadowVale.Data", "ShadowVale.Gameplay", "ShadowVale.UI", "ShadowVale.Telemetry", "Unity.RenderPipelines.Core.Runtime", "Unity.RenderPipelines.Universal.Runtime"],
   "includePlatforms": ["Editor"],
   "overrideReferences": true,
   "precompiledReferences": [

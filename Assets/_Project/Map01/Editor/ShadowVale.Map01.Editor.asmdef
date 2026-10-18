@@ -8,11 +8,14 @@
     "Unity.RenderPipelines.Universal.Runtime",
     "Unity.InputSystem",
     "ShadowVale.AI",
-    "ShadowVale.Data"
+    "ShadowVale.Data",
+    "ShadowVale.Editor",
+    "UnityEngine.UI",
+    "Unity.RenderPipelines.Core.Runtime",
+    "UnityEditor.TestRunner"
   ],
   "includePlatforms": [
     "Editor"
   ],
   "autoReferenced": true
 }
-

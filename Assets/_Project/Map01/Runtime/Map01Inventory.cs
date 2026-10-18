@@ -41,6 +41,7 @@ namespace ShadowVale.Map01
         /// <summary>How far the first job has come, 0 to 1.</summary>
         public float CraftProgress => queue.Count > 0 ? Mathf.Clamp01(1 - CraftRemaining / queue[0].Seconds) : 0;
 
+        public event System.Action<string> ItemUsed;
         private Map01Mission mission;
         private void Awake() { mission = GetComponent<Map01Mission>(); }
 
@@ -205,6 +206,7 @@ namespace ShadowVale.Map01
                 if (throwTarget == null) return false;
                 Spend(id, 1);
             }
+            ItemUsed?.Invoke(id);
             nextQuickUse = Time.time + .25f;
             return true;
         }
@@ -254,6 +256,7 @@ namespace ShadowVale.Map01
         /// layout (<see cref="RestoreLayout"/>) puts every stack back where it was afterwards.</summary>
         public void RestoreFromSave(ForestIngredient[] savedItems, int savedStones, string savedCrafting, float craftRemaining)
         {
+            SuppressFire = false; nextQuickUse = 0;
             ClearAll();
             // Weapons first, so they take their slots; earlier saves carried rifle and knife without entries.
             // Only a missing key is migrated: a saved count of 0 is an explicit absence and stays one.

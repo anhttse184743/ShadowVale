@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.TestTools;
 using Object=UnityEngine.Object;
+using ShadowVale.AI.Perception;
 
 namespace ShadowVale.Map01.Tests
 {
@@ -91,8 +92,8 @@ namespace ShadowVale.Map01.Tests
         {
             Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
             Storage.SetValue(null,Path.GetFullPath("Logs/Rescue/saves/"+Guid.NewGuid().ToString("N")));Assert.NotNull(Rescue.Layout);Assert.AreEqual(4,Rescue.Squad.Count);var guard=Rescue.Squad[1];var overseer=Rescue.Squad[0];
-            Assert.IsTrue(guard.Hear(guard.transform.position+Vector3.left*3,9,Map01NoiseKind.Footstep));
-            Assert.IsFalse(guard.Alerted,"A footstep has a short reaction; rocks remain immediate.");Assert.IsTrue(overseer.Hear(overseer.transform.position+Vector3.left*9,14,Map01NoiseKind.Stone));
+            Assert.IsTrue(guard.Hear(guard.transform.position+Vector3.left*3,9,NoiseKind.Footstep));
+            Assert.IsFalse(guard.Alerted,"A footstep has a short reaction; rocks remain immediate.");Assert.IsTrue(overseer.Hear(overseer.transform.position+Vector3.left*9,14,NoiseKind.Stone));
             Assert.AreEqual(Map01Rescue.Phase.Captive,Rescue.CurrentPhase);
             yield return WaitGameSeconds(1.15f);Assert.IsTrue(guard.Alerted);yield return WaitGameSeconds(.85f);
             Assert.LessOrEqual(Vector3.Distance(overseer.transform.position,Rescue.Layout.guardPosts[0].position),6.5f);
@@ -150,7 +151,7 @@ namespace ShadowVale.Map01.Tests
             yield return WaitGameSeconds(3);
             Assert.IsFalse(Mission.Cinematic);Assert.IsTrue(Mission.ModernPlayer.enabled);Assert.IsTrue(Mission.ModernCombat.enabled);
             Assert.AreEqual(rounds,Mission.ModernCombat.RoundsInMagazine);Assert.IsFalse(Rescue.OverseerAlive);
-            Rescue.Squad[1].Hear(Mission.player.position,100,Map01NoiseKind.Gunshot);
+            Rescue.Squad[1].Hear(Mission.player.position,100,NoiseKind.Gunshot);
             Rescue.ReportDetection(new Map01Detection(Rescue.Squad[1],Map01DetectionCause.Sight,Mission.player.position));
             Assert.IsFalse(Rescue.Failed);Assert.AreEqual(Map01Rescue.Phase.Captive,Rescue.CurrentPhase);
             yield return new ExitPlayMode();

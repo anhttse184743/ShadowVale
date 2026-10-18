@@ -71,7 +71,7 @@ namespace ShadowVale.Map01
             CaptivePost=mission.hung.position;HungHealth=HungMaxHealth;
             Layout=FindFirstObjectByType<Map01RescueLayout>();
             if(Layout==null){var prefab=Resources.Load<Map01RescueLayout>("Rescue/Map01RescueLayout");if(prefab!=null)Layout=Instantiate(prefab);}
-            foreach(var name in SquadNames){var go=GameObject.Find(name);if(go!=null&&go.TryGetComponent<Map01EnemyController>(out var guard))squad.Add(guard);}
+            foreach(var name in SquadNames){var go=GameObject.Find(name);if(go!=null&&go.TryGetComponent<Map01EnemyController>(out var guard)){squad.Add(guard);guard.SquadId="B";}}
             if(Layout==null||squad.Count!=4){Debug.LogError("Rescue layout or one of four original guards is missing.",this);enabled=false;return;}
             for(int i=0;i<4;i++){
                 var route=Layout.patrolRoutes[i];

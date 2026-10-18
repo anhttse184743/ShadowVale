@@ -196,6 +196,7 @@ namespace ShadowVale.Gameplay.Combat
         [Header("Tracers")]
         [Tooltip("Bullet streak spawned per shot. Optional — shooting works without it.")]
         [SerializeField] private ShotTracer tracerPrefab;
+        public ShotTracer TracerPrefab => tracerPrefab;
 
         [Tooltip("How many streaks can overlap. A full pool reuses the oldest.")]
         [SerializeField] private int tracerPoolSize = 12;
@@ -222,10 +223,9 @@ namespace ShadowVale.Gameplay.Combat
         private float _upperBodyWeight;
         /// <summary>Base-layer state holding Nam's own AK carry, when the controller has one.</summary>
         public const string RifleLocomotionState = "Locomotion_Rifle";
-        private bool _rifleBody, _hasReloadParams, _hasHitParam;
+        private bool _rifleBody, _hasReloadParams;
         private static readonly int KnifeLocomotionHash = Animator.StringToHash("Locomotion_Knife");
         private bool HasKnifeCarry => animator!=null&&animator.HasState(0,KnifeLocomotionHash);
-        private float _lastHealthSeen = -1f;
         private float _upperBodyHoldUntil;
         private float _faceCameraHoldUntil;
         private float _fireHoldUntil;
@@ -263,11 +263,9 @@ namespace ShadowVale.Gameplay.Combat
         {
             if (animator == null || animator.runtimeAnimatorController == null) return;
             animator.Rebind();
-            _lastHealthSeen=health!=null?health.Current:-1f;
             _upperBodyHoldUntil=_faceCameraHoldUntil=_fireHoldUntil=0;
             _nextAttackTime=Time.time;
             _magazine?.CancelReload();_spread.Reset();
-            if(_hasHitParam)animator.ResetTrigger("Hit");
             _rifleBody=animator.HasState(0,Animator.StringToHash(RifleLocomotionState));
             _upperBodyLayer = animator.GetLayerIndex(UpperBodyLayer);
             animator.SetInteger(AnimatorParams.Weapon, (int)_equippedKind);
@@ -317,7 +315,6 @@ namespace ShadowVale.Gameplay.Combat
                 foreach (AnimatorControllerParameter p in animator.parameters)
                 {
                     if (p.name == "ReloadSpeed") _hasReloadParams = true;
-                    if (p.name == "Hit") _hasHitParam = true;
                 }
             }
 
@@ -447,17 +444,8 @@ namespace ShadowVale.Gameplay.Combat
         {
             bool dead = health != null && health.IsDead;
 
-            // A round that lands and leaves him standing: Nam's own flinch (Blender hit-reaction take).
-            if (health != null)
-            {
-                if (_hasHitParam && !dead && animator != null && _equippedKind == WeaponKind.Rifle
-                    && _lastHealthSeen >= 0f && health.Current < _lastHealthSeen - 0.01f)
-                {
-                    animator.SetTrigger("Hit");
-                    _upperBodyHoldUntil = Mathf.Max(_upperBodyHoldUntil, Time.time + 0.6f);
-                }
-                _lastHealthSeen = health.Current;
-            }
+            // No flinch when a round lands: Nam (and Hùng in the tutorial) keeps his aim. The controller's
+            // "Hit" state (Nam_HitReaction) is no longer triggered.
 
             // The magazine is ticked before any early return. Dying halfway through a reload
             // would otherwise leave the timer frozen for good, and a magazine that believes it
@@ -640,10 +628,8 @@ namespace ShadowVale.Gameplay.Combat
         private ShooterStance CurrentStance()
         {
             if (_controller == null) return ShooterStance.Standing;
-            if (_characterController != null && !_characterController.isGrounded) return ShooterStance.Airborne;
-            if (_controller.IsSprinting) return ShooterStance.Running;
-            if (_controller.IsSneaking) return ShooterStance.Sneak;
-            return _controller.IsMoving ? ShooterStance.Walking : ShooterStance.Standing;
+            return WeaponSpreadState.ResolveStance(_characterController == null || _characterController.isGrounded,
+                _controller.IsSneaking, _controller.IsSprinting, _controller.PlanarSpeed);
         }
 
         private void ReadReloadInput()
@@ -807,9 +793,8 @@ namespace ShadowVale.Gameplay.Combat
             // trigger widens it. The weapon's own HipSpread is no longer consulted: one flat
             // number could not tell a crouched aimed tap from a shot fired mid-jump.
             ShooterStance stance = CurrentStance();
-            direction = WeaponSpreadState.Scatter(direction, _spread.ConeHalfAngle(stance, _aiming));
-
             Vector2 kick = _spread.Fire(Time.time);
+            direction = WeaponSpreadState.Scatter(direction, _spread.ConeHalfAngle(stance, _aiming));
             var skills = GetComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
             if (skills != null) kick *= skills.RecoilMultiplier;
             if (cameraRig != null) cameraRig.AddRecoil(kick.x, kick.y);
@@ -822,8 +807,9 @@ namespace ShadowVale.Gameplay.Combat
             {
                 var health = hit.collider.GetComponentInParent<Health>();
                 bool alive = health != null && !health.IsDead;
-                ApplyDamage(hit.collider, gun.Damage, hit.point);
-                if (alive && health != null && health.IsDead) GunKilled?.Invoke(health.gameObject);
+                if (health != null) health.TakeBulletDamage(gun.Damage, hit.point, gameObject, direction);
+                else ApplyDamage(hit.collider, gun.Damage, hit.point);
+                if (alive && health.IsDead) GunKilled?.Invoke(health.gameObject);
                 endPoint = hit.point;
             }
             else

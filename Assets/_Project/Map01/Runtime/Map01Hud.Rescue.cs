@@ -18,7 +18,9 @@ namespace ShadowVale.Map01
             // Nothing here takes input: the search for a guard runs once a frame, not once per GUI event.
             if(Event.current.type!=EventType.Repaint)return;
             if(rescue==null)rescue=GetComponent<Map01Rescue>();
-            if(rescue==null||!rescue.GetTakedownHint(out var target,out var ready))return;
+            Map01EnemyController target; bool ready;
+            // Without the rescue (the tutorial) the mission finds the guard itself.
+            if(rescue!=null?!rescue.GetTakedownHint(out target,out ready):!mission.GetTakedownHint(3.2f,out target,out ready))return;
             if(target!=hintGuard){
                 hintGuard=target;var actor=target.GetComponentInChildren<Animator>();
                 hintHead=actor!=null?actor.GetBoneTransform(HumanBodyBones.Head):null;

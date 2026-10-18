@@ -336,6 +336,7 @@ namespace ShadowVale.EnvironmentReview
         static double next;
         static Map01ArtStageRequest()
         {
+            if(!Directory.Exists(Map01ArtStage.Work))return;
             // Optional review output may be absent on a fresh checkout. Never let
             // an I/O failure poison this InitializeOnLoad type or its update loop.
             try

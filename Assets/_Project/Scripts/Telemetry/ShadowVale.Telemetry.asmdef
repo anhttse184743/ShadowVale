@@ -1,7 +1,7 @@
 {
     "name": "ShadowVale.Telemetry",
     "rootNamespace": "ShadowVale.Telemetry",
-    "references": ["ShadowVale.Core","ShadowVale.Data","ShadowVale.Networking"],
+    "references": ["ShadowVale.Core","ShadowVale.Data","ShadowVale.Networking","ShadowVale.Content","ShadowVale.AI"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

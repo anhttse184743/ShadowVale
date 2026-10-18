@@ -1,3 +1,4 @@
+using ShadowVale.AI.Perception;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -407,7 +408,7 @@ namespace ShadowVale.Map01
             if (Current.kiengRung) return;
             Current.kiengRung = true;
             mission.Say("\"Keng! Keng! Keng!\" — kẻng báo động. Lính trong dãy nhà bật dậy!", 4);
-            mission.EmitNoise(At(Data.kieng.frame[0], Data.kieng.frame[1]), 45f, Map01NoiseKind.Other);
+            mission.EmitNoise(At(Data.kieng.frame[0], Data.kieng.frame[1]), 45f, NoiseKind.Other);
             for (int i = 0; i < sleepers.Count; i++) Wake(i, true);
         }
 
@@ -485,9 +486,9 @@ namespace ShadowVale.Map01
             if (Near) mission.Say("Có thêm lính chạy tới từ đường mòn phía Bắc — dây điện thoại vẫn còn.", 4);
         }
 
-        private void OnNoise(Vector3 position, float radius, Map01NoiseKind kind)
+        private void OnNoise(Vector3 position, float radius, NoiseKind kind)
         {
-            if (!ready || Map01SaveSystem.IsRestoring || kind != Map01NoiseKind.Gunshot && radius < 25f) return;
+            if (!ready || Map01SaveSystem.IsRestoring || kind != NoiseKind.Gunshot && radius < 25f) return;
             for (int i = 0; i < sleepers.Count; i++)
             {
                 if (Current.sleepersAwake[i]) continue;

@@ -46,6 +46,16 @@ namespace ShadowVale.Content
                 if (e.MaxHp <= 0) errors.Add($"enemy_archetypes[{e.Id}].max_hp must be > 0");
                 if (e.RetreatHpThreshold < 0 || e.RetreatHpThreshold > 1) errors.Add($"enemy_archetypes[{e.Id}].retreat_hp_threshold must be in [0,1]");
                 if (!string.IsNullOrEmpty(e.LootTableId) && !loot.Contains(e.LootTableId)) errors.Add($"enemy_archetypes[{e.Id}].loot_table_id '{e.LootTableId}' unknown");
+                if (e.Boss != null)
+                {
+                    var p = e.Boss;
+                    if (!e.IsBoss) errors.Add($"enemy_archetypes[{e.Id}].boss is only allowed with is_boss");
+                    if (p.HealthMultiplier <= 0 || p.VisionMultiplier <= 0) errors.Add($"enemy_archetypes[{e.Id}].boss multipliers must be > 0");
+                    if (p.ReinforceHpThreshold < 0 || p.ReinforceHpThreshold > 1 || p.RelocateDamageFraction < 0 || p.RelocateDamageFraction > 1)
+                        errors.Add($"enemy_archetypes[{e.Id}].boss fractions must be in [0,1]");
+                    if (p.RelocateMaxDistance < p.RelocateMinDistance) errors.Add($"enemy_archetypes[{e.Id}].boss relocate_max_distance < relocate_min_distance");
+                    if (p.ReinforceCount < 0 || p.GrenadeRadius < 0 || p.GrenadeDamage < 0) errors.Add($"enemy_archetypes[{e.Id}].boss values must be ≥ 0");
+                }
             }
 
             foreach (var t in b.LootTables)
@@ -101,6 +111,7 @@ namespace ShadowVale.Content
                 }
                 if (!string.IsNullOrEmpty(m.BossArchetypeId) && !enemies.Contains(m.BossArchetypeId))
                     errors.Add($"maps[{m.Id}].boss_archetype_id '{m.BossArchetypeId}' unknown");
+                ValidateSquad(m.Coordination, $"maps[{m.Id}].coordination", errors);
             }
 
             var ai = b.AiSettings;
@@ -110,9 +121,19 @@ namespace ShadowVale.Content
                 if (string.IsNullOrWhiteSpace(ai.DefaultSolverVariant)) errors.Add("ai_settings.default_solver_variant missing");
                 if (ai.LatencyBudgetMs <= 0) errors.Add("ai_settings.latency_budget_ms must be > 0");
                 if (ai.ReplanCooldownMs < 0) errors.Add("ai_settings.replan_cooldown_ms must be >= 0");
+                ValidateSquad(ai.Squad, "ai_settings.squad", errors);
             }
 
             return errors;
+        }
+
+        private static void ValidateSquad(SquadAiSettings q, string where, List<string> errors)
+        {
+            if (q == null) return;
+            if (q.MinGroupAgents < 1 || q.MaxGroupAgents < 1 || q.SubgraphNodes < 2) errors.Add($"{where}: group sizes must be ≥ 1 (subgraph ≥ 2)");
+            if (q.MinGroupAgents > q.MaxGroupAgents) errors.Add($"{where}.min_group_agents > max_group_agents");
+            if (q.SquadAlertRange < 0 || q.ReinforcementRange < 0 || q.GroupMergeRange < 0) errors.Add($"{where}: ranges must be ≥ 0");
+            if (q.RefreshSeconds <= 0 || q.StaleDistance <= 0 || q.ReplanHopDelta < 1) errors.Add($"{where}: refresh, stale distance and hop delta must be > 0");
         }
 
         private static HashSet<string> UniqueIds(IEnumerable<string> ids, string collection, List<string> errors)

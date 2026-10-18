@@ -11,7 +11,7 @@ namespace ShadowVale.Map01
         void Start(){mission=GetComponent<Map01Mission>();story=GetComponent<Map01Story>();}
         void OnGUI()
         {
-            if(mission==null||!mission.IsInitialized||mission.Stopped||mission.InventoryOpen||mission.MapOpen||ForestMenu.Visible||story.Layout==null)return;
+            if(mission==null||!mission.IsInitialized||mission.Stopped||mission.InventoryOpen||mission.MapOpen||ForestMenu.Visible||story==null||story.Layout==null)return;
             var layout=story.Layout;var p=story.Progress;
             if(mission.Stage==3){
                 if(!p.keyCollected&&layout.keyKeeper!=null&&!layout.keyKeeper.Alive)

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ShadowVale.AI.Perception;
 using UnityEngine;
 
 namespace ShadowVale.Map01
@@ -15,7 +16,7 @@ namespace ShadowVale.Map01
     /// own component. Kept in a coarse grid: a check only looks at the plants around the line.
     /// </para>
     /// </summary>
-    public sealed class Map01SightCover : MonoBehaviour
+    public sealed class Map01SightCover : MonoBehaviour, ISightOccluder
     {
         [Tooltip("Plants lower than this (ground grass) hide nothing.")]
         [SerializeField] private float minHeight = .9f;
@@ -84,6 +85,8 @@ namespace ShadowVale.Map01
         /// </summary>
         public bool Blocks(Vector3 eye, Vector3 target)
         {
+            // A smoke bomb's cloud hides Nam the same way, from either side of it (Map01Smoke).
+            if (Map01Smoke.Blocks(eye, target)) return true;
             if (Vector3.Distance(eye, target) <= peerDistance) return false;
             Vector2 a = new Vector2(eye.x, eye.z), d = new Vector2(target.x - eye.x, target.z - eye.z);
             var min = CellOf(Vector2.Min(a, a + d));

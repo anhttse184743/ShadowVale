@@ -88,6 +88,13 @@ namespace ShadowVale.Gameplay.Combat
             }
         }
 
+        public void TakeBulletDamage(float amount, Vector3 hitPoint, GameObject source, Vector3 direction)
+        {
+            if (CinematicInvulnerable || IsDead || amount <= 0f) return;
+            TakeDamage(amount, hitPoint, source);
+            BloodImpact.Play(hitPoint, direction);
+        }
+
         public void TakeDamage(float amount, Vector3 hitPoint, GameObject source)
         {
             if (CinematicInvulnerable || IsDead || amount <= 0f)
