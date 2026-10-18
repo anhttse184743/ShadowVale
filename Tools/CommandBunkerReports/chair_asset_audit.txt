@@ -1,0 +1,28 @@
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Meshes/C1_ApprovedArt.fbx | C1_ApprovedArt/C1 / requisitioned small warehouse/Chair | table=Work table distance=0.70 angle=0.0
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Meshes/C2_ApprovedArt.fbx | C2_ApprovedArt/C2 / communications duty house/Chair.001 | table=Work table.001 distance=0.80 angle=0.0
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Meshes/C2_ApprovedArt.fbx | C2_ApprovedArt/C2 / communications duty house/Chair.002 | table=Work table.002 distance=0.80 angle=0.0
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Meshes/C3_MainGarrison_Art.fbx | C3_MainGarrison_Art/C3 / command house/Chair.005 | table=Work table.010 distance=1.78 angle=51.8
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Meshes/C3_MainGarrison_Art.fbx | C3_MainGarrison_Art/C3 / command house/Chair.006 | table=Work table.010 distance=1.10 angle=0.0
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Meshes/C3_MainGarrison_Art.fbx | C3_MainGarrison_Art/C3 / command house/Chair.007 | table=Work table.010 distance=1.78 angle=51.8
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Meshes/C3_MainGarrison_Art.fbx | C3_MainGarrison_Art/C3 / command house/Chair.008 | table=Work table.011 distance=2.80 angle=0.0
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/Meshes/C3_MainGarrison_Art.fbx | C3_MainGarrison_Art/Checkpoint and duty post.002/Gate duty shelter.002/Chair.009 | table=Work table.016 distance=0.70 angle=0.0
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Meshes/A_ResistanceWorkshop.fbx | A_ResistanceWorkshop/Repair workshop / craft art preview/Chair | table=Work table distance=1.00 angle=0.0
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Meshes/C1_QuartermasterDepot.fbx | C1_QuartermasterDepot/Checkpoint and duty post/Gate duty shelter/Chair.001 | table=Work table.004 distance=0.70 angle=0.0
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Meshes/C2_SignalDetachment.fbx | C2_SignalDetachment/C2 / signal duty house/Chair.002 | table=Work table.005 distance=0.95 angle=0.0
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Meshes/C2_SignalDetachment.fbx | C2_SignalDetachment/C2 / signal duty house/Chair.003 | table=Work table.006 distance=0.95 angle=0.0
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Meshes/C2_SignalDetachment.fbx | C2_SignalDetachment/Checkpoint and duty post.001/Gate duty shelter.001/Chair.004 | table=Work table.009 distance=0.70 angle=0.0
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Meshes/C3_CommandGarrison.fbx | C3_CommandGarrison/C3 / command house/Chair.005 | table=Work table.010 distance=1.78 angle=51.8
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Meshes/C3_CommandGarrison.fbx | C3_CommandGarrison/C3 / command house/Chair.006 | table=Work table.010 distance=1.10 angle=0.0
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Meshes/C3_CommandGarrison.fbx | C3_CommandGarrison/C3 / command house/Chair.007 | table=Work table.010 distance=1.78 angle=51.8
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Meshes/C3_CommandGarrison.fbx | C3_CommandGarrison/C3 / command house/Chair.008 | table=Work table.011 distance=2.80 angle=0.0
+Assets/_Project/Art/Environment/ResistanceGarrison_v2/Meshes/C3_CommandGarrison.fbx | C3_CommandGarrison/Checkpoint and duty post.002/Gate duty shelter.002/Chair.009 | table=Work table.016 distance=0.70 angle=0.0
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Meshes/A_ResistanceWorkshop.fbx | A_ResistanceWorkshop/Repair workshop / craft art preview/Chair | table=Work table distance=1.00 angle=0.0
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Meshes/C1_QuartermasterDepot.fbx | C1_QuartermasterDepot/Checkpoint and duty post/Gate duty shelter/Chair.001 | table=Work table.004 distance=0.70 angle=0.0
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Meshes/C2_SignalDetachment.fbx | C2_SignalDetachment/C2 / signal duty house/Chair.002 | table=Work table.005 distance=0.95 angle=0.0
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Meshes/C2_SignalDetachment.fbx | C2_SignalDetachment/C2 / signal duty house/Chair.003 | table=Work table.006 distance=0.95 angle=0.0
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Meshes/C2_SignalDetachment.fbx | C2_SignalDetachment/Checkpoint and duty post.001/Gate duty shelter.001/Chair.004 | table=Work table.009 distance=0.70 angle=0.0
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Meshes/C3_CommandGarrison.fbx | C3_CommandGarrison/C3 / command house/Chair.005 | table=Work table.010 distance=1.78 angle=51.8
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Meshes/C3_CommandGarrison.fbx | C3_CommandGarrison/C3 / command house/Chair.006 | table=Work table.010 distance=1.10 angle=0.0
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Meshes/C3_CommandGarrison.fbx | C3_CommandGarrison/C3 / command house/Chair.007 | table=Work table.010 distance=1.78 angle=51.8
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Meshes/C3_CommandGarrison.fbx | C3_CommandGarrison/C3 / command house/Chair.008 | table=Work table.011 distance=2.80 angle=0.0
+Assets/_Project/Art/Environment/ResistancePalmRoof_Demo/Meshes/C3_CommandGarrison.fbx | C3_CommandGarrison/Checkpoint and duty post.002/Gate duty shelter.002/Chair.009 | table=Work table.016 distance=0.70 angle=0.0

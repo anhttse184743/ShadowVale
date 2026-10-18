@@ -1,0 +1,5 @@
+PASS actual Unity Play Mode using saved Map 1 channel and all 50 sensor transforms
+PASS player-layer CharacterController entry into water emits ripples: 10
+PASS walking in water emits additional ripples: 16
+PASS standing still, dry bank and bridge-height walking emit no extra ripples (buffer timestamps checked even at capacity)
+PASS ripple count=16, same production RiverWater and RiverWaterTrigger as Map 2

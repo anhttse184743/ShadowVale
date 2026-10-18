@@ -1,0 +1,63 @@
+Detailed layout — reference routes and hills/A — underground friendly shelter/BriefingTable | (-65.00, 0.12, -63.00) | rotation (0.00, 0.00, 0.00) | prefab Assets/_Project/Art/Environment/LayoutTest/Prefabs/BriefingTable.prefab
+  Geometry 0 enabled=False mesh=BriefingTable_0 bounds=Center: (-65.00, 0.84, -63.00), Extents: (1.50, 0.30, 1.35)
+  Geometry 1 enabled=False mesh=BriefingTable_1 bounds=Center: (-65.00, 0.52, -63.00), Extents: (1.45, 0.40, 1.32)
+  Geometry 2 enabled=False mesh=BriefingTable_2 bounds=Center: (-65.00, 0.99, -63.00), Extents: (0.75, 0.01, 0.45)
+  Geometry 3 enabled=False mesh=BriefingTable_3 bounds=Center: (-64.94, 1.00, -62.98), Extents: (0.58, 0.00, 0.39)
+  Worn plank edges enabled=True mesh=Workbench_00 bounds=Center: (-65.00, 0.78, -63.04), Extents: (1.40, 0.33, 0.50)
+  Weathered teak | fine grain enabled=True mesh=Workbench_01 bounds=Center: (-65.00, 0.59, -62.97), Extents: (1.40, 0.47, 0.51)
+  Aged blued iron enabled=True mesh=Workbench_02 bounds=Center: (-65.00, 0.68, -63.13), Extents: (1.28, 0.57, 0.59)
+  Old dark timber enabled=True mesh=Workbench_03 bounds=Center: (-65.00, 0.72, -63.01), Extents: (1.29, 0.41, 0.48)
+  Worn tool steel enabled=True mesh=Workbench_04 bounds=Center: (-65.17, 1.16, -63.17), Extents: (0.95, 0.09, 0.54)
+  Khaki cotton enabled=True mesh=Workbench_05 bounds=Center: (-64.40, 0.77, -62.94), Extents: (0.38, 0.32, 0.26)
+  Bandage linen enabled=True mesh=Workbench_06 bounds=Center: (-64.26, 1.15, -62.85), Extents: (0.25, 0.05, 0.13)
+  Old cream paper enabled=True mesh=Workbench_07 bounds=Center: (-64.90, 1.07, -63.00), Extents: (0.31, 0.00, 0.20)
+  Charcoal ink enabled=True mesh=Workbench_08 bounds=Center: (-65.27, 0.83, -63.09), Extents: (0.55, 0.25, 0.21)
+  Faded olive paint enabled=True mesh=Workbench_09 bounds=Center: (-65.02, 1.14, -63.04), Extents: (1.13, 0.07, 0.32)
+  Dull brass enabled=True mesh=Workbench_10 bounds=Center: (-66.02, 1.27, -62.79), Extents: (0.08, 0.07, 0.03)
+  Old oil marks enabled=True mesh=Workbench_11 bounds=Center: (-65.74, 1.07, -62.79), Extents: (0.05, 0.00, 0.05)
+  Weathered teak | fine grain enabled=True mesh=Chair_00 bounds=Center: (-65.93, 0.59, -64.04), Extents: (0.20, 0.47, 0.20)
+  Worn plank edges enabled=True mesh=Chair_01 bounds=Center: (-65.93, 0.79, -64.03), Extents: (0.21, 0.23, 0.22)
+  Old dark timber enabled=True mesh=Chair_02 bounds=Center: (-65.93, 0.31, -64.03), Extents: (0.19, 0.02, 0.18)
+  Weathered teak | fine grain enabled=True mesh=Chair_00 bounds=Center: (-65.00, 0.59, -64.04), Extents: (0.20, 0.47, 0.20)
+  Worn plank edges enabled=True mesh=Chair_01 bounds=Center: (-65.00, 0.79, -64.03), Extents: (0.21, 0.23, 0.22)
+  Old dark timber enabled=True mesh=Chair_02 bounds=Center: (-65.00, 0.31, -64.03), Extents: (0.19, 0.02, 0.18)
+  Weathered teak | fine grain enabled=True mesh=Chair_00 bounds=Center: (-64.07, 0.59, -64.04), Extents: (0.20, 0.47, 0.20)
+  Worn plank edges enabled=True mesh=Chair_01 bounds=Center: (-64.07, 0.79, -64.03), Extents: (0.21, 0.23, 0.22)
+  Old dark timber enabled=True mesh=Chair_02 bounds=Center: (-64.07, 0.31, -64.03), Extents: (0.19, 0.02, 0.18)
+  Weathered teak | fine grain enabled=True mesh=Chair_00 bounds=Center: (-65.93, 0.59, -61.96), Extents: (0.20, 0.47, 0.20)
+  Worn plank edges enabled=True mesh=Chair_01 bounds=Center: (-65.93, 0.79, -61.97), Extents: (0.21, 0.23, 0.22)
+  Old dark timber enabled=True mesh=Chair_02 bounds=Center: (-65.93, 0.31, -61.97), Extents: (0.19, 0.02, 0.18)
+  Weathered teak | fine grain enabled=True mesh=Chair_00 bounds=Center: (-65.00, 0.59, -61.96), Extents: (0.20, 0.47, 0.20)
+  Worn plank edges enabled=True mesh=Chair_01 bounds=Center: (-65.00, 0.79, -61.97), Extents: (0.21, 0.23, 0.22)
+  Old dark timber enabled=True mesh=Chair_02 bounds=Center: (-65.00, 0.31, -61.97), Extents: (0.19, 0.02, 0.18)
+  Weathered teak | fine grain enabled=True mesh=Chair_00 bounds=Center: (-64.07, 0.59, -61.96), Extents: (0.20, 0.47, 0.20)
+  Worn plank edges enabled=True mesh=Chair_01 bounds=Center: (-64.07, 0.79, -61.97), Extents: (0.21, 0.23, 0.22)
+  Old dark timber enabled=True mesh=Chair_02 bounds=Center: (-64.07, 0.31, -61.97), Extents: (0.19, 0.02, 0.18)
+Detailed layout — reference routes and hills/A — underground friendly shelter/MissionBoard | (-65.00, 0.12, -57.70) | rotation (0.00, 0.00, 0.00) | prefab Assets/_Project/Art/Environment/LayoutTest/Prefabs/MissionBoard.prefab
+  NHIỆM VỤ enabled=False mesh=none bounds=Center: (-65.00, 2.31, -57.81), Extents: (0.69, 0.16, 0.00)
+  Geometry 0 enabled=False mesh=MissionBoard_0 bounds=Center: (-65.00, 1.77, -57.70), Extents: (1.30, 0.75, 0.08)
+  Geometry 1 enabled=False mesh=MissionBoard_1 bounds=Center: (-65.00, 1.32, -57.70), Extents: (1.27, 1.20, 0.08)
+  Geometry 2 enabled=False mesh=MissionBoard_2 bounds=Center: (-65.01, 1.67, -57.79), Extents: (1.14, 0.38, 0.01)
+  Old dark timber enabled=True mesh=MissionBoard_00 bounds=Center: (-65.00, 1.94, -57.70), Extents: (1.30, 0.78, 0.05)
+  Worn plank edges enabled=True mesh=MissionBoard_01 bounds=Center: (-65.00, 1.94, -57.88), Extents: (1.32, 0.81, 0.14)
+  Weathered teak | fine grain enabled=True mesh=MissionBoard_02 bounds=Center: (-64.99, 1.94, -57.76), Extents: (1.27, 0.70, 0.01)
+  Faded olive paint enabled=True mesh=MissionBoard_03 bounds=Center: (-65.00, 2.55, -57.83), Extents: (0.95, 0.11, 0.01)
+  Old cream paper enabled=True mesh=MissionBoard_04 bounds=Center: (-65.03, 1.98, -57.83), Extents: (1.09, 0.59, 0.01)
+  River blue ink enabled=True mesh=MissionBoard_05 bounds=Center: (-65.48, 1.89, -57.84), Extents: (0.07, 0.48, 0.01)
+  Tactical red enabled=True mesh=MissionBoard_06 bounds=Center: (-65.55, 1.86, -57.85), Extents: (0.44, 0.37, 0.01)
+  Charcoal ink enabled=True mesh=MissionBoard_07 bounds=Center: (-65.06, 1.95, -57.84), Extents: (0.99, 0.43, 0.00)
+  Dull brass enabled=True mesh=MissionBoard_08 bounds=Center: (-64.31, 2.07, -57.85), Extents: (0.01, 0.35, 0.01)
+02 Mission • Nam & Hung/workbench | (-66.40, 1.11, -63.00) | rotation (0.00, 0.00, 0.00) | prefab 
+MAP 1 ART STAGE / gameplay source preserved/C1 / Mission art/C1_ApprovedArt/C1 / requisitioned small warehouse/Chair | (37.33, 3.26, -78.56) | rotation (270.00, 306.87, 0.00) | prefab 
+MAP 1 ART STAGE / gameplay source preserved/C2 / Mission art/C2_ApprovedArt/C2 / communications duty house/Chair.001 | (62.69, 6.16, -12.59) | rotation (270.00, 210.00, 0.00) | prefab 
+MAP 1 ART STAGE / gameplay source preserved/C2 / Mission art/C2_ApprovedArt/C2 / communications duty house/Chair.002 | (64.69, 6.16, -13.74) | rotation (270.00, 210.00, 0.00) | prefab 
+MAP 1 ART STAGE / gameplay source preserved/C2 / Mission art/C2 chair set aside for standing operator/Chair.001 | (61.83, 6.16, -12.09) | rotation (270.00, 30.00, 0.00) | prefab 
+  Chair back / EndgrainRepair.001 enabled=True mesh=Chair back / EndgrainRepair.001 bounds=Center: (61.75, 6.89, -12.22), Extents: (0.18, 0.11, 0.11)
+  Chair leg / WeatheredTimber.001 enabled=True mesh=Chair leg / WeatheredTimber.001 bounds=Center: (61.83, 6.62, -12.09), Extents: (0.23, 0.46, 0.23)
+  Seat / AgedTeak.001 enabled=True mesh=Seat / AgedTeak.001 bounds=Center: (61.83, 6.61, -12.09), Extents: (0.27, 0.02, 0.26)
+MAP 1 ART STAGE / gameplay source preserved/C3 / Mission art/C3_MainGarrison_Art/C3 / command house/Chair.005 | (66.60, 8.59, 67.00) | rotation (270.02, 180.00, 0.00) | prefab 
+MAP 1 ART STAGE / gameplay source preserved/C3 / Mission art/C3_MainGarrison_Art/C3 / command house/Chair.006 | (68.00, 8.59, 67.00) | rotation (270.02, 180.00, 0.00) | prefab 
+MAP 1 ART STAGE / gameplay source preserved/C3 / Mission art/C3_MainGarrison_Art/C3 / command house/Chair.007 | (69.40, 8.59, 67.00) | rotation (270.02, 180.00, 0.00) | prefab 
+MAP 1 ART STAGE / gameplay source preserved/C3 / Mission art/C3_MainGarrison_Art/C3 / command house/Chair.008 | (68.00, 8.59, 62.10) | rotation (270.02, 180.00, 0.00) | prefab 
+MAP 1 ART STAGE / gameplay source preserved/C3 / Mission art/C3_MainGarrison_Art/Checkpoint and duty post.002/Gate duty shelter.002/Chair.009 | (72.60, 8.59, 42.70) | rotation (270.02, 180.00, 0.00) | prefab 
+INTERACTION 02 Mission • Nam & Hung/workbench position=(-66.40, 1.11, -63.00) radius=4

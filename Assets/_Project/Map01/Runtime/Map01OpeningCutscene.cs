@@ -101,7 +101,14 @@ namespace ShadowVale.Map01
             commander = visual.GetComponent<Animator>();
             commander.runtimeAnimatorController = null;
             commander.applyRootMotion = false;
-            visual.transform.SetPositionAndRotation(origin + forward * 2.1f, Quaternion.LookRotation(-forward));
+            var post=owner.alliedCommanderPost;
+            visual.transform.SetPositionAndRotation(post!=null?post.position:origin+forward*2.1f,
+                post!=null?post.rotation:Quaternion.LookRotation(-forward));
+            if(post!=null)
+            {
+                var toward=Vector3.ProjectOnPlane(post.position-origin,Vector3.up);
+                if(toward.sqrMagnitude>.1f){forward=toward.normalized;right=Vector3.Cross(Vector3.up,forward);}
+            }
             DecorateCommander();
             // Briefing is unarmed; extraction attaches/enables the rifle when seating him.
             commanderClips = new ClipPlayer(commander, true, idle, talking != null ? talking : idle,
@@ -197,7 +204,7 @@ namespace ShadowVale.Map01
 
         private void SetView(int shot, float weight)
         {
-            Vector3 focus = origin + forward * 1.05f + Vector3.up * 1.35f;
+            Vector3 focus = (origin+commander.transform.position)*.5f + Vector3.up * 1.35f;
             Vector3 position = shot == 0 ? origin - forward * 1.6f + right * 2 + Vector3.up * 1.7f
                 : shot == 1 ? origin + right * 1.9f + forward * 1.3f + Vector3.up * 1.65f
                 : origin + forward * 1.05f + right * 1.9f + Vector3.up * 1.62f;

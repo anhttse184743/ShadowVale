@@ -48,7 +48,7 @@ public sealed class RescueBushTests:ForestSceneTestBase {
         yield return StoryReview();yield return new ExitPlayMode();
     }
     static IEnumerator StoryReview(){
-        Setup();yield return Warmup();var cc=M.player.GetComponent<CharacterController>();cc.enabled=false;M.player.position=R.RetryPoint;cc.enabled=true;
+        Setup();yield return Warmup();yield return TakeRescueOrder(M);var cc=M.player.GetComponent<CharacterController>();cc.enabled=false;M.player.position=R.RetryPoint;cc.enabled=true;
         var d=M.GetComponent<Map01RescueCinematic>()??M.gameObject.AddComponent<Map01RescueCinematic>();
         Assert.IsTrue(d.ShowIntro(R,R.Squad[0]));Assert.IsTrue(R.IntroSeen);
         var h=M.hung.GetComponentInChildren<Map01HungVisual>();
@@ -58,19 +58,43 @@ public sealed class RescueBushTests:ForestSceneTestBase {
             if(d.Elapsed>6.55f){Assert.Less(Vector3.Distance(gameplayView,M.gameCamera.transform.position),.03f,"The radio conversation belongs to the restored player view.");Assert.Less(Quaternion.Angle(gameplayRotation,M.gameCamera.transform.rotation),.2f);}
         });
         Assert.GreaterOrEqual(d.Elapsed,8);Assert.IsTrue(M.ModernCombat.enabled&&M.ModernPlayer.enabled);
+        yield return ExecutionReview();
+    }
+    [UnityTest,Timeout(600000)]public IEnumerator ExecutionShowsBoundDeathThenReturnsToNam(){
+        Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
+        Setup();yield return Warmup();yield return TakeRescueOrder(M);R.MarkIntroSeen();
+        var cc=M.player.GetComponent<CharacterController>();cc.enabled=false;M.player.position=R.RetryPoint;cc.enabled=true;
+        yield return WaitGameSeconds(.8f);yield return ExecutionReview();yield return new ExitPlayMode();
+    }
+    static IEnumerator ExecutionReview(){
+        var h=M.hung.GetComponentInChildren<Map01HungVisual>();
+        var d=M.GetComponent<Map01RescueCinematic>()??M.gameObject.AddComponent<Map01RescueCinematic>();
         R.ReportDetection(new Map01Detection(R.Squad[1],Map01DetectionCause.Sight,M.player.position));
         Assert.AreEqual(Map01Rescue.Phase.Alarm,R.CurrentPhase);
-        bool checkedAim=false;float maxHead=0;
+        bool checkedAim=false,sawCaptive=false,sawReaction=false;float maxHead=0;var alarmCamera=M.gameCamera.transform.position;var alarmPlayer=M.player.position;float maxRetreat=0;
         yield return Record("Execution",()=>d.IsPlaying,()=>{
             Assert.IsTrue(h.RopeVisible);maxHead=Mathf.Max(maxHead,h.actor.GetBoneTransform(HumanBodyBones.Head).position.y-M.hung.position.y);
+            maxRetreat=Mathf.Max(maxRetreat,Vector3.Distance(alarmPlayer,M.player.position));
+            if(d.ExecutionShowsCaptive){
+                sawCaptive=true;var p=M.gameCamera.WorldToViewportPoint(h.actor.GetBoneTransform(HumanBodyBones.Head).position);
+                Assert.Greater(p.z,0);Assert.That(p.x,Is.InRange(.1f,.9f));Assert.That(p.y,Is.InRange(.1f,.9f),"Bound collapse must remain on screen.");
+            }else{
+                Assert.Less(Vector3.Distance(M.gameCamera.transform.position,M.player.position),Vector3.Distance(alarmCamera,alarmPlayer)+.3f,"Establishing and reaction shots stay near Nam.");
+                if(d.ExecutionShowsReaction){sawReaction=true;var p=M.gameCamera.WorldToViewportPoint(M.player.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.Head).position);Assert.Greater(p.z,0);Assert.That(p.x,Is.InRange(.1f,.9f));Assert.That(p.y,Is.InRange(.1f,.9f));}
+            }
             int beat=(int)typeof(Map01RescueCinematic).GetField("storyBeat",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(d);
             float began=(float)typeof(Map01RescueCinematic).GetField("beatAt",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(d);
+            var pose=typeof(Map01RescueCinematic).GetField("captivePose",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(d);
+            var selected=(AnimationClip)typeof(Map01CinematicPose).GetField("selected",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(pose);
+            Assert.AreEqual("Hung_Bound_Execution",selected.name,"The shot must not swap Hung's wrist bindings or captive pose.");
             if(beat==2&&d.Elapsed-began>.25f){
+                var left=h.actor.GetBoneTransform(HumanBodyBones.LeftHand).position;var right=h.actor.GetBoneTransform(HumanBodyBones.RightHand).position;
+                Assert.That(Vector3.Distance(left,right),Is.InRange(.025f,.4f),"Both tied hands must remain separate before the shot.");
                 var muzzle=R.Squad[0].GetComponentInChildren<Map01Rifle>().weapon.Muzzle;
                 Assert.Less(Vector3.Angle(muzzle.forward,h.actor.GetBoneTransform(HumanBodyBones.Chest).position-muzzle.position),5,"Execution muzzle must aim at Hung before firing.");checkedAim=true;
             }
         });
-        Assert.IsTrue(checkedAim);
+        Assert.IsTrue(checkedAim);Assert.IsTrue(sawCaptive&&sawReaction,"Show Hung's death and return to Nam before failure.");Assert.Greater(maxRetreat,.2f,"Nam must physically react rather than remain frozen.");
         Assert.IsTrue(R.Failed);Assert.IsTrue(h.RopeVisible);Assert.Less(maxHead,1.5f,"Captive never stands during the execution.");
         Assert.Less(h.actor.GetBoneTransform(HumanBodyBones.Head).position.y-M.hung.position.y,.8f,"Bound captive must finish collapsed.");
         Assert.Greater(d.Elapsed,6);
@@ -223,7 +247,7 @@ public sealed class RescueBushTests:ForestSceneTestBase {
         yield return LifecycleReview();yield return new ExitPlayMode();
     }
     static IEnumerator LifecycleReview(){
-        Setup();yield return Warmup();var cc=M.player.GetComponent<CharacterController>();cc.enabled=false;M.player.position=R.RetryPoint;cc.enabled=true;
+        Setup();yield return Warmup();yield return TakeRescueOrder(M);var cc=M.player.GetComponent<CharacterController>();cc.enabled=false;M.player.position=R.RetryPoint;cc.enabled=true;
         var director=M.GetComponent<Map01RescueCinematic>()??M.gameObject.AddComponent<Map01RescueCinematic>();
         Assert.IsTrue(director.ShowIntro(R,R.Squad[0]));director.Skip();Assert.IsTrue(R.IntroSeen);Assert.IsFalse(M.Cinematic);
         Assert.IsTrue(M.GetComponent<Map01SaveSystem>().RestartRescue(false));yield return WaitGameSeconds(.9f);Assert.IsTrue(R.IntroSeen);
@@ -249,12 +273,13 @@ public sealed class RescueBushTests:ForestSceneTestBase {
         foreach(var path in Directory.GetFiles(folder,"*.png").Concat(Directory.GetFiles(folder+"/GameView","*.png")))File.Delete(path);
         var rows=new System.Collections.Generic.List<string>{"frame,time,voice"};float began=Time.time,next=Time.time;
         if(name.StartsWith("Bush")||name=="Execution"){Directory.CreateDirectory(folder+"/Contacts");foreach(var path in Directory.GetFiles(folder+"/Contacts"))File.Delete(path);}
-        float deadline=Time.realtimeSinceStartup+180;int frame=0;
+        float deadline=Time.realtimeSinceStartup+240;int frame=0;
         // Fixed simulation steps belong to this recording fixture only, so
         // diagnostics cannot introduce uneven playback into the review video.
         try{Time.captureDeltaTime=name.StartsWith("Bush")?1f/60:0;while(playing()&&Time.realtimeSinceStartup<deadline){
-            if(Time.time<next){step();yield return null;continue;}next=Time.time+1f/30;
-            step();bool done=false;Exception error=null;pump.draw=()=>{try{
+            if(Time.time<next){yield return null;continue;}next=Time.time+(name=="Intro"||name=="Execution"?.5f:1f/30);
+            bool done=false;Exception error=null;pump.draw=()=>{try{
+                step();
                 Capture(M.gameCamera,folder+"/"+frame.ToString("D4")+".png");
                 ScreenCapture.CaptureScreenshot(folder+"/GameView/"+frame.ToString("D4")+".png");
                 if(name.StartsWith("Bush")&&frame%6==0)CaptureContacts(folder,frame);
@@ -317,7 +342,7 @@ public sealed class RescueBushTests:ForestSceneTestBase {
         var focus=M.hung.position+Vector3.up*.65f;
         try{
             camera.fieldOfView=44;int i=0;
-            foreach(var angle in new[]{new Vector3(1.9f,.55f,.1f),new Vector3(.1f,.7f,2.1f)}){
+            foreach(var angle in new[]{new Vector3(1.9f,.55f,.1f),new Vector3(.1f,.7f,-2.1f)}){
                 camera.transform.position=focus+M.hung.rotation*angle;camera.transform.rotation=Quaternion.LookRotation(focus-camera.transform.position);
                 Capture(camera,folder+"/Contacts/"+frame.ToString("D4")+"-"+i+++".png");
             }

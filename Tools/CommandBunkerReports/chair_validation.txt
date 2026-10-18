@@ -1,0 +1,6 @@
+Detailed layout — reference routes and hills/A — underground friendly shelter/BriefingTable/Approved Chair 1 facing table front=(0.00, 0.00, 1.00) dot to table=0.742
+Detailed layout — reference routes and hills/A — underground friendly shelter/BriefingTable/Approved Chair 2 facing table front=(0.00, 0.00, 1.00) dot to table=1.000
+Detailed layout — reference routes and hills/A — underground friendly shelter/BriefingTable/Approved Chair 3 facing table front=(0.00, 0.00, 1.00) dot to table=0.742
+Detailed layout — reference routes and hills/A — underground friendly shelter/BriefingTable/Approved Chair 4 facing table front=(0.00, 0.00, -1.00) dot to table=0.742
+Detailed layout — reference routes and hills/A — underground friendly shelter/BriefingTable/Approved Chair 5 facing table front=(0.00, 0.00, -1.00) dot to table=1.000
+Detailed layout — reference routes and hills/A — underground friendly shelter/BriefingTable/Approved Chair 6 facing table front=(0.00, 0.00, -1.00) dot to table=0.742

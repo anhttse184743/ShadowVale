@@ -21,6 +21,7 @@ namespace ShadowVale.Map01
         [Tooltip("Hand-placed beat round the radio station; the radio responders walk it too once they have checked the station.")]
         public Transform radioBeat;
         public Map01SupplyProps supplyProps;
+        public Map01SabotageProps sabotage;
         [Min(0)] public int puzzleSeed = 241;
         [Min(18)] public float responseClearance = 18;
         [Min(1)] public float observationSeconds = 2;

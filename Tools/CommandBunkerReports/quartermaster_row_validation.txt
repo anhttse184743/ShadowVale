@@ -1,0 +1,11 @@
+PASS six AKs rotated individually -90 degrees about local Y: magazines now point toward rear wall (+Z).
+PASS CharacterController.Move blocked by COLLIDER_Approved loaded shelf remaining front distance=0.629
+PASS row cabinet 1 position=(-57.535, 0.120, -59.100)
+PASS CharacterController.Move blocked by COLLIDER_Approved loaded shelf remaining front distance=0.629
+PASS row cabinet 2 position=(-57.535, 0.120, -61.050)
+PASS CharacterController.Move blocked by COLLIDER_Approved loaded shelf remaining front distance=0.629
+PASS row cabinet 3 position=(-57.535, 0.120, -63.000)
+PASS CharacterController.Move blocked by COLLIDER_Approved loaded shelf remaining front distance=0.629
+PASS row cabinet 4 position=(-57.535, 0.120, -64.950)
+PASS CharacterController.Move blocked by COLLIDER_Approved loaded shelf remaining front distance=0.629
+PASS row cabinet 5 position=(-57.535, 0.120, -66.900)
