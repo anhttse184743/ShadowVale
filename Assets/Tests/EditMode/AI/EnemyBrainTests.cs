@@ -105,6 +105,19 @@ namespace ShadowVale.Tests.EditMode.AI
         }
 
         [Test]
+        public void OnPatrolHeWalksAtHisPatrolPace()
+        {
+            Build(new EnemyTuning { PatrolPace = .55f });
+            _brain.Memory.PatrolPoints = new[] { new Vector3(10, 0, 0), new Vector3(10, 0, 10) };
+            Tick();
+            Assert.AreEqual(.55f, _body.Pace, 1e-6f, "A calm beat, not his full speed.");
+            Build();
+            _brain.Memory.PatrolPoints = new[] { new Vector3(10, 0, 0), new Vector3(10, 0, 10) };
+            Tick();
+            Assert.AreEqual(1f, _body.Pace, 1e-6f, "Default: unchanged.");
+        }
+
+        [Test]
         public void NoiseIsInvestigatedThenSearchedThenHeWalksBack()
         {
             Build(new EnemyTuning { SearchSeconds = 1f });

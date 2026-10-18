@@ -1,3 +1,4 @@
+using System.Linq;
 using ShadowVale.AI.Agents;
 using ShadowVale.AI.Contracts;
 using ShadowVale.AI.Fsm;
@@ -506,6 +507,32 @@ namespace ShadowVale.Map01
             patrolPoints = points ?? System.Array.Empty<Vector3>();
             if (_brain != null) _brain.Memory.PatrolPoints = patrolPoints;
         }
+
+        /// <summary>
+        /// A beat round his area (<see cref="Map01PatrolBeats"/>): the loop starting at <paramref name="start"/>, the
+        /// seconds he stands and the yaw he faces at each point, the walking pace. Unlike <see cref="Repost"/> he is
+        /// not moved: he walks to his first point from where he stands. His post becomes that point, so a reset
+        /// after a failed scouting run puts him back on his beat. A checkpoint restored afterwards keeps its own
+        /// position and point index.
+        /// </summary>
+        public void AssignBeat(Vector3[] points, float[] stops, float[] yaws, int start, float pace)
+        {
+            if (points == null || points.Length == 0) return;
+            EnsureBrain();
+            int n = points.Length;
+            start = ((start % n) + n) % n;
+            T[] Turn<T>(T[] a) => a == null ? null : Enumerable.Range(0, n).Select(i => a[(start + i) % n]).ToArray();
+            var loop = Turn(points);
+            Configure(loop); _patrolStops = Turn(stops); _patrolYaws = Turn(yaws); _stopYaw = float.NaN;
+            _postPosition = loop[0];
+            if (_patrolYaws != null && !float.IsNaN(_patrolYaws[0])) _postRotation = Quaternion.Euler(0, _patrolYaws[0], 0);
+            _tuning.PatrolPace = pace;
+            var m = Memory; m.PatrolIndex = 0; _lastPatrolIndex = 0; m.PatrolPauseUntil = 0;
+            if (Alive && !Engaged && !Alerted && _agent != null && _agent.isOnNavMesh) _body.MoveTo(loop[0]);
+        }
+
+        /// <summary>The walking pace of his beat (1 = full speed; 0.55 for a calm beat).</summary>
+        public float PatrolPace => _tuning.PatrolPace;
 
         // ---- The rescue set-piece ----------------------------------------------------------------
 

@@ -29,6 +29,9 @@ namespace ShadowVale.AI.Fsm
         public float PatrolArriveDistance = .7f;
         /// <summary>Stands this long at each patrol point before walking on; 0 = no stop.</summary>
         public float PatrolPauseSeconds;
+        /// <summary>Walking speed on patrol, as a share of his base speed. 1 = his full speed (about 3.5 m/s for
+        /// Map 1's guards, which reads as jogging); a calm beat walks at about 0.55 of it.</summary>
+        public float PatrolPace = 1f;
 
         // Fighting
         public float AttackRange = 18f;

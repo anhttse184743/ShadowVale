@@ -15,6 +15,11 @@ namespace ShadowVale.Map01
         public Transform radioWorkbench;
         public bool radioWorkspacePrepared;
         public Transform[] responseSites, observationSites;
+        [Header("Beats (Map01PatrolBeats) — empty: a ring round the area is laid out at run time")]
+        [Tooltip("Hand-placed beat round the supply area: children in order are the points (Map01PatrolWaypoint for the stop, forward = where to look). Bake one to edit: ShadowVale > Map 1 > Bake patrol beats.")]
+        public Transform supplyBeat;
+        [Tooltip("Hand-placed beat round the radio station; the radio responders walk it too once they have checked the station.")]
+        public Transform radioBeat;
         public Map01SupplyProps supplyProps;
         [Min(0)] public int puzzleSeed = 241;
         [Min(18)] public float responseClearance = 18;
@@ -34,6 +39,21 @@ namespace ShadowVale.Map01
             Gizmos.color = Color.yellow;
             foreach (var marker in new[] { supplyApproach, radioApproach, commanderPost })
                 if (marker != null) { Gizmos.DrawWireSphere(marker.position, .35f); Gizmos.DrawRay(marker.position, marker.forward); }
+            // The beats as the guards will walk them (hand-placed, else the ring laid out at run time).
+            Gizmos.color = new Color(1f, .75f, .2f);
+            DrawBeat(Map01PatrolBeats.SupplyBeat(this));
+            DrawBeat(Map01PatrolBeats.RadioBeat(this));
+        }
+
+        private static void DrawBeat(Map01PatrolBeats.Beat beat)
+        {
+            for (int i = 0; i < beat.Count; i++)
+            {
+                var p = beat.Points[i] + Vector3.up * .15f;
+                Gizmos.DrawWireSphere(p, .3f);
+                Gizmos.DrawLine(p, beat.Points[(i + 1) % beat.Count] + Vector3.up * .15f);
+                Gizmos.DrawRay(p, Quaternion.Euler(0, beat.Yaws[i], 0) * Vector3.forward);
+            }
         }
     }
 }
