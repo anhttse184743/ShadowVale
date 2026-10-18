@@ -33,6 +33,16 @@ namespace ShadowVale.Map01.Editor
             {
                 if(EditorApplication.isPlayingOrWillChangePlaymode)throw new Exception("Stop Play Mode before changing assets.");
                 if(command=="inspect")Inspect();
+                else if(command=="quarterinspect")InspectQuartermaster();
+                else if(command=="quarterapply")ApplyQuartermaster();
+                else if(command=="quarterverify")VerifyQuartermaster();
+                else if(command=="quartercleanup")CleanupQuartermaster();
+                else if(command=="quarterrow")ArrangeQuartermasterRow();
+                else if(command=="rackwall")MoveRifleRackToWall();
+                else if(command=="cotsapply")ApplyCotsAndSupplies();
+                else if(command=="cotsverify")VerifyCotsAndSupplies();
+                else if(command=="cotcore")RepairCotCore();
+                else if(command=="cotaisles")SpaceCotsForPlayer();
                 else if(command=="apply")Apply();
                 else if(command=="capture")Capture();
                 else if(command=="audit")Audit();

@@ -1,0 +1,2 @@
+PASS CharacterController.Move blocked by COLLIDER_Approved loaded rack remaining front distance=0.600
+PASS rack moved 0.695 m toward wall; clearance=0.030 m; from=(-59.20, 0.12, -58.20) to=(-59.20, 0.12, -57.51)
