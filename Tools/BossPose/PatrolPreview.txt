@@ -1,0 +1,1 @@
+clip=Assets/_Project/Art/Characters/Animations/Generated/Enemy_Patrol_Walk_LowReady.anim grip=True palmError=0.001839569

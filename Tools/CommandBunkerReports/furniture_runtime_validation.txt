@@ -1,0 +1,2 @@
+PASS runtime initialized Map 1; moved workbench registered; player near new entrance workbench; real Interact handler opens BenchOpen and InventoryOpen.
+PASS crafting UI closes; runtime captures complete.

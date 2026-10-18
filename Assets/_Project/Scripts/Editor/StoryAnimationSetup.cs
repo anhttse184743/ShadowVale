@@ -416,6 +416,17 @@ namespace ShadowVale.Editor
 
         public static AnimationClip Clip(string folder, string name)
         {
+            if (name == "Enemy_Patrol_Walk")
+            {
+                var patrol = AssetDatabase.LoadAssetAtPath<AnimationClip>(EnemyPatrolPoseSetup.Path);
+                if (patrol != null) return patrol;
+            }
+            if (name == "Enemy_Rifle_Fire" || name == "Enemy_Rifle_AimIdle")
+            {
+                var wristNeutral = AssetDatabase.LoadAssetAtPath<AnimationClip>(EnemyRiflePoseFix.Output + name + "_WristNeutral.anim");
+                if (wristNeutral != null) return wristNeutral;
+                return Clip(NamFolder, name.Replace("Enemy_", "Nam_"));
+            }
             if(name=="Nam_Takedown"||name=="Enemy_Takedown_Victim"){
                 var compact=QuickTakedownSetup.ShortClip(name);if(compact!=null)return compact;
             }

@@ -1,0 +1,3 @@
+Clip=Nam_Rifle_Fire(Clone)
+Right worst wrist angle=0.06 degrees; endpoint=RightHand_end
+Left worst wrist angle=0.03 degrees; endpoint=LeftHand_end
