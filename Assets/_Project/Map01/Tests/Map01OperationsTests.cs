@@ -31,13 +31,67 @@ namespace ShadowVale.Map01.Tests
         [Test]public void CircuitRoutesToDummyLoadAndRejectsBrokenSource()
         {
             var p=new Map01RadioCircuit(1,new int[Map01RadioCircuit.Count]);Assert.IsTrue(p.Solved());Assert.AreEqual(20,p.ConnectedCount);
-            for(int i=0;i<Map01RadioCircuit.Count;i++){p.Rotate(i);Assert.IsFalse(p.Solved(),"Every segment must matter: "+i);p.Rotate(i,-1);Assert.IsTrue(p.Solved());}
+            for(int i=0;i<Map01RadioCircuit.Count;i++){p.Rotate(i);Assert.IsFalse(p.Solved(),"Every repair must matter: "+i);p.Rotate(i,-1);Assert.IsTrue(p.Solved());}
             p.Tick(91);Assert.AreEqual(0,p.Remaining);
         }
         [Test]public void CircuitMigratesOldBoardWithoutAcceptingItAsSolved()
         {
             var p=new Map01RadioCircuit(241,new int[16]);Assert.AreEqual(20,p.Rotations.Length);Assert.IsFalse(p.Solved());
             var restored=new Map01RadioCircuit(241,(int[])p.Rotations.Clone());CollectionAssert.AreEqual(p.Rotations,restored.Rotations);
+        }
+        [Test]public void SupplyCodesVaryButRemainStableForSavedSeed()
+        {
+            var codes=new System.Collections.Generic.HashSet<int>();
+            for(int seed=1;seed<=300;seed++){
+                int code=Map01SupplyLock.GenerateCode(seed);codes.Add(code);
+                Assert.AreEqual(code,Map01SupplyLock.GenerateCode(seed));
+                Assert.IsTrue(Map01SupplyLock.Digits(code).All(d=>d>=0&&d<=5));
+            }
+            Assert.Greater(codes.Count,100);
+        }
+        [Test]public void RandomRadioRoundsAreSolvableVariedAndRestoreExactly()
+        {
+            var paths=new System.Collections.Generic.HashSet<string>();var counts=new System.Collections.Generic.HashSet<int>();
+            for(int seed=1;seed<=300;seed++){
+                var p=new Map01RadioCircuit(seed);counts.Add(p.TotalRounds);
+                do{
+                    Assert.AreEqual(10,p.Remaining);Assert.IsFalse(p.Solved());Assert.AreEqual(4+p.Round,p.ScrambledCount);
+                    paths.Add(string.Join(",",p.SolvedMasks));
+                    int edit=Array.FindIndex(p.InitiallyScrambled,e=>e);p.Rotate(edit);
+                    var restored=new Map01RadioCircuit(seed,(int[])p.Rotations.Clone(),p.Remaining,p.Round);
+                    CollectionAssert.AreEqual(p.SolvedMasks,restored.SolvedMasks);CollectionAssert.AreEqual(p.Rotations,restored.Rotations);
+                    CollectionAssert.AreEqual(p.InitiallyScrambled,restored.InitiallyScrambled);Assert.AreEqual(p.Round,restored.Round);
+                    for(int i=0;i<Map01RadioCircuit.Count;i++)while(p.Rotations[i]!=0)p.Rotate(i);
+                    Assert.IsTrue(p.Solved(),"Unsolvable seed "+seed+" round "+p.Round);
+                }while(p.AdvanceRound());
+                Assert.AreEqual(p.TotalRounds-1,p.Round);
+            }
+            Assert.Greater(paths.Count,5);CollectionAssert.AreEquivalent(new[]{2,3},counts);
+        }
+        [Test]public void EveryRadioCellCanRotateAndAllChangesSurviveRestore()
+        {
+            var p=new Map01RadioCircuit(171);
+            for(int i=0;i<Map01RadioCircuit.Count;i++){
+                int before=p.Rotations[i];p.Rotate(i);Assert.AreEqual((before+1)%4,p.Rotations[i]);
+            }
+            var restored=new Map01RadioCircuit(171,(int[])p.Rotations.Clone(),p.Remaining,p.Round);
+            CollectionAssert.AreEqual(p.Rotations,restored.Rotations);
+        }
+        [Test]public void PowerSabotageNeedsThreeAccurateNewPullsAndCanTimeout(){
+            for(int seed=1;seed<=200;seed++){
+                var p=new Map01PowerSabotage(seed);
+                for(int i=0;i<3;i++){
+                    for(int tick=0;Mathf.Abs(p.Needle-p.Center)>.08f&&tick<1500;tick++)p.Tick(.005f);
+                    Assert.IsTrue(p.Pull());Assert.AreEqual(i+1,p.Step);
+                }Assert.IsTrue(p.Won);Assert.IsFalse(p.Pull());
+            }
+            var wrong=new Map01PowerSabotage(1);Assert.IsFalse(wrong.Pull());Assert.IsTrue(wrong.Complete&&!wrong.Won);
+            var timeout=new Map01PowerSabotage(1);timeout.Tick(10);Assert.IsTrue(timeout.Complete&&!timeout.Won);
+        }
+        [Test]public void RadioClockAndRoundGateCannotBeSkipped()
+        {
+            var p=new Map01RadioCircuit(171);Assert.IsFalse(p.AdvanceRound());
+            p.Tick(-2);Assert.AreEqual(10,p.Remaining);p.Tick(9.99f);Assert.Greater(p.Remaining,0);p.Tick(.02f);Assert.AreEqual(0,p.Remaining);
         }
         [TestCase(241,214,"1 số đúng vị trí.","2 số đúng nhưng sai vị trí.")]
         [TestCase(241,355,"Không có số nào đúng.","Cả 3 số đều không thuộc mã.")]
@@ -89,7 +143,7 @@ namespace ShadowVale.Map01.Tests
         static IEnumerator Ready(string take)
         {
             float end=Time.realtimeSinceStartup+30;while((M==null||!M.IsInitialized||M.ModernCombat==null||M.GetComponent<Map01Story>().Commander==null)&&Time.realtimeSinceStartup<end)yield return null;
-            if(Recording){SetPreviewResolution(1280,720);EditorWindow.GetWindow(typeof(Editor).Assembly.GetType("UnityEditor.GameView")).Focus();Application.runInBackground=true;Time.captureFramerate=15;M.gameCamera.gameObject.AddComponent<Map01OperationMovie>().Begin(take);}
+            if(Recording){SetPreviewResolution(1920,1080);EditorWindow.GetWindow(typeof(Editor).Assembly.GetType("UnityEditor.GameView")).Focus();Application.runInBackground=true;Time.captureFramerate=15;M.gameCamera.gameObject.AddComponent<Map01OperationMovie>().Begin(take);}
             Assert.NotNull(M);Assert.IsTrue(M.IsInitialized);Storage.SetValue(null,Path.GetFullPath("Logs/Map01Operations/saves/"+Guid.NewGuid().ToString("N")));
             foreach(var e in M.Enemies)e.enabled=false;M.ModernHealth.CinematicInvulnerable=true;
             Assert.AreEqual(4,M.GetComponent<Map01Story>().Guards(1).Length);Assert.AreEqual(5,M.GetComponent<Map01Story>().Guards(2).Length);Assert.AreEqual(5,M.GetComponent<Map01Story>().Guards(3).Length);
@@ -129,7 +183,10 @@ namespace ShadowVale.Map01.Tests
             var aimRouting=RouteInputToGame();using var heldAim=new HeldAimMouse();var aimMouse=heldAim.Device;InputSystem.QueueStateEvent(aimMouse,new MouseState().WithButton(MouseButton.Right));InputSystem.Update();yield return null;
             int magazine=M.ModernCombat.RoundsInMagazine,reserve=bag.Count("ammo_rifle");var equipped=M.ModernCombat.EquippedKind;
             Assert.IsTrue(s.TryInteract());var ui=M.GetComponent<Map01OperationPuzzleUI>();Assert.IsTrue(ui.Active);if(Recording)yield return WaitGameSeconds(3);ui.StartPuzzle();if(Recording)yield return WaitGameSeconds(3);
-            var guess=Map01SupplyLock.Digits(ui.Lock.Secret);ui.SubmitLock(Map01SupplyLock.Code(guess[0],guess[2],guess[1]));
+            var guess=Map01SupplyLock.Digits(ui.Lock.Secret);
+            int wrongFirst=Map01SupplyLock.Code(guess[0],guess[2],guess[1]);
+            if(wrongFirst==ui.Lock.Secret)wrongFirst=Map01SupplyLock.Code((guess[0]+1)%6,guess[1],guess[2]);
+            ui.SubmitLock(wrongFirst);
             if(Recording){yield return WaitGameSeconds(.3f);Capture("lock-feedback",true);yield return WaitGameSeconds(2);}
             int wrong=(ui.Lock.Secret+1)%6;while(ui.Lock.Remaining>0)ui.SubmitLock(wrong);Assert.AreEqual(0,ui.Lock.Remaining);Assert.IsFalse(s.Progress.supplies);
             Capture("lock-ui",true);if(Recording)yield return WaitGameSeconds(2);ui.Lock.Retry();ui.SubmitLock(ui.Lock.Secret);
@@ -165,11 +222,33 @@ namespace ShadowVale.Map01.Tests
             var response=M.Enemies.Where(e=>e.name.StartsWith("operation_radio_response_")).ToArray();foreach(var e in response)e.enabled=false;
             Assert.IsFalse(s.Progress.radioDisabled);if(Recording)yield return WaitGameSeconds(3);yield return Clear(response);Assert.AreEqual(0,s.ResponseRemaining);Assert.IsTrue(response.All(e=>e.GetComponent<ForestPoint>()==null));
             Assert.IsTrue(s.TryInteract());yield return ReadyPuzzle(ui);ui.StartPuzzle();ui.Finish(Map01OperationResult.Failure);yield return null;Assert.AreEqual(3,M.Enemies.Count(e=>e.name.StartsWith("operation_radio_response_")));
-            Assert.IsTrue(s.TryInteract());yield return ReadyPuzzle(ui);ui.StartPuzzle();for(int i=0;i<Map01RadioCircuit.Count;i++)while(ui.Circuit.Rotations[i]!=0)ui.Circuit.Rotate(i);Assert.IsTrue(ui.Circuit.Solved());ui.SubmitCircuit();yield return null;
-            Assert.AreEqual(6,q.Stage);Assert.IsTrue(s.Progress.radioDisabled);Assert.IsNull(M.GetComponentInChildren<Map01Extraction>());
+            Assert.IsTrue(s.TryInteract());yield return ReadyPuzzle(ui);ui.StartPuzzle();
+            int rounds=ui.Circuit.TotalRounds;
+            for(int round=0;round<rounds;round++){
+                Assert.IsTrue(ui.Active);for(int i=0;i<Map01RadioCircuit.Count;i++)while(ui.Circuit.Rotations[i]!=0)ui.Circuit.Rotate(i);
+                Assert.IsTrue(ui.Circuit.Solved());ui.SubmitCircuit();
+                if(round+1<rounds){Assert.IsTrue(ui.AwaitingNextRound);Assert.IsFalse(s.Progress.radioDisabled);ui.StartPuzzle();}
+            }
+            yield return null;
+            Assert.AreEqual(5,q.Stage,"Radio damage alone must not skip the power supply.");Assert.IsTrue(s.Progress.radioDisabled);Assert.IsFalse(s.Progress.powerDisabled);
+            Assert.NotNull(s.Layout.sabotage);Assert.IsTrue(s.Layout.sabotage.damagedRadio.activeSelf);CaptureDevice("radio-damaged",false);
+            s.Target(out _,out var label);StringAssert.Contains("NGUỒN",label);
+            At(s.Layout.sabotage.powerApproach.position);Assert.IsTrue(s.TryInteract());yield return ReadyPuzzle(ui);yield return WaitGameSeconds(1);
+            Assert.Less(Vector3.Distance(index.position,s.Layout.sabotage.powerRightContact.position),.11f,"Power control must be within the actual hand reach.");ui.StartPuzzle();
+            Assert.IsTrue(ui.IsPower);ui.SubmitPower();yield return WaitGameSeconds(2.7f);Assert.IsFalse(ui.Active);Assert.IsFalse(s.Progress.powerDisabled);
+            Assert.AreEqual(3,M.Enemies.Count(e=>e.name.StartsWith("operation_radio_response_")),"A power retry cannot duplicate the response squad.");
+            Assert.IsTrue(s.TryInteract());yield return ReadyPuzzle(ui);ui.StartPuzzle();Capture("power-ui",true);yield return WaitGameSeconds(.3f);
+            for(int fuse=0;fuse<3;fuse++){
+                float deadline=Time.time+9;
+                while(Mathf.Abs(ui.Power.Needle-ui.Power.Center)>Map01PowerSabotage.Window*.5f-.015f&&Time.time<deadline)yield return null;
+                Assert.Less(Mathf.Abs(ui.Power.Needle-ui.Power.Center),Map01PowerSabotage.Window*.5f);
+                ui.SubmitPower();if(fuse<2){Assert.IsTrue(ui.AwaitingNextRound);Assert.AreEqual(5,q.Stage);ui.StartPuzzle();}
+            }
+            yield return WaitGameSeconds(3);Assert.IsTrue(s.Layout.sabotage.Smoking);Assert.Greater(s.Layout.sabotage.GetComponentInChildren<ParticleSystem>().particleCount,5,"Damaged power must emit real smoke particles.");CaptureDevice("power-smoke",true);
+            Assert.AreEqual(6,q.Stage);Assert.IsTrue(s.Progress.powerDisabled);Assert.IsNull(M.GetComponentInChildren<Map01Extraction>());
             var save=M.GetComponent<Map01SaveSystem>();Assert.IsTrue(save.SaveSlot(0,out var error,true),error);Map01SaveSystem.BeginGame(0);yield return null;yield return WaitGameSeconds(1);
             s=M.GetComponent<Map01Story>();q=M.GetComponent<Map01Quest>();foreach(var e in M.Enemies)e.enabled=false;
-            Assert.AreEqual(3,M.Enemies.Count(e=>e.name.StartsWith("operation_radio_response_")));Assert.AreEqual(0,s.ResponseRemaining);Assert.IsTrue(s.Progress.radioResponseSpawned&&s.Progress.radioDisabled);
+            Assert.AreEqual(3,M.Enemies.Count(e=>e.name.StartsWith("operation_radio_response_")));Assert.AreEqual(0,s.ResponseRemaining);Assert.IsTrue(s.Progress.radioResponseSpawned&&s.Progress.radioDisabled&&s.Progress.powerDisabled);Assert.IsTrue(s.Layout.sabotage.Smoking);
             At(s.Commander.position+s.Commander.forward*2);yield return WaitGameSeconds(7);yield return IdleInteraction();Assert.IsTrue(s.TryInteract());Assert.IsTrue(M.GetComponent<Map01StoryDialogue>().IsPlaying,"Radio report did not begin: safe="+s.SafeToReport+" stopped="+M.Stopped+" busy="+Map01NamActions.For(M).Busy);yield return Confirm();Assert.AreEqual(7,q.Stage);Assert.IsNull(M.GetComponentInChildren<Map01Extraction>());
         }
         static IEnumerator ReadyPuzzle(Map01OperationPuzzleUI ui){float deadline=Time.time+8;while(ui.Preparing&&Time.time<deadline)yield return null;Assert.IsFalse(ui.Preparing,"Nam could not reach the radio panel.");}
@@ -204,6 +283,14 @@ namespace ShadowVale.Map01.Tests
             // Binoculars use the player's real look angles, before cinematic camera overrides.
             typeof(ShadowVale.Gameplay.Player.ThirdPersonCamera).GetField("_yaw",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(rig,look.y);
             typeof(ShadowVale.Gameplay.Player.ThirdPersonCamera).GetField("_pitch",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(rig,look.x>180?look.x-360:look.x);
+        }
+        static void CaptureDevice(string name,bool power){
+            var l=M.GetComponent<Map01Story>().Layout;var c=M.gameCamera;var pos=c.transform.position;var rot=c.transform.rotation;float fov=c.fieldOfView;
+            var target=power?l.sabotage.smokeOrigin.position-Vector3.up*.05f:(l.radioRightContact.position+l.radioLeftContact.position)*.5f;
+            var hidden=M.player.GetComponentsInChildren<Renderer>().Where(r=>r.enabled).ToArray();foreach(var renderer in hidden)renderer.enabled=false;
+            var front=power?-l.sabotage.powerApproach.forward:Vector3.ProjectOnPlane(l.radioApproach.position-target,Vector3.up).normalized;
+            try{c.transform.SetPositionAndRotation(target+front*(power?2.7f:1.5f)+Vector3.up*(power?1.2f:.5f)+Vector3.Cross(Vector3.up,front)*.45f,Quaternion.identity);c.transform.LookAt(target);c.fieldOfView=48;Capture(name);}
+            finally{foreach(var renderer in hidden)if(renderer!=null)renderer.enabled=true;c.transform.SetPositionAndRotation(pos,rot);c.fieldOfView=fov;}
         }
         static void Capture(string name,bool ui=false)
         {

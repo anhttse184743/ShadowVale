@@ -84,10 +84,10 @@ namespace ShadowVale.Map01
         public void BeginSupplyOrder(){if(Stage==BriefingStage){Stage=ScoutStage;mission.Say("Điểm 1: thu hồi thuốc và vật tư tiếp tế [E].",6);}}
         public void SuppliesRecovered(){if(Stage==ScoutStage){Stage=ReportScoutStage;mission.Say("Đã thu hồi vật tư. Rời giao tranh rồi liên lạc với chỉ huy [E].",6);}}
         public void BeginRadioOrder(){if(Stage==ReportScoutStage&&story.Progress.suppliesDelivered&&story.Progress.supplyReported)Stage=CampsStage;}
-        public void RadioDisabled(){if(Stage==CampsStage){Stage=ReportCampsStage;mission.Say("Đài liên lạc đã ngừng hoạt động. Rút khỏi trại rồi báo cáo chỉ huy [E].",6);}}
+        public void RadioDisabled(){if(Stage==CampsStage&&story.Progress.radioDisabled&&story.Progress.powerDisabled){Stage=ReportCampsStage;mission.Say("Đài liên lạc đã ngừng hoạt động. Rút khỏi trại rồi báo cáo chỉ huy [E].",6);}}
         public void BeginCommanderOrder()
         {
-            if(Stage!=ReportCampsStage||!story.Progress.radioDisabled)return;Stage=BossStage;EnsureCommander();
+            if(Stage!=ReportCampsStage||!story.Progress.radioDisabled||!story.Progress.powerDisabled)return;Stage=BossStage;EnsureCommander();
             // The scouts' rifle (Map01C3Mission): no voiced line yet, so the order's last word is shown, not spoken.
             if(GetComponent<Map01C3Mission>()?.CachePoint!=null)
                 mission.Say("Chỉ huy (bộ đàm): \"Trinh sát để lại một khẩu Mosin, năm viên, ở vai đồi phía Đông Nam điểm ba. Từ đó nhìn được chòi canh.\"",8);

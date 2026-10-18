@@ -47,6 +47,18 @@ namespace ShadowVale.Map01.Tests
                 "ShadowVale.Map01.Tests.Map01OperationsTests.CircuitMigratesOldBoardWithoutAcceptingItAsSolved",
                 "ShadowVale.Map01.Tests.Map01OperationsTests.FailedLockCanRetryWithoutLosingCodeOrNotebook"}}));
         }
+        public static void RecordPuzzleRevision()
+        {
+            SessionState.SetString(Key+".prefix","puzzle-revision-");Directory.CreateDirectory("Logs/Map01Operations/video");File.WriteAllText("Logs/Map01Operations/video/puzzle-revision-test-cases.txt","");
+            SessionState.SetBool(Key,true);Register();runner.Execute(new ExecutionSettings(new Filter{testMode=TestMode.EditMode,testNames=new[]{
+                "ShadowVale.Map01.Tests.Map01OperationsTests.RadioFailureCallsOnlyOneSavedSquadAndSuccessDoesNotExtract",
+                "ShadowVale.Map01.Tests.RescueBushTests.IntroAndExecutionStayBoundAndPresentDeathBeforeFailure"}}));
+        }
+        public static void RecordExecution()
+        {
+            SessionState.SetString(Key+".prefix","execution-");Directory.CreateDirectory("Logs/Map01Operations/video");File.WriteAllText("Logs/Map01Operations/video/execution-test-cases.txt","");
+            SessionState.SetBool(Key,true);Register();runner.Execute(new ExecutionSettings(new Filter{testMode=TestMode.EditMode,testNames=new[]{"ShadowVale.Map01.Tests.RescueBushTests.ExecutionShowsBoundDeathThenReturnsToNam"}}));
+        }
         public static void RecordInteractionReview()
         {
             SessionState.SetString(Key+".prefix","interaction-");Directory.CreateDirectory("Logs/Map01Operations/video");File.WriteAllText("Logs/Map01Operations/video/interaction-test-cases.txt","");

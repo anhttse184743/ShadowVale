@@ -47,6 +47,17 @@ namespace ShadowVale.Map01
         private Vector3 interrogatorStart,interrogatorClose;
         private AnimationClip interrogatorWalk, executionAim;
         private bool canApproach;
+        private AudioSource tensionSource;
+        private AudioClip heartbeat;
+        private float nextHeartbeat;
+        private Vector3 alarmRetreat;
+        private AnimationClip alarmWalk,alarmCrouch;
+        private bool alarmReverseWalk;
+        private Vector3 executionView,executionFocus,reactionView;
+        const float CollapseViewSeconds=3.3f,ReactionViewSeconds=1.7f,FailureFadeSeconds=.8f;
+        public bool ExecutionShowsCaptive=>CurrentMode==Mode.Execution&&storyBeat>=2&&(!shot||Elapsed-impactAt<CollapseViewSeconds);
+        public bool ExecutionShowsReaction=>CurrentMode==Mode.Execution&&shot&&Elapsed-impactAt>=CollapseViewSeconds;
+        public float ExecutionTension=>CurrentMode==Mode.Execution?Mathf.Clamp01(Elapsed/3):0;
         private Map01CinematicPose introNamPose;
         private AnimationClip introNamIdle;
         private Vector3 introNamPosition;
@@ -109,7 +120,7 @@ namespace ShadowVale.Map01
                 var lower=new[]{HumanBodyBones.Hips,HumanBodyBones.LeftUpperLeg,HumanBodyBones.LeftLowerLeg,HumanBodyBones.LeftFoot,HumanBodyBones.LeftToes,
                     HumanBodyBones.RightUpperLeg,HumanBodyBones.RightLowerLeg,HumanBodyBones.RightFoot,HumanBodyBones.RightToes};
                 introLowerBody=lower.Select(actor.GetBoneTransform).Where(t=>t!=null).Select(t=>(t,t.localPosition,t.localRotation)).ToArray();
-                foreach(var weapon in mission.player.GetComponentsInChildren<Weapon>(true))if(weapon.gameObject.activeSelf){introHiddenWeapons.Add(weapon.gameObject);weapon.gameObject.SetActive(false);}
+                foreach(var weapon in mission.player.GetComponentsInChildren<Weapon>(true))if(CurrentMode==Mode.Intro&&weapon.gameObject.activeSelf){introHiddenWeapons.Add(weapon.gameObject);weapon.gameObject.SetActive(false);}
             }
             RenderStory();
         }
@@ -127,10 +138,43 @@ namespace ShadowVale.Map01
         }
         public void ExecuteHostage(Map01Rescue owner,Map01EnemyController overseer,Map01EnemyController reporter=null){
             if(IsPlaying)return;
-            enemy=overseer;Begin(owner,Mode.Execution,20);OwnStoryActors();
-            storyBeat=1;
+            enemy=overseer;Begin(owner,Mode.Execution,20);
+            // The cinematic pose owns and detaches the controller; collect its
+            // locomotion clips before that handoff, never from the detached actor.
+            var actor=mission.player.GetComponentInChildren<Animator>();var clips=actor.runtimeAnimatorController!=null?actor.runtimeAnimatorController.animationClips:Array.Empty<AnimationClip>();
+            OwnStoryActors();storyBeat=1;nextHeartbeat=0;
+            bool knife=mission.ModernCombat.EquippedKind==WeaponKind.Knife;
+            alarmCrouch=knife?Map01CinematicPose.Clip("Nam_Bush_Recovery"):clips.FirstOrDefault(c=>c.name=="Nam_Crouch_Idle");
+            alarmCrouch??=introNamIdle;
+            alarmWalk=clips.FirstOrDefault(c=>c.name.Contains(storySneaking?"Crouch_Walk_B":"Rifle_Walk_B"));alarmReverseWalk=false;
+            if(alarmWalk==null&&storySneaking){alarmWalk=clips.FirstOrDefault(c=>c.name=="Nam_Crouch_Walk_F");alarmReverseWalk=alarmWalk!=null;}
+            alarmWalk??=clips.FirstOrDefault(c=>c.name.Contains("Walk_B"))??introNamIdle;
+            alarmRetreat=introNamPosition;
+            foreach(float side in new[]{0f,.55f,-.55f}){
+                var direction=(-mission.player.forward+mission.player.right*side).normalized;
+                var desired=introNamPosition+direction*.75f;
+                if(NavMesh.SamplePosition(introNamPosition,out var from,.4f,NavMesh.AllAreas)&&NavMesh.SamplePosition(desired,out var to,.25f,NavMesh.AllAreas)
+                    &&!NavMesh.Raycast(from.position,to.position,out _,NavMesh.AllAreas)){
+                    var delta=to.position-from.position;
+                    bool blocked=Physics.CapsuleCastAll(from.position+Vector3.up*.45f,from.position+Vector3.up*1.3f,.22f,delta.normalized,delta.magnitude,mission.ObstructionMask,QueryTriggerInteraction.Ignore)
+                        .Any(h=>!h.transform.IsChildOf(mission.player)&&h.transform.GetComponentInParent<Health>()==null);
+                    if(!blocked){alarmRetreat=Map01OperationSession.GroundPoint(to.position,mission.player);break;}
+                }
+            }
             Voice().Play(reporter!=null&&reporter!=overseer&&reporter.Alive?"m1_rescue_alarm":"m1_rescue_execute_order");
             overseer.FaceImmediate(mission.hung.position);
+            var axis=Vector3.ProjectOnPlane(enemy.transform.position-mission.hung.position,Vector3.up).normalized;
+            if(axis.sqrMagnitude<.01f)axis=enemy.transform.forward;
+            var lensSide=Vector3.Cross(Vector3.up,axis);
+            executionFocus=Vector3.Lerp(mission.hung.position,enemy.transform.position,.35f)+Vector3.up*.82f;
+            if(Vector3.Dot(lensSide,cameraStart-executionFocus)<0)lensSide=-lensSide;
+            executionView=FindStoryLens(executionFocus,lensSide,3.1f,.65f);
+            var namFocus=introNamPosition+Vector3.up*1.1f;
+            if(!ShelterCameraClear(namFocus,cameraStart)||Physics.CheckSphere(cameraStart,.16f,mission.ObstructionMask,QueryTriggerInteraction.Ignore)){
+                cameraStart=FindStoryLens(namFocus,-mission.player.forward+mission.player.right*.5f,2.5f,.6f);
+                cameraRotation=Quaternion.LookRotation(namFocus-cameraStart);
+            }
+            reactionView=Vector3.zero; // resolved after Nam's retreat, at the cut
         }
         void UpdateStory(){
             if(CurrentMode==Mode.Intro){
@@ -141,12 +185,13 @@ namespace ShadowVale.Map01
                 else if(storyBeat==5&&Elapsed>=Mathf.Max(duration,introReleaseAt+.8f))Finish();
                 return;
             }
-            if(storyBeat==1&&!Voice().HasSpeech){storyBeat=2;beatAt=Elapsed;}
-            else if(storyBeat==2&&Elapsed-beatAt>=Mathf.Max(.65f,rescue.Layout.executionAimSeconds)){
+            UpdateExecutionSound();
+            if(storyBeat==1&&!Voice().HasSpeech&&Elapsed>=1.4f){storyBeat=2;beatAt=Elapsed;}
+            else if(storyBeat==2&&Elapsed-beatAt>=Mathf.Max(1.6f,rescue.Layout.executionAimSeconds)){
                 shot=true;impactAt=Elapsed;storyBeat=3;
                 enemy.FireAtHostage(captiveVisual.actor.GetBoneTransform(HumanBodyBones.Chest).position,0,true);
                 rescue.CompleteExecution();
-            }else if(storyBeat==3&&Elapsed-impactAt>=3+rescue.Layout.executionHoldSeconds)Finish();
+            }else if(storyBeat==3&&Elapsed-impactAt>=CollapseViewSeconds+ReactionViewSeconds+FailureFadeSeconds)Finish();
         }
         void RenderStory(){
             RenderIntroNam();
@@ -160,20 +205,84 @@ namespace ShadowVale.Map01
                 if(executionAim!=null)interrogatorPose.Sample(executionAim,Elapsed-beatAt,true);
                 AimExecution();
             }
-            // Rescue approach and alarm remain in Nam's existing view. The execution
-            // happens at its real position off camera; never reveal the captive by a cut.
-            rig.SetCinematicView(cameraStart,cameraRotation,cameraFov,1);
+            // Establish Nam first, then cut to the real bound captive and back.
+            // Never fly the camera across the forest or move either actor to a stage.
+            if(ExecutionShowsCaptive){
+                float push=Mathf.SmoothStep(0,1,(Elapsed-beatAt)/4.5f)*.18f;
+                var lens=Vector3.MoveTowards(executionView,executionFocus,push);
+                SetStoryView(lens,Quaternion.LookRotation(executionFocus-lens),44);return;
+            }
+            if(ExecutionShowsReaction){
+                var target=mission.player.position+Vector3.up*1.03f;
+                if(reactionView==Vector3.zero)reactionView=FindStoryLens(target,mission.player.forward+mission.player.right*.5f,2.05f,.45f);
+                SetStoryView(reactionView,Quaternion.LookRotation(target-reactionView),42);return;
+            }
+            float tension=ExecutionTension;
+            float recoil=CurrentMode==Mode.Execution&&shot?Mathf.Exp(-(Elapsed-impactAt)*18):0;
+            var sway=Quaternion.Euler(tension*Mathf.Sin(Elapsed*4.3f)*.08f-recoil*.45f,tension*Mathf.Sin(Elapsed*3.1f)*.07f,0);
+            var follow=CurrentMode==Mode.Execution?mission.player.position-introNamPosition:Vector3.zero;
+            SetStoryView(cameraStart+follow,cameraRotation*sway,cameraFov-5*tension);
+        }
+        void SetStoryView(Vector3 position,Quaternion rotation,float fov){
+            rig.SetCinematicView(position,rotation,fov,1);
+            // This director runs after the gameplay camera's LateUpdate. Apply
+            // the cut now as well, so a gunshot cannot precede its camera cut.
+            mission.gameCamera.transform.SetPositionAndRotation(position,rotation);mission.gameCamera.fieldOfView=fov;
+        }
+        Vector3 FindStoryLens(Vector3 focus,Vector3 preferred,float distance,float height){
+            preferred=Vector3.ProjectOnPlane(preferred,Vector3.up).normalized;
+            foreach(float turn in new[]{0f,30f,-30f,60f,-60f,90f,-90f,180f}){
+                var candidate=focus+Quaternion.Euler(0,turn,0)*preferred*distance+Vector3.up*height;
+                if(ShelterCameraClear(focus,candidate)&&!Physics.CheckSphere(candidate,.16f,mission.ObstructionMask,QueryTriggerInteraction.Ignore))return candidate;
+            }
+            return ClearStoryView(focus,distance);
         }
         void RenderIntroNam(){
             if(introNamPose==null||introNamIdle==null)return;
-            mission.player.SetPositionAndRotation(introNamPosition,introNamRotation);
+            float step=CurrentMode==Mode.Execution?Mathf.SmoothStep(0,1,(Elapsed-.2f)/.9f):0;
+            mission.player.SetPositionAndRotation(Vector3.Lerp(introNamPosition,alarmRetreat,step),introNamRotation);
             float idleTime=Mathf.Repeat(Elapsed,Mathf.Max(.01f,introNamIdle.length));
-            introNamPose.Sample(introNamIdle,idleTime,true);
+            if(CurrentMode==Mode.Execution&&Elapsed>.2f){
+                float walkTime=Mathf.Repeat(Vector3.Distance(introNamPosition,mission.player.position)/1.4f,Mathf.Max(.01f,alarmWalk.length));
+                if(alarmReverseWalk)walkTime=alarmWalk.length-walkTime;
+                introNamPose.SampleBlend(alarmWalk,walkTime,alarmCrouch,Mathf.Max(0,Elapsed-1.1f),Mathf.SmoothStep(0,1,(Elapsed-.85f)/.65f));
+            }else introNamPose.Sample(introNamIdle,idleTime,true);
             if(CurrentMode==Mode.Intro&&storyBeat>=2){
                 float weight=storyBeat==5?1-Mathf.SmoothStep(0,1,(Elapsed-introReleaseAt)/.8f):Mathf.SmoothStep(0,1,(Elapsed-introRadioAt)/.7f);
                 Map01ArmContact.Radio(mission.player.GetComponentInChildren<Animator>(),weight);
             }
-            introNamPose.Ground(introNamPosition.y);
+            if(CurrentMode==Mode.Execution){
+                // A restrained look toward the alarm, distributed through the
+                // upper body. Hands, hips and planted feet keep the authored pose.
+                var actor=mission.player.GetComponentInChildren<Animator>();
+                if(shot){
+                    float shock=Mathf.Exp(-Mathf.Max(0,Elapsed-impactAt)*7);
+                    var spine=actor.GetBoneTransform(HumanBodyBones.Spine);if(spine!=null)spine.rotation=Quaternion.AngleAxis(5*shock,mission.player.right)*spine.rotation;
+                }
+                var direction=Vector3.ProjectOnPlane(mission.hung.position-mission.player.position,Vector3.up);
+                if(direction.sqrMagnitude>.01f){
+                    var turn=Quaternion.RotateTowards(Quaternion.identity,Quaternion.FromToRotation(mission.player.forward,direction.normalized),30);
+                    float reaction=Mathf.SmoothStep(0,1,Elapsed/.9f);
+                    foreach(var part in new[]{(HumanBodyBones.Chest,.15f),(HumanBodyBones.Neck,.35f),(HumanBodyBones.Head,.5f)}){
+                        var bone=actor.GetBoneTransform(part.Item1);if(bone!=null)bone.rotation=Quaternion.Slerp(Quaternion.identity,turn,reaction*part.Item2)*bone.rotation;
+                    }
+                }
+            }
+            introNamPose.Ground(mission.player.position.y);
+        }
+        void UpdateExecutionSound(){
+            if(tensionSource==null){
+                tensionSource=gameObject.AddComponent<AudioSource>();tensionSource.playOnAwake=false;tensionSource.spatialBlend=0;tensionSource.volume=.12f;tensionSource.priority=80;
+                var samples=new float[12000];
+                for(int i=0;i<samples.Length;i++){
+                    float t=i/24000f;
+                    float Pulse(float at)=>at<0?0:Mathf.Sin(at*2*Mathf.PI*65)*Mathf.Exp(-at*32);
+                    samples[i]=(Pulse(t)+.6f*Pulse(t-.16f))*.7f;
+                }
+                heartbeat=AudioClip.Create("Rescue tension heartbeat",samples.Length,1,24000,false);heartbeat.SetData(samples,0);tensionSource.clip=heartbeat;
+            }
+            if(!shot&&Elapsed>=nextHeartbeat){tensionSource.Play();nextHeartbeat=Elapsed+Mathf.Lerp(.9f,.6f,ExecutionTension);}
+            if(shot)tensionSource.Stop();
         }
         void AimExecution(){
             var actor=enemy.GetComponentInChildren<Animator>();
@@ -298,7 +407,8 @@ namespace ShadowVale.Map01
         }
         private void Update()
         {
-            if (!IsPlaying || mission.Paused || ForestMenu.Visible) return;
+            if (!IsPlaying) return;
+            if(mission.Paused||ForestMenu.Visible){if(tensionSource!=null)tensionSource.Stop();return;}
             Elapsed += Time.deltaTime;
             if (CurrentMode == Mode.Shelter || CurrentMode == Mode.Execution || CurrentMode==Mode.Intro)
                 skipHeld = Keyboard.current != null && Keyboard.current.escapeKey.isPressed ? skipHeld + Time.unscaledDeltaTime : 0;
@@ -468,6 +578,7 @@ namespace ShadowVale.Map01
         {
             var mode=CurrentMode;CurrentMode=Mode.None;
             namPose?.Dispose();hungPose?.Dispose();namPose=hungPose=null;
+            tensionSource?.Stop();
             storyVoice?.Stop();captivePose?.Dispose();interrogatorPose?.Dispose();captivePose=interrogatorPose=null;
             introNamPose?.Dispose();introNamPose=null;introLowerBody=null;
             foreach(var weapon in introHiddenWeapons)if(weapon!=null)weapon.SetActive(true);introHiddenWeapons.Clear();
@@ -502,6 +613,19 @@ namespace ShadowVale.Map01
             GUI.DrawTexture(new Rect(0,Screen.height*.91f,Screen.width,Screen.height*.09f),Texture2D.whiteTexture);
             var skipStyle=new GUIStyle(GUI.skin.label){fontSize=Mathf.RoundToInt(Screen.height*.022f),alignment=TextAnchor.MiddleRight};
             GUI.color=Color.white;GUI.Label(new Rect(Screen.width*.65f,Screen.height*.014f,Screen.width*.33f,Screen.height*.05f),"Giữ Esc 1 giây để bỏ qua",skipStyle);GUI.color=color;GUI.depth=depth;
+            if(CurrentMode==Mode.Execution){
+                // Directional alarm belongs only to Nam's establishing shot.
+                var towards=mission.hung.position-mission.gameCamera.transform.position;
+                float side=Vector3.Dot(mission.gameCamera.transform.right,towards.normalized);
+                float alpha=shot?.16f:Mathf.Lerp(.15f,.35f,(Mathf.Sin(Elapsed*7)+1)*.5f);
+                GUI.color=new Color(.65f,.06f,.035f,ExecutionShowsCaptive||ExecutionShowsReaction?0:alpha);
+                GUI.DrawTexture(new Rect(side<-.2f?0:side>.2f?Screen.width-18:0,Screen.height*.09f,Mathf.Abs(side)>.2f?18:Screen.width,Mathf.Abs(side)>.2f?Screen.height*.82f:12),Texture2D.whiteTexture);
+                GUI.color=new Color(1,.65f,.3f,ExecutionShowsCaptive||ExecutionShowsReaction?0:.9f);
+                var danger=new GUIStyle(GUI.skin.label){fontSize=Mathf.RoundToInt(Screen.height*.05f),fontStyle=FontStyle.Bold,alignment=TextAnchor.MiddleCenter};
+                GUI.Label(new Rect(Screen.width*(.5f+side*.3f)-24,Screen.height*.14f,48,48),"!",danger);
+                if(shot){GUI.color=new Color(0,0,0,Mathf.SmoothStep(0,1,(Elapsed-impactAt-CollapseViewSeconds-ReactionViewSeconds)/FailureFadeSeconds));GUI.DrawTexture(new Rect(0,0,Screen.width,Screen.height),Texture2D.whiteTexture);}
+                GUI.color=color;
+            }
             if(CurrentMode==Mode.Intro&&storyVoice!=null&&!string.IsNullOrEmpty(storyVoice.CurrentCaption)){
                 var subtitle=new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter,wordWrap=true,fontSize=Mathf.RoundToInt(Screen.height*.031f)};
                 GUI.color=Color.white;GUI.Label(new Rect(Screen.width*.12f,Screen.height*.91f,Screen.width*.76f,Screen.height*.08f),storyVoice.CurrentCaption,subtitle);GUI.color=color;
@@ -509,6 +633,7 @@ namespace ShadowVale.Map01
         }
 
         private void OnDisable(){if(IsPlaying)Cleanup();}
+        private void OnDestroy(){if(heartbeat!=null)Destroy(heartbeat);if(tensionSource!=null)Destroy(tensionSource);}
         private sealed class PosePlayer : IDisposable
         {
             private readonly Animator actor;

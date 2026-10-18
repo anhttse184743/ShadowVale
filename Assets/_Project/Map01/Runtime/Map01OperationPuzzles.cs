@@ -26,6 +26,7 @@ namespace ShadowVale.Map01
             if (history != null) History.AddRange(history.Where(g => g != null));
             AttemptStart = Math.Clamp(attemptStart, 0, History.Count);
         }
+        public static int GenerateCode(int seed){var random=new Random(seed);return Code(random.Next(6),random.Next(6),random.Next(6));}
         public static int Code(int a, int b, int c) => a * 100 + b * 10 + c;
         public static int[] Digits(int code) => new[] { code / 100 % 10, code / 10 % 10, code % 10 };
         public static Map01LockGuess Score(int secret, int guess)
@@ -54,27 +55,61 @@ namespace ShadowVale.Map01
     public sealed class Map01RadioCircuit
     {
         public const int North=1, East=2, South=4, West=8;
-        public const float Seconds=90;
+        public const float Seconds=10;
         public const int Columns=5, Rows=4, Count=Columns*Rows, Source=0, Destination=19;
-        // One continuous cable uses every cell. There are no decoy or alarm branches.
-        static readonly int[] CablePath={0,5,10,15,16,11,6,1,2,7,12,17,18,13,8,3,4,9,14,19};
-        public static readonly int[] SolvedMasks=BuildCable();
+        static readonly int[] FallbackPath={0,5,10,15,16,11,6,1,2,7,12,17,18,13,8,3,4,9,14,19};
         public readonly int[] Rotations=new int[Count];
-        static int[] BuildCable()
-        {
-            var masks=new int[Count];masks[Source]|=West;masks[Destination]|=East;
-            for(int i=1;i<CablePath.Length;i++){
-                int a=CablePath[i-1],b=CablePath[i],direction=b==a+1?1:b==a-1?3:b>a?2:0;
-                masks[a]|=1<<direction;masks[b]|=1<<((direction+2)%4);
-            }return masks;
-        }
+        public readonly bool[] InitiallyScrambled=new bool[Count];
+        public int[] SolvedMasks {get;private set;}
+        public int Round {get;private set;}
+        public int TotalRounds {get;}
+        public int ScrambledCount=>InitiallyScrambled.Count(on=>on);
         public float Remaining=Seconds;
-        public Map01RadioCircuit(int seed,int[] rotations=null,float remaining=Seconds)
+        readonly int seed;
+        public Map01RadioCircuit(int seed,int[] rotations=null,float remaining=Seconds,int round=0)
         {
-            var random=new Random(seed);
-            // Old 16-cell saves keep mission progress but begin this redesigned puzzle anew.
-            for(int i=0;i<Count;i++)Rotations[i]=rotations!=null&&rotations.Length==Count?((rotations[i]%4)+4)%4:random.Next(4);
+            this.seed=seed;TotalRounds=2+new Random(seed).Next(2);
+            Round=Math.Clamp(round,0,TotalRounds-1);BuildRound(rotations);
             Remaining=Math.Clamp(remaining,0,Seconds);
+        }
+        void BuildRound(int[] restored=null)
+        {
+            var random=new Random(unchecked(seed+Round*104729));
+            var path=new int[Count];var used=new bool[Count];int budget=12000;
+            bool Search(int at,int depth)
+            {
+                if(--budget<0)return false;
+                path[depth]=at;used[at]=true;
+                if(depth==Count-1){if(at==Destination)return true;used[at]=false;return false;}
+                var directions=new[]{0,1,2,3};
+                for(int i=3;i>0;i--){int j=random.Next(i+1);(directions[i],directions[j])=(directions[j],directions[i]);}
+                foreach(int d in directions){
+                    int next=Neighbour(at,d);
+                    if(next<0||used[next]||next==Destination&&depth!=Count-2)continue;
+                    if(Search(next,depth+1))return true;
+                }
+                used[at]=false;return false;
+            }
+            if(!Search(Source,0))path=(int[])FallbackPath.Clone();
+            SolvedMasks=new int[Count];SolvedMasks[Source]=West;SolvedMasks[Destination]=East;
+            for(int i=1;i<Count;i++){
+                int a=path[i-1],b=path[i],d=b==a+1?1:b==a-1?3:b>a?2:0;
+                SolvedMasks[a]|=1<<d;SolvedMasks[b]|=1<<((d+2)%4);
+            }
+            Array.Clear(Rotations,0,Count);Array.Clear(InitiallyScrambled,0,Count);
+            // Scramble a subset without exposing it to the UI. Every cell remains
+            // rotatable, including correctly oriented cells the player may disturb.
+            var choices=Enumerable.Range(0,Count).ToArray();
+            for(int i=Count-1;i>0;i--){int j=random.Next(i+1);(choices[i],choices[j])=(choices[j],choices[i]);}
+            for(int i=0;i<4+Round;i++){int at=choices[i];InitiallyScrambled[at]=true;Rotations[at]=random.Next(2)==0?1:3;}
+            if(restored!=null&&restored.Length==Count)
+                for(int i=0;i<Count;i++)Rotations[i]=((restored[i]%4)+4)%4;
+            Remaining=Seconds;
+        }
+        public bool AdvanceRound()
+        {
+            if(Remaining<=0||!Solved()||Round+1>=TotalRounds)return false;
+            Round++;BuildRound();return true;
         }
         public static int RotateMask(int mask,int turns)
         {
@@ -82,7 +117,10 @@ namespace ShadowVale.Map01
             return mask;
         }
         public int Mask(int index)=>RotateMask(SolvedMasks[index],Rotations[index]);
-        public void Rotate(int index,int delta=1) { if(index<0||index>=Count)throw new ArgumentOutOfRangeException(nameof(index));Rotations[index]=(Rotations[index]+delta+4)%4; }
+        public void Rotate(int index,int delta=1) {
+            if(index<0||index>=Count)throw new ArgumentOutOfRangeException(nameof(index));
+            Rotations[index]=((Rotations[index]+delta)%4+4)%4;
+        }
         public bool[] Powered()
         {
             var seen=new bool[Count]; if((Mask(Source)&West)==0)return seen;
@@ -106,9 +144,31 @@ namespace ShadowVale.Map01
             }return true;
         }
         public int ConnectedCount=>Powered().Count(on=>on);
-        public string Feedback=>Solved()?"Đã nối đủ 20/20 đoạn. Có thể NGẮT ĐÀI.":
-            ConnectedCount==0?"Đầu NGUỒN chưa khớp. Bắt đầu từ ô A1 ở góc trên trái.":
-            $"Nguồn đang tới {ConnectedCount}/20 đoạn. Lần theo dây sáng, xoay đoạn kế tiếp để nối tiếp.";
+        public string Feedback=>Solved()?"Dây đã liền mạch. Nhấn XÁC NHẬN VÒNG.":
+            "Tự lần mạch từ NGUỒN đến NGẮT ĐÀI. Mọi ô đều xoay được; dây sáng biểu thị phần đã có điện.";
         public void Tick(float seconds){Remaining=Math.Max(0,Remaining-Math.Max(0,seconds));}
     }
+    /// <summary>Three fuse pulls. The moving needle is a game timing signal, not an electrical simulation.</summary>
+    public sealed class Map01PowerSabotage
+    {
+        public const int Steps=3;
+        public const float Seconds=10,Window=.18f;
+        readonly int seed;
+        float age;
+        public int Step {get;private set;}
+        public float Remaining {get;private set;}=Seconds;
+        public bool Complete {get;private set;}
+        public bool Won=>Complete&&Step==Steps;
+        public float Center {get;private set;}
+        public float Needle=>.5f+.5f*(float)Math.Sin(age*(2.6f+Step*.3f)-Math.PI/2);
+        public Map01PowerSabotage(int seed,int step=0){this.seed=seed;Step=Math.Clamp(step,0,Steps-1);Next();}
+        void Next(){age=0;Remaining=Seconds;Center=.25f+.5f*(float)new Random(unchecked(seed+Step*7919)).NextDouble();}
+        public void Tick(float dt){if(Complete)return;dt=Math.Max(0,dt);age+=dt;Remaining=Math.Max(0,Remaining-dt);if(Remaining<=0)Complete=true;}
+        public bool Pull(){
+            if(Complete)return false;
+            if(Math.Abs(Needle-Center)>Window*.5f){Complete=true;return false;}
+            Step++;if(Step==Steps)Complete=true;else Next();return true;
+        }
+    }
+
 }

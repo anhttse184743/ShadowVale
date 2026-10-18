@@ -16,6 +16,7 @@ namespace ShadowVale.Map01
         public bool radioWorkspacePrepared;
         public Transform[] responseSites, observationSites;
         public Map01SupplyProps supplyProps;
+        public Map01SabotageProps sabotage;
         [Min(0)] public int puzzleSeed = 241;
         [Min(18)] public float responseClearance = 18;
         [Min(1)] public float observationSeconds = 2;
