@@ -1,0 +1,38 @@
+Scene=Assets/_Project/Scenes/Maps/Map 1.unity dirty=False
+View pivot=(-697.11, -2221.44, 2473.61) camera=(90.88, 31.20, 29.12) forward=(-0.23, -0.66, 0.72)
+Selection=none
+Boundary position=(-111.00, 15.00, 0.00) bounds=Center: (-111.00, 15.00, 0.00), Extents: (1.00, 30.00, 102.00) mesh=Library/unity default resources enabled=False active=True mats=Dry soil
+Ground ring position=(0.00, 0.00, 0.00) bounds=Center: (0.00, 31.69, 0.00), Extents: (530.00, 33.39, 520.00) mesh=Assets/_Project/Scenes/Maps/Map 1/Surroundings/Ground ring.asset enabled=True active=True mats=Surrounding ground
+Boundary position=(111.00, 15.00, 0.00) bounds=Center: (111.00, 15.00, 0.00), Extents: (1.00, 30.00, 102.00) mesh=Library/unity default resources enabled=False active=True mats=Dry soil
+Boundary position=(0.00, 15.00, 101.00) bounds=Center: (0.00, 15.00, 101.00), Extents: (112.00, 30.00, 1.00) mesh=Library/unity default resources enabled=False active=True mats=Dry soil
+Continuous hills — 220 x 200 position=(0.00, 0.00, 0.00) bounds=Center: (0.00, 11.19, 0.00), Extents: (110.00, 12.89, 100.00) mesh=Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/StageData/StageTerrain.asset enabled=True active=True mats=Ground
+Boundary position=(0.00, 15.00, -101.00) bounds=Center: (0.00, 15.00, -101.00), Extents: (112.00, 30.00, 1.00) mesh=Library/unity default resources enabled=False active=True mats=Dry soil
+ROOT Sun pos=(0.00, 0.00, 0.00)
+ROOT Detailed layout — reference routes and hills pos=(0.00, 0.00, 0.00)
+ROOT 02 Mission • Nam & Hung pos=(0.00, 0.00, 0.00)
+ROOT Third person shoulder camera pos=(-69.70, 2.01, -66.64)
+ROOT 03 Surroundings • outside the playable map pos=(0.00, 0.00, 0.00)
+ROOT Map01 Operations — commander orders pos=(0.00, 0.00, 0.00)
+ROOT MAP 1 ART STAGE / gameplay source preserved pos=(0.00, 0.00, 0.00)
+ROOT Map 1 / navigation startup pos=(0.00, 0.00, 0.00)
+Ground vertices=44421 ring vertices=53040 seam vertices=840
+SEAM (110.00, 5.83, 97.00) ground-minus-ring=-9.536743E-07
+SEAM (110.00, 5.64, 98.00) ground-minus-ring=-9.536743E-07
+SEAM (110.00, 5.45, 99.00) ground-minus-ring=-9.536743E-07
+SEAM (-28.00, 2.87, 100.00) ground-minus-ring=7.152557E-07
+SEAM (110.00, 3.33, -95.00) ground-minus-ring=-7.152557E-07
+SEAM (110.00, 3.27, -96.00) ground-minus-ring=4.768372E-07
+SEAM (-110.00, 9.36, -100.00) ground-minus-ring=0
+SEAM (-110.00, 9.46, -99.00) ground-minus-ring=0
+SEAM (-110.00, 9.55, -98.00) ground-minus-ring=0
+SEAM (-110.00, 9.64, -97.00) ground-minus-ring=0
+SEAM (-110.00, 9.72, -96.00) ground-minus-ring=0
+SEAM (-110.00, 9.79, -95.00) ground-minus-ring=0
+SEAM (-110.00, 9.85, -94.00) ground-minus-ring=0
+SEAM (-110.00, 9.91, -93.00) ground-minus-ring=0
+SEAM (-110.00, 9.95, -92.00) ground-minus-ring=0
+SEAM (-110.00, 9.99, -91.00) ground-minus-ring=0
+SEAM (-110.00, 10.01, -90.00) ground-minus-ring=0
+SEAM (-110.00, 10.03, -89.00) ground-minus-ring=0
+SEAM (-110.00, 10.03, -88.00) ground-minus-ring=0
+SEAM (-110.00, 10.03, -87.00) ground-minus-ring=0
