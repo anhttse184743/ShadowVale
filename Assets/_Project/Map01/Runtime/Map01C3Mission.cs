@@ -61,6 +61,9 @@ namespace ShadowVale.Map01
             public bool kiengRemoved, phoneCut, wary, kiengRung, called, ambushed, runnersSent;
             public float checkInRemaining = -1f, runnersIn = -1f, sleeperIn = -1f;
             public bool[] sleepersAwake;
+            /// <summary>The guard running to strike the kẻng over a body he found (his SaveId; empty: nobody), and where it lies.</summary>
+            public string bodyRunner = "";
+            public float[] bodyAt;
         }
 
         public const string ResourcePath = "Missions/Map01C3Layout";
@@ -376,6 +379,7 @@ namespace ShadowVale.Map01
             Alarmed = alarmed;
             if (kiengAt >= 0 && Time.time >= kiengAt) { kiengAt = -1f; if (!Current.kiengRemoved && StrikerAlive()) RingKieng(); }
 
+            BodyRunner();
             CheckIn();
             HalfHealthCall();
             Countdowns();
@@ -406,25 +410,117 @@ namespace ShadowVale.Map01
             if (Near) mission.Say("Lính gác cổng (bộ đàm): \"Tổ hai, trả lời! …\" — \"Mất liên lạc! Cả trại cảnh giác!\"", 5);
             ApplyWary();
         }
-        private void ApplyWary()
+        /// <summary>On guard over a body: the same posts, but the men walk to them (it happens in front of Nam).</summary>
+        private void GoWaryOverBody()
+        {
+            if (Current.wary) return;
+            Current.wary = true;
+            ApplyWary(true);
+        }
+        private void ApplyWary(bool walk = false)
         {
             foreach (var w in Data.waryPosts)
             {
                 var g = Guard(w.role);
-                if (g != null && g.Alive && !g.Engaged) g.Repost(At(w.post[0], w.post[1]), w.yaw);
+                if (g != null && g.Alive && !g.Engaged) g.Repost(At(w.post[0], w.post[1]), w.yaw, walk: walk);
             }
             var boss = Commander;
             if (boss != null && boss.Alive && !boss.Engaged && Data.commander.points.Length >= 4)
-                boss.Repost(At(Data.commander.points[2], Data.commander.points[3]), Data.commander.yaws[1]);
+                boss.Repost(At(Data.commander.points[2], Data.commander.points[3]), Data.commander.yaws[1], walk: walk);
         }
 
-        private void RingKieng()
+        /// <param name="fight">The sleepers come out to fight Nam where he is (an alarm); false: to search round
+        /// <paramref name="search"/> (a body found).</param>
+        private void RingKieng(bool fight = true, Vector3? search = null)
         {
             if (Current.kiengRung) return;
             Current.kiengRung = true;
             mission.Say("\"Keng! Keng! Keng!\" — kẻng báo động. Lính trong dãy nhà bật dậy!", 4);
-            mission.EmitNoise(At(Data.kieng.frame[0], Data.kieng.frame[1]), 45f, NoiseKind.Other);
-            for (int i = 0; i < sleepers.Count; i++) Wake(i, true);
+            var kieng = At(Data.kieng.frame[0], Data.kieng.frame[1]);
+            if (fight)
+            {
+                mission.EmitNoise(kieng, 45f, NoiseKind.Other);
+                for (int i = 0; i < sleepers.Count; i++) Wake(i, true);
+                return;
+            }
+            // Up before the noise: a sleeper woken by it (OnNoise) would otherwise come out fighting.
+            for (int i = 0; i < sleepers.Count; i++) Wake(i, false);
+            mission.EmitNoise(kieng, 45f, NoiseKind.Other);
+            if (search.HasValue)
+            {
+                int k = 0;
+                foreach (var s in sleepers) if (s.gameObject.activeSelf && s.Alive && !s.Engaged) s.InspectBody(Map01BodyDiscovery.Around(search.Value, k++));
+            }
+        }
+
+        // ---- a body found (Map01BodyDiscovery) -----------------------------------------------------------------------
+
+        public bool IsGarrison(Map01EnemyController guard) => guard != null && Garrison().Contains(guard);
+        private Map01EnemyController bodyRunner;
+        private Vector3 KiengSpot => kiengPoint != null ? kiengPoint.transform.position : At(Data.kieng.use[0], Data.kieng.use[1]);
+        /// <summary>The guard on his way to strike the kẻng over a body, or null.</summary>
+        public Map01EnemyController BodyRunnerGuard =>
+            string.IsNullOrEmpty(Current.bodyRunner) ? null
+            : bodyRunner != null && bodyRunner.SaveId == Current.bodyRunner ? bodyRunner
+            : bodyRunner = Garrison().FirstOrDefault(g => g != null && g.SaveId == Current.bodyRunner);
+
+        /// <summary>
+        /// A man of the post found a comrade's body: he (or, from the tower, the nearest of the gate, courtyard and porch
+        /// guards) runs to strike the kẻng — Nam can stop him on the way. With the striker gone there is nothing to strike:
+        /// he shouts and the camp stands on guard. A kẻng already struck: he searches.
+        /// </summary>
+        public void OnBodyFound(Map01EnemyController finder, Vector3 at)
+        {
+            if (!ready) return;
+            if (Current.kiengRung || !string.IsNullOrEmpty(Current.bodyRunner))
+            {
+                Map01BodyDiscovery.Search(mission, finder, at, Array.Empty<Map01EnemyController>(), "Địch phát hiện thêm một xác — chúng lục soát quanh đó.");
+                return;
+            }
+            if (Current.kiengRemoved)
+            {
+                Map01BodyDiscovery.Search(mission, finder, at, Array.Empty<Map01EnemyController>(), "Địch phát hiện xác, nhưng kẻng đã mất dùi — cả trại chuyển sang cảnh giác.");
+                GoWaryOverBody();
+                return;
+            }
+            var runner = finder.CanMove ? finder : new[] { "gate", "rover", "porch" }.Select(Guard)
+                .Where(g => g != null && g.Alive && !g.Engaged && g.CanMove)
+                .OrderBy(g => Vector3.Distance(g.Position, KiengSpot)).FirstOrDefault();
+            if (runner == null)
+            {
+                Map01BodyDiscovery.Search(mission, finder, at, Array.Empty<Map01EnemyController>(), "Địch phát hiện xác — cả trại chuyển sang cảnh giác.");
+                GoWaryOverBody();
+                return;
+            }
+            if (runner != finder) finder.InspectBody(Map01BodyDiscovery.Beside(at, finder.Position));
+            bodyRunner = runner; Current.bodyRunner = runner.SaveId; Current.bodyAt = new[] { at.x, at.y, at.z };
+            runner.Dispatch(KiengSpot);
+            Map01BodyDiscovery.Shout(mission, finder, "Địch phát hiện xác — một tên đang chạy đi gõ kẻng!");
+        }
+
+        /// <summary>The kẻng runner on his way: struck when he gets there; nothing if Nam dropped him first.</summary>
+        private void BodyRunner()
+        {
+            if (string.IsNullOrEmpty(Current.bodyRunner)) return;
+            var runner = BodyRunnerGuard;
+            if (runner == null || !runner.Alive || runner.Engaged || Current.kiengRung) { Current.bodyRunner = ""; bodyRunner = null; return; }
+            var body = Current.bodyAt != null && Current.bodyAt.Length >= 3 ? new Vector3(Current.bodyAt[0], Current.bodyAt[1], Current.bodyAt[2]) : runner.Position;
+            if (Current.kiengRemoved)
+            {
+                // Nam took the striker while he ran.
+                Current.bodyRunner = ""; bodyRunner = null;
+                Map01BodyDiscovery.Shout(mission, runner, "Tên lính chạy tới kẻng nhưng dùi đã mất — cả trại chuyển sang cảnh giác.");
+                GoWaryOverBody();
+                return;
+            }
+            if (Vector3.ProjectOnPlane(runner.Position - KiengSpot, Vector3.up).magnitude <= 2.2f)
+            {
+                Current.bodyRunner = ""; bodyRunner = null;
+                GoWaryOverBody();
+                RingKieng(false, body);
+                return;
+            }
+            if (!runner.Alerted) runner.Dispatch(KiengSpot); // the hurry ran out on a long way round
         }
 
         private void HalfHealthCall()
@@ -599,6 +695,7 @@ namespace ShadowVale.Map01
             if (!ready) return;
             var s = saved ?? new State { checkInRemaining = Data.checkInSeconds };
             if (s.checkInRemaining < 0) s.checkInRemaining = Data.checkInSeconds;
+            s.bodyRunner ??= ""; bodyRunner = null;
             var awake = new bool[sleepers.Count];
             for (int i = 0; i < Mathf.Min(awake.Length, s.sleepersAwake?.Length ?? 0); i++) awake[i] = s.sleepersAwake[i];
             bool runnersOut = s.runnersSent;

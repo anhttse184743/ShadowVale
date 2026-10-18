@@ -178,6 +178,43 @@ namespace ShadowVale.Map01
             ReportDetection(Map01DetectionCause.Sight, at);
         }
 
+        // ---- A comrade's body (Map01BodyDiscovery) -----------------------------------------------
+        private const int BodyUnseen = 1, BodySeen = 2;
+        /// <summary>Unseen (1) or seen by another guard (2); a save older than the rule brings 0 (see RestoreSnapshot).</summary>
+        private int _bodyState = BodyUnseen;
+        /// <summary>Dead, and another guard has found him — a body is found only once.</summary>
+        public bool BodyFound => !Alive && _bodyState == BodySeen;
+        /// <summary>Pulled into a bush (Map01BushTakedown): hidden for good, nobody finds him.</summary>
+        public bool BodyHidden => silentKind == 1;
+        public void MarkBodyFound() => _bodyState = BodySeen;
+        /// <summary>He has seen a comrade's body: from then on he is quicker to be sure of what he sees, and stays so.</summary>
+        public bool Wary { get; private set; }
+        /// <summary>A wary guard needs this share of the usual time to be sure he has seen Nam.</summary>
+        public const float WaryDetectionScale = .75f;
+        public void MakeWary() { if (Alive) Wary = true; }
+        /// <summary>Walks on the NavMesh (not the watchtower's sentry, whose agent is off).</summary>
+        public bool CanMove => _agent != null && _agent.enabled && _agent.isOnNavMesh;
+
+        /// <summary>A comrade's body at <paramref name="at"/>: a start, then over to look at it and around it. The overseer
+        /// only looks from beside Hùng (<see cref="BeginInvestigation"/>).</summary>
+        public void InspectBody(Vector3 at)
+        {
+            if (!Alive || Engaged) return;
+            if (!_startled) { _startled = true; Trigger("Startled"); }
+            _hearReactionAt = 0;
+            BeginInvestigation(at);
+            Wary = true;
+        }
+
+        /// <summary>Off to <paramref name="to"/> at the investigating hurry, without a start (the C3 kẻng runner).</summary>
+        public void Dispatch(Vector3 to)
+        {
+            if (!Alive || Engaged) return;
+            _hearReactionAt = 0; _stoneLure = false; ApplyLureTuning();
+            Brain.BeginInvestigation(to, Time.time);
+            Wary = true;
+        }
+
         private bool RescueStealth => _rescuePost && _rescue != null && _rescue.CurrentPhase == Map01Rescue.Phase.Captive;
 
         /// <summary>Treat him as fighting Nam for <paramref name="seconds"/> (debug console, tests).</summary>
@@ -223,6 +260,7 @@ namespace ShadowVale.Map01
             LastStoneHeardAt = float.NegativeInfinity;
             bushCorpse?.Dispose(); bushCorpse = null; silentKind = 0; grappleOwned = false;
             TakenDownSilently = false; SetSilent(false); ShowRifle(true); _startled = false;
+            _bodyState = BodyUnseen; Wary = false;
             if (_health.IsDead) _health.Revive(); else _health.RestoreHealth(_health.Max);
             if (_lootCreated)
             {
@@ -337,6 +375,9 @@ namespace ShadowVale.Map01
             public Vector3 pendingFootstep;
             public bool stoneLure;
             public Quaternion stoneFacing;
+            /// <summary>1 unseen, 2 found by another guard; 0 in saves from before bodies could be found.</summary>
+            public int bodyState;
+            public bool wary;
         }
         public Snapshot Capture()
         {
@@ -352,13 +393,14 @@ namespace ShadowVale.Map01
                 searchRemaining = m.SearchUntil > 0 ? Mathf.Max(.01f, m.SearchUntil - now) : 0,
                 returning = m.Returning, returnPoint = m.ReturnPoint, returnRotation = m.ReturnRotation,
                 destination = _agent.isOnNavMesh && _agent.hasPath ? _agent.destination : transform.position,
-                stopped = _agent.isOnNavMesh && _agent.isStopped
+                stopped = _agent.isOnNavMesh && _agent.isStopped,
+                bodyState = _bodyState, wary = Wary
             };
         }
         /// <summary>This guard as he would be fresh at his post: alive, calm, starting his patrol.</summary>
         public Snapshot CaptureAtPost() => new Snapshot {
             id = SaveId, position = _postPosition, rotation = _postRotation, hp = _health.Max,
-            destination = _postPosition, patrolIndex = 0
+            destination = _postPosition, patrolIndex = 0, bodyState = BodyUnseen
         };
         public void RestoreSnapshot(Snapshot saved)
         {
@@ -369,6 +411,9 @@ namespace ShadowVale.Map01
             TakenDownSilently = saved.silent; SetSilent(saved.silent); ShowRifle(!saved.silent);
             _health.RestoreHealth(saved.hp);
             _lastHealth = _health.Current;
+            // A body in a save from before bodies could be found counts as found: loading it must not set anyone off.
+            _bodyState = saved.bodyState != 0 ? saved.bodyState : Alive ? BodyUnseen : BodySeen;
+            Wary = saved.wary;
             _sense.Reset();
             m.Suspicion = saved.suspicion; m.EngagedUntil = now + saved.engagedRemaining;
             m.PatrolPauseUntil = now + saved.pauseRemaining; _pursuer = saved.pursuer;
@@ -477,8 +522,9 @@ namespace ShadowVale.Map01
         /// <paramref name="stops"/> and <paramref name="yaws"/> follow <paramref name="points"/>: seconds he waits at each,
         /// and the yaw he holds there.
         /// </summary>
+        /// <param name="walk">Walk there instead of being set down on the spot (a change of post in front of Nam).</param>
         public void Repost(Vector3 position, float yaw, Vector3[] points = null, float[] stops = null, float[] yaws = null,
-            float vision = 0f, bool stationary = false)
+            float vision = 0f, bool stationary = false, bool walk = false)
         {
             var rotation = Quaternion.Euler(0, yaw, 0);
             _postPosition = position; _postRotation = rotation;
@@ -486,9 +532,13 @@ namespace ShadowVale.Map01
             Configure(points); _patrolStops = stops; _patrolYaws = yaws; _stopYaw = float.NaN;
             if (vision > 0) { visionRange = vision; SyncTuning(); }
             if (stationary && _agent != null) _agent.enabled = false;
-            _body.Warp(position);
-            transform.rotation = rotation;
+            if (!walk || stationary)
+            {
+                _body.Warp(position);
+                transform.rotation = rotation;
+            }
             if (!stationary && patrolPoints.Length > 0) _body.MoveTo(patrolPoints[0]);
+            else if (walk && !stationary && !Alerted) _body.MoveTo(position);
         }
 
         /// <summary>The per-point stops of a Repost beat: the shared patrol only knows one pause for every point.</summary>
@@ -552,7 +602,7 @@ namespace ShadowVale.Map01
             _holdingAI = false; _agent.updatePosition = true; _agent.updateRotation = true;
             _postPosition = post; _postRotation = Quaternion.identity; Configure(System.Array.Empty<Vector3>()); BindMission(owner);
             _health.CinematicInvulnerable = false; _health.Revive(); _lastHealth = _health.Current;
-            TakenDownSilently = false; SetSilent(false); ShowRifle(true);
+            TakenDownSilently = false; SetSilent(false); ShowRifle(true); _bodyState = BodyUnseen; Wary = false;
             _hearReactionAt = 0; _stoneLure = false; ApplyLureTuning();
             Brain.ResetToPost(0f);
             if (_animator != null) _animator.speed = 1;
@@ -800,6 +850,7 @@ namespace ShadowVale.Map01
             _tuning.DetectionSeconds = stealth
                 ? Mathf.Max(_baseDetectionSeconds, _rescueTuning != null ? _rescueTuning.closeDetectionSeconds : 1.6f)
                 : _baseDetectionSeconds;
+            if (Wary) _tuning.DetectionSeconds *= WaryDetectionScale;
             _tuning.SuspicionCloseGain = stealth ? 1.4f : 3f;
 
             // Calm guards look 10 times a second, staggered; alert ones every frame (PerceptionSchedule).

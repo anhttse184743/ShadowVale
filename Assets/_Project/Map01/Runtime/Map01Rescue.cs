@@ -119,6 +119,16 @@ namespace ShadowVale.Map01
             var cinematic=GetComponent<Map01RescueCinematic>();if(cinematic==null)cinematic=gameObject.AddComponent<Map01RescueCinematic>();
             cinematic.ExecuteHostage(this,squad[0],detection.observer);
         }
+        /// <summary>
+        /// A jetty guard found a comrade's body (Map01BodyDiscovery). Never the hostage's execution — that stays with
+        /// Nam seen or a shot heard (<see cref="ReportDetection"/>): the squad searches round the body, the overseer looks
+        /// from beside Hùng (he never leaves him for anything but a stone), and from then on all of them are wary.
+        /// </summary>
+        public void OnBodyFound(Map01EnemyController finder,Vector3 at)
+        {
+            Map01BodyDiscovery.Search(mission,finder,at,squad,"Địch ở bến phát hiện xác đồng đội — chúng lục soát quanh bến, tên canh không rời Hùng.");
+            foreach(var guard in squad)if(guard!=null)guard.MakeWary();
+        }
         public void CompleteExecution()
         {
             if(CurrentPhase!=Phase.Alarm)return;

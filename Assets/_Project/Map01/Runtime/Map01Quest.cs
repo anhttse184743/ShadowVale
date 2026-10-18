@@ -138,6 +138,7 @@ namespace ShadowVale.Map01
             if(GetComponent<Map01Scouting>()==null)gameObject.AddComponent<Map01Scouting>();
             rescue=GetComponent<Map01Rescue>();if(rescue==null)rescue=gameObject.AddComponent<Map01Rescue>();
             story=GetComponent<Map01Story>();if(story==null)story=gameObject.AddComponent<Map01Story>();
+            if(GetComponent<Map01BodyDiscovery>()==null)gameObject.AddComponent<Map01BodyDiscovery>();
         }
         void Start(){if(mission.IsInitialized)companion=mission.hung.GetComponent<NavMeshAgent>();}
         public bool ShouldFollowPlayer()=>Stage==EscortStage&&rescue.CurrentPhase==Map01Rescue.Phase.Escorting;
