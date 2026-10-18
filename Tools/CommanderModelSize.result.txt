@@ -1,0 +1,1 @@
+PASS: uniform scale x1.2039; standing head-to-foot height 1.3002m -> 1.5654m; Nam 1.5654m; prefab scale (0.97, 0.97, 0.97).

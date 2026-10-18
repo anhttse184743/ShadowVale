@@ -1,0 +1,1 @@
+lifecycle selected=Boss_Charge capture=False
