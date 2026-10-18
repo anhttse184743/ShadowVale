@@ -1,0 +1,15 @@
+Removed retired object: RifleRack/Rack back
+Removed retired object: RifleRack/Rack foot
+Removed retired object: RifleRack/Geometry 0
+Removed retired object: RifleRack/Geometry 1
+Removed retired object: RifleRack/Geometry 2
+Removed retired object: EquipmentShelf/Post
+Removed retired object: EquipmentShelf/Post
+Removed retired object: EquipmentShelf/Geometry 0
+Removed retired object: EquipmentShelf/Geometry 1
+Removed retired object: EquipmentShelf/Geometry 2
+Removed retired object: EquipmentShelf/Geometry 3
+Removed retired object: RadioDesk/Table top
+Removed retired object: RadioDesk/Geometry 0
+Removed retired object: RadioDesk/Geometry 1
+Removed retired object: RadioDesk/Geometry 2

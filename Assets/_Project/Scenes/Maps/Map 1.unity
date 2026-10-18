@@ -119,6 +119,68 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &133797
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 997320566}
+    m_Modifications:
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.512001
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.05650001
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7170524881936639400, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_Name
+      value: Cot Row 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+--- !u!4 &133798 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+  m_PrefabInstance: {fileID: 133797}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &141125
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8169,7 +8231,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &20592576
@@ -41421,6 +41483,68 @@ Transform:
   m_Children: []
   m_Father: {fileID: 841047447}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &102975499
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 997320566}
+    m_Modifications:
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 7.464999
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.9500022
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4406578736473016007, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_Name
+      value: EquipmentShelf Row 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+--- !u!4 &102975500 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+  m_PrefabInstance: {fileID: 102975499}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &103373468
 GameObject:
   m_ObjectHideFlags: 0
@@ -43718,7 +43842,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &108849865
@@ -44181,6 +44305,68 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 3048964477132326566, guid: e7e8a3e65b68b3545aadd71955629f8b, type: 3}
   m_PrefabInstance: {fileID: 109472433}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &109978819
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 997320566}
+    m_Modifications:
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 7.464999
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.9499981
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4406578736473016007, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_Name
+      value: EquipmentShelf Row 2
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+--- !u!4 &109978820 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+  m_PrefabInstance: {fileID: 109978819}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &110186408
 PrefabInstance:
@@ -46148,7 +46334,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &115056956
@@ -56553,7 +56739,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &146254789
@@ -61329,7 +61515,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &161157743
@@ -65219,7 +65405,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &169908620
@@ -69339,7 +69525,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &184675709
@@ -74087,7 +74273,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &197939823
@@ -78660,7 +78846,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &209126510
@@ -91868,7 +92054,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &242700458
@@ -119570,7 +119756,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &307603339
@@ -139131,7 +139317,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &353444177
@@ -140417,7 +140603,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &357086317
@@ -153654,7 +153840,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &384947034
@@ -169174,7 +169360,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 34b748c7582a7e14b86f3f9642ab0ca7, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWater
   leftBank: []
   rightBank: []
@@ -192905,7 +193091,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &481744641
@@ -195562,7 +195748,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &487783399
@@ -199130,7 +199316,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8883483487252382233, guid: ec5e667d947293d498a3bafce0ec2c89, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.060999982
       objectReference: {fileID: 0}
     - target: {fileID: 8883483487252382233, guid: ec5e667d947293d498a3bafce0ec2c89, type: 3}
       propertyPath: m_LocalPosition.z
@@ -206273,7 +206459,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &515165940
@@ -211534,7 +211720,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &527601979
@@ -216282,7 +216468,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &537640728
@@ -260448,7 +260634,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &645039233
@@ -263064,7 +263250,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &651919713
@@ -267924,7 +268110,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &663289985
@@ -285139,7 +285325,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &703234493
@@ -304193,7 +304379,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &752351280
@@ -306430,7 +306616,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &759293090
@@ -315109,7 +315295,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &781525531
@@ -324320,31 +324506,31 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.5
+      value: -6.512001
       objectReference: {fileID: 0}
     - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.05650001
       objectReference: {fileID: 0}
     - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 1.7500076
       objectReference: {fileID: 0}
     - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -324360,7 +324546,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7170524881936639400, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
       propertyPath: m_Name
-      value: Cot
+      value: Cot Row 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -326197,7 +326383,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &815132806
@@ -336531,7 +336717,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 6
+      value: 7.464999
       objectReference: {fileID: 0}
     - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
       propertyPath: m_LocalPosition.y
@@ -336539,7 +336725,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1.5
+      value: 3.8999982
       objectReference: {fileID: 0}
     - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
       propertyPath: m_LocalRotation.w
@@ -336551,7 +336737,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.7071068
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
       propertyPath: m_LocalRotation.z
@@ -345439,7 +345625,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &865643292
@@ -355748,7 +355934,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3297331047102216359, guid: e7e8a3e65b68b3545aadd71955629f8b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
-      value:
+      value: 
       objectReference: {fileID: 2100000, guid: 856d6d67c369ac14d8ea35183dd0445c, type: 2}
     - target: {fileID: 4061857195623199966, guid: e7e8a3e65b68b3545aadd71955629f8b, type: 3}
       propertyPath: m_Size
@@ -355772,11 +355958,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8410058719722199622, guid: e7e8a3e65b68b3545aadd71955629f8b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
-      value:
+      value: 
       objectReference: {fileID: 2100000, guid: 856d6d67c369ac14d8ea35183dd0445c, type: 2}
     - target: {fileID: 8954981718832269182, guid: e7e8a3e65b68b3545aadd71955629f8b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
-      value:
+      value: 
       objectReference: {fileID: 2100000, guid: 856d6d67c369ac14d8ea35183dd0445c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -355858,7 +356044,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3297331047102216359, guid: e7e8a3e65b68b3545aadd71955629f8b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
-      value:
+      value: 
       objectReference: {fileID: 2100000, guid: 77cebe91b05faf44bae046b70bef9826, type: 2}
     - target: {fileID: 4061857195623199966, guid: e7e8a3e65b68b3545aadd71955629f8b, type: 3}
       propertyPath: m_LODs.Array.data[0].screenRelativeHeight
@@ -355874,11 +356060,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8410058719722199622, guid: e7e8a3e65b68b3545aadd71955629f8b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
-      value:
+      value: 
       objectReference: {fileID: 2100000, guid: 77cebe91b05faf44bae046b70bef9826, type: 2}
     - target: {fileID: 8954981718832269182, guid: e7e8a3e65b68b3545aadd71955629f8b, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
-      value:
+      value: 
       objectReference: {fileID: 2100000, guid: 77cebe91b05faf44bae046b70bef9826, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -355933,7 +356119,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &882563731
@@ -395639,7 +395825,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &990348214
@@ -397958,6 +398144,13 @@ Transform:
   - {fileID: 589682225}
   - {fileID: 859099006}
   - {fileID: 1820421584}
+  - {fileID: 109978820}
+  - {fileID: 1816727566}
+  - {fileID: 102975500}
+  - {fileID: 1521306402}
+  - {fileID: 133798}
+  - {fileID: 1378265486}
+  - {fileID: 1245477754}
   m_Father: {fileID: 867500091}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &998038215
@@ -428025,7 +428218,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1067911218
@@ -428795,7 +428988,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1070032600
@@ -469584,7 +469777,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1166848180
@@ -484943,7 +485136,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1202262685
@@ -503349,6 +503542,68 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!1001 &1245477753
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 997320566}
+    m_Modifications:
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.512001
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.05650001
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.5000153
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7170524881936639400, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_Name
+      value: Cot Row 5
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+--- !u!4 &1245477754 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+  m_PrefabInstance: {fileID: 1245477753}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1245877815
 GameObject:
   m_ObjectHideFlags: 0
@@ -523829,7 +524084,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1301775211
@@ -526122,7 +526377,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1308053318
@@ -532173,7 +532428,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1320828553
@@ -539916,7 +540171,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1340990976
@@ -555033,7 +555288,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1378223506
@@ -555057,6 +555312,68 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 10.987305, y: 3.2, z: 7.1391883}
   m_Center: {x: 0.12303257, y: -0.9, z: -0.000044345856}
+--- !u!1001 &1378265485
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 997320566}
+    m_Modifications:
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -6.512001
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.05650001
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.7500076
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7170524881936639400, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+      propertyPath: m_Name
+      value: Cot Row 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+--- !u!4 &1378265486 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
+  m_PrefabInstance: {fileID: 1378265485}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1378292921
 GameObject:
   m_ObjectHideFlags: 0
@@ -558842,7 +559159,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1388150097
@@ -582366,7 +582683,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1448288353
@@ -602488,7 +602805,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1500433140
@@ -602665,7 +602982,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1500508964
@@ -610950,6 +611267,68 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2640095424699546092, guid: 48a7c75d3c800484cb233b948ec9a031, type: 3}
   m_PrefabInstance: {fileID: 1520791126}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1521306401
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 997320566}
+    m_Modifications:
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 7.464999
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -3.900002
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4406578736473016007, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_Name
+      value: EquipmentShelf Row 5
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+--- !u!4 &1521306402 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+  m_PrefabInstance: {fileID: 1521306401}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1521344487
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -618628,7 +619007,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1542937758
@@ -621554,31 +621933,31 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -5.5
+      value: -6.512001
       objectReference: {fileID: 0}
     - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.05650001
       objectReference: {fileID: 0}
     - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 3
+      value: 3.5000114
       objectReference: {fileID: 0}
     - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4315583303560347809, guid: 06a593c555897b24e9491f077f6f3e5d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -678023,7 +678402,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 34b748c7582a7e14b86f3f9642ab0ca7, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWater
   leftBank:
   - {x: -3.5673351, y: -0.25, z: -100}
@@ -684128,7 +684507,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1701733359
@@ -693159,7 +693538,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1727949268
@@ -732519,6 +732898,68 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3519183957324241930, guid: d125efe821eefc4438edde4bf078d26a, type: 3}
   m_PrefabInstance: {fileID: 1816699687}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1816727565
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 997320566}
+    m_Modifications:
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 7.464999
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.0000019073486
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4406578736473016007, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+      propertyPath: m_Name
+      value: EquipmentShelf Row 3
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+--- !u!4 &1816727566 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 521693142199132553, guid: 60da62beefe2c3840954cb7577c42b60, type: 3}
+  m_PrefabInstance: {fileID: 1816727565}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1816781408
 GameObject:
   m_ObjectHideFlags: 0
@@ -737637,7 +738078,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1829691242
@@ -786803,7 +787244,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &1947798721
@@ -811143,7 +811584,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5084715742219187630, guid: ccf523576e817a849875f4438b89cd64, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.8
+      value: 5.799999
       objectReference: {fileID: 0}
     - target: {fileID: 5084715742219187630, guid: ccf523576e817a849875f4438b89cd64, type: 3}
       propertyPath: m_LocalPosition.y
@@ -811151,7 +811592,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5084715742219187630, guid: ccf523576e817a849875f4438b89cd64, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 4.8
+      value: 5.494999
       objectReference: {fileID: 0}
     - target: {fileID: 5084715742219187630, guid: ccf523576e817a849875f4438b89cd64, type: 3}
       propertyPath: m_LocalRotation.w
@@ -811685,7 +812126,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &2008687000
@@ -812626,7 +813067,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ef1ce349f003f554bb65bbf8322b20ff, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.RiverWaterTrigger
   river: {fileID: 1690208351}
 --- !u!65 &2011059946
@@ -819701,7 +820142,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
   m_RenderShadows: 1
   m_RequiresDepthTextureOption: 1

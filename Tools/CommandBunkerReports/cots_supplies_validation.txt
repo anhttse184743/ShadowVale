@@ -1,0 +1,12 @@
+PASS CharacterController.Move blocked by COLLIDER_Approved Cot remaining front distance=1.342
+PASS Cot head faces wall; gap=0.030 m; visible bounds=Center: (-71.51, 0.50, -59.50), Extents: (1.02, 0.32, 0.42)
+PASS CharacterController.Move blocked by COLLIDER_Approved Cot remaining front distance=1.342
+PASS Cot Row 2 head faces wall; gap=0.030 m; visible bounds=Center: (-71.51, 0.50, -61.25), Extents: (1.02, 0.32, 0.42)
+PASS CharacterController.Move blocked by COLLIDER_Approved Cot remaining front distance=1.342
+PASS Cot Row 3 head faces wall; gap=0.030 m; visible bounds=Center: (-71.51, 0.50, -63.00), Extents: (1.02, 0.32, 0.42)
+PASS CharacterController.Move blocked by COLLIDER_Approved Cot remaining front distance=1.342
+PASS Cot Row 4 head faces wall; gap=0.030 m; visible bounds=Center: (-71.51, 0.50, -64.75), Extents: (1.02, 0.32, 0.43)
+PASS CharacterController.Move blocked by COLLIDER_Approved Cot remaining front distance=1.342
+PASS Cot Row 5 head faces wall; gap=0.030 m; visible bounds=Center: (-71.51, 0.50, -66.50), Extents: (1.02, 0.32, 0.43)
+PASS CharacterController.Move blocked by COLLIDER_Approved SupplyCrates remaining front distance=0.906
+PASS ration/ammunition store replaced; old geometry removed.

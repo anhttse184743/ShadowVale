@@ -1,0 +1,5 @@
+Player radius=0.3; bed spacing=1.750006; clear aisle=0.9; head plane=-72.56
+PASS actual CharacterController walked aisle 1; clearance=0.900 m
+PASS actual CharacterController walked aisle 2; clearance=0.900 m
+PASS actual CharacterController walked aisle 3; clearance=0.900 m
+PASS actual CharacterController walked aisle 4; clearance=0.900 m
