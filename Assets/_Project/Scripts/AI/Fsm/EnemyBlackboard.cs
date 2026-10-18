@@ -36,6 +36,8 @@ namespace ShadowVale.AI.Fsm
         public float TakeCoverUntil;
 
         public float SuppressUntil;
+        /// <summary>Ordered to give covering fire (his commander is moving): he stops and fires until then.</summary>
+        public float CoverFireUntil;
         public bool Retreating, RetreatDone;
         public Vector3 RetreatPoint;
         public float RetreatHoldUntil, RetreatGiveUpAt;

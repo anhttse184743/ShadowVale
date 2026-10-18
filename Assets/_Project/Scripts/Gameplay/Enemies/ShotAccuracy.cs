@@ -27,6 +27,8 @@ namespace ShadowVale.Gameplay.Enemies
         public float coverTarget = .6f;
         /// <summary>Firing on the move.</summary>
         public float movingShooter = .6f;
+        /// <summary>A commander firing on the move: trained to, and only at a player ahead of him (FireOnTheMove).</summary>
+        public float bossMovingShooter = .8f;
         /// <summary>Aim settles over this long after he starts firing at the target: the first shot at
         /// <see cref="firstShot"/> of the full chance, rising to all of it.</summary>
         public float settleSeconds = 2.5f;
@@ -67,7 +69,7 @@ namespace ShadowVale.Gameplay.Enemies
             else if (c.TargetMoving) chance *= p.walkingTarget;
             if (c.TargetCrouched) chance *= p.crouchedTarget;
             if (c.TargetInCover) chance *= p.coverTarget;
-            if (c.ShooterMoving) chance *= p.movingShooter;
+            if (c.ShooterMoving) chance *= c.Boss ? p.bossMovingShooter : p.movingShooter;
             if (p.settleSeconds > 0) chance *= Mathf.Lerp(p.firstShot, 1f, Mathf.Clamp01(c.AimedFor / p.settleSeconds));
             if (c.Boss) chance *= p.bossSkill;
             return Mathf.Clamp(chance, p.minHit, p.maxHit);

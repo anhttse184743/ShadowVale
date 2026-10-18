@@ -39,6 +39,8 @@ namespace ShadowVale.Tests.EditMode.AI
             public bool HasArrived(float tolerance) => !Destination.HasValue || (Position - Destination.Value).magnitude <= tolerance;
             public void SetPace(float scale) => Pace = scale;
             public void Face(Vector3 point) => LastFaced = point;
+            public Vector3 Velocity { get; set; }
+            public bool FacesManually { get; set; }
             public void Turn(float degrees) => Rotation *= Quaternion.Euler(0, degrees, 0);
             public void Animate(bool moving) { }
             public bool TrySampleReachable(Vector3 desired, float maxDistance, out Vector3 point) { point = desired; return true; }
@@ -195,25 +197,74 @@ namespace ShadowVale.Tests.EditMode.AI
         {
             var tuning = new EnemyTuning { IsBoss = true };
             ShadowVale.Gameplay.Enemies.Boss.BossBehaviour.ApplyBossTactics(tuning);
-            var cover = new Vector3(-6, 0, 0);
+            var cover = new Vector3(-4, 0, 6);
             Build(tuning, new CoverNearby { Cover = cover });
             var player = new Vector3(0, 0, 12);
             SpotUntilEngaged(player);
             Tick(true, player);
-            Assert.AreEqual(EnemyStateId.TakeCover, _brain.State, "In range, yet he goes to his cover — firing on the way.");
+            Assert.AreEqual(EnemyStateId.TakeCover, _brain.State, "In range, yet he goes to his cover — firing on the way (the player is ahead).");
             Assert.AreEqual(cover, _body.Destination);
             Assert.Greater(_weapon.Aimed, 0);
 
             _body.Arrive(); Tick(true, player); Tick(true, player);
             Assert.AreEqual(EnemyStateId.Engage, _brain.State);
-            Tick(false, player, times: 30);
+            Tick(false, player, times: 45);
             int suppressed = _weapon.Suppressive;
             Assert.Greater(suppressed, 0, "Lost sight: he suppresses the spot first.");
             Tick(false, player, times: 60);
-            Assert.AreEqual(EnemyStateId.Engage, _brain.State, "9 s later he still holds — a rifleman would be hunting by now.");
+            Assert.AreEqual(EnemyStateId.Engage, _brain.State, "10 s later he still holds — a rifleman would be hunting by now.");
             Assert.AreEqual(cover, _body.Destination, "He never set off towards the player.");
             Assert.AreEqual(player, _body.LastFaced, "Watching where the player went.");
             Assert.AreEqual(suppressed, _weapon.Suppressive, "Past the suppression window he watches, not wastes fire.");
+        }
+
+        [Test]
+        public void ACommanderFiresOnTheMoveOnlyAtAPlayerAheadOfHim()
+        {
+            Assert.IsFalse(new EnemyTuning().FireOnTheMove, "Guards: unchanged, they fire whichever way they run.");
+            var tuning = new EnemyTuning { IsBoss = true };
+            ShadowVale.Gameplay.Enemies.Boss.BossBehaviour.ApplyBossTactics(tuning);
+            Assert.IsTrue(tuning.FireOnTheMove);
+            Build(tuning, new CoverNearby { Cover = new Vector3(2, 0, 8) });
+            var player = new Vector3(0, 0, 14);
+            SpotUntilEngaged(player);
+            Tick(true, player);
+            Assert.AreEqual(EnemyStateId.TakeCover, _brain.State);
+            Assert.Greater(_weapon.Aimed, 0, "Walking towards cover with the player ahead: he fires.");
+            Assert.AreEqual(tuning.MoveFirePace, _body.Pace, 1e-6f, "At a walk, not a run.");
+            Assert.IsTrue(_body.FacesManually, "Turned towards the player, not the way he walks.");
+            Assert.Less(Vector3.Angle(_body.LastFaced - _body.Position, player - _body.Position), 1f, "The player is within his twist: faces him.");
+
+            int fired = _weapon.Aimed;
+            _brain.Assign(new Vector3(0, 0, -8), -1, "relocate");   // Behind him: his back to the player.
+            Tick(true, player);
+            Assert.AreEqual(EnemyStateId.TakeCover, _brain.State);
+            Assert.AreEqual(fired, _weapon.Aimed, "The player behind him: he runs without firing.");
+            Assert.AreEqual(tuning.InvestigatePace, _body.Pace, 1e-6f, "And runs at his cover pace.");
+            Assert.IsFalse(_body.FacesManually, "Facing the way he runs.");
+
+            Assert.AreEqual(60f, Vector3.Angle(Vector3.forward,
+                ShadowVale.AI.Fsm.States.TakeCoverState.Twist(Vector3.forward, Vector3.right, 60f)), .01f,
+                "A player 90° off: the body turns at most 60° from the walk.");
+        }
+
+        [Test]
+        public void OrderedToCoverHisCommanderHeStopsAndFires()
+        {
+            Build(new EnemyTuning { EngageInRangeFirst = false, TakeCoverTimeoutSeconds = 10f });
+            Assert.IsFalse(_brain.CoverFire(_now, 3f), "Not fighting: nothing to cover.");
+            var player = new Vector3(0, 0, 10);
+            SpotUntilEngaged(player);
+            _brain.Assign(new Vector3(15, 0, 0), 5, "block");
+            Tick(true, player);
+            Assert.AreEqual(EnemyStateId.TakeCover, _brain.State);
+            Assert.IsTrue(_brain.CoverFire(_now, 3f));
+            Tick(false, player);
+            Assert.AreEqual(EnemyStateId.Engage, _brain.State, "He stops where he is...");
+            Assert.IsTrue(_body.Stopped);
+            Assert.Greater(_weapon.Suppressive, 0, "...and fires at where the player was, keeping his head down.");
+            Tick(false, player, times: 31);
+            Assert.AreEqual(EnemyStateId.TakeCover, _brain.State, "Three seconds later, back to his position.");
         }
 
         [Test]

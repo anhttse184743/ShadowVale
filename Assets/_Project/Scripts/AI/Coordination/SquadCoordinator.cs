@@ -260,6 +260,9 @@ namespace ShadowVale.AI.Coordination
                 if (!a.Alive || string.IsNullOrEmpty(a.SquadId) || a.Brain.Tuning.IsBoss) continue;
                 var m = a.Brain.Memory;
                 if (!m.Engaged(now) || m.Retreating) continue;
+                // Answering the commander's call: they join the plan once they have rallied to him.
+                if (m.HasAssignment && m.AssignedRole == ShadowVale.AI.Boss.NearbyAgentsReinforcements.RallyRole
+                    && !m.ReachedAssignment && now < m.TakeCoverUntil) continue;
                 if (!bySquad.TryGetValue(a.SquadId, out var list)) bySquad[a.SquadId] = list = new List<IEnemyAgent>();
                 list.Add(a);
             }
@@ -309,12 +312,18 @@ namespace ShadowVale.AI.Coordination
             var solver = Solver;
             int serial = ++_serial;
             string id = $"{gameObject.scene.name}-{_session}-{serial}";
-            // A commander fighting nearby turns the plan into a pincer (Boss.Command); otherwise the bundle's weights.
+            // A commander fighting nearby turns the plan into a pincer (Boss.Command) that also keeps watch on
+            // the way to him (GuardCommanderTask); otherwise the bundle's weights and the map's task.
             var weights = Settings.Weights;
+            var task = CoordinationTask;
             var commander = ShadowVale.AI.Boss.Command.CommanderOf(group.Members, now);
-            if (commander != null) weights = ShadowVale.AI.Boss.Command.Pincer(weights);
+            if (commander != null)
+            {
+                weights = ShadowVale.AI.Boss.Command.Pincer(weights);
+                task = new GuardCommanderTask(task, commander.Position);
+            }
             var inst = CoordinationInstance.Build(graph, group.LastKnown, group.Members.Select(m => m.Position).ToList(),
-                CoordinationTask, weights, Settings.SubgraphNodes, id, Settings.Seed + serial, solver.LatencyBudgetMs, solver.VariantId);
+                task, weights, Settings.SubgraphNodes, id, Settings.Seed + serial, solver.LatencyBudgetMs, solver.VariantId);
             if (inst != null && commander != null)
                 EventBus.Publish(new ShadowVale.AI.Boss.BossOrderEvent(commander.Id, "pincer", group.Key));
             if (inst == null) { state.LastPlanTime = now; return; }

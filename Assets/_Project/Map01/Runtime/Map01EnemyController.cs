@@ -55,6 +55,9 @@ namespace ShadowVale.Map01
         private EnemyBrain _brain;
         private readonly EnemyTuning _tuning = new EnemyTuning();
         private float _nextShot;
+        // Bursts (the commander): rounds per burst, the gap inside one, the pause between them; 1 round = single shots.
+        private int _burstRounds = 1, _burstLeft;
+        private float _burstGap, _burstInterval;
         private Map01Mission _mission;
         private bool _lootCreated;
         private float _hiddenScale = .32f, _crouchScale = .6f;
@@ -195,6 +198,8 @@ namespace ShadowVale.Map01
             _tuning.RetreatHealthFraction = Mathf.Clamp01(mission.GuardData.retreat_hp_threshold);
             _rescue = mission.GetComponent<Map01Rescue>(); // Added by Map01Quest.Awake, before this runs.
             mission.Noise.Register(this);
+            // Left alone for a while, a wounded guard recovers (not the commander: ConfigureAsBoss takes it off).
+            if (!IsBoss) EnemyRegen.Attach(gameObject, LegacyId).Suspended = () => _holdingAI || _mission == null || _mission.Stopped;
             SyncTuning();
         }
 
@@ -700,12 +705,34 @@ namespace ShadowVale.Map01
             var health = GetComponent<Health>();
             if (health != null) health.SetMaxHealth(health.Max * healthMultiplier);
             SquadId = "boss";
+            EnemyRegen.Detach(gameObject); // His wounds stay: the fight against him wears him down.
             SyncTuning();
         }
 
-        /// <summary>The commander from his archetype's boss profile (Map01Content.json).</summary>
+        /// <summary>The commander from his archetype's boss profile (Map01Content.json), bursts included.</summary>
         public void ConfigureAsBoss(ShadowVale.Data.Content.BossProfile profile)
-            => ConfigureAsBoss(profile.HealthMultiplier, profile.DamageMultiplier, profile.VisionMultiplier);
+        {
+            ConfigureAsBoss(profile.HealthMultiplier, profile.DamageMultiplier, profile.VisionMultiplier);
+            ConfigureBursts(profile.BurstRounds, profile.BurstGapSeconds, profile.BurstIntervalSeconds);
+        }
+
+        /// <summary>Fires <paramref name="rounds"/> at a time, <paramref name="gap"/> apart, <paramref name="interval"/> from one burst to the next.</summary>
+        public void ConfigureBursts(int rounds, float gap, float interval)
+        {
+            _burstRounds = Mathf.Max(1, rounds); _burstLeft = _burstRounds;
+            _burstGap = Mathf.Max(.02f, gap); _burstInterval = interval;
+        }
+
+        public int BurstRounds => _burstRounds;
+
+        /// <summary>Until the next round may go: inside a burst the gap, after its last round the pause.</summary>
+        private float NextShotDelay()
+        {
+            if (_burstRounds <= 1) return fireInterval;
+            if (--_burstLeft > 0) return _burstGap;
+            _burstLeft = _burstRounds;
+            return _burstInterval > 0 ? _burstInterval : fireInterval;
+        }
 
         // ---- IEnemyAgent: what the coordinator and the debug tools read -------------------------
 
@@ -924,7 +951,7 @@ namespace ShadowVale.Map01
         public void FireAtPlayer()
         {
             if (Time.time < _nextShot || _player == null) return;
-            _nextShot = Time.time + fireInterval;
+            _nextShot = Time.time + NextShotDelay();
             AudibleShots++;
             _animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
             // Hùng is in the line of fire while he is being held or walked home: every third
@@ -950,7 +977,7 @@ namespace ShadowVale.Map01
         public void FireSuppressive(Vector3 point)
         {
             if (Time.time < _nextShot) return;
-            _nextShot = Time.time + fireInterval;
+            _nextShot = Time.time + NextShotDelay();
             AudibleShots++;
             _animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
             _feedback ??= EnemyFeedback.Attach(gameObject);

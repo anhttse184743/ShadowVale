@@ -76,6 +76,17 @@ namespace ShadowVale.AI.Fsm
         /// the bush the player hides in; he lets grenades and his men do it.
         /// </summary>
         public bool HuntWhenLost = true;
+        /// <summary>
+        /// On the way to a position, fire only with the player ahead — within <see cref="MoveFireConeDegrees"/> of
+        /// where he walks — turning his upper body towards him by up to <see cref="MoveFireTwistDegrees"/>, at the
+        /// slower <see cref="MoveFirePace"/>; with the player behind or to the side, run without firing. Off (the
+        /// default, every guard): fire whenever the player is in sight and range, facing the way he runs.
+        /// The rig has no strafe or backpedal clips, so a body turned far from its walk would slide.
+        /// </summary>
+        public bool FireOnTheMove;
+        public float MoveFirePace = .6f;
+        public float MoveFireConeDegrees = 75f;
+        public float MoveFireTwistDegrees = 60f;
 
         /// <summary>Whether a guard on an assignment with this role holds it when the player is out of range.</summary>
         public bool Holds(string role)

@@ -11,10 +11,11 @@ namespace ShadowVale.AI.Fsm.States
         public override void Tick(EnemyContext ctx, float deltaTime)
         {
             var m = ctx.Memory; var t = ctx.Tuning; var body = ctx.Body; var s = ctx.Sense;
+            bool covering = ctx.Now < m.CoverFireUntil;
             if (s.SeesPlayer)
             {
                 body.Face(s.PlayerPosition);
-                if (s.Distance <= t.AttackRange)
+                if (s.Distance <= t.AttackRange || covering)
                 {
                     body.Stop(); body.Animate(false);
                     ctx.Weapon.FireAtPlayer();
@@ -30,7 +31,7 @@ namespace ShadowVale.AI.Fsm.States
                 }
                 return;
             }
-            if (ctx.Tactics.TryGetAlternativeTarget(ctx, out var other))
+            if (!covering && ctx.Tactics.TryGetAlternativeTarget(ctx, out var other))
             {
                 body.Stop(); body.Animate(false);
                 body.Face(other);
@@ -40,7 +41,7 @@ namespace ShadowVale.AI.Fsm.States
             body.Stop(); body.Animate(false);
             body.Face(m.LastKnownPlayerPosition);
             // Past the suppression window only one who does not hunt is still here: he watches.
-            if (ctx.Now < m.SuppressUntil) ctx.Weapon.FireSuppressive(m.LastKnownPlayerPosition);
+            if (ctx.Now < m.SuppressUntil || covering) ctx.Weapon.FireSuppressive(m.LastKnownPlayerPosition);
         }
     }
 }

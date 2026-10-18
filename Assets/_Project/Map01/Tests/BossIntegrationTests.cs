@@ -7,6 +7,7 @@ using ShadowVale.AI.Boss;
 using ShadowVale.AI.Fsm;
 using ShadowVale.Core.Events;
 using ShadowVale.Gameplay.Combat;
+using ShadowVale.Gameplay.Enemies;
 using ShadowVale.Gameplay.Enemies.Boss;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -47,6 +48,9 @@ namespace ShadowVale.Map01.Tests
             Assert.AreEqual(3, behaviour.Profile.ReinforceCount, "Profile read from Map01Content.json (boss_commander.boss).");
             Assert.AreEqual(.5f, behaviour.Profile.ReinforceHpThreshold, 1e-6);
             Assert.AreEqual("boss", boss.SquadId);
+            Assert.AreEqual(behaviour.Profile.BurstRounds, boss.BurstRounds, "He fires in bursts, not a guard's single shots.");
+            var bossRegen = boss.GetComponent<EnemyRegen>();
+            Assert.IsTrue(bossRegen == null || !bossRegen.enabled, "His wounds stay: the fight against him wears him down.");
             float archetypeHp = mission.Bundle.enemy_archetypes.First(a => a.is_boss).max_hp;
             Assert.AreEqual(archetypeHp, boss.GetComponent<Health>().Max, 1e-3f,
                 "Health from boss_commander.max_hp: at a guard's ×3 he died about a second after calling for help.");
@@ -95,6 +99,8 @@ namespace ShadowVale.Map01.Tests
                     Assert.IsFalse(guard.IsBoss);
                     StringAssert.StartsWith("Viện binh", guard.name);
                     Assert.AreEqual("reinforce", guard.SquadId);
+                    Assert.AreEqual(NearbyAgentsReinforcements.RallyRole, guard.Brain.Memory.AssignedRole, id + " rallies to the commander first.");
+                    Assert.IsNotNull(guard.GetComponent<EnemyRegen>(), id + " recovers if left alone a while.");
                     Assert.LessOrEqual(Vector3.Distance(guard.transform.position, boss.transform.position), Map01Reinforcements.SpawnDistance + 7f,
                         "They arrive near the commander, not somewhere across the map.");
                 }
@@ -106,7 +112,16 @@ namespace ShadowVale.Map01.Tests
                 try
                 {
                     string bossId = ((ShadowVale.AI.Agents.IEnemyAgent)boss).Id;
-                    for (float until = Time.realtimeSinceStartup + 5f; !orders.Any(o => o.Order == "pincer") && Time.realtimeSinceStartup < until;)
+                    // Moving to new cover, he has two of them fire to cover him.
+                    var men = calls[0].Agents.Split('+').Select(id => (ShadowVale.AI.Agents.IEnemyAgent)mission.Enemies.Single(e => e.LegacyId == id)).ToList();
+                    Assert.AreEqual(behaviour.Profile.CoverFireMen, behaviour.CoverFire(men, Time.time));
+                    var cover = orders.Single(o => o.Order == "cover_fire");
+                    Assert.AreEqual(behaviour.Profile.CoverFireMen, cover.Detail.Split('+').Length);
+                    foreach (var id in cover.Detail.Split('+'))
+                        Assert.Greater(mission.Enemies.Single(e => e.LegacyId == id).Brain.Memory.CoverFireUntil, Time.time, id + " is giving covering fire.");
+
+                    // Once they have rallied to him (or given up on it), they are planned with the rest.
+                    for (float until = Time.realtimeSinceStartup + 15f; !orders.Any(o => o.Order == "pincer") && Time.realtimeSinceStartup < until;)
                         yield return null;
                     Assert.IsTrue(orders.Any(o => o.Order == "pincer" && o.BossId == bossId), "The reinforcements are planned under his command.");
 
