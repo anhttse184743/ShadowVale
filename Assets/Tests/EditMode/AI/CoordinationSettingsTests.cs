@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using NUnit.Framework;
 using ShadowVale.AI.Coordination;
@@ -43,7 +44,28 @@ namespace ShadowVale.Tests.EditMode.AI
             Assert.AreEqual(d.GroupMergeRange, s.GroupMergeRange);
             Assert.AreEqual(d.SquadAlertRange, s.SquadAlertRange);
             Assert.AreEqual(d.ReinforcementRange, s.ReinforcementRange);
-            Assert.AreEqual("greedy", s.Variant);
+            Assert.AreEqual("qiea", s.Variant, "The best solver of exp-v1 (O5), run by the sidecar; greedy is the fallback.");
+        }
+
+        [Test]
+        public void TheEnvironmentCanPinTheStartingSolver()
+        {
+            string previous = Environment.GetEnvironmentVariable(SquadCoordinator.VariantEnvironment);
+            var go = new UnityEngine.GameObject("coordinator");
+            try
+            {
+                Environment.SetEnvironmentVariable(SquadCoordinator.VariantEnvironment, "greedy");
+                var c = SquadCoordinator.Attach(go, new CoordinationSettings { Variant = "qiea" });
+                Assert.AreEqual("greedy", c.StartingVariant, "Batch tests plan in process, without the sidecar.");
+                Assert.AreEqual("greedy", c.Solver.VariantId);
+                Environment.SetEnvironmentVariable(SquadCoordinator.VariantEnvironment, null);
+                Assert.AreEqual("qiea", c.StartingVariant, "Unset: the bundle's solver.");
+            }
+            finally
+            {
+                Environment.SetEnvironmentVariable(SquadCoordinator.VariantEnvironment, previous);
+                UnityEngine.Object.DestroyImmediate(go);
+            }
         }
 
         [Test]

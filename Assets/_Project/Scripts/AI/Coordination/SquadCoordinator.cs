@@ -87,13 +87,29 @@ namespace ShadowVale.AI.Coordination
         private int _serial;
         private readonly string _session = Guid.NewGuid().ToString("N").Substring(0, 12);
 
+        /// <summary>
+        /// Environment variable that, when set, replaces the bundle's solver for the whole process
+        /// (e.g. "greedy" for the batch tests, so opening a map never starts the sidecar there).
+        /// </summary>
+        public const string VariantEnvironment = "SVL_SOLVER_VARIANT";
+
+        /// <summary>The variant this coordinator starts with: <see cref="VariantEnvironment"/>, else the bundle's.</summary>
+        public string StartingVariant
+        {
+            get
+            {
+                string env = Environment.GetEnvironmentVariable(VariantEnvironment);
+                return string.IsNullOrWhiteSpace(env) ? Settings.Variant : env.Trim();
+            }
+        }
+
         public ISquadSolver Solver
         {
             get
             {
                 if (_solver != null) return _solver;
                 if (ServiceLocator.TryResolve<ISquadSolver>(out var shared)) return _solver = shared;
-                _solver = SolverFactory.Create(Settings.Variant, Settings.LatencyBudgetMs, out var reason);
+                _solver = SolverFactory.Create(StartingVariant, Settings.LatencyBudgetMs, out var reason);
                 SolverFallbackReason = reason;
                 CheckSidecar(_solver);
                 return _solver;
@@ -149,6 +165,13 @@ namespace ShadowVale.AI.Coordination
 
         /// <summary>Re-plan the group containing <paramref name="squadId"/> on the next frame.</summary>
         public void RequestReplan(string squadId) { if (!string.IsNullOrEmpty(squadId)) _forceSquads.Add(squadId); }
+
+        /// <summary>
+        /// The solver (and, for a remote one, the sidecar) from the moment the map loads, not from the
+        /// first contact: starting the sidecar takes about 3 s, which used to send the opening plans
+        /// of every fight to the greedy fallback.
+        /// </summary>
+        private void Start() => _ = Solver;
 
         private void OnEnable()
         {
