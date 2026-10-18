@@ -240,8 +240,12 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(s.TryInteract());yield return ReadyPuzzle(ui);ui.StartPuzzle();Capture("power-ui",true);yield return WaitGameSeconds(.3f);
             for(int fuse=0;fuse<3;fuse++){
                 float deadline=Time.time+9;
-                while(Mathf.Abs(ui.Power.Needle-ui.Power.Center)>Map01PowerSabotage.Window*.5f-.015f&&Time.time<deadline)yield return null;
-                Assert.Less(Mathf.Abs(ui.Power.Needle-ui.Power.Center),Map01PowerSabotage.Window*.5f);
+                while(Mathf.Abs(ui.Power.Needle-ui.Power.Center)>Map01PowerSabotage.Window*.5f-.015f&&Time.time<deadline){
+                    Assert.IsTrue(ui.Active,"Power interaction closed while awaiting fuse "+fuse+"; stage="+q.Stage+" hp="+M.PlayerHealth);
+                    yield return null;
+                }
+                Assert.Less(Mathf.Abs(ui.Power.Needle-ui.Power.Center),Map01PowerSabotage.Window*.5f,
+                    $"Fuse {fuse}: remaining={ui.Power.Remaining} needle={ui.Power.Needle} center={ui.Power.Center} preparing={ui.Preparing} ready={ui.AwaitingNextRound} paused={M.Paused} menu={ForestMenu.Visible}");
                 ui.SubmitPower();if(fuse<2){Assert.IsTrue(ui.AwaitingNextRound);Assert.AreEqual(5,q.Stage);ui.StartPuzzle();}
             }
             yield return WaitGameSeconds(3);Assert.IsTrue(s.Layout.sabotage.Smoking);Assert.Greater(s.Layout.sabotage.GetComponentInChildren<ParticleSystem>().particleCount,5,"Damaged power must emit real smoke particles.");CaptureDevice("power-smoke",true);

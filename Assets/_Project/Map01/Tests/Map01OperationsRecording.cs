@@ -59,6 +59,15 @@ namespace ShadowVale.Map01.Tests
             SessionState.SetString(Key+".prefix","execution-");Directory.CreateDirectory("Logs/Map01Operations/video");File.WriteAllText("Logs/Map01Operations/video/execution-test-cases.txt","");
             SessionState.SetBool(Key,true);Register();runner.Execute(new ExecutionSettings(new Filter{testMode=TestMode.EditMode,testNames=new[]{"ShadowVale.Map01.Tests.RescueBushTests.ExecutionShowsBoundDeathThenReturnsToNam"}}));
         }
+        public static void RecordDevSync()
+        {
+            SessionState.SetString(Key+".prefix","dev-sync-");Directory.CreateDirectory("Logs/Map01Operations/video");File.WriteAllText("Logs/Map01Operations/video/dev-sync-test-cases.txt","");
+            SessionState.SetBool(Key,true);Register();runner.Execute(new ExecutionSettings(new Filter{testMode=TestMode.EditMode,testNames=new[]{
+                "ShadowVale.Map01.Tests.RescueBushTests.ExecutionShowsBoundDeathThenReturnsToNam",
+                "ShadowVale.Map01.Tests.Map01OperationsTests.RadioFailureCallsOnlyOneSavedSquadAndSuccessDoesNotExtract",
+                "ShadowVale.Map01.Tests.Map01OperationsTests.PowerSabotageNeedsThreeAccurateNewPullsAndCanTimeout",
+                "ShadowVale.Map01.Tests.Map01OperationsTests.RandomRadioRoundsAreSolvableVariedAndRestoreExactly"}}));
+        }
         public static void RecordInteractionReview()
         {
             SessionState.SetString(Key+".prefix","interaction-");Directory.CreateDirectory("Logs/Map01Operations/video");File.WriteAllText("Logs/Map01Operations/video/interaction-test-cases.txt","");

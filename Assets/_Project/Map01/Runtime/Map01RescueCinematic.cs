@@ -45,7 +45,7 @@ namespace ShadowVale.Map01
         private bool storyPlayerEnabled,storyCombatEnabled,storyActionsEnabled,storyCCEnabled,storySneaking;
         private Map01NamActions storyActions;
         private Vector3 interrogatorStart,interrogatorClose;
-        private AnimationClip interrogatorWalk, executionAim;
+        private AnimationClip interrogatorWalk, executionAim,boundExecution;
         private bool canApproach;
         private AudioSource tensionSource;
         private AudioClip heartbeat;
@@ -109,6 +109,7 @@ namespace ShadowVale.Map01
             captiveVisual=mission.hung.GetComponentInChildren<Map01HungVisual>();captiveVisual.BeginCaptivePresentation();
             var guardActor=enemy.GetComponentInChildren<Animator>();
             executionAim=guardActor.runtimeAnimatorController?.animationClips.FirstOrDefault(c=>c.name=="Enemy_Rifle_AimIdle");
+            boundExecution=CurrentMode==Mode.Execution?Map01CinematicPose.Clip("Hung_Bound_Execution"):null;
             captivePose=new Map01CinematicPose(captiveVisual.actor);interrogatorPose=new Map01CinematicPose(guardActor);
             if(CurrentMode==Mode.Intro || CurrentMode==Mode.Execution){
                 introNamPosition=mission.player.position;introNamRotation=mission.player.rotation;
@@ -198,7 +199,10 @@ namespace ShadowVale.Map01
             bool walking=false;float travel=0;
             enemy.FaceImmediate(mission.hung.position);
             float captiveTime=CurrentMode==Mode.Execution?(shot?Elapsed-impactAt:0):Mathf.Clamp(Elapsed-2,0,3);
-            captivePose.Sample(Map01CinematicPose.Clip(shot?"Hung_Bound_Execution":"Hung_Captive_Recoil"),captiveTime);
+            // Both sides of the shot share the same bound pose and retarget
+            // bindings. The recoil clip's rest wrists can sit inside the torso;
+            // switching from it at impact made the hands suddenly reappear.
+            captivePose.Sample(CurrentMode==Mode.Execution?boundExecution:Map01CinematicPose.Clip("Hung_Captive_Recoil"),captiveTime);
             interrogatorPose.Sample(walking&&interrogatorWalk!=null?interrogatorWalk:Map01CinematicPose.Clip("Enemy_Interrogate_Strike"),walking?travel*.65f:CurrentMode==Mode.Intro?Mathf.Clamp(Elapsed-2,0,3):0,walking);
             captivePose.Ground(mission.hung.position.y);interrogatorPose.Ground(enemy.transform.position.y);captiveVisual.SampleCaptiveContacts();
             if(CurrentMode==Mode.Execution&&storyBeat>=2){

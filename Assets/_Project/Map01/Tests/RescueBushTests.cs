@@ -84,7 +84,12 @@ public sealed class RescueBushTests:ForestSceneTestBase {
             }
             int beat=(int)typeof(Map01RescueCinematic).GetField("storyBeat",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(d);
             float began=(float)typeof(Map01RescueCinematic).GetField("beatAt",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(d);
+            var pose=typeof(Map01RescueCinematic).GetField("captivePose",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(d);
+            var selected=(AnimationClip)typeof(Map01CinematicPose).GetField("selected",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(pose);
+            Assert.AreEqual("Hung_Bound_Execution",selected.name,"The shot must not swap Hung's wrist bindings or captive pose.");
             if(beat==2&&d.Elapsed-began>.25f){
+                var left=h.actor.GetBoneTransform(HumanBodyBones.LeftHand).position;var right=h.actor.GetBoneTransform(HumanBodyBones.RightHand).position;
+                Assert.That(Vector3.Distance(left,right),Is.InRange(.025f,.4f),"Both tied hands must remain separate before the shot.");
                 var muzzle=R.Squad[0].GetComponentInChildren<Map01Rifle>().weapon.Muzzle;
                 Assert.Less(Vector3.Angle(muzzle.forward,h.actor.GetBoneTransform(HumanBodyBones.Chest).position-muzzle.position),5,"Execution muzzle must aim at Hung before firing.");checkedAim=true;
             }
@@ -337,7 +342,7 @@ public sealed class RescueBushTests:ForestSceneTestBase {
         var focus=M.hung.position+Vector3.up*.65f;
         try{
             camera.fieldOfView=44;int i=0;
-            foreach(var angle in new[]{new Vector3(1.9f,.55f,.1f),new Vector3(.1f,.7f,2.1f)}){
+            foreach(var angle in new[]{new Vector3(1.9f,.55f,.1f),new Vector3(.1f,.7f,-2.1f)}){
                 camera.transform.position=focus+M.hung.rotation*angle;camera.transform.rotation=Quaternion.LookRotation(focus-camera.transform.position);
                 Capture(camera,folder+"/Contacts/"+frame.ToString("D4")+"-"+i+++".png");
             }
