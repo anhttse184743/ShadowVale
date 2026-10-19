@@ -169,8 +169,9 @@ namespace ShadowVale.Map01.Tests
         static IEnumerator SupplyFlow()
         {
             var s=M.GetComponent<Map01Story>();var q=M.GetComponent<Map01Quest>();var bag=M.GetComponent<Map01Inventory>();q.RestoreStage(2);
+            At(s.Commander.position+s.Commander.forward*1.8f);yield return IdleInteraction();
             Assert.IsTrue(s.TryInteract());yield return null;
-            Assert.AreEqual("m1_ops_supply_order_01",M.GetComponent<Map01StoryDialogue>().GetComponent<DialogueVoice>().CurrentId);
+            Assert.AreEqual("m1_supply_debrief_nam_report",M.GetComponent<Map01StoryDialogue>().GetComponent<DialogueVoice>().CurrentId);
             Assert.IsTrue(M.GetComponent<DialogueVoice>().HasSpeech,"Commander briefing must actually start the recording, not only show text.");
             yield return Confirm();Assert.AreEqual(3,q.Stage);
             At(s.Layout.doorApproach.position);Assert.IsTrue(s.TryInteract());Assert.IsFalse(s.Progress.doorUnlocked);
@@ -181,6 +182,8 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(UnityEngine.AI.NavMesh.CalculatePath(M.player.position,s.Layout.chestApproach.position,UnityEngine.AI.NavMesh.AllAreas,route));Assert.AreEqual(UnityEngine.AI.NavMeshPathStatus.PathComplete,route.status);
             Assert.Less(Vector3.Distance(route.corners.Last(),s.Layout.chestApproach.position),.15f,"The open warehouse must have a real walkable landing at the chest.");
             var aimRouting=RouteInputToGame();using var heldAim=new HeldAimMouse();var aimMouse=heldAim.Device;InputSystem.QueueStateEvent(aimMouse,new MouseState().WithButton(MouseButton.Right));InputSystem.Update();yield return null;
+            Assert.IsNotNull(Keyboard.current,"The gameplay interaction loop needs a keyboard to release the UI input gate.");
+            Assert.IsTrue(aimMouse.rightButton.isPressed,$"Held mouse fixture: value={aimMouse.rightButton.ReadValue()}, enabled={aimMouse.enabled}, current={Mouse.current?.name}");Assert.AreEqual(aimMouse,Mouse.current);
             int magazine=M.ModernCombat.RoundsInMagazine,reserve=bag.Count("ammo_rifle");var equipped=M.ModernCombat.EquippedKind;
             Assert.IsTrue(s.TryInteract());var ui=M.GetComponent<Map01OperationPuzzleUI>();Assert.IsTrue(ui.Active);if(Recording)yield return WaitGameSeconds(3);ui.StartPuzzle();if(Recording)yield return WaitGameSeconds(3);
             var guess=Map01SupplyLock.Digits(ui.Lock.Secret);
@@ -276,9 +279,13 @@ namespace ShadowVale.Map01.Tests
         sealed class HeldAimMouse:IDisposable
         {
             readonly Mouse[] physical;bool disposed;
+            readonly Keyboard ownedKeyboard;
             public readonly Mouse Device;
-            public HeldAimMouse(){physical=InputSystem.devices.OfType<Mouse>().Where(m=>m.enabled).ToArray();foreach(var m in physical)InputSystem.DisableDevice(m);Device=InputSystem.AddDevice<Mouse>("HeldAimTest");}
-            public void Dispose(){if(disposed)return;disposed=true;if(Device.added)InputSystem.RemoveDevice(Device);foreach(var m in physical)if(m.added)InputSystem.EnableDevice(m);}
+            public HeldAimMouse(){if(Keyboard.current==null)ownedKeyboard=InputSystem.AddDevice<Keyboard>("HeldAimTestKeyboard");physical=InputSystem.devices.OfType<Mouse>().Where(m=>m.enabled).ToArray();foreach(var m in physical)InputSystem.DisableDevice(m);Device=InputSystem.AddDevice<Mouse>("HeldAimTest");InputSystem.onAfterUpdate+=HoldAim;}
+            // The batch editor can soft-reset devices when a cinematic changes cursor lock/focus.
+            // Model a physically held button at every input update, rather than one initial event.
+            void HoldAim(){if(!disposed&&Device.added){Device.MakeCurrent();var state=new MouseState().WithButton(MouseButton.Right);InputState.Change(Device,state,InputUpdateType.Dynamic);InputState.Change(Device,state,InputUpdateType.Editor);}}
+            public void Dispose(){if(disposed)return;disposed=true;InputSystem.onAfterUpdate-=HoldAim;if(Device.added)InputSystem.RemoveDevice(Device);if(ownedKeyboard!=null&&ownedKeyboard.added)InputSystem.RemoveDevice(ownedKeyboard);foreach(var m in physical)if(m.added)InputSystem.EnableDevice(m);}
         }
         internal static void LookAtOfficer(Map01Mission mission,Vector3 target)
         {

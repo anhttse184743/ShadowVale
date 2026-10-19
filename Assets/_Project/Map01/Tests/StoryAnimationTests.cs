@@ -18,6 +18,14 @@ namespace ShadowVale.Map01.Tests
     public sealed class StoryAnimationTests : ForestSceneTestBase
     {
         private const string Controllers = "Assets/_Project/Art/Characters/Animations/Controllers/";
+        [Test]
+        public void HungEscortKeepsTheOriginalLimpClip()
+        {
+            var controller=AssetDatabase.LoadAssetAtPath<AnimatorController>(Controllers+"AC_Hung.controller");
+            Assert.IsNotNull(controller);
+            Assert.IsTrue(controller.animationClips.Any(c=>c.name=="Hung_DiKhapKhieng"),"Use the original limp, not the unapproved Mixamo demo.");
+            Assert.IsTrue(controller.parameters.Any(p=>p.name=="LimpRate"));
+        }
 
         [Test]
         public void ControllersCarryTheBlenderClips()

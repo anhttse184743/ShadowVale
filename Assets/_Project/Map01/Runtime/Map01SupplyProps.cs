@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace ShadowVale.Map01
 {
@@ -43,9 +43,8 @@ namespace ShadowVale.Map01
         }
         public void CarryBag(Animator actor)
         {
-            if(bag==null||actor==null)return;Ensure();var spine=Bone(actor,HumanBodyBones.Chest,"Spine1");if(spine==null)return;
-            var frame=actor.GetComponentInParent<ShadowVale.Gameplay.Player.PlayerController>()?.transform??actor.transform;
-            bag.gameObject.SetActive(true);bag.SetParent(spine,true);bag.SetPositionAndRotation(spine.position+frame.right*.24f-frame.forward*.24f-Vector3.up*.10f,Quaternion.LookRotation(-frame.forward,Vector3.up));
+            // Cargo is inside the backpack, never attached outside his ribs.
+            if(bag!=null)bag.gameObject.SetActive(false);
         }
         public void PlaceBag(Vector3 point){if(bag==null)return;bag.SetParent(transform,true);bag.SetPositionAndRotation(point,Quaternion.identity);}
         void OnDestroy(){if(bag!=null&&bag.parent!=null&&!bag.IsChildOf(transform))Destroy(bag.gameObject);}

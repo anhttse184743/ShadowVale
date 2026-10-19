@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-19 14:57:27Z" end-time="2026-10-19 14:58:05Z" duration="38.592673">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="525" result="Passed" start-time="2026-10-19 14:57:27Z" end-time="2026-10-19 14:58:05Z" duration="38.592673" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1416" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="328" result="Passed" start-time="2026-10-19 14:57:27Z" end-time="2026-10-19 14:58:05Z" duration="38.365167" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="41760" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1417" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="328" result="Passed" start-time="2026-10-19 14:57:27Z" end-time="2026-10-19 14:58:05Z" duration="38.357568" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1418" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="328" result="Passed" start-time="2026-10-19 14:57:27Z" end-time="2026-10-19 14:58:05Z" duration="38.351405" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1419" name="Tests" fullname="ShadowVale.Map01.Tests" runstate="Runnable" testcasecount="328" result="Passed" start-time="2026-10-19 14:57:27Z" end-time="2026-10-19 14:58:05Z" duration="38.344534" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1313" name="ShelterSuppliesIntegrationTests" fullname="ShadowVale.Map01.Tests.ShelterSuppliesIntegrationTests" classname="ShadowVale.Map01.Tests.ShelterSuppliesIntegrationTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-19 14:57:27Z" end-time="2026-10-19 14:58:05Z" duration="38.331019" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1315" name="BackpackGeometryAndCargoMotionSurviveTheFbxImport" fullname="ShadowVale.Map01.Tests.ShelterSuppliesIntegrationTests.BackpackGeometryAndCargoMotionSurviveTheFbxImport" methodname="BackpackGeometryAndCargoMotionSurviveTheFbxImport" classname="ShadowVale.Map01.Tests.ShelterSuppliesIntegrationTests" runstate="Runnable" seed="660781089" result="Passed" start-time="2026-10-19 14:55:56Z" end-time="2026-10-19 14:55:56Z" duration="0.118030" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1316" name="HandoffRestoresGameplayAndHungSpeaksWhileLyingOnCot" fullname="ShadowVale.Map01.Tests.ShelterSuppliesIntegrationTests.HandoffRestoresGameplayAndHungSpeaksWhileLyingOnCot" methodname="HandoffRestoresGameplayAndHungSpeaksWhileLyingOnCot" classname="ShadowVale.Map01.Tests.ShelterSuppliesIntegrationTests" runstate="Runnable" seed="1227670712" result="Passed" start-time="2026-10-19 14:55:56Z" end-time="2026-10-19 14:58:05Z" duration="128.600586" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1314" name="ImportedReviewedModelsAndClothAreComplete" fullname="ShadowVale.Map01.Tests.ShelterSuppliesIntegrationTests.ImportedReviewedModelsAndClothAreComplete" methodname="ImportedReviewedModelsAndClothAreComplete" classname="ShadowVale.Map01.Tests.ShelterSuppliesIntegrationTests" runstate="Runnable" seed="1315450073" result="Passed" start-time="2026-10-19 14:58:05Z" end-time="2026-10-19 14:58:05Z" duration="0.099606" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/dangk/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

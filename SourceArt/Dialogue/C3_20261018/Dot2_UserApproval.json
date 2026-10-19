@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-18",
+  "userApproval": "11 câu đạt, giữ các bản này",
+  "approvedCount": 11,
+  "previewIndex": "Dot2_Preview_Index.json",
+  "approvedIds": [
+    "m1_rescue_delivered",
+    "m1_supply_debrief_nam_report",
+    "m1_supply_debrief_commander_question",
+    "m1_ops_supply_order_02",
+    "m1_ops_supply_order_01",
+    "m1_ops_handoff_02",
+    "m1_c3_gate_checkin_call",
+    "m1_c3_gate_checkin_reply",
+    "m1_c3_gate_no_answer",
+    "m1_c3_gate_alarm",
+    "m1_c3_enemy_call"
+  ],
+  "phoneCutReplacement": {
+    "id": "m1_c3_phone_cut",
+    "proposedText": "Đường dây đã ngắt.",
+    "status": "awaiting_user_script_and_generation_approval",
+    "proposedMaximumCredits": 1,
+    "generationSubmitted": false
+  },
+  "integrated": false
+}

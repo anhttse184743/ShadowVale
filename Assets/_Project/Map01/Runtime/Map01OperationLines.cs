@@ -5,8 +5,10 @@ namespace ShadowVale.Map01
     {
         public static L Acknowledge()=>new L("Nam","Rõ.",false,"m1_v2_rescue_approach_03");
         public static L[] SupplyOrder=>new[]{
-            new L("Chỉ huy","Số thuốc của Hùng còn ở điểm một. Lấy lại rồi mang về hầm, anh em đang cần.",false,"m1_ops_supply_order_01"),
-            new L("Hùng","Hàng nằm trong kho. Chìa do tên gác giữ.",false,"m1_ops_supply_order_02"),
+            new L("Nam","Báo cáo, tôi đã đưa Hùng về.",false,"m1_supply_debrief_nam_report"),
+            new L("Chỉ huy","Hùng, cậu đã xác nhận được số hàng chưa?",false,"m1_supply_debrief_commander_question"),
+            new L("Hùng","Có. Hàng ở cầu gỗ. Tôi đang quay về báo cáo thì bị chúng chặn.",false,"m1_ops_supply_order_02"),
+            new L("Chỉ huy","Địch đã chuyển số hàng ấy vào kho ở điểm một. Nam, lấy lại thuốc rồi mang về đây. Anh em đang cần.",false,"m1_ops_supply_order_01"),
             Acknowledge()};
         public static L[] SupplyReport=>new[]{
             new L("Nam","Tôi lấy được túi tiếp tế rồi. Thuốc vẫn còn nguyên.",false,"m1_ops_supply_report_01"),
@@ -14,7 +16,7 @@ namespace ShadowVale.Map01
             Acknowledge()};
         public static L[] Handoff=>new[]{
             new L("Nam","Hàng đây. Tôi đã kiểm tra, thuốc còn dùng được.",false,"m1_ops_handoff_01"),
-            new L("Hùng","Đúng số hàng của tôi rồi.",false,"m1_ops_handoff_02"),
+            new L("Hùng","May quá... thuốc còn nguyên.",false,"m1_ops_handoff_02"),
             new L("Chỉ huy","Đài ở điểm hai vẫn đang điều lính ra các chốt. Nam, tới đó vô hiệu hóa nó, cắt đường gọi viện của chúng.",false,"m1_ops_handoff_03"),
             Acknowledge()};
         public static L[] RadioReport=>new[]{

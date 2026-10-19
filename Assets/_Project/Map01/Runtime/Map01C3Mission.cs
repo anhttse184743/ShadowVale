@@ -92,6 +92,7 @@ namespace ShadowVale.Map01
         private readonly List<Vector3> cover = new List<Vector3>();
         private ForestPoint kiengPoint, phonePoint, cachePoint;
         private GameObject striker, cacheRoot;
+        private Transform kiengSoundOrigin;
         private LineRenderer hqWire;
         private Vector3 poleTop;
         private Collider ground;
@@ -244,7 +245,7 @@ namespace ShadowVale.Map01
             Part(PrimitiveType.Cube, "Kẻng post", root, new Vector3(.5f, .95f, 0), new Vector3(.11f, 1.9f, .11f), timber, solid: true);
             Part(PrimitiveType.Cube, "Kẻng beam", root, new Vector3(0, 1.86f, 0), new Vector3(1.2f, .1f, .1f), timber);
             Part(PrimitiveType.Cylinder, "Kẻng rope", root, new Vector3(0, 1.66f, 0), new Vector3(.015f, .1f, .015f), rope);
-            Part(PrimitiveType.Cube, "Kẻng (iron bar)", root, new Vector3(0, 1.28f, 0), new Vector3(.07f, .56f, .07f), steel);
+            kiengSoundOrigin = Part(PrimitiveType.Cube, "Kẻng (iron bar)", root, new Vector3(0, 1.28f, 0), new Vector3(.07f, .56f, .07f), steel).transform;
             striker = Part(PrimitiveType.Cylinder, "Kẻng striker", root, new Vector3(.44f, 1.12f, .09f), new Vector3(.03f, .2f, .03f), steel, Quaternion.Euler(0, 0, 12));
             var use = new GameObject("Kẻng striker point");
             use.transform.position = At(Data.kieng.use[0], Data.kieng.use[1]);
@@ -379,7 +380,7 @@ namespace ShadowVale.Map01
             Current.checkInRemaining = Data.checkInSeconds;
             var silent = new[] { "patrolSouth", "patrolNorth" }.Select(Guard).Where(g => g != null && !g.Alive).ToList();
             if (silent.Count > 0) GoWary();
-            else if (Near) mission.Say("Bộ đàm lính gác cổng: \"Tổ một, tổ hai — báo cáo.\" … \"Bình thường.\"", 3);
+            else if (Near) mission.Say(Map01C3Dialogue.CheckIn, 3);
         }
 
         /// <summary>A patrol did not answer: the camp stands on guard (the remaining patrols hold before the gate, the
@@ -388,7 +389,7 @@ namespace ShadowVale.Map01
         {
             if (Current.wary) return;
             Current.wary = true;
-            if (Near) mission.Say("Lính gác cổng (bộ đàm): \"Tổ hai, trả lời! …\" — \"Mất liên lạc! Cả trại cảnh giác!\"", 5);
+            if (Near) mission.Say(Map01C3Dialogue.MissingPatrol, 5);
             ApplyWary();
         }
         private void ApplyWary()
@@ -407,6 +408,8 @@ namespace ShadowVale.Map01
         {
             if (Current.kiengRung) return;
             Current.kiengRung = true;
+            // The approved clip contains all three strikes. Full 3D placement retains the pool's distance rolloff.
+            Map01OperationAudio.Play("c3_kieng", kiengSoundOrigin != null ? kiengSoundOrigin.position : At(Data.kieng.frame[0], Data.kieng.frame[1]), spatialBlend: 1f);
             mission.Say("\"Keng! Keng! Keng!\" — kẻng báo động. Lính trong dãy nhà bật dậy!", 4);
             mission.EmitNoise(At(Data.kieng.frame[0], Data.kieng.frame[1]), 45f, NoiseKind.Other);
             for (int i = 0; i < sleepers.Count; i++) Wake(i, true);
@@ -430,7 +433,7 @@ namespace ShadowVale.Map01
             if (Current.called) return 0;
             Current.called = true;
             var boss = Commander;
-            if (boss != null && boss.Alive) mission.Say("Chỉ huy địch: \"Lính đâu! Ra hết đây!\"", 3);
+            if (boss != null && boss.Alive) mission.Say(Map01C3Dialogue.EnemyCall, 3);
             int answering = 0;
             if (!Current.kiengRemoved)
             {
@@ -516,6 +519,7 @@ namespace ShadowVale.Map01
                 if (striker != null) striker.SetActive(false);
                 mission.Say("Đã tháo dùi kẻng. Nếu báo động, trại không gõ kẻng gọi lính ngủ dậy được nữa.", 5);
                 Map01NamActions.For(mission)?.Play(Map01NamActions.PickUp, 1.4f, true);
+                StartCoroutine(SpeakAfterInteraction(Map01C3Dialogue.MalletRemoved));
                 return true;
             }
             if (point == phonePoint)
@@ -524,9 +528,25 @@ namespace ShadowVale.Map01
                 DropWire();
                 mission.Say("Đã cắt dây điện thoại. Chỉ huy không gọi được lính ở các chốt đường bến tới nữa.", 5);
                 Map01NamActions.For(mission)?.Play(Map01NamActions.PickUp, 1.6f, true);
+                StartCoroutine(SpeakAfterInteraction(Map01C3Dialogue.PhoneCut));
                 return true;
             }
             return false;
+        }
+        private System.Collections.IEnumerator SpeakAfterInteraction(string caption)
+        {
+            var actions = Map01NamActions.For(mission);
+            while (actions != null && actions.Busy) yield return null;
+            // Do not cut a story line short, or queue a stale remark after a new cinematic.
+            float deadline = Time.time + 5f;
+            var voice = mission.GetComponent<DialogueVoice>();
+            while (voice != null && voice.HasSpeech && Time.time < deadline)
+            {
+                if (mission.Stopped || mission.Cinematic) yield break;
+                yield return null;
+            }
+            if (!mission.Stopped && !mission.Cinematic && (voice == null || !voice.HasSpeech))
+                mission.Say(caption, 4);
         }
         private void DropWire()
         {
