@@ -8,15 +8,25 @@ namespace ShadowVale.Map01
     /// grit and earth thrown up in a cone, a brown dust burst that rolls out along the ground as a ring, and a pale grey
     /// smoke cloud that climbs and drifts for several seconds; a black scorch is left where it lay. The fragments themselves
     /// are too fast to see. Built from code-made particles (Map01Fx), so it needs no assets; the camera shakes with
-    /// distance (Map01CameraShake).
+    /// distance (Map01CameraShake). It is heard in 3D where it went off (<see cref="Sound"/>): sharp up close, a dull
+    /// rumble with a soft echo far off, and late by the speed of sound.
     /// </summary>
     public sealed class Map01Blast : MonoBehaviour
     {
         /// <summary>How long the scorch stays on the ground (it fades over the last quarter).</summary>
         public const float ScorchSeconds = 60f;
+        /// <summary>"Explosion, Medium Blast" by Kinoton (freesound.org/s/516914, CC0): a grenade at medium distance with a
+        /// long reverb tail. Imported mono, so Unity places it.</summary>
+        public const string SoundResource = "Audio/Explosion_Medium_Blast";
+        /// <summary>Full loudness within this, fading (logarithmically) to nothing at <see cref="SoundFar"/>, metres.</summary>
+        public const float SoundNear = 5f, SoundFar = 120f;
+        public const float SpeedOfSound = 340f;
         private Light flash;
         private Renderer scorch;
         private float born;
+        private static AudioClip soundClip;
+        /// <summary>The bang (null when the clip is missing).</summary>
+        public AudioSource Sound { get; private set; }
 
         /// <summary>The blast at <paramref name="ground"/>, the ground facing <paramref name="up"/>;
         /// <paramref name="viewer"/> is the camera that shakes and <paramref name="radius"/> sizes the dust spread.</summary>
@@ -27,8 +37,62 @@ namespace ShadowVale.Map01
             var blast = go.AddComponent<Map01Blast>();
             blast.born = Time.time;
             blast.Build(ground, up.sqrMagnitude > .01f ? up.normalized : Vector3.up, radius);
+            blast.Sound = blast.PlaySound(ground, radius, viewer);
             Map01CameraShake.Kick(viewer, ground, .22f, 35f, .7f);
             return blast;
+        }
+
+        /// <summary>
+        /// The bang, in 3D at the blast. The further the listener, the more its top end is lost (a low-pass, down to a
+        /// rumble) and the more of it is echo (a light reverb); it also arrives later, at the speed of sound. A bigger
+        /// blast (the commander's 7.5 m) is a little louder than a small one.
+        /// </summary>
+        private AudioSource PlaySound(Vector3 ground, float radius, Camera viewer)
+        {
+            if (soundClip == null) soundClip = Resources.Load<AudioClip>(SoundResource);
+            if (soundClip == null) return null;
+            var go = new GameObject("Blast sound");
+            go.transform.SetParent(transform, false);
+            go.transform.position = ground + Vector3.up * .5f;
+            var source = go.AddComponent<AudioSource>();
+            source.clip = soundClip;
+            source.playOnAwake = false;
+            source.spatialBlend = 1f;
+            source.rolloffMode = AudioRolloffMode.Logarithmic;
+            source.minDistance = SoundNear;
+            source.maxDistance = SoundFar;
+            source.dopplerLevel = 0f;
+            source.spread = 60f; // A blast fills the space round it rather than coming from a point.
+            source.volume = Mathf.Clamp(.8f + .2f * radius / 7.5f, .7f, 1f);
+            source.pitch = Random.Range(.94f, 1.04f);
+
+            float distance = Vector3.Distance(ListenerPosition(viewer, ground), ground);
+            go.AddComponent<AudioLowPassFilter>().cutoffFrequency = MuffleCutoff(distance);
+            var echo = go.AddComponent<AudioReverbFilter>();
+            echo.reverbPreset = AudioReverbPreset.User;
+            echo.dryLevel = 0f;
+            echo.room = Mathf.Lerp(-1600f, -700f, Mathf.Clamp01(distance / SoundFar)); // More echo the further off.
+            echo.roomHF = -1800f;
+            echo.decayTime = 2.2f;
+            echo.decayHFRatio = .5f;
+            echo.reflectionsLevel = -1400f;
+            echo.reverbLevel = -500f;
+            echo.diffusion = 100f;
+            echo.density = 100f;
+            source.PlayDelayed(distance / SpeedOfSound);
+            return source;
+        }
+
+        /// <summary>Low-pass cutoff for a blast heard at <paramref name="distance"/> m: open up close, about 1 kHz at the
+        /// edge of hearing, where it is a dull rumble.</summary>
+        public static float MuffleCutoff(float distance)
+            => Mathf.Lerp(20000f, 1000f, Mathf.Pow(Mathf.Clamp01(distance / SoundFar), .6f));
+
+        private static Vector3 ListenerPosition(Camera viewer, Vector3 fallback)
+        {
+            var listener = FindFirstObjectByType<AudioListener>();
+            if (listener != null) return listener.transform.position;
+            return viewer != null ? viewer.transform.position : fallback;
         }
 
         private void Build(Vector3 ground, Vector3 up, float radius)

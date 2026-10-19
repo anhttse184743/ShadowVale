@@ -29,6 +29,13 @@ namespace ShadowVale.Map01.Tests
             CollectionAssert.IsSubsetOf(new[] { "Core", "Flame", "Dirt", "Dust", "Ground ring", "Smoke" }, parts);
             Assert.IsNotNull(blast.GetComponentInChildren<Light>(), "A flash lights the ground.");
             Assert.IsNotNull(blast.transform.Find("Scorch"), "A scorch is left.");
+            var bang = blast.Sound;
+            Assert.IsNotNull(bang, "It is heard (Resources/Audio/Explosion_Medium_Blast).");
+            Assert.AreEqual(1f, bang.spatialBlend, "In 3D, where it went off.");
+            Assert.AreEqual(1, bang.clip.channels, "Imported mono, so Unity can place it.");
+            Assert.IsNotNull(bang.GetComponent<AudioLowPassFilter>());
+            Assert.IsNotNull(bang.GetComponent<AudioReverbFilter>(), "A light echo.");
+            Assert.Greater(Map01Blast.MuffleCutoff(2f), Map01Blast.MuffleCutoff(60f) * 3f, "Sharp up close, a dull rumble far off.");
             Assert.IsTrue(mission.gameCamera.TryGetComponent<Map01CameraShake>(out var shake), "The camera 12 m off shakes.");
             Assert.Greater(shake.Strength(), 0f);
             yield return WaitGameSeconds(.5f);
