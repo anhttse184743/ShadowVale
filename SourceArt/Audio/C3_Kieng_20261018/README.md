@@ -10,6 +10,7 @@ Nguồn bản thu, đều CC0 1.0 theo trang tác giả:
 - BenDrain, **Metal_Pipe_04.wav**: https://freesound.org/people/BenDrain/sounds/487837/
 - Giấy phép: https://creativecommons.org/publicdomain/zero/1.0/
 
-Dùng bản MP3 nghe công khai được liên kết trên trang nguồn, không phải WAV gốc cần đăng nhập. Đây là bản phối từ các bản thu kim loại, không phải bản thu kẻng lịch sử Việt Nam và không dùng AI tạo âm. HTML nguồn, MP3 đầu vào, hash và công thức xử lý được giữ cạnh tài liệu này. Người dùng đã nghe chọn C và cho phép tích hợp thủ công với nguồn/hash do máy chưa có game-dev CLI. Đây không phải chứng nhận package của CLI đó.
+Dùng bản MP3 nghe công khai được liên kết trên trang nguồn, không phải WAV gốc cần đăng nhập. Đây là bản phối từ các bản thu kim loại, không phải bản thu kẻng lịch sử Việt Nam và không dùng AI tạo âm. URL nguồn, MP3 đầu vào, hash và công thức xử lý được giữ cạnh tài liệu này. Không lưu HTML website vì có token nhúng không liên quan tới asset. Người dùng đã nghe chọn C và cho phép tích hợp thủ công với nguồn/hash do máy chưa có game-dev CLI. Đây không phải chứng nhận package của CLI đó.
 
 Âm phát từ vị trí thanh sắt do `BuildKieng` tạo lúc chạy. `Map01OperationAudio.Play` dùng spatial blend 1 riêng cho kẻng; các âm khác giữ mặc định .8. Dùng mức âm .5, linear rolloff, min 2 m và max 45 m của dịch vụ âm thanh hiện có. Đây là thông số kế thừa, chưa phải kết quả đo nghe ngoài hiện trường. Gameplay noise 45 m và cơ chế báo động không đổi. Cờ `kiengRung` hiện có ngăn phát lại.
+
