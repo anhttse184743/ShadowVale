@@ -607,7 +607,7 @@ namespace ShadowVale.Map01.Tests
         }
 
         [UnityTest]
-        public IEnumerator HungOnlyFollowsDuringTheEscortThenStaysAtTheBase()
+        public IEnumerator HungHeadsHomeIndependentlyThenStaysAtTheBase()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
@@ -618,7 +618,7 @@ namespace ShadowVale.Map01.Tests
             var rescue = mission.GetComponent<Map01Rescue>();
             var points = Object.FindObjectsByType<ForestPoint>(FindObjectsSortMode.None);
             foreach (var e in mission.Enemies) e.enabled = false;
-            // Map01PlayerInteraction.Update, which drives Hùng, only runs with a keyboard present.
+            // Input is present, but Hùng's world movement must not target Nam.
             var keyboard = InputSystem.AddDevice<Keyboard>();
             try
             {
@@ -631,7 +631,7 @@ namespace ShadowVale.Map01.Tests
                 mission.CloseGameplayPanel();
                 Assert.Less(Vector3.Distance(mission.hung.position, held), .5f, "Held at the jetty, Hùng stays where he is tied.");
 
-                // Escort: freed at the jetty, he walks with Nam...
+                // Escort: freed at the jetty, he independently takes the route to the shelter.
                 Vector3 door = rescue.Layout.shelterDoor.position;
                 // A few steps down the road home — the way Nam leads him from the jetty to the shelter.
                 var road = new UnityEngine.AI.NavMeshPath();
@@ -649,11 +649,17 @@ namespace ShadowVale.Map01.Tests
                 rescue.MarkIntroSeen();
                 PlaceNam(mission, beside);
                 quest.RestoreStage(Map01Quest.EscortStage);
-                // He first gets up off his knees (~4 s, see Map01HungVisual), then limps after Nam.
+                float initialDistance=rescue.RemainingHomeDistance();
+                // He first gets up off his knees, then limps home independently.
                 yield return WaitGameSeconds(8f);
-                Assert.Less(Vector3.Distance(mission.hung.position, mission.player.position), 6f, "During the escort Hùng follows Nam.");
                 var hungAgent = mission.hung.GetComponent<UnityEngine.AI.NavMeshAgent>();
+                Assert.Less(Vector3.Distance(hungAgent.destination, to.position), 1f, "The destination is the shelter, never Nam.");
+                Assert.Less(rescue.RemainingHomeDistance(),initialDistance-1f,"Hùng advances toward base without waiting for Nam.");
                 Assert.AreEqual(Map01HungVisual.LimpSpeed, hungAgent.speed, .01f, "He limps home at his own pace, never sprints.");
+                PlaceNam(mission,held);
+                float beforeCovering=rescue.RemainingHomeDistance();
+                yield return WaitGameSeconds(2f);
+                Assert.Less(rescue.RemainingHomeDistance(),beforeCovering-1f,"Nam falling behind must not pull Hùng back.");
 
                 // ...all the way to the shelter (the walk itself is the NavMesh's business).
                 hungAgent.Warp(door + Vector3.right * 2f);

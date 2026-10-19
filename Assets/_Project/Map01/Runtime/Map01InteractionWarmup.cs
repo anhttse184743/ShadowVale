@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -37,6 +37,8 @@ namespace ShadowVale.Map01
             var lines=Map01OperationLines.SupplyOrder.Concat(Map01OperationLines.SupplyReport).Concat(Map01OperationLines.Handoff).Concat(Map01OperationLines.RadioReport).Concat(Map01OperationLines.CommanderReport).Concat(Map01OperationLines.EarlyCommanderReport).Concat(Map01OperationLines.RetreatReport);
             foreach(var line in lines)yield return DialogueVoice.Preload(line.voice);
             foreach(var cue in new[]{"m1_v2_rescue_approach_01","m1_v2_rescue_approach_02","m1_v2_rescue_approach_03","m1_rescue_alarm","m1_rescue_execute_order"})yield return DialogueVoice.Preload(cue);
+            yield return Load<Map01SupplyPresentation>("OperationsAnimation/ShelterSupplies/Presentation");
+            Map01SupplyPerformance.Warm();yield return null;
             Ready=true;
         }
         IEnumerator Load<T>(string path) where T:Object

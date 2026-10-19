@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-19",
+  "branch": "Khoa",
+  "files": [
+    {
+      "path": "Assets/_Project/Art/Characters/Animations/ShelterSupplies/Collect.fbx",
+      "sha256": "4ef05eaa9d1682a378ad662ef3d081d60d6a3ceb7683bea1da132cdba653517f",
+      "bytes": 6342348
+    },
+    {
+      "path": "Assets/_Project/Art/Characters/Animations/ShelterSupplies/Collect_Cloth.json",
+      "sha256": "e83c6d56e6756d78aa6b414b9a8cfe03c24a3756c4f02c86bccf1596a2c5cf0d",
+      "bytes": 5189222
+    },
+    {
+      "path": "Assets/_Project/Art/Characters/Animations/ShelterSupplies/Handoff.fbx",
+      "sha256": "50695e15dd816c01e3ae936b48f29b7e181df3e901ad81b41b292603972addc4",
+      "bytes": 6345308
+    },
+    {
+      "path": "Assets/_Project/Art/Characters/Animations/ShelterSupplies/Handoff_Cloth.json",
+      "sha256": "c605b6a6faa778944a17f1c4a00fb5127d3beafdbbe62d235c9c65557f8499e7",
+      "bytes": 5188899
+    },
+    {
+      "path": "Assets/_Project/Art/Characters/Animations/ShelterSupplies/HungRest.fbx",
+      "sha256": "ce868fe67ba63b955fda007da53ef4fe48e6c02e158feb9e415ee7577d6f8f45",
+      "bytes": 3007612
+    },
+    {
+      "path": "Assets/Resources/OperationsAnimation/ShelterSupplies/BagRedTag_preview.mat",
+      "sha256": "72f909315ce84d394dd8af910cf5be5a3fcae44718cb95b4c7dd06c940176563",
+      "bytes": 3402
+    },
+    {
+      "path": "Assets/Resources/OperationsAnimation/ShelterSupplies/CanvasBag_preview.mat",
+      "sha256": "f41c6065e0df89fedf77eeab040b072520c9cf5d87bcd0cd87702371fca2f62d",
+      "bytes": 3402
+    },
+    {
+      "path": "Assets/Resources/OperationsAnimation/ShelterSupplies/CanvasStrap.001_preview.mat",
+      "sha256": "4a6fe3f55610fb8b72df99e69a4cd18b5c176f53f12e96e461e7e241bfdbd584",
+      "bytes": 3408
+    },
+    {
+      "path": "Assets/Resources/OperationsAnimation/ShelterSupplies/CanvasStrap_preview.mat",
+      "sha256": "f3b002bf846fd2ab8ba71c68350c331c5757b2d15941ffbffe62c892e6807ed1",
+      "bytes": 3404
+    },
+    {
+      "path": "Assets/Resources/OperationsAnimation/ShelterSupplies/Collect.prefab",
+      "sha256": "ac6a54a2038927951045182c174d0840b67825ceb8ac92b01744beba1b8cd81f",
+      "bytes": 15232
+    },
+    {
+      "path": "Assets/Resources/OperationsAnimation/ShelterSupplies/FrontPocket_preview.mat",
+      "sha256": "ecca4739b99961eb081e92f5da0922dd876c185d0335b16dc82610271ef074b0",
+      "bytes": 3404
+    },
+    {
+      "path": "Assets/Resources/OperationsAnimation/ShelterSupplies/HungRest.prefab",
+      "sha256": "507670f6f47b42fd3b38395281a677beea1a8c13d06dfc8c355a8793364457b4",
+      "bytes": 5117
+    },
+    {
+      "path": "Assets/Resources/OperationsAnimation/ShelterSupplies/Lit.mat",
+      "sha256": "fc37141eb9a9c4aa71650a219cf8b538f803f5afa8697928c41fdbb4b916958e",
+      "bytes": 3309
+    },
+    {
+      "path": "Assets/Resources/OperationsAnimation/ShelterSupplies/Nam_BaloRanRi.mat",
+      "sha256": "3417b009f37653058ba81274771c01d83bea0a9b78479d20d5ed8f6ff7c3fa89",
+      "bytes": 3855
+    },
+    {
+      "path": "Assets/Resources/OperationsAnimation/ShelterSupplies/Presentation.asset",
+      "sha256": "c6362f302bd691b8a0fcee3b95f391501ec650aaf729334b95440202be8ad461",
+      "bytes": 1198
+    },
+    {
+      "path": "Assets/Resources/OperationsAnimation/ShelterSupplies/Preview_webbing.mat",
+      "sha256": "20f5cbb0bb0e70e121309f4338255cae2156da8667739d26253a477c96fcd032",
+      "bytes": 3402
+    }
+  ],
+  "origin": "Existing in-project models; approved local Blender animation and wrist-copy repair; no paid generation"
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "Name": "ShadowVale.Map01.Tests.ForestFlowTests.HungHeadsHomeIndependentlyThenStaysAtTheBase",
+    "Result": "Passed",
+    "Seconds": "56.978342"
+  },
+  {
+    "Name": "ShadowVale.Map01.Tests.RescueCompatibilityTests.PursuerCannotShootHungThroughSolidCover",
+    "Result": "Passed",
+    "Seconds": "33.934905"
+  },
+  {
+    "Name": "ShadowVale.Map01.Tests.RescueTests.EscortFailureRetriesFromFreedHungWithOriginalInventory",
+    "Result": "Passed",
+    "Seconds": "51.522957"
+  },
+  {
+    "Name": "ShadowVale.Map01.Tests.RescueTests.FreeRequiresFourKillsButNoHealingItemAndWaitsForStandingUp",
+    "Result": "Passed",
+    "Seconds": "41.369026"
+  },
+  {
+    "Name": "ShadowVale.Map01.Tests.RescueTests.HungKeepsWalkingHomeAndCallsForCoverWhenPursuersArrive",
+    "Result": "Passed",
+    "Seconds": "46.877761"
+  },
+  {
+    "Name": "ShadowVale.Map01.Tests.RescueTests.NamAloneAtDoorStartsShelterAndSkipRewardsExactlyOnce",
+    "Result": "Passed",
+    "Seconds": "45.655916"
+  },
+  {
+    "Name": "ShadowVale.Map01.Tests.RescueTests.ThreeWavesSpawnOnlyOnceOffscreenAndReloadKeepsDefeatedEnemies",
+    "Result": "Passed",
+    "Seconds": "54.237905"
+  },
+  {
+    "Name": "ShadowVale.Map01.Tests.StoryAnimationTests.HungEscortKeepsTheOriginalLimpClip",
+    "Result": "Passed",
+    "Seconds": "0.015586"
+  }
+]

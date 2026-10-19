@@ -7,8 +7,8 @@ using UnityEngine.InputSystem;
 namespace ShadowVale.Map01
 {
     /// <summary>
-    /// Routes keyboard input to whichever sibling component owns it, keeps Hùng following while
-    /// the quest says he should, and dispatches world-point interactions (loot, workbench,
+    /// Routes keyboard input to whichever sibling component owns it, guides Hùng home during
+    /// the escort, and dispatches world-point interactions (loot, workbench,
     /// documents, exit — the supplies drop-off defers to Map01Quest for the stage gate). One
     /// place for "what does this key do right now" instead of it being spread across a dozen
     /// conditions in a mission god-class.
@@ -52,8 +52,8 @@ namespace ShadowVale.Map01
         private void Update()
         {
             if (!mission.IsInitialized || mission.Cinematic) return;
-            // Following is world simulation; it must not depend on a keyboard being available.
-            if(!mission.Stopped && quest != null && quest.ShouldFollowPlayer()) UpdateCompanion();
+            // Hùng's journey is world simulation; it must not depend on a keyboard being available.
+            if(!mission.Stopped && quest != null && quest.ShouldEscortHungHome()) UpdateCompanion();
             var kb = Keyboard.current;
             if (kb == null) return;
             scouting?.HoldBinoculars(kb.fKey.isPressed); // Map01Scouting decides when they actually work.
@@ -133,11 +133,8 @@ namespace ShadowVale.Map01
         private void UpdateCompanion()
         {
             if (companion == null || !companion.isOnNavMesh) return;
-            // Beaten and limping: he keeps the pace of his own limp, so Nam has to wait for him.
-            companion.speed = Map01HungVisual.LimpSpeed;
-            companion.stoppingDistance = mission.Settings.followDistance;
-            if (NavMesh.SamplePosition(mission.player.position, out var hit, 3, NavMesh.AllAreas))
-                companion.SetDestination(hit.position);
+            // Hùng heads for the shelter himself; Nam can flank or stay behind to cover him.
+            GetComponent<Map01Rescue>()?.GuideHungHome(companion);
         }
 
         /// <summary>

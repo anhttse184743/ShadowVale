@@ -206,6 +206,42 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(Mission.ModernPlayer.enabled);Assert.IsTrue(Mission.ModernCombat.enabled);
             yield return new ExitPlayMode();
         }
+        [UnityTest]public IEnumerator HungKeepsWalkingHomeAndCallsForCoverWhenPursuersArrive()
+        {
+            Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;
+            Storage.SetValue(null,Path.GetFullPath("Logs/Rescue/saves/"+Guid.NewGuid().ToString("N")));yield return ClearAndFree();
+            Mission.GetComponent<DialogueVoice>()?.Stop();
+            var path=Map01Rescue.Path(Rescue.CaptivePost,Rescue.Layout.shelterDoor.position);
+            EscortAt(Along(path,.23f));yield return WaitGameSeconds(.8f);
+            foreach(var enemy in Rescue.Pursuers){enemy.enabled=false;var navigation=enemy.GetComponent<NavMeshAgent>();if(navigation.isOnNavMesh)navigation.isStopped=true;}
+            Assert.AreEqual(1,Rescue.WaveMask);Assert.AreEqual(1,Rescue.HelpWaveMask,"A new wave makes Hùng ask Nam for cover.");
+            Assert.AreEqual("m1_story_15",Mission.GetComponent<DialogueVoice>().CurrentId,"Use Hùng's existing approved voice.");
+            var agent=Mission.hung.GetComponent<NavMeshAgent>();float remaining=Rescue.RemainingHomeDistance();
+            PlayerAt(Rescue.RetryPoint,Quaternion.identity);
+            yield return WaitGameSeconds(2f);
+            Assert.IsFalse(agent.isStopped,"Calling for cover must not stop the wounded walk.");
+            Assert.Less(Rescue.RemainingHomeDistance(),remaining-1f,"Hùng keeps moving forward while Nam covers him.");
+            Assert.AreEqual(1,Rescue.HelpWaveMask,"Do not repeatedly call for the same wave.");
+            for(int frame=0;frame<3;frame++){CaptureHomeboundWalk(frame);yield return WaitGameSeconds(.25f);}
+            var snapshot=Rescue.Capture();Assert.AreEqual(1,snapshot.helpWaveMask);
+            Rescue.Restore(snapshot,Array.Empty<Map01EnemyController.Snapshot>());Assert.AreEqual(1,Rescue.HelpWaveMask,"Loading must not replay an acknowledged call.");
+            yield return new ExitPlayMode();
+        }
+        private static void CaptureHomeboundWalk(int frame)
+        {
+            Directory.CreateDirectory("Logs/Rescue/homebound");
+            var camera=Mission.gameCamera;var position=camera.transform.position;var rotation=camera.transform.rotation;float fov=camera.fieldOfView;
+            var previous=camera.targetTexture;var active=RenderTexture.active;var target=RenderTexture.GetTemporary(1920,1080,24);
+            var image=new Texture2D(1920,1080,TextureFormat.RGB24,false);
+            try{
+                var focus=Mission.hung.position+Vector3.up*.85f;
+                camera.transform.SetPositionAndRotation(focus+Mission.hung.forward*3.5f+Mission.hung.right*1.8f+Vector3.up*.6f,
+                    Quaternion.LookRotation(-Mission.hung.forward*3.5f-Mission.hung.right*1.8f-Vector3.up*.6f));
+                camera.fieldOfView=48;camera.targetTexture=target;camera.Render();RenderTexture.active=target;
+                image.ReadPixels(new Rect(0,0,1920,1080),0,0);image.Apply();
+                File.WriteAllBytes($"Logs/Rescue/homebound/hung-walking-{frame}.png",image.EncodeToPNG());
+            }finally{camera.targetTexture=previous;RenderTexture.active=active;camera.transform.SetPositionAndRotation(position,rotation);camera.fieldOfView=fov;RenderTexture.ReleaseTemporary(target);Object.Destroy(image);}
+        }
         [UnityTest]public IEnumerator EscortFailureRetriesFromFreedHungWithOriginalInventory()
         {
             Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;

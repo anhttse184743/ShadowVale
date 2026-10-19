@@ -128,6 +128,16 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(c3.Alarmed);
             yield return WaitGameSeconds(c3.Data.kiengDelaySeconds + .5f);
             Assert.IsTrue(c3.Current.kiengRung, "The kẻng is struck.");
+            var gongSources=Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None)
+                .Where(s=>s.isPlaying&&s.clip!=null&&s.clip.name=="c3_kieng").ToArray();
+            Assert.AreEqual(1,gongSources.Length,"One clip carries the three approved strikes.");
+            Assert.AreEqual(1f,gongSources[0].spatialBlend);
+            Assert.AreEqual(AudioRolloffMode.Linear,gongSources[0].rolloffMode);
+            Assert.Greater(gongSources[0].maxDistance,gongSources[0].minDistance);
+            var gong=GameObject.Find("Kẻng (iron bar)");Assert.NotNull(gong);
+            Assert.Less(Vector3.Distance(gong.transform.position,gongSources[0].transform.position),.01f);
+            typeof(Map01C3Mission).GetMethod("RingKieng",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).Invoke(c3,null);
+            Assert.AreEqual(1,Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None).Count(s=>s.isPlaying&&s.clip!=null&&s.clip.name=="c3_kieng"),"Already rung: no replay.");
             Assert.AreEqual(3, ActiveSleepers(), "Every sleeper comes out.");
             Assert.IsTrue(c3.Sleepers.All(Listed), "…and counts as a guard now.");
             yield return new ExitPlayMode();

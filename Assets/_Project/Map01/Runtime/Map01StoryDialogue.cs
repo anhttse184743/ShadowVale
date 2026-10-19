@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using ShadowVale.Gameplay.Combat;
 using ShadowVale.Gameplay.Player;
@@ -172,6 +172,18 @@ namespace ShadowVale.Map01
         void FrameBriefingSpeaker()
         {
             if(Current.speaker=="Chỉ huy"&&TryFrameCommanderWithBoard())return;
+            var resting=mission.hung!=null?mission.hung.GetComponentInChildren<Map01HungRest>():null;
+            if(Current.speaker=="Hùng"&&resting!=null&&resting.IsResting){
+                var target=resting.DialogueFocus;var bed=resting.Cot;float bestClear=-1;conversationCamera=target+bed.right*1.05f+Vector3.up*.8f-bed.forward*.75f;
+                foreach(float side in new[]{1f,-1f}){
+                    var candidate=target+bed.right*side*1.05f+Vector3.up*.8f-bed.forward*.75f;
+                    var ray=candidate-target;float clear=ray.magnitude;
+                    foreach(var hit in Physics.SphereCastAll(target,.10f,ray.normalized,ray.magnitude,mission.ObstructionMask,QueryTriggerInteraction.Ignore))
+                        if(hit.transform.GetComponentInParent<Health>()==null)clear=Mathf.Min(clear,hit.distance-.12f);
+                    if(clear<.6f||clear<=bestClear)continue;bestClear=clear;conversationCamera=target+ray.normalized*clear;
+                }
+                conversationRotation=Quaternion.LookRotation(target-conversationCamera);conversationFov=52;return;
+            }
             bool namSpeaking=Current.speaker=="Nam";
             var forward=facing*Vector3.forward;var right=facing*Vector3.right;
             var subject=Current.speaker=="Hùng"&&mission.hung!=null?mission.hung.position:namSpeaking?position:commander.CommanderTransform.position;

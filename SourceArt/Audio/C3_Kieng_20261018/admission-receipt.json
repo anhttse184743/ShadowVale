@@ -1,0 +1,21 @@
+{
+  "date": "2026-10-18",
+  "selected": "C — Phối hai chất liệu",
+  "selectionUserApproved": true,
+  "manualAdmissionUserApproved": true,
+  "manualAdmissionReason": "game-dev CLI unavailable; user explicitly authorized project workflow with source and hash",
+  "target": "Assets/Resources/OperationsAudio/c3_kieng.wav",
+  "sha256": "14cbbf11cea49daabe418cae0703b4da46a408937dbe0135104ff21e53d8df95",
+  "sourceLicense": "CC0-1.0",
+  "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+  "strikeScheduleSeconds": [
+    0,
+    0.65,
+    1.3
+  ],
+  "nearDistance": "existing pooled audio default 2 m",
+  "farDistance": "existing pooled audio default 45 m",
+  "spatialBlend": 1,
+  "volume": "existing operation audio default .5",
+  "engineTest": "Passed: C3MissionTests.TheKiengWakesTheSleepersWhenTheCampIsAlarmed"
+}

@@ -1,4 +1,4 @@
-using ShadowVale.AI.Perception;
+﻿using ShadowVale.AI.Perception;
 using System;
 using System.Collections;
 using System.Linq;
@@ -69,27 +69,34 @@ namespace ShadowVale.Map01
                         }
                     }
                 }
+                using(var performance=Map01SupplyPerformance.Create(actor,mission.player,delivering)){
+                float duration=performance!=null?performance.Duration:6.8f;
+                float cargoCommit=performance!=null?10.1f:5.4f;
                 float elapsed=0;bool committed=false,openSound=false,clothSound=false;
                 var facing=stand!=null?stand.rotation:mission.player.rotation;var initial=mission.player.rotation;
-                if(delivering&&Layout.supplyProps!=null)Layout.supplyProps.HoldBag(actor);
-                while(elapsed<6.8f){
+                if(performance==null&&delivering&&Layout.supplyProps!=null)Layout.supplyProps.HoldBag(actor);
+                while(elapsed<duration){
                     if(!mission.Paused&&!ForestMenu.Visible){
                         elapsed+=Time.deltaTime;mission.player.rotation=Quaternion.Slerp(initial,facing,Mathf.SmoothStep(0,1,elapsed/.6f));
                         if(elapsed>=1&&!openSound){openSound=true;Map01OperationAudio.Play("chest_open",focus);}
                         if(elapsed>=3.3f&&!clothSound){clothSound=true;Map01OperationAudio.Play("bag_cloth",focus);}
                         AnimationClip clip=elapsed<.5f?idle:elapsed<3?open:take;float t=clip==null?0:elapsed<.5f?elapsed:elapsed<3?(elapsed-.5f)/2.5f*clip.length:(elapsed-3)/3.8f*clip.length;
-                        if(authored!=null){clip=authored;t=elapsed;}
-                        session.Sample(clip,t,focus,elapsed/.7f);
+                        if(authored!=null&&performance==null){clip=authored;t=elapsed;}
+                        if(performance!=null){clip=idle;t=elapsed;}
+                        session.Sample(clip,t,focus,elapsed/.7f,performance!=null);
+                        performance?.Sample(elapsed);
+                        if(performance!=null&&Layout.supplyProps?.bag!=null)Layout.supplyProps.bag.gameObject.SetActive(false);
                         if(Layout.supplyProps!=null){
                             if(!delivering)Layout.supplyProps.OpenLid(Mathf.SmoothStep(0,1,(elapsed-1)/1.5f));
-                            if(elapsed>=3.3f&&elapsed<5.4f)Layout.supplyProps.HoldBag(actor);
+                            if(performance==null&&elapsed>=3.3f&&elapsed<5.4f)Layout.supplyProps.HoldBag(actor);
                         }
-                        if(elapsed>=5.4f&&!committed){
+                        if(elapsed>=cargoCommit&&!committed){
                             committed=true;
                             if(delivering)Layout.supplyProps?.PlaceBag(stand.position+stand.forward*.65f);
                             else {Progress.supplies=true;var bag=GetComponent<Map01Inventory>();if(bag.Count(CargoItem)==0)bag.Add(CargoItem,1);quest.SuppliesRecovered();Layout.supplyProps?.CarryBag(actor);}
                         }
                     }yield return null;
+                }
                 }
             }
         }

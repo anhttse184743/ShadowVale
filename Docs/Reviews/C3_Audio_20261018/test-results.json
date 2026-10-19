@@ -1,0 +1,385 @@
+{
+  "head": "5bf8d639157b86e75ff74ca1712e1e63957b5864",
+  "uniqueTests": 44,
+  "latestPassed": 44,
+  "history": [
+    {
+      "run": "Tests_AfterDev.xml",
+      "total": 44,
+      "passed": 40,
+      "failed": [
+        {
+          "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.NewGameWaitsForCommanderConversationWithoutLegacyOpening",
+          "result": "Failed",
+          "duration": "37.631720",
+          "run": "Tests_AfterDev.xml",
+          "failure": "System.NullReferenceException : Object reference not set to an instance of an object"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.RadioReplyWaitsForOrderAndSkipStopsSpeech",
+          "result": "Failed",
+          "duration": "23.000912",
+          "run": "Tests_AfterDev.xml",
+          "failure": "System.NullReferenceException : Object reference not set to an instance of an object"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.SkippingDormantOpeningCannotAcceptRescueOrder",
+          "result": "Failed",
+          "duration": "16.502566",
+          "run": "Tests_AfterDev.xml",
+          "failure": "System.NullReferenceException : Object reference not set to an instance of an object"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map01OperationsTests.SupplyRequiresKeyPuzzleReportAndPhysicalHandoff",
+          "result": "Failed",
+          "duration": "16.963896",
+          "run": "Tests_AfterDev.xml",
+          "failure": "  Expected: True\n  But was:  False\n"
+        }
+      ]
+    },
+    {
+      "run": "Tests_SetupFix.xml",
+      "total": 4,
+      "passed": 3,
+      "failed": [
+        {
+          "name": "ShadowVale.Map01.Tests.Map01OperationsTests.SupplyRequiresKeyPuzzleReportAndPhysicalHandoff",
+          "result": "Failed",
+          "duration": "34.975897",
+          "run": "Tests_SetupFix.xml",
+          "failure": "  Holding aim through the puzzle and pickup must restore aim without releasing it.\n  Expected: True\n  But was:  False\n"
+        }
+      ]
+    },
+    {
+      "run": "Tests_SupplyInput.xml",
+      "total": 1,
+      "passed": 0,
+      "failed": [
+        {
+          "name": "ShadowVale.Map01.Tests.Map01OperationsTests.SupplyRequiresKeyPuzzleReportAndPhysicalHandoff",
+          "result": "Failed",
+          "duration": "60.774565",
+          "run": "Tests_SupplyInput.xml",
+          "failure": "  Expected: True\n  But was:  False\n"
+        }
+      ]
+    },
+    {
+      "run": "Tests_SupplyHeldInput.xml",
+      "total": 1,
+      "passed": 0,
+      "failed": [
+        {
+          "name": "ShadowVale.Map01.Tests.Map01OperationsTests.SupplyRequiresKeyPuzzleReportAndPhysicalHandoff",
+          "result": "Failed",
+          "duration": "32.320941",
+          "run": "Tests_SupplyHeldInput.xml",
+          "failure": "  Expected: True\n  But was:  False\n"
+        }
+      ]
+    },
+    {
+      "run": "Tests_SupplyInputState.xml",
+      "total": 1,
+      "passed": 0,
+      "failed": [
+        {
+          "name": "ShadowVale.Map01.Tests.Map01OperationsTests.SupplyRequiresKeyPuzzleReportAndPhysicalHandoff",
+          "result": "Failed",
+          "duration": "42.987045",
+          "run": "Tests_SupplyInputState.xml",
+          "failure": "Unhandled log message: '[Exception] ArgumentException: Cannot change state of bitfield control 'Button:/HeldAimTest/rightButton' using this method\nParameter name: control'. Use UnityEngine.TestTools.LogAssert.Expect"
+        }
+      ]
+    },
+    {
+      "run": "Tests_SupplyDeviceState.xml",
+      "total": 1,
+      "passed": 0,
+      "failed": [
+        {
+          "name": "ShadowVale.Map01.Tests.Map01OperationsTests.SupplyRequiresKeyPuzzleReportAndPhysicalHandoff",
+          "result": "Failed",
+          "duration": "35.864986",
+          "run": "Tests_SupplyDeviceState.xml",
+          "failure": "  Held mouse fixture: value=0, enabled=True, current=HeldAimTest\n  Expected: True\n  But was:  False\n"
+        }
+      ]
+    },
+    {
+      "run": "Tests_SupplyBothBuffers.xml",
+      "total": 1,
+      "passed": 1,
+      "failed": []
+    }
+  ],
+  "latestByTest": [
+    {
+      "name": "ShadowVale.Map01.Tests.C3DialogueVoiceTests.EveryApprovedRetakeHasExactCaptionChannelAndImportedAudio",
+      "result": "Passed",
+      "duration": "1.198646",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3DialogueVoiceTests.GateCheckInPlaysBothTransmittedVoicesOnce",
+      "result": "Passed",
+      "duration": "88.171739",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3DialogueVoiceTests.MosinOrderFinishesBeforeLocalNamAcknowledgement",
+      "result": "Passed",
+      "duration": "26.646618",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3DialogueVoiceTests.SourceAndRuntimeCatalogStayIdenticalAfterPrepare",
+      "result": "Passed",
+      "duration": "0.002705",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.ACutLineMeansNoRunners",
+      "result": "Passed",
+      "duration": "42.406551",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.ASilentPatrolAtTheCheckInPutsTheCampOnGuard",
+      "result": "Passed",
+      "duration": "17.133761",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.NestASeesTheTowerPlatformBeyondTheMosinsReport",
+      "result": "Passed",
+      "duration": "16.567330",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.NobodyChasesNamPastTheLeash",
+      "result": "Passed",
+      "duration": "16.910549",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.TheGarrisonHoldsItsPostsAndTheCommanderIsHomeFromTheStart",
+      "result": "Passed",
+      "duration": "16.377674",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.TheKiengWakesTheSleepersWhenTheCampIsAlarmed",
+      "result": "Passed",
+      "duration": "24.257367",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.TheKnifeFromBehindWoundsTheCommanderAndNeverKillsHim",
+      "result": "Passed",
+      "duration": "29.496408",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.TheSaveKeepsThePostAsItWas",
+      "result": "Passed",
+      "duration": "39.616409",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.WithoutTheStrikerOneSleeperAnswersAndTheLineBringsRunners",
+      "result": "Passed",
+      "duration": "54.184760",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.BriefingAssetsRemainAlignedAndHungReportsTutorialCapture",
+      "result": "Passed",
+      "duration": "0.211381",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.EveryStoryLineHasVietnameseAudioAndOnlyRadioIsFiltered",
+      "result": "Passed",
+      "duration": "2.129635",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.NewGameWaitsForCommanderConversationWithoutLegacyOpening",
+      "result": "Passed",
+      "duration": "47.052118",
+      "run": "Tests_SetupFix.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.PauseAndNewSpeakerDoNotOverlap",
+      "result": "Passed",
+      "duration": "54.359266",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.RadioCueDoesNotReplayOrSelectDryVoice",
+      "result": "Passed",
+      "duration": "17.156898",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.RadioReplyWaitsForOrderAndSkipStopsSpeech",
+      "result": "Passed",
+      "duration": "28.506714",
+      "run": "Tests_SetupFix.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.SkippingDormantOpeningCannotAcceptRescueOrder",
+      "result": "Passed",
+      "duration": "12.775282",
+      "run": "Tests_SetupFix.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.AllOperationDialogueHasExactCaptionAndCorrectAudioChannel",
+      "result": "Passed",
+      "duration": "0.800263",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.CircuitMigratesOldBoardWithoutAcceptingItAsSolved",
+      "result": "Passed",
+      "duration": "0.002834",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.CircuitRoutesToDummyLoadAndRejectsBrokenSource",
+      "result": "Passed",
+      "duration": "0.001234",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.EveryRadioCellCanRotateAndAllChangesSurviveRestore",
+      "result": "Passed",
+      "duration": "0.000546",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.FailedLockCanRetryWithoutLosingCodeOrNotebook",
+      "result": "Passed",
+      "duration": "0.002058",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.LockExplainsFeedbackInPlainLanguage(241,214,\"1 số đúng vị trí.\",\"2 số đúng nhưng sai vị trí.\")",
+      "result": "Passed",
+      "duration": "0.001533",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.LockExplainsFeedbackInPlainLanguage(241,355,\"Không có số nào đúng.\",\"Cả 3 số đều không thuộc mã.\")",
+      "result": "Passed",
+      "duration": "0.000156",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.LockExplainsFeedbackInPlainLanguage(241,241,\"Đúng cả 3 số\",\"Khóa đã mở.\")",
+      "result": "Passed",
+      "duration": "0.000141",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(112,121,1,2)",
+      "result": "Passed",
+      "duration": "0.000443",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(111,122,1,0)",
+      "result": "Passed",
+      "duration": "0.000146",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(241,214,1,2)",
+      "result": "Passed",
+      "duration": "0.000135",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(555,555,3,0)",
+      "result": "Passed",
+      "duration": "0.000136",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(123,450,0,0)",
+      "result": "Passed",
+      "duration": "0.000137",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.OfficerNeedsDistantBinocularsAndRestoresCombatBeforeDiscovery",
+      "result": "Passed",
+      "duration": "39.776111",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.OnlyOriginalSupplyKeeperDropsKeyEvenWhenClonedForExtraction",
+      "result": "Passed",
+      "duration": "22.651037",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.PowerSabotageNeedsThreeAccurateNewPullsAndCanTimeout",
+      "result": "Passed",
+      "duration": "0.008030",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.RadioClockAndRoundGateCannotBeSkipped",
+      "result": "Passed",
+      "duration": "0.006567",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.RadioFailureCallsOnlyOneSavedSquadAndSuccessDoesNotExtract",
+      "result": "Passed",
+      "duration": "46.834107",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.RandomRadioRoundsAreSolvableVariedAndRestoreExactly",
+      "result": "Passed",
+      "duration": "0.213787",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.SupplyCodesVaryButRemainStableForSavedSeed",
+      "result": "Passed",
+      "duration": "0.002693",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.SupplyRequiresKeyPuzzleReportAndPhysicalHandoff",
+      "result": "Passed",
+      "duration": "56.775877",
+      "run": "Tests_SupplyBothBuffers.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01StoryVoiceSupplementTests.EightSupplementLinesHaveMatchingCleanAudioAndExistingCharacterVoices",
+      "result": "Passed",
+      "duration": "0.454065",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01StoryVoiceSupplementTests.RemainingGameplayAndBoatDialogueSpeakInOrderBeforeCompletion",
+      "result": "Passed",
+      "duration": "41.840288",
+      "run": "Tests_AfterDev.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01StoryVoiceSupplementTests.SkippingBoardingStopsSupplementDialogueAndCompletesOnce",
+      "result": "Passed",
+      "duration": "18.683851",
+      "run": "Tests_AfterDev.xml"
+    }
+  ],
+  "note": "40/44 full run, then targeted reruns after test setup/input harness fixes. Not a second full 44-test run."
+}

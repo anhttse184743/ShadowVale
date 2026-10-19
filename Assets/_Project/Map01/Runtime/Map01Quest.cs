@@ -121,6 +121,7 @@ namespace ShadowVale.Map01
                     if (rescue.CanFree) return "Đã hạ đủ bốn lính. Cởi trói Hùng [E].";
                     return Objectives[0]+$" — còn {rescue.Remaining}/4 lính; "+(!rescue.OverseerAlive?"đã hạ giám sát, có thể giao chiến":rescue.CanExecuteCaptive?"giám sát đang canh Hùng":"giám sát đã rời Hùng");
                 }
+                if (Stage == EscortStage) return "Hùng đang tự đi về hầm trú ẩn. Theo sát và yểm hộ, giữ Hùng sống sót về doanh trại.";
                 if (story!=null && story.Objective!=null) return story.Objective;
                 return Objectives[Mathf.Clamp(Stage,0,LastStage)];
             }
@@ -138,7 +139,9 @@ namespace ShadowVale.Map01
             story=GetComponent<Map01Story>();if(story==null)story=gameObject.AddComponent<Map01Story>();
         }
         void Start(){if(mission.IsInitialized)companion=mission.hung.GetComponent<NavMeshAgent>();}
-        public bool ShouldFollowPlayer()=>Stage==EscortStage&&rescue.CurrentPhase==Map01Rescue.Phase.Escorting;
+        public bool ShouldEscortHungHome()=>Stage==EscortStage&&rescue.CurrentPhase==Map01Rescue.Phase.Escorting;
+        // Compatibility for older callers: this gates escort movement, not a destination at Nam.
+        public bool ShouldFollowPlayer()=>ShouldEscortHungHome();
         bool NearHung(float distance)=>mission.hung!=null&&Vector3.Distance(mission.player.position,mission.hung.position)<=distance;
         public void TalkToHung(){if(Stage==RescueStage&&!mission.Cinematic)TryRescueHung();}
         public bool CanTreatHung=>rescue!=null&&rescue.CanFree;
@@ -162,9 +165,9 @@ namespace ShadowVale.Map01
         public void BeginCommanderOrder()
         {
             if(Stage!=ReportCampsStage||!story.Progress.radioDisabled||!story.Progress.powerDisabled)return;Stage=BossStage;EnsureCommander();
-            // The scouts' rifle (Map01C3Mission): no voiced line yet, so the order's last word is shown, not spoken.
+            // The transmitted order and Nam's local acknowledgement play once, in sequence.
             if(GetComponent<Map01C3Mission>()?.CachePoint!=null)
-                mission.Say("Chỉ huy (bộ đàm): \"Trinh sát để lại một khẩu Mosin, năm viên, ở vai đồi phía Đông Nam điểm ba. Từ đó nhìn được chòi canh.\"",8);
+                mission.Say(Map01C3Dialogue.CommanderOrder,8);
         }
         // Scanning a camp provides intel only. It cannot complete supply/radio objectives.
         public void CompleteScouting()=>mission.Say("Đã ghi nhận ba vị trí. Tiếp tục mục tiêu chỉ huy đã giao.",5);
