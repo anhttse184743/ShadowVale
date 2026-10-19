@@ -27,6 +27,9 @@ namespace ShadowVale.Gameplay.Enemies.Boss
         /// <summary>Seconds from the throw to the blast.</summary>
         public float SecondsToBlast => Mathf.Max(0, _flight + _fuse - _age);
 
+        /// <summary>A map's own explosion at a point with the blast radius (Map 1: Map01Blast); null = a plain flash.</summary>
+        public static System.Action<Vector3, float> BlastEffect { get; set; }
+
         public static Grenade Launch(Vector3 from, Vector3 target, BossProfile profile, string throwerId)
         {
             var go = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -84,7 +87,7 @@ namespace ShadowVale.Gameplay.Enemies.Boss
             }
             if (ServiceLocator.TryResolve<NoiseSystem>(out var noise)) noise.Emit(at, _noiseRadius, NoiseKind.Grenade);
             EventBus.Publish(new GrenadeExplodedEvent(_thrower, at, dealt));
-            Flash(at, _radius);
+            if (BlastEffect != null) BlastEffect(at, _radius); else Flash(at, _radius);
             Destroy(gameObject);
             return dealt;
         }

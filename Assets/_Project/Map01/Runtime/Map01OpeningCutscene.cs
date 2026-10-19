@@ -14,6 +14,8 @@ namespace ShadowVale.Map01
     /// No video, duplicate character textures, Timeline package or additional controller.</summary>
     public sealed class Map01OpeningCutscene : MonoBehaviour
     {
+        /// <summary>The allied commander's visual: the extraction finds him by it (was "Commander (shared player mesh)").</summary>
+        public const string CommanderVisualName = "Chỉ huy mình";
         public AnimationClip idle, talking, pointing, salute;
         public AnimationClip soldierIdle;
         public GameObject commanderModel;
@@ -100,11 +102,14 @@ namespace ShadowVale.Map01
             right = Vector3.Cross(Vector3.up, forward);
             // Clone only the visual hierarchy, never the player controller, health or quest.
             var visual = Instantiate(commanderModel != null ? commanderModel : soldier.gameObject, transform);
-            visual.name = "Chỉ huy mình";
+            visual.name = CommanderVisualName;
             foreach (var behaviour in visual.GetComponentsInChildren<MonoBehaviour>()) if (!(behaviour is Weapon)) Destroy(behaviour);
             foreach (var collider in visual.GetComponentsInChildren<Collider>()) Destroy(collider);
             foreach (var weapon in visual.GetComponentsInChildren<Weapon>(true)) weapon.gameObject.SetActive(false);
             commander = visual.GetComponent<Animator>();
+            // The officer model ships culling off-screen bones; the soldier mesh it replaced animated always, and
+            // the extraction's hand contacts read his bones whether or not a camera sees him.
+            commander.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             commander.runtimeAnimatorController = null;
             commander.applyRootMotion = false;
             var post=owner.alliedCommanderPost;

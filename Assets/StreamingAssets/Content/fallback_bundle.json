@@ -110,7 +110,7 @@
     "weight_cover": 0.5,
     "weight_distance": 0.1,
     "vision_hops": 2,
-    "squad": { "subgraph_nodes": 24, "max_group_agents": 8, "min_group_agents": 2, "squad_alert_range": 40, "reinforcement_range": 75,
+    "squad": { "subgraph_nodes": 24, "max_group_agents": 8, "min_group_agents": 2, "squad_alert_range": 40, "reinforcement_range": 30,
                "group_merge_range": 60, "refresh_seconds": 6, "replan_hop_delta": 2, "stale_distance": 10 }
   }
 }

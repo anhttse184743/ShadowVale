@@ -167,6 +167,8 @@ namespace ShadowVale.Map01
             // Squad coordination (QUBO over that graph), configured by the content bundle's ai_settings
             // and this map's own coordination entry, if it has one.
             SquadCoordinator.Attach(gameObject, CoordinationSettings.ForScene(gameObject.scene.name));
+            // The commander's grenades go off like Nam's F1 (Map01Blast), sized to their blast.
+            ShadowVale.Gameplay.Enemies.Boss.Grenade.BlastEffect = CommanderBlast;
             // Anonymous session telemetry: listens to the shared events, ends when this map unloads.
             // A sandbox copy (Test Map 1 AI) reports apart, so test sessions never mix with Map 1's numbers.
             TelemetryService.Attach(gameObject, gameObject.scene.name == TutorialDirector.SceneName ? "map00_tutorial" : gameObject.scene.name == Map01SaveSystem.MainScene ? MapId : MapId + "_test");
@@ -521,8 +523,18 @@ namespace ShadowVale.Map01
                 : kind == ShadowVale.Gameplay.Skills.SkillKind.Stealth ? "Lén lút" : "Kỹ thuật";
             Say($"{name} đạt cấp {level}! Xem thông số trong Túi đồ → Kĩ Năng.", 4);
         }
+        private void CommanderBlast(Vector3 at, float radius)
+        {
+            Vector3 up = Physics.Raycast(at + Vector3.up * 1.5f, Vector3.down, out var ground, 4f, ObstructionMask, QueryTriggerInteraction.Ignore)
+                ? ground.normal : Vector3.up;
+            Map01Blast.Spawn(at, up, gameCamera, radius);
+            Map01Smoke.Spawn(at, 1.6f, 4f, visible: false); // Its dust hides a man behind it for a moment, as the F1's does.
+        }
+
         private void OnDestroy()
         {
+            if (ShadowVale.Gameplay.Enemies.Boss.Grenade.BlastEffect == (System.Action<Vector3, float>)CommanderBlast)
+                ShadowVale.Gameplay.Enemies.Boss.Grenade.BlastEffect = null;
             if (Skills != null) Skills.LevelChanged -= OnSkillLevelChanged;
             if (ModernCombat != null) {
                 ModernCombat.GunKilled -= OnGunKilled;

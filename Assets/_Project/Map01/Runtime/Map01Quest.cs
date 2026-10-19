@@ -193,6 +193,7 @@ namespace ShadowVale.Map01
             staging.SetActive(false);
             var instance=Instantiate(template.gameObject,marker.position,marker.rotation,staging.transform);
             var officerModel = Resources.Load<GameObject>("Characters/EnemyCommanderVisual");
+            Animator officerActor = null;
             if (officerModel != null)
             {
                 var previous = instance.GetComponentInChildren<Animator>(true);
@@ -202,11 +203,16 @@ namespace ShadowVale.Map01
                 var actor = replacement.GetComponent<Animator>();
                 actor.runtimeAnimatorController = previous.runtimeAnimatorController;
                 actor.applyRootMotion = false;
-                instance.GetComponent<Health>().BindAnimator(actor);
+                // As the guard model he replaces: animated off-screen too (his rifle, his fall), not culled.
+                actor.cullingMode = previous.cullingMode;
+                officerActor = actor;
                 previous.gameObject.SetActive(false);
                 Destroy(previous.gameObject);
             }
             instance.transform.SetParent(story.Layout.transform, true);
+            // Bound once he is active: an inactive Animator plays no controller, so its rifle layer was not found and
+            // stayed on at his death, holding him upright (19/10/2026).
+            if (officerActor != null) instance.GetComponent<Health>().BindAnimator(officerActor);
             Destroy(staging);
             instance.name="Chỉ huy địch";
             boss=instance.GetComponent<Map01EnemyController>();boss.Configure(System.Array.Empty<Vector3>());

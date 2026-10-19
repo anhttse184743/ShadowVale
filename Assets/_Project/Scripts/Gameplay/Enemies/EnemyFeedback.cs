@@ -75,11 +75,14 @@ namespace ShadowVale.Gameplay.Enemies
         }
 
         /// <summary>Draws a shot up to the first obstruction. Returns whether it reaches its intended victim.</summary>
-        public bool Fire(Vector3 targetPoint, Transform victim, int mask, out Vector3 impact)
+        /// <param name="from">Where the shot is decided from (a commander: his chest, so a rifle held out into a wall
+        /// or the cover he fights from does not stop every round); null = the muzzle. The tracer still leaves the muzzle.</param>
+        public bool Fire(Vector3 targetPoint, Transform victim, int mask, out Vector3 impact, Vector3? from = null)
         {
             if (weapon == null) weapon = GetComponentInChildren<Weapon>();
-            Vector3 start = weapon != null && weapon.Muzzle != null
+            Vector3 muzzle = weapon != null && weapon.Muzzle != null
                 ? weapon.Muzzle.position : transform.position + Vector3.up * 1.3f + transform.forward * .35f;
+            Vector3 start = from ?? muzzle;
             Vector3 delta = targetPoint - start;
             float distance = delta.magnitude;
             impact = targetPoint;
@@ -102,7 +105,7 @@ namespace ShadowVale.Gameplay.Enemies
             {
                 if (tracers[cursor] == null) tracers[cursor] = Instantiate(prefab, transform);
                 tracers[cursor].gameObject.SetActive(true);
-                tracers[cursor].TryPlay(start, impact);
+                tracers[cursor].TryPlay(muzzle, impact);
                 if(weapon!=null)tracers[cursor].AnchorEmission(weapon.Muzzle);
                 cursor = (cursor + 1) % tracers.Length;
             }

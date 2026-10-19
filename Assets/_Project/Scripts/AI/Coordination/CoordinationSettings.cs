@@ -25,8 +25,10 @@ namespace ShadowVale.AI.Coordination
 
         /// <summary>Squad-mates within this of a guard who makes contact join the fight (radio).</summary>
         public float SquadAlertRange = 40f;
-        /// <summary>Other squads within this of the player come to help; 0 = never.</summary>
-        public float ReinforcementRange = 75f;
+        /// <summary>Other squads within this of the player come to help; 0 = never. Was 75 m until 19/10/2026: Map 1's
+        /// camps stand 63-71 m apart, so a fight at one brought the next camp over; 30 m keeps each camp to itself
+        /// (C3 and its commander, 16 m apart, still help each other).</summary>
+        public float ReinforcementRange = 30f;
         /// <summary>Fighting squads this close to each other plan as one combat group.</summary>
         public float GroupMergeRange = 60f;
 
