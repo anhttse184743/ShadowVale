@@ -22,7 +22,7 @@ namespace ShadowVale.Map01
             DrawAwareness(width, height, scale);
             DrawCampWarning(width);
             if (quest.Stage == Map01Quest.ScoutStage && !scouting.Binoculars)
-                GUI.Label(new Rect(width / 2 - 330, height - 70, 660, 30), "Giữ [F] ống nhòm  ·  [C] đi khom, nấp bụi  ·  Giữ [Q] ném đá dụ lính ra xa trại", hudKey);
+                GUI.Label(new Rect(width / 2 - 330, height - 70, 660, 30), "Giữ [F] ống nhòm  ·  [C] đi khom, nấp bụi  ·  [4] chọn/đổi đồ ném · Giữ/thả chuột trái để ném", hudKey);
         }
 
         /// <summary>

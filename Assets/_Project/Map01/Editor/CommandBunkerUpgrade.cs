@@ -23,7 +23,7 @@ namespace ShadowVale.Map01.Editor
         [Serializable] public class Export { public Model[] models; }
         [Serializable] public class Model { public string name; public Part[] parts; }
         [Serializable] public class Part { public string name,material,texture; public float[] @base,vertices,normals,uv; public int[] triangles; public float metallic,roughness; }
-        static CommandBunkerUpgrade(){EditorApplication.update+=Poll;EditorApplication.update+=ProbeCommander;}
+        static CommandBunkerUpgrade(){EditorApplication.update+=Poll;EditorApplication.update+=ProbeCommander;EditorApplication.update+=ProbeFurnitureRuntime;}
         static void Poll()
         {
             const string request="Tools/CommandBunker.request";
@@ -31,8 +31,15 @@ namespace ShadowVale.Map01.Editor
             var command=File.ReadAllText(request).Trim();File.Delete(request);Directory.CreateDirectory(Reports);
             try
             {
+                if(command=="stoplayoutplay"){EditorApplication.isPlaying=false;File.WriteAllText(Reports+"/status.txt","PASS stoplayoutplay");return;}
                 if(EditorApplication.isPlayingOrWillChangePlaymode)throw new Exception("Stop Play Mode before changing assets.");
-                if(command=="inspect")Inspect();
+                if(command=="layoutinspect")InspectFurnitureLayout();
+                else if(command=="layoutapply")ApplyFurnitureLayout();
+                else if(command=="layoutverify")VerifyFurnitureLayout();
+                else if(command=="layoutdoor30")MoveCraftingDoorThirty();
+                else if(command=="layoutplay")StartFurnitureRuntime();
+                else if(command=="layoutrefreshshelf")RefreshFurnitureShelf();
+                else if(command=="inspect")Inspect();
                 else if(command=="quarterinspect")InspectQuartermaster();
                 else if(command=="quarterapply")ApplyQuartermaster();
                 else if(command=="quarterverify")VerifyQuartermaster();
@@ -183,6 +190,7 @@ namespace ShadowVale.Map01.Editor
         }
         static void Verify()
         {
+            if(All<Transform>().Any(t=>t.name=="CraftingWorkbenchEntrance")){VerifyFurnitureLayout();return;}
             var report=new StringBuilder();var table=All<Transform>().Single(t=>t.name=="BriefingTable");
             var point=All<ForestPoint>().Single(p=>p.kind==ForestPointKind.Workbench);
             if(point.id!="workbench"||point.radius!=4||Vector3.Distance(point.transform.position,table.position)>2)throw new Exception("Workbench interaction anchor changed.");

@@ -189,9 +189,28 @@ namespace ShadowVale.Map01
                 .OrderBy(e=>e.SaveId,System.StringComparer.Ordinal).FirstOrDefault();
             if(template==null)return;
             var marker=story.Layout.commanderPost;
-            var instance=Instantiate(template.gameObject,marker.position,marker.rotation,story.Layout.transform);
+            var staging = new GameObject("Commander staging");
+            staging.SetActive(false);
+            var instance=Instantiate(template.gameObject,marker.position,marker.rotation,staging.transform);
+            var officerModel = Resources.Load<GameObject>("Characters/EnemyCommanderVisual");
+            if (officerModel != null)
+            {
+                var previous = instance.GetComponentInChildren<Animator>(true);
+                var replacement = Instantiate(officerModel, previous.transform.parent);
+                replacement.transform.localPosition = previous.transform.localPosition;
+                replacement.transform.localRotation = previous.transform.localRotation;
+                var actor = replacement.GetComponent<Animator>();
+                actor.runtimeAnimatorController = previous.runtimeAnimatorController;
+                actor.applyRootMotion = false;
+                instance.GetComponent<Health>().BindAnimator(actor);
+                previous.gameObject.SetActive(false);
+                Destroy(previous.gameObject);
+            }
+            instance.transform.SetParent(story.Layout.transform, true);
+            Destroy(staging);
             instance.name="Chỉ huy địch";
             boss=instance.GetComponent<Map01EnemyController>();boss.Configure(System.Array.Empty<Vector3>());
+            Map01EnemyGrounding.Attach(boss);
             boss.operationIndex=3;boss.carriesSupplyKey=false;boss.suppressOperationLoot=false;
             boss.BindMission(mission); // Before ConfigureAsBoss: binding resets damage to the balance baseline.
             // The boss_commander archetype (Map01Content.json): his boss profile, and his health (600) rather

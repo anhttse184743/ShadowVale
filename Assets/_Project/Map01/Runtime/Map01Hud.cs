@@ -13,6 +13,43 @@ namespace ShadowVale.Map01
         private Texture2D hudItems, hudPlate, hudWeapons, compassArrow, compassBadge;
         private GUIStyle hudTitle, hudHeading, hudBody, hudSmall, hudCount, hudKey, hudCenter, hudEquipped, hudGuide;
         private float objectiveBottom;
+        private GUIStyle objectiveHeading, objectiveBody, objectiveSmall, objectiveGuide;
+        private GUIStyle objectiveHintGlow, objectiveKeySymbol;
+        private static Texture2D objectiveRoundedOutline;
+        private int observedObjectiveStage = -1;
+        private bool observedRescueAccepted;
+        private float objectiveSecondsLeft = 5f;
+        private float objectiveReveal;
+        private float objectiveHintOpacity = 1f;
+        private const float ObjectiveHintFadeSeconds = .35f;
+        private const float ObjectiveTransitionSeconds = .25f;
+
+        private void Update()
+        {
+            if (mission == null || !mission.IsInitialized) return;
+            if (quest != null && (observedObjectiveStage != quest.Stage || observedRescueAccepted != quest.RescueOrderAccepted))
+            {
+                observedObjectiveStage = quest.Stage;
+                observedRescueAccepted = quest.RescueOrderAccepted;
+                ObjectiveShown = true;
+                objectiveSecondsLeft = 5f;
+            }
+            if (!mission.Cinematic && !ForestMenu.Visible && !mission.BenchOpen)
+            {
+                objectiveReveal = Mathf.MoveTowards(objectiveReveal, ObjectiveShown ? 1f : 0f,
+                    Time.unscaledDeltaTime / ObjectiveTransitionSeconds);
+                objectiveHintOpacity = Mathf.MoveTowards(objectiveHintOpacity, ObjectiveShown ? 0f : 1f,
+                    Time.unscaledDeltaTime / ObjectiveHintFadeSeconds);
+            }
+            // Give the player five readable gameplay seconds, excluding cutscenes and menus.
+            if (!ObjectiveShown || mission.Cinematic || mission.Stopped || ForestMenu.Visible ||
+                mission.InventoryOpen || mission.MapOpen || mission.BenchOpen) return;
+            if (objectiveSecondsLeft > 0f)
+            {
+                objectiveSecondsLeft -= Time.deltaTime;
+                if (objectiveSecondsLeft <= 0f) ObjectiveShown = false;
+            }
+        }
         private int selectedStack;
         private static readonly Color HudPaper = new Color(.9f, .85f, .68f);
         private static readonly Color HudGold = new Color(.87f, .68f, .32f);
@@ -200,7 +237,7 @@ namespace ShadowVale.Map01
             DrawHudFeedback(width, height);
             if (!mission.InventoryOpen && !mission.MapOpen) DrawPickups(width);
             if (!mission.InventoryOpen && !mission.MapOpen) {
-                var map = new Rect(40, 30, 261, 261);
+                var map = new Rect(40, 30, 221, 221);
                 minimap.Draw(map, false, hudSmall); // Round, with its own rim.
                 var hint = new Rect(map.center.x - 95, map.yMax + 9, 190, 27);
                 HudFill(hint, new Color(.02f, .03f, .02f, .5f));
@@ -220,19 +257,55 @@ namespace ShadowVale.Map01
         }
         private void DrawObjective()
         {
+            objectiveHeading ??= new GUIStyle(hudHeading) { fontSize = hudHeading.fontSize - 2 };
+            objectiveBody ??= new GUIStyle(hudBody) { fontSize = hudBody.fontSize - 2 };
+            objectiveSmall ??= new GUIStyle(hudSmall) { fontSize = hudSmall.fontSize - 2 };
+            objectiveGuide ??= new GUIStyle(hudGuide) { fontSize = hudGuide.fontSize - 2 };
             var previousMatrix = GUI.matrix;
             float offset = mission.InventoryOpen || mission.MapOpen ? -158 : 160;
             GUI.matrix = previousMatrix * Matrix4x4.Translate(new Vector3(0, offset, 0));
-            if (!ObjectiveShown) {
-                // Tucked away with [J]: only its heading stays, as a reminder of the key.
-                ShadowLabel(new Rect(48, 205, 332, 37), "NHIỆM VỤ  ·  J", hudHeading);
-                objectiveBottom = 186 + 50 + offset;
+            var translatedMatrix = GUI.matrix;
+            var previousColor = GUI.color;
+            float reveal = Mathf.SmoothStep(0f, 1f, objectiveReveal);
+            const float compactBottom = 255f;
+            float hintOpacity = Mathf.SmoothStep(0f, 1f, objectiveHintOpacity);
+            if (hintOpacity > 0f)
+            {
+                // Fade the entire shortcut row together, including both icons and their outlines.
+                GUI.color = new Color(previousColor.r, previousColor.g, previousColor.b, previousColor.a * hintOpacity);
+                float highlight = .5f + .5f * Mathf.Sin(Time.unscaledTime * Mathf.PI * .8f);
+                objectiveHintGlow ??= new GUIStyle(objectiveSmall) { normal = { textColor = HudGold } };
+                objectiveKeySymbol ??= new GUIStyle(objectiveSmall) {
+                    fontSize = 13, alignment = TextAnchor.MiddleCenter, wordWrap = false,
+                    padding = new RectOffset(), normal = { textColor = HudPaper }
+                };
+                DrawObjectiveListIcon(new Rect(28, 220, 24, 30), highlight);
+                const float hintX = 62, hintY = 223;
+                float prefixWidth = objectiveSmall.CalcSize(new GUIContent("Nhấn")).x;
+                ObjectiveHintLabel(new Rect(hintX, hintY, prefixWidth + 2, 27), "Nhấn", highlight);
+                var keycap = new Rect(hintX + prefixWidth + 7, hintY - 3, 26, 30);
+                DrawObjectiveRoundedOutline(keycap, highlight);
+                ObjectiveHintLabel(new Rect(keycap.x + 1, keycap.y + 3, keycap.width - 2, 15), "`", highlight, objectiveKeySymbol);
+                ObjectiveHintLabel(new Rect(keycap.x + 1, keycap.y + 13, keycap.width - 2, 15), "~", highlight, objectiveKeySymbol);
+                ObjectiveHintLabel(new Rect(keycap.xMax + 7, hintY, 210, 27), "để xem nhiệm vụ", highlight);
+
+            }
+            if (reveal <= 0f)
+            {
+                objectiveBottom = compactBottom + offset;
+                GUI.color = previousColor;
                 GUI.matrix = previousMatrix;
                 return;
             }
+            // Expand from the hint's anchor and fade; reverse smoothly when dismissed mid-animation.
+            float panelScale = Mathf.Lerp(.78f, 1f, reveal);
+            var pivot = new Vector3(28, 186, 0);
+            GUI.matrix = translatedMatrix * Matrix4x4.Translate(pivot)
+                * Matrix4x4.Scale(new Vector3(panelScale, panelScale, 1)) * Matrix4x4.Translate(-pivot);
+            GUI.color = new Color(previousColor.r, previousColor.g, previousColor.b, previousColor.a * reveal);
             // Sized to the text: the longer objectives wrap to three lines and used to be cut off.
             string text = objectives?.ObjectiveText ?? "";
-            float textHeight = hudBody.CalcHeight(new GUIContent(text), 328);
+            float textHeight = objectiveBody.CalcHeight(new GUIContent(text), 292);
             bool guiding = guide.HasTarget && !mission.Stopped;
             // Point 3 (Map01C3Mission): the optional objectives once the order is given, and the camp's state nearby.
             var c3 = GetComponent<Map01C3Mission>();
@@ -242,14 +315,14 @@ namespace ShadowVale.Map01
             float height = Mathf.Max(152, 258 + textHeight + (guiding ? 32 : 0) + c3Height + 14 - 186);
             // See-through: a faint shade and shadowed lettering instead of the plate, so the
             // world stays visible behind the objective.
-            HudFill(new Rect(28, 186, 373, height), new Color(.02f, .03f, .02f, .22f));
-            ShadowLabel(new Rect(48, 205, 332, 37), "NHIỆM VỤ", hudHeading);
-            HudFill(new Rect(49, 246, 328, 1), new Color(.6f, .51f, .3f, .65f));
-            ShadowLabel(new Rect(49, 258, 328, textHeight), text, hudBody);
+            HudFill(new Rect(28, 186, 337, height), new Color(.02f, .03f, .02f, .22f));
+            ShadowLabel(new Rect(48, 205, 296, 37), "NHIỆM VỤ", objectiveHeading);
+            HudFill(new Rect(49, 246, 292, 1), new Color(.6f, .51f, .3f, .65f));
+            ShadowLabel(new Rect(49, 258, 292, textHeight), text, objectiveBody);
             if (guiding) {
                 float y = 258 + textHeight + 6;
                 HudDiamond(new Vector2(58, y + 12), 7);
-                ShadowLabel(new Rect(72, y, 312, 26), $"{guide.Label}  ·  {guide.Distance:0} m", hudGuide);
+                ShadowLabel(new Rect(72, y, 276, 26), $"{guide.Label}  ·  {guide.Distance:0} m", objectiveGuide);
             }
             float c3y = 258 + textHeight + (guiding ? 32 : 0) + 6;
             if (optional != null)
@@ -258,19 +331,85 @@ namespace ShadowVale.Map01
                 foreach (var (what, done) in optional)
                 {
                     GUI.color = done ? new Color(.72f, .86f, .55f, old.a) : old;
-                    ShadowLabel(new Rect(49, c3y, 328, 22), "• " + what + (done ? " — xong" : ""), hudSmall);
+                    ShadowLabel(new Rect(49, c3y, 292, 22), "• " + what + (done ? " — xong" : ""), objectiveSmall);
                     c3y += 22;
                 }
                 GUI.color = old; c3y += 8;
             }
-            if (c3Status != null) ShadowLabel(new Rect(49, c3y, 328, 26), c3Status, hudGuide);
-            objectiveBottom = 186 + height + offset;
+            if (c3Status != null) ShadowLabel(new Rect(49, c3y, 292, 26), c3Status, objectiveGuide);
+            objectiveBottom = Mathf.Lerp(compactBottom, 186 + height, reveal) + offset;
+            GUI.color = previousColor;
             GUI.matrix = previousMatrix;
         }
 
-        /// <summary>[J] shows or hides the objective panel.</summary>
+        /// <summary>Outlined clipboard and list, drawn as HUD geometry for crisp scaling.</summary>
+        private static void DrawObjectiveListIcon(Rect rect, float highlight)
+        {
+            var ink = Color.Lerp(HudPaper, HudGold, .2f + .15f * highlight);
+            ink.a = GUI.color.a;
+            DrawObjectiveRoundedOutline(new Rect(rect.x, rect.y + 3, rect.width, rect.height - 3), highlight);
+            ObjectiveIconStroke(new Vector2(rect.x + 7, rect.y + 6), new Vector2(rect.x + 7, rect.y + 2), ink);
+            ObjectiveIconStroke(new Vector2(rect.x + 7, rect.y + 2), new Vector2(rect.x + 10, rect.y), ink);
+            ObjectiveIconStroke(new Vector2(rect.x + 10, rect.y), new Vector2(rect.x + 14, rect.y), ink);
+            ObjectiveIconStroke(new Vector2(rect.x + 14, rect.y), new Vector2(rect.x + 17, rect.y + 2), ink);
+            ObjectiveIconStroke(new Vector2(rect.x + 17, rect.y + 2), new Vector2(rect.x + 17, rect.y + 6), ink);
+            HudFill(new Rect(rect.x + 7, rect.y + 5, 10, 1.5f), ink);
+            for (int row = 0; row < 5; row++)
+                HudFill(new Rect(rect.x + 5, rect.y + 10 + row * 3.5f, row == 4 ? 8 : 14, 1.25f), ink);
+        }
+
+        private void ObjectiveHintLabel(Rect rect, string text, float highlight, GUIStyle style = null)
+        {
+            style ??= objectiveSmall;
+            var saved = GUI.color;
+            var glowStyle = style == objectiveSmall ? objectiveHintGlow : style;
+            GUI.color = new Color(HudGold.r, HudGold.g, HudGold.b, saved.a * (.12f + .12f * highlight));
+            for (int i = 0; i < 8; i++)
+            {
+                float angle = i * Mathf.PI / 4;
+                GUI.Label(new Rect(rect.x + Mathf.Cos(angle), rect.y + Mathf.Sin(angle), rect.width, rect.height), text, glowStyle);
+            }
+            GUI.color = saved;
+            ShadowLabel(rect, text, style);
+        }
+
+        private static void DrawObjectiveRoundedOutline(Rect rect, float highlight)
+        {
+            // Antialiased rounded outline only: no background box behind the shortcut.
+            objectiveRoundedOutline ??= MakeTexture(64, (u, v) => {
+                var q = new Vector2(Mathf.Abs(u - .5f) - .37f, Mathf.Abs(v - .5f) - .37f);
+                float distance = new Vector2(Mathf.Max(q.x, 0), Mathf.Max(q.y, 0)).magnitude
+                    + Mathf.Min(Mathf.Max(q.x, q.y), 0) - .09f;
+                return new Color(1, 1, 1, Mathf.Clamp01(1f - Mathf.Abs(distance) / .027f));
+            });
+            var saved = GUI.color;
+            GUI.color = new Color(HudGold.r, HudGold.g, HudGold.b, saved.a * (.12f + .12f * highlight));
+            for (int i = 0; i < 8; i++)
+            {
+                float angle = i * Mathf.PI / 4;
+                GUI.DrawTexture(new Rect(rect.x + Mathf.Cos(angle), rect.y + Mathf.Sin(angle), rect.width, rect.height), objectiveRoundedOutline);
+            }
+            var ink = Color.Lerp(HudPaper, HudGold, .15f + .15f * highlight);
+            ink.a = saved.a;
+            GUI.color = ink;
+            GUI.DrawTexture(rect, objectiveRoundedOutline);
+            GUI.color = saved;
+        }
+
+        private static void ObjectiveIconStroke(Vector2 from, Vector2 to, Color color)
+        {
+            var previous = RotateGui(from, Mathf.Atan2(to.y - from.y, to.x - from.x) * Mathf.Rad2Deg);
+            HudFill(new Rect(from.x, from.y - .75f, Vector2.Distance(from, to), 1.5f), color);
+            GUI.matrix = previous;
+        }
+
+        /// <summary>[`] toggles the objective panel with a fresh five-second preview.</summary>
         public bool ObjectiveShown { get; private set; } = true;
-        public void ToggleObjective() => ObjectiveShown = !ObjectiveShown;
+        public void ToggleObjective()
+        {
+            ObjectiveShown = !ObjectiveShown;
+            objectiveSecondsLeft = ObjectiveShown ? 5f : 0f;
+        }
 
         /// <summary>Text with a dark drop shadow, legible without a plate behind it.</summary>
         private static void ShadowLabel(Rect r, string text, GUIStyle style)
@@ -351,7 +490,7 @@ namespace ShadowVale.Map01
                 GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), "[E] " + nearby.label, hudBody);
             // The bench's progress while Nam is away from it: Map01Hud.Pickup.cs, above the pickup feed.
             // Alerted guards are marked by the awareness eye (Map01Hud.Scouting).
-            GUI.Label(new Rect(28, height - 26, width - 430, 24), "Tab Túi đồ  ·  1 Súng chính  ·  2 Súng ngắn  ·  3 Dao  ·  4 Đổi đồ ném  ·  Giữ Q Ném  ·  R Nạp đạn  ·  H Hồi máu  ·  M Bản đồ  ·  Esc Menu", hudSmall);
+            GUI.Label(new Rect(28, height - 26, width - 430, 24), "Tab Túi đồ  ·  1 Súng chính  ·  2 Súng ngắn  ·  3 Dao  ·  4 Đồ ném  ·  Giữ/thả chuột trái Ném  ·  R Nạp đạn  ·  H Hồi máu  ·  M Bản đồ  ·  Esc Menu", hudSmall);
         }
 
         private void DrawMap(float width, float height)

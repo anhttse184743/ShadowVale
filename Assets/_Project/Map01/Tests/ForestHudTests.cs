@@ -84,7 +84,7 @@ namespace ShadowVale.Map01.Tests
         }
 
         [UnityTest]
-        public IEnumerator JTogglesTheSeeThroughObjectivePanelBesideTheRoundMap()
+        public IEnumerator BackquoteTogglesTheObjectivePanelAndAutomaticPreviewExpires()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
@@ -102,12 +102,19 @@ namespace ShadowVale.Map01.Tests
                 Directory.CreateDirectory("Logs/HudPreview");
                 ScreenCapture.CaptureScreenshot("Logs/HudPreview/objective-shown.png");
                 for (int i = 0; i < 4; i++) yield return null;
-                yield return Press(keyboard, Key.J);
-                Assert.IsFalse(hud.ObjectiveShown, "J tucks the objective panel away.");
+                yield return Press(keyboard, Key.Backquote);
+                Assert.IsFalse(hud.ObjectiveShown, "Backquote tucks the objective panel away.");
                 ScreenCapture.CaptureScreenshot("Logs/HudPreview/objective-hidden.png");
                 for (int i = 0; i < 4; i++) yield return null;
-                yield return Press(keyboard, Key.J);
-                Assert.IsTrue(hud.ObjectiveShown, "J brings it back.");
+                yield return Press(keyboard, Key.Backquote);
+                Assert.IsTrue(hud.ObjectiveShown, "Backquote brings it back.");
+                // Keep story presentation from pausing this gameplay timer check.
+                mission.Cinematic = false;
+                Assert.AreEqual(5f, (float)typeof(Map01Hud).GetField("objectiveSecondsLeft", Private).GetValue(hud), .1f);
+                yield return WaitGameSeconds(5.2f);
+                Assert.IsFalse(hud.ObjectiveShown, "Manually reopened objectives also hide after five seconds.");
+                yield return Press(keyboard, Key.Backquote);
+                Assert.IsTrue(hud.ObjectiveShown, "Backquote reopens the timed preview.");
             }
             finally { InputSystem.RemoveDevice(keyboard); RestoreInputRouting(routing); }
             yield return new ExitPlayMode();
@@ -171,15 +178,16 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsTrue(inventory.IsEquipped("rifle_standard"), "Pressing the key of what is in hand puts nothing away: there are no bare hands.");
                 Assert.AreNotEqual(ShadowVale.Gameplay.Combat.WeaponKind.Unarmed, mission.ModernCombat.EquippedKind);
 
-                // Bandages: only H. 4 goes round the throwables instead.
+                // Bandages: only H. 4 selects stones instead.
                 inventory.Add("medkit_small", 2);
                 inventory.Add("smoke_bomb", 1);
                 mission.Damage(40);
                 yield return Press(keyboard, Key.Digit4);
                 Assert.AreEqual(2, inventory.Count("medkit_small"), "4 no longer uses a bandage.");
-                Assert.AreEqual("smoke_bomb", inventory.Throwable, "4 picks the next throwable he has.");
+                Assert.AreEqual("stone", inventory.Throwable, "4 selects stones even when smoke bombs are available.");
+                Assert.IsTrue(inventory.ThrowableEquipped);
                 yield return Press(keyboard, Key.Digit4);
-                Assert.AreEqual("stone", inventory.Throwable, "…and comes back round to the stone.");
+                Assert.AreEqual("smoke_bomb", inventory.Throwable, "Pressing 4 again selects the next available throwable.");
                 yield return Press(keyboard, Key.H);
                 Assert.AreEqual(1, inventory.Count("medkit_small"), "H uses a bandage.");
             }

@@ -37,6 +37,7 @@ namespace ShadowVale.Map01
         private const float Blend = .15f;
 
         private Map01Mission mission;
+        private Map01Inventory inventory;
         private Animator actor;
         private PlayerController controller;
         private PlayerCombat combat;
@@ -49,8 +50,14 @@ namespace ShadowVale.Map01
         public const float StoneReleaseDelay=.18f;
         private float stoneReleaseAt;
         private GameObject handStone;
-        private Material handStoneMaterial;
+        private readonly System.Collections.Generic.List<(Transform bone,Quaternion rest,Vector3 axis,float curl)> stoneFingers=new();
+        private string handItem;
+        private Vector3 palmNormalLocal;
+        private Transform stoneIndex,stoneLittle,stoneIndexTip,stoneLittleTip;
+        private Transform stoneThumb,stoneThumbMiddle,stoneThumbTip;
         private readonly System.Collections.Generic.Dictionary<Renderer,bool> hiddenWeapons=new();
+        private float bandageHideUntil;
+        private bool BandageActionPlaying => (locked && ActiveAction == Bandage) || Time.time < bandageHideUntil;
         public bool StoneActionPlaying=>stonePose&&(holding||Time.time<upperUntil);
 
         private Vector3 modelPosition; private Quaternion modelRotation;
@@ -71,12 +78,45 @@ namespace ShadowVale.Map01
         private void Bind(Map01Mission owner)
         {
             mission = owner;
+            inventory = owner.GetComponent<Map01Inventory>();
             actor = owner.player.GetComponentInChildren<Animator>();
             controller = owner.ModernPlayer; combat = owner.ModernCombat;
             body = owner.player.GetComponent<CharacterController>();
             if (actor == null || actor.runtimeAnimatorController == null) return;
             upperLayer = actor.GetLayerIndex(UpperLayer); stanceLayer = actor.GetLayerIndex(PlayerCombat.UpperBodyLayer);
             hasFullMoves = actor.HasState(0, Animator.StringToHash("Act_Takedown"));
+            // Nam's fingers deliberately use generic bone curves, not Humanoid muscles.
+            var rest=new System.Collections.Generic.Dictionary<string,Quaternion>();
+            foreach(var bone in actor.avatar.humanDescription.skeleton)rest[bone.name]=bone.rotation;
+            var nodes=actor.GetComponentsInChildren<Transform>(true);
+            var saved=new System.Collections.Generic.List<(Transform bone,Quaternion rotation)>();
+            foreach(var bone in nodes)if(bone!=actor.transform && rest.TryGetValue(bone.name,out var rotation)) {
+                saved.Add((bone,bone.localRotation));bone.localRotation=rotation;
+            }
+            var hand=actor.GetBoneTransform(HumanBodyBones.RightHand);
+            // The source rig's reference pose has palms down. Convert that anatomical
+            // direction to each joint's own frame, instead of assuming a shared X axis.
+            var palmNormal=-actor.transform.up;
+            palmNormalLocal=hand.InverseTransformDirection(palmNormal);
+            foreach(var bone in nodes) {
+                if(bone.name=="RightHandIndex1")stoneIndex=bone;
+                if(bone.name=="RightHandPinky1")stoneLittle=bone;
+                if(bone.name=="RightHandIndex3")stoneIndexTip=bone;
+                if(bone.name=="RightHandPinky3")stoneLittleTip=bone;
+                if(bone.name=="RightHandThumb1")stoneThumb=bone;
+                if(bone.name=="RightHandThumb2")stoneThumbMiddle=bone;
+                if(bone.name=="RightHandThumb3")stoneThumbTip=bone;
+                if(!bone.name.StartsWith("RightHand") || !rest.TryGetValue(bone.name,out var rotation))continue;
+                int joint=bone.name[bone.name.Length-1]-'0';
+                if(joint<1||joint>3)continue;
+                bool thumb=bone.name.Contains("Thumb");
+                float curl=thumb?(joint==1?35:joint==2?55:45):joint==1?50:joint==2?65:45;
+                Vector3 forward=bone.childCount>0?bone.GetChild(0).localPosition.normalized:Vector3.up;
+                var inward=bone.InverseTransformDirection(palmNormal);
+                var axis=Vector3.Cross(forward,inward).normalized;
+                stoneFingers.Add((bone,rotation,axis,curl));
+            }
+            foreach(var bone in saved)bone.bone.localRotation=bone.rotation;
         }
 
         private bool Ready(int layer) => actor != null && layer > 0 && actor.isActiveAndEnabled;
@@ -92,6 +132,7 @@ namespace ShadowVale.Map01
             modelPosition = actor.transform.localPosition; modelRotation = actor.transform.localRotation;
             rootMotionWas = actor.applyRootMotion; actor.applyRootMotion = true;   // the take's own travel moves his model
             SetControls(false);
+            if (id == Bandage) HideWeaponRenderers();
             Fire(id);
             return true;
         }
@@ -100,7 +141,13 @@ namespace ShadowVale.Map01
         public void Hold(int id, bool on)
         {
             if (!Ready(upperLayer)) return;
-            if (on && !holding) { stonePose=id==ThrowAim; holding = true; actor.SetBool("ActionHold", true); Fire(id); }
+            if (on && !holding) {
+                stonePose=id==ThrowAim; holding = true; actor.SetBool("ActionHold", true);
+                if(stonePose) {
+                    actor.SetInteger("Action",id);actor.ResetTrigger("DoAction");
+                    HoldStonePose();
+                } else Fire(id);
+            }
             else if (!on && holding) { holding = false; actor.SetBool("ActionHold", false); }
         }
 
@@ -195,6 +242,7 @@ namespace ShadowVale.Map01
         /// </summary>
         private void Finish()
         {
+            if (ActiveAction == Bandage) bandageHideUntil = Time.time + Blend;
             if (actor != null) {
                 Vector3 travel = actor.transform.position - transform.TransformPoint(modelPosition); travel.y = 0;
                 actor.applyRootMotion = rootMotionWas;
@@ -211,6 +259,7 @@ namespace ShadowVale.Map01
         private void Update()
         {
             if (actor == null) return;
+            if(stonePose && holding && Ready(upperLayer))HoldStonePose();
             bool dead = mission != null && mission.ModernHealth != null && mission.ModernHealth.IsDead;
             if (locked && (Time.time >= fullUntil || (cancelable && CancelPressed()) || dead))
                 Finish();
@@ -223,32 +272,81 @@ namespace ShadowVale.Map01
             }
         }
 
+        private void HoldStonePose()
+        {
+            // A zero-speed non-looping state does not sample its cycle offset.
+            // Seek the wind-up explicitly instead of freezing the first idle frame.
+            bool crouched=controller!=null && controller.IsSneaking;
+            actor.Play(crouched?"Act_ThrowAimCrouch":"Act_ThrowAim",upperLayer,crouched?0f:.42f);
+        }
+
         private void LateUpdate()
         {
             // Keep the equipped weapon and ammunition unchanged while freeing the
             // throwing hand. Renderer overrides also cover weapon switches mid-aim.
-            if(StoneActionPlaying) {
-                foreach(var weapon in GetComponentsInChildren<Weapon>(true))foreach(var r in weapon.GetComponentsInChildren<Renderer>(true)) {
-                    if(!hiddenWeapons.ContainsKey(r))hiddenWeapons.Add(r,r.forceRenderingOff);
-                    r.forceRenderingOff=true;
-                }
+            bool stone = StoneActionPlaying;
+            if (stone || BandageActionPlaying || (inventory != null && inventory.ThrowableEquipped)) HideWeaponRenderers();
+            else RestoreWeaponVisibility();
+            bool selectedStone=inventory!=null && inventory.ThrowableEquipped && inventory.Count(inventory.Throwable)>0;
+            bool releasing=stonePose && !holding && Time.time<upperUntil;
+            bool showStone=!locked && !BandageActionPlaying && (holding || releasing
+                ? stone && (holding||Time.time<stoneReleaseAt)
+                : selectedStone);
+            if(showStone) {
+                CurlStoneFingers();
+                string item=holding||releasing?mission.GetComponent<Map01StoneThrow>().Item:inventory.Throwable;
+                if(handStone!=null && handItem!=item) {Destroy(handStone);handStone=null;}
                 if(handStone==null) {
-                    handStone=GameObject.CreatePrimitive(PrimitiveType.Sphere);handStone.name="Stone in hand";
-                    Destroy(handStone.GetComponent<Collider>());
-                    handStone.transform.SetParent(actor.GetBoneTransform(HumanBodyBones.RightHand),false);
-                    handStone.transform.localPosition=Vector3.up*.06f;handStone.transform.localScale=Vector3.one*.10f;
-                    var renderer=handStone.GetComponent<Renderer>();handStoneMaterial=new Material(renderer.sharedMaterial);
-                    handStoneMaterial.color=new Color(.46f,.44f,.39f);renderer.sharedMaterial=handStoneMaterial;
+                    handItem=item;
+                    handStone=Map01StoneThrow.CreateHeldVisual(item,item=="stone"?"Stone in hand":item+" in hand");
+                    var hand=actor.GetBoneTransform(HumanBodyBones.RightHand);
+                    handStone.transform.SetParent(hand,false);
+                    var handScale=hand.lossyScale;
+                    handStone.transform.localScale=new Vector3(1f/Mathf.Max(.001f,Mathf.Abs(handScale.x)),1f/Mathf.Max(.001f,Mathf.Abs(handScale.y)),1f/Mathf.Max(.001f,Mathf.Abs(handScale.z)));
                 }
-                handStone.SetActive(holding||Time.time<stoneReleaseAt);
-            }else RestoreWeaponVisibility();
+                // Seat the pebble between the knuckles and the curled fingertips,
+                // on the palm side rather than on the back of the hand.
+                if(stoneIndex!=null && stoneLittle!=null && stoneIndexTip!=null && stoneLittleTip!=null) {
+                    var knuckles=(stoneIndex.position+stoneLittle.position)*.5f;
+                    var tips=(stoneIndexTip.position+stoneLittleTip.position)*.5f;
+                    var palmNormal=handStone.transform.parent.TransformDirection(palmNormalLocal);
+                    var forward=(knuckles-handStone.transform.parent.position).normalized;
+                    handStone.transform.position=Vector3.Lerp(knuckles,tips,.3f)+palmNormal*.02f+forward*.028f;
+                    if(item!="stone")handStone.transform.localRotation=Quaternion.FromToRotation(Vector3.up,
+                        handStone.transform.parent.InverseTransformDirection(stoneIndex.position-stoneLittle.position).normalized);
+                } else handStone.transform.localPosition=Vector3.up*.06f;
+                CloseThumbOnItem();
+                handStone.SetActive(true);
+            }else if(handStone!=null)handStone.SetActive(false);
+        }
+        private void HideWeaponRenderers() {
+            foreach(var weapon in GetComponentsInChildren<Weapon>(true))foreach(var r in weapon.GetComponentsInChildren<Renderer>(true)) {
+                if(!hiddenWeapons.ContainsKey(r))hiddenWeapons.Add(r,r.forceRenderingOff);
+                r.forceRenderingOff=true;
+            }
+        }
+        private void CurlStoneFingers()
+        {
+            foreach(var finger in stoneFingers)finger.bone.localRotation=finger.rest*Quaternion.AngleAxis(finger.curl,finger.axis);
+        }
+        private void CloseThumbOnItem()
+        {
+            if(stoneThumb==null || stoneThumbMiddle==null || stoneThumbTip==null)return;
+            // Thumb opposition comes from its base as well as flexion at its two
+            // end joints. Aim the curled thumb at the near surface of the held item.
+            float endLength=Vector3.Distance(stoneThumbMiddle.position,stoneThumbTip.position)*.8f;
+            var tip=stoneThumbTip.position+stoneThumbTip.up*endLength;
+            var center=handStone.transform.position;
+            var target=center+(stoneThumb.position-center).normalized*.025f;
+            var turn=Quaternion.FromToRotation(tip-stoneThumb.position,target-stoneThumb.position);
+            stoneThumb.rotation=Quaternion.RotateTowards(Quaternion.identity,turn,65f)*stoneThumb.rotation;
         }
         private void RestoreWeaponVisibility() {
             foreach(var pair in hiddenWeapons)if(pair.Key!=null)pair.Key.forceRenderingOff=pair.Value;
-            hiddenWeapons.Clear();stonePose=false;
+            hiddenWeapons.Clear();stonePose=false;bandageHideUntil=0;
             if(handStone!=null)handStone.SetActive(false);
         }
-        private void OnDestroy(){if(handStoneMaterial!=null)Destroy(handStoneMaterial);if(handStone!=null)Destroy(handStone);}
+        private void OnDestroy(){if(handStone!=null)Destroy(handStone);}
         public void CancelAction() { if (locked) Finish(); holding = false; upperUntil = 0; upperWeight = 0; if (Ready(upperLayer)) actor.SetLayerWeight(upperLayer, 0); RestoreWeaponVisibility(); }
         private void OnDisable() {
             if (locked) Finish(); holding = false;upperUntil=0;upperWeight=0;

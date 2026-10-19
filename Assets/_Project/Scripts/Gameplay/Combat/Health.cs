@@ -43,6 +43,12 @@ namespace ShadowVale.Gameplay.Combat
         public float Max => maxHealth;
         public float Normalized => maxHealth > 0f ? Mathf.Clamp01(_current / maxHealth) : 0f;
         public void KeepCheckpointCorpse() { respawnDelay = 0; despawnDelay = 0; }
+        public void BindAnimator(Animator value)
+        {
+            animator = value;
+            _upperBodyLayer = animator != null && animator.runtimeAnimatorController != null
+                ? animator.GetLayerIndex(UpperBodyLayer) : -1;
+        }
         /// <summary>Raises the health pool (a boss variant, say) and tops the current value up to match.</summary>
         public void SetMaxHealth(float value) { maxHealth = Mathf.Max(1f, value); _current = maxHealth; }
         public void RestoreHealth(float value)
@@ -56,14 +62,7 @@ namespace ShadowVale.Gameplay.Combat
         private void Awake()
         {
             _current = maxHealth;
-            if (animator == null)
-            {
-                animator = GetComponentInChildren<Animator>();
-            }
-            if (animator != null && animator.runtimeAnimatorController != null)
-            {
-                _upperBodyLayer = animator.GetLayerIndex(UpperBodyLayer);
-            }
+            BindAnimator(animator != null && animator.gameObject.activeInHierarchy ? animator : GetComponentInChildren<Animator>());
         }
 
         /// <summary>

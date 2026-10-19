@@ -69,7 +69,7 @@ namespace ShadowVale.Map01
             else head = "NÉM ĐÁ — " + (stoneThrow.WouldHear > 0 ? $"{stoneThrow.WouldHear} lính sẽ nghe thấy và đi kiểm tra" : "chưa lính nào ở đủ gần để nghe");
             GUI.Label(new Rect(plate.x + 16, plate.y + 6, plate.width - 32, 26), head, hudGuide);
             string left = item == "stone" ? $"Còn {inventory.Stones}/{inventory.StoneCapacity} viên" : $"Còn {inventory.Count(item)} quả";
-            GUI.Label(new Rect(plate.x + 16, plate.y + 34, plate.width - 32, 26), $"Thả Q để ném  ·  Chuột phải để cất  ·  Phím 4 đổi đồ ném  ·  {left}", hudSmall);
+            GUI.Label(new Rect(plate.x + 16, plate.y + 34, plate.width - 32, 26), $"Thả chuột trái để ném  ·  Chuột phải để huỷ  ·  1/2/3 đổi vũ khí  ·  {left}", hudSmall);
         }
     }
 }

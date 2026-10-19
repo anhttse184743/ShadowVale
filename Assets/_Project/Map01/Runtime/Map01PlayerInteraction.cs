@@ -13,6 +13,7 @@ namespace ShadowVale.Map01
     /// place for "what does this key do right now" instead of it being spread across a dozen
     /// conditions in a mission god-class.
     /// </summary>
+    [DefaultExecutionOrder(-20)]
     public sealed class Map01PlayerInteraction : MonoBehaviour
     {
         public ForestPoint Nearby { get; private set; }
@@ -58,7 +59,7 @@ namespace ShadowVale.Map01
             if (kb == null) return;
             scouting?.HoldBinoculars(kb.fKey.isPressed); // Map01Scouting decides when they actually work.
             if (ForestMenu.Visible) return;
-            if (kb.jKey.wasPressedThisFrame && hud != null) hud.ToggleObjective();
+            if (kb.backquoteKey.wasPressedThisFrame && hud != null) hud.ToggleObjective();
             if (kb.f9Key.wasPressedThisFrame) saveSystem?.Load();
             if (mission.Stopped) return;
             if (kb.tabKey.wasPressedThisFrame)
@@ -100,12 +101,21 @@ namespace ShadowVale.Map01
                 bool running = mission.ModernPlayer.IsSprinting && mission.ModernPlayer.IsMoving;
                 mission.SetStamina(mission.Stamina + (running ? -mission.Settings.staminaDrain : mission.Settings.staminaRecovery) * Time.deltaTime);
             }
-            // Hold [Q] to aim a stone, let go to throw it; right mouse puts it away.
-            if (kb.qKey.wasPressedThisFrame) stoneThrow.BeginAim();
-            else if (stoneThrow.Aiming)
+            // Slot 4 owns the mouse before PlayerCombat reads it later in the frame.
+            if (ShadowVale.Core.Services.InputFocus.OverlayOpen) { stoneThrow.Cancel(); return; }
+            if (kb.digit4Key.wasPressedThisFrame) inventory.OnSlotKey(3);
+            else if (inventory.ThrowableEquipped)
             {
-                if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame) stoneThrow.Cancel();
-                else if (!kb.qKey.isPressed) stoneThrow.Release();
+                if (kb.digit1Key.wasPressedThisFrame) inventory.OnSlotKey(0);
+                else if (kb.digit2Key.wasPressedThisFrame) inventory.OnSlotKey(1);
+                else if (kb.digit3Key.wasPressedThisFrame) inventory.OnSlotKey(2);
+            }
+            var mouse = Mouse.current;
+            if (inventory.ThrowableEquipped && !inventory.SuppressFire && mouse != null)
+            {
+                if (mouse.rightButton.wasPressedThisFrame) stoneThrow.Cancel();
+                else if (mouse.leftButton.wasPressedThisFrame && (Map01NamActions.For(mission)?.Busy != true)) stoneThrow.BeginAim();
+                else if (stoneThrow.Aiming && mouse.leftButton.wasReleasedThisFrame) stoneThrow.Release();
             }
             Nearby = NearestUsable();
             // A stone site's offer depends on the room left in the bag, so its prompt is worded as he stands there.
