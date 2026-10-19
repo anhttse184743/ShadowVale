@@ -237,7 +237,7 @@ namespace ShadowVale.Map01
             DrawHudFeedback(width, height);
             if (!mission.InventoryOpen && !mission.MapOpen) DrawPickups(width);
             if (!mission.InventoryOpen && !mission.MapOpen) {
-                var map = new Rect(40, 30, 261, 261);
+                var map = new Rect(40, 30, 221, 221);
                 minimap.Draw(map, false, hudSmall); // Round, with its own rim.
                 var hint = new Rect(map.center.x - 95, map.yMax + 9, 190, 27);
                 HudFill(hint, new Color(.02f, .03f, .02f, .5f));
