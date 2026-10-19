@@ -120,9 +120,9 @@ namespace ShadowVale.Tests.EditMode.AI
         [Test]
         public void GrenadeDamageFallsOffToAThirdAtTheEdge()
         {
-            Assert.AreEqual(35f, Grenade.DamageAt(0, 4.5f, 35f), 1e-4);
-            Assert.AreEqual(35f / 3f, Grenade.DamageAt(4.5f, 4.5f, 35f), 1e-4);
-            Assert.AreEqual(0f, Grenade.DamageAt(4.6f, 4.5f, 35f));
+            Assert.AreEqual(35f, Grenade.DamageAt(0, Profile.GrenadeRadius, 35f), 1e-4);
+            Assert.AreEqual(35f / 3f, Grenade.DamageAt(Profile.GrenadeRadius, Profile.GrenadeRadius, 35f), 1e-4);
+            Assert.AreEqual(0f, Grenade.DamageAt(Profile.GrenadeRadius + .1f, Profile.GrenadeRadius, 35f));
             Assert.AreEqual(Vector3.zero, Grenade.ArcPoint(Vector3.zero, new Vector3(10, 0, 0), 0));
             Assert.AreEqual(new Vector3(10, 0, 0), Grenade.ArcPoint(Vector3.zero, new Vector3(10, 0, 0), 1));
             Assert.Greater(Grenade.ArcPoint(Vector3.zero, new Vector3(10, 0, 0), .5f).y, 1.4f, "A lob, not a straight line.");
@@ -284,12 +284,15 @@ namespace ShadowVale.Tests.EditMode.AI
         }
 
         [Test]
-        public void HeFightsFromCoverMostOfTheTimeInBursts()
+        public void HeFightsFromCoverMostOfTheTimeWithSteadyFire()
         {
             Assert.That(Profile.PeekOutSeconds / (Profile.PeekOutSeconds + Profile.PeekHideSeconds), Is.GreaterThan(.7f),
                 "Out firing three quarters of the time (was 47%).");
-            Assert.AreEqual(3, Profile.BurstRounds);
-            Assert.AreEqual(1.2f, Profile.DamageMultiplier, 1e-6, "Less per round: he fires three times as many.");
+            Assert.AreEqual(1, Profile.BurstRounds, "Steady fire, not bursts (19/10/2026).");
+            Assert.AreEqual(.3f, Profile.FireIntervalSeconds, 1e-6, "A round every 0.3 s.");
+            Assert.AreEqual(11.5f, Profile.DamagePerRound, 1e-6);
+            Assert.AreEqual(18f, Profile.AttackRange, 1e-6);
+            Assert.AreEqual(1f, Profile.DetectionSeconds, 1e-6);
             Assert.That(Profile.RelocateMaxDistance, Is.LessThanOrEqualTo(12f), "Short hops between nearby cover.");
         }
 

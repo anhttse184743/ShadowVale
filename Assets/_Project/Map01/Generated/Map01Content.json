@@ -38,11 +38,11 @@
     { "id": "grunt", "display_name": "Militia Grunt",  "max_hp": 80,  "move_speed": 3.2, "vision_range": 14.0, "vision_angle": 90.0,  "hearing_range": 12.0, "weapon_id": "rifle_standard", "alert_decay_seconds": 8.0,  "retreat_hp_threshold": 0.25, "loot_table_id": "loot_tier_1", "is_boss": false },
     { "id": "scout", "display_name": "Militia Scout",  "max_hp": 55,  "move_speed": 4.2, "vision_range": 20.0, "vision_angle": 110.0, "hearing_range": 16.0, "weapon_id": "carbine_scout",  "alert_decay_seconds": 6.0,  "retreat_hp_threshold": 0.40, "loot_table_id": "loot_tier_1", "is_boss": false },
     { "id": "heavy", "display_name": "Militia Heavy",  "max_hp": 160, "move_speed": 2.4, "vision_range": 12.0, "vision_angle": 80.0,  "hearing_range": 10.0, "weapon_id": "shotgun_pump",   "alert_decay_seconds": 10.0, "retreat_hp_threshold": 0.15, "loot_table_id": "loot_tier_2", "is_boss": false },
-    { "id": "boss_commander", "display_name": "Commander Varek", "max_hp": 600, "move_speed": 3.6, "vision_range": 18.0, "vision_angle": 120.0, "hearing_range": 18.0, "weapon_id": "smg_compact", "alert_decay_seconds": 999.0, "retreat_hp_threshold": 0.0, "loot_table_id": "loot_tier_3", "is_boss": true,
+    { "id": "boss_commander", "display_name": "Commander Varek", "max_hp": 700, "move_speed": 3.6, "vision_range": 20.0, "vision_angle": 120.0, "hearing_range": 18.0, "weapon_id": "smg_compact", "alert_decay_seconds": 999.0, "retreat_hp_threshold": 0.0, "loot_table_id": "loot_tier_3", "is_boss": true,
       "boss": { "health_multiplier": 3.0, "damage_multiplier": 1.2, "vision_multiplier": 1.2,
                 "relocate_interval_seconds": 6.0, "relocate_damage_fraction": 0.15, "relocate_min_distance": 4.0, "relocate_max_distance": 12.0, "relocate_min_player_distance": 8.0,
-                "grenade_camp_seconds": 4.0, "grenade_camp_radius": 6.0, "grenade_cooldown_seconds": 10.0, "grenade_range": 24.0, "grenade_radius": 4.5, "grenade_damage": 35.0, "grenade_fuse_seconds": 1.2, "grenade_noise_radius": 30.0,
-                "reinforce_hp_threshold": 0.5, "reinforce_count": 3, "reinforce_radius": 80.0 } }
+                "grenade_camp_seconds": 4.0, "grenade_camp_radius": 6.0, "grenade_cooldown_seconds": 8.0, "grenade_range": 24.0, "grenade_radius": 7.5, "grenade_damage": 45.0, "grenade_fuse_seconds": 1.5, "grenade_noise_radius": 30.0,
+                "reinforce_hp_threshold": 0.5, "reinforce_count": 4, "reinforce_radius": 80.0 } }
   ],
   "loot_tables": [
     { "id": "loot_tier_1", "tier": 1, "rolls": 2, "entries": [

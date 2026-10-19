@@ -199,6 +199,7 @@ namespace ShadowVale.Map01
             var archetype=mission.Bundle?.enemy_archetypes?.FirstOrDefault(a=>a!=null&&a.is_boss);
             var profile=archetype?.boss!=null?archetype.boss.ToProfile():new BossProfile();
             boss.ConfigureAsBoss(profile);
+            if(archetype!=null)boss.ApplyBossArchetype(archetype.move_speed,archetype.vision_range,archetype.vision_angle);
             var bossHealth=instance.GetComponent<Health>();
             if(archetype!=null&&archetype.max_hp>0)bossHealth.SetMaxHealth(archetype.max_hp);
             mission.AddEnemy(boss);

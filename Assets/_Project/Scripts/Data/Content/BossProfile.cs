@@ -9,7 +9,7 @@ namespace ShadowVale.Data.Content
     {
         // Stats on top of the archetype it was made from.
         public float HealthMultiplier { get; set; } = 3f;
-        /// <summary>Per round. Was 1.6 until 18/10/2026, when he began firing in bursts (<see cref="BurstRounds"/>).</summary>
+        /// <summary>Per round, on a guard's damage; only when <see cref="DamagePerRound"/> is 0.</summary>
         public float DamageMultiplier { get; set; } = 1.2f;
         public float VisionMultiplier { get; set; } = 1.2f;
 
@@ -32,19 +32,19 @@ namespace ShadowVale.Data.Content
         public float GrenadeCampSeconds { get; set; } = 4f;
         /// <summary>The area counted as one hiding place. Was 3 m: shifting along a wall or a bush line reset the camp.</summary>
         public float GrenadeCampRadius { get; set; } = 6f;
-        public float GrenadeCooldownSeconds { get; set; } = 10f;
+        public float GrenadeCooldownSeconds { get; set; } = 8f;
         public float GrenadeRange { get; set; } = 24f;
-        public float GrenadeRadius { get; set; } = 4.5f;
+        public float GrenadeRadius { get; set; } = 7.5f;
         /// <summary>At the centre; falls off linearly to a third at the edge.</summary>
-        public float GrenadeDamage { get; set; } = 35f;
-        /// <summary>Seconds on the ground before it goes off: time to run.</summary>
-        public float GrenadeFuseSeconds { get; set; } = 1.2f;
+        public float GrenadeDamage { get; set; } = 45f;
+        /// <summary>Seconds on the ground before it goes off: enough time to leave the wider blast.</summary>
+        public float GrenadeFuseSeconds { get; set; } = 1.5f;
         public float GrenadeNoiseRadius { get; set; } = 30f;
 
         // Reinforcements.
         /// <summary>Calls them once, the first time his health falls below this share; 0 = never.</summary>
         public float ReinforceHpThreshold { get; set; } = 0.5f;
-        public int ReinforceCount { get; set; } = 3;
+        public int ReinforceCount { get; set; } = 4;
         /// <summary>Idle enemies within this distance answer first; the map may bring in more.</summary>
         public float ReinforceRadius { get; set; } = 80f;
 
@@ -78,8 +78,9 @@ namespace ShadowVale.Data.Content
         public float PeekHideSeconds { get; set; } = .8f;
 
         // Added 18/10/2026: fight more, run less, with his men covering him. Code defaults only, like the above.
-        /// <summary>Rounds per burst (1 = single shots at the guards' interval).</summary>
-        public int BurstRounds { get; set; } = 3;
+        /// <summary>Rounds per burst; 1 = steady fire, one round every <see cref="FireIntervalSeconds"/>.
+        /// 3-round bursts from 18/10/2026, steady fire since 19/10/2026.</summary>
+        public int BurstRounds { get; set; } = 1;
         public float BurstGapSeconds { get; set; } = .12f;
         /// <summary>From the last round of a burst to the first of the next.</summary>
         public float BurstIntervalSeconds { get; set; } = 1.2f;
@@ -90,5 +91,15 @@ namespace ShadowVale.Data.Content
         /// <summary>When he moves to new cover, this many of his men give covering fire for <see cref="CoverFireSeconds"/>.</summary>
         public int CoverFireMen { get; set; } = 2;
         public float CoverFireSeconds { get; set; } = 3f;
+
+        // His own weapon and eyes (19/10/2026), not a cloned guard's times a multiplier. 0 = the multiplier way.
+        /// <summary>Damage of each round that hits.</summary>
+        public float DamagePerRound { get; set; } = 11.5f;
+        /// <summary>Seconds between rounds of steady fire (a guard: 1.6).</summary>
+        public float FireIntervalSeconds { get; set; } = .3f;
+        /// <summary>How far he fires, metres (his sight comes from the archetype's vision_range).</summary>
+        public float AttackRange { get; set; } = 18f;
+        /// <summary>Seconds of steady mid-range sight to spot the player (a guard: 1.5).</summary>
+        public float DetectionSeconds { get; set; } = 1f;
     }
 }

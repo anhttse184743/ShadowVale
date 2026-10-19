@@ -45,13 +45,25 @@ namespace ShadowVale.Map01.Tests
             var boss = mission.Enemies.Single(e => e.IsBoss);
             var behaviour = boss.GetComponent<BossBehaviour>();
             Assert.IsNotNull(behaviour, "The commander runs the shared boss behaviour.");
-            Assert.AreEqual(3, behaviour.Profile.ReinforceCount, "Profile read from Map01Content.json (boss_commander.boss).");
+            Assert.AreEqual(4, behaviour.Profile.ReinforceCount, "Profile read from Map01Content.json (boss_commander.boss).");
+            Assert.AreEqual(45f, behaviour.Profile.GrenadeDamage, 1e-3f);
+            Assert.AreEqual(8f, behaviour.Profile.GrenadeCooldownSeconds, 1e-3f);
             Assert.AreEqual(.5f, behaviour.Profile.ReinforceHpThreshold, 1e-6);
             Assert.AreEqual("boss", boss.SquadId);
-            Assert.AreEqual(behaviour.Profile.BurstRounds, boss.BurstRounds, "He fires in bursts, not a guard's single shots.");
+            Assert.AreEqual(behaviour.Profile.BurstRounds, boss.BurstRounds);
+            // His own weapon and eyes (19/10/2026), not a cloned guard's times a multiplier.
+            Assert.AreEqual(11.5f, boss.DamagePerShot, 1e-3f, "11.5 a round.");
+            Assert.AreEqual(.3f, boss.FireInterval, 1e-3f, "A round every 0.3 s.");
+            Assert.AreEqual(20f, boss.VisionRange, 1e-3f, "Sight from boss_commander.vision_range.");
+            Assert.AreEqual(120f, boss.VisionAngle, 1e-3f);
+            Assert.AreEqual(18f, boss.AttackRange, 1e-3f);
+            Assert.AreEqual(18f, boss.Brain.Tuning.AttackRange, 1e-3f, "The FSM fights at his reach.");
+            Assert.AreEqual(1f, boss.DetectionSeconds, 1e-3f);
+            Assert.AreEqual(3.6f, boss.MoveSpeed, 1e-3f, "Walking speed from boss_commander.move_speed.");
             var bossRegen = boss.GetComponent<EnemyRegen>();
             Assert.IsTrue(bossRegen == null || !bossRegen.enabled, "His wounds stay: the fight against him wears him down.");
             float archetypeHp = mission.Bundle.enemy_archetypes.First(a => a.is_boss).max_hp;
+            Assert.AreEqual(700f, archetypeHp, 1e-3f, "boss_commander.max_hp.");
             Assert.AreEqual(archetypeHp, boss.GetComponent<Health>().Max, 1e-3f,
                 "Health from boss_commander.max_hp: at a guard's ×3 he died about a second after calling for help.");
 
@@ -80,6 +92,8 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual(1, relocated.Count);
 
                 var nam = mission.player.GetComponent<Health>();
+                Assert.AreEqual(7.5f, behaviour.Profile.GrenadeRadius, .001f, "Map 1's commander uses the wider blast profile.");
+                Assert.AreEqual(1.5f, behaviour.Profile.GrenadeFuseSeconds, .001f, "1.5 s to get out of the wider blast.");
                 float before = nam.Current;
                 var grenade = behaviour.ThrowGrenade(mission.player.position);
                 float dealt = grenade.Explode();
@@ -88,8 +102,8 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual(1, blasts.Count);
 
                 int sent = behaviour.CallReinforcements(mission.player.position, Time.time);
-                Assert.AreEqual(3, sent, "Nobody idle is left near him: three fresh men.");
-                Assert.AreEqual(3, calls.Single().Arrived);
+                Assert.AreEqual(4, sent, "Nobody idle is left near him: four fresh men.");
+                Assert.AreEqual(4, calls.Single().Arrived);
                 StringAssert.Contains("Tiếp viện", mission.Dialogue, "The call is heard.");
                 foreach (var id in calls[0].Agents.Split('+'))
                 {

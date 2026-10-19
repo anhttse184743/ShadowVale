@@ -26,7 +26,7 @@ namespace ShadowVale.Map01
         [Tooltip("Guards within this distance of Nam (and in his sight) show their hearing ring while he aims.")]
         [SerializeField] private float ringsWithin = 40f;
         private const int ArcPoints = 32, RingPoints = 40, MaxRings = 10;
-        public const float SmokeRadius = 4f, SmokeSeconds = 15f, FuseSeconds = 3.5f, KillRadius = 3f, WoundRadius = 7f, GrenadeNoise = 40f;
+        public const float SmokeRadius = 4f, SmokeSeconds = 15f, FuseSeconds = 3.5f, KillRadius = 6f, WoundRadius = 14f, GrenadeNoise = 40f;
         private static readonly Color ArcColour = new Color(1f, .92f, .6f, .9f);
         private static readonly Color RingIdle = new Color(1f, 1f, 1f, .35f);
         private static readonly Color RingHears = new Color(1f, .62f, .15f, .95f);

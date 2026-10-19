@@ -194,20 +194,20 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(Map01Smoke.Blocks(c - Vector3.right * 10f, c + Vector3.right * 10f), "Through the cloud: no sight.");
             Assert.IsFalse(Map01Smoke.Blocks(c + Vector3.forward * 10f - Vector3.right * 10f, c + Vector3.forward * 10f + Vector3.right * 10f), "Beside it: sight.");
 
-            // The grenade: a guard 2 m off dies, one 5 m off is wounded, one 12 m off is untouched but hears it.
+            // The grenade: a guard 5 m off dies, one 10 m off is wounded, one 17 m off is untouched but hears it.
             var guards = mission.Enemies.Where(g => g != null && g.Alive).Take(3).ToArray();
             Assert.AreEqual(3, guards.Length);
             foreach (var g in guards) { g.enabled = false; var agent = g.GetComponent<UnityEngine.AI.NavMeshAgent>(); if (agent != null) agent.enabled = false; }
             var blast = mission.player.position + Vector3.forward * 30f;
-            guards[0].transform.position = blast + Vector3.right * 2f;
-            guards[1].transform.position = blast + Vector3.right * 5f;
-            guards[2].transform.position = blast + Vector3.right * 12f;
+            guards[0].transform.position = blast + Vector3.right * 5f;
+            guards[1].transform.position = blast + Vector3.right * 10f;
+            guards[2].transform.position = blast + Vector3.right * 17f;
             float wounded = guards[1].GetComponent<Health>().Max;
             float hp = mission.PlayerHealth;
             var (killed, hurt) = thrower.Explode(blast);
             Assert.AreEqual((1, 1), (killed, hurt));
-            Assert.IsFalse(guards[0].Alive, "Within 3 m: killed.");
-            Assert.IsTrue(guards[1].Alive, "Within 7 m: wounded…");
+            Assert.IsFalse(guards[0].Alive, "Within 6 m: killed.");
+            Assert.IsTrue(guards[1].Alive, "Within 14 m: wounded…");
             Assert.Less(guards[1].GetComponent<Health>().Current, wounded, "…and hurt.");
             Assert.IsTrue(guards[2].Alive);
             Assert.AreEqual(hp, mission.PlayerHealth, "Nam 30 m off is not hurt.");
