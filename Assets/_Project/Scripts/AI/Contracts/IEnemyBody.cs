@@ -29,6 +29,11 @@ namespace ShadowVale.AI.Contracts
         void SetPace(float scale);
         /// <summary>Turn towards a point at the body's turn rate this frame.</summary>
         void Face(Vector3 point);
+        /// <summary>How fast and which way he is walking (zero when standing).</summary>
+        Vector3 Velocity { get; }
+        /// <summary>While true the body keeps the facing <see cref="Face"/> gives it while walking, instead of
+        /// turning to the way it walks (firing on the move).</summary>
+        bool FacesManually { get; set; }
         /// <summary>Yaw by <paramref name="degrees"/> (looking around).</summary>
         void Turn(float degrees);
         /// <summary>Drive the locomotion animation: 0 when standing, the agent's speed when walking.</summary>

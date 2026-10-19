@@ -102,7 +102,7 @@ namespace ShadowVale.Map01
                 case "blast_charge": return "Lõi nổ hiếm, trong hòm sắt trại C3. Chế lựu đạn F1: 1 lõi nổ + 1 mô-đun kích hoạt + 1 kim loại vụn.";
                 case "scope_lens": return "Thấu kính dự phòng cho ống ngắm. Rã Mosin sẽ có; hiếm trong hòm trại C3 và đồ của chỉ huy. Chưa dùng vào việc gì ở bản này.";
                 case "smoke_bomb": return "Đồ ném: mây khói bán kính 4 m trong 15 giây, lính không nhìn xuyên qua. Chế từ 1 ống tạo khói + 1 vải. Chọn trong túi, giữ chuột trái ngắm, thả để ném.";
-                case "grenade_f1": return "Lựu đạn F1: nổ 3,5 giây sau khi rơi, chết trong 3 m, bị thương tới 7 m, tiếng nổ vang 40 m — cả Nam cũng không tránh được. Chọn trong túi, giữ chuột trái ngắm, thả để ném.";
+                case "grenade_f1": return $"Lựu đạn F1: nổ 3,5 giây sau khi rơi, chết trong {Map01StoneThrow.KillRadius:0} m, bị thương tới {Map01StoneThrow.WoundRadius:0} m, tiếng nổ vang 40 m — cả Nam cũng không tránh được. Chọn trong túi, giữ chuột trái ngắm, thả để ném.";
                 default: return id != null && id.StartsWith("ammo_") ? "Đạn cho " + Name(id).Substring(4).ToLowerInvariant() + ". Không dùng trực tiếp từ túi đồ." : "Vật phẩm trong túi đồ.";
             }
         }
@@ -129,7 +129,7 @@ namespace ShadowVale.Map01
                 case "medkit_small": return new[] { "Hồi 45 máu", "Phím H" };
                 case "repair_kit": return new[] { "+35% độ bền", "Sửa dã chiến" };
                 case "smoke_bomb": return new[] { "Khói 4 m · 15 giây", "Giữ/thả chuột trái" };
-                case "grenade_f1": return new[] { "Chết 3 m · thương 7 m", "Nổ sau 3,5 giây" };
+                case "grenade_f1": return new[] { $"Chết {Map01StoneThrow.KillRadius:0} m · thương {Map01StoneThrow.WoundRadius:0} m", "Nổ sau 3,5 giây" };
                 case "ammo_pistol": return new[] { "Cho K-54", "Bắn K-54: chưa có" };
                 case "ammo_sniper": return new[] { "Cho Mosin", "Bắn Mosin: chưa có" };
                 case "ammo_rifle": return new[] { "Cho súng trường", "Nạp bằng R" };

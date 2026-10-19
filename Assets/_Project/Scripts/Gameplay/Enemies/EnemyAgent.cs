@@ -85,6 +85,9 @@ namespace ShadowVale.Gameplay.Enemies
             _tuning.VisionRange = visionRange;
             _tuning.AttackRange = attackRange;
             _lastHealth = _health.Current;
+            // Left alone for a while, a wounded enemy recovers; a commander's wounds stay.
+            if (_tuning.IsBoss) EnemyRegen.Detach(gameObject);
+            else EnemyRegen.Attach(gameObject, Id).Suspended = () => !enabled;
             return this;
         }
 

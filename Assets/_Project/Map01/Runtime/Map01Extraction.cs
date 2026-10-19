@@ -203,7 +203,7 @@ namespace ShadowVale.Map01
             hungActor = mission.hung.GetComponentInChildren<Animator>();
             // Reuse the established briefing commander, including his insignia and tint.
             commanderActor = FindObjectsByType<Animator>(FindObjectsSortMode.None)
-                .FirstOrDefault(a => a.name == "Commander (shared player mesh)");
+                .FirstOrDefault(a => a.name == Map01OpeningCutscene.CommanderVisualName);
             if (commanderActor == null || hungActor == null || namActor == null) return false;
             var opening = commanderActor.GetComponentInParent<Map01OpeningCutscene>();
             if (opening != null) opening.ReleaseCommanderForExtraction();

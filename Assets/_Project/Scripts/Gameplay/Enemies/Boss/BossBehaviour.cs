@@ -4,6 +4,7 @@ using System.Linq;
 using ShadowVale.AI.Agents;
 using ShadowVale.AI.Boss;
 using ShadowVale.AI.Contracts;
+using ShadowVale.AI.Coordination;
 using ShadowVale.AI.Fsm;
 using ShadowVale.Core.Events;
 using ShadowVale.Core.Services;
@@ -23,6 +24,10 @@ namespace ShadowVale.Gameplay.Enemies.Boss
     /// them too: squads near him are planned as a pincer (<see cref="Command"/>), his grenades drive the
     /// player towards them, a reload is their cue to push, and when he falls they lose heart. At his
     /// cover he fights in bursts (<see cref="PeekCycle"/>): out to fire, back behind it, out again.
+    /// Since 18/10/2026 he fights more than he runs: longer at each cover, short hops between them,
+    /// firing on the move at a player ahead of him, ducking (not running) when a rifle is on him; and
+    /// his men look after him: they are planned to block the way to him (<see cref="GuardCommanderTask"/>),
+    /// give covering fire while he moves, and re-plan at once when he is hurt.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class BossBehaviour : MonoBehaviour
@@ -40,8 +45,8 @@ namespace ShadowVale.Gameplay.Enemies.Boss
         public const float CoverTimeoutSeconds = 10f;
         /// <summary>How long he keeps fighting (relocating, throwing grenades) after losing sight of the player.</summary>
         public const float EngagedMemorySeconds = 15f;
-        /// <summary>Suppressive fire at the last-seen spot after losing sight, at least.</summary>
-        public const float MinSuppressSeconds = 2.5f;
+        /// <summary>Suppressive fire at the last-seen spot after losing sight, at least (was 2.5 s until 18/10/2026).</summary>
+        public const float MinSuppressSeconds = 4f;
         /// <summary>
         /// Running between positions: ×1.15 of his walk (Map 1: 3.5 → 4 m/s), a little under Nam's walk
         /// (4.2) — a guard's ×1.5 (5.25) made a commander who never stops look like he charges.
@@ -100,6 +105,7 @@ namespace ShadowVale.Gameplay.Enemies.Boss
             t.SuppressSeconds = Mathf.Max(t.SuppressSeconds, MinSuppressSeconds);
             t.InvestigatePace = CoverPace;
             t.ReassignKeepDistance = 0f;    // A step out of cover and back is walked, not taken as already there.
+            t.FireOnTheMove = true;         // Walks and fires at a player ahead; runs without firing otherwise.
         }
 
         private void Update()
@@ -124,6 +130,7 @@ namespace ShadowVale.Gameplay.Enemies.Boss
             var d = Director.Tick(new BossSense(now, memory.Engaged(now), _agent.HealthFraction, _agent.Position,
                 memory.LastKnownPlayerPosition, sheltered, settled, combat != null && combat.IsReloading, aimedAt, Centre(_men)));
             if (d.Push) Push(_men, memory.LastKnownPlayerPosition);
+            if (d.Duck && _peek.Duck(now, Profile.DuckSeconds)) _agent.Brain.Assign(_peek.HidePoint, _peek.Node, "duck");
             if (d.CallReinforcements) CallReinforcements(memory.LastKnownPlayerPosition, now);
             if (d.Relocate) Relocate(memory.LastKnownPlayerPosition, d.RelocateReason);
             else if (memory.Engaged(now) && !memory.HasAssignment && now >= _coverRetryAt
@@ -185,16 +192,50 @@ namespace ShadowVale.Gameplay.Enemies.Boss
             float range = _agent.Brain.Tuning.AttackRange;
             // Behind his men once they are coming; regrouping, never closer to the player than he is.
             float keep = Director.ReinforcementsCalled ? Profile.RelocateMinPlayerDistance * BehindHisMenFactor : 0f;
+            bool fallingBack = reason == "regroup" || Director.ReinforcementsCalled;
             if (reason == "regroup") keep = Mathf.Max(keep, Vector3.Distance(from, playerPosition));
-            if (!BossRelocation.TryPick(graph, Profile, from, playerPosition, here, _rng, out int node, out var to, range, keep)
-                && !(keep > 0 && BossRelocation.TryPick(graph, Profile, from, playerPosition, here, _rng, out node, out to, range)))
+            var men = Centre(_men);
+            if (!BossRelocation.TryPick(graph, Profile, from, playerPosition, here, _rng, out int node, out var to, range, keep, men, fallingBack)
+                && !(keep > 0 && BossRelocation.TryPick(graph, Profile, from, playerPosition, here, _rng, out node, out to, range, 0f, men, fallingBack)))
                 return false;
             _agent.Brain.Assign(to, node, "relocate");
             _peek?.Stop(); // A new cover: the burst cycle starts again once he is there.
             Relocations++;
             EventBus.Publish(new BossRelocatedEvent(_agent.Id, node, from, to, reason ?? ""));
+            float now = Time.time;
+            if (reason != "cover") CoverFire(_men, now);
+            // Hurt or pinned: his men re-plan now, round where he is going.
+            if (reason == "hurt" || reason == "aimed") RequestReplan(_men);
             return true;
         }
+
+        /// <summary>
+        /// He is on the move: the nearest <see cref="BossProfile.CoverFireMen"/> of his men stop and fire at the
+        /// player (or where he was last seen) for <see cref="BossProfile.CoverFireSeconds"/>, keeping his head down.
+        /// </summary>
+        public int CoverFire(IReadOnlyList<IEnemyAgent> men, float now)
+        {
+            if (Profile.CoverFireMen <= 0 || men == null || men.Count == 0) return 0;
+            var chosen = men.OrderBy(m => (m.Position - _agent.Position).sqrMagnitude).ThenBy(m => m.Id, StringComparer.Ordinal)
+                .Where(m => m.Brain.CoverFire(now, Profile.CoverFireSeconds)).Take(Profile.CoverFireMen).ToList();
+            if (chosen.Count == 0) return 0;
+            CoverFireOrders++;
+            EventBus.Publish(new BossOrderEvent(_agent.Id, "cover_fire", string.Join("+", chosen.Select(m => m.Id))));
+            return chosen.Count;
+        }
+
+        public int CoverFireOrders { get; private set; }
+
+        /// <summary>Asks the squad coordinator to plan his men's groups again at the next chance.</summary>
+        private static void RequestReplan(IReadOnlyList<IEnemyAgent> men)
+        {
+            if (men.Count == 0) return;
+            if (_coordinator == null) _coordinator = FindFirstObjectByType<SquadCoordinator>();
+            if (_coordinator == null) return;
+            foreach (var squad in men.Select(m => m.SquadId).Distinct()) _coordinator.RequestReplan(squad);
+        }
+
+        private static SquadCoordinator _coordinator;
 
         public Grenade ThrowGrenade(Vector3 target)
         {

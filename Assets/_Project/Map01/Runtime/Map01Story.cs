@@ -49,6 +49,7 @@ namespace ShadowVale.Map01
             if(Layout==null){var prefab=Resources.Load<Map01OperationsLayout>("Story/Map01Operations");if(prefab!=null)Layout=Instantiate(prefab);}
             if(Layout==null){Debug.LogError("[Map01] Missing operations layout.",this);return;}
             Progress.puzzleSeed=NewPuzzleSeed();RefreshProps();Map01InteractionWarmup.For(mission);
+            Map01PatrolBeats.Apply(Layout); // Supply and radio guards walk fixed beats; a checkpoint restored later keeps its own positions.
         }
         public Snapshot Capture()=>JsonUtility.FromJson<Snapshot>(JsonUtility.ToJson(Progress));
         public void Restore(Snapshot snapshot,int stage)

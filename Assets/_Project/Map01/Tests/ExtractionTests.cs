@@ -42,7 +42,7 @@ namespace ShadowVale.Map01.Tests
             Assert.That(extraction.radio.length,Is.EqualTo(7).Within(.04f));
             Assert.That(extraction.board.length,Is.EqualTo(6).Within(.04f));
             Assert.AreEqual(4,mission.Enemies.Count(e=>e.name.StartsWith("Extraction guard ")));
-            Assert.AreEqual(1,Object.FindObjectsByType<Animator>(FindObjectsSortMode.None).Count(a=>a.name=="Commander (shared player mesh)"));
+            Assert.AreEqual(1,Object.FindObjectsByType<Animator>(FindObjectsSortMode.None).Count(a=>a.name==Map01OpeningCutscene.CommanderVisualName));
             yield return WaitGameSeconds(.2f);
             var hung=mission.hung.GetComponentInChildren<Animator>();
             Debug.Log("Extraction scale Nam="+mission.player.GetComponentInChildren<Animator>().transform.lossyScale+" Hung="+hung.transform.lossyScale);
@@ -52,7 +52,7 @@ namespace ShadowVale.Map01.Tests
             mission.gameCamera.transform.SetPositionAndRotation(new Vector3(.1f,1.8f,83.5f),Quaternion.LookRotation(new Vector3(1.55f,.8f,85.4f)-new Vector3(.1f,1.8f,83.5f)));
             Capture(mission,"waiting-hands-close");
             var gripLog=new System.Collections.Generic.List<string>();
-            foreach(var a in new[]{hung,Object.FindObjectsByType<Animator>(FindObjectsSortMode.None).First(a=>a.name=="Commander (shared player mesh)")}) {
+            foreach(var a in new[]{hung,Object.FindObjectsByType<Animator>(FindObjectsSortMode.None).First(a=>a.name==Map01OpeningCutscene.CommanderVisualName)}) {
                 var g=a.GetComponent<Map01Rifle>();var h=a.GetBoneTransform(HumanBodyBones.LeftHand);
                 var tip=h.Cast<Transform>().First(t=>t.name.EndsWith("_end"));
                 Assert.Less(Vector3.Distance(Vector3.Lerp(h.position,tip.position,.45f),g.support.position),.025f,a.name+" palm must reach rifle support");
@@ -86,7 +86,7 @@ namespace ShadowVale.Map01.Tests
             yield return WaitGameSeconds(4);
             Capture(mission,"departure");
             var diagnostic=new System.Collections.Generic.List<string>();
-            foreach(var actor in new[]{mission.player.GetComponentInChildren<Animator>(),Object.FindObjectsByType<Animator>(FindObjectsSortMode.None).First(a=>a.name=="Commander (shared player mesh)")}) {
+            foreach(var actor in new[]{mission.player.GetComponentInChildren<Animator>(),Object.FindObjectsByType<Animator>(FindObjectsSortMode.None).First(a=>a.name==Map01OpeningCutscene.CommanderVisualName)}) {
                 var origin=actor.GetBoneTransform(HumanBodyBones.Chest).position;
                 diagnostic.Add(actor.name+" forward="+actor.transform.forward+" chest="+origin);
                 foreach(var enemy in Object.FindObjectsByType<Map01EnemyController>(FindObjectsSortMode.None).Where(e=>e.Alive)) {

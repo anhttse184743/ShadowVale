@@ -5,8 +5,8 @@ namespace ShadowVale.Map01
     /// <summary>
     /// What an F1 going off looks like (Map01StoneThrow.Explode). Range and test footage of fragmentation grenades shows
     /// very little flame - the TNT filling gives a white-orange flash of a tenth of a second, not a film fireball - then
-    /// grit and earth thrown up in a cone, a brown-grey dust burst that rolls out along the ground as a ring, and a dark
-    /// cloud that climbs and drifts for several seconds; a black scorch is left where it lay. The fragments themselves
+    /// grit and earth thrown up in a cone, a brown dust burst that rolls out along the ground as a ring, and a pale grey
+    /// smoke cloud that climbs and drifts for several seconds; a black scorch is left where it lay. The fragments themselves
     /// are too fast to see. Built from code-made particles (Map01Fx), so it needs no assets; the camera shakes with
     /// distance (Map01CameraShake).
     /// </summary>
@@ -18,26 +18,31 @@ namespace ShadowVale.Map01
         private Renderer scorch;
         private float born;
 
-        /// <summary>The blast at <paramref name="ground"/>, the ground facing <paramref name="up"/>; <paramref name="viewer"/> is the camera that shakes.</summary>
-        public static Map01Blast Spawn(Vector3 ground, Vector3 up, Camera viewer = null)
+        /// <summary>The blast at <paramref name="ground"/>, the ground facing <paramref name="up"/>;
+        /// <paramref name="viewer"/> is the camera that shakes and <paramref name="radius"/> sizes the dust spread.</summary>
+        public static Map01Blast Spawn(Vector3 ground, Vector3 up, Camera viewer = null, float radius = Map01StoneThrow.WoundRadius)
         {
             var go = new GameObject("F1 blast");
             go.transform.position = ground;
             var blast = go.AddComponent<Map01Blast>();
             blast.born = Time.time;
-            blast.Build(ground, up.sqrMagnitude > .01f ? up.normalized : Vector3.up);
+            blast.Build(ground, up.sqrMagnitude > .01f ? up.normalized : Vector3.up, radius);
             Map01CameraShake.Kick(viewer, ground, .22f, 35f, .7f);
             return blast;
         }
 
-        private void Build(Vector3 ground, Vector3 up)
+        private void Build(Vector3 ground, Vector3 up, float radius)
         {
             var t = transform;
+            // The original particles were authored for the F1's 7 m wound radius. Keep the flash
+            // brief and compact while letting the earth, dust ring and cloud fill the wider blast.
+            float spread = Mathf.Max(.1f, radius / 7f);
+            float plume = Mathf.Sqrt(spread);
             // the flash: a light that dies in a tenth of a second, and a white-hot core on top of it
             var lightGo = new GameObject("Flash");
             lightGo.transform.SetParent(t, false); lightGo.transform.position = ground + up * .6f;
             flash = lightGo.AddComponent<Light>();
-            flash.type = LightType.Point; flash.color = new Color(1f, .8f, .55f); flash.range = 18f; flash.intensity = 30f;
+            flash.type = LightType.Point; flash.color = new Color(1f, .8f, .55f); flash.range = 18f * plume; flash.intensity = 30f;
             flash.shadows = LightShadows.None;
 
             var core = Map01Fx.System(t, "Core", ground + up * .45f, Map01Fx.Glow, .2f, 4);
@@ -62,8 +67,8 @@ namespace ShadowVale.Map01
             // grit and clods thrown up in a cone, streaking, falling back
             var dirt = Map01Fx.System(t, "Dirt", ground + up * .1f, Map01Fx.Unlit, 1.8f, 70);
             main = dirt.main;
-            main.startLifetime = new ParticleSystem.MinMaxCurve(.7f, 1.5f); main.startSize = new ParticleSystem.MinMaxCurve(.03f, .09f);
-            main.startSpeed = new ParticleSystem.MinMaxCurve(6f, 14f); main.gravityModifier = 1.1f;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(.7f, 1.5f); main.startSize = new ParticleSystem.MinMaxCurve(.03f * plume, .09f * plume);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(6f * plume, 14f * plume); main.gravityModifier = 1.1f;
             main.startColor = new ParticleSystem.MinMaxGradient(new Color(.16f, .12f, .09f, 1f), new Color(.27f, .21f, .15f, 1f));
             dirt.emission.SetBursts(new[] { new ParticleSystem.Burst(0f, 55) });
             shape = dirt.shape; shape.shapeType = ParticleSystemShapeType.Cone; shape.angle = 34f; shape.radius = .15f;
@@ -74,8 +79,8 @@ namespace ShadowVale.Map01
             // the dust burst: brown-grey, thrown out fast, stopped by the air within a couple of metres, then hanging
             var dust = Map01Fx.System(t, "Dust", ground + up * .3f, Map01Fx.Lit, 3.5f, 24);
             main = dust.main;
-            main.startLifetime = new ParticleSystem.MinMaxCurve(1.6f, 3f); main.startSize = new ParticleSystem.MinMaxCurve(1f, 2f);
-            main.startSpeed = new ParticleSystem.MinMaxCurve(3f, 7f);
+            main.startLifetime = new ParticleSystem.MinMaxCurve(1.6f, 3f); main.startSize = new ParticleSystem.MinMaxCurve(1f * plume, 2f * plume);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(3f * spread, 7f * spread);
             main.startColor = new ParticleSystem.MinMaxGradient(new Color(.47f, .41f, .33f, .9f), new Color(.38f, .33f, .27f, .9f));
             dust.emission.SetBursts(new[] { new ParticleSystem.Burst(0f, 16) });
             shape = dust.shape; shape.shapeType = ParticleSystemShapeType.Hemisphere; shape.radius = .3f;
@@ -85,26 +90,26 @@ namespace ShadowVale.Map01
             // the ring that rolls out along the ground
             var ring = Map01Fx.System(t, "Ground ring", ground + up * .15f, Map01Fx.Lit, 1.5f, 32);
             main = ring.main;
-            main.startLifetime = new ParticleSystem.MinMaxCurve(.6f, 1.1f); main.startSize = new ParticleSystem.MinMaxCurve(.6f, 1.1f);
-            main.startSpeed = new ParticleSystem.MinMaxCurve(7f, 10f);
+            main.startLifetime = new ParticleSystem.MinMaxCurve(.6f, 1.1f); main.startSize = new ParticleSystem.MinMaxCurve(.6f * plume, 1.1f * plume);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(7f * spread, 10f * spread);
             main.startColor = new Color(.52f, .47f, .38f, .7f);
             ring.emission.SetBursts(new[] { new ParticleSystem.Burst(0f, 26) });
             shape = ring.shape; shape.shapeType = ParticleSystemShapeType.Circle; shape.radius = .25f; shape.radiusThickness = 0f;
             shape.rotation = (Quaternion.FromToRotation(Vector3.up, up) * Quaternion.Euler(90f, 0f, 0f)).eulerAngles;   // the circle lies on the ground
             Map01Fx.Fade(ring, .05f, .6f, .35f); Map01Fx.Grow(ring, 1f, 2.6f); Map01Fx.Drag(ring, 3f);
 
-            // the cloud that climbs and drifts: fed for most of a second, dark grey, thinning out
-            var smoke = Map01Fx.System(t, "Smoke", ground + up * .5f, Map01Fx.Lit, .9f, 50);
+            // Pale blast smoke climbs above the brown ground dust. Keep its puffs distinct as they expand.
+            var smoke = Map01Fx.System(t, "Smoke", ground + up * .55f, Map01Fx.Lit, 1.1f, 70);
             main = smoke.main;
             main.startDelay = .04f;
-            main.startLifetime = new ParticleSystem.MinMaxCurve(3.5f, 6f); main.startSize = new ParticleSystem.MinMaxCurve(1.2f, 2.2f);
-            main.startSpeed = new ParticleSystem.MinMaxCurve(.8f, 1.8f);
-            main.startColor = new ParticleSystem.MinMaxGradient(new Color(.22f, .21f, .2f, .85f), new Color(.3f, .28f, .26f, .8f));
-            var emission = smoke.emission; emission.rateOverTime = 34f;
-            shape = smoke.shape; shape.shapeType = ParticleSystemShapeType.Cone; shape.angle = 14f; shape.radius = .4f;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(4.3f, 5.2f); main.startSize = new ParticleSystem.MinMaxCurve(.7f * plume, 1.3f * plume);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(1.1f, 2.1f);
+            main.startColor = new ParticleSystem.MinMaxGradient(new Color(.7f, .76f, .82f, .8f), new Color(.85f, .9f, .96f, .7f));
+            var emission = smoke.emission; emission.rateOverTime = 48f;
+            shape = smoke.shape; shape.shapeType = ParticleSystemShapeType.Cone; shape.angle = 25f; shape.radius = .75f;
             shape.rotation = Quaternion.FromToRotation(Vector3.forward, up).eulerAngles;
-            Map01Fx.Fade(smoke, .08f, .7f, .5f); Map01Fx.Grow(smoke, .6f, 2.4f); Map01Fx.Drag(smoke, .6f);
-            Map01Fx.Billow(smoke, .35f, .45f); Map01Fx.Wind(smoke, Map01Fx.Breeze * 1.4f);
+            Map01Fx.Fade(smoke, .05f, .8f, .58f); Map01Fx.Grow(smoke, .8f, 1.8f); Map01Fx.Drag(smoke, .45f);
+            Map01Fx.Billow(smoke, .65f, .65f); Map01Fx.Wind(smoke, Map01Fx.Breeze * 1.4f);
 
             foreach (var ps in GetComponentsInChildren<ParticleSystem>()) ps.Play();
 
@@ -115,7 +120,7 @@ namespace ShadowVale.Map01
             quad.transform.SetParent(t, false);
             quad.transform.position = ground + up * .03f;
             quad.transform.rotation = Quaternion.LookRotation(-up) * Quaternion.Euler(0f, 0f, Random.Range(0f, 360f));
-            quad.transform.localScale = Vector3.one * 2.8f;
+            quad.transform.localScale = Vector3.one * 2.8f * plume;
             scorch = quad.GetComponent<Renderer>();
             scorch.sharedMaterial = Map01Fx.Burn;
             scorch.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;

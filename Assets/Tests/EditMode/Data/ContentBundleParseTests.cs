@@ -19,7 +19,8 @@ namespace ShadowVale.Tests.EditMode.Data
             Assert.GreaterOrEqual(bundle.Weapons.Count, 5, "proposal promises 5–6 weapon classes");
             Assert.GreaterOrEqual(bundle.EnemyArchetypes.Count, 3);
             Assert.GreaterOrEqual(bundle.Maps.Count, 1);
-            Assert.AreEqual("greedy", bundle.AiSettings.DefaultSolverVariant);
+            Assert.AreEqual("qiea", bundle.AiSettings.DefaultSolverVariant,
+                "The game plays with the best solver of exp-v1 (O5); greedy is the fallback.");
             Assert.AreEqual(120, bundle.AiSettings.LatencyBudgetMs);
         }
 

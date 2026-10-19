@@ -6,6 +6,7 @@ using ShadowVale.AI.Coordination;
 using ShadowVale.AI.Fsm;
 using ShadowVale.AI.Perception;
 using ShadowVale.Core.Events;
+using ShadowVale.Gameplay.Enemies;
 using UnityEngine;
 
 namespace ShadowVale.Debugging
@@ -35,6 +36,7 @@ namespace ShadowVale.Debugging
         private readonly Action<GrenadeExplodedEvent> _onBlast;
         private readonly Action<BossReinforcementsEvent> _onReinforce;
         private readonly Action<BossOrderEvent> _onOrder;
+        private readonly Action<EnemyRegenEvent> _onRegen;
 
         /// <summary>Also log footsteps nobody heard (very chatty).</summary>
         public bool VerboseNoise { get; set; }
@@ -94,6 +96,9 @@ namespace ShadowVale.Debugging
             EventBus.Subscribe(_onBlast);
             EventBus.Subscribe(_onReinforce);
             EventBus.Subscribe(_onOrder);
+            _onRegen = e => Add(AiLogCategory.Combat, e.AgentId,
+                $"{Tag("REGEN")} {e.AgentId} hồi máu (từ {e.From * 100f:0}%): 30 s không trúng đạn");
+            EventBus.Subscribe(_onRegen);
         }
 
         private static string RoleLabel(AgentAssignment a) => a.Role switch
@@ -105,9 +110,10 @@ namespace ShadowVale.Debugging
 
         private static string BossOrder(BossOrderEvent e) => e.Order switch
         {
-            "pincer" => $"chỉ huy nhóm {e.Detail}: kế hoạch gọng kìm (tăng vòng sườn, chặn lối thoát)",
+            "pincer" => $"chỉ huy nhóm {e.Detail}: kế hoạch gọng kìm (vòng sườn, chặn lối thoát, canh đường tới chỉ huy)",
             "push" => $"Nam đang thay đạn: ra lệnh áp sát ({e.Detail})",
             "morale_break" => $"chỉ huy ngã: lính mất tinh thần, dễ rút lui hơn ({e.Detail})",
+            "cover_fire" => $"đổi chỗ nấp: lính bắn yểm trợ ({e.Detail})",
             _ => e.Order + " " + e.Detail,
         };
 
@@ -144,6 +150,7 @@ namespace ShadowVale.Debugging
             "block" => "chặn lối thoát",
             "cover" => "nấp, hướng về Nam",
             "flank" => "vòng sườn",
+            "rally" => "viện binh tập hợp về chỉ huy",
             _ => role,
         };
 
@@ -167,6 +174,7 @@ namespace ShadowVale.Debugging
             EventBus.Unsubscribe(_onBlast);
             EventBus.Unsubscribe(_onReinforce);
             EventBus.Unsubscribe(_onOrder);
+            EventBus.Unsubscribe(_onRegen);
         }
 
         public void Add(AiLogCategory category, string agentId, string text)

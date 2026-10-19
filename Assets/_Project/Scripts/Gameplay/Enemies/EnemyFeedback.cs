@@ -74,20 +74,56 @@ namespace ShadowVale.Gameplay.Enemies
                 startTime: slice.startTime, duration: slice.duration, nearDistance: 2f, farDistance: range);
         }
 
-        /// <summary>Draws a shot up to the first obstruction. Returns whether it reaches its intended victim.</summary>
-        public bool Fire(Vector3 targetPoint, Transform victim, int mask, out Vector3 impact)
+        /// <summary>Height of the shooter's chest above his feet: the second line a shot is tried along.</summary>
+        public const float ChestHeight = 1.45f;
+
+        /// <summary>
+        /// Draws a shot up to the first obstruction. Returns whether it reaches its intended victim. The shot is tried
+        /// along two lines, from the muzzle and from the shooter's chest (<paramref name="from"/>), and lands if either
+        /// is clear: a rifle held out into a wall, a door or the cover he stands at (the muzzle inside it) does not stop
+        /// every round, nor does a low sandbag a guard fires over (his chest behind it, the muzzle above). Until
+        /// 19/10/2026 only the muzzle counted: Map 1's commander hit 0 of 40 rounds standing by a door. The tracer
+        /// always leaves the muzzle.
+        /// </summary>
+        public bool Fire(Vector3 targetPoint, Transform victim, int mask, out Vector3 impact, Vector3? from = null)
         {
             if (weapon == null) weapon = GetComponentInChildren<Weapon>();
-            Vector3 start = weapon != null && weapon.Muzzle != null
+            Vector3 muzzle = weapon != null && weapon.Muzzle != null
                 ? weapon.Muzzle.position : transform.position + Vector3.up * 1.3f + transform.forward * .35f;
+            Vector3 chest = from ?? transform.position + Vector3.up * ChestHeight;
+            bool reachesVictim = Cast(muzzle, targetPoint, victim, mask, out impact, out float travelled);
+            if (!reachesVictim)
+            {
+                reachesVictim = Cast(chest, targetPoint, victim, mask, out var fromChest, out float chestTravelled);
+                // A round that lands, or a miss that flies on further than from a buried muzzle, ends there.
+                if (reachesVictim || chestTravelled > travelled) impact = fromChest;
+            }
+            if (prefab != null)
+            {
+                if (tracers[cursor] == null) tracers[cursor] = Instantiate(prefab, transform);
+                tracers[cursor].gameObject.SetActive(true);
+                tracers[cursor].TryPlay(muzzle, impact);
+                if(weapon!=null)tracers[cursor].AnchorEmission(weapon.Muzzle);
+                cursor = (cursor + 1) % tracers.Length;
+            }
+            weapon?.PlayMuzzleFlash();
+            PlayAudio(gunshot, .85f, UnityEngine.Random.Range(.94f, 1.06f), muzzle, 65f);
+            return reachesVictim;
+        }
+
+        /// <summary>One line of a shot: where it stops (the target if nothing is in the way), how far it got, and whether
+        /// what stopped it is the victim (no victim: whether nothing did).</summary>
+        private bool Cast(Vector3 start, Vector3 targetPoint, Transform victim, int mask, out Vector3 impact, out float travelled)
+        {
             Vector3 delta = targetPoint - start;
             float distance = delta.magnitude;
-            impact = targetPoint;
+            impact = targetPoint; travelled = distance;
             bool reachesVictim = true;
-            int count = Physics.RaycastNonAlloc(start, delta.normalized, hits, distance, mask, QueryTriggerInteraction.Ignore);
+            if (distance < 1e-4f) return true;
+            int count = Physics.RaycastNonAlloc(start, delta / distance, hits, distance, mask, QueryTriggerInteraction.Ignore);
             // Saturation is rare; correctness matters more than avoiding an allocation in this case.
             RaycastHit[] candidates = count == hits.Length
-                ? Physics.RaycastAll(start, delta.normalized, distance, mask, QueryTriggerInteraction.Ignore) : hits;
+                ? Physics.RaycastAll(start, delta / distance, distance, mask, QueryTriggerInteraction.Ignore) : hits;
             if (candidates != hits) count = candidates.Length;
             float nearest = distance + .001f;
             for (int i = 0; i < count; i++)
@@ -95,19 +131,9 @@ namespace ShadowVale.Gameplay.Enemies
                 var hit = candidates[i];
                 if (hit.transform == transform || hit.transform.IsChildOf(transform) || hit.distance >= nearest) continue;
                 nearest = hit.distance;
-                impact = hit.point;
+                impact = hit.point; travelled = hit.distance;
                 reachesVictim = victim != null && (hit.transform == victim || hit.transform.IsChildOf(victim));
             }
-            if (prefab != null)
-            {
-                if (tracers[cursor] == null) tracers[cursor] = Instantiate(prefab, transform);
-                tracers[cursor].gameObject.SetActive(true);
-                tracers[cursor].TryPlay(start, impact);
-                if(weapon!=null)tracers[cursor].AnchorEmission(weapon.Muzzle);
-                cursor = (cursor + 1) % tracers.Length;
-            }
-            weapon?.PlayMuzzleFlash();
-            PlayAudio(gunshot, .85f, UnityEngine.Random.Range(.94f, 1.06f), start, 65f);
             return reachesVictim;
         }
     }

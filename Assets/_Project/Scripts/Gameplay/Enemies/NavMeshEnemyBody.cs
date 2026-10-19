@@ -76,6 +76,14 @@ namespace ShadowVale.Gameplay.Enemies
                     Quaternion.LookRotation(direction), TurnDegreesPerSecond * Time.deltaTime);
         }
 
+        public Vector3 Velocity => _agent.isOnNavMesh ? _agent.velocity : Vector3.zero;
+
+        public bool FacesManually
+        {
+            get => !_agent.updateRotation;
+            set => _agent.updateRotation = !value;
+        }
+
         public void Turn(float degrees) => _transform.Rotate(0f, degrees, 0f);
 
         public void Animate(bool moving)
