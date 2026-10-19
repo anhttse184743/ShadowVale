@@ -224,7 +224,7 @@ namespace ShadowVale.Map01
                     // Only the bush behind the guard counts: the way in passes other bushes.
                     hid |= mission.Hidden && (knifeBush == null
                         || Vector3.ProjectOnPlane(mission.player.position - knifeBush.position, Vector3.up).magnitude < 2.5f);
-                    Tip = "Tuỳ chọn: giữ Q rồi thả để ném đá ra xa — lính sẽ quay đi xem";
+                    Tip = "Tuỳ chọn: nhấn 4 chọn/đổi đồ ném, giữ chuột trái ngắm rồi thả để ném — lính sẽ quay đi xem";
                     if (!player.IsSneaking) Cue("CTRL", "Nhấn Ctrl để khom — đi thẳng người sẽ gây tiếng động", false, slow: false);
                     else if (!hid) Cue("BỤI CÂY", "Khom người đi vào bụi cây phía trước để ẩn nấp", false, slow: false);
                     else if (combat.EquippedKind != WeaponKind.Knife) Cue("3", "Nhấn 3 để cầm dao", false, slow: false);

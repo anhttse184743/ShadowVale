@@ -171,15 +171,16 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsTrue(inventory.IsEquipped("rifle_standard"), "Pressing the key of what is in hand puts nothing away: there are no bare hands.");
                 Assert.AreNotEqual(ShadowVale.Gameplay.Combat.WeaponKind.Unarmed, mission.ModernCombat.EquippedKind);
 
-                // Bandages: only H. 4 goes round the throwables instead.
+                // Bandages: only H. 4 selects stones instead.
                 inventory.Add("medkit_small", 2);
                 inventory.Add("smoke_bomb", 1);
                 mission.Damage(40);
                 yield return Press(keyboard, Key.Digit4);
                 Assert.AreEqual(2, inventory.Count("medkit_small"), "4 no longer uses a bandage.");
-                Assert.AreEqual("smoke_bomb", inventory.Throwable, "4 picks the next throwable he has.");
+                Assert.AreEqual("stone", inventory.Throwable, "4 selects stones even when smoke bombs are available.");
+                Assert.IsTrue(inventory.ThrowableEquipped);
                 yield return Press(keyboard, Key.Digit4);
-                Assert.AreEqual("stone", inventory.Throwable, "…and comes back round to the stone.");
+                Assert.AreEqual("smoke_bomb", inventory.Throwable, "Pressing 4 again selects the next available throwable.");
                 yield return Press(keyboard, Key.H);
                 Assert.AreEqual(1, inventory.Count("medkit_small"), "H uses a bandage.");
             }

@@ -201,7 +201,7 @@ namespace ShadowVale.Map01
                     ev.Use();
                 }
             }
-            GUI.Label(new Rect(card.x + 14, card.yMax - 30, card.width - 28, 22), "Phím 4 đổi · Giữ Q ném · bấm để chọn", bagHint);
+            GUI.Label(new Rect(card.x + 14, card.yMax - 30, card.width - 28, 22), "4 chọn/đổi đồ ném · Giữ/thả chuột trái ném", bagHint);
             GUI.color = tint;
         }
 
@@ -266,7 +266,7 @@ namespace ShadowVale.Map01
             string id = bagPick >= 0 ? inventory.Cell(bagPick)?.id : slotPick != null ? inventory.SlotItem(slotPick.Value) : null;
             var plate = BagPlate(width);
             GUI.Label(new Rect(plate.x + 25, plate.yMax - 72, plate.width - 50, 44),
-                "Kéo thả: sắp xếp, trang bị, vứt · Chuột phải: menu · Tab / Esc Đóng\n1 Súng chính · 2 Súng ngắn · 3 Dao · 4 Đồ ném · Q Ném · H Hồi máu", bagHint);
+                "Kéo thả: sắp xếp, trang bị, vứt · Chuột phải: menu · Tab / Esc Đóng\n1 Súng chính · 2 Súng ngắn · 3 Dao · 4 Đồ ném · Giữ/thả chuột trái: ném · H Hồi máu", bagHint);
             if (id == null) { GUI.Label(new Rect(d.x + 24, d.y + 50, d.width - 48, 50), "Chọn một món để xem chi tiết. Kéo món vào ô khác để sắp xếp.", hudSmall); return; }
             HudIcon(new Rect(d.x + 14, d.y + 14, 122, 122), id);
             GUI.Label(new Rect(d.x + 150, d.y + 10, d.width - 165, 34), ForestInventory.Name(id).ToUpperInvariant(), hudHeading);

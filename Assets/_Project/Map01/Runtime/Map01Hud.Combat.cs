@@ -27,10 +27,10 @@ namespace ShadowVale.Map01
             }
             float x = width - 370, y = height - 292;
             var kind = mission.ModernCombat != null ? mission.ModernCombat.EquippedKind : WeaponKind.Knife;
-            // The four slots (Map01Inventory.Bag): 1 long gun, 2 pistol, 3 knife on the right, 4 the throwable [Q] uses.
+            // The four slots (Map01Inventory.Bag): 1 long gun, 2 pistol, 3 knife on the right, 4 stones.
             // What is in hand is drawn bright; the rest dimmed; an empty slot shows only its number.
             string primary = inventory.SlotItem(Map01Inventory.Slot.Primary), pistol = inventory.SlotItem(Map01Inventory.Slot.Pistol);
-            if (primary == "rifle_standard") CombatIcon(new Rect(x + 10, y + 10, 146, 118), new Rect(672, 107, 536, 438), kind == WeaponKind.Rifle);
+            if (primary == "rifle_standard") CombatIcon(new Rect(x + 10, y + 10, 146, 118), new Rect(672, 107, 536, 438), kind == WeaponKind.Rifle && !inventory.ThrowableEquipped);
             else if (primary != null) HotbarIcon(new Rect(x + 4, y + 44, 156, 49), primary, false);
             CombatLabel(new Rect(x + 46, y + 123, 60, 24), "1", combatCaption);
             if (pistol != null) HotbarIcon(new Rect(x + 274, y + 8, 70, 52), pistol, false);
@@ -38,13 +38,13 @@ namespace ShadowVale.Map01
             // Each gun's condition under its picture (Map01Hud.Gunsmith.cs).
             if (Map01Inventory.HasCondition(primary)) ConditionBar(new Rect(x + 22, y + 148, 122, 5), inventory.FractionOf(Map01Inventory.Gun.InSlot(Map01Inventory.Slot.Primary)));
             if (Map01Inventory.HasCondition(pistol)) ConditionBar(new Rect(x + 276, y + 62, 66, 4), inventory.FractionOf(Map01Inventory.Gun.InSlot(Map01Inventory.Slot.Pistol)));
-            CombatIcon(new Rect(x + 270, y + 72, 66, 66), new Rect(96, 695, 491, 476), kind == WeaponKind.Knife);
+            CombatIcon(new Rect(x + 270, y + 72, 66, 66), new Rect(96, 695, 491, 476), kind == WeaponKind.Knife && !inventory.ThrowableEquipped);
             CombatLabel(new Rect(x + 238, y + 94, 30, 24), "3", combatCaption);
             string throwable = inventory.ReadyThrowable() ?? inventory.Throwable;
             int throwCount = inventory.Count(throwable);
             var throwRect = new Rect(x + 286, y + 148, 52, 46);
-            if (Time.time - inventory.ThrowableChosenAt < 1.6f) HudBorder(new Rect(throwRect.x - 6, throwRect.y - 4, throwRect.width + 12, throwRect.height + 8), HudGold, 2);
-            HotbarIcon(throwRect, throwable, throwCount > 0);
+            if (inventory.ThrowableEquipped) HudBorder(new Rect(throwRect.x - 6, throwRect.y - 4, throwRect.width + 12, throwRect.height + 8), HudGold, 2);
+            HotbarIcon(throwRect, throwable, throwCount > 0 && inventory.ThrowableEquipped);
             CombatLabel(new Rect(x + 290, y + 186, 46, 20), "×" + throwCount, new GUIStyle(combatCaption) { fontSize = 15, alignment = TextAnchor.MiddleRight });
             for (int k = 0; k < Map01Inventory.Throwables.Length; k++)
             {

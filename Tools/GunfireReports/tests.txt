@@ -1,0 +1,8 @@
+RUNNING
+Passed ShadowVale.Map01.Tests.AimAtCrosshairTests.MuzzleMarkerLiesOnTheActualBarrelBore
+
+
+Passed ShadowVale.Map01.Tests.AimAtCrosshairTests.NewShotsStartAtTheRenderedMuzzleDuringCameraSweeps
+
+
+FINISHED passed=2 failed=0
