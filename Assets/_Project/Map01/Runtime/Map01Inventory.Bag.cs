@@ -61,6 +61,7 @@ namespace ShadowVale.Map01
         {
             for (int i = 0; i < BagSize; i++) bag[i] = null;
             primary = pistol = knife = null; throwable = "stone"; ThrowableEquipped = false;
+            mission?.ModernCombat?.SetHandsOccupied(false);
             primaryCondition = pistolCondition = NoCondition;
         }
 
@@ -251,6 +252,7 @@ namespace ShadowVale.Map01
                 bool wasThrowable = ThrowableEquipped;
                 ThrowableEquipped = false; GetComponent<Map01StoneThrow>()?.Cancel();
                 if (wasThrowable) Map01NamActions.For(mission)?.CancelAction();
+                mission.ModernCombat.SetHandsOccupied(false);
             }
             return drawn;
         }
@@ -289,8 +291,9 @@ namespace ShadowVale.Map01
         {
             if (System.Array.IndexOf(Throwables, id) < 0) return;
             GetComponent<Map01StoneThrow>()?.Cancel();
+            Map01NamActions.For(mission)?.CancelAction();
             throwable = id; ThrowableEquipped = true; ThrowableChosenAt = Time.time;
-            Map01NamActions.For(mission);
+            mission?.ModernCombat?.SetHandsOccupied(true);
             Changed?.Invoke();
         }
         /// <summary>When key 4 last changed the throwable, for the hotbar's short highlight.</summary>

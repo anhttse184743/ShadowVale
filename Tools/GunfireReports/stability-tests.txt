@@ -1,0 +1,23 @@
+STARTED
+ShadowVale.Map01.Tests.AimAtCrosshairTests.BarrelStaysOnTheCrosshairWhileAimingSweepingAndFiring Passed
+
+
+ShadowVale.Map01.Tests.AimAtCrosshairTests.MuzzleFlameShaderCompiles Passed
+
+
+ShadowVale.Map01.Tests.AimAtCrosshairTests.MuzzleMarkerLiesOnTheActualBarrelBore Passed
+
+
+ShadowVale.Map01.Tests.AimAtCrosshairTests.NewShotsStartAtTheRenderedMuzzleDuringCameraSweeps Passed
+
+
+ShadowVale.Map01.Tests.AimAtCrosshairTests.SustainedFireKeepsItsStanceAtSixHundredRoundsPerMinute Passed
+
+
+ShadowVale.Map01.Tests.AimAtCrosshairTests.TheBendComesAndGoesWithTheShotAndSurvivesAPauseAndAReload Passed
+
+
+ShadowVale.Map01.Tests.StoneMouseInputTests.RapidGunToThrowableSwitchClearsAimFireAndReloadPoses Passed
+
+
+FINISHED passed=7 failed=0

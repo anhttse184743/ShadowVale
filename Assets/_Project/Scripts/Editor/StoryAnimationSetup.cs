@@ -602,6 +602,7 @@ namespace ShadowVale.Editor
             aimToThrow.offset = ThrowWindUp;
             aimToThrow.AddCondition(AnimatorConditionMode.If, 0, "DoAction");
             aimToThrow.AddCondition(AnimatorConditionMode.Equals, 3, "Action");
+            RifleFireStabilitySetup.Configure(controller);
             EditorUtility.SetDirty(controller);
         }
 

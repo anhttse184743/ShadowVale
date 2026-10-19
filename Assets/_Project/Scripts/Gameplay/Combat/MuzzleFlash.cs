@@ -43,10 +43,11 @@ namespace ShadowVale.Gameplay.Combat
             // Also visible when the viewer looks almost straight down the barrel.
             Quad(new Vector3(-.055f,-.055f,.055f),new Vector3(.055f,-.055f,.055f),new Vector3(.055f,.055f,.055f),new Vector3(-.055f,.055f,.055f));
             mesh.SetVertices(vertices);mesh.SetUVs(0,uv);mesh.SetTriangles(triangles,0);mesh.RecalculateBounds();
-            gameObject.AddComponent<MeshFilter>().sharedMesh=mesh;
-            flame=gameObject.AddComponent<MeshRenderer>();flame.sharedMaterial=material;
+            var filter=GetComponent<MeshFilter>();if(filter==null)filter=gameObject.AddComponent<MeshFilter>();
+            filter.sharedMesh=mesh;
+            flame=GetComponent<MeshRenderer>();if(flame==null)flame=gameObject.AddComponent<MeshRenderer>();flame.sharedMaterial=material;
             flame.shadowCastingMode=ShadowCastingMode.Off;flame.receiveShadows=false;flame.enabled=false;
-            glow=gameObject.AddComponent<Light>();glow.type=LightType.Point;glow.color=new Color(1,.55f,.16f);
+            glow=GetComponent<Light>();if(glow==null)glow=gameObject.AddComponent<Light>();glow.type=LightType.Point;glow.color=new Color(1,.55f,.16f);
             glow.range=1.25f;glow.intensity=0;glow.shadows=LightShadows.None;glow.enabled=false;
         }
 

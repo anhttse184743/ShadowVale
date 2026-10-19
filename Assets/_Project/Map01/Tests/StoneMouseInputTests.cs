@@ -12,6 +12,18 @@ namespace ShadowVale.Map01.Tests
 {
     public sealed class StoneMouseInputTests : ForestSceneTestBase
     {
+        static readonly System.Collections.Generic.List<InputDevice> isolatedMice=new();
+        static void IsolateMice(Mouse mouse)
+        {
+            foreach(var device in InputSystem.devices.OfType<Mouse>().Where(d=>d!=mouse && d.enabled).ToArray()) {
+                isolatedMice.Add(device);InputSystem.DisableDevice(device);
+            }
+        }
+        [TearDown] public void RestoreMice()
+        {
+            foreach(var device in isolatedMice)if(device!=null&&device.added)InputSystem.EnableDevice(device);
+            isolatedMice.Clear();
+        }
         static IEnumerator KeyPress(Keyboard keyboard,Key key)
         {
             InputSystem.QueueStateEvent(keyboard,new KeyboardState(key));yield return null;yield return null;
@@ -49,6 +61,7 @@ namespace ShadowVale.Map01.Tests
             Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();yield return null;
             var routing=RouteInputToGame();var keyboard=InputSystem.AddDevice<Keyboard>();var mouse=InputSystem.AddDevice<Mouse>();
+            IsolateMice(mouse);
             try
             {
                 InputSystem.QueueStateEvent(mouse,new MouseState());InputSystem.QueueStateEvent(keyboard,new KeyboardState());yield return null;
@@ -150,7 +163,47 @@ namespace ShadowVale.Map01.Tests
                 inventory.Spend("smoke_bomb",inventory.Count("smoke_bomb"));
                 yield return KeyPress(keyboard,Key.Digit4);Assert.IsFalse(inventory.ThrowableEquipped,"Empty slot 4 leaves the weapon equipped.");
             }
-            finally { InputSystem.RemoveDevice(mouse);InputSystem.RemoveDevice(keyboard);RestoreInputRouting(routing); }
+            finally { RestoreMice();InputSystem.RemoveDevice(mouse);InputSystem.RemoveDevice(keyboard);RestoreInputRouting(routing); }
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
+        public IEnumerator RapidGunToThrowableSwitchClearsAimFireAndReloadPoses()
+        {
+            Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();yield return null;yield return null;
+            var routing=RouteInputToGame();var keyboard=InputSystem.AddDevice<Keyboard>();var mouse=InputSystem.AddDevice<Mouse>();
+            IsolateMice(mouse);
+            try {
+                var mission=Object.FindFirstObjectByType<Map01Mission>();foreach(var enemy in mission.Enemies)enemy.enabled=false;
+                mission.GetComponent<Map01Rescue>().MarkIntroSeen();
+                var inventory=mission.GetComponent<Map01Inventory>();var combat=mission.ModernCombat;
+                var actor=mission.player.GetComponentInChildren<Animator>();
+                inventory.Add("stone",4);inventory.Add("ammo_rifle",60);
+                for(int mode=0;mode<3;mode++) {
+                    yield return MouseButtons(mouse,false);yield return KeyPress(keyboard,Key.Digit1);
+                    Assert.IsFalse(inventory.ThrowableEquipped);Assert.AreEqual(2,actor.GetInteger("Weapon"),"Drawing the same hidden rifle must restore its animator mode.");
+                    if(mode<2){yield return MouseButtons(mouse,mode==1,true);yield return WaitGameSeconds(.08f);}
+                    else {combat.RestoreMagazine(10);Assert.IsTrue(combat.TryReload());yield return null;yield return null;}
+                    yield return KeyPress(keyboard,Key.Digit4);
+                    Assert.IsTrue(inventory.ThrowableEquipped,"Slot 4 must work even while a previous equip is suppressing held fire.");
+                    Assert.IsFalse(combat.IsAiming);Assert.IsFalse(combat.IsReloading);
+                    int rounds=combat.RoundsInMagazine,stones=inventory.Stones;
+                    yield return WaitGameSeconds(.25f);yield return new WaitForEndOfFrame();
+                    Assert.AreEqual(0,actor.GetInteger("Weapon"));Assert.Less(actor.GetLayerWeight(actor.GetLayerIndex("UpperBody")),.01f);
+                    Assert.IsTrue(actor.GetCurrentAnimatorStateInfo(0).IsName("Locomotion"),"Throwable ready stance must leave rifle locomotion.");
+                    Assert.Less(actor.GetBoneTransform(HumanBodyBones.RightHand).position.y,actor.GetBoneTransform(HumanBodyBones.Chest).position.y,"The rifle aim must release the right arm.");
+                    Assert.AreEqual(rounds,combat.RoundsInMagazine);Assert.AreEqual(stones,inventory.Stones);
+                    CaptureHand(mission.player,"quick-switch-"+mode);
+                }
+                yield return MouseButtons(mouse,false);
+                yield return MouseButtons(mouse,true);yield return WaitGameSeconds(.3f);
+                Assert.IsTrue(mission.GetComponent<Map01StoneThrow>().Aiming);
+                Assert.IsTrue(actor.GetCurrentAnimatorStateInfo(actor.GetLayerIndex("ActionsUpper")).IsName("Act_ThrowAim"));
+                yield return MouseButtons(mouse,false);
+                yield return KeyPress(keyboard,Key.Digit1);
+                Assert.AreEqual(2,actor.GetInteger("Weapon"));Assert.IsFalse(inventory.ThrowableEquipped);
+            } finally {RestoreMice();InputSystem.RemoveDevice(mouse);InputSystem.RemoveDevice(keyboard);RestoreInputRouting(routing);}
             yield return new ExitPlayMode();
         }
     }

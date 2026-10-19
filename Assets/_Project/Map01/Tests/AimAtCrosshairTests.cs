@@ -109,6 +109,59 @@ namespace ShadowVale.Map01.Tests
         }
 
         [UnityTest]
+        public IEnumerator SustainedFireKeepsItsStanceAtSixHundredRoundsPerMinute()
+        {
+            Map01OpeningCutscene.CancelPending();
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode(); yield return null; yield return null;
+            var routing = RouteInputToGame(); yield return Arrive();
+            var report = new System.Collections.Generic.List<string>();
+            try {
+                Assert.AreEqual(.1f, Rifle.Cooldown, .0001f);
+                var camera = mission.gameCamera.GetComponent<ThirdPersonCamera>();
+                camera.SetCinematicView(mission.gameCamera.transform.position, mission.gameCamera.transform.rotation, 60, 1);
+                var animator = mission.player.GetComponentInChildren<Animator>();
+                int layer = animator.GetLayerIndex(PlayerCombat.UpperBodyLayer);
+                foreach(bool ads in new[]{false, true}) {
+                    // Each stance gets a fresh magazine; an empty second burst tests reload, not fire rate.
+                    mission.ModernCombat.RestoreMagazine(mission.ModernCombat.MagazineCapacity);
+                    var times = new System.Collections.Generic.List<float>();
+                    void Shot(WeaponKind kind, Vector3 position) { if(kind == WeaponKind.Rifle) times.Add(Time.time); }
+                    mission.ModernCombat.Attacked += Shot;
+                    Hold(ads, true);
+                    float start = Time.time, yaw = 0, worstYaw = 0, worstArmStep = 0;
+                    var arm = animator.GetBoneTransform(HumanBodyBones.RightUpperArm);
+                    Quaternion lastArm = arm.localRotation;
+                    bool sampled = false;
+                    try {
+                        while(Time.time - start < 1.25f) {
+                            yield return new WaitForEndOfFrame();
+                            if(Time.time - start < .5f) { lastArm = arm.localRotation; continue; }
+                            Assert.IsFalse(animator.GetCurrentAnimatorStateInfo(layer).IsName("Hold_Rifle"), "The rifle must not lower between rounds.");
+                            if(!sampled) { yaw = mission.player.eulerAngles.y; sampled = true; }
+                            worstYaw = Mathf.Max(worstYaw, Mathf.Abs(Mathf.DeltaAngle(yaw, mission.player.eulerAngles.y)));
+                            worstArmStep = Mathf.Max(worstArmStep, Quaternion.Angle(lastArm, arm.localRotation));
+                            lastArm = arm.localRotation;
+                        }
+                    } finally { mission.ModernCombat.Attacked -= Shot; }
+                    report.Add($"ADS={ads}, shots={times.Count}, times={string.Join(",", times)}");
+                    System.IO.Directory.CreateDirectory("Tools/GunfireReports");
+                    System.IO.File.WriteAllLines("Tools/GunfireReports/fire-stability.txt", report);
+                    Assert.GreaterOrEqual(times.Count, 11);
+                    float average = (times[times.Count-1] - times[0]) / (times.Count-1);
+                    Assert.AreEqual(.1f, average, .015f, "600 rounds/minute must survive frame scheduling.");
+                    Assert.Less(worstYaw, 4f, "The feet must not chase the recoil on every round.");
+                    Assert.Less(worstArmStep, 8f, "Each shot must keep the raised arm pose, with only a small kick.");
+                    report.Add($"ADS={ads}, shots={times.Count}, mean_interval={average:F4}, body_yaw_span={worstYaw:F2}, max_arm_step={worstArmStep:F2}");
+                    Hold(false,false); yield return WaitGameSeconds(1.3f);
+                }
+                System.IO.Directory.CreateDirectory("Tools/GunfireReports");
+                System.IO.File.WriteAllLines("Tools/GunfireReports/fire-stability.txt", report);
+            } finally { Hold(false,false); RestorePhysicalMice(); InputSystem.RemoveDevice(mouse); RestoreInputRouting(routing); }
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
         public IEnumerator NewShotsStartAtTheRenderedMuzzleDuringCameraSweeps()
         {
             Map01OpeningCutscene.CancelPending();

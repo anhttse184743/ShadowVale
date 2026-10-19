@@ -103,7 +103,7 @@ namespace ShadowVale.Map01
             }
             // Slot 4 owns the mouse before PlayerCombat reads it later in the frame.
             if (ShadowVale.Core.Services.InputFocus.OverlayOpen) { stoneThrow.Cancel(); return; }
-            if (!inventory.SuppressFire && kb.digit4Key.wasPressedThisFrame) inventory.OnSlotKey(3);
+            if (kb.digit4Key.wasPressedThisFrame) inventory.OnSlotKey(3);
             else if (inventory.ThrowableEquipped)
             {
                 if (kb.digit1Key.wasPressedThisFrame) inventory.OnSlotKey(0);
