@@ -41,7 +41,7 @@ namespace ShadowVale.Map01
             {
                 var guard = Spawn(boss.Position, playerPosition, i);
                 if (guard == null) break;
-                NearbyAgentsReinforcements.Send(guard, playerPosition, now);
+                NearbyAgentsReinforcements.Send(guard, playerPosition, now, boss, i);
                 sent.Add(guard);
             }
             return sent;

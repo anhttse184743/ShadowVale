@@ -43,5 +43,14 @@ namespace ShadowVale.Gameplay.Combat
         public float HipSpread => hipSpread;
         public bool IsGun => kind == WeaponKind.Rifle;
         public Transform Muzzle => muzzle != null ? muzzle : transform;
+        private MuzzleFlash flash;
+        private void Awake(){if(IsGun)EnsureFlash();}
+        private void EnsureFlash()
+        {
+            if(flash!=null)return;
+            var host=new GameObject("Muzzle flash");host.transform.SetParent(Muzzle,false);
+            flash=host.AddComponent<MuzzleFlash>();
+        }
+        public void PlayMuzzleFlash(){if(!IsGun)return;EnsureFlash();flash.Play();}
     }
 }

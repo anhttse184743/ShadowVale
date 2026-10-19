@@ -23,6 +23,8 @@ namespace ShadowVale.Map01
         private PlayableGraph graph;
         private AnimationClipPlayable death;
         private Transform chest;
+        private Map01EnemyGrounding grounding;
+        private string deathState;
         private Vector3 feet, approach, initialCameraPosition;
         private Quaternion initialCameraRotation;
         private float initialFov, elapsed, duration, skipHeld, clipLength;
@@ -39,11 +41,16 @@ namespace ShadowVale.Map01
             actor = boss.GetComponentInChildren<Animator>();
             cameraRig = owner.gameCamera != null ? owner.gameCamera.GetComponent<ThirdPersonCamera>() : null;
             var controller = actor != null ? actor.runtimeAnimatorController : null;
+            int index = actor != null && controller != null && actor.parameters.Any(p => p.name == "DeathIndex") ? actor.GetInteger("DeathIndex") : -1;
+            string[] variants = { "Enemy_Death_Backward", "Enemy_Death_Forward", "Enemy_Death_Shot", "Enemy_Death_Knees", "Enemy_Death_Stomach" };
+            string desired = index >= 0 && index < variants.Length ? variants[index] : null;
             var clip = controller != null ? controller.animationClips.FirstOrDefault(c =>
                 c.name.Equals("Die", System.StringComparison.OrdinalIgnoreCase)
                 || c.name.IndexOf("Dying", System.StringComparison.OrdinalIgnoreCase) >= 0
                 // the guards' own falls from Blender (Enemy_Death_*), the backward one first
                 || c.name.IndexOf("Death", System.StringComparison.OrdinalIgnoreCase) >= 0) : null;
+            if (desired != null) clip = controller.animationClips.FirstOrDefault(c => c.name == desired) ?? clip;
+            deathState = index >= 0 && actor.HasState(0, Animator.StringToHash("Die_" + index)) ? "Die_" + index : "Die";
             if (clip == null || cameraRig == null) {
                 Debug.LogWarning("[Map01] Finale unavailable: existing death clip or camera missing.", this);
                 return false;
@@ -52,6 +59,7 @@ namespace ShadowVale.Map01
             ReusedDeathClip = clip;
             clipLength = clip.length; duration = clipLength / DeathSpeed + 1.1f;
             feet = boss.transform.position;
+            grounding = boss.GetComponent<Map01EnemyGrounding>();
             chest = actor.isHuman ? actor.GetBoneTransform(HumanBodyBones.Chest) : null;
             initialCameraPosition = owner.gameCamera.transform.position;
             initialCameraRotation = owner.gameCamera.transform.rotation;
@@ -75,7 +83,7 @@ namespace ShadowVale.Map01
             graph = PlayableGraph.Create("Map 1 commander final collapse");
             graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
             death = AnimationClipPlayable.Create(graph, clip);
-            death.SetApplyFootIK(true); death.SetSpeed(DeathSpeed);
+            death.SetApplyFootIK(false); death.SetSpeed(DeathSpeed);
             AnimationPlayableOutput.Create(graph, "Existing death animation", actor).SetSourcePlayable(death);
             graph.Play();
             var agent = boss.GetComponent<NavMeshAgent>();
@@ -109,6 +117,7 @@ namespace ShadowVale.Map01
             if (!playing) return;
             elapsed += Time.unscaledDeltaTime;
             graph.Evaluate(Time.unscaledDeltaTime);
+            grounding?.GroundPose();
             skipHeld = Keyboard.current != null && Keyboard.current.escapeKey.isPressed
                 ? skipHeld + Time.unscaledDeltaTime : 0;
             if (skipHeld >= 1 || elapsed >= duration) { Finish(skipHeld >= 1); return; }
@@ -146,6 +155,7 @@ namespace ShadowVale.Map01
             // Render the settled pose even if the user skips while the boss is still upright.
             elapsed = duration;
             death.SetTime(clipLength); death.SetSpeed(0); graph.Evaluate(0);
+            grounding?.GroundPose();
             LateUpdate();
             playing = false;
             ReleaseAnimation();
@@ -167,8 +177,9 @@ namespace ShadowVale.Map01
             actor.applyRootMotion = rootMotion;
             actor.cullingMode = culling;
             actor.ResetTrigger(PlayerCombat.AnimatorParams.Die);
-            if (actor.HasState(0, Animator.StringToHash("Die"))) {
-                actor.Play("Die", 0, 1); actor.Update(0);
+            if (actor.HasState(0, Animator.StringToHash(deathState))) {
+                actor.Play(deathState, 0, 1); actor.Update(0);
+                grounding?.GroundPose();
             }
         }
 

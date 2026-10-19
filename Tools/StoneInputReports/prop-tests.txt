@@ -1,0 +1,5 @@
+RUNNING
+Passed ShadowVale.Map01.Tests.StoneMouseInputTests.SlotFourAndMouseThrowWithoutFiringOrLosingCancelledStones
+
+
+FINISHED passed=1 failed=0

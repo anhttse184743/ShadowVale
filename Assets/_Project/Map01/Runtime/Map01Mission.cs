@@ -167,6 +167,8 @@ namespace ShadowVale.Map01
             // Squad coordination (QUBO over that graph), configured by the content bundle's ai_settings
             // and this map's own coordination entry, if it has one.
             SquadCoordinator.Attach(gameObject, CoordinationSettings.ForScene(gameObject.scene.name));
+            // The commander's grenades go off like Nam's F1 (Map01Blast), sized to their blast.
+            ShadowVale.Gameplay.Enemies.Boss.Grenade.BlastEffect = CommanderBlast;
             // Anonymous session telemetry: listens to the shared events, ends when this map unloads.
             // A sandbox copy (Test Map 1 AI) reports apart, so test sessions never mix with Map 1's numbers.
             TelemetryService.Attach(gameObject, gameObject.scene.name == TutorialDirector.SceneName ? "map00_tutorial" : gameObject.scene.name == Map01SaveSystem.MainScene ? MapId : MapId + "_test");
@@ -198,11 +200,11 @@ namespace ShadowVale.Map01
             if (ModernCombat != null)
             {
                 ModernCombat.DrawsOwnWeaponHud = true; // Map01Hud.Combat shows the slots on keys 1-4.
-                ModernCombat.SlotPressed = inventory.OnSlotKey; // 1 long gun, 2 pistol, 3 knife, 4 next throwable (Map01Inventory.Bag).
+                ModernCombat.SlotPressed = inventory.OnSlotKey; // 1 long gun, 2 pistol, 3 knife, 4 stones (Map01Inventory.Bag).
                 ModernCombat.GunKilled += OnGunKilled;
                 var stones = GetComponent<Map01StoneThrow>(); // Added by Map01PlayerInteraction.Awake.
                 ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.SuppressFire && !InputFocus.OverlayOpen
-                    && !(Binoculars?.Binoculars ?? false) && (stones == null || !stones.Aiming); // Hands are on the binoculars or a stone, not the rifle.
+                    && !inventory.ThrowableEquipped && !(Binoculars?.Binoculars ?? false) && (stones == null || !stones.Aiming); // Hands are on the binoculars or a throwable, not the rifle.
                 ModernCombat.TryConsumeRound = () =>
                 {
                     if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 3.", 3); return false; }
@@ -521,8 +523,18 @@ namespace ShadowVale.Map01
                 : kind == ShadowVale.Gameplay.Skills.SkillKind.Stealth ? "Lén lút" : "Kỹ thuật";
             Say($"{name} đạt cấp {level}! Xem thông số trong Túi đồ → Kĩ Năng.", 4);
         }
+        private void CommanderBlast(Vector3 at, float radius)
+        {
+            Vector3 up = Physics.Raycast(at + Vector3.up * 1.5f, Vector3.down, out var ground, 4f, ObstructionMask, QueryTriggerInteraction.Ignore)
+                ? ground.normal : Vector3.up;
+            Map01Blast.Spawn(at, up, gameCamera, radius);
+            Map01Smoke.Spawn(at, 1.6f, 4f, visible: false); // Its dust hides a man behind it for a moment, as the F1's does.
+        }
+
         private void OnDestroy()
         {
+            if (ShadowVale.Gameplay.Enemies.Boss.Grenade.BlastEffect == (System.Action<Vector3, float>)CommanderBlast)
+                ShadowVale.Gameplay.Enemies.Boss.Grenade.BlastEffect = null;
             if (Skills != null) Skills.LevelChanged -= OnSkillLevelChanged;
             if (ModernCombat != null) {
                 ModernCombat.GunKilled -= OnGunKilled;

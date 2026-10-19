@@ -448,7 +448,9 @@ namespace ShadowVale.Map01.Tests
             quest.RestoreStage(Map01Quest.BossStage);
             yield return null;
             var boss = mission.Enemies.Single(e => e.IsBoss);
-            Assert.AreEqual(expected * 1.6f, boss.DamagePerShot, 1e-3f);
+            Assert.AreEqual(new ShadowVale.Data.Content.BossProfile().DamagePerRound, boss.DamagePerShot, 1e-3f,
+                "His own damage a round (11.5), not a guard's times a multiplier.");
+            Assert.Greater(boss.DamagePerShot, expected);
             yield return new ExitPlayMode();
         }
 

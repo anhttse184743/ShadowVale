@@ -10,13 +10,15 @@ namespace ShadowVale.AI.Boss
     /// <see cref="Range"/> of a combat group, that group is planned as a pincer: the QUBO weighs
     /// flanking and the escape routes more, so his men close the ring while he keeps Nam pinned
     /// from cover. When he falls, the men he commanded lose heart and fall back sooner. The game's
-    /// replay experiment attacks a camp without a commander, so it never meets either rule.
+    /// replay experiment attacks a camp without a commander, so it never meets either rule. The plan
+    /// also keeps watch on the way to him (<see cref="ShadowVale.AI.Coordination.GuardCommanderTask"/>), so the
+    /// flanking is lighter than it was (×1.8 until 18/10/2026): the men no longer all swing wide and leave him open.
     /// </summary>
     public static class Command
     {
         /// <summary>How far his orders carry (radio and voice), metres.</summary>
         public const float Range = 45f;
-        public const double FlankScale = 1.8;
+        public const double FlankScale = 1.3;
         public const double CoverageScale = 1.3;
         /// <summary>Share of health below which his men retreat once he is down (their own threshold if higher).</summary>
         public const float MoraleBreakRetreat = .6f;

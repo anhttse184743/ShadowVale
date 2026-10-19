@@ -1,0 +1,1 @@
+PLAYING in Game View; repeats 3 seconds after each ending. Stop Play Mode to exit. Save files are not changed.

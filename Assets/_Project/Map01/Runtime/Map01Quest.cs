@@ -192,9 +192,34 @@ namespace ShadowVale.Map01
                 .OrderBy(e=>e.SaveId,System.StringComparer.Ordinal).FirstOrDefault();
             if(template==null)return;
             var marker=story.Layout.commanderPost;
-            var instance=Instantiate(template.gameObject,marker.position,marker.rotation,story.Layout.transform);
+            var staging = new GameObject("Commander staging");
+            staging.SetActive(false);
+            var instance=Instantiate(template.gameObject,marker.position,marker.rotation,staging.transform);
+            var officerModel = Resources.Load<GameObject>("Characters/EnemyCommanderVisual");
+            Animator officerActor = null;
+            if (officerModel != null)
+            {
+                var previous = instance.GetComponentInChildren<Animator>(true);
+                var replacement = Instantiate(officerModel, previous.transform.parent);
+                replacement.transform.localPosition = previous.transform.localPosition;
+                replacement.transform.localRotation = previous.transform.localRotation;
+                var actor = replacement.GetComponent<Animator>();
+                actor.runtimeAnimatorController = previous.runtimeAnimatorController;
+                actor.applyRootMotion = false;
+                // As the guard model he replaces: animated off-screen too (his rifle, his fall), not culled.
+                actor.cullingMode = previous.cullingMode;
+                officerActor = actor;
+                previous.gameObject.SetActive(false);
+                Destroy(previous.gameObject);
+            }
+            instance.transform.SetParent(story.Layout.transform, true);
+            // Bound once he is active: an inactive Animator plays no controller, so its rifle layer was not found and
+            // stayed on at his death, holding him upright (19/10/2026).
+            if (officerActor != null) instance.GetComponent<Health>().BindAnimator(officerActor);
+            Destroy(staging);
             instance.name="Chỉ huy địch";
             boss=instance.GetComponent<Map01EnemyController>();boss.Configure(System.Array.Empty<Vector3>());
+            Map01EnemyGrounding.Attach(boss);
             boss.operationIndex=3;boss.carriesSupplyKey=false;boss.suppressOperationLoot=false;
             boss.BindMission(mission); // Before ConfigureAsBoss: binding resets damage to the balance baseline.
             // The boss_commander archetype (Map01Content.json): his boss profile, and his health (600) rather
@@ -202,6 +227,7 @@ namespace ShadowVale.Map01
             var archetype=mission.Bundle?.enemy_archetypes?.FirstOrDefault(a=>a!=null&&a.is_boss);
             var profile=archetype?.boss!=null?archetype.boss.ToProfile():new BossProfile();
             boss.ConfigureAsBoss(profile);
+            if(archetype!=null)boss.ApplyBossArchetype(archetype.move_speed,archetype.vision_range,archetype.vision_angle);
             var bossHealth=instance.GetComponent<Health>();
             if(archetype!=null&&archetype.max_hp>0)bossHealth.SetMaxHealth(archetype.max_hp);
             mission.AddEnemy(boss);

@@ -1,0 +1,1 @@
+PASS: both commander models have extracted textures and bound color materials.

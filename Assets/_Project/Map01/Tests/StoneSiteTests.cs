@@ -192,6 +192,7 @@ namespace ShadowVale.Map01.Tests
             Assert.AreEqual(1f, hud.StoneMarker(boulder), "Stones a step away are pointed out.");
             Assert.AreEqual(0f, hud.StoneMarker(First(Map01StoneSiteData.Source.Riverbank)), "Not the ones further than a short walk.");
             int before = inventory.Stones;
+            mission.Say(null, 0);
             InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.E));
             yield return null; yield return null;
             InputSystem.QueueStateEvent(keyboard, new KeyboardState());
@@ -201,7 +202,8 @@ namespace ShadowVale.Map01.Tests
             yield return null;
             Assert.AreEqual(0, sites.Showing(boulder), "What was picked up no longer lies there.");
             Assert.AreEqual(0f, hud.StoneMarker(boulder), "Nor is it pointed out any more.");
-            StringAssert.Contains($"({before + 2}/15)", mission.Dialogue);
+            Assert.IsTrue(string.IsNullOrEmpty(mission.Dialogue), "Successful stone pickups use the item feed only.");
+            Assert.IsTrue(hud.PickupFeed.Any(p => p.id == "stone" && p.count >= 2));
 
             // Up to the limit: the last site gives only what fits and keeps the rest.
             var bars = new[] { First(Map01StoneSiteData.Source.Riverbank), First(Map01StoneSiteData.Source.Riverbank, 1), First(Map01StoneSiteData.Source.Riverbank, 2) };

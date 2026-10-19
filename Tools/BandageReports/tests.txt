@@ -1,0 +1,5 @@
+RUNNING
+Passed ShadowVale.Map01.Tests.BandageWeaponTests.BandagingHidesWeaponsAndRestoresThemOnFinishCancelAndDisable
+
+
+FINISHED passed=1 failed=0

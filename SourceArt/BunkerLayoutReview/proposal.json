@@ -1,0 +1,13 @@
+{
+  "status": "PREVIEW_ONLY",
+  "unity_modified": false,
+  "craft_chairs": 2,
+  "craft_wall_clearance_m": 0.03,
+  "meeting_dimensions_m": [
+    1.168,
+    3.3,
+    0.8025
+  ],
+  "meeting_chairs": 6,
+  "placement": "Conceptual doorway context; exact Unity doorway alignment pending approval"
+}

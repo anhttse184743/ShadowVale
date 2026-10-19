@@ -35,6 +35,8 @@ namespace ShadowVale.Map01
             var oldLoot=instance.GetComponent<ForestPoint>();if(oldLoot!=null){mission.UnregisterPoint(oldLoot);Destroy(oldLoot);}
             var enemy=instance.GetComponent<Map01EnemyController>();enemy.carriesSupplyKey=false;enemy.suppressOperationLoot=true;enemy.operationIndex=0;
             enemy.InitializePursuer(mission,at,false);mission.AddEnemy(enemy);
+            // Once they have checked the station they walk the radio beat, spread round it, instead of standing where they stopped.
+            var beat=Map01PatrolBeats.RadioBeat(Layout);if(beat.Count>=3)enemy.AssignBeat(beat.Points,beat.Stops,beat.Yaws,(index*beat.Count/3+1)%beat.Count,Map01PatrolBeats.Pace);
             if(investigate)enemy.Hear(Layout.radio.position,100,NoiseKind.Other);return enemy;
         }
         public void RestoreOperationActors(Map01EnemyController.Snapshot[] states)

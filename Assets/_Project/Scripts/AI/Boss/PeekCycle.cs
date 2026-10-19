@@ -43,6 +43,15 @@ namespace ShadowVale.AI.Boss
 
         public void Stop() => Active = false;
 
+        /// <summary>A rifle is on him: back behind the cover now, for <paramref name="seconds"/>. False if already behind it.</summary>
+        public bool Duck(float now, float seconds)
+        {
+            if (!Active || !IsOut) return false;
+            IsOut = false;
+            _until = now + Mathf.Max(.1f, seconds);
+            return true;
+        }
+
         /// <summary>Where to go now, if anywhere.</summary>
         public Step Tick(float now)
         {

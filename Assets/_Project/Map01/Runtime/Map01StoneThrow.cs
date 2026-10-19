@@ -7,8 +7,8 @@ using UnityEngine;
 namespace ShadowVale.Map01
 {
     /// <summary>
-    /// Throwables on [Q], whichever key 4 picked (Map01Inventory.Throwable): stones, smoke bombs, F1 grenades.
-    /// Hold [Q] to aim: an arc shows where it will land. Release [Q] to throw, right mouse to put it away.
+    /// Slot 4 equips and cycles available stones, smoke bombs and F1 grenades.
+    /// Hold left mouse to aim along the arc, release to throw, right mouse to cancel.
     /// <list type="bullet">
     /// <item>Stone: each guard Nam can see shows the ring he would hear it fall in, lit when the aim is inside it;
     /// where it lands every guard in earshot leaves his post to check it out (Map01EnemyController).</item>
@@ -20,13 +20,14 @@ namespace ShadowVale.Map01
     /// for a stealth map, starting values from the approved design.)</item>
     /// </list>
     /// </summary>
+    [DefaultExecutionOrder(100)]
     public sealed class Map01StoneThrow : MonoBehaviour
     {
         [SerializeField] private float throwSpeed = 14f;
         [Tooltip("Guards within this distance of Nam (and in his sight) show their hearing ring while he aims.")]
         [SerializeField] private float ringsWithin = 40f;
         private const int ArcPoints = 32, RingPoints = 40, MaxRings = 10;
-        public const float SmokeRadius = 4f, SmokeSeconds = 15f, FuseSeconds = 3.5f, KillRadius = 3f, WoundRadius = 7f, GrenadeNoise = 40f;
+        public const float SmokeRadius = 4f, SmokeSeconds = 15f, FuseSeconds = 3.5f, KillRadius = 6f, WoundRadius = 14f, GrenadeNoise = 40f;
         private static readonly Color ArcColour = new Color(1f, .92f, .6f, .9f);
         private static readonly Color RingIdle = new Color(1f, 1f, 1f, .35f);
         private static readonly Color RingHears = new Color(1f, .62f, .15f, .95f);
@@ -55,6 +56,8 @@ namespace ShadowVale.Map01
         private Map01Inventory inventory;
         private IBinoculars scouting;
         private LineRenderer arcLine, landingRing, killRing;
+        private Vector3 throwFacing;
+        private float faceThrowUntil;
 
         private void Awake()
         {
@@ -65,14 +68,14 @@ namespace ShadowVale.Map01
         private void Start() => scouting = GetComponents<MonoBehaviour>().OfType<IBinoculars>().FirstOrDefault(); // Added by Map01Quest.Awake.
 
         private bool CanAim() => mission.IsInitialized && !mission.Stopped && !mission.InventoryOpen && !mission.MapOpen
-            && !ForestMenu.Visible && (scouting == null || !scouting.Binoculars);
+            && !ForestMenu.Visible && !ShadowVale.Core.Services.InputFocus.OverlayOpen && (scouting == null || !scouting.Binoculars);
 
-        /// <summary>[Q] down.</summary>
+        /// <summary>Left mouse down with slot 4 equipped.</summary>
         public void BeginAim()
         {
             if (Aiming || !CanAim()) return;
             string ready = inventory.ReadyThrowable();
-            if (ready == null) { mission.Say("Hết đồ ném — tìm sỏi ở bờ sông, hoặc chế bom khói, lựu đạn ở bàn chế tạo.", 4); return; }
+            if (ready == null) return;
             Item = ready;
             Aiming = true;
             Map01NamActions.For(mission)?.Hold(Map01NamActions.ThrowAim, true);   // the stone drawn back
@@ -83,18 +86,23 @@ namespace ShadowVale.Map01
         public void Cancel()
         {
             Aiming = false;
+            faceThrowUntil = 0;
             Map01NamActions.For(mission)?.Hold(Map01NamActions.ThrowAim, false);
             Show(false);
         }
 
-        /// <summary>[Q] up: throw along the arc shown.</summary>
+        /// <summary>Left mouse up: throw along the arc shown.</summary>
         public void Release()
         {
             if (!Aiming) return;
+            if (!CanAim()) { Cancel(); return; }
+            var target = AimTarget();
+            FaceTarget(target);
+            Plan(target);
             Aiming = false;
             Show(false);
             var nam = Map01NamActions.For(mission);
-            if (Launch()) nam?.ThrowNow(); else nam?.Hold(Map01NamActions.ThrowAim, false);
+            if (Launch()) { faceThrowUntil=Time.time+1.1f; nam?.ThrowNow(); } else nam?.Hold(Map01NamActions.ThrowAim, false);
         }
 
         /// <summary>Throw straight at <paramref name="target"/> (as if aimed there). False without a stone to throw.</summary>
@@ -104,18 +112,36 @@ namespace ShadowVale.Map01
             string ready = inventory.ReadyThrowable();
             if (ready == null) return false;
             Item = ready;
+            FaceTarget(target);
             Plan(target);
             if (!Launch()) return false;
             Map01NamActions.For(mission)?.ThrowNow();
+            faceThrowUntil=Time.time+1.1f;
             return true;
         }
 
-        private void Update()
+        private void LateUpdate()
         {
-            if (!Aiming) return;
+            if (!Aiming) {
+                if (Time.time<faceThrowUntil && CanAim()) FaceDirection(throwFacing);
+                return;
+            }
             if (!CanAim()) { Cancel(); return; }
-            Plan(AimTarget());
+            var target=AimTarget();
+            FaceTarget(target);
+            Plan(target);
             Draw();
+        }
+
+        private void FaceTarget(Vector3 target)
+        {
+            throwFacing=Vector3.ProjectOnPlane(target-mission.player.position,Vector3.up);
+            FaceDirection(throwFacing);
+        }
+
+        private void FaceDirection(Vector3 direction)
+        {
+            if(direction.sqrMagnitude>.0001f)mission.player.rotation=Quaternion.LookRotation(direction,Vector3.up);
         }
 
         /// <summary>Where the crosshair points, no further than a throw, brought down to the ground.</summary>
@@ -184,6 +210,7 @@ namespace ShadowVale.Map01
         /// <summary>What flies: the item's own model where the catalog has one, else a grey pebble.</summary>
         private static GameObject Projectile(string item)
         {
+            if (item == "stone") return CreateStoneVisual("Thrown stone");
             var catalog = Map01ItemCatalog.Load();
             var model = item != "stone" && catalog != null ? catalog.Model(item) : null;
             if (model != null)
@@ -200,6 +227,33 @@ namespace ShadowVale.Map01
             stone.transform.localScale = Vector3.one * .16f;
             stone.GetComponent<Renderer>().material.color = item == "stone" ? new Color(.46f, .44f, .39f) : new Color(.28f, .31f, .2f);
             return stone;
+        }
+
+        // The same palm-sized pebble is used in the hand and in flight.
+        internal static GameObject CreateStoneVisual(string name)
+            => CreateHeldVisual("stone",name);
+
+        internal static GameObject CreateHeldVisual(string item,string name)
+        {
+            var root = new GameObject(name);
+            var model = Map01ItemCatalog.Load()?.Model(item);
+            var visual = model != null ? Instantiate(model, root.transform, false) : GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            visual.transform.SetParent(root.transform, false);
+            foreach (var collider in visual.GetComponentsInChildren<Collider>(true)) {
+                collider.enabled = false;
+                Destroy(collider);
+            }
+            foreach (var lod in visual.GetComponentsInChildren<LODGroup>(true)) lod.ForceLOD(0);
+            var renderers = visual.GetComponentsInChildren<Renderer>(true);
+            if (renderers.Length > 0) {
+                var bounds = renderers[0].bounds;
+                foreach (var renderer in renderers) bounds.Encapsulate(renderer.bounds);
+                float size = bounds.size.magnitude;
+                float scale = (item=="stone"?.15f:item=="smoke_bomb"?.21f:.18f) / Mathf.Max(.001f, size);
+                visual.transform.localScale *= scale;
+                visual.transform.localPosition -= bounds.center * scale;
+            }
+            return root;
         }
 
         private IEnumerator Fly(Vector3[] path, Vector3 landing, string item)

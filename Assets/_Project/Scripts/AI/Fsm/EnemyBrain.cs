@@ -169,11 +169,23 @@ namespace ShadowVale.AI.Fsm
             m.TakeCoverUntil = _ctx.Now + _ctx.Tuning.TakeCoverTimeoutSeconds;
         }
 
+        /// <summary>
+        /// His commander is on the move: stop where he is and fire for <paramref name="seconds"/> — at the player
+        /// if in sight, at where he was last seen if not — so the player keeps his head down. Only while fighting.
+        /// </summary>
+        public bool CoverFire(float now, float seconds)
+        {
+            var m = _ctx.Memory;
+            if (_ctx.Body.IsDead || m.Retreating || !m.Engaged(now) || seconds <= 0) return false;
+            m.CoverFireUntil = Mathf.Max(m.CoverFireUntil, now + seconds);
+            return true;
+        }
+
         /// <summary>Back to calm at his post: forget everything, ignore the player until <paramref name="calmUntil"/>.</summary>
         public void ResetToPost(float calmUntil)
         {
             var m = _ctx.Memory;
-            m.Suspicion = 0; m.AlertUntil = 0; m.EngagedUntil = 0; m.SearchUntil = 0; m.SuppressUntil = 0;
+            m.Suspicion = 0; m.AlertUntil = 0; m.EngagedUntil = 0; m.SearchUntil = 0; m.SuppressUntil = 0; m.CoverFireUntil = 0;
             m.Returning = false; m.CalmUntil = calmUntil; m.PatrolIndex = 0; m.PatrolPauseUntil = 0;
             m.ClearAssignment();
             m.Retreating = false; m.RetreatDone = false; m.RetreatHoldUntil = 0;

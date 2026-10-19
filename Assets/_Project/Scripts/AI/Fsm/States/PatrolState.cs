@@ -8,6 +8,7 @@ namespace ShadowVale.AI.Fsm.States
             var m = ctx.Memory; var body = ctx.Body;
             if (ctx.Now < m.PatrolPauseUntil) { body.Stop(); body.Animate(false); return; }
             body.Resume();
+            body.SetPace(ctx.Tuning.PatrolPace);
             var points = m.PatrolPoints;
             if (points != null && points.Length > 0 && body.HasArrived(ctx.Tuning.PatrolArriveDistance))
             {

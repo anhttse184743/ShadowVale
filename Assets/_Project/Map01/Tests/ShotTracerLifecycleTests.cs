@@ -117,6 +117,7 @@ namespace ShadowVale.Map01.Tests
                 typeof(PlayerCombat).GetMethod("Attack", Private).Invoke(combat, null);
             }
             Assert.AreEqual(ammo - 3, combat.RoundsInMagazine);
+            typeof(PlayerCombat).GetMethod("ResolvePendingGunfire",Private).Invoke(combat,null);
             Assert.IsTrue(pool.Any(t => t.GetComponent<LineRenderer>().enabled), "Actual gameplay gunfire must show a tracer.");
             for (int i = 0; i < 500; i++) Show(combat, Vector3.one, Vector3.one * 2);
             CollectionAssert.AreEqual(pool, Pool(combat));
