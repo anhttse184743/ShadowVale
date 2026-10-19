@@ -130,7 +130,8 @@ namespace ShadowVale.Editor
             // Muzzle/tip marker at the front, for effects and debug lines.
             var muzzle = new GameObject("Muzzle");
             muzzle.transform.SetParent(root.transform, false);
-            muzzle.transform.localPosition = new Vector3(0f, 0f, finalBounds.max.z);
+            muzzle.transform.localPosition = spec.Kind==WeaponKind.Rifle && TryBarrelExit(root.transform,out var barrelExit)
+                ? barrelExit : new Vector3(0f, 0f, finalBounds.max.z);
 
             var weapon = root.AddComponent<Weapon>();
             ApplyStats(weapon, spec, muzzle.transform);
@@ -140,6 +141,24 @@ namespace ShadowVale.Editor
             Object.DestroyImmediate(root);
             Debug.Log($"[Weapons] {path} — length {spec.TargetLength} m from {Path.GetFileName(spec.ModelPath)}");
             return true;
+        }
+
+        public static bool TryBarrelExit(Transform root,out Vector3 exit)
+        {
+            bool found=false,shaftFound=false;Bounds barrel=new Bounds(),shaft=new Bounds();
+            foreach(var filter in root.GetComponentsInChildren<MeshFilter>(true)) {
+                bool end=filter.name.StartsWith("r_barrelEnd_low"),tube=filter.name.StartsWith("r_barrel_low");
+                if((!end&&!tube) || filter.sharedMesh==null)continue;
+                foreach(var vertex in filter.sharedMesh.vertices) {
+                    var point=root.InverseTransformPoint(filter.transform.TransformPoint(vertex));
+                    if(end){if(!found){barrel=new Bounds(point,Vector3.zero);found=true;}else barrel.Encapsulate(point);}
+                    if(tube){if(!shaftFound){shaft=new Bounds(point,Vector3.zero);shaftFound=true;}else shaft.Encapsulate(point);}
+                }
+            }
+            // The slanted muzzle brake is asymmetric; the bore follows the tube's center.
+            var center=shaftFound?shaft.center:barrel.center;
+            exit=new Vector3(center.x,center.y,barrel.max.z);
+            return found;
         }
 
         /// <summary>

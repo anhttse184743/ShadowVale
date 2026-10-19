@@ -26,6 +26,14 @@ namespace ShadowVale.Map01.Tests
         private static Map01Mission mission;
         private static Mouse mouse;
         private static float ahead;
+        private static readonly System.Collections.Generic.List<InputDevice> isolatedMice=new();
+
+        [TearDown]
+        public void RestorePhysicalMice()
+        {
+            foreach(var device in isolatedMice)if(device!=null && device.added)InputSystem.EnableDevice(device);
+            isolatedMice.Clear();
+        }
 
         private static void Look(float yaw, float pitch)
         {
@@ -93,8 +101,99 @@ namespace ShadowVale.Map01.Tests
             controller.enabled = false; mission.player.SetPositionAndRotation(spot, Quaternion.Euler(0, ahead, 0)); controller.enabled = true;
             Look(ahead, 0);
             mouse = InputSystem.AddDevice<Mouse>();
+            foreach(var device in InputSystem.devices.OfType<Mouse>().Where(d=>d!=mouse && d.enabled).ToArray()) {
+                isolatedMice.Add(device);InputSystem.DisableDevice(device);
+            }
             mission.ModernCombat.Equip(WeaponKind.Rifle);
             yield return WaitGameSeconds(.5f);
+        }
+
+        [UnityTest]
+        public IEnumerator NewShotsStartAtTheRenderedMuzzleDuringCameraSweeps()
+        {
+            Map01OpeningCutscene.CancelPending();
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();yield return null;yield return null;
+            var routing=RouteInputToGame();yield return Arrive();
+            try {
+                Hold(true,false);yield return WaitGameSeconds(.8f);
+                var rows=new System.Collections.Generic.List<string>{"time,muzzle_gap_metres,barrel_angle"};
+                float worst=0,start=Time.time;int shots=0;
+                Hold(true,true);
+                while(Time.time-start<1.1f) {
+                    float t=Time.time-start;Look(ahead+25*Mathf.Sin(t*3),-8+12*Mathf.Sin(t*4));
+                    yield return new WaitForEndOfFrame();
+                    foreach(var tracer in ShotTracerLifecycleTests.Pool(mission.ModernCombat)) {
+                        var line=tracer.GetComponent<LineRenderer>();
+                        if(!line.enabled || tracer.EmissionFrame!=Time.frameCount)continue;
+                        var from=line.GetPosition(0);
+                        shots++;
+                        float gap=Vector3.Distance(from,Rifle.Muzzle.position);
+                        float angle=Vector3.Angle(line.GetPosition(1)-from,Rifle.Muzzle.forward);
+                        var flash=Rifle.GetComponentInChildren<MuzzleFlash>();
+                        Assert.IsNotNull(flash);Assert.IsTrue(flash.Visible,"Every real shot must flash at the muzzle.");
+                        Assert.Less(Vector3.Distance(flash.transform.position,Rifle.Muzzle.position),.001f);
+                        Assert.Less(Vector3.Angle(flash.transform.forward,Rifle.Muzzle.forward),.1f);
+                        if(shots==1)CaptureGunfire(Rifle);
+                        worst=Mathf.Max(worst,gap);rows.Add($"{t},{gap},{angle}");
+                    }
+                }
+                Hold(false,false);
+                System.IO.Directory.CreateDirectory("Tools/GunfireReports");System.IO.File.WriteAllLines("Tools/GunfireReports/alignment.csv",rows);
+                Assert.Greater(shots,4,"The regression must measure actual shots.");
+                Assert.Less(worst,.005f,"A new tracer must leave the muzzle's rendered pose, not its previous Update position.");
+                yield return WaitGameSeconds(.2f);
+                Assert.IsFalse(Rifle.GetComponentInChildren<MuzzleFlash>().Visible,"The flame must disappear between shots.");
+                mission.ModernCombat.RestoreMagazine(0);Hold(true,true);yield return WaitGameSeconds(.12f);Hold(false,false);
+                Assert.IsFalse(Rifle.GetComponentInChildren<MuzzleFlash>().Visible,"An empty magazine must not create a flash.");
+            } finally {RestorePhysicalMice();InputSystem.RemoveDevice(mouse);RestoreInputRouting(routing);}
+            yield return new ExitPlayMode();
+        }
+
+        private static void CaptureGunfire(Weapon gun)
+        {
+            System.IO.Directory.CreateDirectory("Tools/GunfireReports");
+            var host=new GameObject("Gunfire verification camera");var camera=host.AddComponent<Camera>();
+            var texture=RenderTexture.GetTemporary(800,500,24);var image=new Texture2D(800,500,TextureFormat.RGB24,false);
+            var previous=RenderTexture.active;
+            var surroundings=Object.FindObjectsByType<Renderer>(FindObjectsSortMode.None).Where(r=>!r.transform.IsChildOf(mission.player))
+                .Select(r=>(renderer:r,hidden:r.forceRenderingOff)).ToArray();
+            try {
+                foreach(var entry in surroundings)entry.renderer.forceRenderingOff=true;
+                camera.clearFlags=CameraClearFlags.SolidColor;camera.backgroundColor=new Color(.055f,.065f,.075f);
+                camera.orthographic=true;camera.orthographicSize=.38f;camera.nearClipPlane=.01f;camera.farClipPlane=30;
+                var focus=gun.Muzzle.position-gun.Muzzle.forward*.12f;
+                camera.transform.position=focus+gun.Muzzle.right*1.4f+Vector3.up*.25f;
+                camera.transform.LookAt(focus);camera.targetTexture=texture;camera.Render();RenderTexture.active=texture;
+                image.ReadPixels(new Rect(0,0,800,500),0,0);image.Apply();
+                System.IO.File.WriteAllBytes("Tools/GunfireReports/muzzle-flash.png",image.EncodeToPNG());
+            } finally {foreach(var entry in surroundings)if(entry.renderer!=null)entry.renderer.forceRenderingOff=entry.hidden;RenderTexture.active=previous;camera.targetTexture=null;RenderTexture.ReleaseTemporary(texture);Object.Destroy(host);Object.Destroy(image);}
+        }
+
+        [Test]
+        public void MuzzleMarkerLiesOnTheActualBarrelBore()
+        {
+            var prefab=UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/Items/W_AK47.prefab");
+            var root=Object.Instantiate(prefab);
+            try {
+                var weapon=root.GetComponent<Weapon>();
+                var filter=root.GetComponentsInChildren<MeshFilter>().Single(f=>f.name.StartsWith("r_barrel_low"));
+                var points=filter.sharedMesh.vertices.Select(v=>root.transform.InverseTransformPoint(filter.transform.TransformPoint(v))).ToArray();
+                float x=(points.Min(p=>p.x)+points.Max(p=>p.x))*.5f;
+                float y=(points.Min(p=>p.y)+points.Max(p=>p.y))*.5f;
+                var marker=root.transform.InverseTransformPoint(weapon.Muzzle.position);
+                Assert.Less(Vector2.Distance(new Vector2(marker.x,marker.y),new Vector2(x,y)),.001f,"Effects must leave the bore center, not the weapon grip origin.");
+                var end=root.GetComponentsInChildren<MeshFilter>().Single(f=>f.name.StartsWith("r_barrelEnd_low"));
+                float tip=end.sharedMesh.vertices.Max(v=>root.transform.InverseTransformPoint(end.transform.TransformPoint(v)).z);
+                Assert.AreEqual(tip,marker.z,.001f,"The marker must also reach the physical barrel exit.");
+            } finally {Object.DestroyImmediate(root);}
+        }
+
+        [Test]
+        public void MuzzleFlameShaderCompiles()
+        {
+            var shader=Resources.Load<Shader>("Combat/MuzzleFlash");Assert.IsNotNull(shader);Assert.IsTrue(shader.isSupported);
+            Assert.IsFalse(UnityEditor.ShaderUtil.GetShaderMessages(shader).Any(m=>m.severity==UnityEditor.Rendering.ShaderCompilerMessageSeverity.Error));
         }
 
         [UnityTest]
@@ -152,7 +251,7 @@ namespace ShadowVale.Map01.Tests
             Assert.Less(mission.ModernCombat.RoundsInMagazine, rounds, "The burst was really fired.");
             Assert.Less(sum / frames, 4f, "Firing, the barrel stays on the crosshair between kicks.");
 
-            InputSystem.RemoveDevice(mouse); RestoreInputRouting(routing);
+            RestorePhysicalMice();InputSystem.RemoveDevice(mouse); RestoreInputRouting(routing);
             yield return new ExitPlayMode();
         }
 
@@ -210,7 +309,7 @@ namespace ShadowVale.Map01.Tests
             Assert.Less(BarrelError(), 3f, "The reload done, the barrel is back on the crosshair.");
 
             Hold(false, false);
-            InputSystem.RemoveDevice(mouse); RestoreInputRouting(routing);
+            RestorePhysicalMice();InputSystem.RemoveDevice(mouse); RestoreInputRouting(routing);
             yield return new ExitPlayMode();
         }
     }

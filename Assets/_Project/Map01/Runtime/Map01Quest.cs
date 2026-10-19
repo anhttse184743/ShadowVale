@@ -202,6 +202,7 @@ namespace ShadowVale.Map01
                 var actor = replacement.GetComponent<Animator>();
                 actor.runtimeAnimatorController = previous.runtimeAnimatorController;
                 actor.applyRootMotion = false;
+                instance.GetComponent<Health>().BindAnimator(actor);
                 previous.gameObject.SetActive(false);
                 Destroy(previous.gameObject);
             }
@@ -209,6 +210,7 @@ namespace ShadowVale.Map01
             Destroy(staging);
             instance.name="Chỉ huy địch";
             boss=instance.GetComponent<Map01EnemyController>();boss.Configure(System.Array.Empty<Vector3>());
+            Map01EnemyGrounding.Attach(boss);
             boss.operationIndex=3;boss.carriesSupplyKey=false;boss.suppressOperationLoot=false;
             boss.BindMission(mission); // Before ConfigureAsBoss: binding resets damage to the balance baseline.
             // The boss_commander archetype (Map01Content.json): his boss profile, and his health (600) rather

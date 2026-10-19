@@ -7,7 +7,7 @@ namespace ShadowVale.Map01
 {
     /// <summary>
     /// Everything the player carries and the bench's crafting queue. What is carried lives in two places:
-    /// the four equipment slots (1 long gun, 2 pistol, 3 knife, plus the throwable picked for [Q]) and the
+    /// the four equipment slots (1 long gun, 2 pistol, 3 knife, plus the throwable selected for left mouse) and the
     /// bag, a 6 x 4 grid where each cell holds one stack. Cells keep their place (the player arranges them,
     /// and a save keeps the arrangement); counts are read off the cells. Presentation (names, icons,
     /// descriptions) stays in the static <see cref="ForestInventory"/> helper; the grid's moves are in
@@ -256,7 +256,7 @@ namespace ShadowVale.Map01
         /// layout (<see cref="RestoreLayout"/>) puts every stack back where it was afterwards.</summary>
         public void RestoreFromSave(ForestIngredient[] savedItems, int savedStones, string savedCrafting, float craftRemaining)
         {
-            SuppressFire = false; nextQuickUse = 0;
+            SuppressFire = false; nextQuickUse = 0; ThrowableEquipped = false;
             ClearAll();
             // Weapons first, so they take their slots; earlier saves carried rifle and knife without entries.
             // Only a missing key is migrated: a saved count of 0 is an explicit absence and stays one.

@@ -351,7 +351,7 @@ namespace ShadowVale.Map01
                 GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), "[E] " + nearby.label, hudBody);
             // The bench's progress while Nam is away from it: Map01Hud.Pickup.cs, above the pickup feed.
             // Alerted guards are marked by the awareness eye (Map01Hud.Scouting).
-            GUI.Label(new Rect(28, height - 26, width - 430, 24), "Tab Túi đồ  ·  1 Súng chính  ·  2 Súng ngắn  ·  3 Dao  ·  4 Đổi đồ ném  ·  Giữ Q Ném  ·  R Nạp đạn  ·  H Hồi máu  ·  M Bản đồ  ·  Esc Menu", hudSmall);
+            GUI.Label(new Rect(28, height - 26, width - 430, 24), "Tab Túi đồ  ·  1 Súng chính  ·  2 Súng ngắn  ·  3 Dao  ·  4 Đồ ném  ·  Giữ/thả chuột trái Ném  ·  R Nạp đạn  ·  H Hồi máu  ·  M Bản đồ  ·  Esc Menu", hudSmall);
         }
 
         private void DrawMap(float width, float height)

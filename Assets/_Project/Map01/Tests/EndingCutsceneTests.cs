@@ -11,6 +11,53 @@ namespace ShadowVale.Map01.Tests
 {
     public sealed class EndingCutsceneTests : ForestSceneTestBase
     {
+        [UnityTest]
+        public IEnumerator ReplacementBossFinaleEndsInItsGroundedDeathState()
+        {
+            Map01OpeningCutscene.CancelPending();
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode(); yield return null;
+            var mission = Object.FindFirstObjectByType<Map01Mission>();
+            foreach (var enemy in mission.Enemies) enemy.enabled = false;
+            var quest = mission.GetComponent<Map01Quest>();
+            quest.RestoreStoryStage(Map01Quest.BossStage, OfficerReported());
+            var boss = quest.CommanderEnemy;
+            var actor = boss.GetComponentInChildren<Animator>();
+            boss.GetComponent<Health>().TakeDamage(999999, boss.transform.position, null);
+            var ending = mission.GetComponent<Map01EndingCutscene>();
+            Assert.IsTrue(ending.IsPlaying);
+            string[] deaths = { "Enemy_Death_Backward", "Enemy_Death_Forward", "Enemy_Death_Shot", "Enemy_Death_Knees", "Enemy_Death_Stomach" };
+            Assert.AreEqual(deaths[actor.GetInteger("DeathIndex")], ending.ReusedDeathClip.name);
+            yield return WaitGameSeconds(ending.Duration + .2f);
+            Assert.IsFalse(ending.IsPlaying);
+            Assert.IsTrue(actor.GetCurrentAnimatorStateInfo(0).IsName("Die_" + actor.GetInteger("DeathIndex")));
+            Assert.Less(actor.GetBoneTransform(HumanBodyBones.Head).position.y, boss.transform.position.y + .9f);
+            Assert.Less(Mathf.Abs(boss.GetComponent<Map01EnemyGrounding>().LastCorrection), .02f);
+            Assert.AreEqual(Map01Quest.ReportBossStage, quest.Stage);
+            yield return new ExitPlayMode();
+        }
+        [UnityTest]
+        public IEnumerator ReplacementBossReceivesDeathOnItsOwnAnimator()
+        {
+            Map01OpeningCutscene.CancelPending();
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode(); yield return null;
+            var mission = Object.FindFirstObjectByType<Map01Mission>();
+            foreach (var enemy in mission.Enemies) enemy.enabled = false;
+            var boss = mission.GetComponent<Map01Quest>().CommanderEnemy;
+            var actor = boss.GetComponentInChildren<Animator>();
+            var health = boss.GetComponent<Health>();
+            var binding = new UnityEditor.SerializedObject(health).FindProperty("animator").objectReferenceValue;
+            Assert.AreSame(actor, binding, "Health must target the replacement model rather than the destroyed guard model.");
+            int index = actor.GetInteger("DeathIndex");
+            health.TakeDamage(999999, boss.transform.position, null);
+            yield return WaitGameSeconds(.5f);
+            Assert.IsTrue(actor.GetCurrentAnimatorStateInfo(0).IsName("Die_" + index), "Ordinary death must leave the aiming state.");
+            yield return WaitGameSeconds(actor.GetCurrentAnimatorStateInfo(0).length + .2f);
+            Assert.Less(actor.GetBoneTransform(HumanBodyBones.Head).position.y, boss.transform.position.y + .9f, "The defeated boss must collapse rather than remain upright.");
+            Assert.Less(Mathf.Abs(boss.GetComponent<Map01EnemyGrounding>().LastCorrection), .02f, "Settled corpse must stay grounded.");
+            yield return new ExitPlayMode();
+        }
         /// <summary>
         /// The officer of point 3, seen and reported, falls: his own death clip plays as the finale (world time
         /// untouched, no saving meanwhile); after it Nam reports by radio for the way out, and that starts the extraction.
@@ -53,6 +100,8 @@ namespace ShadowVale.Map01.Tests
             Assert.IsFalse(ending.IsPlaying);
             Assert.IsFalse(mission.Cinematic);
             Assert.IsTrue(boss.GetComponent<Health>().IsDead);
+            var fallen = boss.GetComponentInChildren<Animator>();
+            Assert.IsTrue(fallen.GetCurrentAnimatorStateInfo(0).IsName("Die_" + fallen.GetInteger("DeathIndex")), "The finale must hand off to the matching death state.");
             Assert.AreEqual(Map01Quest.ReportBossStage, quest.Stage, "The finale leaves the retreat report to Nam.");
             var early = mission.GetComponentInChildren<Map01Extraction>();
             Assert.IsTrue(early == null || early.CurrentPhase == Map01Extraction.Phase.Dormant, "No extraction before the report.");
@@ -89,6 +138,8 @@ namespace ShadowVale.Map01.Tests
             Assert.IsNotNull(ending, "Ending created after lethal damage");
             Assert.IsTrue(ending.IsPlaying);
             ending.Skip(); ending.Skip();
+            var fallen = boss.GetComponentInChildren<Animator>();
+            Assert.IsTrue(fallen.GetCurrentAnimatorStateInfo(0).IsName("Die_" + fallen.GetInteger("DeathIndex")), "Skipping must retain the corpse pose.");
             Assert.IsFalse(ending.IsPlaying);
             Assert.IsFalse(mission.Cinematic);
             Assert.AreEqual(1, Time.timeScale);

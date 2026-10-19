@@ -298,6 +298,7 @@ namespace ShadowVale.Gameplay.Combat
 
         private void Awake()
         {
+            if(GetComponent<GunfireFrame>()==null)gameObject.AddComponent<GunfireFrame>();
             _controller = GetComponent<PlayerController>();
             _characterController = GetComponent<CharacterController>();
             if (animator == null) animator = GetComponentInChildren<Animator>();
@@ -413,13 +414,15 @@ namespace ShadowVale.Gameplay.Combat
             if (_tracerRoot != null) Destroy(_tracerRoot.gameObject);
         }
 
-        private void ShowTracer(Vector3 from, Vector3 to)
+        private void ShowTracer(Vector3 from, Vector3 to) => PlayTracer(from,to);
+
+        private ShotTracer PlayTracer(Vector3 from, Vector3 to)
         {
-            if (tracerPrefab == null) return;
+            if (tracerPrefab == null) return null;
             if (_tracerRoot == null || _tracers == null || _tracers.Length == 0) SpawnTracerPool();
             if (_tracers == null || _tracers.Length == 0)
             {
-                return;
+                return null;
             }
 
             // Prefer a free one; if every streak is still flashing, recycle at the cursor.
@@ -433,11 +436,13 @@ namespace ShadowVale.Gameplay.Combat
                 }
                 _tracerCursor = (index + 1) % _tracers.Length;
                 tracer.TryPlay(from, to);
-                return;
+                return tracer;
             }
 
-            GetUsableTracer(_tracerCursor).TryPlay(from, to);
+            var recycled=GetUsableTracer(_tracerCursor);
+            recycled.TryPlay(from, to);
             _tracerCursor = (_tracerCursor + 1) % _tracers.Length;
+            return recycled;
         }
 
         private void Update()
@@ -769,7 +774,7 @@ namespace ShadowVale.Gameplay.Combat
             {
                 _faceCameraHoldUntil = Time.time + cooldown + faceCameraTail;
                 _fireHoldUntil = _upperBodyHoldUntil;
-                FireGun(_equipped);
+                _pendingGunfire.Add(_equipped);
             }
             else
             {
@@ -777,7 +782,21 @@ namespace ShadowVale.Gameplay.Combat
             }
         }
 
-        /// <summary>Hitscan from the camera centre, so the shot goes where the crosshair points.</summary>
+        private readonly System.Collections.Generic.List<Weapon> _pendingGunfire=new();
+
+        internal void ResolvePendingGunfire()
+        {
+            if(!isActiveAndEnabled){_pendingGunfire.Clear();return;}
+            while(isActiveAndEnabled && _pendingGunfire.Count>0) {
+                var gun=_pendingGunfire[0];_pendingGunfire.RemoveAt(0);
+                if(gun!=null)FireGun(gun);
+            }
+            _pendingGunfire.Clear();
+        }
+
+        private void OnDisable() => _pendingGunfire.Clear();
+
+        /// <summary>Resolve after animation and barrel aim, using this frame's camera and muzzle.</summary>
         private void FireGun(Weapon gun)
         {
             Camera cam = Camera.main;
@@ -817,7 +836,8 @@ namespace ShadowVale.Gameplay.Combat
                 endPoint = origin + direction * gun.Range;
             }
 
-            ShowTracer(gun.Muzzle.position, endPoint);
+            PlayTracer(gun.Muzzle.position, endPoint)?.AnchorEmission(gun.Muzzle);
+            gun.PlayMuzzleFlash();
         }
 
         /// <summary>Sphere sweep forward from chest height — forgiving enough for a greybox test.</summary>

@@ -198,11 +198,11 @@ namespace ShadowVale.Map01
             if (ModernCombat != null)
             {
                 ModernCombat.DrawsOwnWeaponHud = true; // Map01Hud.Combat shows the slots on keys 1-4.
-                ModernCombat.SlotPressed = inventory.OnSlotKey; // 1 long gun, 2 pistol, 3 knife, 4 next throwable (Map01Inventory.Bag).
+                ModernCombat.SlotPressed = inventory.OnSlotKey; // 1 long gun, 2 pistol, 3 knife, 4 stones (Map01Inventory.Bag).
                 ModernCombat.GunKilled += OnGunKilled;
                 var stones = GetComponent<Map01StoneThrow>(); // Added by Map01PlayerInteraction.Awake.
                 ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.SuppressFire && !InputFocus.OverlayOpen
-                    && !(Binoculars?.Binoculars ?? false) && (stones == null || !stones.Aiming); // Hands are on the binoculars or a stone, not the rifle.
+                    && !inventory.ThrowableEquipped && !(Binoculars?.Binoculars ?? false) && (stones == null || !stones.Aiming); // Hands are on the binoculars or a throwable, not the rifle.
                 ModernCombat.TryConsumeRound = () =>
                 {
                     if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 3.", 3); return false; }

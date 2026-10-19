@@ -65,7 +65,7 @@ namespace ShadowVale.Map01
             if(!rescue.IntroSeen||mission.Stopped||Vector3.Distance(mission.player.position,rescue.CaptivePost)>48)return;
             var plate=new Rect(28,y,430,128);HudPanel(plate);
             GUI.Label(new Rect(plate.x+12,plate.y+7,405,23),"PHỤC KÍCH TRONG BỤI",hudKey);
-            GUI.Label(new Rect(plate.x+12,plate.y+32,405,24),"2: Dao  ·  C/Ctrl: Ngồi  ·  Giữ/thả Q: Ném đá",hudSmall);
+            GUI.Label(new Rect(plate.x+12,plate.y+32,405,24),"3: Dao  ·  C/Ctrl: Ngồi  ·  4: Đồ ném · Giữ/thả chuột trái",hudSmall);
             var wrap=new GUIStyle(hudSmall){wordWrap=true};
             GUI.Label(new Rect(plate.x+12,plate.y+57,405,68),"Ẩn trong bụi đủ rộng. Dụ lính tới ≤ 2 m, từ bên hông/sau. Chuột trái khi icon dao + lá sáng xanh.",wrap);
         }

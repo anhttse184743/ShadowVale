@@ -103,8 +103,10 @@ namespace ShadowVale.Gameplay.Enemies
                 if (tracers[cursor] == null) tracers[cursor] = Instantiate(prefab, transform);
                 tracers[cursor].gameObject.SetActive(true);
                 tracers[cursor].TryPlay(start, impact);
+                if(weapon!=null)tracers[cursor].AnchorEmission(weapon.Muzzle);
                 cursor = (cursor + 1) % tracers.Length;
             }
+            weapon?.PlayMuzzleFlash();
             PlayAudio(gunshot, .85f, UnityEngine.Random.Range(.94f, 1.06f), start, 65f);
             return reachesVictim;
         }
