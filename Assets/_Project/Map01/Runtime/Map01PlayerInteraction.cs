@@ -59,7 +59,7 @@ namespace ShadowVale.Map01
             if (kb == null) return;
             scouting?.HoldBinoculars(kb.fKey.isPressed); // Map01Scouting decides when they actually work.
             if (ForestMenu.Visible) return;
-            if (kb.jKey.wasPressedThisFrame && hud != null) hud.ToggleObjective();
+            if (kb.backquoteKey.wasPressedThisFrame && hud != null) hud.ToggleObjective();
             if (kb.f9Key.wasPressedThisFrame) saveSystem?.Load();
             if (mission.Stopped) return;
             if (kb.tabKey.wasPressedThisFrame)

@@ -84,7 +84,7 @@ namespace ShadowVale.Map01.Tests
         }
 
         [UnityTest]
-        public IEnumerator JTogglesTheSeeThroughObjectivePanelBesideTheRoundMap()
+        public IEnumerator BackquoteTogglesTheObjectivePanelAndAutomaticPreviewExpires()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
@@ -102,12 +102,19 @@ namespace ShadowVale.Map01.Tests
                 Directory.CreateDirectory("Logs/HudPreview");
                 ScreenCapture.CaptureScreenshot("Logs/HudPreview/objective-shown.png");
                 for (int i = 0; i < 4; i++) yield return null;
-                yield return Press(keyboard, Key.J);
-                Assert.IsFalse(hud.ObjectiveShown, "J tucks the objective panel away.");
+                yield return Press(keyboard, Key.Backquote);
+                Assert.IsFalse(hud.ObjectiveShown, "Backquote tucks the objective panel away.");
                 ScreenCapture.CaptureScreenshot("Logs/HudPreview/objective-hidden.png");
                 for (int i = 0; i < 4; i++) yield return null;
-                yield return Press(keyboard, Key.J);
-                Assert.IsTrue(hud.ObjectiveShown, "J brings it back.");
+                yield return Press(keyboard, Key.Backquote);
+                Assert.IsTrue(hud.ObjectiveShown, "Backquote brings it back.");
+                // Keep story presentation from pausing this gameplay timer check.
+                mission.Cinematic = false;
+                Assert.AreEqual(5f, (float)typeof(Map01Hud).GetField("objectiveSecondsLeft", Private).GetValue(hud), .1f);
+                yield return WaitGameSeconds(5.2f);
+                Assert.IsFalse(hud.ObjectiveShown, "Manually reopened objectives also hide after five seconds.");
+                yield return Press(keyboard, Key.Backquote);
+                Assert.IsTrue(hud.ObjectiveShown, "Backquote reopens the timed preview.");
             }
             finally { InputSystem.RemoveDevice(keyboard); RestoreInputRouting(routing); }
             yield return new ExitPlayMode();
