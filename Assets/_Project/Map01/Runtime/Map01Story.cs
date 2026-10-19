@@ -121,7 +121,7 @@ namespace ShadowVale.Map01
             Prompt=null;if(!mission.IsInitialized||mission.Stopped||mission.InventoryOpen||mission.MapOpen||Layout==null)return;
             if(checkpointPending&&!Map01NamActions.For(mission).Busy)Checkpoint();
             var inventory=GetComponent<Map01Inventory>();
-            if(!Progress.keyCollected&&inventory.Count(KeyItem)>0){Progress.keyCollected=true;mission.Say("Đã nhặt chìa khóa kho điểm 1. Dùng tại cửa kho [E]; hòm bên trong có khóa mã riêng.",7);Checkpoint();}
+            if(!Progress.keyCollected&&inventory.Count(KeyItem)>0){Progress.keyCollected=true;Checkpoint();}
             if(CanBrief&&Near(Commander,mission.Settings.interactRange))Prompt="[E] Nói chuyện với chỉ huy";
             else if(CanDeliver&&Near(Commander,mission.Settings.interactRange))Prompt="[E] Bàn giao túi tiếp tế — nhận lệnh điểm 2";
             else if(RadioReport)Prompt=SafeToReport?"[E] Liên lạc chỉ huy qua bộ đàm":"Thoát giao tranh rồi liên lạc chỉ huy";

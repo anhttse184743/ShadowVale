@@ -121,6 +121,89 @@ namespace ShadowVale.Map01.Tests
         }
 
         [UnityTest]
+        public IEnumerator ObjectiveNotesFollowStagesAndLootDoesNotDuplicateThePickupFeed()
+        {
+            Map01OpeningCutscene.CancelPending();
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            yield return null; yield return null;
+            var mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
+            var hud = mission.GetComponent<Map01Hud>();
+            var quest = mission.GetComponent<Map01Quest>();
+            var inventory = mission.GetComponent<Map01Inventory>();
+            var interaction = mission.GetComponent<Map01PlayerInteraction>();
+            var notes = typeof(Map01Hud).GetMethod("ObjectiveNotes", Private);
+            foreach (var enemy in mission.Enemies) enemy.enabled = false;
+            quest.RestoreStage(Map01Quest.RescueStage);
+            string rescueNotes = (string)notes.Invoke(hud, null);
+            StringAssert.Contains("LÍNH CÒN LẠI", rescueNotes);
+            StringAssert.DoesNotContain("PHỤC KÍCH", rescueNotes);
+            quest.RestoreStage(Map01Quest.ScoutStage);
+            Assert.IsNull(notes.Invoke(hud, null), "Do not add new help text to the scouting objective.");
+            quest.RestoreStage(Map01Quest.CampsStage);
+            Assert.IsNull(notes.Invoke(hud, null), "Rescue/scout notes do not leak into later objectives.");
+
+            var pickup = new GameObject("HUD pickup regression").AddComponent<ForestPoint>();
+            pickup.kind = ForestPointKind.Loot;
+            pickup.items = new[] { new ForestIngredient { item_id = "cloth", count = 1 } };
+            int before = inventory.Count("cloth");
+            mission.Say(null, 0);
+            interaction.Interact(pickup);
+            Assert.AreEqual(before + 1, inventory.Count("cloth"));
+            Assert.IsTrue(hud.PickupFeed.Any(p => p.id == "cloth"));
+            Assert.IsTrue(string.IsNullOrEmpty(mission.Dialogue), "The centre does not repeat the received item.");
+            Assert.IsTrue(pickup.used);
+            interaction.Interact(pickup);
+            Assert.AreEqual(before + 1, inventory.Count("cloth"), "Loot cannot be taken twice.");
+            UnityEngine.Object.Destroy(pickup.gameObject);
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
+        public IEnumerator CaptureMergedObjectivesAndQuietLootExamples()
+        {
+            Map01OpeningCutscene.CancelPending();
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            for (int i = 0; i < 8; i++) yield return null;
+            var mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
+            var hud = mission.GetComponent<Map01Hud>();
+            foreach (var enemy in mission.Enemies) enemy.enabled = false;
+            mission.ModernHealth.CinematicInvulnerable = true;
+            mission.Cinematic = false;
+            mission.GetComponent<Map01Quest>().RestoreStage(Map01Quest.RescueStage);
+            mission.GetComponent<Map01Rescue>().MarkIntroSeen();
+            SetPreviewResolution(1600, 900);
+            var view = EditorWindow.GetWindow(typeof(Editor).Assembly.GetType("UnityEditor.GameView"));
+            view.Show(); view.Focus();
+            Directory.CreateDirectory("Logs/QuestHudPreview");
+            mission.Say(null, 0);
+            for (int i = 0; i < 10; i++) yield return null;
+            SetPrivate(hud, "objectiveReveal", 1f);
+            SetPrivate(hud, "objectiveHintOpacity", 0f);
+            SetPrivate(hud, "objectiveSecondsLeft", 30f);
+            if (!hud.ObjectiveShown) hud.ToggleObjective();
+            for (int i = 0; i < 4; i++) yield return null;
+            ScreenCapture.CaptureScreenshot("Logs/QuestHudPreview/01-merged-objective.png");
+            for (int i = 0; i < 12; i++) yield return null;
+            hud.ToggleObjective();
+            SetPrivate(hud, "objectiveReveal", 0f);
+            SetPrivate(hud, "objectiveHintOpacity", 1f);
+            var point = new GameObject("Screenshot pickup example").AddComponent<ForestPoint>();
+            point.kind = ForestPointKind.Loot;
+            point.items = new[] { new ForestIngredient { item_id = "cloth", count = 1 },
+                new ForestIngredient { item_id = "ammo_rifle", count = 12 } };
+            mission.GetComponent<Map01PlayerInteraction>().Interact(point);
+            Assert.IsTrue(string.IsNullOrEmpty(mission.Dialogue));
+            Assert.IsTrue(hud.PickupFeed.Any(p => p.id == "cloth"));
+            for (int i = 0; i < 8; i++) yield return null;
+            ScreenCapture.CaptureScreenshot("Logs/QuestHudPreview/02-collapsed-and-loot.png");
+            for (int i = 0; i < 12; i++) yield return null;
+            UnityEngine.Object.Destroy(point.gameObject);
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
         public IEnumerator SprintCostsStaminaOnlyWhileRunning()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
