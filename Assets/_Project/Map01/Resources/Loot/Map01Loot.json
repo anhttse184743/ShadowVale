@@ -13,6 +13,8 @@
   "adaptive": { "lowAmmo": 30, "ammoBoost": 2.0, "lowHealth": 0.6, "medkitBoost": 2.0, "medkitPity": 6 },
   "logistics": { "turnInFloor": 0.3, "operationCredit": [40, 40, 40, 60] },
   "items": [
+    {"code": "ammo_556", "type": "Ammo", "rarity": "Common", "baseValue": 1, "weight": 0.02},
+    {"code": "rifle_m16", "type": "Weapon", "rarity": "Common", "baseValue": 60, "weight": 3.5, "foundMin": 0.55, "foundMax": 0.75, "salvage": [{"item": "scrap_metal", "min": 2, "max": 2}, {"item": "weapon_parts", "min": 1, "max": 1}], "salvageGood": 0.5, "salvageGoodItem": "weapon_parts"},
     { "code": "rifle_standard", "type": "Weapon", "rarity": "Common", "baseValue": 60, "weight": 3.5, "foundMin": 0.55, "foundMax": 0.75,
       "salvage": [ { "item": "scrap_metal", "min": 2, "max": 2 }, { "item": "weapon_parts", "min": 1, "max": 1 } ], "salvageGood": 0.5, "salvageGoodItem": "weapon_parts" },
     { "code": "pistol_k54", "type": "Weapon", "rarity": "Uncommon", "baseValue": 45, "weight": 0.85, "foundMin": 0.6, "foundMax": 0.75,
@@ -168,6 +170,7 @@
       { "item": "herb", "tier": 5, "weight": 1, "min": 2, "max": 2 },
       { "item": "cloth", "tier": 5, "weight": 1, "min": 4, "max": 4 } ] },
     { "code": "lt_m1_base_stock", "name": "Kho căn cứ — hàng lĩnh được", "rollsMin": 0, "rollsMax": 0, "entries": [
+      {"item": "ammo_556", "tier": 5, "weight": 1, "min": 15, "max": 15},
       { "item": "ammo_rifle", "tier": 5, "weight": 1, "min": 15, "max": 15 },
       { "item": "ammo_pistol", "tier": 5, "weight": 1, "min": 8, "max": 8 },
       { "item": "ammo_sniper", "tier": 5, "weight": 1, "min": 5, "max": 5 },

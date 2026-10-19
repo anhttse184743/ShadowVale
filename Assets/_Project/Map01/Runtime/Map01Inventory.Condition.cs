@@ -38,7 +38,7 @@ namespace ShadowVale.Map01
         }
 
         /// <summary>Guns wear; the knife and everything else do not.</summary>
-        public static bool HasCondition(string id) => id == "rifle_standard" || id == "pistol_k54" || id == "rifle_mosin";
+        public static bool HasCondition(string id) => id == "rifle_standard" || id == "rifle_m16" || id == "pistol_k54" || id == "rifle_mosin";
 
         private ForestWeapon WeaponData(string id) => mission?.Bundle?.weapons?.FirstOrDefault(w => w != null && w.id == id);
         /// <summary>A gun's full condition in points (content durability_max).</summary>

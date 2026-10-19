@@ -159,7 +159,7 @@ namespace ShadowVale.Gameplay.Combat
 
         private void Show(bool visible)
         {
-            foreach (Renderer r in _renderers) r.enabled = visible;
+            foreach (Renderer r in _renderers) r.enabled = visible && (_rifle == null || _rifle.UsesOriginalMagazine);
         }
     }
 }

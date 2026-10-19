@@ -178,6 +178,8 @@ namespace ShadowVale.Map01
             bool dressing = drops.Any(d => d.item == "medkit_small");
             medkitDry = dressing ? 0 : medkitDry + 1;
             if (!dressing && medkitDry >= data.adaptive.medkitPity) { drops.Add(new Map01LootRoller.Drop { item = "medkit_small", count = 1 }); medkitDry = 0; }
+            if (guard.RifleItemId == Map01M16.Id)
+                foreach (var drop in drops.Where(d => d.item == "ammo_rifle").ToArray()) { drops.Remove(drop); drops.Add(new Map01LootRoller.Drop { item = Map01M16.Ammo, count = drop.count }); }
             var items = drops.Select(d => new ForestIngredient { item_id = d.item, count = d.count }).ToArray();
             rolled[pointId] = Copy(items);
             return items;
@@ -198,7 +200,7 @@ namespace ShadowVale.Map01
         {
             var kind = data.EnemyOf(KindOf(guard));
             if (kind == null) yield break;
-            yield return Gun(kind.weapon, kind.dropMin, kind.dropMax, pointId);
+            yield return Gun(guard.RifleItemId, kind.dropMin, kind.dropMax, pointId);
             if (!string.IsNullOrEmpty(kind.sidearm)) yield return Gun(kind.sidearm, kind.sidearmMin, kind.sidearmMax, pointId + "_sidearm");
         }
         private ForestIngredient Gun(string id, float min, float max, string salt) => new ForestIngredient
