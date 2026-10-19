@@ -239,10 +239,11 @@ namespace ShadowVale.Map01
                     point.label = Prompt(point);
                     return true;
                 case State.Open:
+                    // Dismiss the contents preview before receiving; keep any new full-bag warning.
+                    if (mission.Dialogue != null && mission.Dialogue.StartsWith("Trong hòm: ")) mission.Say(null, 0);
                     foreach (var item in point.items) inventory.Receive(item.item_id, item.count, item.condition);
                     point.MarkLooted();
                     Show(site);
-                    mission.Say($"Đã lấy: {Listing(point)}. Tab mở túi đồ.", 6);
                     Map01NamActions.For(mission)?.Play(Map01NamActions.PickUp, 288f / 30f / 2.4f, true);
                     point.label = Prompt(point);
                     return true;

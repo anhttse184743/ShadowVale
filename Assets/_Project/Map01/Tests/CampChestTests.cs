@@ -235,6 +235,7 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual(before[item] + count, inventory.Count(item), item);
                 Assert.IsTrue(FeedHas(item), item + " shows in the pickup feed.");
             }
+            Assert.IsTrue(string.IsNullOrEmpty(mission.Dialogue), "Taking the chest clears its preview and uses the pickup feed only.");
             Assert.AreEqual(Map01CampChests.State.Taken, chests.StateOf(chest));
             Assert.IsTrue(chest.used);
             Assert.AreEqual(0, chests.ContentsShown(chest));

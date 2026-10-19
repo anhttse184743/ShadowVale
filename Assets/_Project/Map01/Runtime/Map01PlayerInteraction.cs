@@ -164,13 +164,13 @@ namespace ShadowVale.Map01
         }
 
         /// <summary>
-        /// Grants the point's items and starts its restock timer; returns what was taken. Stones go in only
+        /// Grants the point's items and starts its restock timer; returns only capacity warnings. Stones go in only
         /// while his pockets have room (Map01Inventory.StoneCapacity): any that do not fit stay at the point,
         /// which then stays open with just those. <paramref name="any"/> is false when nothing could be taken.
         /// </summary>
         private string TakeItems(ForestPoint point, out bool any)
         {
-            var taken = new List<string>();
+            any = false;
             int leftStones = 0;
             foreach (var item in point.items)
             {
@@ -178,37 +178,19 @@ namespace ShadowVale.Map01
                 if (item.item_id == "stone") leftStones += item.count - count;
                 if (count <= 0) continue;
                 inventory.Receive(item.item_id, count, item.condition);
-                taken.Add(count + " " + ForestInventory.Name(item.item_id).ToLowerInvariant() + Map01Drops.ConditionTag(mission, item.item_id, item.condition));
+                any = true;
             }
-            any = taken.Count > 0;
             if (leftStones > 0)
             {
                 // Everything else is in the bag now: only the stones that did not fit are left here.
                 foreach (var item in point.items) item.count = item.item_id == "stone" ? Mathf.Min(item.count, leftStones) : 0;
                 if (point.id != null && point.id.StartsWith(Map01RescueStones.IdPrefix)) point.label = $"Đá ném — {leftStones} viên";
                 string full = $"Túi đá đã đầy ({inventory.Stones}/{inventory.StoneCapacity}), còn {leftStones} viên ở đây.";
-                return any ? "Nhận " + string.Join(", ", taken) + ". " + full : full;
+                return full;
             }
             point.MarkLooted();
-            string all = "Nhận " + string.Join(", ", taken) + ".";
-            return point.restockSeconds > 0 ? all + $" Tiếp tế lại sau {point.restockSeconds:0} giây." : all;
+            return null;
         }
-        private string TakeItems(ForestPoint point) => TakeItems(point, out _);
-
-        /// <summary>The first time Nam picks up a badly worn gun: what he can do with it.</summary>
-        private string WornGunHint(ForestPoint point)
-        {
-            if (wornHintShown || point.items == null) return "";
-            foreach (var item in point.items)
-                if (Map01Inventory.HasCondition(item.item_id) && inventory.Fraction(item.item_id, item.condition) < Map01Inventory.WornBelow)
-                {
-                    wornHintShown = true;
-                    return " Súng địch đã mòn: vẫn bắn được tới khi hỏng — sửa bằng bộ sửa chữa (túi đồ) hoặc ở bàn chế tạo, hay rã lấy linh kiện.";
-                }
-            return "";
-        }
-        private bool wornHintShown;
-
         /// <summary>Nam crouches to the pack or opens the crate (Blender clips); walking off cuts it short.</summary>
         private void Rummage(int action) =>
             Map01NamActions.For(mission)?.Play(action, action == Map01NamActions.PickUp ? 288f / 30f / 2.4f : 269f / 30f / 2.6f, true);
@@ -226,7 +208,7 @@ namespace ShadowVale.Map01
                 case ForestPointKind.Loot:
                     if (point.used) return;
                     string took = TakeItems(point, out bool any);
-                    mission.Say(any ? took + WornGunHint(point) + " Tab mở túi đồ." : took, 6);
+                    if (!string.IsNullOrEmpty(took)) mission.Say(took, 6);
                     if (!any) break; // A full bag at a pile of stones: no stooping for nothing.
                     // a fallen guard's pack or gun is picked up off the ground; a crate is opened
                     Rummage(point.GetComponent<Map01EnemyController>() != null || (point.id!=null&&(point.id.StartsWith(Map01RescueStones.IdPrefix)||point.id.StartsWith(Map01Drops.IdPrefix)||point.id.StartsWith(Map01Logistics.GunPointPrefix))) ? Map01NamActions.PickUp : Map01NamActions.OpenChest);

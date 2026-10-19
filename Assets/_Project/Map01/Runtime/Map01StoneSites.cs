@@ -160,8 +160,7 @@ namespace ShadowVale.Map01
             point.items[0].count -= taken;
             int left = point.items[0].count;
             if (left <= 0) point.MarkLooted();
-            string carried = $"Nhặt {taken} viên đá ({inventory.Stones}/{inventory.StoneCapacity}).";
-            mission.Say(left > 0 ? carried + $" Túi đầy, còn {left} viên ở đây." : carried, 3);
+            if (left > 0) mission.Say($"Túi đá đã đầy ({inventory.Stones}/{inventory.StoneCapacity}), còn {left} viên ở đây.", 3);
             return taken;
         }
 
