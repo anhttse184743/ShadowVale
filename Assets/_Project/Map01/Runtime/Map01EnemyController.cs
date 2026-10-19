@@ -990,10 +990,7 @@ namespace ShadowVale.Map01
                 _feedback.Fire(ShotAccuracy.MissPoint(chest, aim, _shotRng), null, obstructionMask, out _);
                 return;
             }
-            // The commander's rifle (Map 1's officer model) reaches well out from him: decided from his chest, a
-            // round is not stopped by the door or sandbag his muzzle pokes into (19/10/2026: 0 hits in 40 rounds).
-            Vector3? from = IsBoss ? transform.position + Vector3.up * 1.45f : (Vector3?)null;
-            if (_feedback.Fire(aim, _player, obstructionMask, out var impact, from))
+            if (_feedback.Fire(aim, _player, obstructionMask, out var impact))
                 _playerHealth.TakeBulletDamage(damage, impact, gameObject, impact - transform.position);
         }
 
