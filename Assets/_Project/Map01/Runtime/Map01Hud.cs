@@ -179,6 +179,10 @@ namespace ShadowVale.Map01
         private void HudIcon(Rect r, string id, bool dim = false)
         {
             if(id==Map01Story.KeyItem||id==Map01Story.CargoItem){var texture=id==Map01Story.KeyItem?Map01OperationHints.KeyIcon:Map01OperationHints.CargoIcon;if(texture!=null){GUI.DrawTexture(r,texture,ScaleMode.ScaleToFit);return;}}
+            if (ItemIcon(id) is Texture2D preview) { var tint = GUI.color; if (dim) GUI.color = new Color(.55f,.55f,.55f,.75f); GUI.DrawTexture(r,preview,ScaleMode.ScaleToFit); GUI.color=tint;
+                if (id == Map01M16.Ammo || id == "ammo_rifle")
+                    GUI.Label(new Rect(r.x+2,r.y+2,r.width-4,18),id == Map01M16.Ammo ? "5,56×45" : "7,62×39",new GUIStyle(hudSmall){fontSize=12,wordWrap=false});
+                return; }
             if ((id == "rifle_standard" || id == "knife") && hudWeapons != null) {
                 // Use the text-free inventory previews from the approved art board.
                 float left = id == "rifle_standard" ? 57 : 240;

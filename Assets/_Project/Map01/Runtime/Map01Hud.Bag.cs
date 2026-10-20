@@ -109,7 +109,7 @@ namespace ShadowVale.Map01
             GUI.Label(new Rect(plate.x + 22, plate.y + 18, 220, 50), "TRANG BỊ", bagTitle);
             GUI.Label(new Rect(plate.xMax - 178, plate.y + 34, 160, 24), "Kéo súng vào ô để đổi", bagHint);
             HudFill(new Rect(plate.x + 22, plate.y + 72, plate.width - 44, 1), HudGold);
-            SlotCardDraw(width, Slot.Primary, "1", "SÚNG CHÍNH", "Nhận: AK (7,62×39), Mosin (7,62×54R)", ev, modal);
+            SlotCardDraw(width, Slot.Primary, "1", "SÚNG CHÍNH", "AK · M16 · Mosin", ev, modal);
             SlotCardDraw(width, Slot.Pistol, "2", "SÚNG NGẮN", "Nhận: súng lục · đạn 7,62×25", ev, modal);
             SlotCardDraw(width, Slot.Knife, "3", "DAO", null, ev, modal);
             DrawThrowCard(width, ev, modal);
@@ -125,6 +125,7 @@ namespace ShadowVale.Map01
         {
             var card = SlotCard(width, slot);
             string id = inventory.SlotItem(slot);
+            if (id == Map01M16.Id) accepts = "5,56×45 · 700 viên/phút";
             string dragId = DragId();
             bool fits = dragging && dragId != null && Map01Inventory.SlotOf(dragId) == slot && slot != Slot.Knife;
             bool refuses = dragging && dragId != null && !fits && dragSlot != slot;
@@ -164,7 +165,8 @@ namespace ShadowVale.Map01
         {
             switch (id)
             {
-                case "rifle_standard": return " · " + (mission.ModernCombat != null ? mission.ModernCombat.RoundsInMagazine : 0) + "/" + inventory.Count("ammo_rifle") + " viên";
+                case "rifle_m16": return " · " + (mission.ModernCombat != null ? mission.ModernCombat.RoundsInMagazine : 0) + "/" + inventory.Count(Map01M16.Ammo) + " viên";
+                case "rifle_standard": return " · " + (mission.ModernCombat != null ? mission.ModernCombat.RoundsInMagazine : 0) + "/" + inventory.Count(id == Map01M16.Id ? Map01M16.Ammo : "ammo_rifle") + " viên";
                 case "pistol_k54": return " · " + inventory.Count("ammo_pistol") + " viên";
                 case "rifle_mosin": return " · " + inventory.Count("ammo_sniper") + " viên";
                 default: return "";

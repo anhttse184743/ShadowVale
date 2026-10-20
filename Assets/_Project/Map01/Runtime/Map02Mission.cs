@@ -95,8 +95,8 @@ namespace ShadowVale.Map01
             {
                 combat.enabled=true;combat.DrawsOwnWeaponHud=false;
                 combat.InputAllowed=()=>!InputBlocked;combat.TryConsumeRound=null;
-                combat.ReserveRounds=()=>Inventory.TryGetValue("ammo_rifle",out int n)?n:0;
-                combat.DrawRounds=requested=>{int n=Mathf.Min(requested,combat.ReserveRounds());Inventory["ammo_rifle"]=combat.ReserveRounds()-n;return n;};
+                combat.ReserveRounds=()=>Inventory.TryGetValue(arrival != null ? arrival.RifleAmmo : "ammo_rifle",out int n)?n:0;
+                combat.DrawRounds=requested=>{int n=Mathf.Min(requested,combat.ReserveRounds());Inventory[arrival != null ? arrival.RifleAmmo : "ammo_rifle"]=combat.ReserveRounds()-n;return n;};
             }
             player.InputAllowed=()=>!InputBlocked;
             if(cameraRig!=null){cameraRig.SetTarget(Player);cameraRig.InputAllowed=()=>!InputBlocked;}

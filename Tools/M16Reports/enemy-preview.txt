@@ -1,0 +1,1 @@
+PASS: patrol_0; avatar=lính rigAvatar; existing enemy firing clip and runtime rifle mount; M16 visual.

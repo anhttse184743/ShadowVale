@@ -92,3 +92,9 @@ MonoBehaviour:
   - id: m1_supply_cargo
     model: {fileID: 919132149155446097, guid: a704ee5169366a84db5322852badc8b1, type: 3}
     scale: 1
+  - id: rifle_m16
+    model: {fileID: 5384721362643639521, guid: 4f58ea62d5e26f849bb50d6af9dc8ab3, type: 3}
+    scale: 1
+  - id: ammo_556
+    model: {fileID: 4674859029522794339, guid: faf326c52c29cb54db4f5521ba6fdae1, type: 3}
+    scale: 1

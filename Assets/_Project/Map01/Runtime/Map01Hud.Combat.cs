@@ -31,7 +31,8 @@ namespace ShadowVale.Map01
             // What is in hand is drawn bright; the rest dimmed; an empty slot shows only its number.
             string primary = inventory.SlotItem(Map01Inventory.Slot.Primary), pistol = inventory.SlotItem(Map01Inventory.Slot.Pistol);
             if (primary == "rifle_standard") CombatIcon(new Rect(x + 10, y + 10, 146, 118), new Rect(672, 107, 536, 438), kind == WeaponKind.Rifle && !inventory.ThrowableEquipped);
-            else if (primary != null) HotbarIcon(new Rect(x + 4, y + 44, 156, 49), primary, false);
+            else if (primary == Map01M16.Id) Map01RifleHud.DrawM16(new Rect(x + 10, y + 10, 146, 118), kind == WeaponKind.Rifle && !inventory.ThrowableEquipped);
+            else if (primary != null) HotbarIcon(new Rect(x + 4, y + 44, 156, 49), primary, kind == WeaponKind.Rifle && !inventory.ThrowableEquipped);
             CombatLabel(new Rect(x + 46, y + 123, 60, 24), "1", combatCaption);
             if (pistol != null) HotbarIcon(new Rect(x + 274, y + 8, 70, 52), pistol, false);
             CombatLabel(new Rect(x + 238, y + 22, 30, 24), "2", combatCaption);
@@ -75,9 +76,9 @@ namespace ShadowVale.Map01
             var combat = mission.ModernCombat;
             bool reloading = kind == WeaponKind.Rifle && combat != null && combat.IsReloading;
             string ammo = kind != WeaponKind.Rifle ? "—"
-                : combat == null ? inventory.Count("ammo_rifle").ToString()
+                : combat == null ? inventory.Count(inventory.PrimaryAmmo).ToString()
                 : reloading ? $"{combat.ReloadProgress * 100f:0}%"
-                : $"{combat.RoundsInMagazine}/{inventory.Count("ammo_rifle")}";
+                : $"{combat.RoundsInMagazine}/{inventory.Count(inventory.PrimaryAmmo)}";
             CombatLabel(new Rect(x - 20, y + 158, 163, 49), ammo, combatNumber);
             bool broken = kind == WeaponKind.Rifle && inventory.HeldGunBroken();
             var caption = broken ? combatBroken ??= new GUIStyle(combatCaption) { normal = { textColor = ConditionBroken } } : combatCaption;

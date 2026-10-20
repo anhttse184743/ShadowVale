@@ -22,6 +22,7 @@ namespace ShadowVale.Map01
         public Vector3[] SpawnPoints {get;private set;}
         public readonly Dictionary<string,int> Inventory=new();
         public int Stones {get;private set;}
+        public string RifleAmmo {get;private set;} = "ammo_rifle";
         public float CinematicTime=>CurrentPhase==Phase.Approaching?clock:CurrentPhase==Phase.Mooring?ApproachDuration+clock:ApproachDuration+MoorDuration+clock;
         public bool IsPlaying => CurrentPhase!=Phase.Gameplay;
         Map01Extraction source;
@@ -96,6 +97,7 @@ namespace ShadowVale.Map01
             player=mission.ModernPlayer;combat=mission.ModernCombat;health=mission.ModernHealth;
             foreach(var item in mission.GetComponent<Map01Inventory>().CaptureItems())Inventory[item.item_id]=item.count;
             Stones=mission.GetComponent<Map01Inventory>().Stones;
+            RifleAmmo=mission.GetComponent<Map01Inventory>().PrimaryAmmo;
             Inventory["ammo_rifle"]=mission.GetComponent<Map01Inventory>().Count("ammo_rifle");
             foreach(var badge in actors[1].GetComponentsInChildren<MeshRenderer>().Where(r=>r.name=="Commander insignia")) {
                 var copy=new Material(badge.sharedMaterial);badge.sharedMaterial=copy;partyMaterials.Add(copy);
@@ -120,8 +122,8 @@ namespace ShadowVale.Map01
             rig.SurfaceCameraFloor=null;
             player.InputAllowed=()=>!IsPlaying&&!paused;player.SurfaceSpeedMultiplier=1;player.SprintAllowed=()=>!paused;
             combat.InputAllowed=()=>!IsPlaying&&!paused;combat.TryConsumeRound=null;
-            combat.ReserveRounds=()=>Inventory.TryGetValue("ammo_rifle",out int reserve)?reserve:0;
-            combat.DrawRounds=requested=>{int n=Mathf.Min(requested,combat.ReserveRounds());Inventory["ammo_rifle"]=combat.ReserveRounds()-n;return n;};
+            combat.ReserveRounds=()=>Inventory.TryGetValue(RifleAmmo,out int reserve)?reserve:0;
+            combat.DrawRounds=requested=>{int n=Mathf.Min(requested,combat.ReserveRounds());Inventory[RifleAmmo]=combat.ReserveRounds()-n;return n;};
         }
         public IEnumerator LoadVillage() {
             
