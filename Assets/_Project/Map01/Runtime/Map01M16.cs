@@ -8,6 +8,7 @@ namespace ShadowVale.Map01
     {
         public const string Id = "rifle_m16", Ammo = "ammo_556";
         public const float ShotSeconds = 60f / 700f;
+        public static readonly Vector3 HeldOffset = new Vector3(0f, -.025f, 0f);
         // Stable shuffled groups keep the same loadout after checkpoint restoration.
         public static string EnemyRifle(Map01Mission mission, Map01EnemyController guard)
         {

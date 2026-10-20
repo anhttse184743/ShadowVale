@@ -26,11 +26,12 @@ namespace ShadowVale.Map01
                 if (prefab == null) { Debug.LogError("Missing M16Visual prefab"); return; }
                 model = Instantiate(prefab, transform, false);
                 // Keep the AK rifle mount, with the M16 prop slightly below its origin.
-                model.transform.SetLocalPositionAndRotation(new Vector3(0f, -.025f, 0f), Quaternion.identity);
+                model.transform.SetLocalPositionAndRotation(Map01M16.HeldOffset, Quaternion.identity);
                 m16Muzzle = model.transform.Find("Muzzle");
             }
             foreach (var r in original) if (r != null) r.enabled = !m16;
             if (model != null) model.SetActive(m16);
+            weapon.SetReloadModel(m16 ? model.transform : null);
             if (ItemId != id) weapon.ConfigureRifle(m16 ? akDamage * .9f : akDamage, m16 ? Map01M16.ShotSeconds : akCooldown, m16 ? m16Muzzle : akMuzzle, !m16);
             ItemId = id;
         }

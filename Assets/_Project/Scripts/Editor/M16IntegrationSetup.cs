@@ -24,6 +24,7 @@ namespace ShadowVale.Editor
         public static void Build()
         {
             Directory.CreateDirectory("Tools/M16Reports");
+            AssetDatabase.ImportAsset("Assets/_Project/Art/Items/Generated/m16_reload.glb", ImportAssetOptions.ForceSynchronousImport);
             if (!WeaponPrefabBuilder.BuildM16()) throw new Exception("M16 model import failed");
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/Items/W_M16.prefab");
             var root = Object.Instantiate(prefab); root.name = "M16Visual";
@@ -32,6 +33,8 @@ namespace ShadowVale.Editor
             float front=vertices.Max(v=>v.z);var tip=vertices.Where(v=>v.z>front-.003f).ToArray();
             root.transform.Find("Muzzle").localPosition=new Vector3(tip.Average(v=>v.x),tip.Average(v=>v.y),front);
             Object.DestroyImmediate(root.GetComponent<Weapon>());
+            if (ReloadMagazineCarrier.GatherMagazine(root.transform) == null) throw new Exception("M16 magazine was not separated");
+            CalibrateMagazine(root);
             Directory.CreateDirectory("Assets/_Project/Map01/Resources/Weapons");
             var visual = PrefabUtility.SaveAsPrefabAsset(root,"Assets/_Project/Map01/Resources/Weapons/M16Visual.prefab");
             Object.DestroyImmediate(root);
@@ -55,6 +58,49 @@ namespace ShadowVale.Editor
             RenderHudM16(visual);
             AssetDatabase.Refresh();
             File.WriteAllText("Tools/M16Reports/status.txt","PASS assets and previews: " + string.Join(", ", rendered));
+        }
+        static void CalibrateMagazine(GameObject model)
+        {
+            var actorObject = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/Player/Player.prefab"));
+            bool sampling = false;
+            try
+            {
+                foreach (var behaviour in actorObject.GetComponentsInChildren<MonoBehaviour>(true)) behaviour.enabled = false;
+                var actor = actorObject.GetComponentInChildren<Animator>();
+                var carrier = actor.GetComponent<ReloadMagazineCarrier>();
+                var anchor = actor.GetComponentsInChildren<Transform>(true).First(t => t.name == "WeaponAnchor");
+                var rifle = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/Items/W_AK47.prefab"), anchor, false);
+                AssetDatabase.LoadAssetAtPath<WeaponGripConfig>("Assets/_Project/ScriptableObjects/GameSettings/WeaponGripConfig.asset").Apply(rifle.transform, WeaponKind.Rifle);
+                var visual = Object.Instantiate(model, rifle.transform, false);
+                visual.transform.localPosition = Map01M16.HeldOffset;
+                var magazine = ReloadMagazineCarrier.GatherMagazine(visual.transform);
+                var hand = actor.GetBoneTransform(HumanBodyBones.LeftHand);
+                var contacts = new List<ReloadMagazineCarrier.Take>();
+                AnimationMode.StartAnimationMode(); sampling = true;
+                foreach (var original in carrier.Takes)
+                {
+                    string clipName = original.state == "ReloadEmpty_Rifle" ? "Nam_Rifle_Reload"
+                        : original.state == "ReloadCrouch_Rifle" ? "Nam_Crouch_Reload" : "Nam_Rifle_ReloadTactical";
+                    var clip = AssetDatabase.LoadAllAssetsAtPath("Assets/_Project/Art/Characters/Animations/Nam/" + clipName + ".fbx")
+                        .OfType<AnimationClip>().FirstOrDefault(c => !c.name.StartsWith("__preview__"));
+                    if (clip == null) throw new Exception("Missing reload clip " + clipName);
+                    AnimationMode.BeginSampling();
+                    AnimationMode.SampleAnimationClip(actor.gameObject, clip, original.leaves * clip.length);
+                    AnimationMode.EndSampling();
+                    var contact = original;
+                    contact.inHandPosition = hand.InverseTransformPoint(magazine.position);
+                    contact.inHandRotation = Quaternion.Inverse(hand.rotation) * magazine.rotation;
+                    contacts.Add(contact);
+                }
+                if (contacts.Count != 3) throw new Exception("Expected three M16 reload contacts");
+                var profile = model.GetComponent<MagazineReloadProfile>() ?? model.AddComponent<MagazineReloadProfile>();
+                profile.takes = contacts.ToArray();
+            }
+            finally
+            {
+                if (sampling) AnimationMode.StopAnimationMode();
+                Object.DestroyImmediate(actorObject);
+            }
         }
         static void RenderHudM16(GameObject prefab)
         {

@@ -103,7 +103,7 @@ namespace ShadowVale.Editor
             Debug.Log($"[Weapons] Built {built}/{Specs.Length} weapon prefab(s) in {OutputFolder}");
         }
 
-        public static bool BuildM16() => BuildOne(new Spec("Assets/_Project/Art/Items/m16_gun.glb", "W_M16", WeaponKind.Rifle,
+        public static bool BuildM16() => BuildOne(new Spec("Assets/_Project/Art/Items/Generated/m16_reload.glb", "W_M16", WeaponKind.Rifle,
             .99f, .32f, .28f, false, 27f, 120f, 60f/700f, true));
 
         private static bool BuildOne(Spec spec)

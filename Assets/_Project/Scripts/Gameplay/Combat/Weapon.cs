@@ -40,6 +40,9 @@ namespace ShadowVale.Gameplay.Combat
             if (flash != null) { Destroy(flash.gameObject); flash = null; }
         }
         public bool UsesOriginalMagazine { get; private set; } = true;
+        private Transform reloadModel;
+        public Transform ReloadModel => reloadModel != null ? reloadModel : transform;
+        public void SetReloadModel(Transform model) => reloadModel = model;
         public WeaponKind Kind => kind;
         public float Damage => damage;
         public float Range => range;

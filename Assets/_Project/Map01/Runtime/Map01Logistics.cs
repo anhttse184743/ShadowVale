@@ -171,25 +171,45 @@ namespace ShadowVale.Map01
         /// <summary>What a fallen guard's pack holds: rolled once (leaning to what Nam is short of), then kept.</summary>
         public ForestIngredient[] GuardPack(Map01EnemyController guard, string pointId)
         {
-            if (rolled.TryGetValue(pointId, out var kept)) return Copy(kept);
+            if (rolled.TryGetValue(pointId, out var kept))
+            {
+                // Older checkpoints may have rolled generic rifle or sidearm rounds.
+                rolled[pointId] = MatchGuardAmmo(guard.RifleItemId, kept);
+                return Copy(rolled[pointId]);
+            }
             var kind = data.EnemyOf(KindOf(guard));
             var table = data.TableOf(kind?.lootTable);
-            var drops = Map01LootRoller.Roll(data, table, Map01LootRoller.Seed(Seed, pointId), Need);
+            string ammo = guard.RifleItemId == Map01M16.Id ? Map01M16.Ammo : "ammo_rifle";
+            var drops = Map01LootRoller.Roll(data, table, Map01LootRoller.Seed(Seed, pointId),
+                item => Need(item.StartsWith("ammo_", StringComparison.Ordinal) && item != "ammo_pistol" ? ammo : item));
             bool dressing = drops.Any(d => d.item == "medkit_small");
             medkitDry = dressing ? 0 : medkitDry + 1;
             if (!dressing && medkitDry >= data.adaptive.medkitPity) { drops.Add(new Map01LootRoller.Drop { item = "medkit_small", count = 1 }); medkitDry = 0; }
-            if (guard.RifleItemId == Map01M16.Id)
-                foreach (var drop in drops.Where(d => d.item == "ammo_rifle").ToArray()) { drops.Remove(drop); drops.Add(new Map01LootRoller.Drop { item = Map01M16.Ammo, count = drop.count }); }
-            var items = drops.Select(d => new ForestIngredient { item_id = d.item, count = d.count }).ToArray();
+            var items = MatchGuardAmmo(guard.RifleItemId, drops.Select(d => new ForestIngredient { item_id = d.item, count = d.count }).ToArray());
             rolled[pointId] = Copy(items);
             return items;
+        }
+
+        /// <summary>Match rifle rounds to the held rifle; preserve K-54 rounds and all other supplies.</summary>
+        public static ForestIngredient[] MatchGuardAmmo(string rifle, ForestIngredient[] items)
+        {
+            string ammo = rifle == Map01M16.Id ? Map01M16.Ammo : "ammo_rifle";
+            var result = new List<ForestIngredient>();
+            int rounds = 0;
+            foreach (var item in items)
+            {
+                if (item.item_id.StartsWith("ammo_", StringComparison.Ordinal) && item.item_id != "ammo_pistol") rounds += item.count;
+                else result.Add(new ForestIngredient { item_id = item.item_id, count = item.count, condition = item.condition });
+            }
+            if (rounds > 0) result.Add(new ForestIngredient { item_id = ammo, count = rounds });
+            return result.ToArray();
         }
 
         /// <summary>How much likelier an item is for Nam now: rounds when his reserve is low, dressings when he is hurt with none.</summary>
         private float Need(string item)
         {
             var a = data.adaptive;
-            if (item == "ammo_rifle" && inventory.Count("ammo_rifle") < a.lowAmmo) return a.ammoBoost;
+            if ((item == "ammo_rifle" || item == Map01M16.Ammo) && inventory.Count(item) < a.lowAmmo) return a.ammoBoost;
             if (item == "medkit_small" && inventory.Count("medkit_small") == 0
                 && mission.PlayerHealth < a.lowHealth * mission.Settings.playerHP) return a.medkitBoost;
             return 1f;
