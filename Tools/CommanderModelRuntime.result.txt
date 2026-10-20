@@ -1,0 +1,1 @@
+PASS: allied commander uses new model; enemy commander uses EnemyCommanderVisual; both Humanoid; enemy rifle attached.

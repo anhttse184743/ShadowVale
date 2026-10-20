@@ -21,6 +21,8 @@ namespace ShadowVale.Map01
 
         public Vector3 Position => inner.Position;
         public Vector3 Forward => inner.Forward;
+        public Vector3 Velocity => inner.Velocity;
+        public bool FacesManually { get => inner.FacesManually; set => inner.FacesManually = value; }
         public Quaternion Rotation { get => inner.Rotation; set => inner.Rotation = value; }
         public float HealthFraction => inner.HealthFraction;
         public bool IsDead => inner.IsDead;

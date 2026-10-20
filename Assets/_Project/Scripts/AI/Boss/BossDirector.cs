@@ -44,7 +44,9 @@ namespace ShadowVale.AI.Boss
         public bool CallReinforcements;
         /// <summary>The player is reloading: order the men near him to close in now.</summary>
         public bool Push;
-        public bool Any => Relocate || ThrowGrenade || CallReinforcements || Push;
+        /// <summary>A rifle is on him: duck behind his cover for a moment, staying where he is.</summary>
+        public bool Duck;
+        public bool Any => Relocate || ThrowGrenade || CallReinforcements || Push || Duck;
     }
 
     /// <summary>
@@ -54,16 +56,18 @@ namespace ShadowVale.AI.Boss
     /// <list type="bullet">
     /// <item>Relocate: after <see cref="BossProfile.RelocateIntervalSeconds"/> (±<see cref="IntervalJitter"/>) of
     /// fighting in one spot, counted from his arrival, or at once after losing
-    /// <see cref="BossProfile.RelocateDamageFraction"/> of his health there. A short interval keeps him
-    /// on the move: run (firing), stop briefly, run on.</item>
+    /// <see cref="BossProfile.RelocateDamageFraction"/> of his health there: a few seconds of fighting
+    /// from each cover, then a short hop (firing on the way when the player is ahead) to the next.</item>
     /// <item>Grenade: the player has lingered within <see cref="BossProfile.GrenadeCampRadius"/> of where he settled for
     /// <see cref="BossProfile.GrenadeCampSeconds"/>, sheltered for at least <see cref="BossProfile.GrenadeShelteredShare"/>
     /// of that time (peeking out to shoot does not reset it), in throwing range, cooldown over; sooner
-    /// (<see cref="BossProfile.KnownHideCampFactor"/>) where he already hid once. It lands
-    /// <see cref="BossProfile.GrenadeFlushOffset"/> beyond the player, away from the commander's men, so
-    /// running from it means running at them.</item>
+    /// (<see cref="BossProfile.KnownHideCampFactor"/>) where he already hid once. Or, hopping between hides,
+    /// within the wider <see cref="BossProfile.GrenadeWideRadius"/> for <see cref="BossProfile.GrenadeWideSeconds"/>,
+    /// as sheltered. It lands <see cref="BossProfile.GrenadeFlushOffset"/> beyond the player, away from the
+    /// commander's men, so running from it means running at them. A player on the move in the open is shot, not grenaded.</item>
     /// <item>Reading the player (<see cref="BossProfile.ReadsPlayer"/>): aimed at for
-    /// <see cref="BossProfile.AimDodgeSeconds"/>, he relocates; the moment the player starts reloading, he
+    /// <see cref="BossProfile.AimDuckSeconds"/>, he ducks behind his cover; still aimed at once he is out again,
+    /// <see cref="BossProfile.AimDodgeSeconds"/> in all, he relocates. The moment the player starts reloading, he
     /// orders his men to push.</item>
     /// <item>Reinforcements: once, the first time health falls below <see cref="BossProfile.ReinforceHpThreshold"/> in a fight,
     /// with a relocation away from the player ("regroup") so he lives until they arrive.</item>
@@ -80,13 +84,34 @@ namespace ShadowVale.AI.Boss
         private readonly System.Random _rng;
         private bool _fighting;
         private float _spotSince, _hpAtSpot = 1f, _interval;
-        // The area the player lingers in: where he settled, for how long, how much of it sheltered.
-        private bool _inZone;
-        private Vector3 _zoneAnchor;
-        private float _zoneTime, _zoneSheltered, _lastTick = float.NaN;
+        /// <summary>An area the player lingers in: where he settled, for how long, how much of it sheltered.</summary>
+        private sealed class Area
+        {
+            public bool In;
+            public Vector3 Anchor;
+            public float Time, Sheltered;
+
+            public void Track(Vector3 player, bool sheltered, float dt, float radius)
+            {
+                if (!In || Flat(player - Anchor) > radius)
+                {
+                    // Somewhere new: the clock starts here.
+                    In = true; Anchor = player; Time = 0; Sheltered = 0;
+                    return;
+                }
+                Time += dt;
+                if (sheltered) Sheltered += dt;
+            }
+
+            public bool Camped(float seconds, float shelteredShare) => Time >= seconds && Sheltered >= shelteredShare * Time;
+        }
+
+        // The close area (one hiding place) and the wide one (hopping between hides near each other).
+        private readonly Area _zone = new Area(), _wide = new Area();
+        private float _lastTick = float.NaN;
         private float _grenadeReadyAt;
         private readonly List<Vector3> _knownHides = new List<Vector3>();
-        private float _aimedSince = float.NaN, _dodgeReadyAt, _pushReadyAt;
+        private float _aimedSince = float.NaN, _lastAimed = float.NegativeInfinity, _duckReadyAt, _dodgeReadyAt, _pushReadyAt;
         private bool _wasReloading;
 
         /// <summary>Where the player camped long enough to draw a grenade: he is expected there again.</summary>
@@ -113,7 +138,7 @@ namespace ShadowVale.AI.Boss
             if (!s.Engaged)
             {
                 _fighting = false;
-                _inZone = false;
+                _zone.In = false; _wide.In = false;
                 _lastTick = float.NaN;
                 _aimedSince = float.NaN;
                 _wasReloading = s.PlayerReloading;
@@ -154,17 +179,27 @@ namespace ShadowVale.AI.Boss
 
             if (p.ReadsPlayer)
             {
-                // A rifle raised at him: he does not wait to be hit before moving.
-                if (!s.AimedAt) _aimedSince = float.NaN;
-                else if (float.IsNaN(_aimedSince)) _aimedSince = s.Now;
-                else if (!d.Relocate && s.Settled && s.Now - _aimedSince >= p.AimDodgeSeconds && s.Now >= _dodgeReadyAt)
+                // A rifle raised at him: he ducks first, and moves only if it is still on him when he comes out.
+                if (s.AimedAt)
                 {
-                    d.Relocate = true;
-                    d.RelocateReason = "aimed";
-                    _spotSince = s.Now; _hpAtSpot = s.HealthFraction;
-                    _dodgeReadyAt = s.Now + p.DodgeCooldownSeconds;
-                    _aimedSince = float.NaN;
+                    if (float.IsNaN(_aimedSince) || s.Now - _lastAimed > p.AimForgetSeconds) _aimedSince = s.Now;
+                    _lastAimed = s.Now;
+                    float aimed = s.Now - _aimedSince;
+                    if (!d.Relocate && s.Settled && aimed >= p.AimDodgeSeconds && s.Now >= _dodgeReadyAt)
+                    {
+                        d.Relocate = true;
+                        d.RelocateReason = "aimed";
+                        _spotSince = s.Now; _hpAtSpot = s.HealthFraction;
+                        _dodgeReadyAt = s.Now + p.DodgeCooldownSeconds;
+                        _aimedSince = float.NaN;
+                    }
+                    else if (!d.Relocate && s.Settled && p.DuckSeconds > 0 && aimed >= p.AimDuckSeconds && s.Now >= _duckReadyAt)
+                    {
+                        d.Duck = true;
+                        _duckReadyAt = s.Now + p.DuckSeconds + p.AimDuckSeconds;
+                    }
                 }
+                else if (s.Now - _lastAimed > p.AimForgetSeconds) _aimedSince = float.NaN;
                 // The first moment of a reload is the window to close in.
                 if (s.PlayerReloading && !_wasReloading && s.Now >= _pushReadyAt)
                 {
@@ -176,18 +211,11 @@ namespace ShadowVale.AI.Boss
 
             float dt = float.IsNaN(_lastTick) ? 0f : Mathf.Max(0f, s.Now - _lastTick);
             _lastTick = s.Now;
-            if (!_inZone || Flat(s.PlayerPosition - _zoneAnchor) > p.GrenadeCampRadius)
-            {
-                // Somewhere new: the clock starts here.
-                _inZone = true; _zoneAnchor = s.PlayerPosition; _zoneTime = 0; _zoneSheltered = 0;
-            }
-            else
-            {
-                _zoneTime += dt;
-                if (s.PlayerSheltered) _zoneSheltered += dt;
-            }
-            if (_zoneTime >= CampSecondsAt(_zoneAnchor) && _zoneSheltered >= p.GrenadeShelteredShare * _zoneTime
-                && s.Now >= _grenadeReadyAt)
+            _zone.Track(s.PlayerPosition, s.PlayerSheltered, dt, p.GrenadeCampRadius);
+            if (p.GrenadeWideRadius > 0) _wide.Track(s.PlayerPosition, s.PlayerSheltered, dt, p.GrenadeWideRadius);
+            bool camped = _zone.Camped(CampSecondsAt(_zone.Anchor), p.GrenadeShelteredShare);
+            bool hopping = p.GrenadeWideRadius > 0 && _wide.Camped(p.GrenadeWideSeconds, p.GrenadeShelteredShare);
+            if ((camped || hopping) && s.Now >= _grenadeReadyAt)
             {
                 float range = Flat(s.PlayerPosition - s.Position);
                 // Never at his own feet.
@@ -196,8 +224,10 @@ namespace ShadowVale.AI.Boss
                     d.ThrowGrenade = true;
                     d.GrenadeTarget = FlushTarget(s.PlayerPosition, s.Squad, p.GrenadeFlushOffset);
                     _grenadeReadyAt = s.Now + p.GrenadeCooldownSeconds;
-                    if (!IsKnownHide(_zoneAnchor)) _knownHides.Add(_zoneAnchor);
-                    _zoneTime = 0; _zoneSheltered = 0; // Another one only if he stays on.
+                    Vector3 hide = camped ? _zone.Anchor : s.PlayerPosition;
+                    if (!IsKnownHide(hide)) _knownHides.Add(hide);
+                    // Another one only if he stays on.
+                    _zone.Time = 0; _zone.Sheltered = 0; _wide.Time = 0; _wide.Sheltered = 0;
                 }
             }
             return d;

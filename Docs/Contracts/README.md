@@ -37,6 +37,31 @@ luôn được ghi vào `persistentDataPath/research/telemetry-sessions.jsonl`.
 Muốn đổi hợp đồng thì sửa DTO, chạy test với biến môi trường `SVL_WRITE_CONTRACT=1` để sinh lại file
 mẫu, rồi báo cho cả nhóm.
 
+### Map 1: tên mục tiêu từ bản ngày 17/10/2026
+
+`objective_completed.payload.objective` lấy từ `Map01Quest.StageIds`; `payload.index` vẫn là số stage.
+Sáu tên đã đổi theo nhiệm vụ C1/C2/C3. Đây là thay đổi **ý nghĩa mục tiêu**, không chỉ đổi nhãn hiển thị:
+
+| `index` | Tên trước | Tên hiện tại | Mục tiêu hiện tại |
+|---|---|---|---|
+| 3 | `scout_camps` | `op1_supplies` | Lấy hàng tiếp tế ở C1 |
+| 4 | `report_scouting` | `report_supplies` | Báo cáo và bàn giao tiếp tế |
+| 5 | `destroy_camps` | `op2_radio` | Vô hiệu đài liên lạc C2 |
+| 6 | `report_camps` | `report_radio` | Báo cáo đã vô hiệu đài |
+| 7 | `defeat_commander` | `op3_commander` | Thực hiện nhiệm vụ chỉ huy C3 |
+| 8 | `report_commander` | `report_retreat` | Báo cáo và nhận đường rút |
+
+Tên ở các index 0/1/2/9/10/11 vẫn lần lượt là `rescue_hung`, `escort_hung`, `briefing`,
+`complete`, `extraction`, `boarding`. Thứ tự chơi cuối map là **8 → 10 → 11 → 9**;
+không sắp thứ tự hoàn thành chỉ bằng giá trị số. Event được phát cho stage vừa hoàn thành;
+khôi phục checkpoint không phát `objective_completed`.
+
+Định dạng JSON/DTO vẫn giữ nguyên trong lượt đồng bộ tài liệu ngày 18/10. Bên nhận cần chấp nhận
+cả tên cũ và mới khi đọc dữ liệu lịch sử; có thể dùng `map_id` + `index` để đối chiếu vị trí,
+nhưng không gộp hai mục tiêu khác nghĩa vào cùng chỉ số nghiên cứu mà bỏ qua `objective`.
+Chưa xác minh backend/dashboard bên ngoài repo đã cập nhật cách phân nhóm. Bảng này ghi nhận
+hành vi client hiện tại, không xác nhận việc triển khai phía server.
+
 ## Content bundle: `enemy_archetypes[].boss` (thêm ở M8)
 
 Archetype có `is_boss: true` được phép kèm một object `boss` (định nghĩa `boss_profile` trong

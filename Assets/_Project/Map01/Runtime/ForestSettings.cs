@@ -51,6 +51,9 @@ namespace ShadowVale.Map01
     {
         public string id;
         public float damage, range, noise_radius, fire_rate;
+        public bool suppressed;
+        public int magazine_size;
+        public float reload_seconds;
         /// <summary>Full condition in durability points, and what one shot takes off it (database weapons.max_durability,
         /// durability_per_use).</summary>
         public float durability_max, durability_per_shot;

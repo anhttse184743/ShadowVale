@@ -41,7 +41,23 @@ namespace ShadowVale.Gameplay.Combat
         public bool Automatic => automatic;
         public float SweepRadius => sweepRadius;
         public float HipSpread => hipSpread;
-        public bool IsGun => kind == WeaponKind.Rifle;
+        public bool IsGun => kind == WeaponKind.Rifle || kind == WeaponKind.Pistol || kind == WeaponKind.Sniper;
         public Transform Muzzle => muzzle != null ? muzzle : transform;
+
+        /// <summary>Configure an additional scene weapon from its existing content profile.</summary>
+        public void Configure(WeaponKind value, float hitDamage, float hitRange, float fireRate, bool repeats, Transform tip)
+        {
+            kind = value; damage = hitDamage; range = hitRange;
+            cooldown = 1f / Mathf.Max(.01f, fireRate); automatic = repeats; muzzle = tip;
+        }
+        private MuzzleFlash flash;
+        private void Awake(){if(IsGun)EnsureFlash();}
+        private void EnsureFlash()
+        {
+            if(flash!=null)return;
+            var host=new GameObject("Muzzle flash");host.transform.SetParent(Muzzle,false);
+            flash=host.AddComponent<MuzzleFlash>();
+        }
+        public void PlayMuzzleFlash(){if(!IsGun)return;EnsureFlash();flash.Play();}
     }
 }

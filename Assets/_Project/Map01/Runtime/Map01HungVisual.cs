@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 namespace ShadowVale.Map01
@@ -6,7 +6,7 @@ namespace ShadowVale.Map01
     /// <summary>
     /// Visual-only replacement. Existing rescue, navigation and save identity stay on Hung.
     /// Follows the quest: held captive at the jetty (kneeling, wrists roped behind his back), stands
-    /// up when Nam frees him, limps home during the escort, then walks and talks normally at base.
+    /// up when Nam frees him, limps home during the escort, then rests on a cot while talking at base.
     /// A shot that brings him down plays the hit-and-fall from whatever he was doing.
     /// </summary>
     public sealed class Map01HungVisual : MonoBehaviour
@@ -23,6 +23,7 @@ namespace ShadowVale.Map01
         private NavMeshAgent agent;
         private Renderer[] placeholder;
         private bool down;
+        private Map01HungRest resting;
         private bool captivePresentation,boundDead;
         private Map01CinematicPose corpsePose;
         public void BeginCaptivePresentation(){captivePresentation=true;talkUntil=0;if(rope==null&&ropeMaterial!=null)rope=TieRope();if(rope!=null)rope.SetActive(true);}
@@ -85,11 +86,12 @@ namespace ShadowVale.Map01
             visual.actor.applyRootMotion = false;
             visual.ResetPose();
             visual.SnapToStage();
+            visual.resting=visual.gameObject.AddComponent<Map01HungRest>();visual.resting.Initialize(owner,visual);
         }
 
         private void LateUpdate()
         {
-            if (mission == null) return;
+            if (mission == null || (resting!=null&&resting.IsResting)) return;
             if(boundDead){corpsePose?.Sample(Map01CinematicPose.Clip("Hung_Bound_Execution"),3);corpsePose?.Ground(mission.hung.position.y);SampleCaptiveContacts();return;}
             if(captivePresentation){SampleCaptiveContacts();return;}
 
@@ -180,7 +182,7 @@ namespace ShadowVale.Map01
 
         private void Update()
         {
-            if (mission == null || actor == null || captivePresentation || boundDead) return;
+            if (mission == null || actor == null || captivePresentation || boundDead || (resting!=null&&resting.IsResting)) return;
             bool fallen = rescue != null && rescue.HungDown;
             if (fallen != down) {
                 down = fallen;

@@ -91,6 +91,16 @@ Phạm vi kiểm tra source: repository `G:/game/ShadowVale`, đặc biệt `Ass
 | A04 | Bundle có boss archetype | Chưa có boss encounter hoạt động trong Map 1; đưa vào một map thuộc demo 2–3 map thay vì mặc định Map 5/6 |
 | N01 | Có cấu hình latency và kiểm tra compiler/static map | Chưa có số đo FPS, latency percentile, replay hoặc playtest; không dùng kiểm tra compile để kết luận đạt performance |
 
+**Cập nhật 18/10/2026 cho các dòng AI (A01–A04, N01).** Bảng trên là ảnh chụp ngày 20/09, giữ lại để đối chiếu. Hiện trạng trên nhánh `dev2`:
+
+| Hạng mục | Hiện trạng | Bằng chứng |
+| --- | --- | --- |
+| A01 | Đủ sáu state (Patrol, Investigate, SpotPlayer, TakeCover, Engage, Retreat), dùng chung cho mọi map | `Scripts/AI/Fsm`, `EnemyBrainTests` |
+| A02 | Map 1 gọi squad coordinator khi phát hiện người chơi. Bài QUBO gồm che lối thoát, cover theo hướng, vòng sườn, phạt trùng vùng; giải cho cả nhóm tác chiến | `SquadCoordinator`, `QuboBuilder`, test parity C#/Python |
+| A03 | Một interface `ISquadSolver`; greedy chạy trong Unity, GA/SA/SQA/QIEA/QAOA chạy trong sidecar Python. Chọn qua `ai_settings.default_solver_variant` của content hoặc F8. **Mặc định là `qiea`**, solver tốt nhất theo exp-v1 (O5); quá budget hoặc sidecar lỗi thì greedy dự phòng và log ghi rõ lý do. QAOA chỉ chạy được với bài ≤ 18 qubit, nên trong game luôn rơi về dự phòng | `WithQieaTheCampIsPlannedByThePythonSidecar` (chạy với sidecar thật), log F8 `[SOLVER x]` / `[GREEDY dự phòng]` |
+| A04 | Chỉ huy trong Map 1: đổi vị trí, lựu đạn phá cover, gọi viện dưới 50% HP; thêm chỉ huy squad (gọng kìm), đọc người chơi, nhô ra bắn | `BossTests`, `BossIntegrationTests` |
+| N01 | Lập kế hoạch bất đồng bộ với budget 120 ms; benchmark và replay exp-v1 có latency p50/p95 | `shadowvale-solver/experiments/results/exp-v1` |
+
 Mã prototype có thể được giữ để duyệt map, nhưng phải được tích hợp/refactor vào các module chung trước khi nghiệm thu. Không bổ sung một hệ thống content/save/solver song song rồi coi đó là kiến trúc chính thức.
 
 ## 6. Phạm vi tiếp theo cho Map 1

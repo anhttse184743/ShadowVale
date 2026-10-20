@@ -1,0 +1,3 @@
+PASS runtime commander at authored board-side post.
+PASS local briefing starts, commander faces Nam, camera renders at new position, closing restores post facing.
+PASS briefing preview cancelled without committing quest progress.

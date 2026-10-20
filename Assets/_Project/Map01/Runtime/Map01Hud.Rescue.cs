@@ -60,50 +60,48 @@ namespace ShadowVale.Map01
             GUI.Label(label,ready?(bush?"[CHUỘT TRÁI] KÉO VÀO BỤI":"[CHUỘT TRÁI] ĐÂM SAU LƯNG"):target.Engaged?"ĐỊCH ĐÃ PHÁT HIỆN":bush?"KÉO VÀO BỤI · ÁP SÁT BÊN HÔNG":"VÒNG RA SAU · ĐẾN GẦN",takedownHint);
         }
 
-        private void DrawBushHelp(float y)
+        // Every stage's supporting notes are laid out inside DrawObjective, never as detached plates.
+        private string ObjectiveNotes()
         {
-            if(!rescue.IntroSeen||mission.Stopped||Vector3.Distance(mission.player.position,rescue.CaptivePost)>48)return;
-            var plate=new Rect(28,y,430,128);HudPanel(plate);
-            GUI.Label(new Rect(plate.x+12,plate.y+7,405,23),"PHỤC KÍCH TRONG BỤI",hudKey);
-            GUI.Label(new Rect(plate.x+12,plate.y+32,405,24),"2: Dao  ·  C/Ctrl: Ngồi  ·  Giữ/thả Q: Ném đá",hudSmall);
-            var wrap=new GUIStyle(hudSmall){wordWrap=true};
-            GUI.Label(new Rect(plate.x+12,plate.y+57,405,68),"Ẩn trong bụi đủ rộng. Dụ lính tới ≤ 2 m, từ bên hông/sau. Chuột trái khi icon dao + lá sáng xanh.",wrap);
+            if (quest == null) return null;
+            rescue ??= GetComponent<Map01Rescue>();
+            var notes = new System.Text.StringBuilder();
+            if (rescue != null && quest.Stage == Map01Quest.RescueStage && !rescue.Failed)
+            {
+                int alive = Mathf.Clamp(rescue.Remaining, 0, SquadLeft.Length - 1);
+                notes.AppendLine(SquadLeft[alive] ??= $"LÍNH CÒN LẠI: {alive}/4");
+                notes.Append(!rescue.OverseerAlive ? "Đã hạ lính giám sát — có thể giao chiến" : rescue.CombatAlarm
+                    ? "Báo động — địch đang truy kích Nam" : rescue.CanExecuteCaptive
+                    ? "Giám sát đang canh Hùng — giữ im lặng" : "Giám sát đã rời Hùng — vòng ra sau");
+            }
+            return notes.Length > 0 ? notes.ToString() : null;
+        }
+
+        private bool ShowObjectiveEscortHealth => rescue != null && quest != null &&
+            quest.Stage == Map01Quest.EscortStage && rescue.Exposed && !rescue.HungDown;
+
+        private void DrawObjectiveEscortHealth(float y)
+        {
+            ShadowLabel(new Rect(49, y, 292, 24), "HÙNG", objectiveSmall);
+            var bar = new Rect(49, y + 25, 292, 10);
+            float alpha = GUI.color.a;
+            HudFill(bar, new Color(0, 0, 0, .6f * alpha));
+            float left = Mathf.Clamp01(rescue.HungHealth / Mathf.Max(1f, rescue.HungMaxHealth));
+            var tint = Time.time - rescue.HungHitAt < .25f ? Color.white : Color.Lerp(Warning, new Color(.45f, .75f, .35f), left);
+            tint.a *= alpha;
+            HudFill(new Rect(bar.x, bar.y, bar.width * left, bar.height), tint);
         }
 
         private void DrawRescue(float width)
         {
-            if (rescue == null) rescue = GetComponent<Map01Rescue>(); // Added by Map01Quest.Awake.
-            if (rescue == null) return;
-            if (Event.current.type != EventType.Repaint) return; // Plates and labels only.
-            if (mission.InventoryOpen || mission.MapOpen) return;
-            if (quest.Stage == Map01Quest.RescueStage && !rescue.Failed) {
-                var info = new Rect(28, objectiveBottom + 12, 370, 65);
-                HudPanel(info);
-                int alive = Mathf.Clamp(rescue.Remaining, 0, SquadLeft.Length - 1);
-                GUI.Label(new Rect(info.x+12,info.y+8,345,24), SquadLeft[alive] ??= $"LÍNH CÒN LẠI: {alive}/4", hudKey);
-                GUI.Label(new Rect(info.x+12,info.y+34,345,25), !rescue.OverseerAlive?"Đã hạ lính giám sát — có thể giao chiến":rescue.CombatAlarm?"Báo động — địch đang truy kích Nam":rescue.CanExecuteCaptive?"Giám sát đang canh Hùng — giữ im lặng":"Giám sát đã rời Hùng — vòng ra sau", hudSmall);
-                DrawBushHelp(info.yMax+8);
-                return;
-            }
-            if (rescue.HungDown)
-            {
-                HudPanel(new Rect(width / 2 - 300, 320, 600, 185));
-                GUI.Label(new Rect(width / 2 - 275, 345, 550, 75), "HÙNG ĐÃ HY SINH", hudCenter);
-                GUI.Label(new Rect(width / 2 - 270, 415, 540, 30), rescue.FailureReason ?? "Giải cứu thất bại.", hudSmall);
-                GUI.Label(new Rect(width / 2 - 270, 453, 540, 50), "Enter Thử lại checkpoint  ·  F9 Tải bản lưu  ·  Esc Menu", hudSmall);
-                return;
-            }
-            // Only once it matters: he has been hit, or the squad is fighting.
-            if (!rescue.Exposed || mission.InventoryOpen || mission.MapOpen) return;
-            if (quest.Stage != Map01Quest.EscortStage) return;
-            var plate = new Rect(28, objectiveBottom + 12, 370, 50);
-            HudPanel(plate);
-            GUI.Label(new Rect(plate.x + 12, plate.y + 12, 80, 26), "HÙNG", hudKey);
-            var bar = new Rect(plate.x + 92, plate.y + 18, plate.width - 110, 14);
-            HudFill(bar, new Color(0, 0, 0, .6f));
-            float left = rescue.HungHealth / rescue.HungMaxHealth;
-            bool justHit = Time.time - rescue.HungHitAt < .25f;
-            HudFill(new Rect(bar.x, bar.y, bar.width * left, bar.height), justHit ? Color.white : Color.Lerp(Warning, new Color(.45f, .75f, .35f), left));
+            rescue ??= GetComponent<Map01Rescue>();
+            if (rescue == null || !rescue.HungDown || mission.InventoryOpen || mission.MapOpen) return;
+            if (Event.current.type != EventType.Repaint) return;
+            // Failure/retry remains immediately visible, independent of the timed objective panel.
+            HudPanel(new Rect(width / 2 - 300, 320, 600, 185));
+            GUI.Label(new Rect(width / 2 - 275, 345, 550, 75), "HÙNG ĐÃ HY SINH", hudCenter);
+            GUI.Label(new Rect(width / 2 - 270, 415, 540, 30), rescue.FailureReason ?? "Giải cứu thất bại.", hudSmall);
+            GUI.Label(new Rect(width / 2 - 270, 453, 540, 50), "Enter Thử lại checkpoint · F9 Tải bản lưu · Esc Menu", hudSmall);
         }
     }
 }

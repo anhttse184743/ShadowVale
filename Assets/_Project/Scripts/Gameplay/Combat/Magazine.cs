@@ -20,6 +20,9 @@ namespace ShadowVale.Gameplay.Combat
         private readonly float _reloadSeconds;
         private float _reloadRemaining;
         private float _reloadDuration;
+        private readonly float[] _commits;
+        private float _reloadElapsed, _fullReloadDuration;
+        private int _planned, _inserted;
 
         public int Capacity { get; }
         public int Rounds { get; private set; }
@@ -35,13 +38,21 @@ namespace ShadowVale.Gameplay.Combat
                 : 0f;
 
         public float ReloadRemaining => Mathf.Max(0f, _reloadRemaining);
+        public int ReloadPlannedRounds => _planned;
+        public float FullReloadProgress => _fullReloadDuration>0 ? _reloadElapsed/_fullReloadDuration : 0;
 
         /// <param name="reloadSeconds">One base duration for every reload, regardless of rounds left.</param>
-        public Magazine(int capacity, float reloadSeconds)
+        public Magazine(int capacity, float reloadSeconds, float[] individualCommits = null)
         {
             Capacity = Mathf.Max(1, capacity);
             _reloadSeconds = Mathf.Max(0.01f, reloadSeconds);
             Rounds = Capacity;
+            if(individualCommits!=null&&individualCommits.Length==Capacity)
+            {
+                float previous=0;
+                foreach(float value in individualCommits){if(!float.IsFinite(value)||value<=previous||value>=1)throw new ArgumentException("Reload insertions must be strictly increasing within (0,1).");previous=value;}
+                _commits=(float[])individualCommits.Clone();
+            }
         }
 
         /// <summary>
@@ -66,7 +77,11 @@ namespace ShadowVale.Gameplay.Combat
         {
             if (IsReloading || IsFull || reserve == 0) return false;
             if (float.IsNaN(durationMultiplier) || float.IsInfinity(durationMultiplier) || durationMultiplier <= 0f) return false;
-            _reloadDuration = Mathf.Max(.01f, _reloadSeconds * durationMultiplier);
+            _fullReloadDuration=Mathf.Max(.01f,_reloadSeconds*durationMultiplier);_reloadElapsed=0;_inserted=0;
+            _planned=Mathf.Min(Capacity-Rounds,reserve<0?Capacity:reserve);
+            // Keep the opening and closing, skipping only the unused repeated insertion gestures.
+            _reloadDuration = _commits==null ? _fullReloadDuration
+                : _fullReloadDuration*(_commits[_planned-1]+1-_commits[Capacity-1]);
             _reloadRemaining = _reloadDuration;
             return true;
         }
@@ -83,7 +98,18 @@ namespace ShadowVale.Gameplay.Combat
         {
             if (!IsReloading) return;
 
-            _reloadRemaining -= deltaTime;
+            deltaTime=Mathf.Max(0,deltaTime);_reloadRemaining -= deltaTime;_reloadElapsed+=deltaTime;
+            if(_commits!=null)
+            {
+                while(_inserted<_planned && _reloadElapsed+1e-6f>=_fullReloadDuration*_commits[_inserted])
+                {
+                    int insertedRound=drawFromReserve!=null?Mathf.Clamp(drawFromReserve(1),0,1):1;
+                    if(insertedRound==0){CancelReload();return;}
+                    Rounds=Mathf.Min(Capacity,Rounds+insertedRound);_inserted++;
+                }
+                if(_reloadRemaining<=0)_reloadRemaining=0;
+                return;
+            }
             if (_reloadRemaining > 0f) return;
 
             _reloadRemaining = 0f;
@@ -101,6 +127,7 @@ namespace ShadowVale.Gameplay.Combat
         {
             _reloadRemaining = 0f;
             _reloadDuration = 0f;
+            _reloadElapsed=0;_fullReloadDuration=0;_planned=0;_inserted=0;
         }
 
         /// <summary>Sets the loaded count directly. For restoring a checkpoint.</summary>

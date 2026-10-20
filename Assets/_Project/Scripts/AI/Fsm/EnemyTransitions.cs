@@ -24,6 +24,8 @@ namespace ShadowVale.AI.Fsm
             if (sees && !engaged) return EnemyStateId.SpotPlayer;
             if (engaged)
             {
+                // Covering his commander's move: he fires from where he is, whatever his assignment.
+                if (ctx.Now < m.CoverFireUntil) return EnemyStateId.Engage;
                 bool inRange = sees && ctx.Sense.Distance <= ctx.Tuning.AttackRange;
                 if (m.HasAssignment && !m.ReachedAssignment && ctx.Now < m.TakeCoverUntil
                     && !(inRange && ctx.Tuning.EngageInRangeFirst)) return EnemyStateId.TakeCover;

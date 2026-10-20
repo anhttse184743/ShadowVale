@@ -50,7 +50,7 @@ namespace ShadowVale.Map01
         [Serializable] public sealed class Role { public string role, guard; public float[] post, points, stops, yaws; public float yaw, vision, deck; public bool copy; }
         [Serializable] public sealed class Route { public float[] points, stops, yaws; }
         [Serializable] public sealed class WaryPost { public string role; public float[] post; public float yaw; }
-        [Serializable] public sealed class Sleeper { public string name, barracks; public float[] door, inside; }
+        [Serializable] public sealed class Sleeper { public string name, barracks; public float[] door, inside; public float floorY, bedYaw; }
         [Serializable] public sealed class Runners { public int count; public float[] from; public float delaySeconds; }
         [Serializable] public sealed class Kieng { public float[] frame, use; }
         [Serializable] public sealed class Phone { public float[] pole, use, hqEnd, far; }
@@ -60,7 +60,7 @@ namespace ShadowVale.Map01
         {
             public bool kiengRemoved, phoneCut, wary, kiengRung, called, ambushed, runnersSent;
             public float checkInRemaining = -1f, runnersIn = -1f, sleeperIn = -1f;
-            public bool[] sleepersAwake;
+            public bool[] sleepersAwake, sleepersKilled, sleepersExecuted;
             /// <summary>The guard running to strike the kẻng over a body he found (his SaveId; empty: nobody), and where it lies.</summary>
             public string bodyRunner = "";
             public float[] bodyAt;
@@ -97,6 +97,7 @@ namespace ShadowVale.Map01
         private readonly List<Vector3> cover = new List<Vector3>();
         private ForestPoint kiengPoint, phonePoint, cachePoint;
         private GameObject striker, cacheRoot;
+        private Transform kiengSoundOrigin;
         private LineRenderer hqWire;
         private Vector3 poleTop;
         private Collider ground;
@@ -195,13 +196,27 @@ namespace ShadowVale.Map01
         /// <summary>The sleepers and the runners, kept off the field until they are called.</summary>
         private void MakeReserve()
         {
-            foreach (var s in Data.sleepers) { var g = CopyGuard(s.name, At(s.inside[0], s.inside[1]), false); if (g != null) sleepers.Add(g); }
+            var animation = Map01BedAnimationData.Load();
+            foreach (var s in Data.sleepers)
+            {
+                var g = CopyGuard(s.name, At(s.inside[0], s.inside[1]), false);
+                if (g == null) continue;
+                int index = sleepers.Count; sleepers.Add(g);
+                if (animation != null)
+                {
+                    var floor = new Vector3(s.inside[0], s.floorY != 0 ? s.floorY : At(s.inside[0], s.inside[1]).y, s.inside[1]);
+                    g.gameObject.AddComponent<Map01C3Sleeper>().Bind(mission, this, index, floor, Quaternion.Euler(0,s.bedYaw,0), animation);
+                }
+            }
+            if (animation != null && GetComponent<Map01C3BedTakedown>() == null) gameObject.AddComponent<Map01C3BedTakedown>();
             for (int i = 0; i < Data.runners.count; i++)
             {
                 var g = CopyGuard("C3 runner " + (i + 1), At(Data.runners.from[0] + i * 1.5f, Data.runners.from[1]), false);
                 if (g != null) runners.Add(g);
             }
             Current.sleepersAwake = new bool[sleepers.Count];
+            Current.sleepersKilled = new bool[sleepers.Count];
+            Current.sleepersExecuted = new bool[sleepers.Count];
         }
 
         // ---- props -----------------------------------------------------------------------------------------------------
@@ -249,7 +264,7 @@ namespace ShadowVale.Map01
             Part(PrimitiveType.Cube, "Kẻng post", root, new Vector3(.5f, .95f, 0), new Vector3(.11f, 1.9f, .11f), timber, solid: true);
             Part(PrimitiveType.Cube, "Kẻng beam", root, new Vector3(0, 1.86f, 0), new Vector3(1.2f, .1f, .1f), timber);
             Part(PrimitiveType.Cylinder, "Kẻng rope", root, new Vector3(0, 1.66f, 0), new Vector3(.015f, .1f, .015f), rope);
-            Part(PrimitiveType.Cube, "Kẻng (iron bar)", root, new Vector3(0, 1.28f, 0), new Vector3(.07f, .56f, .07f), steel);
+            kiengSoundOrigin = Part(PrimitiveType.Cube, "Kẻng (iron bar)", root, new Vector3(0, 1.28f, 0), new Vector3(.07f, .56f, .07f), steel).transform;
             striker = Part(PrimitiveType.Cylinder, "Kẻng striker", root, new Vector3(.44f, 1.12f, .09f), new Vector3(.03f, .2f, .03f), steel, Quaternion.Euler(0, 0, 12));
             var use = new GameObject("Kẻng striker point");
             use.transform.position = At(Data.kieng.use[0], Data.kieng.use[1]);
@@ -344,7 +359,7 @@ namespace ShadowVale.Map01
         internal IEnumerable<Map01EnemyController> Garrison()
         {
             foreach (var g in guards.Values) yield return g;
-            foreach (var s in sleepers) if (s.gameObject.activeSelf) yield return s;
+            foreach (var s in sleepers) if (s.gameObject.activeSelf && s.GetComponent<Map01C3Sleeper>()?.BedOwned != true) yield return s;
             foreach (var r in runners) if (r.gameObject.activeSelf) yield return r;
             if (Commander != null) yield return Commander;
         }
@@ -398,7 +413,7 @@ namespace ShadowVale.Map01
             Current.checkInRemaining = Data.checkInSeconds;
             var silent = new[] { "patrolSouth", "patrolNorth" }.Select(Guard).Where(g => g != null && !g.Alive).ToList();
             if (silent.Count > 0) GoWary();
-            else if (Near) mission.Say("Bộ đàm lính gác cổng: \"Tổ một, tổ hai — báo cáo.\" … \"Bình thường.\"", 3);
+            else if (Near) mission.Say(Map01C3Dialogue.CheckIn, 3);
         }
 
         /// <summary>A patrol did not answer: the camp stands on guard (the remaining patrols hold before the gate, the
@@ -407,7 +422,7 @@ namespace ShadowVale.Map01
         {
             if (Current.wary) return;
             Current.wary = true;
-            if (Near) mission.Say("Lính gác cổng (bộ đàm): \"Tổ hai, trả lời! …\" — \"Mất liên lạc! Cả trại cảnh giác!\"", 5);
+            if (Near) mission.Say(Map01C3Dialogue.MissingPatrol, 5);
             ApplyWary();
         }
         /// <summary>On guard over a body: the same posts, but the men walk to them (it happens in front of Nam).</summary>
@@ -435,6 +450,8 @@ namespace ShadowVale.Map01
         {
             if (Current.kiengRung) return;
             Current.kiengRung = true;
+            // The approved clip contains all three strikes. Full 3D placement retains the pool's distance rolloff.
+            Map01OperationAudio.Play("c3_kieng", kiengSoundOrigin != null ? kiengSoundOrigin.position : At(Data.kieng.frame[0], Data.kieng.frame[1]), spatialBlend: 1f);
             mission.Say("\"Keng! Keng! Keng!\" — kẻng báo động. Lính trong dãy nhà bật dậy!", 4);
             var kieng = At(Data.kieng.frame[0], Data.kieng.frame[1]);
             if (fight)
@@ -449,7 +466,12 @@ namespace ShadowVale.Map01
             if (search.HasValue)
             {
                 int k = 0;
-                foreach (var s in sleepers) if (s.gameObject.activeSelf && s.Alive && !s.Engaged) s.InspectBody(Map01BodyDiscovery.Around(search.Value, k++));
+                foreach (var s in sleepers) if (s.gameObject.activeSelf && s.Alive && !s.Engaged)
+                {
+                    var target=Map01BodyDiscovery.Around(search.Value,k++);
+                    var bed=s.GetComponent<Map01C3Sleeper>();
+                    if(bed!=null)bed.SearchAfterWake(target);else s.InspectBody(target);
+                }
             }
         }
 
@@ -541,14 +563,14 @@ namespace ShadowVale.Map01
             if (Current.called) return 0;
             Current.called = true;
             var boss = Commander;
-            if (boss != null && boss.Alive) mission.Say("Chỉ huy địch: \"Lính đâu! Ra hết đây!\"", 3);
+            if (boss != null && boss.Alive) mission.Say(Map01C3Dialogue.EnemyCall, 3);
             int answering = 0;
             if (!Current.kiengRemoved)
             {
-                answering += Current.sleepersAwake.Count(a => !a);
+                answering += sleepers.Count(s => s.Alive && !Current.sleepersAwake[sleepers.IndexOf(s)]);
                 if (!Current.kiengRung) RingKieng();
             }
-            else if (Current.sleepersAwake.Any(a => !a)) { Current.sleeperIn = Data.sleeperDelayWithoutKieng; answering += Mathf.Min(Data.sleepersWithoutKieng, Current.sleepersAwake.Count(a => !a)); }
+            else if (sleepers.Any(s => s.Alive && !Current.sleepersAwake[sleepers.IndexOf(s)])) { Current.sleeperIn = Data.sleeperDelayWithoutKieng; answering += Mathf.Min(Data.sleepersWithoutKieng, sleepers.Count(s => s.Alive && !Current.sleepersAwake[sleepers.IndexOf(s)])); }
             if (!Current.phoneCut && !Current.runnersSent) { Current.runnersIn = Data.runners.delaySeconds; answering += runners.Count; }
             return answering;
         }
@@ -562,27 +584,48 @@ namespace ShadowVale.Map01
                 int best = -1; float bestDistance = float.MaxValue;
                 for (int i = 0; i < sleepers.Count; i++)
                 {
-                    if (Current.sleepersAwake[i]) continue;
+                    if (Current.sleepersAwake[i] || !sleepers[i].Alive) continue;
                     float d = boss != null ? Vector3.Distance(boss.transform.position, sleepers[i].transform.position) : i;
                     if (d < bestDistance) { bestDistance = d; best = i; }
                 }
-                for (int n = 0; n < Data.sleepersWithoutKieng && best >= 0; n++) { Wake(best, true); best = Array.IndexOf(Current.sleepersAwake, false); }
+                for (int n = 0; n < Data.sleepersWithoutKieng && best >= 0; n++) { Wake(best, true); best = Enumerable.Range(0,sleepers.Count).Where(i=>!Current.sleepersAwake[i]&&sleepers[i].Alive).DefaultIfEmpty(-1).First(); }
             }
             if (Current.runnersIn >= 0 && (Current.runnersIn -= Time.deltaTime) < 0) SendRunners();
         }
 
-        private void Wake(int index, bool fight)
+        public bool TryKnownThreat(out Vector3 at)
         {
-            if (index < 0 || index >= sleepers.Count || Current.sleepersAwake[index]) return;
+            // Prefer a contact over a heard shot. Both are recorded positions, not a player lookup.
+            foreach (var g in Garrison()) if (g != null && g.Engaged && g.TryGetKnownThreat(out at)) return true;
+            foreach (var g in Garrison()) if (g != null && g.TryGetKnownThreat(out at)) return true;
+            at = default; return false;
+        }
+        private void Wake(int index, bool fight, bool immediate = false, Vector3? threat = null)
+        {
+            if (index < 0 || index >= sleepers.Count || Current.sleepersAwake[index] || !sleepers[index].Alive) return;
             Current.sleepersAwake[index] = true;
+            if (fight && !threat.HasValue && TryKnownThreat(out var known)) threat = known;
             var guard = sleepers[index];
+            var bed = guard.GetComponent<Map01C3Sleeper>();
+            if (bed != null) { bed.Wake(fight, immediate, threat); return; }
             var door = Data.sleepers[index].door;
             guard.gameObject.SetActive(true);
             guard.Repost(At(door[0], door[1]), 180f);
             mission.AddEnemy(guard);
-            if (fight && mission.player != null) guard.Alert(mission.player.position);
+            if (fight) { if (threat.HasValue) guard.Alert(threat.Value); else guard.InspectBody(guard.transform.position); }
         }
 
+        public void RecordSleeperDeath(int index, bool execution)
+        {
+            if (index < 0 || index >= sleepers.Count) return;
+            Current.sleepersKilled[index] = true; Current.sleepersExecuted[index] = execution;
+            mission.AddEnemy(sleepers[index]);
+        }
+        public void WakeFromBedShot(Vector3 at, float radius)
+        {
+            for(int i=0;i<sleepers.Count;i++)
+                if(Vector3.Distance(sleepers[i].GetComponent<Map01C3Sleeper>()?.BodyPoint ?? sleepers[i].transform.position,at)<=radius) Wake(i,true);
+        }
         private void SendRunners()
         {
             if (Current.runnersSent) return;
@@ -592,7 +635,7 @@ namespace ShadowVale.Map01
                 r.gameObject.SetActive(true);
                 r.Repost(r.transform.position, 90f);
                 mission.AddEnemy(r);
-                if (mission.player != null) r.Alert(mission.player.position);
+                if (TryKnownThreat(out var known)) r.Alert(known); else r.InspectBody(KiengSpot);
             }
             if (Near) mission.Say("Có thêm lính chạy tới từ đường mòn phía Bắc — dây điện thoại vẫn còn.", 4);
         }
@@ -602,9 +645,10 @@ namespace ShadowVale.Map01
             if (!ready || Map01SaveSystem.IsRestoring || kind != NoiseKind.Gunshot && radius < 25f) return;
             for (int i = 0; i < sleepers.Count; i++)
             {
-                if (Current.sleepersAwake[i]) continue;
+                if (Current.sleepersAwake[i] || !sleepers[i].Alive) continue;
                 var inside = Data.sleepers[i].inside;
-                if (Vector3.Distance(position, At(inside[0], inside[1])) <= Data.sleeperHearMeters) Wake(i, true);
+                if (Vector3.Distance(position, At(inside[0], inside[1])) <= Data.sleeperHearMeters)
+                    Wake(i, true, threat: kind == NoiseKind.Gunshot ? (Vector3?)position : null);
             }
         }
 
@@ -627,6 +671,7 @@ namespace ShadowVale.Map01
                 if (striker != null) striker.SetActive(false);
                 mission.Say("Đã tháo dùi kẻng. Nếu báo động, trại không gõ kẻng gọi lính ngủ dậy được nữa.", 5);
                 Map01NamActions.For(mission)?.Play(Map01NamActions.PickUp, 1.4f, true);
+                StartCoroutine(SpeakAfterInteraction(Map01C3Dialogue.MalletRemoved));
                 return true;
             }
             if (point == phonePoint)
@@ -635,9 +680,25 @@ namespace ShadowVale.Map01
                 DropWire();
                 mission.Say("Đã cắt dây điện thoại. Chỉ huy không gọi được lính ở các chốt đường bến tới nữa.", 5);
                 Map01NamActions.For(mission)?.Play(Map01NamActions.PickUp, 1.6f, true);
+                StartCoroutine(SpeakAfterInteraction(Map01C3Dialogue.PhoneCut));
                 return true;
             }
             return false;
+        }
+        private System.Collections.IEnumerator SpeakAfterInteraction(string caption)
+        {
+            var actions = Map01NamActions.For(mission);
+            while (actions != null && actions.Busy) yield return null;
+            // Do not cut a story line short, or queue a stale remark after a new cinematic.
+            float deadline = Time.time + 5f;
+            var voice = mission.GetComponent<DialogueVoice>();
+            while (voice != null && voice.HasSpeech && Time.time < deadline)
+            {
+                if (mission.Stopped || mission.Cinematic) yield break;
+                yield return null;
+            }
+            if (!mission.Stopped && !mission.Cinematic && (voice == null || !voice.HasSpeech))
+                mission.Say(caption, 4);
         }
         private void DropWire()
         {
@@ -699,13 +760,22 @@ namespace ShadowVale.Map01
             var awake = new bool[sleepers.Count];
             for (int i = 0; i < Mathf.Min(awake.Length, s.sleepersAwake?.Length ?? 0); i++) awake[i] = s.sleepersAwake[i];
             bool runnersOut = s.runnersSent;
-            s.sleepersAwake = new bool[sleepers.Count];
+            var killed = new bool[sleepers.Count]; var executed = new bool[sleepers.Count];
+            for(int i=0;i<sleepers.Count;i++) { killed[i]=s.sleepersKilled!=null&&i<s.sleepersKilled.Length&&s.sleepersKilled[i]; executed[i]=s.sleepersExecuted!=null&&i<s.sleepersExecuted.Length&&s.sleepersExecuted[i]; }
+            s.sleepersAwake = new bool[sleepers.Count]; s.sleepersKilled=killed; s.sleepersExecuted=executed;
             s.runnersSent = false;
             Current = s;
             kiengAt = -1f;
             for (int i = 0; i < sleepers.Count; i++)
             {
-                if (awake[i]) Wake(i, false);
+                var bed=sleepers[i].GetComponent<Map01C3Sleeper>();
+                if(bed!=null)
+                {
+                    bed.ResetToSleep();
+                    if(killed[i]) { sleepers[i].GetComponent<Health>().RestoreHealth(0); bed.HoldCorpse(executed[i]); }
+                    else if(awake[i])Wake(i,false,true);
+                }
+                else if (awake[i]) Wake(i, false, true);
                 else if (sleepers[i].gameObject.activeSelf) sleepers[i].gameObject.SetActive(false);
             }
             if (runnersOut) { Current.runnersSent = true; foreach (var r in runners) { r.gameObject.SetActive(true); mission.AddEnemy(r); } }
@@ -719,7 +789,9 @@ namespace ShadowVale.Map01
         /// <summary>A line for the HUD while Nam is near the post, or null.</summary>
         public string StatusLine()
         {
-            if (!ready || !Near || quest.Stage < Map01Quest.BossStage || quest.Stage > Map01Quest.ReportBossStage) return null;
+            if (!ready || !Near) return null;
+            var bedHint=GetComponent<Map01C3BedTakedown>()?.Hint(); if(bedHint!=null)return bedHint;
+            if (quest.Stage < Map01Quest.BossStage || quest.Stage > Map01Quest.ReportBossStage) return null;
             if (CanAmbush()) return "Sau lưng chỉ huy — CHUỘT TRÁI để đánh úp";
             if (Alarmed) return Current.kiengRung ? "Trại C3 báo động — kẻng đã gõ" : "Trại C3 báo động";
             if (Current.wary) return "Trại C3 đang cảnh giác — tuần tra mất liên lạc";

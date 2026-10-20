@@ -117,6 +117,8 @@ namespace ShadowVale.Map01
         /// <summary>Where a guard has to see: the body's hips as it lies (a fall carries them off the guard's root), a hand above the ground.</summary>
         public static Vector3 SightPoint(Map01EnemyController body)
         {
+            var bed=body.GetComponent<Map01C3Sleeper>();
+            if(bed!=null&&bed.CurrentMode==Map01C3Sleeper.Mode.Dead)return bed.BodyPoint+Vector3.up*.1f;
             var animator = body.GetComponentInChildren<Animator>();
             var hips = animator != null && animator.isHuman ? animator.GetBoneTransform(HumanBodyBones.Hips) : null;
             return hips != null ? hips.position + Vector3.up * .1f : body.transform.position + Vector3.up * .3f;

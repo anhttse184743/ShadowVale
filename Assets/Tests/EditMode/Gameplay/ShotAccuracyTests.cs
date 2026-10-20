@@ -38,13 +38,33 @@ namespace ShadowVale.Tests.EditMode.Gameplay
         }
 
         [Test]
+        public void TheCommanderHitsAStillTargetByHisOwnCurve()
+        {
+            // 19/10/2026: 100% at 5 m, 89% at 10, 80% at 15, 72% at 18 against a still, upright Nam (aim settled).
+            Assert.AreEqual(1f, ShotAccuracy.HitChance(P, Shot(5f, boss: true)), 1e-4f);
+            Assert.AreEqual(.89f, ShotAccuracy.HitChance(P, Shot(10f, boss: true)), 1e-4f);
+            Assert.AreEqual(.80f, ShotAccuracy.HitChance(P, Shot(15f, boss: true)), 1e-4f);
+            Assert.AreEqual(.72f, ShotAccuracy.HitChance(P, Shot(18f, boss: true)), 1e-4f);
+            Assert.AreEqual(.845f, ShotAccuracy.HitChance(P, Shot(12.5f, boss: true)), 1e-4f, "Straight line between the points.");
+            Assert.AreEqual(1f, ShotAccuracy.HitChance(P, Shot(2f, boss: true)), 1e-4f, "Nearer than 5 m: as at 5 m.");
+            // Nam's other states: the same multipliers as for a guard.
+            Assert.AreEqual(.89f * P.walkingTarget, ShotAccuracy.HitChance(P, Shot(10f, moving: true, boss: true)), 1e-4f);
+            Assert.AreEqual(.89f * P.sprintingTarget, ShotAccuracy.HitChance(P, Shot(10f, sprint: true, boss: true)), 1e-4f);
+            Assert.AreEqual(.89f * P.crouchedTarget * P.coverTarget, ShotAccuracy.HitChance(P, Shot(10f, crouched: true, cover: true, boss: true)), 1e-4f);
+            Assert.AreEqual(.89f * P.bossMovingShooter, ShotAccuracy.HitChance(P, Shot(10f, shooterMoving: true, boss: true)), 1e-4f);
+            Assert.AreEqual(.5f, ShotAccuracy.HitChance(P, Shot(5f, aimed: 0, boss: true)), 1e-4f, "His first round still waits for his aim to settle.");
+        }
+
+        [Test]
         public void AimSettlesAfterTheFirstShotsAndTheCommanderShootsBetter()
         {
             Assert.AreEqual(P.closeHit * P.firstShot, ShotAccuracy.HitChance(P, Shot(aimed: 0)), 1e-5f);
             Assert.AreEqual(P.closeHit, ShotAccuracy.HitChance(P, Shot(aimed: P.settleSeconds)), 1e-5f);
-            float guard = ShotAccuracy.HitChance(P, Shot(12f)), boss = ShotAccuracy.HitChance(P, Shot(12f, boss: true));
-            Assert.AreEqual(guard * P.bossSkill, boss, 1e-5f);
-            Assert.LessOrEqual(ShotAccuracy.HitChance(P, Shot(1f, boss: true)), P.maxHit, "Never a sure hit.");
+            var noCurve = new ShotAccuracyProfile { bossCurveDistances = new float[0], bossCurveHits = new float[0] };
+            float guard = ShotAccuracy.HitChance(noCurve, Shot(12f)), boss = ShotAccuracy.HitChance(noCurve, Shot(12f, boss: true));
+            Assert.AreEqual(guard * noCurve.bossSkill, boss, 1e-5f, "Without his curve: a guard's line, better.");
+            Assert.LessOrEqual(ShotAccuracy.HitChance(noCurve, Shot(1f, boss: true)), noCurve.maxHit, "Never a sure hit.");
+            Assert.LessOrEqual(ShotAccuracy.HitChance(P, Shot(1f)), P.maxHit, "A guard: never a sure hit.");
 
             var aim = new AimTracker();
             Assert.AreEqual(0f, aim.Shot(10f));

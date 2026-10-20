@@ -7,7 +7,7 @@ namespace ShadowVale.Map01
 {
     /// <summary>
     /// Everything the player carries and the bench's crafting queue. What is carried lives in two places:
-    /// the four equipment slots (1 long gun, 2 pistol, 3 knife, plus the throwable picked for [Q]) and the
+    /// the four equipment slots (1 long gun, 2 pistol, 3 knife, plus the throwable selected for left mouse) and the
     /// bag, a 6 x 4 grid where each cell holds one stack. Cells keep their place (the player arranges them,
     /// and a save keeps the arrangement); counts are read off the cells. Presentation (names, icons,
     /// descriptions) stays in the static <see cref="ForestInventory"/> helper; the grid's moves are in
@@ -129,7 +129,7 @@ namespace ShadowVale.Map01
                 if (cell.count <= 0) bag[i] = null;
             }
             if (amount > 0 && primary == id) { SetSlot(Slot.Primary, null); amount--; OnSlotEmptied(); }
-            if (amount > 0 && pistol == id) { SetSlot(Slot.Pistol, null); amount--; }
+            if (amount > 0 && pistol == id) { SetSlot(Slot.Pistol, null); amount--; OnSlotEmptied(); }
             Changed?.Invoke();
         }
         /// <summary>Totals by item (bag and slots), for whatever wants the whole list.</summary>
@@ -166,8 +166,12 @@ namespace ShadowVale.Map01
             if (!ForestInventory.IsWeapon(id) || mission == null || mission.ModernCombat == null) return false;
             var kind = mission.ModernCombat.EquippedKind;
             return id == "knife" ? kind == WeaponKind.Knife && knife == id
+                : id == "pistol_k54" ? kind == WeaponKind.Pistol && pistol == id
+                : id == "rifle_mosin" ? kind == WeaponKind.Sniper && primary == id
                 : id == "rifle_standard" && kind == WeaponKind.Rifle && primary == id;
         }
+        public string HeldAmmoId => mission != null && mission.ModernCombat != null
+            ? mission.ModernCombat.EquippedKind==WeaponKind.Pistol ? "ammo_pistol" : mission.ModernCombat.EquippedKind==WeaponKind.Sniper ? "ammo_sniper" : "ammo_rifle" : "ammo_rifle";
         /// <summary>The weapon <paramref name="id"/> into its slot (from the bag, if it is there) and into his hands.</summary>
         public bool EquipItem(string id)
         {
@@ -256,7 +260,7 @@ namespace ShadowVale.Map01
         /// layout (<see cref="RestoreLayout"/>) puts every stack back where it was afterwards.</summary>
         public void RestoreFromSave(ForestIngredient[] savedItems, int savedStones, string savedCrafting, float craftRemaining)
         {
-            SuppressFire = false; nextQuickUse = 0;
+            SuppressFire = false; nextQuickUse = 0; ThrowableEquipped = false;
             ClearAll();
             // Weapons first, so they take their slots; earlier saves carried rifle and knife without entries.
             // Only a missing key is migrated: a saved count of 0 is an explicit absence and stays one.

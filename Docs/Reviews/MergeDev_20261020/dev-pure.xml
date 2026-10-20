@@ -1,0 +1,827 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="122" result="Passed" total="122" passed="122" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-20 06:35:04Z" end-time="2026-10-20 06:35:06Z" duration="1,9539257">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="551" result="Passed" start-time="2026-10-20 06:35:04Z" end-time="2026-10-20 06:35:06Z" duration="1.953926" total="122" passed="122" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1432" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/Admin/.codex/worktrees/dev-preflight-20261020/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="340" result="Passed" start-time="2026-10-20 06:35:04Z" end-time="2026-10-20 06:35:05Z" duration="0.958911" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="133800" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1433" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="340" result="Passed" start-time="2026-10-20 06:35:04Z" end-time="2026-10-20 06:35:05Z" duration="0.917691" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1434" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="340" result="Passed" start-time="2026-10-20 06:35:04Z" end-time="2026-10-20 06:35:05Z" duration="0.878411" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1357" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="340" result="Passed" start-time="2026-10-20 06:35:04Z" end-time="2026-10-20 06:35:05Z" duration="0.844226" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1266" name="ReloadMagazineTests" fullname="ShadowVale.Map01.Tests.ReloadMagazineTests" classname="ShadowVale.Map01.Tests.ReloadMagazineTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-20 06:35:04Z" end-time="2026-10-20 06:35:05Z" duration="0.760993" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1267" name="MagazineLeavesTheRifleRidesTheHandAndGoesBack" fullname="ShadowVale.Map01.Tests.ReloadMagazineTests.MagazineLeavesTheRifleRidesTheHandAndGoesBack" methodname="MagazineLeavesTheRifleRidesTheHandAndGoesBack" classname="ShadowVale.Map01.Tests.ReloadMagazineTests" runstate="Runnable" seed="2118142343" result="Passed" start-time="2026-10-20 06:35:04Z" end-time="2026-10-20 06:35:05Z" duration="0.741382" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+    <test-suite type="Assembly" id="1677" name="ShadowVale.Tests.EditMode.dll" fullname="C:/Users/Admin/.codex/worktrees/dev-preflight-20261020/ShadowVale/Library/ScriptAssemblies/ShadowVale.Tests.EditMode.dll" runstate="Runnable" testcasecount="211" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:06Z" duration="0.946928" total="121" passed="121" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="133800" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1678" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="211" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:06Z" duration="0.929842" total="121" passed="121" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1679" name="Tests" fullname="ShadowVale.Tests" runstate="Runnable" testcasecount="211" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:06Z" duration="0.921802" total="121" passed="121" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1680" name="EditMode" fullname="ShadowVale.Tests.EditMode" runstate="Runnable" testcasecount="211" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:06Z" duration="0.912481" total="121" passed="121" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestSuite" id="1685" name="AI" fullname="ShadowVale.Tests.EditMode.AI" runstate="Runnable" testcasecount="90" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:06Z" duration="0.713965" total="69" passed="69" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1577" name="BossTests" fullname="ShadowVale.Tests.EditMode.AI.BossTests" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" testcasecount="24" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:06Z" duration="0.517427" total="24" passed="24" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1581" name="AGrenadeGoesToAPlayerWhoCampsBehindCover" fullname="ShadowVale.Tests.EditMode.AI.BossTests.AGrenadeGoesToAPlayerWhoCampsBehindCover" methodname="AGrenadeGoesToAPlayerWhoCampsBehindCover" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="520332847" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.006059" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1598" name="AReloadIsTheMensCueToPush" fullname="ShadowVale.Tests.EditMode.AI.BossTests.AReloadIsTheMensCueToPush" methodname="AReloadIsTheMensCueToPush" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="598842964" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.002317" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1597" name="ARifleAimedAtHimMakesHimDuckAndMoveOnlyIfItStaysOnHim" fullname="ShadowVale.Tests.EditMode.AI.BossTests.ARifleAimedAtHimMakesHimDuckAndMoveOnlyIfItStaysOnHim" methodname="ARifleAimedAtHimMakesHimDuckAndMoveOnlyIfItStaysOnHim" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="1654738429" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.001966" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1590" name="ARifleOnHimSendsHimBehindTheCoverAtOnce" fullname="ShadowVale.Tests.EditMode.AI.BossTests.ARifleOnHimSendsHimBehindTheCoverAtOnce" methodname="ARifleOnHimSendsHimBehindTheCoverAtOnce" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="1913833992" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.001567" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1587" name="CallingReinforcementsHeFallsBackTowardsThem" fullname="ShadowVale.Tests.EditMode.AI.BossTests.CallingReinforcementsHeFallsBackTowardsThem" methodname="CallingReinforcementsHeFallsBackTowardsThem" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="784171249" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.015058" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1589" name="FromCoverHeFightsInBursts" fullname="ShadowVale.Tests.EditMode.AI.BossTests.FromCoverHeFightsInBursts" methodname="FromCoverHeFightsInBursts" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="513123698" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.005881" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1584" name="GrenadeDamageFallsOffToAThirdAtTheEdge" fullname="ShadowVale.Tests.EditMode.AI.BossTests.GrenadeDamageFallsOffToAThirdAtTheEdge" methodname="GrenadeDamageFallsOffToAThirdAtTheEdge" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="988545546" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.003273" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1593" name="HeDoesNotTurnHisBackAndRunAndPrefersCoverBehindHisMen" fullname="ShadowVale.Tests.EditMode.AI.BossTests.HeDoesNotTurnHisBackAndRunAndPrefersCoverBehindHisMen" methodname="HeDoesNotTurnHisBackAndRunAndPrefersCoverBehindHisMen" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="1692796808" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.001687" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1591" name="HeFightsFromCoverMostOfTheTimeWithSteadyFire" fullname="ShadowVale.Tests.EditMode.AI.BossTests.HeFightsFromCoverMostOfTheTimeWithSteadyFire" methodname="HeFightsFromCoverMostOfTheTimeWithSteadyFire" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="1201398192" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.001815" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1586" name="HeMovesToCoverWithinReachNeverOntoThePlayerNorBackToWhereHeIs" fullname="ShadowVale.Tests.EditMode.AI.BossTests.HeMovesToCoverWithinReachNeverOntoThePlayerNorBackToWhereHeIs" methodname="HeMovesToCoverWithinReachNeverOntoThePlayerNorBackToWhereHeIs" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="542381670" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.008615" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1578" name="HeRelocatesAfterStayingTooLongAndAtOnceWhenHurtThere" fullname="ShadowVale.Tests.EditMode.AI.BossTests.HeRelocatesAfterStayingTooLongAndAtOnceWhenHurtThere" methodname="HeRelocatesAfterStayingTooLongAndAtOnceWhenHurtThere" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="108308565" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.001007" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1595" name="HisGrenadeDrivesThePlayerTowardsHisMen" fullname="ShadowVale.Tests.EditMode.AI.BossTests.HisGrenadeDrivesThePlayerTowardsHisMen" methodname="HisGrenadeDrivesThePlayerTowardsHisMen" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="1102424289" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.001632" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1592" name="HoppingBetweenHidesNearbyStillDrawsAGrenade" fullname="ShadowVale.Tests.EditMode.AI.BossTests.HoppingBetweenHidesNearbyStillDrawsAGrenade" methodname="HoppingBetweenHidesNearbyStillDrawsAGrenade" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="1036459874" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.002007" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1588" name="LingeringInAnAreaCountsNotStandingOnOneSpot" fullname="ShadowVale.Tests.EditMode.AI.BossTests.LingeringInAnAreaCountsNotStandingOnOneSpot" methodname="LingeringInAnAreaCountsNotStandingOnOneSpot" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="1744254379" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.000853" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1600" name="NoCoverInReachMeansNoMove" fullname="ShadowVale.Tests.EditMode.AI.BossTests.NoCoverInReachMeansNoMove" methodname="NoCoverInReachMeansNoMove" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="792565220" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.000420" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1582" name="NoGrenadeForAPlayerWhoKeepsMovingOrStandsInTheOpen" fullname="ShadowVale.Tests.EditMode.AI.BossTests.NoGrenadeForAPlayerWhoKeepsMovingOrStandsInTheOpen" methodname="NoGrenadeForAPlayerWhoKeepsMovingOrStandsInTheOpen" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="16006378" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.000597" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1583" name="NoGrenadeOutOfRangeOrAtHisOwnFeet" fullname="ShadowVale.Tests.EditMode.AI.BossTests.NoGrenadeOutOfRangeOrAtHisOwnFeet" methodname="NoGrenadeOutOfRangeOrAtHisOwnFeet" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="867451616" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.000649" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1580" name="OutOfAFightHeDoesNothing" fullname="ShadowVale.Tests.EditMode.AI.BossTests.OutOfAFightHeDoesNothing" methodname="OutOfAFightHeDoesNothing" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="264421851" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.000531" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1585" name="ReinforcementsAreCalledOnceBelowHalfHealth" fullname="ShadowVale.Tests.EditMode.AI.BossTests.ReinforcementsAreCalledOnceBelowHalfHealth" methodname="ReinforcementsAreCalledOnceBelowHalfHealth" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="1296037422" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.000665" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1599" name="TheCommanderWearsAStarOverHisHead" fullname="ShadowVale.Tests.EditMode.AI.BossTests.TheCommanderWearsAStarOverHisHead" methodname="TheCommanderWearsAStarOverHisHead" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="493659439" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:05Z" duration="0.015092" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1601" name="TheFallbackBundlesBossCarriesItsProfileAndBadProfilesAreRejected" fullname="ShadowVale.Tests.EditMode.AI.BossTests.TheFallbackBundlesBossCarriesItsProfileAndBadProfilesAreRejected" methodname="TheFallbackBundlesBossCarriesItsProfileAndBadProfilesAreRejected" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="406191957" result="Passed" start-time="2026-10-20 06:35:05Z" end-time="2026-10-20 06:35:06Z" duration="0.187026" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1579" name="TheStopIsCountedFromHisArrivalAndVaries" fullname="ShadowVale.Tests.EditMode.AI.BossTests.TheStopIsCountedFromHisArrivalAndVaries" methodname="TheStopIsCountedFromHisArrivalAndVaries" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="1799729331" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.003150" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1594" name="UnderHisCommandASquadIsPlannedAsAPincer" fullname="ShadowVale.Tests.EditMode.AI.BossTests.UnderHisCommandASquadIsPlannedAsAPincer" methodname="UnderHisCommandASquadIsPlannedAsAPincer" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="2032102001" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000803" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1596" name="WhereThePlayerHidOnceTheGrenadeComesSooner" fullname="ShadowVale.Tests.EditMode.AI.BossTests.WhereThePlayerHidOnceTheGrenadeComesSooner" methodname="WhereThePlayerHidOnceTheGrenadeComesSooner" classname="ShadowVale.Tests.EditMode.AI.BossTests" runstate="Runnable" seed="1576336181" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.001276" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1602" name="CommanderGuardTests" fullname="ShadowVale.Tests.EditMode.AI.CommanderGuardTests" classname="ShadowVale.Tests.EditMode.AI.CommanderGuardTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.037834" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1607" name="ACommanderFiringOnTheMoveLosesLessAimThanAGuard" fullname="ShadowVale.Tests.EditMode.AI.CommanderGuardTests.ACommanderFiringOnTheMoveLosesLessAimThanAGuard" methodname="ACommanderFiringOnTheMoveLosesLessAimThanAGuard" classname="ShadowVale.Tests.EditMode.AI.CommanderGuardTests" runstate="Runnable" seed="588203337" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.001970" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1606" name="AWoundedGuardLeftAloneForHalfAMinuteRecovers" fullname="ShadowVale.Tests.EditMode.AI.CommanderGuardTests.AWoundedGuardLeftAloneForHalfAMinuteRecovers" methodname="AWoundedGuardLeftAloneForHalfAMinuteRecovers" classname="ShadowVale.Tests.EditMode.AI.CommanderGuardTests" runstate="Runnable" seed="2044243054" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.001175" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1605" name="TheMenHeCallsGatherInFrontOfHim" fullname="ShadowVale.Tests.EditMode.AI.CommanderGuardTests.TheMenHeCallsGatherInFrontOfHim" methodname="TheMenHeCallsGatherInFrontOfHim" classname="ShadowVale.Tests.EditMode.AI.CommanderGuardTests" runstate="Runnable" seed="1840412998" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.006269" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1604" name="TheWayToHimNeverOutweighsTheRestOfThePlan" fullname="ShadowVale.Tests.EditMode.AI.CommanderGuardTests.TheWayToHimNeverOutweighsTheRestOfThePlan" methodname="TheWayToHimNeverOutweighsTheRestOfThePlan" classname="ShadowVale.Tests.EditMode.AI.CommanderGuardTests" runstate="Runnable" seed="786520457" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.011103" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1603" name="UnderHisCommandTheSquadAlsoWatchesTheWayToHim" fullname="ShadowVale.Tests.EditMode.AI.CommanderGuardTests.UnderHisCommandTheSquadAlsoWatchesTheWayToHim" methodname="UnderHisCommandTheSquadAlsoWatchesTheWayToHim" classname="ShadowVale.Tests.EditMode.AI.CommanderGuardTests" runstate="Runnable" seed="1845093819" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.008691" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1608" name="CoordinationSettingsTests" fullname="ShadowVale.Tests.EditMode.AI.CoordinationSettingsTests" classname="ShadowVale.Tests.EditMode.AI.CoordinationSettingsTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.020587" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1609" name="AMapOverridesOnlyWhatItStatesOverTheBundle" fullname="ShadowVale.Tests.EditMode.AI.CoordinationSettingsTests.AMapOverridesOnlyWhatItStatesOverTheBundle" methodname="AMapOverridesOnlyWhatItStatesOverTheBundle" classname="ShadowVale.Tests.EditMode.AI.CoordinationSettingsTests" runstate="Runnable" seed="291414962" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.002319" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1612" name="ContradictorySquadSettingsAreRejected" fullname="ShadowVale.Tests.EditMode.AI.CoordinationSettingsTests.ContradictorySquadSettingsAreRejected" methodname="ContradictorySquadSettingsAreRejected" classname="ShadowVale.Tests.EditMode.AI.CoordinationSettingsTests" runstate="Runnable" seed="1148281118" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.003861" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1611" name="TheEnvironmentCanPinTheStartingSolver" fullname="ShadowVale.Tests.EditMode.AI.CoordinationSettingsTests.TheEnvironmentCanPinTheStartingSolver" methodname="TheEnvironmentCanPinTheStartingSolver" classname="ShadowVale.Tests.EditMode.AI.CoordinationSettingsTests" runstate="Runnable" seed="113334191" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.003106" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1610" name="TheFallbackBundleGivesMapOneItsTunedValues" fullname="ShadowVale.Tests.EditMode.AI.CoordinationSettingsTests.TheFallbackBundleGivesMapOneItsTunedValues" methodname="TheFallbackBundleGivesMapOneItsTunedValues" classname="ShadowVale.Tests.EditMode.AI.CoordinationSettingsTests" runstate="Runnable" seed="910880668" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.002286" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1618" name="EnemyBrainTests" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" testcasecount="23" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.054774" total="23" passed="23" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1626" name="ACommanderFiresOnTheMoveOnlyAtAPlayerAheadOfHim" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.ACommanderFiresOnTheMoveOnlyAtAPlayerAheadOfHim" methodname="ACommanderFiresOnTheMoveOnlyAtAPlayerAheadOfHim" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="1243927157" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.014750" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1625" name="ACommanderTakesCoverUnderFireThenWatchesInsteadOfHunting" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.ACommanderTakesCoverUnderFireThenWatchesInsteadOfHunting" methodname="ACommanderTakesCoverUnderFireThenWatchesInsteadOfHunting" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="843577706" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.001759" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1641" name="AllSixStatesAreReachableAndReportedOnTheEventBus" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.AllSixStatesAreReachableAndReportedOnTheEventBus" methodname="AllSixStatesAreReachableAndReportedOnTheEventBus" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="1061984433" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.007386" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-suite type="ParameterizedMethod" id="1634" name="APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.006920" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                  <properties />
+                  <test-case id="1629" name="APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds(&quot;block&quot;,null,False)" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds(&quot;block&quot;,null,False)" methodname="APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="1164888244" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.001002" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1630" name="APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds(&quot;cover&quot;,null,False)" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds(&quot;cover&quot;,null,False)" methodname="APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="2006929686" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000365" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1631" name="APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds(&quot;flank&quot;,null,False)" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds(&quot;flank&quot;,null,False)" methodname="APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="168858304" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000144" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1632" name="APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds(&quot;block&quot;,&quot;block,local&quot;,True)" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds(&quot;block&quot;,&quot;block,local&quot;,True)" methodname="APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="1484699609" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000140" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1633" name="APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds(&quot;flank&quot;,&quot;*&quot;,True)" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds(&quot;flank&quot;,&quot;*&quot;,True)" methodname="APlanPositionIsWhereToDeployNotWhereToStayUnlessItsRoleHolds" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="1586804742" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000154" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                </test-suite>
+                <test-case id="1635" name="ARePlanThatBarelyMovesHimDoesNotSendHimWalking" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.ARePlanThatBarelyMovesHimDoesNotSendHimWalking" methodname="ARePlanThatBarelyMovesHimDoesNotSendHimWalking" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="833384973" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000638" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1639" name="BadlyHurtInAFightHeRetreatsOnceThenRejoins" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.BadlyHurtInAFightHeRetreatsOnceThenRejoins" methodname="BadlyHurtInAFightHeRetreatsOnceThenRejoins" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="1836534364" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000579" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1643" name="DeadBodiesDoNothing" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.DeadBodiesDoNothing" methodname="DeadBodiesDoNothing" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="233751353" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000279" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1642" name="HurtByThePlayerHeKnowsWhereItCameFrom" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.HurtByThePlayerHeKnowsWhereItCameFrom" methodname="HurtByThePlayerHeKnowsWhereItCameFrom" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="739834076" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000469" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1624" name="LosingSightMeansSuppressiveFireThenHuntingTheLastSeenSpot" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.LosingSightMeansSuppressiveFireThenHuntingTheLastSeenSpot" methodname="LosingSightMeansSuppressiveFireThenHuntingTheLastSeenSpot" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="385205387" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000923" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1621" name="NoiseIsInvestigatedThenSearchedThenHeWalksBack" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.NoiseIsInvestigatedThenSearchedThenHeWalksBack" methodname="NoiseIsInvestigatedThenSearchedThenHeWalksBack" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="1498201394" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.001190" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1640" name="NoRetreatWhenNotFightingOrWhenBoss" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.NoRetreatWhenNotFightingOrWhenBoss" methodname="NoRetreatWhenNotFightingOrWhenBoss" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="1171884539" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000314" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1620" name="OnPatrolHeWalksAtHisPatrolPace" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.OnPatrolHeWalksAtHisPatrolPace" methodname="OnPatrolHeWalksAtHisPatrolPace" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="804910218" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000318" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1627" name="OrderedToCoverHisCommanderHeStopsAndFires" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.OrderedToCoverHisCommanderHeStopsAndFires" methodname="OrderedToCoverHisCommanderHeStopsAndFires" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="1745623975" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000525" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1623" name="OutOfRangeWithoutAPlanHeClosesIn" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.OutOfRangeWithoutAPlanHeClosesIn" methodname="OutOfRangeWithoutAPlanHeClosesIn" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="1572561161" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000347" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1619" name="PatrolWalksTheLoopPointToPoint" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.PatrolWalksTheLoopPointToPoint" methodname="PatrolWalksTheLoopPointToPoint" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="277824235" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000640" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1622" name="SuspicionBuildsBeforeHeEngagesAndFiresInRange" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.SuspicionBuildsBeforeHeEngagesAndFiresInRange" methodname="SuspicionBuildsBeforeHeEngagesAndFiresInRange" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="1355608618" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.002314" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1628" name="WithCoverNearbyHeTakesItThenHoldsItInsteadOfChasing" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.WithCoverNearbyHeTakesItThenHoldsItInsteadOfChasing" methodname="WithCoverNearbyHeTakesItThenHoldsItInsteadOfChasing" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="5235558" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000462" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-suite type="ParameterizedMethod" id="1638" name="WithThePlayerInRangeHeFightsBeforeWalkingToHisAssignment" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.WithThePlayerInRangeHeFightsBeforeWalkingToHisAssignment" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.003433" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                  <properties />
+                  <test-case id="1636" name="WithThePlayerInRangeHeFightsBeforeWalkingToHisAssignment(True)" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.WithThePlayerInRangeHeFightsBeforeWalkingToHisAssignment(True)" methodname="WithThePlayerInRangeHeFightsBeforeWalkingToHisAssignment" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="2018595263" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000734" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1637" name="WithThePlayerInRangeHeFightsBeforeWalkingToHisAssignment(False)" fullname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests.WithThePlayerInRangeHeFightsBeforeWalkingToHisAssignment(False)" methodname="WithThePlayerInRangeHeFightsBeforeWalkingToHisAssignment" classname="ShadowVale.Tests.EditMode.AI.EnemyBrainTests" runstate="Runnable" seed="408052876" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000214" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                </test-suite>
+              </test-suite>
+              <test-suite type="TestFixture" id="1646" name="PerceptionScheduleTests" fullname="ShadowVale.Tests.EditMode.AI.PerceptionScheduleTests" classname="ShadowVale.Tests.EditMode.AI.PerceptionScheduleTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.010456" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1647" name="ACalmGuardLooksTenTimesASecond" fullname="ShadowVale.Tests.EditMode.AI.PerceptionScheduleTests.ACalmGuardLooksTenTimesASecond" methodname="ACalmGuardLooksTenTimesASecond" classname="ShadowVale.Tests.EditMode.AI.PerceptionScheduleTests" runstate="Runnable" seed="1805076766" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000776" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1650" name="AfterAResetTheGuardLooksAtOnce" fullname="ShadowVale.Tests.EditMode.AI.PerceptionScheduleTests.AfterAResetTheGuardLooksAtOnce" methodname="AfterAResetTheGuardLooksAtOnce" classname="ShadowVale.Tests.EditMode.AI.PerceptionScheduleTests" runstate="Runnable" seed="554024620" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000238" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1648" name="AnAlertGuardLooksEveryFrame" fullname="ShadowVale.Tests.EditMode.AI.PerceptionScheduleTests.AnAlertGuardLooksEveryFrame" methodname="AnAlertGuardLooksEveryFrame" classname="ShadowVale.Tests.EditMode.AI.PerceptionScheduleTests" runstate="Runnable" seed="1065030343" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000192" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1649" name="GuardsAreSpreadOverTheIntervalTheSameWayEveryRun" fullname="ShadowVale.Tests.EditMode.AI.PerceptionScheduleTests.GuardsAreSpreadOverTheIntervalTheSameWayEveryRun" methodname="GuardsAreSpreadOverTheIntervalTheSameWayEveryRun" classname="ShadowVale.Tests.EditMode.AI.PerceptionScheduleTests" runstate="Runnable" seed="431330567" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.003479" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1651" name="PerceptionTests" fullname="ShadowVale.Tests.EditMode.AI.PerceptionTests" classname="ShadowVale.Tests.EditMode.AI.PerceptionTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.034495" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1654" name="CrouchingAndHidingShortenTheRange" fullname="ShadowVale.Tests.EditMode.AI.PerceptionTests.CrouchingAndHidingShortenTheRange" methodname="CrouchingAndHidingShortenTheRange" classname="ShadowVale.Tests.EditMode.AI.PerceptionTests" runstate="Runnable" seed="1037904678" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.004287" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1655" name="EngagedGuardTracksAllAroundAtFullRangeEvenIfTheTargetCrouches" fullname="ShadowVale.Tests.EditMode.AI.PerceptionTests.EngagedGuardTracksAllAroundAtFullRangeEvenIfTheTargetCrouches" methodname="EngagedGuardTracksAllAroundAtFullRangeEvenIfTheTargetCrouches" classname="ShadowVale.Tests.EditMode.AI.PerceptionTests" runstate="Runnable" seed="907995459" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000493" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1658" name="HearingIsInsideTheNoiseRadiusScaledByTheListener" fullname="ShadowVale.Tests.EditMode.AI.PerceptionTests.HearingIsInsideTheNoiseRadiusScaledByTheListener" methodname="HearingIsInsideTheNoiseRadiusScaledByTheListener" classname="ShadowVale.Tests.EditMode.AI.PerceptionTests" runstate="Runnable" seed="74573714" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000854" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1659" name="NoiseSystemDispatchesCountsAndPublishes" fullname="ShadowVale.Tests.EditMode.AI.PerceptionTests.NoiseSystemDispatchesCountsAndPublishes" methodname="NoiseSystemDispatchesCountsAndPublishes" classname="ShadowVale.Tests.EditMode.AI.PerceptionTests" runstate="Runnable" seed="940983863" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.005766" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1656" name="OccludersAndDeathHideThePlayer" fullname="ShadowVale.Tests.EditMode.AI.PerceptionTests.OccludersAndDeathHideThePlayer" methodname="OccludersAndDeathHideThePlayer" classname="ShadowVale.Tests.EditMode.AI.PerceptionTests" runstate="Runnable" seed="1088083837" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000776" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1657" name="PhysicsObstacleBlocksSightUnlessItIsThePlayer" fullname="ShadowVale.Tests.EditMode.AI.PerceptionTests.PhysicsObstacleBlocksSightUnlessItIsThePlayer" methodname="PhysicsObstacleBlocksSightUnlessItIsThePlayer" classname="ShadowVale.Tests.EditMode.AI.PerceptionTests" runstate="Runnable" seed="778178982" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.009921" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1652" name="SeesAStandingPlayerInFrontWithinRange" fullname="ShadowVale.Tests.EditMode.AI.PerceptionTests.SeesAStandingPlayerInFrontWithinRange" methodname="SeesAStandingPlayerInFrontWithinRange" classname="ShadowVale.Tests.EditMode.AI.PerceptionTests" runstate="Runnable" seed="311060088" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000802" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1660" name="SilentTakedownNeedsKnifeFromBehindOnAnUnawareNonBoss" fullname="ShadowVale.Tests.EditMode.AI.PerceptionTests.SilentTakedownNeedsKnifeFromBehindOnAnUnawareNonBoss" methodname="SilentTakedownNeedsKnifeFromBehindOnAnUnawareNonBoss" classname="ShadowVale.Tests.EditMode.AI.PerceptionTests" runstate="Runnable" seed="911669387" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.001782" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1653" name="UnawareGuardDoesNotSeeBehindUnlessBrushedPast" fullname="ShadowVale.Tests.EditMode.AI.PerceptionTests.UnawareGuardDoesNotSeeBehindUnlessBrushedPast" methodname="UnawareGuardDoesNotSeeBehindUnlessBrushedPast" classname="ShadowVale.Tests.EditMode.AI.PerceptionTests" runstate="Runnable" seed="258367474" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000598" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+            </test-suite>
+            <test-suite type="TestSuite" id="1683" name="Data" fullname="ShadowVale.Tests.EditMode.Data" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.035738" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1553" name="ContentBundleParseTests" fullname="ShadowVale.Tests.EditMode.Data.ContentBundleParseTests" classname="ShadowVale.Tests.EditMode.Data.ContentBundleParseTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.032129" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1560" name="ContentService_ThrowsWithIdOnMissingKey" fullname="ShadowVale.Tests.EditMode.Data.ContentBundleParseTests.ContentService_ThrowsWithIdOnMissingKey" methodname="ContentService_ThrowsWithIdOnMissingKey" classname="ShadowVale.Tests.EditMode.Data.ContentBundleParseTests" runstate="Runnable" seed="116914418" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.009163" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1556" name="FallbackBundle_IdsAreUniqueAndReferencesResolve" fullname="ShadowVale.Tests.EditMode.Data.ContentBundleParseTests.FallbackBundle_IdsAreUniqueAndReferencesResolve" methodname="FallbackBundle_IdsAreUniqueAndReferencesResolve" classname="ShadowVale.Tests.EditMode.Data.ContentBundleParseTests" runstate="Runnable" seed="2120601840" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.003778" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1554" name="FallbackBundle_LoadsAndValidates" fullname="ShadowVale.Tests.EditMode.Data.ContentBundleParseTests.FallbackBundle_LoadsAndValidates" methodname="FallbackBundle_LoadsAndValidates" classname="ShadowVale.Tests.EditMode.Data.ContentBundleParseTests" runstate="Runnable" seed="1822024921" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.001888" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1555" name="FallbackBundle_SnakeCaseKeysMapOntoPascalCase" fullname="ShadowVale.Tests.EditMode.Data.ContentBundleParseTests.FallbackBundle_SnakeCaseKeysMapOntoPascalCase" methodname="FallbackBundle_SnakeCaseKeysMapOntoPascalCase" classname="ShadowVale.Tests.EditMode.Data.ContentBundleParseTests" runstate="Runnable" seed="1126491811" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.004949" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1557" name="Validator_RejectsDuplicateIdsAndDanglingReferences" fullname="ShadowVale.Tests.EditMode.Data.ContentBundleParseTests.Validator_RejectsDuplicateIdsAndDanglingReferences" methodname="Validator_RejectsDuplicateIdsAndDanglingReferences" classname="ShadowVale.Tests.EditMode.Data.ContentBundleParseTests" runstate="Runnable" seed="507465778" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.003100" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1559" name="Validator_RejectsMalformedJson" fullname="ShadowVale.Tests.EditMode.Data.ContentBundleParseTests.Validator_RejectsMalformedJson" methodname="Validator_RejectsMalformedJson" classname="ShadowVale.Tests.EditMode.Data.ContentBundleParseTests" runstate="Runnable" seed="1211976418" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.003347" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1558" name="Validator_RejectsWrongSchemaVersion" fullname="ShadowVale.Tests.EditMode.Data.ContentBundleParseTests.Validator_RejectsWrongSchemaVersion" methodname="Validator_RejectsWrongSchemaVersion" classname="ShadowVale.Tests.EditMode.Data.ContentBundleParseTests" runstate="Runnable" seed="330550967" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000503" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+            </test-suite>
+            <test-suite type="TestSuite" id="1682" name="Gameplay" fullname="ShadowVale.Tests.EditMode.Gameplay" runstate="Runnable" testcasecount="72" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.104626" total="45" passed="45" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="TestFixture" id="1476" name="MagazineTests" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" testcasecount="17" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.025765" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1492" name="ANullSupplierFillsOutright" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests.ANullSupplierFillsOutright" methodname="ANullSupplierFillsOutright" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" seed="1516095092" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.001210" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1484" name="AShortReserveGivesAPartialMagazine" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests.AShortReserveGivesAPartialMagazine" methodname="AShortReserveGivesAPartialMagazine" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" seed="1038734136" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000755" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1493" name="ASupplierCannotOverfillTheMagazine" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests.ASupplierCannotOverfillTheMagazine" methodname="ASupplierCannotOverfillTheMagazine" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" seed="1397670300" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000426" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1488" name="CancellingLeavesTheWeaponAbleToFire" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests.CancellingLeavesTheWeaponAbleToFire" methodname="CancellingLeavesTheWeaponAbleToFire" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" seed="1474653939" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000428" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1482" name="CannotFireWhileReloading" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests.CannotFireWhileReloading" methodname="CannotFireWhileReloading" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" seed="1006439968" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000321" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1478" name="InvalidReloadModifierCannotStartAReload" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests.InvalidReloadModifierCannotStartAReload" methodname="InvalidReloadModifierCannotStartAReload" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" seed="791026671" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000328" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1491" name="RefillIsClampedToTheMagazine" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests.RefillIsClampedToTheMagazine" methodname="RefillIsClampedToTheMagazine" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" seed="1869936926" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000344" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1490" name="RefillRestoresACheckpointAndClearsAnyReload" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests.RefillRestoresACheckpointAndClearsAnyReload" methodname="RefillRestoresACheckpointAndClearsAnyReload" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" seed="701763811" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000275" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1486" name="ReloadCompletesOnlyAfterTheFullDuration" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests.ReloadCompletesOnlyAfterTheFullDuration" methodname="ReloadCompletesOnlyAfterTheFullDuration" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" seed="98640745" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000489" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1483" name="ReloadDrawsOnlyWhatIsMissing" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests.ReloadDrawsOnlyWhatIsMissing" methodname="ReloadDrawsOnlyWhatIsMissing" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" seed="996106010" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000360" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1481" name="ReloadingFromEmptyTakesTheSameTimeAsToppingUp" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests.ReloadingFromEmptyTakesTheSameTimeAsToppingUp" methodname="ReloadingFromEmptyTakesTheSameTimeAsToppingUp" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" seed="1820066348" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000397" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1485" name="ReloadIsRefusedWhenFullOrWithNothingToLoad" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests.ReloadIsRefusedWhenFullOrWithNothingToLoad" methodname="ReloadIsRefusedWhenFullOrWithNothingToLoad" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" seed="1306218367" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000478" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1477" name="ReloadModifierUsesOneDurationWithoutChangingBaseOrActiveReload" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests.ReloadModifierUsesOneDurationWithoutChangingBaseOrActiveReload" methodname="ReloadModifierUsesOneDurationWithoutChangingBaseOrActiveReload" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" seed="3123767" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000768" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1487" name="ReloadProgressRunsFromZeroToOne" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests.ReloadProgressRunsFromZeroToOne" methodname="ReloadProgressRunsFromZeroToOne" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" seed="1181320742" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000644" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1480" name="SpendsExactlyCapacityRoundsBeforeRunningDry" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests.SpendsExactlyCapacityRoundsBeforeRunningDry" methodname="SpendsExactlyCapacityRoundsBeforeRunningDry" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" seed="1133367234" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000390" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1479" name="StartsLoaded" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests.StartsLoaded" methodname="StartsLoaded" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" seed="252967178" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000418" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1489" name="TickingWithoutAReloadDoesNothing" fullname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests.TickingWithoutAReloadDoesNothing" methodname="TickingWithoutAReloadDoesNothing" classname="ShadowVale.Tests.EditMode.Gameplay.MagazineTests" runstate="Runnable" seed="481250473" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000362" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1506" name="ShotAccuracyTests" fullname="ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests" classname="ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.016998" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1510" name="AimSettlesAfterTheFirstShotsAndTheCommanderShootsBetter" fullname="ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests.AimSettlesAfterTheFirstShotsAndTheCommanderShootsBetter" methodname="AimSettlesAfterTheFirstShotsAndTheCommanderShootsBetter" classname="ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests" runstate="Runnable" seed="1803703821" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.001379" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1512" name="AMissFliesPastHimNeverThroughAndRollsTheSameEachRun" fullname="ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests.AMissFliesPastHimNeverThroughAndRollsTheSameEachRun" methodname="AMissFliesPastHimNeverThroughAndRollsTheSameEachRun" classname="ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests" runstate="Runnable" seed="1496636743" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.005088" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1507" name="CloseAndSettledHeUsuallyHitsFarHeOftenMisses" fullname="ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests.CloseAndSettledHeUsuallyHitsFarHeOftenMisses" methodname="CloseAndSettledHeUsuallyHitsFarHeOftenMisses" classname="ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests" runstate="Runnable" seed="635208494" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000617" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1508" name="MovingCrouchingOrInCoverHeIsHarderToHit" fullname="ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests.MovingCrouchingOrInCoverHeIsHarderToHit" methodname="MovingCrouchingOrInCoverHeIsHarderToHit" classname="ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests" runstate="Runnable" seed="1664750834" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000710" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1511" name="OffItIsTheOldSureHit" fullname="ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests.OffItIsTheOldSureHit" methodname="OffItIsTheOldSureHit" classname="ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests" runstate="Runnable" seed="1920770773" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000370" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1509" name="TheCommanderHitsAStillTargetByHisOwnCurve" fullname="ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests.TheCommanderHitsAStillTargetByHisOwnCurve" methodname="TheCommanderHitsAStillTargetByHisOwnCurve" classname="ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests" runstate="Runnable" seed="1765858407" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000637" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+              </test-suite>
+              <test-suite type="TestFixture" id="1529" name="WeaponSpreadStateTests" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" testcasecount="22" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.047902" total="22" passed="22" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1537" name="AFullMagazineClimbsAndPullsRight" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AFullMagazineClimbsAndPullsRight" methodname="AFullMagazineClimbsAndPullsRight" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="1790737301" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.001400" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1531" name="AGapShorterThanTheResetKeepsTheBurstGoing" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AGapShorterThanTheResetKeepsTheBurstGoing" methodname="AGapShorterThanTheResetKeepsTheBurstGoing" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="76304981" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000594" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1545" name="AimingHelpsMostWhenSettledAndNotAtAllWhenRunning" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AimingHelpsMostWhenSettledAndNotAtAllWhenRunning" methodname="AimingHelpsMostWhenSettledAndNotAtAllWhenRunning" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="903073356" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000805" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1535" name="AThreeRoundBurstStaysUnderOneDegree" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AThreeRoundBurstStaysUnderOneDegree" methodname="AThreeRoundBurstStaysUnderOneDegree" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="389605841" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000428" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1551" name="AZeroConeShootsDeadStraight" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AZeroConeShootsDeadStraight" methodname="AZeroConeShootsDeadStraight" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="1766509866" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.001301" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1534" name="BloomIsFullByTheFifteenthRound" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.BloomIsFullByTheFifteenthRound" methodname="BloomIsFullByTheFifteenthRound" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="2121674056" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000355" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1546" name="BloomWidensTheConeOnTopOfTheStance" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.BloomWidensTheConeOnTopOfTheStance" methodname="BloomWidensTheConeOnTopOfTheStance" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="1500638682" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000523" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1530" name="EveryTapIsShotZero" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.EveryTapIsShotZero" methodname="EveryTapIsShotZero" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="1579205945" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000484" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1548" name="ResetClearsTheBurstOutright" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ResetClearsTheBurstOutright" methodname="ResetClearsTheBurstOutright" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="559316300" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000418" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1550" name="ScatterGroupsTowardTheCentre" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ScatterGroupsTowardTheCentre" methodname="ScatterGroupsTowardTheCentre" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="195562642" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.002940" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1549" name="ScatterStaysInsideTheCone" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ScatterStaysInsideTheCone" methodname="ScatterStaysInsideTheCone" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="196408867" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.009148" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1552" name="ScatterSurvivesShootingStraightUp" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ScatterSurvivesShootingStraightUp" methodname="ScatterSurvivesShootingStraightUp" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="1813952923" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000950" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1532" name="ShortBurstsAddNoBloom" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ShortBurstsAddNoBloom" methodname="ShortBurstsAddNoBloom" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="304263550" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000517" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1541" name="SprintPenaltyRequiresActualRunningAndClearsOnStopping" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.SprintPenaltyRequiresActualRunningAndClearsOnStopping" methodname="SprintPenaltyRequiresActualRunningAndClearsOnStopping" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="1840385629" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000408" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1544" name="StancesRankFromSteadyToHopeless" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.StancesRankFromSteadyToHopeless" methodname="StancesRankFromSteadyToHopeless" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="262409132" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000202" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-suite type="ParameterizedMethod" id="1540" name="StationarySprintToggleDoesNotChangeAccuracy" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.StationarySprintToggleDoesNotChangeAccuracy" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.004698" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                  <properties />
+                  <test-case id="1538" name="StationarySprintToggleDoesNotChangeAccuracy(False)" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.StationarySprintToggleDoesNotChangeAccuracy(False)" methodname="StationarySprintToggleDoesNotChangeAccuracy" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="1106299540" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000447" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                  <test-case id="1539" name="StationarySprintToggleDoesNotChangeAccuracy(True)" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.StationarySprintToggleDoesNotChangeAccuracy(True)" methodname="StationarySprintToggleDoesNotChangeAccuracy" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="567885035" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000279" asserts="0">
+                    <properties>
+                      <property name="retryIteration" value="0" />
+                      <property name="repeatIteration" value="0" />
+                    </properties>
+                  </test-case>
+                </test-suite>
+                <test-case id="1543" name="TheClimbIsDeterministic" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheClimbIsDeterministic" methodname="TheClimbIsDeterministic" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="1399052039" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000398" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1542" name="TheClimbNeverEases" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheClimbNeverEases" methodname="TheClimbNeverEases" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="808517612" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000642" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1547" name="TheConeClosesBetweenBursts" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheConeClosesBetweenBursts" methodname="TheConeClosesBetweenBursts" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="464510765" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000434" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1533" name="TheFourthRoundStartsTheBloom" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheFourthRoundStartsTheBloom" methodname="TheFourthRoundStartsTheBloom" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="1352182003" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000198" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1536" name="TheOpeningOfABurstRisesStraight" fullname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheOpeningOfABurstRisesStraight" methodname="TheOpeningOfABurstRisesStraight" classname="ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests" runstate="Runnable" seed="1176606094" result="Passed" start-time="2026-10-20 06:35:06Z" end-time="2026-10-20 06:35:06Z" duration="0.000217" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[Saving results to: C:/Users/Admin/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

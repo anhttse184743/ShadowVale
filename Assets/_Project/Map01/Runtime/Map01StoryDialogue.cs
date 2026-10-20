@@ -37,6 +37,8 @@ namespace ShadowVale.Map01
         Vector3 position, cameraPosition;
         Vector3 conversationCamera;
         Quaternion rotation, facing, cameraRotation, conversationRotation;
+        Quaternion commanderFacing;
+        bool turnedCommander;
         float fov, conversationFov;
         bool closeBriefing, radioConversation;
         Animator speakingActor;
@@ -66,10 +68,28 @@ namespace ShadowVale.Map01
             previousVoiceGate = voice.CanSpeak;
             voice.CanSpeak = () => IsPlaying && !mission.Paused && !ForestMenu.Visible;
             position = mission.player.position; rotation = mission.player.rotation;
+            var post=mission.alliedCommanderPost;
+            if(!radioConversation&&post!=null&&commander!=null&&commander.CommanderTransform!=null&&
+                Vector3.Distance(commander.CommanderTransform.position,post.position)<.5f)
+            {
+                // Stage every shelter conversation at the same mark, independent of approach.
+                var heading=Vector3.ProjectOnPlane(post.forward,Vector3.up).normalized;
+                position=post.position+heading*1.8f;rotation=Quaternion.LookRotation(-heading);
+                var body=mission.player.GetComponent<CharacterController>();bool wasEnabled=body!=null&&body.enabled;
+                if(wasEnabled)body.enabled=false;
+                mission.player.SetPositionAndRotation(position,rotation);
+                if(wasEnabled)body.enabled=true;
+                Physics.SyncTransforms();
+            }
             facing = rotation;
+            turnedCommander=false;
             if (!radioConversation && commander != null && commander.CommanderTransform != null) {
                 var toward = Vector3.ProjectOnPlane(commander.CommanderTransform.position-position, Vector3.up);
-                if (toward.sqrMagnitude > .01f) facing = Quaternion.LookRotation(toward);
+                if (toward.sqrMagnitude > .01f) {
+                    facing = Quaternion.LookRotation(toward);
+                    commanderFacing=commander.CommanderTransform.rotation;turnedCommander=true;
+                    commander.CommanderTransform.rotation=Quaternion.LookRotation(-toward);
+                }
             }
             cameraPosition = mission.gameCamera.transform.position; cameraRotation = mission.gameCamera.transform.rotation; fov = mission.gameCamera.fieldOfView;
             conversationCamera = cameraPosition; conversationRotation = cameraRotation; conversationFov = fov;
@@ -151,6 +171,19 @@ namespace ShadowVale.Map01
         }
         void FrameBriefingSpeaker()
         {
+            if(Current.speaker=="Chỉ huy"&&TryFrameCommanderWithBoard())return;
+            var resting=mission.hung!=null?mission.hung.GetComponentInChildren<Map01HungRest>():null;
+            if(Current.speaker=="Hùng"&&resting!=null&&resting.IsResting){
+                var target=resting.DialogueFocus;var bed=resting.Cot;float bestClear=-1;conversationCamera=target+bed.right*1.05f+Vector3.up*.8f-bed.forward*.75f;
+                foreach(float side in new[]{1f,-1f}){
+                    var candidate=target+bed.right*side*1.05f+Vector3.up*.8f-bed.forward*.75f;
+                    var ray=candidate-target;float clear=ray.magnitude;
+                    foreach(var hit in Physics.SphereCastAll(target,.10f,ray.normalized,ray.magnitude,mission.ObstructionMask,QueryTriggerInteraction.Ignore))
+                        if(hit.transform.GetComponentInParent<Health>()==null)clear=Mathf.Min(clear,hit.distance-.12f);
+                    if(clear<.6f||clear<=bestClear)continue;bestClear=clear;conversationCamera=target+ray.normalized*clear;
+                }
+                conversationRotation=Quaternion.LookRotation(target-conversationCamera);conversationFov=52;return;
+            }
             bool namSpeaking=Current.speaker=="Nam";
             var forward=facing*Vector3.forward;var right=facing*Vector3.right;
             var subject=Current.speaker=="Hùng"&&mission.hung!=null?mission.hung.position:namSpeaking?position:commander.CommanderTransform.position;
@@ -166,6 +199,53 @@ namespace ShadowVale.Map01
             }
             conversationFov=48;
             conversationRotation=Quaternion.LookRotation(focus-conversationCamera);
+        }
+        bool TryFrameCommanderWithBoard()
+        {
+            var post=mission.alliedCommanderPost;
+            if(post==null||commander==null||commander.CommanderTransform==null||
+                Vector3.Distance(commander.CommanderTransform.position,post.position)>.5f)return false;
+            var board=post.parent!=null?post.parent.Find("MissionBoard"):null;
+            if(board==null)return false;
+            // Look diagonally into the room's back wall: officer in the left foreground,
+            // mission board in the right background. Other speakers retain their existing shot.
+            var subject=commander.CommanderTransform.position+Vector3.up*1.42f;
+            var boardFocus=board.position+Vector3.up*1.7f-board.forward*.08f;
+            var focus=Vector3.Lerp(subject,boardFocus,.42f);
+            const float shotFov=52;
+            float distance=Mathf.Max(2.9f,1.85f/(Mathf.Tan(shotFov*.5f*Mathf.Deg2Rad)*Mathf.Max(.7f,mission.gameCamera.aspect)));
+            var view=(-board.right*.65f-board.forward*.76f).normalized;
+            var candidate=focus+view*distance+Vector3.up*.1f-board.right*.65f;
+            var shiftedLeft=candidate;
+            // Leave room for Nam's shoulders/backpack when he approaches from the left.
+            bool NamBlocks(Vector3 eye,Vector3 target)
+            {
+                var ray=target-eye;
+                foreach(var height in new[]{1.05f,1.55f})
+                {
+                    var centre=mission.player.position+Vector3.up*height;
+                    float t=Vector3.Dot(centre-eye,ray)/ray.sqrMagnitude;
+                    if(t<=0||t>=1)continue;
+                    float radius=height<1.5f?.55f:.4f;
+                    if((centre-(eye+ray*t)).sqrMagnitude<radius*radius)return true;
+                }
+                return false;
+            }
+            for(int i=0;i<4&&(NamBlocks(candidate,subject)||NamBlocks(candidate,boardFocus));i++)candidate-=board.right*.25f;
+            if(NamBlocks(candidate,subject)||NamBlocks(candidate,boardFocus))
+                for(int i=1;i<=6;i++)
+                {
+                    var nearer=shiftedLeft+board.forward*(i*.25f);
+                    if(NamBlocks(nearer,subject)||NamBlocks(nearer,boardFocus))continue;
+                    candidate=nearer;break;
+                }
+            var delta=candidate-focus;float clear=delta.magnitude;
+            foreach(var hit in Physics.SphereCastAll(focus,.12f,delta.normalized,delta.magnitude,mission.ObstructionMask,QueryTriggerInteraction.Ignore))
+                if(hit.transform.GetComponentInParent<Health>()==null)clear=Mathf.Min(clear,hit.distance-.15f);
+            if(clear<1.7f)return false;
+            conversationCamera=focus+delta.normalized*clear;
+            conversationRotation=Quaternion.LookRotation(focus-conversationCamera);conversationFov=shotFov;
+            return true;
         }
         void FrameRadioNam()
         {
@@ -204,6 +284,10 @@ namespace ShadowVale.Map01
             var commit = accepted;
             lines = null; accepted = null;
             voice?.Stop(); commander?.SetDialogueSpeaking(false);
+            if(turnedCommander&&commander!=null&&commander.CommanderTransform!=null)
+                commander.CommanderTransform.rotation=commanderFacing;
+            turnedCommander=false;
+            if (mission != null) mission.Say(null, 0);
             if (voice != null) voice.CanSpeak = previousVoiceGate;
             previousVoiceGate = null;
             pose?.Dispose(); pose = null;

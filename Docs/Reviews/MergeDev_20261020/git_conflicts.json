@@ -1,0 +1,130 @@
+[
+  {
+    "path": "Assets/Resources/Dialogue/voice-catalog.json",
+    "blocks": [
+      {
+        "thinh": "      \"caption\": \"Lính địch: Tên này rình kiện hàng trên cầu. Chắc là trinh sát của bọn nó. Phải giữ lại tra hỏi.\",\n      \"speaker\": \"Lính địch\",\n      \"text\": \"Tên này rình kiện hàng trên cầu. Chắc là trinh sát của bọn nó. Phải giữ lại tra hỏi.\",\n      \"voice\": \"Martin\",\n      \"language\": \"vi\",\n      \"match\": \"\",\n      \"pendingVoice\": \"Lời đổi theo màn hướng dẫn ngày 2026-10-17; file giọng hiện tại vẫn là câu cũ. Thu lại theo text rồi đặt match = caption.\",",
+        "dev": "      \"caption\": \"Lính địch: Bắt được nó ở cầu gỗ. Trói chặt vào, chờ lệnh tra hỏi.\",\n      \"speaker\": \"Lính địch\",\n      \"text\": \"Bắt được nó ở cầu gỗ. Trói chặt vào, chờ lệnh tra hỏi.\",\n      \"voice\": \"Martin\",\n      \"language\": \"vi\",\n      \"match\": \"Lính địch: Bắt được nó ở cầu gỗ. Trói chặt vào, chờ lệnh tra hỏi.\","
+      },
+      {
+        "thinh": "      \"caption\": \"Hùng: Cảm ơn Nam. Tôi trinh sát kiện hàng trên cầu thì bị lộ, trúng đạn tay phải rồi bị đánh ngất. Đưa tôi về căn cứ nhé.\",\n      \"text\": \"Cảm ơn Nam. Tôi trinh sát kiện hàng trên cầu thì bị lộ, trúng đạn tay phải rồi bị đánh ngất. Đưa tôi về căn cứ nhé.\",\n      \"spokenText\": \"Cảm ơn Nam. Tôi trinh sát kiện hàng trên cầu thì bị lộ, trúng đạn tay phải rồi bị đánh ngất. Đưa tôi về căn cứ nhé.\",",
+        "dev": "      \"caption\": \"Hùng: Nam... cậu tới thật rồi. Tay phải còn đau, nhưng tôi đi được. Ra khỏi đây đã.\",\n      \"text\": \"Nam... cậu tới thật rồi. Tay phải còn đau, nhưng tôi đi được. Ra khỏi đây đã.\",\n      \"spokenText\": \"Nam... cậu tới thật rồi. Tay phải còn đau, nhưng tôi đi được. Ra khỏi đây đã.\","
+      },
+      {
+        "thinh": "      \"resource\": \"Dialogue/VI/m1_rescue_freed\",\n      \"match\": \"\",\n      \"pendingVoice\": \"Lời đổi theo màn hướng dẫn ngày 2026-10-17; file giọng hiện tại vẫn là câu cũ. Thu lại theo text rồi đặt match = caption.\",",
+        "dev": "      \"resource\": \"Dialogue/VI/m1_rescue_freed_clean\",\n      \"match\": \"Hùng: Nam... cậu tới thật rồi. Tay phải còn đau, nhưng tôi đi được. Ra khỏi đây đã.\","
+      },
+      {
+        "thinh": "      \"caption\": \"Hùng: Về tới căn cứ rồi. Cảm ơn Nam! Tôi sẽ báo chỉ huy về kiện hàng trên cầu. Cậu gặp chỉ huy để nhận nhiệm vụ tiếp theo.\",\n      \"text\": \"Về tới căn cứ rồi. Cảm ơn Nam! Tôi sẽ báo chỉ huy về kiện hàng trên cầu. Cậu gặp chỉ huy để nhận nhiệm vụ tiếp theo.\",\n      \"spokenText\": \"Về tới căn cứ rồi. Cảm ơn Nam! Tôi sẽ báo chỉ huy về kiện hàng trên cầu. Cậu gặp chỉ huy để nhận nhiệm vụ tiếp theo.\",",
+        "dev": "      \"caption\": \"Hùng: Về được rồi... Cảm ơn cậu, Nam. Tôi còn chuyện phải báo với chỉ huy.\",\n      \"text\": \"Về được rồi... Cảm ơn cậu, Nam. Tôi còn chuyện phải báo với chỉ huy.\",\n      \"spokenText\": \"Về được rồi... Cảm ơn cậu, Nam. Tôi còn chuyện phải báo với chỉ huy.\","
+      },
+      {
+        "thinh": "      \"resource\": \"Dialogue/VI/m1_rescue_delivered\",\n      \"match\": \"\",\n      \"pendingVoice\": \"Lời đổi theo màn hướng dẫn ngày 2026-10-17; file giọng hiện tại vẫn là câu cũ. Thu lại theo text rồi đặt match = caption.\",",
+        "dev": "      \"resource\": \"Dialogue/VI/m1_rescue_delivered_clean\",\n      \"match\": \"Hùng: Về được rồi... Cảm ơn cậu, Nam. Tôi còn chuyện phải báo với chỉ huy.\","
+      }
+    ]
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01Rescue.cs",
+    "blocks": [
+      {
+        "thinh": "            \"Lính địch: Tên này rình kiện hàng trên cầu. Chắc là trinh sát của bọn nó. Phải giữ lại tra hỏi.\",",
+        "dev": "            \"Lính địch: Bắt được nó ở cầu gỗ. Trói chặt vào, chờ lệnh tra hỏi.\","
+      },
+      {
+        "thinh": "            mission.Say(\"Hùng: Cảm ơn Nam. Tôi trinh sát kiện hàng trên cầu thì bị lộ, trúng đạn tay phải rồi bị đánh ngất. Đưa tôi về căn cứ nhé.\",9);",
+        "dev": "            mission.Say(\"Hùng: Nam... cậu tới thật rồi. Tay phải còn đau, nhưng tôi đi được. Ra khỏi đây đã.\",9);"
+      },
+      {
+        "thinh": "            mission.Say(\"Hùng: Về tới căn cứ rồi. Cảm ơn Nam! Tôi sẽ báo chỉ huy về kiện hàng trên cầu. Cậu gặp chỉ huy để nhận nhiệm vụ tiếp theo.\",9);return true;",
+        "dev": "            mission.Say(\"Hùng: Về được rồi... Cảm ơn cậu, Nam. Tôi còn chuyện phải báo với chỉ huy.\",9);return true;"
+      }
+    ]
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01Story.cs",
+    "blocks": [
+      {
+        "thinh": "                    if(!Progress.radioResponseCalled)CallRadioResponse(\"Chuông báo động đã bật! Có quân đang tới kiểm tra trạm đài.\");",
+        "dev": "                    Progress.circuitSeed=0;Progress.circuitRound=0;Progress.circuitRotations=null;\n                    if(!Progress.radioResponseCalled){Progress.radioResponseCalled=true;Map01OperationAudio.Play(\"radio_alarm\",Layout.radio.position,.75f);mission.Say(\"Chuông báo động đã bật! Có quân đang tới kiểm tra trạm đài.\",5);TrySpawnResponse();}"
+      }
+    ]
+  },
+  {
+    "path": "Assets/_Project/Map01/Tests/BossIntegrationTests.cs",
+    "blocks": [
+      {
+        "thinh": "                Assert.AreEqual(Mathf.Min(3, idleBefore), sent, \"The post's men not yet fighting answer first, three at most.\");\n                Assert.AreEqual(sent, calls.Single().Arrived);\n                foreach (var id in calls[0].Agents.Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries))",
+        "dev": "                Assert.AreEqual(4, sent, \"Nobody idle is left near him: four fresh men.\");\n                Assert.AreEqual(4, calls.Single().Arrived);\n                StringAssert.Contains(\"Tiếp viện\", mission.Dialogue, \"The call is heard.\");\n                foreach (var id in calls[0].Agents.Split('+'))"
+      }
+    ]
+  },
+  {
+    "path": "Assets/_Project/Scripts/AI/Boss/BossRelocation.cs",
+    "blocks": [
+      {
+        "thinh": "        /// <param name=\"allowed\">The map's bounds for him (Map 1: inside the command post's fence). Null = anywhere.</param>\n        public static bool TryPick(IWorldQuery graph, BossProfile profile, Vector3 from, Vector3 player, int avoidNode,\n            System.Random rng, out int node, out Vector3 position, float fightRange = 0f, float minPlayerDistance = 0f,\n            Func<Vector3, bool> allowed = null)",
+        "dev": "        /// <param name=\"men\">Where his men stand (their centre), if any are fighting near him.</param>\n        /// <param name=\"fallingBack\">Regrouping towards reinforcements: running away from the player is the point.</param>\n        public static bool TryPick(IWorldQuery graph, BossProfile profile, Vector3 from, Vector3 player, int avoidNode,\n            System.Random rng, out int node, out Vector3 position, float fightRange = 0f, float minPlayerDistance = 0f,\n            Vector3? men = null, bool fallingBack = false)"
+      }
+    ]
+  },
+  {
+    "path": "Assets/_Project/Scripts/Gameplay/Enemies/Boss/BossBehaviour.cs",
+    "blocks": [
+      {
+        "thinh": "            if (!BossRelocation.TryPick(graph, Profile, from, playerPosition, here, _rng, out int node, out var to, range, keep, AllowedPosition)\n                && !(keep > 0 && BossRelocation.TryPick(graph, Profile, from, playerPosition, here, _rng, out node, out to, range, 0f, AllowedPosition)))",
+        "dev": "            var men = Centre(_men);\n            if (!BossRelocation.TryPick(graph, Profile, from, playerPosition, here, _rng, out int node, out var to, range, keep, men, fallingBack)\n                && !(keep > 0 && BossRelocation.TryPick(graph, Profile, from, playerPosition, here, _rng, out node, out to, range, 0f, men, fallingBack)))"
+      }
+    ]
+  },
+  {
+    "path": "Assets/_Project/Scripts/Gameplay/Enemies/EnemyFeedback.cs",
+    "blocks": []
+  },
+  {
+    "path": "SourceArt/Dialogue/Map01Remaining/voice-manifest.json",
+    "blocks": [
+      {
+        "thinh": "      \"caption\": \"Hùng: Cảm ơn Nam. Tôi trinh sát kiện hàng trên cầu thì bị lộ, trúng đạn tay phải rồi bị đánh ngất. Đưa tôi về căn cứ nhé.\",\n      \"text\": \"Cảm ơn Nam. Tôi trinh sát kiện hàng trên cầu thì bị lộ, trúng đạn tay phải rồi bị đánh ngất. Đưa tôi về căn cứ nhé.\",\n      \"spokenText\": \"Cảm ơn Nam. Tôi trinh sát kiện hàng trên cầu thì bị lộ, trúng đạn tay phải rồi bị đánh ngất. Đưa tôi về căn cứ nhé.\",",
+        "dev": "      \"caption\": \"Hùng: Nam... cậu tới thật rồi. Tay phải còn đau, nhưng tôi đi được. Ra khỏi đây đã.\",\n      \"text\": \"Nam... cậu tới thật rồi. Tay phải còn đau, nhưng tôi đi được. Ra khỏi đây đã.\",\n      \"spokenText\": \"Nam... cậu tới thật rồi. Tay phải còn đau, nhưng tôi đi được. Ra khỏi đây đã.\","
+      },
+      {
+        "thinh": "      \"resource\": \"Dialogue/VI/m1_rescue_freed\",\n      \"match\": \"\",\n      \"pendingVoice\": \"Lời đổi theo màn hướng dẫn ngày 2026-10-17; file giọng hiện tại vẫn là câu cũ. Thu lại theo text rồi đặt match = caption.\",",
+        "dev": "      \"resource\": \"Dialogue/VI/m1_rescue_freed_clean\",\n      \"match\": \"Hùng: Nam... cậu tới thật rồi. Tay phải còn đau, nhưng tôi đi được. Ra khỏi đây đã.\","
+      },
+      {
+        "thinh": "      \"caption\": \"Hùng: Về tới căn cứ rồi. Cảm ơn Nam! Tôi sẽ báo chỉ huy về kiện hàng trên cầu. Cậu gặp chỉ huy để nhận nhiệm vụ tiếp theo.\",\n      \"text\": \"Về tới căn cứ rồi. Cảm ơn Nam! Tôi sẽ báo chỉ huy về kiện hàng trên cầu. Cậu gặp chỉ huy để nhận nhiệm vụ tiếp theo.\",\n      \"spokenText\": \"Về tới căn cứ rồi. Cảm ơn Nam! Tôi sẽ báo chỉ huy về kiện hàng trên cầu. Cậu gặp chỉ huy để nhận nhiệm vụ tiếp theo.\",",
+        "dev": "      \"caption\": \"Hùng: Về được rồi... Cảm ơn cậu, Nam. Tôi còn chuyện phải báo với chỉ huy.\",\n      \"text\": \"Về được rồi... Cảm ơn cậu, Nam. Tôi còn chuyện phải báo với chỉ huy.\",\n      \"spokenText\": \"Về được rồi... Cảm ơn cậu, Nam. Tôi còn chuyện phải báo với chỉ huy.\","
+      },
+      {
+        "thinh": "      \"resource\": \"Dialogue/VI/m1_rescue_delivered\",\n      \"match\": \"\",\n      \"pendingVoice\": \"Lời đổi theo màn hướng dẫn ngày 2026-10-17; file giọng hiện tại vẫn là câu cũ. Thu lại theo text rồi đặt match = caption.\",",
+        "dev": "      \"resource\": \"Dialogue/VI/m1_rescue_delivered_clean\",\n      \"match\": \"Hùng: Về được rồi... Cảm ơn cậu, Nam. Tôi còn chuyện phải báo với chỉ huy.\","
+      }
+    ]
+  },
+  {
+    "path": "SourceArt/Dialogue/voice-catalog.json",
+    "blocks": [
+      {
+        "thinh": "      \"caption\": \"Lính địch: Tên này rình kiện hàng trên cầu. Chắc là trinh sát của bọn nó. Phải giữ lại tra hỏi.\",\n      \"speaker\": \"Lính địch\",\n      \"text\": \"Tên này rình kiện hàng trên cầu. Chắc là trinh sát của bọn nó. Phải giữ lại tra hỏi.\",\n      \"voice\": \"Martin\",\n      \"language\": \"vi\",\n      \"match\": \"\",\n      \"pendingVoice\": \"Lời đổi theo màn hướng dẫn ngày 2026-10-17; file giọng hiện tại vẫn là câu cũ. Thu lại theo text rồi đặt match = caption.\",",
+        "dev": "      \"caption\": \"Lính địch: Bắt được nó ở cầu gỗ. Trói chặt vào, chờ lệnh tra hỏi.\",\n      \"speaker\": \"Lính địch\",\n      \"text\": \"Bắt được nó ở cầu gỗ. Trói chặt vào, chờ lệnh tra hỏi.\",\n      \"voice\": \"Martin\",\n      \"language\": \"vi\",\n      \"match\": \"Lính địch: Bắt được nó ở cầu gỗ. Trói chặt vào, chờ lệnh tra hỏi.\","
+      },
+      {
+        "thinh": "      \"caption\": \"Hùng: Cảm ơn Nam. Tôi trinh sát kiện hàng trên cầu thì bị lộ, trúng đạn tay phải rồi bị đánh ngất. Đưa tôi về căn cứ nhé.\",\n      \"text\": \"Cảm ơn Nam. Tôi trinh sát kiện hàng trên cầu thì bị lộ, trúng đạn tay phải rồi bị đánh ngất. Đưa tôi về căn cứ nhé.\",\n      \"spokenText\": \"Cảm ơn Nam. Tôi trinh sát kiện hàng trên cầu thì bị lộ, trúng đạn tay phải rồi bị đánh ngất. Đưa tôi về căn cứ nhé.\",",
+        "dev": "      \"caption\": \"Hùng: Nam... cậu tới thật rồi. Tay phải còn đau, nhưng tôi đi được. Ra khỏi đây đã.\",\n      \"text\": \"Nam... cậu tới thật rồi. Tay phải còn đau, nhưng tôi đi được. Ra khỏi đây đã.\",\n      \"spokenText\": \"Nam... cậu tới thật rồi. Tay phải còn đau, nhưng tôi đi được. Ra khỏi đây đã.\","
+      },
+      {
+        "thinh": "      \"resource\": \"Dialogue/VI/m1_rescue_freed\",\n      \"match\": \"\",\n      \"pendingVoice\": \"Lời đổi theo màn hướng dẫn ngày 2026-10-17; file giọng hiện tại vẫn là câu cũ. Thu lại theo text rồi đặt match = caption.\",",
+        "dev": "      \"resource\": \"Dialogue/VI/m1_rescue_freed_clean\",\n      \"match\": \"Hùng: Nam... cậu tới thật rồi. Tay phải còn đau, nhưng tôi đi được. Ra khỏi đây đã.\","
+      },
+      {
+        "thinh": "      \"caption\": \"Hùng: Về tới căn cứ rồi. Cảm ơn Nam! Tôi sẽ báo chỉ huy về kiện hàng trên cầu. Cậu gặp chỉ huy để nhận nhiệm vụ tiếp theo.\",\n      \"text\": \"Về tới căn cứ rồi. Cảm ơn Nam! Tôi sẽ báo chỉ huy về kiện hàng trên cầu. Cậu gặp chỉ huy để nhận nhiệm vụ tiếp theo.\",\n      \"spokenText\": \"Về tới căn cứ rồi. Cảm ơn Nam! Tôi sẽ báo chỉ huy về kiện hàng trên cầu. Cậu gặp chỉ huy để nhận nhiệm vụ tiếp theo.\",",
+        "dev": "      \"caption\": \"Hùng: Về được rồi... Cảm ơn cậu, Nam. Tôi còn chuyện phải báo với chỉ huy.\",\n      \"text\": \"Về được rồi... Cảm ơn cậu, Nam. Tôi còn chuyện phải báo với chỉ huy.\",\n      \"spokenText\": \"Về được rồi... Cảm ơn cậu, Nam. Tôi còn chuyện phải báo với chỉ huy.\","
+      },
+      {
+        "thinh": "      \"resource\": \"Dialogue/VI/m1_rescue_delivered\",\n      \"match\": \"\",\n      \"pendingVoice\": \"Lời đổi theo màn hướng dẫn ngày 2026-10-17; file giọng hiện tại vẫn là câu cũ. Thu lại theo text rồi đặt match = caption.\",",
+        "dev": "      \"resource\": \"Dialogue/VI/m1_rescue_delivered_clean\",\n      \"match\": \"Hùng: Về được rồi... Cảm ơn cậu, Nam. Tôi còn chuyện phải báo với chỉ huy.\","
+      }
+    ]
+  }
+]

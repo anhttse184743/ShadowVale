@@ -1,0 +1,14 @@
+PASS two inward-facing crafting chairs; crafting ForestPoint moved to cot-side entrance: (-68.44, 0.12, -68.23)
+PASS horizontal 3.30m meeting table and two 3.30m backless benches at original briefing position: (-65.00, 0.12, -63.00)
+PASS CharacterController.Move blocked by Meeting table solid blocker remaining front distance=0.908
+PASS CharacterController.Move blocked by Meeting bench solid blocker -1.07 remaining front distance=0.523
+PASS CharacterController.Move blocked by Meeting bench solid blocker 1.07 remaining front distance=0.523
+PASS CharacterController.Move blocked by Crafting table solid blocker remaining front distance=0.863
+PASS CharacterController.Move blocked by COLLIDER_Approved briefing chair remaining front distance=0.557
+PASS CharacterController.Move blocked by COLLIDER_Approved briefing chair remaining front distance=0.557
+PASS crafting furniture does not overlap any of the five cots.
+PASS resized helmet model on EquipmentShelf
+PASS resized helmet model on EquipmentShelf Row 2
+PASS resized helmet model on EquipmentShelf Row 3
+PASS resized helmet model on EquipmentShelf Row 4
+PASS resized helmet model on EquipmentShelf Row 5

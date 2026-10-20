@@ -73,7 +73,7 @@ yield return new WaitUntil(()=>rendered||Time.realtimeSinceStartup>=deadline);if
 }
 File.WriteAllLines(folder+"/frames.csv",entries);
 SceneManager.sceneUnloaded-=InvalidateSourceBoatRendering;
-Assert.IsTrue(complete,"The full departure must finish without skipping.");Assert.NotNull(arrival);Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);
+Assert.IsTrue(complete,"The full departure must finish without skipping.");Assert.NotNull(arrival);Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);AssertMap1WeaponDriversStopped(arrival);
 AssertDryPartySpawn(arrival);VerifyGameplayRifle(arrival.Passengers[0]);Assert.AreEqual(72,arrival.Passengers[0].GetComponent<Health>().Current);Assert.AreEqual(17,arrival.Passengers[0].GetComponent<PlayerCombat>().RoundsInMagazine);
 var session=Object.FindFirstObjectByType<Map02Mission>();
 float bindDeadline=Time.realtimeSinceStartup+10;
@@ -90,6 +90,14 @@ foreach(var renderer in arrival.GetComponentsInChildren<MeshRenderer>(true))
 if(renderer.name=="Moored wooden sampan"||renderer.name=="Boat bench"||renderer.name.StartsWith("Oar ")) {
 renderer.enabled=false;renderer.forceRenderingOff=true;renderer.gameObject.SetActive(false);
 }
+}
+static void AssertMap1WeaponDriversStopped(Map02Arrival arrival) {
+var carried=arrival.Passengers[0];
+var mosin=carried.GetComponent<Map01Mosin>();var pistol=carried.GetComponent<Map01Pistol>();
+Assert.NotNull(mosin);Assert.NotNull(pistol);
+Assert.IsFalse(mosin.enabled,"Mosin cannot keep querying the unloaded Map 1 mission.");
+Assert.IsFalse(pistol.enabled,"Map 1 pistol pose must release the arrival cinematic.");
+Assert.IsFalse(mosin.Scoped);Assert.IsTrue(carried.GetComponent<PlayerCombat>().GunPresentationReady);
 }
 [TearDown]public void ClearTransferFaultInjection()=>SceneManager.sceneUnloaded-=InvalidateSourceBoatRendering;
 [UnityTest]public IEnumerator CompletedCheckpointTransfersVisibleBoatAndKeepsRowersHandsFree() {
@@ -178,7 +186,7 @@ Assert.AreSame(originalPlayer,arrival.Passengers[0]);Assert.AreSame(originalHung
 Assert.IsNull(originalPlayer.GetComponent<PlayerCombat>().SlotPressed,"Unloading Map 1 must release the old bag's number-key handler.");
 LogAssert.Expect(LogType.Log,"Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.");
 yield return RecordArrival(arrival);
-Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);
+Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);AssertMap1WeaponDriversStopped(arrival);
 Assert.IsTrue(UnityEditor.EditorSettings.asyncShaderCompilation,"Restore the editor preference after arrival.");
 VerifyGameplayRifle(originalPlayer);
 Assert.AreEqual(ammo,originalPlayer.GetComponent<PlayerCombat>().RoundsInMagazine);
@@ -204,12 +212,12 @@ InputSystem.QueueStateEvent(mouse,new MouseState().WithButton(MouseButton.Right)
 LogAssert.Expect(LogType.Log,"Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.");
 arrival.Skip();arrival.Skip();
 yield return WaitGameSeconds(.2f);
-Assert.IsTrue(arrival.Passengers[0].GetComponent<PlayerCombat>().IsAiming,"Held aim must survive cinematic handoff.");
+Assert.IsFalse(arrival.Passengers[0].GetComponent<PlayerCombat>().IsAiming,"Cinematic handoff clears toggled aim until a fresh press.");
 InputSystem.QueueStateEvent(mouse,new MouseState());InputSystem.Update();yield return WaitGameSeconds(.2f);
 Assert.IsFalse(arrival.Passengers[0].GetComponent<PlayerCombat>().IsAiming);
 VerifyGameplayRifle(arrival.Passengers[0]);
 InputSystem.RemoveDevice(mouse);RestoreInputRouting(routing);
-Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);
+Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);AssertMap1WeaponDriversStopped(arrival);
 AssertDryPartySpawn(arrival);
 ShotTracerLifecycleTests.FireAfterArrival(arrival.Passengers[0].GetComponent<PlayerCombat>());
 yield return new ExitPlayMode();

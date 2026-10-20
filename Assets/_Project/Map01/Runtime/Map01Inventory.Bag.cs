@@ -8,7 +8,7 @@ namespace ShadowVale.Map01
     /// <summary>
     /// The bag grid and the equipment slots (the approved "Trang bị" design, 16/10/2026):
     /// <list type="bullet">
-    /// <item>1 long gun (AK or Mosin), 2 pistol (K-54), 3 knife, 4 throwable picked for [Q]. There are no bare
+    /// <item>1 long gun (AK or Mosin), 2 pistol (K-54), 3 knife, 4 throwable selected for left mouse. There are no bare
     /// hands: the knife never leaves slot 3, so something is always in hand.</item>
     /// <item>The bag is 6 x 4 = 24 cells, one stack each, at most the item's stack size. Dropping a stack on an
     /// empty cell moves it, on the same item merges up to the limit (the rest stays), on anything else swaps.</item>
@@ -48,18 +48,20 @@ namespace ShadowVale.Map01
         /// <summary>The slot a weapon goes in, or null for anything that is not one.</summary>
         public static Slot? SlotOf(string id) => id == "rifle_standard" || id == "rifle_mosin" ? Slot.Primary
             : id == "pistol_k54" ? Slot.Pistol : id == "knife" ? Slot.Knife : (Slot?)null;
-        /// <summary>The throwable [Q] uses; key 4 goes round the ones he has.</summary>
+        /// <summary>The throwable used by holding and releasing left mouse while slot 4 is equipped.</summary>
         public string Throwable => throwable;
+        public bool ThrowableEquipped { get; private set; }
         public int FreeCells => bag.Count(c => c == null);
         public static bool IsMissionItem(string id) => id == "supplies" || id == "river_documents"
             || id == Map01Story.KeyItem || id == Map01Story.CargoItem;
         /// <summary>Weapons with Nam's own animations so far: the others go in their slot but stay holstered.</summary>
-        public static bool Drawable(string id) => id == "rifle_standard" || id == "knife";
+        public static bool Drawable(string id) => id == "rifle_standard" || id == "knife" || id == "pistol_k54" || id=="rifle_mosin";
 
         private void ClearAll()
         {
             for (int i = 0; i < BagSize; i++) bag[i] = null;
-            primary = pistol = knife = null; throwable = "stone";
+            primary = pistol = knife = null; throwable = "stone"; ThrowableEquipped = false;
+            mission?.ModernCombat?.SetHandsOccupied(false);
             primaryCondition = pistolCondition = NoCondition;
         }
 
@@ -231,8 +233,7 @@ namespace ShadowVale.Map01
             return true;
         }
 
-        /// <summary>Puts the weapon in <paramref name="slot"/> in Nam's hands. K-54 and Mosin have no animations of
-        /// their own yet (the hold design is waiting for approval): asking for them says so and keeps what he holds.</summary>
+        /// <summary>Puts an integrated weapon in Nam's hands.</summary>
         public bool Draw(Slot slot)
         {
             string id = SlotItem(slot);
@@ -243,19 +244,29 @@ namespace ShadowVale.Map01
                     (mission.ModernCombat.EquippedKind == WeaponKind.Knife ? "dao" : "súng trường") + " trên tay.", 4);
                 return false;
             }
-            var kind = id == "knife" ? WeaponKind.Knife : WeaponKind.Rifle;
+            var kind = id == "knife" ? WeaponKind.Knife : id == "pistol_k54" ? WeaponKind.Pistol : id=="rifle_mosin" ? WeaponKind.Sniper : WeaponKind.Rifle;
             SuppressFire = true;
-            return mission.ModernCombat.Equip(kind) && mission.ModernCombat.EquippedKind == kind;
+            bool drawn = mission.ModernCombat.Equip(kind) && mission.ModernCombat.EquippedKind == kind;
+            if (drawn) {
+                bool wasThrowable = ThrowableEquipped;
+                ThrowableEquipped = false; GetComponent<Map01StoneThrow>()?.Cancel();
+                if (wasThrowable) Map01NamActions.For(mission)?.CancelAction();
+                mission.ModernCombat.SetHandsOccupied(false);
+            }
+            return drawn;
         }
 
         /// <summary>What a weapon slot emptied under him leaves in hand: the knife.</summary>
         private void OnSlotEmptied()
         {
-            if (mission != null && mission.ModernCombat != null && mission.ModernCombat.EquippedKind == WeaponKind.Rifle && primary != "rifle_standard")
+            if (mission != null && mission.ModernCombat != null &&
+                ((mission.ModernCombat.EquippedKind == WeaponKind.Rifle && primary != "rifle_standard") ||
+                 (mission.ModernCombat.EquippedKind == WeaponKind.Pistol && pistol != "pistol_k54") ||
+                 (mission.ModernCombat.EquippedKind == WeaponKind.Sniper && primary != "rifle_mosin")))
                 Draw(Slot.Knife);
         }
 
-        /// <summary>Number keys, as PlayerCombat.SlotPressed: 1 long gun, 2 pistol, 3 knife, 4 next throwable.</summary>
+        /// <summary>Number keys: 1 long gun, 2 pistol, 3 knife, 4 equip/cycle available throwables.</summary>
         public bool OnSlotKey(int key)
         {
             switch (key)
@@ -263,27 +274,29 @@ namespace ShadowVale.Map01
                 case 0: Draw(Slot.Primary); return true;
                 case 1: Draw(Slot.Pistol); return true;
                 case 2: Draw(Slot.Knife); return true;
-                case 3: CycleThrowable(); return true;
+                case 3:
+                    CycleThrowable(); return true;
                 default: return false;
             }
         }
 
-        /// <summary>Key 4: the next throwable he has any of (stone, smoke bomb, F1). With only one kind left the
+        /// <summary>Select the next throwable he has any of (stone, smoke bomb, F1). With only one kind left the
         /// choice stays on it.</summary>
         public void CycleThrowable()
         {
             var have = Throwables.Where(t => Count(t) > 0).ToList();
-            if (have.Count == 0) { mission?.Say("Không còn đồ ném nào.", 2); return; }
+            if (have.Count == 0) return;
             int at = have.IndexOf(throwable);
-            throwable = have[(at + 1) % have.Count];
-            ThrowableChosenAt = Time.time;
-            mission?.Say("Đồ ném: " + ForestInventory.Name(throwable) + " (" + Count(throwable) + ")", 1.6f);
-            Changed?.Invoke();
+            SelectThrowable(have[at < 0 ? 0 : ThrowableEquipped ? (at + 1) % have.Count : at]);
         }
         public void SelectThrowable(string id)
         {
             if (System.Array.IndexOf(Throwables, id) < 0) return;
-            throwable = id; ThrowableChosenAt = Time.time; Changed?.Invoke();
+            GetComponent<Map01StoneThrow>()?.Cancel();
+            Map01NamActions.For(mission)?.CancelAction();
+            throwable = id; ThrowableEquipped = true; ThrowableChosenAt = Time.time;
+            mission?.ModernCombat?.SetHandsOccupied(true);
+            Changed?.Invoke();
         }
         /// <summary>When key 4 last changed the throwable, for the hotbar's short highlight.</summary>
         public float ThrowableChosenAt { get; private set; } = -10f;
@@ -291,6 +304,7 @@ namespace ShadowVale.Map01
         public string ReadyThrowable()
         {
             if (Count(throwable) > 0) return throwable;
+            if (ThrowableEquipped) return null;
             var next = Throwables.FirstOrDefault(t => Count(t) > 0);
             if (next != null) { throwable = next; Changed?.Invoke(); }
             return next;

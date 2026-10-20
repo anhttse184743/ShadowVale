@@ -1,0 +1,4 @@
+PASS existing crafting point, radius 4 m, and BriefingTable cutscene anchor preserved.
+PASS all six bunker chairs face inward; original merged furniture renderers are disabled.
+PASS 4 complete navigation paths into crafting interaction range (editor NavMesh).
+PASS 19 source chair corrections verified after FBX reimport.

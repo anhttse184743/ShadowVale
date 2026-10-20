@@ -7,6 +7,20 @@ namespace ShadowVale.Map01.Tests
 {
     public sealed class ForestSaveSlotsTests
     {
+        [Test]
+        public void BatchModeCannotReachPlayerSlotsAfterFixtureCleanup()
+        {
+            if(!Application.isBatchMode)Assert.Ignore("This regression checks the batch editor fallback.");
+            var field=typeof(ForestSaveSlots).GetField("storageRoot",System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Static);
+            var previous=field.GetValue(null);string key=ForestSaveSlots.EditorTestRootKey;
+            string saved=UnityEditor.SessionState.GetString(key,"");
+            try {
+                field.SetValue(null,null);UnityEditor.SessionState.EraseString(key);
+                string path=ForestSaveSlots.PathFor(0);
+                StringAssert.StartsWith(Path.GetFullPath("Temp/Map01BatchFallbackSaves"),path);
+                Assert.AreNotEqual(Path.Combine(Application.persistentDataPath,"shadowvale-slot-0.json"),path);
+            }finally{field.SetValue(null,previous);if(string.IsNullOrEmpty(saved))UnityEditor.SessionState.EraseString(key);else UnityEditor.SessionState.SetString(key,saved);}
+        }
         [TestCase(-1)] [TestCase(5)]
         public void RejectsOutOfRangeSlot(int slot) => Assert.Throws<ArgumentOutOfRangeException>(() => ForestSaveSlots.PathFor(slot));
 

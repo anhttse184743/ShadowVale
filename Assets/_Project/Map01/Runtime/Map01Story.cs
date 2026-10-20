@@ -12,11 +12,14 @@ namespace ShadowVale.Map01
         public const string KeyItem="m1_supply_key", CargoItem="m1_supply_cargo";
         [Serializable] public sealed class Snapshot
         {
-            public int revision=3;
+            public int revision=5;
+            public bool powerDisabled;
+            public int powerSeed,powerStep;
             public bool rescueAccepted,supplies,radioDisabled,commanderConfirmed,commanderKilled,commanderAreaReached;
             public bool keyCollected,doorUnlocked,chestUnlocked,supplyReported,suppliesDelivered,supplyRewardGranted;
             public bool radioResponseCalled,radioResponseSpawned,commanderReported,commanderDiscovery,retreatReported;
-            public int puzzleSeed=241,lockAttemptStart;
+            public int puzzleSeed,lockAttemptStart;
+            public int circuitSeed,circuitRound,circuitRevision;
             public Map01LockGuess[] lockHistory=Array.Empty<Map01LockGuess>();
             public int[] circuitRotations;
         }
@@ -31,7 +34,7 @@ namespace ShadowVale.Map01
         public bool CanBrief=>quest.Stage==0&&!Progress.rescueAccepted||quest.Stage==2;
         public bool RadioReport=>quest.Stage==4&&!Progress.supplyReported||quest.Stage==6||quest.Stage==8;
         public bool CanDeliver=>quest.Stage==4&&Progress.supplyReported&&!Progress.suppliesDelivered;
-        public bool CommanderObjectiveComplete=>Progress.supplies&&Progress.suppliesDelivered&&Progress.radioDisabled&&Progress.commanderAreaReached&&Progress.commanderConfirmed&&Progress.commanderReported&&Progress.commanderKilled;
+        public bool CommanderObjectiveComplete=>Progress.supplies&&Progress.suppliesDelivered&&Progress.radioDisabled&&Progress.powerDisabled&&Progress.commanderAreaReached&&Progress.commanderConfirmed&&Progress.commanderReported&&Progress.commanderKilled;
         Map01Mission mission; Map01Quest quest; Map01OpeningCutscene opening; Map01StoryDialogue dialogue;
         Map01OperationPuzzleUI puzzleUI;float confirmTime;Vector3 previousObservationPosition;bool checkpointPending;
         void Awake()
@@ -45,7 +48,8 @@ namespace ShadowVale.Map01
             opening=GetComponentInChildren<Map01OpeningCutscene>();Layout=FindFirstObjectByType<Map01OperationsLayout>();
             if(Layout==null){var prefab=Resources.Load<Map01OperationsLayout>("Story/Map01Operations");if(prefab!=null)Layout=Instantiate(prefab);}
             if(Layout==null){Debug.LogError("[Map01] Missing operations layout.",this);return;}
-            Progress.puzzleSeed=Layout.puzzleSeed;RefreshProps();Map01InteractionWarmup.For(mission);
+            Progress.puzzleSeed=NewPuzzleSeed();RefreshProps();Map01InteractionWarmup.For(mission);
+            Map01PatrolBeats.Apply(Layout); // Supply and radio guards walk fixed beats; a checkpoint restored later keeps its own positions.
         }
         public Snapshot Capture()=>JsonUtility.FromJson<Snapshot>(JsonUtility.ToJson(Progress));
         public void Restore(Snapshot snapshot,int stage)
@@ -59,7 +63,12 @@ namespace ShadowVale.Map01
                 if(Progress.revision<2&&Progress.commanderConfirmed)Progress.commanderAreaReached=true;
             }
             if(stage>=8){Progress.supplies=Progress.suppliesDelivered=Progress.supplyReported=Progress.supplyRewardGranted=true;Progress.radioDisabled=Progress.commanderConfirmed=Progress.commanderReported=Progress.commanderKilled=Progress.commanderAreaReached=true;}
-            Progress.revision=3;confirmTime=0;RefreshProps();
+            // Keep an in-progress lock and its notebook from old saves. Unstarted
+            // fixed-seed saves are upgraded to a new code instead of repeating 331.
+            if(Progress.puzzleSeed==0 || Progress.revision<4&&(Progress.lockHistory==null||Progress.lockHistory.Length==0)&&!Progress.chestUnlocked)
+                Progress.puzzleSeed=NewPuzzleSeed();
+            if(stage>=6)Progress.powerDisabled=true;
+            Progress.revision=5;confirmTime=0;RefreshProps();
         }
         public void AfterInventoryRestore()
         {
@@ -70,6 +79,7 @@ namespace ShadowVale.Map01
         void RefreshProps()
         {
             if(Layout==null)return;Layout.Present(Progress.supplies,Progress.radioDisabled);
+            if(Layout.sabotage!=null){Layout.sabotage.Present(Progress.radioDisabled,Progress.powerDisabled);if(Progress.radioDisabled&&Layout.radioDisabled!=null)Layout.radioDisabled.SetActive(false);}
             if(Layout.supplyProps!=null)Layout.supplyProps.Present(Progress.doorUnlocked,Progress.chestUnlocked,Progress.supplies,Progress.suppliesDelivered,mission!=null?mission.player:null);
         }
         bool Near(Transform t,float range)=>t!=null&&Vector3.Distance(mission.player.position,t.position)<=range;
@@ -113,6 +123,7 @@ namespace ShadowVale.Map01
                 if(quest.Stage==5){
                     if(ResponsePending)return Progress.radioResponseSpawned?$"Báo động tại đài! Hạ nhóm phản ứng — còn {ResponseRemaining}/3 lính.":"Có quân đang tới kiểm tra trạm đài. Chuẩn bị chiến đấu.";
                     if(RemainingGuards(2)>0)return $"Điểm 2: hạ nhóm bảo vệ trạm đài — còn {RemainingGuards(2)}/5 lính.";
+                    if(Progress.radioDisabled)return "Đài đã hỏng. Tới bộ nguồn cạnh trạm và ngắt ba cầu chì [E] để chúng không sửa lại được.";
                     return "Mở bảng mạch đài [E]. Xoay 20 đoạn dây để nối NGUỒN tới NGẮT ĐÀI thành một đường liền mạch.";
                 }
                 if(quest.Stage==6)return "Đài đã ngừng phát. Rời giao tranh rồi báo cáo chỉ huy qua bộ đàm [E].";
@@ -131,14 +142,15 @@ namespace ShadowVale.Map01
             Prompt=null;if(!mission.IsInitialized||mission.Stopped||mission.InventoryOpen||mission.MapOpen||Layout==null)return;
             if(checkpointPending&&!Map01NamActions.For(mission).Busy)Checkpoint();
             var inventory=GetComponent<Map01Inventory>();
-            if(!Progress.keyCollected&&inventory.Count(KeyItem)>0){Progress.keyCollected=true;mission.Say("Đã nhặt chìa khóa kho điểm 1. Dùng tại cửa kho [E]; hòm bên trong có khóa mã riêng.",7);Checkpoint();}
+            if(!Progress.keyCollected&&inventory.Count(KeyItem)>0){Progress.keyCollected=true;Checkpoint();}
             if(CanBrief&&Near(Commander,mission.Settings.interactRange))Prompt="[E] Nói chuyện với chỉ huy";
             else if(CanDeliver&&Near(Commander,mission.Settings.interactRange))Prompt="[E] Bàn giao túi tiếp tế — nhận lệnh điểm 2";
             else if(RadioReport)Prompt=SafeToReport?"[E] Liên lạc chỉ huy qua bộ đàm":"Thoát giao tranh rồi liên lạc chỉ huy";
             else if(quest.Stage==3){
                 if(!Progress.doorUnlocked&&At(Layout.doorApproach))Prompt=RemainingGuards(1)>0?$"Kho còn {RemainingGuards(1)} lính bảo vệ":!Progress.keyCollected?"CỬA KHO BỊ KHÓA · Lấy chìa từ lính gác":"[E] Dùng chìa mở cửa kho";
                 else if(Progress.doorUnlocked&&At(Layout.chestApproach))Prompt=Progress.chestUnlocked?"[E] Mở hòm — lấy túi thuốc":"[E] Giải khóa hòm tiếp tế · 3 vòng số";
-            }else if(quest.Stage==5&&At(Layout.radioApproach))Prompt=ResponsePending?"Xử lý nhóm phản ứng trước khi thao tác đài":RemainingGuards(2)>0?$"Còn {RemainingGuards(2)} lính bảo vệ đài":"[E] Mở bảng mạch · Vô hiệu hóa đài";
+            }else if(quest.Stage==5&&Progress.radioDisabled&&Layout.sabotage!=null&&At(Layout.sabotage.powerApproach))Prompt=ResponsePending||RemainingGuards(2)>0?"Dọn trạm đài trước khi phá nguồn":"[E] Phá bộ cấp điện · Ngắt ba cầu chì";
+            else if(quest.Stage==5&&!Progress.radioDisabled&&At(Layout.radioApproach))Prompt=ResponsePending?"Xử lý nhóm phản ứng trước khi thao tác đài":RemainingGuards(2)>0?$"Còn {RemainingGuards(2)} lính bảo vệ đài":"[E] Mở bảng mạch · Vô hiệu hóa đài";
             if(Progress.radioResponseCalled&&!Progress.radioResponseSpawned)TrySpawnResponse();ObserveCommander();
         }
         public bool TryInteract()
@@ -160,7 +172,11 @@ namespace ShadowVale.Map01
                     if(Progress.chestUnlocked)StartCoroutine(Collect());else BeginLock();return true;
                 }
             }
-            if(quest.Stage==5&&At(Layout.radioApproach)){
+            if(quest.Stage==5&&Progress.radioDisabled&&Layout.sabotage!=null&&At(Layout.sabotage.powerApproach)){
+                if(RemainingGuards(2)>0||ResponsePending||!SafeToReport){mission.Say(Prompt??Objective,4);return true;}
+                BeginPower();return true;
+            }
+            if(quest.Stage==5&&!Progress.radioDisabled&&At(Layout.radioApproach)){
                 if(RemainingGuards(2)>0||ResponsePending||!SafeToReport){mission.Say(Prompt??Objective,4);return true;}
                 BeginCircuit();return true;
             }return false;
@@ -183,9 +199,10 @@ namespace ShadowVale.Map01
             else if(quest.Stage==6)dialogue.Begin(Map01OperationLines.RadioReport,()=>{quest.BeginCommanderOrder();Checkpoint();},"Tới điểm 3",true);
             else if(quest.Stage==8)dialogue.Begin(Map01OperationLines.RetreatReport,()=>{Progress.retreatReported=true;quest.CompleteBossDefeat(false);Checkpoint();},"Rút ra bến",true);
         }
+        static int NewPuzzleSeed(){int seed=Guid.NewGuid().GetHashCode();return seed==0?1:seed;}
         void BeginLock()
         {
-            var random=new System.Random(Progress.puzzleSeed);int secret=Map01SupplyLock.Code(random.Next(6),random.Next(6),random.Next(6));
+            int secret=Map01SupplyLock.GenerateCode(Progress.puzzleSeed);
             var puzzle=new Map01SupplyLock(secret,Progress.lockHistory,Progress.lockAttemptStart);Operating=true;
             if(!puzzleUI.Begin(mission,puzzle,null,Layout.supply.position+Vector3.up*.5f,result=>{
                 Progress.lockHistory=puzzle.History.ToArray();Progress.lockAttemptStart=puzzle.AttemptStart;Operating=false;
@@ -194,17 +211,30 @@ namespace ShadowVale.Map01
         }
         void BeginCircuit()
         {
-            var puzzle=new Map01RadioCircuit(Progress.puzzleSeed,Progress.circuitRotations);Operating=true;
+            if(Progress.circuitRevision!=1||Progress.circuitSeed==0){Progress.circuitSeed=NewPuzzleSeed();Progress.circuitRound=0;Progress.circuitRotations=null;Progress.circuitRevision=1;}
+            var puzzle=new Map01RadioCircuit(Progress.circuitSeed,Progress.circuitRotations,Map01RadioCircuit.Seconds,Progress.circuitRound);Operating=true;
             var focus=Layout.radioRightContact!=null&&Layout.radioLeftContact!=null
                 ?(Layout.radioRightContact.position+Layout.radioLeftContact.position)*.5f:Layout.radio.position+Vector3.up*.8f;
             if(!puzzleUI.Begin(mission,null,puzzle,focus,result=>{
-                Progress.circuitRotations=(int[])puzzle.Rotations.Clone();Operating=false;
-                if(result==Map01OperationResult.Success){Progress.radioDisabled=true;quest.RadioDisabled();Map01OperationAudio.Play("radio_off",Layout.radio.position);RefreshProps();Checkpoint();}
+                Progress.circuitRotations=(int[])puzzle.Rotations.Clone();Progress.circuitRound=puzzle.Round;Operating=false;
+                if(result==Map01OperationResult.Success){Progress.radioDisabled=true;mission.Say("Đài đã hỏng. Phá tiếp bộ nguồn cạnh trạm trước khi báo cáo chỉ huy.",6);Map01OperationAudio.Play("radio_off",Layout.radio.position);RefreshProps();Checkpoint();}
                 else if(result==Map01OperationResult.Failure){
+                    Progress.circuitSeed=0;Progress.circuitRound=0;Progress.circuitRotations=null;
                     if(!Progress.radioResponseCalled)CallRadioResponse("Chuông báo động đã bật! Có quân đang tới kiểm tra trạm đài.");
                     else mission.Say("Mạch chưa đúng. Đài vẫn đang phát; có thể thử lại.",4);
                 }
             }))Operating=false;
+        }
+        void BeginPower(){
+            if(Progress.powerSeed==0)Progress.powerSeed=NewPuzzleSeed();
+            var puzzle=new Map01PowerSabotage(Progress.powerSeed,Progress.powerStep);Operating=true;
+            var props=Layout.sabotage;var focus=(props.powerRightContact.position+props.powerLeftContact.position)*.5f;
+            if(!puzzleUI.Begin(mission,null,null,focus,result=>{
+                Operating=false;Progress.powerStep=puzzle.Step;
+                if(result==Map01OperationResult.Success){
+                    Progress.powerDisabled=true;Map01OperationAudio.Play("radio_off",focus,.7f);RefreshProps();quest.RadioDisabled();Checkpoint();
+                }else if(result==Map01OperationResult.Failure){Progress.powerSeed=0;Progress.powerStep=0;mission.Say("Chưa phá được bộ nguồn. Có thể thử lại [E].",4);}
+            },puzzle))Operating=false;
         }
         IEnumerator Collect()
         {
@@ -268,7 +298,9 @@ namespace ShadowVale.Map01
                 if(RemainingGuards(1)==0&&!Progress.keyCollected&&keeper!=null){at=keeper.transform.position;label="LÍNH GÁC — LẤY CHÌA [E]";}
                 else{at=(Progress.doorUnlocked?Layout.chestApproach:Layout.doorApproach??Layout.supplyApproach).position;label=Progress.doorUnlocked?"HÒM TIẾP TẾ — GIẢI KHÓA":"ĐIỂM 1 — KHO TIẾP TẾ";}return true;
             }
-            if(quest.Stage==5){at=Layout.radioApproach.position;label=ResponsePending?"TRẠM ĐÀI — NHÓM PHẢN ỨNG":"ĐIỂM 2 — BẢNG MẠCH ĐÀI";return true;}
+            if(quest.Stage==5){
+                if(Progress.radioDisabled&&Layout.sabotage!=null){at=Layout.sabotage.powerApproach.position;label="ĐIỂM 2 — PHÁ NGUỒN ĐIỆN [E]";return true;}
+                at=Layout.radioApproach.position;label=ResponsePending?"TRẠM ĐÀI — NHÓM PHẢN ỨNG":"ĐIỂM 2 — BẢNG MẠCH ĐÀI";return true;}
             if(quest.Stage==7){
                 var c3=GetComponent<Map01C3Mission>();
                 if(c3!=null&&c3.CachePoint!=null&&c3.CachePoint.isActiveAndEnabled&&!c3.CachePoint.used){at=c3.CachePoint.transform.position;label="ĐỒI ĐÔNG NAM — MOSIN TRINH SÁT";return true;}

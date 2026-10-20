@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ namespace ShadowVale.Map01
         public static readonly string[] SquadNames={"patrol_0","patrol_1","patrol_2","rbl_patrol_3"};
         public enum Phase { Captive, Alarm, Failed, Untying, Rising, Escorting, EnteringShelter, Delivered }
         [Serializable] public sealed class Snapshot {
-            public int revision,phase,waveMask;
+            public int revision,phase,waveMask,helpWaveMask;
             public bool safe,reward;
             public bool combatAlarm,introSeen;
             public float escortDistance;
@@ -39,6 +39,7 @@ namespace ShadowVale.Map01
         public bool SafeReached{get;private set;}
         public bool RewardDelivered{get;private set;}
         public int WaveMask{get;private set;}
+        public int HelpWaveMask{get;private set;}
         public float EscortDistance{get;private set;}
         public bool NonSaveable=>CurrentPhase==Phase.Alarm||CurrentPhase==Phase.Untying||CurrentPhase==Phase.Rising||CurrentPhase==Phase.EnteringShelter
             ||(mission.player!=null&&mission.player.TryGetComponent<Map01NamActions>(out var a)&&a.Busy);
@@ -52,6 +53,8 @@ namespace ShadowVale.Map01
         private readonly List<(Map01EnemyController guard,int priority,float distance)> hintOrder=new();
         private PlayerCombat boundCombat;
         private float nextChatter,nextWaveCheck,nextHitLine,calmUntil,nextRally;
+        private float nextHomePathCheck;
+        private NavMeshPath homePath;
         private int chatterIndex;
         private bool whispered;
         public bool IntroSeen{get;private set;}
@@ -59,12 +62,12 @@ namespace ShadowVale.Map01
         private Coroutine release;
         private bool protectedRelease,releaseInvulnerability;
         private static readonly string[] Chatter={
-            "Lính địch: Tên này rình kiện hàng trên cầu. Chắc là trinh sát của bọn nó. Phải giữ lại tra hỏi.",
+            "Lính địch: Bắt được nó ở cầu gỗ. Trói chặt vào, chờ lệnh tra hỏi.",
             "Lính địch: Trói chặt vào! Sáng mai giải nó về đồn chỉ huy khai thác.",
             "Lính địch: Canh cho kỹ — đồng bọn nó thế nào cũng mò tới cứu.",
             "Lính địch: Để xổng tù binh ở cái bến này thì cả tổ ăn đòn."
         };
-        private void Awake(){mission=GetComponent<Map01Mission>();quest=GetComponent<Map01Quest>();}
+        private void Awake(){mission=GetComponent<Map01Mission>();quest=GetComponent<Map01Quest>();homePath=new NavMeshPath();}
         private void Start()
         {
             if(!mission.IsInitialized)return;
@@ -191,10 +194,10 @@ namespace ShadowVale.Map01
             yield return null;while(visual.IsRising)yield return null;
             quest.BeginEscort();CurrentPhase=Phase.Escorting;
             visual.FinishRescueRise();
-            EscortDistance=RemainingHomeDistance();WaveMask=0;SafeReached=false;release=null;mission.Cinematic=false;
+            EscortDistance=RemainingHomeDistance();WaveMask=HelpWaveMask=0;nextHomePathCheck=0;SafeReached=false;release=null;mission.Cinematic=false;
             mission.ModernHealth.CinematicInvulnerable=releaseInvulnerability;protectedRelease=false;
             mission.ModernCombat?.RestoreAfterCinematic();
-            mission.Say("Hùng: Cảm ơn Nam. Tôi trinh sát kiện hàng trên cầu thì bị lộ, trúng đạn tay phải rồi bị đánh ngất. Đưa tôi về căn cứ nhé.",9);
+            mission.Say("Hùng: Nam... cậu tới thật rồi. Tay phải còn đau, nhưng tôi đi được. Ra khỏi đây đã.",9);
             Saves.MarkRescueCheckpoint(true);
         }
         private void Update()
@@ -214,6 +217,38 @@ namespace ShadowVale.Map01
                     foreach(var guard in pursuers)if(guard!=null&&guard.Alive)guard.CeasePursuit();
                 }
             }else if(!SafeReached&&Time.time>=nextWaveCheck){nextWaveCheck=Time.time+.4f;TrySpawnWaves();}
+            TryEscortHelp();
+        }
+        /// <summary>The original limp keeps playing while Hùng takes a complete NavMesh route home.</summary>
+        public void GuideHungHome(NavMeshAgent agent)
+        {
+            if(CurrentPhase!=Phase.Escorting||SafeReached||Failed||mission.Stopped||mission.Cinematic||Layout==null
+                ||Layout.shelterDoor==null||agent==null||!agent.enabled||!agent.isOnNavMesh)return;
+            var visual=mission.hung.GetComponentInChildren<Map01HungVisual>();
+            if(visual!=null&&visual.IsRising)return;
+            agent.speed=Map01HungVisual.LimpSpeed;
+            agent.stoppingDistance=Mathf.Min(.5f,Layout.doorRadius*.25f);
+            agent.autoBraking=true;
+            if(Time.time<nextHomePathCheck)return;
+            nextHomePathCheck=Time.time+.75f;
+            if(NavMesh.SamplePosition(Layout.shelterDoor.position,out var home,3,NavMesh.AllAreas)
+                &&agent.CalculatePath(home.position,homePath)&&homePath.status==NavMeshPathStatus.PathComplete){
+                agent.SetPath(homePath);agent.isStopped=false;
+            }else{agent.ResetPath();agent.isStopped=true;}
+        }
+        private void TryEscortHelp()
+        {
+            if(!Exposed||mission.Cinematic||Time.time<nextHitLine)return;
+            var voice=GetComponent<DialogueVoice>();if(voice!=null&&voice.HasSpeech)return;
+            int pending=WaveMask&~HelpWaveMask;
+            for(int wave=0;wave<3;wave++){
+                int bit=1<<wave;if((pending&bit)==0)continue;
+                HelpWaveMask|=bit;
+                if(!pursuers.Any(g=>g!=null&&g.Alive&&g.name.StartsWith($"rescue_pursuit_{wave}_",StringComparison.Ordinal)))continue;
+                nextHitLine=Time.time+12;
+                // Reuse Hùng's approved wounded call; speaking never parks his navigation agent.
+                mission.Say("Hùng: Tôi trúng đạn rồi... Nam, yểm hộ tôi!",4);return;
+            }
         }
         public void TryApproachIntro(){
             if(!quest.RescueOrderAccepted)return;
@@ -274,7 +309,11 @@ namespace ShadowVale.Map01
         {
             if(!Exposed||damage<=0)return;
             HungHealth=Mathf.Max(0,HungHealth-damage);HungHitAt=Time.time;
-            if(HungHealth<=0){CurrentPhase=Phase.Failed;FailureReason="Hùng đã hy sinh trên đường về căn cứ.";mission.Say(FailureReason,10);}
+            if(HungHealth<=0){
+                CurrentPhase=Phase.Failed;FailureReason="Hùng đã hy sinh trên đường về căn cứ.";
+                var agent=mission.hung.GetComponent<NavMeshAgent>();if(agent!=null&&agent.enabled&&agent.isOnNavMesh){agent.ResetPath();agent.isStopped=true;}
+                mission.Say(FailureReason,10);
+            }
             else if(Time.time>=nextHitLine){nextHitLine=Time.time+12;mission.Say("Hùng: Tôi trúng đạn rồi... Nam, yểm hộ tôi!",4);}
         }
         public bool CompleteDelivery()
@@ -288,12 +327,12 @@ namespace ShadowVale.Map01
             var supplies=mission.Interactables.FirstOrDefault(p=>p.kind==ForestPointKind.Supplies);var inventory=GetComponent<Map01Inventory>();
             inventory.Add("supplies",1);
             if(supplies!=null&&!supplies.used){foreach(var item in supplies.items)inventory.Add(item.item_id,item.count);supplies.MarkLooted();}
-            mission.Say("Hùng: Về tới căn cứ rồi. Cảm ơn Nam! Tôi sẽ báo chỉ huy về kiện hàng trên cầu. Cậu gặp chỉ huy để nhận nhiệm vụ tiếp theo.",9);return true;
+            mission.Say("Hùng: Về được rồi... Cảm ơn cậu, Nam. Tôi còn chuyện phải báo với chỉ huy.",9);return true;
         }
         public void Retry(){if(!Failed&&mission.PlayerHealth>0)return;Saves.RestartRescue(quest.Stage==Map01Quest.EscortStage);}
         public void ResetSquad(){foreach(var guard in squad)if(guard!=null)guard.ReturnToPost();}
         public void RestoreHealth(float value)=>HungHealth=value<0?HungMaxHealth:Mathf.Clamp(value,0,HungMaxHealth);
-        public Snapshot Capture()=>new Snapshot{revision=3,introSeen=IntroSeen,phase=(int)CurrentPhase,waveMask=WaveMask,safe=SafeReached,reward=RewardDelivered,escortDistance=EscortDistance,combatAlarm=CombatAlarm};
+        public Snapshot Capture()=>new Snapshot{revision=4,introSeen=IntroSeen,phase=(int)CurrentPhase,waveMask=WaveMask,helpWaveMask=HelpWaveMask,safe=SafeReached,reward=RewardDelivered,escortDistance=EscortDistance,combatAlarm=CombatAlarm};
         public void Restore(Snapshot saved,Map01EnemyController.Snapshot[] enemies)
         {
             if(saved==null||saved.revision<=0){
@@ -301,6 +340,8 @@ namespace ShadowVale.Map01
                 if(CurrentPhase==Phase.Escorting){EscortDistance=PathLength(Path(CaptivePost,Layout.shelterDoor.position));float distance=RemainingHomeDistance();for(int i=0;i<3;i++)if(distance<=EscortDistance*Layout.waveThresholds[i])WaveMask|=1<<i;}
             }else{CurrentPhase=(Phase)saved.phase;WaveMask=saved.waveMask;SafeReached=saved.safe;RewardDelivered=saved.reward;EscortDistance=saved.escortDistance;}
             IntroSeen=saved!=null&&saved.revision>=3?saved.introSeen:CurrentPhase!=Phase.Captive||Remaining<4||CombatAlarm;
+            HelpWaveMask=saved!=null&&saved.revision>=4?saved.helpWaveMask:WaveMask;
+            nextHomePathCheck=0;nextHitLine=0;
             CombatAlarm=saved!=null&&saved.combatAlarm&&CurrentPhase==Phase.Captive;nextRally=0;
             foreach(var data in enemies??Array.Empty<Map01EnemyController.Snapshot>()){
                 string shortId=data.id.Substring(data.id.LastIndexOf('/')+1);if(!shortId.StartsWith("rescue_pursuit_",StringComparison.Ordinal))continue;

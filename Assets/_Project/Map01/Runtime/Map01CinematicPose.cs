@@ -76,7 +76,10 @@ namespace ShadowVale.Map01 {
         }
         public void Dispose() {
             if(graph.IsValid())graph.Destroy();
-            UnityEngine.Object.Destroy(baked);
+            if (baked != null) {
+                if (Application.isPlaying) UnityEngine.Object.Destroy(baked);
+                else UnityEngine.Object.DestroyImmediate(baked);
+            }
             if(actor==null)return;
             if(actor.avatar!=originalAvatar)BindAvatar(originalAvatar);
             actor.runtimeAnimatorController=controller;actor.applyRootMotion=rootMotion;actor.cullingMode=culling;

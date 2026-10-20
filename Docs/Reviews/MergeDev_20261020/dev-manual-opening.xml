@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-20 07:27:02Z" end-time="2026-10-20 07:27:15Z" duration="13,2679695">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="553" result="Passed" start-time="2026-10-20 07:27:02Z" end-time="2026-10-20 07:27:15Z" duration="13.267970" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1435" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/Admin/.codex/worktrees/dev-preflight-20261020/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="342" result="Passed" start-time="2026-10-20 07:27:02Z" end-time="2026-10-20 07:27:15Z" duration="13.166593" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="192560" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1436" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="342" result="Passed" start-time="2026-10-20 07:27:02Z" end-time="2026-10-20 07:27:15Z" duration="13.164160" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1437" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="342" result="Passed" start-time="2026-10-20 07:27:02Z" end-time="2026-10-20 07:27:15Z" duration="13.162060" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1360" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="342" result="Passed" start-time="2026-10-20 07:27:02Z" end-time="2026-10-20 07:27:15Z" duration="13.159618" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1050" name="DialogueVoiceTests" fullname="ShadowVale.Map01.Tests.DialogueVoiceTests" classname="ShadowVale.Map01.Tests.DialogueVoiceTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-20 07:27:02Z" end-time="2026-10-20 07:27:15Z" duration="13.139795" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1056" name="NewGameWaitsForCommanderConversationWithoutLegacyOpening" fullname="ShadowVale.Map01.Tests.DialogueVoiceTests.NewGameWaitsForCommanderConversationWithoutLegacyOpening" methodname="NewGameWaitsForCommanderConversationWithoutLegacyOpening" classname="ShadowVale.Map01.Tests.DialogueVoiceTests" runstate="Runnable" seed="1890791097" result="Passed" start-time="2026-10-20 07:26:39Z" end-time="2026-10-20 07:26:57Z" duration="17.918404" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1057" name="SkippingDormantOpeningCannotAcceptRescueOrder" fullname="ShadowVale.Map01.Tests.DialogueVoiceTests.SkippingDormantOpeningCannotAcceptRescueOrder" methodname="SkippingDormantOpeningCannotAcceptRescueOrder" classname="ShadowVale.Map01.Tests.DialogueVoiceTests" runstate="Runnable" seed="55314174" result="Passed" start-time="2026-10-20 07:26:57Z" end-time="2026-10-20 07:27:15Z" duration="17.839536" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/Admin/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

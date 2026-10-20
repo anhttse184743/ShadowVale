@@ -102,7 +102,35 @@ namespace ShadowVale.Gameplay.Combat
 
         public int MagazineCapacity => _magazine?.Capacity ?? 0;
         public bool IsReloading => _magazine is { IsReloading: true };
-        public float BaseReloadSeconds => tuning.OrDefault().reloadSeconds;
+        public float BaseReloadSeconds => _activeTuning.OrDefault().reloadSeconds;
+        public bool EquippedIsGun => _equipped != null && _equipped.IsGun;
+        public float StanceBlendSeconds => Mathf.Max(.01f, stanceBlendTime);
+        public int ReloadPlannedRounds => _magazine?.ReloadPlannedRounds??0;
+        public float FullReloadProgress => _magazine?.FullReloadProgress??0;
+
+        public Weapon WeaponFor(WeaponKind kind) => _weapons.TryGetValue(kind, out var value) ? value : null;
+        public int MagazineRounds(WeaponKind kind) => _magazines.TryGetValue(kind, out var value) ? value.Rounds : 0;
+        public void RestoreMagazine(WeaponKind kind, int rounds)
+        {
+            if (_magazines.TryGetValue(kind, out var value)) value.Refill(rounds);
+        }
+
+        /// <summary>Register an extra gun without regenerating the existing player/loadout prefab.</summary>
+        public bool RegisterWeapon(Weapon weapon, WeaponTuning handling, int loadedRounds = 0)
+        {
+            if (weapon == null || !weapon.IsGun || _weapons.ContainsKey(weapon.Kind)) return false;
+            handling = handling.OrDefault();
+            var magazine = handling.Create(); magazine.Refill(loadedRounds);
+            _weapons.Add(weapon.Kind, weapon); _magazines.Add(weapon.Kind, magazine);
+            _tunings.Add(weapon.Kind, handling); weapon.gameObject.SetActive(false);
+            return true;
+        }
+
+        public void CancelReload()
+        {
+            _magazine?.CancelReload();
+            if (animator != null && _hasReloadParams) animator.ResetTrigger("Reload");
+        }
 
         /// <summary>0 to 1 across a reload, for a HUD bar. 0 when not reloading.</summary>
         public float ReloadProgress => _magazine?.ReloadProgress ?? 0f;
@@ -113,7 +141,7 @@ namespace ShadowVale.Gameplay.Combat
         /// <summary>Starts a reload if one is possible. Returns false when it is not.</summary>
         public bool TryReload()
         {
-            if (_magazine == null || _equipped == null || !_equipped.IsGun) return false;
+            if (_handsOccupied || _magazine == null || _equipped == null || !_equipped.IsGun) return false;
             bool wasEmpty = _magazine.IsEmpty;
             var skills = GetComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
             if (!_magazine.BeginReload(ReserveRounds != null ? ReserveRounds() : -1, skills != null ? skills.ReloadMultiplier : 1f)) return false;
@@ -127,6 +155,7 @@ namespace ShadowVale.Gameplay.Combat
         /// </summary>
         private void AnimateReload(bool wasEmpty)
         {
+            if (_equippedKind == WeaponKind.Pistol || _equippedKind == WeaponKind.Sniper) return; // Authored pose players follow the real magazine timer.
             if (animator == null || !_hasReloadParams) return;
             bool crouched = _controller != null && _controller.IsSneaking;
             float length = ClipLength(crouched ? "Nam_Crouch_Reload" : wasEmpty ? "Nam_Rifle_Reload" : "Nam_Rifle_ReloadTactical");
@@ -213,8 +242,14 @@ namespace ShadowVale.Gameplay.Combat
         private WeaponKind _equippedKind;
         private float _nextAttackTime;
         private Magazine _magazine;
+        private readonly System.Collections.Generic.Dictionary<WeaponKind, Magazine> _magazines = new();
+        private readonly System.Collections.Generic.Dictionary<WeaponKind, WeaponTuning> _tunings = new();
+        private WeaponTuning _activeTuning;
         private readonly WeaponSpreadState _spread = new();
         private bool _aiming;
+        private bool _firingHeld;
+        private bool _automaticBurst;
+        private float _stanceYaw;
         private ShotTracer[] _tracers;
         private Transform _tracerRoot;
         private int _tracerCursor;
@@ -223,24 +258,58 @@ namespace ShadowVale.Gameplay.Combat
         private float _upperBodyWeight;
         /// <summary>Base-layer state holding Nam's own AK carry, when the controller has one.</summary>
         public const string RifleLocomotionState = "Locomotion_Rifle";
-        private bool _rifleBody, _hasReloadParams, _hasHitParam;
+        private bool _rifleBody, _hasReloadParams;
         private static readonly int KnifeLocomotionHash = Animator.StringToHash("Locomotion_Knife");
         private bool HasKnifeCarry => animator!=null&&animator.HasState(0,KnifeLocomotionHash);
-        private float _lastHealthSeen = -1f;
         private float _upperBodyHoldUntil;
         private float _faceCameraHoldUntil;
         private float _fireHoldUntil;
         private BarrelAim _barrelAim;
 
         /// <summary>The rifle in hand, or null with anything else out.</summary>
-        internal Weapon Gun => _equipped != null && _equipped.IsGun ? _equipped : null;
+        internal Weapon Gun => !_handsOccupied && _equipped != null && _equipped.IsGun ? _equipped : null;
+        private bool _handsOccupied;
+
+        /// <summary>Free the hands for a held item while preserving the equipped weapon and ammunition.</summary>
+        public void SetHandsOccupied(bool occupied)
+        {
+            if(!occupied && !_handsOccupied)return;
+            _handsOccupied=occupied;
+            _firingHeld=false;
+            _automaticBurst=false;
+            SetAiming(false);_upperBodyHoldUntil=_faceCameraHoldUntil=_fireHoldUntil=0;
+            _aimPoseBlend=0;_upperBodyWeight=0;_magazine?.CancelReload();_pendingGunfire.Clear();
+            _controller?.SetFaceCameraYaw(false);
+            if(occupied)cameraRig?.ClearRecoil();
+            if(animator==null || animator.runtimeAnimatorController==null)return;
+            animator.SetBool(AnimatorParams.Aiming,false);
+            animator.SetInteger(AnimatorParams.Weapon,occupied?0:(int)_equippedKind);
+            animator.ResetTrigger(AnimatorParams.Attack);
+            if(_hasReloadParams)animator.ResetTrigger("Reload");
+            if(_upperBodyLayer>0) {
+                animator.SetLayerWeight(_upperBodyLayer,0);
+                string upper=occupied?"Empty":_equippedKind==WeaponKind.Rifle?"Hold_Rifle":"Hold_Knife";
+                if(animator.HasState(_upperBodyLayer,Animator.StringToHash(upper)))animator.Play(upper,_upperBodyLayer,0);
+            }
+            bool crouched=_controller!=null && _controller.IsSneaking;
+            string state=occupied?(crouched?"Sneak":LocomotionState):_equippedKind==WeaponKind.Rifle
+                ?(crouched?"Sneak_Rifle":RifleLocomotionState):_equippedKind==WeaponKind.Knife && HasKnifeCarry
+                ?(crouched?"Sneak_Knife":"Locomotion_Knife"):(crouched?"Sneak":LocomotionState);
+            if(animator.HasState(0,Animator.StringToHash(state)))animator.CrossFadeInFixedTime(state,.1f,0);
+        }
 
         /// <summary>
         /// True while the takes hold the rifle up to shoot — sights raised, or a round just fired from the hip —
         /// which is when <see cref="BarrelAim"/> lays the barrel on the crosshair. A flinch raises the stance
         /// layer too, but leaves the rifle in its carry: that does not count.
         /// </summary>
-        internal bool RifleLevelled => Gun != null && (_aiming || Time.time < _fireHoldUntil);
+        public bool GunPresentationReady { get; set; } = true;
+        internal bool RifleLevelled => Gun != null && GunPresentationReady && (_aiming || _firingHeld || Time.time < _fireHoldUntil);
+
+        internal bool RecoilPosePlaying => animator != null && _upperBodyLayer > 0
+            && (animator.GetCurrentAnimatorStateInfo(_upperBodyLayer).IsName("Attack_Rifle")
+                || (animator.IsInTransition(_upperBodyLayer)
+                    && animator.GetNextAnimatorStateInfo(_upperBodyLayer).IsName("Attack_Rifle")));
 
         internal int HitMask => hitMask;
 
@@ -264,11 +333,9 @@ namespace ShadowVale.Gameplay.Combat
         {
             if (animator == null || animator.runtimeAnimatorController == null) return;
             animator.Rebind();
-            _lastHealthSeen=health!=null?health.Current:-1f;
             _upperBodyHoldUntil=_faceCameraHoldUntil=_fireHoldUntil=0;
             _nextAttackTime=Time.time;
             _magazine?.CancelReload();_spread.Reset();
-            if(_hasHitParam)animator.ResetTrigger("Hit");
             _rifleBody=animator.HasState(0,Animator.StringToHash(RifleLocomotionState));
             _upperBodyLayer = animator.GetLayerIndex(UpperBodyLayer);
             animator.SetInteger(AnimatorParams.Weapon, (int)_equippedKind);
@@ -276,7 +343,8 @@ namespace ShadowVale.Gameplay.Combat
             animator.SetBool(AnimatorParams.Grounded, true);
             animator.SetBool(AnimatorParams.Sneaking, _controller != null && _controller.IsSneaking);
             animator.ResetTrigger(AnimatorParams.Attack); animator.ResetTrigger(AnimatorParams.Die);
-            _aiming = Mouse.current != null && Mouse.current.rightButton.isPressed && _equipped != null && _equipped.IsGun;
+            // A cinematic clears the toggle; held input must not silently raise the sights again.
+            _aiming = false;
             animator.SetBool(AnimatorParams.Aiming, _aiming);
             bool rifleCarry=_rifleBody && _equippedKind==WeaponKind.Rifle && !_aiming;
             bool knifeCarry=HasKnifeCarry&&_equippedKind==WeaponKind.Knife;
@@ -297,10 +365,12 @@ namespace ShadowVale.Gameplay.Combat
             _aimPoseBlend = _aiming ? 1 : 0;
             if (cameraRig != null) {cameraRig.ClearRecoil(); cameraRig.SetAiming(_aiming);}
             UpdateGripPose(); UpdateFacing(); animator.Update(0);
+            if(_handsOccupied)SetHandsOccupied(true);
         }
 
         private void Awake()
         {
+            if(GetComponent<GunfireFrame>()==null)gameObject.AddComponent<GunfireFrame>();
             _controller = GetComponent<PlayerController>();
             _characterController = GetComponent<CharacterController>();
             if (animator == null) animator = GetComponentInChildren<Animator>();
@@ -318,7 +388,6 @@ namespace ShadowVale.Gameplay.Combat
                 foreach (AnimatorControllerParameter p in animator.parameters)
                 {
                     if (p.name == "ReloadSpeed") _hasReloadParams = true;
-                    if (p.name == "Hit") _hasHitParam = true;
                 }
             }
 
@@ -328,6 +397,9 @@ namespace ShadowVale.Gameplay.Combat
 
             tuning = tuning.OrDefault();
             _magazine = tuning.Create();
+            _activeTuning = tuning;
+            _magazines[WeaponKind.Rifle] = _magazine;
+            _tunings[WeaponKind.Rifle] = tuning;
 
             SpawnWeapons();
             SpawnTracerPool();
@@ -417,13 +489,15 @@ namespace ShadowVale.Gameplay.Combat
             if (_tracerRoot != null) Destroy(_tracerRoot.gameObject);
         }
 
-        private void ShowTracer(Vector3 from, Vector3 to)
+        private void ShowTracer(Vector3 from, Vector3 to) => PlayTracer(from,to);
+
+        private ShotTracer PlayTracer(Vector3 from, Vector3 to)
         {
-            if (tracerPrefab == null) return;
+            if (tracerPrefab == null) return null;
             if (_tracerRoot == null || _tracers == null || _tracers.Length == 0) SpawnTracerPool();
             if (_tracers == null || _tracers.Length == 0)
             {
-                return;
+                return null;
             }
 
             // Prefer a free one; if every streak is still flashing, recycle at the cursor.
@@ -437,28 +511,21 @@ namespace ShadowVale.Gameplay.Combat
                 }
                 _tracerCursor = (index + 1) % _tracers.Length;
                 tracer.TryPlay(from, to);
-                return;
+                return tracer;
             }
 
-            GetUsableTracer(_tracerCursor).TryPlay(from, to);
+            var recycled=GetUsableTracer(_tracerCursor);
+            recycled.TryPlay(from, to);
             _tracerCursor = (_tracerCursor + 1) % _tracers.Length;
+            return recycled;
         }
 
         private void Update()
         {
             bool dead = health != null && health.IsDead;
 
-            // A round that lands and leaves him standing: Nam's own flinch (Blender hit-reaction take).
-            if (health != null)
-            {
-                if (_hasHitParam && !dead && animator != null && _equippedKind == WeaponKind.Rifle
-                    && _lastHealthSeen >= 0f && health.Current < _lastHealthSeen - 0.01f)
-                {
-                    animator.SetTrigger("Hit");
-                    _upperBodyHoldUntil = Mathf.Max(_upperBodyHoldUntil, Time.time + 0.6f);
-                }
-                _lastHealthSeen = health.Current;
-            }
+            // No flinch when a round lands: Nam (and Hùng in the tutorial) keeps his aim. The controller's
+            // "Hit" state (Nam_HitReaction) is no longer triggered.
 
             // The magazine is ticked before any early return. Dying halfway through a reload
             // would otherwise leave the timer frozen for good, and a magazine that believes it
@@ -475,9 +542,12 @@ namespace ShadowVale.Gameplay.Combat
                 _spread.Tick(Time.deltaTime);
             }
 
-            if (dead || (InputAllowed != null && !InputAllowed()))
+            if (dead || _handsOccupied || (InputAllowed != null && !InputAllowed()))
             {
+                _firingHeld = false;
+                _automaticBurst = false;
                 SetAiming(false);
+                if(animator != null) animator.SetBool(AnimatorParams.Aiming, false);
                 _faceCameraHoldUntil = 0f;
                 _fireHoldUntil = 0f;
                 if (_controller != null)
@@ -491,6 +561,8 @@ namespace ShadowVale.Gameplay.Combat
             ReadAimInput();
             ReadReloadInput();
             ReadAttackInput();
+            // Holding the trigger keeps the shooting stance up between rounds without enabling camera ADS.
+            if(animator != null) animator.SetBool(AnimatorParams.Aiming, _aiming || _firingHeld);
             UpdateFacing();
             UpdateUpperBodyWeight();
             UpdateGripPose();
@@ -510,7 +582,7 @@ namespace ShadowVale.Gameplay.Combat
                 return;
             }
 
-            bool levelled = _aiming || Time.time < _upperBodyHoldUntil;
+            bool levelled = _aiming || _firingHeld || Time.time < _upperBodyHoldUntil;
             _aimPoseBlend = Mathf.MoveTowards(
                 _aimPoseBlend, levelled ? 1f : 0f, Time.deltaTime / Mathf.Max(0.01f, gripBlendTime));
 
@@ -535,7 +607,7 @@ namespace ShadowVale.Gameplay.Combat
                 return;
             }
 
-            bool locked = _aiming || Time.time < _faceCameraHoldUntil;
+            bool locked = _aiming || _firingHeld || Time.time < _faceCameraHoldUntil;
             bool holdingGun = _equipped != null && _equipped.IsGun;
             _controller.SetFaceCameraYaw(locked, locked && holdingGun ? -PoseAimYaw() : 0f);
         }
@@ -553,6 +625,8 @@ namespace ShadowVale.Gameplay.Combat
         /// </summary>
         private float PoseAimYaw()
         {
+            // Recoil moves the arms, not the feet. Keep the last resting aim reference through each kick.
+            if (RecoilPosePlaying) return _stanceYaw;
             Transform muzzle = _equipped != null ? _equipped.Muzzle : null;
             if (muzzle == null)
             {
@@ -564,12 +638,12 @@ namespace ShadowVale.Gameplay.Combat
             // would stop turning and leave the spine to twist the whole way.
             if (_barrelAim != null && _barrelAim.TryGetPoseYaw(out float posed))
             {
-                return posed;
+                return _stanceYaw = posed;
             }
 
             Vector3 barrel = Vector3.ProjectOnPlane(muzzle.forward, Vector3.up);
             // Barrel straight up or down carries no yaw; leave the body facing the camera.
-            return barrel.sqrMagnitude < 0.0004f
+            return _stanceYaw = barrel.sqrMagnitude < 0.0004f
                 ? 0f
                 : Vector3.SignedAngle(transform.forward, barrel.normalized, Vector3.up);
         }
@@ -590,7 +664,7 @@ namespace ShadowVale.Gameplay.Combat
             bool attacking = Time.time < _upperBodyHoldUntil;
             // With Nam's own AK carry in the base layer (Locomotion_Rifle), his arms already hold the
             // rifle: the stance layer only comes up to aim, fire, reload or take a hit.
-            bool carried = _rifleBody && _equippedKind == WeaponKind.Rifle && !_aiming && !attacking
+            bool carried = _rifleBody && _equippedKind == WeaponKind.Rifle && !_aiming && !_firingHeld && !attacking
                 && (_magazine == null || !_magazine.IsReloading);
             // The cheap tests first: this runs every frame, the animator is only asked with the knife out.
             if(_equippedKind==WeaponKind.Knife&&!attacking&&HasKnifeCarry) {
@@ -625,13 +699,15 @@ namespace ShadowVale.Gameplay.Combat
 
         private void ReadAimInput()
         {
-            Mouse mouse = Mouse.current;
-            // Only guns aim; swapping to a blade while aiming drops the sights.
-            bool wants = mouse != null
-                         && mouse.rightButton.isPressed
-                         && _equipped != null
-                         && _equipped.IsGun;
-            SetAiming(wants);
+            if (_equipped == null || !_equipped.IsGun)
+            {
+                SetAiming(false);
+                return;
+            }
+
+            // One press raises the sights; the next lowers them. Release keeps the chosen state.
+            if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
+                SetAiming(!_aiming);
         }
 
         /// <summary>
@@ -654,19 +730,41 @@ namespace ShadowVale.Gameplay.Combat
         private void ReadAttackInput()
         {
             Mouse mouse = Mouse.current;
+            _firingHeld = mouse != null && mouse.leftButton.isPressed && Gun != null && !IsReloading
+                && (_magazine == null || _magazine.Rounds > 0);
             if (mouse == null)
             {
+                _automaticBurst = false;
                 return;
             }
 
             bool automatic = _equipped != null && _equipped.Automatic;
             bool pressed = automatic ? mouse.leftButton.isPressed : mouse.leftButton.wasPressedThisFrame;
+            bool continuing = _automaticBurst;
+            _automaticBurst = automatic && pressed && !IsReloading;
             if (!pressed || Time.time < _nextAttackTime)
             {
                 return;
             }
 
-            Attack();
+            if (!automatic || !continuing) { Attack(); return; }
+
+            // A slow frame may contain several scheduled rounds. Preserve their deadlines rather than
+            // silently reducing the fire rate to the frame rate. Never replay a long backlog after a stall.
+            const int maxCatchUp = 4;
+            int fired = 0;
+            while (Time.time >= _nextAttackTime && fired < maxCatchUp)
+            {
+                float deadline = _nextAttackTime;
+                float cooldown = _equipped.Cooldown;
+                Attack();
+                if (_nextAttackTime <= deadline) break; // Empty, reloading, broken or otherwise refused.
+                _nextAttackTime = deadline + cooldown;
+                fired++;
+                if (_equipped == null || !_equipped.Automatic || IsReloading) break;
+            }
+            if (fired == maxCatchUp && _nextAttackTime <= Time.time)
+                _nextAttackTime = Time.time + _equipped.Cooldown;
         }
 
         // ---- Actions --------------------------------------------------------
@@ -686,6 +784,8 @@ namespace ShadowVale.Gameplay.Combat
             }
             if (next == _equipped) return true;
 
+            CancelReload();
+
             if (_equipped != null)
             {
                 _equipped.gameObject.SetActive(false);
@@ -693,6 +793,11 @@ namespace ShadowVale.Gameplay.Combat
 
             _equipped = next;
             _equippedKind = next.Kind;
+            GunPresentationReady=true;
+            if (_magazines.TryGetValue(_equippedKind, out var magazine))
+            {
+                _magazine = magazine; _activeTuning = _tunings[_equippedKind];
+            }
             _equipped.gameObject.SetActive(true);
 
             if (animator != null)
@@ -773,7 +878,7 @@ namespace ShadowVale.Gameplay.Combat
             Attacked?.Invoke(_equippedKind, sound.position);
 
             _upperBodyHoldUntil = Time.time + cooldown + attackLayerTail;
-            if (animator != null)
+            if (animator != null && _equippedKind != WeaponKind.Pistol && _equippedKind != WeaponKind.Sniper)
             {
                 animator.SetTrigger(AnimatorParams.Attack);
             }
@@ -782,7 +887,7 @@ namespace ShadowVale.Gameplay.Combat
             {
                 _faceCameraHoldUntil = Time.time + cooldown + faceCameraTail;
                 _fireHoldUntil = _upperBodyHoldUntil;
-                FireGun(_equipped);
+                _pendingGunfire.Add(_equipped);
             }
             else
             {
@@ -790,7 +895,21 @@ namespace ShadowVale.Gameplay.Combat
             }
         }
 
-        /// <summary>Hitscan from the camera centre, so the shot goes where the crosshair points.</summary>
+        private readonly System.Collections.Generic.List<Weapon> _pendingGunfire=new();
+
+        internal void ResolvePendingGunfire()
+        {
+            if(!isActiveAndEnabled){_pendingGunfire.Clear();return;}
+            while(isActiveAndEnabled && _pendingGunfire.Count>0) {
+                var gun=_pendingGunfire[0];_pendingGunfire.RemoveAt(0);
+                if(gun!=null)FireGun(gun);
+            }
+            _pendingGunfire.Clear();
+        }
+
+        private void OnDisable() => _pendingGunfire.Clear();
+
+        /// <summary>Resolve after animation and barrel aim, using this frame's camera and muzzle.</summary>
         private void FireGun(Weapon gun)
         {
             Camera cam = Camera.main;
@@ -820,7 +939,7 @@ namespace ShadowVale.Gameplay.Combat
             {
                 var health = hit.collider.GetComponentInParent<Health>();
                 bool alive = health != null && !health.IsDead;
-                if (health != null) health.TakeBulletDamage(gun.Damage, hit.point, gameObject, direction);
+                if (health != null) health.TakeBulletDamageFromWeapon(gun.Damage, hit.point, gameObject, direction, gun.Kind);
                 else ApplyDamage(hit.collider, gun.Damage, hit.point);
                 if (alive && health.IsDead) GunKilled?.Invoke(health.gameObject);
                 endPoint = hit.point;
@@ -830,7 +949,8 @@ namespace ShadowVale.Gameplay.Combat
                 endPoint = origin + direction * gun.Range;
             }
 
-            ShowTracer(gun.Muzzle.position, endPoint);
+            PlayTracer(gun.Muzzle.position, endPoint)?.AnchorEmission(gun.Muzzle);
+            gun.PlayMuzzleFlash();
         }
 
         /// <summary>Sphere sweep forward from chest height — forgiving enough for a greybox test.</summary>

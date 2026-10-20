@@ -89,7 +89,8 @@ namespace ShadowVale.Map01.Tests
         }
 
         internal static float Flat(Vector3 a, Vector3 b) => Vector3.ProjectOnPlane(a - b, Vector3.up).magnitude;
-        private static int ActiveSleepers() => c3.Sleepers.Count(s => s.gameObject.activeSelf);
+        // Sleeping reserves now have visible bed proxies; visibility is not proof that they woke.
+        private static int ActiveSleepers() => c3.Current.sleepersAwake.Count(awake => awake);
 
         // Every guard of Map 1 at start serves jetty B, point 1, point 2 or C3 (the old scouting camps are off), so the
         // rules common to all places are tested on point 1's men.

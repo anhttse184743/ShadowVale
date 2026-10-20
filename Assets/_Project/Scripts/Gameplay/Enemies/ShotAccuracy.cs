@@ -27,13 +27,24 @@ namespace ShadowVale.Gameplay.Enemies
         public float coverTarget = .6f;
         /// <summary>Firing on the move.</summary>
         public float movingShooter = .6f;
+        /// <summary>A commander firing on the move: trained to, and only at a player ahead of him (FireOnTheMove).</summary>
+        public float bossMovingShooter = .8f;
         /// <summary>Aim settles over this long after he starts firing at the target: the first shot at
         /// <see cref="firstShot"/> of the full chance, rising to all of it.</summary>
         public float settleSeconds = 2.5f;
         public float firstShot = .5f;
-        /// <summary>A commander shoots better: his chance times this.</summary>
+        /// <summary>A commander shoots better: his chance times this (only without <see cref="bossCurveDistances"/>).</summary>
         public float bossSkill = 1.25f;
         public float minHit = .05f, maxHit = .95f;
+        /// <summary>
+        /// A commander's own hit chance against a still, upright target by distance (19/10/2026): straight lines
+        /// between the points, the first value nearer, the last beyond. The target and shooter multipliers apply on
+        /// top. Empty = a guard's line times <see cref="bossSkill"/>.
+        /// </summary>
+        public float[] bossCurveDistances = { 5f, 10f, 15f, 18f };
+        public float[] bossCurveHits = { 1f, .89f, .8f, .72f };
+        /// <summary>His ceiling with the curve: a sure hit is possible.</summary>
+        public float bossMaxHit = 1f;
     }
 
     /// <summary>What decides one shot.</summary>
@@ -61,16 +72,35 @@ namespace ShadowVale.Gameplay.Enemies
         public static float HitChance(ShotAccuracyProfile p, in ShotContext c)
         {
             if (p == null || !p.enabled) return 1f;
-            float span = Mathf.Max(.01f, c.AttackRange - p.closeDistance);
-            float chance = Mathf.Lerp(p.closeHit, p.farHit, Mathf.Clamp01((c.Distance - p.closeDistance) / span));
+            bool curve = c.Boss && HasBossCurve(p);
+            float chance;
+            if (curve) chance = Curve(p.bossCurveDistances, p.bossCurveHits, c.Distance);
+            else
+            {
+                float span = Mathf.Max(.01f, c.AttackRange - p.closeDistance);
+                chance = Mathf.Lerp(p.closeHit, p.farHit, Mathf.Clamp01((c.Distance - p.closeDistance) / span));
+            }
             if (c.TargetSprinting) chance *= p.sprintingTarget;
             else if (c.TargetMoving) chance *= p.walkingTarget;
             if (c.TargetCrouched) chance *= p.crouchedTarget;
             if (c.TargetInCover) chance *= p.coverTarget;
-            if (c.ShooterMoving) chance *= p.movingShooter;
+            if (c.ShooterMoving) chance *= c.Boss ? p.bossMovingShooter : p.movingShooter;
             if (p.settleSeconds > 0) chance *= Mathf.Lerp(p.firstShot, 1f, Mathf.Clamp01(c.AimedFor / p.settleSeconds));
-            if (c.Boss) chance *= p.bossSkill;
-            return Mathf.Clamp(chance, p.minHit, p.maxHit);
+            if (c.Boss && !curve) chance *= p.bossSkill;
+            return Mathf.Clamp(chance, p.minHit, curve ? p.bossMaxHit : p.maxHit);
+        }
+
+        public static bool HasBossCurve(ShotAccuracyProfile p)
+            => p.bossCurveDistances != null && p.bossCurveHits != null && p.bossCurveDistances.Length > 0
+               && p.bossCurveDistances.Length == p.bossCurveHits.Length;
+
+        /// <summary>The value at <paramref name="x"/> on the line through the points (flat before the first and after the last).</summary>
+        public static float Curve(float[] xs, float[] ys, float x)
+        {
+            if (x <= xs[0]) return ys[0];
+            for (int i = 1; i < xs.Length; i++)
+                if (x <= xs[i]) return Mathf.Lerp(ys[i - 1], ys[i], (x - xs[i - 1]) / Mathf.Max(1e-4f, xs[i] - xs[i - 1]));
+            return ys[ys.Length - 1];
         }
 
         /// <summary>The context for a shot at the player, read off the scene.</summary>

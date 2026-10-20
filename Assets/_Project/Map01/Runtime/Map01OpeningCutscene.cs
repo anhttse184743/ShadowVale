@@ -14,8 +14,11 @@ namespace ShadowVale.Map01
     /// No video, duplicate character textures, Timeline package or additional controller.</summary>
     public sealed class Map01OpeningCutscene : MonoBehaviour
     {
+        /// <summary>The allied commander's visual: the extraction finds him by it (was "Commander (shared player mesh)").</summary>
+        public const string CommanderVisualName = "Chỉ huy mình";
         public AnimationClip idle, talking, pointing, salute;
         public AnimationClip soldierIdle;
+        public GameObject commanderModel;
         public AudioClip commanderVoice, soldierVoice;
         public float[] commanderSubtitleStarts = { 0, 6, 13 };
         public float saluteRaiseSeconds=.7f, saluteLowerSeconds=1f;
@@ -29,6 +32,11 @@ namespace ShadowVale.Map01
 
         private Map01Mission mission;
         private Animator soldier, commander;
+        private Map01SkinContact commanderContact;
+        private Mesh commanderSoleMesh;
+        private readonly List<Vector3> commanderSoleVertices = new();
+        public float CommanderGroundCorrection { get; private set; }
+        public float CommanderSoleGap { get; private set; }
         private ThirdPersonCamera rig;
         private ClipPlayer soldierClips, commanderClips;
         private AudioSource voice;
@@ -93,16 +101,26 @@ namespace ShadowVale.Map01
             }
             right = Vector3.Cross(Vector3.up, forward);
             // Clone only the visual hierarchy, never the player controller, health or quest.
-            var visual = Instantiate(soldier.gameObject, transform);
-            visual.name = "Commander (shared player mesh)";
+            var visual = Instantiate(commanderModel != null ? commanderModel : soldier.gameObject, transform);
+            visual.name = CommanderVisualName;
             foreach (var behaviour in visual.GetComponentsInChildren<MonoBehaviour>()) if (!(behaviour is Weapon)) Destroy(behaviour);
             foreach (var collider in visual.GetComponentsInChildren<Collider>()) Destroy(collider);
             foreach (var weapon in visual.GetComponentsInChildren<Weapon>(true)) weapon.gameObject.SetActive(false);
             commander = visual.GetComponent<Animator>();
+            // The officer model ships culling off-screen bones; the soldier mesh it replaced animated always, and
+            // the extraction's hand contacts read his bones whether or not a camera sees him.
+            commander.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             commander.runtimeAnimatorController = null;
             commander.applyRootMotion = false;
-            visual.transform.SetPositionAndRotation(origin + forward * 2.1f, Quaternion.LookRotation(-forward));
-            DecorateCommander();
+            var post=owner.alliedCommanderPost;
+            visual.transform.SetPositionAndRotation(post!=null?post.position:origin+forward*2.1f,
+                post!=null?post.rotation:Quaternion.LookRotation(-forward));
+            if(post!=null)
+            {
+                var toward=Vector3.ProjectOnPlane(post.position-origin,Vector3.up);
+                if(toward.sqrMagnitude>.1f){forward=toward.normalized;right=Vector3.Cross(Vector3.up,forward);}
+            }
+            if (commanderModel == null) DecorateCommander();
             // Briefing is unarmed; extraction attaches/enables the rifle when seating him.
             commanderClips = new ClipPlayer(commander, true, idle, talking != null ? talking : idle,
                 pointing != null ? pointing : idle);
@@ -145,6 +163,7 @@ namespace ShadowVale.Map01
         private void Update()
         {
             commanderClips?.Tick(Time.deltaTime);
+            GroundCommander();
             soldierClips?.Tick(Time.deltaTime);
             if (!ownsInput) return;
             skipHeld = Keyboard.current != null && Keyboard.current.escapeKey.isPressed
@@ -197,7 +216,7 @@ namespace ShadowVale.Map01
 
         private void SetView(int shot, float weight)
         {
-            Vector3 focus = origin + forward * 1.05f + Vector3.up * 1.35f;
+            Vector3 focus = (origin+commander.transform.position)*.5f + Vector3.up * 1.35f;
             Vector3 position = shot == 0 ? origin - forward * 1.6f + right * 2 + Vector3.up * 1.7f
                 : shot == 1 ? origin + right * 1.9f + forward * 1.3f + Vector3.up * 1.65f
                 : origin + forward * 1.05f + right * 1.9f + Vector3.up * 1.62f;
@@ -320,8 +339,43 @@ namespace ShadowVale.Map01
         private void OnDisable() { if (ownsInput) Complete(); }
         private void OnDestroy()
         {
+            if (commanderSoleMesh != null) Destroy(commanderSoleMesh);
             soldierClips?.Dispose(); commanderClips?.Dispose();
             foreach (var material in materials) if (material != null) Destroy(material);
+        }
+
+        private void GroundCommander()
+        {
+            if (commanderModel == null || commander == null) return;
+            var anchor = mission.alliedCommanderPost != null ? mission.alliedCommanderPost.position : commander.transform.position;
+            float ground = float.NegativeInfinity;
+            int hits = Map01Probe.Raycast(anchor + Vector3.up * 2, Vector3.down, 5);
+            for (int i = 0; i < hits; i++)
+            {
+                var hit = Map01Probe.Hits[i];
+                if (!hit.transform.IsChildOf(commander.transform) && !hit.transform.IsChildOf(mission.player)
+                    && hit.normal.y > .65f && hit.point.y <= anchor.y + .5f)
+                    ground = Mathf.Max(ground, hit.point.y);
+            }
+            if (float.IsNegativeInfinity(ground)) ground = anchor.y;
+            commanderContact ??= new Map01SkinContact(commander);
+            float sole = commanderContact.LowestY();
+            if (float.IsInfinity(sole))
+            {
+                commanderSoleMesh ??= new Mesh();
+                foreach (var skin in commander.GetComponentsInChildren<SkinnedMeshRenderer>())
+                {
+                    skin.BakeMesh(commanderSoleMesh, true);
+                    commanderSoleMesh.GetVertices(commanderSoleVertices);
+                    foreach (var vertex in commanderSoleVertices)
+                        sole = Mathf.Min(sole, skin.transform.TransformPoint(vertex).y);
+                }
+            }
+            if (float.IsInfinity(sole)) return;
+            float correction = ground - sole;
+            CommanderGroundCorrection += correction;
+            commander.transform.position += Vector3.up * correction;
+            CommanderSoleGap = sole + correction - ground;
         }
 
         private sealed class ClipPlayer

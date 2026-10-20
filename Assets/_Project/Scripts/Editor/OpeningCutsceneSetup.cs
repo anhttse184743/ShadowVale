@@ -33,6 +33,7 @@ namespace ShadowVale.Editor
             var root = new GameObject("Map01Opening");
             try {
                 var cutscene = root.AddComponent<Map01OpeningCutscene>();
+                cutscene.commanderModel = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Map01/Resources/Characters/AlliedCommanderVisual.prefab");
                 cutscene.idle = idle; cutscene.salute = salute;
                 cutscene.soldierIdle=AssetDatabase.LoadAssetAtPath<AnimationClip>("Assets/_Project/Art/Characters/Animations/Generated/Nam_Briefing_Idle.anim");
                 cutscene.talking = talking; cutscene.pointing = pointing;

@@ -1,0 +1,1 @@
+Approved Blender workbench and mission board installed in shared LayoutTest prefabs. Original roots, GUIDs, collider objects, ForestPoint and cutscene anchors preserved. Six inward-facing independent chairs. See chair_asset_audit.txt for all furniture source models.

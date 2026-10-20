@@ -82,7 +82,7 @@ namespace ShadowVale.Map01
                 case "m1_supply_key": return "Nhặt từ lính gác. Dùng tại cửa kho điểm 1 [E]. Hòm bên trong có khóa mã riêng.";
                 case "m1_supply_cargo": return "Thuốc và vật tư đã thu hồi. Báo cáo qua bộ đàm rồi mang về giao cho chỉ huy tại hầm [E].";
                 case "medkit_small": return "Hồi máu cho nhân vật. Nhấn H để dùng.";
-                case "stone": return "Đồ ném: rơi xuống gây tiếng động 14 m, lính nghe thấy bỏ vị trí đi kiểm tra. Phím 4 chọn, giữ Q ngắm, thả Q ném.";
+                case "stone": return "Đồ ném: rơi xuống gây tiếng động 14 m, lính nghe thấy bỏ vị trí đi kiểm tra. Nhấn 4 chọn/đổi đồ ném, giữ chuột trái để ngắm, thả để ném.";
                 case "cloth": return "Vật liệu chế tạo: băng cứu thương (2 vải + 1 thảo dược) và bom khói (1 vải + 1 ống tạo khói).";
                 case "herb": return "Kết hợp 2 vải và 1 thảo dược để làm băng cứu thương.";
                 case "supplies": return "Vật phẩm nhiệm vụ. Mang hàng tiếp tế đến bến sông.";
@@ -91,18 +91,18 @@ namespace ShadowVale.Map01
                 case "gun_oil": return "Vật liệu bảo dưỡng: cùng 3 kim loại vụn làm bộ sửa chữa. Sửa súng ở bàn khi đã mất từ một nửa độ bền cũng cần 1 dầu súng.";
                 case "repair_kit": return "Sửa dã chiến ở bất cứ đâu: +35% độ bền cho một khẩu súng (Kỹ thuật cộng thêm), tối đa 80% (Kỹ thuật cao tới 100%). Tab → chuột phải vào súng → Sửa dã chiến. Chế ở bàn: 3 kim loại vụn + 1 dầu súng.";
                 case "weapon_parts": return "Lò xo, chốt, kim hỏa. Sửa súng ở bàn chế tạo lên 100%: 1 linh kiện cho mỗi ¼ độ bền thiếu. Rã súng thu được để có thêm.";
-                case "pistol_k54": return "K-54 (TT-33 bản Trung Quốc), đạn 7,62×25, băng 8 viên. Ở ô 2, có độ bền như mọi khẩu súng. Hoạt ảnh cầm đang chờ duyệt, nên chưa rút ra được.";
-                case "rifle_mosin": return "Mosin M91/30, ống ngắm PU 3,5×, đạn 7,62×54R, 5 viên. Kéo vào ô 1 để thay súng trường. Có độ bền; rã ra cả kính ngắm. Hoạt ảnh cầm đang chờ duyệt, nên chưa rút ra được.";
+                case "pistol_k54": return "K-54 (TT-33 bản Trung Quốc), đạn 7,62×25, băng 8 viên. Phím 2 để cầm; chuột phải bật/tắt ngắm, chuột trái bắn, R thay băng. Có độ bền như mọi khẩu súng.";
+                case "rifle_mosin": return "Mosin M91/30, ống ngắm PU 3,5×, đạn 7,62×54R, 5 viên. Kéo vào ô 1 để thay AK. Bấm chuột phải bật/tắt ngắm PU; R nạp từng viên. Có độ bền; rã ra cả kính ngắm.";
                 case "ammo_rifle": return "Đạn 7,62×39 cho súng trường. Nhấn R để nạp. Chế ở bàn: 2 thuốc súng + 1 kim loại vụn ra 10 viên.";
                 case "gunpowder": return "Hộp thiếc thuốc súng đen. Chế đạn ở bàn: đạn K-54 (1), đạn súng trường (2) và đạn Mosin (3) — mỗi hộp chỉ dùng được một lần, nên phải chọn khẩu nào cần đạn hơn.";
-                case "ammo_pistol": return "Đạn 7,62×25 cho K-54. Chế ở bàn: 1 thuốc súng + 1 kim loại vụn ra 8 viên. Chưa bắn được ở bản này.";
-                case "ammo_sniper": return "Đạn 7,62×54R cho Mosin, nạp từng viên (ống ngắm che khe kẹp đạn). Hiếm: chế ở bàn 3 thuốc súng + 1 kim loại vụn ra 5 viên. Chưa bắn được ở bản này.";
+                case "ammo_pistol": return "Đạn 7,62×25 cho K-54. Nhấn R để nạp. Chế ở bàn: 1 thuốc súng + 1 kim loại vụn ra 8 viên.";
+                case "ammo_sniper": return "Đạn 7,62×54R cho Mosin, nạp từng viên bằng phím R. Hiếm: chế ở bàn 3 thuốc súng + 1 kim loại vụn ra 5 viên.";
                 case "smoke_module": return "Ống tạo khói, trong hòm sắt trại C2. Kết hợp 1 vải tại bàn chế tạo để làm bom khói.";
                 case "fuse_module": return "Mô-đun kích hoạt, trong hòm sắt trại C2. Chế lựu đạn F1: 1 lõi nổ + 1 mô-đun kích hoạt + 1 kim loại vụn.";
                 case "blast_charge": return "Lõi nổ hiếm, trong hòm sắt trại C3. Chế lựu đạn F1: 1 lõi nổ + 1 mô-đun kích hoạt + 1 kim loại vụn.";
                 case "scope_lens": return "Thấu kính dự phòng cho ống ngắm. Rã Mosin sẽ có; hiếm trong hòm trại C3 và đồ của chỉ huy. Chưa dùng vào việc gì ở bản này.";
-                case "smoke_bomb": return "Đồ ném: mây khói bán kính 4 m trong 15 giây, lính không nhìn xuyên qua. Chế từ 1 ống tạo khói + 1 vải. Phím 4 chọn, giữ Q ném.";
-                case "grenade_f1": return "Lựu đạn F1: nổ 3,5 giây sau khi rơi, chết trong 3 m, bị thương tới 7 m, tiếng nổ vang 40 m — cả Nam cũng không tránh được. Phím 4 chọn, giữ Q ném.";
+                case "smoke_bomb": return "Đồ ném: mây khói bán kính 4 m trong 15 giây, lính không nhìn xuyên qua. Chế từ 1 ống tạo khói + 1 vải. Chọn trong túi, giữ chuột trái ngắm, thả để ném.";
+                case "grenade_f1": return $"Lựu đạn F1: nổ 3,5 giây sau khi rơi, chết trong {Map01StoneThrow.KillRadius:0} m, bị thương tới {Map01StoneThrow.WoundRadius:0} m, tiếng nổ vang 40 m — cả Nam cũng không tránh được. Chọn trong túi, giữ chuột trái ngắm, thả để ném.";
                 default: return id != null && id.StartsWith("ammo_") ? "Đạn cho " + Name(id).Substring(4).ToLowerInvariant() + ". Không dùng trực tiếp từ túi đồ." : "Vật phẩm trong túi đồ.";
             }
         }
@@ -128,10 +128,10 @@ namespace ShadowVale.Map01
             switch (outputId) {
                 case "medkit_small": return new[] { "Hồi 45 máu", "Phím H" };
                 case "repair_kit": return new[] { "+35% độ bền", "Sửa dã chiến" };
-                case "smoke_bomb": return new[] { "Khói 4 m · 15 giây", "Phím 4, giữ Q" };
-                case "grenade_f1": return new[] { "Chết 3 m · thương 7 m", "Nổ sau 3,5 giây" };
-                case "ammo_pistol": return new[] { "Cho K-54", "Bắn K-54: chưa có" };
-                case "ammo_sniper": return new[] { "Cho Mosin", "Bắn Mosin: chưa có" };
+                case "smoke_bomb": return new[] { "Khói 4 m · 15 giây", "Giữ/thả chuột trái" };
+                case "grenade_f1": return new[] { $"Chết {Map01StoneThrow.KillRadius:0} m · thương {Map01StoneThrow.WoundRadius:0} m", "Nổ sau 3,5 giây" };
+                case "ammo_pistol": return new[] { "Cho K-54", "R nạp đạn" };
+                case "ammo_sniper": return new[] { "Cho Mosin", "R nạp từng viên" };
                 case "ammo_rifle": return new[] { "Cho súng trường", "Nạp bằng R" };
                 default: return System.Array.Empty<string>();
             }

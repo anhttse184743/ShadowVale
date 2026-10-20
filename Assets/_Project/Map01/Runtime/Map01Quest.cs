@@ -123,6 +123,7 @@ namespace ShadowVale.Map01
                     if (rescue.CanFree) return "Đã hạ đủ bốn lính. Cởi trói Hùng [E].";
                     return Objectives[0]+$" — còn {rescue.Remaining}/4 lính; "+(!rescue.OverseerAlive?"đã hạ giám sát, có thể giao chiến":rescue.CanExecuteCaptive?"giám sát đang canh Hùng":"giám sát đã rời Hùng");
                 }
+                if (Stage == EscortStage) return "Hùng đang tự đi về hầm trú ẩn. Theo sát và yểm hộ, giữ Hùng sống sót về doanh trại.";
                 if (story!=null && story.Objective!=null) return story.Objective;
                 return Objectives[Mathf.Clamp(Stage,0,LastStage)];
             }
@@ -141,7 +142,9 @@ namespace ShadowVale.Map01
             if(GetComponent<Map01BodyDiscovery>()==null)gameObject.AddComponent<Map01BodyDiscovery>();
         }
         void Start(){if(mission.IsInitialized)companion=mission.hung.GetComponent<NavMeshAgent>();}
-        public bool ShouldFollowPlayer()=>Stage==EscortStage&&rescue.CurrentPhase==Map01Rescue.Phase.Escorting;
+        public bool ShouldEscortHungHome()=>Stage==EscortStage&&rescue.CurrentPhase==Map01Rescue.Phase.Escorting;
+        // Compatibility for older callers: this gates escort movement, not a destination at Nam.
+        public bool ShouldFollowPlayer()=>ShouldEscortHungHome();
         bool NearHung(float distance)=>mission.hung!=null&&Vector3.Distance(mission.player.position,mission.hung.position)<=distance;
         public void TalkToHung(){if(Stage==RescueStage&&!mission.Cinematic)TryRescueHung();}
         public bool CanTreatHung=>rescue!=null&&rescue.CanFree;
@@ -161,13 +164,13 @@ namespace ShadowVale.Map01
         public void BeginSupplyOrder(){if(Stage==BriefingStage){Stage=ScoutStage;mission.Say("Điểm 1: thu hồi thuốc và vật tư tiếp tế [E].",6);}}
         public void SuppliesRecovered(){if(Stage==ScoutStage){Stage=ReportScoutStage;mission.Say("Đã thu hồi vật tư. Rời giao tranh rồi liên lạc với chỉ huy [E].",6);}}
         public void BeginRadioOrder(){if(Stage==ReportScoutStage&&story.Progress.suppliesDelivered&&story.Progress.supplyReported)Stage=CampsStage;}
-        public void RadioDisabled(){if(Stage==CampsStage){Stage=ReportCampsStage;mission.Say("Đài liên lạc đã ngừng hoạt động. Rút khỏi trại rồi báo cáo chỉ huy [E].",6);}}
+        public void RadioDisabled(){if(Stage==CampsStage&&story.Progress.radioDisabled&&story.Progress.powerDisabled){Stage=ReportCampsStage;mission.Say("Đài liên lạc đã ngừng hoạt động. Rút khỏi trại rồi báo cáo chỉ huy [E].",6);}}
         public void BeginCommanderOrder()
         {
-            if(Stage!=ReportCampsStage||!story.Progress.radioDisabled)return;Stage=BossStage;EnsureCommander();
-            // The scouts' rifle (Map01C3Mission): no voiced line yet, so the order's last word is shown, not spoken.
+            if(Stage!=ReportCampsStage||!story.Progress.radioDisabled||!story.Progress.powerDisabled)return;Stage=BossStage;EnsureCommander();
+            // The transmitted order and Nam's local acknowledgement play once, in sequence.
             if(GetComponent<Map01C3Mission>()?.CachePoint!=null)
-                mission.Say("Chỉ huy (bộ đàm): \"Trinh sát để lại một khẩu Mosin, năm viên, ở vai đồi phía Đông Nam điểm ba. Từ đó nhìn được chòi canh.\"",8);
+                mission.Say(Map01C3Dialogue.CommanderOrder,8);
         }
         // Scanning a camp provides intel only. It cannot complete supply/radio objectives.
         public void CompleteScouting()=>mission.Say("Đã ghi nhận ba vị trí. Tiếp tục mục tiêu chỉ huy đã giao.",5);
@@ -192,9 +195,34 @@ namespace ShadowVale.Map01
                 .OrderBy(e=>e.SaveId,System.StringComparer.Ordinal).FirstOrDefault();
             if(template==null)return;
             var marker=story.Layout.commanderPost;
-            var instance=Instantiate(template.gameObject,marker.position,marker.rotation,story.Layout.transform);
+            var staging = new GameObject("Commander staging");
+            staging.SetActive(false);
+            var instance=Instantiate(template.gameObject,marker.position,marker.rotation,staging.transform);
+            var officerModel = Resources.Load<GameObject>("Characters/EnemyCommanderVisual");
+            Animator officerActor = null;
+            if (officerModel != null)
+            {
+                var previous = instance.GetComponentInChildren<Animator>(true);
+                var replacement = Instantiate(officerModel, previous.transform.parent);
+                replacement.transform.localPosition = previous.transform.localPosition;
+                replacement.transform.localRotation = previous.transform.localRotation;
+                var actor = replacement.GetComponent<Animator>();
+                actor.runtimeAnimatorController = previous.runtimeAnimatorController;
+                actor.applyRootMotion = false;
+                // As the guard model he replaces: animated off-screen too (his rifle, his fall), not culled.
+                actor.cullingMode = previous.cullingMode;
+                officerActor = actor;
+                previous.gameObject.SetActive(false);
+                Destroy(previous.gameObject);
+            }
+            instance.transform.SetParent(story.Layout.transform, true);
+            // Bound once he is active: an inactive Animator plays no controller, so its rifle layer was not found and
+            // stayed on at his death, holding him upright (19/10/2026).
+            if (officerActor != null) instance.GetComponent<Health>().BindAnimator(officerActor);
+            Destroy(staging);
             instance.name="Chỉ huy địch";
             boss=instance.GetComponent<Map01EnemyController>();boss.Configure(System.Array.Empty<Vector3>());
+            Map01EnemyGrounding.Attach(boss);
             boss.operationIndex=3;boss.carriesSupplyKey=false;boss.suppressOperationLoot=false;
             boss.BindMission(mission); // Before ConfigureAsBoss: binding resets damage to the balance baseline.
             // The boss_commander archetype (Map01Content.json): his boss profile, and his health (600) rather
@@ -202,6 +230,7 @@ namespace ShadowVale.Map01
             var archetype=mission.Bundle?.enemy_archetypes?.FirstOrDefault(a=>a!=null&&a.is_boss);
             var profile=archetype?.boss!=null?archetype.boss.ToProfile():new BossProfile();
             boss.ConfigureAsBoss(profile);
+            if(archetype!=null)boss.ApplyBossArchetype(archetype.move_speed,archetype.vision_range,archetype.vision_angle);
             var bossHealth=instance.GetComponent<Health>();
             if(archetype!=null&&archetype.max_hp>0)bossHealth.SetMaxHealth(archetype.max_hp);
             mission.AddEnemy(boss);

@@ -120,7 +120,7 @@ namespace ShadowVale.Gameplay.Combat
             // Coming up, the reference rides the take as it swings from the carry to the aim. Lowering again
             // or reloading, it stays where the aim had it, so neither is mistaken for the aim pose.
             if (!_settled || rising) _held = _pose;
-            else if (wanted && !_combat.IsReloading)
+            else if (wanted && !_combat.IsReloading && !_combat.RecoilPosePlaying)
                 _held = Vector3.Slerp(_held, _pose, 1f - Mathf.Exp(-Time.deltaTime / PoseSettleTime)).normalized;
 
             Camera view = Camera.main;

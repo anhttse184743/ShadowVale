@@ -26,6 +26,9 @@ namespace ShadowVale.Gameplay.Audio
 
         private PlayerCombat _combat;
         private IAudioService _audio;
+        /// <summary>All firearms use their original unsuppressed report.</summary>
+        public AudioSlice SliceFor(WeaponKind kind) =>
+            kind == WeaponKind.Rifle || kind == WeaponKind.Pistol || kind == WeaponKind.Sniper ? gunshot : melee;
 
         private void Awake() => _combat = GetComponent<PlayerCombat>();
 
@@ -35,7 +38,7 @@ namespace ShadowVale.Gameplay.Audio
 
         private void OnAttacked(WeaponKind kind, Vector3 position)
         {
-            AudioSlice slice = kind == WeaponKind.Rifle ? gunshot : melee;
+            AudioSlice slice = SliceFor(kind);
             if (!slice.IsValid) return;
 
             _audio ??= PooledAudioService.Resolve();
