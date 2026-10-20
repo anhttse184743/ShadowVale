@@ -1,0 +1,81 @@
+{
+  "sources": [
+    {
+      "file": "Gong_547296_public_preview.mp3",
+      "creator": "Department64",
+      "title": "MetalGong 12.wav",
+      "page": "https://freesound.org/people/Department64/sounds/547296/",
+      "download": "https://cdn.freesound.org/previews/547/547296_861714-hq.mp3",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sha256": "098cf0d2ad693db9d5bab4444e0402146ca76edaedf5a8726d24ec725e7564eb",
+      "decodedCropSeconds": [
+        0.1514375,
+        2.3514375
+      ],
+      "actualListeningPerformed": false,
+      "sourceType": "public MP3 preview of a recorded metal impact"
+    },
+    {
+      "file": "Gong_487837_public_preview.mp3",
+      "creator": "BenDrain",
+      "title": "Metal_Pipe_04.wav",
+      "page": "https://freesound.org/people/BenDrain/sounds/487837/",
+      "download": "https://cdn.freesound.org/previews/487/487837_4763661-hq.mp3",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sha256": "97847a7dc38e9cc49c3e96e6cd4ebaa96aa4f2356ca332ab9dca2524134445d2",
+      "decodedCropSeconds": [
+        0.4335833333333333,
+        2.633583333333333
+      ],
+      "actualListeningPerformed": false,
+      "sourceType": "public MP3 preview of a recorded metal impact"
+    }
+  ],
+  "processing": "mono 48k; highpass70 lowpass8000; strongest impact crop <=2.2s; three overlapping strikes; peak normalization; no AI generation",
+  "demos": [
+    {
+      "file": "A_Kim_loai_tam.wav",
+      "duration": 3.7,
+      "strikeScheduleSeconds": [
+        0,
+        0.65,
+        1.3
+      ],
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.7800000309944153,
+      "sha256": "1f360e8c5bcb3381571a25c0197d7dd0fe7fdada5719aac4797f2da2f8bde527"
+    },
+    {
+      "file": "B_Ong_kim_loai.wav",
+      "duration": 3.7,
+      "strikeScheduleSeconds": [
+        0,
+        0.65,
+        1.3
+      ],
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.7800000309944153,
+      "sha256": "b4bf67cb9dcc5eb0be4f6f1f5f277fbed9088119911210a04ce9ac509258ea79"
+    },
+    {
+      "file": "C_Phoi_hai_chat_lieu.wav",
+      "duration": 3.7,
+      "strikeScheduleSeconds": [
+        0,
+        0.65,
+        1.3
+      ],
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.7799999713897705,
+      "sha256": "14cbbf11cea49daabe418cae0703b4da46a408937dbe0135104ff21e53d8df95"
+    }
+  ],
+  "notHistoricalVietnameseGongRecording": true,
+  "integrated": false,
+  "userSelection": "pending"
+}

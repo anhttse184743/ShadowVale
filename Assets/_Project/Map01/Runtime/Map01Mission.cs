@@ -183,6 +183,7 @@ namespace ShadowVale.Map01
             Binoculars = GetComponents<MonoBehaviour>().OfType<IBinoculars>().FirstOrDefault();
             ModernPlayer = player.GetComponent<PlayerController>();
             ModernCombat = player.GetComponent<PlayerCombat>();
+            inventory.ApplyPrimaryRifle(false);
             ModernHealth = player.GetComponent<Health>();
             Enemies = FindObjectsByType<Map01EnemyController>(FindObjectsSortMode.None);
             if (ModernPlayer != null)
@@ -207,18 +208,18 @@ namespace ShadowVale.Map01
                     && !inventory.ThrowableEquipped && !(Binoculars?.Binoculars ?? false) && (stones == null || !stones.Aiming); // Hands are on the binoculars or a throwable, not the rifle.
                 ModernCombat.TryConsumeRound = () =>
                 {
-                    if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 3.", 3); return false; }
-                    inventory.Spend("ammo_rifle", 1);
+                    if (inventory.Count(inventory.PrimaryAmmo) <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 3.", 3); return false; }
+                    inventory.Spend(inventory.PrimaryAmmo, 1);
                     EmitNoise(player.position, Weapon.noise_radius, NoiseKind.Gunshot);
                     return true;
                 };
                 // With a magazine in the weapon the pack is a reserve, drawn once per reload
                 // rather than once per shot, so the two hooks below replace the one above.
-                ModernCombat.ReserveRounds = () => inventory.Count("ammo_rifle");
+                ModernCombat.ReserveRounds = () => inventory.Count(inventory.PrimaryAmmo);
                 ModernCombat.DrawRounds = wanted =>
                 {
-                    int granted = Mathf.Min(wanted, inventory.Count("ammo_rifle"));
-                    if (granted > 0) inventory.Spend("ammo_rifle", granted);
+                    int granted = Mathf.Min(wanted, inventory.Count(inventory.PrimaryAmmo));
+                    if (granted > 0) inventory.Spend(inventory.PrimaryAmmo, granted);
                     else Say("Hết đạn — nhặt thêm đạn hoặc đổi vũ khí bằng phím 1 – 3.", 2);
                     return granted;
                 };

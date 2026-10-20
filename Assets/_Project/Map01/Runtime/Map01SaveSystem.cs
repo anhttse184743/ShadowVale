@@ -525,6 +525,7 @@ namespace ShadowVale.Map01
             {
                 if (Enum.IsDefined(typeof(ShadowVale.Gameplay.Combat.WeaponKind), data.equippedWeapon))
                     mission.ModernCombat.Equip((ShadowVale.Gameplay.Combat.WeaponKind)data.equippedWeapon);
+                mission.GetComponent<Map01Inventory>()?.ApplyPrimaryRifle(false);
                 mission.ModernCombat.RestoreAttackCooldown(data.attackRemaining);
                 // Saves written before magazines existed carry -1; leave the weapon loaded
                 // rather than handing the player an empty rifle out of an old checkpoint.
@@ -532,6 +533,7 @@ namespace ShadowVale.Map01
             }
             foreach (var enemy in mission.Enemies)
             {
+                if (enemy != null) enemy.RefreshRifleLoadout();
                 var saved = data.enemies?.FirstOrDefault(e => e.id == enemy.SaveId);
                 // The previous runtime boss inherited an arbitrary camp parent. Import its
                 // existing snapshot into the stable third-outpost actor, never duplicate him.

@@ -268,7 +268,7 @@ namespace ShadowVale.Map01
                 shown.name = item.item_id;
                 shown.transform.localScale *= catalog.Scale(item.item_id);
                 foreach (var c in shown.GetComponentsInChildren<Collider>()) Destroy(c);
-                bool longGun = item.item_id == "rifle_mosin" || item.item_id == "rifle_standard";
+                bool longGun = item.item_id == "rifle_m16" || item.item_id == "rifle_mosin" || item.item_id == "rifle_standard";
                 if (longGun) shown.transform.localPosition = LongSlot;
                 else
                 {

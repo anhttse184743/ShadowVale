@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Failed(Child)" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-18 15:02:22Z" end-time="2026-10-18 15:02:36Z" duration="14.4664627">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="520" result="Failed" site="Child" start-time="2026-10-18 15:02:22Z" end-time="2026-10-18 15:02:36Z" duration="14.466463" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1410" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="323" result="Failed" site="Child" start-time="2026-10-18 15:02:22Z" end-time="2026-10-18 15:02:36Z" duration="14.238527" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="2864" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1411" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="323" result="Failed" site="Child" start-time="2026-10-18 15:02:22Z" end-time="2026-10-18 15:02:36Z" duration="14.232144" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1412" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="323" result="Failed" site="Child" start-time="2026-10-18 15:02:22Z" end-time="2026-10-18 15:02:36Z" duration="14.227712" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1413" name="Tests" fullname="ShadowVale.Map01.Tests" runstate="Runnable" testcasecount="323" result="Failed" site="Child" start-time="2026-10-18 15:02:22Z" end-time="2026-10-18 15:02:36Z" duration="14.222464" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1154" name="Map01OperationsTests" fullname="ShadowVale.Map01.Tests.Map01OperationsTests" classname="ShadowVale.Map01.Tests.Map01OperationsTests" runstate="Runnable" testcasecount="21" result="Failed" site="Child" start-time="2026-10-18 15:02:22Z" end-time="2026-10-18 15:02:36Z" duration="14.212769" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1175" name="SupplyRequiresKeyPuzzleReportAndPhysicalHandoff" fullname="ShadowVale.Map01.Tests.Map01OperationsTests.SupplyRequiresKeyPuzzleReportAndPhysicalHandoff" methodname="SupplyRequiresKeyPuzzleReportAndPhysicalHandoff" classname="ShadowVale.Map01.Tests.Map01OperationsTests" runstate="Runnable" seed="1310456068" result="Failed" start-time="2026-10-18 15:01:53Z" end-time="2026-10-18 15:02:36Z" duration="42.987045" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[Unhandled log message: '[Exception] ArgumentException: Cannot change state of bitfield control 'Button:/HeldAimTest/rightButton' using this method
+Parameter name: control'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                  <stack-trace><![CDATA[UnityEngine.InputSystem.LowLevel.InputState.Change[TState] (UnityEngine.InputSystem.InputControl control, TState& state, UnityEngine.InputSystem.LowLevel.InputUpdateType updateType, UnityEngine.InputSystem.LowLevel.InputEventPtr eventPtr) (at ./Library/PackageCache/com.unity.inputsystem@7a4e1a2a8194/InputSystem/Runtime/State/InputState.cs:132)
+UnityEngine.InputSystem.LowLevel.InputState.Change[TState] (UnityEngine.InputSystem.InputControl control, TState state, UnityEngine.InputSystem.LowLevel.InputUpdateType updateType, UnityEngine.InputSystem.LowLevel.InputEventPtr eventPtr) (at ./Library/PackageCache/com.unity.inputsystem@7a4e1a2a8194/InputSystem/Runtime/State/InputState.cs:97)
+ShadowVale.Map01.Tests.Map01OperationsTests+HeldAimMouse.HoldAim () (at Assets/_Project/Map01/Tests/Map01OperationsTests.cs:287)
+UnityEngine.InputSystem.Utilities.DelegateHelpers.InvokeCallbacksSafe (UnityEngine.InputSystem.Utilities.CallbackArray`1[System.Action]& callbacks, Unity.Profiling.ProfilerMarker marker, System.String callbackName, System.Object context) (at ./Library/PackageCache/com.unity.inputsystem@7a4e1a2a8194/InputSystem/Runtime/Utilities/DelegateHelpers.cs:22)
+UnityEngine.InputSystem.LowLevel.<>c__DisplayClass10_0:<set_onUpdate>b__0(NativeInputUpdateType, NativeInputEventBuffer*)
+UnityEngineInternal.Input.NativeInputSystem:NotifyUpdate(NativeInputUpdateType, IntPtr)
+UnityEngineInternal.Input.NativeInputSystem:Update(NativeInputUpdateType)
+UnityEngine.InputSystem.InputSystem:Update()
+ShadowVale.Map01.Tests.<SupplyFlow>d__27:MoveNext() (at Assets/_Project/Map01/Tests/Map01OperationsTests.cs:184)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions()
+
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[ArgumentException: Cannot change state of bitfield control 'Button:/HeldAimTest/rightButton' using this method
+Parameter name: control
+UnityEngine.InputSystem.LowLevel.InputState.Change[TState] (UnityEngine.InputSystem.InputControl control, TState& state, UnityEngine.InputSystem.LowLevel.InputUpdateType updateType, UnityEngine.InputSystem.LowLevel.InputEventPtr eventPtr) (at ./Library/PackageCache/com.unity.inputsystem@7a4e1a2a8194/InputSystem/Runtime/State/InputState.cs:132)
+UnityEngine.InputSystem.LowLevel.InputState.Change[TState] (UnityEngine.InputSystem.InputControl control, TState state, UnityEngine.InputSystem.LowLevel.InputUpdateType updateType, UnityEngine.InputSystem.LowLevel.InputEventPtr eventPtr) (at ./Library/PackageCache/com.unity.inputsystem@7a4e1a2a8194/InputSystem/Runtime/State/InputState.cs:97)
+ShadowVale.Map01.Tests.Map01OperationsTests+HeldAimMouse.HoldAim () (at Assets/_Project/Map01/Tests/Map01OperationsTests.cs:287)
+UnityEngine.InputSystem.Utilities.DelegateHelpers.InvokeCallbacksSafe (UnityEngine.InputSystem.Utilities.CallbackArray`1[System.Action]& callbacks, Unity.Profiling.ProfilerMarker marker, System.String callbackName, System.Object context) (at ./Library/PackageCache/com.unity.inputsystem@7a4e1a2a8194/InputSystem/Runtime/Utilities/DelegateHelpers.cs:22)
+UnityEngine.InputSystem.LowLevel.<>c__DisplayClass10_0:<set_onUpdate>b__0(NativeInputUpdateType, NativeInputEventBuffer*)
+UnityEngineInternal.Input.NativeInputSystem:NotifyUpdate(NativeInputUpdateType, IntPtr)
+UnityEngineInternal.Input.NativeInputSystem:Update(NativeInputUpdateType)
+UnityEngine.InputSystem.InputSystem:Update()
+ShadowVale.Map01.Tests.<SupplyFlow>d__27:MoveNext() (at Assets/_Project/Map01/Tests/Map01OperationsTests.cs:184)
+UnityEditor.EditorApplication:Internal_CallUpdateFunctions()
+
+ArgumentException while executing 'InputSystem.onAfterUpdate' callbacks
+ArgumentException: Cannot change state of bitfield control 'Button:/HeldAimTest/rightButton' using this method
+Parameter name: control
+UnityEngine.InputSystem.LowLevel.InputState.Change[TState] (UnityEngine.InputSystem.InputControl control, TState& state, UnityEngine.InputSystem.LowLevel.InputUpdateType updateType, UnityEngine.InputSystem.LowLevel.InputEventPtr eventPtr) (at ./Library/PackageCache/com.unity.inputsystem@7a4e1a2a8194/InputSystem/Runtime/State/InputState.cs:132)
+UnityEngine.InputSystem.LowLevel.InputState.Change[TState] (UnityEngine.InputSystem.InputControl control, TState state, UnityEngine.InputSystem.LowLevel.InputUpdateType updateType, UnityEngine.InputSystem.LowLevel.InputEventPtr eventPtr) (at ./Library/PackageCache/com.unity.inputsystem@7a4e1a2a8194/InputSystem/Runtime/State/InputState.cs:97)
+ShadowVale.Map01.Tests.Map01OperationsTests+HeldAimMouse.HoldAim () (at Assets/_Project/Map01/Tests/Map01OperationsTests.cs:287)
+UnityEngine.InputSystem.Utilities.DelegateHelpers.InvokeCallbacksSafe (UnityEngine.InputSystem.Utilities.CallbackArray`1[System.Action]& callbacks, Unity.Profiling.ProfilerMarker marker, System.String callbackName, System.Object context) (at ./Library/PackageCache/com.unity.inputsystem@7a4e1a2a8194/InputSystem/Runtime/Utilities/DelegateHelpers.cs:22)
+UnityEngine.InputSystem.LowLevel.<>c__DisplayClass10_0:<set_onUpdate>b__0(NativeInputUpdateType, NativeInputEventBuffer*)
+UnityEngineInternal.Input.NativeInputSystem:NotifyUpdate(NativeInputUpdateType, IntPtr)
+
+ArgumentException while executing 'InputSystem.onAfterUpdate' callbacks
+Saving results to: C:/Users/dangk/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

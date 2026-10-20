@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using ShadowVale.Gameplay.Combat;
@@ -50,7 +50,7 @@ namespace ShadowVale.Map01
             foreach(var e in owner.Enemies)if(e!=null&&e.Alive)e.PauseForCinematic(true);
             Cursor.visible=true;Cursor.lockState=CursorLockMode.None;
         }
-        public void Sample(AnimationClip clip,float time,Vector3 focus,float blend=1)
+        public void Sample(AnimationClip clip,float time,Vector3 focus,float blend=1,bool supplyView=false)
         {
             if(disposed)return;
             bool authored=clip!=null&&clip.name=="Nam_SupplyCollect";
@@ -64,6 +64,17 @@ namespace ShadowVale.Map01
             var delta=eye-focus;
             foreach(var hit in Physics.SphereCastAll(focus,.12f,delta.normalized,delta.magnitude,mission.ObstructionMask,QueryTriggerInteraction.Ignore))
                 if(hit.transform.GetComponentInParent<Health>()==null&&hit.distance>.65f)eye=focus+delta.normalized*Mathf.Min(delta.magnitude,Mathf.Max(.7f,hit.distance-.12f));
+            if(supplyView){
+                focus=mission.player.position+Vector3.up*1.1f+forward*.25f;
+                float best=-1;
+                foreach(float side in new[]{1f,-1f}){
+                    var candidate=mission.player.position+Vector3.up*1.75f+forward*.4f+right*(side*1.8f);
+                    var ray=candidate-focus;float clear=ray.magnitude;
+                    foreach(var hit in Physics.SphereCastAll(focus,.10f,ray.normalized,ray.magnitude,mission.ObstructionMask,QueryTriggerInteraction.Ignore))
+                        if(hit.transform.GetComponentInParent<Health>()==null)clear=Mathf.Min(clear,hit.distance-.1f);
+                    if(clear<1.15f||clear<=best)continue;best=clear;eye=focus+ray.normalized*clear;
+                }
+            }
             blend=Mathf.SmoothStep(0,1,blend);
             rig.SetCinematicView(Vector3.Lerp(cameraPosition,eye,blend),Quaternion.Slerp(cameraRotation,Quaternion.LookRotation(focus-eye),blend),Mathf.Lerp(fov,68,blend),1);
         }

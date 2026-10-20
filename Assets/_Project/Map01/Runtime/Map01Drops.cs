@@ -57,6 +57,14 @@ namespace ShadowVale.Map01
             var there = lying.FirstOrDefault(l => l.laid && l.point != null && l.point.id == pointId);
             if (there != null)
             {
+                if (there.pile.id != gun.item_id)
+                {
+                    // A restored loadout may change caliber: rebuild the visible prop as well as the pickup.
+                    Vector3 position = there.pile.position; float previousYaw = there.pile.yaw;
+                    mission.UnregisterPoint(there.point); Destroy(there.view); lying.Remove(there);
+                    Spawn(new Pile { id = gun.item_id, count = gun.count, condition = gun.condition, position = position, yaw = previousYaw }, pointId);
+                    return;
+                }
                 there.pile.condition = gun.condition;
                 there.point.items = new[] { new ForestIngredient { item_id = gun.item_id, count = gun.count, condition = gun.condition } };
                 there.point.label = Label(there.pile);
