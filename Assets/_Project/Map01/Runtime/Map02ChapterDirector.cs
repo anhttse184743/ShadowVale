@@ -203,6 +203,7 @@ namespace ShadowVale.Map01
                 }
             }
         }
+        Vector3 SupperYard=>sites["family"].position+Vector3.left*2;
         Vector3 Destination(Map02ChapterTask t)=>t.kind.StartsWith("rescue")?sites["southStore"].position:sites[t.site].position;
         public void UpdateMarkers()
         {
@@ -251,6 +252,7 @@ namespace ShadowVale.Map01
             if(!State.Available(task))return;
             lines=Map02ChapterDefinition.Load().Lines(task.scene??"").Skip(from).Take(take>0?take:int.MaxValue).ToArray();scenePurpose=0;
             if(lines.Length==0){Finish(task);return;}
+            if(task.id=="D3_05")roles["Anh Thành"].StopAt(SupperYard); // He brings the night-watch order to the meal and stays for the report.
             sceneTask=task;PrepareSceneMotion(task);lineIndex=0;lineClock=sceneClock=skipHeld=0;lockedPosition=Mission.Player.position;lockedRotation=Mission.Player.rotation;
             player.RestoreMotion(false);DialogueVoice.StopAll();
             var actor=Mission.Player.GetComponentInChildren<Animator>();namIdle=actor.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned");namPose=new Map01CinematicPose(actor,null,false);
@@ -324,6 +326,7 @@ namespace ShadowVale.Map01
             placedActors=false;phaseApplied=-1;ApplyState();
             foreach(var saved in State.actors)if(roles.TryGetValue(saved.role,out var actor))actor.StopAt(saved.position);
             if(State.phase==0&&State.Done("D1_01"))roles["Anh Thành"].GoTo(sites["command"].position,1.6f);
+            if(State.phase==4&&State.Done("D3_05"))roles["Anh Thành"].StopAt(SupperYard);
             if(State.phase>=5&&State.Done("N3_02"))foreach(var name in new[]{"Ông Sáu","Chị Lành"})if(Vector3.Distance(roles[name].transform.position,sites["southStore"].position)>8)roles[name].StopAt(sites["southStore"].position+(name=="Ông Sáu"?Vector3.right:Vector3.left)*1.4f);
             if(State.phase>=5&&State.Done("N3_03")&&Vector3.Distance(roles["Bé Tí"].transform.position,sites["southStore"].position)>8)roles["Bé Tí"].StopAt(sites["southStore"].position+Vector3.forward*1.4f);
             if(State.phase==5&&State.Done("N3_00")&&!State.hungDead)roles["Hùng"].GoTo(State.activeTask=="N3_08"||State.Done("N3_08")?ChargePoint:sites["ditch"].position,1.8f);
@@ -460,7 +463,7 @@ namespace ShadowVale.Map01
                 }
             }
             if(Busy){GUI.Box(new Rect(430,32,1050,42),GUIContent.none);GUI.Label(new Rect(443,36,1030,35),Map02ChapterState.PhaseName(State.phase),label);}
-            if(sceneTask!=null&&(sceneTask.id=="N3_WOUND"||sceneTask.id=="N3_09")){float flash=sceneTask.id=="N3_WOUND"?(lineIndex==3?Mathf.Clamp01(1-Mathf.Abs(lineClock-1)*3):0):Mathf.Clamp01(1-Mathf.Abs(sceneClock-(sacrificeTravel+11))*3);if(flash>0){var tint=GUI.color;GUI.color=new Color(1,1,1,flash);GUI.DrawTexture(new Rect(0,0,1600,900),Texture2D.whiteTexture);GUI.color=tint;}}
+            if(sceneTask!=null&&(sceneTask.id=="N3_WOUND"||sceneTask.id=="N3_09")){float flash=sceneTask.id=="N3_WOUND"?(lines[lineIndex].id=="m2v3_wound_04"?Mathf.Clamp01(1-Mathf.Abs(lineClock-1)*3):0):Mathf.Clamp01(1-Mathf.Abs(sceneClock-(sacrificeTravel+11))*3);if(flash>0){var tint=GUI.color;GUI.color=new Color(1,1,1,flash);GUI.DrawTexture(new Rect(0,0,1600,900),Texture2D.whiteTexture);GUI.color=tint;}}
             if(State.phase==3&&!State.Done("N2_01")&&binocular)
             {
                 var cam=rig.GetComponent<Camera>();var point=cam.WorldToViewportPoint(sites["scout"].position+Vector3.up);
