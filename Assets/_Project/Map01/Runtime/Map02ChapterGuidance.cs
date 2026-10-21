@@ -37,9 +37,8 @@ namespace ShadowVale.Map01
                 }
                 if(t.kind=="coverFire")
                 {
-                    if(State.activeTask!=t.id)return "Tới khu vực ghim vàng, nhấn E bắt đầu yểm trợ.";
-                    if(State.taskProgress>=t.seconds&&Vector3.Distance(roles["Hùng"].transform.position,ChargePoint)>=2)return "Hùng đang vòng qua vật che. Tiếp tục yểm trợ tới khi cậu ấy áp sát xe tăng.";
-                    return $"Yểm trợ Hùng: {Mathf.Max(0,t.seconds-State.taskProgress):0} giây còn lại. Có thể xoay camera và dùng súng.";
+                    if(State.activeTask!=t.id)return "Tới bờ đất, nhấn E để yểm trợ Hùng.";
+                    return $"Hùng đang bò dọc bờ mương · {Mathf.Clamp01(State.taskProgress)*100:0}% quãng đường. Bắn tốp lính sau xe tăng cho chúng cúi đầu; còn {EscortStanding} tên đang ngẩng lên.";
                 }
                 if(t.kind=="repair")return $"E bắt đầu sửa · đã xong {n}/{t.count} phần. Nhấn Space đúng nhịp; sai được thử lại.";
                 if(t.kind=="antenna")return "E thao tác đài · A/D căn tín hiệu, giữ ổn định 2 giây.";

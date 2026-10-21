@@ -212,6 +212,17 @@ Tệp: phần partial mới `Map02ChapterTank.cs`, `Map02ChapterLayout.cs`, `Map
 
 Tệp: `Map02ChapterDirector.cs`, `Map02ChapterEnemy.cs`, `Map02ChapterGuidance.cs`.
 
+> **Trạng thái 21/10:** đã làm trong file mới `Map02ChapterCover.cs`.
+> - **Tốp lính đi kèm xe tăng:** 4 lính xuất hiện ngay khi vào `N3_07`, đứng sau xe theo hướng nhìn ra thuyền, ở chế độ `HoldPosition` (không đuổi, chỉ bắn). Bị trúng hoặc có đạn bay sát trong 1,5 m quanh tia ngắm camera thì cúi xuống 2,5 giây và không bắn.
+> - Bắn vào xe tăng chỉ ra tia lửa. Tiếng "keng" chờ asset.
+> - **Hùng bò dọc `HungCanal`:** cung lệch vào trong đất liền 3 m, tránh phía sông. Nếu Layout có các điểm `hungCanal1..n` thì dùng điểm đặt tay.
+> - **Nhịp độ:** tốc độ ×1,5 khi ít nhất nửa tốp đang cúi hoặc đã chết, ×2 khi hết lính. Luôn bị kẹp giữa lịch 60 giây và lịch 90 giây, nên đoạn này dài đúng 60–90 giây. Trường mới `coverClock` không bắt buộc; save cũ lưu giây được tự đổi.
+> - Camera lia sang Hùng 1,5 giây ở mốc 1/3 và 2/3 quãng đường. HUD hiện thanh tiến độ "Hùng đang bò dọc bờ mương", không đếm giây.
+> - Không cần sửa phím C: `MovementLocked` chặn đọc phím đi rón rén trong lúc bò.
+> - Test: `CoverFireTakesSixtyToNinetySecondsWhateverNamHits`. Test cũ được bật director trong đoạn kiểm tra Hùng di chuyển.
+>
+> Chưa làm: tư thế tì súng (`namBraceClip`), clip bò của Hùng (`hungCrawlClip`), âm thanh "keng" và tim đập. Phần này chờ asset.
+
 - **Tốp lính đi kèm xe tăng** (4 lính) xuất hiện từ đầu `N3_07`, đứng nguyên chỗ phía sau và bên hông `tankDock` (`holdPosition`), bắn về phía Nam (chỉ là hiệu ứng vì Nam bất tử). Bị trúng hoặc có đạn bay sát trong 1,5 m thì cúi xuống 2,5 giây (nghe `Health.Damaged` và raycast đường đạn).
 - **Hùng ôm bộc phá lăn xuống bờ mương rồi bò dọc `hungCanal`** (`hungCrawlClip`). Tốc độ cơ bản khoảng 90 giây cho cả quãng, nhanh gấp 1,5 khi một nửa tốp đang cúi hoặc đã chết, đi nốt ×2 khi hết lính. Thời lượng kẹp trong 60–90 giây (Q10). Tới `ChargePoint` thì chạy `N3_09`.
 - **Nam tì súng lên bờ đất bằng tay lành** (khóa di chuyển như hiện tại, chỗ gắn tư thế `namBraceClip`). Máy đàm Hùng để lại nằm cạnh Nam.

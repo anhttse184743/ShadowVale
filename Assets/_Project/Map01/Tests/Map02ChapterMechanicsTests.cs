@@ -43,10 +43,12 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsTrue(c.MovementLocked);var approach=new UnityEngine.AI.NavMeshPath();Assert.IsTrue(UnityEngine.AI.NavMesh.CalculatePath(c.Actor("Hùng").transform.position,c.ChargePoint,UnityEngine.AI.NavMesh.AllAreas,approach));Assert.AreEqual(UnityEngine.AI.NavMeshPathStatus.PathComplete,approach.status);Assert.IsFalse(controller.InputAllowed());Assert.IsTrue(combat.InputAllowed());Assert.IsTrue(hp.CinematicInvulnerable);
                 var before=hp.Current;hp.TakeDamage(100000,m.Player.position,null);Assert.AreEqual(before,hp.Current);
                 var saved=m.Capture();m.Restore(saved);Assert.IsTrue(c.MovementLocked&&hp.CinematicInvulnerable,"Load during cover fire must preserve the no-failure rule.");
+                c.enabled=true; // Hùng's crawl is paced by the director.
                 var startHung=c.Actor("Hùng").transform.position;var initialDistance=Vector3.Distance(startHung,c.ChargePoint);
                 float moveDeadline=Time.time+6;while(Time.time<moveDeadline&&Vector3.Distance(startHung,c.Actor("Hùng").transform.position)<2){yield return null;}
                 Assert.Greater(Vector3.Distance(startHung,c.Actor("Hùng").transform.position),1,"Hùng must actually approach during cover, including after load.");
                 Assert.Less(Vector3.Distance(c.Actor("Hùng").transform.position,c.ChargePoint),initialDistance,"His route must advance toward the charge.");
+                c.enabled=false;
                 finish.Invoke(c,new object[]{Map02ChapterDefinition.Load().Find("N3_08")});
                 Assert.AreEqual("N3_09",c.CurrentScene?.id,"The sacrifice follows the cover fire without walking to a pin.");end.Invoke(c,null);
                 Assert.IsTrue(c.State.hungDead&&c.State.tankDestroyed&&c.State.radioTransferred);Assert.AreEqual("DAWN",c.CurrentScene.id,"Do not expose Nam to combat between the fixed ending and dawn.");
@@ -133,6 +135,48 @@ namespace ShadowVale.Map01.Tests
             }
             finally{c.Cancel();hp.CinematicInvulnerable=false;}
             yield return new ExitPlayMode();
+        }
+        [UnityTest,Timeout(300000)]public IEnumerator CoverFireTakesSixtyToNinetySecondsWhateverNamHits()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
+            yield return CoverFireInPlayMode(); // Closures must be created after the domain reload.
+            yield return new ExitPlayMode();
+        }
+        static IEnumerator CoverFireInPlayMode()
+        {
+            Map02Mission m=null;float deadline=Time.realtimeSinceStartup+100;
+            while(Time.realtimeSinceStartup<deadline){m=Object.FindFirstObjectByType<Map02Mission>();if(m?.Chapter!=null&&m.Ready)break;Object.FindFirstObjectByType<Map02Arrival>()?.Skip();yield return null;}
+            Assert.NotNull(m?.Chapter);var c=m.Chapter;var def=Map02ChapterDefinition.Load();
+            void Load(string id){var snapshot=m.Capture();var s=new Map02ChapterState();foreach(var t in def.tasks){s.Complete(t.id);if(t.id==id)break;}snapshot.chapter=s;m.Restore(snapshot);}
+            void Place(Vector3 p){var cc=m.Player.GetComponent<CharacterController>();cc.enabled=false;m.Player.position=p;cc.enabled=true;Physics.SyncTransforms();}
+            Map02ObjectiveObject Mark(string id)=>Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId==id);
+            Map02ChapterEnemy[] Squad()=>c.Enemies.Where(e=>e!=null&&e.group=="N3_08").ToArray();
+            IEnumerator Begin(){Load("N3_07");var cover=Mark("N3_08");Place(cover.transform.position);Assert.IsTrue(m.Interact(cover));yield return null;yield return null;}
+            float Off(Vector3 p,Vector3[] line){float best=float.MaxValue;for(int i=1;i<line.Length;i++){var a=line[i-1];var b=line[i];var t=Mathf.Clamp01(Vector3.Dot(p-a,b-a)/Mathf.Max(.0001f,(b-a).sqrMagnitude));best=Mathf.Min(best,Vector3.Distance(p,a+(b-a)*t));}return best;}
+            try
+            {
+                yield return Begin();
+                var squad=Squad();Assert.AreEqual(4,squad.Length,"The tank's escort is four men behind it.");Assert.IsTrue(squad.All(e=>e.HoldPosition));
+                var spots=squad.Select(e=>e.transform.position).ToArray();yield return WaitGameSeconds(2f);
+                for(int i=0;i<squad.Length;i++)Assert.Less(Vector3.Distance(spots[i],squad[i].transform.position),.6f,"The escort holds behind the tank, it never chases Nam.");
+                Assert.Less(Off(c.Actor("Hùng").transform.position,c.HungCanal),.5f,"Hùng moves along the ditch.");
+                Assert.IsFalse(c.Instruction.Contains("giây"),c.Instruction);
+                // A round past a soldier's head makes him duck; a soldier ducking does not fire.
+                var target=squad[0];var chest=target.transform.position+Vector3.up*1.3f;
+                typeof(Map02ChapterDirector).GetMethod("SuppressAlong",BindingFlags.NonPublic|BindingFlags.Instance).Invoke(c,new object[]{new Ray(chest+Vector3.right*20+Vector3.up*.8f,(chest+Vector3.up*.8f-(chest+Vector3.right*20+Vector3.up*.8f)).normalized)});
+                Assert.IsTrue(target.Suppressed);
+                // Nobody hit: Hùng still reaches the tracks by 90 s.
+                c.State.coverClock=89f;c.State.taskProgress=89f/90f;float until=Time.time+5;while(Time.time<until&&c.CurrentScene==null)yield return null;
+                Assert.AreEqual("N3_09",c.CurrentScene?.id);Assert.LessOrEqual(c.State.coverClock,91f);
+                // Everyone down at once: Hùng goes faster, but not before 60 s.
+                yield return Begin();
+                foreach(var e in Squad())e.HitPoints.TakeDamage(1000,e.transform.position,m.Player.gameObject);
+                c.State.coverClock=30;c.State.taskProgress=.3f;yield return WaitGameSeconds(2f);
+                Assert.IsNull(c.CurrentScene);Assert.LessOrEqual(c.State.taskProgress,c.State.coverClock/60f+.001f);Assert.Greater(c.State.taskProgress,.3f+2f/90f,"With the escort down he crawls faster than the slowest pace.");
+                c.State.coverClock=59.5f;c.State.taskProgress=59.5f/60f;float started=Time.time;until=Time.time+5;while(Time.time<until&&c.CurrentScene==null)yield return null;
+                Assert.AreEqual("N3_09",c.CurrentScene?.id);Assert.GreaterOrEqual(Time.time-started,.45f,"Not before the 60 s mark.");
+            }
+            finally{c.Cancel();}
         }
         [UnityTest,Timeout(240000)]public IEnumerator TankAndBoatsAreWhereTheNightThreeStoryPutsThem()
         {
