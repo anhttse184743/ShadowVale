@@ -84,7 +84,7 @@ namespace ShadowVale.Map01
                 var actor=new GameObject("Actor slot — "+role);actor.transform.SetParent(root.transform);var slot=actor.AddComponent<Map02ChapterActor>();slot.role=role;roles.Add(role,slot);var art=Layout?.actors?.FirstOrDefault(a=>a.role==role)?.prefab;if(art!=null)slot.Bind(Instantiate(art).transform);
             }
             var arrival=FindFirstObjectByType<Map02Arrival>();
-            if(arrival?.Passengers?.Length>=3){if(roles["Hùng"].visual==null)roles["Hùng"].Bind(arrival.Passengers[2]);if(roles["Anh Thành"].visual==null)roles["Anh Thành"].Bind(arrival.Passengers[1]);}
+            if(arrival?.Passengers?.Length>=3){if(roles["Hùng"].visual==null)roles["Hùng"].Bind(arrival.Passengers[2]);if(roles["Anh Thành"].visual==null)roles["Anh Thành"].Bind(arrival.Passengers[1]);else{roles["Anh Thành"].StopAt(arrival.Passengers[1].position);arrival.Passengers[1].gameObject.SetActive(false);}} // His own model takes over from the arrival boat's commander.
             foreach(var role in roles)initialRolePositions[role.Key]=role.Value.transform.position;
             State.storedRounds=0; // No ammo is invented on chapter entry.
             originalSky=RenderSettings.skybox;if(originalSky!=null){chapterSky=new Material(originalSky);RenderSettings.skybox=chapterSky;} originalAmbientMode=RenderSettings.ambientMode;RenderSettings.ambientMode=UnityEngine.Rendering.AmbientMode.Flat;

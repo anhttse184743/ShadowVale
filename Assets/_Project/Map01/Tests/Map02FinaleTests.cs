@@ -209,5 +209,41 @@ namespace ShadowVale.Map01.Tests
             }
             finally{chapter.Cancel();}
         }
+
+        [UnityTest,Timeout(300000),Explicit("Manual art review; writes Logs/Map02Models/*.png, asserts only that the cast has models.")]
+        public IEnumerator CastAndPropsCapture()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");SetPreviewResolution(1920,1080);yield return new EnterPlayMode();
+            yield return CaptureInPlayMode();
+            yield return new ExitPlayMode();
+        }
+        static IEnumerator CaptureInPlayMode()
+        {
+            yield return Open();chapter.enabled=true;System.IO.Directory.CreateDirectory("Logs/Map02Models");
+            var rig=Object.FindObjectsByType<ThirdPersonCamera>(FindObjectsSortMode.None).First(c=>c.GetComponent<Camera>()?.enabled==true);
+            foreach(var role in new[]{"Anh Thành","Anh Lực","Tâm","Chị Lành","Ông Sáu","Chú Bảy","Bé Tí"})Assert.NotNull(chapter.Actor(role).visual,role+" has a model");
+            IEnumerator Shot(string file,Vector3 eye,Vector3 look,float fov=45)
+            {
+                for(int i=0;i<20;i++){rig.SetCinematicView(eye,Quaternion.LookRotation(look-eye),fov,1);yield return null;}
+                ScreenCapture.CaptureScreenshot("Logs/Map02Models/"+file);yield return null;yield return null;
+            }
+            try
+            {
+                // Day 3 supper yard: Hùng, Chị Lành, Ông Sáu at home, Anh Thành in the yard (lit as day).
+                Load("D3_05");var yard=chapter.Sites["family"].position;Call("TickLight",10f);
+                chapter.Actor("Anh Thành").StopAt(yard+Vector3.left*2);chapter.Actor("Bé Tí").StopAt(yard+Vector3.back*1.5f);chapter.Actor("Chú Bảy").StopAt(yard+Vector3.forward*1.8f);
+                chapter.Actor("Anh Lực").StopAt(yard+Vector3.right*3+Vector3.back);chapter.Actor("Tâm").StopAt(yard+Vector3.left*3.5f+Vector3.back*1.5f);
+                Place(yard+Vector3.back*6);yield return Shot("cast-day3-yard.png",yard+new Vector3(1.5f,1.6f,-6.5f),yard+Vector3.up*.9f,50);
+                // The last boat mid-river.
+                Load("N3_06");yield return null;var boat=chapter.LastBoat.position;yield return Shot("cast-last-boat.png",boat+new Vector3(-6,2.4f,4),boat+Vector3.up*.6f,45);
+                // In daylight (Day 3, after stowing): the crate and bundle in the bank hole, seen from above the rice.
+                Load("D3_02");Call("TickLight",10f);Call("TickDressing",0f);var bundle=chapter.BundleProp.transform.position;
+                yield return Shot("prop-charge-bank.png",bundle+new Vector3(.9f,.75f,-.7f),bundle+Vector3.up*.12f,35);
+                // A rank-and-file soldier (the infantry model), stood in the yard in daylight.
+                var post=chapter.Sites["gate"].position;var soldier=Object.Instantiate(chapter.Layout.enemyArt,post,Quaternion.Euler(0,225,0));
+                yield return Shot("cast-soldier.png",post+new Vector3(-2.4f,1.5f,-2.6f),post+Vector3.up*1,40);Object.Destroy(soldier);
+            }
+            finally{rig.ClearCinematicView();chapter.Cancel();chapter.enabled=true;}
+        }
     }
 }

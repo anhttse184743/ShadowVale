@@ -12,6 +12,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2318a6bb1dc2ca4aa293962e67c852b, type: 3}
   m_Name: Map02ChapterLayout
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map02ChapterLayout
+  actors:
+  - role: "Anh Th\xE0nh"
+    prefab: {fileID: 8012528957299037504, guid: 7ddebcd502c8f0a41a94c2155c3f3e5c, type: 3}
+  - role: "Anh L\u1EF1c"
+    prefab: {fileID: 6698508292658309049, guid: cc5b223aaef07c043bba956ce897d818, type: 3}
+  - role: "T\xE2m"
+    prefab: {fileID: 6095493176547276939, guid: 7565910ceef2c8d43bb154f8214acaf0, type: 3}
+  - role: "Ch\u1ECB L\xE0nh"
+    prefab: {fileID: 6818478853548482926, guid: 0be3712cbd0f8d948a782c1438f51f70, type: 3}
+  - role: "\xD4ng S\xE1u"
+    prefab: {fileID: 1480478741168794151, guid: dfab36a4141a30846948d53968eb84f0, type: 3}
+  - role: "Ch\xFA B\u1EA3y"
+    prefab: {fileID: 534112661175801092, guid: 79edee85666254c418ab14b39a639a1c, type: 3}
+  - role: "B\xE9 T\xED"
+    prefab: {fileID: 5505341830161706337, guid: e02eef3a8eb58ff47822642cfe9d363c, type: 3}
+  enemyArt: {fileID: 7461267688925482901, guid: 2bb747894f951aa439d2d8dfd28cb5c3, type: 3}
   sites:
   - id: command
     position: {x: -79.29, y: 1.1, z: 10.91}
@@ -75,9 +91,24 @@ MonoBehaviour:
     position: {x: -6.2, y: 0.2, z: -92.3}
   - id: boatFar2
     position: {x: -8.2, y: 0.2, z: -85.3}
+  supplyCrateRounds: 30
   nightSunIntensity: 0.08
   nightSkyExposure: 0.08
   patrolSweepSeconds: 15
   coverFireSeconds: 75
   civilianArt: {fileID: 0}
   tankArt: {fileID: 0}
+  coveredHungArt: {fileID: 0}
+  namMournClip: {fileID: 0}
+  hungPlantRetreatClip: {fileID: 0}
+  radioPropArt: {fileID: 0}
+  explosivesArt: {fileID: 8220773862437002748, guid: 44f6a4a2ba3d07c4ea84bbfedf777ed2, type: 3}
+  soupBowlArt: {fileID: 0}
+  militiaArt: {fileID: 0}
+  namProneClip: {fileID: 0}
+  namLieBackClip: {fileID: 0}
+  namSitRadioClip: {fileID: 0}
+  hungFallClip: {fileID: -623603649343465320, guid: 3751eb93ed29b2941b8fea8a977f2077, type: 3}
+  tankTracksClip: {fileID: 0}
+  tinnitusClip: {fileID: 0}
+  artilleryClip: {fileID: 0}
