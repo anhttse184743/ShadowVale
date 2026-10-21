@@ -164,6 +164,29 @@ namespace ShadowVale.Map01.Tests
             finally{chapter.Cancel();chapter.enabled=true;}
         }
 
+        [UnityTest,Timeout(240000)]public IEnumerator TheTankRollsItsTracksAndWheelsWhenItDrives()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
+            yield return RollInPlayMode();
+            yield return new ExitPlayMode();
+        }
+        static IEnumerator RollInPlayMode()
+        {
+            yield return Open();
+            try
+            {
+                // After the crawl the tank turns away into the village: it drives, it is not placed.
+                Load("N3_WOUND");Call("Finish",Map02ChapterDefinition.Load().Find("N3_CRAWL"));
+                if(chapter.TrackLink("L",0)==null){Assert.Inconclusive("Tank art without track links");yield break;}
+                var link=chapter.TrackLink("L",0);var start=link.localPosition;var wheel=chapter.Tank.GetComponentsInChildren<Transform>().First(t=>t.name=="Wheel_L1");var turned=wheel.rotation;
+                for(int i=0;i<12;i++)Call("TickTank",.1f,false);
+                Assert.AreEqual("leaving",chapter.TankStage);Assert.Greater(chapter.TrackTravel,1f,"The tank has driven");
+                Assert.Greater(Vector3.Distance(start,link.localPosition),.001f,"Links move round the loop");
+                Assert.Greater(Quaternion.Angle(turned,wheel.rotation),10,"Road wheels turn");
+                var neighbour=chapter.TrackLink("L",1);Assert.Less(Vector3.Distance(link.localPosition,neighbour.localPosition),.25f,"Links stay on the run, one pitch apart");
+            }
+            finally{chapter.Cancel();chapter.enabled=true;}
+        }
         [UnityTest,Timeout(240000)]public IEnumerator TelemetryStagesKeepTheirOrderThroughTheChapter()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();

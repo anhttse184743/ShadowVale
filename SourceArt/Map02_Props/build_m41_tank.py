@@ -29,12 +29,12 @@ def material(name, rgb, rough, metal=0.0):
     b = m.node_tree.nodes["Principled BSDF"]
     b.inputs["Base Color"].default_value = (*rgb, 1); b.inputs["Roughness"].default_value = rough; b.inputs["Metallic"].default_value = metal
     return m
-PAINT = material("M41_Paint", (.105, .125, .078), .72)      # faded olive drab
-STEEL = material("M41_Steel", (.045, .043, .040), .6, .4)    # MG, small fittings
-TRACK = material("M41_Track", (.085, .058, .042), .75, .3)   # worn, rusty track steel
-RUBBER = material("M41_Rubber", (.022, .022, .022), .85)
-CANVAS = material("M41_Canvas", (.040, .045, .040), .9)      # mantlet cover
-RUST = material("M41_Rust", (.20, .095, .055), .8)           # exhaust/muffler boxes
+PAINT = material("M41_Paint", (.122, .138, .104), .74)      # grey-olive, as the reference sRGB ~(96,102,89)
+STEEL = material("M41_Steel", (.042, .042, .042), .55, .45)  # MG, small fittings
+TRACK = material("M41_Track", (.060, .046, .038), .75, .3)   # dark brown track steel
+RUBBER = material("M41_Rubber", (.026, .024, .023), .88)
+CANVAS = material("M41_Canvas", (.030, .030, .029), .92)      # mantlet cover, near black
+RUST = material("M41_Rust", (.150, .112, .100), .82)          # muffler covers: mauve-brown
 RED = material("M41_TailLight", (.55, .02, .02), .3)
 LENS = material("M41_Lens", (.55, .55, .48), .2)
 
@@ -202,6 +202,11 @@ def build_hull(bm):
     for v in ring["verts"]: v.co = Vector((-.62, -3.02, .95)) + Matrix.Rotation(math.radians(90), 3, 'Y') @ v.co
     bmesh.ops.extrude_edge_only(bm, edges=list({e for v in ring["verts"] for e in v.link_edges}))
     add_box(bm, (-.62, -2.95, .95), (.08, .12, .08))
+    # Weld beads where the plates meet.
+    for a, b in (((-1.04, 2.05, 1.555), (1.04, 2.05, 1.555)), ((-1.0, 2.97, 1.17), (1.0, 2.97, 1.17)), ((-1.0, 2.97, .66), (1.0, 2.97, .66)),
+                 ((-1.06, 2.05, 1.555), (-1.06, -2.85, 1.555)), ((1.06, 2.05, 1.555), (1.06, -2.85, 1.555)),
+                 ((-1.02, 2.05, 1.09), (-1.02, 2.97, 1.09)), ((1.02, 2.05, 1.09), (1.02, 2.97, 1.09)), ((-1.0, -2.95, 1.08), (1.0, -2.95, 1.08))):
+        add_rod(bm, a, b, .011, 5)
     # Suspension arms from the hull side to each wheel hub.
     for side in (-1, 1):
         for y in WHEELS_Y:
@@ -209,21 +214,30 @@ def build_hull(bm):
 hull = mesh("Hull", build_hull, [PAINT, RUST, RED, LENS], root)
 
 # ---------------------------------------------------------------- running gear
-def wheel_builder(radius, width, dual=True, hub=.11):
+def wheel_builder(radius, width, dual=True, hub=.11, side=1):
     def build(bm):
+        out = side * width / 2
         if dual:
             for dx in (-width * .27, width * .27):
-                add_cylinder(bm, (dx, 0, 0), radius, width * .42, 'X', 20, mat_index=1)          # rubber tyre
-                add_cylinder(bm, (dx * 1.05, 0, 0), radius * .78, width * .44, 'X', 20)         # steel disc
+                add_cylinder(bm, (dx, 0, 0), radius, width * .42, 'X', 24, mat_index=1)          # rubber tyre
+                add_cylinder(bm, (dx, 0, 0), radius * .8, width * .46, 'X', 24)                  # steel disc rim
+                add_cylinder(bm, (dx + side * width * .2, 0, 0), radius * .62, width * .06, 'X', 24, mat_index=2)  # recessed dish (shadowed)
         else:
             add_cylinder(bm, (0, 0, 0), radius, width, 'X', 16, mat_index=1)
-        add_cylinder(bm, (0, 0, 0), hub, width * 1.12, 'X', 8)                                   # hub cap
+        add_cylinder(bm, (out * .9, 0, 0), hub * 1.25, width * .14, 'X', 16)                     # hub boss
+        add_cylinder(bm, (out * 1.02, 0, 0), hub * .5, width * .12, 'X', 6, mat_index=2)        # hex nut
+        if dual:
+            for k in range(6):                                                                    # bolt ring
+                a = k * math.pi / 3; add_cylinder(bm, (out * .98, math.cos(a) * hub * .9, math.sin(a) * hub * .9), .012, width * .08, 'X', 6, mat_index=2)
     return build
 
 def sprocket_builder(radius, width, teeth=13):
     def build(bm):
         add_cylinder(bm, (0, 0, 0), radius * .82, width, 'X', 24)
-        add_cylinder(bm, (0, 0, 0), radius * .3, width * 1.2, 'X', 10)
+        add_cylinder(bm, (0, 0, 0), radius * .62, width * 1.08, 'X', 24, mat_index=1)              # dished face
+        add_cylinder(bm, (0, 0, 0), radius * .3, width * 1.25, 'X', 12)
+        for k in range(8):
+            a = k * math.pi / 4; add_cylinder(bm, (0, math.cos(a) * radius * .22, math.sin(a) * radius * .22), .014, width * 1.3, 'X', 6, mat_index=1)
         for i in range(teeth):
             a = 2 * math.pi * i / teeth
             v = add_box(bm, (0, math.cos(a) * radius * .9, math.sin(a) * radius * .9), (width * .9, .07, .09))
@@ -234,11 +248,11 @@ def sprocket_builder(radius, width, teeth=13):
 for side, tag in ((-1, "L"), (1, "R")):
     x = side * TRACK_X
     for i, y in enumerate(WHEELS_Y, 1):
-        mesh(f"Wheel_{tag}{i}", wheel_builder(WHEEL_R, TRACK_W * .9), [PAINT, RUBBER], root, (x, y, WHEEL_Z), True)
+        mesh(f"Wheel_{tag}{i}", wheel_builder(WHEEL_R, TRACK_W * .9, side=side), [PAINT, RUBBER, STEEL], root, (x, y, WHEEL_Z), True)
     for i, y in enumerate(ROLLERS_Y, 1):
-        mesh(f"Roller_{tag}{i}", wheel_builder(ROLLER_R, .2, dual=False, hub=.05), [PAINT, RUBBER], root, (x, y, ROLLER_Z), True)
-    mesh(f"Sprocket_{tag}", sprocket_builder(SPROCKET[2], .26), [PAINT], root, (x, SPROCKET[0], SPROCKET[1]), True)
-    mesh(f"Idler_{tag}", wheel_builder(IDLER[2], TRACK_W * .8), [PAINT, RUBBER], root, (x, IDLER[0], IDLER[1]), True)
+        mesh(f"Roller_{tag}{i}", wheel_builder(ROLLER_R, .2, dual=False, hub=.05, side=side), [PAINT, RUBBER, STEEL], root, (x, y, ROLLER_Z), True)
+    mesh(f"Sprocket_{tag}", sprocket_builder(SPROCKET[2], .26), [PAINT, STEEL], root, (x, SPROCKET[0], SPROCKET[1]), True)
+    mesh(f"Idler_{tag}", wheel_builder(IDLER[2], TRACK_W * .8, side=side), [PAINT, RUBBER, STEEL], root, (x, IDLER[0], IDLER[1]), True)
 
 # ---------------------------------------------------------------- tracks: links with spiked grousers along the run
 def track_path():
@@ -267,24 +281,34 @@ def resample(pts, step):
     return out
 
 LINKS = resample(track_path(), .152)
-def track_builder(side):
-    def build(bm):
-        center = Vector((0, sum(p.y for p, _ in LINKS) / len(LINKS), sum(p.z for p, _ in LINKS) / len(LINKS)))
-        for p, tang in LINKS:
-            out = Vector((0, -tang.z, tang.y))
-            if out.dot(p - center) < 0: out = -out                     # grousers point away from the wheels
-            basis = Matrix((Vector((1, 0, 0)), tang, out)).transposed()
-            def put(vs):
-                for v in vs: v.co = p + basis @ v.co
-            put(add_box(bm, (0, 0, 0), (TRACK_W, .135, .045)))                       # shoe
-            spike = [bm.verts.new(c) for c in ((-TRACK_W / 2, -.06, .022), (TRACK_W / 2, -.06, .022), (TRACK_W / 2, .06, .022),
-                                               (-TRACK_W / 2, .06, .022), (-TRACK_W / 2, .0, .075), (TRACK_W / 2, .0, .075))]
-            for f in ((0, 1, 5, 4), (2, 3, 4, 5), (0, 4, 3), (1, 2, 5)): bm.faces.new([spike[i] for i in f])
-            put(spike)
-            put(add_box(bm, (0, 0, -.045), (.07, .05, .05)))                         # guide horn
-    return build
+LINK_MESH = None
+def link_mesh():
+    """One shoe with its spiked grouser and guide horn, in link space: x across, y along the run, z out."""
+    global LINK_MESH
+    if LINK_MESH: return LINK_MESH
+    bm = bmesh.new()
+    add_box(bm, (0, 0, 0), (TRACK_W, .135, .045))
+    spike = [bm.verts.new(c) for c in ((-TRACK_W / 2, -.06, .022), (TRACK_W / 2, -.06, .022), (TRACK_W / 2, .06, .022),
+                                       (-TRACK_W / 2, .06, .022), (-TRACK_W / 2, .0, .075), (TRACK_W / 2, .0, .075))]
+    for f in ((0, 1, 5, 4), (2, 3, 4, 5), (0, 4, 3), (1, 2, 5)): bm.faces.new([spike[i] for i in f])
+    add_box(bm, (0, 0, -.045), (.07, .05, .05))
+    for dx in (-.16, .16): add_cylinder(bm, (dx, .0675, 0), .018, .12, 'X', 6)   # pin ends
+    me = bpy.data.meshes.new("M41_TrackLink"); bm.to_mesh(me); bm.free(); me.materials.append(TRACK)
+    LINK_MESH = me; return me
+
+def build_track(side, tag):
+    """Track_L/R is the link holder; Link_<tag>_000.. follow the loop in order (rear, ground run, front, top run)."""
+    holder = empty(f"Track_{tag}", (side * TRACK_X, 0, 0), root)
+    center = Vector((0, sum(p.y for p, _ in LINKS) / len(LINKS), sum(p.z for p, _ in LINKS) / len(LINKS)))
+    for i, (p, tang) in enumerate(LINKS):
+        out = Vector((0, -tang.z, tang.y))
+        if out.dot(p - center) < 0: out = -out
+        basis = Matrix((Vector((1, 0, 0)), tang, out)).transposed()
+        o = bpy.data.objects.new(f"Link_{tag}_{i:03d}", link_mesh()); col.objects.link(o)
+        o.matrix_world = Matrix.Translation(Vector((side * TRACK_X, p.y, p.z))) @ basis.to_4x4()
+        set_parent(o, holder)
 for side, tag in ((-1, "L"), (1, "R")):
-    mesh(f"Track_{tag}", track_builder(side), [TRACK], root, (side * TRACK_X, 0, 0), True)
+    build_track(side, tag)
 
 # ---------------------------------------------------------------- turret, gun, cupola, hatches, MG
 RING = Vector((0, .35, 1.56))
@@ -300,6 +324,7 @@ def build_turret(bm):
     belt = [v + RING for v in outline(.32, -.03, 1.3, .6, 1.17, -1.27, 1.02)]
     top = [v + RING for v in outline(.72, .2, 1.12, .46, 1.14, -1.2, 1.0)]
     loft(bm, [base, belt, top])
+    for a, b in zip(belt, belt[1:] + belt[:1]): add_rod(bm, a + Vector((0, 0, .0)), b, .014, 5)   # casting line round the belt
     # Rear bustle, overhanging the engine deck.
     add_box(bm, RING + Vector((0, -1.5, .46)), (1.8, .58, .5), taper_top=(.04, .03))   # flush with the roof
     # Ventilator dome with its six bolts, and turret-ring skirt.
@@ -318,9 +343,13 @@ def build_turret(bm):
     # Periscope housings at the front of the roof.
     add_box(bm, RING + Vector((-.42, .62, .76)), (.22, .14, .1))
     add_box(bm, RING + Vector((.5, .55, .76)), (.18, .12, .1))
-    # Mantlet cover (canvas), the gun's armoured face.
-    add_cylinder(bm, RING + Vector((0, 1.16, .38)), .33, 1.02, 'X', 20, mat_index=C)   # sits in the turret face
-turret = mesh("Turret", build_turret, [PAINT, CANVAS], root, RING)
+    # Mantlet: rounded canvas-covered shield across the turret face, sleeve housing, coax and sight ports.
+    add_cylinder(bm, RING + Vector((0, 1.13, .38)), .31, 1.04, 'X', 24, mat_index=C)
+    add_box(bm, RING + Vector((0, 1.0, .38)), (1.04, .26, .6), mat_index=C)
+    add_cylinder(bm, RING + Vector((0, 1.43, .38)), .17, .18, 'Y', 16, mat_index=C)
+    add_cylinder(bm, RING + Vector((.24, 1.41, .36)), .045, .06, 'Y', 10, mat_index=2)           # coax MG port
+    add_box(bm, RING + Vector((-.3, 1.36, .56)), (.12, .06, .07), mat_index=2)                   # sight port
+turret = mesh("Turret", build_turret, [PAINT, CANVAS, STEEL], root, RING)
 
 TRUNNION = RING + Vector((0, 1.3, .38))
 def build_gun(bm):
@@ -393,6 +422,7 @@ def worn(mat, dirt, wear, bump):
 worn(PAINT, .5, .28, .12); worn(STEEL, .6, .4, .25); worn(TRACK, .5, .5, .3); worn(RUBBER, .4, .2, .1); worn(CANVAS, .3, .5, .3); worn(RUST, .3, .7, .25)
 
 meshes = [o for o in col.objects if o.type == 'MESH']
+uv_meshes = [o for o in meshes if not o.name.startswith("Link_") or o.name.endswith("_000") and o.name.startswith("Link_L")]
 for o in (hull, turret):
     # Slightly bevelled armour edges catch the light like the real plate and casting.
     for o2 in col.objects: o2.select_set(False)
@@ -401,9 +431,11 @@ for o in (hull, turret):
     bpy.ops.object.modifier_apply(modifier=mod.name)
 for o in meshes:
     for o2 in col.objects: o2.select_set(False)
+    if o.name.startswith("Link_") and o not in uv_meshes: continue
     o.select_set(True); bpy.context.view_layer.objects.active = o
     bpy.ops.object.shade_smooth_by_angle(angle=math.radians(38))
-for o in meshes: o.select_set(True)
+for o2 in col.objects: o2.select_set(False)
+for o in uv_meshes: o.select_set(True)
 bpy.context.view_layer.objects.active = hull
 bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_all(action='SELECT')
 bpy.ops.uv.smart_project(angle_limit=math.radians(66), island_margin=.003, scale_to_bounds=False)
@@ -418,6 +450,9 @@ def target(kind):
         node = mat.node_tree.nodes.get("BakeTarget") or mat.node_tree.nodes.new("ShaderNodeTexImage")
         node.name = "BakeTarget"; node.image = images[kind]; mat.node_tree.nodes.active = node
 scene.render.bake.use_pass_direct = scene.render.bake.use_pass_indirect = False; scene.render.bake.use_pass_color = True
+for o2 in col.objects: o2.select_set(False)
+for o in uv_meshes: o.select_set(True)
+bpy.context.view_layer.objects.active = hull
 target("Albedo"); bpy.ops.object.bake(type='DIFFUSE')
 target("Normal"); bpy.ops.object.bake(type='NORMAL', normal_space='TANGENT')
 os.makedirs(OUT, exist_ok=True)
@@ -427,9 +462,10 @@ game = bpy.data.materials.new("M41_Worn"); game.use_nodes = True; gn, gl = game.
 gb = gn["Principled BSDF"]; gb.inputs["Roughness"].default_value = .7
 ta = gn.new("ShaderNodeTexImage"); ta.image = images["Albedo"]; gl.new(ta.outputs["Color"], gb.inputs["Base Color"])
 tn = gn.new("ShaderNodeTexImage"); tn.image = images["Normal"]; nm = gn.new("ShaderNodeNormalMap"); gl.new(tn.outputs["Color"], nm.inputs["Color"]); gl.new(nm.outputs["Normal"], gb.inputs["Normal"])
-for o in meshes:
-    o.data.materials.clear(); o.data.materials.append(game)
+for me in {o.data for o in meshes}:
+    me.materials.clear(); me.materials.append(game)
 tris = sum(sum(len(p.vertices) - 2 for p in o.data.polygons) for o in meshes)
+print("links", sum(1 for o in meshes if o.name.startswith("Link_")))
 print("triangles", tris, "objects", len(meshes))
 
 # ---------------------------------------------------------------- review renders (Eevee): side, front, top, three-quarter

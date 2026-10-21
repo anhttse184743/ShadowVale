@@ -112,7 +112,7 @@ namespace ShadowVale.Map01.EditorTools
             if(normalImporter!=null&&normalImporter.textureType!=TextureImporterType.NormalMap){normalImporter.textureType=TextureImporterType.NormalMap;normalImporter.SaveAndReimport();}
             var path=dir+"M41_Tank_Worn.mat";var mat=AssetDatabase.LoadAssetAtPath<Material>(path);
             if(mat==null){mat=new Material(Shader.Find("Universal Render Pipeline/Lit"));AssetDatabase.CreateAsset(mat,path);}
-            mat.SetColor("_BaseColor",new Color(.78f,.8f,.76f));mat.SetFloat("_Smoothness",.16f); // Matte, weathered paint.
+            mat.SetColor("_BaseColor",new Color(.96f,.96f,.96f));mat.SetFloat("_Smoothness",.18f); // Colours are baked to the reference; matte paint.
             mat.SetTexture("_BaseMap",AssetDatabase.LoadAssetAtPath<Texture2D>(dir+"M41_Tank_Albedo.png"));
             mat.SetTexture("_BumpMap",AssetDatabase.LoadAssetAtPath<Texture2D>(dir+"M41_Tank_Normal.png"));mat.SetFloat("_BumpScale",1);mat.EnableKeyword("_NORMALMAP");
             EditorUtility.SetDirty(mat);
