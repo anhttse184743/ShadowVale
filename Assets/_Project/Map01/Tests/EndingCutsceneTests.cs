@@ -100,6 +100,51 @@ namespace ShadowVale.Map01.Tests
             yield return new ExitPlayMode();
         }
         /// <summary>
+        /// 21/10/2026: the officer killed before Nam watched the camp still completes point 3 (his body is the
+        /// confirmation); while men still hunt Nam the objective counts them; once clear, Nam radios for the way out
+        /// by himself.
+        /// </summary>
+        [UnityTest]
+        public IEnumerator AnEarlyKillCountsAndTheRadioCallComesByItselfOnceClear()
+        {
+            Map01OpeningCutscene.CancelPending();
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            yield return null;
+            var mission = Object.FindFirstObjectByType<Map01Mission>();
+            var quest = mission.GetComponent<Map01Quest>();
+            var story = mission.GetComponent<Map01Story>();
+            foreach (var enemy in mission.Enemies) enemy.enabled = false;
+            quest.RestoreStoryStage(Map01Quest.BossStage, RadioSilenced()); // Never watched the camp.
+            Assert.IsFalse(story.Progress.commanderConfirmed);
+            var boss = quest.CommanderEnemy;
+            boss.GetComponent<Health>().TakeDamage(999999, boss.transform.position, null);
+            Assert.AreEqual(Map01Quest.ReportBossStage, quest.Stage, "His body is the confirmation: point 3 is done.");
+            var ending = mission.GetComponent<Map01EndingCutscene>();
+            double deadline = Time.realtimeSinceStartupAsDouble + (ending != null ? ending.Duration : 0) + 3;
+            while (ending != null && ending.IsPlaying && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
+
+            var hunter = mission.Enemies.First(e => e != null && e.Alive && !e.IsBoss);
+            hunter.EngageFor(30f);
+            Assert.IsFalse(story.SafeToReport);
+            StringAssert.Contains("1 lính đang truy lùng", story.Objective, "Who still hunts him, by count.");
+            yield return WaitGameSeconds(AutoWait);
+            Assert.IsFalse(mission.GetComponent<Map01StoryDialogue>().IsPlaying, "No call while still hunted.");
+
+            hunter.Brain.ResetToPost(Time.time);
+            Assert.IsTrue(story.SafeToReport);
+            yield return WaitGameSeconds(AutoWait);
+            Assert.IsTrue(mission.GetComponent<Map01StoryDialogue>().IsPlaying, "Clear of the fight: the radio call starts without E.");
+            story.TryInteract();
+            Assert.IsTrue(mission.GetComponent<Map01StoryDialogue>().IsPlaying, "E during the call does not end or restart it.");
+            yield return ConfirmConversation(mission);
+            Assert.AreEqual(Map01Quest.ExtractionStage, quest.Stage);
+            yield return new ExitPlayMode();
+        }
+
+        private const float AutoWait = Map01Story.AutoRetreatReportSeconds + .8f;
+
+        /// <summary>
         /// The officer of point 3, seen and reported, falls: his own death clip plays as the finale (world time
         /// untouched, no saving meanwhile); after it Nam reports by radio for the way out, and that starts the extraction.
         /// </summary>

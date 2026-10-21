@@ -88,8 +88,13 @@ namespace ShadowVale.Gameplay.Combat
             }
         }
 
+        /// <summary>Shapes a bullet's damage by where it struck before it is taken (a commander's body armour and
+        /// headshots); null = as fired. Grenades, knives and falls are not bullets and are not shaped.</summary>
+        public System.Func<float, Vector3, float> BulletDamageModifier { get; set; }
+
         public void TakeBulletDamage(float amount, Vector3 hitPoint, GameObject source, Vector3 direction)
         {
+            if (BulletDamageModifier != null) amount = BulletDamageModifier(amount, hitPoint);
             if (CinematicInvulnerable || IsDead || amount <= 0f) return;
             ApplyDamage(amount, hitPoint, source, true);
             BloodImpact.Play(hitPoint, direction);
