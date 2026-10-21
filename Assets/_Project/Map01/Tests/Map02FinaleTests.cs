@@ -242,6 +242,14 @@ namespace ShadowVale.Map01.Tests
                 // A rank-and-file soldier (the infantry model), stood in the yard in daylight.
                 var post=chapter.Sites["gate"].position;var soldier=Object.Instantiate(chapter.Layout.enemyArt,post,Quaternion.Euler(0,225,0));
                 yield return Shot("cast-soldier.png",post+new Vector3(-2.4f,1.5f,-2.6f),post+Vector3.up*1,40);Object.Destroy(soldier);
+                // The modelled tank in daylight, front three-quarter and from behind above.
+                var spot=post+Vector3.forward*7;var shown=Object.Instantiate(chapter.Layout.tankArt,spot,Quaternion.Euler(0,150,0));
+                yield return Shot("tank-day-3q.png",spot+new Vector3(5.5f,3f,-6f),spot+Vector3.up*1.3f,45);
+                yield return Shot("tank-day-rear.png",spot+new Vector3(-4.5f,5f,6.5f),spot+Vector3.up*1.1f,45);Object.Destroy(shown);
+                // Burnt out at the head of the dock road at dawn: gun down, commander's hatch thrown open.
+                Load("DAWN");Call("TickLight",10f);var road=chapter.Sites["tankDock"].position;
+                Assert.AreEqual("destroyed",chapter.TankStage);Assert.AreEqual(75,chapter.CommanderHatchOpen,1,"Burnt out: the commander's hatch is thrown open.");
+                yield return Shot("tank-burnt-dawn.png",road+new Vector3(6.5f,3.2f,-5f),road+Vector3.up*1.2f,45);
             }
             finally{rig.ClearCinematicView();chapter.Cancel();chapter.enabled=true;}
         }

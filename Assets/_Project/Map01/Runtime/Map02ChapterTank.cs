@@ -81,6 +81,7 @@ namespace ShadowVale.Map01
                 else if(!State.tankDestroyed&&sceneTask?.id!="N3_09"&&tankSmoke.isPlaying)tankSmoke.Stop(true,ParticleSystemStopBehavior.StopEmittingAndClear);
             }
             if(stage=="destroyed")BurnTank();
+            AnimateTankParts(dt,stage,snap);
             TickMachineGun(dt,stage);
         }
         void BurnTank()
@@ -106,7 +107,7 @@ namespace ShadowVale.Map01
         {
             if(gunFlash==null)
             {
-                var flash=new GameObject("Tank machine-gun flash");flash.transform.SetParent(tank.transform,false);flash.transform.localPosition=new Vector3(0,2.3f,2.8f);
+                var flash=new GameObject("Tank machine-gun flash");flash.transform.SetParent(mgMuzzle!=null?mgMuzzle:tank.transform,false);flash.transform.localPosition=mgMuzzle!=null?Vector3.zero:new Vector3(0,2.3f,2.8f); // At the .50's muzzle on the modelled tank.
                 gunFlash=flash.AddComponent<Light>();gunFlash.type=LightType.Point;gunFlash.range=9;gunFlash.intensity=4;gunFlash.color=new Color(1,.78f,.42f);gunFlash.shadows=LightShadows.None;gunFlash.enabled=false;
                 splash=Map01Fx.System(root.transform,"Machine-gun splashes",water["boatMid"],Map01Fx.Unlit,1,90);
                 var main=splash.main;main.startLifetime=.7f;main.startSpeed=3.2f;main.startSize=.3f;main.gravityModifier=1;main.startColor=new Color(.85f,.92f,1,.8f);

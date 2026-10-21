@@ -97,7 +97,7 @@ MonoBehaviour:
   patrolSweepSeconds: 15
   coverFireSeconds: 75
   civilianArt: {fileID: 0}
-  tankArt: {fileID: 0}
+  tankArt: {fileID: 5587284310667264704, guid: 4396b00d0f623f442af762fc6fd61a2b, type: 3}
   coveredHungArt: {fileID: 0}
   namMournClip: {fileID: 0}
   hungPlantRetreatClip: {fileID: 0}

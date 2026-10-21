@@ -38,15 +38,16 @@ namespace ShadowVale.Map01.EditorTools
                 if(prefab!=null)actors.Add(new Map02ChapterLayout.RoleArt{role=role,prefab=prefab});
             }
             var soldier=Visual("Assets/_Project/Art/Characters/Enemies/lính rig.fbx","Enemy soldier",1.75f,AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/_Project/Art/Characters/Animations/Controllers/AC_Enemy.controller"));
-            var charge=Charge();
+            var charge=Charge();var tank=Tank();
             var fall=AssetDatabase.LoadAllAssetsAtPath(Npcs+"Animations/Hung_TrungDan.fbx").OfType<AnimationClip>().FirstOrDefault(c=>!c.name.StartsWith("__preview"));
             report.AppendLine($"Hùng shot clip: {(fall!=null?fall.name+" "+fall.length.ToString("0.00")+" s":"MISSING")}");
             layout.actors=actors.ToArray();
             if(soldier!=null)layout.enemyArt=soldier;
             if(charge!=null)layout.explosivesArt=charge;
+            if(tank!=null)layout.tankArt=tank;
             if(fall!=null)layout.hungFallClip=fall;
             EditorUtility.SetDirty(layout);AssetDatabase.SaveAssets();
-            report.AppendLine($"Layout: {actors.Count} roles, enemyArt={(soldier!=null?soldier.name:"-")}, explosivesArt={(charge!=null?charge.name:"-")}");
+            report.AppendLine($"Layout: {actors.Count} roles, enemyArt={(soldier!=null?soldier.name:"-")}, explosivesArt={(charge!=null?charge.name:"-")}, tankArt={(tank!=null?tank.name:"-")}");
             Directory.CreateDirectory("Logs/Map02Models");File.WriteAllText("Logs/Map02Models/setup.txt",report.ToString());
             Debug.Log("Map 2 models:\n"+report);
         }
@@ -94,6 +95,40 @@ namespace ShadowVale.Map01.EditorTools
             var path=Out+Path.GetFileNameWithoutExtension(modelPath).Replace(' ','_')+"_Visual.prefab";
             var prefab=PrefabUtility.SaveAsPrefabAsset(root,path);Object.DestroyImmediate(root);
             report.AppendLine($"{role}: {(human?"Humanoid":"GENERIC (no walk animation)")}, raw height {bounds.size.y/scale:0.00} -> {height:0.00} m (x{scale:0.###}), {renderers.Length} renderers -> {path}");
+            return prefab;
+        }
+
+        /// <summary>
+        /// The Blender M41-type tank (SourceArt/Map02_Props/build_m41_tank.py): one URP material with its baked atlas,
+        /// gun along +Z, sitting on y = 0, a box collider so rounds hit it. Moving parts keep their names and pivots.
+        /// </summary>
+        static GameObject Tank()
+        {
+            const string dir="Assets/_Project/Art/Props/Map02/",model=dir+"M41_Tank.fbx";
+            var importer=AssetImporter.GetAtPath(model) as ModelImporter;if(importer==null){report.AppendLine("Tank: FBX missing");return null;}
+            if(!importer.bakeAxisConversion||importer.materialImportMode!=ModelImporterMaterialImportMode.None)
+            {importer.bakeAxisConversion=true;importer.materialImportMode=ModelImporterMaterialImportMode.None;importer.SaveAndReimport();}
+            var normalImporter=AssetImporter.GetAtPath(dir+"M41_Tank_Normal.png") as TextureImporter;
+            if(normalImporter!=null&&normalImporter.textureType!=TextureImporterType.NormalMap){normalImporter.textureType=TextureImporterType.NormalMap;normalImporter.SaveAndReimport();}
+            var path=dir+"M41_Tank_Worn.mat";var mat=AssetDatabase.LoadAssetAtPath<Material>(path);
+            if(mat==null){mat=new Material(Shader.Find("Universal Render Pipeline/Lit"));AssetDatabase.CreateAsset(mat,path);}
+            mat.SetColor("_BaseColor",new Color(.78f,.8f,.76f));mat.SetFloat("_Smoothness",.16f); // Matte, weathered paint.
+            mat.SetTexture("_BaseMap",AssetDatabase.LoadAssetAtPath<Texture2D>(dir+"M41_Tank_Albedo.png"));
+            mat.SetTexture("_BumpMap",AssetDatabase.LoadAssetAtPath<Texture2D>(dir+"M41_Tank_Normal.png"));mat.SetFloat("_BumpScale",1);mat.EnableKeyword("_NORMALMAP");
+            EditorUtility.SetDirty(mat);
+            var root=new GameObject("M41 tank visual");
+            var body=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>(model));body.transform.SetParent(root.transform,false);
+            foreach(var r in body.GetComponentsInChildren<Renderer>())r.sharedMaterials=r.sharedMaterials.Select(_=>mat).ToArray();
+            var muzzle=body.GetComponentsInChildren<Transform>().FirstOrDefault(t=>t.name=="Gun_Muzzle");
+            if(muzzle!=null&&root.transform.InverseTransformPoint(muzzle.position).z<0)body.transform.localRotation=Quaternion.Euler(0,180,0)*body.transform.localRotation; // The gun points forward.
+            var bounds=body.GetComponentsInChildren<Renderer>().Select(r=>r.bounds).Aggregate((a,b)=>{a.Encapsulate(b);return a;});
+            body.transform.position-=new Vector3(bounds.center.x,bounds.min.y,0);
+            var hull=body.GetComponentsInChildren<Renderer>().First(r=>r.name=="Hull").bounds;
+            var box=root.AddComponent<BoxCollider>();box.center=root.transform.InverseTransformPoint(hull.center);box.size=hull.size;
+            var prefab=PrefabUtility.SaveAsPrefabAsset(root,dir+"M41_Tank.prefab");Object.DestroyImmediate(root);
+            int tris=AssetDatabase.LoadAllAssetsAtPath(model).OfType<Mesh>().Sum(m=>m.triangles.Length/3);
+            var parts=string.Join(", ",new[]{"Turret","Gun","Gun_Muzzle","Cupola","Hatch_Commander","Hatch_Loader","MG_Mount","MG","MG_Muzzle"}.Where(n=>prefab.GetComponentsInChildren<Transform>().Any(t=>t.name==n)));
+            report.AppendLine($"Tank: {bounds.size.x:0.00} x {bounds.size.y:0.00} x {bounds.size.z:0.00} m, {tris} triangles, moving parts: {parts} -> {dir}M41_Tank.prefab");
             return prefab;
         }
 

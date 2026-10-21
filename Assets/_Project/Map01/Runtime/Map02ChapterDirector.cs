@@ -455,7 +455,9 @@ namespace ShadowVale.Map01
         {
             tank=new GameObject("Tank art slot — scripted boss, no rifle damage");tank.transform.SetParent(root.transform);tank.transform.position=sites["tankBreach"].position;
             // Temporary prop volume; the art team replaces the Art child, never its gameplay owner.
-            var art=Layout!=null&&Layout.tankArt!=null?Instantiate(Layout.tankArt):GameObject.CreatePrimitive(PrimitiveType.Cube);art.name="Art placeholder — tank hull";art.transform.SetParent(tank.transform,false);art.transform.localPosition=Vector3.up;if(Layout==null||Layout.tankArt==null)art.transform.localScale=new Vector3(2.8f,2,5);
+            var art=Layout!=null&&Layout.tankArt!=null?Instantiate(Layout.tankArt):GameObject.CreatePrimitive(PrimitiveType.Cube);art.name="Art placeholder — tank hull";art.transform.SetParent(tank.transform,false);
+            if(Layout!=null&&Layout.tankArt!=null){art.name="Art — M41 tank";art.transform.localPosition=Vector3.zero;BindTankParts(art.transform);} // Modelled tank: sits on the ground, parts move.
+            else{art.transform.localPosition=Vector3.up;art.transform.localScale=new Vector3(2.8f,2,5);}
             var smoke=new GameObject("Destroyed smoke");smoke.transform.SetParent(tank.transform,false);smoke.transform.localPosition=Vector3.up*2;
             tankSmoke=smoke.AddComponent<ParticleSystem>();var main=tankSmoke.main;main.playOnAwake=false;main.startLifetime=3;main.startSpeed=1.5f;main.startSize=1.8f;main.startColor=new Color(.15f,.15f,.15f,.6f);tankSmoke.Stop();
             tankSmoke.GetComponent<ParticleSystemRenderer>().sharedMaterial=Map01Fx.Lit;
