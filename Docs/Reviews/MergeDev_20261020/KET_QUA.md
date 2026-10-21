@@ -1,5 +1,7 @@
 # Kết quả ghép dev vào thinh — 20/10/2026
 
+> Báo cáo lịch sử của lượt merge đầu. Lượt rà, ghép dev mới và đồng bộ thinh/dev ngày 21/10 được ghi ở [Map01_Followup_20261020/KET_QUA.md](../Map01_Followup_20261020/KET_QUA.md); không dùng trạng thái "Không push" bên dưới làm trạng thái hiện tại.
+
 Dev đã kiểm: `a1e2b9a9b0e71b42316fd9ecf9174c279c6304d1` (remote đã kiểm lại cùng SHA).
 Thinh trước ghép: `e44dab1e4be14f14d3524dc731486508b8677242`. HEAD tại lần kiểm tra này: `e44dab1e4be14f14d3524dc731486508b8677242`.
 

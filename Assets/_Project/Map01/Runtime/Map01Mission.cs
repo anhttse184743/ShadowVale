@@ -183,6 +183,7 @@ namespace ShadowVale.Map01
             Binoculars = GetComponents<MonoBehaviour>().OfType<IBinoculars>().FirstOrDefault();
             ModernPlayer = player.GetComponent<PlayerController>();
             ModernCombat = player.GetComponent<PlayerCombat>();
+            inventory.ApplyPrimaryRifle(false);
             ModernHealth = player.GetComponent<Health>();
             Enemies = FindObjectsByType<Map01EnemyController>(FindObjectsSortMode.None);
             if (ModernPlayer != null)

@@ -428,21 +428,23 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual(mission.Settings.guardShotInterval, enemy.FireInterval, 1e-4f, enemy.name);
             }
 
-            // One real hit through the guard's own weapon: exactly the balance damage, and no
-            // second hit before the interval has passed.
-            var guard = mission.Enemies.First(e => e.Alive && !e.IsBoss);
-            // This test isolates damage/cooldown; obstruction behaviour has its own raycast test.
-            typeof(Map01EnemyController).GetField("obstructionMask", Private).SetValue(guard, (LayerMask)0);
-            typeof(Map01EnemyController).GetField("_nextShot", Private).SetValue(guard, 0f);
-            var accuracy = guard.Accuracy;
-            guard.Accuracy = new ShadowVale.Gameplay.Enemies.ShotAccuracyProfile { enabled = false }; // Hit chance: ShotAccuracyTests.
-            float before = playerHealth.Current;
-            guard.FireAtPlayer();
-            Assert.AreEqual(before - expected, playerHealth.Current, 1e-3f);
-            guard.FireAtPlayer();
-            Assert.AreEqual(before - expected, playerHealth.Current, 1e-3f, "A guard must not fire again before guardShotInterval.");
-            guard.Accuracy = accuracy;
-
+            // Exercise both authored rifle loadouts with a real hit and a same-frame cooldown check.
+            foreach (var enemy in mission.Enemies) enemy.enabled = false;
+            foreach (var rifle in new[] { "rifle_standard", Map01M16.Id })
+            {
+                var guard = mission.Enemies.First(e => e.Alive && !e.IsBoss && e.RifleItemId == rifle);
+                typeof(Map01EnemyController).GetField("obstructionMask", Private).SetValue(guard, (LayerMask)0);
+                typeof(Map01EnemyController).GetField("_nextShot", Private).SetValue(guard, 0f);
+                var accuracy = guard.Accuracy;
+                guard.Accuracy = new ShadowVale.Gameplay.Enemies.ShotAccuracyProfile { enabled = false };
+                float before = playerHealth.Current;
+                float roundDamage = expected * (rifle == Map01M16.Id ? .9f : 1f);
+                guard.FireAtPlayer();
+                Assert.AreEqual(before - roundDamage, playerHealth.Current, 1e-3f, rifle);
+                guard.FireAtPlayer();
+                Assert.AreEqual(before - roundDamage, playerHealth.Current, 1e-3f, rifle + " must respect its shot interval.");
+                guard.Accuracy = accuracy;
+            }
             // The commander keeps his multiplier on top of the baseline rather than being reset by it.
             // He is in his headquarters from the start (Map01C3Mission); the boss stage brings no second one.
             quest.RestoreStage(Map01Quest.BossStage);

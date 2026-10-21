@@ -34,6 +34,15 @@ namespace ShadowVale.Gameplay.Combat
         [Tooltip("Degrees of cone spread while hip-firing. Aiming halves it.")]
         [SerializeField] private float hipSpread = 3f;
 
+        public void ConfigureRifle(float shotDamage, float shotCooldown, Transform barrel, bool originalMagazine = true)
+        {
+            damage = shotDamage; cooldown = shotCooldown; muzzle = barrel; UsesOriginalMagazine = originalMagazine;
+            if (flash != null) { Destroy(flash.gameObject); flash = null; }
+        }
+        public bool UsesOriginalMagazine { get; private set; } = true;
+        private Transform reloadModel;
+        public Transform ReloadModel => reloadModel != null ? reloadModel : transform;
+        public void SetReloadModel(Transform model) => reloadModel = model;
         public WeaponKind Kind => kind;
         public float Damage => damage;
         public float Range => range;

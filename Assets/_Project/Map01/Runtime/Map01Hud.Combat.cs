@@ -31,6 +31,7 @@ namespace ShadowVale.Map01
             // What is in hand is drawn bright; the rest dimmed; an empty slot shows only its number.
             string primary = inventory.SlotItem(Map01Inventory.Slot.Primary), pistol = inventory.SlotItem(Map01Inventory.Slot.Pistol);
             if (primary == "rifle_standard") CombatIcon(new Rect(x + 10, y + 10, 146, 118), new Rect(672, 107, 536, 438), kind == WeaponKind.Rifle && !inventory.ThrowableEquipped);
+            else if (primary == Map01M16.Id) Map01RifleHud.DrawM16(new Rect(x + 10, y + 10, 146, 118), kind == WeaponKind.Rifle && !inventory.ThrowableEquipped);
             else if (primary != null) HotbarIcon(new Rect(x + 4, y + 44, 156, 49), primary, primary=="rifle_mosin"&&kind==WeaponKind.Sniper&&!inventory.ThrowableEquipped);
             CombatLabel(new Rect(x + 46, y + 123, 60, 24), "1", combatCaption);
             if (pistol != null) HotbarIcon(new Rect(x + 274, y + 8, 70, 52), pistol, kind == WeaponKind.Pistol);

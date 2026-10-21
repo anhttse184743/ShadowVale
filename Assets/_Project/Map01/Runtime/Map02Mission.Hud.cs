@@ -106,7 +106,9 @@ namespace ShadowVale.Map01
                 hudHealth.Apply();
             }
             float bx=1230,by=610;var kind=combat!=null?combat.EquippedKind:WeaponKind.Unarmed;
-            DrawWeaponIcon(new Rect(bx+10,by+10,146,118),new Rect(672,107,536,438),kind==WeaponKind.Rifle);
+            if (RifleAmmo == Map01M16.Ammo)
+                Map01RifleHud.DrawM16(new Rect(bx+10,by+10,146,118),kind==WeaponKind.Rifle);
+            else DrawWeaponIcon(new Rect(bx+10,by+10,146,118),new Rect(672,107,536,438),kind==WeaponKind.Rifle);
             DrawWeaponIcon(new Rect(bx+249,by+29,82,81),new Rect(96,695,491,476),kind==WeaponKind.Knife);
             DrawWeaponIcon(new Rect(bx+286,by+145,54,69),new Rect(783,724,335,429),kind==WeaponKind.Unarmed);
             GUI.Label(new Rect(bx+60,by+125,35,28),"1",hudCaption);GUI.Label(new Rect(bx+280,by+112,35,28),"2",hudCaption);GUI.Label(new Rect(bx+308,by+220,35,28),"3",hudCaption);
@@ -115,7 +117,7 @@ namespace ShadowVale.Map01
             GUI.color=new Color(.94f,.88f,.70f);float fill=.05f+.9f*Mathf.Clamp01(health.Current/health.Max);
             GUI.DrawTextureWithTexCoords(new Rect(drop.x,drop.yMax-drop.height*fill,drop.width,drop.height*fill),hudHealth,new Rect(0,0,1,fill));
             GUI.color=tint;
-            string rounds=kind!=WeaponKind.Rifle?"—":combat.IsReloading?$"{combat.ReloadProgress*100:0}%":$"{combat.RoundsInMagazine}/{(Inventory.TryGetValue("ammo_rifle",out int n)?n:0)}";
+            string rounds=kind!=WeaponKind.Rifle?"—":combat.IsReloading?$"{combat.ReloadProgress*100:0}%":$"{combat.RoundsInMagazine}/{(Inventory.TryGetValue(RifleAmmo,out int n)?n:0)}";
             GUI.Label(new Rect(bx+10,by+170,160,44),rounds,heading);
             GUI.Label(new Rect(bx+10,by+216,165,30),kind==WeaponKind.Rifle?"BĂNG / DỰ TRỮ":"CẬN CHIẾN",hudCaption);
             GUI.Label(new Rect(bx+154,by+260,185,32),$"{health.Current:0} / {health.Max:0} HP",hudCaption);

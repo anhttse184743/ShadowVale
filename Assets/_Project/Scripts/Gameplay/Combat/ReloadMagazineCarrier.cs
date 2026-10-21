@@ -46,6 +46,8 @@ namespace ShadowVale.Gameplay.Combat
         private Vector3 _homePosition, _homeScale;
         private Quaternion _homeRotation;
         private Renderer[] _renderers = Array.Empty<Renderer>();
+        private Transform _boundRoot;
+        private MagazineReloadProfile _profile;
 
         /// <summary>The magazine's pivot in the rifle in use; null until a rifle has been seen.</summary>
         public Transform Magazine => _magazine;
@@ -55,7 +57,7 @@ namespace ShadowVale.Gameplay.Combat
 
         public bool Shown => _renderers.Length == 0 || _renderers[0].enabled;
 
-        public Take[] Takes => takes;
+        public Take[] Takes => _profile != null && _profile.takes.Length > 0 ? _profile.takes : takes;
 
         public void Configure(Animator actor, Transform handBone, Transform weapons, Take[] value)
         {
@@ -69,7 +71,9 @@ namespace ShadowVale.Gameplay.Combat
         /// </summary>
         public static Transform GatherMagazine(Transform rifle)
         {
-            Transform[] all = rifle.GetComponentsInChildren<Transform>(true);
+            var profile = rifle.GetComponent<MagazineReloadProfile>();
+            Transform[] all = rifle.GetComponentsInChildren<Transform>(true)
+                .Where(t => t.GetComponentInParent<MagazineReloadProfile>() == profile).ToArray();
             Transform existing = all.FirstOrDefault(t => t.name == PivotName);
             if (existing != null) return existing;
             Transform[] pieces = all.Where(t => t.name.StartsWith("bm_magazine") && !t.parent.name.StartsWith("bm_magazine")).ToArray();
@@ -89,6 +93,8 @@ namespace ShadowVale.Gameplay.Combat
         public void Bind(Transform rifle)
         {
             if (_magazine != null) Seat();
+            _boundRoot = rifle;
+            _profile = rifle != null ? rifle.GetComponent<MagazineReloadProfile>() : null;
             _magazine = rifle != null ? GatherMagazine(rifle) : null;
             if (_magazine == null) { _renderers = Array.Empty<Renderer>(); return; }
             _home = _magazine.parent;
@@ -105,17 +111,17 @@ namespace ShadowVale.Gameplay.Combat
         {
             if (animator == null || hand == null) return;
             Weapon rifle = ActiveRifle();
-            if (rifle != _rifle)
+            if (rifle != _rifle || _boundRoot != (rifle != null ? rifle.ReloadModel : null))
             {
                 _rifle = rifle;
-                Bind(rifle != null ? rifle.transform : null);
+                Bind(rifle != null ? rifle.ReloadModel : null);
             }
             if (_magazine == null) return;
             if (_layer < 0) _layer = animator.GetLayerIndex(layerName);
             if (_layer < 0 || animator.GetLayerWeight(_layer) <= 0f) { Seat(); return; }
             AnimatorStateInfo info = animator.IsInTransition(_layer)
                 ? animator.GetNextAnimatorStateInfo(_layer) : animator.GetCurrentAnimatorStateInfo(_layer);
-            foreach (Take take in takes)
+            foreach (Take take in Takes)
                 if (info.IsName(take.state)) { Evaluate(take.state, info.normalizedTime); return; }
             Seat();
         }
@@ -134,9 +140,10 @@ namespace ShadowVale.Gameplay.Combat
         public void Evaluate(string state, float time)
         {
             if (_magazine == null) return;
-            int index = state == null ? -1 : Array.FindIndex(takes, t => t.state == state);
-            if (index < 0 || time < takes[index].leaves || time >= takes[index].seated) { Seat(); return; }
-            Take take = takes[index];
+            Take[] current = Takes;
+            int index = state == null ? -1 : Array.FindIndex(current, t => t.state == state);
+            if (index < 0 || time < current[index].leaves || time >= current[index].seated) { Seat(); return; }
+            Take take = current[index];
             Vector3 world = hand.TransformPoint(take.inHandPosition);
             Quaternion rotation = hand.rotation * take.inHandRotation;
             float ease = take.seatEase > 0 ? Mathf.InverseLerp(take.seated - take.seatEase, take.seated, time) : 0f;
@@ -159,7 +166,8 @@ namespace ShadowVale.Gameplay.Combat
 
         private void Show(bool visible)
         {
-            foreach (Renderer r in _renderers) r.enabled = visible;
+            bool activeModel = _rifle == null || _home == _rifle.ReloadModel || _home.IsChildOf(_rifle.ReloadModel);
+            foreach (Renderer r in _renderers) r.enabled = visible && activeModel;
         }
     }
 }

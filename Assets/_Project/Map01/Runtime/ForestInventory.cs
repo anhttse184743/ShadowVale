@@ -8,8 +8,8 @@ namespace ShadowVale.Map01
     public static class ForestInventory
     {
         public static readonly string[] Order = {
-            "rifle_standard", "knife", "pistol_k54", "rifle_mosin",
-            "ammo_rifle", "ammo_pistol", "ammo_sniper", "medkit_small", "smoke_bomb", "grenade_f1", "cloth", "herb", "stone", "m1_supply_key", "m1_supply_cargo", "supplies", "river_documents",
+            "rifle_standard", "rifle_m16", "knife", "pistol_k54", "rifle_mosin",
+            "ammo_rifle", "ammo_556", "ammo_pistol", "ammo_sniper", "medkit_small", "smoke_bomb", "grenade_f1", "cloth", "herb", "stone", "m1_supply_key", "m1_supply_cargo", "supplies", "river_documents",
             "scrap_metal", "gunpowder", "gun_oil", "repair_kit", "weapon_parts", "smoke_module", "fuse_module", "blast_charge", "scope_lens",
             "ammo_smg", "ammo_shotgun"
         };
@@ -38,12 +38,14 @@ namespace ShadowVale.Map01
             }
             return result;
         }
-        public static bool IsWeapon(string id) => id == "rifle_standard" || id == "knife" || id == "pistol_k54" || id == "rifle_mosin";
+        public static bool IsWeapon(string id) => id == "rifle_standard" || id == "rifle_m16" || id == "knife" || id == "pistol_k54" || id == "rifle_mosin";
         public static bool QuickUsable(string id) => id == "medkit_small" || id == "stone" || id == "smoke_bomb" || id == "grenade_f1" || IsWeapon(id);
         public static string Name(string id)
         {
             switch (id) {
-                case "rifle_standard": return "Súng trường";
+                case "rifle_standard": return "AK47";
+                case "rifle_m16": return "M16";
+                case "ammo_556": return "Đạn 5,56×45 mm";
                 case "knife": return "Dao";
                 case "m1_supply_key": return "Chìa khóa kho — Điểm 1";
                 case "m1_supply_cargo": return "Túi thuốc của Hùng";
@@ -77,6 +79,8 @@ namespace ShadowVale.Map01
         public static string Description(string id)
         {
             switch (id) {
+                case "rifle_m16": return "M16, đạn 5,56×45 mm, băng 30 viên, 700 viên/phút. Sát thương mỗi viên bằng 90% AK47. Sửa chữa và rã lấy linh kiện như AK47.";
+                case "ammo_556": return "Đạn 5,56×45 mm dành cho M16. Nạp bằng R; không dùng chung đạn AK47. Chế ở bàn: 2 thuốc súng + 1 kim loại vụn ra 10 viên.";
                 case "rifle_standard": return "Súng trường AK, ở ô 1, đạn 7,62×39. Mỗi phát mòn một ít độ bền; hỏng (0%) thì không bắn được tới khi sửa. Lính địch gục để lại AK đã mòn: sửa, rã lấy linh kiện hoặc nộp ở kho căn cứ.";
                 case "knife": return "Dao, luôn ở ô 3, không vứt được. Cận chiến, hạ gục lặng lẽ từ sau lưng. Nhấn 3 để cầm dao.";
                 case "m1_supply_key": return "Nhặt từ lính gác. Dùng tại cửa kho điểm 1 [E]. Hòm bên trong có khóa mã riêng.";
@@ -118,7 +122,7 @@ namespace ShadowVale.Map01
             switch (outputId) {
                 case "medkit_small": return "heal";
                 case "smoke_bomb": case "grenade_f1": return "throw";
-                case "ammo_pistol": case "ammo_rifle": case "ammo_sniper": return "ammo";
+                case "ammo_556": case "ammo_pistol": case "ammo_rifle": case "ammo_sniper": return "ammo";
                 default: return "tool";
             }
         }
@@ -132,6 +136,7 @@ namespace ShadowVale.Map01
                 case "grenade_f1": return new[] { $"Chết {Map01StoneThrow.KillRadius:0} m · thương {Map01StoneThrow.WoundRadius:0} m", "Nổ sau 3,5 giây" };
                 case "ammo_pistol": return new[] { "Cho K-54", "R nạp đạn" };
                 case "ammo_sniper": return new[] { "Cho Mosin", "R nạp từng viên" };
+                case "ammo_556": return new[] { "Cho M16 · 5,56×45 mm", "Nạp bằng R" };
                 case "ammo_rifle": return new[] { "Cho súng trường", "Nạp bằng R" };
                 default: return System.Array.Empty<string>();
             }

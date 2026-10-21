@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="18" result="Failed(Child)" total="18" passed="17" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-20 23:37:08Z" end-time="2026-10-20 23:37:26Z" duration="17,8731299">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="557" result="Failed" site="Child" start-time="2026-10-20 23:37:08Z" end-time="2026-10-20 23:37:26Z" duration="17.873130" total="18" passed="17" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1441" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/Admin/.codex/worktrees/dev-preflight-20261020/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="346" result="Failed" site="Child" start-time="2026-10-20 23:37:08Z" end-time="2026-10-20 23:37:26Z" duration="17.715680" total="18" passed="17" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="208616" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1442" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="346" result="Failed" site="Child" start-time="2026-10-20 23:37:08Z" end-time="2026-10-20 23:37:26Z" duration="17.699735" total="18" passed="17" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1443" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="346" result="Failed" site="Child" start-time="2026-10-20 23:37:08Z" end-time="2026-10-20 23:37:26Z" duration="17.686752" total="18" passed="17" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="SetUpFixture" id="1366" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="346" result="Failed" site="Child" start-time="2026-10-20 23:37:08Z" end-time="2026-10-20 23:37:26Z" duration="17.670716" total="18" passed="17" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1072" name="ForestFlowTests" fullname="ShadowVale.Map01.Tests.ForestFlowTests" classname="ShadowVale.Map01.Tests.ForestFlowTests" runstate="Runnable" testcasecount="16" result="Failed" site="Child" start-time="2026-10-20 23:36:43Z" end-time="2026-10-20 23:36:50Z" duration="6.600661" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1082" name="GuardDamageFollowsMap01Balance" fullname="ShadowVale.Map01.Tests.ForestFlowTests.GuardDamageFollowsMap01Balance" methodname="GuardDamageFollowsMap01Balance" classname="ShadowVale.Map01.Tests.ForestFlowTests" runstate="Runnable" seed="1321732896" result="Failed" start-time="2026-10-20 23:36:07Z" end-time="2026-10-20 23:36:50Z" duration="42.561932" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: 91.600000381469727d +/- 0.0010000000474974513d
+  But was:  92.44000244140625d
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.ForestFlowTests+<GuardDamageFollowsMap01Balance>d__17.MoveNext () [0x0020e] in C:\Users\Admin\.codex\worktrees\dev-preflight-20261020\ShadowVale\Assets\_Project\Map01\Tests\ForestFlowTests.cs:441
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1136" name="LootRollerTests" fullname="ShadowVale.Map01.Tests.LootRollerTests" classname="ShadowVale.Map01.Tests.LootRollerTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-10-20 23:36:50Z" end-time="2026-10-20 23:36:51Z" duration="1.024086" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1143" name="AGuardsPackIsAFewRoundsNotAMagazine" fullname="ShadowVale.Map01.Tests.LootRollerTests.AGuardsPackIsAFewRoundsNotAMagazine" methodname="AGuardsPackIsAFewRoundsNotAMagazine" classname="ShadowVale.Map01.Tests.LootRollerTests" runstate="Runnable" seed="1925842452" result="Passed" start-time="2026-10-20 23:36:50Z" end-time="2026-10-20 23:36:50Z" duration="0.031220" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1140" name="ATierTheTableLacksFallsToTheNearestLowerOne" fullname="ShadowVale.Map01.Tests.LootRollerTests.ATierTheTableLacksFallsToTheNearestLowerOne" methodname="ATierTheTableLacksFallsToTheNearestLowerOne" classname="ShadowVale.Map01.Tests.LootRollerTests" runstate="Runnable" seed="795021912" result="Passed" start-time="2026-10-20 23:36:50Z" end-time="2026-10-20 23:36:50Z" duration="0.268493" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1141" name="EveryTableGivesItsTierFiveAndOnlyItsOwnItemsInRange" fullname="ShadowVale.Map01.Tests.LootRollerTests.EveryTableGivesItsTierFiveAndOnlyItsOwnItemsInRange" methodname="EveryTableGivesItsTierFiveAndOnlyItsOwnItemsInRange" classname="ShadowVale.Map01.Tests.LootRollerTests" runstate="Runnable" seed="1220536052" result="Passed" start-time="2026-10-20 23:36:50Z" end-time="2026-10-20 23:36:50Z" duration="0.308899" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1144" name="GunsCarryDurabilityInTheContentBundleAndSkillsCapFieldRepairs" fullname="ShadowVale.Map01.Tests.LootRollerTests.GunsCarryDurabilityInTheContentBundleAndSkillsCapFieldRepairs" methodname="GunsCarryDurabilityInTheContentBundleAndSkillsCapFieldRepairs" classname="ShadowVale.Map01.Tests.LootRollerTests" runstate="Runnable" seed="321531862" result="Passed" start-time="2026-10-20 23:36:50Z" end-time="2026-10-20 23:36:50Z" duration="0.003102" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1146" name="SavedDataFromBeforeGunsWoreReadsAsNew" fullname="ShadowVale.Map01.Tests.LootRollerTests.SavedDataFromBeforeGunsWoreReadsAsNew" methodname="SavedDataFromBeforeGunsWoreReadsAsNew" classname="ShadowVale.Map01.Tests.LootRollerTests" runstate="Runnable" seed="792611434" result="Passed" start-time="2026-10-20 23:36:50Z" end-time="2026-10-20 23:36:50Z" duration="0.001173" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1142" name="TheSameSeedRollsTheSameAndOtherSeedsVary" fullname="ShadowVale.Map01.Tests.LootRollerTests.TheSameSeedRollsTheSameAndOtherSeedsVary" methodname="TheSameSeedRollsTheSameAndOtherSeedsVary" classname="ShadowVale.Map01.Tests.LootRollerTests" runstate="Runnable" seed="1764072066" result="Passed" start-time="2026-10-20 23:36:50Z" end-time="2026-10-20 23:36:50Z" duration="0.004189" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1137" name="TheShippedDataPassesTheDatabaseConstraints" fullname="ShadowVale.Map01.Tests.LootRollerTests.TheShippedDataPassesTheDatabaseConstraints" methodname="TheShippedDataPassesTheDatabaseConstraints" classname="ShadowVale.Map01.Tests.LootRollerTests" runstate="Runnable" seed="2038486723" result="Passed" start-time="2026-10-20 23:36:50Z" end-time="2026-10-20 23:36:50Z" duration="0.003201" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1145" name="TheThreeRoundsShareGunpowderAndAMosinRoundCostsMost" fullname="ShadowVale.Map01.Tests.LootRollerTests.TheThreeRoundsShareGunpowderAndAMosinRoundCostsMost" methodname="TheThreeRoundsShareGunpowderAndAMosinRoundCostsMost" classname="ShadowVale.Map01.Tests.LootRollerTests" runstate="Runnable" seed="368839025" result="Passed" start-time="2026-10-20 23:36:50Z" end-time="2026-10-20 23:36:50Z" duration="0.003489" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1138" name="TiersComeUpSixtyTwentySixElevenThree" fullname="ShadowVale.Map01.Tests.LootRollerTests.TiersComeUpSixtyTwentySixElevenThree" methodname="TiersComeUpSixtyTwentySixElevenThree" classname="ShadowVale.Map01.Tests.LootRollerTests" runstate="Runnable" seed="1444083840" result="Passed" start-time="2026-10-20 23:36:50Z" end-time="2026-10-20 23:36:50Z" duration="0.014338" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1139" name="WithinATierAnEntryComesUpByItsWeightAndTwiceAsOftenWhenBoosted" fullname="ShadowVale.Map01.Tests.LootRollerTests.WithinATierAnEntryComesUpByItsWeightAndTwiceAsOftenWhenBoosted" methodname="WithinATierAnEntryComesUpByItsWeightAndTwiceAsOftenWhenBoosted" classname="ShadowVale.Map01.Tests.LootRollerTests" runstate="Runnable" seed="1950921052" result="Passed" start-time="2026-10-20 23:36:50Z" end-time="2026-10-20 23:36:51Z" duration="0.363847" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1147" name="M16IntegrationTests" fullname="ShadowVale.Map01.Tests.M16IntegrationTests" classname="ShadowVale.Map01.Tests.M16IntegrationTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-20 23:37:08Z" end-time="2026-10-20 23:37:16Z" duration="7.580084" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="ParameterizedMethod" id="1151" name="BackpackCaliberMatchesRifleAndKeepsK54" fullname="ShadowVale.Map01.Tests.M16IntegrationTests.BackpackCaliberMatchesRifleAndKeepsK54" classname="ShadowVale.Map01.Tests.M16IntegrationTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-20 23:36:51Z" end-time="2026-10-20 23:36:51Z" duration="0.012668" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1149" name="BackpackCaliberMatchesRifleAndKeepsK54(&quot;rifle_standard&quot;,&quot;ammo_rifle&quot;)" fullname="ShadowVale.Map01.Tests.M16IntegrationTests.BackpackCaliberMatchesRifleAndKeepsK54(&quot;rifle_standard&quot;,&quot;ammo_rifle&quot;)" methodname="BackpackCaliberMatchesRifleAndKeepsK54" classname="ShadowVale.Map01.Tests.M16IntegrationTests" runstate="Runnable" seed="1342820823" result="Passed" start-time="2026-10-20 23:36:51Z" end-time="2026-10-20 23:36:51Z" duration="0.007107" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1150" name="BackpackCaliberMatchesRifleAndKeepsK54(&quot;rifle_m16&quot;,&quot;ammo_556&quot;)" fullname="ShadowVale.Map01.Tests.M16IntegrationTests.BackpackCaliberMatchesRifleAndKeepsK54(&quot;rifle_m16&quot;,&quot;ammo_556&quot;)" methodname="BackpackCaliberMatchesRifleAndKeepsK54" classname="ShadowVale.Map01.Tests.M16IntegrationTests" runstate="Runnable" seed="435216756" result="Passed" start-time="2026-10-20 23:36:51Z" end-time="2026-10-20 23:36:51Z" duration="0.000648" asserts="0">
+                  <properties />
+                </test-case>
+              </test-suite>
+              <test-case id="1148" name="EveryShuffledGroupHasSevenM16AndThreeAK" fullname="ShadowVale.Map01.Tests.M16IntegrationTests.EveryShuffledGroupHasSevenM16AndThreeAK" methodname="EveryShuffledGroupHasSevenM16AndThreeAK" classname="ShadowVale.Map01.Tests.M16IntegrationTests" runstate="Runnable" seed="1032758536" result="Passed" start-time="2026-10-20 23:36:51Z" end-time="2026-10-20 23:36:51Z" duration="0.245933" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1153" name="LootEquipCaliberReloadAndSaveRoundTrip" fullname="ShadowVale.Map01.Tests.M16IntegrationTests.LootEquipCaliberReloadAndSaveRoundTrip" methodname="LootEquipCaliberReloadAndSaveRoundTrip" classname="ShadowVale.Map01.Tests.M16IntegrationTests" runstate="Runnable" seed="1089270943" result="Passed" start-time="2026-10-20 23:36:51Z" end-time="2026-10-20 23:37:16Z" duration="25.037618" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1152" name="M16HasAmmoIconAndSharesAkFoundConditionLimits" fullname="ShadowVale.Map01.Tests.M16IntegrationTests.M16HasAmmoIconAndSharesAkFoundConditionLimits" methodname="M16HasAmmoIconAndSharesAkFoundConditionLimits" classname="ShadowVale.Map01.Tests.M16IntegrationTests" runstate="Runnable" seed="1683088327" result="Passed" start-time="2026-10-20 23:37:16Z" end-time="2026-10-20 23:37:16Z" duration="0.005462" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1273" name="ReloadMagazineTests" fullname="ShadowVale.Map01.Tests.ReloadMagazineTests" classname="ShadowVale.Map01.Tests.ReloadMagazineTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-20 23:37:16Z" end-time="2026-10-20 23:37:26Z" duration="9.991490" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="ParameterizedMethod" id="1276" name="MagazineLeavesTheRifleRidesTheHandAndGoesBack" fullname="ShadowVale.Map01.Tests.ReloadMagazineTests.MagazineLeavesTheRifleRidesTheHandAndGoesBack" classname="ShadowVale.Map01.Tests.ReloadMagazineTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-20 23:37:16Z" end-time="2026-10-20 23:37:26Z" duration="9.989619" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1274" name="MagazineLeavesTheRifleRidesTheHandAndGoesBack(False)" fullname="ShadowVale.Map01.Tests.ReloadMagazineTests.MagazineLeavesTheRifleRidesTheHandAndGoesBack(False)" methodname="MagazineLeavesTheRifleRidesTheHandAndGoesBack" classname="ShadowVale.Map01.Tests.ReloadMagazineTests" runstate="Runnable" seed="1116216787" result="Passed" start-time="2026-10-20 23:37:16Z" end-time="2026-10-20 23:37:16Z" duration="0.137093" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                </test-case>
+                <test-case id="1275" name="MagazineLeavesTheRifleRidesTheHandAndGoesBack(True)" fullname="ShadowVale.Map01.Tests.ReloadMagazineTests.MagazineLeavesTheRifleRidesTheHandAndGoesBack(True)" methodname="MagazineLeavesTheRifleRidesTheHandAndGoesBack" classname="ShadowVale.Map01.Tests.ReloadMagazineTests" runstate="Runnable" seed="1078411630" result="Passed" start-time="2026-10-20 23:37:16Z" end-time="2026-10-20 23:37:26Z" duration="9.850524" asserts="0">
+                  <properties>
+                    <property name="retryIteration" value="0" />
+                    <property name="repeatIteration" value="0" />
+                  </properties>
+                  <output><![CDATA[Saving results to: C:/Users/Admin/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+                </test-case>
+              </test-suite>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

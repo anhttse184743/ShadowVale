@@ -24,6 +24,7 @@ namespace ShadowVale.Map01
             public Vector3 position;
             public float yaw, health, playSeconds, attackCooldown;
             public int magazine, equipped, stones;
+            public string rifleItemId;
             public Item[] inventory;
             public SkillProgress skills;
             public SkillMissionProgress skillMission;
@@ -39,6 +40,15 @@ namespace ShadowVale.Map01
         public readonly Dictionary<string,int> Inventory = new Dictionary<string,int>();
         public int Stones { get; private set; }
         public float PlaySeconds { get; private set; }
+        string RifleItemId
+        {
+            get
+            {
+                var gun = combat != null ? combat.WeaponFor(WeaponKind.Rifle) : null;
+                return gun != null ? gun.GetComponent<Map01RifleVisual>()?.ItemId ?? "rifle_standard" : "rifle_standard";
+            }
+        }
+        public string RifleAmmo => RifleItemId == Map01M16.Id ? Map01M16.Ammo : "ammo_rifle";
         public event Action<Map02Work> WorkRequested;
         public event Action Changed;
         Map02ConversationSession dialogue;
@@ -95,8 +105,8 @@ namespace ShadowVale.Map01
             {
                 combat.enabled=true;combat.DrawsOwnWeaponHud=false;
                 combat.InputAllowed=()=>!InputBlocked;combat.TryConsumeRound=null;
-                combat.ReserveRounds=()=>Inventory.TryGetValue("ammo_rifle",out int n)?n:0;
-                combat.DrawRounds=requested=>{int n=Mathf.Min(requested,combat.ReserveRounds());Inventory["ammo_rifle"]=combat.ReserveRounds()-n;return n;};
+                combat.ReserveRounds=()=>Inventory.TryGetValue(RifleAmmo,out int n)?n:0;
+                combat.DrawRounds=requested=>{int n=Mathf.Min(requested,combat.ReserveRounds());Inventory[RifleAmmo]=combat.ReserveRounds()-n;return n;};
             }
             player.InputAllowed=()=>!InputBlocked;
             if(cameraRig!=null){cameraRig.SetTarget(Player);cameraRig.InputAllowed=()=>!InputBlocked;}
@@ -209,6 +219,7 @@ namespace ShadowVale.Map01
         }
         public bool CanSave()=>string.IsNullOrEmpty(SaveBlockReason());
         public Snapshot Capture()=>new Snapshot {
+            rifleItemId=RifleItemId,
             world=JsonUtility.FromJson<Map02WorldState>(JsonUtility.ToJson(World)),position=Player.position,yaw=Player.eulerAngles.y,
             health=health.Current,magazine=combat!=null?combat.RoundsInMagazine:0,equipped=combat!=null?(int)combat.EquippedKind:0,
             attackCooldown=combat!=null?combat.AttackCooldownRemaining:0,playSeconds=PlaySeconds,stones=Stones,
@@ -234,7 +245,11 @@ namespace ShadowVale.Map01
             Player.SetPositionAndRotation(data.position,Quaternion.Euler(0,data.yaw,0));if(cc!=null)cc.enabled=enabledBefore;
             if(cameraRig!=null){cameraRig.SetTarget(Player);cameraRig.ClearCinematicView();cameraRig.ClearRecoil();}
             player.RestoreMotion(false);health.RestoreHealth(data.health);
-            if(combat!=null){combat.RestoreMagazine(data.magazine);combat.Equip((WeaponKind)data.equipped);combat.RestoreAttackCooldown(data.attackCooldown);}
+            if(combat!=null)
+            {
+                Map01RifleVisual.Apply(combat.WeaponFor(WeaponKind.Rifle), data.rifleItemId == Map01M16.Id ? Map01M16.Id : "rifle_standard");
+                combat.RestoreMagazine(data.magazine);combat.Equip((WeaponKind)data.equipped);combat.RestoreAttackCooldown(data.attackCooldown);
+            }
             var skills=player.GetComponent<PlayerSkills>();
             if(skills!=null)
             {

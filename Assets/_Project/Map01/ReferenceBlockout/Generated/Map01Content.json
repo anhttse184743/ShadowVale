@@ -4,7 +4,9 @@
   "published_at": "2026-09-18T00:00:00Z",
   "checksum": "sha256:fallback-dev-bundle",
   "items": [
+    {"id":"rifle_m16","display_name":"M16","category":"weapon","stack_max":1,"weight":3.5},
     { "id": "ammo_rifle",    "display_name": "Rifle Rounds",    "category": "ammo",       "stack_max": 90,  "weight": 0.02 },
+    {"id": "ammo_556", "display_name": "Đạn 5,56×45 mm", "category": "ammo", "stack_max": 90, "weight": 0.02},
     { "id": "ammo_smg",      "display_name": "SMG Rounds",      "category": "ammo",       "stack_max": 120, "weight": 0.01 },
     { "id": "ammo_shotgun",  "display_name": "Shells",          "category": "ammo",       "stack_max": 32,  "weight": 0.05 },
     { "id": "ammo_pistol",   "display_name": "Pistol Rounds",   "category": "ammo",       "stack_max": 60,  "weight": 0.01 },
@@ -18,6 +20,7 @@
   ],
   "weapons": [
     { "id": "rifle_standard",  "display_name": "Service Rifle",   "class": "rifle",   "damage": 24.0, "fire_rate": 6.5,  "range": 40.0, "ammo_type": "ammo_rifle",   "magazine_size": 30, "reload_seconds": 2.4, "durability_max": 100, "durability_per_shot": 0.12, "noise_radius": 18.0, "suppressed": false },
+    {"id": "rifle_m16", "display_name": "M16", "class": "rifle", "damage": 21.6, "fire_rate": 11.666666666666666, "range": 40.0, "ammo_type": "ammo_556", "magazine_size": 30, "reload_seconds": 2.4, "durability_max": 100, "durability_per_shot": 0.12, "noise_radius": 18.0, "suppressed": false},
     { "id": "smg_compact",     "display_name": "Compact SMG",     "class": "smg",     "damage": 14.0, "fire_rate": 11.0, "range": 22.0, "ammo_type": "ammo_smg",     "magazine_size": 35, "reload_seconds": 1.8, "durability_max": 90,  "durability_per_shot": 0.10, "noise_radius": 14.0, "suppressed": false },
     { "id": "shotgun_pump",    "display_name": "Pump Shotgun",    "class": "shotgun", "damage": 60.0, "fire_rate": 1.2,  "range": 12.0, "ammo_type": "ammo_shotgun", "magazine_size": 6,  "reload_seconds": 3.0, "durability_max": 120, "durability_per_shot": 0.40, "noise_radius": 24.0, "suppressed": false },
     { "id": "pistol_silenced", "display_name": "Silenced Pistol", "class": "pistol",  "damage": 18.0, "fire_rate": 4.0,  "range": 20.0, "ammo_type": "ammo_pistol",  "magazine_size": 12, "reload_seconds": 1.5, "durability_max": 80,  "durability_per_shot": 0.15, "noise_radius": 4.0,  "suppressed": true },

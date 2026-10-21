@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="22" result="Failed(Child)" total="22" passed="21" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-21 01:06:49Z" end-time="2026-10-21 01:06:54Z" duration="4,9376897">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="633" result="Failed" site="Child" start-time="2026-10-21 01:06:49Z" end-time="2026-10-21 01:06:54Z" duration="4.937690" total="22" passed="21" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1529" name="ShadowVale.Map01.Tests.dll" fullname="D:/DO_AN_GAME/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="421" result="Failed" site="Child" start-time="2026-10-21 01:06:49Z" end-time="2026-10-21 01:06:54Z" duration="4.620285" total="22" passed="21" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="209528" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1530" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="421" result="Failed" site="Child" start-time="2026-10-21 01:06:49Z" end-time="2026-10-21 01:06:54Z" duration="4.591478" total="22" passed="21" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1531" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="421" result="Failed" site="Child" start-time="2026-10-21 01:06:49Z" end-time="2026-10-21 01:06:54Z" duration="4.564612" total="22" passed="21" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="SetUpFixture" id="1447" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="421" result="Failed" site="Child" start-time="2026-10-21 01:06:49Z" end-time="2026-10-21 01:06:54Z" duration="4.534974" total="22" passed="21" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1168" name="K54IntegrationTests" fullname="ShadowVale.Map01.Tests.K54IntegrationTests" classname="ShadowVale.Map01.Tests.K54IntegrationTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-21 01:00:20Z" end-time="2026-10-21 01:00:25Z" duration="5.257631" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1169" name="K54HasItsOwnMagazineAndReloadUsesOnlyPistolReserve" fullname="ShadowVale.Map01.Tests.K54IntegrationTests.K54HasItsOwnMagazineAndReloadUsesOnlyPistolReserve" methodname="K54HasItsOwnMagazineAndReloadUsesOnlyPistolReserve" classname="ShadowVale.Map01.Tests.K54IntegrationTests" runstate="Runnable" seed="383444956" result="Passed" start-time="2026-10-21 01:00:03Z" end-time="2026-10-21 01:00:25Z" duration="21.939527" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1286" name="Map02M16SaveCompatibilityTests" fullname="ShadowVale.Map01.Tests.Map02M16SaveCompatibilityTests" classname="ShadowVale.Map01.Tests.Map02M16SaveCompatibilityTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-21 01:00:32Z" end-time="2026-10-21 01:00:32Z" duration="0.537567" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1287" name="SavedM16KeepsItsModelAndCaliberWithoutTheArrivalObject" fullname="ShadowVale.Map01.Tests.Map02M16SaveCompatibilityTests.SavedM16KeepsItsModelAndCaliberWithoutTheArrivalObject" methodname="SavedM16KeepsItsModelAndCaliberWithoutTheArrivalObject" classname="ShadowVale.Map01.Tests.Map02M16SaveCompatibilityTests" runstate="Runnable" seed="90732455" result="Failed" start-time="2026-10-21 01:00:25Z" end-time="2026-10-21 01:00:32Z" duration="6.984307" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  M16 must use its own caliber even without an arrival object.
+  Expected: 55
+  But was:  13
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.Map02M16SaveCompatibilityTests+<CheckRoundTrip>d__1.MoveNext () [0x000af] in D:\DO_AN_GAME\ShadowVale\Assets\_Project\Map01\Tests\Map02M16SaveCompatibilityTests.cs:36
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1320" name="MosinIntegrationTests" fullname="ShadowVale.Map01.Tests.MosinIntegrationTests" classname="ShadowVale.Map01.Tests.MosinIntegrationTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-21 01:01:15Z" end-time="2026-10-21 01:01:27Z" duration="12.412156" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1321" name="ExportedMechanicalPartsMoveAndFollowTheCarryingHands" fullname="ShadowVale.Map01.Tests.MosinIntegrationTests.ExportedMechanicalPartsMoveAndFollowTheCarryingHands" methodname="ExportedMechanicalPartsMoveAndFollowTheCarryingHands" classname="ShadowVale.Map01.Tests.MosinIntegrationTests" runstate="Runnable" seed="913389002" result="Passed" start-time="2026-10-21 01:00:32Z" end-time="2026-10-21 01:00:32Z" duration="0.172623" asserts="0">
+                <properties />
+                <output><![CDATA[K54_MAGAZINE_WORLD_AUDIT_PASS
+MOSIN_MECHANICS_AUDIT_PASS
+]]></output>
+              </test-case>
+              <test-case id="1322" name="MosinInsertsIndividuallyKeepsAKInTheBagAndSavesThreeIndependentMagazines" fullname="ShadowVale.Map01.Tests.MosinIntegrationTests.MosinInsertsIndividuallyKeepsAKInTheBagAndSavesThreeIndependentMagazines" methodname="MosinInsertsIndividuallyKeepsAKInTheBagAndSavesThreeIndependentMagazines" classname="ShadowVale.Map01.Tests.MosinIntegrationTests" runstate="Runnable" seed="1856072416" result="Passed" start-time="2026-10-21 01:00:32Z" end-time="2026-10-21 01:00:57Z" duration="25.150544" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1323" name="PUScopeHasReal35MagnificationAndBoltCycleReturnsToScopeWithoutASecondCamera" fullname="ShadowVale.Map01.Tests.MosinIntegrationTests.PUScopeHasReal35MagnificationAndBoltCycleReturnsToScopeWithoutASecondCamera" methodname="PUScopeHasReal35MagnificationAndBoltCycleReturnsToScopeWithoutASecondCamera" classname="ShadowVale.Map01.Tests.MosinIntegrationTests" runstate="Runnable" seed="1535906114" result="Passed" start-time="2026-10-21 01:00:57Z" end-time="2026-10-21 01:01:27Z" duration="29.719034" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1324" name="MosinReloadTimingTests" fullname="ShadowVale.Map01.Tests.MosinReloadTimingTests" classname="ShadowVale.Map01.Tests.MosinReloadTimingTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-21 01:01:27Z" end-time="2026-10-21 01:01:27Z" duration="0.003839" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1325" name="EachInsertionConsumesOneRoundAndCancellationKeepsOnlyInsertedRounds" fullname="ShadowVale.Map01.Tests.MosinReloadTimingTests.EachInsertionConsumesOneRoundAndCancellationKeepsOnlyInsertedRounds" methodname="EachInsertionConsumesOneRoundAndCancellationKeepsOnlyInsertedRounds" classname="ShadowVale.Map01.Tests.MosinReloadTimingTests" runstate="Runnable" seed="2028846213" result="Passed" start-time="2026-10-21 01:01:27Z" end-time="2026-10-21 01:01:27Z" duration="0.001177" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1327" name="ExhaustedReserveCannotDuplicateRoundsAndOrdinaryAKStillLoadsAtomically" fullname="ShadowVale.Map01.Tests.MosinReloadTimingTests.ExhaustedReserveCannotDuplicateRoundsAndOrdinaryAKStillLoadsAtomically" methodname="ExhaustedReserveCannotDuplicateRoundsAndOrdinaryAKStillLoadsAtomically" classname="ShadowVale.Map01.Tests.MosinReloadTimingTests" runstate="Runnable" seed="1221655025" result="Passed" start-time="2026-10-21 01:01:27Z" end-time="2026-10-21 01:01:27Z" duration="0.000303" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1326" name="FullReloadRemainsFiveSecondsAndPartialReloadSkipsUnusedInsertionGestures" fullname="ShadowVale.Map01.Tests.MosinReloadTimingTests.FullReloadRemainsFiveSecondsAndPartialReloadSkipsUnusedInsertionGestures" methodname="FullReloadRemainsFiveSecondsAndPartialReloadSkipsUnusedInsertionGestures" classname="ShadowVale.Map01.Tests.MosinReloadTimingTests" runstate="Runnable" seed="1367990064" result="Passed" start-time="2026-10-21 01:01:27Z" end-time="2026-10-21 01:01:27Z" duration="0.000351" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1328" name="MosinStealthTests" fullname="ShadowVale.Map01.Tests.MosinStealthTests" classname="ShadowVale.Map01.Tests.MosinStealthTests" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-10-21 01:05:45Z" end-time="2026-10-21 01:05:48Z" duration="3.669659" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1332" name="ActualSightStillFindsNamAndHiddenSniperDamageKeepsThePreviousContact" fullname="ShadowVale.Map01.Tests.MosinStealthTests.ActualSightStillFindsNamAndHiddenSniperDamageKeepsThePreviousContact" methodname="ActualSightStillFindsNamAndHiddenSniperDamageKeepsThePreviousContact" classname="ShadowVale.Map01.Tests.MosinStealthTests" runstate="Runnable" seed="1498819420" result="Passed" start-time="2026-10-21 01:01:27Z" end-time="2026-10-21 01:01:48Z" duration="20.760998" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1335" name="C3ReservesAndRunnersReceiveOnlyRecordedInformation" fullname="ShadowVale.Map01.Tests.MosinStealthTests.C3ReservesAndRunnersReceiveOnlyRecordedInformation" methodname="C3ReservesAndRunnersReceiveOnlyRecordedInformation" classname="ShadowVale.Map01.Tests.MosinStealthTests" runstate="Runnable" seed="1276872426" result="Passed" start-time="2026-10-21 01:01:48Z" end-time="2026-10-21 01:02:39Z" duration="51.007479" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1331" name="CloseShotIsHeardByEveryListenerAndRemembersTheShotRatherThanNamMoving" fullname="ShadowVale.Map01.Tests.MosinStealthTests.CloseShotIsHeardByEveryListenerAndRemembersTheShotRatherThanNamMoving" methodname="CloseShotIsHeardByEveryListenerAndRemembersTheShotRatherThanNamMoving" classname="ShadowVale.Map01.Tests.MosinStealthTests" runstate="Runnable" seed="850539183" result="Passed" start-time="2026-10-21 01:02:39Z" end-time="2026-10-21 01:02:58Z" duration="18.832452" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1338" name="DistantMosinKillAtRadioTriggersBodySearchAndResponseWithoutKnowingNam" fullname="ShadowVale.Map01.Tests.MosinStealthTests.DistantMosinKillAtRadioTriggersBodySearchAndResponseWithoutKnowingNam" methodname="DistantMosinKillAtRadioTriggersBodySearchAndResponseWithoutKnowingNam" classname="ShadowVale.Map01.Tests.MosinStealthTests" runstate="Runnable" seed="956874575" result="Passed" start-time="2026-10-21 01:02:58Z" end-time="2026-10-21 01:03:18Z" duration="19.833758" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1333" name="HitEvidenceSurvivesWeaponSwitchAndOtherDamageIsNotMisclassifiedAsMosin" fullname="ShadowVale.Map01.Tests.MosinStealthTests.HitEvidenceSurvivesWeaponSwitchAndOtherDamageIsNotMisclassifiedAsMosin" methodname="HitEvidenceSurvivesWeaponSwitchAndOtherDamageIsNotMisclassifiedAsMosin" classname="ShadowVale.Map01.Tests.MosinStealthTests" runstate="Runnable" seed="1001364000" result="Passed" start-time="2026-10-21 01:03:18Z" end-time="2026-10-21 01:03:37Z" duration="18.935147" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1337" name="LethalMosinDamageToASleepingReserveCreditsExactlyOneKillAndLootWithoutSight" fullname="ShadowVale.Map01.Tests.MosinStealthTests.LethalMosinDamageToASleepingReserveCreditsExactlyOneKillAndLootWithoutSight" methodname="LethalMosinDamageToASleepingReserveCreditsExactlyOneKillAndLootWithoutSight" classname="ShadowVale.Map01.Tests.MosinStealthTests" runstate="Runnable" seed="1786824937" result="Passed" start-time="2026-10-21 01:03:37Z" end-time="2026-10-21 01:03:54Z" duration="17.886509" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1329" name="QueuedMosinKeepsItsIdentityWhenSwitchedBeforeTheFinalShotPass" fullname="ShadowVale.Map01.Tests.MosinStealthTests.QueuedMosinKeepsItsIdentityWhenSwitchedBeforeTheFinalShotPass" methodname="QueuedMosinKeepsItsIdentityWhenSwitchedBeforeTheFinalShotPass" classname="ShadowVale.Map01.Tests.MosinStealthTests" runstate="Runnable" seed="416006863" result="Passed" start-time="2026-10-21 01:03:54Z" end-time="2026-10-21 01:04:13Z" duration="19.030617" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1330" name="RealMosinShotsAt35_50_70MetresNeverInventSightOrSquadContact" fullname="ShadowVale.Map01.Tests.MosinStealthTests.RealMosinShotsAt35_50_70MetresNeverInventSightOrSquadContact" methodname="RealMosinShotsAt35_50_70MetresNeverInventSightOrSquadContact" classname="ShadowVale.Map01.Tests.MosinStealthTests" runstate="Runnable" seed="399676467" result="Passed" start-time="2026-10-21 01:04:13Z" end-time="2026-10-21 01:04:45Z" duration="31.330814" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1336" name="RepeatedDistantMissesDoNotCreateDamageOrContact" fullname="ShadowVale.Map01.Tests.MosinStealthTests.RepeatedDistantMissesDoNotCreateDamageOrContact" methodname="RepeatedDistantMissesDoNotCreateDamageOrContact" classname="ShadowVale.Map01.Tests.MosinStealthTests" runstate="Runnable" seed="1161524020" result="Passed" start-time="2026-10-21 01:04:45Z" end-time="2026-10-21 01:05:07Z" duration="22.578660" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1334" name="SaveFileReloadKeepsAnUnknownSniperAttackUnknown" fullname="ShadowVale.Map01.Tests.MosinStealthTests.SaveFileReloadKeepsAnUnknownSniperAttackUnknown" methodname="SaveFileReloadKeepsAnUnknownSniperAttackUnknown" classname="ShadowVale.Map01.Tests.MosinStealthTests" runstate="Runnable" seed="734794197" result="Passed" start-time="2026-10-21 01:05:07Z" end-time="2026-10-21 01:05:30Z" duration="22.915956" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <output><![CDATA[[TacticalGraph] No baked graph for scene 'Mosin Stealth Sandbox' (ShadowVale ▸ AI ▸ Bake Tactical Graph). Squads fall back to fighting individually.
+Failed to create agent because it is not close enough to the NavMesh
+Failed to create agent because it is not close enough to the NavMesh
+]]></output>
+              </test-case>
+              <test-case id="1339" name="TheCommanderAlsoGetsNoContactFromAnUnseenDistantMosinHit" fullname="ShadowVale.Map01.Tests.MosinStealthTests.TheCommanderAlsoGetsNoContactFromAnUnseenDistantMosinHit" methodname="TheCommanderAlsoGetsNoContactFromAnUnseenDistantMosinHit" classname="ShadowVale.Map01.Tests.MosinStealthTests" runstate="Runnable" seed="1813898056" result="Passed" start-time="2026-10-21 01:05:30Z" end-time="2026-10-21 01:05:48Z" duration="17.987605" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1521" name="WeaponAnimationIntegrationTests" fullname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests" classname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-21 01:06:49Z" end-time="2026-10-21 01:06:54Z" duration="4.223324" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1522" name="GrenadeUsesItsOwnModelReleasesOnceAndKeepsHandsBusyThroughRecovery" fullname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.GrenadeUsesItsOwnModelReleasesOnceAndKeepsHandsBusyThroughRecovery" methodname="GrenadeUsesItsOwnModelReleasesOnceAndKeepsHandsBusyThroughRecovery" classname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests" runstate="Runnable" seed="1757338266" result="Passed" start-time="2026-10-21 01:05:48Z" end-time="2026-10-21 01:06:09Z" duration="20.593424" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1524" name="HolsteringAnAKInterruptsItsMagazineGestureAndDoesNotFinishAHiddenReload" fullname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.HolsteringAnAKInterruptsItsMagazineGestureAndDoesNotFinishAHiddenReload" methodname="HolsteringAnAKInterruptsItsMagazineGestureAndDoesNotFinishAHiddenReload" classname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests" runstate="Runnable" seed="1689782351" result="Passed" start-time="2026-10-21 01:06:09Z" end-time="2026-10-21 01:06:35Z" duration="25.540891" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1523" name="SmokeIsACanisterInTheHandAndAimingCancelsTheReloadWithoutSpendingAmmo" fullname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.SmokeIsACanisterInTheHandAndAimingCancelsTheReloadWithoutSpendingAmmo" methodname="SmokeIsACanisterInTheHandAndAimingCancelsTheReloadWithoutSpendingAmmo" classname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests" runstate="Runnable" seed="1231770141" result="Passed" start-time="2026-10-21 01:06:35Z" end-time="2026-10-21 01:06:54Z" duration="19.167237" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/Admin/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

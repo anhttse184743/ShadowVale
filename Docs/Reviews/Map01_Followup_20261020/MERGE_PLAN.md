@@ -19,3 +19,12 @@ Người dùng đã yêu cầu hoàn tất kiểm tra, merge vào dev và push c
 7. Kiểm lại M16 + K54/Mosin + lưu/tải + đạn khi đổi slot, C3 và các ca đã sửa trước khi push. Chỉ stage code/asset thật cần cho bản ghép và báo cáo gọn; không stage toàn bộ demo/recovery/save/video chưa track.
 
 Mốc remote phải kiểm lại trước push; chỉ cập nhật nhánh theo fast-forward. Nếu dev có commit mới trong lúc test, phải xét phần mới trước khi xuất bản.
+
+## Hai lỗi phát hiện trong test bản ghép
+
+`merged-weapons-before.xml`: 8/10 đạt, 2 lỗi thực tế. `merged-weapons-fixed.xml`: 10/10 đạt sau sửa.
+
+- Clone lính có M16: private field của `Map01RifleVisual` không đi theo bản sao, làm mất baseline AK và tham chiếu prop. Chuyển các field trạng thái cần sao chép sang SerializeField; giữ một model M16 để tái sử dụng, đổi AK khôi phục đúng sát thương/cooldown và muzzle.
+- Save sau khi C3 gọi dự bị: roster dài hơn làm phép chọn súng theo index cho kết quả khác lúc load. Snapshot mới lưu `rifleItemId`; load ưu tiên AK/M16 hợp lệ đã lưu. Save cũ thiếu field vẫn chọn theo seed hiện có. Bổ sung kiểm tra JSON thật thiếu field trong lượt hồi quy cuối.
+
+Đối chiếu [SerializeField](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/SerializeField.html) và [Instantiate](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/Object.Instantiate.html): dữ liệu private cần serialize để cùng đi theo component khi sao chép. Đối chiếu [JsonUtility.FromJson](https://docs.unity3d.com/6000.3/Documentation/ScriptReference/JsonUtility.FromJson.html): field thiếu giữ giá trị khởi tạo, nên trường string mới để null và dùng fallback. Cả ba trang đã mở và đọc phần mô tả; không xem video hay nhập animation trong lượt sửa code này.

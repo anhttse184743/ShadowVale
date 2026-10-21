@@ -49,4 +49,8 @@ Các XML đỏ, lỗi compile fixture và timeout đều được giữ để ki
 
 R4–R7 đã khép các ca Map 1 được chọn. Bổ sung hai lỗi runtime có bằng chứng đỏ trước sửa: Repost giữ lại 60 s dừng tuần tra cũ; tải checkpoint hộ tống không áp lại tư thế Hùng, phát lại đứng dậy. Đã sửa hủy pause khi nhận chốt mới và áp pose sau khôi phục health/stage. C3 film r6 đạt: 452 khung 1080p60, bốn người về chốt, bước ngang lớn nhất 0,06 m; bước cao nền của chỉ huy 0,2025 m được đo riêng. Hùng r7 đạt toàn bộ bắt đầu quỳ → cởi trói/đứng dậy thật → đi bị thương → nghỉ giường ở căn cứ → chết/retry checkpoint hộ tống.
 
+## Hoàn tất kiểm chứng bản ghép
+
+113/113 ca riêng biệt đạt theo TEST_MANIFEST; dev preflight 18/18 riêng. Đã tái hiện và sửa thêm clone M16, giữ loại súng lính sau tăng roster C3, và Map 2 đọc/lưu loại đạn từ súng thực thay vì phụ thuộc Arrival. Ca JSON cũ và load scene/save thật đều đạt. Sandbox K54/Mosin được sao lưu rồi làm mới từ scene hiện tại trước kiểm lại; không sửa Map 1 gốc. Hash scene/controller/save 0/1/4 khớp trước sửa; testCraftingKit=false. Tiếp theo là tạo merge commit và push atomic hai nhánh theo yêu cầu đã duyệt; biên nhận remote được lưu sau lệnh push.
+
 Đá hiện có 36 cụm, giữ mọi ID cũ. Công cụ RepairCoverage chỉ nối thêm cụm mới, dùng cửa C1/bàn đài C2 làm đầu đường; không dùng tâm công trình nằm dưới mái. Khoảng thiếu đá trên năm tuyến là 38/38/30/4/44 m (giới hạn 46 m). Test static và nhặt cụm 17 thực tế đều đạt r5; tiếng đá rơi trên mái được điều tra ở sàn có đường đi, đạt r4.

@@ -267,6 +267,18 @@ namespace ShadowVale.Map01
         /// <summary>Treat him as fighting Nam for <paramref name="seconds"/> (debug console, tests).</summary>
         public void EngageFor(float seconds) => Memory.EngagedUntil = Time.time + seconds;
 
+        public string RifleItemId { get; private set; } = "rifle_standard";
+
+        public void RefreshRifleLoadout(string savedItemId = null)
+        {
+            if (_mission == null) return;
+            // Old saves have no loadout field; new saves keep the guard's actual gun
+            // even if waking reserves has changed his index in the roster.
+            RifleItemId = savedItemId == Map01M16.Id || savedItemId == "rifle_standard"
+                ? savedItemId : Map01M16.EnemyRifle(_mission, this);
+            var held = GetComponentInChildren<Map01Rifle>(true);
+            if (held != null) Map01RifleVisual.Apply(held.weapon, RifleItemId);
+        }
         public void BindMission(Map01Mission mission)
         {
             _mission = mission;
@@ -279,6 +291,7 @@ namespace ShadowVale.Map01
             // guard's serialized fields.
             damage = mission.Weapon.damage * mission.Settings.guardDamageScale;
             fireInterval = mission.Settings.guardShotInterval;
+            RefreshRifleLoadout();
             _accuracy = mission.Settings.guardAccuracy ?? new ShotAccuracyProfile();
             _baseDetectionSeconds = _tuning.DetectionSeconds = Mathf.Max(.1f, mission.Settings.detectionSeconds);
             _hiddenScale = mission.Settings.hiddenVisionScale;
@@ -447,6 +460,7 @@ namespace ShadowVale.Map01
         [System.Serializable] public sealed class Snapshot
         {
             public string id;
+            public string rifleItemId;
             public Vector3 position, destination, investigate, returnPoint;
             public Quaternion rotation, returnRotation;
             public float hp, shotRemaining, alertRemaining, searchRemaining;
@@ -469,7 +483,7 @@ namespace ShadowVale.Map01
         {
             var m = Memory; float now = Time.time;
             return new Snapshot {
-                id = SaveId, position = transform.position, rotation = transform.rotation, hp = _health.Current,
+                id = SaveId, rifleItemId = RifleItemId, position = transform.position, rotation = transform.rotation, hp = _health.Current,
                 silent = TakenDownSilently, silentKind = silentKind, pursuer = _pursuer, suspicion = m.Suspicion,
                 engagedRemaining = Mathf.Max(0, m.EngagedUntil - now), pauseRemaining = Mathf.Max(0, m.PatrolPauseUntil - now),
                 footstepReactionRemaining = _hearReactionAt > 0 ? Mathf.Max(0, _hearReactionAt - now) : 0,
@@ -487,11 +501,12 @@ namespace ShadowVale.Map01
         }
         /// <summary>This guard as he would be fresh at his post: alive, calm, starting his patrol.</summary>
         public Snapshot CaptureAtPost() => new Snapshot {
-            id = SaveId, position = _postPosition, rotation = _postRotation, hp = _health.Max,
+            id = SaveId, rifleItemId = RifleItemId, position = _postPosition, rotation = _postRotation, hp = _health.Max,
             destination = _postPosition, patrolIndex = 0, bodyState = BodyUnseen
         };
         public void RestoreSnapshot(Snapshot saved)
         {
+            RefreshRifleLoadout(saved.rifleItemId);
             var m = Memory; float now = Time.time;
             _body.Warp(saved.position);
             transform.rotation = saved.rotation;
@@ -894,10 +909,17 @@ namespace ShadowVale.Map01
         /// <summary>Until the next round may go: inside a burst the gap, after its last round the pause.</summary>
         private float NextShotDelay()
         {
-            if (_burstRounds <= 1) return fireInterval;
-            if (--_burstLeft > 0) return _burstGap;
+            if (_burstRounds <= 1) return RifleItemId == Map01M16.Id ? Map01M16.ShotSeconds : fireInterval;
+            if (--_burstLeft > 0) return RifleItemId == Map01M16.Id ? Map01M16.ShotSeconds : _burstGap;
             _burstLeft = _burstRounds;
             return _burstInterval > 0 ? _burstInterval : fireInterval;
+        }
+
+        private void ScheduleNextShot()
+        {
+            float delay = NextShotDelay();
+            _nextShot = RifleItemId == Map01M16.Id && Time.time - _nextShot <= delay
+                ? _nextShot + delay : Time.time + delay;
         }
 
         // ---- IEnemyAgent: what the coordinator and the debug tools read -------------------------
@@ -1154,12 +1176,12 @@ namespace ShadowVale.Map01
         public void FireAtPlayer()
         {
             if (Time.time < _nextShot || _player == null) return;
-            _nextShot = Time.time + NextShotDelay();
+            ScheduleNextShot();
             AudibleShots++;
             _animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
             // Hùng is in the line of fire while he is being held or walked home: every third
             // round goes his way when he is in reach.
-            if (++_shots % 3 == 0 && HostageInReach(out var hostage) && SafeShot(hostage)) { FireAtHostage(hostage, damage); return; }
+            if (++_shots % 3 == 0 && HostageInReach(out var hostage) && SafeShot(hostage)) { FireAtHostage(hostage, damage * (RifleItemId == Map01M16.Id ? .9f : 1f)); return; }
             Vector3 aim = _player.position + Vector3.up;
             // Not every round finds him (ShotAccuracy): a miss flies past him, tracer and all.
             var shot = ShotAccuracy.For(transform.position, _agent != null ? _agent.velocity : Vector3.zero, attackRange,
@@ -1172,14 +1194,14 @@ namespace ShadowVale.Map01
                 return;
             }
             if (FireRound(aim, _player, out var impact))
-                _playerHealth.TakeBulletDamage(damage, impact, gameObject, impact - transform.position);
+                _playerHealth.TakeBulletDamage(damage * (RifleItemId == Map01M16.Id ? .9f : 1f), impact, gameObject, impact - transform.position);
         }
 
         /// <summary>Rounds at the spot Nam was last seen: noise and muzzle flash, no hit.</summary>
         public void FireSuppressive(Vector3 point)
         {
             if (Time.time < _nextShot) return;
-            _nextShot = Time.time + NextShotDelay();
+            ScheduleNextShot();
             AudibleShots++;
             _animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
             FireRound(point + Vector3.up, null, out _);
@@ -1222,8 +1244,8 @@ namespace ShadowVale.Map01
         public void FireAtAlternative(EnemyContext ctx, Vector3 target)
         {
             if (Time.time < _nextShot) return;
-            _nextShot = Time.time + fireInterval * 2f;
-            FireAtHostage(target, damage);
+            _nextShot = Time.time + (RifleItemId == Map01M16.Id ? Map01M16.ShotSeconds : fireInterval) * 2f;
+            FireAtHostage(target, damage * (RifleItemId == Map01M16.Id ? .9f : 1f));
         }
 
         /// <summary>The nearest of Map 1's placed cover points, if one is close enough to reach under fire.</summary>

@@ -1,5 +1,7 @@
 # Rà soát Map 1 sau merge — 20/10/2026
 
+> Cập nhật 21/10: người dùng đã cho phép hoàn tất, ghép và push cả thinh/dev. Các câu "chưa commit/push" bên dưới ghi ranh giới tại thời điểm rà ban đầu; kết quả hiện tại xem KET_QUA.md và MERGE_PLAN.md.
+
 Mốc nguồn: `thinh`, `6c86097bfbf51b6585b3450e7ca53d90cd44436c`. Phạm vi người dùng chọn: rà gameplay Map 1 còn dang dở và sửa lỗi có căn cứ. Không suy luận tác giả từ tên thư mục. Đây là bản rà code hiện tại, không coi danh sách lỗi ngày 17–18/10 là kết quả kiểm thử hiện tại.
 
 ## Đã sửa trong lượt này
