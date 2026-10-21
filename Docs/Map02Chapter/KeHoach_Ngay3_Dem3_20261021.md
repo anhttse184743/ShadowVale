@@ -307,6 +307,20 @@ Checkpoint ngay sau cảnh (code đã lưu sau mỗi nhiệm vụ).
 
 ### GĐ7 — Dàn cảnh phụ của Ngày 3 và Nhịp 1–4 (M)
 
+> **Trạng thái 21/10:** đã làm trong file mới `Map02ChapterDressing.cs`.
+> - **`D3_02`:** nhận thùng lựu đạn ở kho kín → mang (ghim dời ra bờ đất) → đặt xuống → cảnh anh Lực, Hùng → giữ Space để cất. Thùng và gói bộc phá (`explosivesArt`) nằm ở hốc bờ đất. Gói bộc phá mất từ câu `farewell_06`, thùng vẫn ở lại.
+> - **Phân công:** đã kiểm, `family0` đúng là nhà ông Sáu.
+> - Ánh chiều vàng cho cả Ngày 3.
+> - Hùng dìu ông Sáu ra bậc bến sau `D3_04`, nếu Bữa chiều chưa mở.
+> - **Nhịp 1:** tối 1 giây, câu đầu chờ tới giây 1,2, rồi pháo sáng trắng tắt dần trong 12 giây.
+> - **Nhịp 2:** mái sau nhà ông Sáu cháy (lửa và khói) suốt Đêm 3.
+> - **Nhịp 4:** Tâm bắn từ bờ tre (lửa nòng, tiếng súng) trong lúc Nam dọn cây.
+> - Đêm 2, câu "Tiếng gì thế?" phát `tankTracksClip` ở xa nếu có clip.
+> - Test `DayThreeCrateAndNightThreeOpeningsAreDressed`. Bộ test 52/52.
+>
+> **Không làm được với bố cục hiện tại:** "đi ngang nhà chị Lành" giữa hai vị trí giữ ngõ (xem GĐ4).
+> **Chờ asset:** người chạy qua cửa, Hùng khoác máy đàm, đạp cửa sau, ông Sáu ho, bé Tí ôm cổ, các clip nhặt rau, chẻ củi, ném cọng rau, dìu người già.
+
 | Hạng mục | Cách làm | Kịch bản |
 |---|---|---|
 | Mang thùng lựu đạn | Kịch bản: "Nam chuyển … một thùng lựu đạn và khối bộc phá … tới chỗ trú". Hiện `D3_02` chỉ là giữ Space tại chỗ. Đổi thành **mang 1 thùng** từ kho kín tới hốc bờ đất (dùng cơ chế `carry` có sẵn), rồi mới chạy cảnh anh Lực đặt gói vải. Giữ `kind: "demolition"` và thêm bước nhận/đặt thùng, không thêm ID |

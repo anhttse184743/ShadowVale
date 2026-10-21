@@ -85,6 +85,7 @@ namespace ShadowVale.Map01
             foreach(var e in entrances.Where(e=>e.startLine==id)){e.actor.SceneDriven=true;e.actor.GoTo(e.to,1.6f);}
             var waiting=entrances.Where(e=>e.gateLine==id).ToArray();
             if(waiting.Length>0){lineGate=()=>waiting.All(e=>Vector3.Distance(e.actor.transform.position,e.to)<1.5f);gateUntil=sceneClock+7;}
+            else if(sceneTask.id=="N3_00"&&lineIndex==0){lineGate=()=>sceneClock>=1.2f;gateUntil=float.PositiveInfinity;} // One second of black before the flare.
             else if(sceneTask.id=="N3_09"){float at=SacrificeLineAt(id);lineGate=()=>sceneClock>=at;gateUntil=float.PositiveInfinity;} // The echo after the blast, then the guns, then the counter-attack.
             else lineGate=null;
             TickGate();
@@ -95,7 +96,7 @@ namespace ShadowVale.Map01
             bool late=sceneClock>=gateUntil;
             if(lineGate!=null&&!lineGate()&&!late)return;
             if(late)foreach(var e in entrances.Where(e=>e.gateLine==lines[lineIndex].id))e.actor.StopAt(e.to);
-            lineGate=null;spoken=true;lineClock=0;Speak();
+            lineGate=null;spoken=true;lineClock=0;Speak();LineCue(lines[lineIndex].id);
         }
         Vector3 HungAtSupper=>sites["family"].position+Vector3.right*1.4f;
         /// <summary>Extra silence after a line, before the next one starts.</summary>

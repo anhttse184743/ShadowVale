@@ -42,7 +42,8 @@ namespace ShadowVale.Map01
                 }
                 if(t.kind=="repair")return $"E bắt đầu sửa · đã xong {n}/{t.count} phần. Nhấn Space đúng nhịp; sai được thử lại.";
                 if(t.kind=="antenna")return "E thao tác đài · A/D căn tín hiệu, giữ ổn định 2 giây.";
-                if(t.kind=="clear"||t.kind=="demolition")return "E bắt đầu · giữ Space để thao tác, Esc hủy.";
+                if(t.kind=="demolition")return CrateInstruction(t);
+                if(t.kind=="clear")return "E bắt đầu · giữ Space để thao tác, Esc hủy.";
                 if(t.kind=="reach")return "Đi tới ghim vàng. Tự xác nhận khi vào đúng khu vực.";
                 if(t.id=="N3_07")return "Về bờ đất cạnh bến, chỗ Hùng giữ máy.";
                 return "Tới ghim vàng, nhấn E để nói chuyện hoặc tương tác.";
@@ -70,6 +71,7 @@ namespace ShadowVale.Map01
             int n=State.Count(t.id);
             if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)&&State.activeTask==t.id?$"Đặt thùng {n+1}/{t.count} tại {(t.id=="D1_04"?"kho kín":"chỗ trú bến nam")}":$"Nhận thùng {n+1}/{t.count} tại {(t.id=="D1_04"?"bến cập":"kho kín")}";
             if(t.kind=="families")return $"Dặn dò hộ dân {n+1}/{t.count}";
+            if(t.kind=="demolition")return CratePrompt(t);
             if(escort!=null&&State.activeTask==t.id)return $"Dẫn {escort.role} tới {(t.kind.StartsWith("rescue")?"bến nam":t.kind=="escortScout"?"chỗ anh Thành":t.kind=="escortHung"?"nhà chị Lành":t.site=="gate"?"chốt đầu làng":t.site=="rest"?"chỗ nghỉ":"chốt bờ tre")}";
             return t.title;
         }

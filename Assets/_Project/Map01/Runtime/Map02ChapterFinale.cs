@@ -128,6 +128,7 @@ namespace ShadowVale.Map01
             if(sceneTask?.id=="N3_WOUND"&&lines!=null&&lines[lineIndex].id=="m2v3_wound_04")flash=Mathf.Clamp01(1-Mathf.Abs(lineClock-1)*3);
             if(State.Done("N3_WOUND")&&!State.Done("N3_CRAWL")){red=Mathf.Lerp(.35f,.15f,Mathf.Clamp01(State.taskProgress/8));cutoff=900;} // Crawling: blurred red, muffled.
             if(sceneTask?.id=="N3_CRAWL"){red=.12f;cutoff=1800;}
+            if(sceneTask?.id=="N3_00")black=sceneClock<1?1:Mathf.Clamp01(1-(sceneClock-1)/.5f); // Nam has just lain down.
             if(sceneTask?.id=="N3_09")
             {
                 float t=sceneClock;

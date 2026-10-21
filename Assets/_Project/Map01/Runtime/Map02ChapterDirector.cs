@@ -139,6 +139,7 @@ namespace ShadowVale.Map01
             if(t.kind=="reach"||t.kind=="binocular"||t.kind=="crawl")return true;
             if(t.kind=="repair"||t.kind=="antenna"||t.kind=="clear"||t.kind=="demolition")
             {
+                if(CarryCrate(t))return true;
                 OpenWork(t);return true;
             }
             BeginScene(t);return true;
@@ -169,7 +170,7 @@ namespace ShadowVale.Map01
             TickEffects();
             if(phaseFade>0){phaseFade=Mathf.Max(0,phaseFade-dt);TickLight(dt);return;}
             if(State.finished)return;
-            TickTank(dt);TickBoats(dt);
+            TickTank(dt);TickBoats(dt);TickDressing(dt);
             bool carrying=!string.IsNullOrEmpty(State.carry)||escort!=null;if(carrying!=handsBusy){handsBusy=carrying;combat.SetHandsOccupied(carrying);}
             player.SurfaceSpeedMultiplier=escort!=null?.55f:!string.IsNullOrEmpty(State.carry)?.65f:State.wounded?.7f:1;
             player.SprintAllowed=()=>escort==null&&string.IsNullOrEmpty(State.carry)&&!State.wounded;
@@ -218,6 +219,7 @@ namespace ShadowVale.Map01
                 if(t.kind=="carry"&&State.activeTask==t.id&&string.IsNullOrEmpty(State.carry))pos=sites[t.id=="D1_04"?"arrival":"store"].position;
                 if(t.kind=="carry"&&State.activeTask!=t.id)pos=sites[t.id=="D1_04"?"arrival":"store"].position;
                 if(t.kind=="families")pos=sites["family"+Mathf.Clamp(State.Count(t.id),0,2)].position;
+                if(t.kind=="demolition")pos=CrateMarker(t);
                 if(t.kind=="escortHung"||t.kind=="patrolHung"||t.kind=="escortScout")pos=escort!=null&&workTask==t?Destination(t):roles[t.kind=="escortScout"?"Tâm":"Hùng"].transform.position;
                 if(t.kind.StartsWith("rescue")&&escort!=null&&workTask==t)pos=Destination(t);
                 mark.transform.position=pos;mark.prompt=Prompt(t);
@@ -324,6 +326,7 @@ namespace ShadowVale.Map01
             if(task.id=="N3_08")BeginScene(def.Find("N3_09"));
             if(task.id=="N3_04"){Bark("m2v3_wound_01");Bark("m2v3_wound_02");}
             if(task.id=="N3_WOUND")crawlCall=4; // The scene just ended on his first call.
+            if(task.id=="D3_04"&&!State.Available(def.Find("D3_05"))){roles["Hùng"].GoTo(sites["dock"].position+Vector3.left*1.2f,1.1f);roles["Ông Sáu"].Follow(roles["Hùng"].transform,1f);} // Hùng helps Ông Sáu try the dock steps.
             if(State.phase==4&&State.Available(def.Find("D3_05"))&&task.id!="D3_05")roles["Hùng"].GoTo(HungAtSupper,1.35f); // Home for supper.
             if(State.finished){Mission.World.story.stage=Map02Stage.Complete;Mission.StoreCheckpoint();}
             if(State.finished)Mission.Say("MAP 2 HOÀN THÀNH · Ta giữ được làng. Hùng đã hy sinh cứu chuyến thuyền cuối.");
@@ -402,9 +405,10 @@ namespace ShadowVale.Map01
             foreach(var lamp in lamps)lamp.intensity=Mathf.Lerp(lamp.intensity,night?2.5f:0,dt);
             sweepLight.enabled=State.phase==3&&!State.Done("N2_05");
             if(phaseApplied!=State.phase){phaseApplied=State.phase;}
-            if(sun!=null){sun.intensity=Mathf.Lerp(sun.intensity,night?(Layout!=null?Layout.nightSunIntensity:.08f):State.phase==6?.45f:sunIntensity,dt*.6f);sun.color=Color.Lerp(sun.color,night?new Color(.5f,.63f,1):new Color(1,.9f,.75f),dt*.6f);sun.transform.rotation=Quaternion.Slerp(sun.transform.rotation,night?Quaternion.Euler(25,190,0):sunRotation,dt*.6f);}
+            bool golden=State.phase==4; // Day 3: the warmest afternoon of the chapter, against Night 3.
+            if(sun!=null){sun.intensity=Mathf.Lerp(sun.intensity,night?(Layout!=null?Layout.nightSunIntensity:.08f):State.phase==6?.45f:golden?sunIntensity*.9f:sunIntensity,dt*.6f);sun.color=Color.Lerp(sun.color,night?new Color(.5f,.63f,1):golden?new Color(1,.74f,.46f):new Color(1,.9f,.75f),dt*.6f);sun.transform.rotation=Quaternion.Slerp(sun.transform.rotation,night?Quaternion.Euler(25,190,0):golden?Quaternion.Euler(14,250,0):sunRotation,dt*.6f);}
             if(chapterSky!=null&&chapterSky.HasProperty("_Exposure"))chapterSky.SetFloat("_Exposure",Mathf.Lerp(chapterSky.GetFloat("_Exposure"),night?(Layout!=null?Layout.nightSkyExposure:.08f):1f,dt));
-            RenderSettings.ambientLight=Color.Lerp(RenderSettings.ambientLight,night?new Color(.12f,.15f,.23f):ambientBefore,dt*.6f);
+            RenderSettings.ambientLight=Color.Lerp(RenderSettings.ambientLight,night?new Color(.12f,.15f,.23f):golden?Color.Lerp(ambientBefore,new Color(.62f,.48f,.34f),.45f):ambientBefore,dt*.6f);
         }
         void TickPatrol(float dt)
         {

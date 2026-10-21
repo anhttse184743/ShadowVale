@@ -125,5 +125,43 @@ namespace ShadowVale.Map01.Tests
             }
             finally{chapter.Cancel();chapter.enabled=true;}
         }
+
+        [UnityTest,Timeout(240000)]public IEnumerator DayThreeCrateAndNightThreeOpeningsAreDressed()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
+            yield return DressingInPlayMode();
+            yield return new ExitPlayMode();
+        }
+        static Map02ObjectiveObject Mark(string id)=>Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId==id);
+        static float Flat(Vector3 a,Vector3 b)=>Vector2.Distance(new Vector2(a.x,a.z),new Vector2(b.x,b.z));
+        static IEnumerator DressingInPlayMode()
+        {
+            yield return Open();
+            try
+            {
+                // D3_02: the crate is fetched from the closed store and carried to the bank.
+                Load("N2_05");Assert.AreEqual(4,chapter.State.phase);var crate=Mark("D3_02");
+                Assert.Less(Flat(crate.transform.position,chapter.Sites["store"].position),1);Place(crate.transform.position);Assert.IsTrue(mission.Interact(crate));
+                Assert.AreEqual("D3_02",chapter.State.carry);Assert.Less(Flat(crate.transform.position,chapter.Sites["ditch"].position),1,"The pin moves to the bank while carrying.");
+                Place(crate.transform.position);Assert.IsTrue(mission.Interact(crate));Assert.IsTrue(string.IsNullOrEmpty(chapter.State.carry));Assert.AreEqual("D3_02",chapter.CurrentScene?.id);
+                Call("TickDressing",0f);Assert.IsTrue(chapter.CrateProp.activeSelf&&chapter.BundleProp.activeSelf,"Crate and bundle sit in the bank hole.");
+                Call("EndScene");Assert.IsTrue(chapter.Busy,"Stowing follows the scene.");Call("EndWork",true);Assert.IsTrue(chapter.State.Done("D3_02"));
+                // The warmest afternoon of the chapter.
+                Call("TickLight",10f);var sun=Object.FindObjectsByType<Light>(FindObjectsSortMode.None).FirstOrDefault(l=>l.type==LightType.Directional);
+                if(sun!=null)Assert.Greater(sun.color.r-sun.color.b,.3f,"Golden Day 3 light.");
+                // Nhịp 1: black, then the flare; Ông Sáu's roof is burning.
+                Load("D3_06");var attack=Mark("N3_00");Place(attack.transform.position);Assert.IsTrue(mission.Interact(attack));Assert.AreEqual("N3_00",chapter.CurrentScene?.id);
+                Call("TickEffects");Assert.AreEqual(1,chapter.EffectBlack);Assert.IsTrue(chapter.WaitingForLine);
+                Until("N3_00",1.5f);Call("TickDressing",.1f);Assert.IsFalse(chapter.WaitingForLine);Assert.Greater(chapter.FlareLight.intensity,0);Assert.IsTrue(chapter.HouseFire.enabled);
+                Call("EndScene");
+                // Nhịp 4: Tâm fires from the bamboo while Nam clears the tree.
+                Load("N3_CRAWL");Call("TickDressing",1.7f);Assert.NotNull(chapter.TamFlash);
+                // The farewell: Hùng takes the bundle; the crate stays.
+                Load("N3_06");Place(chapter.Sites["ditch"].position+Vector3.forward*2);Call("Update");Assert.AreEqual("N3_07",chapter.CurrentScene?.id);
+                for(int i=0;i<4000&&chapter.CurrentLineId!="m2v3_farewell_06"&&chapter.CurrentScene!=null;i++)Frame();
+                Call("TickDressing",0f);Assert.IsFalse(chapter.BundleProp.activeSelf);Assert.IsTrue(chapter.CrateProp.activeSelf);
+            }
+            finally{chapter.Cancel();chapter.enabled=true;}
+        }
     }
 }
