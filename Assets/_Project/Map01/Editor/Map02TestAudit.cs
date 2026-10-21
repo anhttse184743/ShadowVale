@@ -29,4 +29,3 @@ namespace ShadowVale.Map01.Editor
         }
     }
 }
-

@@ -11,6 +11,8 @@ namespace ShadowVale.Gameplay.Enemies
     {
         public Func<bool> CanStep { get; set; }
         public Func<FootSurface> SurfaceProbe { get; set; }
+        /// <summary>The enemy's own rifle report (a map that gives its guards their weapon's sound); null = the player's gunshot.</summary>
+        public AudioClip GunshotClip { get; set; }
         private PlayerController player;
         private FootstepBank bank;
         private AudioSlice gunshot;
@@ -107,7 +109,7 @@ namespace ShadowVale.Gameplay.Enemies
                 cursor = (cursor + 1) % tracers.Length;
             }
             weapon?.PlayMuzzleFlash();
-            PlayAudio(gunshot, .85f, UnityEngine.Random.Range(.94f, 1.06f), muzzle, 65f);
+            PlayAudio(GunshotClip != null ? new AudioSlice(GunshotClip, 0f, 0f, 1f) : gunshot, .85f, UnityEngine.Random.Range(.94f, 1.06f), muzzle, 65f);
             return reachesVictim;
         }
 

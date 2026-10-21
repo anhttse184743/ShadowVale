@@ -89,6 +89,8 @@ namespace ShadowVale.Gameplay.Player
         private float _aimBlend; // 0 = hip, 1 = aiming
         private bool _aiming;
         private bool _binoculars;
+        private bool _scope, _firstPersonHidden;
+        private float _scopeEyeHeight, _scopeFov, _scopePreviousNearClip;
         private float _activeBinocularFov;
         private float _eyeHeight;
         private Renderer[] _hidden = System.Array.Empty<Renderer>();
@@ -96,6 +98,15 @@ namespace ShadowVale.Gameplay.Player
 
         public bool IsAiming => _aiming;
         public bool IsBinoculars => _binoculars;
+        public bool IsWeaponScope => _scope;
+        public float WeaponScopeFieldOfView => _scopeFov;
+        public void SetWeaponScope(bool value,float magnification,float eyeHeight)
+        {
+            _scopeEyeHeight=eyeHeight;
+            _scopeFov=2*Mathf.Atan(Mathf.Tan(hipFov*Mathf.Deg2Rad*.5f)/Mathf.Max(1,magnification))*Mathf.Rad2Deg;
+            if(value!=_scope&&_camera!=null){if(value){_scopePreviousNearClip=_camera.nearClipPlane;_camera.nearClipPlane=Mathf.Min(.05f,_scopePreviousNearClip);}else _camera.nearClipPlane=_scopePreviousNearClip;}
+            _scope=value;RefreshFirstPersonVisuals();
+        }
         public void RestoreLook(Quaternion rotation)
         {
             _yaw = rotation.eulerAngles.y;
@@ -172,12 +183,12 @@ namespace ShadowVale.Gameplay.Player
             // them still settles.
             RecoverRecoil(Time.deltaTime);
 
-            if (_binoculars)
+            if (_binoculars || _scope)
             {
                 // Straight from the eyes: no arm, no shoulder, so nothing of the character in view.
                 Quaternion look = Quaternion.Euler(_pitch, _yaw, 0f);
-                _camera.fieldOfView = Mathf.Lerp(_camera.fieldOfView, _activeBinocularFov, 1f - Mathf.Exp(-binocularZoomSpeed * Time.deltaTime));
-                transform.SetPositionAndRotation(target.position + Vector3.up * _eyeHeight + look * Vector3.forward * 0.15f, look);
+                _camera.fieldOfView = Mathf.Lerp(_camera.fieldOfView, _binoculars?_activeBinocularFov:_scopeFov, 1f - Mathf.Exp(-binocularZoomSpeed * Time.deltaTime));
+                transform.SetPositionAndRotation(target.position + Vector3.up * (_binoculars?_eyeHeight:_scopeEyeHeight) + look * Vector3.forward * 0.15f, look);
                 return;
             }
 
@@ -267,7 +278,7 @@ namespace ShadowVale.Gameplay.Player
 
             if (Cursor.lockState == CursorLockMode.Locked)
             {
-                float sensitivity = mouseSensitivity * (_binoculars ? _activeBinocularFov / hipFov : Mathf.Lerp(1f, aimSensitivityScale, _aimBlend));
+                float sensitivity = mouseSensitivity * (_binoculars ? _activeBinocularFov / hipFov : _scope ? _scopeFov/hipFov : Mathf.Lerp(1f, aimSensitivityScale, _aimBlend));
                 Vector2 delta = mouse.delta.ReadValue();
 
                 float yawDelta = delta.x * sensitivity;
@@ -286,7 +297,7 @@ namespace ShadowVale.Gameplay.Player
 
             // Wheel zoom only applies to the hip-fire arm; aiming has its own fixed distance.
             float scroll = mouse.scroll.ReadValue().y;
-            if (!Mathf.Approximately(scroll, 0f) && !_aiming && !_binoculars)
+            if (!Mathf.Approximately(scroll, 0f) && !_aiming && !_binoculars && !_scope)
             {
                 distance = Mathf.Clamp(distance - scroll * zoomSpeed, minDistance, maxDistance);
             }
@@ -352,8 +363,14 @@ namespace ShadowVale.Gameplay.Player
         {
             _eyeHeight = eyeHeight;
             if (value) _activeBinocularFov = Mathf.Clamp(fieldOfView ?? binocularFov, 5, 90);
-            if (_binoculars == value || target == null) return;
             _binoculars = value;
+            RefreshFirstPersonVisuals();
+        }
+        private void RefreshFirstPersonVisuals()
+        {
+            bool value=_binoculars||_scope;
+            if(value==_firstPersonHidden||target==null)return;
+            _firstPersonHidden=value;
             if (value)
             {
                 _hidden = target.GetComponentsInChildren<Renderer>();

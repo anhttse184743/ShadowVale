@@ -13,6 +13,23 @@ namespace ShadowVale.Map01.Tests
 {
     public sealed class Map02RuntimeTests:ForestSceneTestBase
     {
+        [UnityTest,Timeout(180000)]public IEnumerator M16ChapterStockUsesMatchingAmmoAndSurvivesSaveLoad()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
+            Map02Mission m=null;float until=Time.realtimeSinceStartup+100;
+            while(Time.realtimeSinceStartup<until){m=Object.FindFirstObjectByType<Map02Mission>();if(m?.Chapter!=null&&m.Ready)break;Object.FindFirstObjectByType<Map02Arrival>()?.Skip();yield return null;}
+            Assert.NotNull(m?.Chapter);var snapshot=m.Capture();snapshot.rifleItemId=Map01M16.Id;
+            snapshot.chapter=new Map02ChapterState();foreach(var t in Map02ChapterDefinition.Load().tasks){snapshot.chapter.Complete(t.id);if(t.id=="N3_00")break;}
+            snapshot.chapter.storedRounds=90;snapshot.chapter.gearStored=true;m.Restore(snapshot);
+            m.Inventory[Map01M16.Ammo]=17;m.Inventory["ammo_rifle"]=4;
+            Assert.AreEqual(Map01M16.Ammo,m.RifleAmmo);
+            var marker=Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId=="N3_01");
+            var cc=m.Player.GetComponent<CharacterController>();cc.enabled=false;m.Player.position=marker.transform.position;cc.enabled=true;Physics.SyncTransforms();
+            Assert.IsTrue(m.Interact(marker));Assert.AreEqual(107,m.Inventory[Map01M16.Ammo]);Assert.AreEqual(4,m.Inventory["ammo_rifle"]);
+            snapshot=m.Capture();Assert.AreEqual(Map01M16.Id,snapshot.rifleItemId);m.Restore(snapshot);
+            Assert.AreEqual(Map01M16.Ammo,m.RifleAmmo);Assert.AreEqual(107,m.Inventory[Map01M16.Ammo]);
+            yield return new ExitPlayMode();
+        }
         [UnityTest,Timeout(240000)]public IEnumerator ObjectCargoFlowSharesPauseMenuAndRestoresExactInventory()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();

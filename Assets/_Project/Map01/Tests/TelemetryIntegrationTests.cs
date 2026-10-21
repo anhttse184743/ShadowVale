@@ -69,7 +69,7 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual(guard.LegacyId, kill.Payload["victim"]);
                 Assert.AreEqual("weapon", kill.Payload["method"]);
                 var objective = dto.Events.Single(e => e.Type == "objective_completed");
-                Assert.AreEqual("scout_camps", objective.Payload["objective"]);
+                Assert.AreEqual("op1_supplies", objective.Payload["objective"]); // Map01Quest.StageIds: named after the commander-led operations.
                 Assert.AreEqual(Map01Quest.ScoutStage, objective.Payload["index"]);
                 Assert.GreaterOrEqual(dto.Encounters.Count, 1);
                 Assert.AreEqual(1, dto.Summary.EnemiesKilled);

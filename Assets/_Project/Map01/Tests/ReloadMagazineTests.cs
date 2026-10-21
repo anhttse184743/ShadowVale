@@ -22,8 +22,9 @@ namespace ShadowVale.Map01.Tests
             ("ReloadEmpty_Rifle", "Nam_Rifle_Reload"), ("Reload_Rifle", "Nam_Rifle_ReloadTactical"), ("ReloadCrouch_Rifle", "Nam_Crouch_Reload"),
         };
 
-        [Test]
-        public void MagazineLeavesTheRifleRidesTheHandAndGoesBack()
+        [TestCase(false)]
+        [TestCase(true)]
+        public void MagazineLeavesTheRifleRidesTheHandAndGoesBack(bool m16)
         {
             GameObject nam = null;
             try
@@ -39,9 +40,11 @@ namespace ShadowVale.Map01.Tests
                 // a plain copy, as PlayerCombat makes at runtime
                 GameObject rifle = Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>(Rifle), anchor);
                 AssetDatabase.LoadAssetAtPath<WeaponGripConfig>(Grip).Apply(rifle.transform, WeaponKind.Rifle);
-                carrier.Bind(rifle.transform);
+                var weapon = rifle.GetComponent<Weapon>();
+                if (m16) Map01RifleVisual.Apply(weapon, Map01M16.Id);
+                carrier.Bind(weapon.ReloadModel);
                 Transform magazine = carrier.Magazine;
-                Assert.IsNotNull(magazine, "The game's AK has separate magazine pieces to carry.");
+                Assert.IsNotNull(magazine, "The equipped rifle has separate magazine pieces to carry.");
                 int pieces = magazine.childCount;
                 Assert.Greater(pieces, 0);
                 Transform hand = actor.GetBoneTransform(HumanBodyBones.LeftHand);
@@ -80,6 +83,11 @@ namespace ShadowVale.Map01.Tests
                     Assert.Less(Vector3.Distance(hand.TransformPoint(take.inHandPosition), well), .03f, $"{state}: the hand brings the magazine back to the well");
                     // a reload cut short (a hit, another weapon): no reload state, straight back in the rifle
                     float mid = (take.leaves + take.putAway) * .5f;
+                    if (m16 && state == "Reload_Rifle")
+                    {
+                        Sample(clip, mid); carrier.Evaluate(state, mid);
+                        Photograph(nam, actor, "Tools/M16Reports/m16-magazine-detached.png");
+                    }
                     Sample(clip, mid); carrier.Evaluate(state, mid); carrier.Evaluate(null, 0);
                     Assert.Less(carrier.OutOfWell, 1e-4f, $"{state}: an interrupted reload re-seats the magazine");
                     Assert.IsTrue(carrier.Shown);
@@ -91,6 +99,40 @@ namespace ShadowVale.Map01.Tests
             {
                 if (AnimationMode.InAnimationMode()) AnimationMode.StopAnimationMode();
                 if (nam != null) Object.DestroyImmediate(nam);
+            }
+        }
+
+        private static void Photograph(GameObject actorObject, Animator actor, string path)
+        {
+            var preview = new PreviewRenderUtility();
+            var copy = Object.Instantiate(actorObject);
+            foreach (var behaviour in copy.GetComponentsInChildren<MonoBehaviour>(true)) behaviour.enabled = false;
+            copy.GetComponentInChildren<Animator>().enabled = false;
+            preview.AddSingleGO(copy);
+            var hand = actor.GetBoneTransform(HumanBodyBones.LeftHand);
+            Vector3 focus = Vector3.Lerp(hand.position, actor.GetBoneTransform(HumanBodyBones.Chest).position, .35f);
+            var camera = preview.camera;
+            camera.transform.position = focus + actor.transform.forward * 1.4f - actor.transform.right * 1.1f + Vector3.up * .15f;
+            camera.transform.LookAt(focus);
+            camera.fieldOfView = 35; camera.nearClipPlane = .01f; camera.farClipPlane = 100;
+            camera.clearFlags = CameraClearFlags.SolidColor; camera.backgroundColor = new Color(.12f,.13f,.12f);
+            preview.lights[0].intensity = 1.5f; preview.lights[0].transform.rotation = Quaternion.Euler(35,30,0);
+            preview.lights[1].intensity = 1; preview.ambientColor = new Color(.5f,.5f,.5f);
+            var old = RenderTexture.active;
+            var target = RenderTexture.GetTemporary(960,720,24);
+            var pixels = new Texture2D(960,720,TextureFormat.RGB24,false);
+            bool async = ShaderUtil.allowAsyncCompilation; ShaderUtil.allowAsyncCompilation = false;
+            try
+            {
+                camera.targetTexture = target; camera.Render(); RenderTexture.active = target;
+                pixels.ReadPixels(new Rect(0,0,960,720),0,0); pixels.Apply();
+                System.IO.File.WriteAllBytes(path,pixels.EncodeToPNG());
+            }
+            finally
+            {
+                camera.targetTexture = null; RenderTexture.active = old;
+                RenderTexture.ReleaseTemporary(target); Object.DestroyImmediate(pixels); preview.Cleanup();
+                ShaderUtil.allowAsyncCompilation = async;
             }
         }
     }

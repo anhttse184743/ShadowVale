@@ -87,6 +87,26 @@ namespace ShadowVale.Map01
         public Map01EnemyController[] Guards(int point)=>Layout==null?Array.Empty<Map01EnemyController>():
             (point==1?Layout.supplyGuards:point==2?Layout.radioGuards:Layout.commanderGuards)??Array.Empty<Map01EnemyController>();
         public int RemainingGuards(int point)=>Guards(point).Count(e=>e!=null&&e.Alive);
+        /// <summary>1 or 2 for a guard of point 1 or 2, else 0.</summary>
+        public int PointOf(Map01EnemyController guard)=>Array.IndexOf(Guards(1),guard)>=0?1:Array.IndexOf(Guards(2),guard)>=0?2:0;
+        /// <summary>
+        /// A guard of point 1 or 2 found a comrade's body (Map01BodyDiscovery): the point's men search round it and stay
+        /// wary. At point 2, while the radio still works, they call the response squad, as a wrong circuit does.
+        /// </summary>
+        public void OnBodyFound(int point,Map01EnemyController finder,Vector3 at)
+        {
+            Map01BodyDiscovery.Search(mission,finder,at,Guards(point),"Địch phát hiện xác đồng đội — chúng đang lục soát quanh đó.");
+            if(point==2&&!Progress.radioDisabled)CallRadioResponse("Địch ở trạm đài gọi bộ đàm báo có người bị hạ — quân phản ứng đang tới.",finder);
+        }
+        /// <summary>The radio station's alarm, once: its bell, and the response squad on its way. <paramref name="caller"/>
+        /// set: a guard's radio call, read only within earshot.</summary>
+        void CallRadioResponse(string line,Map01EnemyController caller=null)
+        {
+            if(Progress.radioResponseCalled||Layout==null)return;
+            Progress.radioResponseCalled=true;Map01OperationAudio.Play("radio_alarm",Layout.radio.position,.75f);
+            if(caller==null)mission.Say(line,5);else Map01BodyDiscovery.Shout(mission,caller,line);
+            TrySpawnResponse();
+        }
         public int ResponseRemaining=>mission.Enemies.Count(e=>e!=null&&e.name.StartsWith("operation_radio_response_",StringComparison.Ordinal)&&e.Alive);
         public bool ResponsePending=>Progress.radioResponseCalled&&(!Progress.radioResponseSpawned||ResponseRemaining>0);
         public string Objective
@@ -200,7 +220,7 @@ namespace ShadowVale.Map01
                 if(result==Map01OperationResult.Success){Progress.radioDisabled=true;mission.Say("Đài đã hỏng. Phá tiếp bộ nguồn cạnh trạm trước khi báo cáo chỉ huy.",6);Map01OperationAudio.Play("radio_off",Layout.radio.position);RefreshProps();Checkpoint();}
                 else if(result==Map01OperationResult.Failure){
                     Progress.circuitSeed=0;Progress.circuitRound=0;Progress.circuitRotations=null;
-                    if(!Progress.radioResponseCalled){Progress.radioResponseCalled=true;Map01OperationAudio.Play("radio_alarm",Layout.radio.position,.75f);mission.Say("Chuông báo động đã bật! Có quân đang tới kiểm tra trạm đài.",5);TrySpawnResponse();}
+                    if(!Progress.radioResponseCalled)CallRadioResponse("Chuông báo động đã bật! Có quân đang tới kiểm tra trạm đài.");
                     else mission.Say("Mạch chưa đúng. Đài vẫn đang phát; có thể thử lại.",4);
                 }
             }))Operating=false;

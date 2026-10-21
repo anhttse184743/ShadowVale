@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="13" result="Passed" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-21 01:08:12Z" end-time="2026-10-21 01:08:17Z" duration="4,7730435">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="633" result="Passed" start-time="2026-10-21 01:08:12Z" end-time="2026-10-21 01:08:17Z" duration="4.773044" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1529" name="ShadowVale.Map01.Tests.dll" fullname="D:/DO_AN_GAME/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="421" result="Passed" start-time="2026-10-21 01:08:13Z" end-time="2026-10-21 01:08:17Z" duration="4.062261" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="191288" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1530" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="421" result="Passed" start-time="2026-10-21 01:08:13Z" end-time="2026-10-21 01:08:17Z" duration="4.043652" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1531" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="421" result="Passed" start-time="2026-10-21 01:08:13Z" end-time="2026-10-21 01:08:17Z" duration="4.036484" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1447" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="421" result="Passed" start-time="2026-10-21 01:08:13Z" end-time="2026-10-21 01:08:17Z" duration="4.031802" total="13" passed="13" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1286" name="Map02M16SaveCompatibilityTests" fullname="ShadowVale.Map01.Tests.Map02M16SaveCompatibilityTests" classname="ShadowVale.Map01.Tests.Map02M16SaveCompatibilityTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-21 01:08:07Z" end-time="2026-10-21 01:08:08Z" duration="0.986594" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1287" name="SavedM16KeepsItsModelAndCaliberWithoutTheArrivalObject" fullname="ShadowVale.Map01.Tests.Map02M16SaveCompatibilityTests.SavedM16KeepsItsModelAndCaliberWithoutTheArrivalObject" methodname="SavedM16KeepsItsModelAndCaliberWithoutTheArrivalObject" classname="ShadowVale.Map01.Tests.Map02M16SaveCompatibilityTests" runstate="Runnable" seed="13570774" result="Passed" start-time="2026-10-21 01:08:00Z" end-time="2026-10-21 01:08:08Z" duration="7.644856" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1288" name="Map02ProgressTests" fullname="ShadowVale.Map01.Tests.Map02ProgressTests" classname="ShadowVale.Map01.Tests.Map02ProgressTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-21 01:08:08Z" end-time="2026-10-21 01:08:08Z" duration="0.008472" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="ParameterizedMethod" id="1294" name="BothRescueOrdersNeedActualEvacuation" fullname="ShadowVale.Map01.Tests.Map02ProgressTests.BothRescueOrdersNeedActualEvacuation" classname="ShadowVale.Map01.Tests.Map02ProgressTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-21 01:08:08Z" end-time="2026-10-21 01:08:08Z" duration="0.004427" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1292" name="BothRescueOrdersNeedActualEvacuation(0,1)" fullname="ShadowVale.Map01.Tests.Map02ProgressTests.BothRescueOrdersNeedActualEvacuation(0,1)" methodname="BothRescueOrdersNeedActualEvacuation" classname="ShadowVale.Map01.Tests.Map02ProgressTests" runstate="Runnable" seed="1378989485" result="Passed" start-time="2026-10-21 01:08:08Z" end-time="2026-10-21 01:08:08Z" duration="0.002764" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1293" name="BothRescueOrdersNeedActualEvacuation(1,0)" fullname="ShadowVale.Map01.Tests.Map02ProgressTests.BothRescueOrdersNeedActualEvacuation(1,0)" methodname="BothRescueOrdersNeedActualEvacuation" classname="ShadowVale.Map01.Tests.Map02ProgressTests" runstate="Runnable" seed="1452689970" result="Passed" start-time="2026-10-21 01:08:08Z" end-time="2026-10-21 01:08:08Z" duration="0.000101" asserts="0">
+                  <properties />
+                </test-case>
+              </test-suite>
+              <test-case id="1291" name="CivilianMovementIsRequiredInAdditionToFiniteWaves" fullname="ShadowVale.Map01.Tests.Map02ProgressTests.CivilianMovementIsRequiredInAdditionToFiniteWaves" methodname="CivilianMovementIsRequiredInAdditionToFiniteWaves" classname="ShadowVale.Map01.Tests.Map02ProgressTests" runstate="Runnable" seed="2044554569" result="Passed" start-time="2026-10-21 01:08:08Z" end-time="2026-10-21 01:08:08Z" duration="0.000166" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1296" name="FailureBlocksProgressButCannotUndoCompletion" fullname="ShadowVale.Map01.Tests.Map02ProgressTests.FailureBlocksProgressButCannotUndoCompletion" methodname="FailureBlocksProgressButCannotUndoCompletion" classname="ShadowVale.Map01.Tests.Map02ProgressTests" runstate="Runnable" seed="464251666" result="Passed" start-time="2026-10-21 01:08:08Z" end-time="2026-10-21 01:08:08Z" duration="0.000190" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1290" name="PreparationIsFreeOrderButSiegeCannotStartEarly" fullname="ShadowVale.Map01.Tests.Map02ProgressTests.PreparationIsFreeOrderButSiegeCannotStartEarly" methodname="PreparationIsFreeOrderButSiegeCannotStartEarly" classname="ShadowVale.Map01.Tests.Map02ProgressTests" runstate="Runnable" seed="1670422260" result="Passed" start-time="2026-10-21 01:08:08Z" end-time="2026-10-21 01:08:08Z" duration="0.000159" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1289" name="ReportsAndDutiesCannotBeSkippedOrCommittedTwice" fullname="ShadowVale.Map01.Tests.Map02ProgressTests.ReportsAndDutiesCannotBeSkippedOrCommittedTwice" methodname="ReportsAndDutiesCannotBeSkippedOrCommittedTwice" classname="ShadowVale.Map01.Tests.Map02ProgressTests" runstate="Runnable" seed="684634194" result="Passed" start-time="2026-10-21 01:08:08Z" end-time="2026-10-21 01:08:08Z" duration="0.000187" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1295" name="SaveRoundTripKeepsPreparationAndGroups" fullname="ShadowVale.Map01.Tests.Map02ProgressTests.SaveRoundTripKeepsPreparationAndGroups" methodname="SaveRoundTripKeepsPreparationAndGroups" classname="ShadowVale.Map01.Tests.Map02ProgressTests" runstate="Runnable" seed="1791390309" result="Passed" start-time="2026-10-21 01:08:08Z" end-time="2026-10-21 01:08:08Z" duration="0.000315" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1297" name="Map02RuntimeTests" fullname="ShadowVale.Map01.Tests.Map02RuntimeTests" classname="ShadowVale.Map01.Tests.Map02RuntimeTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-21 01:08:13Z" end-time="2026-10-21 01:08:17Z" duration="3.980489" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1298" name="ObjectCargoFlowSharesPauseMenuAndRestoresExactInventory" fullname="ShadowVale.Map01.Tests.Map02RuntimeTests.ObjectCargoFlowSharesPauseMenuAndRestoresExactInventory" methodname="ObjectCargoFlowSharesPauseMenuAndRestoresExactInventory" classname="ShadowVale.Map01.Tests.Map02RuntimeTests" runstate="Runnable" seed="36911556" result="Passed" start-time="2026-10-21 01:08:08Z" end-time="2026-10-21 01:08:17Z" duration="9.129624" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1299" name="Map02WorldStateTests" fullname="ShadowVale.Map01.Tests.Map02WorldStateTests" classname="ShadowVale.Map01.Tests.Map02WorldStateTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-21 01:08:17Z" end-time="2026-10-21 01:08:17Z" duration="0.007036" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1300" name="CargoCannotBeDeliveredBeforePickupOrCollectedTwice" fullname="ShadowVale.Map01.Tests.Map02WorldStateTests.CargoCannotBeDeliveredBeforePickupOrCollectedTwice" methodname="CargoCannotBeDeliveredBeforePickupOrCollectedTwice" classname="ShadowVale.Map01.Tests.Map02WorldStateTests" runstate="Runnable" seed="1400944521" result="Passed" start-time="2026-10-21 01:08:17Z" end-time="2026-10-21 01:08:17Z" duration="0.001358" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1301" name="PreparationStockDoesNotRefillPlayerAmmunitionOrSkipPhysicalDelivery" fullname="ShadowVale.Map01.Tests.Map02WorldStateTests.PreparationStockDoesNotRefillPlayerAmmunitionOrSkipPhysicalDelivery" methodname="PreparationStockDoesNotRefillPlayerAmmunitionOrSkipPhysicalDelivery" classname="ShadowVale.Map01.Tests.Map02WorldStateTests" runstate="Runnable" seed="2060557407" result="Passed" start-time="2026-10-21 01:08:17Z" end-time="2026-10-21 01:08:17Z" duration="0.000315" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1303" name="ReachingPropMeansThePlayerIsActuallyWithinItsRadius" fullname="ShadowVale.Map01.Tests.Map02WorldStateTests.ReachingPropMeansThePlayerIsActuallyWithinItsRadius" methodname="ReachingPropMeansThePlayerIsActuallyWithinItsRadius" classname="ShadowVale.Map01.Tests.Map02WorldStateTests" runstate="Runnable" seed="1631717115" result="Passed" start-time="2026-10-21 01:08:17Z" end-time="2026-10-21 01:08:17Z" duration="0.000687" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1302" name="SaveRoundTripKeepsCargoAndRejectsDuplicatePickup" fullname="ShadowVale.Map01.Tests.Map02WorldStateTests.SaveRoundTripKeepsCargoAndRejectsDuplicatePickup" methodname="SaveRoundTripKeepsCargoAndRejectsDuplicatePickup" classname="ShadowVale.Map01.Tests.Map02WorldStateTests" runstate="Runnable" seed="1272020086" result="Passed" start-time="2026-10-21 01:08:17Z" end-time="2026-10-21 01:08:17Z" duration="0.000213" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/Admin/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -13,6 +13,9 @@ namespace ShadowVale.Map01.Tests
         [SetUp]
         public void UseExplicitTestScene()
         {
+            // Every scene test uses isolated slots, including fixtures that open the real map.
+            // A fixture may select a more specific root in its own SetUp.
+            SessionState.SetString(ForestSaveSlots.EditorTestRootKey,System.IO.Path.GetFullPath("Temp/Map01SceneTestSaves"));
             // Gameplay tests intentionally open their own scene; normal editor Play starts at Boot.
             EditorSceneManager.playModeStartScene = null;
             // Editor tooling (ForestMenuTools) points Play back at Boot whenever the open scene
@@ -33,6 +36,7 @@ namespace ShadowVale.Map01.Tests
         [TearDown]
         public void RestoreNormalStartup()
         {
+            SessionState.EraseString(ForestSaveSlots.EditorTestRootKey);
             EditorSceneManager.activeSceneChangedInEditMode -= KeepExplicitStart;
             EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/_Project/Scenes/00_Boot.unity");
             SessionState.EraseBool(FramePacing.UncappedKey);
@@ -89,6 +93,33 @@ namespace ShadowVale.Map01.Tests
         }
 
         // ---- Map 1's story (Map01Story): the commander's orders --------------------------------------------------------
+
+        protected static System.Collections.IEnumerator WaitForMap01Ready()
+        {
+            float until=Time.realtimeSinceStartup+40;
+            Map01Mission mission;
+            do {
+                mission=UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
+                if(mission!=null&&mission.IsInitialized&&mission.ModernPlayer!=null&&mission.ModernCombat!=null
+                    &&mission.ModernHealth!=null&&mission.GetComponent<Map01Story>()?.Commander!=null)yield break;
+                yield return null;
+            } while(Time.realtimeSinceStartup<until);
+            Assert.Fail("Map 1 and its allied commander must initialize before the opening-flow check.");
+        }
+
+        protected static void AssertWaitingForCommander(Map01Mission mission)
+        {
+            var quest=mission.GetComponent<Map01Quest>();
+            var opening=mission.GetComponentInChildren<Map01OpeningCutscene>();
+            Assert.NotNull(opening);Assert.NotNull(opening.CommanderTransform);
+            Assert.IsFalse(opening.IsPlaying||Map01OpeningCutscene.Active,"New Game must wait for E beside the commander.");
+            Assert.IsFalse(mission.Cinematic||mission.GetComponent<Map01StoryDialogue>().IsPlaying);
+            Assert.AreEqual(Map01Quest.RescueStage,quest.Stage);Assert.IsFalse(quest.RescueOrderAccepted);
+            StringAssert.Contains("chỉ huy",quest.ObjectiveText);
+            var voice=mission.GetComponent<DialogueVoice>();
+            Assert.IsTrue(voice==null||!voice.HasSpeech,"No automatic briefing may be queued at map startup.");
+            Assert.IsTrue(mission.ModernPlayer.enabled&&mission.ModernCombat.enabled&&mission.CameraInputEnabled);
+        }
 
         /// <summary>Nam set down at <paramref name="at"/>, standing and still.</summary>
         protected static void PlaceNam(Map01Mission mission, Vector3 at)

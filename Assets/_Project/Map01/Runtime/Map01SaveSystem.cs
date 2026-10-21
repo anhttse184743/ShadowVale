@@ -37,6 +37,8 @@ namespace ShadowVale.Map01
             public int scoutedCamps; // Bitmask of camps logged during the scouting order; 0 in older saves.
             public float attackRemaining;
             public int roundsInMagazine = -1;
+            public int pistolRoundsInMagazine; // Optional addition to v7: older saves have an empty K54 and keep their reserve.
+            public int mosinRoundsInMagazine;
             public float hungHealth = -1; // -1 in older saves: unhurt.
             public string scoutStart; // The checkpoint at Hùng's scouting order, in saves made while scouting.
             public Map01EnemyController.Snapshot[] enemies;
@@ -383,7 +385,9 @@ namespace ShadowVale.Map01
                 crouched = mission.Crouched,
                 equippedWeapon = mission.ModernCombat != null ? (int)mission.ModernCombat.EquippedKind : 0,
                 attackRemaining = mission.ModernCombat != null ? mission.ModernCombat.AttackCooldownRemaining : 0,
-                roundsInMagazine = mission.ModernCombat != null ? mission.ModernCombat.RoundsInMagazine : -1,
+                roundsInMagazine = mission.ModernCombat != null ? mission.ModernCombat.MagazineRounds(ShadowVale.Gameplay.Combat.WeaponKind.Rifle) : -1,
+                pistolRoundsInMagazine = mission.ModernCombat != null ? mission.ModernCombat.MagazineRounds(ShadowVale.Gameplay.Combat.WeaponKind.Pistol) : 0,
+                mosinRoundsInMagazine = mission.ModernCombat != null ? mission.ModernCombat.MagazineRounds(ShadowVale.Gameplay.Combat.WeaponKind.Sniper) : 0,
                 hungHealth = GetComponent<Map01Rescue>().HungHealth,
                 rescue = GetComponent<Map01Rescue>().Capture(),
                 rescueStart = includeRetry ? rescueStart : null, escortStart = includeRetry ? escortStart : null,
@@ -506,6 +510,8 @@ namespace ShadowVale.Map01
                 rescueStart=data.rescueStart;escortStart=data.escortStart;
                 RestoreGameplay(data);
                 GetComponent<Map01Rescue>().RestoreHealth(data.hungHealth);
+                // Loading an escort resumes its pose; only the live rescue plays the rise from captivity.
+                mission.hung.GetComponentInChildren<Map01HungVisual>()?.RestoreAfterCinematic();
                 GetComponent<Map01Scouting>().RestoreFound(data.scoutedCamps);
                 foreach (var point in mission.Points) point.used = data.used.Contains(point.id);
                 // Starting a scouting run over keeps the moment it started from; any other load
@@ -524,22 +530,40 @@ namespace ShadowVale.Map01
             if (mission.ModernCombat != null)
             {
                 if (Enum.IsDefined(typeof(ShadowVale.Gameplay.Combat.WeaponKind), data.equippedWeapon))
-                    mission.ModernCombat.Equip((ShadowVale.Gameplay.Combat.WeaponKind)data.equippedWeapon);
+                {
+                    var equipped=(ShadowVale.Gameplay.Combat.WeaponKind)data.equippedWeapon;
+                    if(equipped==ShadowVale.Gameplay.Combat.WeaponKind.Rifle && inventory.SlotItem(Map01Inventory.Slot.Primary)=="rifle_mosin")
+                        equipped=ShadowVale.Gameplay.Combat.WeaponKind.Sniper;
+                    else if(equipped==ShadowVale.Gameplay.Combat.WeaponKind.Rifle && (inventory.SlotItem(Map01Inventory.Slot.Primary)!="rifle_standard" && inventory.SlotItem(Map01Inventory.Slot.Primary)!=Map01M16.Id))
+                        equipped=ShadowVale.Gameplay.Combat.WeaponKind.Knife;
+                    if(equipped==ShadowVale.Gameplay.Combat.WeaponKind.Pistol && inventory.SlotItem(Map01Inventory.Slot.Pistol)!="pistol_k54")
+                        equipped=ShadowVale.Gameplay.Combat.WeaponKind.Knife;
+                    if(equipped==ShadowVale.Gameplay.Combat.WeaponKind.Sniper && inventory.SlotItem(Map01Inventory.Slot.Primary)!="rifle_mosin")
+                        equipped=ShadowVale.Gameplay.Combat.WeaponKind.Knife;
+                    mission.ModernCombat.Equip(equipped);
+                }
+                inventory.ApplyPrimaryRifle(false);
                 mission.ModernCombat.RestoreAttackCooldown(data.attackRemaining);
                 // Saves written before magazines existed carry -1; leave the weapon loaded
                 // rather than handing the player an empty rifle out of an old checkpoint.
-                if (data.roundsInMagazine >= 0) mission.ModernCombat.RestoreMagazine(data.roundsInMagazine);
+                if (data.roundsInMagazine >= 0) mission.ModernCombat.RestoreMagazine(ShadowVale.Gameplay.Combat.WeaponKind.Rifle, data.roundsInMagazine);
+                mission.ModernCombat.RestoreMagazine(ShadowVale.Gameplay.Combat.WeaponKind.Pistol, data.pistolRoundsInMagazine);
+                mission.ModernCombat.RestoreMagazine(ShadowVale.Gameplay.Combat.WeaponKind.Sniper, data.mosinRoundsInMagazine);
             }
             foreach (var enemy in mission.Enemies)
             {
+                if (enemy == null) continue;
                 var saved = data.enemies?.FirstOrDefault(e => e.id == enemy.SaveId);
                 // The previous runtime boss inherited an arbitrary camp parent. Import its
                 // existing snapshot into the stable third-outpost actor, never duplicate him.
                 if (saved == null && enemy.IsBoss && data.story == null)
                     saved = data.enemies?.FirstOrDefault(e => e.id != null && e.id.EndsWith("/Chỉ huy địch", StringComparison.Ordinal));
                 if (saved != null) enemy.RestoreSnapshot(saved);
-                else if (enemy.IsBoss && GetComponent<Map01Story>().Progress.commanderKilled) {
-                    var state = enemy.Capture(); state.hp = 0; enemy.RestoreSnapshot(state);
+                else {
+                    enemy.RefreshRifleLoadout();
+                    if (enemy.IsBoss && GetComponent<Map01Story>().Progress.commanderKilled) {
+                        var state = enemy.Capture(); state.hp = 0; enemy.RestoreSnapshot(state);
+                    }
                 }
             }
         }

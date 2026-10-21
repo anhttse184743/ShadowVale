@@ -37,12 +37,16 @@ namespace ShadowVale.Gameplay.Player
         [SerializeField] private Limb[] limbs = Array.Empty<Limb>();
 
         public void Configure(Limb[] value) => limbs = value ?? Array.Empty<Limb>();
+        private int authoredPoseOwners;
+        public void BeginAuthoredPose()=>authoredPoseOwners++;
+        public void EndAuthoredPose()=>authoredPoseOwners=Mathf.Max(0,authoredPoseOwners-1);
 
         private void LateUpdate() => Apply();
 
         /// <summary>Sets every twist bone from its hand's current roll.</summary>
         public void Apply()
         {
+            if(authoredPoseOwners>0)return;
             foreach (Limb limb in limbs)
             {
                 if (limb.hand == null || limb.bones == null) continue;

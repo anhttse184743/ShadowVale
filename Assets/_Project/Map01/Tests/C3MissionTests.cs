@@ -3,6 +3,8 @@ using System.Linq;
 using NUnit.Framework;
 using ShadowVale.Gameplay.Combat;
 using UnityEditor.SceneManagement;
+using UnityEditor;
+using System.IO;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.TestTools;
@@ -56,8 +58,10 @@ namespace ShadowVale.Map01.Tests
         }
 
         private static bool InHeadquarters(Vector3 p) => p.x > 63.5f && p.x < 72.5f && p.z > 61.5f && p.z < 69f;
-        private static int ActiveSleepers() => c3.Sleepers.Count(s => s.gameObject.activeSelf);
+        private static int ActiveSleepers() => c3.Current.sleepersAwake.Count(a=>a);
         private static bool Listed(Map01EnemyController guard) => mission.Enemies.Contains(guard);
+        [SetUp] public void IsolateC3Saves()=>SessionState.SetString(ForestSaveSlots.EditorTestRootKey,Path.GetFullPath("Docs/Reviews/C3_BedPistol_Unity_20261019/TestSaves"));
+        [TearDown] public void ReleaseC3Saves()=>SessionState.EraseString(ForestSaveSlots.EditorTestRootKey);
 
         [UnityTest]
         public IEnumerator TheGarrisonHoldsItsPostsAndTheCommanderIsHomeFromTheStart()
@@ -78,8 +82,9 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(InHeadquarters(quest.CommanderEnemy.transform.position), "In his headquarters: " + quest.CommanderEnemy.transform.position);
             Assert.AreEqual(1, mission.Enemies.Count(e => e.IsBoss));
 
-            // The reserve: off the field, out of the enemy list, until called.
+            // The reserve is visible in bed but stays out of active guard counts until called.
             Assert.AreEqual(3, c3.Sleepers.Count);
+            Assert.IsTrue(c3.Sleepers.All(g=>g.gameObject.activeSelf&&g.GetComponent<Map01C3Sleeper>().Sleeping));
             Assert.AreEqual(0, ActiveSleepers());
             Assert.IsFalse(c3.Sleepers.Any(Listed), "Sleepers are not counted as guards on the field.");
             Assert.IsTrue(mission.Points.Contains(c3.KiengPoint) && mission.Points.Contains(c3.PhonePoint));
@@ -136,9 +141,10 @@ namespace ShadowVale.Map01.Tests
             Assert.Greater(gongSources[0].maxDistance,gongSources[0].minDistance);
             var gong=GameObject.Find("Kẻng (iron bar)");Assert.NotNull(gong);
             Assert.Less(Vector3.Distance(gong.transform.position,gongSources[0].transform.position),.01f);
-            typeof(Map01C3Mission).GetMethod("RingKieng",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).Invoke(c3,null);
+            typeof(Map01C3Mission).GetMethod("RingKieng",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).Invoke(c3,new object[]{true,null});
             Assert.AreEqual(1,Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None).Count(s=>s.isPlaying&&s.clip!=null&&s.clip.name=="c3_kieng"),"Already rung: no replay.");
             Assert.AreEqual(3, ActiveSleepers(), "Every sleeper comes out.");
+            yield return WaitGameSeconds(Map01BedAnimationData.Load().wake.length+.2f);
             Assert.IsTrue(c3.Sleepers.All(Listed), "…and counts as a guard now.");
             yield return new ExitPlayMode();
         }
@@ -183,13 +189,22 @@ namespace ShadowVale.Map01.Tests
             OpenMap();
             yield return new EnterPlayMode(); yield return null; yield return null;
             Settle();
+            var northGuard = c3.Guard("patrolNorth");
+            var before = northGuard.Position;
+            northGuard.GetComponent<NavMeshAgent>().enabled = true;
+            northGuard.enabled = true;
             c3.Guard("patrolSouth").GetComponent<Health>().TakeDamage(99999, Vector3.zero, null);
             c3.Current.checkInRemaining = .2f;
             yield return WaitGameSeconds(.5f);
             Assert.IsTrue(c3.Wary, "Tổ một did not answer.");
-            var north = c3.Guard("patrolNorth").transform.position;
+            Assert.Less(Vector3.Distance(before, northGuard.Position), 4f, "The order starts a walk, not a 25 m teleport.");
+            float deadline = Time.time + 40f;
+            while (new Vector2(northGuard.Position.x - 70.5f, northGuard.Position.z - 39.2f).magnitude >= 1.5f && Time.time < deadline)
+                yield return null;
+            var north = northGuard.Position;
             Assert.Less(new Vector2(north.x - 70.5f, north.z - 39.2f).magnitude, 1.5f, "The other patrol holds before the gate.");
-            Assert.AreEqual(c3.Data.checkInSeconds, c3.CheckInRemaining, .5f);
+            Assert.Greater(c3.CheckInRemaining, 0f);
+            Assert.LessOrEqual(c3.CheckInRemaining, c3.Data.checkInSeconds);
             yield return new ExitPlayMode();
         }
 
@@ -249,7 +264,8 @@ namespace ShadowVale.Map01.Tests
             c3.Restore(saved);
             Assert.IsTrue(c3.KiengRemoved); Assert.IsTrue(c3.PhoneCut); Assert.IsTrue(c3.Current.called);
             Assert.AreEqual(1, ActiveSleepers());
-            Assert.IsTrue(c3.Sleepers.Where(s => s.gameObject.activeSelf).All(Listed));
+            Assert.IsTrue(c3.Sleepers.Where((s,i) => c3.Current.sleepersAwake[i]).All(Listed));
+            Assert.IsFalse(c3.Sleepers.Where((s,i) => !c3.Current.sleepersAwake[i]).Any(Listed));
             yield return new ExitPlayMode();
         }
     }

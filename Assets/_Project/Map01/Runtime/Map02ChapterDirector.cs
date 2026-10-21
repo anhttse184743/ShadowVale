@@ -121,7 +121,7 @@ namespace ShadowVale.Map01
             if(t.kind=="medicine"){if(!State.Done("D1_02"))return false;BeginScene(t);return true;}
             if(t.kind=="gear")
             {
-                if(State.gearStored){Mission.Inventory["ammo_rifle"]=Inventory("ammo_rifle")+State.storedRounds;State.storedRounds=0;State.gearStored=false;}
+                if(State.gearStored){Mission.Inventory[Mission.RifleAmmo]=Inventory(Mission.RifleAmmo)+State.storedRounds;State.storedRounds=0;State.gearStored=false;}
                 combat.Equip(WeaponKind.Rifle);Finish(t);return true;
             }
             if(t.kind=="escortHung"||t.kind=="escortScout"||t.kind=="patrolHung")

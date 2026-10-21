@@ -183,6 +183,7 @@ namespace ShadowVale.Map01
             Binoculars = GetComponents<MonoBehaviour>().OfType<IBinoculars>().FirstOrDefault();
             ModernPlayer = player.GetComponent<PlayerController>();
             ModernCombat = player.GetComponent<PlayerCombat>();
+            inventory.ApplyPrimaryRifle(false);
             ModernHealth = player.GetComponent<Health>();
             Enemies = FindObjectsByType<Map01EnemyController>(FindObjectsSortMode.None);
             if (ModernPlayer != null)
@@ -204,21 +205,22 @@ namespace ShadowVale.Map01
                 ModernCombat.GunKilled += OnGunKilled;
                 var stones = GetComponent<Map01StoneThrow>(); // Added by Map01PlayerInteraction.Awake.
                 ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.SuppressFire && !InputFocus.OverlayOpen
-                    && !inventory.ThrowableEquipped && !(Binoculars?.Binoculars ?? false) && (stones == null || !stones.Aiming); // Hands are on the binoculars or a throwable, not the rifle.
+                    && !inventory.ThrowableEquipped && !(Binoculars?.Binoculars ?? false) && (stones == null || !stones.PresentingThrow); // Hands are on the binoculars or a throwable, not the rifle.
                 ModernCombat.TryConsumeRound = () =>
                 {
-                    if (inventory.Count("ammo_rifle") <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 3.", 3); return false; }
-                    inventory.Spend("ammo_rifle", 1);
+                    if (inventory.Count(inventory.HeldAmmoId) <= 0) { Say("Hết đạn — nhặt đạn ở thùng vật tư gần điểm xuất phát hoặc lục xác lính [E]. Đổi sang dao: phím 3.", 3); return false; }
+                    inventory.Spend(inventory.HeldAmmoId, 1);
                     EmitNoise(player.position, Weapon.noise_radius, NoiseKind.Gunshot);
                     return true;
                 };
                 // With a magazine in the weapon the pack is a reserve, drawn once per reload
                 // rather than once per shot, so the two hooks below replace the one above.
-                ModernCombat.ReserveRounds = () => inventory.Count("ammo_rifle");
+                ModernCombat.ReserveRounds = () => inventory.Count(inventory.HeldAmmoId);
                 ModernCombat.DrawRounds = wanted =>
                 {
-                    int granted = Mathf.Min(wanted, inventory.Count("ammo_rifle"));
-                    if (granted > 0) inventory.Spend("ammo_rifle", granted);
+                    string ammo = inventory.HeldAmmoId;
+                    int granted = Mathf.Min(wanted, inventory.Count(ammo));
+                    if (granted > 0) inventory.Spend(ammo, granted);
                     else Say("Hết đạn — nhặt thêm đạn hoặc đổi vũ khí bằng phím 1 – 3.", 2);
                     return granted;
                 };
@@ -239,6 +241,8 @@ namespace ShadowVale.Map01
                 };
                 inventory.GunBroke -= OnGunBroke;
                 inventory.GunBroke += OnGunBroke;
+                Map01Pistol.Install(this);
+                Map01Mosin.Install(this);
             }
             if (gameCamera != null && gameCamera.TryGetComponent<ThirdPersonCamera>(out var cameraRig))
                 {
@@ -315,9 +319,10 @@ namespace ShadowVale.Map01
                 Dialogue=GameplayCaption(line.caption);DialogueUntil=Time.time+line.clip.length+.2f;
                 if(line.caption.StartsWith("Hùng") && hung!=null)hung.GetComponentInChildren<Map01HungVisual>()?.Speak(line.clip.length+.2f);
             };
-            Dialogue=GameplayCaption(text);DialogueUntil=Time.time+seconds;
             if(string.IsNullOrEmpty(text))speech.Stop();
             float spoken=string.IsNullOrEmpty(text)?0:speech.SpeakText(text);
+            // Unrecorded calls still need a readable cue; recorded ambient lines keep their audio-only policy.
+            Dialogue=spoken>0?GameplayCaption(text):text;DialogueUntil=Time.time+seconds;
             if(!string.IsNullOrEmpty(text))DialogueUntil=Time.time+Mathf.Max(seconds,spoken+.25f);
         }
         public static string GameplayCaption(string text)
@@ -327,6 +332,10 @@ namespace ShadowVale.Map01
             return text.StartsWith("Lính")||text.StartsWith("Sĩ quan")||text.StartsWith("Hùng:")||text.StartsWith("Hùng (")||text.StartsWith("Nam:")?null:text;
         }
         public void ReleaseForNextMap() {
+            // The carried actor outlives Map 1; its scene-specific arm/scope drivers must not.
+            if(player.TryGetComponent(out Map01Pistol pistolMotion))pistolMotion.enabled=false;
+            if(player.TryGetComponent(out Map01Mosin mosinMotion))mosinMotion.enabled=false;
+            ModernCombat.GunPresentationReady=true;
             GetComponent<DialogueVoice>()?.Stop();
             ModernCombat.Attacked-=OnPlayerAttacked;
             if(player.TryGetComponent(out PlayerFootsteps footsteps)) {
@@ -336,8 +345,9 @@ namespace ShadowVale.Map01
         private void OnPlayerAttacked(WeaponKind kind, Vector3 position)
         {
             EventBus.Publish(new PlayerAttackEvent(kind.ToString().ToLowerInvariant(), position));
-            if (kind != WeaponKind.Rifle) return;
-            EmitNoise(position, Weapon.noise_radius, NoiseKind.Gunshot);
+            if (kind != WeaponKind.Rifle && kind != WeaponKind.Pistol && kind != WeaponKind.Sniper) return;
+            var profile = kind == WeaponKind.Pistol ? Bundle.weapons.FirstOrDefault(w => w.id == "pistol_k54") : kind==WeaponKind.Sniper ? Bundle.weapons.FirstOrDefault(w=>w.id=="rifle_mosin") : Weapon;
+            EmitNoise(position, profile != null ? profile.noise_radius : Weapon.noise_radius, NoiseKind.Gunshot);
             // Every shot wears the gun in hand by its content's durability_per_shot.
             var held = inventory.HeldGun();
             if (held != null) inventory.Wear(held.Value, inventory.WearPerShot(inventory.SlotItem(held.Value)));

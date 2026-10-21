@@ -158,6 +158,7 @@ namespace ShadowVale.Map01
             // The displayed report prompt owns E, even beside an outpost/base workbench.
             // Otherwise a cleared point 3 can open crafting instead of the required retreat call.
             if (story != null && story.RadioReport && story.TryInteract()) return;
+            if (GetComponent<Map01C3BedTakedown>()?.TryBeginNearest() == true) return;
             if (Nearby != null && Nearby.kind == ForestPointKind.Workbench) { Interact(Nearby); return; }
             if (story?.TryInteract() == true) return;
             if (quest != null && quest.HungInRange) quest.TalkToHung();

@@ -53,6 +53,7 @@ namespace ShadowVale.Map01
         {
             if (mission == null) mission = GetComponent<Map01Mission>(); // Seeded from the mission's Awake, maybe before this Awake.
             ClearAll();
+            // The player's starting rifle is always the AK. M16s come from enemy loot.
             Add("rifle_standard", 1);
             Add("pistol_k54", 1);
             if (mission != null && mission.Settings != null) Add("ammo_pistol", mission.Settings.startingPistolRounds);
@@ -129,7 +130,7 @@ namespace ShadowVale.Map01
                 if (cell.count <= 0) bag[i] = null;
             }
             if (amount > 0 && primary == id) { SetSlot(Slot.Primary, null); amount--; OnSlotEmptied(); }
-            if (amount > 0 && pistol == id) { SetSlot(Slot.Pistol, null); amount--; }
+            if (amount > 0 && pistol == id) { SetSlot(Slot.Pistol, null); amount--; OnSlotEmptied(); }
             Changed?.Invoke();
         }
         /// <summary>Totals by item (bag and slots), for whatever wants the whole list.</summary>
@@ -166,8 +167,12 @@ namespace ShadowVale.Map01
             if (!ForestInventory.IsWeapon(id) || mission == null || mission.ModernCombat == null) return false;
             var kind = mission.ModernCombat.EquippedKind;
             return id == "knife" ? kind == WeaponKind.Knife && knife == id
-                : id == "rifle_standard" && kind == WeaponKind.Rifle && primary == id;
+                : id == "pistol_k54" ? kind == WeaponKind.Pistol && pistol == id
+                : id == "rifle_mosin" ? kind == WeaponKind.Sniper && primary == id
+                : (id == "rifle_standard" || id == Map01M16.Id) && kind == WeaponKind.Rifle && primary == id;
         }
+        public string HeldAmmoId => mission != null && mission.ModernCombat != null
+            ? mission.ModernCombat.EquippedKind==WeaponKind.Pistol ? "ammo_pistol" : mission.ModernCombat.EquippedKind==WeaponKind.Sniper ? "ammo_sniper" : PrimaryAmmo : PrimaryAmmo;
         /// <summary>The weapon <paramref name="id"/> into its slot (from the bag, if it is there) and into his hands.</summary>
         public bool EquipItem(string id)
         {
@@ -213,7 +218,7 @@ namespace ShadowVale.Map01
         public bool NearWorkbench() => mission.Interactables.Any(p => p.kind == ForestPointKind.Workbench
             && Vector3.Distance(mission.player.position, p.transform.position) < mission.Settings.interactRange);
         /// <summary>What the workbench makes on Map 1, in the order the bench lists them.</summary>
-        public static readonly string[] BenchRecipes = { "craft_medkit_small", "craft_repair_kit", "craft_smoke_bomb", "craft_grenade_f1", "craft_ammo_pistol", "craft_ammo_rifle", "craft_ammo_sniper" };
+        public static readonly string[] BenchRecipes = { "craft_medkit_small", "craft_repair_kit", "craft_smoke_bomb", "craft_grenade_f1", "craft_ammo_pistol", "craft_ammo_rifle", "craft_ammo_556", "craft_ammo_sniper" };
         public IEnumerable<ForestRecipe> Recipes => BenchRecipes.Select(Recipe).Where(r => r != null);
         public ForestRecipe Recipe(string id) => mission.Bundle?.craft_recipes?.FirstOrDefault(r => r.id == id);
         public bool HasInputs(ForestRecipe recipe) => recipe.inputs.All(i => Count(i.item_id) >= i.count);
@@ -256,19 +261,21 @@ namespace ShadowVale.Map01
         /// layout (<see cref="RestoreLayout"/>) puts every stack back where it was afterwards.</summary>
         public void RestoreFromSave(ForestIngredient[] savedItems, int savedStones, string savedCrafting, float craftRemaining)
         {
+            restoringRifle = true;
             SuppressFire = false; nextQuickUse = 0; ThrowableEquipped = false;
             ClearAll();
             // Weapons first, so they take their slots; earlier saves carried rifle and knife without entries.
             // Only a missing key is migrated: a saved count of 0 is an explicit absence and stays one.
             bool HasKey(string id) => savedItems.Any(i => i != null && i.item_id == id);
             var saved = savedItems.Where(i => i != null && i.count > 0).OrderBy(i => ForestInventory.IsWeapon(i.item_id) ? 0 : 1).ToList();
-            if (!HasKey("rifle_standard") && !HasKey("rifle_mosin")) saved.Insert(0, new ForestIngredient { item_id = "rifle_standard", count = 1 });
+            if (!HasKey("rifle_standard") && !HasKey("rifle_mosin") && !HasKey("rifle_m16")) saved.Insert(0, new ForestIngredient { item_id = "rifle_standard", count = 1 });
             if (!HasKey("knife")) saved.Insert(0, new ForestIngredient { item_id = "knife", count = 1 });
             foreach (var i in saved) if (i.item_id != "stone") Store(i.item_id, i.count);
             Store("stone", Mathf.Min(savedStones, StoneCapacity));
             queue.Clear(); batchMade.Clear();
             var recipe = string.IsNullOrEmpty(savedCrafting) ? null : mission.Bundle?.craft_recipes?.FirstOrDefault(r => r.id == savedCrafting);
             if (recipe != null) queue.Add(new CraftJob { recipe = recipe, until = Time.time + craftRemaining });
+            restoringRifle = false; ApplyPrimaryRifle(false);
         }
         /// <summary>What to save. A save keeps only the craft under way; the materials of the ones still
         /// waiting behind it go back into the bag, so a load never loses them.</summary>

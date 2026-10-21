@@ -48,7 +48,7 @@ namespace ShadowVale.Map01.Tests
         {
             Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return null;Isolate();
             var guard=R.Squad[0];M.ModernCombat.Equip(WeaponKind.Knife);
-            Place(guard.transform.position-guard.transform.forward*1.9f,guard.transform.rotation);Assert.IsFalse(guard.CanSilentTakedown());
+            Place(guard.transform.position-guard.transform.forward*(R.Layout.overseerBackstabRange+.15f),guard.transform.rotation);Assert.IsFalse(guard.CanSilentTakedown(),"Outside the authored overseer reach, not the old 1.9 m assumption.");
             Place(guard.transform.position+guard.transform.forward,guard.transform.rotation);Assert.IsFalse(guard.CanSilentTakedown());
             Place(guard.transform.position-guard.transform.forward*1.2f,guard.transform.rotation);
             var wall=GameObject.CreatePrimitive(PrimitiveType.Cube);wall.transform.position=Vector3.Lerp(M.player.position,guard.transform.position,.5f)+Vector3.up;wall.transform.localScale=Vector3.one*.35f;Physics.SyncTransforms();

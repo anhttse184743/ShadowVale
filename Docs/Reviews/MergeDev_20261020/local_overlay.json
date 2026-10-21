@@ -1,0 +1,182 @@
+[
+  {
+    "path": "Assets/_Project/Art/Environment/Map01Items/Materials/Grenade olive.mat",
+    "result": "local-only"
+  },
+  {
+    "path": "Assets/_Project/Map01/Generated/Map01Content.json",
+    "result": "merged",
+    "blocks": 0
+  },
+  {
+    "path": "Assets/_Project/Map01/Resources/Missions/Map01C3Layout.json",
+    "result": "local-only"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/DialogueVoice.cs",
+    "result": "local-only"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/ForestInventory.cs",
+    "result": "conflict",
+    "blocks": 1
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/ForestSettings.cs",
+    "result": "local-only"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01BodyDiscovery.cs",
+    "result": "local-only"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01C3Mission.cs",
+    "result": "merged",
+    "blocks": 0
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01CinematicPose.cs",
+    "result": "conflict",
+    "blocks": 1
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01EnemyController.cs",
+    "result": "merged",
+    "blocks": 0
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01Hud.Combat.cs",
+    "result": "conflict",
+    "blocks": 1
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01Inventory.Bag.cs",
+    "result": "merged",
+    "blocks": 0
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01Inventory.cs",
+    "result": "merged",
+    "blocks": 0
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01Mission.cs",
+    "result": "conflict",
+    "blocks": 1
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01NamActions.cs",
+    "result": "conflict",
+    "blocks": 3
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01PlayerInteraction.cs",
+    "result": "merged",
+    "blocks": 0
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01SaveSystem.cs",
+    "result": "local-only"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01StoneThrow.cs",
+    "result": "merged",
+    "blocks": 0
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01StoryDialogue.cs",
+    "result": "conflict",
+    "blocks": 1
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/TutorialDirector.cs",
+    "result": "merged",
+    "blocks": 0
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/TutorialPromptUI.Presentation.cs",
+    "result": "local-only"
+  },
+  {
+    "path": "Assets/_Project/Map01/Tests/BodyDiscoveryTests.cs",
+    "result": "local-only"
+  },
+  {
+    "path": "Assets/_Project/Map01/Tests/C3MissionTests.cs",
+    "result": "merged",
+    "blocks": 0
+  },
+  {
+    "path": "Assets/_Project/Map01/Tests/DialogueVoiceTests.cs",
+    "result": "conflict",
+    "blocks": 17
+  },
+  {
+    "path": "Assets/_Project/Map01/Tests/ForestMenuIntegrationTests.cs",
+    "result": "local-only"
+  },
+  {
+    "path": "Assets/_Project/Map01/Tests/ForestSceneTestBase.cs",
+    "result": "local-only"
+  },
+  {
+    "path": "Assets/_Project/Map01/Tests/Map01OperationsTests.cs",
+    "result": "merged",
+    "blocks": 0
+  },
+  {
+    "path": "Assets/_Project/Map01/Tests/Map02ArrivalTests.cs",
+    "result": "local-only"
+  },
+  {
+    "path": "Assets/_Project/Map01/Tests/OpeningCutsceneTests.cs",
+    "result": "local-only"
+  },
+  {
+    "path": "Assets/_Project/Scripts/Gameplay/Audio/CombatAudio.cs",
+    "result": "local-only"
+  },
+  {
+    "path": "Assets/_Project/Scripts/Gameplay/Combat/Health.cs",
+    "result": "merged",
+    "blocks": 0
+  },
+  {
+    "path": "Assets/_Project/Scripts/Gameplay/Combat/Magazine.cs",
+    "result": "local-only"
+  },
+  {
+    "path": "Assets/_Project/Scripts/Gameplay/Combat/PlayerCombat.cs",
+    "result": "conflict",
+    "blocks": 1
+  },
+  {
+    "path": "Assets/_Project/Scripts/Gameplay/Combat/Weapon.cs",
+    "result": "conflict",
+    "blocks": 1
+  },
+  {
+    "path": "Assets/_Project/Scripts/Gameplay/Combat/WeaponKind.cs",
+    "result": "local-only"
+  },
+  {
+    "path": "Assets/_Project/Scripts/Gameplay/Combat/WeaponTuning.cs",
+    "result": "local-only"
+  },
+  {
+    "path": "Assets/_Project/Scripts/Gameplay/Player/ForearmTwist.cs",
+    "result": "local-only"
+  },
+  {
+    "path": "Assets/_Project/Scripts/Gameplay/Player/ThirdPersonCamera.cs",
+    "result": "local-only"
+  },
+  {
+    "path": "Docs/Contracts/README.md",
+    "result": "local-only"
+  },
+  {
+    "path": "Docs/OpeningCutscene.md",
+    "result": "local-only"
+  }
+]

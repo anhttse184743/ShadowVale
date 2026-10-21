@@ -1,4 +1,10 @@
+using System;
 using System.Collections;
+using System.Linq;
+using UnityEditor;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
+using Object=UnityEngine.Object;
 using System.IO;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
@@ -9,6 +15,23 @@ namespace ShadowVale.Map01.Tests
 {
     public sealed class OpeningCutsceneTests : ForestSceneTestBase
     {
+        string previousSaveRoot;
+        static Keyboard keyboard;
+        static bool interactionHeld;
+        [SetUp] public void IsolateSaves() {
+            previousSaveRoot=SessionState.GetString(ForestSaveSlots.EditorTestRootKey, "");
+            SessionState.SetString(ForestSaveSlots.EditorTestRootKey,Path.GetFullPath("Docs/Reviews/CommanderOpening_20261018/TestSaves/"+Guid.NewGuid().ToString("N")));
+        }
+        [TearDown] public void RestoreSaves() {
+            Time.timeScale=1;
+            if(string.IsNullOrEmpty(previousSaveRoot))SessionState.EraseString(ForestSaveSlots.EditorTestRootKey);
+            else SessionState.SetString(ForestSaveSlots.EditorTestRootKey,previousSaveRoot);
+        }
+        static void PumpInteraction() {
+            keyboard.MakeCurrent();
+            InputSystem.QueueStateEvent(keyboard,interactionHeld?new KeyboardState(Key.E):new KeyboardState());
+        }
+
         [Test]
         public void AssetsUseExistingIdleAndHumanoidClips()
         {
@@ -72,91 +95,94 @@ namespace ShadowVale.Map01.Tests
             yield return new ExitPlayMode();
         }
         [UnityTest]
-        public IEnumerator BriefingIsUnarmedThroughSkipAndRestoresGameplayWeapons()
-        {
+        public IEnumerator CommanderConversationIsUnarmedUntilCancelAndRestoresLoadout() {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/01_MainMenu.unity");
             yield return new EnterPlayMode();
-            Map01OpeningCutscene.RequestNewGame();Map01SaveSystem.BeginGame(-1);
-            yield return null;yield return null;
-            var opening=Object.FindFirstObjectByType<Map01OpeningCutscene>();
-            var mission=Object.FindFirstObjectByType<Map01Mission>();
-            Assert.IsTrue(opening.IsPlaying);
-            AssertBriefingUnarmed(opening,mission);
-            opening.Skip();
-            var deadline=Time.realtimeSinceStartupAsDouble+15;
-            while(opening.IsPlaying && Time.realtimeSinceStartupAsDouble<deadline) {
-                AssertBriefingUnarmed(opening,mission);yield return null;
-            }
-            Assert.IsFalse(opening.IsPlaying);
-            AssertGameplayWeaponRestored(mission);
-            AssertCommanderUnarmed(opening);
+            yield return StartNewGame();
+            yield return CheckConversationCancel();
             yield return new ExitPlayMode();
         }
+        static IEnumerator StartNewGame() {
+            Map01OpeningCutscene.RequestNewGame();Map01SaveSystem.BeginGame(-1);
+            yield return WaitForMap01Ready();
+            AssertWaitingForCommander(Object.FindFirstObjectByType<Map01Mission>());
+        }
+        static IEnumerator CheckConversationCancel() {
+            var mission=Object.FindFirstObjectByType<Map01Mission>();
+            var opening=mission.GetComponentInChildren<Map01OpeningCutscene>();
+            var story=mission.GetComponent<Map01Story>();var dialogue=mission.GetComponent<Map01StoryDialogue>();
+            var kind=mission.ModernCombat.EquippedKind;int rounds=mission.ModernCombat.RoundsInMagazine;
+            PlaceNam(mission,story.Commander.position+story.Commander.forward*1.8f);
+            Assert.IsTrue(story.TryInteract());Assert.IsTrue(dialogue.IsPlaying);
+            Assert.IsTrue(mission.Cinematic&&mission.Stopped);Assert.IsFalse(mission.CameraInputEnabled);
+            Assert.IsFalse(mission.GetComponent<Map01SaveSystem>().CanSave());
+            AssertBriefingUnarmed(opening,mission);
+            yield return WaitGameSeconds(.5f);AssertBriefingUnarmed(opening,mission);
+            dialogue.Close(false);yield return WaitGameSeconds(.3f);
+            AssertWaitingForCommander(mission);AssertGameplayWeaponRestored(mission);AssertCommanderUnarmed(opening);
+            Assert.AreEqual(kind,mission.ModernCombat.EquippedKind);Assert.AreEqual(rounds,mission.ModernCombat.RoundsInMagazine);
+            Assert.IsTrue(mission.GetComponent<Map01SaveSystem>().CanSave());
+        }
         [UnityTest]
-        public IEnumerator FullBriefingSalutesAndReturnsControlWithoutChangingQuest()
-        {
+        public IEnumerator SeparateEPressesStartAndAcceptRescueOrder() {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/01_MainMenu.unity");
             yield return new EnterPlayMode();
-            Map01OpeningCutscene.RequestNewGame();
-            Map01SaveSystem.BeginGame(-1);
-            yield return null; yield return null;
-            var mission = Object.FindFirstObjectByType<Map01Mission>();
-            var opening = Object.FindFirstObjectByType<Map01OpeningCutscene>();
-            Assert.IsTrue(opening.IsPlaying);
-            Assert.IsFalse(mission.CameraInputEnabled);
-            Assert.IsTrue(mission.Stopped);
-            Assert.IsFalse(mission.GetComponent<Map01SaveSystem>().CanSave());
-            var start = mission.player.position;
-            double poseDeadline = Time.realtimeSinceStartupAsDouble + 20;
-            while (opening.BriefingTime < 2.5f && Time.realtimeSinceStartupAsDouble < poseDeadline) {
-                AssertBriefingUnarmed(opening,mission);yield return null;
+            yield return StartNewGame();
+            yield return CheckSeparateInteractionPresses();
+            yield return new ExitPlayMode();
+        }
+        static IEnumerator CheckSeparateInteractionPresses() {
+            var mission=Object.FindFirstObjectByType<Map01Mission>();
+            var story=mission.GetComponent<Map01Story>();var dialogue=mission.GetComponent<Map01StoryDialogue>();
+            var quest=mission.GetComponent<Map01Quest>();var opening=mission.GetComponentInChildren<Map01OpeningCutscene>();
+            var voice=DialogueVoice.For(mission.gameObject);var heard=new System.Collections.Generic.List<string>();
+            Action<DialogueVoice.Line> observe=line=>heard.Add(line.id);
+            var routing=RouteInputToGame();keyboard=InputSystem.AddDevice<Keyboard>();interactionHeld=false;
+            InputSystem.onBeforeUpdate+=PumpInteraction;
+            var kind=mission.ModernCombat.EquippedKind;int rounds=mission.ModernCombat.RoundsInMagazine;
+            try {
+                PlaceNam(mission,story.Commander.position+story.Commander.forward*1.8f);
+                yield return WaitGameSeconds(.4f);AssertWaitingForCommander(mission);
+                var position=mission.player.position;
+                interactionHeld=true;yield return WaitGameSeconds(.3f);
+                Assert.IsTrue(dialogue.IsPlaying,"A real E press beside the commander must start the conversation.");
+                Assert.AreEqual(0,dialogue.Index,"The opening E press cannot also skip the first line.");
+                // Begin installs the mission's caption callback; observe after that handoff.
+                heard.Add(voice.CurrentId);voice.LineStarted+=observe;
+                Assert.IsFalse(quest.RescueOrderAccepted);
+                float deadline=Time.realtimeSinceStartup+100;
+                while(dialogue.IsPlaying&&(dialogue.Index<dialogue.Count-1||voice.HasSpeech)&&Time.realtimeSinceStartup<deadline) {
+                    Assert.IsFalse(quest.RescueOrderAccepted,"Holding E cannot accept the order.");
+                    AssertBriefingUnarmed(opening,mission);
+                    Assert.Less(Vector3.Distance(position,mission.player.position),.02f,"Dialogue must prevent walking; allow up to 2 cm of ground-contact settling.");
+                    yield return null;
+                }
+                Assert.IsTrue(dialogue.IsPlaying);Assert.AreEqual(dialogue.Count-1,dialogue.Index);Assert.IsFalse(voice.HasSpeech);
+                yield return WaitGameSeconds(1.1f);
+                Assert.IsTrue(dialogue.IsPlaying);Assert.IsFalse(quest.RescueOrderAccepted,"Listening to every line still requires a separate E press.");
+                CollectionAssert.AreEqual(Enumerable.Range(1,5).Select(i=>"m1_story_rescue_order_"+i.ToString("00")).Concat(new[]{"m1_v2_rescue_approach_03"}),heard);
+                interactionHeld=false;yield return WaitGameSeconds(.2f);
+                interactionHeld=true;yield return WaitGameSeconds(.3f);
+                Assert.IsTrue(quest.RescueOrderAccepted);Assert.IsFalse(dialogue.IsPlaying||mission.Cinematic||Map01OpeningCutscene.Active);
+                Assert.AreEqual(Map01Quest.RescueStage,quest.Stage);Assert.IsFalse(voice.HasSpeech);
+                Assert.IsTrue(string.IsNullOrEmpty(mission.Dialogue),"The final dialogue caption must not remain in gameplay.");
+                Assert.IsTrue(mission.ModernPlayer.enabled&&mission.ModernCombat.enabled&&mission.CameraInputEnabled);
+                Assert.AreEqual(kind,mission.ModernCombat.EquippedKind);Assert.AreEqual(rounds,mission.ModernCombat.RoundsInMagazine);
+                AssertGameplayWeaponRestored(mission);AssertCommanderUnarmed(opening);
+            } finally {
+                interactionHeld=false;InputSystem.onBeforeUpdate-=PumpInteraction;InputSystem.RemoveDevice(keyboard);keyboard=null;
+                voice.LineStarted-=observe;RestoreInputRouting(routing);
             }
-            Assert.IsFalse(opening.IsIntroducing);
-            var actor = opening.GetComponentsInChildren<Animator>()[0];
-            var hand = actor.GetBoneTransform(HumanBodyBones.RightHand);
-            var shoulder = actor.GetBoneTransform(HumanBodyBones.RightUpperArm);
-            Assert.Greater(hand.position.y - shoulder.position.y, -.25f, "Pointing must raise the hand, not be hidden by idle.");
-            var nam = mission.player.GetComponentInChildren<Animator>();
-            Debug.Log("SALUTE_RUNTIME_BONES "+nam.GetComponentsInChildren<Transform>().Length+" middle="+nam.GetBoneTransform(HumanBodyBones.RightMiddleDistal));
-            Assert.IsNull(nam.runtimeAnimatorController, "Gameplay stance must not override the briefing.");
-            VerifyStraightArm(nam);
-            Assert.Less(nam.GetBoneTransform(HumanBodyBones.RightHand).position.y,
-                nam.GetBoneTransform(HumanBodyBones.RightUpperArm).position.y - .3f, "Nam must rest his right arm during briefing.");
-            Assert.Less(nam.GetBoneTransform(HumanBodyBones.LeftHand).position.y,
-                nam.GetBoneTransform(HumanBodyBones.LeftUpperArm).position.y - .3f, "Nam must rest his left arm during briefing.");
-            Capture(mission.gameCamera, "Logs/Cutscene/wide.png");
-            yield return RecordSalute(opening,mission.gameCamera);
-            while (opening.BriefingTime < opening.SaluteBeginsAt + .85f) {
-                AssertBriefingUnarmed(opening,mission);yield return null;
-            }
-            Assert.Less(Vector3.Distance(nam.GetBoneTransform(HumanBodyBones.RightHand).position,
-                nam.GetBoneTransform(HumanBodyBones.Head).position), .27f, "Salute must bring the right hand to the forehead.");
-            Assert.Less(nam.GetBoneTransform(HumanBodyBones.LeftHand).position.y,
-                nam.GetBoneTransform(HumanBodyBones.LeftUpperArm).position.y - .3f, "The other arm must remain down during salute.");
-            Capture(mission.gameCamera, "Logs/Cutscene/salute.png");
-            VerifyWrist(nam);
-            using(var poseHandler=new HumanPoseHandler(nam.avatar,nam.transform)) {
-                var pose=new HumanPose();poseHandler.GetHumanPose(ref pose);
-                foreach(var name in new[]{"Right Index 1 Stretched","Right Index 2 Stretched","Right Middle 1 Stretched","Right Middle 2 Stretched"})
-                    Assert.Greater(pose.muscles[System.Array.IndexOf(HumanTrait.MuscleName,name)],.85f,"The salute must extend fingers: "+name);
-            }
-            yield return RecordSaluteEnding(opening,mission.gameCamera);
-            double deadline = Time.realtimeSinceStartupAsDouble + 20;
-            while (opening.IsPlaying && Time.realtimeSinceStartupAsDouble < deadline) {
-                AssertBriefingUnarmed(opening,mission);yield return null;
-            }
-            Assert.IsFalse(opening.IsPlaying);
-            Assert.IsFalse(Map01OpeningCutscene.Active);
-            Assert.IsNotNull(nam.runtimeAnimatorController);
-            Assert.IsTrue(mission.ModernPlayer.enabled);
-            Assert.IsTrue(mission.ModernCombat.enabled);
-            AssertGameplayWeaponRestored(mission);
-            AssertCommanderUnarmed(opening);
-            Assert.IsTrue(mission.CameraInputEnabled);
-            Assert.AreEqual(Map01Quest.RescueStage, mission.Stage);
-            Assert.Less(Vector3.Distance(start, mission.player.position), .3f);
-            Assert.IsTrue(mission.GetComponent<Map01SaveSystem>().CanSave());
-            Capture(mission.gameCamera, "Logs/Cutscene/gameplay.png");
+        }
+        [UnityTest]
+        public IEnumerator GameplayCameraStaysAboveRiverWhenWading() {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();yield return WaitForMap01Ready();
+            yield return CheckWadingCamera();
+            yield return new ExitPlayMode();
+        }
+        static IEnumerator CheckWadingCamera() {
+            var mission=Object.FindFirstObjectByType<Map01Mission>();
             // Exercise the river from a low camera angle: body must remain tinted, not sliced.
             mission.ModernPlayer.enabled = false;
             var controller = mission.player.GetComponent<CharacterController>();
@@ -179,33 +205,6 @@ namespace ShadowVale.Map01.Tests
             Capture(mission.gameCamera, "Logs/Cutscene/wading.png");
             if (controller != null) controller.enabled = true;
             mission.ModernPlayer.enabled = true;
-            yield return new ExitPlayMode();
-        }
-        private static IEnumerator RecordSalute(Map01OpeningCutscene opening,Camera camera) {
-            Directory.CreateDirectory("Logs/Cutscene/salute-frames");
-            var events=new System.Collections.Generic.List<string>();int frame=0;
-            while(opening.BriefingTime<opening.SaluteBeginsAt-.15f) {
-                AssertBriefingUnarmed(opening,Object.FindFirstObjectByType<Map01Mission>());yield return null;
-            }
-            var pump=opening.gameObject.AddComponent<ExtractionCapturePump>();
-            while(opening.BriefingTime<opening.SaluteBeginsAt+.85f) {
-                bool rendered=false;float at=opening.BriefingTime;
-                pump.draw=()=>{CaptureSaluteViews(opening,camera,frame);rendered=true;};
-                yield return new WaitUntil(()=>rendered);
-                events.Add(frame+","+at);frame++;yield return WaitGameSeconds(.05f);
-            }
-            Object.Destroy(pump);File.WriteAllLines("Logs/Cutscene/salute-frames.csv",events);
-        }
-        private static IEnumerator RecordSaluteEnding(Map01OpeningCutscene opening,Camera camera) {
-            var events=new System.Collections.Generic.List<string>();int frame=1000;
-            var pump=opening.gameObject.AddComponent<ExtractionCapturePump>();
-            while(opening.IsPlaying) {
-                bool rendered=false;float at=opening.BriefingTime;
-                pump.draw=()=>{CaptureSaluteViews(opening,camera,frame);rendered=true;};
-                yield return new WaitUntil(()=>rendered);
-                events.Add(frame+","+at);frame++;yield return WaitGameSeconds(.08f);
-            }
-            Object.Destroy(pump);File.AppendAllLines("Logs/Cutscene/salute-frames.csv",events);
         }
         private static void VerifyWrist(Animator actor,float maximum=25) {
             var hand=actor.GetBoneTransform(HumanBodyBones.RightHand);
@@ -223,22 +222,6 @@ namespace ShadowVale.Map01.Tests
         }
         private static void VerifyStraightArm(Animator actor) {
             Assert.Less(ElbowBend(actor),8,"Nam must begin and finish the salute with a straight arm, including the listening idle.");
-        }
-        private static void CaptureSaluteViews(Map01OpeningCutscene opening,Camera camera,int frame) {
-            if(opening.IsPlaying)AssertBriefingUnarmed(opening,Object.FindFirstObjectByType<Map01Mission>());
-            if(opening.IsPlaying && opening.BriefingTime>opening.SaluteBeginsAt+.15f)
-                VerifyWrist(Object.FindFirstObjectByType<Map01Mission>().player.GetComponentInChildren<Animator>(),40);
-            Capture(camera,"Logs/Cutscene/salute-frames/"+frame.ToString("D4")+".png");
-            if(frame%3!=0)return;
-            var root=Object.FindFirstObjectByType<Map01Mission>().player;
-            var pos=camera.transform.position;var rot=camera.transform.rotation;float fov=camera.fieldOfView;
-            var focus=root.position+Vector3.up*1.55f;
-            foreach(var side in new[]{"front","side"}) {
-                var eye=root.position+(side=="front"?root.forward*1.7f+root.right*.2f:root.right*1.7f+root.forward*.3f)+Vector3.up*1.6f;
-                camera.transform.SetPositionAndRotation(eye,Quaternion.LookRotation(focus-eye));camera.fieldOfView=48;
-                Capture(camera,"Logs/Cutscene/"+side+"-"+frame.ToString("D4")+".png");
-            }
-            camera.transform.SetPositionAndRotation(pos,rot);camera.fieldOfView=fov;
         }
         private static void AssertBriefingUnarmed(Map01OpeningCutscene opening,Map01Mission mission) {
             AssertCommanderUnarmed(opening);

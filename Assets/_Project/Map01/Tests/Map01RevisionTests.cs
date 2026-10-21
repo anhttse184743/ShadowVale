@@ -92,10 +92,12 @@ namespace ShadowVale.Map01.Tests
             typeof(Map01EnemyController).GetField("_nextShot",Hidden).SetValue(guard,0f);
             typeof(Map01EnemyController).GetMethod("Shoot",Hidden).Invoke(guard,null);
             Assert.AreEqual(before+1,guard.AudibleShots);
-            // A guard's round sounds through the shared enemy feedback (EnemyFeedback): the rifle's own report.
-            var report=M.player.GetComponent<ShadowVale.Gameplay.Audio.CombatAudio>().Gunshot.clip;
+            // A guard's round sounds through the shared enemy feedback (EnemyFeedback), with the guards' own rifle report
+            // (the AK of the extraction film, not Nam's gunshot) and a flash at his muzzle.
+            var report=Resources.Load<Map01Extraction>("Cutscenes/Map01Extraction").rifleAudio;
             Assert.IsNotNull(report);
-            Assert.IsTrue(Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None).Any(a=>a.isPlaying&&a.clip==report),"The guard's shot is heard.");
+            Assert.IsTrue(Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None).Any(a=>a.isPlaying&&a.clip==report),"The guard's shot is heard, his rifle's report.");
+            Assert.IsTrue(guard.GetComponentsInChildren<Light>().Any(l=>l.name=="Rifle muzzle flash"&&l.enabled),"Muzzle flash at his rifle.");
             yield return null;
         }
         static IEnumerator CheckCamera()

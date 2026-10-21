@@ -1,0 +1,5 @@
+Cinematic pursuer 1 position=(-10.45, 1.26, 82.00) hp=0 active=True agent=True onMesh=True
+stop=True speed=3,5 velocity=(0.00, 0.00, 0.00) destination=(-10.45, 1.26, 82.00) status=PathComplete remaining=0
+Cinematic pursuer 0 position=(-5.39, 1.48, 84.08) hp=62 active=True agent=True onMesh=True
+stop=False speed=3,5 velocity=(0.42, 0.00, 0.75) destination=(-3.60, 1.48, 90.32) status=PathComplete remaining=6,552113
+Nam shots=0 commander=4 phase=Departing

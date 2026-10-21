@@ -64,7 +64,7 @@ MonoBehaviour:
   - position: {x: 47.623974, y: 10.000732, z: 34.92092}
     source: 1
     stones: 2
-  - position: {x: 91.11269, y: 20.825281, z: 44.27331}
+  - position: {x: 98.48, y: 18.32, z: 48.16}
     source: 1
     stones: 2
   - position: {x: 66.62983, y: 8.553773, z: 79.102295}
@@ -113,6 +113,12 @@ MonoBehaviour:
     source: 2
     stones: 2
   - position: {x: 100.06619, y: 5.779784, z: 97.6109}
+    source: 2
+    stones: 2
+  - position: {x: -49.33999, y: 3.8767903, z: -26.112059}
+    source: 2
+    stones: 2
+  - position: {x: -37.49991, y: 4.746943, z: 23.928314}
     source: 2
     stones: 2
   riverbankRestockSeconds: 90

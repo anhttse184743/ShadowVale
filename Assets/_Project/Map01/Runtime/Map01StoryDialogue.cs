@@ -287,6 +287,7 @@ namespace ShadowVale.Map01
             if(turnedCommander&&commander!=null&&commander.CommanderTransform!=null)
                 commander.CommanderTransform.rotation=commanderFacing;
             turnedCommander=false;
+            if (mission != null) mission.Say(null, 0);
             if (voice != null) voice.CanSpeak = previousVoiceGate;
             previousVoiceGate = null;
             pose?.Dispose(); pose = null;

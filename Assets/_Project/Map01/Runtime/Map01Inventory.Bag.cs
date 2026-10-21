@@ -46,7 +46,7 @@ namespace ShadowVale.Map01
         public BagCell Cell(int i) => i >= 0 && i < BagSize ? bag[i] : null;
         public string SlotItem(Slot slot) => slot == Slot.Primary ? primary : slot == Slot.Pistol ? pistol : knife;
         /// <summary>The slot a weapon goes in, or null for anything that is not one.</summary>
-        public static Slot? SlotOf(string id) => id == "rifle_standard" || id == "rifle_mosin" ? Slot.Primary
+        public static Slot? SlotOf(string id) => id == "rifle_standard" || id == "rifle_m16" || id == "rifle_mosin" ? Slot.Primary
             : id == "pistol_k54" ? Slot.Pistol : id == "knife" ? Slot.Knife : (Slot?)null;
         /// <summary>The throwable used by holding and releasing left mouse while slot 4 is equipped.</summary>
         public string Throwable => throwable;
@@ -55,7 +55,7 @@ namespace ShadowVale.Map01
         public static bool IsMissionItem(string id) => id == "supplies" || id == "river_documents"
             || id == Map01Story.KeyItem || id == Map01Story.CargoItem;
         /// <summary>Weapons with Nam's own animations so far: the others go in their slot but stay holstered.</summary>
-        public static bool Drawable(string id) => id == "rifle_standard" || id == "knife";
+        public static bool Drawable(string id) => id == "rifle_standard" || id == Map01M16.Id || id == "knife" || id == "pistol_k54" || id=="rifle_mosin";
 
         private void ClearAll()
         {
@@ -95,7 +95,7 @@ namespace ShadowVale.Map01
 
         private void SetSlot(Slot slot, string id, float condition = NoCondition)
         {
-            if (slot == Slot.Primary) { primary = id; primaryCondition = id == null ? NoCondition : condition; }
+            if (slot == Slot.Primary) { primary = id; primaryCondition = id == null ? NoCondition : condition; if (!restoringRifle) ApplyPrimaryRifle(); }
             else if (slot == Slot.Pistol) { pistol = id; pistolCondition = id == null ? NoCondition : condition; }
             else knife = id;
         }
@@ -233,8 +233,7 @@ namespace ShadowVale.Map01
             return true;
         }
 
-        /// <summary>Puts the weapon in <paramref name="slot"/> in Nam's hands. K-54 and Mosin have no animations of
-        /// their own yet (the hold design is waiting for approval): asking for them says so and keeps what he holds.</summary>
+        /// <summary>Puts an integrated weapon in Nam's hands.</summary>
         public bool Draw(Slot slot)
         {
             string id = SlotItem(slot);
@@ -245,7 +244,8 @@ namespace ShadowVale.Map01
                     (mission.ModernCombat.EquippedKind == WeaponKind.Knife ? "dao" : "súng trường") + " trên tay.", 4);
                 return false;
             }
-            var kind = id == "knife" ? WeaponKind.Knife : WeaponKind.Rifle;
+            if (slot == Slot.Primary) ApplyPrimaryRifle();
+            var kind = id == "knife" ? WeaponKind.Knife : id == "pistol_k54" ? WeaponKind.Pistol : id=="rifle_mosin" ? WeaponKind.Sniper : WeaponKind.Rifle;
             SuppressFire = true;
             bool drawn = mission.ModernCombat.Equip(kind) && mission.ModernCombat.EquippedKind == kind;
             if (drawn) {
@@ -260,7 +260,10 @@ namespace ShadowVale.Map01
         /// <summary>What a weapon slot emptied under him leaves in hand: the knife.</summary>
         private void OnSlotEmptied()
         {
-            if (mission != null && mission.ModernCombat != null && mission.ModernCombat.EquippedKind == WeaponKind.Rifle && primary != "rifle_standard")
+            if (mission != null && mission.ModernCombat != null &&
+                ((mission.ModernCombat.EquippedKind == WeaponKind.Rifle && primary != "rifle_standard" && primary != Map01M16.Id) ||
+                 (mission.ModernCombat.EquippedKind == WeaponKind.Pistol && pistol != "pistol_k54") ||
+                 (mission.ModernCombat.EquippedKind == WeaponKind.Sniper && primary != "rifle_mosin")))
                 Draw(Slot.Knife);
         }
 

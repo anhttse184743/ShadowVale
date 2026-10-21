@@ -1,0 +1,2181 @@
+{
+  "thinh_objects": 5899,
+  "dev_objects": 6051,
+  "changed_transforms": 154,
+  "by_root": {
+    "\"Detailed layout \\u2014 reference routes and hills\"": 59,
+    "\"Map01 Operations \\u2014 commander orders\"": 77,
+    "MAP 1 ART STAGE / gameplay source preserved": 17,
+    "\"02 Mission \\u2022 Nam & Hung\"": 1
+  },
+  "rows": [
+    {
+      "transform_id": "5530850651279890001",
+      "name": "BriefingTable",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1432477920267423456",
+        "parent": "997320566",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "146254787",
+      "name": "Water sensor 08",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "146254786",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -6.000841, y: -0.25, z: -66}",
+        "m_LocalRotation": "{x: -0, y: -0.12212737, z: -0, w: 0.99251443}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "234931569",
+      "name": "Cooling slit",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "234931568",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: -0.312, y: 0.36, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.006, y: 0.018, z: 0.28}"
+      }
+    },
+    {
+      "transform_id": "648536683",
+      "name": "Connected fuse panel",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "648536682",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "307603337",
+      "name": "Water sensor 35",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "307603336",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 8.905461, y: -0.25, z: 42}",
+        "m_LocalRotation": "{x: -0, y: 0.008209592, z: -0, w: 0.9999663}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "80977543",
+      "name": "Oil lamp warm practical",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "80977542",
+        "parent": "5530850651279890001",
+        "m_LocalPosition": "{x: -0.75, y: 1.02, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "481744639",
+      "name": "Water sensor 04",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "481744638",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -1.4770756, y: -0.25, z: -82}",
+        "m_LocalRotation": "{x: -0, y: -0.15272504, z: -0, w: 0.98826873}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "527601977",
+      "name": "Water sensor 14",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "527601976",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -8.893788, y: -0.25, z: -42}",
+        "m_LocalRotation": "{x: -0, y: 0.007107435, z: -0, w: 0.9999747}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "487605784",
+      "name": "Cooling slit",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "487605783",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: 0.312, y: 0.36, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.006, y: 0.018, z: 0.28}"
+      }
+    },
+    {
+      "transform_id": "1245225000",
+      "name": "Instrument bezel",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1245224999",
+        "parent": "648536683",
+        "m_LocalPosition": "{x: 0, y: 0.5, z: 0.25}",
+        "m_LocalRotation": "{x: 0.7071068, y: 0, z: 0, w: 0.7071068}",
+        "m_LocalScale": "{x: 0.18, y: 0.014, z: 0.18}"
+      }
+    },
+    {
+      "transform_id": "2003067062",
+      "name": "Cracked ceramic terminal",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "2003067061",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: -0.09, y: 0.015, z: 0.055}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.045, y: 0.065, z: 0.035}"
+      }
+    },
+    {
+      "transform_id": "752351278",
+      "name": "Water sensor 17",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "752351277",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -7.8989577, y: -0.25, z: -30}",
+        "m_LocalRotation": "{x: -0, y: 0.07477047, z: -0, w: 0.9972008}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "319559894",
+      "name": "Scorched cavity",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "319559893",
+        "parent": "1733443997",
+        "m_LocalPosition": "{x: 0, y: 0.62, z: 0.225}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.53, y: 0.74, z: 0.03}"
+      }
+    },
+    {
+      "transform_id": "1701733357",
+      "name": "Water sensor 25",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1701733356",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 0.74892753, y: -0.25, z: 2}",
+        "m_LocalRotation": "{x: -0, y: 0.17833172, z: -0, w: 0.98397046}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1077591975",
+      "name": "Approved facing / C2 / communications duty house / Chair.002",
+      "root": "MAP 1 ART STAGE / gameplay source preserved",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1077591974",
+        "parent": "2146780058",
+        "m_LocalPosition": "{x: -0.09999782, y: 0.15999985, z: -0.6999991}",
+        "m_LocalRotation": "{x: 0.000000044703484, y: 0.70710677, z: 0.7071068, w: -0.000000029802322}",
+        "m_LocalScale": "{x: 99.99999, y: 99.99998, z: 100.00001}"
+      }
+    },
+    {
+      "transform_id": "2046784100",
+      "name": "Cooling slit",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "2046784099",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: 0.312, y: 0.49, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.006, y: 0.018, z: 0.28}"
+      }
+    },
+    {
+      "transform_id": "1728218210",
+      "name": "\"Radio power cable \\u2014 disconnected after sabotage\"",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1728218209",
+        "parent": "1019883338",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "328267978",
+      "name": "Approved facing / C1 / requisitioned small warehouse / Chair",
+      "root": "MAP 1 ART STAGE / gameplay source preserved",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "328267977",
+        "parent": "954293517",
+        "m_LocalPosition": "{x: -0.4499977, y: 0.16000009, z: 0.8000015}",
+        "m_LocalRotation": "{x: 0.000000059604645, y: 0.7071067, z: 0.7071068, w: -0.000000029802322}",
+        "m_LocalScale": "{x: 100, y: 100, z: 99.99999}"
+      }
+    },
+    {
+      "transform_id": "1202262683",
+      "name": "Water sensor 26",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1202262682",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 1.9766097, y: -0.25, z: 6}",
+        "m_LocalRotation": "{x: -0, y: 0.117057525, z: -0, w: 0.99312514}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1236041667",
+      "name": "Cooling slit",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1236041666",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: -0.312, y: 0.62, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.006, y: 0.018, z: 0.28}"
+      }
+    },
+    {
+      "transform_id": "1127922027",
+      "name": "Chair.001",
+      "root": "MAP 1 ART STAGE / gameplay source preserved",
+      "change": "modified",
+      "thinh": {
+        "go": "1127922026",
+        "parent": "1737821251",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: -0.18301715, y: -0.68301153, z: -0.6830116, w: 0.1830171}",
+        "m_LocalScale": "{x: 99.99996, y: 99.99998, z: 99.99998}"
+      },
+      "dev": {
+        "go": "1127922026",
+        "parent": "1737821251",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: -0.68301153, y: 0.18301712, z: 0.18301716, w: 0.6830115}",
+        "m_LocalScale": "{x: 99.99996, y: 99.99998, z: 99.99998}"
+      }
+    },
+    {
+      "transform_id": "744543928",
+      "name": "Stripped copper end 0",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "744543927",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "499459136",
+      "name": "Instrument bezel",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "499459135",
+        "parent": "1733443997",
+        "m_LocalPosition": "{x: 0, y: 0.5, z: 0.25}",
+        "m_LocalRotation": "{x: 0.7071068, y: 0, z: 0, w: 0.7071068}",
+        "m_LocalScale": "{x: 0.18, y: 0.014, z: 0.18}"
+      }
+    },
+    {
+      "transform_id": "618957113",
+      "name": "Seat / AgedTeak.008",
+      "root": "MAP 1 ART STAGE / gameplay source preserved",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "618957112",
+        "parent": "2032790182",
+        "m_LocalPosition": "{x: -0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: -0, z: -0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "703992206",
+      "name": "Loose insulated lead 3",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "703992205",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "370750133",
+      "name": "\"Radio \\u2014 ruptured face and exposed wires\"",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "370750132",
+        "parent": "1019883338",
+        "m_LocalPosition": "{x: 62.904808, y: 7.4075, z: -12.0789795}",
+        "m_LocalRotation": "{x: -0, y: 0.9810648, z: -0, w: -0.19368008}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1641381507",
+      "name": "Loose insulated lead 4",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1641381506",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "90929055",
+      "name": "Left hand panel brace",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "90929054",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: 0.24, y: 0.87, z: 0.25}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1166848178",
+      "name": "Water sensor 24",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1166848177",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -0.7497515, y: -0.25, z: -2}",
+        "m_LocalRotation": "{x: -0, y: 0.17823301, z: -0, w: 0.98398834}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1200326870",
+      "name": "Cooling slit",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1200326869",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: -0.312, y: 0.75, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.006, y: 0.018, z: 0.28}"
+      }
+    },
+    {
+      "transform_id": "537640726",
+      "name": "Water sensor 00",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "537640725",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 3.5088792, y: -0.25, z: -98}",
+        "m_LocalRotation": "{x: -0, y: -0.14465761, z: -0, w: 0.9894818}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1656735411",
+      "name": "Cracked ceramic terminal",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1656735410",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: -0.22, y: 0.015, z: 0.055}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.045, y: 0.065, z: 0.035}"
+      }
+    },
+    {
+      "transform_id": "20592574",
+      "name": "Water sensor 19",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "20592573",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -6.405779, y: -0.25, z: -22}",
+        "m_LocalRotation": "{x: -0, y: 0.108853444, z: -0, w: 0.99405783}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "884200691",
+      "name": "Oil lamp warm practical",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "884200690",
+        "parent": "5530850651279890001",
+        "m_LocalPosition": "{x: 0.85, y: 1.02, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "242700456",
+      "name": "Water sensor 49",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "242700455",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -3.3478227, y: -0.25, z: 98}",
+        "m_LocalRotation": "{x: -0, y: -0.13747458, z: -0, w: 0.99050534}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1452517407",
+      "name": "Cooling slit",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1452517406",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: -0.312, y: 0.555, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.006, y: 0.018, z: 0.28}"
+      }
+    },
+    {
+      "transform_id": "1987055376",
+      "name": "Chair back / EndgrainRepair.002",
+      "root": "MAP 1 ART STAGE / gameplay source preserved",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1987055375",
+        "parent": "1077591975",
+        "m_LocalPosition": "{x: -0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: -0, z: -0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "486913367",
+      "name": "Loose insulated lead 0",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "486913366",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "2011059944",
+      "name": "Water sensor 16",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "2011059943",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -8.410605, y: -0.25, z: -34}",
+        "m_LocalRotation": "{x: -0, y: 0.052292023, z: -0, w: 0.99863183}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1904114341",
+      "name": "Unlit gauge",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1904114340",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: -0.2, y: 0.045, z: 0.057000004}",
+        "m_LocalRotation": "{x: 0.7071068, y: 0, z: 0, w: 0.7071068}",
+        "m_LocalScale": "{x: 0.1353, y: 0.008, z: 0.1353}"
+      }
+    },
+    {
+      "transform_id": "1226434704",
+      "name": "Cracked ceramic terminal",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1226434703",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: 0.16999999, y: 0.015, z: 0.055}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.045, y: 0.065, z: 0.035}"
+      }
+    },
+    {
+      "transform_id": "297798023",
+      "name": "Fuse terminal",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "297798022",
+        "parent": "648536683",
+        "m_LocalPosition": "{x: -0.16, y: 0.76, z: 0.28}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.075, y: 0.035, z: 0.05}"
+      }
+    },
+    {
+      "transform_id": "336532234",
+      "name": "Stripped copper end 1",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "336532233",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1727949266",
+      "name": "Water sensor 11",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1727949265",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -8.245026, y: -0.25, z: -54}",
+        "m_LocalRotation": "{x: -0, y: -0.058152832, z: -0, w: 0.9983077}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "654498512",
+      "name": "Loose insulated lead 2",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "654498511",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1875974084",
+      "name": "Damp shoreline",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1875974083",
+        "parent": "1690208348",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "233570941",
+      "name": "Loose insulated lead 1",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "233570940",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "812646221",
+      "name": "Chair back / EndgrainRepair.008",
+      "root": "MAP 1 ART STAGE / gameplay source preserved",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "812646220",
+        "parent": "2032790182",
+        "m_LocalPosition": "{x: -0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: -0, z: -0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1820421584",
+      "name": "Allied commander beside mission board",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1820421583",
+        "parent": "997320566",
+        "m_LocalPosition": "{x: -2.050003, y: 0.090000995, z: 4.8445015}",
+        "m_LocalRotation": "{x: -0, y: 1, z: -0, w: 0}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1401589641",
+      "name": "Right hand fuse contact",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1401589640",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: -0.16, y: 0.85, z: 0.29}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1238223558",
+      "name": "Fuse terminal",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1238223557",
+        "parent": "648536683",
+        "m_LocalPosition": "{x: 0, y: 0.76, z: 0.28}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.075, y: 0.035, z: 0.05}"
+      }
+    },
+    {
+      "transform_id": "1426512573",
+      "name": "Carry handle",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1426512572",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1947798719",
+      "name": "Water sensor 39",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1947798718",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 7.7862377, y: -0.25, z: 58}",
+        "m_LocalRotation": "{x: -0, y: -0.07109897, z: -0, w: 0.9974693}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "895536070",
+      "name": "Stripped copper end 3",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "895536069",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "513934175",
+      "name": "Burnt open chassis",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "513934174",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0.015}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.67, y: 0.36, z: 0.035}"
+      }
+    },
+    {
+      "transform_id": "915657042",
+      "name": "Torn control cover hanging from hinge",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "915657041",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: 0.21, y: -0.17, z: 0.16}",
+        "m_LocalRotation": "{x: 0.24866627, y: -0.18680005, z: 0.17483427, w: 0.93418616}",
+        "m_LocalScale": "{x: 0.3, y: 0.26, z: 0.025}"
+      }
+    },
+    {
+      "transform_id": "781525529",
+      "name": "Water sensor 36",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "781525528",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 8.882701, y: -0.25, z: 46}",
+        "m_LocalRotation": "{x: -0, y: -0.013896492, z: -0, w: 0.99990344}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1067911216",
+      "name": "Water sensor 23",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1067911215",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -2.0622115, y: -0.25, z: -6}",
+        "m_LocalRotation": "{x: -0, y: 0.13684969, z: -0, w: 0.9905918}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "645039231",
+      "name": "Water sensor 21",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "645039230",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -4.4156017, y: -0.25, z: -14}",
+        "m_LocalRotation": "{x: -0, y: 0.13304219, z: -0, w: 0.9911104}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "434648538",
+      "name": "Seat / AgedTeak",
+      "root": "MAP 1 ART STAGE / gameplay source preserved",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "434648537",
+        "parent": "328267978",
+        "m_LocalPosition": "{x: -0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: -0, z: -0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "485259542",
+      "name": "Instrument bezel",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "485259541",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: -0.2, y: 0.045, z: 0.045}",
+        "m_LocalRotation": "{x: 0.7071068, y: 0, z: 0, w: 0.7071068}",
+        "m_LocalScale": "{x: 0.164, y: 0.014, z: 0.164}"
+      }
+    },
+    {
+      "transform_id": "1448288351",
+      "name": "Water sensor 42",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1448288350",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 5.006191, y: -0.25, z: 70}",
+        "m_LocalRotation": "{x: -0, y: -0.120953366, z: -0, w: 0.9926582}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1581300418",
+      "name": "Unlit gauge",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1581300417",
+        "parent": "1733443997",
+        "m_LocalPosition": "{x: 0, y: 0.5, z: 0.262}",
+        "m_LocalRotation": "{x: 0.7071068, y: 0, z: 0, w: 0.7071068}",
+        "m_LocalScale": "{x: 0.14850001, y: 0.008, z: 0.14850001}"
+      }
+    },
+    {
+      "transform_id": "815132804",
+      "name": "Water sensor 22",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "815132803",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -3.2471838, y: -0.25, z: -10}",
+        "m_LocalRotation": "{x: -0, y: 0.15010352, z: -0, w: 0.9886703}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1406084825",
+      "name": "Bent sheet metal",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1406084824",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: -0.145, y: 0.13499999, z: 0.03}",
+        "m_LocalRotation": "{x: -0.24823798, y: -0.032681152, z: -0.12636863, w: 0.95986503}",
+        "m_LocalScale": "{x: 0.15, y: 0.055, z: 0.045}"
+      }
+    },
+    {
+      "transform_id": "184675707",
+      "name": "Water sensor 46",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "184675706",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 0.3403436, y: -0.25, z: 86}",
+        "m_LocalRotation": "{x: -0, y: -0.15223885, z: -0, w: 0.9883438}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1388150095",
+      "name": "Water sensor 43",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1388150094",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 3.8749976, y: -0.25, z: 74}",
+        "m_LocalRotation": "{x: -0, y: -0.15343882, z: -0, w: 0.98815817}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "910701453",
+      "name": "Bent sheet metal",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "910701452",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: -0.29, y: 0.16, z: 0.03}",
+        "m_LocalRotation": "{x: -0.17269692, y: 0.018151179, z: 0.10294044, w: 0.9794129}",
+        "m_LocalScale": "{x: 0.15, y: 0.055, z: 0.045}"
+      }
+    },
+    {
+      "transform_id": "1294138493",
+      "name": "Cooling slit",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1294138492",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: 0.312, y: 0.555, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.006, y: 0.018, z: 0.28}"
+      }
+    },
+    {
+      "transform_id": "748546934",
+      "name": "Empty fuse socket",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "748546933",
+        "parent": "1733443997",
+        "m_LocalPosition": "{x: -0.16, y: 0.94, z: 0.27}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.075, y: 0.035, z: 0.05}"
+      }
+    },
+    {
+      "transform_id": "542648341",
+      "name": "Smoke from burnt winding",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "542648340",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: 0, y: 1.03, z: -0.08}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1177358615",
+      "name": "Meeting bench solid blocker 1.07",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1177358614",
+        "parent": "5530850651279890001",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1019883338",
+      "name": "\"Point 2 \\u2014 radio damage and power sabotage\"",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1019883337",
+        "parent": "1058967757",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1692669947",
+      "name": "Stripped copper end 4",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1692669946",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "882563729",
+      "name": "Water sensor 32",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "882563728",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 7.858949, y: -0.25, z: 30}",
+        "m_LocalRotation": "{x: -0, y: 0.07558109, z: -0, w: 0.9971397}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1835632783",
+      "name": "Stripped copper end 2",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1835632782",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1094360734",
+      "name": "Field power converter",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1094360733",
+        "parent": "1019883338",
+        "m_LocalPosition": "{x: 63.76, y: 6.16, z: -13.28}",
+        "m_LocalRotation": "{x: -0, y: 0.9810648, z: -0, w: -0.19368008}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1851475542",
+      "name": "Cooling slit",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1851475541",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: 0.312, y: 0.75, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.006, y: 0.018, z: 0.28}"
+      }
+    },
+    {
+      "transform_id": "1961906201",
+      "name": "Empty fuse socket",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1961906200",
+        "parent": "1733443997",
+        "m_LocalPosition": "{x: 0.16, y: 0.76, z: 0.27}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.075, y: 0.035, z: 0.05}"
+      }
+    },
+    {
+      "transform_id": "161157741",
+      "name": "Water sensor 12",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "161157740",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -8.633354, y: -0.25, z: -50}",
+        "m_LocalRotation": "{x: -0, y: -0.038546238, z: -0, w: 0.99925685}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "113422393",
+      "name": "Chair back / EndgrainRepair",
+      "root": "MAP 1 ART STAGE / gameplay source preserved",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "113422392",
+        "parent": "328267978",
+        "m_LocalPosition": "{x: -0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: -0, z: -0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1442173629",
+      "name": "Meeting bench solid blocker -1.07",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1442173628",
+        "parent": "5530850651279890001",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1740211151",
+      "name": "Seat / AgedTeak.009",
+      "root": "MAP 1 ART STAGE / gameplay source preserved",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1740211150",
+        "parent": "266919161",
+        "m_LocalPosition": "{x: -0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: -0, z: -0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "561783371",
+      "name": "Chair leg / WeatheredTimber.008",
+      "root": "MAP 1 ART STAGE / gameplay source preserved",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "561783370",
+        "parent": "2032790182",
+        "m_LocalPosition": "{x: -0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: -0, z: -0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "2030305778",
+      "name": "Seat / AgedTeak.002",
+      "root": "MAP 1 ART STAGE / gameplay source preserved",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "2030305777",
+        "parent": "1077591975",
+        "m_LocalPosition": "{x: -0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: -0, z: -0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "2032790182",
+      "name": "Approved facing / C3 / command house / Chair.008",
+      "root": "MAP 1 ART STAGE / gameplay source preserved",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "2032790181",
+        "parent": "1073124884",
+        "m_LocalPosition": "{x: 0.00000035843325, y: 0.3399992, z: -4.0999985}",
+        "m_LocalRotation": "{x: -0.50000006, y: 0.49999997, z: 0.5000001, w: 0.49999997}",
+        "m_LocalScale": "{x: 100, y: 99.999985, z: 99.999985}"
+      }
+    },
+    {
+      "transform_id": "759293088",
+      "name": "Water sensor 29",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "759293087",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 5.3107796, y: -0.25, z: 18}",
+        "m_LocalRotation": "{x: -0, y: 0.12901096, z: -0, w: 0.9916432}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "2069711859",
+      "name": "Chair back / EndgrainRepair.009",
+      "root": "MAP 1 ART STAGE / gameplay source preserved",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "2069711858",
+        "parent": "266919161",
+        "m_LocalPosition": "{x: -0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: -0, z: -0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "663289983",
+      "name": "Water sensor 15",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "663289982",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -8.742996, y: -0.25, z: -38}",
+        "m_LocalRotation": "{x: -0, y: 0.030547222, z: -0, w: 0.99953336}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1320828551",
+      "name": "Water sensor 44",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1320828550",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 2.6961598, y: -0.25, z: 78}",
+        "m_LocalRotation": "{x: -0, y: -0.1320242, z: -0, w: 0.9912465}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "2000622231",
+      "name": "Charred loose power lead",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "2000622230",
+        "parent": "1733443997",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "249421147",
+      "name": "Fuse terminal",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "249421146",
+        "parent": "648536683",
+        "m_LocalPosition": "{x: 0, y: 0.94, z: 0.28}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.075, y: 0.035, z: 0.05}"
+      }
+    },
+    {
+      "transform_id": "1883033928",
+      "name": "Chair leg / WeatheredTimber",
+      "root": "MAP 1 ART STAGE / gameplay source preserved",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1883033927",
+        "parent": "328267978",
+        "m_LocalPosition": "{x: -0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: -0, z: -0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1316579750",
+      "name": "Cracked ceramic terminal",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1316579749",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: 0.03999999, y: 0.015, z: 0.055}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.045, y: 0.065, z: 0.035}"
+      }
+    },
+    {
+      "transform_id": "1301775209",
+      "name": "Water sensor 48",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1301775208",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -2.1857238, y: -0.25, z: 94}",
+        "m_LocalRotation": "{x: -0, y: -0.1443106, z: -0, w: 0.9895325}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "955824937",
+      "name": "Water interaction sensors",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "955824936",
+        "parent": "1690208348",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1500508962",
+      "name": "Water sensor 37",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1500508961",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 8.681557, y: -0.25, z: 50}",
+        "m_LocalRotation": "{x: -0, y: -0.036313534, z: -0, w: 0.9993405}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "990348212",
+      "name": "Water sensor 38",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "990348211",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 8.304413, y: -0.25, z: 54}",
+        "m_LocalRotation": "{x: -0, y: -0.05761176, z: -0, w: 0.99833906}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1308053316",
+      "name": "Water sensor 40",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1308053315",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 7.000133, y: -0.25, z: 62}",
+        "m_LocalRotation": "{x: -0, y: -0.12207379, z: -0, w: 0.99252105}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "865643290",
+      "name": "Water sensor 33",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "865643289",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 8.391548, y: -0.25, z: 34}",
+        "m_LocalRotation": "{x: -0, y: 0.056639496, z: -0, w: 0.9983947}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "515165938",
+      "name": "Water sensor 18",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "515165937",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -7.223226, y: -0.25, z: -26}",
+        "m_LocalRotation": "{x: -0, y: 0.09232843, z: -0, w: 0.9957286}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "209126508",
+      "name": "Water sensor 13",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "209126507",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -8.855052, y: -0.25, z: -46}",
+        "m_LocalRotation": "{x: -0, y: -0.016784964, z: -0, w: 0.99985915}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1500433138",
+      "name": "Water sensor 09",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1500433137",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -6.9999804, y: -0.25, z: -62}",
+        "m_LocalRotation": "{x: -0, y: -0.12203817, z: -0, w: 0.99252546}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "340179503",
+      "name": "Cooling slit",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "340179502",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: 0.312, y: 0.62, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.006, y: 0.018, z: 0.28}"
+      }
+    },
+    {
+      "transform_id": "384947032",
+      "name": "Water sensor 03",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "384947031",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -0.21049142, y: -0.25, z: -86}",
+        "m_LocalRotation": "{x: -0, y: -0.15273239, z: -0, w: 0.9882676}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "2071886272",
+      "name": "Bent sheet metal",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "2071886271",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: 0, y: 0.16, z: 0.03}",
+        "m_LocalRotation": "{x: -0.32378465, y: 0.034031138, z: 0.098833606, w: 0.9403389}",
+        "m_LocalScale": "{x: 0.15, y: 0.055, z: 0.045}"
+      }
+    },
+    {
+      "transform_id": "1017515112",
+      "name": "Cooling slit",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1017515111",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: 0.312, y: 0.425, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.006, y: 0.018, z: 0.28}"
+      }
+    },
+    {
+      "transform_id": "1008691462",
+      "name": "Fuse terminal",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1008691461",
+        "parent": "648536683",
+        "m_LocalPosition": "{x: 0.16, y: 0.94, z: 0.28}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.075, y: 0.035, z: 0.05}"
+      }
+    },
+    {
+      "transform_id": "1929471808",
+      "name": "Empty fuse socket",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1929471807",
+        "parent": "1733443997",
+        "m_LocalPosition": "{x: 0.16, y: 0.94, z: 0.27}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.075, y: 0.035, z: 0.05}"
+      }
+    },
+    {
+      "transform_id": "763900568",
+      "name": "Charred loose power lead",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "763900567",
+        "parent": "1733443997",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1529159421",
+      "name": "Unlit gauge",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1529159420",
+        "parent": "648536683",
+        "m_LocalPosition": "{x: 0, y: 0.5, z: 0.262}",
+        "m_LocalRotation": "{x: 0.7071068, y: 0, z: 0, w: 0.7071068}",
+        "m_LocalScale": "{x: 0.14850001, y: 0.008, z: 0.14850001}"
+      }
+    },
+    {
+      "transform_id": "520452948",
+      "name": "Front service cover",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "520452947",
+        "parent": "648536683",
+        "m_LocalPosition": "{x: 0, y: 0.63, z: 0.22}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.53, y: 0.72, z: 0.025}"
+      }
+    },
+    {
+      "transform_id": "1373940170",
+      "name": "Buckled service cover",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1373940169",
+        "parent": "1733443997",
+        "m_LocalPosition": "{x: -0.34, y: 0.63, z: 0.32}",
+        "m_LocalRotation": "{x: 0.10677682, y: -0.52062166, z: -0.056306247, w: 0.84521085}",
+        "m_LocalScale": "{x: 0.3, y: 0.67, z: 0.025}"
+      }
+    },
+    {
+      "transform_id": "115056954",
+      "name": "Water sensor 20",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "115056953",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -5.4624214, y: -0.25, z: -18}",
+        "m_LocalRotation": "{x: -0, y: 0.12218907, z: -0, w: 0.99250686}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "101481937",
+      "name": "Bent sheet metal",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "101481936",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: 0.29, y: 0.16, z: 0.03}",
+        "m_LocalRotation": "{x: -0.46689978, y: 0.04907314, z: 0.09229315, w: 0.8781107}",
+        "m_LocalScale": "{x: 0.15, y: 0.055, z: 0.045}"
+      }
+    },
+    {
+      "transform_id": "353444175",
+      "name": "Water sensor 47",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "353444174",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -0.9402331, y: -0.25, z: 90}",
+        "m_LocalRotation": "{x: -0, y: -0.15635094, z: -0, w: 0.9877016}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1172674094",
+      "name": "Cooling slit",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1172674093",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: -0.312, y: 0.685, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.006, y: 0.018, z: 0.28}"
+      }
+    },
+    {
+      "transform_id": "2135656629",
+      "name": "Meeting table solid blocker",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "2135656628",
+        "parent": "5530850651279890001",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "77958384",
+      "name": "Bent sheet metal",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "77958383",
+        "parent": "370750133",
+        "m_LocalPosition": "{x: 0.145, y: 0.13499999, z: 0.03}",
+        "m_LocalRotation": "{x: -0.39533773, y: -0.052047204, z: -0.119700365, w: 0.9092145}",
+        "m_LocalScale": "{x: 0.15, y: 0.055, z: 0.045}"
+      }
+    },
+    {
+      "transform_id": "139413094",
+      "name": "Fuse terminal",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "139413093",
+        "parent": "648536683",
+        "m_LocalPosition": "{x: 0.16, y: 0.76, z: 0.28}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.075, y: 0.035, z: 0.05}"
+      }
+    },
+    {
+      "transform_id": "703234491",
+      "name": "Water sensor 05",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "703234490",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -2.7263417, y: -0.25, z: -78}",
+        "m_LocalRotation": "{x: -0, y: -0.14883275, z: -0, w: 0.9888624}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1304776506",
+      "name": "Cooling slit",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1304776505",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: -0.312, y: 0.49, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.006, y: 0.018, z: 0.28}"
+      }
+    },
+    {
+      "transform_id": "369709106",
+      "name": "workbench",
+      "root": "\"02 Mission \\u2022 Nam & Hung\"",
+      "change": "modified",
+      "thinh": {
+        "go": "369709105",
+        "parent": "1114484776",
+        "m_LocalPosition": "{x: -66.4, y: 1.1088585, z: -63}",
+        "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      },
+      "dev": {
+        "go": "369709105",
+        "parent": "1114484776",
+        "m_LocalPosition": "{x: -68.44, y: 0.12, z: -68.23}",
+        "m_LocalRotation": "{x: -0, y: -0, z: -0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "611908691",
+      "name": "Cooling slit",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "611908690",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: -0.312, y: 0.425, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.006, y: 0.018, z: 0.28}"
+      }
+    },
+    {
+      "transform_id": "28963370",
+      "name": "Empty fuse socket",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "28963369",
+        "parent": "1733443997",
+        "m_LocalPosition": "{x: 0, y: 0.76, z: 0.27}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.075, y: 0.035, z: 0.05}"
+      }
+    },
+    {
+      "transform_id": "520239291",
+      "name": "Empty fuse socket",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "520239290",
+        "parent": "1733443997",
+        "m_LocalPosition": "{x: -0.16, y: 0.76, z: 0.27}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.075, y: 0.035, z: 0.05}"
+      }
+    },
+    {
+      "transform_id": "1378223504",
+      "name": "Water sensor 41",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1378223503",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 6.000765, y: -0.25, z: 66}",
+        "m_LocalRotation": "{x: -0, y: -0.12214517, z: -0, w: 0.9925123}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1542937756",
+      "name": "Water sensor 30",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1542937755",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 6.308779, y: -0.25, z: 22}",
+        "m_LocalRotation": "{x: -0, y: 0.11483151, z: -0, w: 0.993385}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "967443178",
+      "name": "Chair leg / WeatheredTimber.002",
+      "root": "MAP 1 ART STAGE / gameplay source preserved",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "967443177",
+        "parent": "1077591975",
+        "m_LocalPosition": "{x: -0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: -0, z: -0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "169908618",
+      "name": "Water sensor 01",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "169908617",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 2.291757, y: -0.25, z: -94}",
+        "m_LocalRotation": "{x: -0, y: -0.14964046, z: -0, w: 0.9887405}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "2004241735",
+      "name": "Cooling slit",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "2004241734",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: 0.312, y: 0.685, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.006, y: 0.018, z: 0.28}"
+      }
+    },
+    {
+      "transform_id": "2064630349",
+      "name": "Chair leg / WeatheredTimber.009",
+      "root": "MAP 1 ART STAGE / gameplay source preserved",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "2064630348",
+        "parent": "266919161",
+        "m_LocalPosition": "{x: -0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: -0, z: -0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "2046384823",
+      "name": "Empty fuse socket",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "2046384822",
+        "parent": "1733443997",
+        "m_LocalPosition": "{x: 0, y: 0.94, z: 0.27}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.075, y: 0.035, z: 0.05}"
+      }
+    },
+    {
+      "transform_id": "1159221239",
+      "name": "Steel skid",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1159221238",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: 0, y: 0.08, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.78, y: 0.12, z: 0.58}"
+      }
+    },
+    {
+      "transform_id": "1829691240",
+      "name": "Water sensor 10",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1829691239",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -7.755293, y: -0.25, z: -58}",
+        "m_LocalRotation": "{x: -0, y: -0.06359463, z: -0, w: 0.9979758}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1513120164",
+      "name": "Carry handle",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1513120163",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "651919711",
+      "name": "Water sensor 27",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "651919710",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 3.0383062, y: -0.25, z: 10}",
+        "m_LocalRotation": "{x: -0, y: 0.1414783, z: -0, w: 0.98994136}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "285445084",
+      "name": "\"Power interaction \\u2014 reachable front\"",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "285445083",
+        "parent": "1019883338",
+        "m_LocalPosition": "{x: 63.436977, y: 6.199999, z: -14.06623}",
+        "m_LocalRotation": "{x: -0, y: 0.19368008, z: -0, w: 0.9810648}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1340990974",
+      "name": "Water sensor 28",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1340990973",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 4.2016582, y: -0.25, z: 14}",
+        "m_LocalRotation": "{x: -0, y: 0.14060797, z: -0, w: 0.99006534}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "197939821",
+      "name": "Water sensor 31",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "197939820",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 7.1657157, y: -0.25, z: 26}",
+        "m_LocalRotation": "{x: -0, y: 0.09573288, z: -0, w: 0.99540704}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "357086315",
+      "name": "Water sensor 34",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "357086314",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 8.745911, y: -0.25, z: 38}",
+        "m_LocalRotation": "{x: -0, y: 0.03162957, z: -0, w: 0.9994997}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "2071346442",
+      "name": "Ceramic fuse 2",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "2071346441",
+        "parent": "648536683",
+        "m_LocalPosition": "{x: 0.16, y: 0.85, z: 0.27}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.055, y: 0.095, z: 0.05}"
+      }
+    },
+    {
+      "transform_id": "487783397",
+      "name": "Water sensor 07",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "487783396",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -5.0088916, y: -0.25, z: -70}",
+        "m_LocalRotation": "{x: -0, y: -0.12035726, z: -0, w: 0.9927307}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "2008686998",
+      "name": "Water sensor 02",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "2008686997",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 1.0475023, y: -0.25, z: -90}",
+        "m_LocalRotation": "{x: -0, y: -0.15079336, z: -0, w: 0.9885653}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1002689016",
+      "name": "Ceramic fuse 1",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1002689015",
+        "parent": "648536683",
+        "m_LocalPosition": "{x: 0, y: 0.85, z: 0.27}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.055, y: 0.095, z: 0.05}"
+      }
+    },
+    {
+      "transform_id": "108849863",
+      "name": "Water sensor 06",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "108849862",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: -3.9295173, y: -0.25, z: -74}",
+        "m_LocalRotation": "{x: -0, y: -0.14229946, z: -0, w: 0.9898237}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "914121370",
+      "name": "Ceramic fuse 0",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "914121369",
+        "parent": "648536683",
+        "m_LocalPosition": "{x: -0.16, y: 0.85, z: 0.27}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.055, y: 0.095, z: 0.05}"
+      }
+    },
+    {
+      "transform_id": "1733443997",
+      "name": "Burned and opened fuse panel",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1733443996",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "574844140",
+      "name": "Steel body",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "574844139",
+        "parent": "1094360734",
+        "m_LocalPosition": "{x: 0, y: 0.58, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.62, y: 0.92, z: 0.42}"
+      }
+    },
+    {
+      "transform_id": "266919161",
+      "name": "Approved facing / Gate duty shelter.002 / Chair.009",
+      "root": "MAP 1 ART STAGE / gameplay source preserved",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "266919160",
+        "parent": "1073124884",
+        "m_LocalPosition": "{x: -4.6, y: 0.34000206, z: 15.299999}",
+        "m_LocalRotation": "{x: 0.00000003090862, y: 0.7071067, z: 0.7071068, w: -0.000000030908616}",
+        "m_LocalScale": "{x: 100, y: 99.999985, z: 99.999985}"
+      }
+    },
+    {
+      "transform_id": "320164297",
+      "name": "Voltmeter needle",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "320164296",
+        "parent": "648536683",
+        "m_LocalPosition": "{x: 0.012, y: 0.512, z: 0.274}",
+        "m_LocalRotation": "{x: 0, y: 0, z: -0.32556814, w: 0.94551855}",
+        "m_LocalScale": "{x: 0.006, y: 0.09, z: 0.006}"
+      }
+    },
+    {
+      "transform_id": "1070032598",
+      "name": "Water sensor 45",
+      "root": "\"Detailed layout \\u2014 reference routes and hills\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1070032597",
+        "parent": "955824937",
+        "m_LocalPosition": "{x: 1.5626163, y: -0.25, z: 82}",
+        "m_LocalRotation": "{x: -0, y: -0.14320473, z: -0, w: 0.9896931}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    },
+    {
+      "transform_id": "1897348596",
+      "name": "Fuse terminal",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "1897348595",
+        "parent": "648536683",
+        "m_LocalPosition": "{x: -0.16, y: 0.94, z: 0.28}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 0.075, y: 0.035, z: 0.05}"
+      }
+    },
+    {
+      "transform_id": "361352731",
+      "name": "Charred loose power lead",
+      "root": "\"Map01 Operations \\u2014 commander orders\"",
+      "change": "added",
+      "thinh": null,
+      "dev": {
+        "go": "361352730",
+        "parent": "1733443997",
+        "m_LocalPosition": "{x: 0, y: 0, z: 0}",
+        "m_LocalRotation": "{x: 0, y: 0, z: 0, w: 1}",
+        "m_LocalScale": "{x: 1, y: 1, z: 1}"
+      }
+    }
+  ]
+}

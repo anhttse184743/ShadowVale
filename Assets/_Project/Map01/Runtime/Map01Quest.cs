@@ -1,4 +1,5 @@
 using System.Linq;
+using ShadowVale.AI.Boss;
 using ShadowVale.Core.Events;
 using ShadowVale.Data.Content;
 using ShadowVale.Gameplay.Combat;
@@ -80,11 +81,12 @@ namespace ShadowVale.Map01
         };
         // Kept for old menu/test callers; binoculars are now a tool, not a forced perfect-stealth mission.
         public const string ScoutOrder="Chỉ huy: Hạ nhóm bảo vệ điểm một, lấy lại thuốc rồi mang về hầm.";
-        /// <summary>Stable ids of the stages, for telemetry's progression funnel (index = stage number).
-        /// The ids keep their names across the operations rework: they are part of the research data's format.</summary>
+        /// <summary>Stable ids of the stages, for telemetry's progression funnel (index = stage number). They name the
+        /// commander-led operations the stage numbers carry now (17/10/2026; before: scout_camps, report_scouting,
+        /// destroy_camps, report_camps, defeat_commander, report_commander). The save format keeps the numbers.</summary>
         public static readonly string[] StageIds = {
-            "rescue_hung", "escort_hung", "briefing", "scout_camps", "report_scouting",
-            "destroy_camps", "report_camps", "defeat_commander", "report_commander", "complete",
+            "rescue_hung", "escort_hung", "briefing", "op1_supplies", "report_supplies",
+            "op2_radio", "report_radio", "op3_commander", "report_retreat", "complete",
             "extraction", "boarding"
         };
 
@@ -137,6 +139,7 @@ namespace ShadowVale.Map01
             if(GetComponent<Map01Scouting>()==null)gameObject.AddComponent<Map01Scouting>();
             rescue=GetComponent<Map01Rescue>();if(rescue==null)rescue=gameObject.AddComponent<Map01Rescue>();
             story=GetComponent<Map01Story>();if(story==null)story=gameObject.AddComponent<Map01Story>();
+            if(GetComponent<Map01BodyDiscovery>()==null)gameObject.AddComponent<Map01BodyDiscovery>();
         }
         void Start(){if(mission.IsInitialized)companion=mission.hung.GetComponent<NavMeshAgent>();}
         public bool ShouldEscortHungHome()=>Stage==EscortStage&&rescue.CurrentPhase==Map01Rescue.Phase.Escorting;
@@ -231,9 +234,18 @@ namespace ShadowVale.Map01
             var bossHealth=instance.GetComponent<Health>();
             if(archetype!=null&&archetype.max_hp>0)bossHealth.SetMaxHealth(archetype.max_hp);
             mission.AddEnemy(boss);
-            // Relocation, grenades, the pincer and the call for reinforcements (A04), from the same profile.
-            var behaviour=BossBehaviour.Attach(instance,boss,profile,new Map01Reinforcements(mission,template),seed:1);
+            // Relocation, grenades, the pincer and the call for reinforcements (A04), from the same profile. At C3 the
+            // call is answered by the command post itself (Map01C3Reinforcements: its men not yet fighting, the kẻng's
+            // sleepers, the runners down the phone line), and he fights from its cover, never off into the forest.
+            var c3=GetComponent<Map01C3Mission>();
+            IReinforcementProvider men=c3!=null?new Map01C3Reinforcements(c3):new Map01Reinforcements(mission,template);
+            var behaviour=BossBehaviour.Attach(instance,boss,profile,men,seed:1);
             behaviour.Suspended=()=>mission.Stopped;
+            if(c3!=null){
+                c3.AutoCallAtHalfHealth=false; // BossBehaviour makes the call now (reinforce_hp_threshold).
+                behaviour.AllowedPosition=p=>c3.Data==null||c3.InsideFence(p);
+                boss.ConfineMoves=c3.ClampIntoFence; // Without cover in reach the FSM closes in on Nam: up to the fence.
+            }
             bossHealth.onDied.AddListener(OnBossDown);
         }
         public void CompleteBossDefeat(bool showRadio=true)
