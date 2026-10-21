@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using ShadowVale.Gameplay.Combat;
 using ShadowVale.Gameplay.Player;
@@ -107,7 +107,7 @@ namespace ShadowVale.Map01
             mission.Cinematic = true;
             foreach (var guard in mission.Enemies) if (guard != null && guard.Alive) guard.PauseForCinematic(true);
             var actor = mission.player.GetComponentInChildren<Animator>();speakingActor=actor;
-            idle = commander != null ? commander.soldierIdle ?? commander.idle : null;
+            idle = Array.Find(actor.runtimeAnimatorController.animationClips, clip => clip.name == "Idle_Tuned");
             if (idle == null) idle = Resources.Load<AnimationClip>("Rescue/Nam_Shelter_Idle");
             leftFoot=actor.GetBoneTransform(HumanBodyBones.LeftFoot);rightFoot=actor.GetBoneTransform(HumanBodyBones.RightFoot);
             supportY=Mathf.Min(leftFoot.position.y,rightFoot.position.y);

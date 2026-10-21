@@ -12,6 +12,47 @@ namespace ShadowVale.Map01.Tests
     public sealed class EndingCutsceneTests : ForestSceneTestBase
     {
         [UnityTest]
+        public IEnumerator ClearedPointThreeCanReportWithEWhileBesideAWorkbench()
+        {
+            UnityEditor.SessionState.SetString(ForestSaveSlots.EditorTestRootKey,
+                Path.GetFullPath("Logs/Point3Report/saves/" + System.Guid.NewGuid().ToString("N")));
+            Map01OpeningCutscene.CancelPending();
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();yield return null;
+            var mission=Object.FindFirstObjectByType<Map01Mission>();
+            foreach(var enemy in mission.Enemies)enemy.enabled=false;
+            var quest=mission.GetComponent<Map01Quest>();var story=mission.GetComponent<Map01Story>();
+            quest.RestoreStoryStage(Map01Quest.BossStage,OfficerReported());
+            var bench=mission.Interactables.First(p=>p.kind==ForestPointKind.Workbench);
+            PlaceNam(mission,bench.transform.position);yield return null;
+            var interaction=mission.GetComponent<Map01PlayerInteraction>();
+            var interact=typeof(Map01PlayerInteraction).GetMethod("HandleInteractKey",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic);
+            var nearby=typeof(Map01PlayerInteraction).GetField("<Nearby>k__BackingField",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic);
+            nearby.SetValue(interaction,bench); // No physical keyboard is installed in the batch Editor.
+            Assert.AreSame(bench,interaction.Nearby);
+            interact.Invoke(interaction,null);
+            Assert.IsTrue(mission.BenchOpen,"Before a report is pending E should still open the workbench.");
+            mission.CloseGameplayPanel();
+            foreach(var enemy in mission.Enemies.ToArray())if(enemy.Alive)enemy.GetComponent<Health>().TakeDamage(999999,enemy.transform.position,null);
+            var ending=mission.GetComponent<Map01EndingCutscene>();Assert.NotNull(ending);ending.Skip();yield return null;
+            Assert.AreEqual(Map01Quest.ReportBossStage,quest.Stage);
+            Assert.IsTrue(story.SafeToReport);Assert.IsFalse(mission.Enemies.Any(e=>e.Alive));
+            nearby.SetValue(interaction,bench);
+            Assert.AreSame(bench,interaction.Nearby);
+            interact.Invoke(interaction,null);
+            var dialogue=mission.GetComponent<Map01StoryDialogue>();
+            Assert.IsTrue(dialogue.IsPlaying,"A nearby workbench must not consume E while the final commander report is pending.");
+            Assert.IsFalse(mission.BenchOpen);
+            Assert.AreEqual("m1_ops_retreat_01",dialogue.Current.voice);
+            yield return ConfirmConversation(mission);
+            Assert.AreEqual(Map01Quest.ExtractionStage,quest.Stage);
+            Assert.IsTrue(story.Progress.retreatReported);
+            mission.GetComponentInChildren<Map01Extraction>().autoContinueToMap2=false;
+            yield return new ExitPlayMode();
+            UnityEditor.SessionState.EraseString(ForestSaveSlots.EditorTestRootKey);
+        }
+
+        [UnityTest]
         public IEnumerator ReplacementBossFinaleEndsInItsGroundedDeathState()
         {
             Map01OpeningCutscene.CancelPending();

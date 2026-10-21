@@ -102,6 +102,7 @@ namespace ShadowVale.Gameplay.Combat
 
         public int MagazineCapacity => _magazine?.Capacity ?? 0;
         public bool IsReloading => _magazine is { IsReloading: true };
+        public float ReloadDurationMultiplier {get;set;}=1f;
         public float BaseReloadSeconds => tuning.OrDefault().reloadSeconds;
 
         /// <summary>0 to 1 across a reload, for a HUD bar. 0 when not reloading.</summary>
@@ -116,7 +117,7 @@ namespace ShadowVale.Gameplay.Combat
             if (_handsOccupied || _magazine == null || _equipped == null || !_equipped.IsGun) return false;
             bool wasEmpty = _magazine.IsEmpty;
             var skills = GetComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
-            if (!_magazine.BeginReload(ReserveRounds != null ? ReserveRounds() : -1, skills != null ? skills.ReloadMultiplier : 1f)) return false;
+            if (!_magazine.BeginReload(ReserveRounds != null ? ReserveRounds() : -1, (skills != null ? skills.ReloadMultiplier : 1f)*Mathf.Max(.1f,ReloadDurationMultiplier))) return false;
             AnimateReload(wasEmpty);
             return true;
         }
