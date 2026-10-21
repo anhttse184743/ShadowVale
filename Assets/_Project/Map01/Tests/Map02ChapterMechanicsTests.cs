@@ -134,5 +134,53 @@ namespace ShadowVale.Map01.Tests
             finally{c.Cancel();hp.CinematicInvulnerable=false;}
             yield return new ExitPlayMode();
         }
+        [UnityTest,Timeout(240000)]public IEnumerator TankAndBoatsAreWhereTheNightThreeStoryPutsThem()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");SetPreviewResolution(1920,1080);yield return new EnterPlayMode();
+            Map02Mission m=null;float deadline=Time.realtimeSinceStartup+100;
+            while(Time.realtimeSinceStartup<deadline){m=Object.FindFirstObjectByType<Map02Mission>();if(m?.Chapter!=null&&m.Ready)break;Object.FindFirstObjectByType<Map02Arrival>()?.Skip();yield return null;}
+            Assert.NotNull(m?.Chapter);var c=m.Chapter;var def=Map02ChapterDefinition.Load();var hp=m.Player.GetComponent<ShadowVale.Gameplay.Combat.Health>();
+            var finish=typeof(Map02ChapterDirector).GetMethod("Finish",BindingFlags.NonPublic|BindingFlags.Instance);
+            var end=typeof(Map02ChapterDirector).GetMethod("EndScene",BindingFlags.NonPublic|BindingFlags.Instance);
+            void Load(string id){var snapshot=m.Capture();var s=new Map02ChapterState();foreach(var t in def.tasks){s.Complete(t.id);if(t.id==id)break;}snapshot.chapter=s;m.Restore(snapshot);}
+            void Place(Vector3 p){var cc=m.Player.GetComponent<CharacterController>();cc.enabled=false;m.Player.position=p;cc.enabled=true;Physics.SyncTransforms();}
+            float Flat(Vector3 a,Vector3 b)=>Vector3.Distance(new Vector3(a.x,0,a.z),new Vector3(b.x,0,b.z));
+            System.IO.Directory.CreateDirectory("Logs/GD4");
+            try
+            {
+                // Lanes are far enough apart that holding one never starts the next.
+                Assert.Greater(Flat(c.Sites["lane1"].position,c.Sites["lane2"].position),15);Assert.Greater(Flat(c.Sites["lane2"].position,c.Sites["lane3"].position),15);
+                Load("N3_05B");yield return null;Assert.IsTrue(c.Tank==null||!c.Tank.activeSelf,"No tank before the third lane.");
+                Assert.Less(Flat(c.LastBoat.position,c.WaterPoint("boatDock")),.5f,"Boat 1 has left and come back for the last trip.");
+                finish.Invoke(c,new object[]{def.Find("N3_05C")});yield return null;
+                Assert.AreEqual("N3_WOUND",c.CurrentScene?.id);Assert.AreEqual("breach",c.TankStage);Assert.IsTrue(c.Tank.activeSelf);
+                Assert.Less(Flat(c.Tank.transform.position,c.Sites["tankBreach"].position),1);end.Invoke(c,null);
+                Assert.Less(Flat(c.Actor("Anh Lực").transform.position,c.Sites["cover"].position),3,"Anh Lực is in the cover Nam crawls to.");
+                // After the crawl the tank turns away into the village and drops out of sight.
+                Load("N3_CRAWL");yield return null;Assert.AreEqual("leaving",c.TankStage);Assert.IsFalse(c.Tank.activeSelf);
+                Assert.Less(Flat(c.Actor("Tâm").transform.position,c.Sites["tamCover"].position),2,"Tâm covers the fallen tree from the bamboo.");
+                // Reaching the bank: the last boat is mid-river with the family, the tank comes out at the head of the dock road.
+                Load("N3_06");yield return null;Assert.AreEqual("waiting",c.TankStage);Assert.IsFalse(c.Tank.activeSelf);
+                Assert.Less(Flat(c.LastBoat.position,c.WaterPoint("boatMid")),.5f);
+                foreach(var person in new[]{"Chị Lành","Ông Sáu","Bé Tí","Chú Bảy"})Assert.Less(Vector3.Distance(c.Actor(person).transform.position,c.LastBoat.position),3.5f,person+" is on the last boat.");
+                Assert.Less(Flat(c.SecondBoat.position,c.WaterPoint("boatFar2")),.5f,"Boat 2 left at 60 %.");
+                Place(c.Sites["ditch"].position+Vector3.forward*2);yield return null;yield return null;
+                Assert.AreEqual("N3_07",c.CurrentScene?.id);float until=Time.time+6;while(Time.time<until&&c.TankStage!="blocking")yield return null;
+                Assert.AreEqual("blocking",c.TankStage);Assert.Less(Flat(c.Tank.transform.position,c.Sites["tankDock"].position),1);
+                yield return WaitGameSeconds(1.5f);ScreenCapture.CaptureScreenshot("Logs/GD4/n3_07-bank.png");yield return null;
+                // Hùng's run from the bank to the tracks is short and walkable, not across the village.
+                var run=new UnityEngine.AI.NavMeshPath();Assert.IsTrue(UnityEngine.AI.NavMesh.CalculatePath(c.Sites["ditch"].position,c.ChargePoint,UnityEngine.AI.NavMesh.AllAreas,run));
+                float length=0;for(int i=1;i<run.corners.Length;i++)length+=Vector3.Distance(run.corners[i-1],run.corners[i]);
+                Assert.AreEqual(UnityEngine.AI.NavMeshPathStatus.PathComplete,run.status);Assert.Less(length,30,"ditch → charge point");
+                end.Invoke(c,null);
+                // After the sacrifice the tank burns where it blocked the road; at dawn the village is back on its bank.
+                Load("N3_09");end.Invoke(c,null);yield return null;Assert.AreEqual("destroyed",c.TankStage);Assert.Less(Flat(c.Tank.transform.position,c.Sites["tankDock"].position),1);
+                Assert.AreEqual(6,c.State.phase);m.Restore(m.Capture());Assert.Less(Flat(c.LastBoat.position,c.WaterPoint("boatDock")),.5f);
+                // An earlier save hands the boat back to the river physics.
+                Load("D3_05");yield return null;Assert.IsTrue(c.LastBoat.GetComponent<RiverBuoyantBody>().enabled);Assert.IsNull(c.SecondBoat);
+            }
+            finally{c.Cancel();hp.CinematicInvulnerable=false;}
+            yield return new ExitPlayMode();
+        }
     }
 }

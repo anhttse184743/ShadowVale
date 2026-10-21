@@ -72,6 +72,7 @@ namespace ShadowVale.Map01
             Site("lane1",command+Vector3.forward*14);Site("lane2",command+Vector3.forward*5);Site("lane3",command+Vector3.back*5);
             Site("cover",sites["lane3"].position+Vector3.left*5);Site("fallen",dock+Vector3.forward*8);
             for(int i=0;i<3;i++)Site("family"+i,layout.homePositions[Mathf.Min(i,layout.homePositions.Length-1)]);
+            RegisterNightThreeSites();
             foreach(var old in legacy)old.enabled=false;
             foreach(var t in Map02ChapterDefinition.Load().tasks)
             {
@@ -166,6 +167,7 @@ namespace ShadowVale.Map01
             float dt=Mathf.Min(Time.deltaTime,.1f);
             if(phaseFade>0){phaseFade=Mathf.Max(0,phaseFade-dt);TickLight(dt);return;}
             if(State.finished)return;
+            TickTank(dt);TickBoats(dt);
             bool carrying=!string.IsNullOrEmpty(State.carry)||escort!=null;if(carrying!=handsBusy){handsBusy=carrying;combat.SetHandsOccupied(carrying);}
             player.SurfaceSpeedMultiplier=escort!=null?.55f:!string.IsNullOrEmpty(State.carry)?.65f:State.wounded?.7f:1;
             player.SprintAllowed=()=>escort==null&&string.IsNullOrEmpty(State.carry)&&!State.wounded;
@@ -319,6 +321,7 @@ namespace ShadowVale.Map01
             if(task.id=="D1_01")roles["Anh Thành"].GoTo(sites["command"].position,1.6f);
             if(task.id=="D2_04")roles["Tâm"].StopAt(sites["command"].position+Vector3.right*1.5f);
             if(task.id=="N3_00")roles["Hùng"].GoTo(sites["ditch"].position,1.8f);
+            StageNightThree(task);
             ApplyState();Mission.RefreshChapter();Mission.StoreCheckpoint();
             var def=Map02ChapterDefinition.Load();
             if(task.id=="N3_09")BeginScene(def.Find("DAWN"));
@@ -348,6 +351,7 @@ namespace ShadowVale.Map01
             if(State.phase>=5&&State.Done("N3_03")&&Vector3.Distance(roles["Bé Tí"].transform.position,sites["southStore"].position)>8)roles["Bé Tí"].StopAt(sites["southStore"].position+Vector3.forward*1.4f);
             if(State.phase==5&&State.Done("N3_00")&&!State.hungDead)roles["Hùng"].GoTo(State.activeTask=="N3_08"||State.Done("N3_08")?ChargePoint:sites["ditch"].position,1.8f);
             UpdateMarkers();TickLight(10f);
+            TickTank(0,true);TickBoats(0,true);
             var def=Map02ChapterDefinition.Load();
             if(State.phase==4&&State.Available(def.Find("D3_05")))roles["Hùng"].StopAt(HungAtSupper);
             if(State.Done("N3_09")&&!State.finished)BeginScene(def.Find("DAWN"));
@@ -372,13 +376,13 @@ namespace ShadowVale.Map01
             if(!placedActors||placedPhase!=State.phase)
             {
                 if(!fresh)roles["Anh Thành"].StopAt(State.phase==6?sites["ditch"].position+Vector3.right*2.5f:sites["command"].position);
-                roles["Anh Lực"].StopAt(State.phase==6?sites["ditch"].position+Vector3.left*2.5f:sites[State.phase==4?"ditch":State.phase==5?"lane3":"gate"].position);
+                roles["Anh Lực"].StopAt(State.phase==6?sites["ditch"].position+Vector3.left*2.5f:(State.phase==4?sites["ditch"].position:State.phase==5?LucNightThree():sites["gate"].position));
                 var safe=sites["southStore"].position;
                 roles["Chị Lành"].StopAt(State.Done("N3_02")?safe+Vector3.left*1.4f:sites["family"].position);
                 roles["Ông Sáu"].StopAt(State.Done("N3_02")?safe+Vector3.right*1.4f:sites["family"].position+Vector3.right*1.4f);
                 roles["Bé Tí"].StopAt(State.Done("N3_03")?safe+Vector3.forward*1.4f:sites[State.phase==5?"child":"family"].position);
                 roles["Chú Bảy"].StopAt(sites["dock"].position);
-                roles["Tâm"].StopAt(sites[State.Done("D2_04")?"bamboo":"scout"].position);
+                roles["Tâm"].StopAt(sites[State.phase==5&&State.Done("N3_CRAWL")?"tamCover":State.Done("D2_04")?"bamboo":"scout"].position);
                 if(!fresh&&!State.hungDead&&escort!=roles["Hùng"])roles["Hùng"].StopAt(sites[State.phase==5?(State.Done("N3_00")?"ditch":"rest"):State.phase==4?"family":State.phase>=2?"radio":State.phase==1?(State.Done("N1_03")?"gate":State.Done("N1_02")?"bamboo":"family"):State.Done("D1_02")?"family":"arrival"].position+Vector3.right*1.4f);
                 placedActors=true;placedPhase=State.phase;
             }
@@ -387,9 +391,6 @@ namespace ShadowVale.Map01
             health.CinematicInvulnerable=State.Done("N3_WOUND")&&!State.Done("N3_CRAWL")||State.activeTask=="N3_08";
             combat.ReloadDurationMultiplier=State.wounded?1.35f:1;
             if(State.finished)health.CinematicInvulnerable=true;
-            if(State.Done("N3_05C")&&tank==null)CreateTank();
-            if(tank!=null)tank.SetActive(State.Done("N3_05C"));
-            if(tankSmoke!=null){if(State.tankDestroyed)tankSmoke.Play();else tankSmoke.Stop(true,ParticleSystemStopBehavior.StopEmittingAndClear);}
             if(State.phase==5&&State.activeTask=="N3_08")health.CinematicInvulnerable=true;
             foreach(var unit in Enemies)if(unit!=null){if(State.Done("N3_09"))unit.gameObject.SetActive(false);else if(unit.group=="scout_patrol")unit.gameObject.SetActive(State.phase==2);}
             RefreshMemorial();UpdateMarkers();
@@ -447,7 +448,7 @@ namespace ShadowVale.Map01
         }
         void CreateTank()
         {
-            tank=new GameObject("Tank art slot — scripted boss, no rifle damage");tank.transform.SetParent(root.transform);tank.transform.position=sites["lane3"].position+Vector3.forward*8;
+            tank=new GameObject("Tank art slot — scripted boss, no rifle damage");tank.transform.SetParent(root.transform);tank.transform.position=sites["tankBreach"].position;
             // Temporary prop volume; the art team replaces the Art child, never its gameplay owner.
             var art=Layout!=null&&Layout.tankArt!=null?Instantiate(Layout.tankArt):GameObject.CreatePrimitive(PrimitiveType.Cube);art.name="Art placeholder — tank hull";art.transform.SetParent(tank.transform,false);art.transform.localPosition=Vector3.up;if(Layout==null||Layout.tankArt==null)art.transform.localScale=new Vector3(2.8f,2,5);
             var smoke=new GameObject("Destroyed smoke");smoke.transform.SetParent(tank.transform,false);smoke.transform.localPosition=Vector3.up*2;

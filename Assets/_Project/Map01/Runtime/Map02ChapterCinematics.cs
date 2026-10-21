@@ -12,7 +12,14 @@ namespace ShadowVale.Map01
         void ReleaseSceneAction(){hungActionPose?.Dispose();hungActionPose=null;}
         public Vector3 ChargePoint
         {
-            get{var point=(tank!=null?tank.transform.position:sites["lane3"].position+Vector3.forward*8)+Vector3.left*2.2f;return NavMesh.SamplePosition(point,out var h,4,NavMesh.AllAreas)?h.position:point;}
+            get
+            {
+                // The flank of the tracks on the bank side, where Hùng comes up out of the ditch.
+                var body=tank!=null?tank.transform:null;var at=body!=null?body.position:sites["tankDock"].position;
+                var side=body!=null?(Vector3.Dot(body.right,sites["ditch"].position-at)>=0?body.right:-body.right):(sites["ditch"].position-at).normalized;
+                var point=at+side*2.2f-(body!=null?body.forward*.4f:Vector3.zero);
+                return NavMesh.SamplePosition(point,out var h,4,NavMesh.AllAreas)?h.position:point;
+            }
         }
         Vector3 RetreatPoint
         {

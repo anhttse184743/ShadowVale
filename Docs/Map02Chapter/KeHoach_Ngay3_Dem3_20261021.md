@@ -161,6 +161,28 @@ Tệp: `Map02ChapterDirector.cs` (vòng `defend`), `Map02ChapterGuidance.cs`, `M
 
 Tệp: phần partial mới `Map02ChapterTank.cs`, `Map02ChapterLayout.cs`, `Map02ChapterLayout.asset`, `Map02ChapterCinematics.cs`.
 
+> **Trạng thái 21/10:** đã làm.
+>
+> **Đo địa hình bằng script editor tạm (đã xóa):**
+> - Đường từ ngõ đình ra bến dài 105 m. Đoạn cuối thẳng 64 m. Góc đường `(-43, -71.4)` cách bờ đất 18 m, tầm nhìn không bị che.
+> - Sông nằm ở `x≈-18…-5`, rộng khoảng 13 m, bờ bên kia ở `x≈-3`.
+> - Bến nam chỉ có **một** thuyền thật; thuyền thứ hai là bản sao chỉ có hình.
+>
+> **Đặt trong `Map02ChapterLayout.asset`** (chỉnh được trong Inspector):
+> - `lane1 z=32`, `lane2 z=14`, `lane3 z=-4`, cách nhau 18 m; `cover` theo `lane3`.
+> - `tankBreach`, `tankDock`, `tankHide`, `tamCover`.
+> - `boatDock`/`boatDock2`/`boatMid`/`boatFar`/`boatFar2`. Các điểm trên nước không bị kéo về NavMesh.
+>
+> **Đã chạy được:**
+> - Xe tăng đi qua các trạng thái ẩn → phá rào → rẽ đi (khuất) → chờ → trồi ra (5 giây trong `N3_07`) → chặn đường → cháy. Súng máy bắn từng loạt xuống nước, có lửa nòng, tia nước và tiếng.
+> - Thuyền 1 rời bến ở 30%, quay về đón chuyến cuối. Thuyền 2 rời bến ở 60%. Chuyến cuối ở giữa dòng, chở 4 người, chòng chành khi bị bắn, trôi về bờ bên kia sau tiếng nổ. Lúc Bình minh cả hai thuyền về bến.
+> - Tải save trước Đêm 3 thì trả thuyền về cho vật lý sông.
+> - Anh Lực: chỗ nghỉ → chốt ngoài → gốc me → chỗ nấp. Tâm ở `tamCover`.
+> - `ChargePoint` nằm ở sườn xe phía bờ đất; quãng Hùng chạy dưới 30 m.
+> - Test `TankAndBoatsAreWhereTheNightThreeStoryPutsThem`.
+>
+> **Chưa đạt, chuyển sang GĐ6:** ảnh `Logs/GD4/n3_07-bank.png` cho thấy camera hội thoại mặc định đặt sau lưng Nam, xe tăng chỉ thấy ở rìa khung, thuyền không rõ. Cần camera riêng cho `N3_07`. Ba dân làng trên thuyền chưa có vì `civilianArt` còn trống. "Đi ngang nhà chị Lành" giữa hai vị trí giữ ngõ không làm được với bố cục hiện tại (nhà chị Lành cách đường giữ ngõ khoảng 40 m); cần người dựng map quyết định.
+
 1. **Đặt vị trí thật trên bản đồ** (làm tay trong editor, có ảnh chụp). Thêm vào `Map02ChapterLayout.sites`:
    - `lane3Wall` (bức tường Nam nấp ở vị trí thứ ba), `tankBreach` (rào tre ngay sau bức tường đó), `tankTurn` (chỗ xe rẽ vào đường làng).
    - `tankHide` (bóng tre đầu đường bến) và `tankDock` (đầu đường bến, nhìn ra sông, cách `ditch` 15–25 m).
