@@ -173,10 +173,13 @@ namespace ShadowVale.Map01
             lastStage = Stage;
             // A jump must not inherit the body offset of the pose it leaves: played straight from the
             // kneeling captive pose, the standing idle keeps his hips 0.7 m low until rebound.
+            var culling=actor.cullingMode;
+            actor.cullingMode=AnimatorCullingMode.AlwaysAnimate;
             actor.Rebind(); ResetPose();
             actor.SetBool("Captive", Captive); actor.SetBool("Wounded", Wounded);
             actor.Play(Captive ? CaptiveState : Wounded ? WoundedState : LocomotionState, 0, 0);
             actor.Update(0);
+            actor.cullingMode=culling;
             if (rope != null) rope.SetActive(Captive);
         }
 

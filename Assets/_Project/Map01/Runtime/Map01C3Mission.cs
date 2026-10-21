@@ -423,7 +423,7 @@ namespace ShadowVale.Map01
             if (Current.wary) return;
             Current.wary = true;
             if (Near) mission.Say(Map01C3Dialogue.MissingPatrol, 5);
-            ApplyWary();
+            ApplyWary(walk: true);
         }
         /// <summary>On guard over a body: the same posts, but the men walk to them (it happens in front of Nam).</summary>
         private void GoWaryOverBody()

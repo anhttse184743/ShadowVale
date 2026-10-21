@@ -36,7 +36,7 @@ namespace ShadowVale.Map01.Tests
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
-            yield return null;
+            yield return WaitForMap01Ready();
             var mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
             var quest = mission.GetComponent<Map01Quest>();
             var guide = mission.GetComponent<Map01ObjectiveGuide>();
@@ -46,20 +46,18 @@ namespace ShadowVale.Map01.Tests
             SetPreviewResolution(1600, 900);
             Directory.CreateDirectory("Logs/GuidePreview");
 
-            // Nam spawns on the base's floor — a known NavMesh spot to station Hùng for the report shot
-            // (right at the supply point the floor is carved out under furniture).
-            Vector3 baseFloor = mission.player.position;
-            // The escort is shot from Hùng's side looking home (the base is where Nam starts); the
-            // outposts from ~20 m out of the base; the report walking back to Hùng at the base.
+            // Use the real rescue approach instead of a point two metres off the jetty.
+            // Reporting at base now targets the commander; C2's report is a local radio interaction.
+            var rescue = mission.GetComponent<Map01Rescue>();
+            rescue.MarkIntroSeen();
             foreach (var (stage, file, along) in new[] {
-                (Map01Quest.EscortStage, "escort-base", 3), (Map01Quest.CampsStage, "camps-outpost", 20), (Map01Quest.ReportCampsStage, "report-hung", 4) })
+                (Map01Quest.EscortStage, "escort-base", 3), (Map01Quest.CampsStage, "camps-outpost", 20), (Map01Quest.BriefingStage, "report-commander", 4) })
             {
-                if (stage == Map01Quest.EscortStage) { controller.enabled = false; mission.player.position = mission.hung.position + Vector3.right * 2; controller.enabled = true; }
-                if (stage == Map01Quest.ReportCampsStage) mission.hung.GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(baseFloor);
+                controller.enabled = false; mission.player.position = rescue.RetryPoint; controller.enabled = true;
                 quest.RestoreStage(stage);
                 mission.Say(null, -1f);
                 for (float until = Time.time + .7f; Time.time < until;) yield return null;
-                Assert.Greater(guide.Route.Count, along + 8, "Need a route long enough to look down.");
+                Assert.Greater(guide.Route.Count, along + 8, $"Need a route from the real approach to stage {stage}: {guide.Label}, from {mission.player.position} to {guide.Target}.");
                 // Walk Nam a little down the route and look along the next stretch of it.
                 Vector3 stand = guide.Route[along], ahead = guide.Route[along + 8];
                 float yaw = Mathf.Atan2(ahead.x - stand.x, ahead.z - stand.z) * Mathf.Rad2Deg;

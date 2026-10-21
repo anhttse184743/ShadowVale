@@ -189,13 +189,22 @@ namespace ShadowVale.Map01.Tests
             OpenMap();
             yield return new EnterPlayMode(); yield return null; yield return null;
             Settle();
+            var northGuard = c3.Guard("patrolNorth");
+            var before = northGuard.Position;
+            northGuard.GetComponent<NavMeshAgent>().enabled = true;
+            northGuard.enabled = true;
             c3.Guard("patrolSouth").GetComponent<Health>().TakeDamage(99999, Vector3.zero, null);
             c3.Current.checkInRemaining = .2f;
             yield return WaitGameSeconds(.5f);
             Assert.IsTrue(c3.Wary, "Tổ một did not answer.");
-            var north = c3.Guard("patrolNorth").transform.position;
+            Assert.Less(Vector3.Distance(before, northGuard.Position), 4f, "The order starts a walk, not a 25 m teleport.");
+            float deadline = Time.time + 40f;
+            while (new Vector2(northGuard.Position.x - 70.5f, northGuard.Position.z - 39.2f).magnitude >= 1.5f && Time.time < deadline)
+                yield return null;
+            var north = northGuard.Position;
             Assert.Less(new Vector2(north.x - 70.5f, north.z - 39.2f).magnitude, 1.5f, "The other patrol holds before the gate.");
-            Assert.AreEqual(c3.Data.checkInSeconds, c3.CheckInRemaining, .5f);
+            Assert.Greater(c3.CheckInRemaining, 0f);
+            Assert.LessOrEqual(c3.CheckInRemaining, c3.Data.checkInSeconds);
             yield return new ExitPlayMode();
         }
 

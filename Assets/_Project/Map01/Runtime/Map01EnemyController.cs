@@ -407,7 +407,34 @@ namespace ShadowVale.Map01
             }
             _stoneLure = stone && _overseer;
             ApplyLureTuning();
+            if (!_overseer && !IsBoss && CanMove) position = ReachableInvestigation(position);
             Brain.BeginInvestigation(position, Time.time);
+        }
+
+        // A sound on a roof or prop is not itself a walking destination. Prefer the original
+        // point; otherwise search the reachable floor around it, without inventing a player position.
+        private Vector3 ReachableInvestigation(Vector3 source)
+        {
+            var path = new NavMeshPath();
+            bool Reach(Vector3 at, out Vector3 result)
+            {
+                result = default;
+                if (!NavMesh.SamplePosition(at, out var hit, 2f, NavMesh.AllAreas)
+                    || !_agent.CalculatePath(hit.position, path) || path.status != NavMeshPathStatus.PathComplete) return false;
+                result = hit.position; return true;
+            }
+            if (Reach(source, out var direct)) return direct;
+            var floor = new Vector3(source.x, transform.position.y, source.z);
+            Vector3 best = transform.position;
+            float closest = float.PositiveInfinity;
+            for (float radius = 0; radius <= 8; radius += 2)
+                for (int angle = 0; angle < 360; angle += 45)
+                {
+                    if (!Reach(floor + Quaternion.Euler(0, angle, 0) * Vector3.forward * radius, out var candidate)) continue;
+                    float distance = Vector3.ProjectOnPlane(candidate - source, Vector3.up).sqrMagnitude;
+                    if (distance < closest) { closest = distance; best = candidate; }
+                }
+            return best;
         }
 
         /// <summary>On a stone lure the overseer walks right up to the spot and stares at it longer.</summary>
@@ -593,7 +620,7 @@ namespace ShadowVale.Map01
         {
             var rotation = Quaternion.Euler(0, yaw, 0);
             _postPosition = position; _postRotation = rotation;
-            var m = Memory; m.ReturnPoint = position; m.ReturnRotation = rotation; m.PatrolIndex = 0; _lastPatrolIndex = 0;
+            var m = Memory; m.ReturnPoint = position; m.ReturnRotation = rotation; m.PatrolIndex = 0; m.PatrolPauseUntil = 0; _lastPatrolIndex = 0;
             Configure(points); _patrolStops = stops; _patrolYaws = yaws; _stopYaw = float.NaN;
             if (vision > 0) { visionRange = vision; SyncTuning(); }
             if (stationary && _agent != null) _agent.enabled = false;
@@ -986,7 +1013,8 @@ namespace ShadowVale.Map01
             _tuning.DetectionSeconds = stealth
                 ? Mathf.Max(_baseDetectionSeconds, _rescueTuning != null ? _rescueTuning.closeDetectionSeconds : 1.6f)
                 : _baseDetectionSeconds;
-            if (Wary) _tuning.DetectionSeconds *= WaryDetectionScale;
+            if (Wary) _tuning.DetectionSeconds *= _mission != null && _mission.Settings.waryDetectionScale > 0f
+                ? _mission.Settings.waryDetectionScale : WaryDetectionScale;
             _tuning.SuspicionCloseGain = stealth ? 1.4f : 3f;
 
             // Calm guards look 10 times a second, staggered; alert ones every frame (PerceptionSchedule).

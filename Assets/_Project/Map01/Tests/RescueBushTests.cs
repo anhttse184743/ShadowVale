@@ -148,7 +148,7 @@ public sealed class RescueBushTests:ForestSceneTestBase {
         Assert.IsTrue(M.ModernPlayer.enabled&&M.ModernCombat.enabled);
     }
     static IEnumerator BushReview(){
-        Setup();yield return Warmup();R.MarkIntroSeen();var bush=M.GetComponent<Map01BushTakedown>();var input=RouteInputToGame();var mouse=InputSystem.AddDevice<Mouse>();
+        Setup();yield return Warmup();M.GetComponent<Map01Quest>().RestoreStoryStage(Map01Quest.RescueStage,RescueOrdered());R.MarkIntroSeen();var bush=M.GetComponent<Map01BushTakedown>();var input=RouteInputToGame();var mouse=InputSystem.AddDevice<Mouse>();
         try{
             var victim=R.Squad[1];Assert.IsTrue(PlaceBush(victim),"A real authored bush must accommodate a safe paired action.");
             var origin=M.player.position;var rotation=M.player.rotation;
@@ -251,8 +251,9 @@ public sealed class RescueBushTests:ForestSceneTestBase {
         var director=M.GetComponent<Map01RescueCinematic>()??M.gameObject.AddComponent<Map01RescueCinematic>();
         Assert.IsTrue(director.ShowIntro(R,R.Squad[0]));director.Skip();Assert.IsTrue(R.IntroSeen);Assert.IsFalse(M.Cinematic);
         Assert.IsTrue(M.GetComponent<Map01SaveSystem>().RestartRescue(false));yield return WaitGameSeconds(.9f);Assert.IsTrue(R.IntroSeen);
+        yield return WaitForMap01Ready();yield return Warmup();
         foreach(var g in M.Enemies)g.enabled=false;
-        var bush=M.GetComponent<Map01BushTakedown>();Assert.IsTrue(PlaceBush(R.Squad[1]));Assert.IsTrue(bush.TryBegin(R.Squad[1]));
+        var bush=M.GetComponent<Map01BushTakedown>();Assert.IsTrue(PlaceBush(R.Squad[1]),"A safe bush placement after reloading the checkpoint.");Assert.IsTrue(bush.TryBegin(R.Squad[1]),"The paired clips must be warm after scene reload.");
         var routing=RouteInputToGame();var keyboard=InputSystem.AddDevice<Keyboard>();var mouse=InputSystem.AddDevice<Mouse>();
         try{
             InputSystem.QueueStateEvent(mouse,new MouseState().WithButton(MouseButton.Left));yield return WaitGameSeconds(2.1f);Assert.AreEqual(0,bush.Timing.Successes);

@@ -121,10 +121,15 @@ namespace ShadowVale.Map01.Tests
             for (int camp = 0; camp < camps.Length; camp++)
                 Assert.GreaterOrEqual(InRing(data, camps[camp], 18, 40), 3, $"Stones round camp C{camp + 1}, outside its guards' sight.");
 
+            var approaches=camps.ToArray();
+            var operations=Object.FindFirstObjectByType<Map01OperationsLayout>()??Resources.Load<Map01OperationsLayout>("Story/Map01Operations");
+            Assert.NotNull(operations);Assert.NotNull(operations.doorApproach);Assert.NotNull(operations.radioApproach);
+            approaches[0]=operations.doorApproach.position;approaches[1]=operations.radioApproach.position;
+
             var legs = new (string name, Vector3 from, Vector3 to)[]
             {
-                ("base to jetty", start, mission.hung.position), ("base to C1", start, camps[0]),
-                ("C1 to C2", camps[0], camps[1]), ("C2 to C3", camps[1], camps[2]), ("C3 to base", camps[2], start),
+                ("base to jetty", start, mission.hung.position), ("base to C1 door", start, approaches[0]),
+                ("C1 door to C2 radio", approaches[0], approaches[1]), ("C2 radio to C3", approaches[1], approaches[2]), ("C3 to base", approaches[2], start),
             };
             foreach (var leg in legs)
             {
@@ -132,6 +137,70 @@ namespace ShadowVale.Map01.Tests
                 Assert.Greater(corners.Length, 1, leg.name + " has no way through.");
                 Assert.LessOrEqual(LongestStretchWithoutStones(data, watched, corners), 46f, $"From {leg.name}: too long a walk with no stones within 8 m.");
             }
+        }
+
+        [Test, Explicit("Survey only: preserve site ids and inspect nearby reachable alternatives before repairing data.")]
+        public void SurveyInvalidStoneSites()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            Physics.SyncTransforms();
+            var data=Resources.Load<Map01StoneSiteData>(Map01StoneSiteData.ResourcePath);
+            var owner=Object.FindFirstObjectByType<Map01Mission>();
+            var start=Object.FindFirstObjectByType<CharacterController>().transform.position;
+            var watched=Watched();var piles=RescuePiles(owner.hung.position);
+            var river=GameObject.Find("Winding river").GetComponent<MeshFilter>();
+            float water=river.sharedMesh.vertices.Average(v=>river.transform.TransformPoint(v).y);
+            var rows=new System.Text.StringBuilder();
+            for(int i=0;i<data.sites.Length;i++)
+            {
+                var site=data.sites[i];
+                if(NavMesh.SamplePosition(site.position,out _,1,NavMesh.AllAreas))continue;
+                rows.AppendLine($"Invalid site {i}: {site.position.ToString("F5")}");
+                var choices=new List<Vector3>();
+                for(float radius=0;radius<=8;radius+=.5f)for(int angle=0;angle<360;angle+=15)
+                {
+                    var probe=site.position+Quaternion.Euler(0,angle,0)*Vector3.forward*radius;
+                    if(!NavMesh.SamplePosition(probe,out var hit,8,NavMesh.AllAreas))continue;
+                    var at=hit.position;
+                    if(at.y<=water+.15f||InSight(watched,at)||Route(start,at).Length<2)continue;
+                    if(data.sites.Where((s,index)=>index!=i).Any(s=>Flat(s.position,at)<11.5f)||piles.Any(p=>Flat(p,at)<11.5f))continue;
+                    if(!choices.Any(p=>Vector3.Distance(p,at)<.05f))choices.Add(at);
+                }
+                foreach(var at in choices.OrderBy(p=>Vector3.Distance(site.position,p)).Take(8))
+                    rows.AppendLine($"  candidate={at.ToString("F5")}; move={Vector3.Distance(site.position,at):F4}m");
+            }
+            System.IO.Directory.CreateDirectory("Logs/StoneSites");
+            System.IO.File.WriteAllText("Logs/StoneSites/invalid-survey.txt",rows.ToString());
+            Debug.Log(rows.ToString());
+        }
+
+        [UnityTest]
+        public IEnumerator RepairedStoneSiteIsWalkableAndKeepsItsSaveIdentity()
+        {
+            Map01OpeningCutscene.CancelPending();
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();yield return WaitForMap01Ready();
+            mission=Object.FindFirstObjectByType<Map01Mission>();
+            inventory=mission.GetComponent<Map01Inventory>();sites=mission.GetComponent<Map01StoneSites>();
+            foreach(var guard in mission.Enemies)BodyDiscoveryTests.Hold(guard,true);
+            mission.GetComponent<Map01Rescue>().MarkIntroSeen();
+            var point=sites.Point(17);
+            Assert.AreEqual("stones_17",point.id);
+            Assert.Greater(Route(mission.player.position,point.transform.position).Length,1);
+            Assert.IsTrue(NavMesh.SamplePosition(point.transform.position,out var ground,.75f,NavMesh.AllAreas));
+            var controller=mission.player.GetComponent<CharacterController>();controller.enabled=false;
+            mission.player.position=ground.position;controller.enabled=true;Physics.SyncTransforms();
+            var camera=mission.gameCamera.GetComponent<ShadowVale.Gameplay.Player.ThirdPersonCamera>();
+            var focus=point.transform.position+Vector3.up*.5f;var eye=focus+new Vector3(3,2,-3);
+            camera.SetCinematicView(eye,Quaternion.LookRotation(focus-eye),50,1);
+            SetPreviewResolution(1280,720);System.IO.Directory.CreateDirectory("Logs/StoneSites");
+            yield return WaitGameSeconds(.2f);ScreenCapture.CaptureScreenshot("Logs/StoneSites/repaired-site-17.png");yield return WaitGameSeconds(.1f);
+            camera.ClearCinematicView();
+            inventory.Spend("stone",inventory.Stones);
+            mission.GetComponent<Map01PlayerInteraction>().Interact(point);
+            Assert.AreEqual(2,inventory.Stones);Assert.IsTrue(point.used);
+            Assert.AreEqual(1,PointsWithId("stones_17"));
+            yield return new ExitPlayMode();
         }
 
         private static Map01Mission mission;

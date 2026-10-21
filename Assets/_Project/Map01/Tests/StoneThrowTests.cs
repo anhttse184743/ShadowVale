@@ -139,12 +139,13 @@ namespace ShadowVale.Map01.Tests
             mission.GetComponent<Map01Rescue>().MarkIntroSeen(); // Near jetty B the overseer's intro would take the camera and stop the throw.
             var inventory = mission.GetComponent<Map01Inventory>();
             var stones = mission.GetComponent<Map01StoneThrow>();
-            var guard = OnlyGuard(mission, "Outpost guard 0");
+            var guard = OnlyGuard(mission, "patrol_2"); // Open jetty approach; the C1 route crosses the new warehouse roof.
             yield return WaitGameSeconds(.2f);
             Vector3 post = guard.transform.position;
             Quaternion facing = guard.transform.rotation;
             // Crouched 16 m behind him: beyond what he can see of a crouching Nam while he looks around.
             mission.Crouched = true;
+            mission.ModernPlayer.RestoreMotion(true);
             Vector3 stand = BehindInSight(mission, guard, 16f);
             Teleport(mission, stand, Yaw(stand, post));
             int carried = inventory.Count("stone");
@@ -159,7 +160,8 @@ namespace ShadowVale.Map01.Tests
             // Off to look...
             for (float until = Time.time + 8; !guard.Searching && Time.time < until;) yield return null;
             Assert.IsTrue(guard.Searching, "He goes over and starts looking around.");
-            Assert.Less(Vector3.Distance(guard.transform.position, stones.Landing), 2.5f, "At the spot the stone fell.");
+            Assert.Less(Vector3.Distance(guard.transform.position, stones.Landing), 2.5f,
+                $"At the spot the stone fell. guard={guard.Position}; landing={stones.Landing}; investigate={guard.Capture().investigate}; engaged={guard.Engaged}");
             Assert.Greater(Vector3.Distance(guard.transform.position, post), 3f, "Away from his post.");
             Assert.IsFalse(guard.Engaged, "Nam was never seen.");
             AimCamera(mission, guard.transform.position + Vector3.up);
@@ -176,6 +178,35 @@ namespace ShadowVale.Map01.Tests
             Assert.Less(Vector3.Distance(guard.transform.position, post), 1.2f, "Back at his post.");
             Assert.Less(Quaternion.Angle(guard.transform.rotation, facing), 10f, "Facing out again.");
             Assert.IsFalse(guard.Engaged);
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
+        public IEnumerator AStoneOnTheWarehouseRoofIsInvestigatedFromReachableGround()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();yield return WaitForMap01Ready();
+            var mission=Object.FindFirstObjectByType<Map01Mission>();
+            mission.GetComponent<Map01Rescue>().MarkIntroSeen();
+            var stones=mission.GetComponent<Map01StoneThrow>();
+            var guard=OnlyGuard(mission,"Outpost guard 0");
+            yield return WaitGameSeconds(.2f);
+            var post=guard.Position;
+            mission.ModernPlayer.RestoreMotion(true);mission.Crouched=true;
+            var stand=BehindInSight(mission,guard,16);
+            Teleport(mission,stand,Yaw(stand,post));
+            Assert.IsTrue(stones.ThrowAt(Beside(guard,6)));
+            Assert.Greater(stones.Landing.y-guard.Position.y,2,"This reproduces a real roof impact on the current warehouse.");
+            float until=Time.time+12;
+            while(!guard.Searching&&Time.time<until)yield return null;
+            Assert.IsTrue(guard.Searching);
+            var investigate=guard.Capture().investigate;
+            Assert.IsTrue(NavMesh.SamplePosition(investigate,out _,.4f,NavMesh.AllAreas));
+            Assert.Less(Vector3.Distance(guard.Position,investigate),2f);
+            Assert.Greater(Vector3.Distance(guard.Position,post),1f,"He must walk towards the reachable part of the noise location.");
+            Assert.IsFalse(guard.Engaged,"A stone on a roof supplies no player identity.");
+            Directory.CreateDirectory("Logs/StoneSites");
+            File.WriteAllText("Logs/StoneSites/roof-investigation.txt",$"source={stones.Landing}; floor target={investigate}; guard={guard.Position}");
             yield return new ExitPlayMode();
         }
 

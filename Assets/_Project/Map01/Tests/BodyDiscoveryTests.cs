@@ -508,9 +508,9 @@ namespace ShadowVale.Map01.Tests
         private static string StaticStatusPlace() => Status(placeNow);
 
         /// <summary>A review camera rendered into an mp4, one frame per game frame at 15 fps, with a caption strip.</summary>
-        private sealed class Film : IDisposable
+        internal sealed class Film : IDisposable
         {
-            private const int Width = 1280, Height = 720;
+            private readonly int Width, Height, fps;
             private readonly GameObject root;
             private readonly Camera camera;
             private readonly RenderTexture target;
@@ -523,12 +523,13 @@ namespace ShadowVale.Map01.Tests
             private readonly float height, side;
 
             /// <param name="height">Camera height over the action; high (C3) keeps the roofs out of the shot.</param>
-            public Film(string take, float height = 5.5f, float side = 9f)
+            public Film(string take, float height = 5.5f, float side = 9f, int width = 1280, int heightPixels = 720, int framesPerSecond = 15)
             {
+                Width = width; Height = heightPixels; fps = framesPerSecond;
                 this.height = height; this.side = side;
                 path = "Logs/BodyDiscovery/" + take + ".mp4";
                 Directory.CreateDirectory(Path.GetDirectoryName(path));
-                Time.captureFramerate = 15;
+                Time.captureFramerate = fps;
                 root = new GameObject("Body discovery review camera");
                 camera = root.AddComponent<Camera>();
                 camera.fieldOfView = 50f; camera.nearClipPlane = .1f; camera.farClipPlane = 600f; camera.enabled = false;
@@ -543,7 +544,7 @@ namespace ShadowVale.Map01.Tests
                 caption.font = font; text.GetComponent<MeshRenderer>().sharedMaterial = font.material;
                 caption.fontSize = 48; caption.characterSize = .0062f; caption.anchor = TextAnchor.LowerCenter; caption.alignment = TextAlignment.Center;
                 caption.color = new Color(1f, .96f, .82f);
-                encoder = new MediaEncoder(path, new VideoTrackAttributes { frameRate = new MediaRational(15), width = Width, height = Height, includeAlpha = false });
+                encoder = new MediaEncoder(path, new VideoTrackAttributes { frameRate = new MediaRational(fps), width = (uint)Width, height = (uint)Height, includeAlpha = false });
             }
 
             /// <summary>From the side of the line guard → body, a little above, easing after the guard.</summary>
@@ -577,7 +578,7 @@ namespace ShadowVale.Map01.Tests
             {
                 encoder.Dispose();
                 Time.captureFramerate = 0;
-                File.WriteAllText(path + ".txt", frames + " frames at 15 fps; staged in a test on Map 1 (guards held still except the ones in the take), no audio.");
+                File.WriteAllText(path + ".txt", frames + " frames at " + fps + " fps; staged in a test on Map 1 (guards held still except the ones in the take), no audio.");
                 // Leaving Play Mode may already have destroyed the camera and its textures.
                 if (camera != null) camera.targetTexture = null;
                 if (target != null) Object.Destroy(target);

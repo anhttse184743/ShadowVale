@@ -182,8 +182,8 @@ namespace ShadowVale.Map01
 
         /// <summary>
         /// What Nam makes of a guard's call, while he is within earshot. A narrator's notice, not the guard's own words:
-        /// character speech is audio only (Map01Mission.GameplayCaption hides "Lính…" lines) and these calls have no
-        /// recorded voice yet.
+        /// recorded character speech is audio only. Unrecorded speech is now shown by Map01Mission.Say; these existing
+        /// narrator notices remain visible with the same wording.
         /// </summary>
         public static void Shout(Map01Mission mission, Map01EnemyController from, string line)
         {

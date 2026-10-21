@@ -103,6 +103,36 @@ namespace ShadowVale.Map01.Editor
             Debug.Log(report.ToString());
         }
 
+        /// <summary>Repair changed walking routes by appending sites: existing save ids keep their index.</summary>
+        [MenuItem("ShadowVale/Map 1/Repair stone route coverage (preserve ids)")]
+        public static void RepairCoverage()
+        {
+            if(EditorSceneManager.GetActiveScene().path!=ScenePath)
+            {
+                if(!Application.isBatchMode&&!EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())return;
+                EditorSceneManager.OpenScene(ScenePath);
+            }
+            Physics.SyncTransforms();
+            var data=AssetDatabase.LoadAssetAtPath<Map01StoneSiteData>(AssetPath);
+            if(data==null)throw new System.InvalidOperationException("No existing stone data to repair.");
+            var plan=Survey();plan.sites.AddRange(data.sites);int before=plan.sites.Count;
+            var legs=Legs(plan,Encounters(plan));
+            foreach(var leg in legs)if(LongestGap(plan,leg.corners)>46f)Trail(plan,leg.corners);
+            var report=new StringBuilder();
+            report.AppendLine($"Original sites: {before}; repaired sites: {plan.sites.Count}; original ids preserved.");
+            foreach(var leg in legs)
+            {
+                float gap=LongestGap(plan,leg.corners);
+                report.AppendLine($"{leg.name}: uncovered stretch {gap:0.0}m");
+                if(gap>46f)throw new System.InvalidOperationException("Coverage repair needs review: "+report);
+            }
+            if(plan.sites.Count>40)throw new System.InvalidOperationException("More than 40 sites need design review: "+report);
+            for(int i=before;i<plan.sites.Count;i++)report.AppendLine($"stones_{i:00}: {plan.sites[i].position.ToString("F5")}");
+            data.sites=plan.sites.ToArray();EditorUtility.SetDirty(data);AssetDatabase.SaveAssets();
+            Directory.CreateDirectory("Logs/StoneSites");File.WriteAllText("Logs/StoneSites/coverage-repair.txt",report.ToString());
+            Debug.Log(report.ToString());
+        }
+
         // ---- The map as the rules see it ----------------------------------------------------
 
         private static Plan Survey()
@@ -170,10 +200,18 @@ namespace ShadowVale.Map01.Editor
             void Add(string name, Vector3 from, Vector3 to) { var corners = Route(from, to); if (corners.Length > 1) legs.Add((name, corners)); }
             var jetty = encounters.FirstOrDefault(e => e.name.StartsWith("Jetty"));
             var camps = encounters.Where(e => e.name.StartsWith("Camp")).ToArray();
+            var approaches=camps.Select(c=>c.at).ToArray();
+            var operations=Object.FindFirstObjectByType<Map01OperationsLayout>()??Resources.Load<Map01OperationsLayout>("Story/Map01Operations");
+            if(operations!=null)
+            {
+                // A warehouse's centre can be under a blocked roof; walkers approach its authored door.
+                if(approaches.Length>0&&operations.doorApproach!=null)approaches[0]=operations.doorApproach.position;
+                if(approaches.Length>1&&operations.radioApproach!=null)approaches[1]=operations.radioApproach.position;
+            }
             if (jetty.name != null) Add("Base A to jetty B", plan.start, jetty.at);
-            if (camps.Length > 0) Add("Base A to " + camps[0].name, plan.start, camps[0].at);
-            for (int i = 1; i < camps.Length; i++) Add(camps[i - 1].name + " to " + camps[i].name, camps[i - 1].at, camps[i].at);
-            if (camps.Length > 1) Add(camps[camps.Length - 1].name + " to base A", camps[camps.Length - 1].at, plan.start);
+            if (camps.Length > 0) Add("Base A to " + camps[0].name, plan.start, approaches[0]);
+            for (int i = 1; i < camps.Length; i++) Add(camps[i - 1].name + " to " + camps[i].name, approaches[i - 1], approaches[i]);
+            if (camps.Length > 1) Add(camps[camps.Length - 1].name + " to base A", approaches[approaches.Length-1], plan.start);
             return legs;
         }
 

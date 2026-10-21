@@ -318,9 +318,10 @@ namespace ShadowVale.Map01
                 Dialogue=GameplayCaption(line.caption);DialogueUntil=Time.time+line.clip.length+.2f;
                 if(line.caption.StartsWith("Hùng") && hung!=null)hung.GetComponentInChildren<Map01HungVisual>()?.Speak(line.clip.length+.2f);
             };
-            Dialogue=GameplayCaption(text);DialogueUntil=Time.time+seconds;
             if(string.IsNullOrEmpty(text))speech.Stop();
             float spoken=string.IsNullOrEmpty(text)?0:speech.SpeakText(text);
+            // Unrecorded calls still need a readable cue; recorded ambient lines keep their audio-only policy.
+            Dialogue=spoken>0?GameplayCaption(text):text;DialogueUntil=Time.time+seconds;
             if(!string.IsNullOrEmpty(text))DialogueUntil=Time.time+Mathf.Max(seconds,spoken+.25f);
         }
         public static string GameplayCaption(string text)

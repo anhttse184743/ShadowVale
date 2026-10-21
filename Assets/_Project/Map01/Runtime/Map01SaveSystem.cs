@@ -510,6 +510,8 @@ namespace ShadowVale.Map01
                 rescueStart=data.rescueStart;escortStart=data.escortStart;
                 RestoreGameplay(data);
                 GetComponent<Map01Rescue>().RestoreHealth(data.hungHealth);
+                // Loading an escort resumes its pose; only the live rescue plays the rise from captivity.
+                mission.hung.GetComponentInChildren<Map01HungVisual>()?.RestoreAfterCinematic();
                 GetComponent<Map01Scouting>().RestoreFound(data.scoutedCamps);
                 foreach (var point in mission.Points) point.used = data.used.Contains(point.id);
                 // Starting a scouting run over keeps the moment it started from; any other load
