@@ -10,6 +10,8 @@ namespace ShadowVale.Map01
         public string role;
         public Transform visual;
         public float pace=1.35f;
+        /// <summary>Set by the director while this person walks into a scene; scenes otherwise freeze everyone.</summary>
+        public bool SceneDriven {get;set;}
         Map02Mission mission;Transform follow;NavMeshPath path;int corner;float repath;
         Animator animator;AnimationClip walk,idle;Map01CinematicPose pose;
         Vector3 goal;bool travelling;
@@ -28,13 +30,13 @@ namespace ShadowVale.Map01
         public void GoTo(Vector3 destination,float speed){travelling=true;follow=null;goal=destination;pace=speed;repath=0;}
         public void StopAt(Vector3 position)
         {
-            travelling=false;follow=null;path=null;transform.position=position;goal=position;
+            travelling=false;follow=null;path=null;transform.position=position;goal=position;SceneDriven=false;
             if(animator!=null&&animator.runtimeAnimatorController!=null&&animator.parameters.Any(p=>p.name=="Speed"))animator.SetFloat("Speed",0);
         }
         public void SetDead(bool dead){if(dead){travelling=false;follow=null;}if(visual!=null)visual.gameObject.SetActive(!dead);gameObject.name="Actor slot — "+role+(dead?" (đã hy sinh)":"");}
         void Update()
         {
-            mission??=FindFirstObjectByType<Map02Mission>();var m=mission;if(m==null||m.Paused||m.InputBlocked||(follow==null&&!travelling))return;
+            mission??=FindFirstObjectByType<Map02Mission>();var m=mission;if(m==null||m.Paused||ForestMenu.Visible||(m.InputBlocked&&!SceneDriven)||(follow==null&&!travelling))return;
             if(!travelling&&Vector3.Distance(transform.position,follow.position)>7)return; // Never pull an escort through walls or teleport to Nam.
             repath-=Time.deltaTime;if(repath<=0){repath=.5f;if(!travelling)goal=follow.position-follow.forward*1.6f;var p=new NavMeshPath();if(NavMesh.SamplePosition(goal,out var found,2,NavMesh.AllAreas))goal=found.position;if(NavMesh.CalculatePath(transform.position,goal,NavMesh.AllAreas,p)&&p.status==NavMeshPathStatus.PathComplete){path=p;corner=1;}}
             if(travelling&&Vector3.Distance(transform.position,goal)<.3f){StopAt(goal);return;}

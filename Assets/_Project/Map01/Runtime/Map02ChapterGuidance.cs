@@ -40,6 +40,7 @@ namespace ShadowVale.Map01
                 if(t.kind=="antenna")return "E thao tác đài · A/D căn tín hiệu, giữ ổn định 2 giây.";
                 if(t.kind=="clear"||t.kind=="demolition")return "E bắt đầu · giữ Space để thao tác, Esc hủy.";
                 if(t.kind=="reach")return "Đi tới ghim vàng. Tự xác nhận khi vào đúng khu vực.";
+                if(t.id=="N3_07")return "Về bờ đất cạnh bến, chỗ Hùng giữ máy.";
                 return "Tới ghim vàng, nhấn E để nói chuyện hoặc tương tác.";
             }
         }
@@ -48,6 +49,7 @@ namespace ShadowVale.Map01
         {
             var task=Map02ChapterDefinition.Load().Find(marker.chapterId);if(task==null)return true;
             if(task.kind=="reach"||task.kind=="crawl"||task.kind=="binocular")return false;
+            if(task.id=="N3_WOUND"||task.id=="N3_07"||task.id=="N3_09")return false; // Run on their own.
             return State.activeTask!=task.id||!(escort!=null||task.kind=="defend"||task.kind=="coverFire");
         }
         bool ObservationVisible(Camera cam,Vector3 target)

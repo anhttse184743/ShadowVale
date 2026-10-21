@@ -462,7 +462,7 @@
         "N3_03"
       ],
       "count": 1,
-      "scene": "boatsafe",
+      "scene": "",
       "seconds": 40,
       "purpose": "Dọn đường rồi giữ khu vực cho hai chuyến thuyền đầu đi qua."
     },
@@ -1324,24 +1324,17 @@
     },
     {
       "id": "m2v3_wound_01",
-      "conversation": "m2v3_wound",
+      "conversation": "m2v3_fallback",
       "speaker": "Anh Lực",
       "text": "Chốt ngoài không giữ nổi! Tôi lùi!",
       "radio": true
     },
     {
       "id": "m2v3_wound_02",
-      "conversation": "m2v3_wound",
+      "conversation": "m2v3_fallback",
       "speaker": "Anh Thành",
-      "text": "Giữ ngõ đình! Nam, che cho dân xuống bến!",
+      "text": "Lùi về gốc me! Nam, giữ ngõ cho dân qua!",
       "radio": true
-    },
-    {
-      "id": "m2v3_wound_03",
-      "conversation": "m2v3_wound",
-      "speaker": "Nam",
-      "text": "Rõ!",
-      "radio": false
     },
     {
       "id": "m2v3_wound_04",
@@ -1492,7 +1485,7 @@
     },
     {
       "id": "m2v3_sacrifice_01",
-      "conversation": "m2v3_sacrifice",
+      "conversation": "m2v3_cover",
       "speaker": "Nam",
       "text": "Đi đi! Tôi che cho!",
       "radio": false
@@ -1502,7 +1495,8 @@
       "conversation": "m2v3_sacrifice",
       "speaker": "Hùng",
       "text": "Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay…",
-      "radio": false
+      "radio": false,
+      "recording": "m2v3_echo_promise"
     },
     {
       "id": "m2v3_sacrifice_03",

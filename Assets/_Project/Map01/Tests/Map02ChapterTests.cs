@@ -40,6 +40,14 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(d.Lines("sacrifice").Any(l=>l.speaker=="Rạch Tre"&&l.radio&&l.text=="Rạch Tre. Bắn."));
             // The wound flash is keyed to this line, not to its position in the scene.
             Assert.IsTrue(d.Lines("wound").Any(l=>l.id=="m2v3_wound_04"&&l.text.Contains("Xe tăng")));
+            // Radio calls and shouts during play are not cutscenes.
+            Assert.IsTrue(string.IsNullOrEmpty(d.Find("N3_04").scene));
+            Assert.IsTrue(d.Lines("fallback").Select(l=>l.id).SequenceEqual(new[]{"m2v3_wound_01","m2v3_wound_02"}));
+            Assert.AreEqual("Lùi về gốc me! Nam, giữ ngõ cho dân qua!",d.Lines("fallback")[1].text);
+            Assert.IsTrue(d.Lines("cover").Single().text.StartsWith("Đi đi!"));
+            Assert.IsFalse(d.tasks.Any(t=>t.scene=="fallback"||t.scene=="cover"||t.scene=="boatsafe"));
+            // The echo replays the separately recorded promise; it is the first thing heard in the sacrifice scene.
+            var echo=d.Lines("sacrifice")[0];Assert.AreEqual("m2v3_echo_promise",echo.RecordingId);Assert.AreEqual("m2v3_sacrifice_02",echo.id);
         }
         [Test] public void EntireChapterHasSevenPhasesAndExactlyOneSacrifice()
         {

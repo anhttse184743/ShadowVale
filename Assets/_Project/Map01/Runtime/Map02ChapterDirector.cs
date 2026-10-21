@@ -132,7 +132,7 @@ namespace ShadowVale.Map01
             {
                 if(!State.introduced.Contains(t.id)){BeginScene(t,0,2);scenePurpose=3;}else StartRescueEscort(t);return true;
             }
-            if(t.kind=="defend"||t.kind=="coverFire") {EnsureGroup(t.id,4);Mission.Say(t.kind=="coverFire"?"Yểm trợ Hùng. Giữ hỏa lực về phía địch để cậu ấy tiếp cận xe tăng.":"Giữ vị trí và đẩy lùi tốp địch để đoàn dân đi qua.");if(t.kind=="coverFire"){health.CinematicInvulnerable=true;roles["Hùng"].GoTo(ChargePoint,1.8f);}return true;}
+            if(t.kind=="defend"||t.kind=="coverFire") {EnsureGroup(t.id,4);Mission.Say(t.kind=="coverFire"?"Yểm trợ Hùng. Giữ hỏa lực về phía địch để cậu ấy tiếp cận xe tăng.":"Giữ vị trí và đẩy lùi tốp địch để đoàn dân đi qua.");if(t.kind=="coverFire"){health.CinematicInvulnerable=true;roles["Hùng"].GoTo(ChargePoint,1.8f);Bark("m2v3_sacrifice_01");}return true;}
             if(t.kind=="reach"||t.kind=="binocular"||t.kind=="crawl")return true;
             if(t.kind=="repair"||t.kind=="antenna"||t.kind=="clear"||t.kind=="demolition")
             {
@@ -169,15 +169,17 @@ namespace ShadowVale.Map01
             player.SurfaceSpeedMultiplier=escort!=null?.55f:!string.IsNullOrEmpty(State.carry)?.65f:State.wounded?.7f:1;
             player.SprintAllowed=()=>escort==null&&string.IsNullOrEmpty(State.carry)&&!State.wounded;
             if(sceneTask!=null){TickLight(dt);TickScene(dt);return;}
+            TickBark(dt);
             if(doingWork){TickWork(dt);return;}
             if(Mission.Panel!=0)return;
-            TickLight(dt);TickPatrol(dt);
+            TickLight(dt);TickPatrol(dt);TickCrawlCall(dt);
             if(State.phase==5&&State.Done("N3_00")&&!State.Done("N3_04"))EnsureGroup("initial_attack",4);
             if(State.wounded&&!Mission.Cinematic)rig.AddRecoil(Mathf.Sin(Time.time*2)*dt*.08f,Mathf.Sin(Time.time*3)*dt*.06f);
             foreach(var t in State.AvailableTasks.ToArray())
             {
                 var mark=markers[t.id];bool near=Vector3.Distance(Mission.Player.position,mark.transform.position)<mark.radius;
                 if(t.kind=="reach"&&near){Finish(t);break;}
+                if(t.id=="N3_07"&&Vector3.Distance(Mission.Player.position,sites["ditch"].position)<6){BeginScene(t);break;} // The last boat is pinned the moment Nam reaches the bank.
                 if(t.id=="D2_02")EnsureGroup("scout_patrol",3,false);
                 if((t.kind=="escortHung"||t.kind=="escortScout"||t.kind=="patrolHung"||t.kind.StartsWith("rescue"))&&escort!=null&&workTask==t)
                 {
@@ -196,9 +198,10 @@ namespace ShadowVale.Map01
                 {
                     if(!State.combatGroups.Contains(t.id))EnsureGroup(t.id,4);
                     bool safe=t.kind=="coverFire"||State.combatGroups.Contains(t.id)&&Enemies.Where(e=>e!=null&&e.group==t.id).All(e=>e.Dead);
-                    bool inArea=Vector3.Distance(Mission.Player.position,mark.transform.position)<12;
+                    bool inArea=Vector3.Distance(Mission.Player.position,mark.transform.position)<12;float before=State.taskProgress;
                     if(safe&&inArea)State.taskProgress+=dt;
                     if(t.kind=="coverFire"){health.CinematicInvulnerable=true;State.taskProgress+=inArea?0:dt;}
+                    if(t.id=="N3_04"&&before<t.seconds*.3f&&State.taskProgress>=t.seconds*.3f)Bark("m2v3_boatsafe_01"); // The first boat leaves.
                     if(State.taskProgress>=t.seconds&&(t.kind!="coverFire"||Vector3.Distance(roles["Hùng"].transform.position,ChargePoint)<2)){if(t.kind=="coverFire")health.CinematicInvulnerable=false;BeginScene(t);break;}
                 }
             }
@@ -252,15 +255,16 @@ namespace ShadowVale.Map01
             if(!State.Available(task))return;
             lines=Map02ChapterDefinition.Load().Lines(task.scene??"").Skip(from).Take(take>0?take:int.MaxValue).ToArray();scenePurpose=0;
             if(lines.Length==0){Finish(task);return;}
-            if(task.id=="D3_05")roles["Anh Thành"].StopAt(SupperYard); // He brings the night-watch order to the meal and stays for the report.
+            DropBarks();
             sceneTask=task;PrepareSceneMotion(task);lineIndex=0;lineClock=sceneClock=skipHeld=0;lockedPosition=Mission.Player.position;lockedRotation=Mission.Player.rotation;
             player.RestoreMotion(false);DialogueVoice.StopAll();
             var actor=Mission.Player.GetComponentInChildren<Animator>();namIdle=actor.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned");namPose=new Map01CinematicPose(actor,null,false);
             foreach(var weapon in Mission.Player.GetComponentsInChildren<Weapon>(true))if(weapon.gameObject.activeSelf){hiddenWeapons.Add(weapon.gameObject);weapon.gameObject.SetActive(false);}
             var cam=rig.GetComponent<Camera>();cameraBefore=cam.transform.position;cameraRotation=cam.transform.rotation;cameraFov=cam.fieldOfView;
-            protectedBefore=health.CinematicInvulnerable;health.CinematicInvulnerable=true;Speak();
+            protectedBefore=health.CinematicInvulnerable;health.CinematicInvulnerable=true;
+            PlanEntrances(task);StartLine();
         }
-        void Speak(){voice.Stop();lineClock=0;if(Map02DialogueCatalog.HasApprovedRecording(lines[lineIndex]))voice.Play(lines[lineIndex].id);}
+        void Speak(){voice.Stop();lineClock=0;if(Map02DialogueCatalog.HasApprovedRecording(lines[lineIndex]))voice.Play(lines[lineIndex].RecordingId);}
         void TickScene(float dt)
         {
             sceneClock+=dt;lineClock+=dt;
@@ -268,14 +272,13 @@ namespace ShadowVale.Map01
             SceneSampled?.Invoke(sceneTask.id,sceneClock);
             if(sceneTask.id=="N3_WOUND"&&sceneClock>2)health.CinematicInvulnerable=true;var kb=Keyboard.current;
             skipHeld=kb?.escapeKey.isPressed==true?skipHeld+Time.unscaledDeltaTime:0;
-            bool recorded=Map02DialogueCatalog.HasApprovedRecording(lines[lineIndex]);
-            float duration=recorded?DialogueVoice.Length(lines[lineIndex].id):Mathf.Max(2.5f,lines[lineIndex].text.Length/12f);
-            bool next=(lineClock>=duration&&!voice.HasSpeech)||(kb?.eKey.wasPressedThisFrame==true&&lineClock>.6f);
-            if(sceneTask.id=="N3_09"&&lineIndex==0&&sceneClock<Mathf.Max(26,sacrificeTravel+13))next=false;
             if(skipHeld>=1){EndScene();return;}
+            if(!spoken){TickGate();if(!spoken)return;}
+            float duration=LineSeconds(lines[lineIndex])+PauseAfter(lineIndex);
+            bool next=(lineClock>=duration&&!voice.HasSpeech)||(kb?.eKey.wasPressedThisFrame==true&&lineClock>.6f);
             if(next)
             {
-                if(lineIndex+1<lines.Length){lineIndex++;Speak();}
+                if(lineIndex+1<lines.Length){lineIndex++;StartLine();}
                 else if((sceneTask.kind!="cinematic"&&sceneTask.id!="N1_04")||sceneClock>=SceneDuration)EndScene();
             }
         }
@@ -299,6 +302,8 @@ namespace ShadowVale.Map01
         }
         void EndScene()
         {
+            foreach(var e in entrances)if(Vector3.Distance(e.actor.transform.position,e.to)>=1.5f)e.actor.StopAt(e.to); // Skipped walks end where the scene meant them to.
+            ClearEntrances();
             ReleaseSceneAction();var task=sceneTask;if(task.id=="N3_09")roles["Hùng"].StopAt(RetreatPoint);int purpose=scenePurpose;scenePurpose=0;namPose?.Dispose();namPose=null;foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();voice.Stop();sceneTask=null;lines=null;rig.ClearCinematicView();health.CinematicInvulnerable=protectedBefore;
             ForestMenu.SuppressKeysAfterCutscene();combat.RestoreAfterCinematic();
             if(purpose!=0){if(!State.introduced.Contains(task.id))State.introduced.Add(task.id);if(purpose==1)StartWork(task);else if(purpose==2)CompleteFamily(task);else StartRescueEscort(task);return;}
@@ -312,7 +317,13 @@ namespace ShadowVale.Map01
             if(task.id=="D2_04")roles["Tâm"].StopAt(sites["command"].position+Vector3.right*1.5f);
             if(task.id=="N3_00")roles["Hùng"].GoTo(sites["ditch"].position,1.8f);
             ApplyState();Mission.RefreshChapter();Mission.StoreCheckpoint();
-            if(task.id=="N3_09")BeginScene(Map02ChapterDefinition.Load().Find("DAWN"));
+            var def=Map02ChapterDefinition.Load();
+            if(task.id=="N3_09")BeginScene(def.Find("DAWN"));
+            if(task.id=="N3_05C")BeginScene(def.Find("N3_WOUND")); // These happen to Nam; he never walks to a pin to trigger them.
+            if(task.id=="N3_08")BeginScene(def.Find("N3_09"));
+            if(task.id=="N3_04"){Bark("m2v3_wound_01");Bark("m2v3_wound_02");}
+            if(task.id=="N3_WOUND")crawlCall=4; // The scene just ended on his first call.
+            if(State.phase==4&&State.Available(def.Find("D3_05"))&&task.id!="D3_05")roles["Hùng"].GoTo(HungAtSupper,1.35f); // Home for supper.
             if(State.finished){Mission.World.story.stage=Map02Stage.Complete;Mission.StoreCheckpoint();}
             if(State.finished)Mission.Say("MAP 2 HOÀN THÀNH · Ta giữ được làng. Hùng đã hy sinh cứu chuyến thuyền cuối.");
         }
@@ -331,7 +342,11 @@ namespace ShadowVale.Map01
             if(State.phase>=5&&State.Done("N3_03")&&Vector3.Distance(roles["Bé Tí"].transform.position,sites["southStore"].position)>8)roles["Bé Tí"].StopAt(sites["southStore"].position+Vector3.forward*1.4f);
             if(State.phase==5&&State.Done("N3_00")&&!State.hungDead)roles["Hùng"].GoTo(State.activeTask=="N3_08"||State.Done("N3_08")?ChargePoint:sites["ditch"].position,1.8f);
             UpdateMarkers();TickLight(10f);
-            if(State.Done("N3_09")&&!State.finished)BeginScene(Map02ChapterDefinition.Load().Find("DAWN"));
+            var def=Map02ChapterDefinition.Load();
+            if(State.phase==4&&State.Available(def.Find("D3_05")))roles["Hùng"].StopAt(HungAtSupper);
+            if(State.Done("N3_09")&&!State.finished)BeginScene(def.Find("DAWN"));
+            else if(State.Done("N3_05C")&&!State.Done("N3_WOUND"))BeginScene(def.Find("N3_WOUND"));
+            else if(State.Done("N3_08")&&!State.Done("N3_09"))BeginScene(def.Find("N3_09"));
         }
         public Map02ChapterState Capture()
         {
@@ -342,7 +357,7 @@ namespace ShadowVale.Map01
         public void Cancel()
         {
             if(health!=null&&sceneTask!=null)health.CinematicInvulnerable=protectedBefore;
-            ReleaseSceneAction();phaseFade=0;binocular=false;observed=0;detectionClock=0;if(rig!=null)rig.SetBinoculars(false,1);if(combat!=null)combat.SetHandsOccupied(false);handsBusy=false;namPose?.Dispose();namPose=null;foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}voice?.Stop();sceneTask=null;doingWork=false;lines=null;escort?.StopAt(escort.transform.position);escort=null;secondaryEscort?.StopAt(secondaryEscort.transform.position);secondaryEscort=null;rig?.ClearCinematicView();
+            ClearEntrances();DropBarks();ReleaseSceneAction();phaseFade=0;binocular=false;observed=0;detectionClock=0;if(rig!=null)rig.SetBinoculars(false,1);if(combat!=null)combat.SetHandsOccupied(false);handsBusy=false;namPose?.Dispose();namPose=null;foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}voice?.Stop();sceneTask=null;doingWork=false;lines=null;escort?.StopAt(escort.transform.position);escort=null;secondaryEscort?.StopAt(secondaryEscort.transform.position);secondaryEscort=null;rig?.ClearCinematicView();
         }
         void ApplyState()
         {
@@ -441,7 +456,8 @@ namespace ShadowVale.Map01
         public void DrawOverlay()
         {
             var label=new GUIStyle(GUI.skin.label){fontSize=24,wordWrap=true};var title=new GUIStyle(label){fontSize=28,fontStyle=FontStyle.Bold};
-            if(sceneTask!=null&&!(sceneTask.id=="N3_09"&&lineIndex==0&&sceneClock>3))
+            DrawBark(label);
+            if(sceneTask!=null&&spoken)
             {
                 GUI.Box(new Rect(150,700,1300,175),GUIContent.none);var line=lines[lineIndex];
                 GUI.Label(new Rect(180,715,1240,38),line.speaker+(line.radio?" (bộ đàm)":""),title);GUI.Label(new Rect(180,755,1240,85),line.text,label);

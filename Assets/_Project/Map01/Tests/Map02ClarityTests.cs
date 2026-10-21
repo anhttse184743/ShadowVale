@@ -48,7 +48,7 @@ namespace ShadowVale.Map01.Tests
         }
         [Test]public void DialogueFollowsWherePeopleActuallyAreAndWhyTheyMove()
         {
-            var d=Map02ChapterDefinition.Load();Assert.AreEqual(43,d.tasks.Length);Assert.AreEqual(135,d.entries.Length);
+            var d=Map02ChapterDefinition.Load();Assert.AreEqual(43,d.tasks.Length);Assert.AreEqual(134,d.entries.Length);
             Assert.IsFalse(d.Lines("day1report").Any(e=>e.speaker=="Hùng"));
             Assert.IsTrue(d.Lines("promise").Any(e=>e.id=="m2v3_day1report_04"));
             Assert.IsTrue(d.Lines("boatsafe").All(e=>e.radio));

@@ -186,12 +186,12 @@ namespace ShadowVale.Map01
         {
             voice.Stop();lineStartedAt=Time.unscaledTime;
             voiced=Map02DialogueCatalog.HasApprovedRecording(lines[dialogue.Index]);
-            if(voiced)voice.Play(lines[dialogue.Index].id);
+            if(voiced)voice.Play(lines[dialogue.Index].RecordingId);
         }
         public bool AdvanceConversation()
         {
             if(!Ready||Paused||!dialogue.Active||Time.unscaledTime-lineStartedAt<=.3f)return false;
-            bool finished=!voiced||(!voice.HasSpeech&&Time.unscaledTime-lineStartedAt>=DialogueVoice.Length(lines[dialogue.Index].id));
+            bool finished=!voiced||(!voice.HasSpeech&&Time.unscaledTime-lineStartedAt>=DialogueVoice.Length(lines[dialogue.Index].RecordingId));
             int previous=dialogue.Index;var oldStage=World.story.stage;
             bool advanced=dialogue.Advance(finished);
             if(!dialogue.Active){voice.Stop();lines=null;Notify();if(World.story.stage!=oldStage)StoreCheckpoint();}

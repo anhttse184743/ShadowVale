@@ -101,6 +101,20 @@ Giữ nguyên "Đừng giành!" (chính tả đúng; bản docx gõ "dành").
 
 Tệp: `Map02ChapterDirector.cs`, `Map02DialogueCatalog.cs`, `Map02Mission.Hud.cs`.
 
+> **Trạng thái 21/10:** đã làm trong file mới `Map02ChapterStaging.cs`.
+> - Câu nói nền: hàng đợi, bỏ trùng, một cảnh bắt đầu thì xóa hàng đợi. Phụ đề ở `y=690`, không khóa input. `HasBark` dùng cho test.
+> - Cảnh tự chạy (Q8), cả khi tải save ở giữa.
+> - Trường `recording` / `RecordingId`.
+> - **Diễn viên bước vào cảnh:** `SceneDriven` cho phép diễn viên đi trong lúc cảnh khóa input. Người ở xa xuất phát từ sau camera; câu của họ chờ tối đa 7 giây. Áp dụng cho anh Thành (Bữa chiều), Hùng (cất bộc phá, phân công, Bữa chiều), ông Sáu (phân công). Hùng tự về nhà ăn tối khi xong bốn việc.
+> - Khoảng lặng 2 giây trước `lastorder_07`.
+> - Câu hồi tưởng chỉ phát sau tiếng nổ (`EchoAt`). `wound_05` lặp lại khoảng mỗi 4 giây khi bò.
+> - Dữ liệu dời từ GĐ1: `N3_04` bỏ `scene`; `wound_01`/`_02` sang `m2v3_fallback`; bỏ `wound_03` (còn 134 dòng); `sacrifice_01` sang `m2v3_cover`; `sacrifice_02` có `recording`.
+> - Test: `WoundBankAndSacrificeRunWithoutPressingEAndRadioCallsKeepControl` (mới). Mechanics không còn `Interact(N3_09)`.
+>
+> Chưa làm: clip "ném cọng rau" (chờ asset, GĐ7).
+>
+> **Lưu ý test:** `RepairAndAntenna…` lỗi khi chạy thiếu nhóm `Map02ArrivalTests`, kể cả trên commit GĐ1. Đây là lỗi phụ thuộc thứ tự có từ trước, không phải hồi quy. Luôn so kết quả bằng bộ lọc đầy đủ.
+
 1. **Câu nói nền** `Bark(string lineId)`: xếp hàng, có ưu tiên. Hiện phụ đề không chồng lên ghim, phát bản thu nếu đã duyệt, không khóa input. Cảnh khóa điều khiển luôn chặn câu nói nền. Dùng ở: chuyến 1 rời bến, đầu Nhịp 3, lúc bò, đầu `N3_08`, tiếng hét của Hùng lúc lao lên.
 2. **Cảnh tự chạy (Q8):** `N3_WOUND` chạy khi đạt 90%. `N3_07` chạy khi Nam vào trong 6 m quanh `ditch`. `N3_09` chạy khi Hùng tới `ChargePoint`. Bỏ lời nhắc E ở ba ghim này.
 3. **Trường `recording` của dòng thoại:** `HasApprovedRecording` và `Speak()` tra bản thu theo `recording ?? id`.
