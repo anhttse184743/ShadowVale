@@ -24,6 +24,19 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(d.Lines("coordinates").Any(l=>l.text.Contains("pháo không bắn vào đây")));
             Assert.IsTrue(d.Lines("dawn").Any(l=>l.text.Contains("Tôi hứa với nó rồi")));
         }
+        [Test] public void NothingTheHudShowsBeforeDawnGivesAwayHungsDeath()
+        {
+            var d=Map02ChapterDefinition.Load();var state=new Map02ChapterState();
+            foreach(var t in d.tasks)
+            {
+                foreach(var word in new[]{"hy sinh","chết","tử trận","ngã xuống"})
+                {
+                    if(t.id!="DAWN")StringAssert.DoesNotContain(word,(t.title+" "+t.purpose).ToLowerInvariant(),t.id);
+                    StringAssert.DoesNotContain(word,state.Objective.ToLowerInvariant(),"objective before "+t.id);
+                }
+                state.Complete(t.id);
+            }
+        }
         [Test] public void DayThreeAndNightThreeFollowTheRevisedScript()
         {
             var d=Map02ChapterDefinition.Load();

@@ -70,7 +70,16 @@ namespace ShadowVale.Map01.Tests
                     yield return Cut(Mark(task.id).transform.position);
                     if(chapter.State.Done(task.id))continue;
                     if(task.kind=="reach"){yield return WaitDone(task.id,8);continue;}
-                    Assert.IsTrue(mission.Interact(Mark(task.id)),task.id+" interaction");yield return WaitGameSeconds(.7f);
+                    // These happen to Nam: the tank shot, the last boat on reaching the bank, the sacrifice.
+                    if(task.id=="N3_WOUND"||task.id=="N3_07"||task.id=="N3_09")
+                    {
+                        float start=Time.time+6;while(chapter.CurrentScene==null&&Time.time<start)yield return null;
+                        Assert.NotNull(chapter.CurrentScene,task.id+" starts on its own");yield return Dialogue();yield return WaitDone(task.id,12);continue;
+                    }
+                    // A lane hold starts on entering the lane; there is nothing to press.
+                    if(task.kind!="defend"){Assert.IsTrue(mission.Interact(Mark(task.id)),task.id+" interaction");yield return WaitGameSeconds(.7f);}
+                    if(task.kind=="demolition"&&chapter.State.carry==task.id)
+                    {yield return Cut(Mark(task.id).transform.position);Assert.IsTrue(mission.Interact(Mark(task.id)),"set the crate down at the bank");yield return WaitGameSeconds(.7f);}
                     if(task.kind=="carry")
                     {
                         for(int trip=0;trip<task.count;trip++)
@@ -111,7 +120,7 @@ namespace ShadowVale.Map01.Tests
                     else if(task.kind=="defend"||task.kind=="coverFire")
                     {
                         movie.note="GIAO TRANH MÔ PHỎNG · Video kiểm tra thứ tự nhiệm vụ, không đo cân bằng chiến đấu.";
-                        float limit=Time.time+150,fire=Time.time;
+                        float limit=Time.time+(task.kind=="coverFire"?Map02ChapterDirector.CoverSlowest+20:150),fire=Time.time;
                         while(!chapter.State.Done(task.id)&&chapter.CurrentScene==null&&Time.time<limit)
                         {
                             if(Time.time>fire+4)
@@ -161,7 +170,7 @@ namespace ShadowVale.Map01.Tests
                 {
                     if(index==entries.Length-1)
                     {
-                        if(task.id=="N3_09"&&Field<float>("sceneClock")<28){yield return null;continue;}
+                        if(task.id=="N3_09"&&Field<float>("sceneClock")<Map02ChapterDirector.FadeAt){yield return null;continue;} // Keep the guns and the counter-attack in the video.
                         movie.note="RÚT GỌN KHOẢNG LẶNG CUỐI CẢNH · Giữ nguyên kết quả như skip trong game.";
                         typeof(Map02ChapterDirector).GetMethod("EndScene",Private).Invoke(chapter,null);yield return null;last=-1;
                     }

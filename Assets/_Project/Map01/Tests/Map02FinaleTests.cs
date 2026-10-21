@@ -163,5 +163,51 @@ namespace ShadowVale.Map01.Tests
             }
             finally{chapter.Cancel();chapter.enabled=true;}
         }
+
+        [UnityTest,Timeout(240000)]public IEnumerator TelemetryStagesKeepTheirOrderThroughTheChapter()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
+            yield return StagesInPlayMode();
+            yield return new ExitPlayMode();
+        }
+        static IEnumerator StagesInPlayMode()
+        {
+            yield return Open();
+            try
+            {
+                // Telemetry stage ids (Map02Stage) per checkpoint, as before the Day 3 / Night 3 rework.
+                var seen=new System.Collections.Generic.List<Map02Stage>();
+                foreach(var t in Map02ChapterDefinition.Load().tasks){Load(t.id);var stage=mission.World.story.stage;if(seen.Count==0||seen[seen.Count-1]!=stage)seen.Add(stage);}
+                CollectionAssert.AreEqual(new[]{Map02Stage.VillageHelp,Map02Stage.QuietPreparation,Map02Stage.MissingScout,Map02Stage.QuietPreparation,Map02Stage.HoldLanes,Map02Stage.Breakout,Map02Stage.Complete},seen,string.Join(", ",seen));
+            }
+            finally{chapter.Cancel();chapter.enabled=true;}
+        }
+
+        [UnityTest,Timeout(600000),Explicit("Manual performance probe; writes Logs/GD8/perf.txt, asserts nothing.")]
+        public IEnumerator NightThreePerformanceProbe()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");SetPreviewResolution(1920,1080);yield return new EnterPlayMode();
+            yield return PerfInPlayMode();
+            yield return new ExitPlayMode();
+        }
+        static IEnumerator PerfInPlayMode()
+        {
+            yield return Open();chapter.enabled=true;var report=new System.Text.StringBuilder();
+            IEnumerator Measure(string label)
+            {
+                for(int i=0;i<30;i++)yield return null;float total=0;int frames=0;float worst=0;
+                for(int i=0;i<120;i++){yield return null;total+=Time.unscaledDeltaTime;worst=Mathf.Max(worst,Time.unscaledDeltaTime);frames++;}
+                report.AppendLine($"{label}: avg {total/frames*1000:0.0} ms ({frames/total:0} fps), worst {worst*1000:0.0} ms, lights {Object.FindObjectsByType<Light>(FindObjectsSortMode.None).Count(l=>l.isActiveAndEnabled)}, particles {Object.FindObjectsByType<ParticleSystem>(FindObjectsSortMode.None).Count(p=>p.isPlaying)}");
+            }
+            try
+            {
+                Load("N2_02");Place(chapter.Sites["bridge"].position);yield return Measure("Night 2 bridge (reference)");
+                Load("N3_05B");Place(chapter.Sites["lane3"].position);yield return Measure("Night 3 third lane, fire and soldiers");
+                Load("N3_08");float until=Time.time+11;while(Time.time<until)yield return null;yield return Measure("Night 3 bank after the blast");
+                until=Time.time+22;while(Time.time<until&&chapter.CurrentScene?.id=="N3_09")yield return null;yield return Measure("Nhịp 6 guns and militia");
+                System.IO.Directory.CreateDirectory("Logs/GD8");System.IO.File.WriteAllText("Logs/GD8/perf.txt",report.ToString());
+            }
+            finally{chapter.Cancel();}
+        }
     }
 }

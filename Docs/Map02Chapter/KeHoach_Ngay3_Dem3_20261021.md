@@ -337,6 +337,17 @@ Checkpoint ngay sau cảnh (code đã lưu sau mỗi nhiệm vụ).
 
 ### GĐ8 — Kiểm thử và tài liệu (S)
 
+> **Trạng thái 21/10 — kết quả cuối:**
+> - **Bộ test Map02** (Chapter, Mechanics, Clarity, Conversation, Ending, Finale, M16, Progress, Runtime, WorldState, Arrival; batchmode, `!Replay`): **54 đạt, 0 lỗi, 1 bỏ qua** (test đo hiệu năng được đánh dấu chạy tay).
+>   - Test mới: `NothingTheHudShowsBeforeDawnGivesAwayHungsDeath` (EditMode) và `TelemetryStagesKeepTheirOrderThroughTheChapter`. Thứ tự stage `Map02Stage` không đổi: VillageHelp → QuietPreparation → MissingScout → QuietPreparation → HoldLanes → Breakout → Complete.
+> - **Camera dùng chung** (`ThirdPersonCameraCollisionTests` cộng `AimAtCrosshairTests`): 12/13.
+>   - Hai test rung mới đạt: không gọi rung thì khung hình y như cũ; rung yếu không đè rung mạnh.
+>   - `AimAtCrosshairTests.TheBendComesAndGoes…` của Map 1 lỗi 3 lần liền, kể cả khi tắt hẳn lời gọi rung, nên **không do phần việc này**. Chưa kiểm trên `dev2` gốc.
+> - **Hiệu năng** (`NightThreePerformanceProbe`, Full HD, batchmode, máy này): Đêm 2 (mốc so sánh) 12,1 ms; vị trí giữ ngõ thứ ba 8,6 ms; bờ đất sau tiếng nổ 10,3 ms; Nhịp 6 10,4 ms. Đèn đang bật từ 10 lên 12, hệ hạt đang chạy từ 0 lên 2. Đêm 3 không nặng hơn Đêm 2. Batchmode không thay được đo trên máy chơi thật.
+> - **Bộ chạy video `Map02FlowMovieTests`** đã sửa cho cảnh tự chạy, giữ ngõ không cần E, mang thùng lựu đạn, Nhịp 6 tới giây 60. **Chưa chạy lại** (test chạy tay, khoảng 30 phút).
+> - **Tài liệu:** `Implementation_and_QA.md` có thêm mục Ngày 3/Đêm 3; `Map02_Ending_Revision.md` đánh dấu đã cũ.
+> - **Chưa làm:** chơi tay theo mục 6 và buổi chơi thử với người mới. Hai việc này cần người chơi thật.
+
 - Chạy lại toàn bộ bộ test Map02 ở batchmode với `-testCategory "!Replay"`. Hai test EditMode của Map01 đôi khi lỗi ngẫu nhiên do tải cảnh menu: chạy lại trước khi điều tra.
 - **Sửa bộ chạy `Map02FlowMovieTests`:**
   - Bỏ bước `Interact` ở 3 cảnh tự chạy.
