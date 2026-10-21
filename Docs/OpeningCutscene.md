@@ -1,30 +1,33 @@
-# Map 1: opening briefing
+# Map 1 — gặp chỉ huy và nhận nhiệm vụ bằng E
 
-On branch Khoa, New Game now loads Map 1 and requests an in-world briefing. The old Intro.mp4 and VideoPlayer menu path are removed. Continuing a checkpoint does not request the briefing.
+Hướng được người dùng chốt ngày 18/10/2026 trên nhánh `thinh`: bắt đầu Map 1 trong trạng thái có thể điều khiển Nam. Đến cạnh chỉ huy và bấm **E** để mở hội thoại nhận nhiệm vụ cứu Hùng.
 
-## Assets
-- Reuses Idle_Tuned.anim and the player's visual mesh, avatar and textures.
-- Uses Art/cutsence/Salute.fbx, Talking.fbx and Pointing.fbx directly.
-- Commander variation uses a runtime tint, shoulder insignia and a chest nameplate. No second character texture set or duplicated FBX.
-- Commander.mp3 and Soldier.mp3 are synthetic Vietnamese voices. Lip sync is not included.
-- Resources/Cutscenes/Map01Opening.prefab references those clips. ShadowVale > Cutscene > Prepare opening rebuilds the references after replacing source clips.
+## Luồng chơi
 
-## Flow
-Movement, combat, interaction, gameplay HUD and saving are blocked while the briefing plays. The camera blends back to the existing third-person rig over 1.2 seconds. Hold Esc for one second to skip. Skip and natural completion use the same cleanup. Salute plays once during the soldier's reply; no extra nod or turn animation.
+1. Chơi mới từ menu; chọn chơi hoặc bỏ qua phần hướng dẫn theo menu hiện có.
+2. Khi vào Map 1, mục tiêu hướng tới chỉ huy. Chưa có lệnh cứu Hùng được nhận, chưa phát briefing hoặc phim mở màn tự động.
+3. Bấm E cạnh chỉ huy để nghe hội thoại. Các câu có bản thu tự chuyển sau khi phát hết; E có thể bỏ qua một câu sau khoảng khóa nhập một giây.
+4. Ở câu cuối, đợi giọng đọc kết thúc rồi **nhả và bấm E lần nữa** để nhận nhiệm vụ. Giữ nguyên E từ lúc bắt đầu hoặc chỉ nghe hết hội thoại không tự nhận lệnh.
+5. Giữ Esc một giây để đóng hội thoại nhận lệnh đầu mà chưa nhận nhiệm vụ. Có thể gặp chỉ huy và bấm E để nghe lại. Esc bấm sau khi trở lại gameplay vẫn mở menu tạm dừng theo cơ chế hiện tại.
 
-The supply briefing mentions looking for Hung at the northern jetty so it remains compatible with the existing rescue quest and checkpoint stage numbering.
+Trong hội thoại, Nam đứng tại chỗ, tạm khóa di chuyển/chiến đấu/camera gameplay và cất vũ khí. Đóng hoặc xác nhận trả lại điều khiển và trang bị, giữ số đạn. Chỉ huy không cầm súng trong cuộc trò chuyện này. Hệ thống chặn lưu trong lúc hội thoại; lưu trước/sau hội thoại tuân theo `Map01SaveSystem`.
 
-## Verification
-OpeningCutsceneTests checks asset reuse and the complete briefing. ForestMenuIntegrationTests covers starting from the menu and skipping. Logs/Cutscene contains local runtime screenshots and smoke-test results; these are not game assets.
+Đóng hội thoại cũng dừng giọng và xóa chú thích của cuộc trò chuyện khỏi HUD, trước khi callback xác nhận có thể tạo thông báo nhiệm vụ mới.
 
-No Timeline/Cinemachine package is added: existing camera code and Unity animation Playables provide this one short sequence.
+Tải checkpoint không tự phát lại briefing. Tiến độ `rescueAccepted` được khôi phục từ save. Xác nhận nhận nhiệm vụ tạo checkpoint theo luồng cứu Hùng hiện có.
 
+## Code và asset
 
-## Pointing and presentation revision
-Pointing.fbx was refined and rebaked in Blender to five seconds, preserving the humanoid skeleton and asset GUID. Forearm and wrist rotations are softened. The commander idle-arm layer fades out during Pointing. Animation graphs advance manually once per cutscene tick to prevent the gesture finishing ahead of dialogue.
+- `Map01OpeningCutscene.Attach`: tạo nhân vật chỉ huy bằng `Initialize(mission, false)`.
+- `Map01Story.TryInteract`/`Brief`: mở hội thoại khi Nam đủ gần và chưa nhận lệnh.
+- `Map01StoryDialogue`: điều khiển lời thoại, cất súng, camera, tạm khóa điều khiển và xác nhận cuối.
+- `Resources/Cutscenes/Map01Opening.prefab`: giữ asset chỉ huy, mesh/avatar dùng chung và các clip cũ. Các clip chào/pointing và công cụ xem asset vẫn được giữ để kiểm tra riêng; chúng không phải nghi thức bắt buộc khi bắt đầu game.
+- Không dùng Intro.mp4 hay VideoPlayer cho mở đầu Map 1. Không thay rig, mesh hoặc texture Nam trong lượt đồng bộ này.
 
-New Game starts with a 3.5-second black Map 1 / northern jetty title, then fades into the briefing before voice playback. Continuing a save skips this introduction.
+## Kiểm tra
 
-The river uses the existing URP depth texture for shallow-water transparency and deep-water opacity. The gameplay camera stays above the river surface while wading. No water cutscene is added.
+- `ForestMenuIntegrationTests`: Play từ map vẫn tới menu; Chơi mới vào Map 1 chờ chỉ huy; đóng hội thoại bằng Esc rồi tạm dừng; lưu và tải lại.
+- `OpeningCutsceneTests`: E thật qua Input System mở hội thoại; giữ E không tự xác nhận; bấm E riêng ở cuối nhận lệnh; cất/trả súng và điều khiển. Kiểm camera khi lội sông được giữ thành bài riêng.
+- `DialogueVoiceTests`: Chơi mới không xếp hàng briefing tự động; đóng hội thoại không tự nhận lệnh hoặc phát tiếp tiếng cũ.
 
-Validation: opening asset/hand-pose/salute/control-return and wading-camera checks; natural finale and skip/legacy save checks. Screenshots and Blender source/backup remain outside Assets to avoid shipping authoring artifacts.
+Kết quả chạy và danh sách bài đã chọn nằm trong `Docs/Reviews/CommanderOpening_20261018/`. Các ghi nhận mô tả mở màn tự động trước đây là lịch sử, không còn là yêu cầu gameplay hiện hành.

@@ -38,6 +38,8 @@ namespace ShadowVale.Gameplay.Enemies.Boss
         public IReinforcementProvider Reinforcements { get; set; }
         /// <summary>True while the map is paused, in a cutscene or restoring: the boss does nothing then.</summary>
         public Func<bool> Suspended { get; set; }
+        /// <summary>Where his cover positions may be (a map keeping him in his camp); null = anywhere on the graph.</summary>
+        public Func<Vector3, bool> AllowedPosition { get; set; }
         public int Relocations { get; private set; }
         public int GrenadesThrown { get; private set; }
 
@@ -195,8 +197,8 @@ namespace ShadowVale.Gameplay.Enemies.Boss
             bool fallingBack = reason == "regroup" || Director.ReinforcementsCalled;
             if (reason == "regroup") keep = Mathf.Max(keep, Vector3.Distance(from, playerPosition));
             var men = Centre(_men);
-            if (!BossRelocation.TryPick(graph, Profile, from, playerPosition, here, _rng, out int node, out var to, range, keep, men, fallingBack)
-                && !(keep > 0 && BossRelocation.TryPick(graph, Profile, from, playerPosition, here, _rng, out node, out to, range, 0f, men, fallingBack)))
+            if (!BossRelocation.TryPick(graph, Profile, from, playerPosition, here, _rng, out int node, out var to, range, keep, men, fallingBack, allowed: AllowedPosition)
+                && !(keep > 0 && BossRelocation.TryPick(graph, Profile, from, playerPosition, here, _rng, out node, out to, range, 0f, men, fallingBack, allowed: AllowedPosition)))
                 return false;
             _agent.Brain.Assign(to, node, "relocate");
             _peek?.Stop(); // A new cover: the burst cycle starts again once he is there.

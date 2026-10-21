@@ -9,5 +9,7 @@ namespace ShadowVale.Gameplay.Combat
         Unarmed = 0,
         Knife = 1,
         Rifle = 2,
+        Pistol = 3,
+        Sniper = 4,
     }
 }

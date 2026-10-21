@@ -130,7 +130,7 @@ namespace ShadowVale.Map01
                 if (cell.count <= 0) bag[i] = null;
             }
             if (amount > 0 && primary == id) { SetSlot(Slot.Primary, null); amount--; OnSlotEmptied(); }
-            if (amount > 0 && pistol == id) { SetSlot(Slot.Pistol, null); amount--; }
+            if (amount > 0 && pistol == id) { SetSlot(Slot.Pistol, null); amount--; OnSlotEmptied(); }
             Changed?.Invoke();
         }
         /// <summary>Totals by item (bag and slots), for whatever wants the whole list.</summary>
@@ -167,8 +167,12 @@ namespace ShadowVale.Map01
             if (!ForestInventory.IsWeapon(id) || mission == null || mission.ModernCombat == null) return false;
             var kind = mission.ModernCombat.EquippedKind;
             return id == "knife" ? kind == WeaponKind.Knife && knife == id
-                : (id == "rifle_standard" || id == "rifle_m16") && kind == WeaponKind.Rifle && primary == id;
+                : id == "pistol_k54" ? kind == WeaponKind.Pistol && pistol == id
+                : id == "rifle_mosin" ? kind == WeaponKind.Sniper && primary == id
+                : (id == "rifle_standard" || id == Map01M16.Id) && kind == WeaponKind.Rifle && primary == id;
         }
+        public string HeldAmmoId => mission != null && mission.ModernCombat != null
+            ? mission.ModernCombat.EquippedKind==WeaponKind.Pistol ? "ammo_pistol" : mission.ModernCombat.EquippedKind==WeaponKind.Sniper ? "ammo_sniper" : PrimaryAmmo : PrimaryAmmo;
         /// <summary>The weapon <paramref name="id"/> into its slot (from the bag, if it is there) and into his hands.</summary>
         public bool EquipItem(string id)
         {

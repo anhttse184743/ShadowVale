@@ -35,6 +35,8 @@ namespace ShadowVale.Map01
         private static readonly Color RingSmoke = new Color(.85f, .87f, .82f, .9f);
 
         public bool Aiming { get; private set; }
+        public bool PresentingThrow => Aiming || (mission != null && mission.player != null &&
+            mission.player.GetComponent<Map01NamActions>() is { StoneActionPlaying: true });
         /// <summary>What is being aimed (or was last thrown): "stone", "smoke_bomb" or "grenade_f1".</summary>
         public string Item { get; private set; } = "stone";
         /// <summary>Where the aimed throwable would come down.</summary>
@@ -77,6 +79,7 @@ namespace ShadowVale.Map01
             string ready = inventory.ReadyThrowable();
             if (ready == null) return;
             Item = ready;
+            mission.ModernCombat?.CancelReload();
             Aiming = true;
             Map01NamActions.For(mission)?.Hold(Map01NamActions.ThrowAim, true);   // the stone drawn back
             Plan(AimTarget());
@@ -114,6 +117,7 @@ namespace ShadowVale.Map01
             Item = ready;
             FaceTarget(target);
             Plan(target);
+            mission.ModernCombat?.CancelReload();
             if (!Launch()) return false;
             Map01NamActions.For(mission)?.ThrowNow();
             faceThrowUntil=Time.time+1.1f;
@@ -351,7 +355,7 @@ namespace ShadowVale.Map01
         private static Transform FindPart(Transform root, string name)
         {
             foreach (var t in root.GetComponentsInChildren<Transform>(true))
-                if (t != root && t.name == name) return t;
+                if (t != root && (t.name == name || t.name.StartsWith(name+".",System.StringComparison.Ordinal))) return t;
             return null;
         }
 

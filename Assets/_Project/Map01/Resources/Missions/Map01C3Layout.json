@@ -25,9 +25,9 @@
     { "role": "porch", "post": [69.8, 61.6], "yaw": 180 }
   ],
   "sleepers": [
-    { "name": "C3 sleeper 1", "barracks": "west", "door": [56.9, 57.2], "inside": [56.9, 61.0] },
-    { "name": "C3 sleeper 2", "barracks": "west", "door": [56.9, 57.2], "inside": [56.9, 63.0] },
-    { "name": "C3 sleeper 3", "barracks": "east", "door": [79.1, 57.2], "inside": [79.1, 61.0] }
+    { "name": "C3 sleeper 1", "barracks": "west", "door": [56.9, 57.2], "inside": [54.82, 61.80], "floorY": 8.59, "bedYaw": 180 },
+    { "name": "C3 sleeper 2", "barracks": "west", "door": [56.9, 57.2], "inside": [54.82, 63.92], "floorY": 8.59, "bedYaw": 180 },
+    { "name": "C3 sleeper 3", "barracks": "east", "door": [79.1, 57.2], "inside": [77.02, 59.68], "floorY": 8.59, "bedYaw": 180 }
   ],
   "runners": { "count": 2, "from": [40.0, 78.0], "delaySeconds": 25 },
   "kieng": { "frame": [64.8, 43.4], "use": [65.3, 44.2] },

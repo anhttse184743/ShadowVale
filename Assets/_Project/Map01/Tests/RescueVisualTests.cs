@@ -99,7 +99,7 @@ namespace ShadowVale.Map01.Tests
                     if(segment<path.Length)
                     {
                         var delta=path[segment]-M.player.position;var step=Vector3.ClampMagnitude(delta,Time.deltaTime*1.8f);
-                        if(Vector3.Distance(M.player.position,M.hung.position)<5)M.player.position+=step;
+                        M.player.position+=step; // Hung now walks independently; Nam keeps escorting when he falls behind.
                         if(delta.magnitude<.2f)segment++;
                         var direction=Vector3.ProjectOnPlane(delta,Vector3.up);
                         if(direction.sqrMagnitude>.001f)M.player.rotation=Quaternion.RotateTowards(M.player.rotation,Quaternion.LookRotation(direction),Time.deltaTime*260);
@@ -110,8 +110,16 @@ namespace ShadowVale.Map01.Tests
                 yield return recorder.Frame(combat?"Cover Hung":"Escort home");
                 Assert.IsFalse(R.Failed,"Scripted escort must reach shelter alive.");
             }
+            // Reaching the door within the journey deadline starts a separate homecoming.
+            // Let that real cutscene finish before asserting delivery.
+            float homeUntil=Time.time+60;
+            while(M.Cinematic&&M.GetComponent<Map01RescueCinematic>().CurrentMode==Map01RescueCinematic.Mode.Shelter&&Time.time<homeUntil)
+                yield return recorder.Frame("Finish shelter return");
             Assert.AreEqual(Map01Quest.BriefingStage,Q.Stage);Assert.AreEqual(7,R.WaveMask);
-            Assert.IsTrue(R.RewardDelivered);Assert.Less(Vector3.Distance(M.player.position,R.Layout.reportPoint.position),.15f);
+            Assert.IsTrue(R.RewardDelivered);
+            float namHome=Vector3.Distance(M.player.position,R.Layout.reportPoint.position),hungHome=Vector3.Distance(M.hung.position,R.Layout.reportPoint.position);
+            Assert.Less(Mathf.Min(namHome,hungHome),.15f,"Whichever arrived first leads the return.");
+            Assert.AreEqual(Mathf.Max(1.4f,R.Layout.shelterFollowGap),Vector3.Distance(M.player.position,M.hung.position),.1f,"The follower keeps the authored gap.");
             M.ModernPlayer.enabled=true;yield return recorder.Seconds(1.5f,"Delivered at base");recorder.Dispose();recorder=null;
             InputSystem.RemoveDevice(mouse);RestoreInputRouting(inputRouting);
             yield return new ExitPlayMode();

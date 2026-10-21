@@ -52,6 +52,14 @@ namespace ShadowVale.Map01
         private readonly AimTracker _aim = new AimTracker();
         private System.Random _shotRng;
         private NavMeshEnemyBody _body;
+        private Map01ConfinedBody _brainBody;
+        private System.Func<Vector3, Vector3> _confineMoves;
+        /// <summary>Where the FSM may walk him (the C3 commander: inside the fence); null = anywhere.</summary>
+        public System.Func<Vector3, Vector3> ConfineMoves
+        {
+            get => _confineMoves;
+            set { _confineMoves = value; if (_brainBody != null) _brainBody.Confine = value; }
+        }
         private EnemyBrain _brain;
         private readonly EnemyTuning _tuning = new EnemyTuning();
         private float _nextShot;
@@ -79,6 +87,36 @@ namespace ShadowVale.Map01
         private bool _stoneLure;
         private Quaternion _stoneFacing = Quaternion.identity;
         private bool _startled;
+        private bool _pendingDamage, _pendingOnlyMosin;
+        private Vector3 _heardShotPosition;
+        private float _heardShotUntil = float.NegativeInfinity;
+
+        private void RecordDamage(DamageNotice notice)
+        {
+            bool mosin = notice.IsBullet && notice.Weapon == WeaponKind.Sniper && _mission != null && _mission.player != null
+                && notice.Source == _mission.player.gameObject;
+            _pendingOnlyMosin = _pendingDamage ? _pendingOnlyMosin && mosin : mosin;
+            _pendingDamage = true;
+        }
+        private void ClearDamageEvidence() { _pendingDamage = false; _pendingOnlyMosin = false; }
+
+        // The bed proxy holds this controller disabled, so it must settle a lethal bullet
+        // before taking ownership of the corpse. The normal Update must not credit it twice.
+        internal void ResolveSleepingMosinDeath()
+        {
+            if (Alive || !_pendingDamage || !_pendingOnlyMosin || _health.Current >= _lastHealth) return;
+            OnHurt(); _lastHealth = _health.Current; ClearDamageEvidence(); CreateLoot();
+        }
+
+        /// <summary>Information a reinforcement may receive; never looks up Nam's current position.</summary>
+        public bool TryGetKnownThreat(out Vector3 at)
+        {
+            at = default;
+            if (!Alive) return false;
+            if (Engaged) { at = Memory.LastKnownPlayerPosition; return true; }
+            if (Time.time < _heardShotUntil) { at = _heardShotPosition; return true; }
+            return false;
+        }
 
         // Held still for a cinematic or a stopped mission; every timer resumes where it was.
         private bool _holdingAI;
@@ -134,13 +172,26 @@ namespace ShadowVale.Map01
         /// <summary>The jetty squad while Hùng is still held: quieter steps, slower to spot, closer to touch.</summary>
         // ---- The bush pull (Map01BushTakedown) --------------------------------------------------
         private bool grappleOwned;
-        public bool WeaponPoseAvailable => !grappleOwned && !TakenDownSilently && (_mission == null || !_mission.Cinematic);
+        public bool BedPoseOwned { get; set; }
+        public bool WeaponPoseAvailable => !BedPoseOwned && !grappleOwned && !TakenDownSilently && (_mission == null || !_mission.Cinematic);
         /// <summary>Rounds fired with their sound (tests count them).</summary>
         public int AudibleShots { get; private set; }
         private int silentKind;
         private Map01CinematicPose bushCorpse;
         public void SetGrappleWeaponReady(bool ready) { if (grappleOwned && Alive) ShowRifle(ready); }
         public void BeginGrapple() { grappleOwned = true; ShowRifle(false); }
+        /// <summary>Approved bedside execution: silent credit, visible discoverable corpse (not a bush hide).</summary>
+        public void CommitBedKill(string weaponId="pistol")
+        {
+            if (!Alive) return;
+            TakenDownSilently = true; silentKind = 2;
+            _health.TakeDamage(_health.Current, transform.position + Vector3.up, _mission.player.gameObject);
+            _lastHealth = _health.Current;
+            if (_health.IsDead) _mission.Skills?.Award(ShadowVale.Gameplay.Skills.SkillKind.Stealth);
+            CreateLoot(); FillLoot();
+            EventBus.Publish(new TakedownEvent(LegacyId, transform.position));
+            EventBus.Publish(new EnemyKilledEvent(LegacyId, "takedown", weaponId, transform.position));
+        }
         public void CommitBushKill()
         {
             if (!Alive) return; TakenDownSilently = true; silentKind = 1;
@@ -160,6 +211,7 @@ namespace ShadowVale.Map01
         }
         private void LateUpdate()
         {
+            if (_muzzleFlash != null && Time.time >= _flashUntil) _muzzleFlash.enabled = false;
             if (bushCorpse == null) return;
             var clip = Map01CinematicPose.Clip("Enemy_Bush_Finish"); bushCorpse.Sample(clip, clip.length); bushCorpse.Ground(transform.position.y);
         }
@@ -173,6 +225,43 @@ namespace ShadowVale.Map01
             ReportDetection(Map01DetectionCause.Sight, at);
         }
 
+        // ---- A comrade's body (Map01BodyDiscovery) -----------------------------------------------
+        private const int BodyUnseen = 1, BodySeen = 2;
+        /// <summary>Unseen (1) or seen by another guard (2); a save older than the rule brings 0 (see RestoreSnapshot).</summary>
+        private int _bodyState = BodyUnseen;
+        /// <summary>Dead, and another guard has found him — a body is found only once.</summary>
+        public bool BodyFound => !Alive && _bodyState == BodySeen;
+        /// <summary>Pulled into a bush (Map01BushTakedown): hidden for good, nobody finds him.</summary>
+        public bool BodyHidden => silentKind == 1;
+        public void MarkBodyFound() => _bodyState = BodySeen;
+        /// <summary>He has seen a comrade's body: from then on he is quicker to be sure of what he sees, and stays so.</summary>
+        public bool Wary { get; private set; }
+        /// <summary>A wary guard needs this share of the usual time to be sure he has seen Nam.</summary>
+        public const float WaryDetectionScale = .75f;
+        public void MakeWary() { if (Alive) Wary = true; }
+        /// <summary>Walks on the NavMesh (not the watchtower's sentry, whose agent is off).</summary>
+        public bool CanMove => _agent != null && _agent.enabled && _agent.isOnNavMesh;
+
+        /// <summary>A comrade's body at <paramref name="at"/>: a start, then over to look at it and around it. The overseer
+        /// only looks from beside Hùng (<see cref="BeginInvestigation"/>).</summary>
+        public void InspectBody(Vector3 at)
+        {
+            if (!Alive || Engaged) return;
+            if (!_startled) { _startled = true; Trigger("Startled"); }
+            _hearReactionAt = 0;
+            BeginInvestigation(at);
+            Wary = true;
+        }
+
+        /// <summary>Off to <paramref name="to"/> at the investigating hurry, without a start (the C3 kẻng runner).</summary>
+        public void Dispatch(Vector3 to)
+        {
+            if (!Alive || Engaged) return;
+            _hearReactionAt = 0; _stoneLure = false; ApplyLureTuning();
+            Brain.BeginInvestigation(to, Time.time);
+            Wary = true;
+        }
+
         private bool RescueStealth => _rescuePost && _rescue != null && _rescue.CurrentPhase == Map01Rescue.Phase.Captive;
 
         /// <summary>Treat him as fighting Nam for <paramref name="seconds"/> (debug console, tests).</summary>
@@ -180,10 +269,13 @@ namespace ShadowVale.Map01
 
         public string RifleItemId { get; private set; } = "rifle_standard";
 
-        public void RefreshRifleLoadout()
+        public void RefreshRifleLoadout(string savedItemId = null)
         {
             if (_mission == null) return;
-            RifleItemId = Map01M16.EnemyRifle(_mission, this);
+            // Old saves have no loadout field; new saves keep the guard's actual gun
+            // even if waking reserves has changed his index in the roster.
+            RifleItemId = savedItemId == Map01M16.Id || savedItemId == "rifle_standard"
+                ? savedItemId : Map01M16.EnemyRifle(_mission, this);
             var held = GetComponentInChildren<Map01Rifle>(true);
             if (held != null) Map01RifleVisual.Apply(held.weapon, RifleItemId);
         }
@@ -192,6 +284,7 @@ namespace ShadowVale.Map01
             _mission = mission;
             Map01EnemyGrip.Bind(this);
             _feedback = EnemyFeedback.Attach(gameObject, mission.player.GetComponent<PlayerController>());
+            _feedback.GunshotClip = RifleReport;
             _feedback.CanStep = () => enabled && !_holdingAI && _mission != null && !_mission.Stopped;
             GetComponent<Health>().KeepCheckpointCorpse();
             // Map 1's guard tuning lives in Map01Balance.json and Map01Content.json, not in each
@@ -216,6 +309,7 @@ namespace ShadowVale.Map01
         private void OnDestroy()
         {
             if (_mission != null) _mission.Noise.Unregister(this);
+            if (_health != null) _health.Damaged -= RecordDamage;
             bushCorpse?.Dispose();
         }
 
@@ -226,9 +320,11 @@ namespace ShadowVale.Map01
         /// </summary>
         public void ReturnToPost()
         {
+            ClearDamageEvidence(); _heardShotUntil = float.NegativeInfinity;
             LastStoneHeardAt = float.NegativeInfinity;
             bushCorpse?.Dispose(); bushCorpse = null; silentKind = 0; grappleOwned = false;
             TakenDownSilently = false; SetSilent(false); ShowRifle(true); _startled = false;
+            _bodyState = BodyUnseen; Wary = false;
             if (_health.IsDead) _health.Revive(); else _health.RestoreHealth(_health.Max);
             if (_lootCreated)
             {
@@ -264,13 +360,18 @@ namespace ShadowVale.Map01
         /// metres: within it, the guard goes to see what it was. True if he heard it.</summary>
         public bool Hear(Vector3 position, float radius, NoiseKind kind = NoiseKind.Other)
         {
+            if (BedPoseOwned) return false;
             bool stealth = RescueStealth;
             if (stealth && kind == NoiseKind.Footstep && _mission.Crouched)
                 radius *= _rescueTuning != null ? _rescueTuning.crouchedFootstepScale : .55f;
             if (!Alive || !HearingSensor.Hears(transform.position, position, radius)) return false;
             if (kind == NoiseKind.Stone) LastStoneHeardAt = Time.time;
             if (_mission != null && _mission.Cinematic) return false;
-            if (kind == NoiseKind.Gunshot) ReportDetection(Map01DetectionCause.Gunshot, position);
+            if (kind == NoiseKind.Gunshot)
+            {
+                _heardShotPosition = position; _heardShotUntil = Time.time + _tuning.InvestigateTimeoutSeconds;
+                ReportDetection(Map01DetectionCause.Gunshot, position);
+            }
             // Finish checking a thrown stone instead of cancelling the lure for a quiet step behind
             // him. Sight and gunshots still apply.
             if (stealth && kind == NoiseKind.Footstep && _mission.Crouched && _stoneLure && !Engaged) return true;
@@ -319,7 +420,34 @@ namespace ShadowVale.Map01
             }
             _stoneLure = stone && _overseer;
             ApplyLureTuning();
+            if (!_overseer && !IsBoss && CanMove) position = ReachableInvestigation(position);
             Brain.BeginInvestigation(position, Time.time);
+        }
+
+        // A sound on a roof or prop is not itself a walking destination. Prefer the original
+        // point; otherwise search the reachable floor around it, without inventing a player position.
+        private Vector3 ReachableInvestigation(Vector3 source)
+        {
+            var path = new NavMeshPath();
+            bool Reach(Vector3 at, out Vector3 result)
+            {
+                result = default;
+                if (!NavMesh.SamplePosition(at, out var hit, 2f, NavMesh.AllAreas)
+                    || !_agent.CalculatePath(hit.position, path) || path.status != NavMeshPathStatus.PathComplete) return false;
+                result = hit.position; return true;
+            }
+            if (Reach(source, out var direct)) return direct;
+            var floor = new Vector3(source.x, transform.position.y, source.z);
+            Vector3 best = transform.position;
+            float closest = float.PositiveInfinity;
+            for (float radius = 0; radius <= 8; radius += 2)
+                for (int angle = 0; angle < 360; angle += 45)
+                {
+                    if (!Reach(floor + Quaternion.Euler(0, angle, 0) * Vector3.forward * radius, out var candidate)) continue;
+                    float distance = Vector3.ProjectOnPlane(candidate - source, Vector3.up).sqrMagnitude;
+                    if (distance < closest) { closest = distance; best = candidate; }
+                }
+            return best;
         }
 
         /// <summary>On a stone lure the overseer walks right up to the spot and stares at it longer.</summary>
@@ -332,6 +460,7 @@ namespace ShadowVale.Map01
         [System.Serializable] public sealed class Snapshot
         {
             public string id;
+            public string rifleItemId;
             public Vector3 position, destination, investigate, returnPoint;
             public Quaternion rotation, returnRotation;
             public float hp, shotRemaining, alertRemaining, searchRemaining;
@@ -343,12 +472,18 @@ namespace ShadowVale.Map01
             public Vector3 pendingFootstep;
             public bool stoneLure;
             public Quaternion stoneFacing;
+            /// <summary>1 unseen, 2 found by another guard; 0 in saves from before bodies could be found.</summary>
+            public int bodyState;
+            public bool wary;
+            public bool hasKnownPlayer;
+            public Vector3 knownPlayer, heardShotPosition;
+            public float heardShotRemaining;
         }
         public Snapshot Capture()
         {
             var m = Memory; float now = Time.time;
             return new Snapshot {
-                id = SaveId, position = transform.position, rotation = transform.rotation, hp = _health.Current,
+                id = SaveId, rifleItemId = RifleItemId, position = transform.position, rotation = transform.rotation, hp = _health.Current,
                 silent = TakenDownSilently, silentKind = silentKind, pursuer = _pursuer, suspicion = m.Suspicion,
                 engagedRemaining = Mathf.Max(0, m.EngagedUntil - now), pauseRemaining = Mathf.Max(0, m.PatrolPauseUntil - now),
                 footstepReactionRemaining = _hearReactionAt > 0 ? Mathf.Max(0, _hearReactionAt - now) : 0,
@@ -358,16 +493,20 @@ namespace ShadowVale.Map01
                 searchRemaining = m.SearchUntil > 0 ? Mathf.Max(.01f, m.SearchUntil - now) : 0,
                 returning = m.Returning, returnPoint = m.ReturnPoint, returnRotation = m.ReturnRotation,
                 destination = _agent.isOnNavMesh && _agent.hasPath ? _agent.destination : transform.position,
-                stopped = _agent.isOnNavMesh && _agent.isStopped
+                stopped = _agent.isOnNavMesh && _agent.isStopped,
+                bodyState = _bodyState, wary = Wary,
+                hasKnownPlayer = Engaged, knownPlayer = m.LastKnownPlayerPosition,
+                heardShotPosition = _heardShotPosition, heardShotRemaining = Mathf.Max(0, _heardShotUntil - now)
             };
         }
         /// <summary>This guard as he would be fresh at his post: alive, calm, starting his patrol.</summary>
         public Snapshot CaptureAtPost() => new Snapshot {
-            id = SaveId, position = _postPosition, rotation = _postRotation, hp = _health.Max,
-            destination = _postPosition, patrolIndex = 0
+            id = SaveId, rifleItemId = RifleItemId, position = _postPosition, rotation = _postRotation, hp = _health.Max,
+            destination = _postPosition, patrolIndex = 0, bodyState = BodyUnseen
         };
         public void RestoreSnapshot(Snapshot saved)
         {
+            RefreshRifleLoadout(saved.rifleItemId);
             var m = Memory; float now = Time.time;
             _body.Warp(saved.position);
             transform.rotation = saved.rotation;
@@ -375,6 +514,13 @@ namespace ShadowVale.Map01
             TakenDownSilently = saved.silent; SetSilent(saved.silent); ShowRifle(!saved.silent);
             _health.RestoreHealth(saved.hp);
             _lastHealth = _health.Current;
+            // A body in a save from before bodies could be found counts as found: loading it must not set anyone off.
+            ClearDamageEvidence();
+            _heardShotPosition = saved.heardShotPosition; _heardShotUntil = now + saved.heardShotRemaining;
+            m.LastKnownPlayerPosition = saved.hasKnownPlayer ? saved.knownPlayer : saved.investigate;
+            m.LastSeenTime = float.NegativeInfinity;
+            _bodyState = saved.bodyState != 0 ? saved.bodyState : Alive ? BodyUnseen : BodySeen;
+            Wary = saved.wary;
             _sense.Reset();
             m.Suspicion = saved.suspicion; m.EngagedUntil = now + saved.engagedRemaining;
             m.PatrolPauseUntil = now + saved.pauseRemaining; _pursuer = saved.pursuer;
@@ -483,18 +629,23 @@ namespace ShadowVale.Map01
         /// <paramref name="stops"/> and <paramref name="yaws"/> follow <paramref name="points"/>: seconds he waits at each,
         /// and the yaw he holds there.
         /// </summary>
+        /// <param name="walk">Walk there instead of being set down on the spot (a change of post in front of Nam).</param>
         public void Repost(Vector3 position, float yaw, Vector3[] points = null, float[] stops = null, float[] yaws = null,
-            float vision = 0f, bool stationary = false)
+            float vision = 0f, bool stationary = false, bool walk = false)
         {
             var rotation = Quaternion.Euler(0, yaw, 0);
             _postPosition = position; _postRotation = rotation;
-            var m = Memory; m.ReturnPoint = position; m.ReturnRotation = rotation; m.PatrolIndex = 0; _lastPatrolIndex = 0;
+            var m = Memory; m.ReturnPoint = position; m.ReturnRotation = rotation; m.PatrolIndex = 0; m.PatrolPauseUntil = 0; _lastPatrolIndex = 0;
             Configure(points); _patrolStops = stops; _patrolYaws = yaws; _stopYaw = float.NaN;
             if (vision > 0) { visionRange = vision; SyncTuning(); }
             if (stationary && _agent != null) _agent.enabled = false;
-            _body.Warp(position);
-            transform.rotation = rotation;
+            if (!walk || stationary)
+            {
+                _body.Warp(position);
+                transform.rotation = rotation;
+            }
             if (!stationary && patrolPoints.Length > 0) _body.MoveTo(patrolPoints[0]);
+            else if (walk && !stationary && !Alerted) _body.MoveTo(position);
         }
 
         /// <summary>The per-point stops of a Repost beat: the shared patrol only knows one pause for every point.</summary>
@@ -584,7 +735,7 @@ namespace ShadowVale.Map01
             _holdingAI = false; _agent.updatePosition = true; _agent.updateRotation = true;
             _postPosition = post; _postRotation = Quaternion.identity; Configure(System.Array.Empty<Vector3>()); BindMission(owner);
             _health.CinematicInvulnerable = false; _health.Revive(); _lastHealth = _health.Current;
-            TakenDownSilently = false; SetSilent(false); ShowRifle(true);
+            TakenDownSilently = false; SetSilent(false); ShowRifle(true); _bodyState = BodyUnseen; Wary = false;
             _hearReactionAt = 0; _stoneLure = false; ApplyLureTuning();
             Brain.ResetToPost(0f);
             if (_animator != null) _animator.speed = 1;
@@ -673,9 +824,8 @@ namespace ShadowVale.Map01
             FaceImmediate(target);
             if (_animator != null && _animator.runtimeAnimatorController != null) _animator.SetTrigger(PlayerCombat.AnimatorParams.Attack);
             if (_rescue == null || _mission == null || _mission.hung == null) return;
-            _feedback ??= EnemyFeedback.Attach(gameObject);
             AudibleShots++;
-            if (!_feedback.Fire(target + (bodyPoint ? Vector3.zero : Vector3.up * .9f), _mission.hung, obstructionMask, out var impact)) return;
+            if (!FireRound(target + (bodyPoint ? Vector3.zero : Vector3.up * .9f), _mission.hung, out var impact)) return;
             float before = _rescue.HungHealth;
             _rescue.HitHung(amount);
             if (_rescue.HungHealth < before) BloodImpact.Play(impact, impact - transform.position);
@@ -792,6 +942,7 @@ namespace ShadowVale.Map01
             _animator = GetComponentInChildren<Animator>();
             _health = GetComponent<Health>();
             _postPosition = transform.position; _postRotation = transform.rotation;
+            _health.Damaged += RecordDamage;
             _lastHealth = _health.Current;
             var controller = FindFirstObjectByType<PlayerController>();
             if (controller != null)
@@ -821,8 +972,9 @@ namespace ShadowVale.Map01
             if (_health == null) _health = GetComponent<Health>();
             if (_animator == null) _animator = GetComponentInChildren<Animator>();
             _body = new NavMeshEnemyBody(transform, _agent, _animator, _health);
+            _brainBody = new Map01ConfinedBody(_body) { Confine = _confineMoves };
             _baseInvestigateArrive = _tuning.InvestigateArriveDistance;
-            _brain = new EnemyBrain(LegacyId, _body, this, _tuning, this);
+            _brain = new EnemyBrain(LegacyId, _brainBody, this, _tuning, this);
             _brain.Memory.PatrolPoints = patrolPoints;
             SyncTuning();
         }
@@ -862,6 +1014,7 @@ namespace ShadowVale.Map01
             // Before the dead check: a hit that killed him outright is still an attack to account for.
             if (_health.Current < _lastHealth) OnHurt();
             _lastHealth = _health.Current;
+            ClearDamageEvidence();
             if (_health.IsDead)
             {
                 _sawPlayer = false;
@@ -882,6 +1035,8 @@ namespace ShadowVale.Map01
             _tuning.DetectionSeconds = stealth
                 ? Mathf.Max(_baseDetectionSeconds, _rescueTuning != null ? _rescueTuning.closeDetectionSeconds : 1.6f)
                 : _baseDetectionSeconds;
+            if (Wary) _tuning.DetectionSeconds *= _mission != null && _mission.Settings.waryDetectionScale > 0f
+                ? _mission.Settings.waryDetectionScale : WaryDetectionScale;
             _tuning.SuspicionCloseGain = stealth ? 1.4f : 3f;
 
             // Calm guards look 10 times a second, staggered; alert ones every frame (PerceptionSchedule).
@@ -938,6 +1093,7 @@ namespace ShadowVale.Map01
             m.AlertUntil += delay; m.EngagedUntil += delay; m.SuppressUntil += delay; m.TakeCoverUntil += delay;
             m.CalmUntil += delay; m.PatrolPauseUntil += delay; _nextShot += delay;
             if (_hearReactionAt > 0) _hearReactionAt += delay;
+            if (_heardShotUntil > _pausedAt) _heardShotUntil += delay;
             if (m.SearchUntil > 0) m.SearchUntil += delay;
             if (_animator != null) _animator.speed = _animatorSpeedBeforeHold;
             _agent.updatePosition = _agentUpdatesPosition;
@@ -948,12 +1104,13 @@ namespace ShadowVale.Map01
 
         /// <summary>
         /// Hurt — by a weapon: the knife takedown is its own action (<see cref="TrySilentTakedown"/>).
-        /// A hit he survives tells him where it came from, and raises the rescue's alarm.
+        /// Mosin damage is evidence of an attack, not evidence that the shooter was seen.
         /// </summary>
         private void OnHurt()
         {
             HurtCount++;
             if (TakenDownSilently || _player == null) return;
+            if (_pendingDamage && _pendingOnlyMosin) { OnMosinHurt(); return; }
             ReportDetection(Map01DetectionCause.Sight, _player.position);
             if (_health.IsDead) // Killed outright — by a gun, say: loud, and nothing left to react.
             {
@@ -963,6 +1120,36 @@ namespace ShadowVale.Map01
             }
             Trigger("Hit");
             _brain.OnHurtByPlayer(_player.position, Time.time);
+        }
+
+        private void OnMosinHurt()
+        {
+            if (_health.IsDead)
+            {
+                EventBus.Publish(new EnemyKilledEvent(LegacyId, "weapon", "sniper", transform.position));
+                return;
+            }
+            Trigger("Hit");
+            _sawPlayer = CanSeePlayer(out _lastDistance);
+            if (_sawPlayer)
+            {
+                ReportDetection(Map01DetectionCause.Sight, _player.position);
+                Brain.OnHurtByPlayer(_player.position, Time.time);
+                return;
+            }
+            MakeWary();
+            // Existing confirmed contact survives, but this hit does not update it to Nam's live position.
+            if (Engaged) return;
+            if (TryGetKnownThreat(out var heard)) { BeginInvestigation(heard); return; }
+            // Unknown source: search locally, optionally reaching an existing nearby cover point.
+            // Keep sentries/hostage overseers in their roles and leave the commander's combat policy alone.
+            var nearby = transform.position;
+            if (!IsBoss && !_overseer && !HoldsPost && CanMove && TryFindCover(Brain.Context, nearby, out var cover))
+            {
+                var path = new NavMeshPath();
+                if (_agent.CalculatePath(cover, path) && path.status == NavMeshPathStatus.PathComplete) nearby = cover;
+            }
+            BeginInvestigation(nearby);
         }
 
         /// <summary>How this guard sees; rebuilt on demand so the boss's longer sight applies at once.
@@ -995,7 +1182,6 @@ namespace ShadowVale.Map01
             // Hùng is in the line of fire while he is being held or walked home: every third
             // round goes his way when he is in reach.
             if (++_shots % 3 == 0 && HostageInReach(out var hostage) && SafeShot(hostage)) { FireAtHostage(hostage, damage * (RifleItemId == Map01M16.Id ? .9f : 1f)); return; }
-            _feedback ??= EnemyFeedback.Attach(gameObject);
             Vector3 aim = _player.position + Vector3.up;
             // Not every round finds him (ShotAccuracy): a miss flies past him, tracer and all.
             var shot = ShotAccuracy.For(transform.position, _agent != null ? _agent.velocity : Vector3.zero, attackRange,
@@ -1004,10 +1190,10 @@ namespace ShadowVale.Map01
             if (_shotRng.NextDouble() >= ShotAccuracy.HitChance(_accuracy, shot))
             {
                 Vector3 chest = transform.position + Vector3.up * 1.3f;
-                _feedback.Fire(ShotAccuracy.MissPoint(chest, aim, _shotRng), null, obstructionMask, out _);
+                FireRound(ShotAccuracy.MissPoint(chest, aim, _shotRng), null, out _);
                 return;
             }
-            if (_feedback.Fire(aim, _player, obstructionMask, out var impact))
+            if (FireRound(aim, _player, out var impact))
                 _playerHealth.TakeBulletDamage(damage * (RifleItemId == Map01M16.Id ? .9f : 1f), impact, gameObject, impact - transform.position);
         }
 
@@ -1018,8 +1204,33 @@ namespace ShadowVale.Map01
             ScheduleNextShot();
             AudibleShots++;
             _animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
+            FireRound(point + Vector3.up, null, out _);
+        }
+
+        private static AudioClip rifleReport;
+        /// <summary>The guards' rifle report: the AK of the extraction film, not Nam's own gunshot.</summary>
+        private static AudioClip RifleReport => rifleReport != null ? rifleReport
+            : rifleReport = Resources.Load<Map01Extraction>("Cutscenes/Map01Extraction")?.rifleAudio;
+        private Light _muzzleFlash;
+        private float _flashUntil;
+
+        /// <summary>One round through the shared feedback (tracer, report heard within 65 m), with his rifle's muzzle flash.</summary>
+        private bool FireRound(Vector3 at, Transform victim, out Vector3 impact)
+        {
             _feedback ??= EnemyFeedback.Attach(gameObject);
-            _feedback.Fire(point + Vector3.up, null, obstructionMask, out _);
+            _feedback.GunshotClip ??= RifleReport;
+            bool reached = _feedback.Fire(at, victim, obstructionMask, out impact);
+            var muzzle = GetComponentInChildren<Map01Rifle>()?.weapon?.Muzzle;
+            if (muzzle != null)
+            {
+                if (_muzzleFlash == null)
+                {
+                    var go = new GameObject("Rifle muzzle flash"); go.transform.SetParent(muzzle, false);
+                    _muzzleFlash = go.AddComponent<Light>(); _muzzleFlash.color = new Color(1f, .7f, .25f); _muzzleFlash.range = 1.5f; _muzzleFlash.intensity = 1.6f;
+                }
+                _muzzleFlash.enabled = true; _flashUntil = Time.time + .045f;
+            }
+            return reached;
         }
 
         // ---- IEnemyTactics: Map 1's rules on top of the shared FSM ------------------------------

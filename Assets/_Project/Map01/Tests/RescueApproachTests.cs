@@ -18,6 +18,7 @@ public sealed class RescueApproachTests:ForestSceneTestBase {
     static Map01Rescue R=>M.GetComponent<Map01Rescue>();
     static void Isolate(){
         typeof(ForestSaveSlots).GetField("storageRoot",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,Path.GetFullPath("Logs/RescueApproach/saves/"+Guid.NewGuid().ToString("N")));
+        M.GetComponent<Map01Quest>().RestoreStoryStage(Map01Quest.RescueStage,RescueOrdered());
         foreach(var g in M.Enemies)g.enabled=false;
     }
     static void At(Vector3 point){var cc=M.player.GetComponent<CharacterController>();cc.enabled=false;M.player.position=point;cc.enabled=true;Physics.SyncTransforms();}
@@ -74,6 +75,10 @@ public sealed class RescueApproachTests:ForestSceneTestBase {
         SetPreviewResolution(960,540);var camera=M.gameCamera.GetComponent<ThirdPersonCamera>();var focus=target.transform.position+Vector3.up;
         var eye=focus+target.transform.right*3+Vector3.up*1.6f-target.transform.forward*3;camera.SetCinematicView(eye,Quaternion.LookRotation(focus-eye),50,1);
         Directory.CreateDirectory("Logs/RescueApproach");yield return WaitGameSeconds(.2f);ScreenCapture.CaptureScreenshot("Logs/RescueApproach/Bush-Ready.png");yield return WaitGameSeconds(.2f);camera.ClearCinematicView();
+        float readyUntil=Time.time+5;
+        while((Map01NamActions.For(M).Busy||!Map01InteractionWarmup.For(M).BushReady)&&Time.time<readyUntil)yield return null;
+        Assert.IsFalse(Map01NamActions.For(M).Busy,"Wait for the knife draw before pressing attack.");
+        Assert.IsTrue(Map01InteractionWarmup.For(M).BushReady);
         Assert.IsTrue(M.ModernCombat.TrySpecialMelee());Assert.IsTrue(bush.Active);Assert.AreSame(target,bush.Victim);
         bush.enabled=false;Assert.IsFalse(M.Cinematic);Assert.IsTrue(target.Alive);
         yield return new ExitPlayMode();

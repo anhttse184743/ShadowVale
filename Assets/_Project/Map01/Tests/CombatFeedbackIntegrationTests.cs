@@ -136,8 +136,10 @@ namespace ShadowVale.Map01.Tests
             guard.FireAtPlayer();
             Assert.Less(mission.ModernHealth.Current, hp);
             Assert.IsTrue(guard.GetComponentsInChildren<ShotTracer>().Any(t => !t.IsFree));
-            var gun = Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None)
-                .First(a => a.clip == mission.player.GetComponent<CombatAudio>().Gunshot.clip && a.isPlaying);
+            // The guards fire their own rifle report (Map 1: the AK of the extraction film), through the shared feedback.
+            var rifle = Resources.Load<Map01Extraction>("Cutscenes/Map01Extraction").rifleAudio;
+            Assert.IsNotNull(rifle);
+            var gun = Object.FindObjectsByType<AudioSource>(FindObjectsSortMode.None).First(a => a.clip == rifle && a.isPlaying);
             Assert.AreEqual(1f, gun.spatialBlend);
             Assert.AreEqual(AudioRolloffMode.Linear, gun.rolloffMode);
             Assert.AreEqual(65f, gun.maxDistance);

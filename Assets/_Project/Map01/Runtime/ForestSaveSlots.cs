@@ -29,6 +29,9 @@ namespace ShadowVale.Map01
                 // Survives EnterPlayMode's domain reload and fixture cleanup during Play exit.
                 var testRoot = UnityEditor.SessionState.GetString(EditorTestRootKey, "");
                 if (!string.IsNullOrEmpty(testRoot)) return testRoot;
+                // Failed tests can clear SessionState before Play Mode has fully stopped.
+                // Automated editor runs must never fall through to the player's real slots.
+                if (Application.isBatchMode) return Path.GetFullPath("Temp/Map01BatchFallbackSaves");
 #endif
                 return Application.persistentDataPath;
             }

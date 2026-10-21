@@ -25,6 +25,7 @@ namespace ShadowVale.Gameplay.Combat
 
         public UnityEvent onDied;
         public UnityEvent onRespawned;
+        public event System.Action<DamageNotice> Damaged;
 
         /// <summary>
         /// Name of the additive/override layer holding the weapon stance. It is muted while dying
@@ -90,18 +91,38 @@ namespace ShadowVale.Gameplay.Combat
         public void TakeBulletDamage(float amount, Vector3 hitPoint, GameObject source, Vector3 direction)
         {
             if (CinematicInvulnerable || IsDead || amount <= 0f) return;
-            TakeDamage(amount, hitPoint, source);
+            ApplyDamage(amount, hitPoint, source, true);
+            BloodImpact.Play(hitPoint, direction);
+        }
+
+        // Deferred gunfire can resolve after a weapon switch; the queued weapon owns the hit.
+        internal void TakeBulletDamageFromWeapon(float amount, Vector3 hitPoint, GameObject source, Vector3 direction, WeaponKind weapon)
+        {
+            if (CinematicInvulnerable || IsDead || amount <= 0f) return;
+            ApplyDamage(amount, hitPoint, source, true, weapon);
             BloodImpact.Play(hitPoint, direction);
         }
 
         public void TakeDamage(float amount, Vector3 hitPoint, GameObject source)
+            => ApplyDamage(amount, hitPoint, source, false);
+
+        private void ApplyDamage(float amount, Vector3 hitPoint, GameObject source, bool bullet, WeaponKind? firedWeapon = null)
         {
             if (CinematicInvulnerable || IsDead || amount <= 0f)
             {
                 return;
             }
 
+            float applied = Mathf.Min(_current, amount);
             _current = Mathf.Max(0f, _current - amount);
+            if (Damaged != null)
+            {
+                var combat = bullet && source != null ? source.GetComponent<PlayerCombat>() : null;
+                var kind = firedWeapon ?? (combat != null ? combat.EquippedKind : WeaponKind.Unarmed);
+                var muzzle = combat != null ? combat.WeaponFor(kind)?.Muzzle : null;
+                var origin = muzzle != null ? muzzle.position : source != null ? source.transform.position : hitPoint;
+                Damaged.Invoke(new DamageNotice(source, hitPoint, origin, applied, bullet, kind));
+            }
             if (!IsDead)
             {
                 return;

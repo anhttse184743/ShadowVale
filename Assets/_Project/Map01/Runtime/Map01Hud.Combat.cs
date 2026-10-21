@@ -32,9 +32,9 @@ namespace ShadowVale.Map01
             string primary = inventory.SlotItem(Map01Inventory.Slot.Primary), pistol = inventory.SlotItem(Map01Inventory.Slot.Pistol);
             if (primary == "rifle_standard") CombatIcon(new Rect(x + 10, y + 10, 146, 118), new Rect(672, 107, 536, 438), kind == WeaponKind.Rifle && !inventory.ThrowableEquipped);
             else if (primary == Map01M16.Id) Map01RifleHud.DrawM16(new Rect(x + 10, y + 10, 146, 118), kind == WeaponKind.Rifle && !inventory.ThrowableEquipped);
-            else if (primary != null) HotbarIcon(new Rect(x + 4, y + 44, 156, 49), primary, kind == WeaponKind.Rifle && !inventory.ThrowableEquipped);
+            else if (primary != null) HotbarIcon(new Rect(x + 4, y + 44, 156, 49), primary, primary=="rifle_mosin"&&kind==WeaponKind.Sniper&&!inventory.ThrowableEquipped);
             CombatLabel(new Rect(x + 46, y + 123, 60, 24), "1", combatCaption);
-            if (pistol != null) HotbarIcon(new Rect(x + 274, y + 8, 70, 52), pistol, false);
+            if (pistol != null) HotbarIcon(new Rect(x + 274, y + 8, 70, 52), pistol, kind == WeaponKind.Pistol);
             CombatLabel(new Rect(x + 238, y + 22, 30, 24), "2", combatCaption);
             // Each gun's condition under its picture (Map01Hud.Gunsmith.cs).
             if (Map01Inventory.HasCondition(primary)) ConditionBar(new Rect(x + 22, y + 148, 122, 5), inventory.FractionOf(Map01Inventory.Gun.InSlot(Map01Inventory.Slot.Primary)));
@@ -74,15 +74,16 @@ namespace ShadowVale.Map01
             // push on or break contact, so it reads first. A reload shows its progress instead —
             // for those seconds the pack total is not what the player needs to know.
             var combat = mission.ModernCombat;
-            bool reloading = kind == WeaponKind.Rifle && combat != null && combat.IsReloading;
-            string ammo = kind != WeaponKind.Rifle ? "—"
-                : combat == null ? inventory.Count(inventory.PrimaryAmmo).ToString()
+            bool gun = kind == WeaponKind.Rifle || kind == WeaponKind.Pistol || kind==WeaponKind.Sniper;
+            bool reloading = gun && combat != null && combat.IsReloading;
+            string ammo = !gun ? "—"
+                : combat == null ? inventory.Count(inventory.HeldAmmoId).ToString()
                 : reloading ? $"{combat.ReloadProgress * 100f:0}%"
-                : $"{combat.RoundsInMagazine}/{inventory.Count(inventory.PrimaryAmmo)}";
+                : $"{combat.RoundsInMagazine}/{inventory.Count(inventory.HeldAmmoId)}";
             CombatLabel(new Rect(x - 20, y + 158, 163, 49), ammo, combatNumber);
-            bool broken = kind == WeaponKind.Rifle && inventory.HeldGunBroken();
+            bool broken = gun && inventory.HeldGunBroken();
             var caption = broken ? combatBroken ??= new GUIStyle(combatCaption) { normal = { textColor = ConditionBroken } } : combatCaption;
-            CombatLabel(new Rect(x + 5, y + 205, 143, 26), kind != WeaponKind.Rifle ? "CẬN CHIẾN" : broken ? "SÚNG HỎNG · SỬA" : reloading ? "ĐANG NẠP ĐẠN" : "BĂNG / DỰ TRỮ", caption);
+            CombatLabel(new Rect(x + 5, y + 205, 143, 26), !gun ? "CẬN CHIẾN" : broken ? "SÚNG HỎNG · SỬA" : reloading ? "ĐANG NẠP ĐẠN" : "BĂNG / DỰ TRỮ", caption);
             CombatLabel(new Rect(x, y + 261, 346, 25), $"Sức bền {mission.Stamina:0}  ·  {(mission.Hidden ? "Ẩn nấp" : mission.Crouched ? "Đi khom" : "Sẵn sàng")}", combatCaption);
         }
 

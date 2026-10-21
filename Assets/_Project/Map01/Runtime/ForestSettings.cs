@@ -16,6 +16,8 @@ namespace ShadowVale.Map01
         public float hungHP;
         /// <summary>How long a guard looks around where he heard something before heading back.</summary>
         public float searchSeconds;
+        /// <summary>Share of normal detection time after noticing a body. Missing/invalid values use the existing 0.75 default.</summary>
+        public float waryDetectionScale = .75f;
         /// <summary>How long an engaged guard keeps firing at the spot he last saw Nam before hunting him.</summary>
         public float suppressSeconds;
         public int startingStones;
@@ -51,6 +53,9 @@ namespace ShadowVale.Map01
     {
         public string id;
         public float damage, range, noise_radius, fire_rate;
+        public bool suppressed;
+        public int magazine_size;
+        public float reload_seconds;
         /// <summary>Full condition in durability points, and what one shot takes off it (database weapons.max_durability,
         /// durability_per_use).</summary>
         public float durability_max, durability_per_shot;

@@ -6,6 +6,7 @@ namespace ShadowVale.Map01
     public sealed class Map02ObjectiveObject : MonoBehaviour
     {
         public string saveId;
+        public string chapterId;
         public Map02Work work;
         public string prompt;
         [Min(.5f)] public float radius = 2.4f;

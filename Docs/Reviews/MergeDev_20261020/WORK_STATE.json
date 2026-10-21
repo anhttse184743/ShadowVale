@@ -1,0 +1,74 @@
+{
+  "task": "Validate newest dev before merging into thinh",
+  "thinh": "e44dab1e4be14f14d3524dc731486508b8677242",
+  "dev": "a1e2b9a9b0e71b42316fd9ecf9174c279c6304d1",
+  "mainModifiedByIntegration": true,
+  "backup": "Temp/MergeDev_20261020_Before",
+  "devWorktree": "C:/Users/Admin/.codex/worktrees/dev-preflight-20261020/ShadowVale",
+  "candidateWorktree": "C:/Users/Admin/.codex/worktrees/merge-dev-thinh-20261020/ShadowVale",
+  "approved": [
+    "dev commander AI with C3 boundaries and current roster",
+    "dev scene changes except approved C3 buildings",
+    "new dev combat balance, preserving existing C3 headcount/rally count 3"
+  ],
+  "tests": {
+    "devGameplay": {
+      "passed": 68,
+      "failed": 3,
+      "findings": [
+        "2 obsolete automatic-opening test expectations; keep approved E conversation",
+        "commander left palm 0.111m from foregrip; measured short-arm reach, correction under test"
+      ]
+    },
+    "devPure": {
+      "passed": 122,
+      "failed": 0
+    },
+    "candidatePure": {
+      "passed": 83,
+      "failed": 0
+    },
+    "candidateGameplay": {
+      "passed": 81,
+      "failed": 18,
+      "log": "candidate-gameplay.xml"
+    },
+    "candidateGameplayR2": {
+      "passed": 33,
+      "failed": 3
+    },
+    "devManualOpening": {
+      "passed": 2,
+      "failed": 0
+    },
+    "devExtractionFixedR3": {
+      "passed": 3,
+      "failed": 0
+    },
+    "candidateFinalFixes": {
+      "passed": 14,
+      "failed": 0
+    }
+  },
+  "pending": [],
+  "rawBranchConflictsResolved": 9,
+  "localOverlayConflictFilesResolved": 9,
+  "C3SceneBlocksUnchanged": 2583,
+  "candidateCompileRepair": "Map01ConfinedBody forwards new IEnemyBody.Velocity and FacesManually",
+  "gripFixWorktree": "dev-preflight-20261020 only; apply to integration worktree after running batch ends",
+  "autosaveCleanup": "all three observed slot files restored/unchanged and hash-match original snapshot",
+  "queuedIdentity": "regression confirmed Rifle instead of Sniper, fixed with explicit fired-weapon damage context",
+  "mergeTree": "2706f6c5d264c7fc5e9d51402d83a9b02e5c86a5",
+  "candidateUniqueFinal": {
+    "passed": 200,
+    "failed": 0
+  },
+  "mainSmoke": {
+    "passed": 5,
+    "failed": 0
+  },
+  "integrationComplete": true,
+  "commitApprovedByUser": true,
+  "gitCommit": "Authorized merge commit; consult repository history for its final SHA",
+  "pushRequested": false
+}

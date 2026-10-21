@@ -11,20 +11,24 @@ using ShadowVale.Gameplay.Enemies;
 using ShadowVale.Gameplay.Enemies.Boss;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
 
 namespace ShadowVale.Map01.Tests
 {
     /// <summary>
-    /// M8 in Map 1: the commander comes with his boss profile from Map01Content.json, relocates over the
-    /// tactical graph, his grenade hurts Nam behind cover, and his call brings three men.
+    /// M8 in Map 1, on the commander-led story: the C3 commander is at his headquarters from the start with his boss
+    /// profile from Map01Content.json; he relocates over the tactical graph between the command post's own cover
+    /// (never out of the fence), his grenade hurts Nam behind cover, and his call brings the post's men — the ones not
+    /// yet fighting, then the barracks woken by the kẻng — never guards of the other points, nobody cloned.
     /// </summary>
     public sealed class BossIntegrationTests : ForestSceneTestBase
     {
         [UnityTest]
-        public IEnumerator TheCommanderRelocatesThrowsGrenadesAndCallsReinforcements()
+        public IEnumerator TheCommanderFightsFromC3CoverThrowsGrenadesAndCallsThePost()
         {
+            Map01OpeningCutscene.CancelPending();
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
             yield return InPlayMode();
@@ -37,15 +41,16 @@ namespace ShadowVale.Map01.Tests
             yield return null;
             var mission = Object.FindFirstObjectByType<Map01Mission>();
             var quest = mission.GetComponent<Map01Quest>();
-            // As in the real quest line: every camp has fallen before the commander shows up.
-            // The commander already stands at point 3 from the start of the map (Map01Quest.EnsureCommander): spare him.
-            foreach (var guard in mission.Enemies.Where(e => !e.IsBoss)) guard.GetComponent<Health>().TakeDamage(9999, guard.transform.position, null);
-            yield return null;
-            quest.RestoreStage(Map01Quest.BossStage); // Spawns the commander, as a checkpoint at this stage does.
-            var boss = mission.Enemies.Single(e => e.IsBoss);
+            var c3 = mission.GetComponent<Map01C3Mission>();
+            mission.GetComponent<Map01Rescue>().MarkIntroSeen();
+            Assert.IsNotNull(c3.Data, "The C3 layout is loaded.");
+            var boss = quest.CommanderEnemy;
+            Assert.IsNotNull(boss, "The commander is at C3 from map start, not spawned at a stage change.");
+            Assert.AreSame(boss, mission.Enemies.Single(e => e.IsBoss));
+            Assert.IsTrue(c3.InsideFence(boss.transform.position), "He starts inside his command post.");
             var behaviour = boss.GetComponent<BossBehaviour>();
             Assert.IsNotNull(behaviour, "The commander runs the shared boss behaviour.");
-            Assert.AreEqual(4, behaviour.Profile.ReinforceCount, "Profile read from Map01Content.json (boss_commander.boss).");
+            Assert.AreEqual(3, behaviour.Profile.ReinforceCount, "Profile read from Map01Content.json (boss_commander.boss).");
             Assert.AreEqual(45f, behaviour.Profile.GrenadeDamage, 1e-3f);
             Assert.AreEqual(8f, behaviour.Profile.GrenadeCooldownSeconds, 1e-3f);
             Assert.AreEqual(.5f, behaviour.Profile.ReinforceHpThreshold, 1e-6);
@@ -66,6 +71,15 @@ namespace ShadowVale.Map01.Tests
             Assert.AreEqual(700f, archetypeHp, 1e-3f, "boss_commander.max_hp.");
             Assert.AreEqual(archetypeHp, boss.GetComponent<Health>().Max, 1e-3f,
                 "Health from boss_commander.max_hp: at a guard's ×3 he died about a second after calling for help.");
+            Assert.IsInstanceOf<Map01C3Reinforcements>(behaviour.Reinforcements, "His call is answered by the command post.");
+            Assert.IsFalse(c3.AutoCallAtHalfHealth, "BossBehaviour makes the half-health call, not the post a second time.");
+
+            // Nam just outside the south fence.
+            var controller = mission.player.GetComponent<CharacterController>();
+            controller.enabled = false; mission.player.position = c3.At(68f, 36f) + Vector3.up * .1f; controller.enabled = true;
+            Physics.SyncTransforms();
+            var post = PostMen(c3);
+            var elsewhere = mission.Enemies.Where(e => e != null && e.Alive && !e.IsBoss && !post.Contains(e)).ToList();
 
             var relocated = new List<BossRelocatedEvent>();
             var blasts = new List<GrenadeExplodedEvent>();
@@ -79,9 +93,10 @@ namespace ShadowVale.Map01.Tests
                 boss.EngageFor(60f);
                 boss.Brain.Memory.LastKnownPlayerPosition = mission.player.position;
 
-                Assert.IsTrue(behaviour.Relocate(mission.player.position, "test"), "A cover node within reach of his camp.");
+                Assert.IsTrue(behaviour.Relocate(mission.player.position, "test"), "A cover node of the command post within reach.");
                 var m = boss.Brain.Memory;
                 Assert.AreEqual("relocate", m.AssignedRole);
+                Assert.IsTrue(c3.InsideFence(m.AssignedPosition), $"His cover {m.AssignedPosition} is inside the C3 fence.");
                 // Measured flat, as BossRelocation picks it: Map 1's C3 stands on terraces.
                 float moved = Vector3.ProjectOnPlane(m.AssignedPosition - boss.transform.position, Vector3.up).magnitude;
                 Assert.That(moved, Is.InRange(behaviour.Profile.RelocateMinDistance - .5f, behaviour.Profile.RelocateMaxDistance + .5f));
@@ -90,6 +105,13 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual(EnemyStateId.TakeCover, boss.State, "He runs to the new spot — the shared TakeCover state, no seventh state." +
                     $" (stopped={mission.Stopped}, cinematic={mission.Cinematic}, paused={mission.Paused}, enabled={boss.enabled}, engaged={boss.Engaged})");
                 Assert.AreEqual(1, relocated.Count);
+
+                // Whatever the FSM asks of him (closing in on Nam with no cover left), he walks no further than the fence.
+                var agent = boss.GetComponent<NavMeshAgent>();
+                boss.Brain.Context.Body.MoveTo(c3.At(68f, 10f));
+                yield return null;
+                Assert.IsTrue(c3.InsideFence(agent.destination), $"Sent after Nam 30 m out, he stops at the fence ({agent.destination}).");
+                boss.Brain.Assign(m.AssignedPosition, m.AssignedNode, "relocate");
 
                 var nam = mission.player.GetComponent<Health>();
                 Assert.AreEqual(7.5f, behaviour.Profile.GrenadeRadius, .001f, "Map 1's commander uses the wider blast profile.");
@@ -101,23 +123,23 @@ namespace ShadowVale.Map01.Tests
                 Assert.Less(nam.Current, before);
                 Assert.AreEqual(1, blasts.Count);
 
+                int idleBefore = post.Count(g => g.Alive && g.gameObject.activeInHierarchy && !g.Engaged);
                 int sent = behaviour.CallReinforcements(mission.player.position, Time.time);
-                Assert.AreEqual(4, sent, "Nobody idle is left near him: four fresh men.");
-                Assert.AreEqual(4, calls.Single().Arrived);
-                StringAssert.Contains("Tiếp viện", mission.Dialogue, "The call is heard.");
-                foreach (var id in calls[0].Agents.Split('+'))
+                Assert.AreEqual(Mathf.Min(3, idleBefore), sent, "The post's men not yet fighting answer first, three at most.");
+                Assert.AreEqual(sent, calls.Single().Arrived);
+                foreach (var id in calls[0].Agents.Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     var guard = mission.Enemies.Single(e => e.LegacyId == id);
+                    Assert.IsTrue(post.Contains(guard), id + " belongs to the command post.");
                     Assert.IsTrue(guard.Alive, id);
                     Assert.IsTrue(guard.Engaged, id + " is in the fight.");
                     Assert.IsFalse(guard.IsBoss);
-                    StringAssert.StartsWith("Viện binh", guard.name);
-                    Assert.AreEqual("reinforce", guard.SquadId);
-                    Assert.AreEqual(NearbyAgentsReinforcements.RallyRole, guard.Brain.Memory.AssignedRole, id + " rallies to the commander first.");
-                    Assert.IsNotNull(guard.GetComponent<EnemyRegen>(), id + " recovers if left alone a while.");
-                    Assert.LessOrEqual(Vector3.Distance(guard.transform.position, boss.transform.position), Map01Reinforcements.SpawnDistance + 7f,
-                        "They arrive near the commander, not somewhere across the map.");
                 }
+                Assert.IsTrue(c3.Current.called, "The post's own call is made with his.");
+                Assert.IsTrue(c3.Current.kiengRung, "The kẻng is struck: the barracks wake.");
+                Assert.IsTrue(c3.Sleepers.All(s => s.gameObject.activeSelf), "All three sleepers come out.");
+                Assert.IsFalse(mission.Enemies.Any(e => e.name.StartsWith("Viện binh", StringComparison.Ordinal)), "Nobody is cloned out of thin air.");
+                Assert.IsTrue(elsewhere.All(e => !e.Engaged), "The guards of the other points do not hear a shout at C3.");
 
                 // While he fights, the squad coordinator plans his men as a pincer (Boss.Command)...
                 var orders = new List<BossOrderEvent>();
@@ -137,7 +159,7 @@ namespace ShadowVale.Map01.Tests
                     // Once they have rallied to him (or given up on it), they are planned with the rest.
                     for (float until = Time.realtimeSinceStartup + 15f; !orders.Any(o => o.Order == "pincer") && Time.realtimeSinceStartup < until;)
                         yield return null;
-                    Assert.IsTrue(orders.Any(o => o.Order == "pincer" && o.BossId == bossId), "The reinforcements are planned under his command.");
+                    Assert.IsTrue(orders.Any(o => o.Order == "pincer" && o.BossId == bossId), "The post's men are planned under his command.");
 
                     // ...and when he falls, they lose heart.
                     boss.GetComponent<Health>().TakeDamage(999999, boss.transform.position, null);
@@ -154,6 +176,14 @@ namespace ShadowVale.Map01.Tests
             {
                 EventBus.Unsubscribe(onRelocate); EventBus.Unsubscribe(onBlast); EventBus.Unsubscribe(onCall);
             }
+        }
+
+        /// <summary>Everyone of the command post but the commander: the posts, the barracks, the runners.</summary>
+        private static HashSet<Map01EnemyController> PostMen(Map01C3Mission c3)
+        {
+            var men = new HashSet<Map01EnemyController>(c3.Data.roles.Select(r => c3.Guard(r.role)).Where(g => g != null));
+            men.UnionWith(c3.Sleepers); men.UnionWith(c3.RunnerGuards);
+            return men;
         }
     }
 }

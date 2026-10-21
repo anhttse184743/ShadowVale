@@ -5,11 +5,13 @@ namespace ShadowVale.Map01
     /// <summary>Changes only the rifle prop and stats; existing actor poses and hand calibration stay intact.</summary>
     public sealed class Map01RifleVisual : MonoBehaviour
     {
-        public string ItemId { get; private set; } = "rifle_standard";
-        Renderer[] original;
-        GameObject model;
-        float akDamage, akCooldown;
-        Transform akMuzzle, m16Muzzle;
+        // Runtime guard templates can already carry an M16 when Instantiate copies them.
+        // Copy the original AK baseline and prop references with the component as well.
+        [field: SerializeField] public string ItemId { get; private set; } = "rifle_standard";
+        [SerializeField] Renderer[] original;
+        [SerializeField] GameObject model;
+        [SerializeField] float akDamage, akCooldown;
+        [SerializeField] Transform akMuzzle, m16Muzzle;
         public static void Apply(Weapon weapon, string id)
         {
             if (weapon == null) return;

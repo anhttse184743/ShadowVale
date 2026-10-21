@@ -15,5 +15,5 @@ MonoBehaviour:
   SolverBaseUrl: http://127.0.0.1:8001
   SidecarRelativePath: Solver/svl-solver.exe
   AutoLaunchSidecar: 1
-  SidecarStartupTimeoutSeconds: 5
+  SidecarStartupTimeoutSeconds: 30
   FallbackLatencyBudgetMs: 120

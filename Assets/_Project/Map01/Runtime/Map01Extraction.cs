@@ -281,7 +281,29 @@ namespace ShadowVale.Map01
         {
             var prop=Map01Rifle.Attach(actor);
             if(prop!=null)prop.weapon.gameObject.SetActive(true);
-            if(prop!=null && !seatedRifles.Any(p=>p.actor==actor)) seatedRifles.Add((actor,prop.weapon));
+            if(prop!=null && !seatedRifles.Any(p=>p.actor==actor)) {
+                // The replacement commander has different wrist/hand proportions. Put the visible
+                // pistol grip into his palm before solving the supporting arm, instead of using an
+                // offset authored for another character's wrist.
+                var hand=actor.GetBoneTransform(HumanBodyBones.RightHand);
+                var tip=hand.Cast<Transform>().FirstOrDefault(t=>t.name.EndsWith("_end",StringComparison.OrdinalIgnoreCase));
+                var handle=prop.weapon.GetComponentsInChildren<Renderer>().FirstOrDefault(t=>t.name.StartsWith("bl_grip_low"));
+                if(tip!=null && handle!=null) {
+                    Vector3 grip=prop.weapon.transform.InverseTransformPoint(handle.bounds.center);
+                    prop.weapon.transform.localPosition=hand.InverseTransformPoint(Vector3.Lerp(hand.position,tip.position,.45f))
+                        -prop.weapon.transform.localRotation*Vector3.Scale(grip,prop.weapon.transform.localScale);
+                }
+                var foregrip=prop.weapon.GetComponentsInChildren<Renderer>().FirstOrDefault(t=>t.name.StartsWith("r_woodLower_low"));
+                var magazine=prop.weapon.GetComponentsInChildren<Renderer>().FirstOrDefault(t=>t.name.StartsWith("bm_magazine_low"));
+                if(foregrip!=null && handle!=null) {
+                    // This imported rifle's local +Z is not its barrel axis: the former
+                    // (0,0,.25) marker sat below the magazine, not on the wooden foregrip.
+                    Vector3 barrel=(prop.weapon.Muzzle.position-handle.bounds.center).normalized;
+                    Vector3 down=magazine!=null?Vector3.ProjectOnPlane(magazine.bounds.center-handle.bounds.center,barrel).normalized:-actor.transform.up;
+                    prop.support.position=foregrip.bounds.center+down*.02f;
+                }
+                seatedRifles.Add((actor,prop.weapon));
+            }
         }
         private void BuildOar()
         {
@@ -624,7 +646,21 @@ namespace ShadowVale.Map01
             Vector3 localFingers=tip!=null?hand.InverseTransformDirection(tip.position-hand.position).normalized:Vector3.right;
             // Fingers wrap across the barrel; the forearm supplies a stable roll reference.
             Quaternion wrist=Quaternion.FromToRotation(neutral*localFingers,gun.weapon.transform.up)*neutral;
-            Vector3 target=gun.support.position-wrist*Vector3.Scale(localPalm,hand.lossyScale);
+            var upper=actor.GetBoneTransform(HumanBodyBones.LeftUpperArm);
+            float reach=(Vector3.Distance(upper.position,lower.position)+Vector3.Distance(lower.position,hand.position))*.96f;
+            Vector3 palmOffset=wrist*Vector3.Scale(localPalm,hand.lossyScale);
+            // The new commander has shorter arms than Hung. Move the rifle through its holding hand,
+            // rather than stretching the support arm or leaving its palm floating off the foregrip.
+            for(int i=0;i<4 && weight>0;i++) {
+                Vector3 desired=gun.support.position-palmOffset;
+                Vector3 delta=desired-upper.position;
+                if(delta.magnitude<=reach)break;
+                Vector3 correction=upper.position+delta.normalized*reach-desired;
+                var holdingHand=actor.GetBoneTransform(HumanBodyBones.RightHand);
+                SolveCoverArm(actor,HumanBodyBones.RightUpperArm,HumanBodyBones.RightLowerArm,HumanBodyBones.RightHand,
+                    holdingHand.position+correction,holdingHand.rotation,1,weight);
+            }
+            Vector3 target=gun.support.position-palmOffset;
             SolveCoverArm(actor,HumanBodyBones.LeftUpperArm,HumanBodyBones.LeftLowerArm,HumanBodyBones.LeftHand,target,wrist,-1,weight);
         }
         public void HoldSeatedRifle(Animator actor,float lowering)

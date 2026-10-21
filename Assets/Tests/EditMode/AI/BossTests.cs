@@ -345,6 +345,26 @@ namespace ShadowVale.Tests.EditMode.AI
             Assert.IsFalse(BossRelocation.Shielded(new Vector3(-8, 0, 0), men, player));
         }
 
+        [Test]
+        public void NewFallbackAndShieldingNeverOverrideTheMapBoundary()
+        {
+            var graph = new World();
+            int here = graph.Add(Vector3.zero);
+            graph.Add(new Vector3(0, 0, -8));
+            int inside = graph.Add(new Vector3(8, 0, 2));
+            var player = new Vector3(0, 0, 20);
+            foreach (bool fallingBack in new[] { false, true })
+            {
+                Assert.IsTrue(BossRelocation.TryPick(graph, Profile, Vector3.zero, player, here, null,
+                    out int chosen, out var point, men: new Vector3(0, 0, 8), fallingBack: fallingBack,
+                    allowed: p => p.z >= 0));
+                Assert.AreEqual(inside, chosen);
+                Assert.GreaterOrEqual(point.z, 0);
+            }
+            Assert.IsFalse(BossRelocation.TryPick(graph, Profile, Vector3.zero, player, here, null,
+                out _, out _, fallingBack: true, allowed: p => false));
+        }
+
         // ---- Commanding ----------------------------------------------------------------------------
 
         [Test]

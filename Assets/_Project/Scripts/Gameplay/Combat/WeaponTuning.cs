@@ -21,6 +21,9 @@ namespace ShadowVale.Gameplay.Combat
         [Tooltip("Seconds for any reload, whether the magazine is empty or partly loaded.")]
         [Min(0.01f)] public float reloadSeconds;
 
+        /// <summary>Optional authored insertion times, as fractions of a full reload. Null uses a detachable magazine.</summary>
+        public float[] individualReloadCommits;
+
         /// <summary>
         /// A 30-round rifle magazine with one shared reload duration.
         /// </summary>
@@ -43,6 +46,6 @@ namespace ShadowVale.Gameplay.Combat
             => magazineCapacity <= 0 || reloadSeconds <= 0f ? Rifle : this;
 
         public Magazine Create()
-            => new(magazineCapacity, reloadSeconds);
+            => new(magazineCapacity, reloadSeconds, individualReloadCommits);
     }
 }

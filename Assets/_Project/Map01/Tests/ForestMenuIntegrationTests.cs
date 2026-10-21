@@ -9,11 +9,29 @@ using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using UnityEditor.SceneManagement;
+using UnityEditor;
 
 namespace ShadowVale.Map01.Tests
 {
     public sealed class ForestMenuIntegrationTests : ForestSceneTestBase
     {
+        string previousSaveRoot;
+        static Keyboard escapeKeyboard;
+        static bool escapeHeld;
+        [SetUp] public void IsolateSaves() {
+            previousSaveRoot=SessionState.GetString(ForestSaveSlots.EditorTestRootKey, "");
+            SessionState.SetString(ForestSaveSlots.EditorTestRootKey,Path.GetFullPath("Docs/Reviews/CommanderOpening_20261018/TestSaves/"+Guid.NewGuid().ToString("N")));
+        }
+        [TearDown] public void RestoreSaves() {
+            Time.timeScale=1;
+            if(string.IsNullOrEmpty(previousSaveRoot))SessionState.EraseString(ForestSaveSlots.EditorTestRootKey);
+            else SessionState.SetString(ForestSaveSlots.EditorTestRootKey,previousSaveRoot);
+        }
+        static void PumpEscape() {
+            escapeKeyboard.MakeCurrent();
+            InputSystem.QueueStateEvent(escapeKeyboard,escapeHeld?new KeyboardState(Key.Escape):new KeyboardState());
+        }
+
         private const BindingFlags Private = BindingFlags.NonPublic | BindingFlags.Instance;
         private static void Call(ForestMenu menu, string method, params object[] args) => typeof(ForestMenu).GetMethod(method, Private).Invoke(menu, args);
 
@@ -24,68 +42,52 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(UnityEditor.EditorApplication.ExecuteMenuItem("ShadowVale/Menu/Luôn bắt đầu từ menu chính"));
             Assert.AreEqual("Assets/_Project/Scenes/00_Boot.unity", UnityEditor.AssetDatabase.GetAssetPath(EditorSceneManager.playModeStartScene));
             yield return new EnterPlayMode();
-            double deadline = Time.realtimeSinceStartupAsDouble + 10;
-            while (SceneManager.GetActiveScene().name != "01_MainMenu" && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
-            Assert.AreEqual("01_MainMenu", SceneManager.GetActiveScene().name);
-            Assert.IsTrue(ForestMenu.Visible);
-            Assert.IsNull(UnityEngine.Object.FindFirstObjectByType<Map01Mission>(), "No gameplay should run behind the title on startup.");
-            var menu = UnityEngine.Object.FindFirstObjectByType<ForestMenu>();
-            Call(menu, "MainAction", 1); // New game opens the tutorial choice.
-                Call(menu, "MainAction", 1); // Skip tutorial to exercise Map 1's opening below.
-            yield return null;
-            Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name);
-            Assert.IsTrue(Map01OpeningCutscene.Active, "New game starts a real-time briefing inside Map 1.");
-            Assert.IsNull(UnityEngine.Object.FindFirstObjectByType<UnityEngine.Video.VideoPlayer>());
-            var opening = UnityEngine.Object.FindFirstObjectByType<Map01OpeningCutscene>();
-            Assert.IsFalse(opening.GetComponentInParent<Map01Mission>().CameraInputEnabled);
-            opening.Skip();
-            yield return WaitGameSeconds(1.3f);
-            Assert.IsFalse(Map01OpeningCutscene.Active);
-            yield return null;
-            Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name);
-            Assert.IsFalse(ForestMenu.Visible);
-            Assert.IsFalse((bool)typeof(ForestMenu).GetField("loading", Private).GetValue(menu), "Arriving in the map clears the loading screen.");
-            Assert.IsNotNull(UnityEngine.Object.FindFirstObjectByType<Map01Mission>());
+            yield return CheckMenuNewGame();
             yield return new ExitPlayMode();
             Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name, "Stopping Play must restore the scene being edited.");
         }
-
+        static IEnumerator CheckMenuNewGame() {
+            double deadline=Time.realtimeSinceStartupAsDouble+20;
+            while(SceneManager.GetActiveScene().name!="01_MainMenu"&&Time.realtimeSinceStartupAsDouble<deadline)yield return null;
+            Assert.AreEqual("01_MainMenu",SceneManager.GetActiveScene().name);Assert.IsTrue(ForestMenu.Visible);
+            Assert.IsNull(UnityEngine.Object.FindFirstObjectByType<Map01Mission>(),"No gameplay runs behind the title.");
+            var menu=UnityEngine.Object.FindFirstObjectByType<ForestMenu>();
+            Call(menu,"MainAction",1);Call(menu,"MainAction",1); // New Game, then skip the optional tutorial.
+            yield return WaitForMap01Ready();
+            Assert.AreEqual("Map 1",SceneManager.GetActiveScene().name);
+            AssertWaitingForCommander(UnityEngine.Object.FindFirstObjectByType<Map01Mission>());
+            Assert.IsNull(UnityEngine.Object.FindFirstObjectByType<UnityEngine.Video.VideoPlayer>());
+            Assert.IsFalse(ForestMenu.Visible);
+            Assert.IsFalse((bool)typeof(ForestMenu).GetField("loading",Private).GetValue(menu));
+        }
         [UnityTest]
-        public IEnumerator SkippingTheIntroWithEscLandsInTheMapNotAMenu()
-        {
+        public IEnumerator EscClosesCommanderConversationWithoutAcceptingAndStillPausesGameplay() {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/01_MainMenu.unity");
             yield return new EnterPlayMode();
-            var routing = RouteInputToGame();
-            var keyboard = InputSystem.AddDevice<Keyboard>();
-            try
-            {
-                SceneManager.LoadScene("01_MainMenu");
-                yield return null; yield return null;
-                yield return new WaitForSecondsRealtime(.6f); // Past the title's own key grace.
-                var menu = UnityEngine.Object.FindFirstObjectByType<ForestMenu>();
-                Call(menu, "MainAction", 1); // New game opens the tutorial choice.
-                Call(menu, "MainAction", 1); // Skip tutorial to exercise Map 1's opening below.
-                yield return null;
-                Assert.IsTrue(Map01OpeningCutscene.Active);
-                Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name);
-                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.Escape));
-                yield return WaitGameSeconds(1.1f);
-                InputSystem.QueueStateEvent(keyboard, new KeyboardState());
-                yield return WaitGameSeconds(1.3f);
-                Assert.IsFalse(Map01OpeningCutscene.Active);
-                var mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
-                Assert.IsFalse(ForestMenu.Visible, "Skipping the intro must land in the map, not a menu.");
-                Assert.IsFalse(mission.Paused);
-
-                // Once settled in, Esc still pauses as normal.
-                yield return new WaitForSecondsRealtime(.6f);
-                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.Escape));
-                yield return null; yield return null;
-                InputSystem.QueueStateEvent(keyboard, new KeyboardState());
-                Assert.IsTrue(ForestMenu.Visible, "Esc must still open the pause menu during play.");
-                Assert.IsTrue(mission.Paused);
-            }
-            finally { InputSystem.RemoveDevice(keyboard); RestoreInputRouting(routing); Time.timeScale = 1; }
+            yield return CheckMenuNewGame();
+            yield return CheckConversationEscape();
             yield return new ExitPlayMode();
+        }
+        static IEnumerator CheckConversationEscape() {
+            var mission=UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
+            var story=mission.GetComponent<Map01Story>();var dialogue=mission.GetComponent<Map01StoryDialogue>();
+            var routing=RouteInputToGame();escapeKeyboard=InputSystem.AddDevice<Keyboard>();escapeHeld=false;
+            InputSystem.onBeforeUpdate+=PumpEscape;
+            try {
+                yield return WaitGameSeconds(1.2f);
+                PlaceNam(mission,story.Commander.position+story.Commander.forward*1.8f);
+                Assert.IsTrue(story.TryInteract());Assert.IsTrue(dialogue.IsPlaying);
+                escapeHeld=true;yield return WaitGameSeconds(1.2f);
+                Assert.IsFalse(dialogue.IsPlaying);Assert.IsFalse(mission.GetComponent<Map01Quest>().RescueOrderAccepted);
+                escapeHeld=false;yield return WaitGameSeconds(1.3f);
+                AssertWaitingForCommander(mission);Assert.IsFalse(ForestMenu.Visible||mission.Paused,"Closing the conversation returns to gameplay.");
+                escapeHeld=true;yield return new WaitForSecondsRealtime(.3f);
+                Assert.IsTrue(ForestMenu.Visible&&mission.Paused,"A later Esc press still opens the pause menu.");
+                escapeHeld=false;yield return null;
+            } finally {
+                InputSystem.onBeforeUpdate-=PumpEscape;InputSystem.RemoveDevice(escapeKeyboard);escapeKeyboard=null;
+                RestoreInputRouting(routing);Time.timeScale=1;
+            }
         }
 
         [UnityTest]
@@ -117,7 +119,8 @@ namespace ShadowVale.Map01.Tests
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/00_Boot.unity");
             yield return new EnterPlayMode();
-            yield return new WaitForSeconds(.3f);
+            float deadline=Time.realtimeSinceStartup+15;
+            while(SceneManager.GetActiveScene().name!="01_MainMenu"&&Time.realtimeSinceStartup<deadline)yield return null;
             Assert.AreEqual("01_MainMenu", SceneManager.GetActiveScene().name);
             Assert.IsTrue(ForestMenu.Visible);
             Assert.AreEqual(1, UnityEngine.Object.FindObjectsByType<ForestMenu>(FindObjectsSortMode.None).Length);
@@ -129,7 +132,7 @@ namespace ShadowVale.Map01.Tests
         {
             yield return new EnterPlayMode();
             // Isolate integration saves from the player's actual persistent data.
-            string root = Path.Combine(Application.temporaryCachePath, "menu-test-" + Guid.NewGuid().ToString("N"));
+            string root = Path.GetFullPath("Docs/Reviews/CommanderOpening_20261018/TestSaves/Menu/" + Guid.NewGuid().ToString("N"));
             var rootField = typeof(ForestSaveSlots).GetField("storageRoot", BindingFlags.NonPublic | BindingFlags.Static);
             rootField.SetValue(null, root);
             try {
@@ -152,12 +155,11 @@ namespace ShadowVale.Map01.Tests
                 ScreenCapture.CaptureScreenshot("Logs/MenuPreview/main.png");
                 for (int i = 0; i < 10; i++) yield return null;
                 Call(menu, "MainAction", 1); // New game opens the tutorial choice.
-                Call(menu, "MainAction", 1); // Skip tutorial to exercise Map 1's opening below.
+                Call(menu, "MainAction", 1); // Skip tutorial to enter Map 1 and wait for the commander.
                 yield return null;
-                UnityEngine.Object.FindFirstObjectByType<Map01OpeningCutscene>().Skip();
-                yield return WaitGameSeconds(1.3f);
-                yield return null;
-                yield return new WaitForSeconds(1);
+                yield return WaitForMap01Ready();
+                AssertWaitingForCommander(UnityEngine.Object.FindFirstObjectByType<Map01Mission>());
+                yield return WaitGameSeconds(.3f);
                 Assert.AreEqual("Map 1", SceneManager.GetActiveScene().name);
                 Assert.IsFalse(ForestMenu.Visible);
                 var mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
@@ -203,6 +205,7 @@ namespace ShadowVale.Map01.Tests
                 while (pending.GetValue(null) != null && Time.realtimeSinceStartupAsDouble < deadline) yield return null;
                 Assert.IsNull(pending.GetValue(null), "Checkpoint restore did not complete.");
                 mission = UnityEngine.Object.FindFirstObjectByType<Map01Mission>();
+                AssertWaitingForCommander(mission);
                 Assert.Less(Vector3.Distance(position, mission.player.position), .2f);
                 Assert.GreaterOrEqual(mission.PlaySeconds, entry.playSeconds);
                 Assert.AreEqual(1, Time.timeScale);
@@ -211,7 +214,7 @@ namespace ShadowVale.Map01.Tests
             } finally {
                 rootField.SetValue(null, null);
                 Time.timeScale = 1;
-                if (Directory.Exists(root)) Directory.Delete(root, true);
+                // Keep isolated test saves as evidence; never touch the player's persistent slots.
             }
             yield return new ExitPlayMode();
         }

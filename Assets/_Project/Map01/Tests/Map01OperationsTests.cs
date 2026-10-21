@@ -181,9 +181,10 @@ namespace ShadowVale.Map01.Tests
             yield return WaitGameSeconds(.6f);var route=new UnityEngine.AI.NavMeshPath();
             Assert.IsTrue(UnityEngine.AI.NavMesh.CalculatePath(M.player.position,s.Layout.chestApproach.position,UnityEngine.AI.NavMesh.AllAreas,route));Assert.AreEqual(UnityEngine.AI.NavMeshPathStatus.PathComplete,route.status);
             Assert.Less(Vector3.Distance(route.corners.Last(),s.Layout.chestApproach.position),.15f,"The open warehouse must have a real walkable landing at the chest.");
-            var aimRouting=RouteInputToGame();using var heldAim=new HeldAimMouse();var aimMouse=heldAim.Device;InputSystem.QueueStateEvent(aimMouse,new MouseState().WithButton(MouseButton.Right));InputSystem.Update();yield return null;
-            Assert.IsNotNull(Keyboard.current,"The gameplay interaction loop needs a keyboard to release the UI input gate.");
-            Assert.IsTrue(aimMouse.rightButton.isPressed,$"Held mouse fixture: value={aimMouse.rightButton.ReadValue()}, enabled={aimMouse.enabled}, current={Mouse.current?.name}");Assert.AreEqual(aimMouse,Mouse.current);
+            // Toggle aim is input-tested in AimToggleIntegrationTests. This flow tests that
+            // opening the puzzle cancels the already active mode, independent of editor mouse resets.
+            typeof(PlayerCombat).GetMethod("SetAiming",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(M.ModernCombat,new object[]{true});
+            Assert.IsTrue(M.ModernCombat.IsAiming);
             int magazine=M.ModernCombat.RoundsInMagazine,reserve=bag.Count("ammo_rifle");var equipped=M.ModernCombat.EquippedKind;
             Assert.IsTrue(s.TryInteract());var ui=M.GetComponent<Map01OperationPuzzleUI>();Assert.IsTrue(ui.Active);if(Recording)yield return WaitGameSeconds(3);ui.StartPuzzle();if(Recording)yield return WaitGameSeconds(3);
             var guess=Map01SupplyLock.Digits(ui.Lock.Secret);
@@ -194,8 +195,7 @@ namespace ShadowVale.Map01.Tests
             int wrong=(ui.Lock.Secret+1)%6;while(ui.Lock.Remaining>0)ui.SubmitLock(wrong);Assert.AreEqual(0,ui.Lock.Remaining);Assert.IsFalse(s.Progress.supplies);
             Capture("lock-ui",true);if(Recording)yield return WaitGameSeconds(2);ui.Lock.Retry();ui.SubmitLock(ui.Lock.Secret);
             yield return WaitGameSeconds(2.2f);Capture("chest-opening");yield return WaitGameSeconds(2);Capture("cargo-in-hand");yield return IdleInteraction();
-            yield return null;Assert.IsTrue(M.ModernCombat.IsAiming,"Holding aim through the puzzle and pickup must restore aim without releasing it.");Assert.AreEqual(magazine,M.ModernCombat.RoundsInMagazine);Assert.AreEqual(reserve,bag.Count("ammo_rifle"));Assert.AreEqual(equipped,M.ModernCombat.EquippedKind);
-            InputSystem.QueueStateEvent(aimMouse,new MouseState());InputSystem.Update();heldAim.Dispose();RestoreInputRouting(aimRouting);
+            yield return null;Assert.IsFalse(M.ModernCombat.IsAiming,"The puzzle clears toggled aim; a fresh press is required after the interaction.");Assert.AreEqual(magazine,M.ModernCombat.RoundsInMagazine);Assert.AreEqual(reserve,bag.Count("ammo_rifle"));Assert.AreEqual(equipped,M.ModernCombat.EquippedKind);
             Assert.IsTrue(s.Progress.supplies&&s.Progress.chestUnlocked);Assert.AreEqual(1,bag.Count(Map01Story.CargoItem));Assert.AreEqual(0,bag.Count("supplies"),"Reward is deferred until handoff.");Assert.AreEqual(4,q.Stage);
             Assert.IsTrue(s.TryInteract());yield return Confirm();Assert.IsTrue(s.Progress.supplyReported);Assert.AreEqual(4,q.Stage,"Radio report must send Nam home, not to point 2.");
             At(s.Commander.position+s.Commander.forward*1.8f);Assert.IsTrue(s.TryInteract());yield return null;Assert.AreEqual("m1_ops_handoff_01",M.GetComponent<DialogueVoice>().CurrentId,"Handoff must speak immediately, before the bag animation.");yield return Confirm();yield return IdleInteraction();yield return Confirm();
@@ -275,17 +275,6 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(M.GetComponent<Map01StoryDialogue>().IsPlaying,"Distant binocular report missing: binocular="+scouting.Binoculars+" moving="+M.ModernPlayer.IsMoving+" safe="+s.SafeToReport+" at="+M.player.position+" target="+target);
             yield return Confirm();Assert.IsTrue(s.Progress.commanderReported&&s.Progress.commanderDiscovery);Assert.IsTrue(M.ModernCombat.enabled&&M.ModernPlayer.enabled);Assert.IsFalse(M.Cinematic);
             Assert.IsNull(M.GetComponentInChildren<Map01Extraction>());if(Recording)yield return WaitGameSeconds(4);
-        }
-        sealed class HeldAimMouse:IDisposable
-        {
-            readonly Mouse[] physical;bool disposed;
-            readonly Keyboard ownedKeyboard;
-            public readonly Mouse Device;
-            public HeldAimMouse(){if(Keyboard.current==null)ownedKeyboard=InputSystem.AddDevice<Keyboard>("HeldAimTestKeyboard");physical=InputSystem.devices.OfType<Mouse>().Where(m=>m.enabled).ToArray();foreach(var m in physical)InputSystem.DisableDevice(m);Device=InputSystem.AddDevice<Mouse>("HeldAimTest");InputSystem.onAfterUpdate+=HoldAim;}
-            // The batch editor can soft-reset devices when a cinematic changes cursor lock/focus.
-            // Model a physically held button at every input update, rather than one initial event.
-            void HoldAim(){if(!disposed&&Device.added){Device.MakeCurrent();var state=new MouseState().WithButton(MouseButton.Right);InputState.Change(Device,state,InputUpdateType.Dynamic);InputState.Change(Device,state,InputUpdateType.Editor);}}
-            public void Dispose(){if(disposed)return;disposed=true;InputSystem.onAfterUpdate-=HoldAim;if(Device.added)InputSystem.RemoveDevice(Device);if(ownedKeyboard!=null&&ownedKeyboard.added)InputSystem.RemoveDevice(ownedKeyboard);foreach(var m in physical)if(m.added)InputSystem.EnableDevice(m);}
         }
         internal static void LookAtOfficer(Map01Mission mission,Vector3 target)
         {

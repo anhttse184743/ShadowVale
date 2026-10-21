@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 
 namespace ShadowVale.Map01 {
-    /// <summary>One spoken character at a time. Radio colour is baked only into the two radio clips.</summary>
+    /// <summary>One spoken character at a time. Remote lines use the catalog's processed radio clips.</summary>
     public sealed class DialogueVoice : MonoBehaviour {
         [Serializable] public sealed class Line {
             public string id, caption, match, resource, language;

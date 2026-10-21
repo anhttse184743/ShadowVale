@@ -29,9 +29,10 @@ namespace ShadowVale.AI.Boss
         /// <see cref="BossProfile.RelocateMinPlayerDistance"/> (regrouping: as far as he is now).</param>
         /// <param name="men">Where his men stand (their centre), if any are fighting near him.</param>
         /// <param name="fallingBack">Regrouping towards reinforcements: running away from the player is the point.</param>
+        /// <param name="allowed">Map-specific legal cover positions, including the C3 fence.</param>
         public static bool TryPick(IWorldQuery graph, BossProfile profile, Vector3 from, Vector3 player, int avoidNode,
             System.Random rng, out int node, out Vector3 position, float fightRange = 0f, float minPlayerDistance = 0f,
-            Vector3? men = null, bool fallingBack = false)
+            Vector3? men = null, bool fallingBack = false, Func<Vector3, bool> allowed = null)
         {
             node = -1; position = from;
             if (graph == null || graph.NodeCount == 0) return false;
@@ -45,6 +46,7 @@ namespace ShadowVale.AI.Boss
                 float move = Flat(at - from), toPlayer = Flat(at - player);
                 if (move < profile.RelocateMinDistance || move > profile.RelocateMaxDistance) continue;
                 if (toPlayer < minToPlayer) continue;
+                if (allowed != null && !allowed(at)) continue;
                 double score = Score(graph, c, at, player, playerNode, move, profile);
                 if (fightRange > 0 && toPlayer <= fightRange) score += .5;
                 if (!fallingBack && RunsAway(from, at, player)) score -= RunAwayPenalty;
