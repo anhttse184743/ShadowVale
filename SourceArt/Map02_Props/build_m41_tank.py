@@ -30,7 +30,8 @@ def material(name, rgb, rough, metal=0.0):
     b.inputs["Base Color"].default_value = (*rgb, 1); b.inputs["Roughness"].default_value = rough; b.inputs["Metallic"].default_value = metal
     return m
 PAINT = material("M41_Paint", (.105, .125, .078), .72)      # faded olive drab
-STEEL = material("M41_Steel", (.045, .043, .040), .6, .4)    # tracks, sprocket teeth, MG
+STEEL = material("M41_Steel", (.045, .043, .040), .6, .4)    # MG, small fittings
+TRACK = material("M41_Track", (.085, .058, .042), .75, .3)   # worn, rusty track steel
 RUBBER = material("M41_Rubber", (.022, .022, .022), .85)
 CANVAS = material("M41_Canvas", (.040, .045, .040), .9)      # mantlet cover
 RUST = material("M41_Rust", (.20, .095, .055), .8)           # exhaust/muffler boxes
@@ -84,6 +85,31 @@ def add_cylinder(bm, center, radius, depth, axis='X', segments=16, radius2=None,
         bm.faces.new((ring1[i], ring1[j], ring2[j], ring2[i])).material_index = mat_index
     bm.faces.new(list(reversed(ring1))).material_index = mat_index; bm.faces.new(ring2).material_index = mat_index
 
+def add_rod(bm, a, b, radius, segments=8, mat_index=0):
+    """A round bar from a to b (cables, handles, rails)."""
+    a, b = Vector(a), Vector(b); d = (b - a); L = d.length
+    if L < 1e-5: return
+    z = d.normalized(); x = z.orthogonal().normalized(); y = z.cross(x)
+    r1 = [bm.verts.new(a + (x * math.cos(2 * math.pi * i / segments) + y * math.sin(2 * math.pi * i / segments)) * radius) for i in range(segments)]
+    r2 = [bm.verts.new(v.co + d) for v in r1]
+    for i in range(segments):
+        j = (i + 1) % segments; bm.faces.new((r1[i], r1[j], r2[j], r2[i])).material_index = mat_index
+
+def add_x(bm, center, w, h, plane, mat_index=0, t=.012):
+    """Pressed X on a box face; plane 'yz' (side face, normal x), 'xy' (lid, normal z)."""
+    c = Vector(center)
+    for sgn in (-1, 1):
+        if plane == 'yz': a, b = c + Vector((0, -w / 2, -sgn * h / 2)), c + Vector((0, w / 2, sgn * h / 2))
+        else: a, b = c + Vector((-w / 2, -sgn * h / 2, 0)), c + Vector((w / 2, sgn * h / 2, 0))
+        add_rod(bm, a, b, t, 4, mat_index)
+
+def add_handle(bm, center, length, axis, height=.05, r=.011, mat_index=0):
+    """U-shaped grab handle standing off a surface (axis = direction it runs, up = +z)."""
+    c = Vector(center); d = Vector(axis).normalized() * length / 2; up = Vector((0, 0, height))
+    if height > 0:
+        add_rod(bm, c - d, c - d + up, r, 6, mat_index); add_rod(bm, c + d + up, c + d, r, 6, mat_index)
+    add_rod(bm, c - d + up, c + d + up, r, 6, mat_index)
+
 def loft(bm, rings, mat_index=0, cap=True):
     """Bridge closed outlines (lists of Vector) bottom to top."""
     vr = [[bm.verts.new(p) for p in ring] for ring in rings]
@@ -131,9 +157,13 @@ def build_hull(bm):
                   [Vector((x - .3, 3.15, .86)), Vector((x + .3, 3.15, .86)), Vector((x + .3, 3.15, .89)), Vector((x - .3, 3.15, .89))]], cap=True)
         loft(bm, [[Vector((x - .3, -2.72, 1.055)), Vector((x - .3, -2.72, 1.085)), Vector((x + .3, -2.72, 1.085)), Vector((x + .3, -2.72, 1.055))],
                   [Vector((x - .3, -3.0, .9)), Vector((x - .3, -3.0, .93)), Vector((x + .3, -3.0, .93)), Vector((x + .3, -3.0, .9))]], cap=True)
-        # Stowage boxes along the fender, with an X-pressed lid.
+        # Stowage boxes along the fender, X pressed into lid and side, lid seam.
         for y0, y1 in ((-.95, .45), (.5, 1.75)):
-            add_box(bm, (x + side * .02, (y0 + y1) / 2, 1.3), (.5, y1 - y0 - .04, .44), taper_top=(.01, .01))
+            yc, ln = (y0 + y1) / 2, y1 - y0 - .04
+            add_box(bm, (x + side * .02, yc, 1.3), (.5, ln, .44), taper_top=(.01, .01))
+            add_x(bm, (x + side * .02, yc, 1.525), .4, ln - .12, 'xy')
+            add_x(bm, (x + side * .275, yc, 1.3), ln - .14, .3, 'yz')
+            add_box(bm, (x + side * .02, yc, 1.46), (.52, ln + .01, .015))
         # Muffler/exhaust boxes at the rear of the fenders (rust-brown), exhaust pipe out the back.
         add_box(bm, (x + side * .02, -1.85, 1.28), (.52, 1.65, .4), mat_index=R)
         add_cylinder(bm, (x - side * .12, -2.82, 1.2), .065, .36, 'Y', 10, mat_index=R)
@@ -141,11 +171,29 @@ def build_hull(bm):
         add_box(bm, (side * .74, 2.72, 1.33), (.34, .1, .28))
         for dx in (-.07, .07):
             add_cylinder(bm, (side * .74 + dx, 2.79, 1.33), .055, .06, 'Y', 10, mat_index=L)
-        # Tail lights.
+        # Tow cable along the side, slack between its clips, eye at each end.
+        cable = [(side * 1.1, 1.9, 1.56), (side * 1.12, 1.3, 1.585), (side * 1.11, .6, 1.565), (side * 1.12, -.1, 1.59), (side * 1.11, -.8, 1.565), (side * 1.1, -1.05, 1.57)]
+        for a, b in zip(cable, cable[1:]): add_rod(bm, a, b, .016, 6)
+        for end in (cable[0], cable[-1]): add_cylinder(bm, end, .05, .02, 'X', 10)
+        # Rear louvres at the lower corners of the back plate.
+        for k in range(5): add_box(bm, (side * .55, -2.96, .86 + k * .055), (.4, .04, .02))
+        # Tail lights in their guards.
+        add_box(bm, (side * .88, -2.945, 1.18), (.16, .05, .14))   # guard behind the lamp face
         add_cylinder(bm, (side * .88, -2.97, 1.18), .045, .05, 'Y', 10, mat_index=T)
         # Front towing eyes and rear lifting rings.
         add_cylinder(bm, (side * .45, 3.0, .8), .07, .12, 'X', 10)
         add_cylinder(bm, (side * .98, -2.9, 1.18), .06, .05, 'X', 10)
+    # Air cleaner on the right front fender (perforated drum).
+    add_cylinder(bm, (1.32, 1.95, 1.2), .13, .5, 'Y', 14)
+    for k in range(5): add_cylinder(bm, (1.32, 1.76 + k * .095, 1.2), .132, .025, 'Y', 14, mat_index=R)
+    # Driver's hatch and periscopes on the front deck, left of the gun.
+    add_cylinder(bm, (-.48, 2.25, 1.57), .3, .04, 'Z', 18)
+    for dx in (-.14, .12): add_box(bm, (-.48 + dx, 2.55, 1.6), (.16, .1, .07))
+    add_handle(bm, (-.48, 2.2, 1.59), .16, (1, 0, 0), .03)
+    # Engine access panels with handles beside the grilles.
+    for side in (-1, 1):
+        add_box(bm, (side * .55, -.95, 1.565), (.8, .45, .02))
+        add_handle(bm, (side * .55, -.95, 1.575), .18, (1, 0, 0), .035)
     # Engine deck grilles (slats) behind the turret, rear towing pintle ring.
     for i in range(9):
         add_box(bm, (0, -1.35 - i * .14, 1.56), (1.6, .06, .03))
@@ -236,7 +284,7 @@ def track_builder(side):
             put(add_box(bm, (0, 0, -.045), (.07, .05, .05)))                         # guide horn
     return build
 for side, tag in ((-1, "L"), (1, "R")):
-    mesh(f"Track_{tag}", track_builder(side), [STEEL], root, (side * TRACK_X, 0, 0), True)
+    mesh(f"Track_{tag}", track_builder(side), [TRACK], root, (side * TRACK_X, 0, 0), True)
 
 # ---------------------------------------------------------------- turret, gun, cupola, hatches, MG
 RING = Vector((0, .35, 1.56))
@@ -254,14 +302,19 @@ def build_turret(bm):
     loft(bm, [base, belt, top])
     # Rear bustle, overhanging the engine deck.
     add_box(bm, RING + Vector((0, -1.5, .46)), (1.8, .58, .5), taper_top=(.04, .03))   # flush with the roof
-    # Ventilator dome and turret-ring skirt.
+    # Ventilator dome with its six bolts, and turret-ring skirt.
     add_cylinder(bm, RING + Vector((0, -.95, .74)), .2, .06, 'Z', 16)
+    for k in range(6): add_cylinder(bm, RING + Vector((math.cos(k * math.pi / 3) * .15, -.95 + math.sin(k * math.pi / 3) * .15, .78)), .018, .02, 'Z', 6)
+    # Lifting eyes at the corners of the roof.
+    for sx, sy in ((-.85, .7), (.85, .7), (-.85, -1.05), (.85, -1.05)):
+        add_cylinder(bm, RING + Vector((sx, sy, .76)), .05, .025, 'X', 10)
     add_cylinder(bm, RING + Vector((0, 0, -.02)), 1.0, .06, 'Z', 24)
     # Grab handles along the sides (small rails).
     for side in (-1, 1):
         for y in (.6, .25, -.15, -.55, -.95):
-            add_box(bm, RING + Vector((side * 1.13, y, .5)), (.05, .16, .03))
-            add_box(bm, RING + Vector((side * 1.12, y, .3)), (.05, .16, .03))
+            for z in (.52, .3): add_handle(bm, RING + Vector((side * 1.15, y, z)), .16, (0, 1, 0), .0, .012)
+    # Bustle rail.
+    add_handle(bm, RING + Vector((0, -1.82, .55)), 1.5, (1, 0, 0), .0, .014)
     # Periscope housings at the front of the roof.
     add_box(bm, RING + Vector((-.42, .62, .76)), (.22, .14, .1))
     add_box(bm, RING + Vector((.5, .55, .76)), (.18, .12, .1))
@@ -337,17 +390,24 @@ def worn(mat, dirt, wear, bump):
     grain = n.new("ShaderNodeTexNoise"); grain.inputs["Scale"].default_value = 45; l.new(coord.outputs["Object"], grain.inputs["Vector"])
     bp = n.new("ShaderNodeBump"); bp.inputs["Strength"].default_value = bump; bp.inputs["Distance"].default_value = .004
     l.new(grain.outputs["Fac"], bp.inputs["Height"]); l.new(bp.outputs["Normal"], b.inputs["Normal"])
-worn(PAINT, .5, .28, .12); worn(STEEL, .6, .4, .25); worn(RUBBER, .4, .2, .1); worn(CANVAS, .3, .5, .3); worn(RUST, .3, .7, .25)
+worn(PAINT, .5, .28, .12); worn(STEEL, .6, .4, .25); worn(TRACK, .5, .5, .3); worn(RUBBER, .4, .2, .1); worn(CANVAS, .3, .5, .3); worn(RUST, .3, .7, .25)
 
 meshes = [o for o in col.objects if o.type == 'MESH']
+for o in (hull, turret):
+    # Slightly bevelled armour edges catch the light like the real plate and casting.
+    for o2 in col.objects: o2.select_set(False)
+    o.select_set(True); bpy.context.view_layer.objects.active = o
+    mod = o.modifiers.new("Edges", 'BEVEL'); mod.width = .012; mod.segments = 1; mod.limit_method = 'ANGLE'
+    bpy.ops.object.modifier_apply(modifier=mod.name)
+for o in meshes:
+    for o2 in col.objects: o2.select_set(False)
+    o.select_set(True); bpy.context.view_layer.objects.active = o
+    bpy.ops.object.shade_smooth_by_angle(angle=math.radians(38))
 for o in meshes: o.select_set(True)
 bpy.context.view_layer.objects.active = hull
 bpy.ops.object.mode_set(mode='EDIT'); bpy.ops.mesh.select_all(action='SELECT')
 bpy.ops.uv.smart_project(angle_limit=math.radians(66), island_margin=.003, scale_to_bounds=False)
 bpy.ops.uv.pack_islands(margin=.002); bpy.ops.object.mode_set(mode='OBJECT')
-for o in meshes:
-    for p in o.data.polygons: p.use_smooth = False
-    mod = o.modifiers.new("Normals", 'WEIGHTED_NORMAL') if hasattr(bpy.types, "WeightedNormalModifier") else None
 
 images = {k: bpy.data.images.new("M41_Tank_" + k, 2048, 2048, alpha=False) for k in ("Albedo", "Normal")}
 images["Normal"].colorspace_settings.name = 'Non-Color'
