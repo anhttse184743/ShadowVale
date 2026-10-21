@@ -6,12 +6,11 @@ namespace ShadowVale.Map01
 {
     public sealed partial class Map02Mission
     {
-        Texture2D hudChart, hudPanel, hudCombatIcons, hudDisc, hudHealth;
+        Texture2D hudChart, hudMiniChart, hudArrow, hudPanel, hudCombatIcons, hudDisc, hudHealth;
         GUIStyle hudStencil, hudCaption;
-        public int AvailableObjectiveCount => targets.Count(t=>t!=null&&World.Available(t.work));
+        public int AvailableObjectiveCount => targets.Count(t=>t!=null&&ObjectiveAvailable(t));
         public bool HasCheckpoint => !string.IsNullOrEmpty(checkpoint);
-        public Map02ObjectiveObject TrackedObjective => targets.Where(t=>t!=null&&World.Available(t.work))
-            .OrderBy(t=>(Point(t)-Player.position).sqrMagnitude).FirstOrDefault();
+        public Map02ObjectiveObject TrackedObjective => Chapter!=null?Chapter.TrackedMarker:targets.Where(t=>t!=null&&ObjectiveAvailable(t)).OrderBy(t=>t.saveId).FirstOrDefault();
         static Vector3 Point(Map02ObjectiveObject target)=>target.standPoint!=null?target.standPoint.position:target.transform.position;
 
         System.Collections.IEnumerator PrepareHudChart()
@@ -22,19 +21,26 @@ namespace ShadowVale.Map01
             var survey=new GameObject("Map 2 HUD survey camera");
             var surveyCamera=survey.AddComponent<Camera>();surveyCamera.enabled=false;
             survey.transform.SetPositionAndRotation(new Vector3(0,180,0),Quaternion.Euler(90,0,0));
-            surveyCamera.orthographic=true;surveyCamera.orthographicSize=110;
+            surveyCamera.orthographic=true;surveyCamera.orthographicSize=Map02Navigation.HalfSize;
             surveyCamera.nearClipPlane=.1f;surveyCamera.farClipPlane=260;
             surveyCamera.clearFlags=CameraClearFlags.SolidColor;surveyCamera.backgroundColor=new Color(.15f,.23f,.17f);
             surveyCamera.useOcclusionCulling=false;
             var rt=RenderTexture.GetTemporary(768,768,24);
             var previous=RenderTexture.active;
+            var sun=FindObjectsByType<Light>(FindObjectsSortMode.None).FirstOrDefault(l=>l.type==LightType.Directional);float sunBefore=sun!=null?sun.intensity:0;var ambient=RenderSettings.ambientLight;
+            var actors=FindObjectsByType<Map02ChapterActor>(FindObjectsSortMode.None).SelectMany(a=>a.GetComponentsInChildren<Renderer>()).Concat(Player.GetComponentsInChildren<Renderer>()).Distinct().Where(r=>r.enabled).ToArray();
+            foreach(var actor in actors)actor.enabled=false;
             try
             {
+                if(sun!=null)sun.intensity=1;RenderSettings.ambientLight=Color.gray;
                 surveyCamera.targetTexture=rt;surveyCamera.Render();RenderTexture.active=rt;
                 hudChart=new Texture2D(768,768,TextureFormat.RGB24,false){name="Map 2 village survey",wrapMode=TextureWrapMode.Clamp};
                 hudChart.ReadPixels(new Rect(0,0,768,768),0,0);hudChart.Apply();
+                var pixels=hudChart.GetPixels();
+                for(int y=0;y<768;y++)for(int x=0;x<768;x++)if(Vector2.Distance(new Vector2(x+.5f,y+.5f),new Vector2(384,384))>365)pixels[y*768+x]=Color.clear;
+                hudMiniChart=new Texture2D(768,768,TextureFormat.RGBA32,false){name="Map 2 north-up chart",wrapMode=TextureWrapMode.Clamp};hudMiniChart.SetPixels(pixels);hudMiniChart.Apply();
             }
-            finally{surveyCamera.targetTexture=null;RenderTexture.active=previous;RenderTexture.ReleaseTemporary(rt);Destroy(survey);}
+            finally{if(sun!=null)sun.intensity=sunBefore;RenderSettings.ambientLight=ambient;foreach(var actor in actors)if(actor!=null)actor.enabled=true;surveyCamera.targetTexture=null;RenderTexture.active=previous;RenderTexture.ReleaseTemporary(rt);Destroy(survey);}
         }
         void HudPlate(Rect rect)
         {
@@ -54,36 +60,31 @@ namespace ShadowVale.Map01
                 hudDisc.Apply();
             }
             var map=new Rect(28,24,230,230);GUI.DrawTexture(map,hudDisc);
-            // Crop a 90 m north-up window around Nam; horizontal strips mask it to a disc.
-            var center=new Vector2(map.center.x,map.center.y);float radius=109;
-            for(float y=-radius;y<radius;y+=3)
-            {
-                float half=Mathf.Sqrt(Mathf.Max(0,radius*radius-(y+1.5f)*(y+1.5f)));
-                var strip=new Rect(center.x-half,center.y+y,half*2,3);
-                var uv=new Rect((Player.position.x+110)/220-half/radius*45/220,
-                    (Player.position.z+110)/220-(y+3)/radius*45/220,half/radius*90/220,3/radius*45/220);
-                if(hudChart!=null)GUI.DrawTextureWithTexCoords(strip,hudChart,uv);
-            }
-            GUI.Label(new Rect(map.x+88,map.y+4,60,30),"BẮC",hudCaption);
-            var saved=GUI.matrix;GUIUtility.RotateAroundPivot(Player.eulerAngles.y,center);
-            GUI.Label(new Rect(center.x-11,center.y-16,28,35),"▲",heading);GUI.matrix=saved;
-            foreach(var target in targets.Where(t=>t!=null&&World.Available(t.work)))
-            {
-                var delta=Point(target)-Player.position;var pos=center+new Vector2(delta.x,-delta.z)/45*radius;
-                if(Vector2.Distance(pos,center)>radius-14)pos=center+(pos-center).normalized*(radius-14);
-                DrawObjectivePin(pos);
-            }
-            GUI.Label(new Rect(52,254,235,28),"M  MỞ BẢN ĐỒ",hudCaption);
-            float plateHeight=Mathf.Max(132,70+hudCaption.CalcHeight(new GUIContent(World.Objective),300));
-            HudPlate(new Rect(25,300,345,plateHeight));
-            GUI.Label(new Rect(44,317,300,35),"NHIỆM VỤ",hudStencil);
-            GUI.Label(new Rect(44,358,300,plateHeight-62),World.Objective,hudCaption);
+            // Fixed north-up village chart: landmarks do not scroll or rotate under the player.
+            var center=map.center;const float radius=115;
+            if(hudMiniChart!=null)GUI.DrawTexture(map,hudMiniChart);
+            DrawRoute(map,true);
+            GUI.Label(new Rect(map.x+88,map.y+4,100,30),"BẮC ↑",hudCaption);
             var objective=TrackedObjective;
+            if(objective!=null)DrawObjectivePin(Map02Navigation.Disc(Point(objective),center,radius));
+            if(Chapter?.Companion!=null)
+            {
+                var at=Map02Navigation.Disc(Chapter.Companion.transform.position,center,radius);var companionTint=GUI.color;GUI.color=new Color(.4f,.85f,1);GUI.DrawTexture(new Rect(at.x-4,at.y-4,8,8),Texture2D.whiteTexture);GUI.color=companionTint;
+            }
+            DrawNamArrow(Map02Navigation.Disc(Player.position,center,radius),18);
+            GUI.Label(new Rect(52,254,235,28),"M  MỞ BẢN ĐỒ",hudCaption);
+            string title=Chapter?.TrackedTask?.title??ObjectiveText;
+            string instruction=Chapter?.Instruction??"Tới ghim vàng để tương tác.";
+            float plateHeight=Mathf.Max(184,100+hudCaption.CalcHeight(new GUIContent(title+"\n\n"+instruction),300));
+            HudPlate(new Rect(25,300,345,plateHeight));
+            GUI.Label(new Rect(44,317,300,35),"VIỆC ĐANG THEO DÕI",hudStencil);
+            GUI.Label(new Rect(44,357,300,plateHeight-75),title+"\n\n"+instruction,hudCaption);
+            if(Chapter!=null){var phaseTint=GUI.color;GUI.color=new Color(0,0,0,.65f);GUI.DrawTexture(new Rect(560,20,990,38),Texture2D.whiteTexture);GUI.color=phaseTint;GUI.Label(new Rect(574,23,960,34),Map02ChapterState.PhaseName(Chapter.State.phase)+(Chapter.State.phase==5?" · Sơ tán "+Chapter.State.evacuation+"%":""),hudCaption);}
             if(objective!=null)
             {
                 float distance=Vector3.Distance(Player.position,Point(objective));
-                HudPlate(new Rect(560,25,490,63));
-                GUI.Label(new Rect(581,37,450,44),objective.prompt+" · "+distance.ToString("0")+" m",hudCaption);
+                HudPlate(new Rect(560,65,490,78));
+                GUI.Label(new Rect(581,77,450,58),objective.prompt+" · "+distance.ToString("0")+" m",hudCaption);
                 var cam=cameraRig!=null?cameraRig.GetComponent<Camera>():Camera.main;
                 if(cam!=null)
                 {
@@ -92,7 +93,8 @@ namespace ShadowVale.Map01
                     {var at=new Vector2(screen.x*1600,(1-screen.y)*900);DrawObjectivePin(at,16);GUI.Label(new Rect(at.x-25,at.y+13,80,30),distance.ToString("0")+" m",hudCaption);}
                 }
             }
-            GUI.Label(new Rect(28,310+plateHeight,350,30),HasCheckpoint?"CHECKPOINT SẴN SÀNG · Esc lưu / tải":"CHƯA CÓ CHECKPOINT",hudCaption);
+            GUI.Label(new Rect(28,310+plateHeight,350,50),"J chọn việc / xem hướng dẫn · M bản đồ",hudCaption);
+            GUI.Label(new Rect(28,355+plateHeight,350,50),HasCheckpoint?"Đã có checkpoint · Esc lưu / tải":"Chưa có checkpoint",hudCaption);
             hudCombatIcons??=Resources.Load<Texture2D>("Hud/CombatIcons");
             if(hudHealth==null)
             {
@@ -124,6 +126,24 @@ namespace ShadowVale.Map01
             GUI.Label(new Rect(25,865,1100,32),"E Tương tác · Tab Túi đồ · J Nhiệm vụ · M Bản đồ · Esc Menu",hudCaption);
             if(nearest!=null){HudPlate(new Rect(435,770,730,65));GUI.Label(new Rect(457,784,685,44),"[E] "+nearest.prompt,body);}
         }
+        void DrawNamArrow(Vector2 at,float size)
+        {
+            if(hudArrow==null){hudArrow=new Texture2D(32,32,TextureFormat.RGBA32,false);for(int y=0;y<32;y++)for(int x=0;x<32;x++)hudArrow.SetPixel(x,y,Mathf.Abs(x-15.5f)<(31-y)*.45f?Color.white:Color.clear);hudArrow.Apply();}
+            var matrix=GUI.matrix;var color=GUI.color;GUI.matrix=Map02Navigation.RotateUi(matrix,at,Player.eulerAngles.y);GUI.color=new Color(.65f,.95f,1);GUI.DrawTexture(new Rect(at.x-size/2,at.y-size/2,size,size),hudArrow);GUI.color=color;GUI.matrix=matrix;
+        }
+        void DrawObjectiveChoices(Rect area)
+        {
+            if(Chapter==null)return;
+            var rows=Chapter.State.AvailableTasks.ToArray();float y=area.y;
+            foreach(var task in rows)
+            {
+                bool selected=Chapter.TrackedTask?.id==task.id;
+                if(GUI.Button(new Rect(area.x,y,area.width,66),(selected?"◆ ĐANG THEO DÕI · ":"Theo dõi · ")+task.title, new GUIStyle(GUI.skin.button){fontSize=20,wordWrap=true}))
+                {if(!Chapter.Track(task.id))Say("Hoàn tất việc đang mang hoặc hộ tống trước khi đổi mục tiêu.");}
+                GUI.Label(new Rect(area.x+8,y+70,area.width-16,65),task.purpose??"",small);y+=145;
+            }
+            if(rows.Length==0)GUI.Label(area,Chapter.State.Objective,body);
+        }
         void DrawWeaponIcon(Rect area,Rect pixels,bool active)
         {
             if(hudCombatIcons==null)return;var tint=GUI.color;
@@ -132,7 +152,7 @@ namespace ShadowVale.Map01
         }
         void DrawObjectivePin(Vector2 position,float size=12)
         {
-            var matrix=GUI.matrix;var tint=GUI.color;GUIUtility.RotateAroundPivot(45,position);
+            var matrix=GUI.matrix;var tint=GUI.color;GUI.matrix=Map02Navigation.RotateUi(matrix,position,45);
             GUI.color=new Color(.04f,.05f,.025f,.95f);GUI.DrawTexture(new Rect(position.x-size*.5f-2,position.y-size*.5f-2,size+4,size+4),Texture2D.whiteTexture);
             GUI.color=new Color(1,.77f,.23f);GUI.DrawTexture(new Rect(position.x-size*.5f,position.y-size*.5f,size,size),Texture2D.whiteTexture);
             GUI.matrix=matrix;GUI.color=tint;

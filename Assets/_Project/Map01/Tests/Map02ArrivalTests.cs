@@ -49,6 +49,8 @@ var pump=camera.gameObject.AddComponent<ExtractionCapturePump>();
 // Simulate stale renderer registrations being invalidated by Map 1 unload.
 // Destination renderers must be created after this cleanup, not just before it.
 if(gameViewOnly)SceneManager.sceneUnloaded+=InvalidateSourceBoatRendering;
+// Per-frame PNG recording is opt-in: synchronous disk I/O must not determine gameplay regression timing.
+bool recordFrames=UnityEditor.SessionState.GetBool("ShadowVale.Map02.RecordTransferFrames",false);
 var entries=new System.Collections.Generic.List<string>();int frame=0;float next=0,start=Time.realtimeSinceStartup,deadline=start+180;
 bool complete=false;Map02Arrival arrival=null;
 LogAssert.Expect(LogType.Log,"Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.");
@@ -63,7 +65,7 @@ Assert.IsTrue(hull.HasPropertyBlock(),"Moving boat must use its own draw propert
 Assert.Less(hull.GetComponent<MeshFilter>().sharedMesh.bounds.center.magnitude,.001f);
 Assert.Less(Vector3.Distance(hull.transform.position,arrival.transform.position),.5f,"Hull pivot must travel with its actual geometry.");
 }
-if(Time.realtimeSinceStartup>=next) {
+if(recordFrames&&Time.realtimeSinceStartup>=next) {
 next=Time.realtimeSinceStartup+.5f;bool rendered=false;System.Exception failure=null;
 string phase=arrival==null?extraction.CurrentPhase.ToString():"Map2-"+arrival.CurrentPhase;
 float elapsed=Time.realtimeSinceStartup-start;int number=frame++;
@@ -71,7 +73,7 @@ pump.draw=()=>{try{if(gameViewOnly)ScreenCapture.CaptureScreenshot(folder+"/fram
 yield return new WaitUntil(()=>rendered||Time.realtimeSinceStartup>=deadline);if(failure!=null)throw failure;
 }else yield return null;
 }
-File.WriteAllLines(folder+"/frames.csv",entries);
+if(recordFrames)File.WriteAllLines(folder+"/frames.csv",entries);
 SceneManager.sceneUnloaded-=InvalidateSourceBoatRendering;
 Assert.IsTrue(complete,"The full departure must finish without skipping.");Assert.NotNull(arrival);Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);AssertMap1WeaponDriversStopped(arrival);
 AssertDryPartySpawn(arrival);VerifyGameplayRifle(arrival.Passengers[0]);Assert.AreEqual(72,arrival.Passengers[0].GetComponent<Health>().Current);Assert.AreEqual(17,arrival.Passengers[0].GetComponent<PlayerCombat>().RoundsInMagazine);

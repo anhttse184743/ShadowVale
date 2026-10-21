@@ -20,7 +20,7 @@ namespace ShadowVale.AI.Coordination
         public bool AutoLaunchSidecar = true;
 
         [Tooltip("Seconds to wait for /health after launching before falling back to greedy.")]
-        public float SidecarStartupTimeoutSeconds = 5f;
+        public float SidecarStartupTimeoutSeconds = 30f;
 
         [Tooltip("Used only when the content bundle has no ai_settings (should never happen).")]
         public int FallbackLatencyBudgetMs = 120;

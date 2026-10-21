@@ -1,6 +1,6 @@
 Shader "ShadowVale/Tropical Sky"
 {
- Properties { _Zenith("Zenith",Color)=(.14,.39,.67,1) _Horizon("Horizon",Color)=(.70,.82,.86,1) _CloudCover("Cloud cover",Range(0,1))=.48 }
+ Properties { _Zenith("Zenith",Color)=(.14,.39,.67,1) _Horizon("Horizon",Color)=(.70,.82,.86,1) _CloudCover("Cloud cover",Range(0,1))=.48 _Exposure("Exposure",Range(0,2))=1 }
  SubShader {
  Tags { "Queue"="Background" "RenderType"="Background" "PreviewType"="Skybox" }
  Cull Off ZWrite Off
@@ -9,7 +9,7 @@ Shader "ShadowVale/Tropical Sky"
  #pragma vertex vert
  #pragma fragment frag
  #include "UnityCG.cginc"
- float4 _Zenith,_Horizon;float _CloudCover;
+ float4 _Zenith,_Horizon;float _CloudCover,_Exposure;
  struct v2f{float4 vertex:SV_POSITION;float3 dir:TEXCOORD0;};
  v2f vert(float4 vertex:POSITION){v2f o;o.vertex=UnityObjectToClipPos(vertex);o.dir=vertex.xyz;return o;}
  float hash(float2 p){return frac(sin(dot(p,float2(127.1,311.7)))*43758.5453);}
@@ -23,7 +23,7 @@ Shader "ShadowVale/Tropical Sky"
  float3 cloud=lerp(float3(.66,.73,.78),float3(1,.99,.94),saturate((density-.36)*3));
  color=lerp(color,cloud,cover*.94);
  float sun=pow(saturate(dot(d,normalize(float3(-.4,.7,-.35)))),600);color+=float3(1,.87,.63)*sun*1.5;
- return half4(color,1);}
+ return half4(color*_Exposure,1);}
  ENDHLSL
  }
  }
