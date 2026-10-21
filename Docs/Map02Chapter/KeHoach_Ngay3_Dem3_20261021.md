@@ -236,6 +236,33 @@ Tệp: `Map02ChapterDirector.cs`, `Map02ChapterEnemy.cs`, `Map02ChapterGuidance.
 
 Tệp: `Map02ChapterCinematics.cs` và phần partial mới `Map02ChapterFinale.cs`.
 
+> **Trạng thái 21/10:** đã làm trong file mới `Map02ChapterFinale.cs`.
+> - **Trục thời gian `N3_09` theo bảng dưới**, khai báo thành hằng số: `RiseEnd 3`, `PlantEnd 6`, `ShotAt 8`, `BlastAt 9`, `EchoAt 13`, `FireOrderAt 30`, `MilitiaAt 32`, `ThanhAt 38`, `CounterAt 40`, `FadeAt 60`. Cảnh dài 70 giây.
+> - **Hiệu ứng tính từ trạng thái mỗi khung hình**, nên skip hay tải save không để sót:
+>   - Đỏ khi bị thương, kéo dài qua lúc bò.
+>   - Nhạt màu 10 giây sau tiếng nổ.
+>   - Nháy trắng.
+>   - Tối dần từ giây 60.
+>   - Lọc âm trên listener: tiếng nghẹt khi bị thương; điếc 1 giây sau tiếng nổ rồi nghe lại dần.
+>   - Tiếng ù tổng hợp 3,7 kHz không đi qua bộ lọc. Có `tinnitusClip` thì dùng clip đó.
+> - **Rung camera:** thêm `ThirdPersonCamera.Shake`, chỉ chạy khi cảnh gọi, nên Map 1 không đổi. Dùng ở các chỗ: tiếng xích rung đất, phát bắn trúng tường, vụ nổ, đạn pháo.
+> - **Camera theo từng nhịp, không cận mặt:**
+>   - Sau phát bắn: nằm sấp nhìn về xe tăng.
+>   - `N3_07` câu đầu: cảnh rộng thấy cả thuyền lẫn xe tăng.
+>   - `N3_07` các câu sau: sau vai Nam, Hùng đứng giữa Nam và xe tăng.
+>   - `N3_09`: sau vai Nam → nằm thấp thấy thuyền và khói → cảnh rộng lúc du kích tràn vào.
+> - **Máy đàm** chuyển cho Nam từ câu `farewell_09`, giữ tới cuối. Hiện là khối tạm, có `radioPropArt` thì dùng.
+> - **Nhịp 6:**
+>   - Pháo nổ ở `artyImpact1..3`, rìa làng phía bắc, có ánh lửa và khói.
+>   - 7 bóng du kích (`militiaArt`, nếu trống thì lấy model anh Lực, nếu vẫn trống thì là bóng đen tạm) chạy theo đường làng xuống bến.
+>   - Anh Thành chạy qua.
+> - Xe cháy: thân xe sẫm màu, lửa chập chờn, khói. Lúc Bình minh chỉ còn than.
+> - Thêm các chỗ gắn clip vào Layout: `namProneClip`, `namLieBackClip`, `namSitRadioClip`, `hungFallClip`, `militiaArt`, `radioPropArt`, `explosivesArt`, `soupBowlArt`, `tankTracksClip`, `tinnitusClip`, `artilleryClip`.
+> - Test: `Map02FinaleTests` gồm 3 test, chạy cảnh 70 giây bằng đồng hồ tay. Skip ở giây 1 / 8,5 / 20 / 45 đều ra cùng Bình minh. `Time.timeScale` luôn bằng 1.
+> - Ảnh `Logs/GD6/n3_07-framing.png`: sau vai Nam nhìn thấy xe tăng ở đầu đường bến.
+>
+> Chưa làm: tư thế kéo cổ áo, Nam đứng bắn rồi khuỵu, Hùng hét, bé Tí ngoái lại. Phần này chờ asset. Ngược sáng thật cần chỉnh ánh sáng khi đã có model.
+
 **`N3_WOUND` + `N3_CRAWL` (Nhịp 3)**
 1. Mặt đất rung, tiếng xích sắt ngay sau bức tường → xe phá rào tre → nòng quay chậm → anh Lực: "Xe tăng! Nằm xuống!"
 2. Phát đạn trúng tường: nháy trắng, rung, cắt sang góc nhìn Nam nằm sấp giữa gạch vụn (`namProneClip`), màn hình nhòe đỏ, âm chìm. Không dựng cảnh tường sập.

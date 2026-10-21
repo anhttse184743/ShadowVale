@@ -166,6 +166,7 @@ namespace ShadowVale.Map01
         {
             if(!ready||Mission.Paused||ForestMenu.Visible||Mission.World.story.failed)return;
             float dt=Mathf.Min(Time.deltaTime,.1f);
+            TickEffects();
             if(phaseFade>0){phaseFade=Mathf.Max(0,phaseFade-dt);TickLight(dt);return;}
             if(State.finished)return;
             TickTank(dt);TickBoats(dt);
@@ -286,15 +287,13 @@ namespace ShadowVale.Map01
         void LateUpdate()
         {
             if(!ready)return;PanToHung();if(sceneTask==null)return;
-            Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=sceneTask.id=="DAWN"&&Layout!=null?Layout.namMournClip:null;namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null);
+            Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=NamPoseClip();namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null);
             string speaker=lines[lineIndex].speaker;Vector3 subject=Mission.Player.position;
             if(!lines[lineIndex].radio&&speaker!="Nam"&&roles.TryGetValue(speaker,out var actor))subject=actor.transform.position;
             var focus=Vector3.Lerp(subject,Mission.Player.position,.3f)+Vector3.up*1.25f;
             if(Vector3.Distance(subject,Mission.Player.position)>10)focus=Mission.Player.position+Vector3.up*1.25f;
             var eye=focus-Mission.Player.forward*3.4f+Mission.Player.right*2.5f+Vector3.up*1.4f;
-            // Cut to the physical approach/planting, then back to Nam before the fatal shot.
-            if(sceneTask.id=="N3_09"&&sceneClock>=sacrificeTravel+4&&sceneClock<sacrificeTravel+11)
-            {focus=roles["Hùng"].transform.position+Vector3.up;eye=focus-roles["Hùng"].transform.forward*3+roles["Hùng"].transform.right*2+Vector3.up;}
+            if(FinaleCamera(out var staged,out var stagedFocus)){eye=staged;focus=stagedFocus;}
             if(sceneTask.id=="DAWN"){focus=Vector3.Lerp(Mission.Player.position,memorialArt!=null?memorialArt.transform.position:sites["ditch"].position,.5f)+Vector3.up*.8f;eye=focus-Mission.Player.forward*4+Mission.Player.right*3+Vector3.up*1.5f;}
             // Medium/wide framing; obstruction tested below.
             var ray=eye-focus;foreach(var hit in Physics.SphereCastAll(focus,.12f,ray.normalized,ray.magnitude,~0,QueryTriggerInteraction.Ignore))if(hit.collider.GetComponentInParent<Health>()==null&&hit.distance>.65f)eye=focus+ray.normalized*Mathf.Min(ray.magnitude,Mathf.Max(.7f,hit.distance-.12f));
@@ -465,7 +464,7 @@ namespace ShadowVale.Map01
         public void DrawOverlay()
         {
             var label=new GUIStyle(GUI.skin.label){fontSize=24,wordWrap=true};var title=new GUIStyle(label){fontSize=28,fontStyle=FontStyle.Bold};
-            DrawBark(label);DrawAmmoMarks(label);DrawCover(label);
+            DrawEffects();DrawBark(label);DrawAmmoMarks(label);DrawCover(label);
             if(sceneTask!=null&&spoken)
             {
                 GUI.Box(new Rect(150,700,1300,175),GUIContent.none);var line=lines[lineIndex];
@@ -488,7 +487,6 @@ namespace ShadowVale.Map01
                 }
             }
             if(Busy){GUI.Box(new Rect(430,32,1050,42),GUIContent.none);GUI.Label(new Rect(443,36,1030,35),Map02ChapterState.PhaseName(State.phase),label);}
-            if(sceneTask!=null&&(sceneTask.id=="N3_WOUND"||sceneTask.id=="N3_09")){float flash=sceneTask.id=="N3_WOUND"?(lines[lineIndex].id=="m2v3_wound_04"?Mathf.Clamp01(1-Mathf.Abs(lineClock-1)*3):0):Mathf.Clamp01(1-Mathf.Abs(sceneClock-(sacrificeTravel+11))*3);if(flash>0){var tint=GUI.color;GUI.color=new Color(1,1,1,flash);GUI.DrawTexture(new Rect(0,0,1600,900),Texture2D.whiteTexture);GUI.color=tint;}}
             if(State.phase==3&&!State.Done("N2_01")&&binocular)
             {
                 var cam=rig.GetComponent<Camera>();var point=cam.WorldToViewportPoint(sites["scout"].position+Vector3.up);
@@ -502,7 +500,7 @@ namespace ShadowVale.Map01
         }
         void OnDestroy()
         {
-            Cancel();if(combat!=null){combat.Attacked-=OnPlayerShot;combat.ReloadDurationMultiplier=1;combat.SetHandsOccupied(false);}if(player!=null){player.SurfaceSpeedMultiplier=1;player.SprintAllowed=null;}
+            Cancel();ResetEffects();if(combat!=null){combat.Attacked-=OnPlayerShot;combat.ReloadDurationMultiplier=1;combat.SetHandsOccupied(false);}if(player!=null){player.SurfaceSpeedMultiplier=1;player.SprintAllowed=null;}
             RenderSettings.skybox=originalSky;RenderSettings.ambientMode=originalAmbientMode;if(chapterSky!=null)Destroy(chapterSky);RenderSettings.ambientLight=ambientBefore;RenderSettings.fog=fogBefore;RenderSettings.fogColor=fogColorBefore;RenderSettings.fogDensity=fogDensityBefore;
             if(sun!=null){sun.intensity=sunIntensity;sun.transform.rotation=sunRotation;sun.color=originalSunColor;}
         }

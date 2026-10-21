@@ -53,6 +53,7 @@ namespace ShadowVale.Map01
         readonly List<Entrance> entrances=new List<Entrance>();
         Func<bool> lineGate;float gateUntil;bool spoken;
         public bool WaitingForLine=>sceneTask!=null&&!spoken;
+        public string CurrentLineId=>sceneTask!=null&&lines!=null?lines[lineIndex].id:null;
         void PlanEntrances(Map02ChapterTask task)
         {
             ClearEntrances();
@@ -84,7 +85,7 @@ namespace ShadowVale.Map01
             foreach(var e in entrances.Where(e=>e.startLine==id)){e.actor.SceneDriven=true;e.actor.GoTo(e.to,1.6f);}
             var waiting=entrances.Where(e=>e.gateLine==id).ToArray();
             if(waiting.Length>0){lineGate=()=>waiting.All(e=>Vector3.Distance(e.actor.transform.position,e.to)<1.5f);gateUntil=sceneClock+7;}
-            else if(sceneTask.id=="N3_09"&&lineIndex==0){lineGate=()=>sceneClock>=EchoAt;gateUntil=float.PositiveInfinity;} // Heard only after the blast.
+            else if(sceneTask.id=="N3_09"){float at=SacrificeLineAt(id);lineGate=()=>sceneClock>=at;gateUntil=float.PositiveInfinity;} // The echo after the blast, then the guns, then the counter-attack.
             else lineGate=null;
             TickGate();
         }
@@ -96,7 +97,6 @@ namespace ShadowVale.Map01
             if(late)foreach(var e in entrances.Where(e=>e.gateLine==lines[lineIndex].id))e.actor.StopAt(e.to);
             lineGate=null;spoken=true;lineClock=0;Speak();
         }
-        float EchoAt=>sacrificeTravel+13;
         Vector3 HungAtSupper=>sites["family"].position+Vector3.right*1.4f;
         /// <summary>Extra silence after a line, before the next one starts.</summary>
         float PauseAfter(int index)=>index+1<lines.Length&&lines[index+1].id=="m2v3_lastorder_07"?2f:0f; // "nhìn Nam một lúc lâu"

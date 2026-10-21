@@ -31,13 +31,16 @@ namespace ShadowVale.Map01
             // The road from the lanes to the south dock: the tank waits in the bamboo and blocks its head, 18 m from the bank.
             var road=new NavMeshPath();bool known=NavMesh.CalculatePath(ditch,sites["lane3"].position,NavMesh.AllAreas,road)&&road.status==NavMeshPathStatus.PathComplete;
             Site("tankDock",known?Along(road.corners,18):ditch+Vector3.forward*18);Site("tankHide",known?Along(road.corners,30):ditch+Vector3.forward*30);
-            Site("tamCover",sites["fallen"].position+Vector3.left*6);
+            Site("tamCover",sites["fallen"].position+Vector3.left*6);Site("militiaEntry",known?Along(road.corners,62):sites["lane3"].position);
+            var edge=sites["lane1"].position; // The guns fall on the village edge, cutting the road the enemy reinforces by.
+            Water("artyImpact1",edge+Vector3.forward*30);Water("artyImpact2",edge+Vector3.forward*36+Vector3.right*14);Water("artyImpact3",edge+Vector3.forward*33+Vector3.left*16);
             lastBoat=FindObjectsByType<RiverBuoyantBody>(FindObjectsSortMode.None).OrderBy(b=>Vector3.Distance(b.transform.position,sites["dock"].position)).FirstOrDefault();
             var moor=lastBoat!=null?lastBoat.transform.position:sites["dock"].position+Vector3.right*15;
             if(lastBoat!=null){lastBoatHome=moor;lastBoatHomeRotation=lastBoat.transform.rotation;}
             Water("boatDock",moor);Water("boatDock2",moor+Vector3.back*3.5f);Water("boatMid",moor+new Vector3(1.5f,0,-2));
             Water("boatFar",moor+new Vector3(6.5f,0,-4.5f));Water("boatFar2",moor+new Vector3(4.5f,0,2.5f));
         }
+        /// <summary>Points that are not walked to (on the water, at the village edge): never snapped to the NavMesh.</summary>
         void Water(string id,Vector3 fallback){var authored=Layout?.sites?.FirstOrDefault(s=>s.id==id);water[id]=authored!=null?authored.position:fallback;}
 
         // ---- Tank: breach at the third lane, turns into the village road, hidden in Nhịp 4, blocks the dock road in Nhịp 5.
@@ -46,7 +49,7 @@ namespace ShadowVale.Map01
             if(!State.Done("N3_05C"))return "hidden";
             if(!State.Done("N3_CRAWL"))return "breach";
             if(!State.Done("N3_06"))return "leaving";
-            if(State.tankDestroyed)return "destroyed";
+            if(State.tankDestroyed||sceneTask?.id=="N3_09"&&sceneClock>=BlastAt)return "destroyed";
             if(!State.Done("N3_07"))return sceneTask?.id=="N3_07"?(sceneClock<5?"emerging":"blocking"):"waiting";
             return "blocking";
         }
@@ -77,7 +80,20 @@ namespace ShadowVale.Map01
                 if(State.tankDestroyed&&!tankSmoke.isPlaying)tankSmoke.Play();
                 else if(!State.tankDestroyed&&sceneTask?.id!="N3_09"&&tankSmoke.isPlaying)tankSmoke.Stop(true,ParticleSystemStopBehavior.StopEmittingAndClear);
             }
+            if(stage=="destroyed")BurnTank();
             TickMachineGun(dt,stage);
+        }
+        void BurnTank()
+        {
+            // Dark hull, fire light flickering, smoke: the main light of the bank from the blast to dawn.
+            if(tankFire==null)
+            {
+                var block=new MaterialPropertyBlock();block.SetColor("_BaseColor",new Color(.12f,.11f,.1f));
+                foreach(var r in tank.GetComponentsInChildren<Renderer>())if(!(r is ParticleSystemRenderer))r.SetPropertyBlock(block);
+                var go=new GameObject("Burning tank light");go.transform.SetParent(tank.transform,false);go.transform.localPosition=Vector3.up*2.5f;
+                tankFire=go.AddComponent<Light>();tankFire.type=LightType.Point;tankFire.range=22;tankFire.color=new Color(1,.55f,.22f);tankFire.shadows=LightShadows.None;
+            }
+            tankFire.intensity=State.phase>=6?.6f:3.2f+Mathf.PerlinNoise(Time.time*3,0)*1.6f; // Only embers left at dawn.
         }
         Vector3[] Leg(string from,string to)
         {
@@ -97,7 +113,7 @@ namespace ShadowVale.Map01
                 var shape=splash.shape;shape.shapeType=ParticleSystemShapeType.Cone;shape.angle=18;shape.radius=.15f;shape.rotation=new Vector3(-90,0,0);
             }
             gunFlash.enabled=false;
-            bool firing=(stage=="emerging"||stage=="blocking")&&!(sceneTask?.id=="N3_09"&&sceneClock>=sacrificeTravel+8);
+            bool firing=stage=="emerging"||stage=="blocking";
             if(!firing||dt<=0)return;
             float before=Mathf.Repeat(gunClock,.15f);gunClock+=dt;float cycle=Mathf.Repeat(gunClock,2.6f);
             if(cycle>.9f)return; // A burst, then a pause.
@@ -130,7 +146,7 @@ namespace ShadowVale.Map01
             if(State.phase>=6)return "boatDock"; // The village is back on its bank at dawn.
             if(!State.Done("N3_04"))return State.activeTask=="N3_04"&&State.taskProgress>=SecondWaveAt?"boatFar":"boatDock";
             if(!State.Done("N3_06"))return "boatDock"; // Back for the last trip.
-            if(State.Done("N3_09")||sceneTask?.id=="N3_09"&&sceneClock>=sacrificeTravel+9)return "boatFar";
+            if(State.Done("N3_09")||sceneTask?.id=="N3_09"&&sceneClock>=BlastAt)return "boatFar";
             return "boatMid";
         }
         static void MoveBoat(Transform boat,Vector3 target,bool snap,float step)

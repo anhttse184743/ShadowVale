@@ -15,5 +15,10 @@ namespace ShadowVale.Map01
         public float patrolSweepSeconds=15,coverFireSeconds=75;
         public GameObject civilianArt,tankArt,coveredHungArt;
         public AnimationClip namMournClip,hungPlantRetreatClip;
+        [Header("Night 3 art slots (empty: placeholder or idle pose)")]
+        public GameObject radioPropArt,explosivesArt,soupBowlArt,militiaArt;
+        public AnimationClip namProneClip,namLieBackClip,namSitRadioClip,hungFallClip;
+        [Header("Night 3 sound slots (empty: synthesized or silent)")]
+        public AudioClip tankTracksClip,tinnitusClip,artilleryClip;
     }
 }
