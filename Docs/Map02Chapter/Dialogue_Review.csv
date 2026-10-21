@@ -105,6 +105,7 @@ m2v3_wound_01,m2v3_fallback,Anh Lực,True,Chốt ngoài không giữ nổi! Tô
 m2v3_wound_02,m2v3_fallback,Anh Thành,True,"Lùi về gốc me! Nam, giữ ngõ cho dân qua!",pending_approval
 m2v3_wound_04,m2v3_wound,Anh Lực,False,Xe tăng! Nằm xuống!,pending_approval
 m2v3_wound_05,m2v3_wound,Hùng,True,Nam! Nam! Trả lời tôi!,pending_approval
+m2v3_ammo_01,m2v3_hints,Hùng,True,"Đạn ở xác tụi nó, lấy mà dùng.",pending_approval
 m2v3_alive_01,m2v3_alive,Nam,False,...Còn sống.,pending_approval
 m2v3_alive_02,m2v3_alive,Hùng,True,Về bến. Ngay. Đừng cãi.,pending_approval
 m2v3_coordinates_01,m2v3_coordinates,Hùng,True,"Rạch Tre báo: cần tọa độ cuối, dân phải ra khỏi bảy mươi thước quanh ngõ đình.",pending_approval

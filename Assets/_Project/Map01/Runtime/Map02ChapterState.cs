@@ -50,7 +50,7 @@ namespace ShadowVale.Map01
         public float taskProgress;
         public int workCount;
         public bool wounded,hungDead,radioTransferred,tankDestroyed,artilleryFired,finished,gearStored;
-        [Serializable] public sealed class UnitSnapshot {public string id,group;public Vector3 position;public float health;}
+        [Serializable] public sealed class UnitSnapshot {public string id,group;public Vector3 position;public float health;public bool looted;}
         public bool Done(string id)=>completed.Contains(id);
         public bool Available(Map02ChapterTask t)=>t!=null&&!finished&&t.phase==phase&&!Done(t.id)&&(t.requires??Array.Empty<string>()).All(Done);
         public IEnumerable<Map02ChapterTask> AvailableTasks=>Map02ChapterDefinition.Load().tasks.Where(Available);

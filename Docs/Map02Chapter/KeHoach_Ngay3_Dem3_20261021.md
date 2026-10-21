@@ -129,6 +129,19 @@ Tệp: `Map02ChapterDirector.cs`, `Map02DialogueCatalog.cs`, `Map02Mission.Hud.c
 
 Tệp: `Map02ChapterDirector.cs` (vòng `defend`), `Map02ChapterGuidance.cs`, `Map02Mission.Hud.cs`.
 
+> **Trạng thái 21/10:** đã làm trong file mới `Map02ChapterLanes.cs`.
+> - Các chặng 0→60 / 60→70 / 70→80 / 80→90; `taskProgress` là tỉ lệ 0–1.
+> - % tăng ×0,4 khi còn lính. Đợt 2 (3 lính, cho phép ít nhất 1) xuất hiện ở 50%.
+> - Qua chặng khi đạt 100% của chặng, đợt 2 đã xuất hiện và không còn lính.
+> - **Bắt đầu giữ ngõ khi bước vào vùng 12 m, không cần E.**
+> - HUD: "Sơ tán X% · Còn N lính…", không còn chữ "giây".
+> - "Chuyến một đi rồi" ở mức sơ tán 30% của `N3_04`.
+> - **Đạn rơi:** 5–8 viên mỗi xác, tự nhặt khi đi qua (1,8 m), có nhãn "◇ đạn" trong vòng 15 m, lưu cờ `looted`. Hùng nhắc qua đàm khi còn dưới 10 viên (`m2v3_ammo_01`, 135 dòng thoại).
+> - Save cũ lưu giây: tự đổi sang tỉ lệ khi giá trị > 1.
+> - Test `LaneHoldsFollowEvacuationAndTheFallenDropRounds`, gồm phép tính ngân sách đạn theo sát thương thật của súng. Bộ test 46/46.
+>
+> **Cần xem ở GĐ4:** các vị trí giữ ngõ chỉ cách nhau 9–10 m, nhỏ hơn bán kính 12 m. Vì vậy xong chặng trước là chặng sau tự bắt đầu ngay tại chỗ. Cần đặt lại `lane2` (gốc me, đi ngang nhà chị Lành) và `lane3` cho xa hơn.
+
 - Các chặng: `N3_04` 0→60 (chuyến 1 và 2), `N3_05A` 60→70, `N3_05B` 70→80, `N3_05C` 80→90. `seconds` trong JSON đổi nghĩa thành "thời lượng chặng khi đường đã trống".
 - `taskProgress` (đã có trong save) tăng `dt / seconds` khi Nam ở trong vùng 12 m, nhân với 0,4 khi còn lính sống. Ra khỏi vùng thì dừng tăng nhưng không mất tiến độ.
 - Đợt 1 xuất hiện khi bắt đầu chặng. Đợt 2 (3 lính) xuất hiện ở 50%. Qua chặng khi `taskProgress ≥ 1` và không còn lính sống. Kịch bản cho mỗi tốp 3–5 lính.

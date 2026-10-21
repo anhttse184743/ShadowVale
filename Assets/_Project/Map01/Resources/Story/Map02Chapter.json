@@ -1351,6 +1351,13 @@
       "radio": true
     },
     {
+      "id": "m2v3_ammo_01",
+      "conversation": "m2v3_hints",
+      "speaker": "Hùng",
+      "text": "Đạn ở xác tụi nó, lấy mà dùng.",
+      "radio": true
+    },
+    {
       "id": "m2v3_alive_01",
       "conversation": "m2v3_alive",
       "speaker": "Nam",

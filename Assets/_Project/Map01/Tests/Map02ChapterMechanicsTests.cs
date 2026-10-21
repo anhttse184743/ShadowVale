@@ -88,5 +88,51 @@ namespace ShadowVale.Map01.Tests
             finally{c.Cancel();c.enabled=true;}
             yield return new ExitPlayMode();
         }
+        [UnityTest,Timeout(240000)]public IEnumerator LaneHoldsFollowEvacuationAndTheFallenDropRounds()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
+            Map02Mission m=null;float deadline=Time.realtimeSinceStartup+100;
+            while(Time.realtimeSinceStartup<deadline){m=Object.FindFirstObjectByType<Map02Mission>();if(m?.Chapter!=null&&m.Ready)break;Object.FindFirstObjectByType<Map02Arrival>()?.Skip();yield return null;}
+            Assert.NotNull(m?.Chapter);var c=m.Chapter;var def=Map02ChapterDefinition.Load();var hp=m.Player.GetComponent<ShadowVale.Gameplay.Combat.Health>();
+            void Load(string id){var snapshot=m.Capture();var s=new Map02ChapterState();foreach(var t in def.tasks){s.Complete(t.id);if(t.id==id)break;}snapshot.chapter=s;m.Restore(snapshot);}
+            void Place(Vector3 p){var cc=m.Player.GetComponent<CharacterController>();cc.enabled=false;m.Player.position=p;cc.enabled=true;Physics.SyncTransforms();}
+            Map02ObjectiveObject Mark(string id)=>Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId==id);
+            void Kill(string group){foreach(var e in c.Enemies.Where(e=>e!=null&&e.group==group&&!e.Dead).ToArray())e.HitPoints.TakeDamage(1000,e.transform.position,m.Player.gameObject);}
+            try
+            {
+                Load("N3_04");var lane=def.Find("N3_05A");var mark=Mark("N3_05A");var away=mark.transform.position+Vector3.right*30;
+                Assert.IsFalse(c.ShowInteractPrompt(mark),"Holding a lane is never started with E.");
+                Place(away);yield return null;yield return null;Assert.AreNotEqual("N3_05A",c.State.activeTask,"Holding starts only in the lane.");
+                hp.CinematicInvulnerable=true;Place(mark.transform.position);
+                float until=Time.time+6;while(Time.time<until&&c.SoldiersPressing("N3_05A")==0)yield return null;
+                Assert.AreEqual("N3_05A",c.State.activeTask);Assert.Greater(c.SoldiersPressing("N3_05A"),0);
+                float p0=c.State.taskProgress,t0=Time.time;yield return WaitGameSeconds(2f);
+                Assert.Greater(c.State.taskProgress,p0,"Evacuation moves while Nam holds the lane.");
+                Assert.Less((c.State.taskProgress-p0)/(Time.time-t0),.6f/lane.seconds,"Soldiers in the lane slow the evacuation.");
+                Assert.IsFalse(c.Instruction.Contains("giây"),"No countdown: "+c.Instruction);StringAssert.Contains("Sơ tán",c.Instruction);
+                // Leaving the lane neither advances nor loses evacuation.
+                Place(away);yield return null;float held=c.State.taskProgress;yield return WaitGameSeconds(1f);
+                Assert.AreEqual(held,c.State.taskProgress,1e-4f);
+                // The second wave comes half way; the mark alone does not hold the lane while soldiers remain.
+                Kill("N3_05A");c.State.taskProgress=.49f;Place(mark.transform.position);
+                until=Time.time+8;while(Time.time<until&&!c.State.combatGroups.Contains("N3_05A_b"))yield return null;
+                Assert.IsTrue(c.State.combatGroups.Contains("N3_05A_b"));Assert.AreEqual(Mathf.FloorToInt(Mathf.Lerp(60,70,c.State.taskProgress)),c.Evacuation);
+                c.State.taskProgress=1;yield return null;yield return null;Assert.IsFalse(c.State.Done("N3_05A"));
+                Kill("N3_05A_b");until=Time.time+3;while(Time.time<until&&!c.State.Done("N3_05A"))yield return null;
+                Assert.IsTrue(c.State.Done("N3_05A"));Assert.AreEqual(70,c.State.evacuation);
+                // The fallen give their rounds once; a load does not give them again.
+                hp.CinematicInvulnerable=true;var body=c.Enemies.First(e=>e!=null&&e.Dead&&!e.Looted);int before=m.Inventory.TryGetValue(m.RifleAmmo,out int had)?had:0;
+                Place(body.transform.position);yield return null;yield return null;
+                int after=m.Inventory[m.RifleAmmo];Assert.That(after-before,Is.InRange(5,8));Assert.IsTrue(body.Looted);
+                var saved=m.Capture();m.Restore(saved);hp.CinematicInvulnerable=true;var again=c.Enemies.First(e=>e.id==body.id);Assert.IsTrue(again.Looted);
+                Place(again.transform.position);yield return null;yield return null;Assert.AreEqual(after,m.Inventory[m.RifleAmmo]);
+                // Budget: the 90 stored rounds plus the smallest drops cover every Night 3 soldier at 60 % hits.
+                var rifle=m.Player.GetComponent<ShadowVale.Gameplay.Combat.PlayerCombat>().WeaponFor(ShadowVale.Gameplay.Combat.WeaponKind.Rifle);
+                int soldiers=4+4*(4+3),cost=Mathf.CeilToInt(Mathf.Ceil(100f/rifle.Damage)/.6f);
+                Assert.GreaterOrEqual(90+soldiers*5,soldiers*cost,$"rifle damage {rifle.Damage}");
+            }
+            finally{c.Cancel();hp.CinematicInvulnerable=false;}
+            yield return new ExitPlayMode();
+        }
     }
 }

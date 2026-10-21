@@ -132,7 +132,8 @@ namespace ShadowVale.Map01
             {
                 if(!State.introduced.Contains(t.id)){BeginScene(t,0,2);scenePurpose=3;}else StartRescueEscort(t);return true;
             }
-            if(t.kind=="defend"||t.kind=="coverFire") {EnsureGroup(t.id,4);Mission.Say(t.kind=="coverFire"?"Yểm trợ Hùng. Giữ hỏa lực về phía địch để cậu ấy tiếp cận xe tăng.":"Giữ vị trí và đẩy lùi tốp địch để đoàn dân đi qua.");if(t.kind=="coverFire"){health.CinematicInvulnerable=true;roles["Hùng"].GoTo(ChargePoint,1.8f);Bark("m2v3_sacrifice_01");}return true;}
+            if(t.kind=="defend"){StartDefend(t);return true;}
+            if(t.kind=="coverFire") {EnsureGroup(t.id,4);Mission.Say("Yểm trợ Hùng. Giữ hỏa lực về phía địch để cậu ấy tiếp cận xe tăng.");health.CinematicInvulnerable=true;roles["Hùng"].GoTo(ChargePoint,1.8f);Bark("m2v3_sacrifice_01");return true;}
             if(t.kind=="reach"||t.kind=="binocular"||t.kind=="crawl")return true;
             if(t.kind=="repair"||t.kind=="antenna"||t.kind=="clear"||t.kind=="demolition")
             {
@@ -172,7 +173,7 @@ namespace ShadowVale.Map01
             TickBark(dt);
             if(doingWork){TickWork(dt);return;}
             if(Mission.Panel!=0)return;
-            TickLight(dt);TickPatrol(dt);TickCrawlCall(dt);
+            TickLight(dt);TickPatrol(dt);TickCrawlCall(dt);TickAmmo();
             if(State.phase==5&&State.Done("N3_00")&&!State.Done("N3_04"))EnsureGroup("initial_attack",4);
             if(State.wounded&&!Mission.Cinematic)rig.AddRecoil(Mathf.Sin(Time.time*2)*dt*.08f,Mathf.Sin(Time.time*3)*dt*.06f);
             foreach(var t in State.AvailableTasks.ToArray())
@@ -194,15 +195,17 @@ namespace ShadowVale.Map01
                     observed=view?observed+dt:0;if(observed>=t.seconds){binocular=false;rig.SetBinoculars(false,1);Finish(t);break;}
                 }
                 if(t.kind=="crawl"&&Keyboard.current?.cKey.isPressed==true){var path=new NavMeshPath();if(NavMesh.CalculatePath(Mission.Player.position,mark.transform.position,NavMesh.AllAreas,path)&&path.status==NavMeshPathStatus.PathComplete){var next=path.corners.FirstOrDefault(p=>Vector3.Distance(p,Mission.Player.position)>.15f);if(Vector3.Distance(Mission.Player.position,mark.transform.position)>1.2f){var delta=Vector3.ProjectOnPlane(next-Mission.Player.position,Vector3.up).normalized*.8f*dt;Mission.Player.GetComponent<CharacterController>().Move(delta);State.taskProgress+=dt;}}if(Vector3.Distance(Mission.Player.position,mark.transform.position)<1.5f){health.CinematicInvulnerable=false;BeginScene(t);break;}}
-                if((t.kind=="defend"||t.kind=="coverFire")&&State.activeTask==t.id)
+                if(t.kind=="defend")
+                {
+                    // Holding starts on reaching the lane, never by pressing E.
+                    if(State.activeTask!=t.id&&string.IsNullOrEmpty(State.carry)&&escort==null&&InLane(t))StartDefend(t);
+                    if(State.activeTask==t.id&&TickLane(t,dt))break;
+                }
+                if(t.kind=="coverFire"&&State.activeTask==t.id)
                 {
                     if(!State.combatGroups.Contains(t.id))EnsureGroup(t.id,4);
-                    bool safe=t.kind=="coverFire"||State.combatGroups.Contains(t.id)&&Enemies.Where(e=>e!=null&&e.group==t.id).All(e=>e.Dead);
-                    bool inArea=Vector3.Distance(Mission.Player.position,mark.transform.position)<12;float before=State.taskProgress;
-                    if(safe&&inArea)State.taskProgress+=dt;
-                    if(t.kind=="coverFire"){health.CinematicInvulnerable=true;State.taskProgress+=inArea?0:dt;}
-                    if(t.id=="N3_04"&&before<t.seconds*.3f&&State.taskProgress>=t.seconds*.3f)Bark("m2v3_boatsafe_01"); // The first boat leaves.
-                    if(State.taskProgress>=t.seconds&&(t.kind!="coverFire"||Vector3.Distance(roles["Hùng"].transform.position,ChargePoint)<2)){if(t.kind=="coverFire")health.CinematicInvulnerable=false;BeginScene(t);break;}
+                    health.CinematicInvulnerable=true;State.taskProgress+=dt;
+                    if(State.taskProgress>=t.seconds&&Vector3.Distance(roles["Hùng"].transform.position,ChargePoint)<2){health.CinematicInvulnerable=false;BeginScene(t);break;}
                 }
             }
         }
@@ -332,7 +335,10 @@ namespace ShadowVale.Map01
             Cancel();State=state??new Map02ChapterState();State.Validate();workTask=Map02ChapterDefinition.Load().Find(State.activeTask);
             Mission.World.story.stage=State.finished?Map02Stage.Complete:Map02Stage.Contact;
             foreach(var e in Enemies)if(e!=null)Destroy(e.gameObject);Enemies.Clear();
-            foreach(var saved in State.enemies)SpawnEnemy(saved.id,saved.group,saved.position,saved.health,saved.group!="scout_patrol");
+            foreach(var saved in State.enemies)SpawnEnemy(saved.id,saved.group,saved.position,saved.health,saved.group!="scout_patrol",saved.looted);
+            ammoHinted=false;
+            // Saves from before evacuation-driven lanes stored seconds held.
+            var held=Map02ChapterDefinition.Load().Find(State.activeTask);if(held!=null&&held.kind=="defend"&&State.taskProgress>1)State.taskProgress=Mathf.Clamp01(State.taskProgress/Mathf.Max(1,held.seconds));
             if(State.completed.Count==0)foreach(var pair in initialRolePositions)roles[pair.Key].StopAt(pair.Value);
             placedActors=false;phaseApplied=-1;ApplyState();
             foreach(var saved in State.actors)if(roles.TryGetValue(saved.role,out var actor))actor.StopAt(saved.position);
@@ -351,7 +357,7 @@ namespace ShadowVale.Map01
         public Map02ChapterState Capture()
         {
             State.actors=roles.Select(pair=>new Map02ChapterState.ActorSnapshot{role=pair.Key,position=pair.Value.transform.position}).ToList();
-            State.enemies=Enemies.Where(e=>e!=null).Select(e=>new Map02ChapterState.UnitSnapshot{id=e.id,group=e.group,position=e.transform.position,health=e.HitPoints.Current}).ToList();
+            State.enemies=Enemies.Where(e=>e!=null).Select(e=>new Map02ChapterState.UnitSnapshot{id=e.id,group=e.group,position=e.transform.position,health=e.HitPoints.Current,looted=e.Looted}).ToList();
             return JsonUtility.FromJson<Map02ChapterState>(JsonUtility.ToJson(State));
         }
         public void Cancel()
@@ -418,10 +424,10 @@ namespace ShadowVale.Map01
                 else Mission.Say("Hùng: Đèn đang quét. Nằm thấp xuống, chờ nó đi qua.");
             }
         }
-        void EnsureGroup(string id,int count,bool hostile=true)
+        void EnsureGroup(string id,int count,bool hostile=true,string site=null,int minimum=0)
         {
             if(State.combatGroups.Contains(id)||Time.time<spawnRetry)return;
-            var task=Map02ChapterDefinition.Load().Find(id);var center=sites[task!=null?task.site:id=="scout_patrol"?"scout":"lane1"].position;var locations=new List<Vector3>();
+            var task=Map02ChapterDefinition.Load().Find(id);var center=sites[site??(task!=null?task.site:id=="scout_patrol"?"scout":"lane1")].position;var locations=new List<Vector3>();
             for(int i=0;i<36&&locations.Count<count;i++)
             {
                 var p=center+Quaternion.Euler(0,i*137.5f,0)*Vector3.forward*(22+i%3*4);
@@ -430,14 +436,14 @@ namespace ShadowVale.Map01
                 var view=rig.GetComponent<Camera>().WorldToViewportPoint(h.position+Vector3.up);if(view.z>0&&view.x>0&&view.x<1&&view.y>0&&view.y<1)continue;
                 if(locations.Any(q=>Vector3.Distance(q,h.position)<4))continue;locations.Add(h.position);
             }
-            if(locations.Count<count){spawnRetry=Time.time+2;Mission.Say("Địch đang cơ động ngoài tuyến. Giữ vị trí có vật che.");return;}
-            for(int i=0;i<count;i++)SpawnEnemy(id+"_"+i,id,locations[i],100,hostile);
+            if(locations.Count<(minimum>0?minimum:count)){spawnRetry=Time.time+2;Mission.Say("Địch đang cơ động ngoài tuyến. Giữ vị trí có vật che.");return;}
+            for(int i=0;i<locations.Count;i++)SpawnEnemy(id+"_"+i,id,locations[i],100,hostile);
             State.combatGroups.Add(id);
         }
-        void SpawnEnemy(string id,string group,Vector3 position,float hp,bool hostile=true)
+        void SpawnEnemy(string id,string group,Vector3 position,float hp,bool hostile=true,bool looted=false)
         {
             var go=new GameObject("Map2Enemy_"+id);go.transform.SetPositionAndRotation(position,Quaternion.identity);go.transform.SetParent(root.transform);
-            var unit=go.AddComponent<Map02ChapterEnemy>();unit.Initialize(this,id,group,hp,hostile);Enemies.Add(unit);
+            var unit=go.AddComponent<Map02ChapterEnemy>();unit.Initialize(this,id,group,hp,hostile);unit.Looted=looted;Enemies.Add(unit);
         }
         void CreateTank()
         {
@@ -456,7 +462,7 @@ namespace ShadowVale.Map01
         public void DrawOverlay()
         {
             var label=new GUIStyle(GUI.skin.label){fontSize=24,wordWrap=true};var title=new GUIStyle(label){fontSize=28,fontStyle=FontStyle.Bold};
-            DrawBark(label);
+            DrawBark(label);DrawAmmoMarks(label);
             if(sceneTask!=null&&spoken)
             {
                 GUI.Box(new Rect(150,700,1300,175),GUIContent.none);var line=lines[lineIndex];

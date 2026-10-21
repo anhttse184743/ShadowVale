@@ -10,6 +10,8 @@ namespace ShadowVale.Map01
         public string id,group;
         public Health HitPoints {get;private set;}
         public bool Dead=>HitPoints==null||HitPoints.IsDead;
+        /// <summary>Night 3: his rounds have been picked up.</summary>
+        public bool Looted {get;set;}
         Vector3 patrolHome;float patrolClock;
         Map02ChapterDirector director;NavMeshAgent agent;bool alerted;float shot,repath;Animator actor;
         public void Initialize(Map02ChapterDirector owner,string key,string roster,float hp,bool hostile)
