@@ -179,7 +179,8 @@ namespace ShadowVale.Map01.Tests
         [UnityTest] public IEnumerator CloseShotIsHeardByEveryListenerAndRemembersTheShotRatherThanNamMoving()
         {
             Open();yield return new EnterPlayMode();yield return WaitForMap01Ready();Quiet();Equip(true);Targets();PlaceNam(M,Lane);
-            Stage(G,Lane+Vector3.forward*20,200);Stage(Ally,Lane+Vector3.back*5,80);
+            // Both within Map01Mission.ShotPinpointMeters (12 m): further off, a Mosin shot is only searched for (MosinSniperShotTests).
+            Stage(G,Lane+Vector3.forward*10,200);Stage(Ally,Lane+Vector3.back*5,80);
             G.transform.rotation=Quaternion.LookRotation(Vector3.forward);
             Ally.transform.rotation=Quaternion.LookRotation(Vector3.back); // Hearing behind the shooter, without a real visual contact.
             yield return WaitGameSeconds(.5f);Aim(G.Position+Vector3.up);

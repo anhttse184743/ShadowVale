@@ -206,6 +206,7 @@ namespace ShadowVale.Map01
                 ModernCombat.DrawsOwnWeaponHud = true; // Map01Hud.Combat shows the slots on keys 1-4.
                 ModernCombat.SlotPressed = inventory.OnSlotKey; // 1 long gun, 2 pistol, 3 knife, 4 stones (Map01Inventory.Bag).
                 ModernCombat.GunKilled += OnGunKilled;
+                ModernCombat.ShotPassesThrough = RoundPassesThrough;
                 var stones = GetComponent<Map01StoneThrow>(); // Added by Map01PlayerInteraction.Awake.
                 ModernCombat.InputAllowed = () => CameraInputEnabled && !ForestMenu.Visible && !inventory.SuppressFire && !InputFocus.OverlayOpen
                     && !inventory.ThrowableEquipped && !(Binoculars?.Binoculars ?? false) && (stones == null || !stones.PresentingThrow); // Hands are on the binoculars or a throwable, not the rifle.
@@ -354,7 +355,17 @@ namespace ShadowVale.Map01
             EventBus.Publish(new PlayerAttackEvent(kind.ToString().ToLowerInvariant(), position));
             if (kind != WeaponKind.Rifle && kind != WeaponKind.Pistol && kind != WeaponKind.Sniper) return;
             var profile = kind == WeaponKind.Pistol ? Bundle.weapons.FirstOrDefault(w => w.id == "pistol_k54") : kind==WeaponKind.Sniper ? Bundle.weapons.FirstOrDefault(w=>w.id=="rifle_mosin") : Weapon;
-            EmitNoise(position, profile != null ? profile.noise_radius : Weapon.noise_radius, NoiseKind.Gunshot);
+            float loud = profile != null ? profile.noise_radius : Weapon.noise_radius;
+            if (kind == WeaponKind.Sniper)
+            {
+                // Heard to noise_radius, placed only from close by: within ShotPinpointMeters it is a gunshot like any
+                // other (Nam found, a hostage's guard sets off the execution); further off, a guard searches roughly
+                // that way without knowing where Nam is (Map01EnemyController.HearDistantShot).
+                EmitNoise(position, Mathf.Min(loud, ShotPinpointMeters), NoiseKind.Gunshot);
+                foreach (var guard in Enemies)
+                    if (guard != null && Vector3.Distance(guard.transform.position, position) > ShotPinpointMeters) guard.HearDistantShot(position, loud);
+            }
+            else EmitNoise(position, loud, NoiseKind.Gunshot);
             // Every shot wears the gun in hand by its content's durability_per_shot.
             var held = inventory.HeldGun();
             if (held != null) inventory.Wear(held.Value, inventory.WearPerShot(inventory.SlotItem(held.Value)));
@@ -526,6 +537,19 @@ namespace ShadowVale.Map01
             else if (kb.enterKey.wasPressedThisFrame && rescue != null && rescue.HungDown) rescue.Retry();
             else if (kb.enterKey.wasPressedThisFrame && scouting != null && scouting.FailedRun) scouting.Restart();
         }
+
+        /// <summary>
+        /// Thatch and zinc stop no rifle round: the art stage's roof colliders ("ROOF / …", Map01ArtStage) let shots
+        /// through. C3's watchtower eave hangs at the sentry's head (14.1-14.5 m, head 14.25 m), so from the ground every
+        /// round aimed at the head he shows under it stopped in the roof (2026-10-22). Sight, the camera and thrown
+        /// things still stop at roofs.
+        /// </summary>
+        public static bool RoundPassesThrough(Collider c) => c is MeshCollider && c.name.StartsWith("ROOF /");
+
+        /// <summary>A guard who hears a Mosin shot from this close knows where it came from (Nam found); from further
+        /// off, out to the rifle's noise_radius (30 m), he only searches roughly that way. Chosen 2026-10-22: sniping
+        /// was found out by everyone within 30 m, as far as the PU's 3.5x reaches in C3's terraced ground.</summary>
+        public const float ShotPinpointMeters = 12f;
 
         private void OnGunKilled(GameObject target)
         {

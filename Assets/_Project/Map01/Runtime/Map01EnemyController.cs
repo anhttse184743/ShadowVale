@@ -400,6 +400,30 @@ namespace ShadowVale.Map01
         bool INoiseListener.OnNoise(Vector3 position, float radius, NoiseKind kind) => Hear(position, radius, kind);
 
         /// <summary>
+        /// A Mosin shot from beyond <see cref="Map01Mission.ShotPinpointMeters"/> but within <paramref name="radius"/>
+        /// (2026-10-22): loud enough to put him on edge, too far off to tell where it came from. He goes to search round
+        /// a spot roughly that way, vaguer the further it was, and nothing more: no detection, no known threat for
+        /// reinforcements. Only seeing Nam gives him away (stealth sniping as in Sniper Elite or MGS V: shoot, then move).
+        /// True if he heard it.
+        /// </summary>
+        public bool HearDistantShot(Vector3 shooter, float radius)
+        {
+            if (BedPoseOwned || !Alive || (_mission != null && _mission.Cinematic)) return false;
+            if (!HearingSensor.Hears(transform.position, shooter, radius)) return false;
+            if (Engaged) return true;
+            var off = Vector3.ProjectOnPlane(shooter - transform.position, Vector3.up);
+            float d = off.magnitude;
+            if (d < .01f) return true;
+            var along = off / d; var side = Vector3.Cross(Vector3.up, along);
+            var guess = transform.position + along * (d * Random.Range(.6f, 1.15f)) + side * (d * Random.Range(-.35f, .35f));
+            if (_mission != null && Physics.Raycast(guess + Vector3.up * 40f, Vector3.down, out var ground, 80f, _mission.ObstructionMask, QueryTriggerInteraction.Ignore))
+                guess.y = ground.point.y;   // C3 stands on terraces: the spot on the ground there, not at his own height
+            _hearReactionAt = 0;
+            BeginInvestigation(guess);
+            return true;
+        }
+
+        /// <summary>
         /// Off to check <paramref name="position"/> (the FSM's Investigate). The overseer does not
         /// leave Hùng for a sound: he looks from beside him, and for a stone he goes a few steps
         /// towards it and keeps his eyes on that spot (the stone lure) — never into the river.

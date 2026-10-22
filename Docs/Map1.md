@@ -119,6 +119,13 @@ hay mô hình C3: lính được đặt lại vị trí lúc chạy, kẻng và 
   rồi hắn vùng ra đánh. Báo cáo bằng ống nhòm không còn làm lộ Nam.
 - **Mosin trinh sát:** từ lúc nhận lệnh điểm 3, khẩu Mosin + 5 viên nằm trên tấm bạt cạnh tảng đá ở vai đồi Đông Nam
   (106, 22). Từ đó thấy sàn chòi, cách 36 m, ngoài tầm 30 m của tiếng Mosin.
+  Mép mái chòi thấp ngang đầu lính gác (14,1–14,5 m, đầu 14,25 m): trước 22/10/2026 phát nhắm đầu từ dưới lên đều
+  găm vào mái. Nay đạn xuyên mái lá và mái tôn (`Map01Mission.RoundPassesThrough`, va chạm "ROOF / …"); tầm nhìn,
+  camera và đồ ném vẫn bị mái chặn. Trúng là chết (200 sát thương, `lethalHits`).
+- **Tiếng Mosin** (từ 22/10/2026): vang 30 m nhưng chỉ lính trong 12 m (`ShotPinpointMeters`) biết đúng chỗ Nam
+  (tính là phát hiện; đang giải cứu Hùng thì Hùng bị xử). Lính 12–30 m chỉ đi lục soát một chỗ đại khái về phía tiếng
+  súng (càng xa càng lệch), không biết chỗ Nam, không báo cho viện binh; chỉ nhìn thấy Nam mới lộ. Bắn xong nên đổi
+  chỗ. AK và K-54 giữ luật cũ. Kiểm thử: `MosinSniperShotTests`, `MosinStealthTests`.
 - **Điểm danh:** mỗi 90 giây lính gác cổng gọi bộ đàm hai tổ tuần tra; một tổ không trả lời thì trại "cảnh giác":
   tuần tra còn lại đứng trước cổng, lính sân và cận vệ giữ cửa nhà chỉ huy, chỉ huy ở bàn phụ.
 - **Kẻng:** trại báo động thì sau 4 giây một lính gõ kẻng, 3 lính ngủ ở hai dãy nhà ra đánh. Tháo dùi kẻng ([E] ở cổng)

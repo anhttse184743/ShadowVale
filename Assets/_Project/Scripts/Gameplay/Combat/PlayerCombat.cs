@@ -942,8 +942,7 @@ namespace ShadowVale.Gameplay.Combat
             // The trace starts at the camera so the shot lands on the crosshair, but the streak
             // has to come out of the barrel or it looks like the player is firing from their eyes.
             Vector3 endPoint;
-            if (Physics.Raycast(origin, direction, out RaycastHit hit, gun.Range,
-                    hitMask, QueryTriggerInteraction.Ignore))
+            if (TryShotHit(origin, direction, gun.Range, out RaycastHit hit))
             {
                 var health = hit.collider.GetComponentInParent<Health>();
                 bool alive = health != null && !health.IsDead;
@@ -959,6 +958,24 @@ namespace ShadowVale.Gameplay.Combat
 
             PlayTracer(gun.Muzzle.position, endPoint)?.AnchorEmission(gun.Muzzle);
             gun.PlayMuzzleFlash();
+        }
+
+        /// <summary>
+        /// Colliders a round goes straight through, set by a map (Map 1: its thatch and zinc roofs, which stop no
+        /// rifle bullet). Null: the first collider on the line stops it, as before.
+        /// </summary>
+        public System.Func<Collider, bool> ShotPassesThrough { get; set; }
+
+        /// <summary>The first thing on the line that stops the round.</summary>
+        private bool TryShotHit(Vector3 origin, Vector3 direction, float range, out RaycastHit hit)
+        {
+            if (ShotPassesThrough == null)
+                return Physics.Raycast(origin, direction, out hit, range, hitMask, QueryTriggerInteraction.Ignore);
+            hit = default;
+            bool found = false;
+            foreach (var h in Physics.RaycastAll(origin, direction, range, hitMask, QueryTriggerInteraction.Ignore))
+                if ((!found || h.distance < hit.distance) && !ShotPassesThrough(h.collider)) { hit = h; found = true; }
+            return found;
         }
 
         /// <summary>Sphere sweep forward from chest height — forgiving enough for a greybox test.</summary>
