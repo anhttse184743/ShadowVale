@@ -31,12 +31,15 @@ namespace ShadowVale.Map01
         public float SourceFrame { get; private set; }=1;
         public float PoseWeight=>weight;
         public Weapon Weapon { get; private set; }
+        public Transform GunTransform=>gun;
         public static Map01Pistol Install(Map01Mission owner)
         {
             var existing=owner.player.GetComponent<Map01Pistol>();if(existing!=null)return existing;
             if(owner.Bundle?.weapons==null||!owner.Bundle.weapons.Any(w=>w!=null&&w.id=="pistol_k54"))return null;
             var asset=Resources.Load<Map01PistolAnimationData>("Weapons/K54V12");
             if(asset==null){Debug.LogError("K54 v12 animation asset is missing; rebuild ShadowVale/K54/Build approved assets.");return null;}
+            // Tutorial Hùng has his own skeleton. Never leave a half-bound Nam layer on it.
+            if(!NamMotionData.FitsSkeleton(owner.player.GetComponentInChildren<Animator>()?.transform,asset.bones))return null;
             var result=owner.player.gameObject.AddComponent<Map01Pistol>();result.Bind(owner,asset);return result;
         }
         void Bind(Map01Mission owner,Map01PistolAnimationData asset)
@@ -88,6 +91,7 @@ namespace ShadowVale.Map01
             else SourceFrame=aim>=1?153+Mathf.Repeat(clock*60,99):1+Mathf.Repeat(clock*60,79);
             wasReloading=combat.IsReloading;
             if(combat.EquippedKind==WeaponKind.Pistol)combat.GunPresentationReady=active && (aim>=.95f || Time.time-shotAt<Weapon.Cooldown);
+            if(TryGetComponent<NamMotionRefresh>(out var refresh)&&refresh.ControlsPistol)return;
             for(int i=0;i<bones.Length;i++)data.bones[i].At(SourceFrame).Apply(bones[i],weight);
             if(gun.parent!=rightHand)gun.SetParent(rightHand,false);
             data.weapon.At(SourceFrame).Apply(gun);

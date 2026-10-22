@@ -1,0 +1,1 @@
+motion=jump_pistol frame=1922,112 root=(-67.50, 13.56, -66.50) hand=(-67.09, 15.06, -66.88) foot=(-67.64, 14.01, -66.69) modelLocal=(0.00, 0.00, 0.00) grounded=False

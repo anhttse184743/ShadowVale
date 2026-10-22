@@ -205,11 +205,12 @@ namespace ShadowVale.Map01
                     break;
                 case ForestPointKind.Loot:
                     if (point.used) return;
+                    if (point.used) return;
                     string took = TakeItems(point, out bool any);
                     if (!string.IsNullOrEmpty(took)) mission.Say(took, 6);
                     if (!any) break; // A full bag at a pile of stones: no stooping for nothing.
                     // a fallen guard's pack or gun is picked up off the ground; a crate is opened
-                    Rummage(point.GetComponent<Map01EnemyController>() != null || (point.id!=null&&(point.id.StartsWith(Map01RescueStones.IdPrefix)||point.id.StartsWith(Map01Drops.IdPrefix)||point.id.StartsWith(Map01Logistics.GunPointPrefix))) ? Map01NamActions.PickUp : Map01NamActions.OpenChest);
+                    Rummage(point.GetComponent<Map01EnemyController>() != null || (point.id!=null&&(point.id.StartsWith(Map01RescueStones.IdPrefix)||point.id.StartsWith(Map01Drops.IdPrefix)||point.id.StartsWith(Map01Logistics.GunPointPrefix)||point.id.StartsWith(Map01FieldSupplies.IdPrefix))) ? Map01NamActions.PickUp : Map01NamActions.OpenChest);
                     break;
                 case ForestPointKind.Workbench:
                     // [E] opens the bench screen (Map01Hud.Bench) and shuts it again.

@@ -1,0 +1,178 @@
+{
+  "approvedOn": "2026-10-22",
+  "approval": "oke thêm vào game cho tôi",
+  "unity": "6000.3.24f1",
+  "scope": "Nam / Map 1; incompatible Hùng skeleton keeps its own motions; Map 2 mission not wired in this change",
+  "clips": 47,
+  "frames": 3208,
+  "fps": 60,
+  "bones": 62,
+  "props": 5,
+  "latestDistinctTests": 22,
+  "passed": 22,
+  "failed": 0,
+  "runs": [
+    {
+      "file": "regression-tests.xml",
+      "total": "19",
+      "passed": "19",
+      "failed": "0"
+    },
+    {
+      "file": "final-tests.xml",
+      "total": "12",
+      "passed": "11",
+      "failed": "1"
+    },
+    {
+      "file": "rig-tests.xml",
+      "total": "4",
+      "passed": "4",
+      "failed": "0"
+    }
+  ],
+  "cases": [
+    {
+      "name": "ShadowVale.Map01.Tests.C3BedAnimationTests.ApprovedDataKeepsClipTimingAndSeparateGameplayRigs",
+      "result": "Passed",
+      "run": "regression-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3BedAnimationTests.KnifeExecutionIsSilentFreeOfAmmoCostAndLeavesDiscoverableSavedCorpse",
+      "result": "Passed",
+      "run": "regression-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3BedAnimationTests.MissingKnifeRejectsAndEmptyPistolCanExecuteButCancellationRestoresControls",
+      "result": "Passed",
+      "run": "regression-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.K54IntegrationTests.CaptureK54InTheRealMapLighting",
+      "result": "Passed",
+      "run": "regression-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.K54IntegrationTests.K54FiresOneRoundDealsConfiguredDamageAndSurvivesCrouchAndStoryInterruptions",
+      "result": "Passed",
+      "run": "regression-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.K54IntegrationTests.K54HasItsOwnMagazineAndReloadUsesOnlyPistolReserve",
+      "result": "Passed",
+      "run": "rig-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.K54IntegrationTests.SwitchingAndThrowingCancelK54ReloadAndKeepBothAmmunitionPools",
+      "result": "Passed",
+      "run": "regression-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.K54NormalRestorationTests.ActualShotUsesNormalReportAudioAndStillWakesWithinTenMetres",
+      "result": "Passed",
+      "run": "regression-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.K54NormalRestorationTests.HeldLootAndIconsUseTheOriginalApprovedPistol",
+      "result": "Passed",
+      "run": "regression-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.K54NormalRestorationTests.OrdinaryK54ProfileRestoresSixteenMetresWithoutChangingBalance",
+      "result": "Passed",
+      "run": "regression-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.NamMotionRefreshTests.ActualJumpUsesPhysicsAndWaitsForLandingAfterTheNominalFlight",
+      "result": "Passed",
+      "run": "final-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.NamMotionRefreshTests.ApprovedAssetHasAllFortySevenClipsAndExistingSkeleton",
+      "result": "Passed",
+      "run": "final-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.NamMotionRefreshTests.ExportedJumpHasNoSecondBallisticArcAndPropsKeepTheirSize",
+      "result": "Passed",
+      "run": "rig-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.NamMotionRefreshTests.JumpControllerExitsOnActualGroundedAndPreservesStoryStates",
+      "result": "Passed",
+      "run": "final-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.NamMotionRefreshTests.KnifeDrawAttackHolsterAndPistolReloadUseV3WithoutChangingAmmo",
+      "result": "Passed",
+      "run": "final-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.NamMotionRefreshTests.SlopeJumpWeaponSwapsAndPausePreserveTheAirbornePhase",
+      "result": "Passed",
+      "run": "final-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.NamMotionRefreshTests.ThrowCancelReleaseAndCrouchUseApprovedPropsAndReleaseOnce",
+      "result": "Passed",
+      "run": "final-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.TutorialAnimationPolishTests.GameplayPosesAndSideBySideSizeReview",
+      "result": "Passed",
+      "run": "rig-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.TutorialAnimationPolishTests.HungMatchesNamsStandingSizeAndGroundContact",
+      "result": "Passed",
+      "run": "rig-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.GrenadeUsesItsOwnModelReleasesOnceAndKeepsHandsBusyThroughRecovery",
+      "result": "Passed",
+      "run": "final-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.HolsteringAnAKInterruptsItsMagazineGestureAndDoesNotFinishAHiddenReload",
+      "result": "Passed",
+      "run": "final-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.SmokeIsACanisterInTheHandAndAimingCancelsTheReloadWithoutSpendingAmmo",
+      "result": "Passed",
+      "run": "final-tests.xml"
+    }
+  ],
+  "sha256": {
+    "SourceArt/AnimationRefresh_20261022/Nam_AnimationRefresh_2026-10-22_v3.blend": "77727ffeab59bf989dfd9fdd568fbe859ce35541ae6df2a92e6341a32c59ac2c",
+    "Assets/_Project/Map01/Resources/Characters/NamMotionV3.asset": "a8f60a4018ab32c2bebdecab425bbf8eca2f50c4b1e918287a8a9b8412b87c8c",
+    "Assets/_Project/Art/NamMotionV3/Nam_AnimationRefresh_v3.fbx": "ce0ca8a086b1140aa0f9970b47fb730fb0b012baee0114ec614b60d587a81668",
+    "Assets/_Project/Map01/Runtime/NamMotionData.cs": "e3c7c1ade39d6ba92dc2ab66d5bedef8ab5d0143771e4f924a71b026a53fcb71",
+    "Assets/_Project/Map01/Runtime/NamMotionRefresh.cs": "9731e3bc89d4a4ae377978149f1c63bb835f344380d1663b0035bf9dff1e23a2",
+    "Assets/_Project/Map01/Runtime/Map01Pistol.cs": "73cd78e7231307ceb40d8b2cc0678f6291199ae03404edcd4e68397ea3819fb0",
+    "Assets/_Project/Map01/Runtime/Map01Mosin.cs": "f6f7e1673c3d3df27d02273f4aa1aa4146683627d39a40b78d1fea4947bcd36a",
+    "Assets/_Project/Map01/Runtime/Map01NamActions.cs": "abbc73e8d9333dfce98c411bb79d227a6a4c3ea3ccbbaade78e645f435fb1bda",
+    "Assets/_Project/Map01/Runtime/Map01Mission.cs": "560c56cd66ca4bf25743e4245b67c94239996cbbd84818581395d33e873b3e2b",
+    "Assets/_Project/Scripts/Gameplay/Player/PlayerController.cs": "d6f7ec9c085ce8a643414e752570855f5bd2a6b793bdb8e57b7d926de17df7ca",
+    "Assets/_Project/Art/Characters/Animations/Controllers/AC_Player.controller": "56582721ca33cbc735ca029ac01991a5501f3c342a916b26522c648f9141063f"
+  },
+  "liveUnityStills": [
+    "01-knife-draw.png",
+    "02-knife-idle.png",
+    "03-knife-attack.png",
+    "04-knife-holster.png",
+    "05-pistol-carry.png",
+    "06-pistol-reload.png",
+    "07-f1-carry.png",
+    "08-f1-release.png",
+    "09-smoke-crouch.png",
+    "10-jump-pistol.png",
+    "11-land-pistol.png",
+    "12-stone-crouch.png",
+    "13-slope-jump-f1.png",
+    "14-f1-pin.png",
+    "15-f1-aim.png"
+  ],
+  "committed": false,
+  "pushed": false
+}

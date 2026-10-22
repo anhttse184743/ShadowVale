@@ -30,11 +30,11 @@
   ],
   "weapons": [
     { "id": "rifle_standard",  "display_name": "Service Rifle",   "class": "rifle",   "damage": 24.0, "fire_rate": 6.5,  "range": 40.0, "ammo_type": "ammo_rifle",   "magazine_size": 30, "reload_seconds": 2.4, "durability_max": 100, "durability_per_shot": 0.35, "noise_radius": 18.0, "suppressed": false },
-    {"id": "rifle_m16", "display_name": "M16", "class": "rifle", "damage": 21.6, "fire_rate": 11.666666666666666, "range": 40.0, "ammo_type": "ammo_556", "magazine_size": 30, "reload_seconds": 2.4, "durability_max": 100, "durability_per_shot": 0.35, "noise_radius": 18.0, "suppressed": false},
+    {"id": "rifle_m16", "display_name": "M16", "class": "rifle", "damage": 22.0, "fire_rate": 10.0, "range": 80.0, "ammo_type": "ammo_556", "magazine_size": 30, "reload_seconds": 2.4, "durability_max": 100, "durability_per_shot": 0.35, "noise_radius": 18.0, "suppressed": false},
     { "id": "smg_compact",     "display_name": "Compact SMG",     "class": "smg",     "damage": 14.0, "fire_rate": 11.0, "range": 22.0, "ammo_type": "ammo_smg",     "magazine_size": 35, "reload_seconds": 1.8, "durability_max": 90,  "durability_per_shot": 0.10, "noise_radius": 14.0, "suppressed": false },
     { "id": "shotgun_pump",    "display_name": "Pump Shotgun",    "class": "shotgun", "damage": 60.0, "fire_rate": 1.2,  "range": 12.0, "ammo_type": "ammo_shotgun", "magazine_size": 6,  "reload_seconds": 3.0, "durability_max": 120, "durability_per_shot": 0.40, "noise_radius": 24.0, "suppressed": false },
     { "id": "pistol_k54",      "display_name": "K-54 Pistol", "class": "pistol", "damage": 22.0, "fire_rate": 3.0, "range": 25.0, "ammo_type": "ammo_pistol", "magazine_size": 8, "reload_seconds": 1.8, "durability_max": 80, "durability_per_shot": 0.4, "noise_radius": 16.0, "suppressed": false },
-    { "id": "rifle_mosin",     "display_name": "Mosin PU Rifle",  "class": "sniper",  "damage": 95.0, "fire_rate": 0.7,  "range": 80.0, "ammo_type": "ammo_sniper",  "magazine_size": 5,  "reload_seconds": 5.0, "durability_max": 110, "durability_per_shot": 1.0, "noise_radius": 30.0, "suppressed": false },
+    { "id": "rifle_mosin",     "display_name": "Mosin PU Rifle",  "class": "sniper",  "damage": 200.0, "fire_rate": 0.7,  "range": 200.0, "ammo_type": "ammo_sniper",  "magazine_size": 5,  "reload_seconds": 5.0, "durability_max": 110, "durability_per_shot": 1.0, "noise_radius": 30.0, "suppressed": false },
     { "id": "carbine_scout",   "display_name": "Scout Carbine",   "class": "carbine", "damage": 20.0, "fire_rate": 5.0,  "range": 32.0, "ammo_type": "ammo_rifle",   "magazine_size": 20, "reload_seconds": 2.0, "durability_max": 100, "durability_per_shot": 0.10, "noise_radius": 16.0, "suppressed": false }
   ],
   "enemy_archetypes": [

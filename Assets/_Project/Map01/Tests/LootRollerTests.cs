@@ -35,16 +35,16 @@ namespace ShadowVale.Map01.Tests
         }
 
         [Test]
-        public void TiersComeUpSixtyTwentySixElevenThree()
+        public void TiersFollowTheConsumableFocusedFiftyTwoThirtyEightEightTwoProfile()
         {
             var counts = new int[5];
             var random = new System.Random(7);
             const int n = 100000;
             for (int i = 0; i < n; i++) counts[Map01LootRoller.PickTier(Data.tierOdds, random.NextDouble())]++;
-            Assert.AreEqual(.60, counts[1] / (double)n, .01);
-            Assert.AreEqual(.26, counts[2] / (double)n, .01);
-            Assert.AreEqual(.11, counts[3] / (double)n, .01);
-            Assert.AreEqual(.03, counts[4] / (double)n, .005);
+            Assert.AreEqual(.52, counts[1] / (double)n, .01);
+            Assert.AreEqual(.38, counts[2] / (double)n, .01);
+            Assert.AreEqual(.08, counts[3] / (double)n, .01);
+            Assert.AreEqual(.02, counts[4] / (double)n, .005);
         }
 
         [Test]
@@ -62,10 +62,10 @@ namespace ShadowVale.Map01.Tests
         [Test]
         public void ATierTheTableLacksFallsToTheNearestLowerOne()
         {
-            // Tiers 1 and 3 only: tier 2 rolls fall to 1 (60+26), tier 4 to 3 (11+3).
+            // Tiers 1 and 3 only: tier 2 rolls fall to 1 (52+38), tier 4 to 3 (8+2).
             var table = new Map01Loot.Table { code = "t", rollsMin = 1, rollsMax = 1, entries = new[] { E("common", 1, 1), E("rare", 3, 1) } };
-            Assert.AreEqual(.86, Share(Data, table, "common", null), .015);
-            Assert.AreEqual(.14, Share(Data, table, "rare", null), .015);
+            Assert.AreEqual(.90, Share(Data, table, "common", null), .015);
+            Assert.AreEqual(.10, Share(Data, table, "rare", null), .015);
         }
 
         private static double Share(Map01Loot data, Map01Loot.Table table, string item, Map01LootRoller.Boost boost)
@@ -159,7 +159,8 @@ namespace ShadowVale.Map01.Tests
 
             // Throwables ready-made: operation guards carry smoke bombs now and then, an F1 rarely.
             var guards = Data.TableOf("lt_m1_operation_guard").entries;
-            Assert.AreEqual(2, guards.Single(e => e.item == "smoke_bomb").tier);
+            Assert.IsTrue(guards.Any(e => e.item == "smoke_bomb" && e.tier == 2));
+            Assert.IsTrue(guards.Any(e => e.item == "smoke_bomb" && e.tier == 3));
             Assert.AreEqual(4, guards.Single(e => e.item == "grenade_f1").tier);
         }
 

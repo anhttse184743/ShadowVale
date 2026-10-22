@@ -7,7 +7,9 @@ namespace ShadowVale.Map01
     public static class Map01M16
     {
         public const string Id = "rifle_m16", Ammo = "ammo_556";
-        public const float ShotSeconds = 60f / 700f;
+        public const float Damage = 22f, Range = 80f, RoundsPerMinute = 600f;
+        public const float ShotSeconds = 60f / RoundsPerMinute;
+        public const float DamageRelativeToAk = Damage / 30f;
         public static readonly Vector3 HeldOffset = new Vector3(0f, -.025f, 0f);
         // Seeded groups assign fresh loadouts; snapshots preserve them when the roster grows.
         public static string EnemyRifle(Map01Mission mission, Map01EnemyController guard)

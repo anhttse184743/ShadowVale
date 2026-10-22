@@ -11,8 +11,8 @@ namespace ShadowVale.Map01
     /// <list type="bullet">
     /// <item>A fallen guard leaves his pack, rolled from his kind's loot table (patrol, camp guard, operation guard,
     /// commander), and his rifle, worn to 15-35% (the commander also his K-54). The roll leans towards what Nam is
-    /// short of - rounds when his reserve is under a magazine, dressings when he is hurt and has none - and after six
-    /// packs without a dressing the next one has one. A roll is kept in the save, so a load finds the same pack.</item>
+    /// short of - rounds when his reserve is under a magazine, dressings when he is hurt and has none. When medicine
+    /// is scarce, the configured dry-pack limit adds a dressing. A roll is kept in the save, so a load finds the same pack.</item>
     /// <item>The camp chests hold their signature things (tier 5) and a few rolls of their camp's table, the guns in
     /// them in used but sound condition. Rolled from this run's seed, so each new game differs.</item>
     /// <item>The base store (KHO CĂN CỨ, a tab of the bench screen, and the supply point in base A): logistics points
@@ -184,7 +184,8 @@ namespace ShadowVale.Map01
                 item => Need(item.StartsWith("ammo_", StringComparison.Ordinal) && item != "ammo_pistol" ? ammo : item));
             bool dressing = drops.Any(d => d.item == "medkit_small");
             medkitDry = dressing ? 0 : medkitDry + 1;
-            if (!dressing && medkitDry >= data.adaptive.medkitPity) { drops.Add(new Map01LootRoller.Drop { item = "medkit_small", count = 1 }); medkitDry = 0; }
+            if (!dressing && medkitDry >= data.adaptive.medkitPity && inventory.Count("medkit_small") < 2)
+            { drops.Add(new Map01LootRoller.Drop { item = "medkit_small", count = 1 }); medkitDry = 0; }
             var items = MatchGuardAmmo(guard.RifleItemId, drops.Select(d => new ForestIngredient { item_id = d.item, count = d.count }).ToArray());
             rolled[pointId] = Copy(items);
             return items;

@@ -75,6 +75,30 @@ namespace ShadowVale.Gameplay.Combat
         public float ConeHalfAngle(ShooterStance stance, bool aiming)
             => StanceCone(stance, aiming) + Bloom * BloomConeDegrees;
 
+        public float ConeHalfAngle(ShooterStance stance, bool aiming, WeaponKind weapon, bool m16 = false)
+            => weapon == WeaponKind.Sniper ? SniperStanceCone(stance,aiming)
+                : m16 ? M16StanceCone(stance,aiming) + Bloom * 1.35f : ConeHalfAngle(stance,aiming);
+
+        /// <summary>M16 taps remain usable; movement and sustained fire need shorter bursts.</summary>
+        public static float M16StanceCone(ShooterStance stance, bool aiming) => stance switch
+        {
+            ShooterStance.Sneak => aiming ? .075f : .4f,
+            ShooterStance.Standing => aiming ? .12f : .65f,
+            ShooterStance.Walking => aiming ? .6f : 1.6f,
+            ShooterStance.Running => 4f,
+            _ => aiming ? 4f : 8f,
+        };
+
+        /// <summary>A settled PU shot stays within 3.5 cm at 200 m; moving and hip fire remain imprecise.</summary>
+        public static float SniperStanceCone(ShooterStance stance,bool aiming) => stance switch
+        {
+            ShooterStance.Sneak => aiming ? .005f : 1.6f,
+            ShooterStance.Standing => aiming ? .01f : 2.5f,
+            ShooterStance.Walking => aiming ? .25f : 4.5f,
+            ShooterStance.Running => 6f,
+            _ => aiming ? 4f : 8f,
+        };
+
         /// <summary>
         /// The base cone before any bloom.
         /// <para>
@@ -104,9 +128,9 @@ namespace ShadowVale.Gameplay.Combat
         /// Registers a shot and returns the view kick it causes, in degrees: x rises, y pulls
         /// right.
         /// </summary>
-        public Vector2 Fire(float time)
+        public Vector2 Fire(float time, bool m16 = false)
         {
-            if (time - _lastShotTime > BurstResetSeconds)
+            if (time - _lastShotTime > (m16 ? .32f : BurstResetSeconds))
             {
                 // Long enough between pulls that this is a fresh burst. Every deliberate tap is
                 // therefore shot zero, the most accurate one the weapon has.
@@ -118,12 +142,13 @@ namespace ShadowVale.Gameplay.Combat
             int index = ShotIndex;
             ShotIndex++;
 
-            if (index >= FreeBloomShots)
+            if (index >= (m16 ? 2 : FreeBloomShots))
             {
-                Bloom = Mathf.Min(1f, Bloom + BloomPerShot);
+                Bloom = Mathf.Min(1f, Bloom + (m16 ? .14f : BloomPerShot));
             }
 
-            return new Vector2(VerticalKick(index), HorizontalKick(index));
+            return new Vector2(VerticalKick(index) * (m16 ? 1.35f : 1f),
+                HorizontalKick(index) * (m16 ? 1.4f : 1f));
         }
 
         /// <summary>Degrees the view rises on the given shot of a burst.</summary>
@@ -146,11 +171,11 @@ namespace ShadowVale.Gameplay.Combat
         /// it is reset by the gap before the next shot rather than by a clock running now, so a
         /// player who pauses and resumes gets the same pattern either way.
         /// </summary>
-        public void Tick(float deltaTime)
+        public void Tick(float deltaTime, bool m16 = false)
         {
             if (Bloom > 0f)
             {
-                Bloom = Mathf.Max(0f, Bloom - BloomRecoveryPerSecond * deltaTime);
+                Bloom = Mathf.Max(0f, Bloom - (m16 ? .65f : BloomRecoveryPerSecond) * deltaTime);
             }
         }
 

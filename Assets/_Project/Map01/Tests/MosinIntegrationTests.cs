@@ -40,7 +40,7 @@ namespace ShadowVale.Map01.Tests
         {
             K54IntegrationTests.OpenSandbox();yield return new EnterPlayMode();yield return null;PrepareMosin();yield return WaitGameSeconds(.3f);
             var combat=M.ModernCombat;var bag=M.GetComponent<Map01Inventory>();var mosin=M.player.GetComponent<Map01Mosin>();
-            Assert.IsNotNull(mosin);Assert.AreEqual(95,mosin.Weapon.Damage);Assert.AreEqual(80,mosin.Weapon.Range);Assert.AreEqual(1f/.7f,mosin.Weapon.Cooldown,.0001f);Assert.AreEqual(5,combat.MagazineCapacity);Assert.AreEqual(0,combat.RoundsInMagazine);
+            Assert.IsNotNull(mosin);Assert.AreEqual(200,mosin.Weapon.Damage);Assert.AreEqual(200,mosin.Weapon.Range);Assert.IsTrue(mosin.Weapon.LethalAgainstEnemies);Assert.AreEqual(1f/.7f,mosin.Weapon.Cooldown,.0001f);Assert.AreEqual(5,combat.MagazineCapacity);Assert.AreEqual(0,combat.RoundsInMagazine);
             bool akInBag=false;for(int i=0;i<Map01Inventory.BagSize;i++)akInBag|=bag.Cell(i)?.id=="rifle_standard";
             Assert.IsTrue(akInBag,"AK is stored in the existing bag, not attached to a new rig/back slot.");
             Assert.IsTrue(mosin.Weapon.GetComponentsInChildren<Transform>(true).Any(t=>t.name=="bolt"));Assert.IsTrue(mosin.Weapon.GetComponentsInChildren<Transform>(true).Any(t=>t.name=="Cartridge"));

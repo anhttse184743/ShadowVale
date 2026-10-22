@@ -1,5 +1,6 @@
 using System.IO;
 using ShadowVale.Gameplay.Combat;
+using ShadowVale.Map01;
 using UnityEditor;
 using UnityEngine;
 
@@ -104,7 +105,7 @@ namespace ShadowVale.Editor
         }
 
         public static bool BuildM16() => BuildOne(new Spec("Assets/_Project/Art/Items/Generated/m16_reload.glb", "W_M16", WeaponKind.Rifle,
-            .99f, .32f, .28f, false, 27f, 120f, 60f/700f, true));
+            .99f, .32f, .28f, false, Map01M16.Damage, Map01M16.Range, Map01M16.ShotSeconds, true));
 
         private static bool BuildOne(Spec spec)
         {
@@ -252,6 +253,7 @@ namespace ShadowVale.Editor
             so.FindProperty("range").floatValue = spec.Range;
             so.FindProperty("cooldown").floatValue = spec.Cooldown;
             so.FindProperty("automatic").boolValue = spec.Automatic;
+            so.FindProperty("usesM16Handling").boolValue = spec.PrefabName == "W_M16";
             so.FindProperty("muzzle").objectReferenceValue = muzzle;
             so.ApplyModifiedPropertiesWithoutUndo();
         }

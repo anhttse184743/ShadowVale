@@ -14,6 +14,9 @@ namespace ShadowVale.Gameplay.Combat
         [Header("Damage")]
         [SerializeField] private float damage = 25f;
 
+        [Tooltip("An actual hit kills an enemy agent. Health still owns cinematic invulnerability and death events.")]
+        [SerializeField] private bool lethalAgainstEnemies;
+
         [Tooltip("Metres. Melee is a short sweep, guns are effectively hitscan.")]
         [SerializeField] private float range = 2f;
 
@@ -34,9 +37,15 @@ namespace ShadowVale.Gameplay.Combat
         [Tooltip("Degrees of cone spread while hip-firing. Aiming halves it.")]
         [SerializeField] private float hipSpread = 3f;
 
-        public void ConfigureRifle(float shotDamage, float shotCooldown, Transform barrel, bool originalMagazine = true)
+        [SerializeField] private bool usesM16Handling;
+        public bool UsesM16Handling => usesM16Handling;
+
+        public void ConfigureRifle(float shotDamage, float shotCooldown, Transform barrel, bool originalMagazine = true,
+            float shotRange = -1f, bool m16Handling = false)
         {
             damage = shotDamage; cooldown = shotCooldown; muzzle = barrel; UsesOriginalMagazine = originalMagazine;
+            if (shotRange > 0f) range = shotRange;
+            usesM16Handling = m16Handling;
             if (flash != null) { Destroy(flash.gameObject); flash = null; }
         }
         public bool UsesOriginalMagazine { get; private set; } = true;
@@ -45,6 +54,10 @@ namespace ShadowVale.Gameplay.Combat
         public void SetReloadModel(Transform model) => reloadModel = model;
         public WeaponKind Kind => kind;
         public float Damage => damage;
+        public bool LethalAgainstEnemies => lethalAgainstEnemies;
+        public float DamageAgainst(Health target) => lethalAgainstEnemies && target != null
+            && target.GetComponentInParent<ShadowVale.AI.Agents.IEnemyAgent>() != null
+                ? Mathf.Max(damage,target.Current) : damage;
         public float Range => range;
         public float Cooldown => cooldown;
         public bool Automatic => automatic;
@@ -54,10 +67,12 @@ namespace ShadowVale.Gameplay.Combat
         public Transform Muzzle => muzzle != null ? muzzle : transform;
 
         /// <summary>Configure an additional scene weapon from its existing content profile.</summary>
-        public void Configure(WeaponKind value, float hitDamage, float hitRange, float fireRate, bool repeats, Transform tip)
+        public void Configure(WeaponKind value, float hitDamage, float hitRange, float fireRate, bool repeats, Transform tip, bool lethalHits = false)
         {
             kind = value; damage = hitDamage; range = hitRange;
             cooldown = 1f / Mathf.Max(.01f, fireRate); automatic = repeats; muzzle = tip;
+            lethalAgainstEnemies = lethalHits;
+            usesM16Handling = false;
         }
         private MuzzleFlash flash;
         private void Awake(){if(IsGun)EnsureFlash();}

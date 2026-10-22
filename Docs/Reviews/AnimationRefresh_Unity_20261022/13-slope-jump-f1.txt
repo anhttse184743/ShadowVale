@@ -1,0 +1,1 @@
+motion=jump_f1 frame=2554,832 root=(-67.50, 13.57, -66.50) hand=(-67.31, 14.73, -66.80) foot=(-67.65, 14.00, -66.68) modelLocal=(0.00, 0.00, 0.00) grounded=False

@@ -259,8 +259,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ShadowVale.Gameplay::ShadowVale.Gameplay.Combat.Weapon
   kind: 4
-  damage: 95
-  range: 80
+  damage: 200
+  lethalAgainstEnemies: 1
+  range: 200
   cooldown: 1.4285715
   automatic: 0
   sweepRadius: 0.35

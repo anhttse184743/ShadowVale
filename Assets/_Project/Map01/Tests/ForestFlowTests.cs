@@ -438,7 +438,7 @@ namespace ShadowVale.Map01.Tests
                 var accuracy = guard.Accuracy;
                 guard.Accuracy = new ShadowVale.Gameplay.Enemies.ShotAccuracyProfile { enabled = false };
                 float before = playerHealth.Current;
-                float roundDamage = expected * (rifle == Map01M16.Id ? .9f : 1f);
+                float roundDamage = expected * (rifle == Map01M16.Id ? Map01M16.DamageRelativeToAk : 1f);
                 guard.FireAtPlayer();
                 Assert.AreEqual(before - roundDamage, playerHealth.Current, 1e-3f, rifle);
                 guard.FireAtPlayer();
@@ -584,6 +584,11 @@ namespace ShadowVale.Map01.Tests
             Assert.AreEqual("ĐỒI ĐÔNG NAM — MOSIN TRINH SÁT", guide.Label, "The order points out the scouts' rifle first.");
             Assert.Less(Vector3.Distance(guide.Target, c3.CachePoint.transform.position), .5f);
             interaction.Interact(c3.CachePoint);
+            yield return WaitGameSeconds(.6f);
+            var field = mission.GetComponent<Map01FieldSupplies>().ApproachPoint;
+            Assert.AreEqual("ĐỒI ĐÔNG NAM — BĂNG, KHÓI, LỰU ĐẠN", guide.Label);
+            Assert.Less(Vector3.Distance(guide.Target, field.transform.position), .5f);
+            interaction.Interact(field); Map01NamActions.For(mission).CancelAction();
             yield return WaitGameSeconds(.6f);
             Assert.AreEqual("ĐIỂM 3 — QUAN SÁT DOANH TRẠI [F]", guide.Label);
             Assert.Less(Vector3.Distance(guide.Target, story.Layout.commanderPost.position), .5f);

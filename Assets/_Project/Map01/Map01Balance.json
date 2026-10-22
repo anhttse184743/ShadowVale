@@ -4,6 +4,7 @@
   "staminaDrain": 12, "staminaRecovery": 16,
   "interactRange": 3.5, "stoneRange": 20, "stoneNoise": 14,
   "guardDamageScale": 0.35, "guardShotInterval": 1.6,
+  "guardM16": { "burstRounds": 3, "magazineRounds": 30, "burstPause": 1.8, "reloadSeconds": 3.2, "staggerSeconds": 0.35, "maxConcurrentBursts": 2 },
   "detectionSeconds": 1.5, "hiddenVisionScale": 0.32, "crouchVisionScale": 0.6, "waryDetectionScale": 0.75,
   "medkitHeal": 45, "followDistance": 3, "hungHP": 150, "searchSeconds": 8, "suppressSeconds": 1.5,
   "startingStones": 6, "startingPistolRounds": 16, "stoneCapacity": 15, "testCraftingKit": false, "guardDropAmmo": 30, "guardDropMedkits": 1,
