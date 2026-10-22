@@ -141,6 +141,7 @@ namespace ShadowVale.Gameplay.Player
             _recoilYawOwed = 0f;
         }
         public System.Func<bool> InputAllowed { get; set; }
+        private bool _cursorLentToScreen;
 
         private void Awake()
         {
@@ -175,8 +176,14 @@ namespace ShadowVale.Gameplay.Player
                 return;
             }
 
-            if (InputAllowed != null && !InputAllowed()) SetCursorLocked(false);
-            else ReadLookInput();
+            // A screen that takes the input (bag, menu, cutscene, dialogue) gets the cursor, and the game takes it
+            // back the moment that screen closes; it used to wait for a click into the game before aiming or firing.
+            if (InputAllowed != null && !InputAllowed()) { SetCursorLocked(false); _cursorLentToScreen = true; }
+            else
+            {
+                if (_cursorLentToScreen) { _cursorLentToScreen = false; SetCursorLocked(true); }
+                ReadLookInput();
+            }
 
             // After the player's input, so a pull that cancels the climb is credited before any
             // of it is handed back. Before the binoculars too: a burst fired just before raising
@@ -337,8 +344,11 @@ namespace ShadowVale.Gameplay.Player
             }
         }
 
+        private static bool _cursorWanted;   // what was last asked for: an editor in batch mode has no cursor to read back
+
         private static void SetCursorLocked(bool locked)
         {
+            _cursorWanted = locked;
             Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
             Cursor.visible = !locked;
         }

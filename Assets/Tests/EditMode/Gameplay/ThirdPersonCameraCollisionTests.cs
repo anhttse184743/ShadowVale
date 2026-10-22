@@ -60,5 +60,25 @@ namespace ShadowVale.Tests.EditMode.Gameplay
             var corners=new Vector3[4];camera.CalculateFrustumCorners(new Rect(0,0,1,1),camera.nearClipPlane,Camera.MonoOrStereoscopicEye.Mono,corners);
             foreach(var corner in corners) Assert.Greater(view.transform.TransformPoint(corner).z,player.transform.position.z-1.15f);
         }
+        [Test] public void CursorComesBackWhenTheScreenThatTookItCloses()
+        {
+            // What the camera asks for, and the real cursor too where this editor has one (batch mode has none).
+            var wanted=typeof(ThirdPersonCamera).GetField("_cursorWanted",BindingFlags.Static|BindingFlags.NonPublic);
+            var lockBefore=Cursor.lockState;var shownBefore=Cursor.visible;
+            try
+            {
+                Cursor.lockState=CursorLockMode.Locked;bool realCursor=Cursor.lockState==CursorLockMode.Locked;
+                bool screenOpen=true;rig.InputAllowed=()=>!screenOpen;
+                Tick();Tick();
+                Assert.IsFalse((bool)wanted.GetValue(null),"The bag, a menu or a cutscene has the cursor while it is open.");
+                if(realCursor) Assert.AreEqual(CursorLockMode.None,Cursor.lockState);
+                screenOpen=false;Tick();
+                Assert.IsTrue((bool)wanted.GetValue(null),"Closing it gives the cursor straight back to the game, with no click needed to aim or fire.");
+                if(realCursor){Assert.AreEqual(CursorLockMode.Locked,Cursor.lockState);Assert.IsFalse(Cursor.visible);}
+                Tick();
+                Assert.IsTrue((bool)wanted.GetValue(null),"And keeps it there.");
+            }
+            finally{Cursor.lockState=lockBefore;Cursor.visible=shownBefore;}
+        }
     }
 }
