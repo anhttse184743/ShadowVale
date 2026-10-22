@@ -224,7 +224,8 @@ Theo bản thiết kế "Trang bị" đã duyệt (16/10/2026), bỏ hẳn tay k
     bẩy F1 bật ra lúc rời tay và rơi xuống đất; ngòi F1 bốc khói mảnh từ lúc bay tới lúc nổ. Nổ F1 (`Map01Blast`):
     chớp sáng 0,1 giây (không có quả cầu lửa kiểu phim), đất đá bắn hình nón, bụi nâu xám bung ra rồi dừng, vòng
     bụi lăn trên mặt đất, cột khói xám đậm bốc lên trôi theo gió, vết cháy xém nằm 60 giây; camera rung trong
-    35 m (`Map01CameraShake`). Bom khói: tia lửa lúc mồi cháy, luồng khói trắng xám phun từ ống cuộn thành mây,
+    35 m (`Map01CameraShake`). Tiếng nổ 3D, càng xa càng ù: bộ lọc hạ đều theo quãng tám, khoảng 19 kHz ở 2 m, 4,5 kHz ở
+    60 m, 1 kHz ở 120 m (`Map01Blast.MuffleCutoff`, từ 23/10/2026; trước đó còn 7,5 kHz ở 60 m). Bom khói: tia lửa lúc mồi cháy, luồng khói trắng xám phun từ ống cuộn thành mây,
     mây nghiêng theo gió rồi tan.
 - Test: `ThrowEffectsTests.BlastAndSmokeBuildTheirEffectsAndClearAway`; bài `[Explicit]`
   `ThrowEffectsTests.PhotographTheThrowEffects` chụp 10 ảnh (khói từ lúc mồi tới lúc tan, F1 từ ngòi cháy tới vết

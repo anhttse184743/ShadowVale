@@ -26,7 +26,7 @@ namespace ShadowVale.Map01
         public bool JumpPlaying => jumping||landing;
         public string ActiveProp { get; private set; }
         public float AppliedWeight { get; private set; }
-        Map01Mission mission;Map01Inventory inventory;Map01NamActions actions;PlayerCombat combat;PlayerController motor;Animator actor;Map01Pistol pistol;
+        Map01Mission mission;Map01Inventory inventory;Map01NamActions actions;PlayerCombat combat;PlayerController motor;CharacterController body;Animator actor;Map01Pistol pistol;
         ForearmTwist twist;bool ownsTwist;
         Transform[] bones;bool[] upper;Transform hand;
         Dictionary<string,NamMotionData.Clip> clips;
@@ -94,7 +94,10 @@ namespace ShadowVale.Map01
                 if(lastWeapon==WeaponKind.Knife&&!knife&&!throwable)holsterAt=Time.time;
                 lastWeapon=combat.EquippedKind;
             }
-            bool nowGrounded=motor.IsGrounded;
+            // Only a running body leaves the ground. A teleport (save load, retry, a scripted placement) switches the controller off
+            // for a moment; read as airborne, it played a jump and its landing on the spot.
+            if(body==null)body=motor.GetComponent<CharacterController>();
+            bool nowGrounded=!motor.enabled||body==null||!body.enabled||motor.IsGrounded;
             if(motor.JumpSequence!=jumpSequence||(!nowGrounded&&grounded))
             {
                 jumping=true;landing=false;jumpElapsed=0;jumpSequence=motor.JumpSequence;
@@ -121,7 +124,7 @@ namespace ShadowVale.Map01
             else if(Time.time-holsterAt<1)
             {
                 id="knife_holster";frame=Clip(id).At(Time.time-holsterAt);prop="Knife";
-                if(motor.PlanarSpeed>.05f)bodyFrame=-2;
+                if(motor.PlanarSpeed>.05f)bodyFrame=-2;else if(motor.IsSneaking)bodyFrame=CrouchLegs();
             }
             else if(throwable)
             {
@@ -135,7 +138,7 @@ namespace ShadowVale.Map01
                     else{id=prefix+"aim";frame=Clip(id).At(t-prep.Seconds-wind.Seconds,true);}
                 }
                 else{id=prefix+"prepare";frame=Clip(id).start;}
-                if(motor.PlanarSpeed>.05f)bodyFrame=-2;
+                if(motor.PlanarSpeed>.05f)bodyFrame=-2;else if(motor.IsSneaking)bodyFrame=CrouchLegs();
             }
             else if(pistolOn)
             {
@@ -189,6 +192,11 @@ namespace ShadowVale.Map01
             if(holstering)combat.GunPresentationReady=false;
             if(prop=="Pistol")ApplyPistol(frame);
         }
+        // Crouched, a throw or the knife's holster is the upper body's: the legs keep the crouch they are in, the refreshed
+        // knife or pistol crouch or the Animator's (long guns). The takes' own legs stood Nam up for the holster's second
+        // after a knife-to-rifle switch, and the crouched throw sits 6 cm above the rifle crouch (2026-10-23).
+        float CrouchLegs()=>combat.EquippedKind==WeaponKind.Knife?MotionFrame(Locomotion("knife"))
+            :combat.EquippedKind==WeaponKind.Pistol?MotionFrame(Locomotion("pistol")):-2;
         string Locomotion(string kind)=>motor.IsSneaking?kind+"_crouch":motor.PlanarSpeed>.05f?kind+(motor.IsSprinting?"_run":"_walk"):kind+(kind=="knife"?"_idle":"_carry");
         float MotionSeconds()=>gaitClock;
         float MotionFrame(string id)=>Clip(id).At(motor.PlanarSpeed>.05f?MotionSeconds():id.EndsWith("_crouch")?0:clock,true);
