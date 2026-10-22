@@ -11,7 +11,7 @@ using UnityEngine.InputSystem;
 namespace ShadowVale.Map01
 {
     /// <summary>Playable chapter, separate from Map 1 and the retired evacuation prototype.</summary>
-    public sealed partial class Map02ChapterDirector : MonoBehaviour
+    public sealed partial class Map02ChapterDirector : MonoBehaviour,IBinoculars
     {
         public event Action<string,float> SceneSampled;
         public event Action<string> TaskCompleted;
@@ -20,10 +20,14 @@ namespace ShadowVale.Map01
         public Map02Mission Mission {get;private set;}
         public bool Busy=>sceneTask!=null||doingWork||DayActivityActive;
         public bool ConversationActive=>sceneTask!=null;
+        public bool Binoculars=>binocular;
+        bool binocularHeld;
+        public void HoldBinoculars(bool held){binocularHeld=held;SetBinoculars(held&&!Mission.InputBlocked);}
+        void SetBinoculars(bool held){if(binocular==held)return;binocular=held;rig?.SetBinoculars(held,held?2:1);}
         public bool LocksInput=>Busy||DayReturningInput||State.finished||Transitioning;
         public bool MovementLocked=>State.activeTask=="N3_08"&&!State.Done("N3_08")||State.Done("N3_WOUND")&&!State.Done("N3_CRAWL");
-        public bool MaySave=>!Busy&&escort==null;
-        public string SaveReason=>escort!=null?"Đưa người được dìu tới điểm an toàn trước khi lưu.":"Hãy hoàn tất thao tác hoặc hội thoại trước khi lưu.";
+        public bool MaySave=>!Busy;
+        public string SaveReason=>"Hãy hoàn tất thao tác hoặc hội thoại trước khi lưu.";
         public IReadOnlyDictionary<string,Transform> Sites=>sites;
         public Map02ChapterTask CurrentScene=>sceneTask;
         public List<Map02ChapterEnemy> Enemies {get;}=new List<Map02ChapterEnemy>();
@@ -36,7 +40,7 @@ namespace ShadowVale.Map01
         readonly Dictionary<string,Map02ChapterActor> roles=new Dictionary<string,Map02ChapterActor>();
         Map02ChapterTask sceneTask,workTask;
         Map02DialogueCatalog.Entry[] lines;
-        int scenePurpose;int lineIndex;float lineClock,sceneClock,skipHeld,workClock,signal=.15f,signalHold,scanClock,scannedAt=-99,observed,spawnRetry;
+        int scenePurpose;int lineIndex;float lineClock,sceneClock,skipHeld,workClock,signal=.15f,signalHold,scannedAt=-99,patrolLoadGrace,observed,spawnRetry;
         int phaseApplied=-1;
         readonly Dictionary<string,Vector3> initialRolePositions=new Dictionary<string,Vector3>();
         bool doingWork,heldReleased,binocular,protectedBefore,ready,handsBusy;
@@ -84,7 +88,28 @@ namespace ShadowVale.Map01
             {
                 var actor=new GameObject("Actor slot — "+role);actor.transform.SetParent(root.transform);var slot=actor.AddComponent<Map02ChapterActor>();slot.role=role;roles.Add(role,slot);var art=Layout?.actors?.FirstOrDefault(a=>a.role==role)?.prefab;if(art!=null&&!(arrival?.Passengers?.Length>=3&&(role=="Hùng"||role=="Anh Thành")))slot.Bind(Instantiate(art).transform);
             }
-            if(arrival?.Passengers?.Length>=3){if(roles["Hùng"].visual==null)roles["Hùng"].Bind(arrival.Passengers[2]);if(roles["Anh Thành"].visual==null)roles["Anh Thành"].Bind(arrival.Passengers[1]);}
+            if(arrival?.Passengers?.Length>=3)
+            {
+                if(roles["Hùng"].visual==null)roles["Hùng"].Bind(arrival.Passengers[2]);
+                if(roles["Anh Thành"].visual==null)roles["Anh Thành"].Bind(arrival.Passengers[1]);
+                else
+                {
+                    // The boat uses Map 1's commander; the village uses Thành's named source model.
+                    roles["Anh Thành"].StopAt(arrival.Passengers[1].position);
+                    arrival.Passengers[1].gameObject.SetActive(false);
+                }
+            }
+            if(roles["Hùng"].visual==null)
+            {
+                // Direct scene Play has no carried Map 1 party. Use the same authored Hùng visual.
+                var hung=Instantiate(Resources.Load<Map01HungVisual>("Characters/HungVisual"));hung.enabled=false;
+                var dimensions=Map01ActorAssets.Load();float scale=dimensions.namHeight/dimensions.hungHeight;
+                hung.actor.transform.localScale=Vector3.one*scale;
+                hung.actor.transform.localPosition=Vector3.up*(-dimensions.hungSole*scale);
+                hung.actor.SetBool("Captive",false);hung.actor.SetBool("Wounded",true);hung.actor.SetBool("Dead",false);
+                hung.actor.Play(Map01HungVisual.WoundedState,0,0);
+                roles["Hùng"].Bind(hung.transform);roles["Hùng"].StopAt(sites["arrival"].position);
+            }
             if(arrival?.Passengers==null){roles["Hùng"].StopAt(sites["arrival"].position+Vector3.right*1.4f);roles["Anh Thành"].StopAt(sites["arrival"].position+Vector3.left*1.4f);}
             foreach(var role in roles)initialRolePositions[role.Key]=role.Value.transform.position;
             State.storedRounds=0; // No ammo is invented on chapter entry.
@@ -121,7 +146,12 @@ namespace ShadowVale.Map01
                 UpdateMarkers();return true;
             }
             if(t.kind=="families") {if(!State.introduced.Contains(t.id)){BeginScene(t);scenePurpose=2;}else CompleteFamily(t);return true;}
-            if(t.kind=="wire"){Finish(t);return true;}
+            if(t.kind=="wire")
+            {
+                if(State.TakeWire()){UpdateMarkers();Mission.StoreCheckpoint();Mission.Say("Đã lấy cuộn dây. Mang về trạm, nhấn E giao cho Hùng.");return true;}
+                if(State.DeliverWire()){CommitFinishedTask(t);return true;}
+                return false;
+            }
             if(t.kind=="medicine"){if(!State.Done("D1_02"))return false;BeginScene(t);return true;}
             if(t.kind=="gear")
             {
@@ -130,7 +160,7 @@ namespace ShadowVale.Map01
             }
             if(t.kind=="escortHung"||t.kind=="escortScout"||t.kind=="patrolHung")
             {
-                escort=roles[t.kind=="escortScout"?"Tâm":"Hùng"];escort.Follow(Mission.Player,t.id=="D1_02"?1.25f:1.35f,false);Mission.Say("Đi bộ và giữ Hùng trong phạm vi 4 m. Đến điểm đánh dấu để hoàn tất.");UpdateMarkers();return true;
+                escort=roles[t.kind=="escortScout"?"Tâm":"Hùng"];escort.Follow(Mission.Player,t.id=="D1_02"?1.25f:1.35f,false);Mission.Say(escort.role=="Hùng"?"Đi bộ và giữ Hùng trong phạm vi 4 m. Đến điểm đánh dấu để hoàn tất.":"Tâm sẽ đi theo. Đưa cả hai tới điểm đánh dấu để hoàn tất.");UpdateMarkers();return true;
             }
             if(t.kind=="rescueFamily"||t.kind=="rescueChild")
             {
@@ -165,13 +195,14 @@ namespace ShadowVale.Map01
         }
         void Update()
         {
+            if(ready)SetBinoculars((binocularHeld||Keyboard.current?.fKey.isPressed==true)&&!Mission.InputBlocked&&!ForestMenu.Visible);
             if(!ready||Mission.Paused||ForestMenu.Visible||Mission.World.story.failed)return;
             float dt=Mathf.Min(Time.deltaTime,.1f);
             if(phaseFade>0){phaseFade=Mathf.Max(0,phaseFade-dt);TickLight(dt);return;}
             if(State.finished)return;
             bool carrying=!string.IsNullOrEmpty(State.carry)||escort!=null||DayActivityActive;if(carrying!=handsBusy){handsBusy=carrying;combat.SetHandsOccupied(carrying);}
             player.SurfaceSpeedMultiplier=escort!=null?.55f:!string.IsNullOrEmpty(State.carry)?.65f:State.wounded?.7f:1;
-            player.SprintAllowed=()=>escort==null&&string.IsNullOrEmpty(State.carry)&&!State.wounded;
+            player.SprintAllowed=()=>escort==null&&string.IsNullOrEmpty(State.carry)&&Mission.CharacterCanSprint;
             if(sceneTask!=null){TickLight(dt);TickScene(dt);return;}
             if(TickDay(dt))return;
             if(doingWork){TickWork(dt);return;}
@@ -191,10 +222,9 @@ namespace ShadowVale.Map01
                 }
                 if(t.kind=="binocular")
                 {
-                    if(Keyboard.current?.fKey.wasPressedThisFrame==true){binocular=!binocular;rig.SetBinoculars(binocular,2);}
                     var cam=rig.GetComponent<Camera>();var delta=sites["scout"].position+Vector3.up-cam.transform.position;
                     bool view=binocular&&!player.IsMoving&&Vector3.Distance(Mission.Player.position,sites["scout"].position)>8&&Vector3.Angle(cam.transform.forward,delta)<Mathf.Min(32,cam.fieldOfView*.5f+8)&&ObservationVisible(cam,sites["scout"].position+Vector3.up);
-                    observed=view?observed+dt:0;if(observed>=t.seconds){binocular=false;rig.SetBinoculars(false,1);Finish(t);break;}
+                    observed=view?observed+dt:0;if(observed>=t.seconds){Finish(t);break;}
                 }
                 if(t.kind=="crawl"&&Keyboard.current?.cKey.isPressed==true){var path=new NavMeshPath();if(NavMesh.CalculatePath(Mission.Player.position,mark.transform.position,NavMesh.AllAreas,path)&&path.status==NavMeshPathStatus.PathComplete){var next=path.corners.FirstOrDefault(p=>Vector3.Distance(p,Mission.Player.position)>.15f);if(Vector3.Distance(Mission.Player.position,mark.transform.position)>1.2f){var delta=Vector3.ProjectOnPlane(next-Mission.Player.position,Vector3.up).normalized*.8f*dt;Mission.Player.GetComponent<CharacterController>().Move(delta);State.taskProgress+=dt;}}if(Vector3.Distance(Mission.Player.position,mark.transform.position)<1.5f){health.CinematicInvulnerable=false;BeginScene(t);break;}}
                 if((t.kind=="defend"||t.kind=="coverFire")&&State.activeTask==t.id)
@@ -214,6 +244,7 @@ namespace ShadowVale.Map01
             foreach(var t in Map02ChapterDefinition.Load().tasks)
             {
                 var mark=markers[t.id];Vector3 pos=DayTaskPoint(t);
+                if(t.kind=="wire"&&State.wireStage==1)pos=sites["radio"].position;
                 if(t.kind=="carry"&&State.activeTask==t.id&&string.IsNullOrEmpty(State.carry))pos=sites[t.id=="D1_04"?"arrival":"store"].position;
                 if(t.kind=="carry"&&State.activeTask!=t.id)pos=sites[t.id=="D1_04"?"arrival":"store"].position;
                 if(t.id=="D1_04"&&State.Count(t.id)>=3)pos=sites["store"].position;
@@ -263,7 +294,7 @@ namespace ShadowVale.Map01
             if(!State.Available(task))return;
             lines=Map02ChapterDefinition.Load().Lines(task.scene??"").Skip(from).Take(take>0?take:int.MaxValue).ToArray();scenePurpose=0;lines=DayLines(task,lines);
             if(lines.Length==0){Finish(task);return;}
-            ReleaseDayFreePose();sceneTask=task;PrepareSceneMotion(task);PrepareDayScene(task);lineIndex=0;lineClock=sceneClock=skipHeld=0;lockedPosition=Mission.Player.position;lockedRotation=Mission.Player.rotation;
+            ReleaseDayFreePose();sceneTask=task;PrepareSceneMotion(task);PrepareDayScene(task);lineIndex=0;lineClock=sceneClock=skipHeld=0;lockedPosition=Mission.Player.position;lockedRotation=Mission.Player.rotation;if(State.phase>=2)StageConversation(task);
             player.RestoreMotion(false);DialogueVoice.StopAll();
             var actor=Mission.Player.GetComponentInChildren<Animator>();namIdle=actor.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned");namPose=new Map01CinematicPose(actor,null,false);
             foreach(var weapon in Mission.Player.GetComponentsInChildren<Weapon>(true))if(weapon.gameObject.activeSelf){hiddenWeapons.Add(weapon.gameObject);weapon.gameObject.SetActive(false);}
@@ -294,7 +325,7 @@ namespace ShadowVale.Map01
         void LateUpdate()
         {
             DayLateUpdate();UpdateWorkWeapon();if(!ready||sceneTask==null)return;
-            MoveDaySceneRoots();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=sceneTask.id=="DAWN"&&Layout!=null?Layout.namMournClip:null;namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null);
+            HoldConversation();MoveDaySceneRoots();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=sceneTask.id=="DAWN"&&Layout!=null?Layout.namMournClip:null;namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null);
             SampleDayScene();
             string speaker=lines[lineIndex].speaker;Vector3 subject=Mission.Player.position;
             if(!lines[lineIndex].radio&&speaker!="Nam"&&roles.TryGetValue(speaker,out var actor))subject=actor.transform.position;
@@ -314,7 +345,7 @@ namespace ShadowVale.Map01
         }
         void EndScene()
         {
-            ReleaseDayScene();ReleaseSceneAction();var task=sceneTask;if(task.id=="N3_09")roles["Hùng"].StopAt(RetreatPoint);int purpose=scenePurpose;scenePurpose=0;namPose?.Dispose();namPose=null;foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();voice.Stop();sceneTask=null;lines=null;rig.ClearCinematicView();health.CinematicInvulnerable=protectedBefore;
+            ReleaseConversation();ReleaseDayScene();ReleaseSceneAction();var task=sceneTask;if(task.id=="N3_09")roles["Hùng"].StopAt(RetreatPoint);int purpose=scenePurpose;scenePurpose=0;namPose?.Dispose();namPose=null;foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();voice.Stop();sceneTask=null;lines=null;rig.ClearCinematicView();health.CinematicInvulnerable=protectedBefore;
             ForestMenu.SuppressKeysAfterCutscene();Mission.RequireInteractionRelease();combat.RestoreAfterCinematic();
             dayDockEnding=false;
             if(purpose==5){Day.arrivalSeen=true;dayArrivalStarting=false;Mission.StoreCheckpoint();return;}
@@ -324,14 +355,21 @@ namespace ShadowVale.Map01
         void Finish(Map02ChapterTask task)
         {
             if(task.id=="D1_03")Day.GiveMedicine(0);if(task.id=="N1_03")Day.GiveMedicine(1);
-            if(!State.Complete(task.id))return;TaskCompleted?.Invoke(task.id);
+            if(!State.Complete(task.id))return;
+            CommitFinishedTask(task);
+        }
+        void CommitFinishedTask(Map02ChapterTask task)
+        {
+            TaskCompleted?.Invoke(task.id);
             if(task.id=="N1_03")roles["Hùng"].GoTo(sites["nightOneRest"].position,1.25f);
             if(task.id=="N1_01")roles["Anh Lực"].GoTo(sites["bamboo"].position+Vector3.left,1.4f);if(task.id=="N1_02")roles["Anh Lực"].GoTo(sites["gate"].position,1.5f);
-            if(task.id=="N2_02")Mission.StoreCheckpoint();
+
             if(task.id=="D1_01")roles["Anh Thành"].GoTo(sites["command"].position,1.6f);
             if(task.id=="D2_04")roles["Tâm"].StopAt(sites["command"].position+Vector3.right*1.5f);
             if(task.id=="N3_00")roles["Hùng"].GoTo(sites["ditch"].position,1.8f);
-            ApplyState();Mission.RefreshChapter();Mission.StoreCheckpoint();
+            ApplyState();Mission.RefreshChapter();
+            if(task.id=="N2_02")Mission.EnsurePatrolCheckpoint();
+            Mission.StoreCheckpoint();
             if(task.id=="N3_09")BeginScene(Map02ChapterDefinition.Load().Find("DAWN"));
             if(State.finished){Mission.World.story.stage=Map02Stage.Complete;Mission.StoreCheckpoint();}
             if(State.finished)Mission.Say("MAP 2 HOÀN THÀNH · Ta giữ được làng. Hùng đã hy sinh cứu chuyến thuyền cuối.");
@@ -345,13 +383,26 @@ namespace ShadowVale.Map01
             if(State.completed.Count==0)foreach(var pair in initialRolePositions)roles[pair.Key].StopAt(pair.Value);
             placedActors=false;phaseApplied=-1;ApplyState();
             foreach(var saved in State.actors)if(roles.TryGetValue(saved.role,out var actor))actor.StopAt(saved.position);
+            PlaceChildWithMother();
             if(State.phase==0&&State.Done("D1_01"))roles["Anh Thành"].GoTo(sites["command"].position,1.6f);
             if(State.phase>=5&&State.Done("N3_02"))foreach(var name in new[]{"Ông Sáu","Chị Lành"})if(Vector3.Distance(roles[name].transform.position,sites["southStore"].position)>8)roles[name].StopAt(sites["southStore"].position+(name=="Ông Sáu"?Vector3.right:Vector3.left)*1.4f);
             if(State.phase>=5&&State.Done("N3_03")&&Vector3.Distance(roles["Bé Tí"].transform.position,sites["southStore"].position)>8)roles["Bé Tí"].StopAt(sites["southStore"].position+Vector3.forward*1.4f);
             if(State.phase==5&&State.Done("N3_00")&&!State.hungDead)roles["Hùng"].GoTo(State.activeTask=="N3_08"||State.Done("N3_08")?ChargePoint:sites["ditch"].position,1.8f);
+            if(State.Available(workTask))
+            {
+                if(workTask.kind=="escortScout"||workTask.kind=="escortHung"||workTask.kind=="patrolHung")
+                {escort=roles[workTask.kind=="escortScout"?"Tâm":"Hùng"];escort.Follow(Mission.Player,1.35f);}
+                else if(workTask.kind=="rescueFamily"||workTask.kind=="rescueChild")
+                {if(State.introduced.Contains(workTask.id))StartRescueEscort(workTask);}
+            }
+            handsBusy=!string.IsNullOrEmpty(State.carry);combat.SetHandsOccupied(handsBusy);
+            player.SurfaceSpeedMultiplier=State.wounded?.7f:1;
+            player.SprintAllowed=()=>Mission.CharacterCanSprint;
+            detectionClock=0;scannedAt=-99;patrolLoadGrace=2;
             if(State.phase==1&&State.Done("N1_01"))roles["Anh Lực"].GoTo(sites[State.Done("N1_02")?"gate":"bamboo"].position,1.4f);
             if(State.phase==1&&State.Done("N1_03")&&!State.Done("N1_04"))roles["Hùng"].GoTo(sites["nightOneRest"].position,1.25f);
             ArrangeDayFamily();UpdateMarkers();SyncDayProps();TickLight(10f);
+
             if(State.Done("N3_09")&&!State.finished)BeginScene(Map02ChapterDefinition.Load().Find("DAWN"));
         }
         public Map02ChapterState Capture()
@@ -364,7 +415,7 @@ namespace ShadowVale.Map01
         {
             ReleaseWorkWeapon();ReleaseDayScene();ReleaseDayFreePose();CloseDay(false);dayReturnInput=false;dayArrivalStarting=dayDockEnding=false;
             if(health!=null&&sceneTask!=null)health.CinematicInvulnerable=protectedBefore;
-            ReleaseSceneAction();phaseFade=0;binocular=false;observed=0;detectionClock=0;if(rig!=null)rig.SetBinoculars(false,1);if(combat!=null)combat.SetHandsOccupied(false);handsBusy=false;namPose?.Dispose();namPose=null;foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}voice?.Stop();sceneTask=null;doingWork=false;lines=null;escort?.StopAt(escort.transform.position);escort=null;secondaryEscort?.StopAt(secondaryEscort.transform.position);secondaryEscort=null;rig?.ClearCinematicView();
+            ReleaseConversation();ReleaseSceneAction();phaseFade=0;binocularHeld=false;binocular=false;observed=0;detectionClock=0;if(rig!=null)rig.SetBinoculars(false,1);if(combat!=null)combat.SetHandsOccupied(false);handsBusy=false;namPose?.Dispose();namPose=null;foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}voice?.Stop();sceneTask=null;doingWork=false;lines=null;escort?.StopAt(escort.transform.position);escort=null;secondaryEscort?.StopAt(secondaryEscort.transform.position);secondaryEscort=null;rig?.ClearCinematicView();
         }
         void ApplyState()
         {
@@ -384,6 +435,9 @@ namespace ShadowVale.Map01
                 placedActors=true;placedPhase=State.phase;
             }
             roles["Hùng"].SetDead(State.hungDead);
+            roles["Tâm"].SetVisible(State.phase>=2);
+            roles["Tâm"].SetInjured(State.phase==2&&!State.Done("D2_04")&&State.activeTask!="D2_04");
+            PlaceChildWithMother();
             if(phaseChanged){phaseFade=1.2f;player.RestoreMotion(false);TickLight(10f);}
             health.CinematicInvulnerable=State.Done("N3_WOUND")&&!State.Done("N3_CRAWL")||State.activeTask=="N3_08";
             combat.ReloadDurationMultiplier=State.wounded?1.35f:1;
@@ -396,6 +450,14 @@ namespace ShadowVale.Map01
             roles["Hùng"].SetLocomotion(State.phase<=1?DayClip("InjuredIdle"):null,State.phase<=1?HungMapOneWalk:null);
             roles["Hùng"].PrimeLocomotion();roles["Anh Thành"].SetQuietRifle(State.phase<=1);roles["Anh Thành"].SetLocomotion(State.phase<=1?dayNamAnimator.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned"):null,State.phase<=1?ordinaryWalk:null);ArrangeDayFamily();
             SyncDayProps();RefreshMemorial();UpdateMarkers();
+        }
+        void PlaceChildWithMother()
+        {
+            // Keep the authored lost-child/rescue segment in Night 3; normal village life stays by Lành.
+            if(State.phase<=1||State.phase==5&&!State.Done("N3_03"))return;
+            var mother=roles["Chị Lành"].transform;
+            roles["Bé Tí"].StopAt(mother.position+Vector3.right*1.05f+Vector3.back*.55f);
+            roles["Bé Tí"].SetSitting(false);
         }
         void TickLight(float dt)
         {
@@ -411,12 +473,14 @@ namespace ShadowVale.Map01
         void TickPatrol(float dt)
         {
             if(State.phase!=3||State.Done("N2_05"))return;
-            float period=Mathf.Max(6,Layout!=null?Layout.patrolSweepSeconds:15);scanClock+=dt;float phase=Mathf.Repeat(scanClock,period);
+            float period=Mathf.Max(6,Layout!=null?Layout.patrolSweepSeconds:15);
+            State.patrolScanSeconds=Mathf.Repeat(State.patrolScanSeconds+dt,period);float phase=State.patrolScanSeconds;
             // A sweep can notice Nam only with line of sight and without cover; one warning per pass.
             var origin=sites["scout"].position+Vector3.up*1.7f;var delta=Mission.Player.position+Vector3.up-origin;
             sweepLight.transform.position=origin;
             var sweep=Quaternion.Euler(0,Mathf.Lerp(-50,50,phase/period),0)*(sites["store"].position-origin).normalized;
             sweepLight.transform.rotation=Quaternion.LookRotation(sweep);
+            if(patrolLoadGrace>0){patrolLoadGrace=Mathf.Max(0,patrolLoadGrace-dt);return;}
             if(!State.Done("N2_02"))return;
             bool clear=Physics.Raycast(origin,delta.normalized,out var seen,delta.magnitude+.2f,~0,QueryTriggerInteraction.Ignore)&&(seen.transform==Mission.Player||seen.transform.IsChildOf(Mission.Player));
             bool exposed=phase>period*.13f&&phase<period*.87f&&Vector3.Angle(sweep,delta)<11&&delta.magnitude<55&&clear;
@@ -424,7 +488,7 @@ namespace ShadowVale.Map01
             if(detectionClock>=(player.IsSneaking?2f:1.4f)&&Time.time-scannedAt>period)
             {
                 detectionClock=0;scannedAt=Time.time;State.patrolWarnings++;
-                if(State.patrolWarnings>=2){Mission.Retry();Mission.Say("Bị tuần tra phát hiện. Đã trở lại checkpoint; dùng bờ mương và vật che để tránh đèn.");}
+                if(State.patrolWarnings>=2){Mission.RetryPatrol();Mission.Say("Bị tuần tra phát hiện. Đã trở lại đầu cầu; dùng bờ mương và vật che để tránh đèn.");}
                 else Mission.Say("Hùng: Đèn đang quét. Nằm thấp xuống, chờ nó đi qua.");
             }
         }

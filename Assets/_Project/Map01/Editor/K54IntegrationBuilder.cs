@@ -201,7 +201,7 @@ namespace ShadowVale.Map01.Editor
                 var profile=JsonUtility.FromJson<ForestBundle>(File.ReadAllText("Assets/_Project/Map01/Generated/Map01Content.json")).weapons.First(w=>w.id==spec.weapon);
                 var tips=prop.GetComponentsInChildren<Transform>(true);
                 var tip=tips.First(t=>t.name.EndsWith("_Muzzle"));
-                var weapon=prop.AddComponent<Weapon>();weapon.Configure(spec.kind,profile.damage,profile.range,profile.fire_rate,false,tip);
+                var weapon=prop.AddComponent<Weapon>();weapon.Configure(spec.kind,profile.damage,profile.range,profile.fire_rate,false,tip,lethalHits:spec.kind==WeaponKind.Sniper);
                 data.prefab=PrefabUtility.SaveAsPrefabAsset(prop,Root+"/"+(spec.ownHands?"K54_v12":"Mosin_v13")+".prefab");Object.DestroyImmediate(prop);
                 // Rebind improved hand meshes to the same 62-bone skeleton, without importing another character.
                 var hands=new List<Map01PistolAnimationData.Hand>();

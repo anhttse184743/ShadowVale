@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Passed" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-22 04:22:21Z" end-time="2026-10-22 04:22:39Z" duration="17,5506854">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="640" result="Passed" start-time="2026-10-22 04:22:21Z" end-time="2026-10-22 04:22:39Z" duration="17.550685" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1537" name="ShadowVale.Map01.Tests.dll" fullname="D:/DO_AN_GAME/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="428" result="Passed" start-time="2026-10-22 04:22:23Z" end-time="2026-10-22 04:22:39Z" duration="15.959535" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="204192" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1538" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="428" result="Passed" start-time="2026-10-22 04:22:23Z" end-time="2026-10-22 04:22:39Z" duration="15.917037" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1539" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="428" result="Passed" start-time="2026-10-22 04:22:23Z" end-time="2026-10-22 04:22:39Z" duration="15.893886" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1455" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="428" result="Passed" start-time="2026-10-22 04:22:23Z" end-time="2026-10-22 04:22:39Z" duration="15.864152" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1168" name="K54IntegrationTests" fullname="ShadowVale.Map01.Tests.K54IntegrationTests" classname="ShadowVale.Map01.Tests.K54IntegrationTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-22 04:21:59Z" end-time="2026-10-22 04:22:05Z" duration="6.182894" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1169" name="K54HasItsOwnMagazineAndReloadUsesOnlyPistolReserve" fullname="ShadowVale.Map01.Tests.K54IntegrationTests.K54HasItsOwnMagazineAndReloadUsesOnlyPistolReserve" methodname="K54HasItsOwnMagazineAndReloadUsesOnlyPistolReserve" classname="ShadowVale.Map01.Tests.K54IntegrationTests" runstate="Runnable" seed="1860913804" result="Passed" start-time="2026-10-22 04:21:40Z" end-time="2026-10-22 04:22:05Z" duration="25.329719" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1343" name="NamMotionRefreshTests" fullname="ShadowVale.Map01.Tests.NamMotionRefreshTests" classname="ShadowVale.Map01.Tests.NamMotionRefreshTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-22 04:22:05Z" end-time="2026-10-22 04:22:05Z" duration="0.212479" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1346" name="ExportedJumpHasNoSecondBallisticArcAndPropsKeepTheirSize" fullname="ShadowVale.Map01.Tests.NamMotionRefreshTests.ExportedJumpHasNoSecondBallisticArcAndPropsKeepTheirSize" methodname="ExportedJumpHasNoSecondBallisticArcAndPropsKeepTheirSize" classname="ShadowVale.Map01.Tests.NamMotionRefreshTests" runstate="Runnable" seed="832566321" result="Passed" start-time="2026-10-22 04:22:05Z" end-time="2026-10-22 04:22:05Z" duration="0.208485" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1486" name="TutorialAnimationPolishTests" fullname="ShadowVale.Map01.Tests.TutorialAnimationPolishTests" classname="ShadowVale.Map01.Tests.TutorialAnimationPolishTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-22 04:22:23Z" end-time="2026-10-22 04:22:39Z" duration="15.807751" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1488" name="GameplayPosesAndSideBySideSizeReview" fullname="ShadowVale.Map01.Tests.TutorialAnimationPolishTests.GameplayPosesAndSideBySideSizeReview" methodname="GameplayPosesAndSideBySideSizeReview" classname="ShadowVale.Map01.Tests.TutorialAnimationPolishTests" runstate="Runnable" seed="1520816957" result="Passed" start-time="2026-10-22 04:22:05Z" end-time="2026-10-22 04:22:39Z" duration="33.572797" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1487" name="HungMatchesNamsStandingSizeAndGroundContact" fullname="ShadowVale.Map01.Tests.TutorialAnimationPolishTests.HungMatchesNamsStandingSizeAndGroundContact" methodname="HungMatchesNamsStandingSizeAndGroundContact" classname="ShadowVale.Map01.Tests.TutorialAnimationPolishTests" runstate="Runnable" seed="33526724" result="Passed" start-time="2026-10-22 04:22:39Z" end-time="2026-10-22 04:22:39Z" duration="0.061519" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/Admin/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

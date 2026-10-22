@@ -1,0 +1,83 @@
+{
+  "updated": "2026-10-22",
+  "reservedVoices": [
+    "Brodie",
+    "Clint",
+    "Tom",
+    "Martin"
+  ],
+  "characters": [
+    {
+      "speaker": "Nam",
+      "age": null,
+      "voice": "Brodie",
+      "status": "keep_existing_map1_voice"
+    },
+    {
+      "speaker": "Hùng",
+      "age": null,
+      "voice": "Clint",
+      "accent": "Northern Vietnamese",
+      "status": "keep_existing_map1_voice"
+    },
+    {
+      "speaker": "Anh Thành",
+      "age": 38,
+      "voice": "Tom",
+      "accentPreference": "Southern Vietnamese",
+      "sourceModel": "Chỉ huy Thành.fbx",
+      "status": "same_commander_as_map1_keep_voice"
+    },
+    {
+      "speaker": "Tâm",
+      "age": 26,
+      "voice": null,
+      "accentPreference": "Southern Vietnamese",
+      "sourceModel": "Anh Tâm.fbx",
+      "status": "needs_distinct_voice"
+    },
+    {
+      "speaker": "Anh Lực",
+      "age": 30,
+      "voice": null,
+      "accentPreference": "Southern Vietnamese",
+      "sourceModel": "Du kích Lực.fbx",
+      "status": "needs_distinct_voice"
+    },
+    {
+      "speaker": "Chú Bảy",
+      "age": 64,
+      "voice": null,
+      "accentPreference": "Southern Vietnamese",
+      "sourceModel": "Ông 7 chèo thuyền.fbx",
+      "status": "needs_distinct_voice"
+    },
+    {
+      "speaker": "Ông Sáu",
+      "age": 72,
+      "voice": null,
+      "accentPreference": "Southern Vietnamese",
+      "sourceModel": "Ông 6.fbx",
+      "status": "needs_distinct_voice"
+    },
+    {
+      "speaker": "Chị Lành",
+      "age": 25,
+      "voice": null,
+      "accentPreference": "Southern Vietnamese",
+      "sourceModel": "Chị Lành.fbx",
+      "status": "needs_distinct_voice"
+    },
+    {
+      "speaker": "Bé Tí",
+      "age": 7,
+      "voice": null,
+      "sourceModel": "Bé Tí.fbx",
+      "status": "silent_in_day2_night2_script"
+    }
+  ],
+  "speakerAliases": {
+    "Đơn vị pháo": "Anh Thành",
+    "Chỉ huy": "Anh Thành"
+  }
+}

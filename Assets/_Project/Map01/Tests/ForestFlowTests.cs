@@ -309,6 +309,16 @@ namespace ShadowVale.Map01.Tests
             var points = Object.FindObjectsByType<ForestPoint>(FindObjectsSortMode.None);
             var crate = points.Single(p => p.id == "tutorial_loot");
             var supplies = points.Single(p => p.id == "supplies");
+            // The old shipping marker beside the jetty must not offer E or respond to old callers.
+            var oldExit = GameObject.Find("river_exit").GetComponent<ForestPoint>();
+            if (Keyboard.current == null) InputSystem.AddDevice<Keyboard>();
+            Teleport(mission, oldExit.transform.position);
+            yield return WaitGameSeconds(.2f);
+            Assert.AreNotSame(oldExit, interaction.Nearby, "The retired delivery marker cannot take the interaction prompt.");
+            string previousDialogue = mission.Dialogue; int previousStage = quest.Stage;
+            interaction.Interact(oldExit);
+            Assert.AreEqual(previousDialogue, mission.Dialogue, "Old exit references cannot show the obsolete shipping response.");
+            Assert.AreEqual(previousStage, quest.Stage);
             Assert.AreEqual(0, crate.restockSeconds, "The starting crate gives its kit once: the base no longer refills itself.");
             Assert.AreEqual(0, supplies.restockSeconds);
 
@@ -438,7 +448,7 @@ namespace ShadowVale.Map01.Tests
                 var accuracy = guard.Accuracy;
                 guard.Accuracy = new ShadowVale.Gameplay.Enemies.ShotAccuracyProfile { enabled = false };
                 float before = playerHealth.Current;
-                float roundDamage = expected * (rifle == Map01M16.Id ? .9f : 1f);
+                float roundDamage = expected * (rifle == Map01M16.Id ? Map01M16.DamageRelativeToAk : 1f);
                 guard.FireAtPlayer();
                 Assert.AreEqual(before - roundDamage, playerHealth.Current, 1e-3f, rifle);
                 guard.FireAtPlayer();
@@ -585,6 +595,11 @@ namespace ShadowVale.Map01.Tests
             Assert.Less(Vector3.Distance(guide.Target, c3.CachePoint.transform.position), .5f);
             interaction.Interact(c3.CachePoint);
             yield return WaitGameSeconds(.6f);
+            var field = mission.GetComponent<Map01FieldSupplies>().ApproachPoint;
+            Assert.AreEqual("ĐỒI ĐÔNG NAM — BĂNG, KHÓI, LỰU ĐẠN", guide.Label);
+            Assert.Less(Vector3.Distance(guide.Target, field.transform.position), .5f);
+            interaction.Interact(field); Map01NamActions.For(mission).CancelAction();
+            yield return WaitGameSeconds(.6f);
             Assert.AreEqual("ĐIỂM 3 — QUAN SÁT DOANH TRẠI [F]", guide.Label);
             Assert.Less(Vector3.Distance(guide.Target, story.Layout.commanderPost.position), .5f);
             quest.RestoreStoryStage(Map01Quest.BossStage, OfficerReported());
@@ -600,7 +615,20 @@ namespace ShadowVale.Map01.Tests
             yield return WaitGameSeconds(.6f);
             Assert.AreEqual(Map01Quest.ReportBossStage, quest.Stage);
             Assert.AreEqual("TÌM CHỖ KÍN — BÁO CÁO [E]", guide.Label, "After the finale Nam reports by radio for the way out.");
-            quest.RestoreStage(Map01Quest.ExtractionStage);
+            // This fixture freezes guards to inspect guide targets. The C3 death response
+            // still marks them engaged; end that simulated fight before making the safe radio call.
+            c3.enabled = false;
+            Map01BodyDiscovery.For(mission).enabled = false;
+            foreach (var enemy in mission.Enemies.Where(e => e != null && e.Alive)) {
+                enemy.ReturnToPost(); enemy.enabled = false;
+            }
+            // Earlier guide probes only selected distant targets; Nam is still at the jetty.
+            // Report from C3 so extraction does not immediately advance into auto-boarding.
+            PlaceNam(mission, field.transform.position);
+            Assert.IsTrue(story.SafeToReport);
+            Assert.IsTrue(story.TryInteract());
+            yield return ConfirmConversation(mission);
+            Assert.AreEqual(Map01Quest.ExtractionStage, quest.Stage, "The radio report opens the route to the boat.");
             yield return WaitGameSeconds(.6f);
             Assert.AreEqual("NORTHERN JETTY", guide.Label, "The retreat leads to the waiting boat.");
 

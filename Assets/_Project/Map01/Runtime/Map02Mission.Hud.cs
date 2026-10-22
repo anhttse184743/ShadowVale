@@ -6,7 +6,7 @@ namespace ShadowVale.Map01
 {
     public sealed partial class Map02Mission
     {
-        Texture2D hudChart, hudArrow, hudPanel, hudCombatIcons, hudHealth;
+        Texture2D hudChart, hudMiniChart, hudArrow, hudPanel, hudCombatIcons, hudDisc, hudHealth, hudGoal;
         GUIStyle hudStencil, hudCaption;
         public int AvailableObjectiveCount => targets.Count(t=>t!=null&&ObjectiveAvailable(t));
         public bool HasCheckpoint => !string.IsNullOrEmpty(checkpoint);
@@ -119,8 +119,8 @@ namespace ShadowVale.Map01
         }
         void DrawNamArrow(Vector2 at,float size)
         {
-            if(hudArrow==null){hudArrow=new Texture2D(32,32,TextureFormat.RGBA32,false);for(int y=0;y<32;y++)for(int x=0;x<32;x++)hudArrow.SetPixel(x,y,Mathf.Abs(x-15.5f)<(31-y)*.45f?Color.white:Color.clear);hudArrow.Apply();}
-            var matrix=GUI.matrix;var color=GUI.color;GUI.matrix=Map02Navigation.RotateUi(matrix,at,Player.eulerAngles.y);GUI.color=new Color(.65f,.95f,1);GUI.DrawTexture(new Rect(at.x-size/2,at.y-size/2,size,size),hudArrow);GUI.color=color;GUI.matrix=matrix;
+            if(hudArrow==null)hudArrow=Map01Minimap.Symbol(0);
+            var matrix=GUI.matrix;var color=GUI.color;GUI.matrix=Map02Navigation.RotateUi(matrix,at,Player.eulerAngles.y);GUI.color=new Color(.98f,.93f,.72f);GUI.DrawTexture(new Rect(at.x-size/2,at.y-size/2,size,size),hudArrow);GUI.color=color;GUI.matrix=matrix;
         }
         void DrawObjectiveChoices(Rect area)
         {
@@ -143,10 +143,10 @@ namespace ShadowVale.Map01
         }
         void DrawObjectivePin(Vector2 position,float size=12)
         {
-            var matrix=GUI.matrix;var tint=GUI.color;GUI.matrix=Map02Navigation.RotateUi(matrix,position,45);
-            GUI.color=new Color(.04f,.05f,.025f,.95f);GUI.DrawTexture(new Rect(position.x-size*.5f-2,position.y-size*.5f-2,size+4,size+4),Texture2D.whiteTexture);
-            GUI.color=new Color(1,.77f,.23f);GUI.DrawTexture(new Rect(position.x-size*.5f,position.y-size*.5f,size,size),Texture2D.whiteTexture);
-            GUI.matrix=matrix;GUI.color=tint;
+            if(hudGoal==null)hudGoal=Map01Minimap.Symbol(2);
+            var tint=GUI.color;GUI.color=Color.black;
+            GUI.DrawTexture(new Rect(position.x-size/2-1,position.y-size/2-1,size+2,size+2),hudGoal);
+            GUI.color=new Color(1,.77f,.26f);GUI.DrawTexture(new Rect(position.x-size/2,position.y-size/2,size,size),hudGoal);GUI.color=tint;
         }
     }
 }

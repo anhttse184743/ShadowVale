@@ -24,7 +24,7 @@ MonoBehaviour:
   - role: "Ch\xFA B\u1EA3y"
     prefab: {fileID: 178453329010743982, guid: 230d8f4705ce40a458bfb9a728fc46c8, type: 3}
   - role: "T\xE2m"
-    prefab: {fileID: 738124240311401533, guid: bc730d08f653e164cbb9aef813ab0536, type: 3}
+    prefab: {fileID: 1592088549058560199, guid: 4b474e014de278c42b5b5a9a3a6526d4, type: 3}
   - role: "H\xF9ng"
     prefab: {fileID: 3074639621431819192, guid: da8f6cf4b6ab9dd499d9a80674d831e9, type: 3}
   - role: "Anh Th\xE0nh"

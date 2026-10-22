@@ -18,17 +18,19 @@ namespace ShadowVale.Map01.Tests
             GameObject copy=null;
             try
             {
-                var gun=original.GetComponent<Weapon>();float damage=gun.Damage,cooldown=gun.Cooldown;
+                var gun=original.GetComponent<Weapon>();float damage=gun.Damage,cooldown=gun.Cooldown,range=gun.Range;
                 Map01RifleVisual.Apply(gun,Map01M16.Id);
                 Assert.AreEqual(1,original.GetComponentsInChildren<MagazineReloadProfile>().Length);
                 copy=Object.Instantiate(original);var clone=copy.GetComponent<Weapon>();
                 Map01RifleVisual.Apply(clone,"rifle_standard");
                 Assert.AreEqual(damage,clone.Damage,.0001f);
                 Assert.AreEqual(cooldown,clone.Cooldown,.0001f);
+                Assert.AreEqual(range,clone.Range);Assert.IsFalse(clone.UsesM16Handling);
                 Assert.AreEqual(0,copy.GetComponentsInChildren<MagazineReloadProfile>().Length,"An AK clone must not keep its template's M16 visible.");
                 Map01RifleVisual.Apply(clone,Map01M16.Id);
                 Assert.AreEqual(1,copy.GetComponentsInChildren<MagazineReloadProfile>(true).Length,"Switching a clone must reuse the one model.");
-                Assert.AreEqual(damage*.9f,clone.Damage,.0001f);
+                Assert.AreEqual(Map01M16.Damage,clone.Damage,.0001f);
+                Assert.AreEqual(Map01M16.Range,clone.Range);Assert.IsTrue(clone.UsesM16Handling);
             }
             finally {if(copy!=null)Object.DestroyImmediate(copy);Object.DestroyImmediate(original);}
         }

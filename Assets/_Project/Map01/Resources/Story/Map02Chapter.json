@@ -199,7 +199,7 @@
     },
     {
       "id": "D2_05",
-      "title": "Lấy cuộn dây ăng-ten trong kho kín",
+      "title": "Lấy cuộn dây trong kho kín và mang về giao Hùng",
       "phase": 2,
       "kind": "wire",
       "site": "store",
@@ -209,7 +209,7 @@
       "count": 1,
       "scene": "",
       "seconds": 3,
-      "purpose": "Lấy cuộn dây trong số vật tư đã cất hôm trước để dựng lại ăng-ten."
+      "purpose": "Mang cuộn dây từ số vật tư đã cất hôm trước về trạm để Hùng dựng lại ăng-ten."
     },
     {
       "id": "D2_06",
@@ -1004,7 +1004,7 @@
     {
       "id": "m2v3_antenna_03",
       "conversation": "m2v3_antenna",
-      "speaker": "Đơn vị pháo",
+      "speaker": "Anh Thành",
       "text": "Nghe rõ. Nói đi.",
       "radio": true
     },
@@ -1389,7 +1389,7 @@
     {
       "id": "m2v3_coordinates_04",
       "conversation": "m2v3_coordinates",
-      "speaker": "Đơn vị pháo",
+      "speaker": "Anh Thành",
       "text": "Nhận tọa độ. Ba phút.",
       "radio": true
     },
@@ -1501,7 +1501,7 @@
     {
       "id": "m2v3_sacrifice_03",
       "conversation": "m2v3_sacrifice",
-      "speaker": "Đơn vị pháo",
+      "speaker": "Anh Thành",
       "text": "Bắn.",
       "radio": true
     },

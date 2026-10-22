@@ -1,0 +1,87 @@
+{
+  "status": "DESIGN_PROPOSAL_NOT_APPLIED",
+  "coordinate_status": "Candidate world x/z; P1/P7 measured existing, all new points require Unity placement QA.",
+  "scope": "C3 only. Existing terrain, mission objectives, boss AI and other missions unchanged.",
+  "points": [
+    {
+      "id": "P1",
+      "x": 106.8,
+      "z": 22.7,
+      "phase": "Chuẩn bị",
+      "name": "Ổ Mosin hiện có",
+      "chance": 1,
+      "contents": "1 Mosin + 5 đạn nhắm",
+      "condition": "Từ lúc nhận nhiệm vụ; một lần; giữ vị trí hiện tại"
+    },
+    {
+      "id": "P2",
+      "x": 43,
+      "z": 32,
+      "phase": "Chuẩn bị",
+      "name": "Túi trinh sát đường Tây",
+      "chance": 1,
+      "contents": "1 bom khói + 8 đạn K54",
+      "condition": "Một lần; có dấu vải dẫn đường; vị trí mới cần kiểm tra"
+    },
+    {
+      "id": "P3",
+      "x": 57.5,
+      "z": 60,
+      "phase": "Xâm nhập",
+      "name": "Túi y tế ngoài cửa nhà Tây",
+      "chance": 1,
+      "contents": "1 băng cứu thương (hồi 45 HP)",
+      "condition": "Tiếp cận được mà không giết lính; tránh vùng diễn hoạt trên giường"
+    },
+    {
+      "id": "P4",
+      "x": 75.8,
+      "z": 54,
+      "phase": "Xâm nhập",
+      "name": "Hòm đạn sân tiếp tế",
+      "chance": 1,
+      "contents": "15 viên đúng súng chính (M16 hoặc AK)",
+      "condition": "Khóa loại đạn vào save khi tạo; không tạo cả hai loại"
+    },
+    {
+      "id": "P5",
+      "x": 91,
+      "z": 63,
+      "phase": "Nhánh tùy chọn",
+      "name": "Một cụm đồ ở sườn Đông",
+      "chance": 0.6,
+      "contents": "Chọn đúng 1: 2 đạn Mosin (45%) / 1 khói (35%) / 1 sửa súng (20%)",
+      "condition": "60% cụm tồn tại; không bắt buộc cho mục tiêu; seed ổn định"
+    },
+    {
+      "id": "P6",
+      "x": 62,
+      "z": 72,
+      "phase": "Cứu nguy",
+      "name": "Hốc cứu nguy cạnh tuyến điện thoại",
+      "chance": 1,
+      "contents": "Tối đa 1 gói: 1 băng HOẶC 15 viên đúng súng chính",
+      "condition": "Hốc có từ đầu; chốt và lưu đúng một lần khi mở: HP < 40 và không có băng ưu tiên băng, nếu không thì đạn khi đạn súng trường trong băng + dự trữ < 15; khỏe và đủ đạn thì 1 vải; không quay lại đổi phần thưởng"
+    },
+    {
+      "id": "P7",
+      "x": 71,
+      "z": 59.05,
+      "phase": "Sau mục tiêu",
+      "name": "Hòm C3 hiện có",
+      "chance": 1,
+      "contents": "1 sửa súng + 2 linh kiện + 3 đạn Mosin; 2 lượt vật liệu",
+      "condition": "Chỉ huy chết mới mở; hòm không cấp đồ chuẩn bị; giữ +60 hậu cần hiện có, không cộng trùng"
+    },
+    {
+      "id": "P8",
+      "x": 52,
+      "z": 82,
+      "phase": "Rút lui",
+      "name": "Túi khói đường rút",
+      "chance": 1,
+      "contents": "1 bom khói",
+      "condition": "Mở từ khi chỉ huy chết; không hồi sinh; tránh tuyến tiếp viện thực tế"
+    }
+  ]
+}

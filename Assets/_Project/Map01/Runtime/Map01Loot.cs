@@ -29,6 +29,7 @@ namespace ShadowVale.Map01
         public EnemyType[] enemyTypes;
         public Table[] lootTables;
         public Container[] containers;
+        public FieldCache[] fieldCaches;
 
         [Serializable] public sealed class Repair
         {
@@ -49,10 +50,10 @@ namespace ShadowVale.Map01
             /// <summary>Reserve rounds under which ammunition is twice as likely.</summary>
             public int lowAmmo;
             public float ammoBoost;
-            /// <summary>Health fraction under which, with no dressing in the bag, dressings are twice as likely.</summary>
+            /// <summary>Health fraction under which, with no dressing in the bag, medkitBoost multiplies their weight.</summary>
             public float lowHealth;
             public float medkitBoost;
-            /// <summary>Guard packs in a row without a dressing after which the next one has one.</summary>
+            /// <summary>The dry-pack count that adds a dressing when Nam carries fewer than two.</summary>
             public int medkitPity;
         }
         [Serializable] public sealed class Logistics
@@ -86,6 +87,7 @@ namespace ShadowVale.Map01
         [Serializable] public sealed class Entry { public string item; public int tier; public float weight; public int min, max; }
         [Serializable] public sealed class Table { public string code, name; public int rollsMin, rollsMax; public Entry[] entries; }
         [Serializable] public sealed class Container { public string tag, lootTable; }
+        [Serializable] public sealed class FieldCache { public string id, label; public float x, z; public int minStage; }
 
         public const string ResourcePath = "Loot/Map01Loot";
         private static Map01Loot cached;
@@ -135,6 +137,13 @@ namespace ShadowVale.Map01
                 if (e.dropMin < 0 || e.dropMax > 1 || e.dropMax < e.dropMin) p.Add(e.code + ": drop condition");
             }
             foreach (var c in containers ?? Array.Empty<Container>()) if (!tables.Contains(c.lootTable)) p.Add(c.tag + ": unknown loot table " + c.lootTable);
+            var cacheIds = new HashSet<string>();
+            foreach (var c in fieldCaches ?? Array.Empty<FieldCache>())
+            {
+                if (string.IsNullOrEmpty(c.id) || !cacheIds.Add(c.id)) p.Add("field cache: missing or duplicate id");
+                if (ContainerTable(c.id) == null) p.Add(c.id + ": unknown field cache container");
+                if (c.minStage < 0 || c.minStage > Map01Quest.LastStage) p.Add(c.id + ": invalid stage");
+            }
             return p;
         }
 

@@ -1,0 +1,1 @@
+motion=f1_throw frame=1330,112 root=(-67.50, 12.22, -66.50) hand=(-67.02, 13.57, -66.35) foot=(-67.55, 12.42, -66.71) modelLocal=(0.00, 0.00, 0.00) grounded=True

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="12" result="Failed(Child)" total="12" passed="11" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-22 04:19:14Z" end-time="2026-10-22 04:19:21Z" duration="6,2666512">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="640" result="Failed" site="Child" start-time="2026-10-22 04:19:14Z" end-time="2026-10-22 04:19:21Z" duration="6.266651" total="12" passed="11" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1537" name="ShadowVale.Map01.Tests.dll" fullname="D:/DO_AN_GAME/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="428" result="Failed" site="Child" start-time="2026-10-22 04:19:15Z" end-time="2026-10-22 04:19:21Z" duration="5.901232" total="12" passed="11" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="140112" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1538" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="428" result="Failed" site="Child" start-time="2026-10-22 04:19:15Z" end-time="2026-10-22 04:19:21Z" duration="5.865897" total="12" passed="11" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1539" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="428" result="Failed" site="Child" start-time="2026-10-22 04:19:15Z" end-time="2026-10-22 04:19:21Z" duration="5.831413" total="12" passed="11" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="SetUpFixture" id="1455" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="428" result="Failed" site="Child" start-time="2026-10-22 04:19:15Z" end-time="2026-10-22 04:19:21Z" duration="5.797525" total="12" passed="11" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1343" name="NamMotionRefreshTests" fullname="ShadowVale.Map01.Tests.NamMotionRefreshTests" classname="ShadowVale.Map01.Tests.NamMotionRefreshTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-22 04:17:22Z" end-time="2026-10-22 04:17:33Z" duration="10.555084" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1349" name="ActualJumpUsesPhysicsAndWaitsForLandingAfterTheNominalFlight" fullname="ShadowVale.Map01.Tests.NamMotionRefreshTests.ActualJumpUsesPhysicsAndWaitsForLandingAfterTheNominalFlight" methodname="ActualJumpUsesPhysicsAndWaitsForLandingAfterTheNominalFlight" classname="ShadowVale.Map01.Tests.NamMotionRefreshTests" runstate="Runnable" seed="2024699381" result="Passed" start-time="2026-10-22 04:15:46Z" end-time="2026-10-22 04:16:13Z" duration="27.423755" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1344" name="ApprovedAssetHasAllFortySevenClipsAndExistingSkeleton" fullname="ShadowVale.Map01.Tests.NamMotionRefreshTests.ApprovedAssetHasAllFortySevenClipsAndExistingSkeleton" methodname="ApprovedAssetHasAllFortySevenClipsAndExistingSkeleton" classname="ShadowVale.Map01.Tests.NamMotionRefreshTests" runstate="Runnable" seed="1372851154" result="Passed" start-time="2026-10-22 04:16:13Z" end-time="2026-10-22 04:16:13Z" duration="0.331808" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1346" name="ExportedJumpHasNoSecondBallisticArcAndPropsKeepTheirSize" fullname="ShadowVale.Map01.Tests.NamMotionRefreshTests.ExportedJumpHasNoSecondBallisticArcAndPropsKeepTheirSize" methodname="ExportedJumpHasNoSecondBallisticArcAndPropsKeepTheirSize" classname="ShadowVale.Map01.Tests.NamMotionRefreshTests" runstate="Runnable" seed="497932660" result="Passed" start-time="2026-10-22 04:16:13Z" end-time="2026-10-22 04:16:13Z" duration="0.008706" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1345" name="JumpControllerExitsOnActualGroundedAndPreservesStoryStates" fullname="ShadowVale.Map01.Tests.NamMotionRefreshTests.JumpControllerExitsOnActualGroundedAndPreservesStoryStates" methodname="JumpControllerExitsOnActualGroundedAndPreservesStoryStates" classname="ShadowVale.Map01.Tests.NamMotionRefreshTests" runstate="Runnable" seed="73836082" result="Passed" start-time="2026-10-22 04:16:13Z" end-time="2026-10-22 04:16:13Z" duration="0.005879" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1347" name="KnifeDrawAttackHolsterAndPistolReloadUseV3WithoutChangingAmmo" fullname="ShadowVale.Map01.Tests.NamMotionRefreshTests.KnifeDrawAttackHolsterAndPistolReloadUseV3WithoutChangingAmmo" methodname="KnifeDrawAttackHolsterAndPistolReloadUseV3WithoutChangingAmmo" classname="ShadowVale.Map01.Tests.NamMotionRefreshTests" runstate="Runnable" seed="1061864687" result="Passed" start-time="2026-10-22 04:16:13Z" end-time="2026-10-22 04:16:41Z" duration="27.494302" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1350" name="SlopeJumpWeaponSwapsAndPausePreserveTheAirbornePhase" fullname="ShadowVale.Map01.Tests.NamMotionRefreshTests.SlopeJumpWeaponSwapsAndPausePreserveTheAirbornePhase" methodname="SlopeJumpWeaponSwapsAndPausePreserveTheAirbornePhase" classname="ShadowVale.Map01.Tests.NamMotionRefreshTests" runstate="Runnable" seed="110065837" result="Passed" start-time="2026-10-22 04:16:41Z" end-time="2026-10-22 04:17:05Z" duration="24.557724" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1348" name="ThrowCancelReleaseAndCrouchUseApprovedPropsAndReleaseOnce" fullname="ShadowVale.Map01.Tests.NamMotionRefreshTests.ThrowCancelReleaseAndCrouchUseApprovedPropsAndReleaseOnce" methodname="ThrowCancelReleaseAndCrouchUseApprovedPropsAndReleaseOnce" classname="ShadowVale.Map01.Tests.NamMotionRefreshTests" runstate="Runnable" seed="620127848" result="Passed" start-time="2026-10-22 04:17:05Z" end-time="2026-10-22 04:17:33Z" duration="27.197018" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1486" name="TutorialAnimationPolishTests" fullname="ShadowVale.Map01.Tests.TutorialAnimationPolishTests" classname="ShadowVale.Map01.Tests.TutorialAnimationPolishTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-22 04:17:52Z" end-time="2026-10-22 04:18:00Z" duration="8.223205" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1488" name="GameplayPosesAndSideBySideSizeReview" fullname="ShadowVale.Map01.Tests.TutorialAnimationPolishTests.GameplayPosesAndSideBySideSizeReview" methodname="GameplayPosesAndSideBySideSizeReview" classname="ShadowVale.Map01.Tests.TutorialAnimationPolishTests" runstate="Runnable" seed="337383426" result="Failed" start-time="2026-10-22 04:17:33Z" end-time="2026-10-22 04:18:00Z" duration="27.228294" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <failure>
+                  <message><![CDATA[Unhandled log message: '[Exception] KeyNotFoundException: The given key 'LeftForeArmTwist1' was not present in the dictionary.'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                  <stack-trace><![CDATA[System.Collections.Generic.Dictionary`2[TKey,TValue].get_Item (TKey key) (at <d49d4cb128564ee1b54a84338c98d353>:0)
+ShadowVale.Map01.Map01Pistol+<>c__DisplayClass32_0.<Bind>b__3 (ShadowVale.Map01.Map01PistolAnimationData+Track t) (at Assets/_Project/Map01/Runtime/Map01Pistol.cs:48)
+System.Linq.Enumerable+SelectArrayIterator`2[TSource,TResult].ToArray () (at <e1f614c5eede4689988594bcb9796955>:0)
+System.Linq.Enumerable.ToArray[TSource] (System.Collections.Generic.IEnumerable`1[T] source) (at <e1f614c5eede4689988594bcb9796955>:0)
+ShadowVale.Map01.Map01Pistol.Bind (ShadowVale.Map01.Map01Mission owner, ShadowVale.Map01.Map01PistolAnimationData asset) (at Assets/_Project/Map01/Runtime/Map01Pistol.cs:48)
+ShadowVale.Map01.Map01Pistol.Install (ShadowVale.Map01.Map01Mission owner) (at Assets/_Project/Map01/Runtime/Map01Pistol.cs:41)
+ShadowVale.Map01.Map01Mission.Start () (at Assets/_Project/Map01/Runtime/Map01Mission.cs:244)
+
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[KeyNotFoundException: The given key 'LeftForeArmTwist1' was not present in the dictionary.
+System.Collections.Generic.Dictionary`2[TKey,TValue].get_Item (TKey key) (at <d49d4cb128564ee1b54a84338c98d353>:0)
+ShadowVale.Map01.Map01Pistol+<>c__DisplayClass32_0.<Bind>b__3 (ShadowVale.Map01.Map01PistolAnimationData+Track t) (at Assets/_Project/Map01/Runtime/Map01Pistol.cs:48)
+System.Linq.Enumerable+SelectArrayIterator`2[TSource,TResult].ToArray () (at <e1f614c5eede4689988594bcb9796955>:0)
+System.Linq.Enumerable.ToArray[TSource] (System.Collections.Generic.IEnumerable`1[T] source) (at <e1f614c5eede4689988594bcb9796955>:0)
+ShadowVale.Map01.Map01Pistol.Bind (ShadowVale.Map01.Map01Mission owner, ShadowVale.Map01.Map01PistolAnimationData asset) (at Assets/_Project/Map01/Runtime/Map01Pistol.cs:48)
+ShadowVale.Map01.Map01Pistol.Install (ShadowVale.Map01.Map01Mission owner) (at Assets/_Project/Map01/Runtime/Map01Pistol.cs:41)
+ShadowVale.Map01.Map01Mission.Start () (at Assets/_Project/Map01/Runtime/Map01Mission.cs:244)
+
+]]></output>
+              </test-case>
+              <test-case id="1487" name="HungMatchesNamsStandingSizeAndGroundContact" fullname="ShadowVale.Map01.Tests.TutorialAnimationPolishTests.HungMatchesNamsStandingSizeAndGroundContact" methodname="HungMatchesNamsStandingSizeAndGroundContact" classname="ShadowVale.Map01.Tests.TutorialAnimationPolishTests" runstate="Runnable" seed="2038809712" result="Passed" start-time="2026-10-22 04:18:00Z" end-time="2026-10-22 04:18:00Z" duration="0.172732" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1529" name="WeaponAnimationIntegrationTests" fullname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests" classname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-22 04:19:15Z" end-time="2026-10-22 04:19:21Z" duration="5.661550" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1530" name="GrenadeUsesItsOwnModelReleasesOnceAndKeepsHandsBusyThroughRecovery" fullname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.GrenadeUsesItsOwnModelReleasesOnceAndKeepsHandsBusyThroughRecovery" methodname="GrenadeUsesItsOwnModelReleasesOnceAndKeepsHandsBusyThroughRecovery" classname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests" runstate="Runnable" seed="1004007406" result="Passed" start-time="2026-10-22 04:18:00Z" end-time="2026-10-22 04:18:25Z" duration="25.241380" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1532" name="HolsteringAnAKInterruptsItsMagazineGestureAndDoesNotFinishAHiddenReload" fullname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.HolsteringAnAKInterruptsItsMagazineGestureAndDoesNotFinishAHiddenReload" methodname="HolsteringAnAKInterruptsItsMagazineGestureAndDoesNotFinishAHiddenReload" classname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests" runstate="Runnable" seed="571132502" result="Passed" start-time="2026-10-22 04:18:25Z" end-time="2026-10-22 04:18:56Z" duration="30.274291" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1531" name="SmokeIsACanisterInTheHandAndAimingCancelsTheReloadWithoutSpendingAmmo" fullname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.SmokeIsACanisterInTheHandAndAimingCancelsTheReloadWithoutSpendingAmmo" methodname="SmokeIsACanisterInTheHandAndAimingCancelsTheReloadWithoutSpendingAmmo" classname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests" runstate="Runnable" seed="408414217" result="Passed" start-time="2026-10-22 04:18:56Z" end-time="2026-10-22 04:19:21Z" duration="24.851169" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/Admin/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

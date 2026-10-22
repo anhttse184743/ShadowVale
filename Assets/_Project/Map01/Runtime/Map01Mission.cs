@@ -153,6 +153,7 @@ namespace ShadowVale.Map01
             Map01CampChests.Attach(this); // An iron chest in each enemy camp (Map01ItemCatalog).
             // Point 3's command post (sets up in Start); Map 1's story only, not the tutorial.
             if (quest != null && GetComponent<Map01C3Mission>() == null) gameObject.AddComponent<Map01C3Mission>();
+            if (quest != null && GetComponent<Map01FieldSupplies>() == null) gameObject.AddComponent<Map01FieldSupplies>();
             hp = Settings.playerHP; stamina = Settings.stamina;
             Skills = player.GetComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
             if (Skills == null) Skills = player.gameObject.AddComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
@@ -243,6 +244,7 @@ namespace ShadowVale.Map01
                 inventory.GunBroke += OnGunBroke;
                 Map01Pistol.Install(this);
                 Map01Mosin.Install(this);
+                NamMotionRefresh.Install(this);
             }
             if (gameCamera != null && gameCamera.TryGetComponent<ThirdPersonCamera>(out var cameraRig))
                 {
@@ -278,6 +280,9 @@ namespace ShadowVale.Map01
         public Material trailMaterial;
         public void RegisterPoint(ForestPoint point)
         {
+            // Retired delivery/exit markers remain serialized in old scenes and saves.
+            // Current extraction is owned by Map01Extraction after the C3 radio report.
+            if (point.kind == ForestPointKind.Exit) { point.enabled = false; return; }
             Points.Add(point);
             if (point.kind == ForestPointKind.Hide) {
                 hideSpots.Add(point);

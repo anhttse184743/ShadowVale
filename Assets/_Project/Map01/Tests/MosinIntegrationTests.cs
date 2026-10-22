@@ -40,7 +40,7 @@ namespace ShadowVale.Map01.Tests
         {
             K54IntegrationTests.OpenSandbox();yield return new EnterPlayMode();yield return null;PrepareMosin();yield return WaitGameSeconds(.3f);
             var combat=M.ModernCombat;var bag=M.GetComponent<Map01Inventory>();var mosin=M.player.GetComponent<Map01Mosin>();
-            Assert.IsNotNull(mosin);Assert.AreEqual(95,mosin.Weapon.Damage);Assert.AreEqual(80,mosin.Weapon.Range);Assert.AreEqual(1f/.7f,mosin.Weapon.Cooldown,.0001f);Assert.AreEqual(5,combat.MagazineCapacity);Assert.AreEqual(0,combat.RoundsInMagazine);
+            Assert.IsNotNull(mosin);Assert.AreEqual(200,mosin.Weapon.Damage);Assert.AreEqual(200,mosin.Weapon.Range);Assert.IsTrue(mosin.Weapon.LethalAgainstEnemies);Assert.AreEqual(1f/.7f,mosin.Weapon.Cooldown,.0001f);Assert.AreEqual(5,combat.MagazineCapacity);Assert.AreEqual(0,combat.RoundsInMagazine);
             bool akInBag=false;for(int i=0;i<Map01Inventory.BagSize;i++)akInBag|=bag.Cell(i)?.id=="rifle_standard";
             Assert.IsTrue(akInBag,"AK is stored in the existing bag, not attached to a new rig/back slot.");
             Assert.IsTrue(mosin.Weapon.GetComponentsInChildren<Transform>(true).Any(t=>t.name=="bolt"));Assert.IsTrue(mosin.Weapon.GetComponentsInChildren<Transform>(true).Any(t=>t.name=="Cartridge"));
@@ -67,7 +67,8 @@ namespace ShadowVale.Map01.Tests
             {
                 yield return WaitGameSeconds(1f);Assert.IsTrue(mosin.Scoped);Assert.IsTrue(rig.IsWeaponScope);Assert.IsFalse(rig.IsBinoculars);Assert.AreEqual(rig.WeaponScopeFieldOfView,M.gameCamera.fieldOfView,.2f);
                 Assert.AreEqual(2*Mathf.Atan(Mathf.Tan(hipFov*Mathf.Deg2Rad*.5f)/3.5f)*Mathf.Rad2Deg,M.gameCamera.fieldOfView,.2f);
-                rightHeld=false;yield return WaitGameSeconds(.25f);Assert.IsTrue(combat.IsAiming);Assert.IsTrue(mosin.Scoped,"Releasing the button keeps the PU scope toggled on.");
+                rightHeld=false;yield return WaitGameSeconds(.5f);Assert.IsFalse(combat.IsAiming);Assert.IsFalse(mosin.Scoped,"Releasing the button lowers the PU scope.");
+                rightHeld=true;yield return WaitGameSeconds(1f);Assert.IsTrue(combat.IsAiming);Assert.IsTrue(mosin.Scoped);
                 yield return CaptureScopedPose("unity_mosin_aim");ScreenCapture.CaptureScreenshot(Work+"/unity_mosin_PU35.png");yield return null;yield return null;
                 typeof(PlayerCombat).GetMethod("Attack",BindingFlags.NonPublic|BindingFlags.Instance).Invoke(combat,null);yield return WaitGameSeconds(.65f);
                 Assert.AreEqual(4,combat.RoundsInMagazine);Assert.IsFalse(mosin.Scoped);Assert.That(mosin.SourceFrame,Is.InRange(163f,249f));CaptureCloseup("unity_mosin_bolt");
@@ -75,10 +76,10 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsTrue(combat.TryReload());yield return WaitGameSeconds(1.6f);Assert.AreEqual(5,combat.RoundsInMagazine);Assert.IsTrue(combat.IsReloading);Assert.IsFalse(mosin.Scoped);CaptureCloseup("unity_mosin_single_load");
                 yield return WaitGameSeconds(1.2f);Assert.IsFalse(combat.IsReloading);Assert.IsTrue(mosin.Scoped);
                 M.ModernPlayer.RestoreMotion(true);M.Crouched=true;yield return WaitGameSeconds(.6f);Assert.IsTrue(mosin.Scoped);yield return CaptureScopedPose("unity_mosin_crouch_aim");
-                rightHeld=true;yield return WaitGameSeconds(.5f);Assert.IsFalse(combat.IsAiming);Assert.IsFalse(mosin.Scoped,"A second press closes the PU scope.");
+                rightHeld=false;yield return WaitGameSeconds(.5f);Assert.IsFalse(combat.IsAiming);Assert.IsFalse(mosin.Scoped,"Releasing after the bolt/reload cycle also closes the PU scope.");
                 M.GetComponent<Map01Inventory>().Draw(Map01Inventory.Slot.Pistol);yield return WaitGameSeconds(.4f);Assert.IsFalse(mosin.Scoped);Assert.IsFalse(rig.IsWeaponScope);
             }
-            finally{InputSystem.onBeforeUpdate-=HoldRight;InputSystem.RemoveDevice(heldMouse);heldMouse=null;RestoreInputRouting(routing);}
+            finally{rightHeld=false;InputSystem.onBeforeUpdate-=HoldRight;InputSystem.RemoveDevice(heldMouse);heldMouse=null;RestoreInputRouting(routing);}
             yield return new ExitPlayMode();
         }
         static IEnumerator CaptureScopedPose(string name)

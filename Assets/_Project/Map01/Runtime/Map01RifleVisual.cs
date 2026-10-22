@@ -10,7 +10,7 @@ namespace ShadowVale.Map01
         [field: SerializeField] public string ItemId { get; private set; } = "rifle_standard";
         [SerializeField] Renderer[] original;
         [SerializeField] GameObject model;
-        [SerializeField] float akDamage, akCooldown;
+        [SerializeField] float akDamage, akCooldown, akRange;
         [SerializeField] Transform akMuzzle, m16Muzzle;
         public static void Apply(Weapon weapon, string id)
         {
@@ -20,7 +20,7 @@ namespace ShadowVale.Map01
         }
         void Set(Weapon weapon, string id)
         {
-            if (original == null) { original = weapon.GetComponentsInChildren<Renderer>(true); akDamage = weapon.Damage; akCooldown = weapon.Cooldown; akMuzzle = weapon.Muzzle; }
+            if (original == null) { original = weapon.GetComponentsInChildren<Renderer>(true); akDamage = weapon.Damage; akCooldown = weapon.Cooldown; akRange = weapon.Range; akMuzzle = weapon.Muzzle; }
             bool m16 = id == Map01M16.Id;
             if (m16 && model == null)
             {
@@ -34,7 +34,9 @@ namespace ShadowVale.Map01
             foreach (var r in original) if (r != null) r.enabled = !m16;
             if (model != null) model.SetActive(m16);
             weapon.SetReloadModel(m16 ? model.transform : null);
-            if (ItemId != id) weapon.ConfigureRifle(m16 ? akDamage * .9f : akDamage, m16 ? Map01M16.ShotSeconds : akCooldown, m16 ? m16Muzzle : akMuzzle, !m16);
+            if (ItemId != id) weapon.ConfigureRifle(m16 ? Map01M16.Damage : akDamage,
+                m16 ? Map01M16.ShotSeconds : akCooldown, m16 ? m16Muzzle : akMuzzle, !m16,
+                m16 ? Map01M16.Range : akRange, m16);
             ItemId = id;
         }
     }

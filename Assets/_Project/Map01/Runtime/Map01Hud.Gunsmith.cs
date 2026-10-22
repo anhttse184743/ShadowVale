@@ -26,6 +26,7 @@ namespace ShadowVale.Map01
         private const string GunsTab = "guns", StoreTab = "store";
         private int benchGun;
         private string armedKey; private float armedAt = -10f;
+        private Vector2 storeScroll;
         private void Disarm() { armedKey = null; armedAt = -10f; }
         private bool askSalvage; private Gun salvageAsk;
         private GUIStyle bagCondition;
@@ -217,7 +218,7 @@ namespace ShadowVale.Map01
         private void DrawStore(float ox, float oy)
         {
             Rect R(float x, float y, float w, float h) => new Rect(ox + x, oy + y, w, h);
-            var logistics = Map01Logistics.For(mission);
+            var logistics = Map01Logistics.For(mission.MapOne);
             bool inBase = logistics.InBase();
 
             // Points, and where they came from.
@@ -235,16 +236,20 @@ namespace ShadowVale.Map01
             }
             GUI.Label(R(96, 594, 372, 120),
                 $"Súng thu được đã nộp: {logistics.HandedIn}.\nMỗi khẩu nộp được giá trị của nó, ít đi khi mòn (0%: còn {Map01Loot.Load().logistics.turnInFloor * 100f:0}%).\n" +
-                "Kho không tự đầy lại: đạn và thuốc chủ yếu lấy từ địch và hòm trại.", benchSmallDim);
+                "Tiếp tế có ở thùng căn cứ, thưởng bàn giao C1, hòm trại và hai túi dã chiến C3.", benchSmallDim);
 
             // What the store issues.
             GUI.Label(R(500, 196, 400, 28), "CẤP PHÁT", benchHead);
+            GUI.Label(R(880, 196, 284, 28), "Cuộn để xem tất cả vật tư", benchSmallDim);
             var stock = logistics.Stock.ToList();
-            for (int k = 0; k < stock.Count && k < 8; k++)
+            var viewport = R(500, 232, 664, 576);
+            var content = new Rect(0, 0, viewport.width - 20, Mathf.Max(viewport.height, stock.Count * 72));
+            storeScroll = GUI.BeginScrollView(viewport, storeScroll, content);
+            for (int k = 0; k < stock.Count; k++)
             {
                 var offer = stock[k];
                 string why = logistics.IssueRefusal(offer);
-                var row = R(500, 232 + k * 72, 664, 64);
+                var row = new Rect(0, k * 72, content.width, 64);
                 HudPanel(row);
                 BenchTileIcon(new Rect(row.x + 8, row.y + 6, 52, 52), offer.item);
                 GUI.Label(new Rect(row.x + 72, row.y + 8, 330, 24), $"{ForestInventory.Name(offer.item)} ×{offer.count}", benchMatName);
@@ -253,6 +258,7 @@ namespace ShadowVale.Map01
                 if (BenchButton(new Rect(row.xMax - 132, row.y + 10, 120, 44), "LĨNH", benchVerdict, why == null, why == null))
                     logistics.Issue(offer);
             }
+            GUI.EndScrollView();
 
             // Captured guns to hand in.
             GUI.Label(R(1212, 196, 300, 28), "NỘP SÚNG THU ĐƯỢC", benchHead);

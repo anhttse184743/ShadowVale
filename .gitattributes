@@ -33,3 +33,5 @@
 *.glb -text -diff -merge -filter
 *.gltf -text -diff -merge -filter
 *.bin -text -diff -merge -filter
+# Baked Nam poses use Unity's binary serialization.
+Assets/_Project/Map01/Resources/Characters/NamMotionV3.asset -text -diff -merge -filter

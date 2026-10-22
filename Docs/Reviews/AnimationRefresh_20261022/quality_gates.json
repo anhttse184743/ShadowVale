@@ -1,0 +1,15 @@
+{
+  "47 mesh/weights/material entries preserved": true,
+  "62 bones and original rest matrices preserved": true,
+  "Original v2 unchanged": true,
+  "Final blend matches numerical audit hash": true,
+  "Unedited scalar samples preserved": true,
+  "Six Mixamo source hashes match": true,
+  "No sampled hand/body penetration over 2 mm": true,
+  "Elbow axial twist below 10 degrees": true,
+  "Sampled sole penetration below 1 mm": true,
+  "Jump grounded phases within 1 mm": true,
+  "Pistol jump supporting hand target within 2 mm": true,
+  "20 final stills at 1920x1080": true,
+  "Full video read-back verifies frame count and dimensions": true
+}

@@ -42,8 +42,8 @@ namespace ShadowVale.Map01
         public float CraftProgress => queue.Count > 0 ? Mathf.Clamp01(1 - CraftRemaining / queue[0].Seconds) : 0;
 
         public event System.Action<string> ItemUsed;
-        private Map01Mission mission;
-        private void Awake() { mission = GetComponent<Map01Mission>(); }
+        private CharacterHudSession mission;
+        private void Awake() { mission = CharacterHudSession.For(gameObject); }
 
         /// <summary>Nam starts with his rifle (slot 1), his K-54 (slot 2) with two magazines (Map01Balance.json
         /// startingPistolRounds) and his knife (slot 3) — rifle rounds and herbs only come from picking up loot in the field
@@ -51,7 +51,7 @@ namespace ShadowVale.Map01
         /// Map01Balance.json has testCraftingKit on, he also carries <see cref="TestCraftingKit"/>.</summary>
         public void SeedStartingLoadout(int startingStones)
         {
-            if (mission == null) mission = GetComponent<Map01Mission>(); // Seeded from the mission's Awake, maybe before this Awake.
+            if (mission == null) mission = CharacterHudSession.For(gameObject);
             ClearAll();
             // The player's starting rifle is always the AK. M16s come from enemy loot.
             Add("rifle_standard", 1);
@@ -112,7 +112,7 @@ namespace ShadowVale.Map01
             if (amount - rest > 0) Received?.Invoke(id, amount - rest);
             if (rest > 0 && mission != null)
             {
-                Map01Drops.For(mission)?.Put(id, rest, condition);
+                mission.Drop(id, rest, condition);
                 mission.Say($"Túi đã đầy — {rest} {ForestInventory.Name(id).ToLowerInvariant()} để lại dưới chân.", 4);
             }
         }
@@ -201,7 +201,7 @@ namespace ShadowVale.Map01
                 mission.RestoreHealthFromSave(Mathf.Min(mission.Settings.playerHP, mission.PlayerHealth + mission.Settings.medkitHeal));
                 mission.Say("Đã dùng băng cứu thương.", 3);
                 // Down on one knee winding the bandage on (Blender); walking off cuts it short.
-                Map01NamActions.For(mission)?.Play(Map01NamActions.Bandage, 141f / 30f / 1.4f, true);
+                Map01NamActions.For(mission.MapOne)?.Play(Map01NamActions.Bandage, 141f / 30f / 1.4f, true);
             }
             else
             {

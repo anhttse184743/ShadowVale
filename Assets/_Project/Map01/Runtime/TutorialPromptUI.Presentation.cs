@@ -157,7 +157,7 @@ namespace ShadowVale.Map01
                 TutorialStep.Sprint => "Nhấn một lần để bật chạy nhanh. Nhấn lại để tắt.",
                 TutorialStep.Crouch => "Nhấn một lần để khom. Nhấn lại để đứng lên.",
                 TutorialStep.Weapons => "Phím 1: súng  ·  Phím 2: dao",
-                TutorialStep.Shoot => "Chuột phải bật/tắt ngắm  ·  Chuột trái để bắn  ·  R nạp đạn",
+                TutorialStep.Shoot => "Giữ chuột phải để ngắm  ·  Chuột trái để bắn  ·  R nạp đạn",
                 TutorialStep.Heal => "Dùng băng để hồi lượng máu đã mất.",
                 TutorialStep.Squad => "Tận dụng chỗ nấp và các thao tác vừa học.",
                 TutorialStep.Scout => "Đặt tâm ngắm lên kiện hàng. Giữ F đến khi quét xong.",

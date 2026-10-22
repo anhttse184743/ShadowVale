@@ -11,6 +11,7 @@ namespace ShadowVale.Map01
         public float playerHP, stamina, walkSpeed, sprintSpeed, crouchSpeed;
         public float staminaDrain, staminaRecovery, interactRange, stoneRange, stoneNoise;
         public float guardDamageScale, guardShotInterval, detectionSeconds, hiddenVisionScale, crouchVisionScale;
+        public Map01GuardFireTuning guardM16 = new Map01GuardFireTuning();
         public float medkitHeal, followDistance;
         /// <summary>Hùng's health while he is in the line of fire (the rescue and the walk home).</summary>
         public float hungHP;

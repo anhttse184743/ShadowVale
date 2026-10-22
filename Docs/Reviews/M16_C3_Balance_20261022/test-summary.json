@@ -1,0 +1,228 @@
+{
+  "latest_unique_tests": 51,
+  "passed": 51,
+  "failed": 0,
+  "runs": [
+    {
+      "file": "balance-tests.xml",
+      "result": "Failed(Child)",
+      "total": "27",
+      "passed": "26",
+      "failed": "1"
+    },
+    {
+      "file": "regression-tests.xml",
+      "result": "Passed",
+      "total": "29",
+      "passed": "29",
+      "failed": "0"
+    }
+  ],
+  "cases": {
+    "ShadowVale.Map01.Tests.M16BalanceTests.ActualM16NeedsFourHitsForAGuardAndCannotReachPastEightyMetres": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.M16BalanceTests.CaptureCurrentRuntimeC3AndResourceLayoutForTheProposal": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.M16BalanceTests.RuntimePrefabAndContentAgreeAndDoNotInheritAkDamage": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.M16BalanceTests.SustainedM16FireBloomsEarlierKicksMoreAndRecoversForATap": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.M16MergeCompatibilityTests.CloningAnM16ThenSelectingAkRestoresOneCorrectModelAndItsBaseline": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AFullMagazineClimbsAndPullsRight": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AGapShorterThanTheResetKeepsTheBurstGoing": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AimingHelpsMostWhenSettledAndNotAtAllWhenRunning": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AThreeRoundBurstStaysUnderOneDegree": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AZeroConeShootsDeadStraight": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.BloomIsFullByTheFifteenthRound": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.BloomWidensTheConeOnTopOfTheStance": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.EveryTapIsShotZero": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ResetClearsTheBurstOutright": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ScatterGroupsTowardTheCentre": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ScatterStaysInsideTheCone": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ScatterSurvivesShootingStraightUp": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ShortBurstsAddNoBloom": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.SprintPenaltyRequiresActualRunningAndClearsOnStopping": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.StancesRankFromSteadyToHopeless": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.StationarySprintToggleDoesNotChangeAccuracy(False)": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.StationarySprintToggleDoesNotChangeAccuracy(True)": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheClimbIsDeterministic": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheClimbNeverEases": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheConeClosesBetweenBursts": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheFourthRoundStartsTheBloom": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheOpeningOfABurstRisesStraight": {
+      "result": "Passed",
+      "evidence": "balance-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.M16IntegrationTests.BackpackCaliberMatchesRifleAndKeepsK54(\"rifle_standard\",\"ammo_rifle\")": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.M16IntegrationTests.BackpackCaliberMatchesRifleAndKeepsK54(\"rifle_m16\",\"ammo_556\")": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.M16IntegrationTests.EveryShuffledGroupHasSevenM16AndThreeAK": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.M16IntegrationTests.LootEquipCaliberReloadAndSaveRoundTrip": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.M16IntegrationTests.M16HasAmmoIconAndSharesAkFoundConditionLimits": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.M16MergeCompatibilityTests.PrimaryChangesPreserveK54MosinAndTheReinforcedGarrisonsSavedRifles": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.Map02M16SaveCompatibilityTests.SavedM16KeepsItsModelAndCaliberWithoutTheArrivalObject": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinBalanceTests.HeadAndTorsoShotsKillAt35_80_120_199MetresIncludingHeavyAndCommanderHealth": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinBalanceTests.LethalityDoesNotLeakIntoNonEnemiesOrAReconfiguredPistol": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinBalanceTests.MaxRangeCoverAndCinematicProtectionStillApplyAndScopeShowsTheActualTarget": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinBalanceTests.ProfilePrefabAndPrecisionSupportARealTwoHundredMetreHeadShot": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinIntegrationTests.MosinInsertsIndividuallyKeepsAKInTheBagAndSavesThreeIndependentMagazines": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinReloadTimingTests.EachInsertionConsumesOneRoundAndCancellationKeepsOnlyInsertedRounds": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinReloadTimingTests.ExhaustedReserveCannotDuplicateRoundsAndOrdinaryAKStillLoadsAtomically": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinReloadTimingTests.FullReloadRemainsFiveSecondsAndPartialReloadSkipsUnusedInsertionGestures": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.ActualSightStillFindsNamAndHiddenSniperDamageKeepsThePreviousContact": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.CloseShotIsHeardByEveryListenerAndRemembersTheShotRatherThanNamMoving": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.DistantMosinKillAtRadioTriggersBodySearchAndResponseWithoutKnowingNam": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.HitEvidenceSurvivesWeaponSwitchAndOtherDamageIsNotMisclassifiedAsMosin": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.QueuedMosinKeepsItsIdentityWhenSwitchedBeforeTheFinalShotPass": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.RealMosinShotsAt35_50_70MetresNeverInventSightOrSquadContact": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.RepeatedDistantMissesDoNotCreateDamageOrContact": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.SaveFileReloadKeepsAnUnknownSniperAttackUnknown": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.TheCommanderAlsoGetsNoContactFromAnUnseenDistantMosinHit": {
+      "result": "Passed",
+      "evidence": "regression-tests.xml"
+    }
+  },
+  "note": "First-run test fixture failure repaired after Unity domain reload; the final run supersedes it. C3 proposal is not applied."
+}
