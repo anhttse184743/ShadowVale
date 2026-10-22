@@ -54,7 +54,7 @@ namespace ShadowVale.Map01
         private static readonly Color HudGold = new Color(.87f, .68f, .32f);
         private static readonly Rect HudPlateUv = new Rect(0, 0, 1, 1);
 
-        private Map01Mission mission;
+        private CharacterHudSession mission;
         private Map01Minimap minimap;
         private Map01Quest quest;
         private IMapObjectives objectives;
@@ -63,7 +63,8 @@ namespace ShadowVale.Map01
         private Map01ObjectiveGuide guide;
         private void Awake()
         {
-            mission = GetComponent<Map01Mission>();
+            mission = CharacterHudSession.For(gameObject);
+            if(mission.MapTwo!=null){inventory=GetComponent<Map01Inventory>();HookPickups();return;}
             minimap = GetComponent<Map01Minimap>();
             if (minimap == null) minimap = gameObject.AddComponent<Map01Minimap>();
             quest = GetComponent<Map01Quest>();
@@ -114,7 +115,7 @@ namespace ShadowVale.Map01
         }
         private static float Cross(Vector2 p, Vector2 a, Vector2 b) => (p.x - b.x) * (a.y - b.y) - (a.x - b.x) * (p.y - b.y);
         /// <summary>4× supersampled so the procedural shapes have smooth edges.</summary>
-        private static Texture2D MakeTexture(int size, System.Func<float, float, Color> shade)
+        internal static Texture2D MakeTexture(int size, System.Func<float, float, Color> shade)
         {
             var texture = new Texture2D(size, size, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
             for (int y = 0; y < size; y++)
@@ -223,6 +224,7 @@ namespace ShadowVale.Map01
         private void DrawHud()
         {
             if (!mission.IsInitialized || mission.Cinematic || ForestMenu.Visible) return;
+            if(mission.MapTwo!=null){DrawMapTwoCharacterHud();return;}
             HudStyles();
             HookPickups(); // Map01Hud.Pickup.cs
             var matrix = GUI.matrix; var color = GUI.color; int depth = GUI.depth;
@@ -305,15 +307,17 @@ namespace ShadowVale.Map01
                 * Matrix4x4.Scale(new Vector3(panelScale, panelScale, 1)) * Matrix4x4.Translate(-pivot);
             GUI.color = new Color(previousColor.r, previousColor.g, previousColor.b, previousColor.a * reveal);
             // Sized to the text: the longer objectives wrap to three lines and used to be cut off.
-            string text = objectives?.ObjectiveText ?? "";
+            var mapTwo=mission.MapTwo;
+            string text = mapTwo!=null?mapTwo.Chapter.TrackedTask?.title??mapTwo.ObjectiveText:objectives?.ObjectiveText ?? "";
             float textHeight = objectiveBody.CalcHeight(new GUIContent(text), 292);
-            bool guiding = guide.HasTarget && !mission.Stopped;
+            bool guiding = (mapTwo!=null?mapTwo.TrackedObjective!=null:guide!=null&&guide.HasTarget) && !mission.Stopped;
             // Point 3 (Map01C3Mission): the optional objectives once the order is given, and the camp's state nearby.
             var c3 = GetComponent<Map01C3Mission>();
             var optional = c3 != null && quest != null && quest.Stage == Map01Quest.BossStage ? c3.OptionalObjectives().ToList() : null;
             string c3Status = c3 != null ? c3.StatusLine() : null;
             float c3Height = (optional != null ? optional.Count * 22 + 8 : 0) + (c3Status != null ? 28 : 0);
-            string notes = ObjectiveNotes();
+            string notes = mapTwo!=null?mapTwo.Chapter.Instruction:ObjectiveNotes();
+            if(mapTwo?.Chapter.Companion!=null){var person=mapTwo.Chapter.Companion;float distance=Vector3.Distance(mapTwo.Player.position,person.transform.position);notes+="\n"+person.role+" · "+distance.ToString("0")+" m · "+(distance>7?"Đang chờ — quay lại đón":"Đang đi cùng");}
             float notesHeight = string.IsNullOrEmpty(notes) ? 0 : objectiveSmall.CalcHeight(new GUIContent(notes), 292) + 18;
             float escortHeight = ShowObjectiveEscortHealth ? 45 : 0;
             float height = Mathf.Max(152, 258 + textHeight + (guiding ? 32 : 0) + c3Height + notesHeight + escortHeight + 14 - 186);
@@ -326,7 +330,9 @@ namespace ShadowVale.Map01
             if (guiding) {
                 float y = 258 + textHeight + 6;
                 HudDiamond(new Vector2(58, y + 12), 7);
-                ShadowLabel(new Rect(72, y, 276, 26), $"{guide.Label}  ·  {guide.Distance:0} m", objectiveGuide);
+                string label=mapTwo!=null?"Mục tiêu đã ghim":guide.Label;
+                float distance=mapTwo!=null?Vector3.Distance(mapTwo.Player.position,mapTwo.TrackedObjective.transform.position):guide.Distance;
+                ShadowLabel(new Rect(72, y, 276, 26), $"{label}  ·  {distance:0} m", objectiveGuide);
             }
             float c3y = 258 + textHeight + (guiding ? 32 : 0) + 6;
             if (optional != null)
@@ -489,7 +495,7 @@ namespace ShadowVale.Map01
                 var r = new Rect(x, height - 289, areaWidth, 86); HudPanel(r);
                 GUI.Label(new Rect(r.x + 18, r.y + 12, r.width - 36, r.height - 20), mission.Dialogue, hudBody);
             }
-            var nearby = interaction.Nearby;
+            var nearby = interaction?.Nearby;
             var storyPrompt = GetComponent<Map01Story>()?.Prompt;
             if (nearby != null && !nearby.used && nearby.kind == ForestPointKind.Workbench && !mission.Stopped && !mission.InventoryOpen)
                 GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), "[E] " + nearby.label, hudBody);
@@ -501,7 +507,7 @@ namespace ShadowVale.Map01
                 GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), "[E] " + nearby.label, hudBody);
             // The bench's progress while Nam is away from it: Map01Hud.Pickup.cs, above the pickup feed.
             // Alerted guards are marked by the awareness eye (Map01Hud.Scouting).
-            GUI.Label(new Rect(28, height - 26, width - 430, 24), "Tab Túi đồ  ·  1 Súng chính  ·  2 Súng ngắn  ·  3 Dao  ·  4 Đồ ném  ·  Giữ/thả chuột trái Ném  ·  R Nạp đạn  ·  H Hồi máu  ·  M Bản đồ  ·  Esc Menu", hudSmall);
+            if(mission.MapTwo==null)GUI.Label(new Rect(28, height - 26, width - 430, 24), "Tab Túi đồ  ·  1 Súng chính  ·  2 Súng ngắn  ·  3 Dao  ·  4 Đồ ném  ·  Giữ/thả chuột trái Ném  ·  R Nạp đạn  ·  H Hồi máu  ·  M Bản đồ  ·  Esc Menu", hudSmall);
         }
 
         private void DrawMap(float width, float height)

@@ -173,6 +173,7 @@ namespace ShadowVale.Map01
         /// A drawn weapon taken out of the slot leaves the knife in hand.</summary>
         public bool EquipFromCell(int i)
         {
+            if(mission?.MapTwo?.CharacterGearLocked==true){mission.Say("Hoàn tất việc đang mang hoặc hộ tống trước khi đổi trang bị.");return false;}
             var cell = Cell(i);
             var slot = cell != null ? SlotOf(cell.id) : null;
             if (slot == null) { if (cell != null) mission?.Say(ForestInventory.Name(cell.id) + " không trang bị được.", 3); return false; }
@@ -214,7 +215,7 @@ namespace ShadowVale.Map01
             string id = cell.id;
             cell.count -= amount;
             if (cell.count <= 0) bag[i] = null;
-            Map01Drops.For(mission)?.Put(id, amount, cell.condition);
+            mission?.Drop(id, amount, cell.condition);
             Changed?.Invoke();
             return true;
         }
@@ -228,7 +229,7 @@ namespace ShadowVale.Map01
             float condition = Condition(slot);
             SetSlot(slot, null);
             if (wasHeld) Draw(Slot.Knife);
-            Map01Drops.For(mission)?.Put(id, 1, condition);
+            mission?.Drop(id, 1, condition);
             Changed?.Invoke();
             return true;
         }
@@ -236,6 +237,7 @@ namespace ShadowVale.Map01
         /// <summary>Puts an integrated weapon in Nam's hands.</summary>
         public bool Draw(Slot slot)
         {
+            if(mission?.MapTwo?.CharacterGearLocked==true)return false;
             string id = SlotItem(slot);
             if (id == null || mission == null || mission.ModernCombat == null) return false;
             if (!Drawable(id))
@@ -251,7 +253,7 @@ namespace ShadowVale.Map01
             if (drawn) {
                 bool wasThrowable = ThrowableEquipped;
                 ThrowableEquipped = false; GetComponent<Map01StoneThrow>()?.Cancel();
-                if (wasThrowable) Map01NamActions.For(mission)?.CancelAction();
+                if (wasThrowable) Map01NamActions.For(mission.MapOne)?.CancelAction();
                 mission.ModernCombat.SetHandsOccupied(false);
             }
             return drawn;
@@ -292,9 +294,10 @@ namespace ShadowVale.Map01
         }
         public void SelectThrowable(string id)
         {
+            if(mission?.MapTwo?.CharacterGearLocked==true)return;
             if (System.Array.IndexOf(Throwables, id) < 0) return;
             GetComponent<Map01StoneThrow>()?.Cancel();
-            Map01NamActions.For(mission)?.CancelAction();
+            Map01NamActions.For(mission.MapOne)?.CancelAction();
             throwable = id; ThrowableEquipped = true; ThrowableChosenAt = Time.time;
             mission?.ModernCombat?.SetHandsOccupied(true);
             Changed?.Invoke();

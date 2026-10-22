@@ -249,10 +249,10 @@ namespace ShadowVale.Map01.Tests
                 yield return Press(keyboard, Key.Digit3);
                 Assert.IsTrue(inventory.IsEquipped("knife"), "3 draws the knife.");
                 yield return Press(keyboard, Key.Digit2);
-                Assert.IsTrue(inventory.IsEquipped("knife"), "2 with no pistol in its slot leaves the knife in hand.");
+                Assert.IsTrue(inventory.SlotItem(Map01Inventory.Slot.Pistol)!=null?inventory.IsEquipped("pistol_k54"):inventory.IsEquipped("knife"), "2 draws the owned K-54; an empty pistol slot leaves the knife in hand.");
                 // 6–8 were the weapon keys while 1–5 belonged to the removed shortcut bar.
                 yield return Press(keyboard, Key.Digit6);
-                Assert.IsTrue(inventory.IsEquipped("knife"), "6 no longer switches to the rifle.");
+                Assert.IsTrue(inventory.SlotItem(Map01Inventory.Slot.Pistol)!=null?inventory.IsEquipped("pistol_k54"):inventory.IsEquipped("knife"), "6 must leave the current weapon in hand.");
                 yield return Press(keyboard, Key.Digit1);
                 Assert.IsTrue(inventory.IsEquipped("rifle_standard"), "1 draws the rifle.");
                 yield return Press(keyboard, Key.Digit1);

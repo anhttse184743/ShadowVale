@@ -208,7 +208,10 @@ namespace ShadowVale.Map01
 
         private void DrawMapTexture(Rect area, Rect world, Vector2? disk, Texture texture)
         {
-            var bounds = exploration.Bounds;
+            DrawTerrainTexture(area,world,disk,texture,exploration.Bounds);
+        }
+        internal static void DrawTerrainTexture(Rect area,Rect world,Vector2? disk,Texture texture,Rect bounds)
+        {
             float x0 = Mathf.Max(world.xMin, bounds.xMin), x1 = Mathf.Min(world.xMax, bounds.xMax);
             float z0 = Mathf.Max(world.yMin, bounds.yMin), z1 = Mathf.Min(world.yMax, bounds.yMax);
             if (x1 <= x0 || z1 <= z0) return;
@@ -227,10 +230,12 @@ namespace ShadowVale.Map01
         /// </summary>
         private static void DrawInDisc(Rect target, Texture texture, Rect uv, Vector2 center, float radius, float strip)
         {
+            float scale=Mathf.Max(.01f,Mathf.Abs(GUI.matrix.m11));
+            strip=Mathf.Max(1,Mathf.Round(strip*scale))/scale;
             float top = Mathf.Max(target.yMin, center.y - radius), bottom = Mathf.Min(target.yMax, center.y + radius);
             for (float y = top; y < bottom; y += strip)
             {
-                float y1 = Mathf.Min(y + strip, bottom);
+                float y1 = Mathf.Min(y + strip+.05f/scale, bottom);
                 float half = Chord(radius, (y + y1) / 2 - center.y);
                 float x0 = Mathf.Max(target.xMin, center.x - half), x1 = Mathf.Min(target.xMax, center.x + half);
                 if (x1 <= x0) continue;
@@ -304,7 +309,7 @@ namespace ShadowVale.Map01
             return p;
         }
 
-        private static Texture2D Symbol(int kind)
+        internal static Texture2D Symbol(int kind)
         {
             var texture = new Texture2D(32, 32, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
             var pixels = new Color[1024];
