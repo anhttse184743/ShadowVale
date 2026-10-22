@@ -25,6 +25,30 @@ namespace ShadowVale.Map01
     [Serializable] public sealed class Map02ChapterState
     {
         public int version=3,phase,evacuation,patrolWarnings,storedRounds;
+        // Additive version 3 fields: older completed tasks stay completed.
+        public int wireStage; // 0 in store, 1 carried, 2 delivered
+        public float patrolScanSeconds;
+        public bool night2ChainCuePlayed;
+        public List<string> night2RouteVisited=new List<string>();
+        public bool PatrolRouteActive=>phase==3&&Done("N2_02")&&!Done("N2_05");
+        public bool TakeWire()
+        {
+            if(!Available(Map02ChapterDefinition.Load().Find("D2_05"))||wireStage!=0||!string.IsNullOrEmpty(carry))return false;
+            wireStage=1;activeTask=trackedTask=carry="D2_05";return true;
+        }
+        public bool DeliverWire()
+        {
+            if(wireStage!=1||carry!="D2_05"||activeTask!="D2_05")return false;
+            return Complete("D2_05");
+        }
+        public void ResetPatrolRoute()
+        {
+            if(!PatrolRouteActive)return;
+            completed.RemoveAll(id=>id=="N2_03"||id=="N2_04");
+            introduced.RemoveAll(id=>id=="N2_03"||id=="N2_04"||id=="N2_05");
+            activeTask=carry=null;trackedTask="N2_03";taskProgress=0;workCount=0;
+            patrolWarnings=0;patrolScanSeconds=0;night2ChainCuePlayed=false;night2RouteVisited.Clear();
+        }
         public List<string> introduced=new List<string>();
         public List<string> completed=new List<string>();
         public List<Counter> counts=new List<Counter>();
@@ -61,6 +85,7 @@ namespace ShadowVale.Map01
             var t=Map02ChapterDefinition.Load().Find(id);
             if(!Available(t))return false;
             completed.Add(id);activeTask=null;taskProgress=0;coverClock=0;workCount=0;carry=null;
+            if(id=="D2_05")wireStage=2;
             if(id=="N3_04")evacuation=60;
             if(id=="N3_05A")evacuation=70;if(id=="N3_05B")evacuation=80;if(id=="N3_05C")evacuation=90;
             if(id=="N3_WOUND")wounded=true;
@@ -75,6 +100,13 @@ namespace ShadowVale.Map01
             var def=Map02ChapterDefinition.Load();
             if(completed==null||enemies==null||combatGroups==null)throw new System.IO.InvalidDataException("Dữ liệu Map 2 bị thiếu.");
             actors??=new List<ActorSnapshot>();
+            night2RouteVisited??=new List<string>();
+            if(wireStage<0||wireStage>2||patrolWarnings<0||patrolWarnings>2||!float.IsFinite(patrolScanSeconds)||patrolScanSeconds<0||
+                night2RouteVisited.Any(string.IsNullOrWhiteSpace)||night2RouteVisited.Distinct().Count()!=night2RouteVisited.Count)
+                throw new System.IO.InvalidDataException("Trạng thái tuyến Ngày 2 / Đêm 2 không hợp lệ.");
+            if(Done("D2_05"))wireStage=2; // Missing fields in old version 3 saves.
+            else if(wireStage==2||wireStage==1&&(activeTask!="D2_05"||carry!="D2_05"||!Available(def.Find("D2_05"))))
+                throw new System.IO.InvalidDataException("Cuộn dây ăng-ten không khớp tiến trình.");
             if(actors.Any(a=>a==null||string.IsNullOrEmpty(a.role)||!float.IsFinite(a.position.x)||!float.IsFinite(a.position.y)||!float.IsFinite(a.position.z))||actors.Select(a=>a.role).Distinct().Count()!=actors.Count)throw new System.IO.InvalidDataException("Vị trí nhân vật Map 2 không hợp lệ.");
             if(counts==null||counts.Any(c=>c==null||def.Find(c.id)==null||c.count<0||c.count>def.Find(c.id).count)||counts.Select(c=>c.id).Distinct().Count()!=counts.Count)throw new System.IO.InvalidDataException("Số lượt thao tác Map 2 không hợp lệ.");
             if(completed.Any(id=>def.Find(id)==null))throw new System.IO.InvalidDataException("Nhiệm vụ Map 2 không tồn tại.");

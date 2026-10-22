@@ -22,7 +22,7 @@ namespace ShadowVale.EnvironmentReview
         [Serializable] sealed class SourceTake {public string item,action;public int start,end;}
         [Serializable] sealed class SourceData {public SourceTake[] takes;}
         static SourceTake[] Source()=>JsonUtility.FromJson<SourceData>("{\"takes\":"+File.ReadAllText("SourceArt/WeaponAnimation_Blender_20261017/takes.json")+"}").takes;
-        static NativeWeaponPreviewTools(){Directory.CreateDirectory(Work);File.WriteAllText(Work+"/tool_version.txt","2");EditorApplication.update+=MaintainPreviewStartup;EditorApplication.update+=Poll;EditorSceneManager.activeSceneChangedInEditMode+=SceneChanged;AssemblyReloadEvents.beforeAssemblyReload+=Release;EditorApplication.delayCall+=()=>SceneChanged(default,SceneManager.GetActiveScene());}
+        static NativeWeaponPreviewTools(){ReviewToolVersion.Schedule(Work,"2");EditorApplication.update+=MaintainPreviewStartup;EditorApplication.update+=Poll;EditorSceneManager.activeSceneChangedInEditMode+=SceneChanged;AssemblyReloadEvents.beforeAssemblyReload+=Release;EditorApplication.delayCall+=()=>SceneChanged(default,SceneManager.GetActiveScene());}
         static void MaintainPreviewStartup()
         {
             if(EditorApplication.isPlayingOrWillChangePlaymode||EditorApplication.isCompiling||EditorApplication.isUpdating||SessionState.GetBool("ShadowVale.MergeDev.Tests",false))return;
@@ -99,5 +99,3 @@ namespace ShadowVale.EnvironmentReview
         }
     }
 }
-
-

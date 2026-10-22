@@ -8,6 +8,7 @@
     "ShadowVale.Core",
     "ShadowVale.Data",
     "ShadowVale.Gameplay",
+    "ShadowVale.UI",
     "ShadowVale.Telemetry",
     "UnityEngine.UI",
     "Unity.RenderPipelines.Core.Runtime",

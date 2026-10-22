@@ -54,7 +54,7 @@ namespace ShadowVale.Map01
 
         private readonly List<Vector3> arc = new List<Vector3>();
         private readonly List<LineRenderer> rings = new List<LineRenderer>();
-        private Map01Mission mission;
+        private CharacterHudSession mission;
         private Map01Inventory inventory;
         private IBinoculars scouting;
         private LineRenderer arcLine, landingRing, killRing;
@@ -63,7 +63,7 @@ namespace ShadowVale.Map01
 
         private void Awake()
         {
-            mission = GetComponent<Map01Mission>();
+            mission = CharacterHudSession.For(gameObject);
             inventory = GetComponent<Map01Inventory>();
         }
 
@@ -81,7 +81,7 @@ namespace ShadowVale.Map01
             Item = ready;
             mission.ModernCombat?.CancelReload();
             Aiming = true;
-            Map01NamActions.For(mission)?.Hold(Map01NamActions.ThrowAim, true);   // the stone drawn back
+            Map01NamActions.For(mission.MapOne)?.Hold(Map01NamActions.ThrowAim, true);   // the stone drawn back
             Plan(AimTarget());
         }
 
@@ -90,7 +90,7 @@ namespace ShadowVale.Map01
         {
             Aiming = false;
             faceThrowUntil = 0;
-            Map01NamActions.For(mission)?.Hold(Map01NamActions.ThrowAim, false);
+            Map01NamActions.For(mission.MapOne)?.Hold(Map01NamActions.ThrowAim, false);
             Show(false);
         }
 
@@ -104,7 +104,7 @@ namespace ShadowVale.Map01
             Plan(target);
             Aiming = false;
             Show(false);
-            var nam = Map01NamActions.For(mission);
+            var nam = Map01NamActions.For(mission.MapOne);
             if (Launch()) { faceThrowUntil=Time.time+1.1f; nam?.ThrowNow(); } else nam?.Hold(Map01NamActions.ThrowAim, false);
         }
 
@@ -119,7 +119,7 @@ namespace ShadowVale.Map01
             Plan(target);
             mission.ModernCombat?.CancelReload();
             if (!Launch()) return false;
-            Map01NamActions.For(mission)?.ThrowNow();
+            Map01NamActions.For(mission.MapOne)?.ThrowNow();
             faceThrowUntil=Time.time+1.1f;
             return true;
         }
@@ -200,6 +200,8 @@ namespace ShadowVale.Map01
                 if (d <= HearingRadius) hears++;
                 if (d <= WoundRadius) inBlast++;
             }
+            if(mission.MapTwo!=null)foreach(var guard in mission.MapTwo.Chapter.Enemies)
+            {if(guard==null||guard.Dead||!guard.gameObject.activeInHierarchy)continue;float d=Vector3.Distance(guard.transform.position,Landing);if(d<=HearingRadius)hears++;if(d<=WoundRadius)inBlast++;}
             WouldHear = hears;
             WouldHit = Item == "grenade_f1" ? inBlast : 0;
         }
@@ -338,6 +340,7 @@ namespace ShadowVale.Map01
                 if (d <= KillRadius) { health.TakeDamage(health.Max * 4f, at, mission.player.gameObject); killed++; }
                 else { health.TakeDamage(health.Max * .6f, at, mission.player.gameObject); wounded++; }
             }
+            if(mission.MapTwo!=null){var extra=mission.MapTwo.CharacterExplosion(at);killed+=extra.killed;wounded+=extra.wounded;}
             float self = Vector3.Distance(mission.player.position, at);
             if (self <= KillRadius) mission.Damage(mission.Settings.playerHP * 4f);
             else if (self <= WoundRadius) mission.Damage(mission.Settings.playerHP * .45f);
@@ -455,6 +458,15 @@ namespace ShadowVale.Map01
                 Circle(rings[shown], at, HearingRadius, true);
                 Tint(rings[shown], Vector3.Distance(at, Landing) <= HearingRadius ? RingHears : RingIdle);
                 shown++;
+            }
+            if(mission.MapTwo!=null&&Item=="stone")foreach(var guard in mission.MapTwo.Chapter.Enemies)
+            {
+                if(shown>=MaxRings)break;if(guard==null||guard.Dead||!guard.gameObject.activeInHierarchy)continue;
+                var at=guard.transform.position;if(Vector3.Distance(at,mission.player.position)>ringsWithin)continue;
+                if(Map01Smoke.Blocks(eye,at+Vector3.up*1.2f))continue;
+                if(Physics.Linecast(eye,at+Vector3.up*1.2f,out var hit,mission.ObstructionMask,QueryTriggerInteraction.Ignore)&&hit.transform!=guard.transform&&!hit.transform.IsChildOf(guard.transform))continue;
+                if(rings.Count<=shown){var ring=NewLine("Guard hearing ring",.07f);ring.loop=true;rings.Add(ring);}
+                Circle(rings[shown],at,HearingRadius,true);Tint(rings[shown],Vector3.Distance(at,Landing)<=HearingRadius?RingHears:RingIdle);shown++;
             }
             RingsShown = shown;
             Show(true);

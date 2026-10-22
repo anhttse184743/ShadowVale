@@ -113,7 +113,8 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(inv.EquipFromCell(cell));Assert.IsTrue(inv.Draw(Map01Inventory.Slot.Primary));
             Assert.AreEqual(akReserve+17,inv.Count("ammo_rifle"));Assert.AreEqual(0,combat.RoundsInMagazine);
             Assert.AreEqual(60,combat.ReserveRounds());Assert.AreEqual(Map01M16.Ammo,inv.PrimaryAmmo);
-            Assert.AreEqual(akDamage*.9f,gun.Damage,.001f);Assert.AreEqual(60f/700f,gun.Cooldown,.00001f);
+            Assert.AreEqual(Map01M16.Damage,gun.Damage,.001f);Assert.AreEqual(Map01M16.ShotSeconds,gun.Cooldown,.00001f);
+            Assert.AreEqual(Map01M16.Range,gun.Range);Assert.IsTrue(gun.UsesM16Handling);
             yield return null;
             var carrier = combat.GetComponentInChildren<ReloadMagazineCarrier>(true);
             Assert.NotNull(carrier);

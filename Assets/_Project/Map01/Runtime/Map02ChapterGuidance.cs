@@ -15,15 +15,16 @@ namespace ShadowVale.Map01
             {
                 var t=TrackedTask;if(t==null)return State.Objective;
                 int n=State.Count(t.id);
+                if(t.kind=="wire")return State.wireStage==1?"Đang mang cuộn dây. Tới trạm ở ghim vàng, nhấn E giao cho Hùng.":"Tới kho kín ở ghim vàng, nhấn E lấy cuộn dây ăng-ten.";
                 if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)?$"Đang mang thùng {n+1}/{t.count}. Tới ghim vàng rồi nhấn E để đặt.":$"Đã chuyển {n}/{t.count}. Tới ghim vàng, nhấn E nhận thùng tiếp theo.";
                 if(escort!=null)
                 {
                     var person=Companion;float distance=Vector3.Distance(person.transform.position,Mission.Player.position);
-                    return distance>7?$"{person.role} đang chờ, cách {distance:0} m. Quay lại đón; ghim xanh chỉ người đi cùng.":$"Dẫn {(secondaryEscort!=null?"ông Sáu và chị Lành":escort.role)} tới ghim vàng. Người xa nhất cách {distance:0} m.";
+                    return $"Dẫn {(secondaryEscort!=null?"ông Sáu và chị Lành":escort.role)} tới ghim vàng. Người đi cùng đang theo sau, cách {distance:0} m.";
                 }
                 if(t.kind=="escortHung"||t.kind=="escortScout"||t.kind=="patrolHung"||t.kind.StartsWith("rescue"))return "Tới ghim vàng, nhấn E đón người trước khi dẫn tới nơi an toàn.";
                 if(t.kind=="families")return $"Đã dặn {n}/{t.count} hộ. Tới nhà được đánh dấu, nhấn E nói chuyện.";
-                if(t.kind=="binocular")return $"Tới cầu · F mở/đóng ống nhòm. Nhìn về ánh đèn phía nam cầu, giữ yên 2 giây. Tiến độ {Mathf.Clamp01(observed/t.seconds)*100:0}%.";
+                if(t.kind=="binocular")return $"Tới cầu · Giữ F dùng ống nhòm, thả F để hạ. Nhìn về ánh đèn phía nam cầu, giữ yên 2 giây. Tiến độ {Mathf.Clamp01(observed/t.seconds)*100:0}%.";
                 if(t.kind=="crawl")return "Giữ C để bò về ghim vàng. Không cần nhấn E lần nữa.";
                 if(t.kind=="defend")
                 {
@@ -69,6 +70,7 @@ namespace ShadowVale.Map01
         public string Prompt(Map02ChapterTask t)
         {
             int n=State.Count(t.id);
+            if(t.kind=="wire")return State.wireStage==1?"Giao cuộn dây ăng-ten cho Hùng":"Lấy cuộn dây ăng-ten trong kho kín";
             if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)&&State.activeTask==t.id?$"Đặt thùng {n+1}/{t.count} tại {(t.id=="D1_04"?"kho kín":"chỗ trú bến nam")}":$"Nhận thùng {n+1}/{t.count} tại {(t.id=="D1_04"?"bến cập":"kho kín")}";
             if(t.kind=="families")return $"Dặn dò hộ dân {n+1}/{t.count}";
             if(t.kind=="demolition")return CratePrompt(t);

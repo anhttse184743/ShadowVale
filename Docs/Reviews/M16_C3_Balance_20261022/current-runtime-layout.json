@@ -1,0 +1,1606 @@
+{
+    "points": [
+        {
+            "id": "c3_kieng",
+            "name": "Kẻng striker point",
+            "kind": "Sabotage",
+            "position": {
+                "x": 65.30000305175781,
+                "y": 8.25,
+                "z": 44.20000076293945
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": []
+        },
+        {
+            "id": "c3_mosin_cache",
+            "name": "C3 scouts' Mosin cache",
+            "kind": "Loot",
+            "position": {
+                "x": 106.80000305175781,
+                "y": 20.01692771911621,
+                "z": 22.700000762939454
+            },
+            "active": false,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "rifle_mosin",
+                    "count": 1,
+                    "condition": 85.39183807373047
+                },
+                {
+                    "item_id": "ammo_sniper",
+                    "count": 5,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "c3_phone",
+            "name": "Telephone line point",
+            "kind": "Sabotage",
+            "position": {
+                "x": 68.5,
+                "y": 8.295392990112305,
+                "z": 75.80000305175781
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": []
+        },
+        {
+            "id": "chest_c1",
+            "name": "Iron chest C1",
+            "kind": "Chest",
+            "position": {
+                "x": 43.0,
+                "y": 3.0977566242218019,
+                "z": -78.94999694824219
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "gun_oil",
+                    "count": 1,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "ammo_pistol",
+                    "count": 16,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "medkit_small",
+                    "count": 1,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "gunpowder",
+                    "count": 2,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "weapon_parts",
+                    "count": 1,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "ammo_rifle",
+                    "count": 20,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "chest_c2",
+            "name": "Iron chest C2",
+            "kind": "Chest",
+            "position": {
+                "x": 68.0,
+                "y": 6.0,
+                "z": -11.949999809265137
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "ammo_rifle",
+                    "count": 60,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "smoke_module",
+                    "count": 2,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "weapon_parts",
+                    "count": 2,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "fuse_module",
+                    "count": 1,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "gunpowder",
+                    "count": 3,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "scrap_metal",
+                    "count": 2,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "gun_oil",
+                    "count": 1,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "herb",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "chest_c3",
+            "name": "Iron chest C3",
+            "kind": "Chest",
+            "position": {
+                "x": 71.0,
+                "y": 8.25,
+                "z": 59.04999923706055
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "ammo_sniper",
+                    "count": 10,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "scope_lens",
+                    "count": 1,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "blast_charge",
+                    "count": 1,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "repair_kit",
+                    "count": 1,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "medkit_small",
+                    "count": 2,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "smoke_module",
+                    "count": 1,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "gun_oil",
+                    "count": 1,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "documents",
+            "name": "documents",
+            "kind": "Documents",
+            "position": {
+                "x": 61.0,
+                "y": 6.560001373291016,
+                "z": -10.800000190734864
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": []
+        },
+        {
+            "id": "rescue_stones_00",
+            "name": "Stone pickup 00",
+            "kind": "Loot",
+            "position": {
+                "x": -12.0,
+                "y": 3.04693341255188,
+                "z": 43.0
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 3,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "rescue_stones_01",
+            "name": "Stone pickup 01",
+            "kind": "Loot",
+            "position": {
+                "x": 3.8732285499572756,
+                "y": -1.5977160930633546,
+                "z": 43.01258087158203
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 3,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "rescue_stones_02",
+            "name": "Stone pickup 02",
+            "kind": "Loot",
+            "position": {
+                "x": -21.0,
+                "y": 3.0212836265563967,
+                "z": 55.0
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 3,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "rescue_stones_03",
+            "name": "Stone pickup 03",
+            "kind": "Loot",
+            "position": {
+                "x": 14.395439147949219,
+                "y": -0.9005699753761292,
+                "z": 55.439998626708987
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 3,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "rescue_stones_04",
+            "name": "Stone pickup 04",
+            "kind": "Loot",
+            "position": {
+                "x": -25.0,
+                "y": 3.2710225582122804,
+                "z": 67.0
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 3,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "rescue_stones_05",
+            "name": "Stone pickup 05",
+            "kind": "Loot",
+            "position": {
+                "x": 17.005069732666017,
+                "y": 1.2999999523162842,
+                "z": 67.46873474121094
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 3,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "rescue_stones_06",
+            "name": "Stone pickup 06",
+            "kind": "Loot",
+            "position": {
+                "x": -19.0,
+                "y": 2.2092339992523195,
+                "z": 78.0
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 3,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "rescue_stones_07",
+            "name": "Stone pickup 07",
+            "kind": "Loot",
+            "position": {
+                "x": 10.236138343811036,
+                "y": -0.9850034713745117,
+                "z": 74.47999572753906
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 3,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "rescue_stones_08",
+            "name": "Stone pickup 08",
+            "kind": "Loot",
+            "position": {
+                "x": -31.0,
+                "y": 3.0787854194641115,
+                "z": 92.0
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 3,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "rescue_stones_09",
+            "name": "Stone pickup 09",
+            "kind": "Loot",
+            "position": {
+                "x": 21.0,
+                "y": 2.422452926635742,
+                "z": 94.0
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 3,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "river_exit",
+            "name": "river_exit",
+            "kind": "Exit",
+            "position": {
+                "x": -0.18000030517578126,
+                "y": 1.6800010204315186,
+                "z": 86.4000015258789
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": []
+        },
+        {
+            "id": "stones_00",
+            "name": "Stone site 00 (Riverbank)",
+            "kind": "Stones",
+            "position": {
+                "x": -7.286333084106445,
+                "y": 0.7947491407394409,
+                "z": -92.0
+            },
+            "active": true,
+            "restock": 90.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 3,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_01",
+            "name": "Stone site 01 (Riverbank)",
+            "kind": "Stones",
+            "position": {
+                "x": 3.948878049850464,
+                "y": 0.869163453578949,
+                "z": -72.0
+            },
+            "active": true,
+            "restock": 90.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 3,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_02",
+            "name": "Stone site 02 (Riverbank)",
+            "kind": "Stones",
+            "position": {
+                "x": -16.032546997070314,
+                "y": -0.1007031798362732,
+                "z": -54.0
+            },
+            "active": true,
+            "restock": 90.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 3,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_03",
+            "name": "Stone site 03 (Riverbank)",
+            "kind": "Stones",
+            "position": {
+                "x": -0.5797994136810303,
+                "y": -0.10128627717494965,
+                "z": -34.0
+            },
+            "active": true,
+            "restock": 90.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 3,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_04",
+            "name": "Stone site 04 (Riverbank)",
+            "kind": "Stones",
+            "position": {
+                "x": -13.37414836883545,
+                "y": 0.43210315704345705,
+                "z": -16.0
+            },
+            "active": true,
+            "restock": 90.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 3,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_05",
+            "name": "Stone site 05 (Riverbank)",
+            "kind": "Stones",
+            "position": {
+                "x": 10.620000839233399,
+                "y": 0.05529739707708359,
+                "z": 9.892245292663575
+            },
+            "active": true,
+            "restock": 90.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 3,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_06",
+            "name": "Stone site 06 (Riverbank)",
+            "kind": "Stones",
+            "position": {
+                "x": -2.029449224472046,
+                "y": 0.7285040020942688,
+                "z": 22.0
+            },
+            "active": true,
+            "restock": 90.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 3,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_07",
+            "name": "Stone site 07 (Boulder)",
+            "kind": "Stones",
+            "position": {
+                "x": 16.039226531982423,
+                "y": 2.4133195877075197,
+                "z": -81.66830444335938
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_08",
+            "name": "Stone site 08 (Boulder)",
+            "kind": "Stones",
+            "position": {
+                "x": -101.87688446044922,
+                "y": 9.581390380859375,
+                "z": -73.64851379394531
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_09",
+            "name": "Stone site 09 (Boulder)",
+            "kind": "Stones",
+            "position": {
+                "x": 60.024959564208987,
+                "y": 3.35615873336792,
+                "z": -68.43132781982422
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_10",
+            "name": "Stone site 10 (Boulder)",
+            "kind": "Stones",
+            "position": {
+                "x": 26.100000381469728,
+                "y": 2.2561380863189699,
+                "z": -47.66553497314453
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_11",
+            "name": "Stone site 11 (Boulder)",
+            "kind": "Stones",
+            "position": {
+                "x": 87.3279037475586,
+                "y": 7.930429458618164,
+                "z": -45.83261489868164
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_12",
+            "name": "Stone site 12 (Boulder)",
+            "kind": "Stones",
+            "position": {
+                "x": -74.0699462890625,
+                "y": 3.4729702472686769,
+                "z": -31.68000030517578
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_13",
+            "name": "Stone site 13 (Boulder)",
+            "kind": "Stones",
+            "position": {
+                "x": 92.70794677734375,
+                "y": 13.423789978027344,
+                "z": -27.625076293945314
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_14",
+            "name": "Stone site 14 (Boulder)",
+            "kind": "Stones",
+            "position": {
+                "x": 61.37384033203125,
+                "y": 15.162109375,
+                "z": 21.006303787231447
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_15",
+            "name": "Stone site 15 (Boulder)",
+            "kind": "Stones",
+            "position": {
+                "x": -11.88636589050293,
+                "y": 3.3756301403045656,
+                "z": 30.866588592529298
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_16",
+            "name": "Stone site 16 (Boulder)",
+            "kind": "Stones",
+            "position": {
+                "x": 47.62397384643555,
+                "y": 9.919726371765137,
+                "z": 34.920921325683597
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_17",
+            "name": "Stone site 17 (Boulder)",
+            "kind": "Stones",
+            "position": {
+                "x": 98.4800033569336,
+                "y": 18.277477264404298,
+                "z": 48.159996032714847
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_18",
+            "name": "Stone site 18 (Boulder)",
+            "kind": "Stones",
+            "position": {
+                "x": 66.62982940673828,
+                "y": 8.458230972290039,
+                "z": 79.102294921875
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_19",
+            "name": "Stone site 19 (Boulder)",
+            "kind": "Stones",
+            "position": {
+                "x": 50.328704833984378,
+                "y": 4.907430648803711,
+                "z": 94.87694549560547
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_20",
+            "name": "Stone site 20 (Trail)",
+            "kind": "Stones",
+            "position": {
+                "x": 86.12194061279297,
+                "y": 3.7364485263824465,
+                "z": -99.03633117675781
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_21",
+            "name": "Stone site 21 (Trail)",
+            "kind": "Stones",
+            "position": {
+                "x": 45.10285949707031,
+                "y": 3.474708318710327,
+                "z": -98.48572540283203
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_22",
+            "name": "Stone site 22 (Trail)",
+            "kind": "Stones",
+            "position": {
+                "x": -77.21635437011719,
+                "y": 10.743804931640625,
+                "z": -98.18843078613281
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_23",
+            "name": "Stone site 23 (Trail)",
+            "kind": "Stones",
+            "position": {
+                "x": -40.547119140625,
+                "y": 5.689068794250488,
+                "z": -73.60649871826172
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_24",
+            "name": "Stone site 24 (Trail)",
+            "kind": "Stones",
+            "position": {
+                "x": -47.34504318237305,
+                "y": 4.200105667114258,
+                "z": -61.72443389892578
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_25",
+            "name": "Stone site 25 (Trail)",
+            "kind": "Stones",
+            "position": {
+                "x": 55.20787811279297,
+                "y": 5.299312591552734,
+                "z": -43.62272262573242
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_26",
+            "name": "Stone site 26 (Trail)",
+            "kind": "Stones",
+            "position": {
+                "x": -35.03992462158203,
+                "y": 3.965322971343994,
+                "z": -11.67097282409668
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_27",
+            "name": "Stone site 27 (Trail)",
+            "kind": "Stones",
+            "position": {
+                "x": 21.59939193725586,
+                "y": 4.174164772033691,
+                "z": 2.413753032684326
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_28",
+            "name": "Stone site 28 (Trail)",
+            "kind": "Stones",
+            "position": {
+                "x": -61.56000518798828,
+                "y": 5.0,
+                "z": 5.460000038146973
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_29",
+            "name": "Stone site 29 (Trail)",
+            "kind": "Stones",
+            "position": {
+                "x": 109.02616882324219,
+                "y": 22.877233505249025,
+                "z": 12.77794361114502
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_30",
+            "name": "Stone site 30 (Trail)",
+            "kind": "Stones",
+            "position": {
+                "x": -52.599796295166019,
+                "y": 7.632359504699707,
+                "z": 34.50927734375
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_31",
+            "name": "Stone site 31 (Trail)",
+            "kind": "Stones",
+            "position": {
+                "x": 30.287860870361329,
+                "y": 4.131191730499268,
+                "z": 63.122528076171878
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_32",
+            "name": "Stone site 32 (Trail)",
+            "kind": "Stones",
+            "position": {
+                "x": -55.73807144165039,
+                "y": 7.695998191833496,
+                "z": 86.98321533203125
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_33",
+            "name": "Stone site 33 (Trail)",
+            "kind": "Stones",
+            "position": {
+                "x": 100.06619262695313,
+                "y": 5.693168640136719,
+                "z": 97.61090087890625
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_34",
+            "name": "Stone site 34 (Trail)",
+            "kind": "Stones",
+            "position": {
+                "x": -49.339988708496097,
+                "y": 3.8221311569213869,
+                "z": -26.112058639526368
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "stones_35",
+            "name": "Stone site 35 (Trail)",
+            "kind": "Stones",
+            "position": {
+                "x": -37.499908447265628,
+                "y": 4.7054901123046879,
+                "z": 23.928314208984376
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "stone",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "supplies",
+            "name": "supplies",
+            "kind": "Supplies",
+            "position": {
+                "x": -60.20000076293945,
+                "y": 0.6100009679794312,
+                "z": -61.5
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "ammo_rifle",
+                    "count": 60,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "medkit_small",
+                    "count": 2,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "tutorial_loot",
+            "name": "tutorial_loot",
+            "kind": "Loot",
+            "position": {
+                "x": -60.70000076293945,
+                "y": 0.9995929002761841,
+                "z": -66.0
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": [
+                {
+                    "item_id": "ammo_rifle",
+                    "count": 60,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "medkit_small",
+                    "count": 2,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "herb",
+                    "count": 2,
+                    "condition": -1.0
+                },
+                {
+                    "item_id": "cloth",
+                    "count": 4,
+                    "condition": -1.0
+                }
+            ]
+        },
+        {
+            "id": "workbench",
+            "name": "workbench",
+            "kind": "Workbench",
+            "position": {
+                "x": -68.44000244140625,
+                "y": 0.11999999731779099,
+                "z": -68.2300033569336
+            },
+            "active": true,
+            "restock": 0.0,
+            "items": []
+        }
+    ],
+    "enemies": [
+        {
+            "id": "02 Mission • Nam & Hung/Outpost guards/Outpost guard 0",
+            "name": "Outpost guard 0",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 34.0,
+                "y": 3.167487859725952,
+                "z": -75.0
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 1,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "02 Mission • Nam & Hung/Outpost guards/Outpost guard 1",
+            "name": "Outpost guard 1",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 36.6247673034668,
+                "y": 3.2049758434295656,
+                "z": -82.8066177368164
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 1,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "02 Mission • Nam & Hung/Outpost guards/Outpost guard 2",
+            "name": "Outpost guard 2",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 60.0,
+                "y": 6.045485496520996,
+                "z": -18.0
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 2,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "02 Mission • Nam & Hung/Outpost guards/Outpost guard 3",
+            "name": "Outpost guard 3",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 71.88249969482422,
+                "y": 6.0567779541015629,
+                "z": -13.41244125366211
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 2,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "02 Mission • Nam & Hung/Outpost guards/Outpost guard 4",
+            "name": "Outpost guard 4",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 56.0,
+                "y": 9.113834381103516,
+                "z": 38.5
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 3,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "02 Mission • Nam & Hung/Outpost guards/Outpost guard 5",
+            "name": "Outpost guard 5",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 45.994075775146487,
+                "y": 8.952884674072266,
+                "z": 46.01515579223633
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 3,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "02 Mission • Nam & Hung/Outpost guards/rbl_east_2",
+            "name": "rbl_east_2",
+            "rifle": "rifle_standard",
+            "position": {
+                "x": 65.0,
+                "y": 6.0411200523376469,
+                "z": -19.299999237060548
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 0,
+            "active": false,
+            "boss": false
+        },
+        {
+            "id": "02 Mission • Nam & Hung/Outpost guards/rbl_east_3",
+            "name": "rbl_east_3",
+            "rifle": "rifle_standard",
+            "position": {
+                "x": 68.0,
+                "y": 8.279998779296875,
+                "z": 51.70000076293945
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 0,
+            "active": false,
+            "boss": false
+        },
+        {
+            "id": "02 Mission • Nam & Hung/patrol_0",
+            "name": "patrol_0",
+            "rifle": "rifle_standard",
+            "position": {
+                "x": -4.400000095367432,
+                "y": 1.4799995422363282,
+                "z": 84.5999984741211
+            },
+            "health": 100.0,
+            "vision": 20.0,
+            "attackRange": 18.0,
+            "operation": 0,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "02 Mission • Nam & Hung/patrol_1",
+            "name": "patrol_1",
+            "rifle": "rifle_standard",
+            "position": {
+                "x": -27.46442413330078,
+                "y": 3.009582042694092,
+                "z": 86.53556823730469
+            },
+            "health": 100.0,
+            "vision": 20.0,
+            "attackRange": 18.0,
+            "operation": 0,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "02 Mission • Nam & Hung/patrol_2",
+            "name": "patrol_2",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": -19.367403030395509,
+                "y": 2.9365689754486086,
+                "z": 64.6325912475586
+            },
+            "health": 100.0,
+            "vision": 20.0,
+            "attackRange": 18.0,
+            "operation": 0,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "02 Mission • Nam & Hung/rbl_patrol_3",
+            "name": "rbl_patrol_3",
+            "rifle": "rifle_standard",
+            "position": {
+                "x": -23.367677688598634,
+                "y": 2.806363821029663,
+                "z": 95.63233184814453
+            },
+            "health": 100.0,
+            "vision": 20.0,
+            "attackRange": 18.0,
+            "operation": 0,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "C3 / mission reserve/C3 gate guard",
+            "name": "C3 gate guard",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 68.0,
+                "y": 8.279998779296875,
+                "z": 44.0
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 3,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "C3 / mission reserve/C3 runner 1",
+            "name": "C3 runner 1",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 40.0,
+                "y": 4.371519565582275,
+                "z": 78.0
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 0,
+            "active": false,
+            "boss": false
+        },
+        {
+            "id": "C3 / mission reserve/C3 runner 2",
+            "name": "C3 runner 2",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 41.5,
+                "y": 4.617447853088379,
+                "z": 78.0
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 0,
+            "active": false,
+            "boss": false
+        },
+        {
+            "id": "C3 / mission reserve/C3 sleeper 1",
+            "name": "C3 sleeper 1",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 54.81999969482422,
+                "y": 8.59000015258789,
+                "z": 61.79999923706055
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 0,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "C3 / mission reserve/C3 sleeper 2",
+            "name": "C3 sleeper 2",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 54.81999969482422,
+                "y": 8.59000015258789,
+                "z": 63.91999816894531
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 0,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "C3 / mission reserve/C3 sleeper 3",
+            "name": "C3 sleeper 3",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 77.0199966430664,
+                "y": 8.59000015258789,
+                "z": 59.68000030517578
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 0,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "Map01 Operations — commander orders/Chỉ huy địch",
+            "name": "Chỉ huy địch",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 68.0,
+                "y": 8.600000381469727,
+                "z": 64.5999984741211
+            },
+            "health": 700.0,
+            "vision": 20.0,
+            "attackRange": 18.0,
+            "operation": 3,
+            "active": true,
+            "boss": true
+        },
+        {
+            "id": "Map01 Operations — commander orders/Operation guard 1_2",
+            "name": "Operation guard 1_2",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 43.19792938232422,
+                "y": 3.1292433738708498,
+                "z": -75.62334442138672
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 1,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "Map01 Operations — commander orders/Operation guard 1_3",
+            "name": "Operation guard 1_3",
+            "rifle": "rifle_standard",
+            "position": {
+                "x": 43.404361724853519,
+                "y": 3.133286237716675,
+                "z": -82.0578384399414
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 1,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "Map01 Operations — commander orders/Operation guard 2_2",
+            "name": "Operation guard 2_2",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 61.5246467590332,
+                "y": 6.0438232421875,
+                "z": -8.289463996887207
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 2,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "Map01 Operations — commander orders/Operation guard 2_3",
+            "name": "Operation guard 2_3",
+            "rifle": "rifle_standard",
+            "position": {
+                "x": 67.4011459350586,
+                "y": 6.070727348327637,
+                "z": -8.0199613571167
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 2,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "Map01 Operations — commander orders/Operation guard 2_4",
+            "name": "Operation guard 2_4",
+            "rifle": "rifle_standard",
+            "position": {
+                "x": 70.54468536376953,
+                "y": 6.063352584838867,
+                "z": -19.7519474029541
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 2,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "Map01 Operations — commander orders/Operation guard 3_2",
+            "name": "Operation guard 3_2",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 82.0,
+                "y": 12.529999732971192,
+                "z": 48.54999923706055
+            },
+            "health": 100.0,
+            "vision": 30.0,
+            "attackRange": 12.0,
+            "operation": 3,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "Map01 Operations — commander orders/Operation guard 3_3",
+            "name": "Operation guard 3_3",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 61.5,
+                "y": 8.309821128845215,
+                "z": 56.5
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 3,
+            "active": true,
+            "boss": false
+        },
+        {
+            "id": "Map01 Operations — commander orders/Operation guard 3_4",
+            "name": "Operation guard 3_4",
+            "rifle": "rifle_m16",
+            "position": {
+                "x": 68.0,
+                "y": 8.597500801086426,
+                "z": 61.400001525878909
+            },
+            "health": 100.0,
+            "vision": 14.0,
+            "attackRange": 12.0,
+            "operation": 3,
+            "active": true,
+            "boss": false
+        }
+    ]
+}

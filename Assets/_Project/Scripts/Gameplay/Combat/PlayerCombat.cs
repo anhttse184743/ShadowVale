@@ -89,7 +89,7 @@ namespace ShadowVale.Gameplay.Combat
         public float AttackCooldownRemaining => Mathf.Max(0, _nextAttackTime - Time.time);
 
         /// <summary>Half-angle of the cone the next shot can land in, in degrees.</summary>
-        public float CurrentSpreadDegrees => _spread.ConeHalfAngle(CurrentStance(), _aiming);
+        public float CurrentSpreadDegrees => _spread.ConeHalfAngle(CurrentStance(), _aiming, _equippedKind, _equipped != null && _equipped.UsesM16Handling);
 
         /// <summary>0 to 1. How far sustained fire has opened the cone.</summary>
         public float SpreadBloom => _spread.Bloom;
@@ -344,7 +344,7 @@ namespace ShadowVale.Gameplay.Combat
             animator.SetBool(AnimatorParams.Grounded, true);
             animator.SetBool(AnimatorParams.Sneaking, _controller != null && _controller.IsSneaking);
             animator.ResetTrigger(AnimatorParams.Attack); animator.ResetTrigger(AnimatorParams.Die);
-            // A cinematic clears the toggle; held input must not silently raise the sights again.
+            // Clear the cinematic pose; gameplay polls the held aim button on its next update.
             _aiming = false;
             animator.SetBool(AnimatorParams.Aiming, _aiming);
             bool rifleCarry=_rifleBody && _equippedKind==WeaponKind.Rifle && !_aiming;
@@ -540,7 +540,7 @@ namespace ShadowVale.Gameplay.Combat
             else
             {
                 _magazine?.Tick(Time.deltaTime, DrawRounds);
-                _spread.Tick(Time.deltaTime);
+                _spread.Tick(Time.deltaTime, _equipped != null && _equipped.UsesM16Handling);
             }
 
             if (dead || _handsOccupied || (InputAllowed != null && !InputAllowed()))
@@ -706,9 +706,8 @@ namespace ShadowVale.Gameplay.Combat
                 return;
             }
 
-            // One press raises the sights; the next lowers them. Release keeps the chosen state.
-            if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
-                SetAiming(!_aiming);
+            // Aim follows the held button; release returns to normal movement/facing.
+            SetAiming(Mouse.current != null && Mouse.current.rightButton.isPressed);
         }
 
         /// <summary>
@@ -888,7 +887,7 @@ namespace ShadowVale.Gameplay.Combat
             {
                 _faceCameraHoldUntil = Time.time + cooldown + faceCameraTail;
                 _fireHoldUntil = _upperBodyHoldUntil;
-                _pendingGunfire.Add(_equipped);
+                _pendingGunfire.Add(new PendingGunShot(_equipped,CurrentStance(),_aiming));
             }
             else
             {
@@ -896,14 +895,19 @@ namespace ShadowVale.Gameplay.Combat
             }
         }
 
-        private readonly System.Collections.Generic.List<Weapon> _pendingGunfire=new();
+        private readonly struct PendingGunShot
+        {
+            public readonly Weapon Gun;public readonly ShooterStance Stance;public readonly bool Aiming;
+            public PendingGunShot(Weapon gun,ShooterStance stance,bool aiming){Gun=gun;Stance=stance;Aiming=aiming;}
+        }
+        private readonly System.Collections.Generic.List<PendingGunShot> _pendingGunfire=new();
 
         internal void ResolvePendingGunfire()
         {
             if(!isActiveAndEnabled){_pendingGunfire.Clear();return;}
             while(isActiveAndEnabled && _pendingGunfire.Count>0) {
-                var gun=_pendingGunfire[0];_pendingGunfire.RemoveAt(0);
-                if(gun!=null)FireGun(gun);
+                var shot=_pendingGunfire[0];_pendingGunfire.RemoveAt(0);
+                if(shot.Gun!=null)FireShot(shot.Gun,shot.Stance,shot.Aiming);
             }
             _pendingGunfire.Clear();
         }
@@ -912,6 +916,9 @@ namespace ShadowVale.Gameplay.Combat
 
         /// <summary>Resolve after animation and barrel aim, using this frame's camera and muzzle.</summary>
         private void FireGun(Weapon gun)
+            => FireShot(gun,CurrentStance(),_aiming);
+
+        private void FireShot(Weapon gun,ShooterStance stance,bool aiming)
         {
             Camera cam = Camera.main;
             if (cam == null)
@@ -925,9 +932,9 @@ namespace ShadowVale.Gameplay.Combat
             // How steady the shooter is decides the cone, and how long they have held the
             // trigger widens it. The weapon's own HipSpread is no longer consulted: one flat
             // number could not tell a crouched aimed tap from a shot fired mid-jump.
-            ShooterStance stance = CurrentStance();
-            Vector2 kick = _spread.Fire(Time.time);
-            direction = WeaponSpreadState.Scatter(direction, _spread.ConeHalfAngle(stance, _aiming));
+            Vector2 kick = _spread.Fire(Time.time, gun.UsesM16Handling);
+            direction = WeaponSpreadState.Scatter(direction, _spread.ConeHalfAngle(stance, aiming, gun.Kind, gun.UsesM16Handling));
+            if (gun.Kind == WeaponKind.Sniper) kick = new Vector2(1.8f,.12f);
             var skills = GetComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
             if (skills != null) kick *= skills.RecoilMultiplier;
             if (cameraRig != null) cameraRig.AddRecoil(kick.x, kick.y);
@@ -940,7 +947,7 @@ namespace ShadowVale.Gameplay.Combat
             {
                 var health = hit.collider.GetComponentInParent<Health>();
                 bool alive = health != null && !health.IsDead;
-                if (health != null) health.TakeBulletDamageFromWeapon(gun.Damage, hit.point, gameObject, direction, gun.Kind);
+                if (health != null) health.TakeBulletDamageFromWeapon(gun.DamageAgainst(health), hit.point, gameObject, direction, gun.Kind);
                 else ApplyDamage(hit.collider, gun.Damage, hit.point);
                 if (alive && health.IsDead) GunKilled?.Invoke(health.gameObject);
                 endPoint = hit.point;

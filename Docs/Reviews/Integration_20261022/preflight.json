@@ -1,0 +1,40 @@
+{
+  "files": 152,
+  "bytes": 114342982,
+  "missingGuids": [],
+  "duplicateGuids": [],
+  "largestFiles": [
+    {
+      "path": "SourceArt/AnimationRefresh_20261022/Nam_AnimationRefresh_2026-10-22_v3.blend",
+      "bytes": 35279857
+    },
+    {
+      "path": "Assets/_Project/Art/NamMotionV3/Nam_AnimationRefresh_v3.fbx",
+      "bytes": 14346508
+    },
+    {
+      "path": "SourceArt/AnimationRefresh_20261022/UnityExport/Nam_AnimationRefresh_v3.fbx",
+      "bytes": 14346508
+    },
+    {
+      "path": "Assets/_Project/Map01/Resources/Characters/NamMotionV3.asset",
+      "bytes": 9922820
+    },
+    {
+      "path": "Docs/Reviews/AnimationRefresh_Unity_20261022/13-slope-jump-f1.png",
+      "bytes": 2648830
+    },
+    {
+      "path": "Docs/Reviews/AnimationRefresh_Unity_20261022/11-land-pistol.png",
+      "bytes": 2533421
+    },
+    {
+      "path": "Docs/Reviews/AnimationRefresh_Unity_20261022/10-jump-pistol.png",
+      "bytes": 2374441
+    },
+    {
+      "path": "Docs/Reviews/AnimationRefresh_Unity_20261022/05-pistol-carry.png",
+      "bytes": 2137908
+    }
+  ]
+}

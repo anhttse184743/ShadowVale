@@ -79,7 +79,7 @@ namespace ShadowVale.Map01
         public static string Description(string id)
         {
             switch (id) {
-                case "rifle_m16": return "M16, đạn 5,56×45 mm, băng 30 viên, 700 viên/phút. Sát thương mỗi viên bằng 90% AK47. Sửa chữa và rã lấy linh kiện như AK47.";
+                case "rifle_m16": return "M16, đạn 5,56×45 mm, băng 30 viên, 600 viên/phút. Sát thương 22, tầm bắn tối đa 80 m. Ngắm, bắn nhịp ngắn; giữ cò lâu tăng giật và tản đạn. Sửa chữa và rã lấy linh kiện như AK47.";
                 case "ammo_556": return "Đạn 5,56×45 mm dành cho M16. Nạp bằng R; không dùng chung đạn AK47. Chế ở bàn: 2 thuốc súng + 1 kim loại vụn ra 10 viên.";
                 case "rifle_standard": return "Súng trường AK, ở ô 1, đạn 7,62×39. Mỗi phát mòn một ít độ bền; hỏng (0%) thì không bắn được tới khi sửa. Lính địch gục để lại AK đã mòn: sửa, rã lấy linh kiện hoặc nộp ở kho căn cứ.";
                 case "knife": return "Dao, luôn ở ô 3, không vứt được. Cận chiến, hạ gục lặng lẽ từ sau lưng. Nhấn 3 để cầm dao.";
@@ -95,8 +95,8 @@ namespace ShadowVale.Map01
                 case "gun_oil": return "Vật liệu bảo dưỡng: cùng 3 kim loại vụn làm bộ sửa chữa. Sửa súng ở bàn khi đã mất từ một nửa độ bền cũng cần 1 dầu súng.";
                 case "repair_kit": return "Sửa dã chiến ở bất cứ đâu: +35% độ bền cho một khẩu súng (Kỹ thuật cộng thêm), tối đa 80% (Kỹ thuật cao tới 100%). Tab → chuột phải vào súng → Sửa dã chiến. Chế ở bàn: 3 kim loại vụn + 1 dầu súng.";
                 case "weapon_parts": return "Lò xo, chốt, kim hỏa. Sửa súng ở bàn chế tạo lên 100%: 1 linh kiện cho mỗi ¼ độ bền thiếu. Rã súng thu được để có thêm.";
-                case "pistol_k54": return "K-54 (TT-33 bản Trung Quốc), đạn 7,62×25, băng 8 viên. Phím 2 để cầm; chuột phải bật/tắt ngắm, chuột trái bắn, R thay băng. Có độ bền như mọi khẩu súng.";
-                case "rifle_mosin": return "Mosin M91/30, ống ngắm PU 3,5×, đạn 7,62×54R, 5 viên. Kéo vào ô 1 để thay AK. Bấm chuột phải bật/tắt ngắm PU; R nạp từng viên. Có độ bền; rã ra cả kính ngắm.";
+                case "pistol_k54": return "K-54 (TT-33 bản Trung Quốc), đạn 7,62×25, băng 8 viên. Phím 2 để cầm; giữ chuột phải để ngắm, chuột trái bắn, R thay băng. Có độ bền như mọi khẩu súng.";
+                case "rifle_mosin": return "Mosin M91/30, ống ngắm PU 3,5×, tầm bắn 200 m, đạn 7,62×54R, 5 viên. Trúng đầu hoặc thân địch: một viên hạ gục. Đứng yên hoặc khom để bắn chính xác. Kéo vào ô 1 để thay AK; giữ chuột phải để ngắm PU, R nạp từng viên. Có độ bền; rã ra cả kính ngắm.";
                 case "ammo_rifle": return "Đạn 7,62×39 cho súng trường. Nhấn R để nạp. Chế ở bàn: 2 thuốc súng + 1 kim loại vụn ra 10 viên.";
                 case "gunpowder": return "Hộp thiếc thuốc súng đen. Chế đạn ở bàn: đạn K-54 (1), đạn súng trường (2) và đạn Mosin (3) — mỗi hộp chỉ dùng được một lần, nên phải chọn khẩu nào cần đạn hơn.";
                 case "ammo_pistol": return "Đạn 7,62×25 cho K-54. Nhấn R để nạp. Chế ở bàn: 1 thuốc súng + 1 kim loại vụn ra 8 viên.";

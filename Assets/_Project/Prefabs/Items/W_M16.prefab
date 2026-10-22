@@ -380,9 +380,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: ShadowVale.Gameplay::ShadowVale.Gameplay.Combat.Weapon
   kind: 2
-  damage: 27
-  range: 120
-  cooldown: 0.08571429
+  damage: 22
+  range: 80
+  cooldown: 0.1
+  usesM16Handling: 1
   automatic: 1
   sweepRadius: 0.35
   muzzle: {fileID: 5662166334731640641}

@@ -125,7 +125,7 @@ namespace ShadowVale.Map01
         {
             var card = SlotCard(width, slot);
             string id = inventory.SlotItem(slot);
-            if (id == Map01M16.Id) accepts = "5,56×45 · 700 viên/phút";
+            if (id == Map01M16.Id) accepts = "5,56×45 · 600 viên/phút";
             string dragId = DragId();
             bool fits = dragging && dragId != null && Map01Inventory.SlotOf(dragId) == slot && slot != Slot.Knife;
             bool refuses = dragging && dragId != null && !fits && dragSlot != slot;

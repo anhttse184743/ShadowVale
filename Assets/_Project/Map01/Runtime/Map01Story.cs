@@ -267,9 +267,17 @@ namespace ShadowVale.Map01
             dialogue.Begin(Map01OperationLines.Handoff.Skip(2).ToArray(),()=>{
                 if(Progress.suppliesDelivered)return;Progress.suppliesDelivered=true;
                 var bag=GetComponent<Map01Inventory>();if(bag.Count(CargoItem)>0)bag.Spend(CargoItem,1);
-                if(!Progress.supplyRewardGranted){bag.Add("supplies",1);bag.Add("medkit_small",2);bag.Add("ammo_rifle",30);Progress.supplyRewardGranted=true;}
+                GiveSupplyReward();
                 RefreshProps();quest.BeginRadioOrder();Checkpoint();
             },"Nhận nhiệm vụ điểm 2",true);
+        }
+        void GiveSupplyReward()
+        {
+            if (Progress.supplyRewardGranted) return;
+            Progress.supplyRewardGranted = true;
+            var bag = GetComponent<Map01Inventory>();
+            foreach (var item in Map01Logistics.For(mission).ContainerLoot("supply_delivery_reward"))
+                bag.Receive(item.item_id, item.count, item.condition);
         }
         void ObserveCommander()
         {
@@ -320,6 +328,8 @@ namespace ShadowVale.Map01
             if(quest.Stage==7){
                 var c3=GetComponent<Map01C3Mission>();
                 if(c3!=null&&c3.CachePoint!=null&&c3.CachePoint.isActiveAndEnabled&&!c3.CachePoint.used){at=c3.CachePoint.transform.position;label="ĐỒI ĐÔNG NAM — MOSIN TRINH SÁT";return true;}
+                var field=GetComponent<Map01FieldSupplies>()?.ApproachPoint;
+                if(field!=null&&field.isActiveAndEnabled&&!field.used){at=field.transform.position;label="ĐỒI ĐÔNG NAM — BĂNG, KHÓI, LỰU ĐẠN";return true;}
                 bool hunt=Progress.commanderReported&&quest.CommanderEnemy!=null&&quest.CommanderEnemy.Alive;
                 at=hunt?quest.CommanderEnemy.transform.position:Layout.commanderPost.position;label=hunt?"ĐIỂM 3 — HẠ SĨ QUAN":"ĐIỂM 3 — QUAN SÁT DOANH TRẠI [F]";return true;
             }return false;

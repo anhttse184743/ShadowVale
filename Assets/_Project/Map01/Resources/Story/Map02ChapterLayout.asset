@@ -14,19 +14,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map02ChapterLayout
   actors:
   - role: "Anh Th\xE0nh"
-    prefab: {fileID: 8012528957299037504, guid: 7ddebcd502c8f0a41a94c2155c3f3e5c, type: 3}
+    prefab: {fileID: 7832698061118072078, guid: 5b2abf7e6f14f3d41b5a1d88cffbafab, type: 3}
   - role: "Anh L\u1EF1c"
-    prefab: {fileID: 6698508292658309049, guid: cc5b223aaef07c043bba956ce897d818, type: 3}
+    prefab: {fileID: 2737592800967087114, guid: b6e1ae955e1b8ba4294dd7a7fff9d165, type: 3}
   - role: "T\xE2m"
-    prefab: {fileID: 6095493176547276939, guid: 7565910ceef2c8d43bb154f8214acaf0, type: 3}
-  - role: "Ch\u1ECB L\xE0nh"
-    prefab: {fileID: 6818478853548482926, guid: 0be3712cbd0f8d948a782c1438f51f70, type: 3}
-  - role: "\xD4ng S\xE1u"
-    prefab: {fileID: 1480478741168794151, guid: dfab36a4141a30846948d53968eb84f0, type: 3}
+    prefab: {fileID: 1592088549058560199, guid: 4b474e014de278c42b5b5a9a3a6526d4, type: 3}
   - role: "Ch\xFA B\u1EA3y"
-    prefab: {fileID: 534112661175801092, guid: 79edee85666254c418ab14b39a639a1c, type: 3}
+    prefab: {fileID: 2314452259327122441, guid: 3b63b62191cce4b48be90e47f0c67f4d, type: 3}
+  - role: "\xD4ng S\xE1u"
+    prefab: {fileID: 4555953771642930173, guid: f95f828c6b1569d49b5e915ebd11efeb, type: 3}
+  - role: "Ch\u1ECB L\xE0nh"
+    prefab: {fileID: 5919166819237297731, guid: b5366c22bc8cad54d876648671db5910, type: 3}
   - role: "B\xE9 T\xED"
-    prefab: {fileID: 5505341830161706337, guid: e02eef3a8eb58ff47822642cfe9d363c, type: 3}
+    prefab: {fileID: 8497960597794566686, guid: e969c10c69e15824faa1da209f85cad9, type: 3}
   enemyArt: {fileID: 7461267688925482901, guid: 2bb747894f951aa439d2d8dfd28cb5c3, type: 3}
   sites:
   - id: command
