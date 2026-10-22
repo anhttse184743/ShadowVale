@@ -391,7 +391,6 @@ namespace ShadowVale.Map01
             if(task.id=="N3_08")BeginScene(def.Find("N3_09"));
             if(task.id=="N3_04"){Bark("m2v3_wound_01");Bark("m2v3_wound_02");}
             if(task.id=="N3_WOUND")crawlCall=4; // The scene just ended on his first call.
-            if(task.id=="D3_04"&&!State.Available(def.Find("D3_05"))){roles["Hùng"].GoTo(sites["dock"].position+Vector3.left*1.2f,1.1f);roles["Ông Sáu"].Follow(roles["Hùng"].transform,1f);} // Hùng helps Ông Sáu try the dock steps.
             if(State.phase==4&&State.Available(def.Find("D3_05"))&&task.id!="D3_05")roles["Hùng"].GoTo(HungAtSupper,1.35f); // Home for supper.
             if(State.finished){Mission.World.story.stage=Map02Stage.Complete;Mission.StoreCheckpoint();}
             if(State.finished)Mission.Say("MAP 2 HOÀN THÀNH · Ta giữ được làng. Hùng đã hy sinh cứu chuyến thuyền cuối.");

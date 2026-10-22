@@ -330,7 +330,7 @@
       "kind": "demolition",
       "site": "ditch",
       "requires": [
-        "N2_05"
+        "D3_01"
       ],
       "count": 1,
       "scene": "demolition",
@@ -344,7 +344,7 @@
       "kind": "repair",
       "site": "dock",
       "requires": [
-        "N2_05"
+        "D3_02"
       ],
       "count": 2,
       "scene": "boats",
@@ -358,7 +358,7 @@
       "kind": "families",
       "site": "family",
       "requires": [
-        "N2_05"
+        "D3_03"
       ],
       "count": 3,
       "scene": "families",
@@ -372,9 +372,6 @@
       "kind": "cinematic",
       "site": "family",
       "requires": [
-        "D3_01",
-        "D3_02",
-        "D3_03",
         "D3_04"
       ],
       "count": 1,

@@ -139,8 +139,8 @@ namespace ShadowVale.Map01.Tests
             yield return Open();
             try
             {
-                // D3_02: the crate is fetched from the closed store and carried to the bank.
-                Load("N2_05");Assert.AreEqual(4,chapter.State.phase);var crate=Mark("D3_02");
+                // D3_02 (after D3_01, Day 3 goes in order): the crate is fetched from the closed store and carried to the bank.
+                Load("D3_01");Assert.AreEqual(4,chapter.State.phase);Assert.IsFalse(chapter.State.Available(Map02ChapterDefinition.Load().Find("D3_03")),"Day 3 goes one task at a time.");var crate=Mark("D3_02");
                 Assert.Less(Flat(crate.transform.position,chapter.Sites["store"].position),1);Place(crate.transform.position);Assert.IsTrue(mission.Interact(crate));
                 Assert.AreEqual("D3_02",chapter.State.carry);Assert.Less(Flat(crate.transform.position,chapter.Sites["ditch"].position),1,"The pin moves to the bank while carrying.");
                 Place(crate.transform.position);Assert.IsTrue(mission.Interact(crate));Assert.IsTrue(string.IsNullOrEmpty(chapter.State.carry));Assert.AreEqual("D3_02",chapter.CurrentScene?.id);
