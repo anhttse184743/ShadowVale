@@ -41,7 +41,7 @@ namespace ShadowVale.Map01
         public Map02ChapterDirector Chapter {get;private set;}
         public string ObjectiveText=>Chapter!=null?Chapter.State.Objective:World.Objective;
         bool ObjectiveAvailable(Map02ObjectiveObject t)=>Chapter!=null?Chapter.IsAvailable(t):World.Available(t.work);
-        public void RefreshChapter(){targets=FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None);Notify();}
+        public void RefreshChapter(){SyncSkills();targets=FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None);Notify();}
         public Map02WorldState World { get; private set; } = new Map02WorldState();
         public Transform Player => player != null ? player.transform : null;
         public bool Ready { get; private set; }
@@ -91,6 +91,7 @@ namespace ShadowVale.Map01
         }
         static void Loaded(Scene scene, LoadSceneMode mode)
         {
+            if(scene.name=="Map 2")Map02BridgeRails.Install(scene);
             if (scene.name == "Map 2" && FindFirstObjectByType<Map02Mission>() == null)
                 new GameObject("Map 2 mission session").AddComponent<Map02Mission>();
         }
@@ -141,6 +142,7 @@ namespace ShadowVale.Map01
         }
         void Update()
         {
+            if(Ready)SyncSkills();
             TickCharacterEffects();
             if (!Ready || Paused || ForestMenu.Visible) return;
             TickCharacter();
@@ -238,7 +240,7 @@ namespace ShadowVale.Map01
             return "";
         }
         public bool CanSave()=>string.IsNullOrEmpty(SaveBlockReason());
-        public Snapshot Capture(){SyncBagFromTotals();return new Snapshot {
+        public Snapshot Capture(){SyncSkills();SyncBagFromTotals();return new Snapshot {
             hasCharacterState=Bag!=null,stamina=Stamina,bagLayout=Bag?.CaptureLayout(),exploration=Exploration?.Capture(),
             rifleMagazine=combat?.MagazineRounds(WeaponKind.Rifle)??-1,pistolMagazine=combat?.MagazineRounds(WeaponKind.Pistol)??-1,sniperMagazine=combat?.MagazineRounds(WeaponKind.Sniper)??-1,
             crafting=Bag?.CraftingId,craftRemaining=Bag?.CraftRemaining??0,ground=groundItems.Where(g=>g!=null).Select(g=>new GroundSnapshot{id=g.id,count=g.count,condition=g.condition,position=g.transform.position}).ToArray(),
@@ -289,18 +291,9 @@ namespace ShadowVale.Map01
                 if(data.hasCharacterState){combat.RestoreMagazine(WeaponKind.Rifle,data.rifleMagazine);combat.RestoreMagazine(WeaponKind.Pistol,data.pistolMagazine);combat.RestoreMagazine(WeaponKind.Sniper,data.sniperMagazine);}
                 combat.RestoreMagazine(data.magazine);combat.RestoreAttackCooldown(data.attackCooldown);
             }
-            var skills=player.GetComponent<PlayerSkills>();
-            if(skills!=null)
-            {
-                if(!string.IsNullOrEmpty(data.skillRunId))
-                {
-                    var career=player.GetComponent<SkillCampaignPersistence>();if(career==null)career=player.gameObject.AddComponent<SkillCampaignPersistence>();
-                    career.Initialize(data.skillRunId);career.Restore(data.skills,data.skillMission);
-                }
-                else{if(data.skills!=null)skills.Restore(data.skills);skills.RestoreMission(data.skillMission);}
-            }
+            RestoreSkills(data);
             if(Chapter!=null)Chapter.Restore(data.chapter??Map02ChapterState.Migrate(World));
-            RestoreCharacter(data);
+            SyncSkills();RestoreCharacter(data);
             if(Chapter?.State.PatrolRouteActive==true)EnsurePatrolCheckpoint();else patrolCheckpoint=null;
             Notify();
         }
@@ -337,7 +330,7 @@ namespace ShadowVale.Map01
                 if(!career.TryFlush(out var error))throw new IOException(error);
             pending=Parse(entry.checkpoint);Time.timeScale=1;SceneManager.LoadScene("Map 2");
         }
-        void OnDestroy(){DestroyCharacter();voice?.Stop();if(hudChart!=null)Destroy(hudChart);if(hudDisc!=null)Destroy(hudDisc);if(hudMiniChart!=null)Destroy(hudMiniChart);if(hudArrow!=null)Destroy(hudArrow);if(hudGoal!=null)Destroy(hudGoal);if(hudHealth!=null)Destroy(hudHealth);Time.timeScale=1;}
+        void OnDestroy(){DestroySkills();DestroyCharacter();voice?.Stop();if(hudChart!=null)Destroy(hudChart);if(hudDisc!=null)Destroy(hudDisc);if(hudMiniChart!=null)Destroy(hudMiniChart);if(hudArrow!=null)Destroy(hudArrow);if(hudGoal!=null)Destroy(hudGoal);if(hudHealth!=null)Destroy(hudHealth);Time.timeScale=1;}
         void OnGUI()
         {
             if(!Ready||ForestMenu.Visible)return;

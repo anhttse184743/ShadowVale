@@ -17,7 +17,7 @@ namespace ShadowVale.EnvironmentReview
         public const string Root="Assets/_Project/Art/WeaponAnimationReview_20261016";
         const string Player="Assets/_Project/Prefabs/Player/Player.prefab";
         static double next;
-        static WeaponAnimationReviewTools(){Directory.CreateDirectory(Work);File.WriteAllText(Work+"/tool_version.txt","8");EditorApplication.update+=Poll;AssemblyReloadEvents.beforeAssemblyReload+=ReleasePreviewGraphs;EditorApplication.delayCall+=ConfigurePreviewStartup;}
+        static WeaponAnimationReviewTools(){ReviewToolVersion.Schedule(Work,"8");EditorApplication.update+=Poll;AssemblyReloadEvents.beforeAssemblyReload+=ReleasePreviewGraphs;EditorApplication.delayCall+=ConfigurePreviewStartup;}
         static void ReleasePreviewGraphs(){foreach(var d in Object.FindObjectsByType<WeaponAnimationPreview>(FindObjectsInactive.Include,FindObjectsSortMode.None))d.ReleaseGraph();}
         static void ConfigurePreviewStartup(){if(UnityEngine.SceneManagement.SceneManager.GetActiveScene().path==Preview)EditorSceneManager.playModeStartScene=AssetDatabase.LoadAssetAtPath<SceneAsset>(Preview);}
         static void Poll()

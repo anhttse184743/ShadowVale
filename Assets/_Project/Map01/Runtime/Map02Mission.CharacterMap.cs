@@ -51,7 +51,7 @@ namespace ShadowVale.Map01
             if(characterEnemy==null)characterEnemy=Map01Minimap.Symbol(3);
             foreach(var role in new[]{"Hùng","Anh Thành","Anh Lực","Tâm","Ông Sáu","Chị Lành","Bé Tí","Chú Bảy"})
             {
-                var actor=Chapter.Actor(role);if(actor==null||role=="Hùng"&&Chapter.State.hungDead||!IsExplored(actor.transform.position))continue;
+                var actor=Chapter.Actor(role);if(actor==null||actor.visual==null||!actor.visual.gameObject.activeInHierarchy||role=="Hùng"&&Chapter.State.hungDead||!IsExplored(actor.transform.position))continue;
                 var at=Plot(actor.transform.position);if(!OnMap(at))continue;GUI.color=new Color(.3f,.67f,.84f);GUI.DrawTexture(new Rect(at.x-5,at.y-5,10,10),characterAlly);
             }
             foreach(var enemy in seenEnemies){var at=Plot(enemy.transform.position);if(!OnMap(at))continue;GUI.color=new Color(.85f,.22f,.13f);GUI.DrawTexture(new Rect(at.x-7,at.y-7,14,14),characterEnemy);}

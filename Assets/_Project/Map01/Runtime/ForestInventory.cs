@@ -95,8 +95,8 @@ namespace ShadowVale.Map01
                 case "gun_oil": return "Vật liệu bảo dưỡng: cùng 3 kim loại vụn làm bộ sửa chữa. Sửa súng ở bàn khi đã mất từ một nửa độ bền cũng cần 1 dầu súng.";
                 case "repair_kit": return "Sửa dã chiến ở bất cứ đâu: +35% độ bền cho một khẩu súng (Kỹ thuật cộng thêm), tối đa 80% (Kỹ thuật cao tới 100%). Tab → chuột phải vào súng → Sửa dã chiến. Chế ở bàn: 3 kim loại vụn + 1 dầu súng.";
                 case "weapon_parts": return "Lò xo, chốt, kim hỏa. Sửa súng ở bàn chế tạo lên 100%: 1 linh kiện cho mỗi ¼ độ bền thiếu. Rã súng thu được để có thêm.";
-                case "pistol_k54": return "K-54 (TT-33 bản Trung Quốc), đạn 7,62×25, băng 8 viên. Phím 2 để cầm; chuột phải bật/tắt ngắm, chuột trái bắn, R thay băng. Có độ bền như mọi khẩu súng.";
-                case "rifle_mosin": return "Mosin M91/30, ống ngắm PU 3,5×, đạn 7,62×54R, 5 viên. Kéo vào ô 1 để thay AK. Bấm chuột phải bật/tắt ngắm PU; R nạp từng viên. Có độ bền; rã ra cả kính ngắm.";
+                case "pistol_k54": return "K-54 (TT-33 bản Trung Quốc), đạn 7,62×25, băng 8 viên. Phím 2 để cầm; giữ chuột phải để ngắm, chuột trái bắn, R thay băng. Có độ bền như mọi khẩu súng.";
+                case "rifle_mosin": return "Mosin M91/30, ống ngắm PU 3,5×, đạn 7,62×54R, 5 viên. Kéo vào ô 1 để thay AK. Bấm giữ chuột phải để ngắm PU; R nạp từng viên. Có độ bền; rã ra cả kính ngắm.";
                 case "ammo_rifle": return "Đạn 7,62×39 cho súng trường. Nhấn R để nạp. Chế ở bàn: 2 thuốc súng + 1 kim loại vụn ra 10 viên.";
                 case "gunpowder": return "Hộp thiếc thuốc súng đen. Chế đạn ở bàn: đạn K-54 (1), đạn súng trường (2) và đạn Mosin (3) — mỗi hộp chỉ dùng được một lần, nên phải chọn khẩu nào cần đạn hơn.";
                 case "ammo_pistol": return "Đạn 7,62×25 cho K-54. Nhấn R để nạp. Chế ở bàn: 1 thuốc súng + 1 kim loại vụn ra 8 viên.";

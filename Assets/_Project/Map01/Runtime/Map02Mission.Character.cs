@@ -16,8 +16,8 @@ namespace ShadowVale.Map01
         public ForestBundle CharacterContent {get;private set;}
         public Camera GameCamera=>cameraRig!=null?cameraRig.GetComponent<Camera>():Camera.main;
         public float Stamina {get;private set;}
-        public bool CharacterGearLocked=>Chapter?.Companion!=null||!string.IsNullOrEmpty(Chapter?.State.carry)||Chapter?.MovementLocked==true;
-        public bool CharacterCanSprint=>!CharacterGearLocked&&Stamina>2&&Chapter?.State.wounded!=true;
+        public bool CharacterGearLocked=>!string.IsNullOrEmpty(Chapter?.State.carry)||Chapter?.MovementLocked==true;
+        public bool CharacterCanSprint=>Chapter?.MovementLocked!=true&&Stamina>2&&Chapter?.State.wounded!=true;
         public string HudMessage=>message;
         public bool HudMessageVisible=>Time.unscaledTime<messageUntil;
         public readonly List<ForestPoint> CharacterWorkpoints=new List<ForestPoint>();
@@ -39,6 +39,7 @@ namespace ShadowVale.Map01
             Exploration=new MapExploration(Rect.MinMaxRect(-Map02Navigation.HalfSize,-Map02Navigation.HalfSize,Map02Navigation.HalfSize,Map02Navigation.HalfSize));
             Bag=gameObject.AddComponent<Map01Inventory>();
             var skills=player.GetComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();if(skills==null)player.gameObject.AddComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
+            InitializeSkills();
             CharacterTrail=new Material(Shader.Find("Universal Render Pipeline/Unlit"));
             Map01Pistol.Install(CharacterHudSession.For(gameObject));Map01Mosin.Install(CharacterHudSession.For(gameObject));
             gameObject.AddComponent<Map01StoneThrow>();
@@ -46,7 +47,7 @@ namespace ShadowVale.Map01
             Bag.Changed+=WriteBagTotals;
             CharacterHud=gameObject.AddComponent<Map01Hud>();
             InitializeCharacterEffects();
-            combat.SlotPressed=slot=>{if(CharacterGearLocked){Say("Hoàn tất việc đang mang hoặc hộ tống trước khi đổi trang bị.");return true;}return Bag.OnSlotKey(slot);};
+            combat.SlotPressed=slot=>{if(CharacterGearLocked){Say("Hoàn tất việc đang mang trước khi đổi trang bị.");return true;}return Bag.OnSlotKey(slot);};
             combat.ReserveRounds=()=>Bag.Count(Bag.HeldAmmoId);
             combat.DrawRounds=requested=>{int n=Mathf.Min(requested,Bag.Count(Bag.HeldAmmoId));Bag.Spend(Bag.HeldAmmoId,n);return n;};
             combat.GunUsable=()=>!Bag.HeldGunBroken();

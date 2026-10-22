@@ -71,7 +71,7 @@ namespace ShadowVale.Map01
             if(binocularMask==null)binocularMask=MakeBinocularMask();
             float maskWidth=height*2,x=(width-maskWidth)/2;GUI.DrawTexture(new Rect(x,0,maskWidth,height),binocularMask);
             if(x>0){HudFill(new Rect(0,0,x,height),Color.black);HudFill(new Rect(width-x,0,x,height),Color.black);}
-            var plate=new Rect(width/2-300,height-150,600,64);HudPanel(plate);GUI.Label(new Rect(plate.x+16,plate.y+10,plate.width-32,48),"ỐNG NHÒM · Quan sát ánh đèn, giữ yên để xác nhận.\nF đóng ống nhòm",hudSmall);
+            var plate=new Rect(width/2-300,height-150,600,64);HudPanel(plate);GUI.Label(new Rect(plate.x+16,plate.y+10,plate.width-32,48),"ỐNG NHÒM · Giữ F để quan sát.\nThả F hạ ống nhòm · Giữ yên để xác nhận mục tiêu",hudSmall);
         }
         public void DrawCharacterEye(Vector2 at,bool spotted)
         {

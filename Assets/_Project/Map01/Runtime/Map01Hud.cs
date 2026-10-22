@@ -317,7 +317,7 @@ namespace ShadowVale.Map01
             string c3Status = c3 != null ? c3.StatusLine() : null;
             float c3Height = (optional != null ? optional.Count * 22 + 8 : 0) + (c3Status != null ? 28 : 0);
             string notes = mapTwo!=null?mapTwo.Chapter.Instruction:ObjectiveNotes();
-            if(mapTwo?.Chapter.Companion!=null){var person=mapTwo.Chapter.Companion;float distance=Vector3.Distance(mapTwo.Player.position,person.transform.position);notes+="\n"+person.role+" · "+distance.ToString("0")+" m · "+(distance>7?"Đang chờ — quay lại đón":"Đang đi cùng");}
+            if(mapTwo?.Chapter.Companion!=null){var person=mapTwo.Chapter.Companion;float distance=Vector3.Distance(mapTwo.Player.position,person.transform.position);notes+="\n"+person.role+" · "+distance.ToString("0")+" m · Đang theo sau";}
             float notesHeight = string.IsNullOrEmpty(notes) ? 0 : objectiveSmall.CalcHeight(new GUIContent(notes), 292) + 18;
             float escortHeight = ShowObjectiveEscortHealth ? 45 : 0;
             float height = Mathf.Max(152, 258 + textHeight + (guiding ? 32 : 0) + c3Height + notesHeight + escortHeight + 14 - 186);

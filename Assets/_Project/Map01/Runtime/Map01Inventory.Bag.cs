@@ -173,7 +173,7 @@ namespace ShadowVale.Map01
         /// A drawn weapon taken out of the slot leaves the knife in hand.</summary>
         public bool EquipFromCell(int i)
         {
-            if(mission?.MapTwo?.CharacterGearLocked==true){mission.Say("Hoàn tất việc đang mang hoặc hộ tống trước khi đổi trang bị.");return false;}
+            if(mission?.MapTwo?.CharacterGearLocked==true){mission.Say("Hoàn tất việc đang mang trước khi đổi trang bị.");return false;}
             var cell = Cell(i);
             var slot = cell != null ? SlotOf(cell.id) : null;
             if (slot == null) { if (cell != null) mission?.Say(ForestInventory.Name(cell.id) + " không trang bị được.", 3); return false; }

@@ -12,6 +12,15 @@ namespace ShadowVale.Map01
         public bool Dead=>HitPoints==null||HitPoints.IsDead;
         public bool Alerted=>alerted;
         public bool Investigating=>investigate.HasValue;
+        public bool CanSilentTakedown(Map02Mission mission)
+        {
+            if (Dead || alerted || !gameObject.activeInHierarchy || mission == null || mission.InputBlocked || mission.Skills == null) return false;
+            float range = mission.Skills.TakedownRange(1.6f);
+            var delta = mission.Player.position - transform.position;
+            if (delta.magnitude > range || Vector3.Angle(transform.forward, Vector3.ProjectOnPlane(delta, Vector3.up)) < 130) return false;
+            return !Physics.Linecast(mission.Player.position + Vector3.up, transform.position + Vector3.up, out var hit, ~0, QueryTriggerInteraction.Ignore)
+                || hit.transform == transform || hit.transform.IsChildOf(transform);
+        }
         Vector3? investigate;
         public void Hear(Vector3 point,bool hostile){if(hostile)alerted=true;else investigate=point;}
         Vector3 patrolHome;float patrolClock;

@@ -1003,7 +1003,7 @@
     {
       "id": "m2v3_antenna_03",
       "conversation": "m2v3_antenna",
-      "speaker": "Đơn vị pháo",
+      "speaker": "Anh Thành",
       "text": "Nghe rõ. Nói đi.",
       "radio": true
     },
@@ -1395,7 +1395,7 @@
     {
       "id": "m2v3_coordinates_04",
       "conversation": "m2v3_coordinates",
-      "speaker": "Đơn vị pháo",
+      "speaker": "Anh Thành",
       "text": "Nhận tọa độ. Ba phút.",
       "radio": true
     },
@@ -1507,7 +1507,7 @@
     {
       "id": "m2v3_sacrifice_03",
       "conversation": "m2v3_sacrifice",
-      "speaker": "Đơn vị pháo",
+      "speaker": "Anh Thành",
       "text": "Bắn.",
       "radio": true
     },

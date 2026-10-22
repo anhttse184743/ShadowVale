@@ -344,7 +344,7 @@ namespace ShadowVale.Gameplay.Combat
             animator.SetBool(AnimatorParams.Grounded, true);
             animator.SetBool(AnimatorParams.Sneaking, _controller != null && _controller.IsSneaking);
             animator.ResetTrigger(AnimatorParams.Attack); animator.ResetTrigger(AnimatorParams.Die);
-            // A cinematic clears the toggle; held input must not silently raise the sights again.
+            // Clear the cinematic pose; gameplay polls the held aim button on its next update.
             _aiming = false;
             animator.SetBool(AnimatorParams.Aiming, _aiming);
             bool rifleCarry=_rifleBody && _equippedKind==WeaponKind.Rifle && !_aiming;
@@ -706,9 +706,8 @@ namespace ShadowVale.Gameplay.Combat
                 return;
             }
 
-            // One press raises the sights; the next lowers them. Release keeps the chosen state.
-            if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
-                SetAiming(!_aiming);
+            // Aim follows the held button; release returns to normal movement/facing.
+            SetAiming(Mouse.current != null && Mouse.current.rightButton.isPressed);
         }
 
         /// <summary>

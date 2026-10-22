@@ -45,13 +45,13 @@ namespace ShadowVale.Map01.Tests
             yield return WaitGameSeconds(.3f);
             Assert.IsTrue(Mission.ModernCombat.IsAiming, kind+": holding does not repeatedly toggle.");
             rightDown=false; yield return WaitGameSeconds(.3f);
-            Assert.IsTrue(Mission.ModernCombat.IsAiming, kind+": release keeps aim enabled.");
+            Assert.IsFalse(Mission.ModernCombat.IsAiming, kind+": release lowers the sights.");
             rightDown=true; yield return WaitGameSeconds(.7f);
-            Assert.IsFalse(Mission.ModernCombat.IsAiming, kind+": second press disables aim.");
+            Assert.IsTrue(Mission.ModernCombat.IsAiming, kind+": holding again raises the sights.");
             rightDown=false; yield return WaitGameSeconds(.3f);
             Assert.IsFalse(Mission.ModernCombat.IsAiming, kind+": release keeps aim disabled.");
         }
-        [UnityTest] public IEnumerator AKK54AndMosinToggleOnPressAndClearWhenGameplayIsInterrupted()
+        [UnityTest] public IEnumerator AKK54AndMosinAimOnlyWhileHeldAndClearWhenGameplayIsInterrupted()
         {
             K54IntegrationTests.OpenSandbox();
             yield return new EnterPlayMode(); yield return null;
@@ -73,7 +73,7 @@ namespace ShadowVale.Map01.Tests
                 rightDown=true;yield return WaitGameSeconds(.7f);Assert.IsTrue(Mission.ModernCombat.IsAiming);
                 Mission.Cinematic=true;yield return WaitGameSeconds(.2f);Assert.IsFalse(Mission.ModernCombat.IsAiming);
                 Mission.Cinematic=false;yield return WaitGameSeconds(.5f);
-                Assert.IsFalse(Mission.ModernCombat.IsAiming,"Held input cannot reactivate aim after an interruption.");
+                Assert.IsTrue(Mission.ModernCombat.IsAiming,"Held aim resumes when gameplay becomes available again.");
                 rightDown=false;yield return WaitGameSeconds(.2f);
                 bag.Draw(Map01Inventory.Slot.Knife);rightDown=true;yield return WaitGameSeconds(.3f);
                 Assert.IsFalse(Mission.ModernCombat.IsAiming,"A blade cannot enter gun aim mode.");
