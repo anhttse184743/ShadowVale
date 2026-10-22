@@ -161,6 +161,7 @@ namespace ShadowVale.Map01.Tests
             K54IntegrationTests.OpenSandbox();yield return new EnterPlayMode();yield return WaitForMap01Ready();Quiet();Floor();yield return WaitGameSeconds(.6f);
             Assert.IsTrue(M.GetComponent<Map01Inventory>().Draw(Map01Inventory.Slot.Pistol));yield return WaitGameSeconds(.3f);
             var routing=RouteInputToGame();keys=InputSystem.AddDevice<Keyboard>();InputSystem.onBeforeUpdate+=Pump;
+            float oldCapture=Time.captureDeltaTime;Time.captureDeltaTime=1f/60;
             try
             {
                 uint before=M.ModernPlayer.JumpSequence;float baseY=M.player.position.y;
@@ -173,7 +174,7 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsTrue(M.ModernPlayer.IsGrounded);Photo("11-land-pistol");yield return WaitGameSeconds(.65f);Assert.IsFalse(Motion.JumpPlaying);
                 Assert.That(Motion.MotionId,Does.StartWith("pistol"));Assert.AreEqual(1.4f,M.ModernPlayer.JumpHeight);Assert.AreEqual(-20,M.ModernPlayer.Gravity);
             }
-            finally{InputSystem.onBeforeUpdate-=Pump;InputSystem.RemoveDevice(keys);keys=null;space=false;RestoreInputRouting(routing);}
+            finally{Time.captureDeltaTime=oldCapture;InputSystem.onBeforeUpdate-=Pump;InputSystem.RemoveDevice(keys);keys=null;space=false;RestoreInputRouting(routing);}
             yield return new ExitPlayMode();
         }
         [UnityTest]public IEnumerator SlopeJumpWeaponSwapsAndPausePreserveTheAirbornePhase()

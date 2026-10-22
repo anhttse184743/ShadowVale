@@ -1,0 +1,1 @@
+Offline generation: VieNeu-TTS v3 Turbo 48 kHz, vieneu 3.8.0, CPU ONNX fp32. Only built-in v3 Turbo presets; no user voice cloning. Cost: 0. All 49 spoken cues, including the boat arrival for Map 2 Day 1–Night 1; m2v3_shift_01 remains silent. Voice choice approved by user. Each source waveform has SHA-256 in voice-manifest.json. See model card and LICENSE.

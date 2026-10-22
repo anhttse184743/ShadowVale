@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using ShadowVale.AI.Contracts;
@@ -318,6 +318,12 @@ namespace ShadowVale.Map01
             Destroy(trail, .12f);
         }
         public void Say(string text, float seconds = 7) {
+            // Foreground conversations own their voice gate until Close. A delayed
+            // gameplay notice (including a clear) must not pause or replace that queue.
+            if(GetComponent<Map01StoryDialogue>()?.IsPlaying==true){
+                if(string.IsNullOrEmpty(text)){Dialogue=null;DialogueUntil=0;}
+                return;
+            }
             var speech=DialogueVoice.For(gameObject);
             speech.CanSpeak=()=>!Cinematic&&!ForestMenu.Visible;
             speech.LineStarted=line=>{

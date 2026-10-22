@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.AI;
 using ShadowVale.Gameplay.Audio;
@@ -18,7 +18,7 @@ namespace ShadowVale.Map01
         {
             get{var point=ChargePoint+(sites["ditch"].position-ChargePoint).normalized*3;return NavMesh.SamplePosition(point,out var h,2,NavMesh.AllAreas)?h.position:ChargePoint;}
         }
-        float SceneDuration=>sceneTask!=null&&sceneTask.id=="N3_09"?Mathf.Max(sceneTask.seconds,sacrificeTravel+18):sceneTask?.seconds??0;
+        float SceneDuration=>sceneTask?.id=="N1_04"||sceneTask?.id=="N1_01"?DaySceneMinimum:sceneTask!=null&&sceneTask.id=="N3_09"?Mathf.Max(sceneTask.seconds,sacrificeTravel+18):sceneTask?.seconds??0;
         void StartRescueEscort(Map02ChapterTask task)
         {
             escort=roles[task.kind=="rescueChild"?"Bé Tí":"Ông Sáu"];escort.Follow(Mission.Player,1.5f);

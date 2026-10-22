@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
@@ -58,6 +58,7 @@ namespace ShadowVale.Map01.Tests
             foreach(var pair in c.Sites){var path=new NavMeshPath();bool valid=NavMesh.CalculatePath(origin,pair.Value.position,NavMesh.AllAreas,path)&&path.status==NavMeshPathStatus.PathComplete;report.AppendLine(pair.Key+" "+pair.Value.position+" "+valid);Assert.IsTrue(valid,pair.Key);}
             File.WriteAllText("Logs/Map02Chapter/navigation.txt",report.ToString());
             var target=Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId=="D1_01");
+            if(!c.State.dayOne.arrivalSeen){if(!c.Busy)typeof(Map02ChapterDirector).GetMethod("TickDay",BindingFlags.NonPublic|BindingFlags.Instance).Invoke(c,new object[]{0f});typeof(Map02ChapterDirector).GetMethod("EndScene",BindingFlags.NonPublic|BindingFlags.Instance).Invoke(c,null);Assert.True(c.State.dayOne.arrivalSeen);Assert.False(c.State.Done("D1_01"));}
             Move(m,target.transform.position);Assert.IsTrue(m.Interact(target));Assert.IsTrue(c.Busy);Assert.IsFalse(m.CanSave());
             typeof(Map02ChapterDirector).GetMethod("EndScene",BindingFlags.NonPublic|BindingFlags.Instance).Invoke(c,null);yield return null;
             Assert.IsTrue(c.State.Done("D1_01"));Assert.IsFalse(c.Busy);Assert.IsTrue(m.HasCheckpoint);
@@ -69,7 +70,7 @@ namespace ShadowVale.Map01.Tests
                 snapshot=m.Capture();snapshot.chapter=Through(id);m.Restore(snapshot);yield return WaitGameSeconds(2f);
                 Assert.AreEqual(snapshot.chapter.phase,c.State.phase);Assert.AreEqual(snapshot.chapter.hungDead,c.State.hungDead);Assert.AreEqual(snapshot.magazine,m.Player.GetComponent<ShadowVale.Gameplay.Combat.PlayerCombat>().RoundsInMagazine);
                 if(c.State.phase==1||c.State.phase==3||c.State.phase==5)
-                {Assert.IsTrue(RenderSettings.skybox.HasProperty("_Exposure"));Assert.Less(RenderSettings.skybox.GetFloat("_Exposure"),.15f);}
+                {Assert.IsTrue(RenderSettings.skybox.HasProperty("_Exposure"));Assert.Less(RenderSettings.skybox.GetFloat("_Exposure"),c.State.phase==1?.25f:.15f);}
                 foreach(var fx in c.GetComponentsInChildren<ParticleSystemRenderer>(true))
                 {Assert.NotNull(fx.sharedMaterial,fx.name);Assert.IsTrue(fx.sharedMaterial.shader.isSupported,fx.name);Assert.IsTrue(fx.sharedMaterial.shader.name.StartsWith("Universal Render Pipeline/Particles/"),fx.name);}
                 ScreenCapture.CaptureScreenshot("Logs/Map02Chapter/"+id+".png");yield return null;

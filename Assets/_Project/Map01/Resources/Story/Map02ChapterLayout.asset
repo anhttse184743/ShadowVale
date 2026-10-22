@@ -13,20 +13,22 @@ MonoBehaviour:
   m_Name: Map02ChapterLayout
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map02ChapterLayout
   actors:
-  - role: "Anh Th\xE0nh"
-    prefab: {fileID: 7832698061118072078, guid: 5b2abf7e6f14f3d41b5a1d88cffbafab, type: 3}
   - role: "Anh L\u1EF1c"
-    prefab: {fileID: 2737592800967087114, guid: b6e1ae955e1b8ba4294dd7a7fff9d165, type: 3}
+    prefab: {fileID: 2747438680082658287, guid: 483ad9fd5189d8e46a630b45f391647a, type: 3}
+  - role: "Ch\u1ECB L\xE0nh"
+    prefab: {fileID: 7340975216270895813, guid: 7644077037a3add488a4a3821c350c75, type: 3}
+  - role: "\xD4ng S\xE1u"
+    prefab: {fileID: 4110490182615045429, guid: 59d21896debef7b43ae66d59df205b55, type: 3}
+  - role: "B\xE9 T\xED"
+    prefab: {fileID: 6308178546673856099, guid: 83d820b083d8424479002984cbe77308, type: 3}
+  - role: "Ch\xFA B\u1EA3y"
+    prefab: {fileID: 178453329010743982, guid: 230d8f4705ce40a458bfb9a728fc46c8, type: 3}
   - role: "T\xE2m"
     prefab: {fileID: 1592088549058560199, guid: 4b474e014de278c42b5b5a9a3a6526d4, type: 3}
-  - role: "Ch\xFA B\u1EA3y"
-    prefab: {fileID: 2314452259327122441, guid: 3b63b62191cce4b48be90e47f0c67f4d, type: 3}
-  - role: "\xD4ng S\xE1u"
-    prefab: {fileID: 4555953771642930173, guid: f95f828c6b1569d49b5e915ebd11efeb, type: 3}
-  - role: "Ch\u1ECB L\xE0nh"
-    prefab: {fileID: 5919166819237297731, guid: b5366c22bc8cad54d876648671db5910, type: 3}
-  - role: "B\xE9 T\xED"
-    prefab: {fileID: 8497960597794566686, guid: e969c10c69e15824faa1da209f85cad9, type: 3}
+  - role: "H\xF9ng"
+    prefab: {fileID: 3074639621431819192, guid: da8f6cf4b6ab9dd499d9a80674d831e9, type: 3}
+  - role: "Anh Th\xE0nh"
+    prefab: {fileID: 5763547110180736092, guid: 4a8df090b7131f340865e8389e7bc7ac, type: 3}
   enemyArt: {fileID: 0}
   sites:
   - id: command
@@ -73,7 +75,13 @@ MonoBehaviour:
     position: {x: -63.48, y: 1.18, z: -32.6}
   - id: family2
     position: {x: -77.17, y: 1.09, z: -29.35}
+  - id: dayOneFamily
+    position: {x: -50.7, y: 1.03, z: -35.7}
+  - id: nightOneRest
+    position: {x: -47.7, y: 1.03, z: -35.7}
   supplyCrateRounds: 30
+  dayOneSunIntensity: 0.82
+  dayOneOilLampIntensity: 0.65
   nightSunIntensity: 0.08
   nightSkyExposure: 0.08
   patrolSweepSeconds: 15

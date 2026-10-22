@@ -24,6 +24,7 @@ namespace ShadowVale.Map01
         private Renderer[] placeholder;
         private bool down;
         private Map01HungRest resting;
+        private RuntimeAnimatorController stageController;
         private bool captivePresentation,boundDead;
         private Map01CinematicPose corpsePose;
         public void BeginCaptivePresentation(){captivePresentation=true;talkUntil=0;if(rope==null&&ropeMaterial!=null)rope=TieRope();if(rope!=null)rope.SetActive(true);}
@@ -83,6 +84,7 @@ namespace ShadowVale.Map01
             visual.agent = owner.hung.GetComponent<NavMeshAgent>();
             visual.placeholder = old;
             foreach (var renderer in old) if (renderer != null && renderer.enabled) renderer.forceRenderingOff = true;
+            visual.stageController=visual.actor.runtimeAnimatorController;
             visual.actor.applyRootMotion = false;
             visual.ResetPose();
             visual.SnapToStage();
@@ -158,8 +160,14 @@ namespace ShadowVale.Map01
         /// <summary>Restore this quest stage immediately; Rebind alone falls back to the captive kneeling state.</summary>
         public void RestoreAfterCinematic()
         {
-            if(boundDead)return;
+            if(boundDead||actor==null)return;
             ReleaseHold(); SnapToStage(); AnchorToGround();
+        }
+        /// <summary>Discard transient cinematic/death ownership before applying a saved stage.</summary>
+        public void RestoreCheckpointPose()
+        {
+            corpsePose?.Dispose();corpsePose=null;boundDead=false;captivePresentation=false;
+            down=rescue!=null&&rescue.HungDown;RestoreContactCulling();RestoreAfterCinematic();
         }
         private bool Wounded => !down && Stage == Map01Quest.EscortStage;
 
@@ -170,6 +178,12 @@ namespace ShadowVale.Map01
         /// </summary>
         private void SnapToStage()
         {
+            if(actor==null)return;
+            // A cinematic Playable temporarily detaches the controller. Checkpoint
+            // restoration first cancels its owner, then reattaches this stage controller.
+            stageController??=Resources.Load<Map01HungVisual>("Characters/HungVisual")?.actor?.runtimeAnimatorController;
+            if(actor.runtimeAnimatorController==null)actor.runtimeAnimatorController=stageController;
+            if(actor.runtimeAnimatorController==null)return;
             lastStage = Stage;
             // A jump must not inherit the body offset of the pose it leaves: played straight from the
             // kneeling captive pose, the standing idle keeps his hips 0.7 m low until rebound.
@@ -185,7 +199,7 @@ namespace ShadowVale.Map01
 
         private void Update()
         {
-            if (mission == null || actor == null || captivePresentation || boundDead || (resting!=null&&resting.IsResting)) return;
+            if (mission == null || actor == null || actor.runtimeAnimatorController==null || captivePresentation || boundDead || (resting!=null&&resting.IsResting)) return;
             bool fallen = rescue != null && rescue.HungDown;
             if (fallen != down) {
                 down = fallen;

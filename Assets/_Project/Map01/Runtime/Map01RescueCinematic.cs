@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using ShadowVale.Gameplay.Combat;
 using ShadowVale.Gameplay.Player;
@@ -578,7 +578,9 @@ namespace ShadowVale.Map01
             }
             ForestMenu.SuppressKeysAfterCutscene();
         }
-        private void Cleanup()
+        /// <summary>Release animation/camera ownership without committing a skipped outcome.</summary>
+        public void CancelForRestore(){if(IsPlaying)Cleanup(true);}
+        private void Cleanup(bool restoring=false)
         {
             var mode=CurrentMode;CurrentMode=Mode.None;
             namPose?.Dispose();hungPose?.Dispose();namPose=hungPose=null;
@@ -587,7 +589,7 @@ namespace ShadowVale.Map01
             introNamPose?.Dispose();introNamPose=null;introLowerBody=null;
             foreach(var weapon in introHiddenWeapons)if(weapon!=null)weapon.SetActive(true);introHiddenWeapons.Clear();
             if(mode==Mode.Intro||mode==Mode.Execution){
-                if(captiveVisual!=null)captiveVisual.EndCaptivePresentation(mode==Mode.Execution);
+                if(captiveVisual!=null)captiveVisual.EndCaptivePresentation(mode==Mode.Execution&&!restoring);
                 if(mission!=null&&mission.player!=null&&mission.ModernPlayer!=null&&mission.ModernCombat!=null){
                     var cc=mission.player.GetComponent<CharacterController>();if(cc!=null)cc.enabled=storyCCEnabled;
                     if(storyActions!=null)storyActions.enabled=storyActionsEnabled;mission.ModernPlayer.enabled=storyPlayerEnabled;mission.ModernCombat.enabled=storyCombatEnabled;
