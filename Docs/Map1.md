@@ -130,7 +130,12 @@ hay mô hình C3: lính được đặt lại vị trí lúc chạy, kẻng và 
 - Hòm sắt C3 khóa tới khi chỉ huy chết. Lưu game giữ kẻng, dây, cảnh giác, ai đã được gọi.
 - Phần chiến đấu của chỉ huy (nấp, lựu đạn, lùi sau lính) để AI riêng: gọi `CallReinforcements()` và dùng
   `CoverPoints` (15 điểm nấp); tắt `AutoCallAtHalfHealth` khi AI tự gọi.
-- Kiểm thử: `C3MissionTests`.
+- **Cảnh báo lựu đạn của chỉ huy** (`Map01GrenadeWarning`, `Map01Hud.Grenade.cs`, từ 22/10/2026): lúc lựu đạn rời tay,
+  vòng đỏ rộng bằng tầm nổ (7,5 m) hiện trên đất quanh chỗ nó nhắm, vòng thứ hai lớn dần từ tâm, chạm vòng ngoài là nổ;
+  lựu đạn bay là quả F1 có khói ngòi. Trên HUD, kiểu chỉ báo lựu đạn của Call of Duty:
+  biểu tượng quanh tâm ngắm phía có lựu đạn, mũi tên và số giây còn lại; đỏ khi Nam trong vòng nổ (kèm dòng chữ lớn),
+  vàng khi cách vòng dưới 8 m. Từ lúc ném tới lúc nổ 2–2,8 giây (bay 0,5–1,3 giây + ngòi 1,5 giây); chưa có động tác né.
+- Kiểm thử: `C3MissionTests`, `GrenadeWarningTests`.
 
 ## Độ bền súng, rớt đồ và kho căn cứ
 
@@ -195,7 +200,7 @@ Theo bản thiết kế "Trang bị" đã duyệt (16/10/2026), bỏ hẳn tay k
   - Đá: như trước, tiếng động 14 m.
   - Bom khói: mây khói bán kính 4 m trong 15 giây; lính không nhìn xuyên qua (`Map01Smoke.Blocks` trong
     `Map01EnemyController.CanSeePlayer`). Chế ở bàn: 1 ống tạo khói + 1 vải.
-  - Lựu đạn F1: nổ 3,5 giây sau khi rơi; trong 3 m chết, tới 7 m bị thương (60% máu), tiếng nổ 40 m như tiếng súng.
+  - Lựu đạn F1: nổ ngay khi chạm đất (trước 22/10/2026: 3,5 giây sau khi rơi); trong 6 m chết, tới 14 m bị thương (60% máu), tiếng nổ 40 m như tiếng súng.
     Nam đứng gần cũng bị. Chế ở bàn: 1 lõi nổ + 1 mô-đun kích hoạt + 1 kim loại vụn. Bán kính là giá trị khởi đầu,
     chỉnh sau khi chơi thử (F1 thật: ngòi 3,2–4,2 giây, mảnh văng tới 200 m).
   - Hình ảnh (dựng bằng code, không cần asset, `Map01Fx`): khoen chốt (dây giật của bom khói) ở lại tay Nam; cần

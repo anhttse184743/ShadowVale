@@ -22,10 +22,20 @@ namespace ShadowVale.Gameplay.Enemies.Boss
         private string _thrower;
         private bool _exploded;
 
+        private static readonly System.Collections.Generic.List<Grenade> _live = new System.Collections.Generic.List<Grenade>();
+        /// <summary>Grenades thrown and not yet gone off, for a map to warn the player of (Map 1: Map01GrenadeWarning).</summary>
+        public static System.Collections.Generic.IReadOnlyList<Grenade> Live => _live;
+
         public bool Exploded => _exploded;
         public Vector3 Target => _to;
         /// <summary>Seconds from the throw to the blast.</summary>
         public float SecondsToBlast => Mathf.Max(0, _flight + _fuse - _age);
+        /// <summary>Seconds from the throw to the blast, in all.</summary>
+        public float TotalSeconds => _flight + _fuse;
+        /// <summary>How far from <see cref="Target"/> the blast hurts.</summary>
+        public float Radius => _radius;
+        /// <summary>Down at <see cref="Target"/>, its fuse burning.</summary>
+        public bool Landed => _age >= _flight;
 
         /// <summary>A map's own explosion at a point with the blast radius (Map 1: Map01Blast); null = a plain flash.</summary>
         public static System.Action<Vector3, float> BlastEffect { get; set; }
@@ -43,6 +53,7 @@ namespace ShadowVale.Gameplay.Enemies.Boss
             g._fuse = Mathf.Max(0, profile.GrenadeFuseSeconds);
             g._radius = profile.GrenadeRadius; g._damage = profile.GrenadeDamage; g._noiseRadius = profile.GrenadeNoiseRadius;
             g._thrower = throwerId;
+            _live.Add(g);
             return g;
         }
 
@@ -74,6 +85,7 @@ namespace ShadowVale.Gameplay.Enemies.Boss
         {
             if (_exploded) return 0;
             _exploded = true;
+            _live.Remove(this);
             Vector3 at = _to;
             float dealt = 0;
             if (ServiceLocator.TryResolve<IPlayerObservable>(out var player) && player.IsAlive)
@@ -91,6 +103,8 @@ namespace ShadowVale.Gameplay.Enemies.Boss
             Destroy(gameObject);
             return dealt;
         }
+
+        private void OnDestroy() => _live.Remove(this);   // also when its scene unloads before it goes off
 
         private bool TryFindPlayerDamageable(IPlayerObservable player, Vector3 at, out IDamageable target)
         {

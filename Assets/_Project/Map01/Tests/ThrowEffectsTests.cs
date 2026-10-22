@@ -114,10 +114,10 @@ namespace ShadowVale.Map01.Tests
                 Map01Smoke.ClearAll();
                 yield return Frames(30);
 
-                // F1: thrown, its fuse smoking where it lies, then the blast frame by frame
+                // F1: thrown, its fuse smoking in flight, then the blast frame by frame as it lands
                 inventory.Add("grenade_f1", 1); inventory.SelectThrowable("grenade_f1");
                 Assert.IsTrue(thrower.ThrowAt(ahead));
-                yield return Frames(70); mission.Say(null, -1f); yield return Photo("game-fx-05-f1-ngoi-chay");
+                yield return Frames(30); mission.Say(null, -1f); yield return Photo("game-fx-05-f1-dang-bay");
                 while (Object.FindObjectsByType<Map01Blast>(FindObjectsSortMode.None).Length == 0) yield return null;
                 mission.Say(null, -1f);
                 yield return Photo("game-fx-06-f1-chop");

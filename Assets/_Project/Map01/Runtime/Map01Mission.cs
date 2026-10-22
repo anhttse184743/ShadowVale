@@ -170,6 +170,8 @@ namespace ShadowVale.Map01
             SquadCoordinator.Attach(gameObject, CoordinationSettings.ForScene(gameObject.scene.name));
             // The commander's grenades go off like Nam's F1 (Map01Blast), sized to their blast.
             ShadowVale.Gameplay.Enemies.Boss.Grenade.BlastEffect = CommanderBlast;
+            // ...and are marked from the moment they leave his hand: the ring on the ground, an F1 in the air, the HUD pointer.
+            if (GetComponent<Map01GrenadeWarning>() == null) gameObject.AddComponent<Map01GrenadeWarning>();
             // Anonymous session telemetry: listens to the shared events, ends when this map unloads.
             // A sandbox copy (Test Map 1 AI) reports apart, so test sessions never mix with Map 1's numbers.
             TelemetryService.Attach(gameObject, gameObject.scene.name == TutorialDirector.SceneName ? "map00_tutorial" : gameObject.scene.name == Map01SaveSystem.MainScene ? MapId : MapId + "_test");

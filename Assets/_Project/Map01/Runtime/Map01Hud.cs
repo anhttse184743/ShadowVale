@@ -253,6 +253,7 @@ namespace ShadowVale.Map01
             DrawStoneAim(width, height); // Map01Hud.Stone.cs
             DrawScoutFailure(width); // Map01Hud.Scouting.cs
             if (mission.MapOpen) DrawMap(width, height);
+            DrawGrenadeWarning(width, height); // Map01Hud.Grenade.cs — over everything, the bag and the map included.
             if ((mission.PlayerHealth <= 0 && GetComponent<TutorialDirector>() == null) || (objectives?.IsComplete ?? false)) {
                 HudPanel(new Rect(width / 2 - 300, 320, 600, 185));
                 GUI.Label(new Rect(width / 2 - 275, 345, 550, 75), mission.PlayerHealth <= 0 ? "NAM ĐÃ GỤC NGÃ" : "HOÀN THÀNH MAP 1", hudCenter);
