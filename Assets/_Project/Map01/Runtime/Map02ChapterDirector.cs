@@ -209,7 +209,7 @@ namespace ShadowVale.Map01
             TickTank(dt);TickBoats(dt);TickDressing(dt);
             bool leading=escort!=null&&State.phase<4; // Day 3 / Night 3 escorts keep Nam armed and at pace.
             bool carrying=!string.IsNullOrEmpty(State.carry)||leading||DayActivityActive;if(carrying!=handsBusy||carrying&&!combat.HandsOccupied){handsBusy=carrying;combat.SetHandsOccupied(carrying);}   // a bag refresh (each save) frees the hands
-            player.SurfaceSpeedMultiplier=leading?.55f:!string.IsNullOrEmpty(State.carry)?.65f:State.wounded?.7f:1;
+            player.SurfaceSpeedMultiplier=leading?.55f:!string.IsNullOrEmpty(State.carry)?CarryPace:State.wounded?.7f:1;
             player.SprintAllowed=()=>!leading&&string.IsNullOrEmpty(State.carry)&&Mission.CharacterCanSprint;
             if(sceneTask!=null){TickLight(dt);TickScene(dt);return;}
             if(TickDay(dt))return;
@@ -295,6 +295,8 @@ namespace ShadowVale.Map01
             }
             if(workTask.kind!="repair"){holdClock=kb.spaceKey.isPressed?holdClock+dt:0;if(holdClock>=workTask.seconds)EndWork(true);}
         }
+        /// <summary>Walking pace with a load in both hands (no sprinting).</summary>
+        public const float CarryPace=.85f;
         /// <summary>After a pose on Nam is released (its animator rebinds): the equipped weapon's stance, hands kept busy if they are.</summary>
         void RestoreNamAnimator(){if(combat==null)return;combat.RestoreAfterCinematic();if(handsBusy)combat.SetHandsOccupied(true);}
         void EndWork(bool success)
