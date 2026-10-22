@@ -148,6 +148,9 @@ namespace ShadowVale.Editor
                 useAutomaticThresholds = false,
             };
             blendTree.AddChild(idle, 0f);
+            // The walk at half rate for half the pace, so slowed walking (a load, wading) does not slide the feet.
+            blendTree.AddChild(walk, WalkThreshold * .5f);
+            var slow = blendTree.children; slow[1].timeScale = .5f; blendTree.children = slow;   // PlayerSlowWalkSetup then matches each rate to its clip's stride
             blendTree.AddChild(walk, WalkThreshold);
             blendTree.AddChild(run, RunThreshold);
             // A BlendTree is a sub-asset of the controller, not a standalone file.
