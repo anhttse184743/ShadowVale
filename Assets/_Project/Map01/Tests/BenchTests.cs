@@ -83,7 +83,7 @@ namespace ShadowVale.Map01.Tests
             SessionState.SetBool(Map01Inventory.NoTestKitKey, true);
             foreach (var (id, count) in Map01Inventory.TestCraftingKit) Assert.AreEqual(count, inventory.Count(id), "Test kit: " + id);
             foreach (var recipe in inventory.Recipes) Assert.GreaterOrEqual(inventory.CanMake(recipe), 2, "The kit makes " + recipe.id + " at least twice.");
-            CollectionAssert.AreEqual(new[] { "craft_medkit_small", "craft_repair_kit", "craft_smoke_bomb", "craft_grenade_f1", "craft_ammo_pistol", "craft_ammo_rifle", "craft_ammo_sniper" },
+            CollectionAssert.AreEqual(new[] { "craft_medkit_small", "craft_repair_kit", "craft_smoke_bomb", "craft_grenade_f1", "craft_ammo_pistol", "craft_ammo_rifle", "craft_ammo_556", "craft_ammo_sniper" },
                 inventory.Recipes.Select(r => r.id).ToArray());
 
             // [E] at the bench opens the screen; Tab goes over to the bag; Tab again shuts it; [E] twice opens and shuts.
@@ -192,6 +192,17 @@ namespace ShadowVale.Map01.Tests
             hud.SelectBenchRecipe("craft_medkit_small");
             for (int i = 0; i < 6; i++) yield return null;
             yield return Photo("game-bench-01-du-vat-lieu");
+
+            // Eight recipes no longer fit at full height (112 a row in 650): the list scrolls to its foot instead of
+            // closing its rows up. The scroll view clamps a far-off position to the last row.
+            var scroll = typeof(Map01Hud).GetField("recipeScroll", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            scroll.SetValue(hud, new Vector2(0, 10000));
+            for (int i = 0; i < 4; i++) yield return null;
+            yield return Photo("game-bench-01b-cuon-cuoi-danh-sach");
+            float foot = ((Vector2)scroll.GetValue(hud)).y;
+            Assert.Greater(foot, 0f, "The recipe list scrolls.");
+            Assert.LessOrEqual(foot, mission.Bundle.craft_recipes.Length * 112f - 8f - 650f + .5f, "…no further than its last row.");
+            scroll.SetValue(hud, Vector2.zero);
 
             hud.SelectBenchRecipe("craft_ammo_rifle", 3);
             for (int i = 0; i < 4; i++) yield return null;

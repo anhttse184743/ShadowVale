@@ -20,7 +20,8 @@ namespace ShadowVale.Map01
     /// </summary>
     public sealed partial class Map01Inventory
     {
-        public const int BagColumns = 6, BagSize = 24;
+        /// <summary>8 x 5 = 40 cells (24 before 2026-10-22). A save with fewer cells loads into the first ones.</summary>
+        public const int BagColumns = 8, BagRows = 5, BagSize = BagColumns * BagRows;
         public enum Slot { Primary, Pistol, Knife }
         /// <summary>One stack. A gun is a stack of one and carries its own condition (durability points, see
         /// Map01Inventory.Condition.cs); for anything else <see cref="condition"/> is <see cref="NoCondition"/>.</summary>

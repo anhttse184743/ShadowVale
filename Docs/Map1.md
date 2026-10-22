@@ -72,7 +72,8 @@ Mỗi món nhận được (nhặt, mở hòm, chế tạo) hiện một dòng �
 cùng, nhặt cùng món trong 2 giây thì cộng dồn, tối đa 7 dòng, mờ đi sau 4 giây (`Map01Hud.Pickup.cs`).
 
 **Chế tạo:** [E] ở bàn chế tạo căn cứ A mở màn hình bàn chế tạo (`Map01Hud.Craft.cs`); [E] hoặc Esc đóng, Tab chuyển sang
-túi đồ. Bên trái là các công thức, chia thẻ Hồi máu · Dụng cụ · Ném · Đạn, mỗi dòng ghi làm được mấy lần và có/cần của
+túi đồ. Bên trái là các công thức, chia thẻ Hồi máu · Dụng cụ · Ném · Đạn (danh sách cuộn bằng con lăn chuột hoặc thanh cuộn khi
+không vừa; thẻ SỬA SÚNG và NỘP SÚNG cũng cuộn khi quá 6 khẩu), mỗi dòng ghi làm được mấy lần và có/cần của
 từng vật liệu. Ở giữa là món đang chọn: hình lớn, công dụng, mỗi vật liệu một hàng (hình, cần/có, ĐỦ hoặc THIẾU, thiếu thì
 ghi nơi kiếm), số lượng [-] [+] TỐI ĐA và nút CHẾ TẠO (bị khóa thì ghi lý do bên dưới). Bên phải là vật liệu trong túi, hàng
 chờ và món vừa xong. Rê chuột lên hình vật liệu để xem hình lớn và nơi kiếm. Vật liệu bị trừ ngay khi bấm; bàn làm lần
@@ -182,7 +183,9 @@ Theo bản thiết kế "Trang bị" đã duyệt (16/10/2026), bỏ hẳn tay k
   `D:\DO_AN_GAME\chuyen_dong\Nam_ThietKe_K54_Mosin_2026-10-16.blend` (chưa đưa vào game). Bản thiết kế đeo súng
   (AK chéo sau lưng, K-54 trong bao da bên hông phải) và động tác đổi súng, ném F1, ném bom khói:
   `D:\DO_AN_GAME\chuyen_dong\thiet_ke_deo_nem\Nam_ThietKe_DeoSung_NemLuuDan_2026-10-16.blend` (chưa đưa vào game).
-- **Túi đồ (Tab)**: lưới 6 × 4 = 24 ô, mỗi ô một chồng tới mức tối đa của món. Kéo lên ô trống: đặt vào; lên món khác:
+- **Túi đồ (Tab)**: lưới 8 × 5 = 40 ô (24 ô trước 22/10/2026; save cũ nạp vào các ô đầu), mỗi ô một chồng tới mức tối đa của món (`stack_max` trong `Map01Content.json`):
+  mọi loại đạn 99, mọi món khác 64; súng 1 ô một khẩu (mỗi khẩu giữ độ bền riêng), vật phẩm nhiệm vụ 1; đá theo sức
+  chứa túi (`stoneCapacity`, 15). Nhặt thêm thì lấp đầy chồng đang có trước rồi mới mở ô mới. Kéo lên ô trống: đặt vào; lên món khác:
   đổi chỗ; lên cùng món: gộp tới mức tối đa. Tách đôi, SẮP XẾP (súng → đạn → đồ ném → hồi máu → vật liệu → nhiệm vụ),
   kéo súng vào ô trang bị để đổi, chuột phải để có menu. Vị trí từng ô được lưu. Túi hết chỗ: phần nhặt thêm nằm
   dưới chân Nam.

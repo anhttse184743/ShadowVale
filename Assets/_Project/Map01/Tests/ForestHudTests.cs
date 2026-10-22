@@ -305,7 +305,7 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsNotNull(Resources.Load<Texture2D>("Hud/HealthFrame"));
                 foreach (var (id, n) in new[] { ("ammo_rifle", 125), ("medkit_small", 5), ("cloth", 12), ("herb", 8), ("supplies", 1), ("river_documents", 1), ("ammo_sniper", 6), ("scrap_metal", 4) })
                     inventory.Add(id, n);
-                CollectionAssert.AreEqual(new[] { 90, 35 }, inventory.InventoryStacks().Where(s => s.Id == "ammo_rifle").Select(s => s.Count));
+                CollectionAssert.AreEqual(new[] { 99, 26 }, inventory.InventoryStacks().Where(s => s.Id == "ammo_rifle").Select(s => s.Count));
                 Assert.IsFalse(inventory.UseItem("ammo_rifle"), "Ammo is not used directly.");
                 Assert.IsFalse(inventory.UseItem("river_documents"));
                 Assert.IsFalse(inventory.UseItem("medkit_small"), "Full health must not consume a bandage.");
@@ -362,9 +362,9 @@ namespace ShadowVale.Map01.Tests
                 for (int i = 0; i < 5; i++) yield return null;
                 ScreenCapture.CaptureScreenshot("Logs/HudPreview/inventory.png");
                 for (int i = 0; i < 10; i++) yield return null;
-                // The bag is 24 cells; what it has no room for is put on the ground, not lost.
-                inventory.Receive("ammo_rifle", 2700);
-                Assert.LessOrEqual(inventory.InventoryStacks().Count, Map01Inventory.BagSize, "The bag never holds more than its 24 cells.");
+                // More rounds than the whole bag holds: what it has no room for is put on the ground, not lost.
+                inventory.Receive("ammo_rifle", Map01Inventory.BagSize * inventory.StackLimit("ammo_rifle") + 1);
+                Assert.LessOrEqual(inventory.InventoryStacks().Count, Map01Inventory.BagSize, $"The bag never holds more than its {Map01Inventory.BagSize} cells.");
                 Assert.Greater(Map01Drops.For(mission).Piles.Count(), 0, "What did not fit lies at Nam's feet.");
                 for (int i = 0; i < 3; i++) yield return null;
                 ScreenCapture.CaptureScreenshot("Logs/HudPreview/scrolled.png");
