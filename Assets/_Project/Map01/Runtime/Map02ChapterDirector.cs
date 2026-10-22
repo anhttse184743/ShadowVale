@@ -192,6 +192,7 @@ namespace ShadowVale.Map01
             Cursor.visible=false;Cursor.lockState=CursorLockMode.Locked;doingWork=true;workTask=task;workClock=holdClock=0;heldReleased=false;signalHold=0;workOrigin=Mission.Player.position;
             if(task.kind=="antenna"){signalAudio=gameObject.AddComponent<AudioSource>();signalAudio.clip=Resources.Load<AudioClip>("OperationsAudio/radio_off");signalAudio.loop=true;signalAudio.volume=.2f;signalAudio.Play();}
             equippedBefore=combat.EquippedKind;combat.Equip(WeaponKind.Unarmed);player.RestoreMotion(false);
+            if(IsPatch(task))BeginPatch();
         }
         void Update()
         {
@@ -260,6 +261,7 @@ namespace ShadowVale.Map01
         {
             workClock+=dt;var kb=Keyboard.current;
             if(kb?.escapeKey.wasPressedThisFrame==true){EndWork(false);return;}
+            if(Patching){TickPatch(dt);return;}
             if(kb==null)return;
             if(!kb.spaceKey.isPressed)heldReleased=true;
             if(workTask.kind=="antenna")
@@ -282,7 +284,7 @@ namespace ShadowVale.Map01
         }
         void EndWork(bool success)
         {
-            var task=workTask;if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}doingWork=false;combat.Equip(equippedBefore);combat.RestoreAfterCinematic();ForestMenu.SuppressKeysAfterCutscene();
+            var task=workTask;if(IsPatch(task))EndPatch();if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}doingWork=false;combat.Equip(equippedBefore);combat.RestoreAfterCinematic();ForestMenu.SuppressKeysAfterCutscene();
             if(success){if(task.kind=="antenna")BeginScene(task,1);else if(task.kind=="clear")BeginScene(task,3);else Finish(task);}
         }
         void BeginScene(Map02ChapterTask task,int from=0,int take=0)
@@ -319,7 +321,7 @@ namespace ShadowVale.Map01
         }
         void LateUpdate()
         {
-            if(!ready)return;PanToHung();if(sceneTask==null)return;
+            if(!ready)return;PanToHung();HoldCargo();if(sceneTask==null)return;
             HoldConversation();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=NamPoseClip();namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null);
             string speaker=lines[lineIndex].speaker;Vector3 subject=Mission.Player.position;
             if(!lines[lineIndex].radio&&speaker!="Nam"&&roles.TryGetValue(speaker,out var actor))subject=actor.transform.position;
@@ -420,7 +422,7 @@ namespace ShadowVale.Map01
         public void Cancel()
         {
             if(health!=null&&sceneTask!=null)health.CinematicInvulnerable=protectedBefore;
-            ClearEntrances();DropBarks();ReleaseConversation();ReleaseSceneAction();phaseFade=0;binocularHeld=false;binocular=false;observed=0;detectionClock=0;if(rig!=null)rig.SetBinoculars(false,1);if(combat!=null)combat.SetHandsOccupied(false);handsBusy=false;namPose?.Dispose();namPose=null;foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}voice?.Stop();sceneTask=null;doingWork=false;lines=null;escort?.StopAt(escort.transform.position);escort=null;secondaryEscort?.StopAt(secondaryEscort.transform.position);secondaryEscort=null;rig?.ClearCinematicView();
+            ClearEntrances();DropBarks();ReleaseConversation();ReleaseSceneAction();phaseFade=0;binocularHeld=false;binocular=false;observed=0;detectionClock=0;if(rig!=null)rig.SetBinoculars(false,1);if(combat!=null)combat.SetHandsOccupied(false);handsBusy=false;namPose?.Dispose();namPose=null;foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}voice?.Stop();if(Patching)EndPatch();sceneTask=null;doingWork=false;lines=null;escort?.StopAt(escort.transform.position);escort=null;secondaryEscort?.StopAt(secondaryEscort.transform.position);secondaryEscort=null;rig?.ClearCinematicView();
         }
         void ApplyState()
         {
@@ -539,7 +541,8 @@ namespace ShadowVale.Map01
                 GUI.Label(new Rect(180,715,1240,38),line.speaker+(line.radio?" (bộ đàm)":""),title);GUI.Label(new Rect(180,755,1240,85),line.text,label);
                 GUI.Label(new Rect(180,844,1240,32),$"{lineIndex+1}/{lines.Length} · E tiếp tục · Giữ Esc 1 giây bỏ cảnh",label);
             }
-            if(doingWork)
+            if(Patching)DrawPatch(label,title);
+            else if(doingWork)
             {
                 GUI.Box(new Rect(350,270,900,350),GUIContent.none);GUI.Label(new Rect(385,300,830,80),workTask.title,title);
                 GUI.Label(new Rect(385,390,830,100),workTask.kind=="antenna"?"A / D chỉnh hướng · giữ tín hiệu trong vùng ổn định 2 giây":workTask.kind=="repair"?$"Nhấn Space đúng nhịp · {State.workCount}/{workTask.count} · Sai được thử lại":"Giữ Space để thao tác · Esc hủy",label);

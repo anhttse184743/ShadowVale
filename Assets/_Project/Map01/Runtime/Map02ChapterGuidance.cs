@@ -41,6 +41,7 @@ namespace ShadowVale.Map01
                     if(State.activeTask!=t.id)return "Tới bờ đất, nhấn E để yểm trợ Hùng.";
                     return $"Hùng đang bò dọc bờ mương · {Mathf.Clamp01(State.taskProgress)*100:0}% quãng đường. Bắn tốp lính sau xe tăng cho chúng cúi đầu; còn {EscortStanding} tên đang ngẩng lên.";
                 }
+                if(IsPatch(t))return $"E bắt đầu vá · đã xong {n}/{t.count} thuyền. Bấm chuột vào chỗ rò khi vòng ngoài thu khít; càng chuẩn càng nhanh xong.";
                 if(t.kind=="repair")return $"E bắt đầu sửa · đã xong {n}/{t.count} phần. Nhấn Space đúng nhịp; sai được thử lại.";
                 if(t.kind=="antenna")return "E thao tác đài · A/D căn tín hiệu, giữ ổn định 2 giây.";
                 if(t.kind=="demolition")return CrateInstruction(t);

@@ -47,10 +47,10 @@ namespace ShadowVale.Map01.Tests
             Assert.IsFalse(d.Lines("demolition").Single(l=>l.id=="m2v3_demolition_02").radio,"Hùng looks at the bundle himself.");
             var report=d.Find("D3_06");Assert.AreEqual("family",report.site);Assert.IsTrue(string.IsNullOrEmpty(report.scene));
             Assert.Greater(d.Find("D3_05").seconds,45);
-            // The artillery is Rạch Tre from the first call to the last order.
+            // The artillery is Rạch Tre from the first call to the last order; Anh Thành answers for it on the radio.
             Assert.IsFalse(d.entries.Any(e=>e.speaker=="Đơn vị pháo"||e.text.Contains("Đơn vị bạn")));
             Assert.IsTrue(d.Lines("antenna").Any(l=>l.text.Contains("Bông Súng gọi Rạch Tre")));
-            Assert.IsTrue(d.Lines("sacrifice").Any(l=>l.speaker=="Rạch Tre"&&l.radio&&l.text=="Rạch Tre. Bắn."));
+            Assert.IsTrue(d.Lines("sacrifice").Any(l=>l.speaker=="Anh Thành"&&l.radio&&l.text=="Rạch Tre. Bắn."));
             // The wound flash is keyed to this line, not to its position in the scene.
             Assert.IsTrue(d.Lines("wound").Any(l=>l.id=="m2v3_wound_04"&&l.text.Contains("Xe tăng")));
             // Radio calls and shouts during play are not cutscenes.

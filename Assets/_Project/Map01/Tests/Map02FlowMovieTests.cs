@@ -106,7 +106,11 @@ namespace ShadowVale.Map01.Tests
                         var limit=Time.time+100;Key();yield return null;
                         while(Field<bool>("doingWork")&&Time.time<limit)
                         {
-                            if(task.kind=="repair")
+                            if(chapter.Patching)
+                            {
+                                var ripe=chapter.Leaks.FirstOrDefault(l=>l.age>=Map02ChapterDirector.PatchApproach-.03f);if(ripe!=null)chapter.PatchAt(ripe.at);yield return null;
+                            }
+                            else if(task.kind=="repair")
                             {
                                 float needle=Mathf.PingPong(Field<float>("workClock")*.65f,1);
                                 if(needle>.44f&&needle<.55f){Key(UnityEngine.InputSystem.Key.Space);yield return null;Key();yield return WaitGameSeconds(.65f);}

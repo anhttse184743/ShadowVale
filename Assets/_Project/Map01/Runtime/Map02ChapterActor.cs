@@ -15,6 +15,7 @@ namespace ShadowVale.Map01
         Map02Mission mission;Transform follow;NavMeshPath path;int corner;float repath;
         Animator animator;AnimationClip walk,idle;Map01CinematicPose pose;
         float visualY;readonly RaycastHit[] floorHits=new RaycastHit[24];
+        float soleWindow=float.PositiveInfinity,soleOffset;Animator skeleton;
         Vector3 goal;bool travelling;
         public Animator Animator=>animator;
         public bool ConversationHeld {get;set;}
@@ -24,7 +25,7 @@ namespace ShadowVale.Map01
         public void Bind(Transform existing)
         {
             visual=existing;transform.position=existing.position;existing.SetParent(transform,true);
-            visualY=existing.localPosition.y;
+            visualY=existing.localPosition.y;soleWindow=float.PositiveInfinity;soleOffset=0;skeleton=null;
             animator=existing.GetComponentInChildren<Animator>();
             if(animator!=null&&animator.runtimeAnimatorController!=null)
             {
@@ -45,7 +46,23 @@ namespace ShadowVale.Map01
                 if(hit.normal.y<.55f||hit.transform.IsChildOf(transform)||hit.collider is CharacterController||hit.collider.GetComponentInParent<ShadowVale.Gameplay.Combat.Health>()!=null||hit.collider.GetComponentInParent<Map02ObjectiveObject>()!=null)continue;
                 floor=Mathf.Max(floor,hit.point.y);
             }
-            if(!float.IsNegativeInfinity(floor)){var local=visual.localPosition;local.y=visualY+Mathf.Clamp(floor-transform.position.y,-.6f,.6f);visual.localPosition=local;}
+            float sole=SettleSoles();
+            var local=visual.localPosition;   // the sole correction holds even where no floor is found under the socket
+            local.y=visualY+(float.IsNegativeInfinity(floor)?0:Mathf.Clamp(floor-transform.position.y,-.6f,.6f))-sole;visual.localPosition=local;
+        }
+        // Some rigs and clips (Hùng's carried-over model, his limp) keep both feet a hand's width above the visual's base.
+        // The lowest toe over the last moments is what stands on the ground: lower the visual to it at once when the
+        // feet come lower, and only slowly let it back, so a walk cycle does not bob. It only ever lowers.
+        float SettleSoles()
+        {
+            if(skeleton==null)skeleton=visual.GetComponentsInChildren<Animator>().FirstOrDefault(a=>a.isHuman);   // not always the first animator
+            if(skeleton==null)return 0;
+            Transform Low(HumanBodyBones toes,HumanBodyBones foot)=>skeleton.GetBoneTransform(toes)??skeleton.GetBoneTransform(foot);
+            var l=Low(HumanBodyBones.LeftToes,HumanBodyBones.LeftFoot);var r=Low(HumanBodyBones.RightToes,HumanBodyBones.RightFoot);if(l==null||r==null)return 0;
+            float lift=Mathf.Min(l.position.y,r.position.y)-visual.position.y;   // toes above the visual's own base: the pose alone
+            soleWindow=Mathf.Min(lift,soleWindow+.06f*Time.deltaTime);
+            soleOffset=Mathf.MoveTowards(soleOffset,Mathf.Clamp(soleWindow-.015f,0,.25f),.5f*Time.deltaTime);
+            return soleOffset;
         }
         public void Follow(Transform player,float speed){SetInjured(false);travelling=false;follow=player;pace=speed;repath=0;}
         public void SceneMove(Vector3 position,Vector3 lookAt,float speed){transform.position=position;var look=Vector3.ProjectOnPlane(lookAt-position,Vector3.up);if(look.sqrMagnitude>.001f)transform.rotation=Quaternion.RotateTowards(transform.rotation,Quaternion.LookRotation(look),220*Time.deltaTime);if(animator!=null&&animator.runtimeAnimatorController!=null&&animator.parameters.Any(p=>p.name=="Speed"))animator.SetFloat("Speed",speed);}

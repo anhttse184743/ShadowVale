@@ -109,6 +109,11 @@ MonoBehaviour:
   namLieBackClip: {fileID: 0}
   namSitRadioClip: {fileID: 0}
   hungFallClip: {fileID: -623603649343465320, guid: 3751eb93ed29b2941b8fea8a977f2077, type: 3}
+  grenadeCrateArt: {fileID: 6065015199601875537, guid: d0f2bc4dc2a426444b87fcd9b5d44273, type: 3}
+  ammoCanArt: {fileID: 2958864210250216784, guid: 9039fabf5f7725c42b726d1ec309df6f, type: 3}
+  medkitArt: {fileID: 5019380679771558921, guid: 0d2b35192e56a4e43989571f3a0ae89d, type: 3}
+  grenadeArt: {fileID: 8944137499766871718, guid: e23d487084fad2d4c821980e378369a6, type: 3}
+  strawCartArt: {fileID: 8974337617010150994, guid: 76462e0fb74f0084998cce3bc6b2db0e, type: 3}
   tankTracksClip: {fileID: 0}
   tinnitusClip: {fileID: 0}
   artilleryClip: {fileID: 0}

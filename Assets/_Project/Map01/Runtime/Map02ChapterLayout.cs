@@ -18,6 +18,10 @@ namespace ShadowVale.Map01
         [Header("Night 3 art slots (empty: placeholder or idle pose)")]
         public GameObject radioPropArt,explosivesArt,soupBowlArt,militiaArt;
         public AnimationClip namProneClip,namLieBackClip,namSitRadioClip,hungFallClip;
+        [Header("Carried supplies (empty: a plain box)")]
+        public GameObject grenadeCrateArt,ammoCanArt,medkitArt,grenadeArt;
+        [Tooltip("The straw cart by the store; Day 3's medicine and ammunition wait on it.")]
+        public GameObject strawCartArt;
         [Header("Night 3 sound slots (empty: synthesized or silent)")]
         public AudioClip tankTracksClip,tinnitusClip,artilleryClip;
     }

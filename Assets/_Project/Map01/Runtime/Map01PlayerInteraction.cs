@@ -118,6 +118,7 @@ namespace ShadowVale.Map01
                 else if (stoneThrow.Aiming && mouse.leftButton.wasReleasedThisFrame) stoneThrow.Release();
             }
             Nearby = NearestUsable();
+            InteractHighlight.Focus(Nearby != null ? Nearby.transform : null);
             // A stone site's offer depends on the room left in the bag, so its prompt is worded as he stands there.
             if (Nearby != null && Nearby.kind == ForestPointKind.Stones && stoneSites != null) Nearby.label = stoneSites.Prompt(Nearby);
             if (kb.eKey.wasPressedThisFrame) HandleInteractKey();
