@@ -141,12 +141,11 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual("rifle_standard", inventory.Cell(mosin).id, "The AK goes where the Mosin was.");
                 Assert.AreEqual(WeaponKind.Knife, mission.ModernCombat.EquippedKind, "The rifle in hand left its slot: the knife comes out.");
 
-                // The Mosin and the K-54 have no animations yet: their keys say so and keep the knife in hand.
+                // Both weapons now have approved animations and are drawn from their actual slots.
                 yield return Press(keyboard, Key.Digit1);
-                Assert.AreEqual(WeaponKind.Knife, mission.ModernCombat.EquippedKind);
-                StringAssert.Contains("chưa có hoạt ảnh", mission.Dialogue);
+                Assert.AreEqual(WeaponKind.Sniper, mission.ModernCombat.EquippedKind);
                 yield return Press(keyboard, Key.Digit2);
-                Assert.AreEqual(WeaponKind.Knife, mission.ModernCombat.EquippedKind);
+                Assert.AreEqual(WeaponKind.Pistol, mission.ModernCombat.EquippedKind);
 
                 // Back to the AK, through the bag: then 1 draws it again.
                 Assert.IsTrue(inventory.EquipFromCell(CellOf(inventory, "rifle_standard")));

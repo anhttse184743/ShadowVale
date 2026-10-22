@@ -58,6 +58,7 @@ namespace ShadowVale.Map01.Tests
             var voice=DialogueVoice.For(m.gameObject);
             Assert.NotNull(voice,"The mission must provide a valid DialogueVoice component.");
             var story=m.GetComponent<Map01Story>();var d=m.GetComponent<Map01StoryDialogue>();var q=m.GetComponent<Map01Quest>();
+            PlaceNamAtCommander(m);
             var at=m.player.position;
             int rounds=m.ModernCombat.RoundsInMagazine;
             float hp=m.ModernHealth.Current;
@@ -74,7 +75,13 @@ namespace ShadowVale.Map01.Tests
             Action<DialogueVoice.Line> observe=line=>heard.Add(line.id);
             voice.LineStarted+=observe;
             yield return WaitGameSeconds(.85f);
-            Assert.LessOrEqual(m.gameCamera.fieldOfView,49,"The first briefing must use the requested close camera.");
+            Assert.That(m.gameCamera.fieldOfView,Is.EqualTo(52).Within(.1f),"The commander uses the shelter's authored board shot.");
+            var board=m.alliedCommanderPost.parent.Find("MissionBoard");Assert.NotNull(board);
+            foreach(var focus in new[]{story.Commander.position+Vector3.up*1.42f,board.position+Vector3.up*1.7f-board.forward*.08f})
+            {
+                var screen=m.gameCamera.WorldToViewportPoint(focus);
+                Assert.Greater(screen.z,0);Assert.That(screen.x,Is.InRange(0f,1f));Assert.That(screen.y,Is.InRange(0f,1f));
+            }
             Directory.CreateDirectory("Logs/Map01StoryVoice");
             ScreenCapture.CaptureScreenshot("Logs/Map01StoryVoice/close-briefing-first-line.png");
             yield return WaitGameSeconds(.2f);

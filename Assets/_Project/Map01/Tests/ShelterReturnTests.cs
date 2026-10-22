@@ -127,7 +127,7 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsFalse(hungActor.GetBool("Captive"));Assert.IsFalse(mission.hung.GetComponentInChildren<Map01HungVisual>().RopeVisible);
                 CaptureClose(mission,folder+"/settled.png");
                 Assert.AreEqual(Map01Quest.BriefingStage,quest.Stage);Assert.IsFalse(mission.Cinematic);
-                Assert.IsTrue(rescue.RewardDelivered);Assert.AreEqual(supplies+1,mission.GetComponent<Map01Inventory>().Count("supplies"));
+                Assert.IsTrue(rescue.RewardDelivered);Assert.AreEqual(supplies,mission.GetComponent<Map01Inventory>().Count("supplies"),"The retired delivery item must not return.");
                 Assert.IsFalse(rescue.CompleteDelivery());Assert.AreEqual(ammo,mission.ModernCombat.RoundsInMagazine);
                 Assert.AreEqual(weapon,mission.ModernCombat.EquippedKind);
                 Assert.AreSame(controller,actor.runtimeAnimatorController);Assert.IsFalse(actor.applyRootMotion);

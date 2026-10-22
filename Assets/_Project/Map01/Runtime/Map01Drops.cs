@@ -198,7 +198,8 @@ namespace ShadowVale.Map01
         private static Vector3 Ground(Vector3 point)
         {
             foreach (var hit in Physics.RaycastAll(point + Vector3.up * 1.5f, Vector3.down, 6f, ~0, QueryTriggerInteraction.Ignore).OrderBy(h => h.distance))
-                if (hit.collider is TerrainCollider || hit.collider.GetComponentInParent<Animator>() == null && hit.normal.y > .6f) return hit.point;
+                // The raised ray may start above a shelter roof. Loot belongs below its placement point.
+                if (hit.point.y <= point.y + .05f && (hit.collider is TerrainCollider || hit.collider.GetComponentInParent<Animator>() == null && hit.normal.y > .6f)) return hit.point;
             return point - Vector3.up * .5f;
         }
     }

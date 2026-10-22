@@ -39,6 +39,9 @@ namespace ShadowVale.Map01.Tests
             EditorSettings.asyncShaderCompilation=false;ShaderUtil.allowAsyncCompilation=false;
             var actor=m.player.GetComponentInChildren<Animator>();var actions=Map01NamActions.For(m);
             var stones=m.GetComponent<Map01StoneThrow>();var inv=m.GetComponent<Map01Inventory>();
+            var motion=m.player.GetComponent<NamMotionRefresh>();Assert.NotNull(motion);
+            float aimReady=motion.Data.Find("stone_crouch_prepare").Seconds+motion.Data.Find("stone_crouch_wind").Seconds+.2f;
+            float releaseAt=aimReady+.45f;
             var camera=m.gameCamera;var rig=camera.GetComponent<ThirdPersonCamera>();
             var pump=m.player.gameObject.AddComponent<ExtractionCapturePump>();
             var metrics=new List<string>{"weapon,time,hips_height,head_height,hand_reach"};
@@ -48,11 +51,11 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsTrue(m.ModernPlayer.IsSneaking);
                 float pelvis=actor.GetBoneTransform(HumanBodyBones.Hips).position.y-m.player.position.y;
                 int before=inv.Count("stone");InputSystem.QueueStateEvent(keyboard,new KeyboardState(Key.Q));InputSystem.Update();stones.BeginAim();Assert.IsTrue(stones.Aiming);
-                float start=Time.time;bool released=false;
+                float start=Time.time;bool released=false,checkedAim=false;
                 Directory.CreateDirectory("Logs/CrouchStone/"+kind);
-                while(Time.time-start<3.3f) {
+                while(Time.time-start<releaseAt+motion.Data.Find("stone_crouch_throw").Seconds+.6f) {
                     float t=Time.time-start;
-                    if(t>=1.1f&&!released) {InputSystem.QueueStateEvent(keyboard,new KeyboardState());InputSystem.Update();stones.Release();released=true;Assert.AreEqual(before-1,inv.Count("stone"));}
+                    if(t>=releaseAt&&!released) {InputSystem.QueueStateEvent(keyboard,new KeyboardState());InputSystem.Update();stones.Release();released=true;Assert.AreEqual(before-1,inv.Count("stone"));}
                     var target=m.player.position+Vector3.up*.80f;
                     var eye=target+new Vector3(2.4f,1.0f,2.2f);
                     rig.SetCinematicView(eye,Quaternion.LookRotation(target-eye),44,1);
@@ -63,13 +66,14 @@ namespace ShadowVale.Map01.Tests
                         var upper=actor.GetBoneTransform(HumanBodyBones.RightUpperArm);var lower=actor.GetBoneTransform(HumanBodyBones.RightLowerArm);var hand=actor.GetBoneTransform(HumanBodyBones.RightHand);
                         float reach=Vector3.Distance(upper.position,hand.position)/(Vector3.Distance(upper.position,lower.position)+Vector3.Distance(lower.position,hand.position));
                         if(actions.StoneActionPlaying&&t>.3f)Assert.Less(reach,.98f,"Do not lock the throwing elbow straight.");
-                        if(!released&&t>.35f)Assert.Greater(hand.position.y,(actor.GetBoneTransform(HumanBodyBones.Chest)??actor.GetBoneTransform(HumanBodyBones.Spine)).position.y,"Hold Q must keep the stone drawn back, not in Nam's lap.");
+                        if(!released&&t>aimReady){Assert.AreEqual("stone_crouch_aim",motion.MotionId);Assert.Greater(hand.position.y,(actor.GetBoneTransform(HumanBodyBones.Chest)??actor.GetBoneTransform(HumanBodyBones.Spine)).position.y,"After preparation, holding aim keeps the stone drawn back.");checkedAim=true;}
                         if(actions.StoneActionPlaying)Assert.IsTrue(m.player.GetComponentsInChildren<Weapon>().SelectMany(w=>w.GetComponentsInChildren<Renderer>()).All(r=>r.forceRenderingOff),"Free the throwing hand from the equipped weapon.");
                         Capture(camera,"Logs/CrouchStone/"+kind+"/"+(frame++).ToString("D4")+".png");
                         metrics.Add(kind+","+t+","+height+","+(actor.GetBoneTransform(HumanBodyBones.Head).position.y-m.player.position.y)+","+reach);
                     }catch(Exception error){failure=error;}finally{drawn=true;}};
                     yield return new WaitUntil(()=>drawn);pump.draw=null;if(failure!=null)throw failure;
                 }
+                Assert.IsTrue(checkedAim,"The recording must include the fully aimed pose before release.");
                 Assert.IsFalse(actions.StoneActionPlaying);Assert.AreEqual(kind,m.ModernCombat.EquippedKind);
                 Assert.IsTrue(m.player.GetComponentsInChildren<Weapon>().SelectMany(w=>w.GetComponentsInChildren<Renderer>()).All(r=>!r.forceRenderingOff));
                 Assert.Less(actor.GetLayerWeight(actor.GetLayerIndex("ActionsUpper")),.01f);

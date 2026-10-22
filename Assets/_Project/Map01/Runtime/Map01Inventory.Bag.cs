@@ -28,6 +28,7 @@ namespace ShadowVale.Map01
         public sealed class BagCell { public string id; public int count; public float condition = NoCondition; }
         [System.Serializable] public sealed class Layout
         {
+            public int fieldKitVersion;
             public string[] ids = new string[BagSize];
             public int[] counts = new int[BagSize];
             public string primary, pistol, throwable;
@@ -60,6 +61,7 @@ namespace ShadowVale.Map01
 
         private void ClearAll()
         {
+            CancelFieldCraft(false);
             for (int i = 0; i < BagSize; i++) bag[i] = null;
             primary = pistol = knife = null; throwable = "stone"; ThrowableEquipped = false;
             mission?.ModernCombat?.SetHandsOccupied(false);
@@ -162,7 +164,7 @@ namespace ShadowVale.Map01
         public static int SortGroup(string id)
         {
             if (ForestInventory.IsWeapon(id)) return 0;
-            if (id.StartsWith("ammo_")) return 1;
+            if (id.StartsWith("ammo_") && id != RecoveredAmmo) return 1;
             if (System.Array.IndexOf(Throwables, id) >= 0) return 2;
             if (id == "medkit_small" || id == "herb") return 3;
             if (IsMissionItem(id)) return 5;
@@ -238,6 +240,7 @@ namespace ShadowVale.Map01
         /// <summary>Puts an integrated weapon in Nam's hands.</summary>
         public bool Draw(Slot slot)
         {
+            CancelFieldCraft();
             if(mission?.MapTwo?.CharacterGearLocked==true)return false;
             string id = SlotItem(slot);
             if (id == null || mission == null || mission.ModernCombat == null) return false;
@@ -295,6 +298,7 @@ namespace ShadowVale.Map01
         }
         public void SelectThrowable(string id)
         {
+            CancelFieldCraft();
             if(mission?.MapTwo?.CharacterGearLocked==true)return;
             if (System.Array.IndexOf(Throwables, id) < 0) return;
             GetComponent<Map01StoneThrow>()?.Cancel();
@@ -318,8 +322,9 @@ namespace ShadowVale.Map01
         /// <summary>The bag as saved: every cell, the slots, the throwable picked.</summary>
         public Layout CaptureLayout()
         {
+            CancelFieldCraft(false);
             var l = new Layout { primary = primary, pistol = pistol, throwable = throwable, conditions = new float[BagSize],
-                primaryCondition = primaryCondition, pistolCondition = pistolCondition };
+                primaryCondition = primaryCondition, pistolCondition = pistolCondition, fieldKitVersion = fieldKitVersion };
             for (int i = 0; i < BagSize; i++) { l.ids[i] = bag[i]?.id; l.counts[i] = bag[i]?.count ?? 0; l.conditions[i] = bag[i]?.condition ?? NoCondition; }
             return l;
         }

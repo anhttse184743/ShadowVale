@@ -15,13 +15,15 @@ namespace ShadowVale.Map01
 
         private void DrawInventoryTabs(Rect panel)
         {
-            for (int i = 0; i < 2; i++)
+            for (int i = 0; i < 3; i++)
             {
-                var tab = new Rect(panel.x + 24 + i * 334, 144, 326, 42);
-                HudPanel(tab, skillsTab == (i == 1));
-                if (GUI.Button(tab, i == 0 ? "KHO ĐỒ" : "KĨ NĂNG", hudKey))
+                float step = (panel.width - 48) / 3;
+                var tab = new Rect(panel.x + 24 + i * step, 144, step - 7, 42);
+                HudPanel(tab, i == 2 ? fieldCraftTab : i == 1 ? skillsTab : !skillsTab && !fieldCraftTab);
+                if (GUI.Button(tab, i == 0 ? "KHO ĐỒ" : i == 1 ? "KĨ NĂNG" : "CHẾ DÃ CHIẾN", hudKey))
                 {
-                    skillsTab = i == 1; pinnedSkill = -1;
+                    skillsTab = i == 1; fieldCraftTab = i == 2; pinnedSkill = -1;
+                    if (i != 2) inventory.CancelFieldCraft();
                 }
             }
         }

@@ -289,7 +289,7 @@ namespace ShadowVale.Map01
             // Keep the equipped weapon and ammunition unchanged while freeing the
             // throwing hand. Renderer overrides also cover weapon switches mid-aim.
             bool stone = StoneActionPlaying;
-            if (stone || BandageActionPlaying || (inventory != null && inventory.ThrowableEquipped)) HideWeaponRenderers();
+            if (stone || BandageActionPlaying || (inventory != null && (inventory.ThrowableEquipped || inventory.IsFieldCrafting))) HideWeaponRenderers();
             else RestoreWeaponVisibility();
             bool selectedStone=inventory!=null && inventory.ThrowableEquipped && inventory.Count(inventory.Throwable)>0;
             bool releasing=stonePose && !holding && Time.time<upperUntil;

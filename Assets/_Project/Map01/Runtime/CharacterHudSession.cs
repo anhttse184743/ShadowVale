@@ -24,7 +24,7 @@ namespace ShadowVale.Map01
         public Health ModernHealth=>MapOne!=null?MapOne.ModernHealth:player?.GetComponent<Health>();
         public IBinoculars Binoculars=>MapOne!=null?MapOne.Binoculars:MapTwo!=null?MapTwo.Chapter:null;
         public bool CameraInputEnabled=>MapOne!=null?MapOne.CameraInputEnabled:MapTwo!=null&&!MapTwo.InputBlocked;
-        public T GetComponent<T>() where T:Component=>(MapOne!=null?MapOne.gameObject:MapTwo.gameObject).GetComponent<T>();
+        public T GetComponent<T>() where T:Component=>MapOne!=null?MapOne.GetComponent<T>():MapTwo!=null?MapTwo.GetComponent<T>():null;
         public PlayerCombat ModernCombat=>MapOne!=null?MapOne.ModernCombat:player?.GetComponent<PlayerCombat>();
         public PlayerSkills Skills=>MapOne!=null?MapOne.Skills:player?.GetComponent<PlayerSkills>();
         public ForestSettings Settings=>MapOne!=null?MapOne.Settings:MapTwo?.CharacterSettings;

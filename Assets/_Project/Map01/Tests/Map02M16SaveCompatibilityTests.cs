@@ -27,11 +27,12 @@ namespace ShadowVale.Map01.Tests
             var combat = mission.Player.GetComponent<PlayerCombat>();
             var gun = combat.WeaponFor(WeaponKind.Rifle);
             Assert.NotNull(gun);
-            Map01RifleVisual.Apply(gun, Map01M16.Id);
-            Assert.IsTrue(combat.Equip(WeaponKind.Rifle));
+            mission.Bag.Add(Map01M16.Id, 1);
+            Assert.IsTrue(mission.Bag.EquipItem(Map01M16.Id));
+            Assert.AreEqual(Map01M16.Id, gun.GetComponent<Map01RifleVisual>()?.ItemId);
             combat.RestoreMagazine(WeaponKind.Rifle, 9);
-            mission.Inventory["ammo_rifle"] = 13;
-            mission.Inventory[Map01M16.Ammo] = 55;
+            mission.Bag.Spend("ammo_rifle", mission.Bag.Count("ammo_rifle")); mission.Bag.Add("ammo_rifle", 13);
+            mission.Bag.Spend(Map01M16.Ammo, mission.Bag.Count(Map01M16.Ammo)); mission.Bag.Add(Map01M16.Ammo, 55);
             Assert.AreEqual(55, combat.ReserveRounds(), "M16 must use its own caliber even without an arrival object.");
             Assert.AreEqual(7, combat.DrawRounds(7));
             Assert.AreEqual(48, mission.Inventory[Map01M16.Ammo]);

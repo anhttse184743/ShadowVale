@@ -80,6 +80,16 @@ chờ và món vừa xong. Rê chuột lên hình vật liệu để xem hình l
 lượt từng món, Nam đi đâu bàn vẫn làm tiếp (thẻ "Đang chế tạo" ở góc phải màn hình), xong hiện ở dòng báo nhặt đồ. Lưu
 game giữ món đang làm và trả lại vật liệu của các món còn chờ. Phím B vẫn làm nhanh một băng cứu thương ở bàn.
 
+**Chế dã chiến** (từ 22/10/2026; `Map01Inventory.FieldCraft.cs`, `Map01Hud.FieldCraft.cs`, thiết kế `Docs/Design/FieldCrafting_20261022.md`):
+Tab → thẻ CHẾ DÃ CHIẾN. Bộ dụng cụ luôn mang theo, không chiếm ô. Đạn AK thiếu vì khoảng 70% lính cầm M16 và túi lính rơi
+đúng loại đạn súng đang cầm, nên: thu hồi 10 / 20 / 30 đạn M16 dự trữ (3 giây) ra 1 / 2 / 3 vật tư đạn thu hồi (đạn trong
+băng không bị lấy); 2 vật tư + 1 gói tiếp liệu AK → 10 đạn AK (8 giây dã chiến, 5 giây ở bàn), tức 20 M16 + 1 gói = 10 AK.
+Băng cứu thương 4 giây, bộ sửa chữa 8 giây, bom khói 6 giây làm được ngoài đường; F1, đạn Mosin và đạn từ thuốc súng vẫn
+cần bàn. Mỗi lần một việc; vật liệu giữ riêng trong lúc làm. Di chuyển, nhảy, đổi súng, bị thương, đóng túi, đổi thẻ
+hay bấm Hủy thì hoàn vật liệu; tạm dừng thì đứng tiến độ; lưu game hủy việc đang làm trước. Túi đầy thì đồ dư rơi dưới chân.
+Gói tiếp liệu AK: 2 gói lúc bắt đầu (save cũ được bù 2 gói), thưởng C1 2 gói, hòm C2 2 gói, kho căn cứ 1 gói/3 điểm, túi
+`c3_field_ak_v1` trước C3 (30 đạn AK + 2 gói). Kiểm thử: `FieldCraftingTests`.
+
 | Món | Cần | Thời gian |
 |---|---|---|
 | Băng cứu thương ×1 | 2 vải + 1 thảo dược | 4 giây |

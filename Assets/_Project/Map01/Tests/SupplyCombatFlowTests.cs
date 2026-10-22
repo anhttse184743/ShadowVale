@@ -173,8 +173,8 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(approach.used); interact.Interact(approach); Assert.AreEqual(med + 3, bag.Count("medkit_small"), "Used caches cannot be collected twice.");
             // A legacy run may have taken the Mosin already; the new caches have their own IDs.
             c3.CachePoint.MarkLooted();
-            Assert.IsTrue(M.GetComponent<Map01SaveSystem>().SaveSlot(1, out var error, true), error);
-            M.GetComponent<Map01SaveSystem>().Load(); yield return null; yield return WaitForMap01Ready(); yield return null; Quiet();
+            Assert.IsTrue(M.GetComponent<Map01SaveSystem>().SaveSlot(0, out var error, true), error);
+            M.GetComponent<Map01SaveSystem>().Load(); yield return null; yield return WaitForMap01CheckpointRestore(); Quiet();
             caches = M.GetComponent<Map01FieldSupplies>(); bag = M.GetComponent<Map01Inventory>();
             Assert.IsTrue(caches.ApproachPoint.used); Assert.IsFalse(caches.MedicPoint.used);
             Assert.IsTrue(M.GetComponent<Map01C3Mission>().CachePoint.used);

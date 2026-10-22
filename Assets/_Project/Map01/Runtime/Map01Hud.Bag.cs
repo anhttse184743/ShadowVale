@@ -71,6 +71,7 @@ namespace ShadowVale.Map01
             BagStyles();
             var ev = Event.current;
             var skillPanel = BagPlate(width);
+            if (fieldCraftTab) { DrawFieldCraft(width, skillPanel); return; }
             if (skillsTab)
             {
                 DrawEquipColumn(width, ev, true);

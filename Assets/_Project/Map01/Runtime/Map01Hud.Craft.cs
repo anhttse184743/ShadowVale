@@ -39,9 +39,13 @@ namespace ShadowVale.Map01
         public Texture2D ItemRender(string id)
         {
             if (id == null) return null;
+            id = CraftVisualId(id);
             if (!itemRenders.TryGetValue(id, out var picture)) itemRenders[id] = picture = Resources.Load<Texture2D>("Hud/ItemRenders/" + id);
             return picture;
         }
+
+        private static string CraftVisualId(string id) => id == Map01Inventory.RecoveredAmmo ? "scrap_metal"
+            : id == Map01Inventory.AkLoadingPack ? "ammo_rifle" : id;
 
         private static string Hex(Color c) => ColorUtility.ToHtmlStringRGB(c);
 
@@ -160,7 +164,7 @@ namespace ShadowVale.Map01
                 var tile = new Rect(row.x + 10, row.y + (rowHeight - tileSize) / 2, tileSize, tileSize);
                 BenchTileIcon(tile, r.output_item_id);
                 if (r.output_count > 1) GUI.Label(new Rect(tile.x + 2, tile.yMax - 25, tileSize - 6, 22), "×" + r.output_count, benchCount);
-                GUI.Label(new Rect(row.x + 98, row.y + nameY, 268, 26), ForestInventory.Name(r.output_item_id).ToUpperInvariant(), benchRowName);
+                GUI.Label(new Rect(row.x + 98, row.y + nameY, 268, 26), FieldRecipeName(r).ToUpperInvariant(), benchRowName);
                 int n = inventory.CanMake(r);
                 int missing = r.inputs.Count(i => inventory.Count(i.item_id) < i.count);
                 GUI.Label(new Rect(row.x + 98, row.y + statusY, 268, 22), n > 0
@@ -191,7 +195,7 @@ namespace ShadowVale.Map01
             var render = ItemRender(output);
             if (render != null) GUI.DrawTexture(new Rect(picture.x + 6, picture.y + 6, picture.width - 12, picture.height - 12), render, ScaleMode.ScaleToFit);
             else HudIcon(new Rect(picture.x + 30, picture.y + 30, 150, 150), output);
-            GUI.Label(R(732, 144, 440, 42), ForestInventory.Name(output).ToUpperInvariant(), benchName);
+            GUI.Label(R(732, 144, 440, 42), FieldRecipeName(recipe).ToUpperInvariant(), benchName);
             GUI.Label(R(732, 190, 440, 24), $"Ra ×{recipe.output_count} mỗi lần · {recipe.craft_seconds:0} giây · Trong túi: <b><color=#{Hex(HudPaper)}>{inventory.Count(output)}</color></b>", benchDim);
             float cx = ox + 732;
             foreach (var fact in ForestInventory.BenchFacts(output).Append($"Tối đa {inventory.StackLimit(output)}/ô"))
@@ -244,6 +248,7 @@ namespace ShadowVale.Map01
             if (BenchButton(R(666, 772, 120, 42), $"TỐI ĐA ×{Mathf.Max(1, most)}", benchVerdict, most > 1)) benchQty = Mathf.Max(1, most);
 
             string reason = !inventory.NearWorkbench() ? "Đến bàn chế tạo ở căn cứ A để chế tạo"
+                : inventory.IsFieldCrafting ? "Hoàn tất hoặc hủy chế dã chiến trước"
                 : most < q ? "Thiếu " + string.Join(", ", recipe.inputs.Where(i => inventory.Count(i.item_id) < i.count * q)
                     .Select(i => (i.count * q - inventory.Count(i.item_id)) + " " + ForestInventory.Name(i.item_id).ToLowerInvariant()))
                 : null;
@@ -263,9 +268,10 @@ namespace ShadowVale.Map01
 
             // The bag's materials.
             GUI.Label(R(1212, 196, 300, 28), "VẬT LIỆU TRONG TÚI", benchHead);
-            for (int k = 0; k < BenchMaterials.Length; k++)
+            var visibleMaterials = recipe.inputs.Select(i => i.item_id).Concat(BenchMaterials).Distinct().Take(8).ToArray();
+            for (int k = 0; k < visibleMaterials.Length; k++)
             {
-                string id = BenchMaterials[k];
+                string id = visibleMaterials[k];
                 var tile = R(1212 + k % 4 * 78, 232 + k / 4 * 112, 70, 70);   // four across, under the guns and store tabs as on theirs
                 var use = recipe.inputs.FirstOrDefault(i => i.item_id == id);
                 bool over = tile.Contains(mouse);

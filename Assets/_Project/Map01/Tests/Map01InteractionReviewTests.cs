@@ -30,6 +30,7 @@ namespace ShadowVale.Map01.Tests
             var m=Object.FindFirstObjectByType<Map01Mission>();var warm=Map01InteractionWarmup.For(m);float deadline=Time.realtimeSinceStartup+45;
             while(!warm.Ready&&Time.realtimeSinceStartup<deadline)yield return null;Assert.IsTrue(warm.Ready);
             foreach(var e in m.Enemies)e.enabled=false;
+            PlaceNamAtCommander(m);yield return WaitGameSeconds(.2f);
             SetPreviewResolution(3840,2160);
             var actor=m.player.GetComponentInChildren<Animator>();var left=actor.GetBoneTransform(HumanBodyBones.LeftFoot);var right=actor.GetBoneTransform(HumanBodyBones.RightFoot);
             float support=Mathf.Min(left.position.y,right.position.y);

@@ -242,6 +242,14 @@ namespace ShadowVale.Map01.Tests
             var guard = mission.Enemies.First(e => e.Alive);
             Assert.IsNull(guard.GetComponent<ForestPoint>(), "A living guard must not already carry a loot point.");
 
+            // Force an overhead surface into the ground probe: dropped loot must stay in the room.
+            var deathAt = guard.transform.position;
+            var floor = GameObject.CreatePrimitive(PrimitiveType.Cube); floor.name = "Loot grounding floor";
+            floor.transform.position = deathAt - Vector3.up * .1f; floor.transform.localScale = new Vector3(4, .2f, 4);
+            var ceiling = GameObject.CreatePrimitive(PrimitiveType.Cube); ceiling.name = "Loot grounding ceiling";
+            ceiling.transform.position = deathAt + Vector3.up * 1.8f; ceiling.transform.localScale = new Vector3(4, .1f, 4);
+            Physics.SyncTransforms();
+
             guard.GetComponent<Health>().TakeDamage(9999, guard.transform.position, null);
             yield return null; // Update() drops the loot the first frame it observes the guard dead.
 
@@ -250,7 +258,9 @@ namespace ShadowVale.Map01.Tests
             Assert.AreEqual(ForestPointKind.Loot, drop.kind);
 
             // His pack, rolled from his kind's loot table (Map01Loot.json): his spare rounds at least, nothing off the table.
-            Assert.GreaterOrEqual(Holds(drop, "ammo_rifle"), SpareRounds(guard), "A guard always carries his spare rounds.");
+            string rifle = guard.RifleItemId;
+            string ammo = rifle == Map01M16.Id ? Map01M16.Ammo : "ammo_rifle";
+            Assert.GreaterOrEqual(Holds(drop, ammo), SpareRounds(guard), "A guard carries spare rounds for his own rifle.");
             Assert.IsEmpty(OffTable(drop, guard), "Everything in the pack comes from his loot table.");
             var pack = PackOf(drop);
             var before = Counts(inventory, pack);
@@ -261,13 +271,14 @@ namespace ShadowVale.Map01.Tests
             var gun = LaidGun(mission, guard);
             Assert.IsNotNull(gun, "A fallen guard drops his rifle.");
             var kind = Map01Loot.Load().EnemyOf(Map01Logistics.KindOf(guard));
-            Assert.AreEqual(kind.weapon, gun.items[0].item_id);
-            Assert.That(inventory.Fraction(kind.weapon, gun.items[0].condition), Is.InRange(kind.dropMin - 1e-4f, kind.dropMax + 1e-4f));
-            Assert.Less(Vector3.Distance(gun.transform.position, guard.transform.position), 2f, "The rifle lies where he fell.");
+            Assert.AreEqual(rifle, gun.items[0].item_id);
+            Assert.That(inventory.Fraction(rifle, gun.items[0].condition), Is.InRange(kind.dropMin - 1e-4f, kind.dropMax + 1e-4f));
+            Assert.Less(Vector3.Distance(gun.transform.position, deathAt), 2f, "The rifle lies where he fell.");
+            Assert.Less(gun.transform.position.y-deathAt.y, .6f, "Loot stays at the fallen guard's feet, below the ceiling.");
             Assert.IsFalse(HoldsRifle(guard), "The rifle left his hands.");
-            int rifles = inventory.Count(kind.weapon);
+            int rifles = inventory.Count(rifle);
             interaction.Interact(gun);
-            Assert.AreEqual(rifles + 1, inventory.Count(kind.weapon), "The captured rifle goes into the bag.");
+            Assert.AreEqual(rifles + 1, inventory.Count(rifle), "The captured rifle goes into the bag.");
             Assert.IsTrue(gun.used);
 
             var after = Counts(inventory, pack);
@@ -285,7 +296,7 @@ namespace ShadowVale.Map01.Tests
         private static int SpareRounds(Map01EnemyController guard) => TableOf(guard).entries.Where(e => e.tier == 5 && e.item == "ammo_rifle").Sum(e => e.min);
         /// <summary>Items in a guard's pack his table could not give (a dressing may come from the pity rule; the key from the keeper).</summary>
         private static string[] OffTable(ForestPoint pack, Map01EnemyController guard) =>
-            pack.items.Select(i => i.item_id).Where(id => id != "medkit_small" && id != Map01Story.KeyItem && TableOf(guard).entries.All(e => e.item != id)).ToArray();
+            pack.items.Select(i => i.item_id).Where(id => id != "medkit_small" && id != Map01Story.KeyItem && TableOf(guard).entries.All(e => e.item != (id == Map01M16.Ammo && guard.RifleItemId == Map01M16.Id ? "ammo_rifle" : id))).ToArray();
         private static ForestPoint LaidGun(Map01Mission mission, Map01EnemyController guard) =>
             Map01Drops.For(mission).LaidGuns.FirstOrDefault(p => p.id == Map01Logistics.GunPointPrefix + guard.LegacyId);
         private static bool HoldsRifle(Map01EnemyController guard)

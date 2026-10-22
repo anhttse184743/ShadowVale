@@ -107,6 +107,15 @@ namespace ShadowVale.Map01.Tests
             Assert.Fail("Map 1 and its allied commander must initialize before the opening-flow check.");
         }
 
+        protected static System.Collections.IEnumerator WaitForMap01CheckpointRestore()
+        {
+            yield return WaitForMap01Ready();
+            float until = Time.realtimeSinceStartup + 15;
+            while (Map01SaveSystem.IsRestoring && Time.realtimeSinceStartup < until) yield return null;
+            Assert.IsFalse(Map01SaveSystem.IsRestoring, "The pending checkpoint must finish restoring before its state is inspected.");
+            yield return null;
+        }
+
         protected static void AssertWaitingForCommander(Map01Mission mission)
         {
             var quest=mission.GetComponent<Map01Quest>();
@@ -129,6 +138,14 @@ namespace ShadowVale.Map01.Tests
             body.enabled = false; mission.player.position = at; body.enabled = enabled;
             mission.ModernPlayer.RestoreMotion(false); mission.Crouched = false;
             Physics.SyncTransforms();
+        }
+
+        protected static void PlaceNamAtCommander(Map01Mission mission)
+        {
+            Assert.IsNotNull(mission.GetComponent<Map01Story>().Commander);
+            var post = mission.alliedCommanderPost;
+            Assert.IsNotNull(post);
+            PlaceNam(mission, post.position + post.forward * 1.8f);
         }
 
         /// <summary>The running story conversation, confirmed to its end as the player would ("Nhận nhiệm vụ").</summary>

@@ -77,7 +77,13 @@ namespace ShadowVale.Map01
         {
             if (Aiming || !CanAim()) return;
             string ready = inventory.ReadyThrowable();
-            if (ready == null) return;
+            if (ready == null)
+            {
+                mission.Say(inventory.Throwable == "stone"
+                    ? "Hết đá ném. Nhặt thêm ở bờ sông hoặc các bãi đá bên đường."
+                    : $"Hết {ForestInventory.Name(inventory.Throwable).ToLowerInvariant()}. Nhấn 4 để chọn vật ném khác.", 4);
+                return;
+            }
             Item = ready;
             mission.ModernCombat?.CancelReload();
             Aiming = true;

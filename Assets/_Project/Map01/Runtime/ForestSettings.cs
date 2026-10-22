@@ -106,6 +106,9 @@ namespace ShadowVale.Map01
         public string id, output_item_id;
         public int output_count;
         public float craft_seconds;
+        /// <summary>Zero keeps the recipe at the bench. Field jobs never enter the bench queue.</summary>
+        public float field_seconds;
+        public int field_max_batch;
         public ForestIngredient[] inputs;
     }
 }

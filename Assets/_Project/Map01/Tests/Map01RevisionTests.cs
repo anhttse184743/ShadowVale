@@ -103,10 +103,14 @@ namespace ShadowVale.Map01.Tests
         static IEnumerator CheckCamera()
         {
             yield return Ready();var q=M.GetComponent<Map01Quest>();var story=M.GetComponent<Map01Story>();q.RestoreStage(Map01Quest.BriefingStage);
+            PlaceNamAtCommander(M);
             var d=M.GetComponent<Map01StoryDialogue>();
-            Assert.IsTrue(story.TryInteract());yield return WaitGameSeconds(1.1f);d.Advance();yield return WaitGameSeconds(.8f);
+            Assert.IsTrue(story.TryInteract());
+            for(int line=0;line<d.Count&&d.Current.speaker!="Hùng";line++){yield return WaitGameSeconds(1.1f);d.Advance();}
+            yield return WaitGameSeconds(.8f);
             Assert.AreEqual("Hùng",d.Current.speaker);
-            var screen=M.gameCamera.WorldToViewportPoint(M.hung.position+Vector3.up*1.42f);
+            var resting=M.hung.GetComponentInChildren<Map01HungRest>();
+            var screen=M.gameCamera.WorldToViewportPoint(resting!=null&&resting.IsResting?resting.DialogueFocus:M.hung.position+Vector3.up*1.42f);
             Assert.Greater(screen.z,0);Assert.That(screen.x,Is.InRange(.15f,.85f));Assert.That(screen.y,Is.InRange(.15f,.85f));
             Capture("Hung-speaks");d.Close(false);yield return null;
             var at=M.player.position;var ammo=M.ModernCombat.RoundsInMagazine;

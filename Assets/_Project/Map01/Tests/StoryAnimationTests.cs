@@ -41,7 +41,8 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(player.layers.Any(l => l.name == Map01NamActions.UpperLayer && l.defaultWeight == 0), "The stone and binoculars layer is only raised while one plays.");
             var nam = player.animationClips.Where(c => c.name.StartsWith("Nam_")).ToList();
             Assert.GreaterOrEqual(nam.Count, 25);
-            foreach (var clip in nam) { Assert.IsTrue(clip.humanMotion, clip.name); Assert.AreEqual(30, clip.frameRate, clip.name); }
+            // The stabilized fire take is resampled at 60 Hz; the original Blender takes remain 30 Hz.
+            foreach (var clip in nam) { Assert.IsTrue(clip.humanMotion, clip.name); Assert.AreEqual(clip.name=="Nam_Rifle_Fire_Stable"?60:30, clip.frameRate, clip.name); }
             Assert.That(nam.First(c => c.name == "Nam_Takedown_Neck").length, Is.EqualTo(Map01NamActions.TakedownSeconds).Within(.05f));
 
             var enemy = AssetDatabase.LoadAssetAtPath<AnimatorController>(Controllers + "AC_Enemy.controller");

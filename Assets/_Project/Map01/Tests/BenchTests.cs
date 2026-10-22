@@ -83,7 +83,7 @@ namespace ShadowVale.Map01.Tests
             SessionState.SetBool(Map01Inventory.NoTestKitKey, true);
             foreach (var (id, count) in Map01Inventory.TestCraftingKit) Assert.AreEqual(count, inventory.Count(id), "Test kit: " + id);
             foreach (var recipe in inventory.Recipes) Assert.GreaterOrEqual(inventory.CanMake(recipe), 2, "The kit makes " + recipe.id + " at least twice.");
-            CollectionAssert.AreEqual(new[] { "craft_medkit_small", "craft_repair_kit", "craft_smoke_bomb", "craft_grenade_f1", "craft_ammo_pistol", "craft_ammo_rifle", "craft_ammo_556", "craft_ammo_sniper" },
+            CollectionAssert.AreEqual(new[] { "craft_medkit_small", "craft_repair_kit", "craft_smoke_bomb", "craft_grenade_f1", "craft_ammo_pistol", "craft_ammo_rifle", "craft_ammo_556", "craft_ammo_sniper", "recover_ammo_556", "assemble_ammo_ak" },
                 inventory.Recipes.Select(r => r.id).ToArray());
 
             // [E] at the bench opens the screen; Tab goes over to the bag; Tab again shuts it; [E] twice opens and shuts.

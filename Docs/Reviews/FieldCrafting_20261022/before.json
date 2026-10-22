@@ -1,0 +1,78 @@
+[
+  {
+    "path": "Assets/_Project/Map01/Runtime/ForestSettings.cs",
+    "sha256": "cfbfeef2252a650ed80d1f2685286e3669ea017f48148cd82995c093afe27000"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/ForestInventory.cs",
+    "sha256": "d9f01950f41dba5bc9b9fac1d62357d64be975a54f031baa1fe8cbe4ea63ab6c"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01Inventory.cs",
+    "sha256": "e17ab5b8f11151c106bc440f5d2b724932775cbd7d5ce7bd2253dec09618b36a"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01Inventory.Bag.cs",
+    "sha256": "4359a987bef09847bbfa4a9c8267b6d97e9004166e078c9dd542b1166cc2a7fd"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01Inventory.Condition.cs",
+    "sha256": "d9d12b0a25ba79f9bdc7afa355457ed542289913f1aeb03a3310d8b420fe6756"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01Hud.Bag.cs",
+    "sha256": "0275f4d3944772f08ede9c11c97e712e15ccd52a8323fb83bad1a65c7606c246"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01Hud.Skills.cs",
+    "sha256": "64905194fa8a6d45559804081c162c65a84915988163acc8828a97b3e4e0ff18"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01Hud.Craft.cs",
+    "sha256": "affc19ddd421c8cc43da81b2b9b6d40464f088f127312e1d234a253b3681dde1"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01Hud.cs",
+    "sha256": "07fcf6cc99eb4bc0e377fe396e7d1297135e51bc06177f47561ce7f906b8fa3e"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01SaveSystem.cs",
+    "sha256": "0972840cb95274c23778ef604b1a528abf95b41f5a5abff3bafcc535ee6366ce"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map02Mission.Character.cs",
+    "sha256": "6d31cd67259780db0ddd2cfa3c823a6edbc7a6997f2766c85dfed1f4ac1dc59a"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01ItemCatalog.cs",
+    "sha256": "70c41da06e7a70164278b0ed547604977d19b873dbb83d2e52d1df4c88ed1d12"
+  },
+  {
+    "path": "Assets/_Project/Map01/Generated/Map01Content.json",
+    "sha256": "bc4b3f22ca103f478145c92af41a803579c1f6ca5dbcc13d92e6cab235477e83"
+  },
+  {
+    "path": "Assets/_Project/Map01/Resources/Loot/Map01Loot.json",
+    "sha256": "3d39e929522ec483a617f52c2701936a7c7e1e4c7448ee5610d160a0151c033a"
+  },
+  {
+    "path": "Assets/_Project/Map01/Tests/BenchTests.cs",
+    "sha256": "b6ef4b406f2b515ba891a9692f0b88b3bf4e138af31b2c5bc1232ee24ff4c5e0"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01NamActions.cs",
+    "sha256": "abbc73e8d9333dfce98c411bb79d227a6a4c3ea3ccbbaade78e645f435fb1bda"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map02ChapterEnemy.cs",
+    "sha256": "c91c536f9cb1968f7db2a86b91ad3fce2cf6d48346ca6a71d4dc67e705ab2b01"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01Pistol.cs",
+    "sha256": "16e25d17b41d617bda4cec80d2fcddabd83ed3be0646d58189255aa337a36436"
+  },
+  {
+    "path": "Assets/_Project/Map01/Runtime/Map01Mosin.cs",
+    "sha256": "c30b5befe597b7cbe7d409e3697f584e38ebffbbc5fa6067a33b8b5a5ecc7e5d"
+  }
+]

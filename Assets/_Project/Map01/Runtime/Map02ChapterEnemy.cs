@@ -62,7 +62,7 @@ namespace ShadowVale.Map01
         {
             if(Dead){if(agent!=null&&agent.enabled)agent.enabled=false;return;}
             var mission=director.Mission;
-            if(mission.InputBlocked||mission.Paused||ForestMenu.Visible){if(agent.isOnNavMesh)agent.isStopped=true;return;}
+            if(mission.CharacterWorldBlocked||ForestMenu.Visible){if(agent.isOnNavMesh)agent.isStopped=true;return;}
             if(!agent.isOnNavMesh)return;
             if(investigate.HasValue&&!alerted){agent.isStopped=false;agent.stoppingDistance=.5f;agent.SetDestination(investigate.Value);if(Vector3.Distance(transform.position,investigate.Value)<1)investigate=null;return;}
             var target=mission.Player;var from=transform.position+Vector3.up*1.45f;var to=target.position+Vector3.up;

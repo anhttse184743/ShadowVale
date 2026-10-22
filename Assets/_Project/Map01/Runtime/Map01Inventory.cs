@@ -53,6 +53,8 @@ namespace ShadowVale.Map01
         {
             if (mission == null) mission = CharacterHudSession.For(gameObject);
             ClearAll();
+            fieldKitVersion = 1;
+            Add(AkLoadingPack, 2);
             // The player's starting rifle is always the AK. M16s come from enemy loot.
             Add("rifle_standard", 1);
             Add("pistol_k54", 1);
@@ -70,6 +72,7 @@ namespace ShadowVale.Map01
             ("cloth", 12), ("herb", 6), ("scrap_metal", 12), ("gun_oil", 4), ("smoke_module", 4), ("gunpowder", 12),
             ("ammo_rifle", 60), ("medkit_small", 2), ("rifle_mosin", 1), ("ammo_sniper", 10),
             ("weapon_parts", 2), ("fuse_module", 2), ("blast_charge", 2), ("scope_lens", 1), ("smoke_bomb", 2), ("grenade_f1", 1), ("repair_kit", 2),
+            (Map01M16.Ammo, 20), (RecoveredAmmo, 4),
         };
 
         /// <summary>Editor SessionState flag the test base sets, so tests start with the normal loadout whatever
@@ -189,6 +192,7 @@ namespace ShadowVale.Map01
 
         public bool UseItem(string id, Vector3? throwTarget = null)
         {
+            CancelFieldCraft();
             // The bench goes on working while he walks off, so a queued craft blocks nothing.
             if (!mission.IsInitialized || mission.Stopped || ForestMenu.Visible || Time.time < nextQuickUse) return false;
             if (!ForestInventory.QuickUsable(id)) { mission.Say("Vật phẩm này không dùng trực tiếp.", 3); return false; }
@@ -218,7 +222,7 @@ namespace ShadowVale.Map01
         public bool NearWorkbench() => mission.Interactables.Any(p => p.kind == ForestPointKind.Workbench
             && Vector3.Distance(mission.player.position, p.transform.position) < mission.Settings.interactRange);
         /// <summary>What the workbench makes on Map 1, in the order the bench lists them.</summary>
-        public static readonly string[] BenchRecipes = { "craft_medkit_small", "craft_repair_kit", "craft_smoke_bomb", "craft_grenade_f1", "craft_ammo_pistol", "craft_ammo_rifle", "craft_ammo_556", "craft_ammo_sniper" };
+        public static readonly string[] BenchRecipes = { "craft_medkit_small", "craft_repair_kit", "craft_smoke_bomb", "craft_grenade_f1", "craft_ammo_pistol", "craft_ammo_rifle", "craft_ammo_556", "craft_ammo_sniper", RecoverM16Recipe, AssembleAkRecipe };
         public IEnumerable<ForestRecipe> Recipes => BenchRecipes.Select(Recipe).Where(r => r != null);
         public ForestRecipe Recipe(string id) => mission.Bundle?.craft_recipes?.FirstOrDefault(r => r.id == id);
         public bool HasInputs(ForestRecipe recipe) => recipe.inputs.All(i => Count(i.item_id) >= i.count);
@@ -233,7 +237,7 @@ namespace ShadowVale.Map01
         /// the bench works through the queue one at a time, also while Nam is away from it.</summary>
         public bool TryCraft(string recipeId, int times = 1)
         {
-            if (times < 1 || !NearWorkbench()) return false;
+            if (times < 1 || IsFieldCrafting || !NearWorkbench()) return false;
             var recipe = Recipe(recipeId);
             if (recipe == null) return false;
             if (CanMake(recipe) < times) { mission.Say("Chưa đủ vật liệu: cần " + Inputs(recipe, times) + "."); return false; }
@@ -244,6 +248,7 @@ namespace ShadowVale.Map01
         }
         public void Update()
         {
+            TickFieldCraft();
             if (queue.Count == 0 || Time.time < queue[0].until) return;
             var done = queue[0].recipe;
             queue.RemoveAt(0);
@@ -287,6 +292,8 @@ namespace ShadowVale.Map01
         /// waiting behind it go back into the bag, so a load never loses them.</summary>
         public ForestIngredient[] CaptureItems()
         {
+            // A save cancels the field job before totals/layout/ground items are captured.
+            CancelFieldCraft(false);
             var saved = new Dictionary<string, int>(Items);
             saved.Remove("stone");                                  // stones are saved on their own (CheckpointData.stones)
             for (int n = 1; n < queue.Count; n++)

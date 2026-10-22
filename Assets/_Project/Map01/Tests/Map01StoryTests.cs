@@ -37,6 +37,7 @@ namespace ShadowVale.Map01.Tests
             Assert.IsFalse(M.Cinematic,"New Game must not launch the removed opening.");
             Assert.IsFalse(q.RescueOrderAccepted);Assert.NotNull(s.Commander);Assert.IsTrue(q.ObjectiveText.Contains("chỉ huy"));
             Assert.AreEqual(1,Object.FindObjectsByType<Animator>(FindObjectsSortMode.None).Count(a=>a.name==Map01OpeningCutscene.CommanderVisualName));
+            PlaceNamAtCommander(M);
             var position=M.player.position;int rounds=M.ModernCombat.RoundsInMagazine;
             Assert.IsTrue(s.TryInteract());Assert.IsTrue(d.IsPlaying);Assert.IsFalse(q.RescueOrderAccepted);
             yield return WaitGameSeconds(.8f);Assert.Less(Vector3.Distance(position,M.player.position),.001f);

@@ -4,6 +4,8 @@
   "published_at": "2026-09-18T00:00:00Z",
   "checksum": "sha256:fallback-dev-bundle",
   "items": [
+    { "id": "ammo_recovered", "display_name": "Vật tư đạn thu hồi", "category": "material", "stack_max": 64, "weight": 0.08 },
+    { "id": "ak_loading_pack", "display_name": "Gói tiếp liệu AK", "category": "material", "stack_max": 64, "weight": 0.12 },
     {"id":"rifle_m16","display_name":"M16","category":"weapon","stack_max":1,"weight":3.5},
     { "id": "ammo_rifle",    "display_name": "Rifle Rounds",    "category": "ammo",       "stack_max": 99,  "weight": 0.02 },
     {"id": "ammo_556", "display_name": "Đạn 5,56×45 mm", "category": "ammo", "stack_max": 99, "weight": 0.02},
@@ -70,9 +72,13 @@
     ]}
   ],
   "craft_recipes": [
-    { "id": "craft_medkit_small", "output_item_id": "medkit_small", "output_count": 1, "required_skill": "engineering", "required_skill_level": 1, "craft_seconds": 4.0,
+    { "id": "recover_ammo_556", "output_item_id": "ammo_recovered", "output_count": 1, "craft_seconds": 3.0, "field_seconds": 3.0, "field_max_batch": 3,
+      "inputs": [ { "item_id": "ammo_556", "count": 10 } ] },
+    { "id": "assemble_ammo_ak", "output_item_id": "ammo_rifle", "output_count": 10, "craft_seconds": 5.0, "field_seconds": 8.0, "field_max_batch": 1,
+      "inputs": [ { "item_id": "ammo_recovered", "count": 2 }, { "item_id": "ak_loading_pack", "count": 1 } ] },
+    { "id": "craft_medkit_small", "output_item_id": "medkit_small", "output_count": 1, "required_skill": "engineering", "required_skill_level": 1, "craft_seconds": 4.0, "field_seconds": 4, "field_max_batch": 1,
       "inputs": [ { "item_id": "cloth", "count": 2 }, { "item_id": "herb", "count": 1 } ] },
-    { "id": "craft_repair_kit",   "output_item_id": "repair_kit",   "output_count": 1, "required_skill": "engineering", "required_skill_level": 2, "craft_seconds": 6.0,
+    { "id": "craft_repair_kit",   "output_item_id": "repair_kit",   "output_count": 1, "required_skill": "engineering", "required_skill_level": 2, "craft_seconds": 6.0, "field_seconds": 8, "field_max_batch": 1,
       "inputs": [ { "item_id": "scrap_metal", "count": 3 }, { "item_id": "gun_oil", "count": 1 } ] },
     { "id": "craft_ammo_pistol",  "output_item_id": "ammo_pistol",  "output_count": 8,  "required_skill": "engineering", "required_skill_level": 1, "craft_seconds": 3.0,
       "inputs": [ { "item_id": "gunpowder", "count": 1 }, { "item_id": "scrap_metal", "count": 1 } ] },
@@ -81,7 +87,7 @@
     {"id": "craft_ammo_556", "output_item_id": "ammo_556", "output_count": 10, "required_skill": "engineering", "required_skill_level": 1, "craft_seconds": 5.0, "inputs": [{"item_id": "gunpowder", "count": 2}, {"item_id": "scrap_metal", "count": 1}]},
     { "id": "craft_ammo_sniper",  "output_item_id": "ammo_sniper",  "output_count": 5,  "required_skill": "engineering", "required_skill_level": 1, "craft_seconds": 6.0,
       "inputs": [ { "item_id": "gunpowder", "count": 3 }, { "item_id": "scrap_metal", "count": 1 } ] },
-    { "id": "craft_smoke_bomb",   "output_item_id": "smoke_bomb",   "output_count": 1, "required_skill": "engineering", "required_skill_level": 1, "craft_seconds": 4.0,
+    { "id": "craft_smoke_bomb",   "output_item_id": "smoke_bomb",   "output_count": 1, "required_skill": "engineering", "required_skill_level": 1, "craft_seconds": 4.0, "field_seconds": 6, "field_max_batch": 1,
       "inputs": [ { "item_id": "smoke_module", "count": 1 }, { "item_id": "cloth", "count": 1 } ] },
     { "id": "craft_grenade_f1",   "output_item_id": "grenade_f1",   "output_count": 1, "required_skill": "engineering", "required_skill_level": 1, "craft_seconds": 6.0,
       "inputs": [ { "item_id": "blast_charge", "count": 1 }, { "item_id": "fuse_module", "count": 1 }, { "item_id": "scrap_metal", "count": 1 } ] }

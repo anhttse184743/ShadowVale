@@ -27,15 +27,19 @@ namespace ShadowVale.Map01
 
         public float Scale(string id)
         {
+            id = VisualId(id);
             foreach (var entry in items) if (entry.id == id) return entry.scale > 0 ? entry.scale : 1f;
             return 1f;
         }
 
         public GameObject Model(string id)
         {
+            id = VisualId(id);
             foreach (var entry in items) if (entry.id == id) return entry.model;
             return null;
         }
+        private static string VisualId(string id) => id == Map01Inventory.RecoveredAmmo ? "scrap_metal"
+            : id == Map01Inventory.AkLoadingPack ? "ammo_rifle" : id;
 
         private static Map01ItemCatalog loaded;
         public static Map01ItemCatalog Load() => loaded != null ? loaded : loaded = Resources.Load<Map01ItemCatalog>(ResourcePath);

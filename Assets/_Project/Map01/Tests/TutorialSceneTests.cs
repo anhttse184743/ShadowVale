@@ -360,7 +360,8 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsFalse(director.Failed, "Sneaking out of the bush behind him goes unnoticed: " + director.FailureReason);
                 Assert.IsTrue(director.knifeGuard.CanSilentTakedown(), "Behind him, close enough for the knife.");
                 Assert.AreEqual("CHUỘT TRÁI", director.KeyLabel);
-                StringAssert.Contains("Q", director.Tip, "The optional stone is offered on its own line.");
+                StringAssert.Contains("4", director.Tip, "The optional stone uses the current throwable slot.");
+                StringAssert.Contains("chuột trái", director.Tip, "The hint teaches holding and releasing the actual throw button.");
                 Assert.IsTrue(mission.GetTakedownHint(3.2f, out var marked, out bool ready), "The knife badge shows over him, as in Map 1.");
                 Assert.AreSame(director.knifeGuard, marked); Assert.IsTrue(ready);
                 Assert.IsTrue(mission.ModernCombat.TrySpecialMelee(), "No stone needed.");
