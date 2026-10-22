@@ -101,12 +101,12 @@ namespace ShadowVale.Map01.Tests
         {
             Directory.CreateDirectory(Work);
             var rig=M.player.GetComponentInChildren<Animator>();var hand=rig.GetBoneTransform(HumanBodyBones.RightHand);var foot=rig.GetBoneTransform(HumanBodyBones.RightFoot);
-            File.WriteAllText(Work+"/"+name+".txt",$"motion={Motion.MotionId} frame={Motion.SourceFrame} root={M.player.position} hand={hand.position} foot={foot.position} modelLocal={rig.transform.localPosition} grounded={M.ModernPlayer.IsGrounded}");
+            WriteReviewFile(Work+"/"+name+".txt",$"motion={Motion.MotionId} frame={Motion.SourceFrame} root={M.player.position} hand={hand.position} foot={foot.position} modelLocal={rig.transform.localPosition} grounded={M.ModernPlayer.IsGrounded}");
             var camera=new GameObject("Nam v3 live verification camera").AddComponent<Camera>();camera.CopyFrom(M.gameCamera);camera.tag="Untagged";
             var at=M.player.position+Vector3.up;camera.transform.position=M.player.position+M.player.forward*3.8f+M.player.right*2f+Vector3.up*1.7f;
             camera.transform.LookAt(at);camera.fieldOfView=39;camera.nearClipPlane=.03f;
             var rt=RenderTexture.GetTemporary(1920,1080,24);var prior=RenderTexture.active;var tex=new Texture2D(1920,1080,TextureFormat.RGB24,false);
-            try{camera.targetTexture=rt;camera.Render();RenderTexture.active=rt;tex.ReadPixels(new Rect(0,0,1920,1080),0,0);tex.Apply();Directory.CreateDirectory(Work);File.WriteAllBytes(Work+"/"+name+".png",tex.EncodeToPNG());}
+            try{camera.targetTexture=rt;camera.Render();RenderTexture.active=rt;tex.ReadPixels(new Rect(0,0,1920,1080),0,0);tex.Apply();Directory.CreateDirectory(Work);WriteReviewFile(Work+"/"+name+".png",tex.EncodeToPNG());}
             finally{RenderTexture.active=prior;RenderTexture.ReleaseTemporary(rt);Object.Destroy(tex);Object.Destroy(camera.gameObject);}
         }
         [UnityTest]public IEnumerator KnifeDrawAttackHolsterAndPistolReloadUseV3WithoutChangingAmmo()

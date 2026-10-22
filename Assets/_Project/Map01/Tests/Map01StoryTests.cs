@@ -80,9 +80,20 @@ namespace ShadowVale.Map01.Tests
             Capture("rescue-radio-Nam-view");director.Skip();yield return null;
             camera=M.gameCamera.transform.position;rotation=M.gameCamera.transform.rotation;
             rescue.ReportDetection(new Map01Detection(rescue.Squad[0],Map01DetectionCause.Sight,M.player.position));
-            yield return WaitGameSeconds(2);
+            // The execution as reworked on 2026-10-18 (6434bce8): Nam's own view first, a cut to the real bound captive,
+            // then back to Nam after the shot. Never a camera flown across the forest.
+            yield return WaitGameSeconds(.5f);
             Assert.AreEqual(Map01RescueCinematic.Mode.Execution,director.CurrentMode);
-            Assert.Less(Vector3.Distance(camera,M.gameCamera.transform.position),.001f);Assert.Less(Quaternion.Angle(rotation,M.gameCamera.transform.rotation),.01f);
+            Assert.IsFalse(director.ExecutionShowsCaptive,"It opens on Nam's view.");
+            // Its opening lens may step off the gameplay camera to clear the shelter (FindStoryLens): what counts is Nam in frame.
+            InView(M.player.position+Vector3.up*1.1f,"The execution opens on Nam.");
+            float until=Time.time+15;while(!director.ExecutionShowsCaptive&&Time.time<until)yield return null;yield return null;
+            Assert.IsTrue(director.ExecutionShowsCaptive,"Then it cuts to the bound captive.");
+            InView(M.hung.position+Vector3.up*.82f,"The cut frames the captive where he is held.");
+            Capture("alarm-captive-view");
+            until=Time.time+15;while(!director.ExecutionShowsReaction&&Time.time<until)yield return null;yield return null;
+            Assert.IsTrue(director.ExecutionShowsReaction,"And back to Nam after the shot.");
+            InView(M.player.position+Vector3.up*1.03f,"The reaction frames Nam.");
             Capture("alarm-Nam-view");director.Skip();yield return null;Assert.IsTrue(rescue.Failed);
             Assert.IsFalse(M.Cinematic);yield return new ExitPlayMode();
         }
@@ -103,6 +114,11 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(dialogue.IsPlaying,"Approaching the actual third post identifies the living officer.");
             yield return Confirm(dialogue);
             Assert.IsTrue(story.Progress.commanderAreaReached&&story.Progress.commanderConfirmed);
+        }
+        static void InView(Vector3 point,string message)
+        {
+            var view=M.gameCamera.WorldToViewportPoint(point);
+            Assert.Greater(view.z,0,message);Assert.That(view.x,Is.InRange(.05f,.95f),message);Assert.That(view.y,Is.InRange(.05f,.95f),message);
         }
         static void Capture(string name,Vector3? eye=null,Vector3? target=null)
         {

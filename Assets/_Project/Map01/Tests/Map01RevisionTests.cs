@@ -80,7 +80,10 @@ namespace ShadowVale.Map01.Tests
             Directory.CreateDirectory("Logs/Map01Revision");File.WriteAllText("Logs/Map01Revision/hand-contact-measurements.txt","");
             using(var pose=new Map01CinematicPose(actor)){
                 foreach(var name in new[]{"Enemy_Guard_Idle","Enemy_Patrol_Walk","Enemy_Rifle_AimIdle","Enemy_Rifle_Fire"}){
-                    var clip=clips.First(c=>c.name==name);pose.Sample(clip,clip.length*.3f);grip.Apply();yield return null;yield return null;grip.Apply();
+                    // The mount the game holds each clip in (Map01EnemyGrip.LateUpdate): idle and walk play in AC_Enemy's Locomotion blend tree,
+                    // so they use the patrol carry; only the aim and fire states raise the rifle to the shoulder.
+                    bool patrol=name=="Enemy_Guard_Idle"||name=="Enemy_Patrol_Walk";
+                    var clip=clips.First(c=>c.name==name);pose.Sample(clip,clip.length*.3f);grip.Apply(patrol);yield return null;yield return null;grip.Apply(patrol);
                     Capture(name,actor.transform.position+actor.transform.forward*1.9f+actor.transform.right*1.3f+Vector3.up*1.5f,actor.transform.position+Vector3.up*1.3f);
                     File.AppendAllText("Logs/Map01Revision/hand-contact-measurements.txt",name+" palm="+grip.PalmError+"m wrist="+grip.WristBend+"deg\n");
                     Assert.Less(grip.PalmError,.035f,name);Assert.Less(grip.WristBend,1,name);

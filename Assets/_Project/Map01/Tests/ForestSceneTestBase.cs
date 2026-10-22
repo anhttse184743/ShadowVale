@@ -30,7 +30,16 @@ namespace ShadowVale.Map01.Tests
             SessionState.SetBool(FramePacing.UncappedKey, true);
             // Tests start with the normal loadout whatever Map01Balance.json says about the bench test kit.
             SessionState.SetBool(Map01Inventory.NoTestKitKey, true);
+            // Capture fixtures turn async shader compilation off for steady frames; EditorSettings is saved into
+            // ProjectSettings, so the editor's own value is kept here (SessionState outlives the play-mode reloads)
+            // and put back after every test.
+            if (!SessionState.GetBool(AsyncShadersKnownKey, false))
+            {
+                SessionState.SetBool(AsyncShadersKey, EditorSettings.asyncShaderCompilation);
+                SessionState.SetBool(AsyncShadersKnownKey, true);
+            }
         }
+        private const string AsyncShadersKey = "ShadowVale.Tests.AsyncShaders", AsyncShadersKnownKey = "ShadowVale.Tests.AsyncShadersKnown";
         private static void KeepExplicitStart(UnityEngine.SceneManagement.Scene from, UnityEngine.SceneManagement.Scene to) =>
             EditorSceneManager.playModeStartScene = null;
         [TearDown]
@@ -41,6 +50,12 @@ namespace ShadowVale.Map01.Tests
             EditorSceneManager.playModeStartScene = AssetDatabase.LoadAssetAtPath<SceneAsset>("Assets/_Project/Scenes/00_Boot.unity");
             SessionState.EraseBool(FramePacing.UncappedKey);
             SessionState.EraseBool(Map01Inventory.NoTestKitKey);
+            if (SessionState.GetBool(AsyncShadersKnownKey, false))
+            {
+                bool editorValue = SessionState.GetBool(AsyncShadersKey, true);
+                EditorSettings.asyncShaderCompilation = editorValue; ShaderUtil.allowAsyncCompilation = editorValue;
+                SessionState.EraseBool(AsyncShadersKey); SessionState.EraseBool(AsyncShadersKnownKey);
+            }
         }
 
         /// <summary>Fix the Game View to <paramref name="width"/>×<paramref name="height"/>: screenshots
@@ -64,6 +79,18 @@ namespace ShadowVale.Map01.Tests
             viewType.GetProperty("selectedSizeIndex", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance).SetValue(view, count - 1);
             view.Repaint();
         }
+
+        /// <summary>Writes a review file, retrying for up to two seconds: a virus scan or a diff viewer can hold a file that was
+        /// just written (Win32 1224, "a user-mapped section is open"), and the test then failed on the evidence, not the game.</summary>
+        protected static void WriteReviewFile(string path, byte[] bytes)
+        {
+            for (int attempt = 0; ; attempt++)
+            {
+                try { System.IO.File.WriteAllBytes(path, bytes); return; }
+                catch (System.IO.IOException) when (attempt < 20) { System.Threading.Thread.Sleep(100); }
+            }
+        }
+        protected static void WriteReviewFile(string path, string text) => WriteReviewFile(path, System.Text.Encoding.UTF8.GetBytes(text));
 
         /// <summary>WaitForSeconds is a YieldInstruction the Edit Mode runner cannot wait on — it
         /// only skips a frame — so game-time waits have to poll Time.time instead.</summary>

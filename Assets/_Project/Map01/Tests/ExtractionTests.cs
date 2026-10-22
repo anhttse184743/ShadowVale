@@ -312,8 +312,11 @@ namespace ShadowVale.Map01.Tests
         {
             float y=float.PositiveInfinity;
             foreach(var renderer in actor.GetComponentsInChildren<SkinnedMeshRenderer>()) {
+                // BakeMesh leaves the renderer's scale out of the vertices' frame but not out of their size: place them
+                // without scaling again, or Hùng (modelled smaller, scaled 1.08 to Nam's height) measures short.
                 var mesh=new Mesh();renderer.BakeMesh(mesh);
-                foreach(var vertex in mesh.vertices)y=Mathf.Min(y,renderer.transform.TransformPoint(vertex).y);
+                var frame=Matrix4x4.TRS(renderer.transform.position,renderer.transform.rotation,Vector3.one);
+                foreach(var vertex in mesh.vertices)y=Mathf.Min(y,frame.MultiplyPoint3x4(vertex).y);
                 Object.Destroy(mesh);
             }
             return y;

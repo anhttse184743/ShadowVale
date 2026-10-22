@@ -34,6 +34,8 @@ namespace ShadowVale.Map01.Tests
             var state=new MouseState();if(left)state=state.WithButton(MouseButton.Left);if(right)state=state.WithButton(MouseButton.Right);
             InputSystem.QueueStateEvent(mouse,state);yield return null;yield return null;
         }
+        // The item in Nam's hand, by whichever prop shows it: NamMotionRefresh ("stone in hand"), Map01NamActions ("Stone in hand"), Map01ThrowableVisual.
+        static bool InHand(Transform t,string item)=>string.Equals(t.name,item+" in hand",System.StringComparison.OrdinalIgnoreCase)||t.name=="Throwable in hand — "+item;
         static void CaptureHand(Transform player,string name)
         {
             var actor=player.GetComponentInChildren<Animator>();
@@ -48,11 +50,11 @@ namespace ShadowVale.Map01.Tests
                 camera.transform.position=focus+player.forward*.35f+player.right*.45f+player.up*.1f;
                 camera.transform.LookAt(focus);camera.targetTexture=texture;camera.Render();RenderTexture.active=texture;
                 image.ReadPixels(new Rect(0,0,512,512),0,0);image.Apply();
-                System.IO.File.WriteAllBytes("Tools/StoneInputReports/"+name+".png",image.EncodeToPNG());
+                WriteReviewFile("Tools/StoneInputReports/"+name+".png",image.EncodeToPNG());
                 focus=player.position+Vector3.up;camera.orthographicSize=1.1f;
                 camera.transform.position=focus+player.forward*3+player.right*2+Vector3.up*.4f;camera.transform.LookAt(focus);
                 camera.Render();RenderTexture.active=texture;image.ReadPixels(new Rect(0,0,512,512),0,0);image.Apply();
-                System.IO.File.WriteAllBytes("Tools/StoneInputReports/"+name+"-full.png",image.EncodeToPNG());
+                WriteReviewFile("Tools/StoneInputReports/"+name+"-full.png",image.EncodeToPNG());
             } finally {RenderTexture.active=previous;camera.targetTexture=null;RenderTexture.ReleaseTemporary(texture);Object.Destroy(go);Object.Destroy(image);}
         }
         [UnityTest]
@@ -73,21 +75,23 @@ namespace ShadowVale.Map01.Tests
                 int before=inventory.Stones,rounds=mission.ModernCombat.RoundsInMagazine;
                 yield return KeyPress(keyboard,Key.Digit4);
                 Assert.IsTrue(inventory.ThrowableEquipped);Assert.AreEqual("stone",inventory.Throwable);Assert.IsFalse(stones.Aiming);
-                var readyStone=mission.player.GetComponentsInChildren<Transform>(true).First(t=>t.name=="Stone in hand");
+                var readyStone=mission.player.GetComponentsInChildren<Transform>(true).First(t=>InHand(t,"stone"));
                 Assert.IsTrue(readyStone.gameObject.activeInHierarchy,"Selecting slot 4 must already show a stone.");
                 yield return new WaitForEndOfFrame();CaptureHand(mission.player,"stone-ready");
                 yield return MouseButtons(mouse,true);yield return WaitGameSeconds(.25f);
                 Assert.IsTrue(stones.Aiming);Assert.Greater(stones.Arc.Count,1);Assert.AreEqual(before,inventory.Stones);Assert.AreEqual(rounds,mission.ModernCombat.RoundsInMagazine);
-                var handStone=mission.player.GetComponentsInChildren<Transform>(true).First(t=>t.name=="Stone in hand");
+                var handStone=mission.player.GetComponentsInChildren<Transform>(true).First(t=>InHand(t,"stone"));
                 Assert.IsTrue(handStone.gameObject.activeInHierarchy);
                 Assert.AreEqual(mission.player.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.RightHand),handStone.parent);
-                Assert.IsNotNull(handStone.GetComponentInChildren<LODGroup>(),"Use the catalog pebble model, not a sphere.");
+                Assert.IsFalse(handStone.GetComponentsInChildren<MeshFilter>().Any(f=>f.sharedMesh!=null&&f.sharedMesh.name=="Sphere"),"Use the approved stone model, not a sphere.");
                 var stoneBounds=handStone.GetComponentInChildren<Renderer>().bounds;
                 Assert.That(Mathf.Max(stoneBounds.size.x,stoneBounds.size.y,stoneBounds.size.z),Is.InRange(.05f,.16f));
-                yield return WaitGameSeconds(.4f);
+                // The refreshed motions (NamMotionRefresh) own the throw: prepare, wind, then the held aim.
+                var motion=mission.player.GetComponent<NamMotionRefresh>();float aimBy=Time.time+3;
+                while(motion.MotionId!="stone_aim"&&Time.time<aimBy)yield return null;
+                Assert.AreEqual("stone_aim",motion.MotionId,"Holding left mouse winds up into the held throw.");
                 yield return new WaitForEndOfFrame();CaptureHand(mission.player,"stone-aim");
                 var actor=mission.player.GetComponentInChildren<Animator>();
-                Assert.IsTrue(actor.GetCurrentAnimatorStateInfo(actor.GetLayerIndex("ActionsUpper")).IsName("Act_ThrowAim"),"Holding left mouse must show the throw wind-up.");
                 Assert.Greater(actor.GetBoneTransform(HumanBodyBones.RightHand).position.y,actor.GetBoneTransform(HumanBodyBones.Chest).position.y,"The throwing hand must be raised.");
                 var index1=actor.GetComponentsInChildren<Transform>().First(t=>t.name=="RightHandIndex1");
                 var index2=actor.GetComponentsInChildren<Transform>().First(t=>t.name=="RightHandIndex2");
@@ -103,7 +107,9 @@ namespace ShadowVale.Map01.Tests
                 Assert.Greater(Vector3.Angle(thumb2.position-thumb1.position,thumb3.position-thumb2.position),35f,"The thumb's middle joint must flex, not stay straight.");
                 var thumbEnd=thumb3.position+thumb3.up*Vector3.Distance(thumb2.position,thumb3.position)*.8f;
                 Assert.Greater(Vector3.Angle(thumb3.position-thumb2.position,thumbEnd-thumb3.position),30f,"The thumb tip must curl too.");
-                Assert.Less(Vector3.Distance(thumbEnd,handStone.position),Vector3.Distance(thumb1.position,handStone.position),"The thumb must close toward the held item.");
+                // Toward the stone itself: the refreshed prop's root sits on the hand bone, not in the palm as the old one did.
+                var stoneCentre=handStone.GetComponentInChildren<Renderer>().bounds.center;
+                Assert.Less(Vector3.Distance(thumbEnd,stoneCentre),Vector3.Distance(thumb1.position,stoneCentre),"The thumb must close toward the held item.");
                 var rig=mission.gameCamera.GetComponent<ShadowVale.Gameplay.Player.ThirdPersonCamera>();
                 var pivot=mission.player.position;
                 rig.SetCinematicView(pivot+new Vector3(-3,3,0),Quaternion.LookRotation(new Vector3(8,-2,0)),50,1);
@@ -145,14 +151,14 @@ namespace ShadowVale.Map01.Tests
                 yield return KeyPress(keyboard,Key.Digit4);
                 Assert.IsTrue(inventory.ThrowableEquipped);Assert.AreEqual("smoke_bomb",inventory.Throwable,"4 skips empty stones.");
                 yield return new WaitForEndOfFrame();
-                Assert.IsTrue(mission.player.GetComponentsInChildren<Transform>().Any(t=>t.name=="smoke_bomb in hand"),"Selecting smoke must also put its real item model in hand.");
+                Assert.IsTrue(mission.player.GetComponentsInChildren<Transform>().Any(t=>InHand(t,"smoke_bomb")),"Selecting smoke must also put its real item model in hand.");
                 CaptureHand(mission.player,"smoke-ready");
                 yield return MouseButtons(mouse,true);Assert.IsTrue(stones.Aiming);Assert.AreEqual("smoke_bomb",stones.Item);
                 yield return KeyPress(keyboard,Key.Digit4);
                 Assert.IsFalse(stones.Aiming);Assert.AreEqual(smoke,inventory.Count("smoke_bomb"),"Cycling while aiming cancels without spending the previous item.");
                 Assert.AreEqual("grenade_f1",inventory.Throwable);
                 yield return new WaitForEndOfFrame();
-                Assert.IsTrue(mission.player.GetComponentsInChildren<Transform>().Any(t=>t.name=="grenade_f1 in hand"),"Selecting F1 must put the grenade in hand.");
+                Assert.IsTrue(mission.player.GetComponentsInChildren<Transform>().Any(t=>InHand(t,"grenade_f1")),"Selecting F1 must put the grenade in hand.");
                 CaptureHand(mission.player,"f1-ready");
                 yield return MouseButtons(mouse,false);yield return MouseButtons(mouse,true);
                 Assert.IsTrue(stones.Aiming);Assert.AreEqual("grenade_f1",stones.Item);
