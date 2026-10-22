@@ -91,7 +91,7 @@ namespace ShadowVale.Map01.Tests
             for (float until = Time.time + 18; quest.Stage == Map01Quest.RescueStage && Time.time < until;) yield return null;
             Assert.AreEqual(Map01Quest.EscortStage, quest.Stage, "Untied and on his feet, Hùng goes home with Nam.");
 
-            // The shelter: arriving ends the escort and hands over the supplies he carried.
+            // The shelter: arriving ends the escort. Hùng was scouting, not carrying supplies: no quest item comes of it.
             int supplies = inventory.Count("supplies");
             PlaceNam(mission, rescue.Layout.shelterDoor.position);
             yield return WaitGameSeconds(.6f);
@@ -99,7 +99,7 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(home != null && home.IsPlaying, "Reaching the shelter door plays the homecoming.");
             home.Skip();
             Assert.AreEqual(Map01Quest.BriefingStage, quest.Stage, "Home with Hùng: report to the commander.");
-            Assert.AreEqual(supplies + 1, inventory.Count("supplies"));
+            Assert.AreEqual(supplies, inventory.Count("supplies"), "No \"supplies\" quest item: its river delivery is retired.");
 
             // The commander, in person, gives point 1.
             yield return null;

@@ -167,6 +167,7 @@ namespace ShadowVale.Map01.Tests
             drops = Map01Drops.For(mission);
             Assert.AreEqual(1, drops.Piles.Count(), "The pile is still on the ground after loading.");
             Assert.AreEqual("cloth", inventory.Cell(moved)?.id, "The bag comes back as it was arranged.");
+            Assert.AreEqual(0, inventory.Count("supplies"), "A save that still carries the retired \"supplies\" quest item loads without it.");
             point = mission.Interactables.Single(p => p.id != null && p.id.StartsWith(Map01Drops.IdPrefix));
 
             // [E] at the pile picks it up again.

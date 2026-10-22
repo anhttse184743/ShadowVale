@@ -199,8 +199,8 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(s.Progress.supplies&&s.Progress.chestUnlocked);Assert.AreEqual(1,bag.Count(Map01Story.CargoItem));Assert.AreEqual(0,bag.Count("supplies"),"Reward is deferred until handoff.");Assert.AreEqual(4,q.Stage);
             Assert.IsTrue(s.TryInteract());yield return Confirm();Assert.IsTrue(s.Progress.supplyReported);Assert.AreEqual(4,q.Stage,"Radio report must send Nam home, not to point 2.");
             At(s.Commander.position+s.Commander.forward*1.8f);Assert.IsTrue(s.TryInteract());yield return null;Assert.AreEqual("m1_ops_handoff_01",M.GetComponent<DialogueVoice>().CurrentId,"Handoff must speak immediately, before the bag animation.");yield return Confirm();yield return IdleInteraction();yield return Confirm();
-            Assert.AreEqual(5,q.Stage);Assert.IsTrue(s.Progress.suppliesDelivered&&s.Progress.supplyRewardGranted);Assert.AreEqual(0,bag.Count(Map01Story.CargoItem));Assert.AreEqual(1,bag.Count("supplies"));
-            var snapshot=s.Capture();s.Restore(snapshot,q.Stage);Assert.AreEqual(1,bag.Count("supplies"));Assert.IsTrue(s.Progress.suppliesDelivered);
+            Assert.AreEqual(5,q.Stage);Assert.IsTrue(s.Progress.suppliesDelivered&&s.Progress.supplyRewardGranted);Assert.AreEqual(0,bag.Count(Map01Story.CargoItem),"Handed over: the cargo leaves the bag.");Assert.AreEqual(0,bag.Count("supplies"),"The reward has no quest item left over.");
+            var snapshot=s.Capture();s.Restore(snapshot,q.Stage);Assert.AreEqual(0,bag.Count("supplies"));Assert.AreEqual(0,bag.Count(Map01Story.CargoItem),"A restore after the handoff does not bring the cargo back.");Assert.IsTrue(s.Progress.suppliesDelivered);
         }
         static IEnumerator RadioFlow()
         {

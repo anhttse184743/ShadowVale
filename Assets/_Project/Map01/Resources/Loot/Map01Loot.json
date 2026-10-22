@@ -181,7 +181,6 @@
       { "item": "medkit_small", "tier": 5, "weight": 1, "min": 2, "max": 2 },
       { "item": "smoke_bomb", "tier": 5, "weight": 1, "min": 1, "max": 1 } ] },
     { "code": "lt_m1_supply_reward", "name": "Thưởng bàn giao tiếp tế C1", "rollsMin": 0, "rollsMax": 0, "entries": [
-      { "item": "supplies", "tier": 5, "weight": 1, "min": 1, "max": 1 },
       { "item": "medkit_small", "tier": 5, "weight": 1, "min": 2, "max": 2 },
       { "item": "ammo_rifle", "tier": 5, "weight": 1, "min": 30, "max": 30 },
       { "item": "smoke_bomb", "tier": 5, "weight": 1, "min": 1, "max": 1 },

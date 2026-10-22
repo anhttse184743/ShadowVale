@@ -259,6 +259,11 @@ namespace ShadowVale.Map01
 
         /// <summary>Loads the totals a save carries (every save has them). A save that also carries the bag's
         /// layout (<see cref="RestoreLayout"/>) puts every stack back where it was afterwards.</summary>
+        /// <summary>Quest items whose quest is gone. They cannot be dropped, so a save that still carries one would keep
+        /// it in the bag for good: a load leaves them out. "supplies" was Hùng's load for the retired river delivery
+        /// (given on his return and with the point 1 handoff); point 1 now carries its own m1_supply_cargo.</summary>
+        public static readonly string[] RetiredQuestItems = { "supplies" };
+
         public void RestoreFromSave(ForestIngredient[] savedItems, int savedStones, string savedCrafting, float craftRemaining)
         {
             restoringRifle = true;
@@ -267,7 +272,8 @@ namespace ShadowVale.Map01
             // Weapons first, so they take their slots; earlier saves carried rifle and knife without entries.
             // Only a missing key is migrated: a saved count of 0 is an explicit absence and stays one.
             bool HasKey(string id) => savedItems.Any(i => i != null && i.item_id == id);
-            var saved = savedItems.Where(i => i != null && i.count > 0).OrderBy(i => ForestInventory.IsWeapon(i.item_id) ? 0 : 1).ToList();
+            var saved = savedItems.Where(i => i != null && i.count > 0 && System.Array.IndexOf(RetiredQuestItems, i.item_id) < 0)
+                .OrderBy(i => ForestInventory.IsWeapon(i.item_id) ? 0 : 1).ToList();
             if (!HasKey("rifle_standard") && !HasKey("rifle_mosin") && !HasKey("rifle_m16")) saved.Insert(0, new ForestIngredient { item_id = "rifle_standard", count = 1 });
             if (!HasKey("knife")) saved.Insert(0, new ForestIngredient { item_id = "knife", count = 1 });
             foreach (var i in saved) if (i.item_id != "stone") Store(i.item_id, i.count);
