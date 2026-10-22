@@ -119,6 +119,7 @@ namespace ShadowVale.Map01
             float tx = 96;
             foreach (var (id, label) in BenchGroups)
             {
+                if(mission.MapTwo!=null&&id==StoreTab)continue;
                 float w = benchTab.CalcSize(new GUIContent(label)).x + 22;
                 if (BenchButton(R(tx, 150, w, 32), label, benchTab, true, benchGroup == id))
                 {

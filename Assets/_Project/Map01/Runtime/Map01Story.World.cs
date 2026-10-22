@@ -1,4 +1,4 @@
-﻿using ShadowVale.AI.Perception;
+using ShadowVale.AI.Perception;
 using System;
 using System.Collections;
 using System.Linq;
@@ -53,11 +53,14 @@ namespace ShadowVale.Map01
             var open=clips.FirstOrDefault(c=>c.name=="Nam_OpenChest");var take=clips.FirstOrDefault(c=>c.name=="Nam_PickUp");
             var idle=UnityEngine.Resources.Load<AnimationClip>("Rescue/Nam_Shelter_Idle");
             var authored=Resources.Load<AnimationClip>("OperationsAnimation/"+(delivering?"Nam_SupplyHandoff":"Nam_SupplyCollect"));
-            var stand=delivering?Layout.handoff:Layout.chestApproach;
-            var focus=delivering?stand.position+stand.forward*.7f+Vector3.up*.65f:Layout.supply.position+Vector3.up*.55f;
+            // Hand over the cargo where Nam finished speaking, not at the separate layout mark.
+            var stand=delivering?null:Layout.chestApproach;
+            var handoffPosition=mission.player.position;var handoffRotation=mission.player.rotation;
+            var handoffForward=handoffRotation*Vector3.forward;
+            var focus=delivering?handoffPosition+handoffForward*.7f+Vector3.up*.65f:Layout.supply.position+Vector3.up*.55f;
             using(var session=new Map01OperationSession(mission)){
                 var path=new NavMeshPath();
-                if(stand!=null&&NavMesh.CalculatePath(mission.player.position,stand.position,NavMesh.AllAreas,path)&&path.status==NavMeshPathStatus.PathComplete){
+                if(!delivering&&stand!=null&&NavMesh.CalculatePath(mission.player.position,stand.position,NavMesh.AllAreas,path)&&path.status==NavMeshPathStatus.PathComplete){
                     var walk=clips.FirstOrDefault(c=>c.name=="Nam_Walk_F")??clips.FirstOrDefault(c=>c.name.Contains("Walk")&&!c.name.Contains("Crouch"));
                     float travel=0;
                     foreach(var corner in path.corners){
@@ -73,9 +76,9 @@ namespace ShadowVale.Map01
                 }
                 using(var performance=Map01SupplyPerformance.Create(actor,mission.player,delivering)){
                 float duration=performance!=null?performance.Duration:6.8f;
-                float cargoCommit=performance!=null?10.1f:5.4f;
+                float cargoCommit=performance!=null?(delivering?11.25f:10.1f):5.4f;
                 float elapsed=0;bool committed=false,openSound=false,clothSound=false;
-                var facing=stand!=null?stand.rotation:mission.player.rotation;var initial=mission.player.rotation;
+                var facing=delivering?handoffRotation:stand!=null?stand.rotation:mission.player.rotation;var initial=mission.player.rotation;
                 if(performance==null&&delivering&&Layout.supplyProps!=null)Layout.supplyProps.HoldBag(actor);
                 while(elapsed<duration){
                     if(!mission.Paused&&!ForestMenu.Visible){
@@ -94,7 +97,7 @@ namespace ShadowVale.Map01
                         }
                         if(elapsed>=cargoCommit&&!committed){
                             committed=true;
-                            if(delivering)Layout.supplyProps?.PlaceBag(stand.position+stand.forward*.65f);
+                            if(delivering)Layout.supplyProps?.PlaceBag(mission.player.position+handoffForward*.65f);
                             else {Progress.supplies=true;var bag=GetComponent<Map01Inventory>();if(bag.Count(CargoItem)==0)bag.Add(CargoItem,1);quest.SuppliesRecovered();Layout.supplyProps?.CarryBag(actor);}
                         }
                     }yield return null;

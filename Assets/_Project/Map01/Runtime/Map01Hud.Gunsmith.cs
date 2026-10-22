@@ -218,7 +218,7 @@ namespace ShadowVale.Map01
         private void DrawStore(float ox, float oy)
         {
             Rect R(float x, float y, float w, float h) => new Rect(ox + x, oy + y, w, h);
-            var logistics = Map01Logistics.For(mission);
+            var logistics = Map01Logistics.For(mission.MapOne);
             bool inBase = logistics.InBase();
 
             // Points, and where they came from.

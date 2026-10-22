@@ -33,7 +33,7 @@ namespace ShadowVale.Map01
         public string PrimaryAmmo => SlotItem(Slot.Primary) == Map01M16.Id ? Map01M16.Ammo : "ammo_rifle";
         public void ApplyPrimaryRifle(bool unload = true)
         {
-            if (mission == null) mission = GetComponent<Map01Mission>();
+            if (mission == null) mission = CharacterHudSession.For(gameObject);
             var combat = mission != null ? mission.ModernCombat : null;
             if (combat == null) return;
             var gun = combat.WeaponFor(WeaponKind.Rifle);

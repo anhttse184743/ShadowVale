@@ -22,4 +22,4 @@ MonoBehaviour:
   basisX: {x: -1, y: 0, z: 0}
   basisY: {x: 0, y: 0, z: -1}
   basisZ: {x: 0, y: 1, z: 0}
-  namFloorOffset: 0.050107706
+  namFloorOffset: 0.05010768

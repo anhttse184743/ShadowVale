@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2318a6bb1dc2ca4aa293962e67c852b, type: 3}
+  m_Name: Map02ChapterLayout
+  m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map02ChapterLayout
+  actors:
+  - role: "Anh Th\xE0nh"
+    prefab: {fileID: 7832698061118072078, guid: 5b2abf7e6f14f3d41b5a1d88cffbafab, type: 3}
+  - role: "Anh L\u1EF1c"
+    prefab: {fileID: 2737592800967087114, guid: b6e1ae955e1b8ba4294dd7a7fff9d165, type: 3}
+  - role: "T\xE2m"
+    prefab: {fileID: 1592088549058560199, guid: 4b474e014de278c42b5b5a9a3a6526d4, type: 3}
+  - role: "Ch\xFA B\u1EA3y"
+    prefab: {fileID: 2314452259327122441, guid: 3b63b62191cce4b48be90e47f0c67f4d, type: 3}
+  - role: "\xD4ng S\xE1u"
+    prefab: {fileID: 4555953771642930173, guid: f95f828c6b1569d49b5e915ebd11efeb, type: 3}
+  - role: "Ch\u1ECB L\xE0nh"
+    prefab: {fileID: 5919166819237297731, guid: b5366c22bc8cad54d876648671db5910, type: 3}
+  - role: "B\xE9 T\xED"
+    prefab: {fileID: 8497960597794566686, guid: e969c10c69e15824faa1da209f85cad9, type: 3}
+  enemyArt: {fileID: 0}
+  sites:
+  - id: command
+    position: {x: -79.29, y: 1.1, z: 10.91}
+  - id: gate
+    position: {x: -79.29, y: 1.03, z: 19.91}
+  - id: family
+    position: {x: -48.46, y: 1.03, z: -30.49}
+  - id: store
+    position: {x: -49.15, y: 1.03, z: 8.39}
+  - id: arrival
+    position: {x: -39.36, y: 1.03, z: 46.67}
+  - id: dock
+    position: {x: -27.75, y: 0.83, z: -86.19}
+  - id: southStore
+    position: {x: -32.75, y: 0.83, z: -86.19}
+  - id: ditch
+    position: {x: -32.75, y: 0.83, z: -86.19}
+  - id: radio
+    position: {x: -74.29, y: 1.08, z: 10.91}
+  - id: rest
+    position: {x: -79.29, y: 1.03, z: 6.91}
+  - id: bamboo
+    position: {x: -65.29, y: 1.03, z: 10.91}
+  - id: scout
+    position: {x: 29, y: 0.77, z: -16.66}
+  - id: bridge
+    position: {x: 29, y: 0.73, z: -4.66}
+  - id: child
+    position: {x: -77.17, y: 1.09, z: -29.35}
+  - id: lane1
+    position: {x: -79.29, y: 1.03, z: 24.91}
+  - id: lane2
+    position: {x: -79.29, y: 1.16, z: 15.91}
+  - id: lane3
+    position: {x: -79.29, y: 1.03, z: 5.91}
+  - id: cover
+    position: {x: -84.29, y: 1.04, z: 5.91}
+  - id: fallen
+    position: {x: -27.75, y: 0.87, z: -78.19}
+  - id: family0
+    position: {x: -48.46, y: 1.03, z: -30.49}
+  - id: family1
+    position: {x: -63.48, y: 1.18, z: -32.6}
+  - id: family2
+    position: {x: -77.17, y: 1.09, z: -29.35}
+  supplyCrateRounds: 30
+  nightSunIntensity: 0.08
+  nightSkyExposure: 0.08
+  patrolSweepSeconds: 15
+  coverFireSeconds: 75
+  civilianArt: {fileID: 0}
+  tankArt: {fileID: 0}
+  coveredHungArt: {fileID: 0}
+  namMournClip: {fileID: 0}
+  hungPlantRetreatClip: {fileID: 0}

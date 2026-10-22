@@ -102,6 +102,7 @@ namespace ShadowVale.Gameplay.Combat
 
         public int MagazineCapacity => _magazine?.Capacity ?? 0;
         public bool IsReloading => _magazine is { IsReloading: true };
+        public float ReloadDurationMultiplier {get;set;}=1f;
         public float BaseReloadSeconds => _activeTuning.OrDefault().reloadSeconds;
         public bool EquippedIsGun => _equipped != null && _equipped.IsGun;
         public float StanceBlendSeconds => Mathf.Max(.01f, stanceBlendTime);
@@ -144,7 +145,7 @@ namespace ShadowVale.Gameplay.Combat
             if (_handsOccupied || _magazine == null || _equipped == null || !_equipped.IsGun) return false;
             bool wasEmpty = _magazine.IsEmpty;
             var skills = GetComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
-            if (!_magazine.BeginReload(ReserveRounds != null ? ReserveRounds() : -1, skills != null ? skills.ReloadMultiplier : 1f)) return false;
+            if (!_magazine.BeginReload(ReserveRounds != null ? ReserveRounds() : -1, (skills != null ? skills.ReloadMultiplier : 1f)*Mathf.Max(.1f,ReloadDurationMultiplier))) return false;
             AnimateReload(wasEmpty);
             return true;
         }
@@ -343,7 +344,7 @@ namespace ShadowVale.Gameplay.Combat
             animator.SetBool(AnimatorParams.Grounded, true);
             animator.SetBool(AnimatorParams.Sneaking, _controller != null && _controller.IsSneaking);
             animator.ResetTrigger(AnimatorParams.Attack); animator.ResetTrigger(AnimatorParams.Die);
-            // A cinematic clears the toggle; held input must not silently raise the sights again.
+            // Clear the cinematic pose; gameplay polls the held aim button on its next update.
             _aiming = false;
             animator.SetBool(AnimatorParams.Aiming, _aiming);
             bool rifleCarry=_rifleBody && _equippedKind==WeaponKind.Rifle && !_aiming;
@@ -705,9 +706,8 @@ namespace ShadowVale.Gameplay.Combat
                 return;
             }
 
-            // One press raises the sights; the next lowers them. Release keeps the chosen state.
-            if (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame)
-                SetAiming(!_aiming);
+            // Aim follows the held button; release returns to normal movement/facing.
+            SetAiming(Mouse.current != null && Mouse.current.rightButton.isPressed);
         }
 
         /// <summary>

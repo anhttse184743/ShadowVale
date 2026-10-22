@@ -58,7 +58,7 @@ namespace ShadowVale.Map01.Editor
             report.AppendLine("PASS six AKs rotated individually -90 degrees about local Y: magazines now point toward rear wall (+Z).");
             var first=All<Transform>().Single(t=>t.name=="EquipmentShelf");var shelter=first.parent;var shell=shelter.Find("ShelterShell");
             var wall=shell.GetComponentsInChildren<BoxCollider>().Where(c=>c.name=="Front wall").OrderByDescending(c=>c.bounds.center.x).First();
-            const float spacing=1.95f, halfWidth=.845f;
+            const float spacing=1.95f;
             float south=shelter.InverseTransformPoint(new Vector3(wall.bounds.center.x,wall.bounds.center.y,wall.bounds.max.z)).z;
             var northWall=shell.GetComponentsInChildren<BoxCollider>().Single(c=>c.name=="Back retaining wall");
             float north=shelter.InverseTransformPoint(new Vector3(northWall.bounds.center.x,northWall.bounds.center.y,northWall.bounds.min.z)).z;
@@ -117,4 +117,3 @@ namespace ShadowVale.Map01.Editor
         }
     }
 }
-

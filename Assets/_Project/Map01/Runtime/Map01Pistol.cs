@@ -10,7 +10,7 @@ namespace ShadowVale.Map01
     [DefaultExecutionOrder(40)]
     public sealed class Map01Pistol : MonoBehaviour
     {
-        Map01Mission mission;
+        CharacterHudSession mission;
         Map01PistolAnimationData data;
         PlayerCombat combat;
         Map01NamActions actions;
@@ -32,9 +32,10 @@ namespace ShadowVale.Map01
         public float PoseWeight=>weight;
         public Weapon Weapon { get; private set; }
         public Transform GunTransform=>gun;
-        public static Map01Pistol Install(Map01Mission owner)
+        public static Map01Pistol Install(Map01Mission owner)=>Install(CharacterHudSession.For(owner.gameObject));
+        public static Map01Pistol Install(CharacterHudSession owner)
         {
-            var existing=owner.player.GetComponent<Map01Pistol>();if(existing!=null)return existing;
+            var existing=owner.player.GetComponent<Map01Pistol>();if(existing!=null){existing.mission=owner;existing.combat=owner.ModernCombat;existing.actions=Map01NamActions.For(owner.MapOne);return existing;}
             if(owner.Bundle?.weapons==null||!owner.Bundle.weapons.Any(w=>w!=null&&w.id=="pistol_k54"))return null;
             var asset=Resources.Load<Map01PistolAnimationData>("Weapons/K54V12");
             if(asset==null){Debug.LogError("K54 v12 animation asset is missing; rebuild ShadowVale/K54/Build approved assets.");return null;}
@@ -42,10 +43,10 @@ namespace ShadowVale.Map01
             if(!NamMotionData.FitsSkeleton(owner.player.GetComponentInChildren<Animator>()?.transform,asset.bones))return null;
             var result=owner.player.gameObject.AddComponent<Map01Pistol>();result.Bind(owner,asset);return result;
         }
-        void Bind(Map01Mission owner,Map01PistolAnimationData asset)
+        void Bind(CharacterHudSession owner,Map01PistolAnimationData asset)
         {
             mission=owner;data=asset;combat=owner.ModernCombat;actor=GetComponentInChildren<Animator>();
-            actions=Map01NamActions.For(owner);
+            actions=Map01NamActions.For(owner.MapOne);
             var map=actor.GetComponentsInChildren<Transform>(true).GroupBy(t=>t.name).ToDictionary(g=>g.Key,g=>g.First());
             bones=data.bones.Select(t=>map[t.name]).ToArray();rightHand=map["RightHand"];
             gun=Instantiate(data.prefab,rightHand,false).transform;gun.name="K54 v12";

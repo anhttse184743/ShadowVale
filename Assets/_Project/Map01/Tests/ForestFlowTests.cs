@@ -605,7 +605,20 @@ namespace ShadowVale.Map01.Tests
             yield return WaitGameSeconds(.6f);
             Assert.AreEqual(Map01Quest.ReportBossStage, quest.Stage);
             Assert.AreEqual("TÌM CHỖ KÍN — BÁO CÁO [E]", guide.Label, "After the finale Nam reports by radio for the way out.");
-            quest.RestoreStage(Map01Quest.ExtractionStage);
+            // This fixture freezes guards to inspect guide targets. The C3 death response
+            // still marks them engaged; end that simulated fight before making the safe radio call.
+            c3.enabled = false;
+            Map01BodyDiscovery.For(mission).enabled = false;
+            foreach (var enemy in mission.Enemies.Where(e => e != null && e.Alive)) {
+                enemy.ReturnToPost(); enemy.enabled = false;
+            }
+            // Earlier guide probes only selected distant targets; Nam is still at the jetty.
+            // Report from C3 so extraction does not immediately advance into auto-boarding.
+            PlaceNam(mission, field.transform.position);
+            Assert.IsTrue(story.SafeToReport);
+            Assert.IsTrue(story.TryInteract());
+            yield return ConfirmConversation(mission);
+            Assert.AreEqual(Map01Quest.ExtractionStage, quest.Stage, "The radio report opens the route to the boat.");
             yield return WaitGameSeconds(.6f);
             Assert.AreEqual("NORTHERN JETTY", guide.Label, "The retreat leads to the waiting boat.");
 

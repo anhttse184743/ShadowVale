@@ -9,7 +9,7 @@ namespace ShadowVale.Map01
     [DefaultExecutionOrder(41)]
     public sealed class Map01Mosin : MonoBehaviour
     {
-        Map01Mission mission;PlayerCombat combat;Map01NamActions actions;Animator actor;
+        CharacterHudSession mission;PlayerCombat combat;Map01NamActions actions;Animator actor;
         Map01PistolAnimationData data;Transform[] bones,parts;Transform rightHand,gun,round;
         ForearmTwist twist;ThirdPersonCamera cameraRig;
         bool ownsTwist,scoped,wasReloading;float weight,aim,clock,shotAt=-100;
@@ -22,18 +22,19 @@ namespace ShadowVale.Map01
         public const float ScopeMagnification=3.5f;
         // Insertion presses in the authored five-round take, normalized to its full five seconds.
         public static float[] InsertionTimes=>new[]{.297f,.415f,.533f,.651f,.769f};
-        public static Map01Mosin Install(Map01Mission owner)
+        public static Map01Mosin Install(Map01Mission owner)=>Install(CharacterHudSession.For(owner.gameObject));
+        public static Map01Mosin Install(CharacterHudSession owner)
         {
-            var existing=owner.player.GetComponent<Map01Mosin>();if(existing!=null)return existing;
+            var existing=owner.player.GetComponent<Map01Mosin>();if(existing!=null){existing.mission=owner;existing.combat=owner.ModernCombat;existing.actions=Map01NamActions.For(owner.MapOne);existing.cameraRig=owner.gameCamera.GetComponent<ThirdPersonCamera>();return existing;}
             if(owner.Bundle?.weapons==null||!owner.Bundle.weapons.Any(w=>w!=null&&w.id=="rifle_mosin"))return null;
             var asset=Resources.Load<Map01PistolAnimationData>("Weapons/MosinV13");
             if(asset==null){Debug.LogError("Mosin motion asset is missing. Build ShadowVale/Mosin/Build motion assets.");return null;}
             if(!NamMotionData.FitsSkeleton(owner.player.GetComponentInChildren<Animator>()?.transform,asset.bones))return null;
             var result=owner.player.gameObject.AddComponent<Map01Mosin>();result.Bind(owner,asset);return result;
         }
-        void Bind(Map01Mission owner,Map01PistolAnimationData asset)
+        void Bind(CharacterHudSession owner,Map01PistolAnimationData asset)
         {
-            mission=owner;data=asset;combat=owner.ModernCombat;actor=GetComponentInChildren<Animator>();actions=Map01NamActions.For(owner);cameraRig=owner.gameCamera.GetComponent<ThirdPersonCamera>();
+            mission=owner;data=asset;combat=owner.ModernCombat;actor=GetComponentInChildren<Animator>();actions=Map01NamActions.For(owner.MapOne);cameraRig=owner.gameCamera.GetComponent<ThirdPersonCamera>();
             normalCrosshair=GameObject.Find("Crosshair");
             var map=actor.GetComponentsInChildren<Transform>(true).GroupBy(t=>t.name).ToDictionary(g=>g.Key,g=>g.First());
             bones=data.bones.Select(t=>map[t.name]).ToArray();rightHand=map["RightHand"];

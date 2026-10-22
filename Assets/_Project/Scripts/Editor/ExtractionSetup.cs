@@ -80,6 +80,7 @@ namespace ShadowVale.Editor
             var data=AssetDatabase.LoadAssetAtPath<Map01ActorAssets>(path);
             if(data==null) {data=ScriptableObject.CreateInstance<Map01ActorAssets>();AssetDatabase.CreateAsset(data,path);}
             data.rifle=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/Items/W_AK47.prefab").GetComponent<ShadowVale.Gameplay.Combat.Weapon>();
+            data.enemyController=AssetDatabase.LoadAssetAtPath<RuntimeAnimatorController>("Assets/_Project/Art/Characters/Animations/Controllers/AC_Enemy.controller");
             var nam=Measure("Assets/_Project/Art/Characters/Player/Player.fbx");
             var hung=Measure("Assets/_Project/Art/Characters/NPCs/hung.fbx");
             data.namHeight=nam.x;data.hungHeight=hung.x;data.hungSole=hung.y;

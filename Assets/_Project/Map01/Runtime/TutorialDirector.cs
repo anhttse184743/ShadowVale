@@ -238,7 +238,7 @@ namespace ShadowVale.Map01
                     if (combat.IsReloading && !reloading) { reloadReserveBefore = inventory.Count("ammo_rifle"); reloading = true; }
                     if (reloading && !combat.IsReloading) { reloaded |= inventory.Count("ammo_rifle") < reloadReserveBefore; reloading = false; }
                     if (combat.EquippedKind != WeaponKind.Rifle) Cue("1", "Nhấn 1 để cầm súng AK", false);
-                    else if (!aimed) Cue("CHUỘT PHẢI", "Bấm chuột phải để bật/tắt ngắm vào lính", combat.IsAiming);
+                    else if (!aimed) Cue("CHUỘT PHẢI", "Giữ chuột phải để ngắm vào lính", combat.IsAiming);
                     else if (shootingGuard.Alive) Cue("CHUỘT TRÁI", "Nhấn chuột trái để bắn hạ lính", mouse != null && mouse.leftButton.isPressed);
                     else Cue("R", "Nhấn R để nạp đạn", reloading);
                     if (!shootingGuard.Alive && (!shot || !killedWithRifle)) Fail("Hạ mục tiêu bằng súng sau khi ngắm. Thử lại bước này.");

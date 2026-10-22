@@ -23,9 +23,7 @@ namespace ShadowVale.EnvironmentReview
         static double next;
         static Map01MergeIntegration()
         {
-            // A locked or read-only review folder must not break every editor start: the version stamp is best effort.
-            try{Directory.CreateDirectory(Work);File.WriteAllText(Work+"/tool_version.txt","12");}
-            catch(IOException e){Debug.LogWarning("[Map01MergeIntegration] "+e.Message);}
+            ReviewToolVersion.Schedule(Work,"12");
             EditorApplication.update+=Check;
         }
         static void Check()
@@ -70,4 +68,3 @@ namespace ShadowVale.EnvironmentReview
         }
     }
 }
-

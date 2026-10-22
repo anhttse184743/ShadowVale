@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Map01ActorAssets
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map01ActorAssets
   rifle: {fileID: 4962573079660159442, guid: 9a48efb4e0c45d649bc5db052fd00ea6, type: 3}
+  enemyController: {fileID: 9100000, guid: 023d84ee39001af489004ee508755499, type: 2}
   namHeight: 1.7526859
   hungHeight: 1.6224272
   hungSole: -0.0392634
