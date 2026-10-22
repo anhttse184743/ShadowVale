@@ -463,8 +463,8 @@ namespace ShadowVale.Map01
                 roles["Anh Lực"].StopAt(State.phase==6?sites["ditch"].position+Vector3.left*2.5f:(State.phase==4?sites["ditch"].position:State.phase==5?LucNightThree():sites["gate"].position));
                 var safe=sites["southStore"].position;
                 roles["Chị Lành"].StopAt(State.Done("N3_02")?safe+Vector3.left*1.4f:State.phase<=1?DayFamily+Vector3.left*.8f:sites["family"].position);
-                roles["Ông Sáu"].StopAt(State.Done("N3_02")?safe+Vector3.right*1.4f:(State.phase<=1?DayFamily:sites["family"].position)+Vector3.forward*3.5f+Vector3.left*1.4f);
-                roles["Bé Tí"].StopAt(State.Done("N3_03")?safe+Vector3.forward*1.4f:State.phase==5?sites["child"].position+Vector3.back*.8f:(State.phase<=1?DayFamily:sites["family"].position)+Vector3.left*1.3f+Vector3.forward*3.1f);   // Night 3: lost at the buffalo pen
+                roles["Ông Sáu"].StopAt(State.Done("N3_02")?safe+Vector3.right*1.4f:State.phase<=1?DayFamily+Vector3.forward*3.5f+Vector3.left*1.4f:sites["family"].position+Vector3.right*1.4f);   // Day 1 / Night 1: the family's seat; later days: the yard
+                roles["Bé Tí"].StopAt(State.Done("N3_03")?safe+Vector3.forward*1.4f:State.phase<=1?DayFamily+Vector3.left*1.3f+Vector3.forward*3.1f:sites[State.phase==5?"child":"family"].position+Vector3.back*.8f);   // Night 3: lost at the buffalo pen
                 roles["Chú Bảy"].StopAt(sites["dock"].position);
                 roles["Tâm"].StopAt(sites[State.phase==5&&State.Done("N3_CRAWL")?"tamCover":State.Done("D2_04")?"bamboo":"scout"].position);
                 if(!fresh&&!State.hungDead&&escort!=roles["Hùng"])roles["Hùng"].StopAt(sites[State.phase==5?(State.Done("N3_00")?"ditch":"rest"):State.phase==4?"family":State.phase>=2?"radio":State.phase==1?(State.Done("N1_03")?"gate":State.Done("N1_02")?"bamboo":"family"):State.Done("D1_02")?"family":"arrival"].position+Vector3.right*1.4f);
