@@ -70,6 +70,10 @@ namespace ShadowVale.Map01
         string message;
         float messageUntil;
         Map02ObjectiveObject nearest;
+        bool waitWorldERelease;float worldEAfter;
+        public void RequireInteractionRelease(){waitWorldERelease=Keyboard.current?.eKey.isPressed==true;worldEAfter=Time.unscaledTime+.15f;}
+        bool WorldEReady(Keyboard kb){if(waitWorldERelease){if(kb.eKey.isPressed)return false;waitWorldERelease=false;}return Time.unscaledTime>=worldEAfter;}
+
         Map02ObjectiveObject[] targets=Array.Empty<Map02ObjectiveObject>();
         Map02QuestLayout questLayout;
         GUIStyle body, heading, small;
@@ -124,6 +128,8 @@ namespace ShadowVale.Map01
             questLayout=FindFirstObjectByType<Map02QuestLayout>();
             dialogue=new Map02ConversationSession(World.story);
             Ready=true;
+            InstallMapSafety();
+            arrival?.ReleasePassengerAnimation();
             Chapter=gameObject.AddComponent<Map02ChapterDirector>();Chapter.Initialize(this,questLayout);RefreshChapter();
             StartCoroutine(PrepareHudChart());
             if (pending != null) { var data=pending; pending=null; Restore(data); }
@@ -133,10 +139,12 @@ namespace ShadowVale.Map01
         void Update()
         {
             if (!Ready || Paused || ForestMenu.Visible) return;
+            TickMapSafety();
+            Chapter?.UpdateMarkers();
             RefreshRoute();
             if (!World.story.failed) PlaySeconds+=Time.deltaTime;
             if (health != null && health.IsDead && !World.story.failed) { World.story.Fail("Nam đã hy sinh. Trở về checkpoint để thử lại.");CancelConversation();Notify(); }
-            var kb=Keyboard.current;if(kb==null)return;
+            var kb=Keyboard.current;if(kb==null)return;bool worldEReady=WorldEReady(kb);
             if(dialogue.Active)
             {
                 if(kb.escapeKey.wasPressedThisFrame){CancelConversation();return;}
@@ -149,12 +157,13 @@ namespace ShadowVale.Map01
             if(kb.jKey.wasPressedThisFrame){TogglePanel(2);return;}
             if(kb.mKey.wasPressedThisFrame){TogglePanel(3);return;}
             if(Panel!=0)return;
+            if(Chapter?.HasNearbyPost==true){nearest=null;if(worldEReady)Chapter.TryInteractNearbyPost();return;}
             nearest=null;float best=float.PositiveInfinity;
             foreach(var target in targets)
                 if(target!=null)
                 if(ObjectiveAvailable(target)&&(Chapter==null||Chapter.ShowInteractPrompt(target))&&target.WithinReach(Player))
                 {float d=(Player.position-target.transform.position).sqrMagnitude;if(target==TrackedObjective)d=-1;if(d<best){nearest=target;best=d;}}
-            if(nearest!=null&&kb.eKey.wasPressedThisFrame)Interact(nearest);
+            if(nearest!=null&&worldEReady&&kb.eKey.wasPressedThisFrame)Interact(nearest);
         }
         public bool Interact(Map02ObjectiveObject target)
         {
@@ -271,6 +280,8 @@ namespace ShadowVale.Map01
                 else{if(data.skills!=null)skills.Restore(data.skills);skills.RestoreMission(data.skillMission);}
             }
             if(Chapter!=null)Chapter.Restore(data.chapter??Map02ChapterState.Migrate(World));
+            ResetMapSafety();
+            TickMapSafety();
             Notify();
         }
         public void StoreCheckpoint(){if(!Ready||!CanSave())return;var data=Capture();data.checkpoint=null;checkpoint=JsonUtility.ToJson(data);}
@@ -290,7 +301,7 @@ namespace ShadowVale.Map01
                 if(!career.TryFlush(out var error))throw new IOException(error);
             pending=Parse(entry.checkpoint);Time.timeScale=1;SceneManager.LoadScene("Map 2");
         }
-        void OnDestroy(){voice?.Stop();if(hudChart!=null)Destroy(hudChart);if(hudDisc!=null)Destroy(hudDisc);if(hudMiniChart!=null)Destroy(hudMiniChart);if(hudArrow!=null)Destroy(hudArrow);if(hudHealth!=null)Destroy(hudHealth);Time.timeScale=1;}
+        void OnDestroy(){voice?.Stop();if(hudChart!=null)Destroy(hudChart);if(hudArrow!=null)Destroy(hudArrow);if(hudHealth!=null)Destroy(hudHealth);Time.timeScale=1;}
         void OnGUI()
         {
             if(!Ready||ForestMenu.Visible)return;
@@ -309,7 +320,7 @@ namespace ShadowVale.Map01
             {
                 GUI.color=new Color(.025f,.035f,.025f,.94f);GUI.DrawTexture(new Rect(160,100,1280,700),Texture2D.whiteTexture);GUI.color=Color.white;
                 GUI.Box(new Rect(160,100,1280,700),GUIContent.none);GUI.Label(new Rect(200,125,1200,45),Panel==1?"TÚI ĐỒ":Panel==2?"NHIỆM VỤ":"BẢN ĐỒ MAP 2",heading);
-                if(Panel==1){int y=190;foreach(var item in Inventory.OrderBy(p=>p.Key)){GUI.Label(new Rect(200,y,1120,38),ForestInventory.Name(item.Key)+" × "+item.Value,body);y+=40;}GUI.Label(new Rect(200,y+10,1120,80),$"Đá: {Stones}\n{(Chapter!=null?Chapter.Instruction:"Hãy theo mục tiêu trên bản đồ.")}",body);}
+                if(Panel==1)DrawInventoryPanel();
                 else if(Panel==2)DrawObjectiveChoices(new Rect(200,190,1120,500));
                 else {DrawMap(new Rect(205,190,510,510));DrawObjectiveChoices(new Rect(750,190,620,500));}
                 GUI.Label(new Rect(200,730,1120,45),"Esc: đóng",small);
@@ -320,7 +331,7 @@ namespace ShadowVale.Map01
             }
             if(Panel==0)Chapter?.DrawOverlay();
             if(World.story.failed){GUI.Box(new Rect(420,290,760,240),GUIContent.none);GUI.Label(new Rect(455,320,690,95),World.story.failureCause,body);if(GUI.Button(new Rect(650,440,300,55),"Thử lại checkpoint"))Retry();}
-            if(Chapter?.Busy!=true&&Chapter?.Transitioning!=true&&Time.unscaledTime<messageUntil)GUI.Label(new Rect(400,250,800,90),message,body);
+            if(Panel==0&&Chapter?.Busy!=true&&Chapter?.Transitioning!=true&&Time.unscaledTime<messageUntil)GUI.Label(new Rect(400,250,800,90),message,body);
             GUI.matrix=matrix;GUI.color=color;GUI.depth=depth;
         }
         void DrawMap(Rect area)

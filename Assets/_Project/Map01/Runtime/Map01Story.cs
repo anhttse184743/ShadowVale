@@ -187,7 +187,6 @@ namespace ShadowVale.Map01
                 new L("Chỉ huy","Trinh sát đã thấy Hùng ở bến phía bắc. Anh ấy còn sống, nhưng đang bị giữ.",false,"m1_story_rescue_order_01"),
                 new L("Nam","Có mấy tên lính canh?",false,"m1_story_rescue_order_02"),
                 new L("Chỉ huy","Chưa rõ. Cậu tới quan sát trước, tìm cách đưa Hùng ra. Đừng nổ súng khi chúng còn giữ anh ấy.",false,"m1_story_rescue_order_03"),
-                new L("Nam","Rõ. Tôi sẽ tiếp cận kín rồi báo tình hình.",false,"m1_story_rescue_order_04"),
                 new L("Chỉ huy","Kiểm tra trang bị trước khi đi. Cứu được người thì đưa thẳng về hầm.",false,"m1_story_rescue_order_05"),
                 Map01OperationLines.Acknowledge()
             },()=>{Progress.rescueAccepted=true;GetComponent<Map01SaveSystem>().MarkRescueCheckpoint(false);});

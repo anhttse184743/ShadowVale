@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -24,6 +24,7 @@ namespace ShadowVale.Map01
     }
     [Serializable] public sealed class Map02ChapterState
     {
+        public Map02DayOneState dayOne=new Map02DayOneState();
         public int version=3,phase,evacuation,patrolWarnings,storedRounds;
         public List<string> introduced=new List<string>();
         public List<string> completed=new List<string>();
@@ -70,6 +71,7 @@ namespace ShadowVale.Map01
         }
         public void Validate()
         {
+            dayOne??=new Map02DayOneState();dayOne.Validate();
             var def=Map02ChapterDefinition.Load();
             if(completed==null||enemies==null||combatGroups==null)throw new System.IO.InvalidDataException("Dữ liệu Map 2 bị thiếu.");
             actors??=new List<ActorSnapshot>();

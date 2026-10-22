@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using ShadowVale.AI.Boss;
 using ShadowVale.Core.Events;
 using ShadowVale.Data.Content;
@@ -168,9 +168,8 @@ namespace ShadowVale.Map01
         public void BeginCommanderOrder()
         {
             if(Stage!=ReportCampsStage||!story.Progress.radioDisabled||!story.Progress.powerDisabled)return;Stage=BossStage;EnsureCommander();
-            // The transmitted order and Nam's local acknowledgement play once, in sequence.
-            if(GetComponent<Map01C3Mission>()?.CachePoint!=null)
-                mission.Say(Map01C3Dialogue.CommanderOrder,8);
+            // The report dialogue already includes the Mosin location and one reply.
+            // Advancing the stage must not enqueue a second radio conversation.
         }
         // Scanning a camp provides intel only. It cannot complete supply/radio objectives.
         public void CompleteScouting()=>mission.Say("Đã ghi nhận ba vị trí. Tiếp tục mục tiêu chỉ huy đã giao.",5);

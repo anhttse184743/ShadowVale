@@ -14,7 +14,13 @@ namespace ShadowVale.Map01
             get
             {
                 var t=TrackedTask;if(t==null)return State.Objective;
+                EnsureDayState();var dayText=DayInstruction(t);if(dayText!=null)return dayText;
                 int n=State.Count(t.id);
+                if(t.id=="D1_01")return "Tới chốt đầu làng gặp anh Lực, nhấn E đối mật khẩu. Ghim vàng chỉ đúng người cần gặp.";
+                if(t.id=="D1_03")return "Đến nhà chị Lành, nhấn E trao thuốc cho ông Sáu. Việc này, cất thùng và sửa bến có thể làm theo thứ tự tùy ý.";
+                if(t.id=="D1_06")return "Ba việc đã xong. Gặp anh Thành và nhấn E báo cáo để chuyển sang Đêm 1.";
+                if(t.id=="N1_01")return "Tới hiên nhà chị Lành, nhấn E ngồi ăn cùng Hùng. Sau bữa cơm mới bắt đầu ca gác.";
+                if(t.id=="N1_04")return "Tới chiếu nghỉ, nhấn E đổi ca. Cảnh nghỉ kết thúc mới sang Ngày 2.";
                 if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)?$"Đang mang thùng {n+1}/{t.count}. Tới ghim vàng rồi nhấn E để đặt.":$"Đã chuyển {n}/{t.count}. Tới ghim vàng, nhấn E nhận thùng tiếp theo.";
                 if(escort!=null)
                 {
@@ -62,6 +68,7 @@ namespace ShadowVale.Map01
         public string Prompt(Map02ChapterTask t)
         {
             int n=State.Count(t.id);
+            if(t.id=="D1_04"&&n>=3)return "Sắp xếp ba thùng vào kho kín";
             if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)&&State.activeTask==t.id?$"Đặt thùng {n+1}/{t.count} tại {(t.id=="D1_04"?"kho kín":"chỗ trú bến nam")}":$"Nhận thùng {n+1}/{t.count} tại {(t.id=="D1_04"?"bến cập":"kho kín")}";
             if(t.kind=="families")return $"Dặn dò hộ dân {n+1}/{t.count}";
             if(escort!=null&&State.activeTask==t.id)return $"Dẫn {escort.role} tới {(t.kind.StartsWith("rescue")?"bến nam":t.kind=="escortScout"?"chỗ anh Thành":t.kind=="escortHung"?"nhà chị Lành":t.site=="gate"?"chốt đầu làng":t.site=="rest"?"chỗ nghỉ":"chốt bờ tre")}";
