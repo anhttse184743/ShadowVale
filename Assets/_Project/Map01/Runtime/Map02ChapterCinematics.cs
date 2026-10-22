@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.AI;
 namespace ShadowVale.Map01
@@ -24,7 +24,7 @@ namespace ShadowVale.Map01
         {
             get{var point=ChargePoint+(sites["ditch"].position-ChargePoint).normalized*3;return NavMesh.SamplePosition(point,out var h,2,NavMesh.AllAreas)?h.position:ChargePoint;}
         }
-        float SceneDuration=>sceneTask?.seconds??0;
+        float SceneDuration=>sceneTask?.id=="N1_04"||sceneTask?.id=="N1_01"?DaySceneMinimum:sceneTask?.seconds??0;
         void StartRescueEscort(Map02ChapterTask task)
         {
             escort=roles[task.kind=="rescueChild"?"Bé Tí":"Ông Sáu"];escort.Follow(Mission.Player,1.5f);

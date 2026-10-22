@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -12,7 +12,7 @@ namespace ShadowVale.Map01.Tests {
     public class DialogueVoiceTests:ForestSceneTestBase {
         [Serializable] class Catalog {public Entry[] entries;}
         [Serializable] class Entry {
-            public string id,caption,match,resource,cleanResource,language,pendingVoice;
+            public string id,caption,match,resource,cleanResource,language,pendingVoice,reusedFrom;
             public bool radio;
             public float duration;
         }
@@ -56,7 +56,13 @@ namespace ShadowVale.Map01.Tests {
             var source=JsonUtility.FromJson<Catalog>(File.ReadAllText("SourceArt/Dialogue/voice-catalog.json"));
             CollectionAssert.AreEquivalent(source.entries.Select(e=>e.id),catalog.entries.Select(e=>e.id));
             Assert.AreEqual(catalog.entries.Length,catalog.entries.Select(e=>e.id).Distinct().Count(),"Voice IDs must be unique.");
-            Assert.AreEqual(catalog.entries.Length,catalog.entries.Select(e=>e.resource).Distinct().Count(),"Every line needs its own recording.");
+            var originals=catalog.entries.Where(e=>string.IsNullOrEmpty(e.reusedFrom)).ToArray();
+            Assert.AreEqual(originals.Length,originals.Select(e=>e.resource).Distinct().Count(),"Only explicit exact-text aliases may reuse a recording.");
+            foreach(var alias in catalog.entries.Where(e=>!string.IsNullOrEmpty(e.reusedFrom))){
+                var original=originals.Single(e=>e.id==alias.reusedFrom);
+                Assert.AreEqual(original.caption,alias.caption,alias.id);Assert.AreEqual(original.radio,alias.radio,alias.id);
+                Assert.AreEqual(original.resource,alias.resource,alias.id);Assert.AreEqual(original.cleanResource,alias.cleanResource,alias.id);
+            }
             CollectionAssert.AreEquivalent(RadioIds,catalog.entries.Where(e=>e.radio).Select(e=>e.id));
             foreach(var line in catalog.entries) {
                 Assert.IsNotEmpty(line.id);Assert.IsNotEmpty(line.caption,line.id);

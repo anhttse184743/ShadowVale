@@ -68,11 +68,12 @@ namespace ShadowVale.Map01.Tests
                 .SelectMany(o=>o.GetComponentsInChildren<MeshRenderer>()).Any(r=>r.enabled),"The pre-chapter grey blocks are not shown under the chapter.");
             Assert.IsFalse(Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Where(o=>string.IsNullOrEmpty(o.chapterId))
                 .SelectMany(o=>o.GetComponentsInChildren<MeshFilter>()).Where(f=>f.sharedMesh!=null&&f.sharedMesh.name=="Cube").SelectMany(f=>f.GetComponents<Collider>()).Any(c=>c.enabled),"Nor do they block the way as invisible boxes.");
-            Assert.AreEqual("",Stock(),"Nothing is in the store before Day 1's crates arrive.");
-            // Day 1: each crate from the dock goes onto the cart.
-            Set("D1_04","D1_04",1);yield return Frames(3);Assert.AreEqual("ammo",Stock());
+            Assert.AreEqual("",Stock(),"Nothing is on the cart before Day 3.");
+            // Day 1: the landing's crates are the Day 1 props (carried and packed into the store by the Day 1 activity).
+            Set("D1_04","D1_04",1);yield return Frames(3);Assert.AreEqual("",Stock(),"Day 1's crates go into the store, not onto the cart.");
             // Day 3 starts with exactly what Day 1 brought in, and E outlines the item it would lift.
             Set("D3_01");yield return Frames(3);Assert.AreEqual("ammo,medkit,grenades",Stock());
+            Assert.IsFalse(Object.FindObjectsByType<Transform>(FindObjectsSortMode.None).Any(t=>t.name.StartsWith("Supply crate ")&&t.gameObject.activeInHierarchy),"From Day 3 the cart holds that stock; the Day 1 crates are not shown twice.");
             Assert.AreEqual("medkit",chapter.HighlightFor(Marker("D3_01"))?.name,"The first trip lifts the medicine.");
             Place(chapter.Sites["store"].position+Vector3.back*.6f);
             bool outlined=false;for(int i=0;i<30&&!outlined;i++){yield return null;outlined=InteractHighlight.Current!=null&&InteractHighlight.Current.name=="medkit";}

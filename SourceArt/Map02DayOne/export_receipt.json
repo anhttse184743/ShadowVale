@@ -1,0 +1,82 @@
+[
+  {
+    "action": "Assist",
+    "frames": 121,
+    "sha256": "1bc3f4ae4137553b336b91c703ff71c7e1136a5aaecb5f94e50c3013a598565c"
+  },
+  {
+    "action": "AssistWalk",
+    "frames": 121,
+    "sha256": "972bc0814aed953d72bd5e529e886f8281458b6d8350a2c6f8c5aafd03198c08"
+  },
+  {
+    "action": "BandageHung",
+    "frames": 121,
+    "sha256": "90982d7e58071e2fc4ba43e2f2ab5c6beeaf75461727cac43f3674da3bdd664f"
+  },
+  {
+    "action": "BandageLanh",
+    "frames": 121,
+    "sha256": "7a9437fc4f9b2d315fdb5fdb9e861131d9fc55dfa5705c7fa14fd45eabc6b127"
+  },
+  {
+    "action": "Carry",
+    "frames": 121,
+    "sha256": "7ba370a2d049b554597c93e1997ffafbb0760bf49baff2b46a71e3a6ab8a1703"
+  },
+  {
+    "action": "CarryWalk",
+    "frames": 121,
+    "sha256": "7ad316eaee14b3fd5df3ce70c14d472ed019efacaa37db9e62361de714a81d0b"
+  },
+  {
+    "action": "Hammer",
+    "frames": 121,
+    "sha256": "8926519f1337208a148a494a5fdb96826f996b6d214d4f76cc2c8187e4b4a445"
+  },
+  {
+    "action": "InjuredIdle",
+    "frames": 121,
+    "sha256": "c4dd30d9b9cd4305d4f9c2e7c6e4d7e8ea21a0d1be74a9507ddc25691fadecdf"
+  },
+  {
+    "action": "InjuredWalk",
+    "frames": 121,
+    "sha256": "cebc297521958ecf94253cb4921b6d0bd65455c898f37682a2b9fef50bb8128a"
+  },
+  {
+    "action": "MealHung",
+    "frames": 121,
+    "sha256": "2c59dfe8381f667e008a93a1351bab7da09a1eb765da2b9b908abf1c140c70a5"
+  },
+  {
+    "action": "MealNam",
+    "frames": 121,
+    "sha256": "aa409df402e6e067930eb86ca24397bbbbd6efd7eb731d86ed8ca3e39effae98"
+  },
+  {
+    "action": "Medicine",
+    "frames": 121,
+    "sha256": "c8334471f93aef5069dba71353fa56bbda9ed3791a3014bc612a1cc74e6a4eeb"
+  },
+  {
+    "action": "PlaceCrate",
+    "frames": 121,
+    "sha256": "0e310ca8d4f8e9dc799b70f9f01c3da7479362c653ca2f5abec90fb9719b00e7"
+  },
+  {
+    "action": "Rest",
+    "frames": 121,
+    "sha256": "26a5205c48b8fe9aad7ea21dcb84c5d94ecb95e0a98d0f42e2d3c346ccc0b457"
+  },
+  {
+    "action": "RestHung",
+    "frames": 121,
+    "sha256": "ed67f1a1236d3d1790c330c62487681960b5bc1a2010e50b5aae9b2df50bd34c"
+  },
+  {
+    "action": "RestNam",
+    "frames": 121,
+    "sha256": "6887f818c6f595a047da0b5d2eac239b2c3588b43f8095043882caba93ecf8b0"
+  }
+]

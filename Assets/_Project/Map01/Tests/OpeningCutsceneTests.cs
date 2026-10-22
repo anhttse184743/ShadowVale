@@ -160,7 +160,7 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsTrue(dialogue.IsPlaying);Assert.AreEqual(dialogue.Count-1,dialogue.Index);Assert.IsFalse(voice.HasSpeech);
                 yield return WaitGameSeconds(1.1f);
                 Assert.IsTrue(dialogue.IsPlaying);Assert.IsFalse(quest.RescueOrderAccepted,"Listening to every line still requires a separate E press.");
-                CollectionAssert.AreEqual(Enumerable.Range(1,5).Select(i=>"m1_story_rescue_order_"+i.ToString("00")).Concat(new[]{"m1_v2_rescue_approach_03"}),heard);
+                CollectionAssert.AreEqual(new[]{1,2,3,5}.Select(i=>"m1_story_rescue_order_"+i.ToString("00")).Concat(new[]{"m1_v2_rescue_approach_03"}),heard);
                 interactionHeld=false;yield return WaitGameSeconds(.2f);
                 interactionHeld=true;yield return WaitGameSeconds(.3f);
                 Assert.IsTrue(quest.RescueOrderAccepted);Assert.IsFalse(dialogue.IsPlaying||mission.Cinematic||Map01OpeningCutscene.Active);

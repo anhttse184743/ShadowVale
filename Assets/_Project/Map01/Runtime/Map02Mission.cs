@@ -78,6 +78,10 @@ namespace ShadowVale.Map01
         string message;
         float messageUntil;
         Map02ObjectiveObject nearest;
+        bool waitWorldERelease;float worldEAfter;
+        public void RequireInteractionRelease(){waitWorldERelease=Keyboard.current?.eKey.isPressed==true;worldEAfter=Time.unscaledTime+.15f;}
+        bool WorldEReady(Keyboard kb){if(waitWorldERelease){if(kb.eKey.isPressed)return false;waitWorldERelease=false;}return Time.unscaledTime>=worldEAfter;}
+
         Map02ObjectiveObject[] targets=Array.Empty<Map02ObjectiveObject>();
         Map02QuestLayout questLayout;
         GUIStyle body, heading, small;
@@ -133,6 +137,8 @@ namespace ShadowVale.Map01
             questLayout=FindFirstObjectByType<Map02QuestLayout>();
             dialogue=new Map02ConversationSession(World.story);
             Ready=true;
+            InstallMapSafety();
+            arrival?.ReleasePassengerAnimation();
             Chapter=gameObject.AddComponent<Map02ChapterDirector>();Chapter.Initialize(this,questLayout);RefreshChapter();
             InitializeCharacter();
             StartCoroutine(PrepareHudChart());
@@ -145,6 +151,8 @@ namespace ShadowVale.Map01
             if(Ready)SyncSkills();
             TickCharacterEffects();
             if (!Ready || Paused || ForestMenu.Visible) return;
+            TickMapSafety();
+            Chapter?.UpdateMarkers();
             TickCharacter();
             RefreshRoute();
             if (!World.story.failed) PlaySeconds+=Time.deltaTime;
@@ -152,10 +160,10 @@ namespace ShadowVale.Map01
             // What [E] would use, and its outline, whatever the input device.
             if(!dialogue.Active&&!World.story.failed&&Chapter?.LocksInput!=true&&Panel==0)
             {
-                nearest=NearestObjective();
+                nearest=Chapter?.HasNearbyPost==true?null:NearestObjective();
                 InteractHighlight.Focus(nearest!=null?Chapter?.HighlightFor(nearest)??nearest.transform:NearestGroundItem()?.transform);
             }
-            var kb=Keyboard.current;if(kb==null)return;
+            var kb=Keyboard.current;if(kb==null)return;bool worldEReady=WorldEReady(kb);
             if(dialogue.Active)
             {
                 if(kb.escapeKey.wasPressedThisFrame){CancelConversation();return;}
@@ -168,7 +176,8 @@ namespace ShadowVale.Map01
             if(kb.jKey.wasPressedThisFrame){TogglePanel(2);return;}
             if(kb.mKey.wasPressedThisFrame){TogglePanel(3);return;}
             if(Panel!=0)return;
-            if(kb.eKey.wasPressedThisFrame){if(nearest!=null)Interact(nearest);else TryCharacterInteraction();}
+            if(Chapter?.HasNearbyPost==true){nearest=null;if(worldEReady)Chapter.TryInteractNearbyPost();return;}
+            if(worldEReady&&kb.eKey.wasPressedThisFrame){if(nearest!=null)Interact(nearest);else TryCharacterInteraction();}
         }
         Map02ObjectiveObject NearestObjective()
         {
@@ -306,6 +315,8 @@ namespace ShadowVale.Map01
             if(Chapter!=null)Chapter.Restore(data.chapter??Map02ChapterState.Migrate(World));
             SyncSkills();RestoreCharacter(data);
             if(Chapter?.State.PatrolRouteActive==true)EnsurePatrolCheckpoint();else patrolCheckpoint=null;
+            ResetMapSafety();
+            TickMapSafety();
             Notify();
         }
         public void EnsurePatrolCheckpoint()
@@ -361,7 +372,7 @@ namespace ShadowVale.Map01
             {
                 GUI.color=new Color(.025f,.035f,.025f,.94f);GUI.DrawTexture(new Rect(160,100,1280,700),Texture2D.whiteTexture);GUI.color=Color.white;
                 GUI.Box(new Rect(160,100,1280,700),GUIContent.none);GUI.Label(new Rect(200,125,1200,45),Panel==1?"TÚI ĐỒ":Panel==2?"NHIỆM VỤ":"BẢN ĐỒ MAP 2",heading);
-                if(Panel==1){int y=190;foreach(var item in Inventory.OrderBy(p=>p.Key)){GUI.Label(new Rect(200,y,1120,38),ForestInventory.Name(item.Key)+" × "+item.Value,body);y+=40;}GUI.Label(new Rect(200,y+10,1120,80),$"Đá: {Stones}\n{(Chapter!=null?Chapter.Instruction:"Hãy theo mục tiêu trên bản đồ.")}",body);}
+                if(Panel==1)DrawInventoryPanel();
                 else if(Panel==2)DrawObjectiveChoices(new Rect(200,190,1120,500));
                 else {DrawMap(new Rect(205,190,510,510));DrawObjectiveChoices(new Rect(750,190,620,500));}
                 GUI.Label(new Rect(200,730,1120,45),"Esc: đóng",small);
@@ -372,7 +383,7 @@ namespace ShadowVale.Map01
             }
             if(Panel==0)Chapter?.DrawOverlay();
             if(World.story.failed){GUI.Box(new Rect(420,290,760,240),GUIContent.none);GUI.Label(new Rect(455,320,690,95),World.story.failureCause,body);if(GUI.Button(new Rect(650,440,300,55),"Thử lại checkpoint"))Retry();}
-            if(CharacterHud==null&&Chapter?.Busy!=true&&Chapter?.Transitioning!=true&&Time.unscaledTime<messageUntil)GUI.Label(new Rect(400,250,800,90),message,body);
+            if(Panel==0&&CharacterHud==null&&Chapter?.Busy!=true&&Chapter?.Transitioning!=true&&Time.unscaledTime<messageUntil)GUI.Label(new Rect(400,250,800,90),message,body);
             GUI.matrix=matrix;GUI.color=color;GUI.depth=depth;
         }
         void DrawMap(Rect area)

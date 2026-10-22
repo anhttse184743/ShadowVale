@@ -309,6 +309,16 @@ namespace ShadowVale.Map01.Tests
             var points = Object.FindObjectsByType<ForestPoint>(FindObjectsSortMode.None);
             var crate = points.Single(p => p.id == "tutorial_loot");
             var supplies = points.Single(p => p.id == "supplies");
+            // The old shipping marker beside the jetty must not offer E or respond to old callers.
+            var oldExit = GameObject.Find("river_exit").GetComponent<ForestPoint>();
+            if (Keyboard.current == null) InputSystem.AddDevice<Keyboard>();
+            Teleport(mission, oldExit.transform.position);
+            yield return WaitGameSeconds(.2f);
+            Assert.AreNotSame(oldExit, interaction.Nearby, "The retired delivery marker cannot take the interaction prompt.");
+            string previousDialogue = mission.Dialogue; int previousStage = quest.Stage;
+            interaction.Interact(oldExit);
+            Assert.AreEqual(previousDialogue, mission.Dialogue, "Old exit references cannot show the obsolete shipping response.");
+            Assert.AreEqual(previousStage, quest.Stage);
             Assert.AreEqual(0, crate.restockSeconds, "The starting crate gives its kit once: the base no longer refills itself.");
             Assert.AreEqual(0, supplies.restockSeconds);
 

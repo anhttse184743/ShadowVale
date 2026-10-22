@@ -48,12 +48,12 @@ namespace ShadowVale.Map01.Tests
         }
         [Test]public void DialogueFollowsWherePeopleActuallyAreAndWhyTheyMove()
         {
-            var d=Map02ChapterDefinition.Load();Assert.AreEqual(43,d.tasks.Length);Assert.AreEqual(135,d.entries.Length);
+            var d=Map02ChapterDefinition.Load();Assert.AreEqual(43,d.tasks.Length);Assert.AreEqual(139,d.entries.Length);Assert.True(d.Lines("arrivalbank").All(e=>!e.radio));Assert.AreEqual(2,d.Lines("duckevent").Length);
             Assert.IsFalse(d.Lines("day1report").Any(e=>e.speaker=="Hùng"));
             Assert.IsTrue(d.Lines("promise").Any(e=>e.id=="m2v3_day1report_04"));
             Assert.IsTrue(d.Lines("boatsafe").All(e=>e.radio));
             Assert.IsTrue(d.Lines("child").Last().speaker=="Chú Bảy");
-            Assert.AreEqual("patrolHung",d.Find("N1_03").kind);Assert.AreEqual("patrolHung",d.Find("N1_04").kind);
+            Assert.AreEqual("patrolHung",d.Find("N1_03").kind);Assert.AreEqual("cinematic",d.Find("N1_04").kind);
             Assert.AreEqual("command",d.Find("D2_04").site);
         }
         [UnityTest,Timeout(360000)]public IEnumerator LiveFocusPromptsAndRealEscortPathKeepRescuedPeopleAtSafety()

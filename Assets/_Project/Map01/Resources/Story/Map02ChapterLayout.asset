@@ -27,6 +27,8 @@ MonoBehaviour:
     prefab: {fileID: 5919166819237297731, guid: b5366c22bc8cad54d876648671db5910, type: 3}
   - role: "B\xE9 T\xED"
     prefab: {fileID: 8497960597794566686, guid: e969c10c69e15824faa1da209f85cad9, type: 3}
+  - role: "H\xF9ng"
+    prefab: {fileID: 3074639621431819192, guid: da8f6cf4b6ab9dd499d9a80674d831e9, type: 3}
   enemyArt: {fileID: 7461267688925482901, guid: 2bb747894f951aa439d2d8dfd28cb5c3, type: 3}
   sites:
   - id: command
@@ -91,7 +93,13 @@ MonoBehaviour:
     position: {x: -6.2, y: 0.2, z: -92.3}
   - id: boatFar2
     position: {x: -8.2, y: 0.2, z: -85.3}
+  - id: dayOneFamily
+    position: {x: -50.7, y: 1.03, z: -35.7}
+  - id: nightOneRest
+    position: {x: -47.7, y: 1.03, z: -35.7}
   supplyCrateRounds: 30
+  dayOneSunIntensity: 0.82
+  dayOneOilLampIntensity: 0.65
   nightSunIntensity: 0.08
   nightSkyExposure: 0.08
   patrolSweepSeconds: 15

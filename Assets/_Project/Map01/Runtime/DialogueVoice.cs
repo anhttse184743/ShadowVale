@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -56,6 +56,9 @@ namespace ShadowVale.Map01 {
         public float SpeakText(string text) {
             Find("");if(string.IsNullOrEmpty(text))return 0;
             var matches=catalog.entries.Where(e=>!e.id.StartsWith("m1_open_") && !string.IsNullOrEmpty(e.match) && text.Contains(e.match))
+                // Exact-text aliases let chapter cues share an approved recording.
+                // They are alternatives, not additional utterances of the same line.
+                .GroupBy(e=>e.match,StringComparer.Ordinal).Select(group=>group.First())
                 .OrderBy(e=>text.IndexOf(e.match,StringComparison.Ordinal)).Select(e=>Find(e.id)).ToArray();
             if(matches.Length==0)return 0;Begin(matches);
             return matches.Sum(e=>e.clip!=null?e.clip.length+.18f:0);

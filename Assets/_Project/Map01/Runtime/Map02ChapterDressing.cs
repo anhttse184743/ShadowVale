@@ -40,7 +40,7 @@ namespace ShadowVale.Map01
         static string TripKind(string task,int trip)=>task=="D3_02"?"grenades":task=="D3_01"?(trip==0?"medkit":"ammo"):trip==0?"ammo":trip==1?"medkit":"grenades";
         static float Depth(string kind)=>kind=="grenades"?.35f:kind=="medkit"?.31f:.15f;   // along the row
         string CargoKind()=>TripKind(State.carry,State.Count(State.carry));
-        static readonly string[] PickupTasks={"D1_04"};   // Day 3's are taken from the store's stock on the cart
+        static readonly string[] PickupTasks={};   // Day 1's crates are the Day 1 props; Day 3's are taken from the store's stock on the cart
         readonly Dictionary<string,(GameObject pile,string key)> pickups=new Dictionary<string,(GameObject,string)>(),delivered=new Dictionary<string,(GameObject,string)>();
         static readonly string[] DeliveryTasks={"D3_01"};
         bool oldPlaceholdersHidden;
@@ -113,6 +113,9 @@ namespace ShadowVale.Map01
         /// taken (or is carrying) to the south shelter and the bank hole. Day 3's pickups are fetched from it.</summary>
         void RefreshStoreStock(Map02ChapterDefinition def)
         {
+            // Until Day 3 the Day 1 crates themselves stand in the store; from Day 3 the cart holds that stock.
+            foreach(var crate in physicalCrates)if(crate!=null&&State.phase>=4)crate.gameObject.SetActive(false);
+            if(State.phase<4){if(storeStock!=null)Destroy(storeStock);storeStock=null;storeStockKey=null;return;}
             var bring=def.Find("D1_04");var take=def.Find("D3_01");
             var stock=bring==null?new List<string>():Trips("D1_04",0,State.Done("D1_04")?bring.count:Mathf.Min(State.Count("D1_04"),bring.count));
             if(take!=null)
@@ -150,6 +153,8 @@ namespace ShadowVale.Map01
             // Day 3's pickups: only the item that this E would lift, on the cart.
             string next=marker.chapterId=="D3_01"?TripKind("D3_01",State.Count("D3_01")):marker.chapterId=="D3_02"&&!State.introduced.Contains("D3_02")?"grenades":null;
             if(next!=null)return storeStock!=null?storeStock.transform.Find(next):null;
+            // Day 1: the next crate at the landing.
+            if(marker.chapterId=="D1_04"){int i=State.Count("D1_04");return i<physicalCrates.Count?physicalCrates[i]:null;}
             return pickups.TryGetValue(marker.chapterId,out var p)&&p.pile!=null?p.pile.transform:null;
         }
         GameObject CargoArt(string kind)
@@ -164,7 +169,7 @@ namespace ShadowVale.Map01
         // Runs after the animator, so the arms are posed on top of the walk.
         void HoldCargo()
         {
-            bool show=!string.IsNullOrEmpty(State.carry)&&sceneTask==null;
+            bool show=!string.IsNullOrEmpty(State.carry)&&State.carry!="D1_04"&&sceneTask==null;   // Day 1's crate is carried by the Day 1 pose
             string kind=show?CargoKind():heldKind;
             if(HeldCargo!=null&&(!show||heldKind!=kind))HeldCargo.SetActive(false);
             if(!show)

@@ -24,7 +24,7 @@
       ],
       "count": 1,
       "scene": "bandage",
-      "seconds": 3,
+      "seconds": 24,
       "purpose": "Hùng bị thương tay phải; cần được thay băng trước khi nhận việc."
     },
     {
@@ -109,7 +109,7 @@
         "N1_01"
       ],
       "count": 1,
-      "scene": "duck",
+      "scene": "postbamboo",
       "seconds": 3,
       "purpose": "Kiểm tra ca trực cùng Hùng; giữ gần người đi cùng."
     },
@@ -131,7 +131,7 @@
       "id": "N1_04",
       "title": "Cùng Hùng về chỗ nghỉ và đổi ca",
       "phase": 1,
-      "kind": "patrolHung",
+      "kind": "cinematic",
       "site": "rest",
       "requires": [
         "N1_03"
@@ -610,42 +610,42 @@
   "entries": [
     {
       "id": "m2v3_contact_01",
-      "conversation": "m2v3_contact",
+      "conversation": "m2v3_arrivalbank",
       "speaker": "Anh Thành",
       "text": "Đường về bị chặn rồi. Mình ở lại đây, chờ tin.",
-      "radio": true
-    },
-    {
-      "id": "m2v3_contact_02",
-      "conversation": "m2v3_contact",
-      "speaker": "Nam",
-      "text": "Rõ.",
       "radio": false
     },
     {
       "id": "m2v3_contact_03",
-      "conversation": "m2v3_contact",
+      "conversation": "m2v3_arrivalbank",
       "speaker": "Anh Thành",
       "text": "Hùng đi băng lại tay. Nam lo bắt liên lạc.",
-      "radio": true
+      "radio": false
     },
     {
-      "id": "m2v3_contact_04",
+      "id": "m2v3_password_01",
+      "conversation": "m2v3_contact",
+      "speaker": "Anh Lực",
+      "text": "Nước đã lên chưa?",
+      "radio": false
+    },
+    {
+      "id": "m2v3_password_02",
       "conversation": "m2v3_contact",
       "speaker": "Nam",
-      "text": "Rõ.",
+      "text": "Đò còn đợi ở bến.",
       "radio": false
     },
     {
       "id": "m2v3_contact_08",
-      "conversation": "m2v3_contact",
+      "conversation": "m2v3_arrivalbank",
       "speaker": "Anh Thành",
       "text": "Trong lúc chờ, giao thuốc, cất vật tư vào kho kín rồi sửa bến cùng chú Bảy. Nam giúp một tay.",
-      "radio": true
+      "radio": false
     },
     {
       "id": "m2v3_contact_09",
-      "conversation": "m2v3_contact",
+      "conversation": "m2v3_arrivalbank",
       "speaker": "Nam",
       "text": "Rõ.",
       "radio": false
@@ -801,15 +801,16 @@
       "id": "m2v3_promise_05",
       "conversation": "m2v3_promise",
       "speaker": "Hùng",
-      "text": "Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay, ăn với cà pháo, nhất làng luôn. ...Ngon hơn nồi này nhiều.",
+      "text": "Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay, ăn với cà pháo, nhất làng luôn. ...Bữa đó cả nhà chị Lành cùng ra chơi nữa nhé.",
       "radio": false
     },
     {
       "id": "m2v3_promise_06",
       "conversation": "m2v3_promise",
       "speaker": "Chị Lành",
-      "text": "Nghe hết đó nha.",
-      "radio": false
+      "text": "Nghe hết đó nha. Mời thì nhớ giữ lời. Tí, ngồi gọn lại cho ông ăn.",
+      "radio": false,
+      "pendingVoice": true
     },
     {
       "id": "m2v3_promise_07",
@@ -855,16 +856,16 @@
     },
     {
       "id": "m2v3_duck_01",
-      "conversation": "m2v3_duck",
+      "conversation": "m2v3_duckevent",
       "speaker": "Nam",
-      "text": "Tiếng gió ở bờ tre.",
+      "text": "Vịt thôi.",
       "radio": false
     },
     {
       "id": "m2v3_duck_02",
-      "conversation": "m2v3_duck",
+      "conversation": "m2v3_duckevent",
       "speaker": "Hùng",
-      "text": "Ừ. Đi tiếp thôi, đừng rời chốt.",
+      "text": "Biết mà.",
       "radio": false
     },
     {
@@ -899,7 +900,7 @@
       "id": "m2v3_shift_01",
       "conversation": "m2v3_shift",
       "speaker": "Nam",
-      "text": "Đến giờ đổi ca rồi. Cậu nằm nghỉ đi.",
+      "text": "",
       "radio": false
     },
     {
@@ -1215,13 +1216,6 @@
       "conversation": "m2v3_supper",
       "speaker": "Anh Thành",
       "text": "Sáng mai đường có thể thông. Tối nay ngủ sớm. Nam, ca đầu.",
-      "radio": false
-    },
-    {
-      "id": "m2v3_lastorder_02",
-      "conversation": "m2v3_supper",
-      "speaker": "Nam",
-      "text": "Rõ.",
       "radio": false
     },
     {
@@ -1552,6 +1546,41 @@
       "conversation": "m2v3_dawn",
       "speaker": "Nam",
       "text": "Tôi hứa với nó rồi.",
+      "radio": false
+    },
+    {
+      "id": "m2v3_postbamboo_01",
+      "conversation": "m2v3_postbamboo",
+      "speaker": "Nam",
+      "text": "Đèn đã che, cửa cài chắc. Lối đi cũng thông rồi.",
+      "radio": false
+    },
+    {
+      "id": "m2v3_postbamboo_02",
+      "conversation": "m2v3_postbamboo",
+      "speaker": "Anh Lực",
+      "text": "Được. Qua chốt đầu làng kiểm tra nốt đi.",
+      "radio": false
+    },
+    {
+      "id": "m2v3_postbamboo_03",
+      "conversation": "m2v3_postbamboo",
+      "speaker": "Nam",
+      "text": "Rõ.",
+      "radio": false
+    },
+    {
+      "id": "m2v3_repair_done_01",
+      "conversation": "m2v3_repairdone",
+      "speaker": "Chú Bảy",
+      "text": "Chắc rồi. Có người xuống bến cũng yên tâm.",
+      "radio": false
+    },
+    {
+      "id": "m2v3_repair_done_02",
+      "conversation": "m2v3_repairdone",
+      "speaker": "Nam",
+      "text": "Xong rồi chú.",
       "radio": false
     }
   ]

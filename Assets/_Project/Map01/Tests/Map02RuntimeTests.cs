@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
@@ -46,6 +46,10 @@ namespace ShadowVale.Map01.Tests
             var medicine=Mark("D1_03");Move(m,medicine.transform.position);Assert.IsTrue(m.Interact(medicine));
             typeof(Map02ChapterDirector).GetMethod("EndScene",BindingFlags.NonPublic|BindingFlags.Instance).Invoke(m.Chapter,null);
             for(int i=0;i<2;i++){Move(m,crate.transform.position);Assert.IsTrue(m.Interact(crate));Move(m,crate.transform.position);Assert.IsTrue(m.Interact(crate));}
+            Assert.IsFalse(m.Chapter.State.Done("D1_04"));Assert.AreEqual(0,m.Chapter.State.storedRounds);
+            Move(m,crate.transform.position);Assert.True(m.Interact(crate));
+            bool Solve(Map02DayOneState state,int i=0){if(i==3)return state.Packed;for(int r=0;r<2;r++)for(int x=2;x<6;x++)for(int y=0;y<4;y++){if(!state.PlaceCrate(i,x,y,r==1,out _))continue;if(Solve(state,i+1))return true;state.crates[i]=new Map02DayOneState.Placement();}return false;}
+            Assert.True(Solve(m.Chapter.State.dayOne));typeof(Map02ChapterDirector).GetMethod("CompletePacking",BindingFlags.NonPublic|BindingFlags.Instance).Invoke(m.Chapter,null);
             Assert.IsTrue(m.Chapter.State.Done("D1_04"));Assert.AreEqual(m.Chapter.Layout.supplyCrateRounds*3,m.Chapter.State.storedRounds);Assert.AreEqual(13,m.Inventory["ammo_rifle"]);Assert.AreEqual(61,h.Current);Assert.AreEqual(9,gun.RoundsInMagazine);
             var storage=typeof(ForestSaveSlots).GetField("storageRoot",BindingFlags.Static|BindingFlags.NonPublic);var old=storage.GetValue(null);
             try
