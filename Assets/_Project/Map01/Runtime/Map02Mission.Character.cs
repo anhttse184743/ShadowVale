@@ -16,7 +16,7 @@ namespace ShadowVale.Map01
         public ForestBundle CharacterContent {get;private set;}
         public Camera GameCamera=>cameraRig!=null?cameraRig.GetComponent<Camera>():Camera.main;
         public float Stamina {get;private set;}
-        public bool CharacterGearLocked=>!string.IsNullOrEmpty(Chapter?.State.carry)||Chapter?.MovementLocked==true;
+        public bool CharacterGearLocked=>!string.IsNullOrEmpty(Chapter?.State.carry)||Chapter?.Companion!=null||Chapter?.DayActivityActive==true||Chapter?.MovementLocked==true;
         public bool CharacterCanSprint=>Chapter?.MovementLocked!=true&&Stamina>2&&Chapter?.State.wounded!=true;
         // The player's panel still blocks controls, but field crafting must leave enemies active.
         public bool CharacterWorldBlocked=>!Ready||Paused||Cinematic||Chapter?.LocksInput==true||World.story.failed

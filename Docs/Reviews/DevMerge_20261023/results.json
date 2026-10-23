@@ -1,0 +1,931 @@
+{
+  "stages": [
+    {
+      "stage": "focused-01",
+      "total": 109,
+      "results": {
+        "Passed": 106,
+        "Failed": 3
+      }
+    },
+    {
+      "stage": "followup-03",
+      "total": 17,
+      "results": {
+        "Passed": 15,
+        "Failed": 2
+      }
+    },
+    {
+      "stage": "targeted-04",
+      "total": 3,
+      "results": {
+        "Passed": 2,
+        "Failed": 1
+      }
+    },
+    {
+      "stage": "stone-05",
+      "total": 1,
+      "results": {
+        "Failed": 1
+      }
+    },
+    {
+      "stage": "stone-06",
+      "total": 1,
+      "results": {
+        "Failed": 1
+      }
+    },
+    {
+      "stage": "stone-07",
+      "total": 1,
+      "results": {
+        "Failed": 1
+      }
+    },
+    {
+      "stage": "stone-08",
+      "total": 1,
+      "results": {
+        "Failed": 1
+      }
+    },
+    {
+      "stage": "stone-final-09",
+      "total": 1,
+      "results": {
+        "Failed": 1
+      }
+    }
+  ],
+  "unique": 123,
+  "latest_results": {
+    "Passed": 122,
+    "Failed": 1
+  },
+  "cases": [
+    {
+      "test": "ShadowVale.Map01.Tests.AiIntegrationTests.WithQieaTheCampIsPlannedByThePythonSidecar",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 24.830351,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.CrouchStoneTests.CrouchedThrowKeepsLegsPlantedAndRestoresKnifeAndRifle",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 28.574739,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.DialogueVoiceTests.ClosingCommanderBriefingDoesNotQueueSpeechOrAcceptOrder",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 17.230087,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.DialogueVoiceTests.CurrentOperationDialogueUsesMatchingCharacterRecordings",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.004808,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.DialogueVoiceTests.EveryStoryLineHasVietnameseAudioAndOnlyRadioIsFiltered",
+      "result": "Passed",
+      "stage": "followup-03",
+      "seconds": 0.193921,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.DialogueVoiceTests.ExtractionRadioFinishesAllThreeLinesInOrder",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 33.876672,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.DialogueVoiceTests.LegacyBriefingUsesAlignedVoiceAssets",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.071844,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.DialogueVoiceTests.NewGameWaitsForCommanderAndDoesNotRepeatAcceptedBriefing",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 19.413885,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.DialogueVoiceTests.NewRescueRecordingsMatchTheUpdatedCaptions",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.009837,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.DialogueVoiceTests.PauseAndNewSpeakerDoNotOverlap",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 12.819921,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.DialogueVoiceTests.PendingReplacementLinesCannotAutoPlayTheirOldRecordings",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 4.690665,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.DialogueVoiceTests.RadioCueDoesNotReplayOrSelectDryVoice",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 4.702364,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.DialogueVoiceTests.RadioReplyWaitsForOrderAndSkipStopsSpeech",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 28.111221,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.ExtractionTests.GroundedMatchingActorsAndBoardingWithAllEnemiesAlive",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 22.99398,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.ExtractionTests.NaturalBoardingDepartsBeforeCompletion",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 48.968424,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.ExtractionTests.RadioSkipAndExtractionCheckpointAreIdempotent",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 27.871065,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.ExtractionTests.RiflesAndAimSurviveRadioHandoff",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 19.469606,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.ExtractionTests.SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 47.470376,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.FieldCraftingTests.C3AkPouchIsReachableIndependentOfOldCachesAndCannotRefillAfterLoad",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 24.795579,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.FieldCraftingTests.MapOneConversionKeepsMagazinesAndRefundsDamagePauseSaveAndOverflowOnce",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 37.733923,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.FieldCraftingTests.MapTwoFieldPanelLeavesWorldActiveAndSaveCancelsEscrowWithoutDuplicatingPacks",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 13.916932,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.FieldCraftingTests.ResourceLoopHasLossFinitePacksAndSeparateWorkshopRecipes",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.033075,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.GuardApproachTests.CrouchedRearApproachGivesTimeForOneKnifeKill",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 29.040609,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.GuardApproachTests.RecordOverseerContacts",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 20.273446,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map01DialogueRigRegressionTests.LegacyRigCanStartAndCheckpointReattachesHungController",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 21.655875,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map01DialogueRigRegressionTests.MainRadioReportDeliversMosinAndAcknowledgesOnlyOnce",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 40.997753,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map01DialogueRigRegressionTests.PointThreeMainOrderContainsMosinBeforeExactlyOneAcknowledgement",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.005595,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map01RevisionTests.EarlyOfficerDeathCannotSkipPointThree",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 27.170663,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map01RevisionTests.GunContactsAndEnemyShotHaveVisibleAndAudibleFeedback",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 18.783414,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map01RevisionTests.LocalConversationFramesHungAndRadioKeepsNamStill",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 20.783957,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map01RevisionTests.RevisedAudioHasExactCaptionsAndRetiresObsoleteOrders",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.032334,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map01StoryTests.LegacySupplyAndRadioSavesKeepProgressWithoutDuplicateRewards",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 16.608534,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map01StoryTests.NewGameWaitsForCommanderAndSeparateFinalAcceptance",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 23.019427,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map01StoryTests.RescueApproachAndExecutionNeverCutAwayFromNam",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 25.946703,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map01StoryVoiceTests.AllApprovedLinesHaveExactVoicesAndCleanMasters",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.036311,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map01StoryVoiceTests.BriefingSpeaksBothCharactersAndAutomaticallyAdvancesThenWaitsForAcceptance",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 37.153778,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ArrivalTests.FullNaturalDepartureKeepsBoatVisibleAfterSceneLoad",
+      "result": "Passed",
+      "stage": "followup-03",
+      "seconds": 91.144892,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02BoundaryGuidanceTests.EntireSurveyUsesUnclampedCartesianCoordinates",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.00231,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02BoundaryGuidanceTests.RealPerimeterStopsWalkingAndUnderworldSaveRecoversWithoutQuestOrInventoryReset",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 10.142305,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02BridgeCollisionTests.RealCharacterCannotWalkThroughRailsAndChildLoadsBesideMother",
+      "result": "Passed",
+      "stage": "targeted-04",
+      "seconds": 9.192549,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02BridgeCollisionTests.SavedSceneHasSolidSidesOnEveryBridgeWithoutDuplicateBarriers",
+      "result": "Passed",
+      "stage": "targeted-04",
+      "seconds": 0.505687,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02CastTests.ConversationFacesPartnerAtExactSpacingFromEveryApproach",
+      "result": "Passed",
+      "stage": "followup-03",
+      "seconds": 9.467529,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02CastTests.DayTwoAndNightTwoKeepVisibleActorsAcrossPreviewAndSaveLoad",
+      "result": "Passed",
+      "stage": "followup-03",
+      "seconds": 11.212271,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02CastTests.EveryNamedSourceModelHasAnAnimatedCharacterPrefab",
+      "result": "Passed",
+      "stage": "followup-03",
+      "seconds": 0.002694,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.RepairAndAntennaRequireActualInputAndCoverFireLocksOnlyMovement",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 9.224359,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterTests.DayOneAllowsFreeOrderButDoesNotOpenNightBeforeReport",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.001408,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterTests.EntireChapterHasSevenPhasesAndExactlyOneSacrifice",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.003964,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterTests.EveryTaskHasValidDependenciesUniqueIdentityAndNoOrphanedDialogue",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.002822,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterTests.InvalidAndOutOfOrderSavesAreRejected",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.002949,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterTests.LiveMapHasReachableObjectivesAndSkipSaveRestorePreserveChapter",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 20.524183,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterTests.SaveRoundTripKeepsCargoCountsNightWarningAmmoAndEnding",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.002258,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02CharacterHudTests.SharedBagSkillsWeaponsAndDiscoverySurviveMapTwoSaveLoad",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 22.164605,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ClarityTests.DialogueFollowsWherePeopleActuallyAreAndWhyTheyMove",
+      "result": "Passed",
+      "stage": "followup-03",
+      "seconds": 0.001306,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ClarityTests.EveryTaskExplainsItsPurposeWithoutRevealingFutureTasksInHud",
+      "result": "Passed",
+      "stage": "followup-03",
+      "seconds": 0.00087,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ClarityTests.FocusIsStableSelectableAndCannotAbandonCarriedCargo",
+      "result": "Passed",
+      "stage": "followup-03",
+      "seconds": 0.000882,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ClarityTests.IconsRotateAtTheirOwnPositionAtEveryHudScale",
+      "result": "Passed",
+      "stage": "followup-03",
+      "seconds": 0.002352,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ClarityTests.LiveFocusPromptsAndRealEscortPathKeepRescuedPeopleAtSafety",
+      "result": "Passed",
+      "stage": "followup-03",
+      "seconds": 75.389111,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ClarityTests.NorthUpMapAndCompassShareOneProjection",
+      "result": "Passed",
+      "stage": "followup-03",
+      "seconds": 0.002103,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ClarityTests.RifleActuallyHitsMapTwoEnemyAndARealWallBlocksTheBullet",
+      "result": "Passed",
+      "stage": "followup-03",
+      "seconds": 7.569192,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneIntegrationTests.ActualChapterRequiresPackingDockAndPostSafetyWithoutTouchingLaterDays",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 9.68249,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOnePlayableFlowTests.LandingToDayTwoThroughPlayerInput",
+      "result": "Passed",
+      "stage": "followup-03",
+      "seconds": 312.582776,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.ApprovedAcknowledgementsReuseExactCaptionOnly",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.004279,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.CorruptSavedGeometryIsRejected",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.003955,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.DayOneTasksKeepThreeIndependentBranches",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.002525,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(\"D1_03\",\"D1_04\",\"D1_05\")",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.001081,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(\"D1_03\",\"D1_05\",\"D1_04\")",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.000425,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(\"D1_04\",\"D1_03\",\"D1_05\")",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.000386,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(\"D1_04\",\"D1_05\",\"D1_03\")",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.000419,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(\"D1_05\",\"D1_03\",\"D1_04\")",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.000409,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(\"D1_05\",\"D1_04\",\"D1_03\")",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.00042,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryWetTemplateHasSolution(0)",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.001002,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryWetTemplateHasSolution(1)",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.000558,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryWetTemplateHasSolution(2)",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.0004,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.InvalidCrateMoveLeavesPreviousPosition",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.003078,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.LampNeedsShieldAndGateNeedsBothSteps",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.000629,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.NamAcknowledgesOnceAfterTheCompleteInstructionBlock",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.003395,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.PostsContainOnlySpecifiedFaultCounts",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.002664,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.SaveAndResetKeepPuzzleIdentity",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.001489,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.StakeHitsAndRepairUnitsAreDifferent",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.001031,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneTests.TwoQuestPacketsAreIdempotent",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.000795,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneVisualTests.CaptureWorkAndPorchStaging",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 16.54728,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests.AllDayOneAndNightOneSpokenCuesHaveExactDedicatedRecordings",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.010205,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests.EverySpokenCuePlaysToCompletionWithoutOverlap",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 124.551118,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.InvalidNewStateIsRejectedWithoutChangingVersionThree",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.006891,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.LiveWireEscortAndPatrolSaveLoadKeepTheirContracts",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 8.489812,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.OldVersionThreeWireSavesKeepCompletedTasksAndPendingWork",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.001764,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.PatrolResetRewindsOnlyNightRouteAndKeepsChapterResources",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.001448,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.WireRequiresPickupAndDeliveryAndCannotBeDuplicated",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.000814,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02M16SaveCompatibilityTests.SavedM16KeepsItsModelAndCaliberWithoutTheArrivalObject",
+      "result": "Passed",
+      "stage": "followup-03",
+      "seconds": 10.618933,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02PresentationTests.ActualFamilyCargoAndPostPresentation",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 9.932669,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02PresentationTests.CargoMaskPreservesForwardFeetAndChangesHandContact",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.406777,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02PresentationTests.CarryFramesAreForwardAndHungUsesTheMapOneAsset",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.010356,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02PresentationTests.LiveWalkingMealApproachAndDockControls",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 15.353862,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02RuntimeTests.M16ChapterStockUsesMatchingAmmoAndSurvivesSaveLoad",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 8.27534,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02RuntimeTests.ObjectCargoFlowSharesPauseMenuAndRestoresExactInventory",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 8.336157,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.StoneMouseInputTests.RapidGunToThrowableSwitchClearsAimFireAndReloadPoses",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 23.474315,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.StoneMouseInputTests.SlotFourAndMouseThrowWithoutFiringOrLosingCancelledStones",
+      "result": "Failed",
+      "stage": "stone-final-09",
+      "seconds": 20.800358,
+      "message": "  The thumb tip must curl too.\n  Expected: greater than 30.0f\n  But was:  20.0072784f\n"
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.ThrowEffectsTests.BlastAndSmokeBuildTheirEffectsAndClearAway",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 18.685219,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.ARealRifleKillAndCompletedReloadAdvanceToHealing",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 25.630188,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.CaptureTutorialPreview",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 22.003451,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.CargoAndCaptureAreOnTheWoodenBridge",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 2.445578,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.DeathRetriesOnlyTheCurrentStepAndRestoresSupplies",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 19.772601,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.GeneratedSceneIsEnabledOnceAndHungIsAVariant",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.00489,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.HidingInTheBushThenStabbingFromBehindCompletesWithoutAStone",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 21.366663,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.HoldingFRecordsTheActualVisibleSupplyCache",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 20.759242,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.KillingTheShootingTargetWithAKnifeFailsOnlyThatLesson",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 18.329029,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.LateSquadIsBoundAndHealingAlwaysHasUsableBandages",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 18.814551,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.LessonsProgressDirectlyFromTheOriginalShelterToTheJetty",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 2.002279,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.NewGameChoiceCanStartTheTutorial",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 13.861639,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.PauseResumesThePendingSlowMotionCue",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 20.777417,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.ReturnPatrolWaitsForTheBranchAndThenCaptureStarts",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 48.840167,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.ScoutingGuideLeadsToTheBridgeThenItsCargo",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 19.639594,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.SkippingFromPauseStartsFreshMapOneAtNormalSpeed",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 22.838996,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.SpottedDuringTheKnifeLessonRetriesWithEnter",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 28.366503,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.StartsAsHungWithLoadoutAndNoMapOneQuestOrSave",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 18.493715,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.TheKnifeGuardHasHisBackToTheApproachAndIsOutOfEarshot",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 1.890131,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.TheKnifeLessonTellsThePlayerToSneakThenHide",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 21.071099,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.TheMainRouteHasACompleteNavMeshPath",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 1.89391,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.TheStoneIsOptionalButStillLuresBeforeTheKnife",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 21.932551,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.TutorialPreservesTheOriginalTerrainShelterAndScenery",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 4.426841,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.WalkingInLoudThenHidingInTheBushStillWorks",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 29.282027,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.TutorialSceneTests.WeaponsLessonTeachesKnifeOnThreeThenTheRifleOnOne",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 19.214577,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.Coordination.RemoteSolverClientTests.ALiveSidecarSolvesWithTheRequestedVariant",
+      "result": "Passed",
+      "stage": "focused-01",
+      "seconds": 0.278526,
+      "message": ""
+    }
+  ]
+}

@@ -24,6 +24,20 @@ namespace ShadowVale.Map01.Tests
             yield return Ready();
             var mission = Object.FindFirstObjectByType<Map02Mission>();
             Assert.IsNull(Object.FindFirstObjectByType<Map02Arrival>());
+            // Direct entry now starts the bank briefing. Finish that introduction
+            // before exercising equipment; it must not complete Lực's contact task.
+            var chapter = mission.Chapter;
+            if (chapter.State.phase == 0 && !chapter.State.dayOne.arrivalSeen)
+            {
+                float deadline = Time.realtimeSinceStartup + 5;
+                while (chapter.CurrentScene == null && Time.realtimeSinceStartup < deadline) yield return null;
+                Assert.AreEqual("D1_01", chapter.CurrentScene?.id, "The direct-entry bank briefing must start.");
+                typeof(Map02ChapterDirector).GetMethod("EndScene", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(chapter, null);
+                yield return WaitGameSeconds(.2f);
+                Assert.IsTrue(chapter.State.dayOne.arrivalSeen);
+                Assert.IsFalse(chapter.State.Done("D1_01"));
+            }
+            Assert.IsFalse(mission.InputBlocked, "The introduction must return equipment controls.");
             var combat = mission.Player.GetComponent<PlayerCombat>();
             var gun = combat.WeaponFor(WeaponKind.Rifle);
             Assert.NotNull(gun);

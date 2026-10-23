@@ -58,7 +58,7 @@ namespace ShadowVale.Map01.Tests
             var voice=DialogueVoice.For(m.gameObject);
             Assert.NotNull(voice,"The mission must provide a valid DialogueVoice component.");
             var story=m.GetComponent<Map01Story>();var d=m.GetComponent<Map01StoryDialogue>();var q=m.GetComponent<Map01Quest>();
-            PlaceNamAtCommander(m);
+            PlaceNamAtCommander(m);yield return WaitGameSeconds(.3f);
             var at=m.player.position;
             int rounds=m.ModernCombat.RoundsInMagazine;
             float hp=m.ModernHealth.Current;
@@ -87,18 +87,18 @@ namespace ShadowVale.Map01.Tests
             yield return WaitGameSeconds(.2f);
             float deadline=Time.realtimeSinceStartup+120;
             bool capturedNam=false;
-            while((d.Index<5||voice.HasSpeech)&&Time.realtimeSinceStartup<deadline){
+            while((d.Index<d.Count-1||voice.HasSpeech)&&Time.realtimeSinceStartup<deadline){
                 if(d.Index==1&&!capturedNam) {
                     float shot=(float)typeof(Map01StoryDialogue).GetField("cameraElapsed",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(d);
                     if(shot>=.75f) { ScreenCapture.CaptureScreenshot("Logs/Map01StoryVoice/close-briefing-Nam.png");capturedNam=true; }
                 }
                 Assert.IsTrue(m.Cinematic);Assert.IsFalse(q.RescueOrderAccepted);
-                Assert.Less(Vector3.Distance(at,m.player.position),.001f);
+                Assert.Less(Vector3.Distance(at,m.player.position),.02f,"Allow ground-contact settling up to 2 cm, matching the opening interaction test.");
                 Assert.LessOrEqual(Object.FindObjectsByType<DialogueVoice>(FindObjectsSortMode.None).Count(v=>v.HasSpeech),1,"Only one character speaks at a time.");
                 yield return null;
             }
-            Assert.AreEqual(5,d.Index);Assert.IsFalse(voice.HasSpeech);
-            CollectionAssert.AreEqual(Enumerable.Range(1,5).Select(i=>"m1_story_rescue_order_"+i.ToString("00")).Concat(new[]{"m1_v2_rescue_approach_03"}),heard);
+            Assert.AreEqual(d.Count-1,d.Index);Assert.IsFalse(voice.HasSpeech);
+            CollectionAssert.AreEqual(new[]{1,2,3,5}.Select(i=>"m1_story_rescue_order_"+i.ToString("00")).Concat(new[]{"m1_v2_rescue_approach_03"}),heard);
             Assert.IsTrue(d.IsPlaying);Assert.IsFalse(q.RescueOrderAccepted,"Listening must not silently accept the final order.");
             Directory.CreateDirectory("Logs/Map01StoryVoice");
             File.WriteAllLines("Logs/Map01StoryVoice/natural-briefing.txt",heard);

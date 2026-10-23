@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -472,6 +472,8 @@ namespace ShadowVale.Map01
         private void Restore()
         {
             GetComponent<DialogueVoice>()?.Stop();
+            GetComponent<Map01StoryDialogue>()?.Close(false);
+            GetComponent<Map01RescueCinematic>()?.CancelForRestore();
             try
             {
                 var data = JsonUtility.FromJson<CheckpointData>(pendingCheckpoint);
@@ -514,7 +516,7 @@ namespace ShadowVale.Map01
                 RestoreGameplay(data);
                 GetComponent<Map01Rescue>().RestoreHealth(data.hungHealth);
                 // Loading an escort resumes its pose; only the live rescue plays the rise from captivity.
-                mission.hung.GetComponentInChildren<Map01HungVisual>()?.RestoreAfterCinematic();
+                mission.hung.GetComponentInChildren<Map01HungVisual>()?.RestoreCheckpointPose();
                 GetComponent<Map01Scouting>().RestoreFound(data.scoutedCamps);
                 foreach (var point in mission.Points) point.used = data.used.Contains(point.id);
                 // Starting a scouting run over keeps the moment it started from; any other load

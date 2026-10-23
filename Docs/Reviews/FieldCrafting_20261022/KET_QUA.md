@@ -1,6 +1,6 @@
 # Chế tạo dã chiến và tiếp đạn AK
 
-Đã triển khai trong mã nguồn ngày 22/10/2026 theo phương án được người dùng duyệt. Thay đổi đang ở workspace; chưa commit/push.
+Đã triển khai theo phương án được người dùng duyệt và có trong commit `11c5349d` trên thinh. Kết quả kiểm tra sau khi merge dev ngày 23/10/2026 được bổ sung bên dưới.
 
 ## Cách dùng
 
@@ -49,3 +49,7 @@ Không sửa scene, prefab, clip, thông số sát thương hay tầm phát hi�
 - 8 ca còn hỏng cũng hỏng y hệt trên worktree sạch ở `e73346bd` và ở `86d8360d` (trước cả phần lựu đạn/Mosin), nên không do chế dã chiến: `CrouchStoneTests` (hông hạ 15–18 cm khi ném đá lúc ngồi — cần sửa tư thế trong Blender), `ExtractionTests` (chiều cao đứng), `GuardApproachTests.RecordOverseerContacts` và `Map01RevisionTests.GunContacts…` (chân chạm đất của clip lính), `Map01StoryTests.RescueApproach…` (góc camera nhảy 44°), `StoneMouseInputTests.SlotFour…` (test viết cho prop đá cũ "Stone in hand"/viên sỏi danh mục), `ThrowEffectsTests.BlastAndSmoke…` (ngưỡng ×3 không đạt được với công thức lọc âm hiện tại), `TutorialSceneTests.TutorialPreserves…` (cảnh hướng dẫn ít hơn Map 1 138 đối tượng).
 - Chưa chạy: hai ca cần solver Python (`svl-api` ở cổng 8011, mã ở `D:\DO_AN_GAME\shadowvale-solver-main`) vì máy chưa có Python.
 - Đã gỡ `FullRegressionAudit.cs` tạm (bản sao ở thư mục lượt chạy) và trả các ảnh/báo cáo đã commit mà lượt test ghi đè.
+
+## Kiểm tra sau merge dev — 23/10/2026
+
+`FieldCraftingTests` hiện có **4 ca, đều đạt** trên bản tích hợp: kinh tế vật tư; quy đổi/hủy/hoàn vật liệu Map 1; nguồn AK C3 hữu hạn qua save/load; chế tạo Map 2 giữ thế giới hoạt động và không nhân vật tư khi lưu. Hai ca QIEA cũng đã đạt với solver Python ở đường dẫn người dùng cung cấp. Hồi quy liên quan có 122/123 ca đạt; còn lỗi pose ngón cái cầm đá, đã ghi rõ trong [báo cáo merge](../DevMerge_20261023/KET_QUA.md). Các ghi chú chưa chạy Unity phía trên mô tả giai đoạn triển khai ban đầu.

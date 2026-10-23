@@ -36,9 +36,7 @@ namespace ShadowVale.Map01
                 surveyCamera.targetTexture=rt;surveyCamera.Render();RenderTexture.active=rt;
                 hudChart=new Texture2D(768,768,TextureFormat.RGB24,false){name="Map 2 village survey",wrapMode=TextureWrapMode.Clamp};
                 hudChart.ReadPixels(new Rect(0,0,768,768),0,0);hudChart.Apply();
-                var pixels=hudChart.GetPixels();
-                for(int y=0;y<768;y++)for(int x=0;x<768;x++)if(Vector2.Distance(new Vector2(x+.5f,y+.5f),new Vector2(384,384))>365)pixels[y*768+x]=Color.clear;
-                hudMiniChart=new Texture2D(768,768,TextureFormat.RGBA32,false){name="Map 2 north-up chart",wrapMode=TextureWrapMode.Clamp};hudMiniChart.SetPixels(pixels);hudMiniChart.Apply();
+
             }
             finally{if(sun!=null)sun.intensity=sunBefore;RenderSettings.ambientLight=ambient;foreach(var actor in actors)if(actor!=null)actor.enabled=true;surveyCamera.targetTexture=null;RenderTexture.active=previous;RenderTexture.ReleaseTemporary(rt);Destroy(survey);}
         }
@@ -52,26 +50,19 @@ namespace ShadowVale.Map01
         {
             hudStencil??=new GUIStyle(heading){font=Resources.Load<Font>("Menu/Fonts/BlackOpsOne-Regular")??heading.font,fontSize=23};
             hudCaption??=new GUIStyle(small){fontSize=17,wordWrap=true};
-            if(hudDisc==null)
-            {
-                hudDisc=new Texture2D(128,128,TextureFormat.RGBA32,false);
-                for(int y=0;y<128;y++)for(int x=0;x<128;x++)
-                {float d=Vector2.Distance(new Vector2(x,y),new Vector2(63.5f,63.5f))/63.5f;hudDisc.SetPixel(x,y,d>.99f?Color.clear:d>.965f?new Color(.87f,.68f,.32f):new Color(.06f,.09f,.05f,.95f));}
-                hudDisc.Apply();
-            }
-            var map=new Rect(28,24,230,230);GUI.DrawTexture(map,hudDisc);
-            // Fixed north-up village chart: landmarks do not scroll or rotate under the player.
-            var center=map.center;const float radius=115;
-            if(hudMiniChart!=null)GUI.DrawTexture(map,hudMiniChart);
-            DrawRoute(map,true);
+            var map=new Rect(28,24,230,230);GUI.Box(map,GUIContent.none);
+            // Match the complete square survey: radial clamping would move corner landmarks away from their actual position.
+
+            if(hudChart!=null)GUI.DrawTexture(map,hudChart);
+            DrawRoute(map,false);
             GUI.Label(new Rect(map.x+88,map.y+4,100,30),"BẮC ↑",hudCaption);
             var objective=TrackedObjective;
-            if(objective!=null)DrawObjectivePin(Map02Navigation.Disc(Point(objective),center,radius));
+            if(objective!=null)DrawObjectivePin(Map02Navigation.Plot(Point(objective),map));
             if(Chapter?.Companion!=null)
             {
-                var at=Map02Navigation.Disc(Chapter.Companion.transform.position,center,radius);var companionTint=GUI.color;GUI.color=new Color(.4f,.85f,1);GUI.DrawTexture(new Rect(at.x-4,at.y-4,8,8),Texture2D.whiteTexture);GUI.color=companionTint;
+                var at=Map02Navigation.Plot(Chapter.Companion.transform.position,map);var companionTint=GUI.color;GUI.color=new Color(.4f,.85f,1);GUI.DrawTexture(new Rect(at.x-4,at.y-4,8,8),Texture2D.whiteTexture);GUI.color=companionTint;
             }
-            DrawNamArrow(Map02Navigation.Disc(Player.position,center,radius),18);
+            DrawNamArrow(Map02Navigation.Plot(Player.position,map),18);
             GUI.Label(new Rect(52,254,235,28),"M  MỞ BẢN ĐỒ",hudCaption);
             string title=Chapter?.TrackedTask?.title??ObjectiveText;
             string instruction=Chapter?.Instruction??"Tới ghim vàng để tương tác.";

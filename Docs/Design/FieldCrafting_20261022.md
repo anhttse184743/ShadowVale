@@ -89,3 +89,7 @@ Các tỉ lệ, thời gian, nguồn gói và quyết định F1/Mosin thuộc �
 Thêm định nghĩa vật tư, hình/tooltip, nguồn cấp hữu hạn; bổ sung phần chế dã chiến trong túi và một job có nguyên liệu giữ riêng. Tách job này khỏi queue bàn đang có. Gắn điều kiện truy cập vào recipe thay vì mở tất cả `TryCraft` khi xa bàn. Giữ cùng nền inventory cho Map 1/2; thêm default/migration rõ ràng cho save cũ.
 
 Kiểm tra cần thiết khi triển khai: chỉ trừ đạn dự trữ; 20 M16 tạo đúng lượng ráp 10 AK; hủy/bị thương/túi đầy/lưu tải không nhân vật tư; nhận kit/gói không lặp; các nguồn AK hiện có vẫn đúng; hoạt động ở cả Map 1 và Map 2. Playtest một lượt ưu tiên AK và một lượt ưu tiên M16 để điều chỉnh tỉ lệ 2:1, thời gian và số gói theo đạn thực sự còn trước C3. Không giảm thêm sức mạnh M16 để bù cho thiếu nguồn đạn AK.
+
+## Trạng thái kiểm chứng — 23/10/2026
+
+Đã triển khai trong commit 11c5349d và kiểm tra lại sau merge dev: FieldCraftingTests 4/4 đạt trên Map 1/2, gồm quy đổi, hoàn vật liệu, save/load và túi AK C3 hữu hạn. Chi tiết và lỗi hồi quy còn lại: [báo cáo merge](../Reviews/DevMerge_20261023/KET_QUA.md).
