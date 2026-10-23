@@ -34,7 +34,11 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsTrue(c.State.Done("D1_05"));
                 Load("D2_05");var antenna=Mark("D2_06");Move(antenna);Assert.IsTrue(m.Interact(antenna));end.Invoke(c,null);
                 for(int i=0;i<25;i++)tick.Invoke(c,new object[]{.1f});Assert.IsFalse(c.State.Done("D2_06"),"Waiting without tuning cannot solve the antenna.");
-                Set("signal",.72f);Key();for(int i=0;i<21&&c.CurrentScene==null;i++)tick.Invoke(c,new object[]{.1f});Assert.AreEqual("D2_06",c.CurrentScene.id);end.Invoke(c,null);Assert.IsTrue(c.State.Done("D2_06"));
+                Key(UnityEngine.InputSystem.Key.W);for(int i=0;i<40;i++)tick.Invoke(c,new object[]{.1f});
+                Assert.AreEqual(c.Layout.antennaHeight,c.AntennaClimbHeight,.01f);
+                Set("signal",.72f);Key();for(int i=0;i<21;i++)tick.Invoke(c,new object[]{.1f});Assert.IsNull(c.CurrentScene,"Stable signal still requires tying and descending.");
+                Key(UnityEngine.InputSystem.Key.Space);for(int i=0;i<16;i++)tick.Invoke(c,new object[]{.1f});Assert.IsTrue(c.AntennaTied);
+                Key(UnityEngine.InputSystem.Key.S);for(int i=0;i<40&&c.CurrentScene==null;i++)tick.Invoke(c,new object[]{.1f});Key();Assert.AreEqual("D2_06",c.CurrentScene.id);end.Invoke(c,null);Assert.IsTrue(c.State.Done("D2_06"));
                 Load("N3_07");var cover=Mark("N3_08");Move(cover);Assert.IsTrue(m.Interact(cover));
                 var controller=m.Player.GetComponent<ShadowVale.Gameplay.Player.PlayerController>();var combat=m.Player.GetComponent<ShadowVale.Gameplay.Combat.PlayerCombat>();var hp=m.Player.GetComponent<ShadowVale.Gameplay.Combat.Health>();
                 Assert.IsTrue(c.MovementLocked);var approach=new UnityEngine.AI.NavMeshPath();Assert.IsTrue(UnityEngine.AI.NavMesh.CalculatePath(c.Actor("Hùng").transform.position,c.ChargePoint,UnityEngine.AI.NavMesh.AllAreas,approach));Assert.AreEqual(UnityEngine.AI.NavMeshPathStatus.PathComplete,approach.status);Assert.IsFalse(controller.InputAllowed());Assert.IsTrue(combat.InputAllowed());Assert.IsTrue(hp.CinematicInvulnerable);

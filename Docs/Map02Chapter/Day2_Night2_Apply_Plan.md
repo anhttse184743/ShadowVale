@@ -87,17 +87,23 @@ File chính: Map02ChapterState.cs, Map02ChapterDirector.cs, Map02Mission.cs và 
 
 ### Đợt 2 Làm một tuyến Ngày 2 chơi được
 
+Đã triển khai phần chơi được và kiểm chứng 10/10 test ngày 22/10/2026. Xem [kết quả Đợt 2](Day2_Night2_Phase2_Result.md); dáng leo hiện dùng pose bằng code, còn cần clip mỹ thuật chuyên dụng.
+
 Khảo sát hai đường tới cầu và đường hộ tống; dựng dấu vết, vị trí Tâm, tuần tra hữu hạn và điểm nhận ở chốt. Hoàn thiện mang dây. Tiếp đó gắn tương tác leo/dựng ăng-ten theo điểm bám. Tách hành vi theo tuyến vào partial/controller phù hợp để tránh tiếp tục dồn mọi loại việc vào Director.
 
 File/asset chính: Map02ChapterLayout.cs/.asset, Map02ChapterActor.cs, Map02ChapterEnemy.cs, Director và prop/dấu vết. Điều kiện xong: đi được cả hai đường; né hoặc xử lý địch đều cứu được Tâm; mang dây thực sự về trạm; chỉ tín hiệu ổn định mới nối máy.
 
 ### Đợt 3 Hoàn thiện Đêm 2
 
+Đã triển khai luật chơi, cửa kho, chuỗi đường bến, hướng dẫn đàm theo đèn và cue xích ngày 22/10/2026. Xem [kết quả Đợt 3](Day2_Night2_Phase3_Result.md); phần thu giọng/diễn xuất vẫn theo Đợt 4.
+
 Đặt vùng quan sát và đèn/tuần tra cụ thể; đồng bộ thoại chỉ đường với vòng quét, phản ứng phát hiện lần một và reset lần hai. Thêm kiểm tra cửa kho, chuỗi điểm đường bến và cue xích sắt. Hùng tiếp tục ở trạm làm mắt qua đàm, Nam về điểm hẹn không tính giờ.
 
 Điều kiện xong: vật che cản phát hiện; nhìn sai chỗ không xong quan sát; có thể qua đêm không giao tranh; lần hai luôn quay về đầu cầu với trạng thái đã định, không mất đồ hoặc giữ cảnh báo sai.
 
 ### Đợt 4 Gắn diễn xuất và âm thanh
+
+Đã triển khai dàn cảnh và pose/IK ngày 22/10/2026; xem [kết quả Đợt 4](Day2_Night2_Phase4_Result.md). Cảnh kết đêm có đoạn ngủ/đắp áo riêng; nhạc chủ đề hiện là motif nhạc cụ tạm. Bản thu 32 câu vẫn chờ Runway đăng nhập; các clip diễn xuất mỹ thuật chuyên dụng còn là slot thay thế, chưa coi toàn bộ Đợt 4 đã nghiệm thu.
 
 Dựng phản ứng “Vướng”, dìu Tâm, leo/buộc dây, cử chỉ tay trái và các cảnh kết đêm. Chuẩn bị slot animation riêng cho từng cảnh, không sửa rig gốc dùng chung của Map 1. Đồng bộ radio cue, xích sắt và đoạn nhạc Hùng từ Đêm 1. Gắn bản thu sau khi duyệt, không tạo audio trả phí trong phạm vi kế hoạch này.
 

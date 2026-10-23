@@ -47,6 +47,8 @@ namespace ShadowVale.Map01
             Bag.Changed+=WriteBagTotals;
             CharacterHud=gameObject.AddComponent<Map01Hud>();
             InitializeCharacterEffects();
+            Map01NamActions.For(CharacterHudSession.For(gameObject));
+            NamProneMotion.Install(CharacterHudSession.For(gameObject));
             combat.SlotPressed=slot=>{if(CharacterGearLocked){Say("Hoàn tất việc đang mang trước khi đổi trang bị.");return true;}return Bag.OnSlotKey(slot);};
             combat.ReserveRounds=()=>Bag.Count(Bag.HeldAmmoId);
             combat.DrawRounds=requested=>{int n=Mathf.Min(requested,Bag.Count(Bag.HeldAmmoId));Bag.Spend(Bag.HeldAmmoId,n);return n;};

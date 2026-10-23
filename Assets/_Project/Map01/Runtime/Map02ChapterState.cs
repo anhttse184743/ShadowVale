@@ -28,6 +28,9 @@ namespace ShadowVale.Map01
         // Additive version 3 fields: older completed tasks stay completed.
         public int wireStage; // 0 in store, 1 carried, 2 delivered
         public float patrolScanSeconds;
+        public float patrolFocusSeconds;
+        public Vector3 patrolFocusDirection;
+        public int night2GuidanceStage;
         public bool night2ChainCuePlayed;
         public List<string> night2RouteVisited=new List<string>();
         public bool PatrolRouteActive=>phase==3&&Done("N2_02")&&!Done("N2_05");
@@ -47,7 +50,7 @@ namespace ShadowVale.Map01
             completed.RemoveAll(id=>id=="N2_03"||id=="N2_04");
             introduced.RemoveAll(id=>id=="N2_03"||id=="N2_04"||id=="N2_05");
             activeTask=carry=null;trackedTask="N2_03";taskProgress=0;workCount=0;
-            patrolWarnings=0;patrolScanSeconds=0;night2ChainCuePlayed=false;night2RouteVisited.Clear();
+            patrolWarnings=0;patrolScanSeconds=patrolFocusSeconds=0;patrolFocusDirection=Vector3.zero;night2GuidanceStage=1;night2ChainCuePlayed=false;night2RouteVisited.Clear();
         }
         public List<string> introduced=new List<string>();
         public List<string> completed=new List<string>();
@@ -99,6 +102,10 @@ namespace ShadowVale.Map01
             if(completed==null||enemies==null||combatGroups==null)throw new System.IO.InvalidDataException("Dữ liệu Map 2 bị thiếu.");
             actors??=new List<ActorSnapshot>();
             night2RouteVisited??=new List<string>();
+            if(night2GuidanceStage<0||night2GuidanceStage>7||!float.IsFinite(patrolFocusSeconds)||patrolFocusSeconds<0||patrolFocusSeconds>3.01f||
+                !float.IsFinite(patrolFocusDirection.x)||!float.IsFinite(patrolFocusDirection.y)||!float.IsFinite(patrolFocusDirection.z))
+                throw new System.IO.InvalidDataException("Trạng thái đèn và hướng dẫn bộ đàm Đêm 2 không hợp lệ.");
+            if(Done("N2_02")&&night2GuidanceStage==0)night2GuidanceStage=night2ChainCuePlayed?7:1;
             if(wireStage<0||wireStage>2||patrolWarnings<0||patrolWarnings>2||!float.IsFinite(patrolScanSeconds)||patrolScanSeconds<0||
                 night2RouteVisited.Any(string.IsNullOrWhiteSpace)||night2RouteVisited.Distinct().Count()!=night2RouteVisited.Count)
                 throw new System.IO.InvalidDataException("Trạng thái tuyến Ngày 2 / Đêm 2 không hợp lệ.");

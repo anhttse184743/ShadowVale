@@ -1,0 +1,22 @@
+{
+  "file": "Nam_Crawl_Mixamo_Review_v4.blend1",
+  "size": 131228139,
+  "sha256": "f1b924a47a390939fbf91221f6432f1c8f5ca28ed03d7588e2ffa1aab23fbe6b",
+  "parts": [
+    {
+      "name": "Nam_Crawl_Mixamo_Review_v4.blend1.part001",
+      "size": 52428800,
+      "sha256": "7ef40e32f6ba773031308f9b588a4ee231051a513a1045f7261f9921f345f042"
+    },
+    {
+      "name": "Nam_Crawl_Mixamo_Review_v4.blend1.part002",
+      "size": 52428800,
+      "sha256": "01fdd470b30aeafa894c9743a503da99e067caaac2aea27f3ce2dff45c6983e8"
+    },
+    {
+      "name": "Nam_Crawl_Mixamo_Review_v4.blend1.part003",
+      "size": 26370539,
+      "sha256": "ece07a1d10e450ebb7a842bfc64fbee814691dae4f824c3a63c8df0f8e546d16"
+    }
+  ]
+}

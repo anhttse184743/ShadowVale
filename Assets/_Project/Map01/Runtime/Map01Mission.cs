@@ -243,6 +243,8 @@ namespace ShadowVale.Map01
                 inventory.GunBroke += OnGunBroke;
                 Map01Pistol.Install(this);
                 Map01Mosin.Install(this);
+                Map01NamActions.For(this);
+                NamProneMotion.Install(CharacterHudSession.For(gameObject));
             }
             if (gameCamera != null && gameCamera.TryGetComponent<ThirdPersonCamera>(out var cameraRig))
                 {

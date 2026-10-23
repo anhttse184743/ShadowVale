@@ -45,7 +45,7 @@ namespace ShadowVale.Map01
             }
             if(!float.IsNegativeInfinity(floor)){var local=visual.localPosition;local.y=visualY+Mathf.Clamp(floor-transform.position.y,-.6f,.6f);visual.localPosition=local;}
         }
-        public void Follow(Transform player,float speed){SetInjured(false);travelling=false;follow=player;pace=speed;repath=0;}
+        public void Follow(Transform player,float speed){SetInjured(false);SetSitting(false);travelling=false;follow=player;pace=speed;repath=0;}
         public void SceneMove(Vector3 position,Vector3 lookAt,float speed){transform.position=position;var look=Vector3.ProjectOnPlane(lookAt-position,Vector3.up);if(look.sqrMagnitude>.001f)transform.rotation=Quaternion.RotateTowards(transform.rotation,Quaternion.LookRotation(look),220*Time.deltaTime);if(animator!=null&&animator.runtimeAnimatorController!=null&&animator.parameters.Any(p=>p.name=="Speed"))animator.SetFloat("Speed",speed);}
         public void GoTo(Vector3 destination,float speed){SetInjured(false);travelling=true;follow=null;goal=destination;pace=speed;repath=0;}
         public void StopAt(Vector3 position)

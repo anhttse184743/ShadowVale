@@ -1,0 +1,32 @@
+{
+  "parameters": {
+    "body_yaw": -23.75,
+    "body_x": 0.15,
+    "body_y": -0.1,
+    "clavicle_forward": 55.0,
+    "clavicle_down": 50,
+    "spine1": 9.5,
+    "spine2": -24.5,
+    "gun_z": 0.268,
+    "left_pole": -0.10500000000000004,
+    "right_pole": 0.32500000000000007
+  },
+  "rig_measurements": {
+    "left_elbow_degrees": 83.99596569571348,
+    "left_forearm_elevation_degrees": 65.389339777786,
+    "body_heading_degrees": 23.463600299130356,
+    "chest_long_axis_elevation_degrees": 12.505935895601729,
+    "left_elbow_z": 0.059727441519498825,
+    "right_elbow_z": 0.03357245773077011,
+    "head_z": 0.34077852964401245,
+    "left_elbow_axis_offset": 0.046049050986766815,
+    "head_axis_offset": 0.02870345115661621,
+    "left_forearm_plan_heading_degrees": 7.220587415045047,
+    "right_upper_arm_plan_opening_degrees": 34.14779371776179,
+    "left_wrist_contact_error": 0.001721893393791394,
+    "right_wrist_contact_error": 0.0017470677847510098
+  },
+  "score": 4.295639948675944,
+  "evaluations": 401,
+  "scope": "Fictional character animation art constraints; no source rest changes or gameplay bindings."
+}

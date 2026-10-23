@@ -39,7 +39,7 @@ namespace ShadowVale.Gameplay.Player
         public bool IsInCover => CoverProbe != null && CoverProbe();
         /// <summary>No lighting model yet: the player is always fully lit.</summary>
         public float VisibilityFactor => 1f;
-        public Vector3 SightPoint => transform.position + Vector3.up * (IsCrouching ? crouchedSightHeight : standingSightHeight);
+        public Vector3 SightPoint => transform.position + Vector3.up * (GetComponent<PlayerController>()?.IsProne == true ? .4f : IsCrouching ? crouchedSightHeight : standingSightHeight);
         public bool IsAlive => Health == null || !Health.IsDead;
         public bool Owns(Transform t) => t != null && (t == transform || t.IsChildOf(transform));
         public bool IsReloading => Combat != null && Combat.IsReloading;

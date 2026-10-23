@@ -21,6 +21,7 @@ namespace ShadowVale.Gameplay.Player
         [Header("Arm")]
         [Tooltip("Pivot height above the target's feet — roughly head height.")]
         [SerializeField] private float pivotHeight = 1.6f;
+        private float _stancePivot;
 
         [Tooltip("Resting distance behind the pivot.")]
         [SerializeField] private float distance = 2.0f;
@@ -144,6 +145,7 @@ namespace ShadowVale.Gameplay.Player
 
         private void Awake()
         {
+            _stancePivot = pivotHeight;
             _camera = GetComponent<Camera>();
         }
 
@@ -196,7 +198,8 @@ namespace ShadowVale.Gameplay.Player
             _camera.fieldOfView = Mathf.Lerp(hipFov, aimFov, _aimBlend);
 
             Quaternion rotation = Quaternion.Euler(_pitch, _yaw, 0f);
-            Vector3 head = target.position + Vector3.up * pivotHeight;
+            _stancePivot = Mathf.Lerp(_stancePivot, target.GetComponent<PlayerController>()?.IsProne == true ? .55f : pivotHeight, 1-Mathf.Exp(-10*Time.deltaTime));
+            Vector3 head = target.position + Vector3.up * _stancePivot;
             Vector3 shoulder = rotation * Vector3.right * Mathf.Lerp(shoulderOffset, aimShoulderOffset, _aimBlend);
             float radius = CameraCollisionRadius();
             Vector3 pivot = head + shoulder.normalized * ClearDistance(head, shoulder.normalized, shoulder.magnitude, radius);

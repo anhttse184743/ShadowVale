@@ -55,6 +55,8 @@ MonoBehaviour:
     position: {x: 29, y: 0.77, z: -16.66}
   - id: bridge
     position: {x: 29, y: 0.73, z: -4.66}
+  - id: nightPatrol
+    position: {x: 53, y: 0.77, z: -28.66}
   - id: child
     position: {x: -77.17, y: 1.09, z: -29.35}
   - id: lane1
@@ -77,9 +79,21 @@ MonoBehaviour:
   nightSunIntensity: 0.08
   nightSkyExposure: 0.08
   patrolSweepSeconds: 15
+  nightPatrolLightRange: 28
   coverFireSeconds: 75
   civilianArt: {fileID: 0}
   tankArt: {fileID: 0}
   coveredHungArt: {fileID: 0}
   namMournClip: {fileID: 0}
   hungPlantRetreatClip: {fileID: 0}
+  dayTwoOpenRoute:
+  - {x: -52, y: 1, z: 15}
+  - {x: -20, y: 1, z: 14}
+  dayTwoCoveredRoute:
+  - {x: -65, y: 1, z: -15}
+  - {x: -25, y: 1, z: -24}
+  antennaHeight: 4
+  nightTwoEvacuationRoute:
+  - {x: -56, y: 1, z: -12}
+  - {x: -48, y: 1, z: -34}
+  - {x: -37, y: 1, z: -59}

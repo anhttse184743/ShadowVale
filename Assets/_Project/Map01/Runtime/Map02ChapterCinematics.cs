@@ -9,7 +9,7 @@ namespace ShadowVale.Map01
         Vector3[] sacrificePath=Array.Empty<Vector3>();float sacrificeTravel;bool executionShot;
         GameObject memorialArt;
         Map01CinematicPose hungActionPose;
-        void ReleaseSceneAction(){hungActionPose?.Dispose();hungActionPose=null;}
+        void ReleaseSceneAction(){ReleasePerformance();hungActionPose?.Dispose();hungActionPose=null;}
         public Vector3 ChargePoint
         {
             get{var point=(tank!=null?tank.transform.position:sites["lane3"].position+Vector3.forward*8)+Vector3.left*2.2f;return NavMesh.SamplePosition(point,out var h,4,NavMesh.AllAreas)?h.position:point;}

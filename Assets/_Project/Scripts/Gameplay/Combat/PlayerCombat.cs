@@ -135,6 +135,7 @@ namespace ShadowVale.Gameplay.Combat
 
         /// <summary>0 to 1 across a reload, for a HUD bar. 0 when not reloading.</summary>
         public float ReloadProgress => _magazine?.ReloadProgress ?? 0f;
+        public System.Func<bool> ProneReloadAvailable { get; set; }
 
         /// <summary>Puts a saved round count back in the weapon and clears any reload.</summary>
         public void RestoreMagazine(int rounds) => _magazine?.Refill(rounds);
@@ -143,10 +144,12 @@ namespace ShadowVale.Gameplay.Combat
         public bool TryReload()
         {
             if (_handsOccupied || _magazine == null || _equipped == null || !_equipped.IsGun) return false;
+            bool proneReload = _controller != null && _controller.IsProne && (ProneReloadAvailable?.Invoke() ?? false);
+            if (_controller != null && _controller.IsProne && !proneReload && !_controller.TrySetProne(false)) return false;
             bool wasEmpty = _magazine.IsEmpty;
             var skills = GetComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
             if (!_magazine.BeginReload(ReserveRounds != null ? ReserveRounds() : -1, (skills != null ? skills.ReloadMultiplier : 1f)*Mathf.Max(.1f,ReloadDurationMultiplier))) return false;
-            AnimateReload(wasEmpty);
+            if (!proneReload) AnimateReload(wasEmpty);
             return true;
         }
 
@@ -626,6 +629,7 @@ namespace ShadowVale.Gameplay.Combat
         /// </summary>
         private float PoseAimYaw()
         {
+            if (_controller != null && _controller.IsProne) return 0f;
             // Recoil moves the arms, not the feet. Keep the last resting aim reference through each kick.
             if (RecoilPosePlaying) return _stanceYaw;
             Transform muzzle = _equipped != null ? _equipped.Muzzle : null;

@@ -107,6 +107,9 @@ namespace ShadowVale.Map01
                 if(exploration.player!=null)exploration.player.gameObject.SetActive(false);
             }
             while (arrival != null && arrival.IsPlaying) yield return null;
+            // Give bridge rail carving a navigation update before chapter paths are surveyed.
+            yield return null;
+            yield return null;
             player=arrival != null && arrival.Passengers != null ? arrival.Passengers[0].GetComponent<PlayerController>() : exploration != null ? exploration.player : FindFirstObjectByType<PlayerController>();
             if (player == null) { Debug.LogError("Map 2 has no player to bind.",this); yield break; }
             combat=player.GetComponent<PlayerCombat>();health=player.GetComponent<Health>();
@@ -232,6 +235,7 @@ namespace ShadowVale.Map01
         public string SaveBlockReason()
         {
             if(!Ready)return "Đang bàn giao từ cảnh cập bến.";
+            if(player.GetComponent<Map01NamActions>()?.Busy==true)return "Đợi băng bó xong hoặc di chuyển để hủy trước khi lưu.";
             if(health!=null&&health.IsDead)return "Không thể lưu khi Nam đã gục ngã.";
             if(dialogue.Active)return "Hãy kết thúc hoặc đóng hội thoại trước khi lưu.";
             if(Chapter!=null&&!Chapter.MaySave)return Chapter.SaveReason;
@@ -278,6 +282,7 @@ namespace ShadowVale.Map01
         }
         public void Restore(Snapshot data)
         {
+            player.GetComponent<Map01NamActions>()?.CancelAction();
             Chapter?.Cancel();CancelConversation();World=JsonUtility.FromJson<Map02WorldState>(JsonUtility.ToJson(data.world));dialogue=new Map02ConversationSession(World.story);
             Inventory.Clear();foreach(var item in data.inventory)Inventory[item.id]=item.count;Stones=data.stones;PlaySeconds=data.playSeconds;checkpoint=data.checkpoint;patrolCheckpoint=data.patrolCheckpoint;
             var cc=player.GetComponent<CharacterController>();bool enabledBefore=cc!=null&&cc.enabled;if(cc!=null)cc.enabled=false;

@@ -197,11 +197,13 @@ namespace ShadowVale.Map01
             if (id == "medkit_small")
             {
                 if (mission.PlayerHealth >= mission.Settings.playerHP) { mission.Say("Máu đã đầy, chưa cần dùng băng cứu thương.", 3); return false; }
+                var actions=Map01NamActions.For(mission);
+                if(actions?.Busy==true)return false;
                 Spend(id, 1);
                 mission.RestoreHealthFromSave(Mathf.Min(mission.Settings.playerHP, mission.PlayerHealth + mission.Settings.medkitHeal));
                 mission.Say("Đã dùng băng cứu thương.", 3);
                 // Down on one knee winding the bandage on (Blender); walking off cuts it short.
-                Map01NamActions.For(mission.MapOne)?.Play(Map01NamActions.Bandage, 141f / 30f / 1.4f, true);
+                actions?.Play(Map01NamActions.Bandage, 141f / 30f / 1.4f, true);
             }
             else
             {

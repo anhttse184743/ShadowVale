@@ -36,7 +36,7 @@ namespace ShadowVale.Map01
         public const float UntieSeconds = 141f / 30f;
         private const float Blend = .15f;
 
-        private Map01Mission mission;
+        private CharacterHudSession mission;
         private Map01Inventory inventory;
         private Animator actor;
         private PlayerController controller;
@@ -68,6 +68,10 @@ namespace ShadowVale.Map01
 
         public static Map01NamActions For(Map01Mission mission)
         {
+            return mission!=null?For(CharacterHudSession.For(mission.gameObject)):null;
+        }
+        public static Map01NamActions For(CharacterHudSession mission)
+        {
             if (mission == null || mission.player == null) return null;
             var actions = mission.player.GetComponent<Map01NamActions>();
             if (actions == null) actions = mission.player.gameObject.AddComponent<Map01NamActions>();
@@ -75,12 +79,12 @@ namespace ShadowVale.Map01
             return actions;
         }
 
-        private void Bind(Map01Mission owner)
+        private void Bind(CharacterHudSession owner)
         {
             mission = owner;
             inventory = owner.GetComponent<Map01Inventory>();
             actor = owner.player.GetComponentInChildren<Animator>();
-            controller = owner.ModernPlayer; combat = owner.ModernCombat;
+            controller = owner.player.GetComponent<PlayerController>(); combat = owner.ModernCombat;
             body = owner.player.GetComponent<CharacterController>();
             if (actor == null || actor.runtimeAnimatorController == null) return;
             upperLayer = actor.GetLayerIndex(UpperLayer); stanceLayer = actor.GetLayerIndex(PlayerCombat.UpperBodyLayer);
@@ -128,6 +132,7 @@ namespace ShadowVale.Map01
         public bool Play(int id, float seconds, bool canCancel = false)
         {
             if (!ReadyFull || locked) return false;
+            if (controller != null && controller.IsProne && !controller.TrySetProne(false)) return false;
             locked = true; ActiveAction=id; cancelable = canCancel; fullUntil = Time.time + seconds;
             modelPosition = actor.transform.localPosition; modelRotation = actor.transform.localRotation;
             rootMotionWas = actor.applyRootMotion; actor.applyRootMotion = true;   // the take's own travel moves his model

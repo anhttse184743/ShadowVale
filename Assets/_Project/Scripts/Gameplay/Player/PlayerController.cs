@@ -20,6 +20,7 @@ namespace ShadowVale.Gameplay.Player
         [SerializeField] private float walkSpeed = 2.5f;
         [SerializeField] private float sprintSpeed = 6f;
         [SerializeField] private float sneakSpeed = 1.2f;
+        [SerializeField] private float crawlSpeed = .65f;
         [SerializeField] private float rotationSpeed = 720f; // deg/sec toward travel direction
         [SerializeField] private float acceleration = 14f;   // m/s^2 toward the target velocity
         [SerializeField] private float gravity = -20f;
@@ -43,6 +44,10 @@ namespace ShadowVale.Gameplay.Player
         private bool _sneakToggled;
         private RuntimeAnimatorController _paramsFor;
         private bool _hasMoveParams;
+        private float _standingHeight, _standingStep;
+        private Vector3 _standingCenter;
+        public bool IsProne { get; private set; }
+        public System.Func<bool> ProneAllowed { get; set; }
 
         public bool IsSneaking { get; private set; }
         public bool IsSprinting { get; private set; }
@@ -61,6 +66,7 @@ namespace ShadowVale.Gameplay.Player
         public float SurfaceSpeedMultiplier { get; set; } = 1;
         public void RestoreMotion(bool sneaking)
         {
+            SetProne(false, true);
             _planarVelocity = Vector3.zero;
             PlanarSpeed = 0f;
             _verticalVelocity = 0;
@@ -71,6 +77,9 @@ namespace ShadowVale.Gameplay.Player
         private void Awake()
         {
             _controller = GetComponent<CharacterController>();
+            _standingHeight = _controller.height;
+            _standingCenter = _controller.center;
+            _standingStep = _controller.stepOffset;
             _health = GetComponent<Health>();
             if (cameraTransform == null && Camera.main != null)
             {
@@ -103,6 +112,8 @@ namespace ShadowVale.Gameplay.Player
 
         private void Update()
         {
+            bool dead = _health != null && _health.IsDead;
+            if (dead && IsProne) SetProne(false, true);
             if (InputAllowed != null && !InputAllowed())
             {
                 _planarVelocity = Vector3.zero;
@@ -110,17 +121,19 @@ namespace ShadowVale.Gameplay.Player
                 if (animator != null) animator.SetFloat(PlayerCombat.AnimatorParams.Speed, 0);
                 return;
             }
-            bool dead = _health != null && _health.IsDead;
             Keyboard kb = dead ? null : Keyboard.current;
 
             Vector2 input = ReadMoveInput(kb);
+            bool stoodFromProne = IsProne && kb != null && (kb.zKey.wasPressedThisFrame || kb.spaceKey.wasPressedThisFrame);
+            if (stoodFromProne) TrySetProne(false);
+            else if (kb != null && kb.zKey.wasPressedThisFrame) TrySetProne(true);
             UpdateStanceToggles(kb);
 
             Vector3 move = ToCameraSpace(input);
 
             ApplyRotation(move);
 
-            float targetSpeed = IsSneaking ? sneakSpeed : IsSprinting ? sprintSpeed : walkSpeed;
+            float targetSpeed = IsProne ? crawlSpeed : IsSneaking ? sneakSpeed : IsSprinting ? sprintSpeed : walkSpeed;
             Vector3 targetVelocity = move * targetSpeed * SurfaceSpeedMultiplier;
             _planarVelocity = Vector3.MoveTowards(
                 _planarVelocity, targetVelocity, acceleration * Time.deltaTime);
@@ -131,7 +144,7 @@ namespace ShadowVale.Gameplay.Player
                 _verticalVelocity = -2f; // Stick to slopes instead of ratcheting downhill.
             }
 
-            if (grounded && kb != null && kb.spaceKey.wasPressedThisFrame)
+            if (grounded && !IsProne && !stoodFromProne && kb != null && kb.spaceKey.wasPressedThisFrame)
             {
                 // Jumping stands you up instead of being swallowed by the crouch.
                 _sneakToggled = false;
@@ -186,6 +199,10 @@ namespace ShadowVale.Gameplay.Player
         /// </summary>
         private void UpdateStanceToggles(Keyboard kb)
         {
+            if (IsProne) {
+                _sprintToggled = _sneakToggled = false;
+                IsSneaking = true; IsSprinting = false; return;
+            }
             if (kb == null)
             {
                 _sprintToggled = false;
@@ -209,6 +226,41 @@ namespace ShadowVale.Gameplay.Player
             if (SprintAllowed != null && !SprintAllowed()) _sprintToggled = false;
             IsSneaking = _sneakToggled;
             IsSprinting = _sprintToggled && !_sneakToggled;
+        }
+
+        public bool TrySetProne(bool value)
+        {
+            if (value == IsProne) return true;
+            if (value && (!_controller.isGrounded || (_health != null && _health.IsDead)
+                || ProneAllowed == null || !ProneAllowed() || (InputAllowed != null && !InputAllowed()))) return false;
+            return SetProne(value, false);
+        }
+
+        private bool SetProne(bool value, bool force)
+        {
+            if (_controller == null) return false;
+            if (!value && IsProne && !force && !CanStand()) return false;
+            IsProne = value;
+            float bottom = _standingCenter.y - _standingHeight * .5f;
+            _controller.stepOffset = value ? Mathf.Min(.08f, _standingStep) : _standingStep;
+            _controller.height = value ? Mathf.Max(.5f, _controller.radius * 2) : _standingHeight;
+            _controller.center = value ? new Vector3(_standingCenter.x, bottom + _controller.height * .5f, _standingCenter.z) : _standingCenter;
+            _sprintToggled = _sneakToggled = false;
+            IsSneaking = value; IsSprinting = false;
+            _planarVelocity = Vector3.zero; PlanarSpeed = 0;
+            return true;
+        }
+
+        private bool CanStand()
+        {
+            Vector3 center = transform.TransformPoint(_standingCenter);
+            float scale = Mathf.Abs(transform.lossyScale.y);
+            float radius = _controller.radius * Mathf.Max(Mathf.Abs(transform.lossyScale.x), Mathf.Abs(transform.lossyScale.z));
+            float half = Mathf.Max(0, _standingHeight * scale * .5f - radius);
+            foreach (var hit in Physics.OverlapCapsule(center + transform.up * half, center - transform.up * half,
+                Mathf.Max(.01f, radius - _controller.skinWidth), ~0, QueryTriggerInteraction.Ignore))
+                if (!hit.transform.IsChildOf(transform) && !Physics.GetIgnoreLayerCollision(gameObject.layer, hit.gameObject.layer)) return false;
+            return true;
         }
 
         private void ApplyRotation(Vector3 move)

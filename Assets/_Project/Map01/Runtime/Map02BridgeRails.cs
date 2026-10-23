@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.AI;
 namespace ShadowVale.Map01
 {
     /// <summary>Solid sides on the village bridges; the two ends stay open.</summary>
@@ -23,6 +24,10 @@ namespace ShadowVale.Map01
                     rail.enabled=true;rail.isTrigger=false;
                     rail.center=new Vector3(deck.center.x,deck.center.y+deck.size.y*.5f+.6f,deck.center.z+side*(deck.size.z*.5f-.11f));
                     rail.size=new Vector3(deck.size.x,1.2f,.22f);rails.Add(rail);
+                    // The saved NavMesh predates these rails. Companions must plan around them.
+                    var obstacle=child.GetComponent<NavMeshObstacle>();if(obstacle==null)obstacle=child.gameObject.AddComponent<NavMeshObstacle>();
+                    obstacle.shape=NavMeshObstacleShape.Box;obstacle.center=rail.center;obstacle.size=rail.size;
+                    obstacle.carving=true;obstacle.carveOnlyStationary=false;obstacle.carvingTimeToStationary=0;
                 }
             }
             return rails;

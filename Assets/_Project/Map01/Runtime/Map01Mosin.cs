@@ -43,7 +43,7 @@ namespace ShadowVale.Map01
         }
         void OnShot(WeaponKind kind,Vector3 point){if(kind==WeaponKind.Sniper)shotAt=Time.time;}
         bool Available=>mission!=null&&combat!=null&&combat.EquippedKind==WeaponKind.Sniper&&actor!=null&&actor.isActiveAndEnabled&&!mission.Cinematic
-            &&!(mission.ModernHealth?.IsDead??false)&&!(mission.Binoculars?.Binoculars??false)&&!(actions!=null&&(actions.Busy||actions.StoneActionPlaying));
+            &&!(mission.ModernHealth?.IsDead??false)&&GetComponent<PlayerController>()?.IsProne!=true&&!(mission.Binoculars?.Binoculars??false)&&!(actions!=null&&(actions.Busy||actions.StoneActionPlaying));
         void Update()
         {
             if(data==null||cameraRig==null)return;

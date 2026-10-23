@@ -257,7 +257,7 @@
       "id": "N2_02",
       "title": "Báo dấu hiệu đèn pin qua bộ đàm",
       "phase": 3,
-      "kind": "talk",
+      "kind": "patrolReport",
       "site": "bridge",
       "requires": [
         "N2_01"
@@ -271,7 +271,7 @@
       "id": "N2_03",
       "title": "Đi kín đáo tới kho, xác nhận cửa hầm còn kín",
       "phase": 3,
-      "kind": "reach",
+      "kind": "inspectDoor",
       "site": "store",
       "requires": [
         "N2_02"
@@ -285,7 +285,7 @@
       "id": "N2_04",
       "title": "Kiểm tra đường sơ tán ra bến nam",
       "phase": 3,
-      "kind": "reach",
+      "kind": "inspectRoute",
       "site": "dock",
       "requires": [
         "N2_03"

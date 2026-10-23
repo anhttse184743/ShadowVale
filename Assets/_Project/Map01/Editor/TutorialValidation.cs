@@ -13,6 +13,7 @@ namespace ShadowVale.Map01.Editor
         static TutorialValidation() { if (!string.IsNullOrEmpty(SessionState.GetString(Pending, ""))) Attach(); }
         private static void Attach() { api = ScriptableObject.CreateInstance<TestRunnerApi>(); api.RegisterCallbacks(new Results()); }
         public static void RunTutorial() => Run("Temp/tutorial-tests.xml", "ShadowVale.Map01.Tests.TutorialSceneTests");
+        public static void RunNamProne() => Run("Logs/AnimationPreview/NamCrawl/Unity/play-tests.xml", "ShadowVale.Map01.Tests.NamProneIntegrationTests");
         public static void RunMap02Conversation() => Run("Temp/map02-conversation-tests.xml", "ShadowVale.Map01.Tests.Map02CastTests.ConversationFacesPartnerAtExactSpacingFromEveryApproach");
         public static void RunMap02Skills() => Run("Temp/map02-skills-tests.xml", "ShadowVale.Map01.Tests.Map02SkillsTests");
         public static void RunMap01() => Run("Temp/map01-regression.xml", null);
