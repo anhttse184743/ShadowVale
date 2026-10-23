@@ -109,6 +109,34 @@ namespace ShadowVale.Map01.Tests
                         Assert.IsTrue(player.IsProne);Assert.IsTrue(magazine.enabled,"Magazine must be restored on completion.");
                         Assert.Greater(combat.RoundsInMagazine,5);
                     }
+                    var testBag=session.GetComponent<Map01Inventory>();
+                    testBag.Add("ammo_556",120);testBag.Add("ammo_pistol",80);testBag.Add("ammo_sniper",20);
+                    foreach(var weaponCase in new[]{("rifle_m16",WeaponKind.Rifle),("pistol_k54",WeaponKind.Pistol),("rifle_mosin",WeaponKind.Sniper)}) {
+                        var slot=Map01Inventory.SlotOf(weaponCase.Item1).Value;
+                        if(testBag.SlotItem(slot)!=weaponCase.Item1) {
+                            testBag.Add(weaponCase.Item1,1);
+                            if(testBag.SlotItem(slot)!=weaponCase.Item1) {
+                                int cell=Enumerable.Range(0,Map01Inventory.BagSize).First(i=>testBag.Cell(i)?.id==weaponCase.Item1);
+                                Assert.IsTrue(testBag.EquipFromCell(cell));
+                            }
+                        }
+                        Assert.IsTrue(combat.Equip(weaponCase.Item2));yield return WaitGameSeconds(.35f);
+                        Assert.IsTrue(player.IsProne);Assert.IsTrue(motion.CanReloadProne);
+                        int initial=combat.MagazineCapacity-2;combat.RestoreMagazine(initial);
+                        Assert.IsTrue(combat.TryReload());yield return WaitGameSeconds(combat.BaseReloadSeconds*skills.ReloadMultiplier*.35f);
+                        Assert.IsTrue(player.IsProne,weaponCase.Item1+" must not stand up to reload.");
+                        Assert.IsTrue(combat.IsReloading,weaponCase.Item1+" standing pose controller must not cancel the shared reload.");
+                        Assert.AreEqual("reload",motion.SelectedPose);
+                        Assert.AreEqual(combat.ReloadProgress,motion.ReloadPoseProgress,.06f);
+                        Capture(session,map,"reload-"+weaponCase.Item1);
+                        float end=Time.realtimeSinceStartup+12;
+                        while(combat.IsReloading && Time.realtimeSinceStartup<end)yield return null;
+                        Assert.IsFalse(combat.IsReloading);yield return null;yield return null;
+                        Assert.Greater(combat.RoundsInMagazine,initial);Assert.IsTrue(player.IsProne);
+                    }
+                    int akCell=Enumerable.Range(0,Map01Inventory.BagSize).First(i=>testBag.Cell(i)?.id=="rifle_standard");
+                    Assert.IsTrue(testBag.EquipFromCell(akCell));Assert.IsTrue(combat.Equip(WeaponKind.Rifle));
+                    yield return WaitGameSeconds(.3f);
                     combat.RestoreMagazine(5);Assert.IsTrue(combat.TryReload());
                     yield return WaitGameSeconds(.3f);
                     yield return Press(keyboard,Key.Z);

@@ -29,10 +29,11 @@ namespace ShadowVale.Map01
         Renderer[] hiddenMagazines;
         bool[] magazineEnabled;
         Quaternion magazineHome;
+        Vector3 magazineOffset;
+        ReloadMagazineCarrier magazineCarrier;
         bool reloadingPose;
         public bool CanReloadProne => enabled && data != null && data.Find("reload") != null
-            && combat != null && combat.EquippedKind == WeaponKind.Rifle && Available
-            && (bag == null || bag.SlotItem(Map01Inventory.Slot.Primary) != Map01M16.Id);
+            && combat != null && combat.EquippedIsGun && Available;
         public float ReloadPoseProgress { get; private set; }
         public float PoseWeight => weight;
         public string SelectedPose => selected;
@@ -106,7 +107,7 @@ namespace ShadowVale.Map01
                     receiverRenderer = gun != null ? gun.GetComponentsInChildren<Renderer>(true).FirstOrDefault(r => r.name.StartsWith("ul_dustcover")) : null;
                     magazineRenderer = gun != null ? gun.GetComponentsInChildren<Renderer>(true).FirstOrDefault(r => r.name.StartsWith("bm_magazine_low")) : null;
                 }
-                if(gun != null && gripRenderer != null) {
+                if(gun != null) {
                     var seat=reload ? take.grip.At(frame) : Map01PistolAnimationData.Pose.Mix(take.grip.At(frame), aimed.grip.At(frame), aim);
                     Vector3 authoredCenter=rightHand.TransformPoint(seat.position);
                     Vector3 center=reload ? authoredCenter : authoredCenter-transform.up*.05f;
@@ -122,9 +123,13 @@ namespace ShadowVale.Map01
                     Vector3 up=receiverRenderer != null && magazineRenderer != null
                         ? receiverRenderer.bounds.center-magazineRenderer.bounds.center : gun.Muzzle.up;
                     Quaternion current=Quaternion.LookRotation(gun.Muzzle.forward,up);
-                    gun.transform.rotation=Quaternion.Slerp(gun.transform.rotation,facing*Quaternion.Inverse(current)*gun.transform.rotation,weight);
-                    gun.transform.position+= (center-gripRenderer.bounds.center)*weight;
-                    if (reload) PresentMagazines(gun, take, frame);
+                    Vector3 pivot=rightHand.position;
+                    Quaternion turn=Quaternion.Slerp(Quaternion.identity,facing*Quaternion.Inverse(current),weight);
+                    gun.transform.SetPositionAndRotation(pivot+turn*(gun.transform.position-pivot),turn*gun.transform.rotation);
+                    if(gripRenderer != null)gun.transform.position+= (center-gripRenderer.bounds.center)*weight;
+                    // Mosin keeps its internal magazine and per-round ammo commits. Only
+                    // the body gesture is shared; no detachable AK magazine is fabricated.
+                    if (reload && combat.EquippedKind != WeaponKind.Sniper) PresentMagazines(gun, take, frame);
                 }
                 combat.GunPresentationReady=true;
             }
@@ -132,11 +137,15 @@ namespace ShadowVale.Map01
         void PresentMagazines(Weapon gun, NamProneAnimationData.Take take, float frame)
         {
             if (oldMagazine == null) {
-                hiddenMagazines=gun.GetComponentsInChildren<Renderer>(true).Where(r=>r.name.IndexOf("magazine",System.StringComparison.OrdinalIgnoreCase)>=0).ToArray();
+                hiddenMagazines=gun.ReloadModel.GetComponentsInChildren<Renderer>(true)
+                    .Where(r=>r.gameObject.activeInHierarchy && r.name.IndexOf("magazine",System.StringComparison.OrdinalIgnoreCase)>=0).ToArray();
                 magazineEnabled=hiddenMagazines.Select(r=>r.enabled).ToArray();
                 if(hiddenMagazines.Length==0)return;
                 var center=hiddenMagazines.Aggregate(Vector3.zero,(sum,r)=>sum+r.bounds.center)/hiddenMagazines.Length;
                 magazineHome=Quaternion.Inverse(actor.transform.rotation);
+                magazineOffset=actor.transform.InverseTransformPoint(center)-take.oldMagazine.At(1).position;
+                magazineCarrier=GetComponentInChildren<ReloadMagazineCarrier>();
+                if(magazineCarrier!=null)magazineCarrier.ExternalPose=true;
                 oldMagazine=new GameObject("Prone reload old magazine").transform;
                 oldMagazine.SetPositionAndRotation(center,Quaternion.identity);
                 foreach(var source in hiddenMagazines) {
@@ -155,7 +164,11 @@ namespace ShadowVale.Map01
             if(oldMagazine==null)return;
             int key=Mathf.Clamp(Mathf.FloorToInt(frame-1),0,take.oldVisible.Length-1);
             void Place(Transform prop,Map01PistolAnimationData.Track track,bool visible) {
-                var pose=track.At(frame);prop.localPosition=pose.position;prop.localRotation=pose.rotation*magazineHome;
+                var pose=track.At(frame);
+                float u=(frame-1)/(take.oldVisible.Length-1);
+                float seated=prop==oldMagazine ? 1-Mathf.SmoothStep(0,1,Mathf.InverseLerp(.1f,.3f,u))
+                    : Mathf.SmoothStep(0,1,Mathf.InverseLerp(.65f,.84f,u));
+                prop.localPosition=pose.position+magazineOffset*seated;prop.localRotation=pose.rotation*magazineHome;
                 prop.gameObject.SetActive(visible);
             }
             Place(oldMagazine,take.oldMagazine,take.oldVisible[key]);Place(newMagazine,take.newMagazine,take.newVisible[key]);
@@ -165,6 +178,7 @@ namespace ShadowVale.Map01
             if(hiddenMagazines!=null)for(int i=0;i<hiddenMagazines.Length;i++)if(hiddenMagazines[i]!=null)hiddenMagazines[i].enabled=magazineEnabled[i];
             if(oldMagazine!=null)Destroy(oldMagazine.gameObject);if(newMagazine!=null)Destroy(newMagazine.gameObject);
             oldMagazine=newMagazine=null;hiddenMagazines=null;magazineEnabled=null;ReloadPoseProgress=0;
+            if(magazineCarrier!=null)magazineCarrier.ExternalPose=false;magazineCarrier=null;
         }
         void RollHand(bool left,Vector3 pivot,Quaternion rotation)
         {

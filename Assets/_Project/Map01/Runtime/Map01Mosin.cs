@@ -55,6 +55,14 @@ namespace ShadowVale.Map01
         void LateUpdate()
         {
             if(data==null)return;
+            if(GetComponent<PlayerController>()?.IsProne==true && GetComponent<NamProneMotion>()?.CanReloadProne==true) {
+                weight=0;ReleaseTwist();wasReloading=false;
+                if(gun.parent!=rightHand)gun.SetParent(rightHand,false);
+                data.weapon.At(101).Apply(gun);
+                for(int i=0;i<parts.Length;i++)if(parts[i]!=null)data.parts[i].At(1).Apply(parts[i]);
+                if(round!=null)round.gameObject.SetActive(false);
+                return;
+            }
             bool active=Available,interrupted=combat.EquippedKind==WeaponKind.Sniper&&!active;
             if(interrupted)combat.CancelReload();
             weight=interrupted?0:Mathf.MoveTowards(weight,active?1:0,Time.deltaTime/combat.StanceBlendSeconds);

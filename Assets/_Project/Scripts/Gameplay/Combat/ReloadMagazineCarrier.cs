@@ -56,6 +56,8 @@ namespace ShadowVale.Gameplay.Combat
         public float OutOfWell => _magazine == null ? 0f : Vector3.Distance(_magazine.position, _home.TransformPoint(_homePosition));
 
         public bool Shown => _renderers.Length == 0 || _renderers[0].enabled;
+        /// <summary>A shared full-body pose owns the detachable prop until it restores the original.</summary>
+        public bool ExternalPose { get; set; }
 
         public Take[] Takes => _profile != null && _profile.takes.Length > 0 ? _profile.takes : takes;
 
@@ -109,6 +111,7 @@ namespace ShadowVale.Gameplay.Combat
 
         private void LateUpdate()
         {
+            if (ExternalPose) return;
             if (animator == null || hand == null) return;
             Weapon rifle = ActiveRifle();
             if (rifle != _rifle || _boundRoot != (rifle != null ? rifle.ReloadModel : null))

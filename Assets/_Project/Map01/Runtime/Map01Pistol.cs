@@ -72,6 +72,14 @@ namespace ShadowVale.Map01
         void LateUpdate()
         {
             if(data==null||combat==null)return;
+            if(GetComponent<PlayerController>()?.IsProne==true && GetComponent<NamProneMotion>()?.CanReloadProne==true) {
+                weight=0;ReleaseTwist();wasReloading=false;
+                if(gun.parent!=rightHand)gun.SetParent(rightHand,false);
+                data.weapon.At(153).Apply(gun);
+                for(int i=0;i<parts.Length;i++)if(parts[i]!=null)data.parts[i].At(1).Apply(parts[i]);
+                if(magazine!=null)magazine.gameObject.SetActive(true);
+                return;
+            }
             bool active=Available;
             // Story actions own the arms immediately. A weapon swap blends back into locomotion.
             bool interrupted=combat.EquippedKind==WeaponKind.Pistol&&!active;

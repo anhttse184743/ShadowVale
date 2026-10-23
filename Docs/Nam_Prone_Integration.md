@@ -6,7 +6,7 @@
 - Z hoặc Space khi nằm: trở về đứng. Lần nhấn Space này không đồng thời nhảy.
 - WASD: trườn theo camera; dừng di chuyển thì dừng nhịp trườn.
 - Giữ chuột phải: ngắm, thả chuột: trở lại cầm chờ.
-- R với AK khi nằm: thay băng đạn, giữ tư thế nằm.
+- R với AK/M16/K54/Mosin khi nằm: nạp đạn, giữ tư thế nằm.
 - Đổi trang bị vẫn giữ tư thế nằm. Shift/C không tự hủy nằm.
 - Khi có vật cản phía trên, giữ nằm đến khi đủ khoảng trống đứng dậy.
 
@@ -29,14 +29,18 @@ Súng hạ thêm 5 cm so với điểm gắn đã sửa; không hạ hai tay the
 
 Animation được bake lên xương Nam hiện có, gồm các ngón tay và xương twist.
 Hệ thống K54/Mosin khi đứng nhường toàn thân cho tư thế nằm. Khi dùng một
-động tác toàn thân có sẵn (hồi máu, hoặc nạp đạn K54/Mosin/M16), Nam đứng dậy trước;
+động tác toàn thân có sẵn như hồi máu, Nam đứng dậy trước;
 nếu vướng trần thì không bắt đầu động tác đứng xuyên vật cản.
-AK có animation thay băng đạn khi nằm từ `Nam_Prone_Reload_MagazineOnly_v3.blend`.
+AK, M16, K54 và Mosin dùng chung động tác nạp đạn khi nằm từ
+`Nam_Prone_Reload_MagazineOnly_v3.blend` theo yêu cầu dùng chung của người chơi.
 Nhấn R khi nằm để thay băng, không có động tác kéo khóa lên đạn. Animation và
 băng đạn cũ/mới lấy tiến độ trực tiếp từ `PlayerCombat.ReloadProgress`, dùng
 thời gian thực tế sau nâng cấp Shooting và các hệ số reload hiện có.
 Không có timer cố định riêng cho tư thế nằm. Đứng dậy bằng Z/Space hủy reload;
 đổi vũ khí, chết hoặc vô hiệu hóa component khôi phục băng đạn gốc.
+M16/K54 dùng băng đạn của model đang cầm; không tạo băng AK thay thế.
+Mosin giữ băng trong và cơ chế nạp từng viên, chỉ mượn chuyển động thân/tay AK.
+Controller tư thế đứng nhường animation cho hệ thống nằm, không hủy reload.
 Clip bắn/ném riêng ở tư thế nằm không nằm trong bộ trườn đã duyệt.
 
 ## Cập nhật nguồn
@@ -53,5 +57,9 @@ vào bản build. Dữ liệu runtime nằm trong `Assets/_Project/Map01/Resourc
 
 `NamProneIntegrationTests` mở từng map thật, vào Play Mode và gửi input qua
 Unity Input System. Kiểm tra Z/Space, trườn, collider, vật cản trên đầu,
-đổi súng/dao, ngắm và chuyển sang hồi máu. Kết quả và ảnh chụp nằm trong
+đổi súng/dao, ngắm và chuyển sang hồi máu. Reload AK được kiểm tra ở Shooting
+cấp 0 và cấp tối đa; M16/K54/Mosin được kiểm tra giữ nằm, theo tiến độ reload,
+hoàn tất nạp đạn. Kiểm tra thêm hủy khi đứng dậy và đổi vũ khí, phục hồi băng đạn.
+Hai bài kiểm tra Map 1 và Map 2 đã pass sau khi mở rộng reload dùng chung.
+Kết quả và ảnh chụp nằm trong
 `Logs/AnimationPreview/NamCrawl/Unity/`.
