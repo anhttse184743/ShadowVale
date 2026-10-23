@@ -25,9 +25,14 @@ namespace ShadowVale.Map01.Tests
         void Key(params Key[] keys)=>InputSystem.QueueStateEvent(keyboard,new KeyboardState(keys));
         Map02ObjectiveObject Mark(string id)=>Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId==id);
         [UnityTest,Timeout(1800000),Explicit("Manual video recording; excluded from routine regression runs.")]
-        public IEnumerator RecordEveryTaskFromLandingToDawn()
+        public IEnumerator RecordEveryTaskFromLandingToDawn()=>Record(null);
+        /// <summary>Day 3 and Night 3 played straight through, every task in order from the Day 3 test-run point to dawn.</summary>
+        [UnityTest,Timeout(1800000),Explicit("Day 3 → dawn as played (about 15-20 min); run on demand.")]
+        public IEnumerator PlayDayThreeAndNightThreeToDawn()=>Record("D3_01");
+        IEnumerator Record(string resumeAt)
         {
             Directory.CreateDirectory(Folder);
+            SessionState.SetString("Codex.Map02FlowMovie.Resume",resumeAt??"");
             SessionState.SetBool("Codex.Map02FlowMovie.Autostart",true);
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");SetPreviewResolution(1920,1080);
             yield return new EnterPlayMode();
@@ -92,7 +97,7 @@ namespace ShadowVale.Map01.Tests
                     {
                         yield return Dialogue();var who=Field<Map02ChapterActor>("escort");Assert.NotNull(who,task.id);
                         Vector3 destination=task.kind.StartsWith("rescue")?chapter.Sites["southStore"].position:chapter.Sites[task.site].position;
-                        yield return Cut(destination);who.StopAt(destination+Vector3.right*1.5f);yield return WaitGameSeconds(1);
+                        yield return Cut(destination);who.StopAt(destination+Vector3.right*1.5f);Field<Map02ChapterActor>("secondaryEscort")?.StopAt(destination+Vector3.left*1.5f);yield return WaitGameSeconds(1);   // both of the family, not only the first
                         yield return Dialogue();
                     }
                     else if(task.kind=="families")
@@ -143,11 +148,13 @@ namespace ShadowVale.Map01.Tests
                     movie.Snapshot(task.id);yield return WaitGameSeconds(.8f);
                 }
                 Assert.IsTrue(chapter.State.finished&&chapter.State.hungDead&&chapter.State.tankDestroyed);
-                movie.Section("KẾT THÚC · Làng được giữ", "Đủ 43 bước. Model/animation phụ và lồng tiếng mới chưa hoàn thiện; đây không phải video nghiệm thu hình ảnh cuối.");
-                yield return WaitGameSeconds(4);movie.End();File.WriteAllText(Folder+"/result.txt","PASS — 43 tasks, fresh state to dawn, real interaction entrypoints; shortened traversal, simulated combat; no new voice track.");
+                // No lambda here: closures made in this iterator break across Play Mode's domain reload.
+                int played=0;bool counting=string.IsNullOrEmpty(resumeAt);foreach(var t in Map02ChapterDefinition.Load().tasks){if(t.id==resumeAt)counting=true;if(counting)played++;}
+                movie.Section("KẾT THÚC · Làng được giữ", $"Đủ {played} bước. Model/animation phụ và lồng tiếng mới chưa hoàn thiện; đây không phải video nghiệm thu hình ảnh cuối.");
+                yield return WaitGameSeconds(4);movie.End();File.WriteAllText(Folder+"/result.txt",$"PASS — {played} tasks, {(string.IsNullOrEmpty(resumeAt)?"fresh state":"from "+resumeAt)} to dawn, real interaction entrypoints; shortened traversal, simulated combat; no new voice track.");
             }
             finally
-            {SessionState.EraseBool("Codex.Map02FlowMovie.Autostart");Key();if(movie!=null)movie.End();if(keyboard!=null)InputSystem.RemoveDevice(keyboard);RestoreInputRouting(input);Time.captureFramerate=0;}
+            {SessionState.EraseBool("Codex.Map02FlowMovie.Autostart");SessionState.EraseString("Codex.Map02FlowMovie.Resume");Key();if(movie!=null)movie.End();if(keyboard!=null)InputSystem.RemoveDevice(keyboard);RestoreInputRouting(input);Time.captureFramerate=0;}
             yield return new ExitPlayMode();
         }
         IEnumerator Cut(Vector3 p)
@@ -217,7 +224,7 @@ namespace ShadowVale.Map01.Tests
                 try{encoder??=new MediaEncoder(path,new VideoTrackAttributes{frameRate=new MediaRational(15),width=(uint)image.width,height=(uint)image.height,includeAlpha=false});encoder.AddFrame(image);frames++;}finally{Destroy(image);}}
         }
         public void Snapshot(string id)=>ScreenCapture.CaptureScreenshot(Path.Combine(Path.GetDirectoryName(path),id+".png"));
-        public void End(){StopAllCoroutines();encoder?.Dispose();encoder=null;if(path!=null)File.WriteAllText(path+".info.txt",frames+" frames / 15 fps. Full quest order demo; traversal cuts, simulated combat, shortened cinematic holds. No newly recorded voice audio.");}
+        public void End(){StopAllCoroutines();try{encoder?.Dispose();}catch(ArgumentException e){Debug.LogWarning("Review video not finalised: "+e.Message);}encoder=null;if(path!=null)File.WriteAllText(path+".info.txt",frames+" frames / 15 fps. Full quest order demo; traversal cuts, simulated combat, shortened cinematic holds. No newly recorded voice audio.");}
         void OnDisable()=>End();
     }
 }
