@@ -2133,21 +2133,30 @@
     },
     {
       "id": "m2v3_promise_05",
-      "caption": "Hùng: Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay, ăn với cà pháo, nhất làng luôn. ...Bữa đó cả nhà chị Lành cùng ra chơi nữa nhé.",
-      "match": "Hùng: Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay, ăn với cà pháo, nhất làng luôn. ...Bữa đó cả nhà chị Lành cùng ra chơi nữa nhé.",
+      "caption": "Hùng: Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay, ăn với cà pháo, nhất làng luôn.",
+      "match": "Hùng: Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay, ăn với cà pháo, nhất làng luôn.",
       "resource": "Dialogue/Map02DayOneFree/m2v3_promise_05",
       "language": "vi-VN",
       "radio": false,
-      "duration": 7.44
+      "duration": 5.0
+    },
+    {
+      "id": "m2v3_promise_05b",
+      "caption": "Hùng: ...Ngon hơn nồi này nhiều.",
+      "match": "Hùng: ...Ngon hơn nồi này nhiều.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_promise_05b",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.2
     },
     {
       "id": "m2v3_promise_06",
-      "caption": "Chị Lành: Nghe hết đó nha. Mời thì nhớ giữ lời. Tí, ngồi gọn lại cho ông ăn.",
-      "match": "Chị Lành: Nghe hết đó nha. Mời thì nhớ giữ lời. Tí, ngồi gọn lại cho ông ăn.",
+      "caption": "Chị Lành: Nghe hết đó nha.",
+      "match": "Chị Lành: Nghe hết đó nha.",
       "resource": "Dialogue/Map02DayOneFree/m2v3_promise_06",
       "language": "vi-VN",
       "radio": false,
-      "duration": 4.48
+      "duration": 1.05
     },
     {
       "id": "m2v3_promise_07",
@@ -2268,8 +2277,8 @@
     },
     {
       "id": "m2v3_postbamboo_02",
-      "caption": "Anh Lực: Được. Qua chốt đầu làng kiểm tra nốt đi.",
-      "match": "Anh Lực: Được. Qua chốt đầu làng kiểm tra nốt đi.",
+      "caption": "Tổ gác: Được. Qua chốt đầu làng kiểm tra nốt đi.",
+      "match": "Tổ gác: Được. Qua chốt đầu làng kiểm tra nốt đi.",
       "resource": "Dialogue/Map02DayOneFree/m2v3_postbamboo_02",
       "language": "vi-VN",
       "radio": false,
@@ -2313,8 +2322,8 @@
     },
     {
       "id": "m2_moor_order",
-      "caption": "Chỉ huy: Giữ yên lặng. Đưa thuyền sát bến.",
-      "match": "Chỉ huy: Giữ yên lặng. Đưa thuyền sát bến.",
+      "caption": "Anh Thành: Giữ yên lặng. Đưa thuyền sát bến.",
+      "match": "Anh Thành: Giữ yên lặng. Đưa thuyền sát bến.",
       "resource": "Dialogue/Map02DayOneFree/m2_moor_order",
       "language": "vi-VN",
       "radio": false,
@@ -2322,8 +2331,8 @@
     },
     {
       "id": "m2_ashore_order",
-      "caption": "Chỉ huy: Nam, lên trước đi. Chúng ta gặp nhau trên bờ.",
-      "match": "Chỉ huy: Nam, lên trước đi. Chúng ta gặp nhau trên bờ.",
+      "caption": "Anh Thành: Nam, lên trước đi. Chúng ta gặp nhau trên bờ.",
+      "match": "Anh Thành: Nam, lên trước đi. Chúng ta gặp nhau trên bờ.",
       "resource": "Dialogue/Map02DayOneFree/m2_ashore_order",
       "language": "vi-VN",
       "radio": false,

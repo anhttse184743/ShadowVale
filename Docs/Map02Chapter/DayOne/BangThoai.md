@@ -1,12 +1,12 @@
 # Thoại Ngày 1–Đêm 1 đã lồng tiếng miễn phí
 
-Đã duyệt bộ giọng VieNeu-TTS v3 Turbo ngày 22/10/2026. Có 49 câu có lời, bao gồm ba câu trên thuyền; cue đổi ca giữ im lặng. Không sử dụng credit Runway.
+Đã duyệt bộ giọng VieNeu-TTS v3 Turbo ngày 22/10/2026. Có 50 câu có lời, bao gồm ba câu trên thuyền; cue đổi ca giữ im lặng. Không sử dụng credit Runway.
 
 | Cue | Nhân vật | Nội dung | Giọng mẫu |
 |---|---|---|---|
 | m2_arrival_sight | Hùng | Bến làng ở phía trước rồi. | Minh Quân |
-| m2_moor_order | Chỉ huy | Giữ yên lặng. Đưa thuyền sát bến. | Minh Triết |
-| m2_ashore_order | Chỉ huy | Nam, lên trước đi. Chúng ta gặp nhau trên bờ. | Minh Triết |
+| m2_moor_order | Anh Thành | Giữ yên lặng. Đưa thuyền sát bến. | Minh Triết |
+| m2_ashore_order | Anh Thành | Nam, lên trước đi. Chúng ta gặp nhau trên bờ. | Minh Triết |
 | m2v3_contact_01 | Anh Thành | Đường về bị chặn rồi. Mình ở lại đây, chờ tin. | Minh Triết |
 | m2v3_contact_03 | Anh Thành | Hùng đi băng lại tay. Nam lo bắt liên lạc. | Minh Triết |
 | m2v3_password_01 | Anh Lực | Nước đã lên chưa? | Đức Trí |
@@ -34,8 +34,9 @@
 | m2v3_promise_02 | Nam | Này Hùng... mai mốt hết giặc, cậu tính làm gì? | Adam |
 | m2v3_promise_03 | Hùng | Về với u. Ăn một bữa cơm cho tử tế. Đi biền biệt thế này, chẳng biết u còn nhận ra không. | Minh Quân |
 | m2v3_promise_04 | Nam | Rồi sau đó? | Adam |
-| m2v3_promise_05 | Hùng | Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay, ăn với cà pháo, nhất làng luôn. ...Bữa đó cả nhà chị Lành cùng ra chơi nữa nhé. | Minh Quân |
-| m2v3_promise_06 | Chị Lành | Nghe hết đó nha. Mời thì nhớ giữ lời. Tí, ngồi gọn lại cho ông ăn. | Thục Đoan |
+| m2v3_promise_05 | Hùng | Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay, ăn với cà pháo, nhất làng luôn. | Minh Quân (cắt từ bản thu cũ, 23/10) |
+| m2v3_promise_05b | Hùng | ...Ngon hơn nồi này nhiều. | Minh Quân (đã nghe duyệt 23/10) |
+| m2v3_promise_06 | Chị Lành | Nghe hết đó nha. | Thục Đoan |
 | m2v3_promise_07 | Nam | Nói rồi đó nha. Tôi nhớ đó. | Adam |
 | m2v3_promise_08 | Hùng | Ừ, hứa. Còn cậu, cậu tính sao? | Minh Quân |
 | m2v3_promise_09 | Nam | Tôi hả... cũng chưa biết. Chỉ mong mau tới ngày đó. | Adam |
@@ -49,7 +50,7 @@
 | m2v3_nightwatch_03 | Nam | Cậu nghỉ đi. Tôi canh tiếp. | Adam |
 | m2v3_nightwatch_04 | Hùng | Tới giờ thì gọi tôi. Đừng thức một mình. | Minh Quân |
 | m2v3_postbamboo_01 | Nam | Đèn đã che, cửa cài chắc. Lối đi cũng thông rồi. | Adam |
-| m2v3_postbamboo_02 | Anh Lực | Được. Qua chốt đầu làng kiểm tra nốt đi. | Đức Trí |
+| m2v3_postbamboo_02 | Tổ gác | Được. Qua chốt đầu làng kiểm tra nốt đi. | Đức Trí (bản thu hiện có) |
 | m2v3_postbamboo_03 | Nam | Rõ. | Adam |
 | m2v3_repair_done_01 | Chú Bảy | Chắc rồi. Có người xuống bến cũng yên tâm. | Thái Sơn |
 | m2v3_repair_done_02 | Nam | Xong rồi chú. | Adam |

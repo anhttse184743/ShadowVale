@@ -7,7 +7,7 @@ namespace ShadowVale.Map01
         {
             post=part=-1;if(!ready||Mission.Paused||ForestMenu.Visible||Busy||State.phase!=1||escort!=null||Mission.Panel!=0)return false;
             float best=2.25f*2.25f;
-            for(int p=0;p<2;p++){var id=p==0?"N1_02":"N1_03";if(!State.Available(Map02ChapterDefinition.Load().Find(id))||(Day.postsReached&(1<<p))==0)continue;if(Day.posts[p].Safe&&Vector3.ProjectOnPlane(Mission.Player.position-roles["Anh Lực"].transform.position,Vector3.up).sqrMagnitude<=9)continue;var props=new[]{postLamps[p],postGates[p],postBundles[p]};for(int i=0;i<3;i++){float distance=Vector3.ProjectOnPlane(Mission.Player.position-props[i].position,Vector3.up).sqrMagnitude;if(distance<best){best=distance;post=p;part=i;}}}
+            for(int p=0;p<2;p++){var id=p==0?"N1_02":"N1_03";if(!State.Available(Map02ChapterDefinition.Load().Find(id))||(Day.postsReached&(1<<p))==0)continue;if(Day.posts[p].Safe&&Vector3.ProjectOnPlane(Mission.Player.position-PostKeeper(id).transform.position,Vector3.up).sqrMagnitude<=9)continue;var props=new[]{postLamps[p],postGates[p],postBundles[p]};for(int i=0;i<3;i++){float distance=Vector3.ProjectOnPlane(Mission.Player.position-props[i].position,Vector3.up).sqrMagnitude;if(distance<best){best=distance;post=p;part=i;}}}
             return part>=0;
         }
         public bool HasNearbyPost=>NearbyPost(out _,out _);
@@ -23,6 +23,9 @@ namespace ShadowVale.Map01
             string[] names={"đèn dầu — xoay chụp che sáng","cửa rào — kiểm tra thanh chốt","lối đi — kiểm tra đồ chắn đường"};
             Cell(new Rect(400,690,800,85),"[E] Kiểm tra "+names[part],new Color(.06f,.08f,.05f,.94f));
         }
+        /// <summary>The lamp's beam on the 1600×900 HUD: 0° points out of the village (up), turning clockwise.
+        /// GUIUtility.RotateAroundPivot takes a screen-pixel pivot, which misses the lamp whenever the HUD is scaled.</summary>
+        public static Matrix4x4 LampBeamMatrix(Matrix4x4 canvas,Vector2 lamp,float lampAngle)=>Map02Navigation.RotateUi(canvas,lamp,lampAngle-90);
         GUIStyle DayText=>new GUIStyle(GUI.skin.label){fontSize=23,wordWrap=true};
         GUIStyle DayHeading=>new GUIStyle(DayText){fontSize=30,fontStyle=FontStyle.Bold};
         bool DayButton(Rect r,string caption)=>GUI.Button(r,caption,new GUIStyle(GUI.skin.button){fontSize=22,wordWrap=true});
@@ -103,8 +106,8 @@ namespace ShadowVale.Map01
             {
                 GUI.Label(new Rect(140,175,1280,100),"A/D xoay chụp đèn. Ánh sáng cần chiếu vào trong làng, không hắt ra mé ngoài. Nhấn E hoặc nút xác nhận sau khi quan sát hướng sáng.",DayText);
                 var center=new Vector2(780,455);GUI.Label(new Rect(650,285,400,45),"PHÍA NGOÀI LÀNG",DayText);GUI.Label(new Rect(650,620,400,45),"PHÍA TRONG LÀNG",DayText);
-                GUI.Box(new Rect(600,345,380,260),"ĐÈN");var end=center+new Vector2(Mathf.Sin(p.lampAngle*Mathf.Deg2Rad),-Mathf.Cos(p.lampAngle*Mathf.Deg2Rad))*130;
-                var matrix=GUI.matrix;float angle=Mathf.Atan2(end.y-center.y,end.x-center.x)*Mathf.Rad2Deg;GUIUtility.RotateAroundPivot(angle,center);Cell(new Rect(center.x,center.y,130,14),"→",new Color(1,.8f,.35f));GUI.matrix=matrix;
+                GUI.Box(new Rect(600,345,380,260),"ĐÈN");
+                var matrix=GUI.matrix;GUI.matrix=LampBeamMatrix(matrix,center,p.lampAngle);Cell(new Rect(center.x,center.y-7,130,14),"→",new Color(1,.8f,.35f));GUI.matrix=matrix;
                 if(DayButton(new Rect(1050,620,320,60),"Xác nhận hướng đèn")){dayFeedback=p.LampSafe?"✓ Ánh đèn đã được che đúng hướng.":"Ánh sáng vẫn lọt ra ngoài làng.";if(p.LampSafe)CloseDay();}
             }
             else if(dayActivity==DayActivity.Gate)
@@ -124,7 +127,7 @@ namespace ShadowVale.Map01
                 Cell(new Rect(565,315,240,100),"CỬA RÀO\nKhoảng mở cửa",new Color(.38f,.28f,.17f));
                 Cell(new Rect(p.bundleStowed?250:425,p.bundleStowed?470:440,110,65),"BÓ CỦI",new Color(.55f,.37f,.18f));
                 if(DayButton(new Rect(880,325,500,100),"Đặt cạnh cửa rào"))dayFeedback="Bó củi sẽ chắn khoảng mở cửa. Chọn vị trí khác.";
-                if(DayButton(new Rect(880,470,500,100),"Chuyển vào giá chứa trong chốt")){p.bundleStowed=true;SyncDayProps();dayFeedback="✓ Lối gác đã thông. Quay lại anh Lực khi kiểm tra xong.";}
+                if(DayButton(new Rect(880,470,500,100),"Chuyển vào giá chứa trong chốt")){p.bundleStowed=true;SyncDayProps();dayFeedback="✓ Lối gác đã thông. Quay lại "+(postIndex==0?"tổ gác":"anh Lực")+" khi kiểm tra xong.";}
                 if(DayButton(new Rect(1000,610,360,55),"Xác nhận và quay lại")){if(p.bundleStowed)CloseDay();else dayFeedback="Bó vật liệu vẫn nằm trên lối đi.";}
 
             }

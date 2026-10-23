@@ -38,7 +38,7 @@ namespace ShadowVale.Map01
             {
                 var item=stacks[bagSelection];BagIcon(item.Id,new Rect(1200,250,140,130));GUI.Label(new Rect(1145,395,260,60),BagName(item.Id),body);GUI.Label(new Rect(1145,465,260,145),item.Id.StartsWith("m2_medicine_")?"Gói thuốc dành riêng cho nhiệm vụ. Trao cho đúng người; không dùng hồi máu hoặc vứt bỏ.":(item.Id=="knife"?"Dao dùng cận chiến. Nhấn 2 để trang bị.":item.Id=="medkit_small"?"Băng cứu thương mang theo.":ForestInventory.Description(item.Id)),small);
                 var kind=item.Id=="knife"?WeaponKind.Knife:item.Id==RifleItemId?WeaponKind.Rifle:WeaponKind.Unarmed;
-                if(string.IsNullOrEmpty(Chapter?.State.carry)&&Chapter?.Companion==null&&kind!=WeaponKind.Unarmed&&combat.WeaponFor(kind)!=null&&GUI.Button(new Rect(1145,630,260,48),"TRANG BỊ")){combat.Equip(kind);CloseGameplayPanel();}
+                if(string.IsNullOrEmpty(Chapter?.State.carry)&&Chapter?.CompanionLocksGear!=true&&kind!=WeaponKind.Unarmed&&combat.WeaponFor(kind)!=null&&GUI.Button(new Rect(1145,630,260,48),"TRANG BỊ")){combat.Equip(kind);CloseGameplayPanel();}
             }
             else GUI.Label(new Rect(1145,255,260,110),"Chọn vật phẩm để xem thông tin.",body);
             if(Chapter!=null&&Chapter.State.phase<=1)GUI.Label(new Rect(205,765,1180,70),Chapter.ReservedMedicine,small);

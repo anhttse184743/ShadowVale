@@ -1,6 +1,7 @@
 using System.Linq;
 using ShadowVale.Gameplay.Combat;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 namespace ShadowVale.Map01
 {
@@ -102,10 +103,29 @@ namespace ShadowVale.Map01
                 if(dayActivity==DayActivity.Lamp&&kb!=null){var p=Day.posts[postIndex];p.lampAngle=Mathf.Repeat(p.lampAngle+((kb.dKey.isPressed?1:0)-(kb.aKey.isPressed?1:0))*65*dt,360);SyncDayProps();}
                 return true;
             }
-            if(State.phase==1&&sceneTask==null&&escort!=null&&!Day.duckSeen&&State.activeTask=="N1_02"&&Vector3.Distance(Mission.Player.position,sites["bamboo"].position)<9)
+            if(State.activeTask!="N1_02")duckPoint=null;
+            if(State.phase==1&&sceneTask==null&&escort!=null&&!Day.duckSeen&&State.activeTask=="N1_02"&&DuckReached())
             {Day.duckSeen=true;var duck=Map02ChapterDefinition.Load().Lines("duckevent");Mission.Say(string.Join("\n",duck.Select(line=>line.Caption)));if(duck.All(Map02DialogueCatalog.HasApprovedRecording))voice.SpeakText(string.Join("\n",duck.Select(line=>line.Caption)));PlayDaySound("duck");}
             if(State.phase!=1||sceneTask!=null||escort!=null||Mission.Panel!=0)return false;
             return false;
+        }
+        // The duck in the bushes (doc, Night 1): on the way to the bamboo post, not at it. Halfway along the walk
+        // from where the patrol sets out; the old 9 m ring round the post stays as the fallback so it always happens.
+        public Vector3? DuckPoint=>duckPoint;
+        Vector3? duckPoint;
+        bool DuckReached()
+        {
+            var nam=Mission.Player.position;var post=sites["bamboo"].position;
+            duckPoint??=RouteMiddle(nam,post);
+            if(Vector3.Distance(escort.transform.position,nam)>6)return false;   // Hùng has to be beside Nam to grab his shoulder
+            return Vector3.Distance(nam,duckPoint.Value)<3.5f||Vector3.Distance(nam,post)<9;
+        }
+        static Vector3 RouteMiddle(Vector3 from,Vector3 to)
+        {
+            var path=new NavMeshPath();
+            if(!NavMesh.SamplePosition(from,out var a,2,NavMesh.AllAreas)||!NavMesh.SamplePosition(to,out var b,2,NavMesh.AllAreas)||!NavMesh.CalculatePath(a.position,b.position,NavMesh.AllAreas,path)||path.corners.Length<2)return Vector3.Lerp(from,to,.5f);
+            float half=0;for(int i=1;i<path.corners.Length;i++)half+=Vector3.Distance(path.corners[i-1],path.corners[i]);
+            return Along(path.corners,half*.5f);
         }
         void TickDayKeyboard(Keyboard kb)
         {
@@ -174,7 +194,7 @@ namespace ShadowVale.Map01
         {
             if(t.id=="D1_04"&&State.Count(t.id)>=3)return "Đã chuyển 3/3 thùng — tới kho kín, nhấn E sắp xếp vào kho.";
             if(t.id=="D1_05")return $"Hai cọc: {Day.stakeHits/3}/2 · ba ván: {Day.BoardCount}/3. E làm việc cùng chú Bảy.";
-            if((t.id=="N1_02"||t.id=="N1_03")&&(Day.postsReached&(t.id=="N1_02"?1:2))!=0)return "Kiểm tra ba hạng mục: đèn dầu, cửa rào và lối đi. Đến gần từng vật để thấy nhắc E. Sửa xong, quay lại anh Lực ở ghim vàng báo chốt sẵn sàng.";
+            if((t.id=="N1_02"||t.id=="N1_03")&&(Day.postsReached&(t.id=="N1_02"?1:2))!=0)return "Kiểm tra ba hạng mục: đèn dầu, cửa rào và lối đi. Đến gần từng vật để thấy nhắc E. Sửa xong, quay lại "+(t.id=="N1_02"?"tổ gác":"anh Lực")+" ở ghim vàng báo chốt sẵn sàng.";
             return null;
         }
     }

@@ -85,14 +85,27 @@ namespace ShadowVale.Map01
                 var marker=go.AddComponent<Map02ObjectiveObject>();marker.saveId="m2v3_"+t.id;marker.chapterId=t.id;marker.prompt=t.title;marker.radius=3;marker.standPoint=go.transform;markers.Add(t.id,marker);
             }
             var arrival=FindFirstObjectByType<Map02Arrival>();
-            foreach(var role in new[]{"Anh Thành","Anh Lực","Hùng","Chị Lành","Ông Sáu","Bé Tí","Chú Bảy","Tâm"})
+            foreach(var role in new[]{"Anh Thành","Anh Lực","Hùng","Chị Lành","Ông Sáu","Bé Tí","Chú Bảy","Tâm",Guard,SeatedGuard})
             {
-                var actor=new GameObject("Actor slot — "+role);actor.transform.SetParent(root.transform);var slot=actor.AddComponent<Map02ChapterActor>();slot.role=role;roles.Add(role,slot);var art=Layout?.actors?.FirstOrDefault(a=>a.role==role)?.prefab;if(art!=null&&!(arrival?.Passengers?.Length>=3&&(role=="Hùng"||role=="Anh Thành")))slot.Bind(Instantiate(art).transform);
+                var actor=new GameObject("Actor slot — "+role);actor.transform.SetParent(root.transform);var slot=actor.AddComponent<Map02ChapterActor>();slot.role=role;roles.Add(role,slot);var art=Layout?.actors?.FirstOrDefault(a=>a.role==role)?.prefab;
+                if(art==null&&(role==Guard||role==SeatedGuard))art=GuardArt;
+                if(art!=null&&!(arrival?.Passengers?.Length>=3&&(role=="Hùng"||role=="Anh Thành")))slot.Bind(Instantiate(art).transform);
             }
+            TintGuards();
             if(arrival?.Passengers?.Length>=3)
             {
                 if(roles["Hùng"].visual==null)roles["Hùng"].Bind(arrival.Passengers[2]);
-                if(roles["Anh Thành"].visual==null)roles["Anh Thành"].Bind(arrival.Passengers[1]);
+                if(roles["Anh Thành"].visual==null)
+                {
+                    roles["Anh Thành"].Bind(arrival.Passengers[1]);
+                    // The boat commander's root is not at his soles: the arrival lifts it until his soles touch the bank.
+                    // Put the slot (the floor his day locomotion grounds to) on the bank itself, and leave the model
+                    // where the arrival stood it, so he neither floats once he moves nor sinks while the bank scene holds him.
+                    if(arrival.CurrentPhase==Map02Arrival.Phase.Gameplay)
+                    {
+                        var thanh=roles["Anh Thành"];var stood=thanh.visual.position;thanh.StopAt(arrival.SpawnPoints[1]);thanh.visual.position=stood;
+                    }
+                }
                 else
                 {
                     // The boat uses Map 1's commander; the village uses Thành's named source model.
@@ -200,6 +213,7 @@ namespace ShadowVale.Map01
         }
         void Update()
         {
+            PauseMealCrickets(!ready||Mission.Paused||ForestMenu.Visible||Mission.World.story.failed);
             if(ready)SetBinoculars((binocularHeld||Keyboard.current?.fKey.isPressed==true)&&!Mission.InputBlocked&&!ForestMenu.Visible);
             if(!ready||Mission.Paused||ForestMenu.Visible||Mission.World.story.failed)return;
             float dt=Mathf.Min(Time.deltaTime,.1f);
@@ -207,9 +221,9 @@ namespace ShadowVale.Map01
             if(phaseFade>0){phaseFade=Mathf.Max(0,phaseFade-dt);TickLight(dt);return;}
             if(State.finished)return;
             TickTank(dt);TickBoats(dt);TickDressing(dt);
-            bool leading=escort!=null&&State.phase<4; // Day 3 / Night 3 escorts keep Nam armed and at pace.
+            bool leading=LeadingWounded; // Day 3 / Night 3 escorts and Tâm's keep Nam armed and at pace.
             bool carrying=!string.IsNullOrEmpty(State.carry)||leading||DayActivityActive;if(carrying!=handsBusy||carrying&&!combat.HandsOccupied){handsBusy=carrying;combat.SetHandsOccupied(carrying);}   // a bag refresh (each save) frees the hands
-            player.SurfaceSpeedMultiplier=leading?.55f:!string.IsNullOrEmpty(State.carry)?CarryPace:State.wounded?.7f:1;
+            player.SurfaceSpeedMultiplier=leading?EscortPace:!string.IsNullOrEmpty(State.carry)?CarryPace:State.wounded?.7f:1;
             player.SprintAllowed=()=>!leading&&string.IsNullOrEmpty(State.carry)&&Mission.CharacterCanSprint;
             if(sceneTask!=null){TickLight(dt);TickScene(dt);return;}
             if(TickDay(dt))return;
@@ -257,12 +271,12 @@ namespace ShadowVale.Map01
                 if(t.kind=="carry"&&State.activeTask==t.id&&string.IsNullOrEmpty(State.carry))pos=sites[t.id=="D1_04"?"arrival":"store"].position;
                 if(t.kind=="carry"&&State.activeTask!=t.id)pos=sites[t.id=="D1_04"?"arrival":"store"].position;
                 if(t.id=="D1_04"&&State.Count(t.id)>=3)pos=sites["store"].position;
-                if((t.id=="N1_02"||t.id=="N1_03")&&(Day.postsReached&(t.id=="N1_02"?1:2))!=0)pos=roles["Anh Lực"].transform.position;
+                if((t.id=="N1_02"||t.id=="N1_03")&&(Day.postsReached&(t.id=="N1_02"?1:2))!=0)pos=PostKeeper(t.id).transform.position;
                 if(t.kind=="families")pos=sites["family"+Mathf.Clamp(State.Count(t.id),0,2)].position;
                 if(t.kind=="demolition")pos=CrateMarker(t);
                 if(t.kind=="escortHung"||t.kind=="patrolHung"||t.kind=="escortScout")pos=escort!=null&&workTask==t?Destination(t):roles[t.kind=="escortScout"?"Tâm":"Hùng"].transform.position;
                 if(t.kind.StartsWith("rescue")&&escort!=null&&workTask==t)pos=Destination(t);
-                if((t.id=="N1_02"||t.id=="N1_03")&&(Day.postsReached&(t.id=="N1_02"?1:2))!=0)pos=roles["Anh Lực"].transform.position;
+                if((t.id=="N1_02"||t.id=="N1_03")&&(Day.postsReached&(t.id=="N1_02"?1:2))!=0)pos=PostKeeper(t.id).transform.position;
                 // Dialogue pins follow the person, not a nearby empty site marker.
                 if(t.id=="D1_01")pos=roles["Anh Lực"].transform.position;
                 if(t.id=="D1_06")pos=roles["Anh Thành"].transform.position;
@@ -297,6 +311,8 @@ namespace ShadowVale.Map01
         }
         /// <summary>Walking pace with a load in both hands (no sprinting).</summary>
         public const float CarryPace=.85f;
+        /// <summary>Walking pace while leading Hùng before Day 3 (no sprinting); see LeadingWounded.</summary>
+        public const float EscortPace=.55f;
         /// <summary>After a pose on Nam is released (its animator rebinds): the equipped weapon's stance, hands kept busy if they are.</summary>
         void RestoreNamAnimator(){if(combat==null)return;combat.RestoreAfterCinematic();if(handsBusy)combat.SetHandsOccupied(true);}
         void EndWork(bool success)
@@ -321,7 +337,7 @@ namespace ShadowVale.Map01
         void Speak(){voice.Stop();lineClock=0;if(HoldMealVoice)return;if(Map02DialogueCatalog.HasApprovedRecording(lines[lineIndex]))voice.Play(lines[lineIndex].RecordingId);}
         void TickScene(float dt)
         {
-            sceneClock+=dt;lineClock+=dt;TickMealVoice();
+            sceneClock+=dt;lineClock+=dt;TickMealVoice();TickMealCrickets();
             if(sceneTask.id=="N3_09"&&tank!=null)SampleSacrifice();
             SceneSampled?.Invoke(sceneTask.id,sceneClock);
             if(sceneTask.id=="N3_WOUND"&&sceneClock>2)health.CinematicInvulnerable=true;var kb=Keyboard.current;
@@ -340,9 +356,9 @@ namespace ShadowVale.Map01
         }
         void LateUpdate()
         {
-            DayLateUpdate();UpdateWorkWeapon();if(!ready)return;PanToHung();HoldCargo();if(sceneTask==null)return;
+            DayLateUpdate();UpdateWorkWeapon();if(!ready)return;PanToHung();HoldCargo();if(sceneTask==null){UpdateHungRadio();return;}
             HoldConversation();MoveDaySceneRoots();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=NamPoseClip();namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null);
-            SampleDayScene();
+            SampleDayScene();UpdateHungRadio();
             string speaker=lines[lineIndex].speaker;Vector3 subject=Mission.Player.position;
             if(!lines[lineIndex].radio&&speaker!="Nam"&&roles.TryGetValue(speaker,out var actor))subject=actor.transform.position;
             var focus=Vector3.Lerp(subject,Mission.Player.position,.3f)+Vector3.up*1.25f;
@@ -353,9 +369,9 @@ namespace ShadowVale.Map01
             // Medium/wide framing; obstruction tested below.
             var ray=eye-focus;foreach(var hit in Physics.SphereCastAll(focus,.12f,ray.normalized,ray.magnitude,~0,QueryTriggerInteraction.Ignore))if(hit.collider.GetComponentInParent<Health>()==null&&hit.distance>.65f)eye=focus+ray.normalized*Mathf.Min(ray.magnitude,Mathf.Max(.7f,hit.distance-.12f));
             if(sceneTask.id=="D1_02"){focus=roles["Hùng"].transform.position+Vector3.up*.85f;eye=focus+new Vector3(-3f,.35f,2f);}
-            if(sceneTask.id=="N1_01"){focus=mealRoot.position+Vector3.up*.75f;eye=focus+new Vector3(3f,1.7f,-3f);}
-            float blend=Mathf.SmoothStep(0,1,sceneClock/.8f);
-            rig.SetCinematicView(Vector3.Lerp(cameraBefore,eye,blend),Quaternion.Slerp(cameraRotation,Quaternion.LookRotation(focus-eye),blend),Mathf.Lerp(cameraFov,sceneTask.id=="N1_01"||sceneTask.id=="D1_02"?45:58,blend),1);
+            float mealFov=45;if(sceneTask.id=="N1_01")MealShot(out eye,out focus,out mealFov);
+            float blend=sceneTask.id=="N1_01"?1:Mathf.SmoothStep(0,1,sceneClock/.8f);   // a cut into the house, not a glide through its wall
+            rig.SetCinematicView(Vector3.Lerp(cameraBefore,eye,blend),Quaternion.Slerp(cameraRotation,Quaternion.LookRotation(focus-eye),blend),Mathf.Lerp(cameraFov,sceneTask.id=="N1_01"?mealFov:sceneTask.id=="D1_02"?45:58,blend),1);
         }
         void EndScene()
         {
@@ -378,8 +394,6 @@ namespace ShadowVale.Map01
         {
             TaskCompleted?.Invoke(task.id);
             if(task.id=="N1_03")roles["Hùng"].GoTo(sites["nightOneRest"].position,1.25f);
-            if(task.id=="N1_01")roles["Anh Lực"].GoTo(sites["bamboo"].position+Vector3.left,1.4f);if(task.id=="N1_02")roles["Anh Lực"].GoTo(sites["gate"].position,1.5f);
-
             if(task.id=="D1_01")roles["Anh Thành"].GoTo(sites["command"].position,1.6f);
             if(task.id=="D2_04")roles["Tâm"].StopAt(sites["command"].position+Vector3.right*1.5f);
             if(task.id=="N3_00")roles["Hùng"].GoTo(sites["ditch"].position,1.8f);
@@ -432,7 +446,6 @@ namespace ShadowVale.Map01
             player.SurfaceSpeedMultiplier=State.wounded?.7f:1;
             player.SprintAllowed=()=>Mission.CharacterCanSprint;
             detectionClock=0;scannedAt=-99;patrolLoadGrace=2;
-            if(State.phase==1&&State.Done("N1_01"))roles["Anh Lực"].GoTo(sites[State.Done("N1_02")?"gate":"bamboo"].position,1.4f);
             if(State.phase==1&&State.Done("N1_03")&&!State.Done("N1_04"))roles["Hùng"].GoTo(sites["nightOneRest"].position,1.25f);
             ArrangeDayFamily();UpdateMarkers();SyncDayProps();TickLight(10f);
             TickTank(0,true);TickBoats(0,true);
@@ -496,7 +509,8 @@ namespace ShadowVale.Map01
         void TickLight(float dt)
         {
             bool night=State.phase==1||State.phase==3||State.phase==5;bool afternoon=State.phase==0&&State.Available(Map02ChapterDefinition.Load().Find("D1_06"));
-            foreach(var lamp in lamps){lamp.range=State.phase<=1?6:10;if(lamp.name.EndsWith("family")&&State.phase<=1)lamp.transform.position=DayFamily+new Vector3(-.55f,.84f,-1.5f);lamp.intensity=Mathf.Lerp(lamp.intensity,night?(State.phase<=1?(Layout!=null?Layout.dayOneOilLampIntensity:.65f):2.5f):0,Mathf.Clamp01(dt));}
+            // Day 1 / Night 1 the family lamp is the small one on the supper mat: it lights the tray and little else.
+            foreach(var lamp in lamps){bool supperLamp=lamp.name.EndsWith("family")&&State.phase<=1;lamp.range=supperLamp?3.5f:State.phase<=1?6:10;if(supperLamp)lamp.transform.position=dayLampFlame!=null?dayLampFlame.position+Vector3.up*.1f:PorchMeal+Vector3.up*.3f;lamp.intensity=Mathf.Lerp(lamp.intensity,night?(State.phase<=1?(Layout!=null?Layout.dayOneOilLampIntensity:.65f):2.5f):0,Mathf.Clamp01(dt));}
             sweepLight.enabled=State.phase==3&&!State.Done("N2_05");
             if(phaseApplied!=State.phase){phaseApplied=State.phase;}
             if(TickNaturalLighting(dt))return;

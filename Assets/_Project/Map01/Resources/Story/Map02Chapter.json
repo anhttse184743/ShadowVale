@@ -798,16 +798,22 @@
       "id": "m2v3_promise_05",
       "conversation": "m2v3_promise",
       "speaker": "Hùng",
-      "text": "Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay, ăn với cà pháo, nhất làng luôn. ...Bữa đó cả nhà chị Lành cùng ra chơi nữa nhé.",
+      "text": "Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay, ăn với cà pháo, nhất làng luôn.",
+      "radio": false
+    },
+    {
+      "id": "m2v3_promise_05b",
+      "conversation": "m2v3_promise",
+      "speaker": "Hùng",
+      "text": "...Ngon hơn nồi này nhiều.",
       "radio": false
     },
     {
       "id": "m2v3_promise_06",
       "conversation": "m2v3_promise",
       "speaker": "Chị Lành",
-      "text": "Nghe hết đó nha. Mời thì nhớ giữ lời. Tí, ngồi gọn lại cho ông ăn.",
-      "radio": false,
-      "pendingVoice": true
+      "text": "Nghe hết đó nha.",
+      "radio": false
     },
     {
       "id": "m2v3_promise_07",
@@ -1555,7 +1561,7 @@
     {
       "id": "m2v3_postbamboo_02",
       "conversation": "m2v3_postbamboo",
-      "speaker": "Anh Lực",
+      "speaker": "Tổ gác",
       "text": "Được. Qua chốt đầu làng kiểm tra nốt đi.",
       "radio": false
     },

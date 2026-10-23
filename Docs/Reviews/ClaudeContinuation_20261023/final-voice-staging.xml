@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="28" result="Passed" total="28" passed="28" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-23 05:20:47Z" end-time="2026-10-23 05:20:57Z" duration="9,9720394">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="768" result="Passed" start-time="2026-10-23 05:20:47Z" end-time="2026-10-23 05:20:57Z" duration="9.972039" total="28" passed="28" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1690" name="ShadowVale.Map01.Tests.dll" fullname="D:/DO_AN_GAME/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="545" result="Passed" start-time="2026-10-23 05:20:47Z" end-time="2026-10-23 05:20:57Z" duration="9.607073" total="28" passed="28" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="203740" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1691" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="545" result="Passed" start-time="2026-10-23 05:20:47Z" end-time="2026-10-23 05:20:57Z" duration="9.584539" total="28" passed="28" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1692" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="545" result="Passed" start-time="2026-10-23 05:20:48Z" end-time="2026-10-23 05:20:57Z" duration="9.558975" total="28" passed="28" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1601" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="545" result="Passed" start-time="2026-10-23 05:20:48Z" end-time="2026-10-23 05:20:57Z" duration="9.536568" total="28" passed="28" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1327" name="Map02ClarityTests" fullname="ShadowVale.Map01.Tests.Map02ClarityTests" classname="ShadowVale.Map01.Tests.Map02ClarityTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-23 05:18:05Z" end-time="2026-10-23 05:18:05Z" duration="0.049717" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1333" name="DialogueFollowsWherePeopleActuallyAreAndWhyTheyMove" fullname="ShadowVale.Map01.Tests.Map02ClarityTests.DialogueFollowsWherePeopleActuallyAreAndWhyTheyMove" methodname="DialogueFollowsWherePeopleActuallyAreAndWhyTheyMove" classname="ShadowVale.Map01.Tests.Map02ClarityTests" runstate="Runnable" seed="1407220950" result="Passed" start-time="2026-10-23 05:18:05Z" end-time="2026-10-23 05:18:05Z" duration="0.035152" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1343" name="Map02DayOneCompletionTests" fullname="ShadowVale.Map01.Tests.Map02DayOneCompletionTests" classname="ShadowVale.Map01.Tests.Map02DayOneCompletionTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-23 05:18:27Z" end-time="2026-10-23 05:18:29Z" duration="1.165032" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1345" name="RadioClearsTheActualShirtAndFollowsTheSignaller" fullname="ShadowVale.Map01.Tests.Map02DayOneCompletionTests.RadioClearsTheActualShirtAndFollowsTheSignaller" methodname="RadioClearsTheActualShirtAndFollowsTheSignaller" classname="ShadowVale.Map01.Tests.Map02DayOneCompletionTests" runstate="Runnable" seed="250631539" result="Passed" start-time="2026-10-23 05:18:05Z" end-time="2026-10-23 05:18:21Z" duration="15.365838" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+              <test-case id="1344" name="SupperFinishesItsTimelineAndLoadingKeepsItComplete" fullname="ShadowVale.Map01.Tests.Map02DayOneCompletionTests.SupperFinishesItsTimelineAndLoadingKeepsItComplete" methodname="SupperFinishesItsTimelineAndLoadingKeepsItComplete" classname="ShadowVale.Map01.Tests.Map02DayOneCompletionTests" runstate="Runnable" seed="521285253" result="Passed" start-time="2026-10-23 05:18:21Z" end-time="2026-10-23 05:18:29Z" duration="7.799326" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1350" name="Map02DayOneTests" fullname="ShadowVale.Map01.Tests.Map02DayOneTests" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" testcasecount="19" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.022347" total="19" passed="19" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1369" name="ApprovedAcknowledgementsReuseExactCaptionOnly" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.ApprovedAcknowledgementsReuseExactCaptionOnly" methodname="ApprovedAcknowledgementsReuseExactCaptionOnly" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="369763057" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.002634" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1361" name="CorruptSavedGeometryIsRejected" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.CorruptSavedGeometryIsRejected" methodname="CorruptSavedGeometryIsRejected" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="108517761" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.001860" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1371" name="DayOneTasksKeepThreeIndependentBranches" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.DayOneTasksKeepThreeIndependentBranches" methodname="DayOneTasksKeepThreeIndependentBranches" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="1089853154" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.002128" asserts="0">
+                <properties />
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1368" name="EveryChoreOrderWaitsForReport" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.003117" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1362" name="EveryChoreOrderWaitsForReport(&quot;D1_03&quot;,&quot;D1_04&quot;,&quot;D1_05&quot;)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(&quot;D1_03&quot;,&quot;D1_04&quot;,&quot;D1_05&quot;)" methodname="EveryChoreOrderWaitsForReport" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="2143595775" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.000349" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1363" name="EveryChoreOrderWaitsForReport(&quot;D1_03&quot;,&quot;D1_05&quot;,&quot;D1_04&quot;)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(&quot;D1_03&quot;,&quot;D1_05&quot;,&quot;D1_04&quot;)" methodname="EveryChoreOrderWaitsForReport" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="877524435" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.000113" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1364" name="EveryChoreOrderWaitsForReport(&quot;D1_04&quot;,&quot;D1_03&quot;,&quot;D1_05&quot;)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(&quot;D1_04&quot;,&quot;D1_03&quot;,&quot;D1_05&quot;)" methodname="EveryChoreOrderWaitsForReport" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="950780963" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.000108" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1365" name="EveryChoreOrderWaitsForReport(&quot;D1_04&quot;,&quot;D1_05&quot;,&quot;D1_03&quot;)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(&quot;D1_04&quot;,&quot;D1_05&quot;,&quot;D1_03&quot;)" methodname="EveryChoreOrderWaitsForReport" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="483318632" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.000094" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1366" name="EveryChoreOrderWaitsForReport(&quot;D1_05&quot;,&quot;D1_03&quot;,&quot;D1_04&quot;)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(&quot;D1_05&quot;,&quot;D1_03&quot;,&quot;D1_04&quot;)" methodname="EveryChoreOrderWaitsForReport" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="1437589559" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.000091" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1367" name="EveryChoreOrderWaitsForReport(&quot;D1_05&quot;,&quot;D1_04&quot;,&quot;D1_03&quot;)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(&quot;D1_05&quot;,&quot;D1_04&quot;,&quot;D1_03&quot;)" methodname="EveryChoreOrderWaitsForReport" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="631643733" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.000088" asserts="0">
+                  <properties />
+                </test-case>
+              </test-suite>
+              <test-suite type="ParameterizedMethod" id="1354" name="EveryWetTemplateHasSolution" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryWetTemplateHasSolution" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.002813" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1351" name="EveryWetTemplateHasSolution(0)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryWetTemplateHasSolution(0)" methodname="EveryWetTemplateHasSolution" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="2141146769" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.001150" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1352" name="EveryWetTemplateHasSolution(1)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryWetTemplateHasSolution(1)" methodname="EveryWetTemplateHasSolution" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="1369209934" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.000174" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1353" name="EveryWetTemplateHasSolution(2)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryWetTemplateHasSolution(2)" methodname="EveryWetTemplateHasSolution" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="1771852186" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.000085" asserts="0">
+                  <properties />
+                </test-case>
+              </test-suite>
+              <test-case id="1355" name="InvalidCrateMoveLeavesPreviousPosition" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.InvalidCrateMoveLeavesPreviousPosition" methodname="InvalidCrateMoveLeavesPreviousPosition" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="576943259" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.001245" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1359" name="LampNeedsShieldAndGateNeedsBothSteps" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.LampNeedsShieldAndGateNeedsBothSteps" methodname="LampNeedsShieldAndGateNeedsBothSteps" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="1369583162" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.000257" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1370" name="NamAcknowledgesOnceAfterTheCompleteInstructionBlock" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.NamAcknowledgesOnceAfterTheCompleteInstructionBlock" methodname="NamAcknowledgesOnceAfterTheCompleteInstructionBlock" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="691107754" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.001125" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1358" name="PostsContainOnlySpecifiedFaultCounts" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.PostsContainOnlySpecifiedFaultCounts" methodname="PostsContainOnlySpecifiedFaultCounts" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="1795210966" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.001363" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1356" name="SaveAndResetKeepPuzzleIdentity" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.SaveAndResetKeepPuzzleIdentity" methodname="SaveAndResetKeepPuzzleIdentity" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="1484502784" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.000482" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1357" name="StakeHitsAndRepairUnitsAreDifferent" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.StakeHitsAndRepairUnitsAreDifferent" methodname="StakeHitsAndRepairUnitsAreDifferent" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="494942074" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.000565" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1360" name="TwoQuestPacketsAreIdempotent" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.TwoQuestPacketsAreIdempotent" methodname="TwoQuestPacketsAreIdempotent" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="2068224864" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.000211" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1374" name="Map02DayOneVoiceCoverageTests" fullname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests" classname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-23 05:18:35Z" end-time="2026-10-23 05:20:28Z" duration="112.398065" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1375" name="AllDayOneAndNightOneSpokenCuesHaveExactDedicatedRecordings" fullname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests.AllDayOneAndNightOneSpokenCuesHaveExactDedicatedRecordings" methodname="AllDayOneAndNightOneSpokenCuesHaveExactDedicatedRecordings" classname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests" runstate="Runnable" seed="582160088" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:18:29Z" duration="0.028375" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1376" name="EverySpokenCuePlaysToCompletionWithoutOverlap" fullname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests.EverySpokenCuePlaysToCompletionWithoutOverlap" methodname="EverySpokenCuePlaysToCompletionWithoutOverlap" classname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests" runstate="Runnable" seed="26696474" result="Passed" start-time="2026-10-23 05:18:29Z" end-time="2026-10-23 05:20:28Z" duration="119.191363" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1407" name="Map02PresentationTests" fullname="ShadowVale.Map01.Tests.Map02PresentationTests" classname="ShadowVale.Map01.Tests.Map02PresentationTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-23 05:20:48Z" end-time="2026-10-23 05:20:57Z" duration="9.442256" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1411" name="ActualFamilyCargoAndPostPresentation" fullname="ShadowVale.Map01.Tests.Map02PresentationTests.ActualFamilyCargoAndPostPresentation" methodname="ActualFamilyCargoAndPostPresentation" classname="ShadowVale.Map01.Tests.Map02PresentationTests" runstate="Runnable" seed="1220666030" result="Passed" start-time="2026-10-23 05:20:28Z" end-time="2026-10-23 05:20:40Z" duration="12.326205" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+                <output><![CDATA[Animator is not playing an AnimatorController
+]]></output>
+              </test-case>
+              <test-case id="1409" name="CargoMaskPreservesForwardFeetAndChangesHandContact" fullname="ShadowVale.Map01.Tests.Map02PresentationTests.CargoMaskPreservesForwardFeetAndChangesHandContact" methodname="CargoMaskPreservesForwardFeetAndChangesHandContact" classname="ShadowVale.Map01.Tests.Map02PresentationTests" runstate="Runnable" seed="565291377" result="Passed" start-time="2026-10-23 05:20:40Z" end-time="2026-10-23 05:20:41Z" duration="0.411585" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1410" name="CarryFramesAreForwardAndHungUsesTheMapOneAsset" fullname="ShadowVale.Map01.Tests.Map02PresentationTests.CarryFramesAreForwardAndHungUsesTheMapOneAsset" methodname="CarryFramesAreForwardAndHungUsesTheMapOneAsset" classname="ShadowVale.Map01.Tests.Map02PresentationTests" runstate="Runnable" seed="1725028687" result="Passed" start-time="2026-10-23 05:20:41Z" end-time="2026-10-23 05:20:41Z" duration="0.004798" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1408" name="LiveWalkingMealApproachAndDockControls" fullname="ShadowVale.Map01.Tests.Map02PresentationTests.LiveWalkingMealApproachAndDockControls" methodname="LiveWalkingMealApproachAndDockControls" classname="ShadowVale.Map01.Tests.Map02PresentationTests" runstate="Runnable" seed="1307438410" result="Passed" start-time="2026-10-23 05:20:41Z" end-time="2026-10-23 05:20:57Z" duration="16.501844" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Saving results to: Logs/Map02Chapter/latest-full-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

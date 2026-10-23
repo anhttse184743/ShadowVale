@@ -1,0 +1,17 @@
+{
+  "cue": "m2v3_postbamboo_02",
+  "speaker": "Tổ gác",
+  "text": "Được. Qua chốt đầu làng kiểm tra nốt đi.",
+  "wav": "Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_postbamboo_02.wav",
+  "wav_sha256": "5330365bc1430ecee427b3940ee0afd3bf03e94e10c0df7544f3ff9e508bf299",
+  "wav_unchanged": true,
+  "changed": [
+    "Assets\\_Project\\Map01\\Resources\\Story\\Map02Chapter.json",
+    "Assets\\Resources\\Dialogue\\voice-catalog.json",
+    "SourceArt\\Dialogue\\voice-catalog.json",
+    "SourceArt\\Dialogue\\Map02DayOneFree\\voice-manifest.json",
+    "Docs\\Map02Chapter\\DayOne\\voice-plan.json",
+    "Docs\\Map02Chapter\\DayOne\\BangThoai.md"
+  ],
+  "approval": "User chose existing words and recording, spoken by Tổ gác, 2026-10-23"
+}

@@ -40,6 +40,18 @@ namespace ShadowVale.Map01.Tests
                 Assert.Less(Vector3.Distance(canvas.MultiplyPoint3x4(pivot),rotated.MultiplyPoint3x4(pivot)),.001f,$"pivot drift at {scale} / {angle}");
             }
         }
+        [Test]public void PostLampBeamStartsAtTheLampAndPointsWhereTheShadeFacesAtEveryHudScale()
+        {
+            // 1920×1080 drew the beam above the panel's text (screenshot post-lamp.png, 23/10): the pivot was taken in screen pixels.
+            var lamp=new Vector2(780,455);
+            foreach(float scale in new[]{1f,1.2f,2.4f})foreach(float angle in new[]{0f,90f,180f,270f})
+            {
+                var canvas=Matrix4x4.Scale(new Vector3(scale,scale,1));var beam=Map02ChapterDirector.LampBeamMatrix(canvas,lamp,angle);
+                var tip=new Vector3(lamp.x+Mathf.Sin(angle*Mathf.Deg2Rad)*130,lamp.y-Mathf.Cos(angle*Mathf.Deg2Rad)*130,0);
+                Assert.Less(Vector3.Distance(canvas.MultiplyPoint3x4(lamp),beam.MultiplyPoint3x4(lamp)),.001f,$"beam root at {scale} / {angle}");
+                Assert.Less(Vector3.Distance(canvas.MultiplyPoint3x4(tip),beam.MultiplyPoint3x4(new Vector3(lamp.x+130,lamp.y,0))),.01f,$"beam tip at {scale} / {angle}");
+            }
+        }
         [Test]public void EveryTaskExplainsItsPurposeWithoutRevealingFutureTasksInHud()
         {
             foreach(var task in Map02ChapterDefinition.Load().tasks)Assert.IsFalse(string.IsNullOrWhiteSpace(task.purpose),task.id);
@@ -48,7 +60,7 @@ namespace ShadowVale.Map01.Tests
         }
         [Test]public void DialogueFollowsWherePeopleActuallyAreAndWhyTheyMove()
         {
-            var d=Map02ChapterDefinition.Load();Assert.AreEqual(43,d.tasks.Length);Assert.AreEqual(139,d.entries.Length);Assert.True(d.Lines("arrivalbank").All(e=>!e.radio));Assert.AreEqual(2,d.Lines("duckevent").Length);
+            var d=Map02ChapterDefinition.Load();Assert.AreEqual(43,d.tasks.Length);Assert.AreEqual(140,d.entries.Length);Assert.True(d.Lines("arrivalbank").All(e=>!e.radio));Assert.AreEqual(2,d.Lines("duckevent").Length);
             Assert.IsFalse(d.Lines("day1report").Any(e=>e.speaker=="Hùng"));
             Assert.IsTrue(d.Lines("promise").Any(e=>e.id=="m2v3_day1report_04"));
             Assert.IsTrue(d.Lines("boatsafe").All(e=>e.radio));
