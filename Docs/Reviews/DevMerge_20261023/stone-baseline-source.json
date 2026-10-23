@@ -1,0 +1,20 @@
+[
+  {
+    "path": "Assets/_Project/Map01/Runtime/NamMotionRefresh.cs",
+    "before_merge_blob": "de2ce853d62918a66729c260d08c5c0bd5d16eeb",
+    "merged_blob": "de2ce853d62918a66729c260d08c5c0bd5d16eeb",
+    "unchanged": true
+  },
+  {
+    "path": "Assets/_Project/Map01/Resources/Characters/NamMotionV3.asset",
+    "before_merge_blob": "62b4b3e78129d1c0e660b5ea103a486510f73364",
+    "merged_blob": "62b4b3e78129d1c0e660b5ea103a486510f73364",
+    "unchanged": true
+  },
+  {
+    "path": "Assets/_Project/Map01/Tests/StoneMouseInputTests.cs",
+    "before_merge_blob": "1062328338b71655e5d5ab63d7b52d3d6fbc73c3",
+    "merged_blob": "1062328338b71655e5d5ab63d7b52d3d6fbc73c3",
+    "unchanged": true
+  }
+]

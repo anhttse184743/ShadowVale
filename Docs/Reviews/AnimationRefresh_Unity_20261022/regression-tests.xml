@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="19" result="Passed" total="19" passed="19" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-22 04:12:11Z" end-time="2026-10-22 04:12:19Z" duration="7,8995505">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="639" result="Passed" start-time="2026-10-22 04:12:11Z" end-time="2026-10-22 04:12:19Z" duration="7.899551" total="19" passed="19" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1536" name="ShadowVale.Map01.Tests.dll" fullname="D:/DO_AN_GAME/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="427" result="Passed" start-time="2026-10-22 04:12:11Z" end-time="2026-10-22 04:12:19Z" duration="7.352613" total="19" passed="19" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="199564" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1537" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="427" result="Passed" start-time="2026-10-22 04:12:11Z" end-time="2026-10-22 04:12:19Z" duration="7.296427" total="19" passed="19" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1538" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="427" result="Passed" start-time="2026-10-22 04:12:11Z" end-time="2026-10-22 04:12:19Z" duration="7.250311" total="19" passed="19" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1454" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="427" result="Passed" start-time="2026-10-22 04:12:11Z" end-time="2026-10-22 04:12:19Z" duration="7.182781" total="19" passed="19" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1049" name="C3BedAnimationTests" fullname="ShadowVale.Map01.Tests.C3BedAnimationTests" classname="ShadowVale.Map01.Tests.C3BedAnimationTests" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-10-22 04:07:32Z" end-time="2026-10-22 04:07:37Z" duration="4.430285" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1050" name="ApprovedDataKeepsClipTimingAndSeparateGameplayRigs" fullname="ShadowVale.Map01.Tests.C3BedAnimationTests.ApprovedDataKeepsClipTimingAndSeparateGameplayRigs" methodname="ApprovedDataKeepsClipTimingAndSeparateGameplayRigs" classname="ShadowVale.Map01.Tests.C3BedAnimationTests" runstate="Runnable" seed="1422694088" result="Passed" start-time="2026-10-22 04:06:46Z" end-time="2026-10-22 04:06:47Z" duration="0.113143" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1054" name="KnifeExecutionIsSilentFreeOfAmmoCostAndLeavesDiscoverableSavedCorpse" fullname="ShadowVale.Map01.Tests.C3BedAnimationTests.KnifeExecutionIsSilentFreeOfAmmoCostAndLeavesDiscoverableSavedCorpse" methodname="KnifeExecutionIsSilentFreeOfAmmoCostAndLeavesDiscoverableSavedCorpse" classname="ShadowVale.Map01.Tests.C3BedAnimationTests" runstate="Runnable" seed="1527714992" result="Passed" start-time="2026-10-22 04:06:47Z" end-time="2026-10-22 04:07:17Z" duration="29.951132" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1055" name="MissingKnifeRejectsAndEmptyPistolCanExecuteButCancellationRestoresControls" fullname="ShadowVale.Map01.Tests.C3BedAnimationTests.MissingKnifeRejectsAndEmptyPistolCanExecuteButCancellationRestoresControls" methodname="MissingKnifeRejectsAndEmptyPistolCanExecuteButCancellationRestoresControls" classname="ShadowVale.Map01.Tests.C3BedAnimationTests" runstate="Runnable" seed="1324812576" result="Passed" start-time="2026-10-22 04:07:17Z" end-time="2026-10-22 04:07:37Z" duration="20.350848" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1168" name="K54IntegrationTests" fullname="ShadowVale.Map01.Tests.K54IntegrationTests" classname="ShadowVale.Map01.Tests.K54IntegrationTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-22 04:09:08Z" end-time="2026-10-22 04:09:15Z" duration="6.835239" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1172" name="CaptureK54InTheRealMapLighting" fullname="ShadowVale.Map01.Tests.K54IntegrationTests.CaptureK54InTheRealMapLighting" methodname="CaptureK54InTheRealMapLighting" classname="ShadowVale.Map01.Tests.K54IntegrationTests" runstate="Runnable" seed="1282377869" result="Passed" start-time="2026-10-22 04:07:37Z" end-time="2026-10-22 04:08:06Z" duration="29.342909" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1171" name="K54FiresOneRoundDealsConfiguredDamageAndSurvivesCrouchAndStoryInterruptions" fullname="ShadowVale.Map01.Tests.K54IntegrationTests.K54FiresOneRoundDealsConfiguredDamageAndSurvivesCrouchAndStoryInterruptions" methodname="K54FiresOneRoundDealsConfiguredDamageAndSurvivesCrouchAndStoryInterruptions" classname="ShadowVale.Map01.Tests.K54IntegrationTests" runstate="Runnable" seed="502479682" result="Passed" start-time="2026-10-22 04:08:06Z" end-time="2026-10-22 04:08:28Z" duration="22.056174" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1169" name="K54HasItsOwnMagazineAndReloadUsesOnlyPistolReserve" fullname="ShadowVale.Map01.Tests.K54IntegrationTests.K54HasItsOwnMagazineAndReloadUsesOnlyPistolReserve" methodname="K54HasItsOwnMagazineAndReloadUsesOnlyPistolReserve" classname="ShadowVale.Map01.Tests.K54IntegrationTests" runstate="Runnable" seed="1923375258" result="Passed" start-time="2026-10-22 04:08:28Z" end-time="2026-10-22 04:08:52Z" duration="23.895837" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1170" name="SwitchingAndThrowingCancelK54ReloadAndKeepBothAmmunitionPools" fullname="ShadowVale.Map01.Tests.K54IntegrationTests.SwitchingAndThrowingCancelK54ReloadAndKeepBothAmmunitionPools" methodname="SwitchingAndThrowingCancelK54ReloadAndKeepBothAmmunitionPools" classname="ShadowVale.Map01.Tests.K54IntegrationTests" runstate="Runnable" seed="166521847" result="Passed" start-time="2026-10-22 04:08:52Z" end-time="2026-10-22 04:09:15Z" duration="22.833605" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1173" name="K54NormalRestorationTests" fullname="ShadowVale.Map01.Tests.K54NormalRestorationTests" classname="ShadowVale.Map01.Tests.K54NormalRestorationTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-22 04:09:31Z" end-time="2026-10-22 04:09:37Z" duration="5.898779" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1176" name="ActualShotUsesNormalReportAudioAndStillWakesWithinTenMetres" fullname="ShadowVale.Map01.Tests.K54NormalRestorationTests.ActualShotUsesNormalReportAudioAndStillWakesWithinTenMetres" methodname="ActualShotUsesNormalReportAudioAndStillWakesWithinTenMetres" classname="ShadowVale.Map01.Tests.K54NormalRestorationTests" runstate="Runnable" seed="2062634960" result="Passed" start-time="2026-10-22 04:09:15Z" end-time="2026-10-22 04:09:37Z" duration="21.819278" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1175" name="HeldLootAndIconsUseTheOriginalApprovedPistol" fullname="ShadowVale.Map01.Tests.K54NormalRestorationTests.HeldLootAndIconsUseTheOriginalApprovedPistol" methodname="HeldLootAndIconsUseTheOriginalApprovedPistol" classname="ShadowVale.Map01.Tests.K54NormalRestorationTests" runstate="Runnable" seed="1901583258" result="Passed" start-time="2026-10-22 04:09:37Z" end-time="2026-10-22 04:09:37Z" duration="0.013704" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1174" name="OrdinaryK54ProfileRestoresSixteenMetresWithoutChangingBalance" fullname="ShadowVale.Map01.Tests.K54NormalRestorationTests.OrdinaryK54ProfileRestoresSixteenMetresWithoutChangingBalance" methodname="OrdinaryK54ProfileRestoresSixteenMetresWithoutChangingBalance" classname="ShadowVale.Map01.Tests.K54NormalRestorationTests" runstate="Runnable" seed="998622514" result="Passed" start-time="2026-10-22 04:09:37Z" end-time="2026-10-22 04:09:37Z" duration="0.013558" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1343" name="NamMotionRefreshTests" fullname="ShadowVale.Map01.Tests.NamMotionRefreshTests" classname="ShadowVale.Map01.Tests.NamMotionRefreshTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-22 04:10:46Z" end-time="2026-10-22 04:10:54Z" duration="8.286903" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1349" name="ActualJumpUsesPhysicsAndWaitsForLandingAfterTheNominalFlight" fullname="ShadowVale.Map01.Tests.NamMotionRefreshTests.ActualJumpUsesPhysicsAndWaitsForLandingAfterTheNominalFlight" methodname="ActualJumpUsesPhysicsAndWaitsForLandingAfterTheNominalFlight" classname="ShadowVale.Map01.Tests.NamMotionRefreshTests" runstate="Runnable" seed="343175886" result="Passed" start-time="2026-10-22 04:09:37Z" end-time="2026-10-22 04:10:01Z" duration="24.242048" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1344" name="ApprovedAssetHasAllFortySevenClipsAndExistingSkeleton" fullname="ShadowVale.Map01.Tests.NamMotionRefreshTests.ApprovedAssetHasAllFortySevenClipsAndExistingSkeleton" methodname="ApprovedAssetHasAllFortySevenClipsAndExistingSkeleton" classname="ShadowVale.Map01.Tests.NamMotionRefreshTests" runstate="Runnable" seed="8256905" result="Passed" start-time="2026-10-22 04:10:01Z" end-time="2026-10-22 04:10:02Z" duration="0.417833" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1346" name="ExportedJumpHasNoSecondBallisticArcAndPropsKeepTheirSize" fullname="ShadowVale.Map01.Tests.NamMotionRefreshTests.ExportedJumpHasNoSecondBallisticArcAndPropsKeepTheirSize" methodname="ExportedJumpHasNoSecondBallisticArcAndPropsKeepTheirSize" classname="ShadowVale.Map01.Tests.NamMotionRefreshTests" runstate="Runnable" seed="1084642661" result="Passed" start-time="2026-10-22 04:10:02Z" end-time="2026-10-22 04:10:02Z" duration="0.007792" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1345" name="JumpControllerExitsOnActualGroundedAndPreservesStoryStates" fullname="ShadowVale.Map01.Tests.NamMotionRefreshTests.JumpControllerExitsOnActualGroundedAndPreservesStoryStates" methodname="JumpControllerExitsOnActualGroundedAndPreservesStoryStates" classname="ShadowVale.Map01.Tests.NamMotionRefreshTests" runstate="Runnable" seed="374210153" result="Passed" start-time="2026-10-22 04:10:02Z" end-time="2026-10-22 04:10:02Z" duration="0.006037" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1347" name="KnifeDrawAttackHolsterAndPistolReloadUseV3WithoutChangingAmmo" fullname="ShadowVale.Map01.Tests.NamMotionRefreshTests.KnifeDrawAttackHolsterAndPistolReloadUseV3WithoutChangingAmmo" methodname="KnifeDrawAttackHolsterAndPistolReloadUseV3WithoutChangingAmmo" classname="ShadowVale.Map01.Tests.NamMotionRefreshTests" runstate="Runnable" seed="658218173" result="Passed" start-time="2026-10-22 04:10:02Z" end-time="2026-10-22 04:10:28Z" duration="26.680968" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1348" name="ThrowCancelReleaseAndCrouchUseApprovedPropsAndReleaseOnce" fullname="ShadowVale.Map01.Tests.NamMotionRefreshTests.ThrowCancelReleaseAndCrouchUseApprovedPropsAndReleaseOnce" methodname="ThrowCancelReleaseAndCrouchUseApprovedPropsAndReleaseOnce" classname="ShadowVale.Map01.Tests.NamMotionRefreshTests" runstate="Runnable" seed="1026636131" result="Passed" start-time="2026-10-22 04:10:28Z" end-time="2026-10-22 04:10:54Z" duration="25.901381" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1528" name="WeaponAnimationIntegrationTests" fullname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests" classname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-22 04:12:12Z" end-time="2026-10-22 04:12:19Z" duration="6.554498" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1529" name="GrenadeUsesItsOwnModelReleasesOnceAndKeepsHandsBusyThroughRecovery" fullname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.GrenadeUsesItsOwnModelReleasesOnceAndKeepsHandsBusyThroughRecovery" methodname="GrenadeUsesItsOwnModelReleasesOnceAndKeepsHandsBusyThroughRecovery" classname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests" runstate="Runnable" seed="412858789" result="Passed" start-time="2026-10-22 04:10:54Z" end-time="2026-10-22 04:11:21Z" duration="26.376530" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1531" name="HolsteringAnAKInterruptsItsMagazineGestureAndDoesNotFinishAHiddenReload" fullname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.HolsteringAnAKInterruptsItsMagazineGestureAndDoesNotFinishAHiddenReload" methodname="HolsteringAnAKInterruptsItsMagazineGestureAndDoesNotFinishAHiddenReload" classname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests" runstate="Runnable" seed="429876938" result="Passed" start-time="2026-10-22 04:11:21Z" end-time="2026-10-22 04:11:49Z" duration="28.486713" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1530" name="SmokeIsACanisterInTheHandAndAimingCancelsTheReloadWithoutSpendingAmmo" fullname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.SmokeIsACanisterInTheHandAndAimingCancelsTheReloadWithoutSpendingAmmo" methodname="SmokeIsACanisterInTheHandAndAimingCancelsTheReloadWithoutSpendingAmmo" classname="ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests" runstate="Runnable" seed="280217685" result="Passed" start-time="2026-10-22 04:11:49Z" end-time="2026-10-22 04:12:19Z" duration="29.485467" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/Admin/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

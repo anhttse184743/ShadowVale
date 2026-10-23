@@ -1,0 +1,1 @@
+Actual Map 1 enemy: 80 -> 58 (79m) -> 36 -> 14 -> 0; four hits. 81m miss and solid-wall block. Six shots spend six rounds, 30 -> 24.

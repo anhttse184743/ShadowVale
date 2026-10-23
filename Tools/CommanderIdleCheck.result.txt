@@ -1,0 +1,2 @@
+Idle after 5 seconds: total root correction -0.0196m; independently baked sole 0.18000m; floor 0.18000m; gap 0.00000m; model scale (1.01, 1.01, 1.01).
+PASS

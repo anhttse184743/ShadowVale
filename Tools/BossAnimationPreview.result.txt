@@ -1,0 +1,20 @@
+OPEN: 19 clips
+Boss_Charge | 5.70s | humanoid=True
+Boss_Idle_Survey | 8.00s | humanoid=True
+Boss_Orders | 20.80s | humanoid=True
+Boss_Point | 4.70s | humanoid=True
+Enemy_Death_Backward | 2.60s | humanoid=True
+Enemy_Death_Forward | 2.57s | humanoid=True
+Enemy_Death_Knees | 5.77s | humanoid=True
+Enemy_Death_Shot | 4.60s | humanoid=True
+Enemy_Death_Stomach | 5.60s | humanoid=True
+Enemy_Guard_Idle | 8.57s | humanoid=True
+Enemy_HitReaction | 2.30s | humanoid=True
+Enemy_Patrol_Walk | 1.00s | humanoid=True
+Enemy_Rifle_AimIdle | 3.10s | humanoid=True
+Enemy_Rifle_Fire | 0.27s | humanoid=True
+Enemy_Rifle_Run | 0.67s | humanoid=True
+Enemy_Search_LookAround | 10.63s | humanoid=True
+Enemy_Startled | 3.67s | humanoid=True
+Enemy_Takedown_Victim | 4.67s | humanoid=True
+Enemy_Turn180 | 1.87s | humanoid=True

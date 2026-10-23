@@ -1,0 +1,237 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ee0b1c2a6e782e4c91ad98dd650273a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ShadowVale.AI::ShadowVale.AI.Tactical.TacticalGraphAsset
+  sceneName: Map00_Tutorial
+  spacing: 9
+  nodes:
+  - position: {x: -62.746006, y: 4.24, z: -46.864304}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: 010000000300000004000000
+  - position: {x: -62.539993, y: 3.760044, z: -37.379997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0000000002000000030000000400000005000000
+  - position: {x: -60.31487, y: 3.5363533, z: -29.42803}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 01000000040000000500000006000000
+  - position: {x: -53.539993, y: 4.24, z: -46.379997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 00000000010000000400000009000000
+  - position: {x: -53.539993, y: 3.723574, z: -37.379997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0000000001000000020000000300000005000000090000000a000000
+  - position: {x: -53.539993, y: 3.7789536, z: -28.379997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 01000000020000000400000006000000090000000a0000000b000000
+  - position: {x: -53.539993, y: 4.1345754, z: -19.379997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0200000005000000070000000a0000000b0000000c000000
+  - position: {x: -52.45747, y: 4.4411263, z: -10.892968}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 06000000080000000b0000000c0000000d000000
+  - position: {x: -49.161716, y: 4.696169, z: -3.3225884}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 070000000c0000000d0000000e000000
+  - position: {x: -47.583817, y: 3.6799998, z: -36.114586}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0300000004000000050000000a000000
+  - position: {x: -44.539993, y: 3.840009, z: -28.379997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 040000000500000006000000090000000b00000010000000
+  - position: {x: -44.539993, y: 4.1367564, z: -19.379997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0500000006000000070000000a0000000c0000001000000011000000
+  - position: {x: -44.539993, y: 4.347527, z: -10.379997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0600000007000000080000000b0000000d000000100000001100000012000000
+  - position: {x: -44.539993, y: 4.487276, z: -1.3799973}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 07000000080000000c0000000e000000110000001200000013000000
+  - position: {x: -44.539993, y: 4.9321175, z: 7.6200027}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 080000000d0000000f000000120000001300000014000000
+  - position: {x: -40.96, y: 4.96, z: 16.16}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0e000000130000001400000015000000
+  - position: {x: -39.787514, y: 4.1800375, z: -17.657026}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0a0000000b0000000c00000011000000
+  - position: {x: -36.474483, y: 4.0810757, z: -9.90636}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0b0000000c0000000d0000001000000012000000
+  - position: {x: -35.539993, y: 3.866442, z: -1.3799973}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0c0000000d0000000e000000110000001300000017000000
+  - position: {x: -35.539993, y: 4.0591774, z: 7.6200027}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0d0000000e0000000f00000012000000140000001700000018000000
+  - position: {x: -34.895805, y: 4.327903, z: 16.542253}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: 0e0000000f0000001300000015000000170000001800000019000000
+  - position: {x: -35.539993, y: 4.497461, z: 25.620003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0f000000140000001600000018000000190000001a000000
+  - position: {x: -33.331516, y: 4.1630836, z: 33.844357}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 15000000190000001a0000001b000000
+  - position: {x: -28.640297, y: 3.4445148, z: 8.500499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 12000000130000001400000018000000
+  - position: {x: -26.539993, y: 3.5944588, z: 16.620003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 13000000140000001500000017000000190000001e000000
+  - position: {x: -26.539993, y: 3.7187555, z: 25.620003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: 140000001500000016000000180000001a0000001e0000001f000000
+  - position: {x: -26.539993, y: 3.551421, z: 34.620003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1500000016000000190000001b0000001e0000001f00000020000000
+  - position: {x: -26.539993, y: 3.399985, z: 43.620003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 160000001a0000001c0000001f00000020000000
+  - position: {x: -25.530869, y: 3.3920014, z: 52.22943}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1b0000001d000000200000002100000022000000
+  - position: {x: -22.27085, y: 3.152816, z: 59.868107}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1c000000210000002200000023000000
+  - position: {x: -20.8, y: 3.4, z: 26.8}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 18000000190000001a0000001f000000
+  - position: {x: -17.59999, y: 3.2399998, z: 34.800003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 190000001a0000001b0000001e0000002000000025000000
+  - position: {x: -17.539993, y: 2.9984462, z: 43.620003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: 1a0000001b0000001c0000001f000000210000002500000026000000
+  - position: {x: -16.788029, y: 2.9053257, z: 53.78599}
+    cover: 1
+    coverFacing: 45.000004
+    chokepoint: 0
+    neighbors: 1c0000001d0000002000000022000000250000002600000027000000
+  - position: {x: -17.539993, y: 2.8145304, z: 61.620003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1c0000001d0000002100000023000000260000002700000028000000
+  - position: {x: -17.539993, y: 2.6117814, z: 70.62}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1d0000002200000024000000270000002800000029000000
+  - position: {x: -14.460914, y: 1.656328, z: 78.320274}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2300000028000000290000002a000000
+  - position: {x: -12.891236, y: 2.984562, z: 45.46103}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1f000000200000002100000026000000
+  - position: {x: -9.65059, y: 2.990919, z: 53.069847}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2000000021000000220000002500000027000000
+  - position: {x: -8.539993, y: 1.5728008, z: 61.620003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2100000022000000230000002600000028000000
+  - position: {x: -8.539993, y: 1.5705693, z: 70.62}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2200000023000000240000002700000029000000
+  - position: {x: -8.539993, y: 0.9119017, z: 79.62}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2300000024000000280000002a0000002b000000
+  - position: {x: -8.539993, y: -0.47384077, z: 88.62}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2400000029000000
+  - position: {x: -1.3474, y: 1.48, z: 88.89862}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 29000000

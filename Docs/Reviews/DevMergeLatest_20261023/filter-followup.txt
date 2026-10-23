@@ -1,0 +1,1 @@
+^ShadowVale\.Map01\.Tests\.(?:MosinBalanceTests|MosinSniperShotTests|M16MergeCompatibilityTests|Map02FootstepSyncTests|BossIntegrationTests)\.;HealthBulletModifierTests

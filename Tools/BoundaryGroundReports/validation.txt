@@ -1,0 +1,1 @@
+PASS: 840 seam vertices match current terrain; maximum height gap 0.000001m. Adjusted 3758 outer-ground vertices within 12m blend band and 111 nearby plants. Playable terrain, boundary colliders and NavMesh unchanged.

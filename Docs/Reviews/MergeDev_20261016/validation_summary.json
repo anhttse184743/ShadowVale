@@ -1,0 +1,365 @@
+{
+  "unique_tests": 70,
+  "passed": 70,
+  "unresolved": [],
+  "latest_result_by_fullname": {
+    "ShadowVale.Map01.Tests.ForestSaveSlotsTests.ASaveFromTheOldMapLayoutIsRefused": {
+      "result": "Passed",
+      "duration": "0.117190",
+      "name": "ASaveFromTheOldMapLayoutIsRefused"
+    },
+    "ShadowVale.Map01.Tests.ForestSaveSlotsTests.MetadataAndCheckpointSurviveSerialization": {
+      "result": "Passed",
+      "duration": "0.006116",
+      "name": "MetadataAndCheckpointSurviveSerialization"
+    },
+    "ShadowVale.Map01.Tests.ForestSaveSlotsTests.RejectsIncompleteOrUnsupportedEnvelope(\"{}\")": {
+      "result": "Passed",
+      "duration": "0.003553",
+      "name": "RejectsIncompleteOrUnsupportedEnvelope(\"{}\")"
+    },
+    "ShadowVale.Map01.Tests.ForestSaveSlotsTests.RejectsIncompleteOrUnsupportedEnvelope(\"{\\\"version\\\":99}\")": {
+      "result": "Passed",
+      "duration": "0.001151",
+      "name": "RejectsIncompleteOrUnsupportedEnvelope(\"{\\\"version\\\":99}\")"
+    },
+    "ShadowVale.Map01.Tests.ForestSaveSlotsTests.RejectsNegativePlaytime": {
+      "result": "Passed",
+      "duration": "0.004236",
+      "name": "RejectsNegativePlaytime"
+    },
+    "ShadowVale.Map01.Tests.ForestSaveSlotsTests.RejectsOutOfRangeSlot(-1)": {
+      "result": "Passed",
+      "duration": "0.002536",
+      "name": "RejectsOutOfRangeSlot(-1)"
+    },
+    "ShadowVale.Map01.Tests.ForestSaveSlotsTests.RejectsOutOfRangeSlot(5)": {
+      "result": "Passed",
+      "duration": "0.001786",
+      "name": "RejectsOutOfRangeSlot(5)"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.AllOperationDialogueHasExactCaptionAndCorrectAudioChannel": {
+      "result": "Passed",
+      "duration": "0.070204",
+      "name": "AllOperationDialogueHasExactCaptionAndCorrectAudioChannel"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.CircuitMigratesOldBoardWithoutAcceptingItAsSolved": {
+      "result": "Passed",
+      "duration": "0.014096",
+      "name": "CircuitMigratesOldBoardWithoutAcceptingItAsSolved"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.CircuitRoutesToDummyLoadAndRejectsBrokenSource": {
+      "result": "Passed",
+      "duration": "0.008163",
+      "name": "CircuitRoutesToDummyLoadAndRejectsBrokenSource"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.FailedLockCanRetryWithoutLosingCodeOrNotebook": {
+      "result": "Passed",
+      "duration": "0.009193",
+      "name": "FailedLockCanRetryWithoutLosingCodeOrNotebook"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.LockExplainsFeedbackInPlainLanguage(241,214,\"1 số đúng vị trí.\",\"2 số đúng nhưng sai vị trí.\")": {
+      "result": "Passed",
+      "duration": "0.007381",
+      "name": "LockExplainsFeedbackInPlainLanguage(241,214,\"1 số đúng vị trí.\",\"2 số đúng nhưng sai vị trí.\")"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.LockExplainsFeedbackInPlainLanguage(241,355,\"Không có số nào đúng.\",\"Cả 3 số đều không thuộc mã.\")": {
+      "result": "Passed",
+      "duration": "0.001038",
+      "name": "LockExplainsFeedbackInPlainLanguage(241,355,\"Không có số nào đúng.\",\"Cả 3 số đều không thuộc mã.\")"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.LockExplainsFeedbackInPlainLanguage(241,241,\"Đúng cả 3 số\",\"Khóa đã mở.\")": {
+      "result": "Passed",
+      "duration": "0.001569",
+      "name": "LockExplainsFeedbackInPlainLanguage(241,241,\"Đúng cả 3 số\",\"Khóa đã mở.\")"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(112,121,1,2)": {
+      "result": "Passed",
+      "duration": "0.005560",
+      "name": "LockScoresRepeatedDigitsWithoutDoubleCounting(112,121,1,2)"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(111,122,1,0)": {
+      "result": "Passed",
+      "duration": "0.001713",
+      "name": "LockScoresRepeatedDigitsWithoutDoubleCounting(111,122,1,0)"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(241,214,1,2)": {
+      "result": "Passed",
+      "duration": "0.003867",
+      "name": "LockScoresRepeatedDigitsWithoutDoubleCounting(241,214,1,2)"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(555,555,3,0)": {
+      "result": "Passed",
+      "duration": "0.004124",
+      "name": "LockScoresRepeatedDigitsWithoutDoubleCounting(555,555,3,0)"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(123,450,0,0)": {
+      "result": "Passed",
+      "duration": "0.002835",
+      "name": "LockScoresRepeatedDigitsWithoutDoubleCounting(123,450,0,0)"
+    },
+    "ShadowVale.Map01.Tests.Map02ProgressTests.BothRescueOrdersNeedActualEvacuation(0,1)": {
+      "result": "Passed",
+      "duration": "0.008136",
+      "name": "BothRescueOrdersNeedActualEvacuation(0,1)"
+    },
+    "ShadowVale.Map01.Tests.Map02ProgressTests.BothRescueOrdersNeedActualEvacuation(1,0)": {
+      "result": "Passed",
+      "duration": "0.001550",
+      "name": "BothRescueOrdersNeedActualEvacuation(1,0)"
+    },
+    "ShadowVale.Map01.Tests.Map02ProgressTests.CivilianMovementIsRequiredInAdditionToFiniteWaves": {
+      "result": "Passed",
+      "duration": "0.002054",
+      "name": "CivilianMovementIsRequiredInAdditionToFiniteWaves"
+    },
+    "ShadowVale.Map01.Tests.Map02ProgressTests.FailureBlocksProgressButCannotUndoCompletion": {
+      "result": "Passed",
+      "duration": "0.001523",
+      "name": "FailureBlocksProgressButCannotUndoCompletion"
+    },
+    "ShadowVale.Map01.Tests.Map02ProgressTests.PreparationIsFreeOrderButSiegeCannotStartEarly": {
+      "result": "Passed",
+      "duration": "0.002171",
+      "name": "PreparationIsFreeOrderButSiegeCannotStartEarly"
+    },
+    "ShadowVale.Map01.Tests.Map02ProgressTests.ReportsAndDutiesCannotBeSkippedOrCommittedTwice": {
+      "result": "Passed",
+      "duration": "0.003955",
+      "name": "ReportsAndDutiesCannotBeSkippedOrCommittedTwice"
+    },
+    "ShadowVale.Map01.Tests.Map02ProgressTests.SaveRoundTripKeepsPreparationAndGroups": {
+      "result": "Passed",
+      "duration": "0.003889",
+      "name": "SaveRoundTripKeepsPreparationAndGroups"
+    },
+    "ShadowVale.Map01.Tests.Map02WorldStateTests.CargoCannotBeDeliveredBeforePickupOrCollectedTwice": {
+      "result": "Passed",
+      "duration": "0.003108",
+      "name": "CargoCannotBeDeliveredBeforePickupOrCollectedTwice"
+    },
+    "ShadowVale.Map01.Tests.Map02WorldStateTests.PreparationStockDoesNotRefillPlayerAmmunitionOrSkipPhysicalDelivery": {
+      "result": "Passed",
+      "duration": "0.001912",
+      "name": "PreparationStockDoesNotRefillPlayerAmmunitionOrSkipPhysicalDelivery"
+    },
+    "ShadowVale.Map01.Tests.Map02WorldStateTests.ReachingPropMeansThePlayerIsActuallyWithinItsRadius": {
+      "result": "Passed",
+      "duration": "0.009266",
+      "name": "ReachingPropMeansThePlayerIsActuallyWithinItsRadius"
+    },
+    "ShadowVale.Map01.Tests.Map02WorldStateTests.SaveRoundTripKeepsCargoAndRejectsDuplicatePickup": {
+      "result": "Passed",
+      "duration": "0.002759",
+      "name": "SaveRoundTripKeepsCargoAndRejectsDuplicatePickup"
+    },
+    "ShadowVale.Map01.Tests.MapExplorationTests.BakedSurveyMatchesPhysicalPlayableBoundsAndSafeCamp": {
+      "result": "Passed",
+      "duration": "0.035662",
+      "name": "BakedSurveyMatchesPhysicalPlayableBoundsAndSafeCamp"
+    },
+    "ShadowVale.Map01.Tests.MapExplorationTests.DiscoveryClipsAtPhysicalBoundary": {
+      "result": "Passed",
+      "duration": "0.005494",
+      "name": "DiscoveryClipsAtPhysicalBoundary"
+    },
+    "ShadowVale.Map01.Tests.MapExplorationTests.MissingMalformedOrDifferentLayoutStateStartsUnexplored": {
+      "result": "Passed",
+      "duration": "0.014052",
+      "name": "MissingMalformedOrDifferentLayoutStateStartsUnexplored"
+    },
+    "ShadowVale.Map01.Tests.MapExplorationTests.SaveRoundTripKeepsExplorationAndUsesSmallPayload": {
+      "result": "Passed",
+      "duration": "0.005808",
+      "name": "SaveRoundTripKeepsExplorationAndUsesSmallPayload"
+    },
+    "ShadowVale.Map01.Tests.MapExplorationTests.VisitingRevealsOnlyNearbyCellsAndNeverClearsPreviousVisits": {
+      "result": "Passed",
+      "duration": "0.002572",
+      "name": "VisitingRevealsOnlyNearbyCellsAndNeverClearsPreviousVisits"
+    },
+    "ShadowVale.Map01.Tests.SkillCampaignPersistenceTests.CareerPathsCannotEscapeTheSaveDirectory": {
+      "result": "Passed",
+      "duration": "0.015489",
+      "name": "CareerPathsCannotEscapeTheSaveDirectory"
+    },
+    "ShadowVale.Map01.Tests.SkillCampaignPersistenceTests.DamagedCareerIsRejectedWithoutReplacingItsFile": {
+      "result": "Passed",
+      "duration": "0.030897",
+      "name": "DamagedCareerIsRejectedWithoutReplacingItsFile"
+    },
+    "ShadowVale.Map01.Tests.SkillCampaignPersistenceTests.EngineeringAndRepairTransactionsSurviveAnOlderCheckpointAndAppRestart": {
+      "result": "Passed",
+      "duration": "0.046551",
+      "name": "EngineeringAndRepairTransactionsSurviveAnOlderCheckpointAndAppRestart"
+    },
+    "ShadowVale.Map01.Tests.SkillCampaignPersistenceTests.LegacyCheckpointKeepsXpAndGetsAStableRunIdentity": {
+      "result": "Passed",
+      "duration": "0.020013",
+      "name": "LegacyCheckpointKeepsXpAndGetsAStableRunIdentity"
+    },
+    "ShadowVale.Map01.Tests.SkillCampaignPersistenceTests.LoadingAnAttemptThatAlreadyFailedReturnsToItsMissionStart": {
+      "result": "Passed",
+      "duration": "0.044432",
+      "name": "LoadingAnAttemptThatAlreadyFailedReturnsToItsMissionStart"
+    },
+    "ShadowVale.Map01.Tests.SkillCampaignPersistenceTests.MidMissionSaveRetainsProvisionalXpUntilActualFailure": {
+      "result": "Passed",
+      "duration": "0.038138",
+      "name": "MidMissionSaveRetainsProvisionalXpUntilActualFailure"
+    },
+    "ShadowVale.Map01.Tests.SkillCampaignPersistenceTests.NewRunDoesNotInheritAnotherRunsPermanentProgress": {
+      "result": "Passed",
+      "duration": "0.024202",
+      "name": "NewRunDoesNotInheritAnotherRunsPermanentProgress"
+    },
+    "ShadowVale.Map01.Tests.BenchTests.BenchOpensWithEQueuesCraftsAndGunpowderMakesRounds": {
+      "result": "Passed",
+      "duration": "74.026090",
+      "name": "BenchOpensWithEQueuesCraftsAndGunpowderMakesRounds"
+    },
+    "ShadowVale.Map01.Tests.CampChestTests.EachCampHasOneChestThatStandsClearAndCanBeReached": {
+      "result": "Passed",
+      "duration": "7.410376",
+      "name": "EachCampHasOneChestThatStandsClearAndCanBeReached"
+    },
+    "ShadowVale.Map01.Tests.LoadoutTests.BagMovesSwapsMergesSplitsAndSorts": {
+      "result": "Passed",
+      "duration": "67.361855",
+      "name": "BagMovesSwapsMergesSplitsAndSorts"
+    },
+    "ShadowVale.Map01.Tests.LoadoutTests.DroppedThingsLieOnTheGroundAndComeBackWithASave": {
+      "result": "Passed",
+      "duration": "77.774581",
+      "name": "DroppedThingsLieOnTheGroundAndComeBackWithASave"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.OfficerNeedsDistantBinocularsAndRestoresCombatBeforeDiscovery": {
+      "result": "Passed",
+      "duration": "56.393635",
+      "name": "OfficerNeedsDistantBinocularsAndRestoresCombatBeforeDiscovery"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.OnlyOriginalSupplyKeeperDropsKeyEvenWhenClonedForExtraction": {
+      "result": "Passed",
+      "duration": "52.525255",
+      "name": "OnlyOriginalSupplyKeeperDropsKeyEvenWhenClonedForExtraction"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.RadioFailureCallsOnlyOneSavedSquadAndSuccessDoesNotExtract": {
+      "result": "Passed",
+      "duration": "87.088078",
+      "name": "RadioFailureCallsOnlyOneSavedSquadAndSuccessDoesNotExtract"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.SupplyRequiresKeyPuzzleReportAndPhysicalHandoff": {
+      "result": "Passed",
+      "duration": "77.318863",
+      "name": "SupplyRequiresKeyPuzzleReportAndPhysicalHandoff"
+    },
+    "ShadowVale.Map01.Tests.MergedCheckpointTests.OneCheckpointKeepsBagDropsStorySkillsAndExplorationTogether": {
+      "result": "Passed",
+      "duration": "61.995361",
+      "name": "OneCheckpointKeepsBagDropsStorySkillsAndExplorationTogether"
+    },
+    "ShadowVale.Map01.Tests.RescueMotionTests.UntieAndRiseKeepTheRenderedSkinOnTheJetty": {
+      "result": "Passed",
+      "duration": "94.951354",
+      "name": "UntieAndRiseKeepTheRenderedSkinOnTheJetty"
+    },
+    "ShadowVale.Map01.Tests.RescueTests.FourGuardsHaveThreeSeparatedConnectedRoutesAndApproaches": {
+      "result": "Passed",
+      "duration": "51.141698",
+      "name": "FourGuardsHaveThreeSeparatedConnectedRoutesAndApproaches"
+    },
+    "ShadowVale.Map01.Tests.SkillIntegrationTests.MissionXpSurvivesResumeButRollsBackOnFailureWhileEngineeringPersists": {
+      "result": "Passed",
+      "duration": "87.223836",
+      "name": "MissionXpSurvivesResumeButRollsBackOnFailureWhileEngineeringPersists"
+    },
+    "ShadowVale.Map01.Tests.LoadoutTests.SmokeHidesAndTheGrenadeKillsWoundsAndIsHeard": {
+      "result": "Passed",
+      "duration": "68.396268",
+      "name": "SmokeHidesAndTheGrenadeKillsWoundsAndIsHeard"
+    },
+    "ShadowVale.Map01.Tests.Map02ArrivalTests.FullNaturalDepartureKeepsBoatVisibleAfterSceneLoad": {
+      "result": "Passed",
+      "duration": "152.462523",
+      "name": "FullNaturalDepartureKeepsBoatVisibleAfterSceneLoad"
+    },
+    "ShadowVale.Map01.Tests.Map02ArrivalTests.NaturalArrivalPreservesPartyAndEquipment": {
+      "result": "Passed",
+      "duration": "216.290580",
+      "name": "NaturalArrivalPreservesPartyAndEquipment"
+    },
+    "ShadowVale.Map01.Tests.Map02ConversationTests.ContactRequiresSeparateConfirmationAndCanBeCancelled": {
+      "result": "Passed",
+      "duration": "0.014553",
+      "name": "ContactRequiresSeparateConfirmationAndCanBeCancelled"
+    },
+    "ShadowVale.Map01.Tests.Map02ConversationTests.FamilyConversationCannotDeliverMedicineOrRescuePeople": {
+      "result": "Passed",
+      "duration": "0.004363",
+      "name": "FamilyConversationCannotDeliverMedicineOrRescuePeople"
+    },
+    "ShadowVale.Map01.Tests.Map02ConversationTests.InterruptionOrFailureCannotCommitStaleConversation": {
+      "result": "Passed",
+      "duration": "0.004756",
+      "name": "InterruptionOrFailureCannotCommitStaleConversation"
+    },
+    "ShadowVale.Map01.Tests.Map02ConversationTests.OldDepartureWithLivingHungCannotPlayAfterSacrifice": {
+      "result": "Passed",
+      "duration": "0.001992",
+      "name": "OldDepartureWithLivingHungCannotPlayAfterSacrifice"
+    },
+    "ShadowVale.Map01.Tests.Map02ConversationTests.ScriptHasUniqueIdsAndNamNeverUsesRemoteVoice": {
+      "result": "Passed",
+      "duration": "0.006719",
+      "name": "ScriptHasUniqueIdsAndNamNeverUsesRemoteVoice"
+    },
+    "ShadowVale.Map01.Tests.Map02ConversationTests.TalkingToScoutDoesNotTeleportHimToSafety": {
+      "result": "Passed",
+      "duration": "0.002014",
+      "name": "TalkingToScoutDoesNotTeleportHimToSafety"
+    },
+    "ShadowVale.Map01.Tests.Map02EndingTests.SacrificeCannotSkipEvacuationOrTriggerDuringEarlierEscort": {
+      "result": "Passed",
+      "duration": "0.002398",
+      "name": "SacrificeCannotSkipEvacuationOrTriggerDuringEarlierEscort"
+    },
+    "ShadowVale.Map01.Tests.Map02EndingTests.SaveKeepsEndingEventAndDoesNotReplayIt": {
+      "result": "Passed",
+      "duration": "0.002568",
+      "name": "SaveKeepsEndingEventAndDoesNotReplayIt"
+    },
+    "ShadowVale.Map01.Tests.Map02RuntimeTests.ObjectCargoFlowSharesPauseMenuAndRestoresExactInventory": {
+      "result": "Passed",
+      "duration": "27.934632",
+      "name": "ObjectCargoFlowSharesPauseMenuAndRestoresExactInventory"
+    },
+    "ShadowVale.Map01.Tests.MinimapDiscoveryTests.DiscoverySurvivesSaveLoadAndBothLayoutsShowRealTerrain": {
+      "result": "Passed",
+      "duration": "72.422728",
+      "name": "DiscoverySurvivesSaveLoadAndBothLayoutsShowRealTerrain"
+    },
+    "ShadowVale.Map01.Tests.StoneSiteTests.StonesArePickedUpToTheBagsLimitAndTheRiverBringsMore": {
+      "result": "Passed",
+      "duration": "51.482754",
+      "name": "StonesArePickedUpToTheBagsLimitAndTheRiverBringsMore"
+    },
+    "ShadowVale.Map01.Tests.ThrowEffectsTests.BlastAndSmokeBuildTheirEffectsAndClearAway": {
+      "result": "Passed",
+      "duration": "52.183281",
+      "name": "BlastAndSmokeBuildTheirEffectsAndClearAway"
+    },
+    "ShadowVale.Map01.Tests.MergedCheckpointTests.EditorIsolationStillProtectsTheDefaultSlotsWhenAFixtureClearsItsOverride": {
+      "result": "Passed",
+      "duration": "0.012299",
+      "name": "EditorIsolationStillProtectsTheDefaultSlotsWhenAFixtureClearsItsOverride"
+    }
+  },
+  "selection_order": [
+    "pure",
+    "world",
+    "retry",
+    "motion",
+    "transfer",
+    "isolation"
+  ]
+}

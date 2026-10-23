@@ -1,0 +1,1 @@
+motion=smoke_crouch_prepare frame=2897 root=(-67.50, 12.22, -66.50) hand=(-67.38, 13.01, -66.78) foot=(-67.41, 12.38, -66.62) modelLocal=(0.00, 0.00, 0.00) grounded=True

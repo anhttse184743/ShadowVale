@@ -1,0 +1,2 @@
+ShadowVale.Map01.Tests.MergedCheckpointTests.EditorIsolationStillProtectsTheDefaultSlotsWhenAFixtureClearsItsOverride
+ShadowVale.Map01.Tests.LoadoutTests.BagMovesSwapsMergesSplitsAndSorts

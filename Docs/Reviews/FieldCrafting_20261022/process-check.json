@@ -1,0 +1,7 @@
+{
+  "CheckedAt": "2026-10-22T23:26:16.6397624+07:00",
+  "ClaudeProcesses": 16,
+  "UnityProjectProcesses": 1,
+  "LaunchedUnity": false,
+  "Reason": "Claude is still running; no additional Unity test launched."
+}

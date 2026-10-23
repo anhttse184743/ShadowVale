@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Collect",
+    "source": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\output\\SupplyRepair_20261020\\Collect.blend",
+    "source_sha256": "da60d50c5507c7895dd92a25c414c62c599e9352c71faa039e0038447073687c",
+    "bones": 62,
+    "file_sha256": "99a7c83131b431bd99b6d1f9409602360740f5b2326121e7cb4cad75d5437a9d",
+    "frames": 481
+  },
+  {
+    "name": "Handoff",
+    "source": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\output\\SupplyRepair_20261020\\Handoff.blend",
+    "source_sha256": "af7229138579e93c06d0b7ce745ae6031219ad201d65b969f6d74b80d5a5a5f8",
+    "bones": 62,
+    "file_sha256": "f7ec770690d49c0c38ba8cab9c2e05a3a5dddb0469768d4eb4cb68c3e8788b37",
+    "frames": 481
+  }
+]

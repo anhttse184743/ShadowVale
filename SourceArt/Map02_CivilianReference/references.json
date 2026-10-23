@@ -1,0 +1,18 @@
+{
+  "status": "character_model_work_paused_by_user",
+  "concept": "local-contact-concept.png",
+  "concept_provider": "built-in image_gen",
+  "three_d_provider_job": null,
+  "notes": [
+    "Historical photos are clothing/anatomy references; they do not establish a year or a named unit in the fictional story.",
+    "Underground contacts wear civilian clothing in daily village life; military references must not be conflated with civilians or used to give every villager openly carried weapons.",
+    "Future scale uses actual project Nam/Hung calibration and Unity world measurements, not the image generator's scale.",
+    "User paused model production to prioritize quest logic and interactive objects."
+  ],
+  "sources": [
+    "https://commons.wikimedia.org/wiki/File:Vietnamese_civilians_with_food_and_clothing_received_during_a_MEDCAP_in_Long_Dinh_village.jpg",
+    "https://commons.wikimedia.org/wiki/File:Vietnamese_Village_Elder,_1969_(14895393116).jpg",
+    "https://nvsk.vnanet.vn/tong-tien-cong-mau-than-1968-buoc-ngoat-quan-trong-cho-khang-chien-chong-my-1-140055.vna",
+    "https://www.qdnd.vn/quoc-phong-an-ninh/xay-dung-quan-doi/sang-tao-trong-ke-sach-bam-dan-bam-dat-257772"
+  ]
+}

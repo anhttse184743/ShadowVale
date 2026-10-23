@@ -1,0 +1,8 @@
+RUNNING
+Passed ShadowVale.Map01.Tests.ForestHudTests.ItemsUseTheirOwnKeysWithNoShortcutBar
+
+
+Passed ShadowVale.Map01.Tests.StoneMouseInputTests.SlotFourAndMouseThrowWithoutFiringOrLosingCancelledStones
+
+
+FINISHED passed=2 failed=0

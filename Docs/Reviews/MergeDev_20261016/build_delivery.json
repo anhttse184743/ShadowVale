@@ -1,0 +1,18 @@
+{
+  "target": "StandaloneWindows64",
+  "development": false,
+  "build_result": "Succeeded",
+  "errors": 0,
+  "summary_bytes": 854492457,
+  "directory_bytes": 854492457,
+  "executable": "D:\\DO_AN_GAME\\ShadowVale\\SourceArt\\MergeDev_20261016_Build\\ShadowVale.exe",
+  "scenes": [
+    "Assets/_Project/Scenes/00_Boot.unity",
+    "Assets/_Project/Scenes/01_MainMenu.unity",
+    "Assets/_Project/Scenes/Maps/Map 1.unity",
+    "Assets/_Project/Scenes/Maps/Map 2.unity"
+  ],
+  "executable_sha256": "e1a9d9e062bbcdb91f76983fae8bb1e4fb8036d55289318ef91033f130d38ecc",
+  "benchmark": "Benchmark/Measurements/results.json",
+  "manual_slots_verified": true
+}

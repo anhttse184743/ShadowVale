@@ -1,0 +1,1 @@
+GPU drawer=UnityEngine.Rendering.GPUResidentDrawer reset=True

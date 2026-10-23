@@ -1,0 +1,129 @@
+{
+  "lt_m1_operation_guard": {
+    "mean_quantities": {
+      "ammo_rifle": 19.6,
+      "scrap_metal": 0.54,
+      "cloth": 0.36,
+      "medkit_small": 0.17333333333333334,
+      "gunpowder": 0.30333333333333334,
+      "ammo_pistol": 0.7583333333333333,
+      "smoke_bomb": 0.08666666666666667,
+      "weapon_parts": 0.08800000000000001,
+      "gun_oil": 0.077,
+      "smoke_module": 0.055,
+      "repair_kit": 0.016153846153846154,
+      "fuse_module": 0.011538461538461539,
+      "blast_charge": 0.006923076923076922,
+      "ammo_sniper": 0.04038461538461539,
+      "grenade_f1": 0.013846153846153845
+    },
+    "per_roll_probability": {
+      "ammo_rifle": 0.3,
+      "scrap_metal": 0.18,
+      "cloth": 0.12,
+      "medkit_small": 0.08666666666666667,
+      "gunpowder": 0.07583333333333334,
+      "ammo_pistol": 0.05416666666666667,
+      "smoke_bomb": 0.043333333333333335,
+      "weapon_parts": 0.044000000000000004,
+      "gun_oil": 0.0385,
+      "smoke_module": 0.0275,
+      "repair_kit": 0.008076923076923077,
+      "fuse_module": 0.0057692307692307696,
+      "blast_charge": 0.003461538461538461,
+      "ammo_sniper": 0.0057692307692307696,
+      "grenade_f1": 0.006923076923076922
+    },
+    "rolls_min": 2,
+    "rolls_max": 2,
+    "notes": "Before adaptive boosts and medkit pity; non-pistol ammo in guard packs is converted to held rifle caliber.",
+    "actual_mean_primary_rounds_after_caliber_matching": 19.640384615384615,
+    "chance_at_least_one_medkit_without_adaptive_or_pity": 0.1658222222222222
+  },
+  "lt_m1_patrol": {
+    "mean_quantities": {
+      "ammo_rifle": 11.25,
+      "cloth": 0.22499999999999998,
+      "scrap_metal": 0.15,
+      "medkit_small": 0.117,
+      "gunpowder": 0.1365,
+      "herb": 0.07800000000000001,
+      "gun_oil": 0.055,
+      "weapon_parts": 0.055,
+      "repair_kit": 0.018,
+      "smoke_module": 0.012
+    },
+    "per_roll_probability": {
+      "ammo_rifle": 0.3,
+      "cloth": 0.15,
+      "scrap_metal": 0.15,
+      "medkit_small": 0.117,
+      "gunpowder": 0.091,
+      "herb": 0.052000000000000005,
+      "gun_oil": 0.055,
+      "weapon_parts": 0.055,
+      "repair_kit": 0.018,
+      "smoke_module": 0.012
+    },
+    "rolls_min": 1,
+    "rolls_max": 1,
+    "notes": "Before adaptive boosts and medkit pity; non-pistol ammo in guard packs is converted to held rifle caliber."
+  },
+  "lt_m1_chest_c3": {
+    "mean_quantities": {
+      "ammo_sniper": 10.78,
+      "scope_lens": 1.0,
+      "blast_charge": 1.0,
+      "repair_kit": 1.0225,
+      "medkit_small": 1.312,
+      "ammo_rifle": 27.0,
+      "scrap_metal": 1.7999999999999998,
+      "gunpowder": 0.6825000000000001,
+      "weapon_parts": 0.22275000000000003,
+      "gun_oil": 0.11549999999999999,
+      "smoke_module": 0.066,
+      "grenade_f1": 0.040499999999999994,
+      "fuse_module": 0.026999999999999996
+    },
+    "per_roll_probability": {
+      "ammo_rifle": 0.36,
+      "scrap_metal": 0.24,
+      "medkit_small": 0.10400000000000001,
+      "gunpowder": 0.091,
+      "ammo_sniper": 0.065,
+      "weapon_parts": 0.0495,
+      "gun_oil": 0.0385,
+      "smoke_module": 0.022000000000000002,
+      "grenade_f1": 0.013499999999999998,
+      "fuse_module": 0.009,
+      "repair_kit": 0.0075
+    },
+    "rolls_min": 3,
+    "rolls_max": 3,
+    "notes": "Before adaptive boosts and medkit pity; non-pistol ammo in guard packs is converted to held rifle caliber."
+  },
+  "m16": {
+    "old_runtime_damage": 27,
+    "new_runtime_damage": 22,
+    "old_runtime_rpm": 700,
+    "new_runtime_rpm": 600,
+    "old_runtime_range_m": 120,
+    "new_runtime_range_m": 80,
+    "old_dps": 315.0,
+    "new_dps": 220.0,
+    "dps_reduction_fraction": 0.3015873015873016,
+    "body_hits_100hp_before": 4,
+    "body_hits_100hp_after": 5,
+    "perfect_ttk_100hp_before_seconds": 0.2571428571428571,
+    "perfect_ttk_100hp_after_seconds": 0.4
+  },
+  "budget_normal_assumption": {
+    "guard_hp": 100,
+    "m16_hit_rate": 0.45,
+    "expected_rounds_per_guard": 11.11111111111111,
+    "old_mean_drop_per_operation_guard": 19.640384615384615,
+    "proposed_c3_drop_mean": 6,
+    "expected_net_rounds_per_kill_after_proposal": -5.111111111111111,
+    "notes": "Planning model, not measured player accuracy. Commander assumed killed by one Mosin hit."
+  }
+}

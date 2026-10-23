@@ -16,5 +16,7 @@ namespace ShadowVale.Data.Content
         public float WeightCover { get; set; } = 0.5f;
         public float WeightDistance { get; set; } = 0.1f;
         public int VisionHops { get; set; } = 2;
+        /// <summary>Squad coordination ranges and sizes for every map; a map may override them (<see cref="MapDefinition.Coordination"/>).</summary>
+        public SquadAiSettings Squad { get; set; }
     }
 }

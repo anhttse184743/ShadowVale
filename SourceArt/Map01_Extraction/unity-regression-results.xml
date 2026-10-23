@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="9" result="Passed" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-02 14:00:51Z" end-time="2026-10-02 14:01:25Z" duration="33.8251819">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="128" result="Passed" start-time="2026-10-02 14:00:51Z" end-time="2026-10-02 14:01:25Z" duration="33.825182" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1087" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/dangk/Documents/Codex/2026-09-20/du/ShadowValeValidation/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="68" result="Passed" start-time="2026-10-02 14:00:51Z" end-time="2026-10-02 14:01:25Z" duration="33.744889" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="18556" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1088" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="68" result="Passed" start-time="2026-10-02 14:00:51Z" end-time="2026-10-02 14:01:25Z" duration="33.743458" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1089" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="68" result="Passed" start-time="2026-10-02 14:00:51Z" end-time="2026-10-02 14:01:25Z" duration="33.742840" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1090" name="Tests" fullname="ShadowVale.Map01.Tests" runstate="Runnable" testcasecount="68" result="Passed" start-time="2026-10-02 14:00:51Z" end-time="2026-10-02 14:01:25Z" duration="33.741942" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1001" name="EndingCutsceneTests" fullname="ShadowVale.Map01.Tests.EndingCutsceneTests" classname="ShadowVale.Map01.Tests.EndingCutsceneTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-02 13:58:57Z" end-time="2026-10-02 13:59:01Z" duration="3.508936" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1002" name="DefeatUsesExistingDeathThenRadioAndExtraction" fullname="ShadowVale.Map01.Tests.EndingCutsceneTests.DefeatUsesExistingDeathThenRadioAndExtraction" methodname="DefeatUsesExistingDeathThenRadioAndExtraction" classname="ShadowVale.Map01.Tests.EndingCutsceneTests" runstate="Runnable" seed="704607204" result="Passed" start-time="2026-10-02 13:58:16Z" end-time="2026-10-02 13:58:48Z" duration="32.623211" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1003" name="SkipIsIdempotentAndLegacyVictoryDoesNotReplay" fullname="ShadowVale.Map01.Tests.EndingCutsceneTests.SkipIsIdempotentAndLegacyVictoryDoesNotReplay" methodname="SkipIsIdempotentAndLegacyVictoryDoesNotReplay" classname="ShadowVale.Map01.Tests.EndingCutsceneTests" runstate="Runnable" seed="433068140" result="Passed" start-time="2026-10-02 13:58:48Z" end-time="2026-10-02 13:59:01Z" duration="12.554368" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1004" name="ExtractionTests" fullname="ShadowVale.Map01.Tests.ExtractionTests" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-02 14:00:28Z" end-time="2026-10-02 14:00:32Z" duration="3.667803" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1008" name="GroundedMatchingActorsAndBoardingWithAllEnemiesAlive" fullname="ShadowVale.Map01.Tests.ExtractionTests.GroundedMatchingActorsAndBoardingWithAllEnemiesAlive" methodname="GroundedMatchingActorsAndBoardingWithAllEnemiesAlive" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" seed="1999366238" result="Passed" start-time="2026-10-02 13:59:01Z" end-time="2026-10-02 13:59:15Z" duration="13.844389" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1005" name="NaturalBoardingDepartsBeforeCompletion" fullname="ShadowVale.Map01.Tests.ExtractionTests.NaturalBoardingDepartsBeforeCompletion" methodname="NaturalBoardingDepartsBeforeCompletion" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" seed="2089020484" result="Passed" start-time="2026-10-02 13:59:15Z" end-time="2026-10-02 14:00:01Z" duration="46.263130" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <output><![CDATA[Extraction scale Nam=(1.00, 1.00, 1.00) Hung=(1.08, 1.08, 1.08)
+]]></output>
+              </test-case>
+              <test-case id="1006" name="RadioSkipAndExtractionCheckpointAreIdempotent" fullname="ShadowVale.Map01.Tests.ExtractionTests.RadioSkipAndExtractionCheckpointAreIdempotent" methodname="RadioSkipAndExtractionCheckpointAreIdempotent" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" seed="1062379002" result="Passed" start-time="2026-10-02 14:00:01Z" end-time="2026-10-02 14:00:19Z" duration="17.991319" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1007" name="RiflesAndAimSurviveRadioHandoff" fullname="ShadowVale.Map01.Tests.ExtractionTests.RiflesAndAimSurviveRadioHandoff" methodname="RiflesAndAimSurviveRadioHandoff" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" seed="225287094" result="Passed" start-time="2026-10-02 14:00:19Z" end-time="2026-10-02 14:00:32Z" duration="12.904905" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1053" name="HungVisualTests" fullname="ShadowVale.Map01.Tests.HungVisualTests" classname="ShadowVale.Map01.Tests.HungVisualTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-02 14:00:41Z" end-time="2026-10-02 14:00:47Z" duration="6.207686" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1054" name="ModelAnimatesAndRescueNavigationSurvives" fullname="ShadowVale.Map01.Tests.HungVisualTests.ModelAnimatesAndRescueNavigationSurvives" methodname="ModelAnimatesAndRescueNavigationSurvives" classname="ShadowVale.Map01.Tests.HungVisualTests" runstate="Runnable" seed="335072760" result="Passed" start-time="2026-10-02 14:00:32Z" end-time="2026-10-02 14:00:47Z" duration="15.399139" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <output><![CDATA[HUNG_SCALE Nam head=1.736051 Hung head=1.680809 visual scale=(1.00, 1.00, 1.00)
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1060" name="OpeningCutsceneTests" fullname="ShadowVale.Map01.Tests.OpeningCutsceneTests" classname="ShadowVale.Map01.Tests.OpeningCutsceneTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-02 14:00:51Z" end-time="2026-10-02 14:01:25Z" duration="33.726057" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1061" name="AssetsUseExistingIdleAndHumanoidClips" fullname="ShadowVale.Map01.Tests.OpeningCutsceneTests.AssetsUseExistingIdleAndHumanoidClips" methodname="AssetsUseExistingIdleAndHumanoidClips" classname="ShadowVale.Map01.Tests.OpeningCutsceneTests" runstate="Runnable" seed="118935250" result="Passed" start-time="2026-10-02 14:00:47Z" end-time="2026-10-02 14:00:47Z" duration="0.004549" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1062" name="FullBriefingSalutesAndReturnsControlWithoutChangingQuest" fullname="ShadowVale.Map01.Tests.OpeningCutsceneTests.FullBriefingSalutesAndReturnsControlWithoutChangingQuest" methodname="FullBriefingSalutesAndReturnsControlWithoutChangingQuest" classname="ShadowVale.Map01.Tests.OpeningCutsceneTests" runstate="Runnable" seed="917015729" result="Passed" start-time="2026-10-02 14:00:47Z" end-time="2026-10-02 14:01:25Z" duration="37.266369" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/dangk/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,11 @@
+RUNNING
+Passed ShadowVale.Map01.Tests.BandageWeaponTests.BandagingHidesWeaponsAndRestoresThemOnFinishCancelAndDisable
+
+
+Passed ShadowVale.Map01.Tests.StoneMouseInputTests.RapidGunToThrowableSwitchClearsAimFireAndReloadPoses
+
+
+Passed ShadowVale.Map01.Tests.StoneMouseInputTests.SlotFourAndMouseThrowWithoutFiringOrLosingCancelledStones
+
+
+FINISHED passed=3 failed=0

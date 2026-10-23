@@ -28,6 +28,7 @@ namespace ShadowVale.AI.Solvers.Classical
             var sw = Stopwatch.StartNew();
             var a = req.AgentCount;
             var n = req.NodeCount;
+            if (a < 1 || n < a) throw new ArgumentException("Require 1 <= agents <= nodes");
             var size = a * n;
             var q = req.QMatrix;
             if (q == null || q.Length != size * size)

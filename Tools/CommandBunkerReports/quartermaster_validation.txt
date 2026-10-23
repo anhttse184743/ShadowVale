@@ -1,0 +1,13 @@
+PASS solid collider + carving + front probe: RifleRack / COLLIDER_Approved loaded rack hit=(-59.20, 0.82, -58.48)
+PASS CharacterController.Move blocked by COLLIDER_Approved loaded rack remaining front distance=0.600
+PASS approved meshes and URP materials: RifleRack
+PASS solid collider + carving + front probe: EquipmentShelf / COLLIDER_Approved loaded shelf hit=(-57.84, 0.98, -61.50)
+PASS CharacterController.Move blocked by COLLIDER_Approved loaded shelf remaining front distance=0.629
+PASS approved meshes and URP materials: EquipmentShelf
+PASS solid collider + carving + front probe: RadioDesk / COLLIDER_Approved desk hit=(-62.00, 0.52, -58.58)
+PASS CharacterController.Move blocked by COLLIDER_Approved desk remaining front distance=0.705
+PASS solid collider + carving + front probe: RadioDesk / COLLIDER_Approved chair facing table hit=(-62.00, 0.59, -59.28)
+PASS CharacterController.Move blocked by COLLIDER_Approved chair facing table remaining front distance=0.557
+PASS approved meshes and URP materials: RadioDesk
+PASS shelf faces inward, wall gap=0.030 m
+PASS chair front +Z points toward desk; separate chair collider at local Z=-0.85 m

@@ -1,0 +1,28 @@
+{
+  "source": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\ShadowValeValidation\\Assets\\_Project\\Art\\Characters\\Player\\Player.fbx",
+  "source_sha256": "c9b339abe1307e12d919c8623cbcd38bfae08339af1ea93d2b3a25da0bff69a7",
+  "provenance": "Derived locally in Blender from existing project model; no provider-generated geometry or external asset license added.",
+  "scope": "Temporary hand renderers in bush branch only; original model, mesh, avatar and material bytes preserved.",
+  "topology": [
+    {
+      "side": "Left",
+      "original_vertices": 7726,
+      "refined_vertices": 30838,
+      "triangles": 61676,
+      "bones": 58
+    },
+    {
+      "side": "Right",
+      "original_vertices": 7724,
+      "refined_vertices": 30759,
+      "triangles": 61504,
+      "bones": 58
+    }
+  ],
+  "imported_vertex_budget_per_hand": 45000,
+  "original_rig_bones": 58,
+  "bake_fps": 30,
+  "voices": "Existing project voice set; same five added Vietnamese direct speech WAVs.",
+  "validated_baseline": "Khoa 1f36340; main assets copied to isolated validation checkout before authoring.",
+  "main_verification": "File hashes and Editor import verified separately in main-import-verification.json."
+}

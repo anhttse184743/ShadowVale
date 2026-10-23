@@ -1,0 +1,19 @@
+Added banyans: 8
+Added flamboyants: 8
+Cleared crop/grass clumps around trunks: 487
+PASS route (-77.92, 1.00, -28.54)
+PASS route (-66.64, 1.00, -38.29)
+PASS route (-53.38, 1.00, -37.81)
+PASS route (-86.29, 1.00, -9.20)
+PASS route (-73.37, 1.00, -18.95)
+PASS route (-56.68, 1.00, -19.22)
+PASS route (-84.29, 1.00, 10.79)
+PASS route (-44.94, 1.00, 5.20)
+PASS route (-80.29, 1.00, 30.64)
+PASS route (-60.71, 1.00, 19.87)
+PASS route (-42.06, 1.00, 28.66)
+PASS route (-72.65, 1.00, 50.03)
+PASS route (-58.49, 1.00, 40.43)
+PASS route (-44.25, 1.00, 53.15)
+PASS route (36.86, 1.00, 2.60)
+PASS route (58.27, 1.00, -62.03)

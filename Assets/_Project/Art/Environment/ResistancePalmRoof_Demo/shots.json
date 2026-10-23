@@ -1,0 +1,46 @@
+{
+  "items": [
+    {
+      "root": "A_ResistanceWorkshop",
+      "name": "A_Workshop",
+      "fov": 52,
+      "cutaway": false
+    },
+    {
+      "root": "C1_QuartermasterDepot",
+      "name": "C1_Overview",
+      "fov": 54,
+      "cutaway": false
+    },
+    {
+      "root": "C2_SignalDetachment",
+      "name": "C2_Overview",
+      "fov": 54,
+      "cutaway": false
+    },
+    {
+      "root": "C3_CommandGarrison",
+      "name": "C3_Overview",
+      "fov": 54,
+      "cutaway": false
+    },
+    {
+      "root": "C3_CommandGarrison",
+      "name": "C3_Arrival",
+      "fov": 59,
+      "cutaway": false
+    },
+    {
+      "root": "C1_QuartermasterDepot",
+      "name": "C1_RoofDetail",
+      "fov": 55,
+      "cutaway": false
+    },
+    {
+      "root": "C3_CommandGarrison",
+      "name": "C3_RoofDetail",
+      "fov": 55,
+      "cutaway": false
+    }
+  ]
+}

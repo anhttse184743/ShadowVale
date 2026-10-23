@@ -1,0 +1,13 @@
+SHOT 2 — Vietnamese dubbing cues (not burned-in subtitles)
+Timeline: 8 seconds, 24 fps, 192 frames.
+
+00:02.000–00:05.000 | NAM (screen left)
+Liên lạc ổn chưa, Hùng?
+Familiar, considerate, natural Vietnamese tones. No radio filter.
+
+00:05.000–00:08.000 | HUNG (screen right)
+Ổn rồi. Nam, cậu nghỉ chút đi.
+Slightly tired but alert, quiet concern. No overlap with Nam.
+
+Dialogue audio intentionally absent: accurate Vietnamese speech was not generated.
+Ambience and effects are synthetic placeholders; no music or narration.

@@ -1,0 +1,1 @@
+PREVIEW ONLY. No Unity files modified. Five 0.85m-wide cots at 1.30m centers, heads toward wall, 3cm head clearance. Supply store: olive wooden ammunition cases and jute ration sacks on walnut pallet. Pending user approval.

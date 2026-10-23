@@ -1,0 +1,5 @@
+PASS actual Unity Play Mode starts Map 2 without title menu
+PASS landing spawn grounded, animated player model present
+PASS Space jump above 0.5 m and W movement above 2 m
+PASS R resets to landing; falling returns safely to landing
+PASS one active follow camera and audio listener; no gameplay runtime errors

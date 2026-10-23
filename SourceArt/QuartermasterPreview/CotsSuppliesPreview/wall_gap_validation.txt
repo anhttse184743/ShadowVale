@@ -1,0 +1,1 @@
+PASS head rail Y=1.018 m; inner wall Y=1.048 m; clearance=0.030 m. Five cots, 1.30 m center spacing. Preview only; Unity unchanged.

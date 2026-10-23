@@ -1,0 +1,140 @@
+FAILURES 0; authored agents 19; surface Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/IntegratedNavMesh 4.asset
+POINT Outpost guard 3 (72.000,6.056,-14.000) delta=0,04408407
+POINT Outpost guard 5 (73.000,8.280,53.000) delta=0
+POINT Operation guard 3_2 (82.560,8.280,61.000) delta=0
+POINT Operation guard 2_2 (61.000,6.042,-8.000) delta=0
+POINT Operation guard 1_3 (44.000,3.136,-82.000) delta=0
+POINT patrol_2 (-14.000,1.568,79.000) delta=0
+POINT patrol_0 (-4.400,1.480,84.600) delta=0
+POINT Outpost guard 2 (60.000,6.045,-18.000) delta=0
+POINT Operation guard 2_4 (71.000,6.067,-20.000) delta=0
+POINT rbl_patrol_3 (-7.500,0.579,79.000) delta=0
+POINT Outpost guard 1 (36.000,3.120,-83.000) delta=0
+POINT patrol_1 (-11.500,0.592,91.500) delta=0
+POINT Outpost guard 4 (66.000,8.280,45.000) delta=0
+POINT Operation guard 2_3 (68.000,6.074,-8.000) delta=0
+POINT Operation guard 1_2 (43.000,3.135,-75.000) delta=0
+POINT Operation guard 3_3 (68.000,8.313,58.800) delta=0,03282452
+POINT Hung (-3.000,1.480,87.000) delta=0
+POINT Operation guard 3_4 (54.000,8.280,52.000) delta=0
+POINT Outpost guard 0 (34.000,3.167,-75.000) delta=0
+PASS patrol Outpost guard 1 (36.000,3.120,-83.000) -> (35.844,3.120,-80.195) -> (39.000,3.120,-83.000)
+PASS patrol Operation guard 1_2 (43.000,3.135,-75.000) -> (43.000,3.158,-72.000) -> (44.500,3.159,-72.402)
+PASS patrol Operation guard 1_3 (44.000,3.136,-82.000) -> (44.000,3.128,-79.000) -> (45.500,3.139,-79.402)
+PASS patrol Outpost guard 3 (72.000,6.056,-14.000) -> (72.000,6.061,-11.000) -> (73.500,6.068,-11.402)
+PASS patrol Operation guard 2_2 (61.000,6.042,-8.000) -> (61.000,6.062,-5.000) -> (62.500,6.076,-5.402)
+PASS patrol Operation guard 2_3 (68.000,6.074,-8.000) -> (68.000,6.089,-5.000) -> (69.500,6.100,-5.402)
+PASS patrol Operation guard 2_4 (71.000,6.067,-20.000) -> (71.000,6.052,-17.000) -> (72.500,6.062,-17.402)
+PASS patrol Outpost guard 5 (73.000,8.280,53.000) -> (73.000,8.280,56.000) -> (74.500,8.280,55.598)
+PASS patrol Operation guard 3_2 (82.560,8.280,61.000) -> (82.560,8.280,64.000) -> (84.060,8.280,63.598)
+PASS patrol Operation guard 3_3 (68.000,8.313,58.800) -> (68.000,8.600,61.800) -> (69.556,8.600,61.473)
+PASS patrol Operation guard 3_4 (54.000,8.280,52.000) -> (54.000,8.280,55.000) -> (55.500,8.280,54.598)
+POINT C1 Door — use guard key (37.200,3.157,-76.650) delta=0
+POINT C1 Chest — combination puzzle (38.960,3.280,-77.970) delta=0
+POINT C2 Radio interaction (62.632,6.200,-12.743) delta=0,265189
+POINT C3 Commander post (68.000,8.600,62.000) delta=0
+POINT Supply handoff — shelter (-67.500,0.200,-66.500) delta=0
+POINT Player -> C1 Door — use guard key from (-67.500,0.200,-66.500) delta=0,01000118
+POINT Player -> C1 Door — use guard key to (37.200,3.157,-76.650) delta=0
+PASS Player -> C1 Door — use guard key PathComplete
+POINT Player -> C1 Chest — combination puzzle from (-67.500,0.200,-66.500) delta=0,01000118
+POINT Player -> C1 Chest — combination puzzle to (38.960,3.280,-77.970) delta=0
+PASS Player -> C1 Chest — combination puzzle PathComplete
+POINT Player -> C2 Radio interaction from (-67.500,0.200,-66.500) delta=0,01000118
+POINT Player -> C2 Radio interaction to (62.632,6.200,-12.743) delta=3,9321E-06
+PASS Player -> C2 Radio interaction PathComplete
+POINT Player -> C3 Commander post from (-67.500,0.200,-66.500) delta=0,01000118
+POINT Player -> C3 Commander post to (68.000,8.600,62.000) delta=0
+PASS Player -> C3 Commander post PathComplete
+POINT Player -> Supply handoff — shelter from (-67.500,0.200,-66.500) delta=0,01000118
+POINT Player -> Supply handoff — shelter to (-67.500,0.200,-66.500) delta=0
+PASS Player -> Supply handoff — shelter PathComplete
+POINT Guard -> objective Outpost guard 3 from (72.000,6.056,-14.000) delta=0
+POINT Guard -> objective Outpost guard 3 to (62.632,6.200,-12.743) delta=3,9321E-06
+PASS Guard -> objective Outpost guard 3 PathComplete
+POINT Guard -> objective Outpost guard 5 from (73.000,8.280,53.000) delta=0
+POINT Guard -> objective Outpost guard 5 to (68.000,8.600,62.000) delta=0
+PASS Guard -> objective Outpost guard 5 PathComplete
+POINT Guard -> objective Operation guard 3_2 from (82.560,8.280,61.000) delta=0
+POINT Guard -> objective Operation guard 3_2 to (68.000,8.600,62.000) delta=0
+PASS Guard -> objective Operation guard 3_2 PathComplete
+POINT Guard -> objective Operation guard 2_2 from (61.000,6.042,-8.000) delta=0
+POINT Guard -> objective Operation guard 2_2 to (62.632,6.200,-12.743) delta=3,9321E-06
+PASS Guard -> objective Operation guard 2_2 PathComplete
+POINT Guard -> objective Operation guard 1_3 from (44.000,3.136,-82.000) delta=0
+POINT Guard -> objective Operation guard 1_3 to (37.200,3.157,-76.650) delta=0
+PASS Guard -> objective Operation guard 1_3 PathComplete
+POINT Guard -> objective patrol_2 from (-14.000,1.568,79.000) delta=0
+POINT Guard -> objective patrol_2 to (68.000,8.600,62.000) delta=0
+PASS Guard -> objective patrol_2 PathComplete
+POINT Guard -> objective patrol_0 from (-4.400,1.480,84.600) delta=0
+POINT Guard -> objective patrol_0 to (68.000,8.600,62.000) delta=0
+PASS Guard -> objective patrol_0 PathComplete
+POINT Guard -> objective Outpost guard 2 from (60.000,6.045,-18.000) delta=0
+POINT Guard -> objective Outpost guard 2 to (62.632,6.200,-12.743) delta=3,9321E-06
+PASS Guard -> objective Outpost guard 2 PathComplete
+POINT Guard -> objective Operation guard 2_4 from (71.000,6.067,-20.000) delta=0
+POINT Guard -> objective Operation guard 2_4 to (62.632,6.200,-12.743) delta=3,9321E-06
+PASS Guard -> objective Operation guard 2_4 PathComplete
+POINT Guard -> objective rbl_patrol_3 from (-7.500,0.579,79.000) delta=0
+POINT Guard -> objective rbl_patrol_3 to (68.000,8.600,62.000) delta=0
+PASS Guard -> objective rbl_patrol_3 PathComplete
+POINT Guard -> objective Outpost guard 1 from (36.000,3.120,-83.000) delta=0
+POINT Guard -> objective Outpost guard 1 to (37.200,3.157,-76.650) delta=0
+PASS Guard -> objective Outpost guard 1 PathComplete
+POINT Guard -> objective patrol_1 from (-11.500,0.592,91.500) delta=0
+POINT Guard -> objective patrol_1 to (68.000,8.600,62.000) delta=0
+PASS Guard -> objective patrol_1 PathComplete
+POINT Guard -> objective Outpost guard 4 from (66.000,8.280,45.000) delta=0
+POINT Guard -> objective Outpost guard 4 to (68.000,8.600,62.000) delta=0
+PASS Guard -> objective Outpost guard 4 PathComplete
+POINT Guard -> objective Operation guard 2_3 from (68.000,6.074,-8.000) delta=0
+POINT Guard -> objective Operation guard 2_3 to (62.632,6.200,-12.743) delta=3,9321E-06
+PASS Guard -> objective Operation guard 2_3 PathComplete
+POINT Guard -> objective Operation guard 1_2 from (43.000,3.135,-75.000) delta=0
+POINT Guard -> objective Operation guard 1_2 to (37.200,3.157,-76.650) delta=0
+PASS Guard -> objective Operation guard 1_2 PathComplete
+POINT Guard -> objective Operation guard 3_3 from (68.000,8.313,58.800) delta=0
+POINT Guard -> objective Operation guard 3_3 to (68.000,8.600,62.000) delta=0
+PASS Guard -> objective Operation guard 3_3 PathComplete
+POINT Guard -> objective Hung from (-3.000,1.480,87.000) delta=0
+POINT Guard -> objective Hung to (68.000,8.600,62.000) delta=0
+PASS Guard -> objective Hung PathComplete
+POINT Guard -> objective Operation guard 3_4 from (54.000,8.280,52.000) delta=0
+POINT Guard -> objective Operation guard 3_4 to (68.000,8.600,62.000) delta=0
+PASS Guard -> objective Operation guard 3_4 PathComplete
+POINT Guard -> objective Outpost guard 0 from (34.000,3.167,-75.000) delta=0
+POINT Guard -> objective Outpost guard 0 to (37.200,3.157,-76.650) delta=0
+PASS Guard -> objective Outpost guard 0 PathComplete
+POINT Radio response 6 (62.222,7.551,-34.628) delta=0
+POINT Response -> radio Radio response 6 from (62.222,7.551,-34.628) delta=0
+POINT Response -> radio Radio response 6 to (62.632,6.200,-12.743) delta=3,9321E-06
+PASS Response -> radio Radio response 6 PathComplete
+POINT Radio response 7 (50.222,6.761,-31.412) delta=0
+POINT Response -> radio Radio response 7 from (50.222,6.761,-31.412) delta=0
+POINT Response -> radio Radio response 7 to (62.632,6.200,-12.743) delta=3,9321E-06
+PASS Response -> radio Radio response 7 PathComplete
+POINT Radio response 8 (41.438,6.796,-22.628) delta=0
+POINT Response -> radio Radio response 8 from (41.438,6.796,-22.628) delta=0
+POINT Response -> radio Radio response 8 to (62.632,6.200,-12.743) delta=3,9321E-06
+PASS Response -> radio Radio response 8 PathComplete
+POINT Radio response 9 (37.440,7.358,-10.720) delta=0
+POINT Response -> radio Radio response 9 from (37.440,7.358,-10.720) delta=0
+POINT Response -> radio Radio response 9 to (62.632,6.200,-12.743) delta=3,9321E-06
+PASS Response -> radio Radio response 9 PathComplete
+POINT Radio response 10 (36.241,7.387,4.372) delta=0
+POINT Response -> radio Radio response 10 from (36.241,7.387,4.372) delta=0
+POINT Response -> radio Radio response 10 to (62.632,6.200,-12.743) delta=3,9321E-06
+PASS Response -> radio Radio response 10 PathComplete
+POINT Officer observation 0 (68.000,14.793,30.000) delta=0
+OBS Officer observation 0 commander distance=32,5937
+POINT Officer observation 1 (70.232,14.578,30.078) delta=0
+OBS Officer observation 1 commander distance=32,55362
+POINT Officer observation 2 (65.768,14.751,30.078) delta=0
+OBS Officer observation 2 commander distance=32,58574
+POINT C3 -> rescue jetty from (68.000,8.600,62.000) delta=0
+POINT C3 -> rescue jetty to (-3.000,1.480,87.000) delta=0,1200005
+PASS C3 -> rescue jetty PathComplete
+POINT Escort B -> A from (-3.000,1.480,87.000) delta=0,1200005
+POINT Escort B -> A to (-61.000,0.251,-63.000) delta=0,04948595
+PASS Escort B -> A PathComplete

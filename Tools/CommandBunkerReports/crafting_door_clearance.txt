@@ -1,0 +1,1 @@
+PASS table edge to cot-side doorway edge = 0.3000 m; doorway X=-66.7400; tabletop edge X=-67.0400; root=(-68.4400, 0.1200, -68.2300); rear wall gap remains 0.030m.

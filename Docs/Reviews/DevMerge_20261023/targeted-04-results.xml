@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-23 00:06:43Z" end-time="2026-10-23 00:06:50Z" duration="7,1029923">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="732" result="Failed" site="Child" start-time="2026-10-23 00:06:43Z" end-time="2026-10-23 00:06:50Z" duration="7.102992" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1658" name="ShadowVale.Map01.Tests.dll" fullname="D:/DO_AN_GAME/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="519" result="Failed" site="Child" start-time="2026-10-23 00:06:43Z" end-time="2026-10-23 00:06:50Z" duration="6.955388" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="208648" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1659" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="519" result="Failed" site="Child" start-time="2026-10-23 00:06:43Z" end-time="2026-10-23 00:06:50Z" duration="6.938159" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1660" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="519" result="Failed" site="Child" start-time="2026-10-23 00:06:43Z" end-time="2026-10-23 00:06:50Z" duration="6.921442" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="SetUpFixture" id="1569" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="519" result="Failed" site="Child" start-time="2026-10-23 00:06:43Z" end-time="2026-10-23 00:06:50Z" duration="6.905327" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1300" name="Map02BridgeCollisionTests" fullname="ShadowVale.Map01.Tests.Map02BridgeCollisionTests" classname="ShadowVale.Map01.Tests.Map02BridgeCollisionTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-23 00:06:24Z" end-time="2026-10-23 00:06:26Z" duration="1.613492" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1302" name="RealCharacterCannotWalkThroughRailsAndChildLoadsBesideMother" fullname="ShadowVale.Map01.Tests.Map02BridgeCollisionTests.RealCharacterCannotWalkThroughRailsAndChildLoadsBesideMother" methodname="RealCharacterCannotWalkThroughRailsAndChildLoadsBesideMother" classname="ShadowVale.Map01.Tests.Map02BridgeCollisionTests" runstate="Runnable" seed="2054431935" result="Passed" start-time="2026-10-23 00:06:16Z" end-time="2026-10-23 00:06:25Z" duration="9.192549" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <output><![CDATA[Parameter 'Sitting' does not exist.
+Parameter 'Sitting' does not exist.
+]]></output>
+              </test-case>
+              <test-case id="1301" name="SavedSceneHasSolidSidesOnEveryBridgeWithoutDuplicateBarriers" fullname="ShadowVale.Map01.Tests.Map02BridgeCollisionTests.SavedSceneHasSolidSidesOnEveryBridgeWithoutDuplicateBarriers" methodname="SavedSceneHasSolidSidesOnEveryBridgeWithoutDuplicateBarriers" classname="ShadowVale.Map01.Tests.Map02BridgeCollisionTests" runstate="Runnable" seed="560563156" result="Passed" start-time="2026-10-23 00:06:25Z" end-time="2026-10-23 00:06:26Z" duration="0.505687" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1572" name="StoneMouseInputTests" fullname="ShadowVale.Map01.Tests.StoneMouseInputTests" classname="ShadowVale.Map01.Tests.StoneMouseInputTests" runstate="Runnable" testcasecount="2" result="Failed" site="Child" start-time="2026-10-23 00:06:44Z" end-time="2026-10-23 00:06:50Z" duration="6.844016" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1573" name="SlotFourAndMouseThrowWithoutFiringOrLosingCancelledStones" fullname="ShadowVale.Map01.Tests.StoneMouseInputTests.SlotFourAndMouseThrowWithoutFiringOrLosingCancelledStones" methodname="SlotFourAndMouseThrowWithoutFiringOrLosingCancelledStones" classname="ShadowVale.Map01.Tests.StoneMouseInputTests" runstate="Runnable" seed="1693088024" result="Failed" start-time="2026-10-23 00:06:26Z" end-time="2026-10-23 00:06:50Z" duration="24.610305" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  The thumb must close toward the held item.
+  Expected: less than 0.0823429152f
+  But was:  0.122405127f
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.StoneMouseInputTests+<SlotFourAndMouseThrowWithoutFiringOrLosingCancelledStones>d__7.MoveNext () [0x009eb] in D:\DO_AN_GAME\ShadowVale\Assets\_Project\Map01\Tests\StoneMouseInputTests.cs:121
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Saving results to: Logs/Map02Chapter/latest-full-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
