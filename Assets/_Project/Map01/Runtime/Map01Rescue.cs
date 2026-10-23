@@ -324,8 +324,8 @@ namespace ShadowVale.Map01
             foreach(var guard in pursuers.Where(g=>g!=null&&g.Alive).ToArray()){
                 mission.RemoveEnemy(guard);pursuers.Remove(guard);Destroy(guard.gameObject);
             }
+            // The base shelf opens with Hùng home. No "supplies" quest item: it belonged to the retired river delivery.
             var supplies=mission.Interactables.FirstOrDefault(p=>p.kind==ForestPointKind.Supplies);var inventory=GetComponent<Map01Inventory>();
-            inventory.Add("supplies",1);
             if(supplies!=null&&!supplies.used){foreach(var item in supplies.items)inventory.Add(item.item_id,item.count);supplies.MarkLooted();}
             mission.Say("Hùng: Về được rồi... Cảm ơn cậu, Nam. Tôi còn chuyện phải báo với chỉ huy.",9);return true;
         }

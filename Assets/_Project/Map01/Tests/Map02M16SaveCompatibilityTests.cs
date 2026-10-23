@@ -24,14 +24,29 @@ namespace ShadowVale.Map01.Tests
             yield return Ready();
             var mission = Object.FindFirstObjectByType<Map02Mission>();
             Assert.IsNull(Object.FindFirstObjectByType<Map02Arrival>());
+            // Direct entry now starts the bank briefing. Finish that introduction
+            // before exercising equipment; it must not complete Lực's contact task.
+            var chapter = mission.Chapter;
+            if (chapter.State.phase == 0 && !chapter.State.dayOne.arrivalSeen)
+            {
+                float deadline = Time.realtimeSinceStartup + 5;
+                while (chapter.CurrentScene == null && Time.realtimeSinceStartup < deadline) yield return null;
+                Assert.AreEqual("D1_01", chapter.CurrentScene?.id, "The direct-entry bank briefing must start.");
+                typeof(Map02ChapterDirector).GetMethod("EndScene", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).Invoke(chapter, null);
+                yield return WaitGameSeconds(.2f);
+                Assert.IsTrue(chapter.State.dayOne.arrivalSeen);
+                Assert.IsFalse(chapter.State.Done("D1_01"));
+            }
+            Assert.IsFalse(mission.InputBlocked, "The introduction must return equipment controls.");
             var combat = mission.Player.GetComponent<PlayerCombat>();
             var gun = combat.WeaponFor(WeaponKind.Rifle);
             Assert.NotNull(gun);
-            Map01RifleVisual.Apply(gun, Map01M16.Id);
-            Assert.IsTrue(combat.Equip(WeaponKind.Rifle));
+            mission.Bag.Add(Map01M16.Id, 1);
+            Assert.IsTrue(mission.Bag.EquipItem(Map01M16.Id));
+            Assert.AreEqual(Map01M16.Id, gun.GetComponent<Map01RifleVisual>()?.ItemId);
             combat.RestoreMagazine(WeaponKind.Rifle, 9);
-            mission.Inventory["ammo_rifle"] = 13;
-            mission.Inventory[Map01M16.Ammo] = 55;
+            mission.Bag.Spend("ammo_rifle", mission.Bag.Count("ammo_rifle")); mission.Bag.Add("ammo_rifle", 13);
+            mission.Bag.Spend(Map01M16.Ammo, mission.Bag.Count(Map01M16.Ammo)); mission.Bag.Add(Map01M16.Ammo, 55);
             Assert.AreEqual(55, combat.ReserveRounds(), "M16 must use its own caliber even without an arrival object.");
             Assert.AreEqual(7, combat.DrawRounds(7));
             Assert.AreEqual(48, mission.Inventory[Map01M16.Ammo]);

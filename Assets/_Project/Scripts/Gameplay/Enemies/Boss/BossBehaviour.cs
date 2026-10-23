@@ -9,6 +9,7 @@ using ShadowVale.AI.Fsm;
 using ShadowVale.Core.Events;
 using ShadowVale.Core.Services;
 using ShadowVale.Data.Content;
+using ShadowVale.Gameplay.Combat;
 using UnityEngine;
 
 namespace ShadowVale.Gameplay.Enemies.Boss
@@ -74,6 +75,13 @@ namespace ShadowVale.Gameplay.Enemies.Boss
         private IEnemyAgent _agent;
         private System.Random _rng;
         private float _coverRetryAt;
+        // Where he comes out from his cover: the node and a step to either side; which he used last, and where he was hit.
+        private readonly List<Vector3> _firingPoints = new List<Vector3>();
+        private int _peekIndex, _burnedIndex = -1;
+        private float _healthSeen = 1f;
+        private Animator _actor;
+        /// <summary>Rounds that struck his head (armour bypassed, damage ×<see cref="BossProfile.HeadshotFactor"/>).</summary>
+        public int Headshots { get; private set; }
 
         public static BossBehaviour Attach(GameObject enemy, IEnemyAgent agent, BossProfile profile,
             IReinforcementProvider reinforcements = null, int seed = 0)
@@ -87,6 +95,8 @@ namespace ShadowVale.Gameplay.Enemies.Boss
             b._peek = new PeekCycle(b.Profile.PeekOutSeconds, b.Profile.PeekHideSeconds, new System.Random(seed ^ 0x7ee4));
             ApplyBossTactics(agent.Brain.Tuning);
             CommanderMarker.Attach(enemy); // The star over his head: which one is the commander.
+            var health = enemy.GetComponent<Health>();
+            if (health != null) health.BulletDamageModifier = b.ArmorDamage; // Body armour: aim for his head.
             return b;
         }
 
@@ -132,7 +142,15 @@ namespace ShadowVale.Gameplay.Enemies.Boss
             var d = Director.Tick(new BossSense(now, memory.Engaged(now), _agent.HealthFraction, _agent.Position,
                 memory.LastKnownPlayerPosition, sheltered, settled, combat != null && combat.IsReloading, aimedAt, Centre(_men)));
             if (d.Push) Push(_men, memory.LastKnownPlayerPosition);
-            if (d.Duck && _peek.Duck(now, Profile.DuckSeconds)) _agent.Brain.Assign(_peek.HidePoint, _peek.Node, "duck");
+            if (d.Duck)
+            {
+                if (_peek.Duck(now, Profile.DuckSeconds)) _agent.Brain.Assign(_peek.HidePoint, _peek.Node, "duck");
+                // Rounds landing and nothing to duck behind (open ground, or on his way): he moves instead.
+                else if (d.DuckReason == "suppressed" && !d.Relocate) Relocate(memory.LastKnownPlayerPosition, "suppressed");
+            }
+            // Hit while out at a firing point: that one is known to the player, he will not come out there next.
+            if (_agent.HealthFraction < _healthSeen - 1e-5f && _peek.Active && _peek.IsOut) _burnedIndex = _peekIndex;
+            _healthSeen = _agent.HealthFraction;
             if (d.CallReinforcements) CallReinforcements(memory.LastKnownPlayerPosition, now);
             if (d.Relocate) Relocate(memory.LastKnownPlayerPosition, d.RelocateReason);
             else if (memory.Engaged(now) && !memory.HasAssignment && now >= _coverRetryAt
@@ -151,14 +169,69 @@ namespace ShadowVale.Gameplay.Enemies.Boss
                 // Just arrived at a position of his own choosing (not a push or a step of the cycle).
                 bool atCover = memory.ReachedAssignment && (memory.AssignedRole == "relocate" || memory.AssignedRole == "local");
                 if (atCover && TryDuckPoint(memory.AssignedPosition, memory.LastKnownPlayerPosition, out var duck))
+                {
                     _peek.Begin(memory.AssignedPosition, duck, memory.AssignedNode, now);
+                    FiringPoints(memory.AssignedPosition, memory.LastKnownPlayerPosition, _firingPoints);
+                    _peekIndex = 0; _burnedIndex = -1;
+                }
                 return;
             }
             switch (_peek.Tick(now))
             {
-                case PeekCycle.Step.Out: _agent.Brain.Assign(_peek.FiringPoint, _peek.Node, "peek"); break;
+                case PeekCycle.Step.Out:
+                    _peekIndex = NextPeek(_firingPoints.Count, _peekIndex, _burnedIndex, _rng);
+                    _agent.Brain.Assign(_firingPoints.Count > 0 ? _firingPoints[_peekIndex] : _peek.FiringPoint, _peek.Node, "peek");
+                    break;
                 case PeekCycle.Step.Back: _agent.Brain.Assign(_peek.HidePoint, _peek.Node, "duck"); break;
             }
+        }
+
+        /// <summary>
+        /// Where he may come out from <paramref name="cover"/>: the cover node itself and, <see cref="BossProfile.PeekSideOffset"/>
+        /// to either side across the line to the player, any reachable spot that still sees him.
+        /// </summary>
+        private void FiringPoints(Vector3 cover, Vector3 player, List<Vector3> into)
+        {
+            into.Clear();
+            into.Add(cover);
+            if (Profile.PeekSideOffset <= 0 || !ServiceLocator.TryResolve<IWorldQuery>(out var graph)) return;
+            Vector3 toPlayer = player - cover; toPlayer.y = 0;
+            if (toPlayer.sqrMagnitude < 1e-4f) return;
+            Vector3 side = Vector3.Cross(Vector3.up, toPlayer.normalized);
+            var body = _agent.Brain.Context.Body;
+            foreach (float s in new[] { 1f, -1f })
+                if (body.TrySampleReachable(cover + side * s * Profile.PeekSideOffset, .5f, out var p)
+                    && graph.HasLineOfSight(p + Vector3.up * 1.5f, player + Vector3.up * 1.2f))
+                    into.Add(p);
+        }
+
+        /// <summary>Which of <paramref name="count"/> firing points to come out at next: never the last one if there is
+        /// another, never the one he was hit at (<paramref name="burned"/>) if there is another.</summary>
+        public static int NextPeek(int count, int last, int burned, System.Random rng)
+        {
+            if (count <= 1) return 0;
+            var choices = new List<int>();
+            for (int i = 0; i < count; i++) if (i != last && i != burned) choices.Add(i);
+            if (choices.Count == 0) for (int i = 0; i < count; i++) if (i != burned) choices.Add(i);
+            if (choices.Count == 0) return 0;
+            return choices[rng != null ? rng.Next(choices.Count) : 0];
+        }
+
+        /// <summary>A bullet on him through his body armour: to the head (above his neck) ×<see cref="BossProfile.HeadshotFactor"/>,
+        /// anywhere else ×<see cref="BossProfile.ArmorBodyFactor"/>.</summary>
+        public float ArmorDamage(float amount, Vector3 hitPoint)
+        {
+            bool head = hitPoint.y >= HeadLine();
+            if (head) Headshots++;
+            return amount * BossDirector.ArmorFactor(Profile, head);
+        }
+
+        /// <summary>The height above which a round is in his head: just under his head bone, or 1.5 m on a rig without one.</summary>
+        public float HeadLine()
+        {
+            if (_actor == null) _actor = GetComponentInChildren<Animator>();
+            var head = _actor != null && _actor.isHuman ? _actor.GetBoneTransform(HumanBodyBones.Head) : null;
+            return head != null ? head.position.y - .14f : transform.position.y + 1.5f;
         }
 
         /// <summary>

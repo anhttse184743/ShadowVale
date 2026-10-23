@@ -1,4 +1,4 @@
-using L=ShadowVale.Map01.Map01StoryDialogue.Line;
+﻿using L=ShadowVale.Map01.Map01StoryDialogue.Line;
 namespace ShadowVale.Map01
 {
     public static class Map01OperationLines
@@ -22,6 +22,7 @@ namespace ShadowVale.Map01
         public static L[] RadioReport=>new[]{
             new L("Nam","Đài đã ngừng phát. Chúng không gọi viện qua trạm này được nữa.",false,"m1_ops_radio_report_01"),
             new L("Chỉ huy","Tên sĩ quan điều quân đang ở điểm ba. Quan sát từ xa rồi báo tôi trước khi đánh.",true,"m1_ops_radio_report_02"),
+            new L("Chỉ huy",Map01C3Dialogue.MosinInstruction,true,"m1_c3_mosin_order"),
             Acknowledge()};
         public static L[] CommanderReport=>new[]{
             new L("Nam","Tôi thấy tên sĩ quan rồi. Hắn ở trong chốt, có lính bảo vệ.",false,"m1_ops_commander_report_01"),

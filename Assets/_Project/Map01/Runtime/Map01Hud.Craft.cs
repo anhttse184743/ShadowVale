@@ -19,6 +19,7 @@ namespace ShadowVale.Map01
             benchSmall, benchSmallDim, benchSmallBold, benchTab, benchButton, benchVerdict, benchStep, benchCount, benchCenterSmall;
         private string benchRecipe, benchGroup = "all";
         private int benchQty = 1;
+        private Vector2 recipeScroll;
         private readonly Dictionary<string, Texture2D> itemRenders = new Dictionary<string, Texture2D>();
 
         private static readonly Color BenchHave = new Color(.78f, .9f, .62f), BenchShort = new Color(.92f, .55f, .42f),
@@ -38,9 +39,13 @@ namespace ShadowVale.Map01
         public Texture2D ItemRender(string id)
         {
             if (id == null) return null;
+            id = CraftVisualId(id);
             if (!itemRenders.TryGetValue(id, out var picture)) itemRenders[id] = picture = Resources.Load<Texture2D>("Hud/ItemRenders/" + id);
             return picture;
         }
+
+        private static string CraftVisualId(string id) => id == Map01Inventory.RecoveredAmmo ? "scrap_metal"
+            : id == Map01Inventory.AkLoadingPack ? "ammo_rifle" : id;
 
         private static string Hex(Color c) => ColorUtility.ToHtmlStringRGB(c);
 
@@ -123,6 +128,7 @@ namespace ShadowVale.Map01
                 float w = benchTab.CalcSize(new GUIContent(label)).x + 22;
                 if (BenchButton(R(tx, 150, w, 32), label, benchTab, true, benchGroup == id))
                 {
+                    if (benchGroup != id) recipeScroll = Vector2.zero;   // a new group's list starts at its top
                     benchGroup = id;
                     var first = recipes.FirstOrDefault(r => id == "all" || ForestInventory.BenchGroup(r.output_item_id) == id);
                     if (first != null && id != "all" && ForestInventory.BenchGroup(recipe.output_item_id) != id) { benchRecipe = first.id; benchQty = 1; }
@@ -141,20 +147,24 @@ namespace ShadowVale.Map01
             if (benchGroup == GunsTab) { DrawGunsmith(ox, oy, mouse); return; }
             if (benchGroup == StoreTab) { DrawStore(ox, oy); return; }
 
-            // Recipes. Seven or more no longer fit at full height above the panel's foot: the rows close up.
-            float step = Mathf.Min(112f, 650f / shown.Count), rowHeight = step - 8f, tileSize = Mathf.Min(78f, rowHeight - 16f);
-            bool compact = rowHeight < 104f;
-            float nameY = compact ? 6 : 11, statusY = compact ? 31 : 38, materialsY = compact ? 56 : 64, barY = compact ? rowHeight - 6 : 92;
+            // Recipes, at full height in a list that scrolls (mouse wheel or its bar) once they no longer fit above the
+            // panel's foot; they used to close up instead, until the rows were too short to read.
+            const float step = 112f, rowHeight = step - 8f, tileSize = 78f;
+            const float nameY = 11, statusY = 38, materialsY = 64, barY = 92;
+            var listView = R(96, 196, 372 + 16, 650);
+            var listContent = new Rect(0, 0, 372, Mathf.Max(listView.height, shown.Count * step - 8f));
+            recipeScroll = GUI.BeginScrollView(listView, recipeScroll, listContent, false, false);
             for (int k = 0; k < shown.Count; k++)
             {
                 var r = shown[k];
-                var row = R(96, 196 + k * step, 372, rowHeight);
+                var row = new Rect(0, k * step, 372, rowHeight);
+                if (row.yMax < recipeScroll.y || row.y > recipeScroll.y + listView.height) continue;   // out of view
                 bool selected = r.id == benchRecipe;
                 HudPanel(row, selected);
                 var tile = new Rect(row.x + 10, row.y + (rowHeight - tileSize) / 2, tileSize, tileSize);
                 BenchTileIcon(tile, r.output_item_id);
                 if (r.output_count > 1) GUI.Label(new Rect(tile.x + 2, tile.yMax - 25, tileSize - 6, 22), "×" + r.output_count, benchCount);
-                GUI.Label(new Rect(row.x + 98, row.y + nameY, 268, 26), ForestInventory.Name(r.output_item_id).ToUpperInvariant(), benchRowName);
+                GUI.Label(new Rect(row.x + 98, row.y + nameY, 268, 26), FieldRecipeName(r).ToUpperInvariant(), benchRowName);
                 int n = inventory.CanMake(r);
                 int missing = r.inputs.Count(i => inventory.Count(i.item_id) < i.count);
                 GUI.Label(new Rect(row.x + 98, row.y + statusY, 268, 22), n > 0
@@ -176,6 +186,7 @@ namespace ShadowVale.Map01
                 }
                 if (GUI.Button(row, GUIContent.none, GUIStyle.none) && !selected) { benchRecipe = r.id; benchQty = 1; }
             }
+            GUI.EndScrollView();
 
             // The chosen recipe.
             string output = recipe.output_item_id;
@@ -184,7 +195,7 @@ namespace ShadowVale.Map01
             var render = ItemRender(output);
             if (render != null) GUI.DrawTexture(new Rect(picture.x + 6, picture.y + 6, picture.width - 12, picture.height - 12), render, ScaleMode.ScaleToFit);
             else HudIcon(new Rect(picture.x + 30, picture.y + 30, 150, 150), output);
-            GUI.Label(R(732, 144, 440, 42), ForestInventory.Name(output).ToUpperInvariant(), benchName);
+            GUI.Label(R(732, 144, 440, 42), FieldRecipeName(recipe).ToUpperInvariant(), benchName);
             GUI.Label(R(732, 190, 440, 24), $"Ra ×{recipe.output_count} mỗi lần · {recipe.craft_seconds:0} giây · Trong túi: <b><color=#{Hex(HudPaper)}>{inventory.Count(output)}</color></b>", benchDim);
             float cx = ox + 732;
             foreach (var fact in ForestInventory.BenchFacts(output).Append($"Tối đa {inventory.StackLimit(output)}/ô"))
@@ -237,6 +248,7 @@ namespace ShadowVale.Map01
             if (BenchButton(R(666, 772, 120, 42), $"TỐI ĐA ×{Mathf.Max(1, most)}", benchVerdict, most > 1)) benchQty = Mathf.Max(1, most);
 
             string reason = !inventory.NearWorkbench() ? "Đến bàn chế tạo ở căn cứ A để chế tạo"
+                : inventory.IsFieldCrafting ? "Hoàn tất hoặc hủy chế dã chiến trước"
                 : most < q ? "Thiếu " + string.Join(", ", recipe.inputs.Where(i => inventory.Count(i.item_id) < i.count * q)
                     .Select(i => (i.count * q - inventory.Count(i.item_id)) + " " + ForestInventory.Name(i.item_id).ToLowerInvariant()))
                 : null;
@@ -255,11 +267,12 @@ namespace ShadowVale.Map01
                 : $"<color=#{Hex(BenchShort)}>{reason}</color>", benchSmall);
 
             // The bag's materials.
-            GUI.Label(R(1212, 146, 300, 28), "VẬT LIỆU TRONG TÚI", benchHead);
-            for (int k = 0; k < BenchMaterials.Length; k++)
+            GUI.Label(R(1212, 196, 300, 28), "VẬT LIỆU TRONG TÚI", benchHead);
+            var visibleMaterials = recipe.inputs.Select(i => i.item_id).Concat(BenchMaterials).Distinct().Take(8).ToArray();
+            for (int k = 0; k < visibleMaterials.Length; k++)
             {
-                string id = BenchMaterials[k];
-                var tile = R(1212 + k % 4 * 78, 184 + k / 4 * 116, 70, 70);   // four across: the F1's two parts joined the six
+                string id = visibleMaterials[k];
+                var tile = R(1212 + k % 4 * 78, 232 + k / 4 * 112, 70, 70);   // four across, under the guns and store tabs as on theirs
                 var use = recipe.inputs.FirstOrDefault(i => i.item_id == id);
                 bool over = tile.Contains(mouse);
                 BenchTileIcon(tile, id, use != null || over);
@@ -276,13 +289,13 @@ namespace ShadowVale.Map01
             }
 
             // The queue.
-            GUI.Label(R(1212, 438, 300, 28), "ĐANG CHẾ TẠO", benchHead);
+            GUI.Label(R(1212, 470, 300, 28), "ĐANG CHẾ TẠO", benchHead);
             if (queue.Count == 0)
-                GUI.Label(R(1212, 474, 300, 64), "Trống. Món đang làm hiện ở đây; rời bàn vẫn làm tiếp, xong sẽ báo ở mép phải màn hình.", benchSmallDim);
+                GUI.Label(R(1212, 504, 300, 64), "Trống. Món đang làm hiện ở đây; rời bàn vẫn làm tiếp, xong sẽ báo ở mép phải màn hình.", benchSmallDim);
             for (int k = 0; k < Mathf.Min(2, queue.Count); k++)
             {
                 var job = queue[k];
-                var row = R(1212, 474 + k * 74, 300, 66);
+                var row = R(1212, 504 + k * 74, 300, 66);
                 HudPanel(row, k == 0);
                 BenchTileIcon(new Rect(row.x + 9, row.y + 9, 48, 48), job.recipe.output_item_id);
                 GUI.Label(new Rect(row.x + 66, row.y + 8, 228, 22), $"{ForestInventory.Name(job.recipe.output_item_id)} ×{job.recipe.output_count}", benchSmallBold);
@@ -290,18 +303,18 @@ namespace ShadowVale.Map01
                 HudFill(new Rect(row.x + 66, row.y + 52, 222, 5), new Color(.17f, .18f, .11f));
                 if (k == 0) HudFill(new Rect(row.x + 66, row.y + 52, 222 * inventory.CraftProgress, 5), HudGold);
             }
-            if (queue.Count > 2) GUI.Label(R(1212, 624, 300, 22), $"+{queue.Count - 2} món chờ", benchSmallDim);
+            if (queue.Count > 2) GUI.Label(R(1212, 650, 300, 22), $"+{queue.Count - 2} món chờ", benchSmallDim);
 
             // Just made: the pickup feed, here while the bench is open.
             var made = pickups.Where(p => Age(p) < PickupShown + PickupFade).Take(2).ToList();
             if (made.Count > 0)
             {
-                GUI.Label(R(1212, 660, 300, 28), "VỪA XONG", benchHead);
+                GUI.Label(R(1212, 680, 300, 28), "VỪA XONG", benchHead);
                 for (int k = 0; k < made.Count; k++)
                 {
                     var p = made[k];
                     float alpha = Age(p) < PickupShown ? 1 : Mathf.Clamp01(1 - (Age(p) - PickupShown) / PickupFade);
-                    var row = R(1212, 696 + k * 52, 300, 46);
+                    var row = R(1212, 716 + k * 52, 300, 46);
                     HudFill(row, new Color(.035f, .045f, .03f, .82f * alpha));
                     HudFill(new Rect(row.x, row.y, 3, row.height), new Color(HudGold.r, HudGold.g, HudGold.b, alpha));
                     var old = GUI.color; GUI.color = new Color(1, 1, 1, alpha);

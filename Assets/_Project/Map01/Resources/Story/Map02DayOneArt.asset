@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 339a0f230671aa94f87ab57f87b3cafb, type: 3}
+  m_Name: Map02DayOneArt
+  m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map02DayOneArt
+  actions:
+  - id: Carry
+    clip: {fileID: 7400000, guid: 76be74ac9be768c48a1449a3eaf37e23, type: 2}
+  - id: CarryWalk
+    clip: {fileID: 7400000, guid: d6435867f7764874eb6ee45998d30657, type: 2}
+  - id: PlaceCrate
+    clip: {fileID: 7400000, guid: 38a816501269cc04b99c79189bd99161, type: 2}
+  - id: InjuredIdle
+    clip: {fileID: 7400000, guid: f5d5e8ca04ea2ec4e8ded8a7eec28df8, type: 2}
+  - id: InjuredWalk
+    clip: {fileID: -623603649343465320, guid: 60dab59bb6584c540b1ff07a7c571599, type: 3}
+  - id: Assist
+    clip: {fileID: 7400000, guid: ae18c93bb070c8f4ebfd9a2de1359296, type: 2}
+  - id: AssistWalk
+    clip: {fileID: 7400000, guid: 91ece79d438b67745abacc99a42d1dfc, type: 2}
+  - id: Medicine
+    clip: {fileID: 7400000, guid: 4203ac609421e3a4e8455656e0c5e06f, type: 2}
+  - id: Hammer
+    clip: {fileID: 7400000, guid: 0253245f8396dd14eab769c5b989ad6d, type: 2}
+  - id: BandageHung
+    clip: {fileID: 7400000, guid: bb9a653aaf20e8541987eecd6257c868, type: 2}
+  - id: BandageLanh
+    clip: {fileID: 7400000, guid: 7df9d1d8923b064499b4df4c3e347934, type: 2}
+  - id: MealNam
+    clip: {fileID: 7400000, guid: aba28bad0bf439c46bcf57e64b665e36, type: 2}
+  - id: MealHung
+    clip: {fileID: 7400000, guid: d52a379c589b72d4ea9f25471feb4b12, type: 2}
+  - id: RestNam
+    clip: {fileID: 7400000, guid: 124476d29a14bd14380f3d41ddbd6c32, type: 2}
+  - id: RestHung
+    clip: {fileID: 7400000, guid: 2b59fbcd923b6b94b90a62e7d2488d9d, type: 2}
+  assistSpeed: 1.25
+  bandageSeconds: 24
+  shiftSeconds: 12
+  carryOffset: {x: 0, y: 0.87, z: 0.36}
+  medicinePacket: {fileID: 0}

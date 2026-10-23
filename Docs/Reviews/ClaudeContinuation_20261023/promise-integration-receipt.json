@@ -1,0 +1,19 @@
+{
+  "id": "m2v3_promise_05b",
+  "text": "...Ngon hơn nồi này nhiều.",
+  "voice": "Minh Quân",
+  "seed": 2049,
+  "engine": "VieNeu-TTS v3 Turbo",
+  "sdk": "vieneu==3.8.0",
+  "backend": "onnx",
+  "precision": "fp32",
+  "duration": 1.2,
+  "sampleRate": 48000,
+  "peak": 0.7271015048027039,
+  "rms": 0.11463259905576706,
+  "sha256": "873d1d6f390f63a71bd0c6aa1b41586e1bbf62a21e4b49b36f01111513e65376",
+  "reviewOnly": false,
+  "perceptualReview": "User approved listening and integration on 2026-10-23",
+  "integratedFile": "Assets/Resources/Dialogue/Map02DayOneFree/m2v3_promise_05b.wav",
+  "copiedSha256": "873d1d6f390f63a71bd0c6aa1b41586e1bbf62a21e4b49b36f01111513e65376"
+}

@@ -32,6 +32,20 @@ namespace ShadowVale.Tests.EditMode.Gameplay
             wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
             wall.transform.position = player.transform.position + offset; wall.transform.localScale = scale;
         }
+        [Test] public void WithoutAShakeTheViewIsExactlyTheSame()
+        {
+            // Map 1 never shakes: the view must not move unless a scene asks.
+            Tick(); var before = view.transform.position; Tick();
+            Assert.AreEqual(0f, rig.ShakeAmplitude); Assert.AreEqual(before, view.transform.position);
+            rig.Shake(0f, 1f); rig.Shake(.5f, 0f); Assert.AreEqual(0f, rig.ShakeAmplitude, "A zero shake is no shake.");
+        }
+        [Test] public void ShakeMovesTheViewWithinItsAmplitudeAndAWeakerOneCannotReplaceIt()
+        {
+            Tick(); var still = view.transform.position;
+            rig.Shake(.5f, 10f); rig.Shake(.1f, 10f); Assert.AreEqual(.5f, rig.ShakeAmplitude, .01f);
+            Tick(); float moved = Vector3.Distance(still, view.transform.position);
+            Assert.Greater(moved, 0f); Assert.LessOrEqual(moved, .5f * 2f * Mathf.Sqrt(3f) * .5f + .001f);
+        }
         [Test] public void NearbyWallRetractsBelowMinimumZoomDistance()
         {
             Wall(new Vector3(0, 1.6f, -.85f), new Vector3(6, 4, .1f)); Tick();
@@ -59,6 +73,26 @@ namespace ShadowVale.Tests.EditMode.Gameplay
             Wall(new Vector3(0,1.6f,-1.2f),new Vector3(6,4,.1f));Tick();
             var corners=new Vector3[4];camera.CalculateFrustumCorners(new Rect(0,0,1,1),camera.nearClipPlane,Camera.MonoOrStereoscopicEye.Mono,corners);
             foreach(var corner in corners) Assert.Greater(view.transform.TransformPoint(corner).z,player.transform.position.z-1.15f);
+        }
+        [Test] public void CursorComesBackWhenTheScreenThatTookItCloses()
+        {
+            // What the camera asks for, and the real cursor too where this editor has one (batch mode has none).
+            var wanted=typeof(ThirdPersonCamera).GetField("_cursorWanted",BindingFlags.Static|BindingFlags.NonPublic);
+            var lockBefore=Cursor.lockState;var shownBefore=Cursor.visible;
+            try
+            {
+                Cursor.lockState=CursorLockMode.Locked;bool realCursor=Cursor.lockState==CursorLockMode.Locked;
+                bool screenOpen=true;rig.InputAllowed=()=>!screenOpen;
+                Tick();Tick();
+                Assert.IsFalse((bool)wanted.GetValue(null),"The bag, a menu or a cutscene has the cursor while it is open.");
+                if(realCursor) Assert.AreEqual(CursorLockMode.None,Cursor.lockState);
+                screenOpen=false;Tick();
+                Assert.IsTrue((bool)wanted.GetValue(null),"Closing it gives the cursor straight back to the game, with no click needed to aim or fire.");
+                if(realCursor){Assert.AreEqual(CursorLockMode.Locked,Cursor.lockState);Assert.IsFalse(Cursor.visible);}
+                Tick();
+                Assert.IsTrue((bool)wanted.GetValue(null),"And keeps it there.");
+            }
+            finally{Cursor.lockState=lockBefore;Cursor.visible=shownBefore;}
         }
     }
 }

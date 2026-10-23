@@ -12,7 +12,7 @@ using Slot = ShadowVale.Map01.Map01Inventory.Slot;
 namespace ShadowVale.Map01.Tests
 {
     /// <summary>
-    /// The approved loadout (Map01Inventory.Bag, Map01Hud.Bag, Map01Drops, Map01Smoke, Map01StoneThrow): the 24-cell
+    /// The approved loadout (Map01Inventory.Bag, Map01Hud.Bag, Map01Drops, Map01Smoke, Map01StoneThrow): the 40-cell
     /// bag and its moves, the weapon slots with no bare hands, putting things on the ground and picking them up
     /// again (also across a save), and the two new throwables.
     /// </summary>
@@ -24,6 +24,24 @@ namespace ShadowVale.Map01.Tests
             yield return null;
             InputSystem.QueueStateEvent(keyboard, new KeyboardState());
             yield return null;
+        }
+
+        [System.Serializable] private sealed class ContentItems { public ContentItem[] items; }
+        [System.Serializable] private sealed class ContentItem { public string id, category; public int stack_max; }
+
+        /// <summary>The bag's stack sizes, as the content bundle sets them: every round 99, every other stackable 64,
+        /// a gun one per cell (each carries its own condition).</summary>
+        [Test]
+        public void RoundsStackTo99AndEverythingElseTo64()
+        {
+            var text = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>("Assets/_Project/Map01/Generated/Map01Content.json");
+            var items = JsonUtility.FromJson<ContentItems>(text.text).items;
+            Assert.IsNotEmpty(items);
+            foreach (var item in items)
+            {
+                int expected = item.category == "weapon" ? 1 : item.category == "ammo" ? 99 : 64;
+                Assert.AreEqual(expected, item.stack_max, $"{item.id} ({item.category})");
+            }
         }
 
         private static int CellOf(Map01Inventory inventory, string id)
@@ -50,7 +68,13 @@ namespace ShadowVale.Map01.Tests
             Assert.AreEqual(-1, CellOf(inventory, "rifle_standard"), "What a slot holds is not in the bag.");
             inventory.Add("cloth", 7); inventory.Add("herb", 3); inventory.Add("ammo_rifle", 100);
             int cloth = CellOf(inventory, "cloth"), herb = CellOf(inventory, "herb");
-            Assert.AreEqual(new[] { 90, 10 }, Enumerable.Range(0, Map01Inventory.BagSize).Select(inventory.Cell).Where(c => c?.id == "ammo_rifle").Select(c => c.count).ToArray(), "Stacks fill to their size (90 rounds).");
+            Assert.AreEqual(new[] { 99, 1 }, Enumerable.Range(0, Map01Inventory.BagSize).Select(inventory.Cell).Where(c => c?.id == "ammo_rifle").Select(c => c.count).ToArray(), "Stacks fill to their size (99 rounds).");
+            Assert.AreEqual(99, inventory.StackLimit("ammo_sniper"), "Every kind of round stacks to 99.");
+            Assert.AreEqual(64, inventory.StackLimit("medkit_small"), "Everything else stacks to 64.");
+            Assert.AreEqual(64, inventory.StackLimit("grenade_f1"));
+            Assert.AreEqual(1, inventory.StackLimit("rifle_mosin"), "A gun keeps its own condition: one per cell.");
+            Assert.AreEqual(1, inventory.StackLimit(Map01Story.CargoItem), "Quest items stay one.");
+            Assert.AreEqual(inventory.StoneCapacity, inventory.StackLimit("stone"), "Stones: as many as his pockets hold.");
 
             int empty = FirstEmpty(inventory);
             Assert.IsTrue(inventory.Move(cloth, empty));
@@ -73,6 +97,19 @@ namespace ShadowVale.Map01.Tests
             Assert.Less(order.IndexOf("stone"), order.IndexOf("herb"), "…throwables before healing…");
             Assert.Less(order.IndexOf("herb"), order.IndexOf("cloth"), "…healing before materials.");
             Assert.IsNotNull(inventory.Cell(0), "Sorted stacks start in the first cell.");
+
+            // A save from the 24-cell bag (6 x 4, before 2026-10-22) restores into the 40 cells and loses nothing,
+            // even what sat beyond its last cell.
+            Assert.AreEqual(40, Map01Inventory.BagSize);
+            Assert.IsTrue(inventory.Move(CellOf(inventory, "cloth"), Map01Inventory.BagSize - 1));
+            var before = new System.Collections.Generic.Dictionary<string, int>();   // a loop, not a lambda: no closure over the iterator's locals
+            foreach (var id in order) before[id] = inventory.Count(id);
+            var layout = inventory.CaptureLayout();
+            layout.ids = layout.ids.Take(24).ToArray(); layout.counts = layout.counts.Take(24).ToArray();
+            layout.conditions = layout.conditions?.Take(24).ToArray();
+            inventory.RestoreLayout(layout);
+            foreach (var kv in before) Assert.AreEqual(kv.Value, inventory.Count(kv.Key), kv.Key + " survives an old 24-cell layout.");
+            Assert.GreaterOrEqual(CellOf(inventory, "cloth"), 0, "What lay beyond the old 24 cells is put back into the bag.");
             yield return new ExitPlayMode();
         }
 
@@ -104,12 +141,11 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual("rifle_standard", inventory.Cell(mosin).id, "The AK goes where the Mosin was.");
                 Assert.AreEqual(WeaponKind.Knife, mission.ModernCombat.EquippedKind, "The rifle in hand left its slot: the knife comes out.");
 
-                // The Mosin and the K-54 have no animations yet: their keys say so and keep the knife in hand.
+                // Both weapons now have approved animations and are drawn from their actual slots.
                 yield return Press(keyboard, Key.Digit1);
-                Assert.AreEqual(WeaponKind.Knife, mission.ModernCombat.EquippedKind);
-                StringAssert.Contains("chưa có hoạt ảnh", mission.Dialogue);
+                Assert.AreEqual(WeaponKind.Sniper, mission.ModernCombat.EquippedKind);
                 yield return Press(keyboard, Key.Digit2);
-                Assert.AreEqual(WeaponKind.Knife, mission.ModernCombat.EquippedKind);
+                Assert.AreEqual(WeaponKind.Pistol, mission.ModernCombat.EquippedKind);
 
                 // Back to the AK, through the bag: then 1 draws it again.
                 Assert.IsTrue(inventory.EquipFromCell(CellOf(inventory, "rifle_standard")));
@@ -167,6 +203,7 @@ namespace ShadowVale.Map01.Tests
             drops = Map01Drops.For(mission);
             Assert.AreEqual(1, drops.Piles.Count(), "The pile is still on the ground after loading.");
             Assert.AreEqual("cloth", inventory.Cell(moved)?.id, "The bag comes back as it was arranged.");
+            Assert.AreEqual(0, inventory.Count("supplies"), "A save that still carries the retired \"supplies\" quest item loads without it.");
             point = mission.Interactables.Single(p => p.id != null && p.id.StartsWith(Map01Drops.IdPrefix));
 
             // [E] at the pile picks it up again.

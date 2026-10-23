@@ -1,0 +1,420 @@
+{
+    "version": 1,
+    "world": {
+        "version": 1,
+        "story": {
+            "version": 2,
+            "stage": 2,
+            "medicineDelivered": false,
+            "crateStored": false,
+            "scoutFound": false,
+            "scoutSheltered": false,
+            "weakGroupGathered": false,
+            "southStockMoved": false,
+            "boatsChecked": false,
+            "firstWaveCleared": false,
+            "secondWaveCleared": false,
+            "frontGroupSafe": false,
+            "fireteamCleared": false,
+            "boatsEvacuated": false,
+            "hungSacrificeConfirmed": false,
+            "rescuedGroups": 0,
+            "failed": false,
+            "failureCause": ""
+        },
+        "medicineTaken": false,
+        "medicineCarried": false,
+        "crateTaken": false,
+        "crateCarried": false,
+        "southStockTaken": false,
+        "southStockCarried": false
+    },
+    "chapter": {
+        "dayOne": {
+            "carriedWeapon": -1,
+            "schema": 1,
+            "seed": 600044221,
+            "wetPattern": 1,
+            "stakeHits": 6,
+            "medicineMask": 3,
+            "postsReached": 3,
+            "initialized": true,
+            "stockCredited": true,
+            "duckSeen": true,
+            "arrivalSeen": true,
+            "crates": [
+                {
+                    "x": 3,
+                    "y": 0,
+                    "rotated": false,
+                    "offset": 0.0
+                },
+                {
+                    "x": 4,
+                    "y": 2,
+                    "rotated": false,
+                    "offset": 0.0
+                },
+                {
+                    "x": 2,
+                    "y": 0,
+                    "rotated": false,
+                    "offset": 0.0
+                }
+            ],
+            "boards": [
+                {
+                    "x": 0,
+                    "y": 0,
+                    "rotated": false,
+                    "offset": 0.013612463138997555
+                },
+                {
+                    "x": 1,
+                    "y": 1,
+                    "rotated": false,
+                    "offset": 0.019739648327231408
+                },
+                {
+                    "x": 2,
+                    "y": 2,
+                    "rotated": false,
+                    "offset": 0.017630789428949357
+                }
+            ],
+            "boardOrder": [
+                1,
+                4,
+                3,
+                2,
+                0
+            ],
+            "posts": [
+                {
+                    "faults": 1,
+                    "lampAngle": 156.28765869140626,
+                    "gateClosed": true,
+                    "latchSeated": true,
+                    "bundleStowed": true
+                },
+                {
+                    "faults": 6,
+                    "lampAngle": 180.0,
+                    "gateClosed": true,
+                    "latchSeated": true,
+                    "bundleStowed": true
+                }
+            ]
+        },
+        "version": 3,
+        "phase": 2,
+        "evacuation": 0,
+        "patrolWarnings": 0,
+        "storedRounds": 90,
+        "wireStage": 0,
+        "patrolScanSeconds": 0.0,
+        "night2ChainCuePlayed": false,
+        "night2RouteVisited": [],
+        "introduced": [
+            "D1_05"
+        ],
+        "completed": [
+            "D1_01",
+            "D1_02",
+            "D1_03",
+            "D1_04",
+            "D1_05",
+            "D1_06",
+            "N1_01",
+            "N1_02",
+            "N1_03",
+            "N1_04"
+        ],
+        "counts": [
+            {
+                "id": "D1_04",
+                "count": 3
+            },
+            {
+                "id": "D1_05",
+                "count": 5
+            }
+        ],
+        "combatGroups": [],
+        "enemies": [],
+        "activeTask": "",
+        "carry": "",
+        "trackedTask": "D2_01",
+        "actors": [
+            {
+                "role": "Anh Thành",
+                "position": {
+                    "x": -79.29000091552735,
+                    "y": 1.0971262454986573,
+                    "z": 10.90999984741211
+                }
+            },
+            {
+                "role": "Anh Lực",
+                "position": {
+                    "x": -79.29000091552735,
+                    "y": 1.0250000953674317,
+                    "z": 19.90999984741211
+                }
+            },
+            {
+                "role": "Hùng",
+                "position": {
+                    "x": -72.88999938964844,
+                    "y": 1.0812917947769166,
+                    "z": 10.90999984741211
+                }
+            },
+            {
+                "role": "Chị Lành",
+                "position": {
+                    "x": -48.459999084472659,
+                    "y": 1.0250000953674317,
+                    "z": -30.489999771118165
+                }
+            },
+            {
+                "role": "Ông Sáu",
+                "position": {
+                    "x": -49.86000061035156,
+                    "y": 1.0250000953674317,
+                    "z": -26.989999771118165
+                }
+            },
+            {
+                "role": "Bé Tí",
+                "position": {
+                    "x": -47.40999984741211,
+                    "y": 1.0250000953674317,
+                    "z": -31.03999900817871
+                }
+            },
+            {
+                "role": "Chú Bảy",
+                "position": {
+                    "x": -27.75,
+                    "y": 0.8250001668930054,
+                    "z": -86.19000244140625
+                }
+            },
+            {
+                "role": "Tâm",
+                "position": {
+                    "x": 29.0,
+                    "y": 0.7743980288505554,
+                    "z": -16.65999984741211
+                }
+            }
+        ],
+        "taskProgress": 0.0,
+        "workCount": 0,
+        "wounded": false,
+        "hungDead": false,
+        "radioTransferred": false,
+        "tankDestroyed": false,
+        "artilleryFired": false,
+        "finished": false,
+        "gearStored": true
+    },
+    "bagLayout": {
+        "fieldKitVersion": 1,
+        "ids": [
+            "ak_loading_pack",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        ],
+        "counts": [
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "primary": "rifle_standard",
+        "pistol": "",
+        "throwable": "stone",
+        "conditions": [
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0
+        ],
+        "primaryCondition": 100.0,
+        "pistolCondition": -1.0
+    },
+    "exploration": {
+        "version": 1,
+        "resolution": 128,
+        "bounds": {
+            "serializedVersion": "2",
+            "x": -110.0,
+            "y": -110.0,
+            "width": 220.0,
+            "height": 220.0
+        },
+        "cells": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAwAAAAAAAAAAAAAAAAAA+A8AAAAAAAAAAAAAAAAAAPwfAAAAAAAAAAAAAAAAAAD+PwAAAAAAAAAAAAAAAAAA/38AAAAAAAAAAAAAAAAAAP9/AAAAAAAAAAAAAAAAAID//wAAAAAAAAAAAAAAAACA//8AAAAAAAAAAAAAAAAAwP//AAAAAAAAAAAAAAAAAMD//wAAAAAAAAAAAAAAAADg//8AAAAAAAAAAAAAAAAA4P9/AAAAAAAAAAAAAAAAAPD/fwAAAAAAAAAAAAAAAADw//8AAAAAAAAAAAAAAAAA+P//AAAAAAAAAAAAAAAAAPj//wAAAAAAAAAAAAAAAAD8//8AAAAAAAAAAAAAAAAA/P//AAAAAAAAAAAAAAAAAP7//wAAAAAAAAAAAAAAAAD+//8AAAAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAgP///wAAAAAAAAAAAAAAAID///8AAAAAAAAAAAAAAADA//9/AAAAAAAAAAAAAAAAwP//fwAAAAAAAAAAAAAAAOD//z8AAAAAAAAAAAAAAADg//8fAAAAAAAAAAAAAAAA4P//DwAAAAAAAAAAAAAAAOD//wMAAAAAAAAAAAAAAADg//8BAAAAAAAAAAAAAAAA8P//AAAAAAAAAAAAAAAAAPj/fwAAAAAAAAAAAAAAAAD8/z8AAAAAAAAAAAAAAAAA/P8fAAAAAAAAAAAAAAAAAPz/HwAAAAAAAAAAAAAAAAD8/w8AAAAAAAAAAAAAAAAA/v8PAAAAAAAAAAAAAAAAAP7/DwAAAAAAAAAAAAAAAAD//w8AAAAAAAAAAAAAAAAA//8PAAAAAAAAAAAAAAAAgP//DwAAAAAAAAAAAAAAAPD//wcAAAAAAAAAAAAAAAD+//8HAAAAAAAAAAAAAACA////BwAAAAAAAAAAAAAAwP///wcAAAAAAAAAAAAAAOD///8HAAAAAAAAAAAAAADw////DwAAAAAAAAAAAAAA+P///w8AAAAAAAAAAAAAAPj///8fAAAAAAAAAAAAAAD4////HwAAAAAAAAAAAAAA+P///x8AAAAAAAAAAAAAAPj///8fAAAAAAAAAAAAAAD4////HwAAAAAAAAAAAAAA/P///x8AAAAAAAAAAAAAAPz///8fAAAAAAAAAAAAAAD4////HwAAAAAAAAAAAAAA+P///x8AAAAAAAAAAAAAAPj///8PAAAAAAAAAAAAAAD4////DwAAAAAAAAAAAAAA+P///x8AAAAAAAAAAAAAAPz///8fAAAAAAAAAAAAAAD8////HwAAAAAAAAAAAAAA/P///x8AAAAAAAAAAAAAAPz///8/AAAAAAAAAAAAAAD8////PwAAAAAAAAAAAAAA/P///z8AAAAAAAAAAAAAAPz///8/AAAAAAAAAAAAAAD8////fwAAAAAAAAAAAAAA/P///38AAAAAAAAAAAAAAPz///9/AAAAAAAAAAAAAAD8////fwAAAAAAAAAAAAAA/P////8AAAAAAAAAAAAAAPz/////AAAAAAAAAAAAAAD4/////wAAAAAAAAAAAAAA+P////8AAAAAAAAAAAAAAPD/////AAAAAAAAAAAAAADg/////wEAAAAAAAAAAAAAwP////8BAAAAAAAAAAAAAAD+////AQAAAAAAAAAAAAAA+P///wEAAAAAAAAAAAAAAPj///8BAAAAAAAAAAAAAADw////AQAAAAAAAAAAAAAA4P///wMAAAAAAAAAAAAAAMD///8DAAAAAAAAAAAAAAAA////AwAAAAAAAAAAAAAAAP///wMAAAAAAAAAAAAAAAD+//8HAAAAAAAAAAAAAAAA/P///wcAAAAAAAAAAAAAAPj///8/AAAAAAAAAAAAAADw////fwAAAAAAAAAAAAAA8P////8BAAAAAAAAAAAAAOD/////AwAAAAAAAAAAAADA/////wcAAAAAAAAAAAAAgP////8HAAAAAAAAAAAAAID/////DwAAAAAAAAAAAAAA/////w8AAAAAAAAAAAAAAP7///8PAAAAAAAAAAAAAAD8////DwAAAAAAAAAAAAAA+P///w8AAAAAAAAAAAAAAPD///8PAAAAAAAAAAAAAADA////BwAAAAAAAAAAAAAAAP///wcAAAAAAAAAAAAAAAAA//8DAAAAAAAAAAAAAAAAAID/AQAAAAAAAAAAAAAAAAAAfgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+    },
+    "hasCharacterState": true,
+    "stamina": 300.0,
+    "craftRemaining": 0.0,
+    "crafting": "",
+    "ground": [],
+    "position": {
+        "x": -48.70272445678711,
+        "y": 1.2293353080749512,
+        "z": -36.60116958618164
+    },
+    "yaw": 0.0,
+    "health": 100.0,
+    "playSeconds": 609.79541015625,
+    "attackCooldown": 0.0,
+    "magazine": 30,
+    "equipped": 2,
+    "stones": 0,
+    "rifleMagazine": 30,
+    "pistolMagazine": 0,
+    "sniperMagazine": 0,
+    "rifleItemId": "rifle_standard",
+    "inventory": [
+        {
+            "id": "ak_loading_pack",
+            "count": 2
+        },
+        {
+            "id": "knife",
+            "count": 1
+        },
+        {
+            "id": "rifle_standard",
+            "count": 1
+        }
+    ],
+    "skills": {
+        "shooting": 0,
+        "stealth": 0,
+        "engineering": 0
+    },
+    "skillMission": {
+        "id": "map2_phase_2",
+        "attemptId": "785095baecec4ddfa919132e9d332eb0",
+        "shooting": 0,
+        "stealth": 0,
+        "failed": false
+    },
+    "checkpoint": "{\"version\":1,\"world\":{\"version\":1,\"story\":{\"version\":2,\"stage\":2,\"medicineDelivered\":false,\"crateStored\":false,\"scoutFound\":false,\"scoutSheltered\":false,\"weakGroupGathered\":false,\"southStockMoved\":false,\"boatsChecked\":false,\"firstWaveCleared\":false,\"secondWaveCleared\":false,\"frontGroupSafe\":false,\"fireteamCleared\":false,\"boatsEvacuated\":false,\"hungSacrificeConfirmed\":false,\"rescuedGroups\":0,\"failed\":false,\"failureCause\":\"\"},\"medicineTaken\":false,\"medicineCarried\":false,\"crateTaken\":false,\"crateCarried\":false,\"southStockTaken\":false,\"southStockCarried\":false},\"chapter\":{\"dayOne\":{\"carriedWeapon\":-1,\"schema\":1,\"seed\":600044221,\"wetPattern\":1,\"stakeHits\":6,\"medicineMask\":3,\"postsReached\":3,\"initialized\":true,\"stockCredited\":true,\"duckSeen\":true,\"arrivalSeen\":true,\"crates\":[{\"x\":3,\"y\":0,\"rotated\":false,\"offset\":0.0},{\"x\":4,\"y\":2,\"rotated\":false,\"offset\":0.0},{\"x\":2,\"y\":0,\"rotated\":false,\"offset\":0.0}],\"boards\":[{\"x\":0,\"y\":0,\"rotated\":false,\"offset\":0.013612463138997555},{\"x\":1,\"y\":1,\"rotated\":false,\"offset\":0.019739648327231408},{\"x\":2,\"y\":2,\"rotated\":false,\"offset\":0.017630789428949357}],\"boardOrder\":[1,4,3,2,0],\"posts\":[{\"faults\":1,\"lampAngle\":156.28765869140626,\"gateClosed\":true,\"latchSeated\":true,\"bundleStowed\":true},{\"faults\":6,\"lampAngle\":180.0,\"gateClosed\":true,\"latchSeated\":true,\"bundleStowed\":true}]},\"version\":3,\"phase\":2,\"evacuation\":0,\"patrolWarnings\":0,\"storedRounds\":90,\"wireStage\":0,\"patrolScanSeconds\":0.0,\"night2ChainCuePlayed\":false,\"night2RouteVisited\":[],\"introduced\":[\"D1_05\"],\"completed\":[\"D1_01\",\"D1_02\",\"D1_03\",\"D1_04\",\"D1_05\",\"D1_06\",\"N1_01\",\"N1_02\",\"N1_03\",\"N1_04\"],\"counts\":[{\"id\":\"D1_04\",\"count\":3},{\"id\":\"D1_05\",\"count\":5}],\"combatGroups\":[],\"enemies\":[],\"activeTask\":\"\",\"carry\":\"\",\"trackedTask\":\"N1_04\",\"actors\":[{\"role\":\"Anh Thành\",\"position\":{\"x\":-79.29000091552735,\"y\":1.0971262454986573,\"z\":10.90999984741211}},{\"role\":\"Anh Lực\",\"position\":{\"x\":-79.29000091552735,\"y\":1.0250000953674317,\"z\":19.90999984741211}},{\"role\":\"Hùng\",\"position\":{\"x\":-72.88999938964844,\"y\":1.0812917947769166,\"z\":10.90999984741211}},{\"role\":\"Chị Lành\",\"position\":{\"x\":-48.459999084472659,\"y\":1.0250000953674317,\"z\":-30.489999771118165}},{\"role\":\"Ông Sáu\",\"position\":{\"x\":-49.86000061035156,\"y\":1.0250000953674317,\"z\":-26.989999771118165}},{\"role\":\"Bé Tí\",\"position\":{\"x\":-47.40999984741211,\"y\":1.0250000953674317,\"z\":-31.03999900817871}},{\"role\":\"Chú Bảy\",\"position\":{\"x\":-27.75,\"y\":0.8250001668930054,\"z\":-86.19000244140625}},{\"role\":\"Tâm\",\"position\":{\"x\":29.0,\"y\":0.7743980288505554,\"z\":-16.65999984741211}}],\"taskProgress\":0.0,\"workCount\":0,\"wounded\":false,\"hungDead\":false,\"radioTransferred\":false,\"tankDestroyed\":false,\"artilleryFired\":false,\"finished\":false,\"gearStored\":true},\"bagLayout\":{\"fieldKitVersion\":1,\"ids\":[\"ak_loading_pack\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"],\"counts\":[2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\"primary\":\"rifle_standard\",\"pistol\":\"\",\"throwable\":\"stone\",\"conditions\":[-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0],\"primaryCondition\":100.0,\"pistolCondition\":-1.0},\"exploration\":{\"version\":1,\"resolution\":128,\"bounds\":{\"serializedVersion\":\"2\",\"x\":-110.0,\"y\":-110.0,\"width\":220.0,\"height\":220.0},\"cells\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgAwAAAAAAAAAAAAAAAAAA+A8AAAAAAAAAAAAAAAAAAPwfAAAAAAAAAAAAAAAAAAD+PwAAAAAAAAAAAAAAAAAA/38AAAAAAAAAAAAAAAAAAP9/AAAAAAAAAAAAAAAAAID//wAAAAAAAAAAAAAAAACA//8AAAAAAAAAAAAAAAAAwP//AAAAAAAAAAAAAAAAAMD//wAAAAAAAAAAAAAAAADg//8AAAAAAAAAAAAAAAAA4P9/AAAAAAAAAAAAAAAAAPD/fwAAAAAAAAAAAAAAAADw//8AAAAAAAAAAAAAAAAA+P//AAAAAAAAAAAAAAAAAPj//wAAAAAAAAAAAAAAAAD8//8AAAAAAAAAAAAAAAAA/P//AAAAAAAAAAAAAAAAAP7//wAAAAAAAAAAAAAAAAD+//8AAAAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAgP///wAAAAAAAAAAAAAAAID///8AAAAAAAAAAAAAAADA//9/AAAAAAAAAAAAAAAAwP//fwAAAAAAAAAAAAAAAOD//z8AAAAAAAAAAAAAAADg//8fAAAAAAAAAAAAAAAA4P//DwAAAAAAAAAAAAAAAOD//wMAAAAAAAAAAAAAAADg//8BAAAAAAAAAAAAAAAA8P//AAAAAAAAAAAAAAAAAPj/fwAAAAAAAAAAAAAAAAD8/z8AAAAAAAAAAAAAAAAA/P8fAAAAAAAAAAAAAAAAAPz/HwAAAAAAAAAAAAAAAAD8/w8AAAAAAAAAAAAAAAAA/v8PAAAAAAAAAAAAAAAAAP7/DwAAAAAAAAAAAAAAAAD//w8AAAAAAAAAAAAAAAAA//8PAAAAAAAAAAAAAAAAgP//DwAAAAAAAAAAAAAAAPD//wcAAAAAAAAAAAAAAAD+//8HAAAAAAAAAAAAAACA////BwAAAAAAAAAAAAAAwP///wcAAAAAAAAAAAAAAOD///8HAAAAAAAAAAAAAADw////DwAAAAAAAAAAAAAA+P///w8AAAAAAAAAAAAAAPj///8fAAAAAAAAAAAAAAD4////HwAAAAAAAAAAAAAA+P///x8AAAAAAAAAAAAAAPj///8fAAAAAAAAAAAAAAD4////HwAAAAAAAAAAAAAA/P///x8AAAAAAAAAAAAAAPz///8fAAAAAAAAAAAAAAD4////HwAAAAAAAAAAAAAA+P///x8AAAAAAAAAAAAAAPj///8PAAAAAAAAAAAAAAD4////DwAAAAAAAAAAAAAA+P///x8AAAAAAAAAAAAAAPz///8fAAAAAAAAAAAAAAD8////HwAAAAAAAAAAAAAA/P///x8AAAAAAAAAAAAAAPz///8/AAAAAAAAAAAAAAD8////PwAAAAAAAAAAAAAA/P///z8AAAAAAAAAAAAAAPz///8/AAAAAAAAAAAAAAD8////fwAAAAAAAAAAAAAA/P///38AAAAAAAAAAAAAAPz///9/AAAAAAAAAAAAAAD8////fwAAAAAAAAAAAAAA/P////8AAAAAAAAAAAAAAPz/////AAAAAAAAAAAAAAD4/////wAAAAAAAAAAAAAA+P////8AAAAAAAAAAAAAAPD/////AAAAAAAAAAAAAADg/////wEAAAAAAAAAAAAAwP////8BAAAAAAAAAAAAAAD+////AQAAAAAAAAAAAAAA+P///wEAAAAAAAAAAAAAAPj///8BAAAAAAAAAAAAAADw////AQAAAAAAAAAAAAAA4P///wMAAAAAAAAAAAAAAMD///8DAAAAAAAAAAAAAAAA////AwAAAAAAAAAAAAAAAP///wMAAAAAAAAAAAAAAAD+//8HAAAAAAAAAAAAAAAA/P///wcAAAAAAAAAAAAAAPj///8/AAAAAAAAAAAAAADw////fwAAAAAAAAAAAAAA8P////8BAAAAAAAAAAAAAOD/////AwAAAAAAAAAAAADA/////wcAAAAAAAAAAAAAgP////8HAAAAAAAAAAAAAID/////DwAAAAAAAAAAAAAA/////w8AAAAAAAAAAAAAAP7///8PAAAAAAAAAAAAAAD8////DwAAAAAAAAAAAAAA+P///w8AAAAAAAAAAAAAAPD///8PAAAAAAAAAAAAAADA////BwAAAAAAAAAAAAAAAP///wcAAAAAAAAAAAAAAAAA//8DAAAAAAAAAAAAAAAAAID/AQAAAAAAAAAAAAAAAAAAfgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"},\"hasCharacterState\":true,\"stamina\":300.0,\"craftRemaining\":0.0,\"crafting\":\"\",\"ground\":[],\"position\":{\"x\":-48.70000076293945,\"y\":1.1819441318511963,\"z\":-36.60000228881836},\"yaw\":0.0,\"health\":100.0,\"playSeconds\":608.2943115234375,\"attackCooldown\":0.0,\"magazine\":30,\"equipped\":2,\"stones\":0,\"rifleMagazine\":30,\"pistolMagazine\":0,\"sniperMagazine\":0,\"rifleItemId\":\"rifle_standard\",\"inventory\":[{\"id\":\"ak_loading_pack\",\"count\":2},{\"id\":\"knife\",\"count\":1},{\"id\":\"rifle_standard\",\"count\":1}],\"skills\":{\"shooting\":0,\"stealth\":0,\"engineering\":0},\"skillMission\":{\"id\":\"map2_phase_2\",\"attemptId\":\"785095baecec4ddfa919132e9d332eb0\",\"shooting\":0,\"stealth\":0,\"failed\":false},\"checkpoint\":\"\",\"patrolCheckpoint\":\"\",\"skillRunId\":\"cbc2c618df3349b4ba8279fe6420bfc2\"}",
+    "patrolCheckpoint": "",
+    "skillRunId": "cbc2c618df3349b4ba8279fe6420bfc2"
+}

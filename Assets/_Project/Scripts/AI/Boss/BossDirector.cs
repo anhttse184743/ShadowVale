@@ -44,8 +44,10 @@ namespace ShadowVale.AI.Boss
         public bool CallReinforcements;
         /// <summary>The player is reloading: order the men near him to close in now.</summary>
         public bool Push;
-        /// <summary>A rifle is on him: duck behind his cover for a moment, staying where he is.</summary>
+        /// <summary>A rifle is on him, or rounds are landing: duck behind his cover for a moment, staying where he is.</summary>
         public bool Duck;
+        /// <summary>aimed | suppressed (hit several times in a moment).</summary>
+        public string DuckReason;
         public bool Any => Relocate || ThrowGrenade || CallReinforcements || Push || Duck;
     }
 
@@ -113,6 +115,9 @@ namespace ShadowVale.AI.Boss
         private readonly List<Vector3> _knownHides = new List<Vector3>();
         private float _aimedSince = float.NaN, _lastAimed = float.NegativeInfinity, _duckReadyAt, _dodgeReadyAt, _pushReadyAt;
         private bool _wasReloading;
+        // Rounds landing on him: when, the last health seen, and when he last ducked under them.
+        private readonly List<float> _hits = new List<float>();
+        private float _lastHealth = float.NaN, _suppressedAt = float.NaN;
 
         /// <summary>Where the player camped long enough to draw a grenade: he is expected there again.</summary>
         public IReadOnlyList<Vector3> KnownHides => _knownHides;
@@ -142,6 +147,7 @@ namespace ShadowVale.AI.Boss
                 _lastTick = float.NaN;
                 _aimedSince = float.NaN;
                 _wasReloading = s.PlayerReloading;
+                _lastHealth = s.HealthFraction; _suppressedAt = float.NaN; _hits.Clear();
                 return d;
             }
             if (!_fighting)
@@ -195,7 +201,7 @@ namespace ShadowVale.AI.Boss
                     }
                     else if (!d.Relocate && s.Settled && p.DuckSeconds > 0 && aimed >= p.AimDuckSeconds && s.Now >= _duckReadyAt)
                     {
-                        d.Duck = true;
+                        d.Duck = true; d.DuckReason = "aimed";
                         _duckReadyAt = s.Now + p.DuckSeconds + p.AimDuckSeconds;
                     }
                 }
@@ -208,6 +214,7 @@ namespace ShadowVale.AI.Boss
                 }
             }
             _wasReloading = s.PlayerReloading;
+            Suppression(s, ref d);
 
             float dt = float.IsNaN(_lastTick) ? 0f : Mathf.Max(0f, s.Now - _lastTick);
             _lastTick = s.Now;
@@ -232,6 +239,41 @@ namespace ShadowVale.AI.Boss
             }
             return d;
         }
+
+        /// <summary>
+        /// Rounds landing on him: <see cref="BossProfile.SuppressedHits"/> within <see cref="BossProfile.SuppressedWindowSeconds"/>
+        /// and he ducks at once; a round landing again soon after he comes back out (within
+        /// <see cref="BossProfile.SuppressedRelocateSeconds"/> of the duck ending) and he moves to other cover. A drop in
+        /// his health between ticks is a hit.
+        /// </summary>
+        private void Suppression(in BossSense s, ref BossDecision d)
+        {
+            var p = Profile;
+            bool hit = !float.IsNaN(_lastHealth) && s.HealthFraction < _lastHealth - 1e-5f;
+            _lastHealth = s.HealthFraction;
+            if (p.SuppressedHits <= 0 || !hit) return;
+            float now = s.Now;
+            _hits.Add(now);
+            _hits.RemoveAll(t => now - t > p.SuppressedWindowSeconds);
+            if (d.Relocate || !s.Settled) return;
+            float back = _suppressedAt + p.DuckSeconds;
+            if (!float.IsNaN(_suppressedAt) && s.Now >= back && s.Now <= back + p.SuppressedRelocateSeconds)
+            {
+                d.Relocate = true;
+                d.RelocateReason = "suppressed";
+                _spotSince = s.Now; _hpAtSpot = s.HealthFraction;
+                _suppressedAt = float.NaN; _hits.Clear();
+                return;
+            }
+            if (_hits.Count >= p.SuppressedHits && (float.IsNaN(_suppressedAt) || s.Now > back + p.SuppressedRelocateSeconds))
+            {
+                d.Duck = true; d.DuckReason = "suppressed";
+                _suppressedAt = s.Now; _hits.Clear();
+            }
+        }
+
+        /// <summary>The share of a bullet's damage his armour lets through: <paramref name="headshot"/> or body.</summary>
+        public static float ArmorFactor(BossProfile p, bool headshot) => headshot ? p.HeadshotFactor : p.ArmorBodyFactor;
 
         /// <summary>How long a camp must last before a grenade: shorter where the player already hid.</summary>
         private float CampSecondsAt(Vector3 anchor)

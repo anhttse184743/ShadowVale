@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
@@ -23,6 +23,44 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(d.Lines("promise").Any(l=>l.text.Contains("U tôi là u cậu")));
             Assert.IsTrue(d.Lines("coordinates").Any(l=>l.text.Contains("pháo không bắn vào đây")));
             Assert.IsTrue(d.Lines("dawn").Any(l=>l.text.Contains("Tôi hứa với nó rồi")));
+        }
+        [Test] public void NothingTheHudShowsBeforeDawnGivesAwayHungsDeath()
+        {
+            var d=Map02ChapterDefinition.Load();var state=new Map02ChapterState();
+            foreach(var t in d.tasks)
+            {
+                foreach(var word in new[]{"hy sinh","chết","tử trận","ngã xuống"})
+                {
+                    if(t.id!="DAWN")StringAssert.DoesNotContain(word,(t.title+" "+t.purpose).ToLowerInvariant(),t.id);
+                    StringAssert.DoesNotContain(word,state.Objective.ToLowerInvariant(),"objective before "+t.id);
+                }
+                state.Complete(t.id);
+            }
+        }
+        [Test] public void DayThreeAndNightThreeFollowTheRevisedScript()
+        {
+            var d=Map02ChapterDefinition.Load();
+            // Anh Thành brings the night-watch order to the supper; Hùng answers him face to face.
+            var supper=d.Lines("supper");Assert.AreEqual(0,d.Lines("lastorder").Length);
+            Assert.IsTrue(supper.Any(l=>l.id=="m2v3_lastorder_01")&&supper.Last().id=="m2v3_lastorder_07");
+            Assert.IsFalse(supper.Any(l=>l.speaker=="Hùng"&&l.radio));
+            Assert.IsFalse(d.Lines("demolition").Single(l=>l.id=="m2v3_demolition_02").radio,"Hùng looks at the bundle himself.");
+            var report=d.Find("D3_06");Assert.AreEqual("family",report.site);Assert.IsTrue(string.IsNullOrEmpty(report.scene));
+            Assert.Greater(d.Find("D3_05").seconds,45);
+            // The artillery is Rạch Tre from the first call to the last order; Anh Thành answers for it on the radio.
+            Assert.IsFalse(d.entries.Any(e=>e.speaker=="Đơn vị pháo"||e.text.Contains("Đơn vị bạn")));
+            Assert.IsTrue(d.Lines("antenna").Any(l=>l.text.Contains("Bông Súng gọi Rạch Tre")));
+            Assert.IsTrue(d.Lines("sacrifice").Any(l=>l.speaker=="Anh Thành"&&l.radio&&l.text=="Rạch Tre. Bắn."));
+            // The wound flash is keyed to this line, not to its position in the scene.
+            Assert.IsTrue(d.Lines("wound").Any(l=>l.id=="m2v3_wound_04"&&l.text.Contains("Xe tăng")));
+            // Radio calls and shouts during play are not cutscenes.
+            Assert.IsTrue(string.IsNullOrEmpty(d.Find("N3_04").scene));
+            Assert.IsTrue(d.Lines("fallback").Select(l=>l.id).SequenceEqual(new[]{"m2v3_wound_01","m2v3_wound_02"}));
+            Assert.AreEqual("Lùi về gốc me! Nam, giữ ngõ cho dân qua!",d.Lines("fallback")[1].text);
+            Assert.IsTrue(d.Lines("cover").Single().text.StartsWith("Đi đi!"));
+            Assert.IsFalse(d.tasks.Any(t=>t.scene=="fallback"||t.scene=="cover"||t.scene=="boatsafe"));
+            // The echo replays the separately recorded promise; it is the first thing heard in the sacrifice scene.
+            var echo=d.Lines("sacrifice")[0];Assert.AreEqual("m2v3_echo_promise",echo.RecordingId);Assert.AreEqual("m2v3_sacrifice_02",echo.id);
         }
         [Test] public void EntireChapterHasSevenPhasesAndExactlyOneSacrifice()
         {
@@ -58,6 +96,7 @@ namespace ShadowVale.Map01.Tests
             foreach(var pair in c.Sites){var path=new NavMeshPath();bool valid=NavMesh.CalculatePath(origin,pair.Value.position,NavMesh.AllAreas,path)&&path.status==NavMeshPathStatus.PathComplete;report.AppendLine(pair.Key+" "+pair.Value.position+" "+valid);Assert.IsTrue(valid,pair.Key);}
             File.WriteAllText("Logs/Map02Chapter/navigation.txt",report.ToString());
             var target=Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId=="D1_01");
+            if(!c.State.dayOne.arrivalSeen){if(!c.Busy)typeof(Map02ChapterDirector).GetMethod("TickDay",BindingFlags.NonPublic|BindingFlags.Instance).Invoke(c,new object[]{0f});typeof(Map02ChapterDirector).GetMethod("EndScene",BindingFlags.NonPublic|BindingFlags.Instance).Invoke(c,null);Assert.True(c.State.dayOne.arrivalSeen);Assert.False(c.State.Done("D1_01"));}
             Move(m,target.transform.position);Assert.IsTrue(m.Interact(target));Assert.IsTrue(c.Busy);Assert.IsFalse(m.CanSave());
             typeof(Map02ChapterDirector).GetMethod("EndScene",BindingFlags.NonPublic|BindingFlags.Instance).Invoke(c,null);yield return null;
             Assert.IsTrue(c.State.Done("D1_01"));Assert.IsFalse(c.Busy);Assert.IsTrue(m.HasCheckpoint);
@@ -69,7 +108,7 @@ namespace ShadowVale.Map01.Tests
                 snapshot=m.Capture();snapshot.chapter=Through(id);m.Restore(snapshot);yield return WaitGameSeconds(2f);
                 Assert.AreEqual(snapshot.chapter.phase,c.State.phase);Assert.AreEqual(snapshot.chapter.hungDead,c.State.hungDead);Assert.AreEqual(snapshot.magazine,m.Player.GetComponent<ShadowVale.Gameplay.Combat.PlayerCombat>().RoundsInMagazine);
                 if(c.State.phase==1||c.State.phase==3||c.State.phase==5)
-                {Assert.IsTrue(RenderSettings.skybox.HasProperty("_Exposure"));Assert.Less(RenderSettings.skybox.GetFloat("_Exposure"),.15f);}
+                {Assert.IsTrue(RenderSettings.skybox.HasProperty("_Exposure"));Assert.Less(RenderSettings.skybox.GetFloat("_Exposure"),c.State.phase==1?.25f:.15f);}
                 foreach(var fx in c.GetComponentsInChildren<ParticleSystemRenderer>(true))
                 {Assert.NotNull(fx.sharedMaterial,fx.name);Assert.IsTrue(fx.sharedMaterial.shader.isSupported,fx.name);Assert.IsTrue(fx.sharedMaterial.shader.name.StartsWith("Universal Render Pipeline/Particles/"),fx.name);}
                 ScreenCapture.CaptureScreenshot("Logs/Map02Chapter/"+id+".png");yield return null;

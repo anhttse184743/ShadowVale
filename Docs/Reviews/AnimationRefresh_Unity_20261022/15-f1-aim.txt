@@ -1,0 +1,1 @@
+motion=f1_aim frame=1259,455 root=(-67.50, 12.22, -66.50) hand=(-67.85, 14.00, -66.84) foot=(-67.62, 12.37, -66.70) modelLocal=(0.00, 0.00, 0.00) grounded=True

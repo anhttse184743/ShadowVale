@@ -26,6 +26,7 @@ namespace ShadowVale.Map01
         private const string GunsTab = "guns", StoreTab = "store";
         private int benchGun;
         private string armedKey; private float armedAt = -10f;
+        private Vector2 storeScroll, gunScroll, spareScroll;
         private void Disarm() { armedKey = null; armedAt = -10f; }
         private bool askSalvage; private Gun salvageAsk;
         private GUIStyle bagCondition;
@@ -87,10 +88,14 @@ namespace ShadowVale.Map01
                 return;
             }
             benchGun = Mathf.Clamp(benchGun, 0, guns.Count - 1);
-            for (int k = 0; k < Mathf.Min(guns.Count, 6); k++)
+            // Every gun he carries, six rows in view and the rest a scroll away (the 40-cell bag holds more than six).
+            var gunView = R(96, 232, 372 + 16, 6 * 96 - 8);
+            var gunContent = new Rect(0, 0, 372, Mathf.Max(gunView.height, guns.Count * 96 - 8));
+            gunScroll = GUI.BeginScrollView(gunView, gunScroll, gunContent, false, false);
+            for (int k = 0; k < guns.Count; k++)
             {
                 var g = guns[k]; string id = inventory.IdOf(g); float f = inventory.FractionOf(g);
-                var row = R(96, 232 + k * 96, 372, 88);
+                var row = new Rect(0, k * 96, 372, 88);
                 HudPanel(row, k == benchGun);
                 BenchTileIcon(new Rect(row.x + 10, row.y + 9, 70, 70), id);
                 GUI.Label(new Rect(row.x + 92, row.y + 8, 272, 26), ForestInventory.Name(id).ToUpperInvariant(), benchRowName);
@@ -99,7 +104,8 @@ namespace ShadowVale.Map01
                 GUI.Label(new Rect(row.x + 296, row.y + 58, 70, 24), $"<color=#{Hex(ConditionColor(f))}>{(f <= 0 ? "HỎNG" : Percent(f))}</color>", benchSmallBold);
                 if (GUI.Button(row, GUIContent.none, GUIStyle.none)) { benchGun = k; Disarm(); }
             }
-            if (guns.Count > 6) GUI.Label(R(96, 812, 372, 22), $"+{guns.Count - 6} khẩu nữa trong túi", benchSmallDim);
+            GUI.EndScrollView();
+            if (guns.Count > 6) GUI.Label(R(96, 812, 372, 22), $"{guns.Count} khẩu · cuộn để xem hết", benchSmallDim);
 
             var gun = guns[benchGun];
             string gid = inventory.IdOf(gun);
@@ -235,16 +241,20 @@ namespace ShadowVale.Map01
             }
             GUI.Label(R(96, 594, 372, 120),
                 $"Súng thu được đã nộp: {logistics.HandedIn}.\nMỗi khẩu nộp được giá trị của nó, ít đi khi mòn (0%: còn {Map01Loot.Load().logistics.turnInFloor * 100f:0}%).\n" +
-                "Kho không tự đầy lại: đạn và thuốc chủ yếu lấy từ địch và hòm trại.", benchSmallDim);
+                "Tiếp tế có ở thùng căn cứ, thưởng bàn giao C1, hòm trại và hai túi dã chiến C3.", benchSmallDim);
 
             // What the store issues.
             GUI.Label(R(500, 196, 400, 28), "CẤP PHÁT", benchHead);
+            GUI.Label(R(880, 196, 284, 28), "Cuộn để xem tất cả vật tư", benchSmallDim);
             var stock = logistics.Stock.ToList();
-            for (int k = 0; k < stock.Count && k < 8; k++)
+            var viewport = R(500, 232, 664, 576);
+            var content = new Rect(0, 0, viewport.width - 20, Mathf.Max(viewport.height, stock.Count * 72));
+            storeScroll = GUI.BeginScrollView(viewport, storeScroll, content);
+            for (int k = 0; k < stock.Count; k++)
             {
                 var offer = stock[k];
                 string why = logistics.IssueRefusal(offer);
-                var row = R(500, 232 + k * 72, 664, 64);
+                var row = new Rect(0, k * 72, content.width, 64);
                 HudPanel(row);
                 BenchTileIcon(new Rect(row.x + 8, row.y + 6, 52, 52), offer.item);
                 GUI.Label(new Rect(row.x + 72, row.y + 8, 330, 24), $"{ForestInventory.Name(offer.item)} ×{offer.count}", benchMatName);
@@ -253,16 +263,20 @@ namespace ShadowVale.Map01
                 if (BenchButton(new Rect(row.xMax - 132, row.y + 10, 120, 44), "LĨNH", benchVerdict, why == null, why == null))
                     logistics.Issue(offer);
             }
+            GUI.EndScrollView();
 
             // Captured guns to hand in.
             GUI.Label(R(1212, 196, 300, 28), "NỘP SÚNG THU ĐƯỢC", benchHead);
             var spare = inventory.Guns().Where(g => !inventory.IsEquipped(inventory.IdOf(g)) || g.Slot == null).ToList();
             if (spare.Count == 0)
                 GUI.Label(R(1212, 232, 296, 90), "Không có khẩu nào để nộp. Khẩu đang cầm trên tay không nộp được.", benchSmallDim);
-            for (int k = 0; k < spare.Count && k < 6; k++)
+            var spareView = R(1212, 232, 296 + 16, 6 * 94 - 8);
+            var spareContent = new Rect(0, 0, 296, Mathf.Max(spareView.height, spare.Count * 94 - 8));
+            spareScroll = GUI.BeginScrollView(spareView, spareScroll, spareContent, false, false);
+            for (int k = 0; k < spare.Count; k++)
             {
                 var g = spare[k]; string id = inventory.IdOf(g); float f = inventory.FractionOf(g);
-                var row = R(1212, 232 + k * 94, 296, 86);
+                var row = new Rect(0, k * 94, 296, 86);
                 HudPanel(row);
                 BenchTileIcon(new Rect(row.x + 8, row.y + 8, 56, 56), id);
                 GUI.Label(new Rect(row.x + 72, row.y + 6, 220, 22), ForestInventory.Name(id), benchSmallBold);
@@ -277,6 +291,7 @@ namespace ShadowVale.Map01
                     else Arm(key);
                 }
             }
+            GUI.EndScrollView();
         }
 
         // ---- the salvage question in the bag ----------------------------------------------------------------------

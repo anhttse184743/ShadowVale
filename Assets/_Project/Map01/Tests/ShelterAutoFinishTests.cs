@@ -53,11 +53,11 @@ namespace ShadowVale.Map01.Tests {
             Assert.AreEqual(Map01Quest.BriefingStage,quest.Stage);Assert.IsTrue(rescue.RewardDelivered);
             Assert.Less(Vector3.Distance(mission.player.position,layout.reportPoint.position),hungFirst?1.7f:.15f,"Keep the existing leader/follower endpoints when auto-skipping.");
             Assert.Greater(Vector3.Distance(mission.player.position,mission.hung.position),1.3f);
-            Assert.AreEqual(supplies+1,mission.GetComponent<Map01Inventory>().Count("supplies"));
-            director.Skip();Assert.IsFalse(rescue.CompleteDelivery());Assert.AreEqual(supplies+1,mission.GetComponent<Map01Inventory>().Count("supplies"));
+            Assert.AreEqual(supplies,mission.GetComponent<Map01Inventory>().Count("supplies"),"The retired delivery item must not return.");
+            director.Skip();Assert.IsFalse(rescue.CompleteDelivery());Assert.AreEqual(supplies,mission.GetComponent<Map01Inventory>().Count("supplies"));
             Assert.AreEqual(ammo,mission.ModernCombat.RoundsInMagazine);Assert.IsTrue(cc.enabled&&mission.ModernPlayer.enabled&&mission.ModernCombat.enabled);
             Assert.IsFalse(mission.Cinematic);Assert.IsFalse(mission.hung.GetComponentInChildren<Map01HungVisual>().RopeVisible);
-            Directory.CreateDirectory("Logs/ShelterAutoFinish");File.WriteAllText("Logs/ShelterAutoFinish/"+(hungFirst?"HungFirst":"NamFirst")+".txt",$"Elapsed {director.Elapsed:F3}; Nam path {Value(director,"namDistance"):F3}; inside marker {Value(director,"namInsideDistance"):F3}; Hung path {Value(director,"hungDistance"):F3}; supplies +1; controls restored.");
+            Directory.CreateDirectory("Logs/ShelterAutoFinish");File.WriteAllText("Logs/ShelterAutoFinish/"+(hungFirst?"HungFirst":"NamFirst")+".txt",$"Elapsed {director.Elapsed:F3}; Nam path {Value(director,"namDistance"):F3}; inside marker {Value(director,"namInsideDistance"):F3}; Hung path {Value(director,"hungDistance"):F3}; no retired supplies item; controls restored.");
         }
         [TearDown]public void ResetStorage()=>Storage.SetValue(null,null);
     }

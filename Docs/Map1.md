@@ -72,12 +72,23 @@ Mỗi món nhận được (nhặt, mở hòm, chế tạo) hiện một dòng �
 cùng, nhặt cùng món trong 2 giây thì cộng dồn, tối đa 7 dòng, mờ đi sau 4 giây (`Map01Hud.Pickup.cs`).
 
 **Chế tạo:** [E] ở bàn chế tạo căn cứ A mở màn hình bàn chế tạo (`Map01Hud.Craft.cs`); [E] hoặc Esc đóng, Tab chuyển sang
-túi đồ. Bên trái là các công thức, chia thẻ Hồi máu · Dụng cụ · Ném · Đạn, mỗi dòng ghi làm được mấy lần và có/cần của
+túi đồ. Bên trái là các công thức, chia thẻ Hồi máu · Dụng cụ · Ném · Đạn (danh sách cuộn bằng con lăn chuột hoặc thanh cuộn khi
+không vừa; thẻ SỬA SÚNG và NỘP SÚNG cũng cuộn khi quá 6 khẩu), mỗi dòng ghi làm được mấy lần và có/cần của
 từng vật liệu. Ở giữa là món đang chọn: hình lớn, công dụng, mỗi vật liệu một hàng (hình, cần/có, ĐỦ hoặc THIẾU, thiếu thì
 ghi nơi kiếm), số lượng [-] [+] TỐI ĐA và nút CHẾ TẠO (bị khóa thì ghi lý do bên dưới). Bên phải là vật liệu trong túi, hàng
 chờ và món vừa xong. Rê chuột lên hình vật liệu để xem hình lớn và nơi kiếm. Vật liệu bị trừ ngay khi bấm; bàn làm lần
 lượt từng món, Nam đi đâu bàn vẫn làm tiếp (thẻ "Đang chế tạo" ở góc phải màn hình), xong hiện ở dòng báo nhặt đồ. Lưu
 game giữ món đang làm và trả lại vật liệu của các món còn chờ. Phím B vẫn làm nhanh một băng cứu thương ở bàn.
+
+**Chế dã chiến** (từ 22/10/2026; `Map01Inventory.FieldCraft.cs`, `Map01Hud.FieldCraft.cs`, thiết kế `Docs/Design/FieldCrafting_20261022.md`):
+Tab → thẻ CHẾ DÃ CHIẾN. Bộ dụng cụ luôn mang theo, không chiếm ô. Đạn AK thiếu vì khoảng 70% lính cầm M16 và túi lính rơi
+đúng loại đạn súng đang cầm, nên: thu hồi 10 / 20 / 30 đạn M16 dự trữ (3 giây) ra 1 / 2 / 3 vật tư đạn thu hồi (đạn trong
+băng không bị lấy); 2 vật tư + 1 gói tiếp liệu AK → 10 đạn AK (8 giây dã chiến, 5 giây ở bàn), tức 20 M16 + 1 gói = 10 AK.
+Băng cứu thương 4 giây, bộ sửa chữa 8 giây, bom khói 6 giây làm được ngoài đường; F1, đạn Mosin và đạn từ thuốc súng vẫn
+cần bàn. Mỗi lần một việc; vật liệu giữ riêng trong lúc làm. Di chuyển, nhảy, đổi súng, bị thương, đóng túi, đổi thẻ
+hay bấm Hủy thì hoàn vật liệu; tạm dừng thì đứng tiến độ; lưu game hủy việc đang làm trước. Túi đầy thì đồ dư rơi dưới chân.
+Gói tiếp liệu AK: 2 gói lúc bắt đầu (save cũ được bù 2 gói), thưởng C1 2 gói, hòm C2 2 gói, kho căn cứ 1 gói/3 điểm, túi
+`c3_field_ak_v1` trước C3 (30 đạn AK + 2 gói). Kiểm thử: `FieldCraftingTests`.
 
 | Món | Cần | Thời gian |
 |---|---|---|
@@ -118,6 +129,13 @@ hay mô hình C3: lính được đặt lại vị trí lúc chạy, kẻng và 
   rồi hắn vùng ra đánh. Báo cáo bằng ống nhòm không còn làm lộ Nam.
 - **Mosin trinh sát:** từ lúc nhận lệnh điểm 3, khẩu Mosin + 5 viên nằm trên tấm bạt cạnh tảng đá ở vai đồi Đông Nam
   (106, 22). Từ đó thấy sàn chòi, cách 36 m, ngoài tầm 30 m của tiếng Mosin.
+  Mép mái chòi thấp ngang đầu lính gác (14,1–14,5 m, đầu 14,25 m): trước 22/10/2026 phát nhắm đầu từ dưới lên đều
+  găm vào mái. Nay đạn xuyên mái lá và mái tôn (`Map01Mission.RoundPassesThrough`, va chạm "ROOF / …"); tầm nhìn,
+  camera và đồ ném vẫn bị mái chặn. Trúng là chết (200 sát thương, `lethalHits`).
+- **Tiếng Mosin** (từ 22/10/2026): vang 30 m nhưng chỉ lính trong 12 m (`ShotPinpointMeters`) biết đúng chỗ Nam
+  (tính là phát hiện; đang giải cứu Hùng thì Hùng bị xử). Lính 12–30 m chỉ đi lục soát một chỗ đại khái về phía tiếng
+  súng (càng xa càng lệch), không biết chỗ Nam, không báo cho viện binh; chỉ nhìn thấy Nam mới lộ. Bắn xong nên đổi
+  chỗ. AK và K-54 giữ luật cũ. Kiểm thử: `MosinSniperShotTests`, `MosinStealthTests`.
 - **Điểm danh:** mỗi 90 giây lính gác cổng gọi bộ đàm hai tổ tuần tra; một tổ không trả lời thì trại "cảnh giác":
   tuần tra còn lại đứng trước cổng, lính sân và cận vệ giữ cửa nhà chỉ huy, chỉ huy ở bàn phụ.
 - **Kẻng:** trại báo động thì sau 4 giây một lính gõ kẻng, 3 lính ngủ ở hai dãy nhà ra đánh. Tháo dùi kẻng ([E] ở cổng)
@@ -129,7 +147,12 @@ hay mô hình C3: lính được đặt lại vị trí lúc chạy, kẻng và 
 - Hòm sắt C3 khóa tới khi chỉ huy chết. Lưu game giữ kẻng, dây, cảnh giác, ai đã được gọi.
 - Phần chiến đấu của chỉ huy (nấp, lựu đạn, lùi sau lính) để AI riêng: gọi `CallReinforcements()` và dùng
   `CoverPoints` (15 điểm nấp); tắt `AutoCallAtHalfHealth` khi AI tự gọi.
-- Kiểm thử: `C3MissionTests`.
+- **Cảnh báo lựu đạn của chỉ huy** (`Map01GrenadeWarning`, `Map01Hud.Grenade.cs`, từ 22/10/2026): lúc lựu đạn rời tay,
+  vòng đỏ rộng bằng tầm nổ (7,5 m) hiện trên đất quanh chỗ nó nhắm, vòng thứ hai lớn dần từ tâm, chạm vòng ngoài là nổ;
+  lựu đạn bay là quả F1 có khói ngòi. Trên HUD, kiểu chỉ báo lựu đạn của Call of Duty:
+  biểu tượng quanh tâm ngắm phía có lựu đạn, mũi tên và số giây còn lại; đỏ khi Nam trong vòng nổ (kèm dòng chữ lớn),
+  vàng khi cách vòng dưới 8 m. Từ lúc ném tới lúc nổ 2–2,8 giây (bay 0,5–1,3 giây + ngòi 1,5 giây); chưa có động tác né.
+- Kiểm thử: `C3MissionTests`, `GrenadeWarningTests`.
 
 ## Độ bền súng, rớt đồ và kho căn cứ
 
@@ -182,7 +205,9 @@ Theo bản thiết kế "Trang bị" đã duyệt (16/10/2026), bỏ hẳn tay k
   `D:\DO_AN_GAME\chuyen_dong\Nam_ThietKe_K54_Mosin_2026-10-16.blend` (chưa đưa vào game). Bản thiết kế đeo súng
   (AK chéo sau lưng, K-54 trong bao da bên hông phải) và động tác đổi súng, ném F1, ném bom khói:
   `D:\DO_AN_GAME\chuyen_dong\thiet_ke_deo_nem\Nam_ThietKe_DeoSung_NemLuuDan_2026-10-16.blend` (chưa đưa vào game).
-- **Túi đồ (Tab)**: lưới 6 × 4 = 24 ô, mỗi ô một chồng tới mức tối đa của món. Kéo lên ô trống: đặt vào; lên món khác:
+- **Túi đồ (Tab)**: lưới 8 × 5 = 40 ô (24 ô trước 22/10/2026; save cũ nạp vào các ô đầu), mỗi ô một chồng tới mức tối đa của món (`stack_max` trong `Map01Content.json`):
+  mọi loại đạn 99, mọi món khác 64; súng 1 ô một khẩu (mỗi khẩu giữ độ bền riêng), vật phẩm nhiệm vụ 1; đá theo sức
+  chứa túi (`stoneCapacity`, 15). Nhặt thêm thì lấp đầy chồng đang có trước rồi mới mở ô mới. Kéo lên ô trống: đặt vào; lên món khác:
   đổi chỗ; lên cùng món: gộp tới mức tối đa. Tách đôi, SẮP XẾP (súng → đạn → đồ ném → hồi máu → vật liệu → nhiệm vụ),
   kéo súng vào ô trang bị để đổi, chuột phải để có menu. Vị trí từng ô được lưu. Túi hết chỗ: phần nhặt thêm nằm
   dưới chân Nam.
@@ -192,14 +217,15 @@ Theo bản thiết kế "Trang bị" đã duyệt (16/10/2026), bỏ hẳn tay k
   - Đá: như trước, tiếng động 14 m.
   - Bom khói: mây khói bán kính 4 m trong 15 giây; lính không nhìn xuyên qua (`Map01Smoke.Blocks` trong
     `Map01EnemyController.CanSeePlayer`). Chế ở bàn: 1 ống tạo khói + 1 vải.
-  - Lựu đạn F1: nổ 3,5 giây sau khi rơi; trong 3 m chết, tới 7 m bị thương (60% máu), tiếng nổ 40 m như tiếng súng.
+  - Lựu đạn F1: nổ ngay khi chạm đất (trước 22/10/2026: 3,5 giây sau khi rơi); trong 6 m chết, tới 14 m bị thương (60% máu), tiếng nổ 40 m như tiếng súng.
     Nam đứng gần cũng bị. Chế ở bàn: 1 lõi nổ + 1 mô-đun kích hoạt + 1 kim loại vụn. Bán kính là giá trị khởi đầu,
     chỉnh sau khi chơi thử (F1 thật: ngòi 3,2–4,2 giây, mảnh văng tới 200 m).
   - Hình ảnh (dựng bằng code, không cần asset, `Map01Fx`): khoen chốt (dây giật của bom khói) ở lại tay Nam; cần
     bẩy F1 bật ra lúc rời tay và rơi xuống đất; ngòi F1 bốc khói mảnh từ lúc bay tới lúc nổ. Nổ F1 (`Map01Blast`):
     chớp sáng 0,1 giây (không có quả cầu lửa kiểu phim), đất đá bắn hình nón, bụi nâu xám bung ra rồi dừng, vòng
     bụi lăn trên mặt đất, cột khói xám đậm bốc lên trôi theo gió, vết cháy xém nằm 60 giây; camera rung trong
-    35 m (`Map01CameraShake`). Bom khói: tia lửa lúc mồi cháy, luồng khói trắng xám phun từ ống cuộn thành mây,
+    35 m (`Map01CameraShake`). Tiếng nổ 3D, càng xa càng ù: bộ lọc hạ đều theo quãng tám, khoảng 19 kHz ở 2 m, 4,5 kHz ở
+    60 m, 1 kHz ở 120 m (`Map01Blast.MuffleCutoff`, từ 23/10/2026; trước đó còn 7,5 kHz ở 60 m). Bom khói: tia lửa lúc mồi cháy, luồng khói trắng xám phun từ ống cuộn thành mây,
     mây nghiêng theo gió rồi tan.
 - Test: `ThrowEffectsTests.BlastAndSmokeBuildTheirEffectsAndClearAway`; bài `[Explicit]`
   `ThrowEffectsTests.PhotographTheThrowEffects` chụp 10 ảnh (khói từ lúc mồi tới lúc tan, F1 từ ngòi cháy tới vết

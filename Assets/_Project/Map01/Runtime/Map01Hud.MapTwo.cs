@@ -17,6 +17,7 @@ namespace ShadowVale.Map01
                 if(m.Panel==1)
                 {
                     DrawInventory(width);
+                    if(m.Chapter.State.phase<=1)GUI.Label(new Rect(28,height-75,width-56,60),m.Chapter.ReservedMedicine,hudSmall);
                     if(inventory.NearWorkbench()&&GUI.Button(new Rect(28,100,250,50),"CHẾ TẠO / SỬA SÚNG",hudKey))mission.SetBenchOpen(true);
                     DrawHudFeedback(width,height);return;
                 }

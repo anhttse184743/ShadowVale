@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -82,14 +82,14 @@ namespace ShadowVale.Map01
             var data=PrepareRetry(JsonUtility.FromJson<CheckpointData>(operationStart));data.operationStart=operationStart;
             RestartInteractionCheckpoint(JsonUtility.ToJson(data));return true;
         }
-        private string SavePath => Path.Combine(Application.persistentDataPath, "shadowvale-map01-checkpoint.json");
+        private string SavePath => Path.Combine(Path.GetDirectoryName(ForestSaveSlots.PathFor(0)), "shadowvale-map01-checkpoint.json");
 
         /// <summary>The real map. Any other scene running this mission (the "Test Map 1 AI" copy) is a
         /// sandbox: it saves to files of its own and never touches the game's slots or checkpoint.</summary>
         public const string MainScene = "Map 1";
         private string SceneName => gameObject.scene.name;
         public bool IsSandbox => SceneName != MainScene;
-        private string SandboxPath(int slot) => Path.Combine(Application.persistentDataPath, "sandbox",
+        private string SandboxPath(int slot) => Path.Combine(Path.GetDirectoryName(ForestSaveSlots.PathFor(0)), "sandbox",
             string.Concat(SceneName.Select(c => char.IsLetterOrDigit(c) ? c : '_')) + "-slot-" + slot + ".json");
 
         private void Awake()
@@ -329,6 +329,8 @@ namespace ShadowVale.Map01
         {
             error = null;
             if (!mission.IsInitialized) { error = "Màn chơi chưa sẵn sàng để lưu."; return false; }
+            // Field crafting owns a cancelable handling pose. Refund it before the general busy-action save guard.
+            inventory.CancelFieldCraft(false);
             try { SyncSkillMission(); if (!skillCampaign.TryFlush(out error)) return false; }
             catch (Exception e) { error = "Không thể lưu tiến trình kỹ năng: " + e.Message; return false; }
             if (mission.Cinematic || GetComponent<Map01Story>().Operating || Map01NamActions.For(mission).Busy || GetComponent<Map01Rescue>().NonSaveable || GetComponent<Map01Rescue>().Failed
@@ -470,6 +472,8 @@ namespace ShadowVale.Map01
         private void Restore()
         {
             GetComponent<DialogueVoice>()?.Stop();
+            GetComponent<Map01StoryDialogue>()?.Close(false);
+            GetComponent<Map01RescueCinematic>()?.CancelForRestore();
             try
             {
                 var data = JsonUtility.FromJson<CheckpointData>(pendingCheckpoint);
@@ -490,6 +494,7 @@ namespace ShadowVale.Map01
                 inventory.RestoreFromSave(data.items, data.stones, data.crafting, data.craftRemaining);
                 if (data.bag != null) inventory.RestoreLayout(data.bag);
                 Map01Drops.For(mission).Restore(data.dropped);
+                inventory.RestoreFieldToolkit(data.bag?.fieldKitVersion ?? 0);
                 Map01Smoke.ClearAll();
                 Map01Blast.ClearAll();
                 EnsureSkillCampaign();
@@ -511,7 +516,7 @@ namespace ShadowVale.Map01
                 RestoreGameplay(data);
                 GetComponent<Map01Rescue>().RestoreHealth(data.hungHealth);
                 // Loading an escort resumes its pose; only the live rescue plays the rise from captivity.
-                mission.hung.GetComponentInChildren<Map01HungVisual>()?.RestoreAfterCinematic();
+                mission.hung.GetComponentInChildren<Map01HungVisual>()?.RestoreCheckpointPose();
                 GetComponent<Map01Scouting>().RestoreFound(data.scoutedCamps);
                 foreach (var point in mission.Points) point.used = data.used.Contains(point.id);
                 // Starting a scouting run over keeps the moment it started from; any other load

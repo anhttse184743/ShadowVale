@@ -91,7 +91,7 @@ namespace ShadowVale.Map01.Tests
             for (float until = Time.time + 18; quest.Stage == Map01Quest.RescueStage && Time.time < until;) yield return null;
             Assert.AreEqual(Map01Quest.EscortStage, quest.Stage, "Untied and on his feet, Hùng goes home with Nam.");
 
-            // The shelter: arriving ends the escort and hands over the supplies he carried.
+            // The shelter: arriving ends the escort. Hùng was scouting, not carrying supplies: no quest item comes of it.
             int supplies = inventory.Count("supplies");
             PlaceNam(mission, rescue.Layout.shelterDoor.position);
             yield return WaitGameSeconds(.6f);
@@ -99,7 +99,7 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(home != null && home.IsPlaying, "Reaching the shelter door plays the homecoming.");
             home.Skip();
             Assert.AreEqual(Map01Quest.BriefingStage, quest.Stage, "Home with Hùng: report to the commander.");
-            Assert.AreEqual(supplies + 1, inventory.Count("supplies"));
+            Assert.AreEqual(supplies, inventory.Count("supplies"), "No \"supplies\" quest item: its river delivery is retired.");
 
             // The commander, in person, gives point 1.
             yield return null;
@@ -242,6 +242,14 @@ namespace ShadowVale.Map01.Tests
             var guard = mission.Enemies.First(e => e.Alive);
             Assert.IsNull(guard.GetComponent<ForestPoint>(), "A living guard must not already carry a loot point.");
 
+            // Force an overhead surface into the ground probe: dropped loot must stay in the room.
+            var deathAt = guard.transform.position;
+            var floor = GameObject.CreatePrimitive(PrimitiveType.Cube); floor.name = "Loot grounding floor";
+            floor.transform.position = deathAt - Vector3.up * .1f; floor.transform.localScale = new Vector3(4, .2f, 4);
+            var ceiling = GameObject.CreatePrimitive(PrimitiveType.Cube); ceiling.name = "Loot grounding ceiling";
+            ceiling.transform.position = deathAt + Vector3.up * 1.8f; ceiling.transform.localScale = new Vector3(4, .1f, 4);
+            Physics.SyncTransforms();
+
             guard.GetComponent<Health>().TakeDamage(9999, guard.transform.position, null);
             yield return null; // Update() drops the loot the first frame it observes the guard dead.
 
@@ -250,7 +258,9 @@ namespace ShadowVale.Map01.Tests
             Assert.AreEqual(ForestPointKind.Loot, drop.kind);
 
             // His pack, rolled from his kind's loot table (Map01Loot.json): his spare rounds at least, nothing off the table.
-            Assert.GreaterOrEqual(Holds(drop, "ammo_rifle"), SpareRounds(guard), "A guard always carries his spare rounds.");
+            string rifle = guard.RifleItemId;
+            string ammo = rifle == Map01M16.Id ? Map01M16.Ammo : "ammo_rifle";
+            Assert.GreaterOrEqual(Holds(drop, ammo), SpareRounds(guard), "A guard carries spare rounds for his own rifle.");
             Assert.IsEmpty(OffTable(drop, guard), "Everything in the pack comes from his loot table.");
             var pack = PackOf(drop);
             var before = Counts(inventory, pack);
@@ -261,13 +271,14 @@ namespace ShadowVale.Map01.Tests
             var gun = LaidGun(mission, guard);
             Assert.IsNotNull(gun, "A fallen guard drops his rifle.");
             var kind = Map01Loot.Load().EnemyOf(Map01Logistics.KindOf(guard));
-            Assert.AreEqual(kind.weapon, gun.items[0].item_id);
-            Assert.That(inventory.Fraction(kind.weapon, gun.items[0].condition), Is.InRange(kind.dropMin - 1e-4f, kind.dropMax + 1e-4f));
-            Assert.Less(Vector3.Distance(gun.transform.position, guard.transform.position), 2f, "The rifle lies where he fell.");
+            Assert.AreEqual(rifle, gun.items[0].item_id);
+            Assert.That(inventory.Fraction(rifle, gun.items[0].condition), Is.InRange(kind.dropMin - 1e-4f, kind.dropMax + 1e-4f));
+            Assert.Less(Vector3.Distance(gun.transform.position, deathAt), 2f, "The rifle lies where he fell.");
+            Assert.Less(gun.transform.position.y-deathAt.y, .6f, "Loot stays at the fallen guard's feet, below the ceiling.");
             Assert.IsFalse(HoldsRifle(guard), "The rifle left his hands.");
-            int rifles = inventory.Count(kind.weapon);
+            int rifles = inventory.Count(rifle);
             interaction.Interact(gun);
-            Assert.AreEqual(rifles + 1, inventory.Count(kind.weapon), "The captured rifle goes into the bag.");
+            Assert.AreEqual(rifles + 1, inventory.Count(rifle), "The captured rifle goes into the bag.");
             Assert.IsTrue(gun.used);
 
             var after = Counts(inventory, pack);
@@ -285,7 +296,7 @@ namespace ShadowVale.Map01.Tests
         private static int SpareRounds(Map01EnemyController guard) => TableOf(guard).entries.Where(e => e.tier == 5 && e.item == "ammo_rifle").Sum(e => e.min);
         /// <summary>Items in a guard's pack his table could not give (a dressing may come from the pity rule; the key from the keeper).</summary>
         private static string[] OffTable(ForestPoint pack, Map01EnemyController guard) =>
-            pack.items.Select(i => i.item_id).Where(id => id != "medkit_small" && id != Map01Story.KeyItem && TableOf(guard).entries.All(e => e.item != id)).ToArray();
+            pack.items.Select(i => i.item_id).Where(id => id != "medkit_small" && id != Map01Story.KeyItem && TableOf(guard).entries.All(e => e.item != (id == Map01M16.Ammo && guard.RifleItemId == Map01M16.Id ? "ammo_rifle" : id))).ToArray();
         private static ForestPoint LaidGun(Map01Mission mission, Map01EnemyController guard) =>
             Map01Drops.For(mission).LaidGuns.FirstOrDefault(p => p.id == Map01Logistics.GunPointPrefix + guard.LegacyId);
         private static bool HoldsRifle(Map01EnemyController guard)
@@ -309,6 +320,16 @@ namespace ShadowVale.Map01.Tests
             var points = Object.FindObjectsByType<ForestPoint>(FindObjectsSortMode.None);
             var crate = points.Single(p => p.id == "tutorial_loot");
             var supplies = points.Single(p => p.id == "supplies");
+            // The old shipping marker beside the jetty must not offer E or respond to old callers.
+            var oldExit = GameObject.Find("river_exit").GetComponent<ForestPoint>();
+            if (Keyboard.current == null) InputSystem.AddDevice<Keyboard>();
+            Teleport(mission, oldExit.transform.position);
+            yield return WaitGameSeconds(.2f);
+            Assert.AreNotSame(oldExit, interaction.Nearby, "The retired delivery marker cannot take the interaction prompt.");
+            string previousDialogue = mission.Dialogue; int previousStage = quest.Stage;
+            interaction.Interact(oldExit);
+            Assert.AreEqual(previousDialogue, mission.Dialogue, "Old exit references cannot show the obsolete shipping response.");
+            Assert.AreEqual(previousStage, quest.Stage);
             Assert.AreEqual(0, crate.restockSeconds, "The starting crate gives its kit once: the base no longer refills itself.");
             Assert.AreEqual(0, supplies.restockSeconds);
 
@@ -438,7 +459,7 @@ namespace ShadowVale.Map01.Tests
                 var accuracy = guard.Accuracy;
                 guard.Accuracy = new ShadowVale.Gameplay.Enemies.ShotAccuracyProfile { enabled = false };
                 float before = playerHealth.Current;
-                float roundDamage = expected * (rifle == Map01M16.Id ? .9f : 1f);
+                float roundDamage = expected * (rifle == Map01M16.Id ? Map01M16.DamageRelativeToAk : 1f);
                 guard.FireAtPlayer();
                 Assert.AreEqual(before - roundDamage, playerHealth.Current, 1e-3f, rifle);
                 guard.FireAtPlayer();
@@ -585,6 +606,11 @@ namespace ShadowVale.Map01.Tests
             Assert.Less(Vector3.Distance(guide.Target, c3.CachePoint.transform.position), .5f);
             interaction.Interact(c3.CachePoint);
             yield return WaitGameSeconds(.6f);
+            var field = mission.GetComponent<Map01FieldSupplies>().ApproachPoint;
+            Assert.AreEqual("ĐỒI ĐÔNG NAM — BĂNG, KHÓI, LỰU ĐẠN", guide.Label);
+            Assert.Less(Vector3.Distance(guide.Target, field.transform.position), .5f);
+            interaction.Interact(field); Map01NamActions.For(mission).CancelAction();
+            yield return WaitGameSeconds(.6f);
             Assert.AreEqual("ĐIỂM 3 — QUAN SÁT DOANH TRẠI [F]", guide.Label);
             Assert.Less(Vector3.Distance(guide.Target, story.Layout.commanderPost.position), .5f);
             quest.RestoreStoryStage(Map01Quest.BossStage, OfficerReported());
@@ -600,7 +626,20 @@ namespace ShadowVale.Map01.Tests
             yield return WaitGameSeconds(.6f);
             Assert.AreEqual(Map01Quest.ReportBossStage, quest.Stage);
             Assert.AreEqual("TÌM CHỖ KÍN — BÁO CÁO [E]", guide.Label, "After the finale Nam reports by radio for the way out.");
-            quest.RestoreStage(Map01Quest.ExtractionStage);
+            // This fixture freezes guards to inspect guide targets. The C3 death response
+            // still marks them engaged; end that simulated fight before making the safe radio call.
+            c3.enabled = false;
+            Map01BodyDiscovery.For(mission).enabled = false;
+            foreach (var enemy in mission.Enemies.Where(e => e != null && e.Alive)) {
+                enemy.ReturnToPost(); enemy.enabled = false;
+            }
+            // Earlier guide probes only selected distant targets; Nam is still at the jetty.
+            // Report from C3 so extraction does not immediately advance into auto-boarding.
+            PlaceNam(mission, field.transform.position);
+            Assert.IsTrue(story.SafeToReport);
+            Assert.IsTrue(story.TryInteract());
+            yield return ConfirmConversation(mission);
+            Assert.AreEqual(Map01Quest.ExtractionStage, quest.Stage, "The radio report opens the route to the boat.");
             yield return WaitGameSeconds(.6f);
             Assert.AreEqual("NORTHERN JETTY", guide.Label, "The retreat leads to the waiting boat.");
 

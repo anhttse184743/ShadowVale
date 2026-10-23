@@ -65,3 +65,33 @@ Chưa xác nhận thời lượng 90–120 phút, chất lượng lồng tiếng
 - git diff --check chạy sạch. Không commit/push trong đợt này.
 
 Đây là nghiệm thu logic và luồng tự động, chưa thay thế chơi thử toàn chương bằng người thật. Chưa đo được mục tiêu 90–120 phút. Cần chạy thêm sau khi nhóm model/animation gắn asset, đặc biệt các cảnh tương tác hai người và hy sinh.
+
+## Ngày 3 – Đêm 3 theo kịch bản mới (21/10/2026)
+
+Kế hoạch, trạng thái từng giai đoạn và các mâu thuẫn trong kịch bản: `KeHoach_Ngay3_Dem3_20261021.md`. Nhánh `feat/map2-day3-night3`, mỗi giai đoạn một commit (GĐ1–GĐ8).
+
+Thay đổi so với mô tả ở trên:
+- **Ngày 3:**
+  - `D3_02` phải mang thùng lựu đạn từ kho kín ra hốc bờ đất.
+  - Lệnh giao ngõ đình nằm trong Bữa chiều, anh Thành bước vào sân. `D3_06` là bước báo cáo tại sân.
+  - Ánh chiều vàng.
+- **Giữ ngõ:** theo % sơ tán, không có đồng hồ, có đợt lính thứ hai, bắt đầu khi bước vào ngõ. Lính chết rơi 5–8 viên đạn. Ba vị trí giữ ngõ cách nhau 18 m.
+- **Xe tăng:**
+  - Phá rào ở vị trí thứ ba, rẽ đi, khuất ở Nhịp 4.
+  - Trồi ra ở đầu đường bến (cách bờ đất 18 m), súng máy bắn xuống nước.
+  - Cháy tại chỗ, Bình minh còn than.
+- **Thuyền:**
+  - Chuyến 1 rời bến ở 30%, chuyến 2 ở 60%. Chuyến cuối ở giữa dòng chở 4 người, trôi sang bờ bên kia sau tiếng nổ.
+  - Tải save trước Đêm 3 thì trả thuyền về cho vật lý sông.
+- **Yểm trợ:**
+  - Tốp 4 lính đứng sau xe tăng, cúi xuống khi bị bắn sát.
+  - Hùng bò dọc bờ mương. Đoạn này dài 60–90 giây tùy mức áp chế, thay cho 75 giây cố định.
+- **Cảnh cuối:** theo đồng hồ của kịch bản (8 giây trúng đạn, 9 giây nổ, 13 giây hồi tưởng, 30 giây "Rạch Tre. Bắn.", 40 giây "Phản công!", 60 giây tối dần), có Nhịp 6 với pháo và du kích.
+- **Hiệu ứng:** tính từ trạng thái mỗi khung hình, nên skip hay tải save không để sót. Rung camera (`ThirdPersonCamera.Shake`) chỉ chạy khi cảnh gọi.
+- **Câu nói nền** không khóa điều khiển. Ba cảnh tự chạy: bị thương, tới bờ đất, hy sinh.
+
+Kiểm chứng:
+- **Bộ test Map02** (gồm Arrival và Finale, batchmode, `!Replay`, không gồm test video): xem số cuối ở mục 3 GĐ8 của kế hoạch.
+- **Thứ tự test:** `Map02ChapterMechanicsTests.RepairAndAntenna…` chỉ đạt khi nhóm Arrival chạy trước. Lỗi này có sẵn từ trước, đã kiểm trên commit GĐ1.
+- **Test video `Map02FlowMovieTests`** đã sửa cho luồng mới nhưng chưa chạy lại (test chạy tay, khoảng 30 phút).
+- **Chưa có:** buổi chơi thử với người thật, model và clip cho Hùng, Nam và xe tăng, các bản thu âm. Hình hiện có chỉ là khối tạm và bóng tạm.

@@ -201,7 +201,7 @@ namespace ShadowVale.Map01.Tests
             var cinematic=Mission.GetComponent<Map01RescueCinematic>();Assert.IsTrue(cinematic.IsPlaying);
             int before=Mission.GetComponent<Map01Inventory>().Count("supplies");
             cinematic.Skip();Assert.AreEqual(Map01Quest.BriefingStage,Quest.Stage);Assert.IsTrue(Rescue.RewardDelivered);
-            Assert.AreEqual(before+1,Mission.GetComponent<Map01Inventory>().Count("supplies"));Assert.IsFalse(Rescue.CompleteDelivery());
+            Assert.AreEqual(before,Mission.GetComponent<Map01Inventory>().Count("supplies"),"The retired river-delivery item is not a rescue reward.");Assert.IsFalse(Rescue.CompleteDelivery());
             Assert.Less(Vector3.Distance(Mission.player.position,layout.reportPoint.position),.15f);
             Assert.IsTrue(Mission.ModernPlayer.enabled);Assert.IsTrue(Mission.ModernCombat.enabled);
             yield return new ExitPlayMode();

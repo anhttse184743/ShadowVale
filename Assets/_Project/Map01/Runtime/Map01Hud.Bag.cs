@@ -24,13 +24,19 @@ namespace ShadowVale.Map01
         // The right-click menu and the drop question.
         private bool menuOpen; private int menuCell = -1; private Slot? menuSlot; private Vector2 menuAt;
         private bool askDrop; private int askCell = -1; private Slot? askSlot; private int askAmount;
-        private GUIStyle bagAccept, bagTitle, bagHint, bagSlotHead, bagName, bagLine, bagButton, bagCount, bagTag, bagWarn, bagGhost;
-        private const float BagStep = 110, BagCellSize = 98;
+        private GUIStyle bagAccept, bagTitle, bagHint, bagSlotHead, bagName, bagLine, bagButton, bagCount, bagTag, bagTagRight, bagWarn, bagGhost;
+        // 8 x 5 cells of 74 (98 when the bag had 6 x 4): the grid still ends above the details plate (y + 578).
+        private const float BagStep = 82, BagCellSize = 74;
 
         // ---- layout (HUD grid units; the two plates are anchored to the right edge) ------------------------------
         private static Rect EquipPlate(float width) => new Rect(width - 1175, 60, 404, 805);
         private static Rect BagPlate(float width) => new Rect(width - 748, 60, 705, 805);
-        private static Rect BagCellRect(float width, int i) { var p = BagPlate(width); return new Rect(p.x + 25 + i % Map01Inventory.BagColumns * BagStep, p.y + 132 + i / Map01Inventory.BagColumns * BagStep, BagCellSize, BagCellSize); }
+        private static Rect BagCellRect(float width, int i)
+        {
+            var p = BagPlate(width);
+            float left = (p.width - ((Map01Inventory.BagColumns - 1) * BagStep + BagCellSize)) / 2;   // the grid centred in the plate
+            return new Rect(p.x + left + i % Map01Inventory.BagColumns * BagStep, p.y + 132 + i / Map01Inventory.BagColumns * BagStep, BagCellSize, BagCellSize);
+        }
         private static Rect SlotCard(float width, Slot slot)
         {
             var p = EquipPlate(width);
@@ -65,6 +71,7 @@ namespace ShadowVale.Map01
             BagStyles();
             var ev = Event.current;
             var skillPanel = BagPlate(width);
+            if (fieldCraftTab) { DrawFieldCraft(width, skillPanel); return; }
             if (skillsTab)
             {
                 DrawEquipColumn(width, ev, true);
@@ -125,7 +132,7 @@ namespace ShadowVale.Map01
         {
             var card = SlotCard(width, slot);
             string id = inventory.SlotItem(slot);
-            if (id == Map01M16.Id) accepts = "5,56×45 · 700 viên/phút";
+            if (id == Map01M16.Id) accepts = "5,56×45 · 600 viên/phút";
             string dragId = DragId();
             bool fits = dragging && dragId != null && Map01Inventory.SlotOf(dragId) == slot && slot != Slot.Knife;
             bool refuses = dragging && dragId != null && !fits && dragSlot != slot;
@@ -237,7 +244,12 @@ namespace ShadowVale.Map01
                     bool full = limit > 1 && cell.count >= limit;
                     // A gun shows its condition where a stack shows its count.
                     if (Map01Inventory.HasCondition(cell.id)) GunConditionOverlay(r, inventory.FractionOf(Map01Inventory.Gun.InCell(i)));
-                    else HudNumber(new Rect(r.xMax - (full ? 86 : 54), r.yMax - 27, full ? 82 : 50, 23), "×" + cell.count + (full ? " ĐẦY" : ""));
+                    else
+                    {
+                        HudNumber(new Rect(r.xMax - 50, r.yMax - 27, 46, 23), "×" + cell.count);
+                        // A full stack says so in its top corner (the count box is too narrow for "×99 ĐẦY" in a 74 cell).
+                        if (full) GUI.Label(new Rect(r.x, r.y + 3, r.width - 5, 16), "ĐẦY", bagTagRight ??= new GUIStyle(bagTag) { alignment = TextAnchor.UpperRight });
+                    }
                     if (Map01Inventory.IsMissionItem(cell.id)) GUI.Label(new Rect(r.x + 5, r.y + 3, r.width, 16), "NHIỆM VỤ", bagTag);
                     else if (cell.id == inventory.Throwable) GUI.Label(new Rect(r.x + 5, r.y + 3, r.width, 16), "Ô 4", bagTag);
                 }

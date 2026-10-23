@@ -16,8 +16,11 @@ namespace ShadowVale.Map01
         public ForestBundle CharacterContent {get;private set;}
         public Camera GameCamera=>cameraRig!=null?cameraRig.GetComponent<Camera>():Camera.main;
         public float Stamina {get;private set;}
-        public bool CharacterGearLocked=>!string.IsNullOrEmpty(Chapter?.State.carry)||Chapter?.MovementLocked==true;
+        public bool CharacterGearLocked=>!string.IsNullOrEmpty(Chapter?.State.carry)||Chapter?.CompanionLocksGear==true||Chapter?.DayActivityActive==true||Chapter?.MovementLocked==true;
         public bool CharacterCanSprint=>Chapter?.MovementLocked!=true&&Stamina>2&&Chapter?.State.wounded!=true;
+        // The player's panel still blocks controls, but field crafting must leave enemies active.
+        public bool CharacterWorldBlocked=>!Ready||Paused||Cinematic||Chapter?.LocksInput==true||World.story.failed
+            ||(Panel!=0&&!(Panel==1&&CharacterHud?.FieldCraftingOpen==true));
         public string HudMessage=>message;
         public bool HudMessageVisible=>Time.unscaledTime<messageUntil;
         public readonly List<ForestPoint> CharacterWorkpoints=new List<ForestPoint>();
@@ -45,6 +48,7 @@ namespace ShadowVale.Map01
             gameObject.AddComponent<Map01StoneThrow>();
             SyncBagFromTotals(true,arrival?.CharacterBag);
             Bag.Changed+=WriteBagTotals;
+            Bag.RestoreFieldToolkit(arrival?.CharacterBag?.fieldKitVersion ?? 0);
             CharacterHud=gameObject.AddComponent<Map01Hud>();
             InitializeCharacterEffects();
             Map01NamActions.For(CharacterHudSession.For(gameObject));
@@ -113,9 +117,10 @@ namespace ShadowVale.Map01
             var throwing=GetComponent<Map01StoneThrow>();
             if(Bag.ThrowableEquipped&&!CharacterGearLocked&&!Bag.SuppressFire&&Mouse.current!=null){if(Mouse.current.rightButton.wasPressedThisFrame)throwing.Cancel();else if(Mouse.current.leftButton.wasPressedThisFrame)throwing.BeginAim();else if(Mouse.current.leftButton.wasReleasedThisFrame)throwing.Release();}
         }
+        Map02GroundItem NearestGroundItem()=>groundItems.Where(g=>g!=null&&Vector3.Distance(Player.position,g.transform.position)<3).OrderBy(g=>(g.transform.position-Player.position).sqrMagnitude).FirstOrDefault();
         void TryCharacterInteraction()
         {
-            var item=groundItems.Where(g=>g!=null&&Vector3.Distance(Player.position,g.transform.position)<3).OrderBy(g=>(g.transform.position-Player.position).sqrMagnitude).FirstOrDefault();
+            var item=NearestGroundItem();
             if(item!=null){PickupCharacterItem(item);return;}
             if(!CharacterGearLocked&&Bag.NearWorkbench())SetCharacterPanel(4);
         }
@@ -132,6 +137,7 @@ namespace ShadowVale.Map01
             Exploration.Restore(data.exploration);Exploration.Reveal(Player.position,14);RefreshExplorationTexture();
             foreach(var item in groundItems)if(item!=null)Destroy(item.gameObject);groundItems.Clear();
             foreach(var saved in data.ground??Array.Empty<GroundSnapshot>()){DropCharacterItem(saved.id,saved.count,saved.condition);groundItems[groundItems.Count-1].transform.position=saved.position;}
+            Bag.RestoreFieldToolkit(data.bagLayout?.fieldKitVersion ?? 0);
             player.SprintAllowed=()=>CharacterCanSprint;
             GetComponent<Map01StoneThrow>()?.Cancel();
         }

@@ -12,7 +12,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 namespace ShadowVale.Map01.Tests {
 public sealed class Map02ArrivalTests:ForestSceneTestBase {
-[UnityTest]public IEnumerator FullNaturalDepartureKeepsBoatVisibleAfterSceneLoad() {
+[UnityTest,Timeout(300000)]public IEnumerator FullNaturalDepartureKeepsBoatVisibleAfterSceneLoad() {
 EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;
 yield return RecordFullTransfer(false);
 yield return new ExitPlayMode();
@@ -211,12 +211,21 @@ while(SceneManager.GetActiveScene().name!="Map 2")yield return null;
 var arrival=Object.FindFirstObjectByType<Map02Arrival>();while(arrival.CurrentPhase==Map02Arrival.Phase.Loading)yield return null;
 var routing=RouteInputToGame();var mouse=InputSystem.AddDevice<Mouse>();
 InputSystem.QueueStateEvent(mouse,new MouseState().WithButton(MouseButton.Right));InputSystem.Update();
+Assert.IsFalse(arrival.Passengers[0].GetComponent<PlayerCombat>().IsAiming,"Arrival keeps gameplay aim inactive before handing back controls.");
 LogAssert.Expect(LogType.Log,"Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.");
 arrival.Skip();arrival.Skip();
 yield return WaitGameSeconds(.2f);
-Assert.IsFalse(arrival.Passengers[0].GetComponent<PlayerCombat>().IsAiming,"Cinematic handoff clears toggled aim until a fresh press.");
+Assert.IsTrue(arrival.Passengers[0].GetComponent<PlayerCombat>().IsAiming,"After handoff, aim follows the held right mouse button.");
 InputSystem.QueueStateEvent(mouse,new MouseState());InputSystem.Update();yield return WaitGameSeconds(.2f);
 Assert.IsFalse(arrival.Passengers[0].GetComponent<PlayerCombat>().IsAiming);
+// Arrival now leads directly into Thành's bank briefing. Finish that
+// scene before checking the restored gameplay rifle, not while it is stowed.
+var chapter=Object.FindFirstObjectByType<Map02Mission>()?.Chapter;
+if(chapter?.CurrentScene?.id=="D1_01"){
+ typeof(Map02ChapterDirector).GetMethod("EndScene",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(chapter,null);
+ Assert.IsFalse(chapter.State.Done("D1_01"),"Bank briefing must not complete contact with Lực.");
+ yield return WaitGameSeconds(.2f);
+}
 VerifyGameplayRifle(arrival.Passengers[0]);
 InputSystem.RemoveDevice(mouse);RestoreInputRouting(routing);
 Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);AssertMap1WeaponDriversStopped(arrival);

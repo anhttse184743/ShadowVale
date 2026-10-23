@@ -40,6 +40,18 @@ namespace ShadowVale.Map01.Tests
                 Assert.Less(Vector3.Distance(canvas.MultiplyPoint3x4(pivot),rotated.MultiplyPoint3x4(pivot)),.001f,$"pivot drift at {scale} / {angle}");
             }
         }
+        [Test]public void PostLampBeamStartsAtTheLampAndPointsWhereTheShadeFacesAtEveryHudScale()
+        {
+            // 1920×1080 drew the beam above the panel's text (screenshot post-lamp.png, 23/10): the pivot was taken in screen pixels.
+            var lamp=new Vector2(780,455);
+            foreach(float scale in new[]{1f,1.2f,2.4f})foreach(float angle in new[]{0f,90f,180f,270f})
+            {
+                var canvas=Matrix4x4.Scale(new Vector3(scale,scale,1));var beam=Map02ChapterDirector.LampBeamMatrix(canvas,lamp,angle);
+                var tip=new Vector3(lamp.x+Mathf.Sin(angle*Mathf.Deg2Rad)*130,lamp.y-Mathf.Cos(angle*Mathf.Deg2Rad)*130,0);
+                Assert.Less(Vector3.Distance(canvas.MultiplyPoint3x4(lamp),beam.MultiplyPoint3x4(lamp)),.001f,$"beam root at {scale} / {angle}");
+                Assert.Less(Vector3.Distance(canvas.MultiplyPoint3x4(tip),beam.MultiplyPoint3x4(new Vector3(lamp.x+130,lamp.y,0))),.01f,$"beam tip at {scale} / {angle}");
+            }
+        }
         [Test]public void EveryTaskExplainsItsPurposeWithoutRevealingFutureTasksInHud()
         {
             foreach(var task in Map02ChapterDefinition.Load().tasks)Assert.IsFalse(string.IsNullOrWhiteSpace(task.purpose),task.id);
@@ -48,12 +60,12 @@ namespace ShadowVale.Map01.Tests
         }
         [Test]public void DialogueFollowsWherePeopleActuallyAreAndWhyTheyMove()
         {
-            var d=Map02ChapterDefinition.Load();Assert.AreEqual(43,d.tasks.Length);Assert.AreEqual(135,d.entries.Length);
+            var d=Map02ChapterDefinition.Load();Assert.AreEqual(43,d.tasks.Length);Assert.AreEqual(140,d.entries.Length);Assert.True(d.Lines("arrivalbank").All(e=>!e.radio));Assert.AreEqual(2,d.Lines("duckevent").Length);
             Assert.IsFalse(d.Lines("day1report").Any(e=>e.speaker=="Hùng"));
             Assert.IsTrue(d.Lines("promise").Any(e=>e.id=="m2v3_day1report_04"));
             Assert.IsTrue(d.Lines("boatsafe").All(e=>e.radio));
             Assert.IsTrue(d.Lines("child").Last().speaker=="Chú Bảy");
-            Assert.AreEqual("patrolHung",d.Find("N1_03").kind);Assert.AreEqual("patrolHung",d.Find("N1_04").kind);
+            Assert.AreEqual("patrolHung",d.Find("N1_03").kind);Assert.AreEqual("cinematic",d.Find("N1_04").kind);
             Assert.AreEqual("command",d.Find("D2_04").site);
         }
         [UnityTest,Timeout(360000)]public IEnumerator LiveFocusPromptsAndRealEscortPathKeepRescuedPeopleAtSafety()
@@ -74,7 +86,10 @@ namespace ShadowVale.Map01.Tests
             Load("N3_01");var family=Mark("N3_02");Place(m,family.transform.position);Assert.IsTrue(m.Interact(family));Assert.AreEqual("N3_02",c.CurrentScene.id);Assert.IsFalse(c.State.Done("N3_02"));typeof(Map02ChapterDirector).GetMethod("EndScene",Private).Invoke(c,null);
             var follower=typeof(Map02ChapterDirector).GetField("secondaryEscort",Private).GetValue(c);Assert.AreSame(c.Actor("Chị Lành"),follower,"Both members of the family must be escorted.");
             var daughterStart=c.Actor("Chị Lành").transform.position;c.Actor("Chị Lành").transform.position=m.Player.position+Vector3.forward*12;
-            Assert.AreSame(c.Actor("Chị Lành"),c.Companion);Assert.IsTrue(c.Instruction.Contains("Chị Lành đang chờ"));c.Actor("Chị Lành").transform.position=daughterStart;
+            Assert.AreSame(c.Actor("Chị Lành"),c.Companion);
+            StringAssert.Contains("ông Sáu và chị Lành",c.Instruction);
+            StringAssert.Contains("đang theo sau, cách 12 m",c.Instruction);
+            c.Actor("Chị Lành").transform.position=daughterStart;
             var controller=m.Player.GetComponent<PlayerController>();bool wasEnabled=controller.enabled;controller.enabled=false;
             var body=m.Player.GetComponent<CharacterController>();var path=new NavMeshPath();var destination=c.Sites["southStore"].position;
             Assert.IsTrue(NavMesh.CalculatePath(m.Player.position,destination,NavMesh.AllAreas,path));Assert.AreEqual(NavMeshPathStatus.PathComplete,path.status);

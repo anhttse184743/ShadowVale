@@ -122,6 +122,7 @@ namespace ShadowVale.Debugging
             "hurt" => "bị thương",
             "regroup" => "rút về phía viện binh",
             "aimed" => "né vì Nam đang ngắm",
+            "suppressed" => "bị sấy trúng liên tục, đổi chỗ",
             "cover" => "tìm chỗ nấp",
             _ => "đứng lâu",
         };

@@ -1,0 +1,386 @@
+{
+  "lt_m1_patrol": {
+    "before": {
+      "weapon_parts": {
+        "mean_quantity": 0.055,
+        "chance_in_random_rolls": 0.05500000000000005
+      },
+      "medkit_small": {
+        "mean_quantity": 0.117,
+        "chance_in_random_rolls": 0.11699999999999999
+      },
+      "gunpowder": {
+        "mean_quantity": 0.1365,
+        "chance_in_random_rolls": 0.09099999999999997
+      },
+      "ammo_rifle": {
+        "mean_quantity": 11.25,
+        "chance_in_random_rolls": 0.30000000000000004
+      },
+      "scrap_metal": {
+        "mean_quantity": 0.15,
+        "chance_in_random_rolls": 0.15000000000000002
+      },
+      "smoke_module": {
+        "mean_quantity": 0.012,
+        "chance_in_random_rolls": 0.01200000000000001
+      },
+      "gun_oil": {
+        "mean_quantity": 0.055,
+        "chance_in_random_rolls": 0.05500000000000005
+      },
+      "repair_kit": {
+        "mean_quantity": 0.018,
+        "chance_in_random_rolls": 0.018000000000000016
+      },
+      "cloth": {
+        "mean_quantity": 0.22499999999999998,
+        "chance_in_random_rolls": 0.15000000000000002
+      },
+      "herb": {
+        "mean_quantity": 0.07800000000000001,
+        "chance_in_random_rolls": 0.052000000000000046
+      }
+    },
+    "after": {
+      "weapon_parts": {
+        "mean_quantity": 0.04,
+        "chance_in_random_rolls": 0.040000000000000036
+      },
+      "medkit_small": {
+        "mean_quantity": 0.171,
+        "chance_in_random_rolls": 0.17100000000000004
+      },
+      "gunpowder": {
+        "mean_quantity": 0.1995,
+        "chance_in_random_rolls": 0.133
+      },
+      "ammo_rifle": {
+        "mean_quantity": 10.95,
+        "chance_in_random_rolls": 0.26
+      },
+      "scrap_metal": {
+        "mean_quantity": 0.13,
+        "chance_in_random_rolls": 0.13
+      },
+      "smoke_module": {
+        "mean_quantity": 0.008,
+        "chance_in_random_rolls": 0.008000000000000007
+      },
+      "gun_oil": {
+        "mean_quantity": 0.04,
+        "chance_in_random_rolls": 0.040000000000000036
+      },
+      "repair_kit": {
+        "mean_quantity": 0.012,
+        "chance_in_random_rolls": 0.01200000000000001
+      },
+      "cloth": {
+        "mean_quantity": 0.195,
+        "chance_in_random_rolls": 0.13
+      },
+      "herb": {
+        "mean_quantity": 0.11399999999999999,
+        "chance_in_random_rolls": 0.07599999999999996
+      }
+    }
+  },
+  "lt_m1_camp_guard": {
+    "before": {
+      "weapon_parts": {
+        "mean_quantity": 0.066,
+        "chance_in_random_rolls": 0.06503200000000003
+      },
+      "medkit_small": {
+        "mean_quantity": 0.15600000000000003,
+        "chance_in_random_rolls": 0.15059199999999995
+      },
+      "fuse_module": {
+        "mean_quantity": 0.013499999999999998,
+        "chance_in_random_rolls": 0.013459500000000013
+      },
+      "gunpowder": {
+        "mean_quantity": 0.23400000000000004,
+        "chance_in_random_rolls": 0.15059199999999995
+      },
+      "ammo_rifle": {
+        "mean_quantity": 14.645,
+        "chance_in_random_rolls": 0.36855000000000004
+      },
+      "scrap_metal": {
+        "mean_quantity": 0.33749999999999997,
+        "chance_in_random_rolls": 0.21375000000000005
+      },
+      "smoke_module": {
+        "mean_quantity": 0.033,
+        "chance_in_random_rolls": 0.03275800000000001
+      },
+      "gun_oil": {
+        "mean_quantity": 0.066,
+        "chance_in_random_rolls": 0.06503200000000003
+      },
+      "repair_kit": {
+        "mean_quantity": 0.020249999999999997,
+        "chance_in_random_rolls": 0.02015887499999991
+      },
+      "cloth": {
+        "mean_quantity": 0.27,
+        "chance_in_random_rolls": 0.1728
+      },
+      "ammo_pistol": {
+        "mean_quantity": 0.4680000000000001,
+        "chance_in_random_rolls": 0.07664800000000005
+      },
+      "ammo_sniper": {
+        "mean_quantity": 0.028124999999999997,
+        "chance_in_random_rolls": 0.011221874999999937
+      },
+      "herb": {
+        "mean_quantity": 0.09,
+        "chance_in_random_rolls": 0.08820000000000006
+      }
+    },
+    "after": {
+      "weapon_parts": {
+        "mean_quantity": 0.048,
+        "chance_in_random_rolls": 0.04748800000000003
+      },
+      "medkit_small": {
+        "mean_quantity": 0.22799999999999998,
+        "chance_in_random_rolls": 0.21644800000000003
+      },
+      "fuse_module": {
+        "mean_quantity": 0.009000000000000001,
+        "chance_in_random_rolls": 0.00898199999999999
+      },
+      "gunpowder": {
+        "mean_quantity": 0.34199999999999997,
+        "chance_in_random_rolls": 0.21644800000000003
+      },
+      "ammo_rifle": {
+        "mean_quantity": 14.159,
+        "chance_in_random_rolls": 0.32362199999999997
+      },
+      "scrap_metal": {
+        "mean_quantity": 0.2925,
+        "chance_in_random_rolls": 0.18655
+      },
+      "smoke_module": {
+        "mean_quantity": 0.024,
+        "chance_in_random_rolls": 0.023872000000000004
+      },
+      "gun_oil": {
+        "mean_quantity": 0.048,
+        "chance_in_random_rolls": 0.04748800000000003
+      },
+      "repair_kit": {
+        "mean_quantity": 0.013500000000000002,
+        "chance_in_random_rolls": 0.013459500000000013
+      },
+      "cloth": {
+        "mean_quantity": 0.23400000000000004,
+        "chance_in_random_rolls": 0.15059199999999995
+      },
+      "ammo_pistol": {
+        "mean_quantity": 0.6839999999999999,
+        "chance_in_random_rolls": 0.11111199999999993
+      },
+      "ammo_sniper": {
+        "mean_quantity": 0.01875,
+        "chance_in_random_rolls": 0.00748749999999998
+      },
+      "herb": {
+        "mean_quantity": 0.07800000000000001,
+        "chance_in_random_rolls": 0.07664800000000005
+      }
+    }
+  },
+  "lt_m1_operation_guard": {
+    "before": {
+      "weapon_parts": {
+        "mean_quantity": 0.08800000000000001,
+        "chance_in_random_rolls": 0.08606400000000003
+      },
+      "medkit_small": {
+        "mean_quantity": 0.17333333333333334,
+        "chance_in_random_rolls": 0.1658222222222222
+      },
+      "fuse_module": {
+        "mean_quantity": 0.011538461538461539,
+        "chance_in_random_rolls": 0.011505177514792853
+      },
+      "smoke_bomb": {
+        "mean_quantity": 0.08666666666666667,
+        "chance_in_random_rolls": 0.08478888888888891
+      },
+      "gunpowder": {
+        "mean_quantity": 0.30333333333333334,
+        "chance_in_random_rolls": 0.1459159722222222
+      },
+      "grenade_f1": {
+        "mean_quantity": 0.013846153846153845,
+        "chance_in_random_rolls": 0.01379822485207105
+      },
+      "ammo_rifle": {
+        "mean_quantity": 19.6,
+        "chance_in_random_rolls": 0.51
+      },
+      "scrap_metal": {
+        "mean_quantity": 0.54,
+        "chance_in_random_rolls": 0.3275999999999999
+      },
+      "blast_charge": {
+        "mean_quantity": 0.006923076923076922,
+        "chance_in_random_rolls": 0.006911094674556306
+      },
+      "smoke_module": {
+        "mean_quantity": 0.055,
+        "chance_in_random_rolls": 0.054243749999999924
+      },
+      "gun_oil": {
+        "mean_quantity": 0.077,
+        "chance_in_random_rolls": 0.07551774999999994
+      },
+      "repair_kit": {
+        "mean_quantity": 0.016153846153846154,
+        "chance_in_random_rolls": 0.016088609467455606
+      },
+      "cloth": {
+        "mean_quantity": 0.36,
+        "chance_in_random_rolls": 0.22560000000000002
+      },
+      "ammo_pistol": {
+        "mean_quantity": 0.7583333333333333,
+        "chance_in_random_rolls": 0.10539930555555566
+      },
+      "ammo_sniper": {
+        "mean_quantity": 0.04038461538461539,
+        "chance_in_random_rolls": 0.011505177514792853
+      }
+    },
+    "after": {
+      "weapon_parts": {
+        "mean_quantity": 0.032,
+        "chance_in_random_rolls": 0.031743999999999994
+      },
+      "medkit_small": {
+        "mean_quantity": 0.2533333333333333,
+        "chance_in_random_rolls": 0.237288888888889
+      },
+      "fuse_module": {
+        "mean_quantity": 0.007692307692307693,
+        "chance_in_random_rolls": 0.007677514792899354
+      },
+      "smoke_bomb": {
+        "mean_quantity": 0.19066666666666665,
+        "chance_in_random_rolls": 0.18157822222222209
+      },
+      "gunpowder": {
+        "mean_quantity": 0.44333333333333336,
+        "chance_in_random_rolls": 0.20938263888888886
+      },
+      "grenade_f1": {
+        "mean_quantity": 0.00923076923076923,
+        "chance_in_random_rolls": 0.009209467455621234
+      },
+      "ammo_rifle": {
+        "mean_quantity": 18.72,
+        "chance_in_random_rolls": 0.4524
+      },
+      "scrap_metal": {
+        "mean_quantity": 0.4680000000000001,
+        "chance_in_random_rolls": 0.28766400000000003
+      },
+      "blast_charge": {
+        "mean_quantity": 0.004615384615384615,
+        "chance_in_random_rolls": 0.004610059171597736
+      },
+      "smoke_module": {
+        "mean_quantity": 0.024,
+        "chance_in_random_rolls": 0.02385599999999999
+      },
+      "gun_oil": {
+        "mean_quantity": 0.04,
+        "chance_in_random_rolls": 0.03960000000000008
+      },
+      "repair_kit": {
+        "mean_quantity": 0.01076923076923077,
+        "chance_in_random_rolls": 0.01074023668639068
+      },
+      "cloth": {
+        "mean_quantity": 0.31200000000000006,
+        "chance_in_random_rolls": 0.19718399999999991
+      },
+      "ammo_pistol": {
+        "mean_quantity": 1.1083333333333334,
+        "chance_in_random_rolls": 0.15206597222222207
+      },
+      "ammo_sniper": {
+        "mean_quantity": 0.026923076923076925,
+        "chance_in_random_rolls": 0.007677514792899354
+      }
+    }
+  },
+  "guard_m16": {
+    "shot_damage": 6.159999999999998,
+    "old_theoretical_dps": 61.59999999999998,
+    "new_theoretical_magazine_cycle_dps": 8.04352557127312,
+    "thirty_round_cycle_seconds": 22.975,
+    "tuning": {
+      "burstRounds": 3,
+      "magazineRounds": 30,
+      "burstPause": 1.8,
+      "reloadSeconds": 3.2,
+      "staggerSeconds": 0.35,
+      "maxConcurrentBursts": 2
+    },
+    "note": "Timing model at authored RPM, average stagger and every shot hitting; excludes frame quantization, group contention and AI hit probability. Player M16 unchanged."
+  },
+  "guaranteed_sources": {
+    "lt_m1_chest_c1": {
+      "gun_oil": 1,
+      "ammo_pistol": 16,
+      "medkit_small": 2,
+      "smoke_bomb": 1,
+      "grenade_f1": 1,
+      "gunpowder": 2
+    },
+    "lt_m1_chest_c2": {
+      "ammo_rifle": 60,
+      "smoke_module": 1,
+      "weapon_parts": 1,
+      "medkit_small": 3,
+      "smoke_bomb": 2,
+      "grenade_f1": 1,
+      "gunpowder": 3
+    },
+    "lt_c3_field_approach": {
+      "medkit_small": 3,
+      "smoke_bomb": 2,
+      "grenade_f1": 1
+    },
+    "lt_c3_field_medic": {
+      "medkit_small": 2,
+      "smoke_bomb": 1
+    },
+    "lt_m1_supply_reward": {
+      "supplies": 1,
+      "medkit_small": 2,
+      "ammo_rifle": 30,
+      "smoke_bomb": 1,
+      "grenade_f1": 1
+    },
+    "lt_m1_base_start": {
+      "ammo_rifle": 60,
+      "medkit_small": 2,
+      "smoke_bomb": 1,
+      "herb": 2,
+      "cloth": 4
+    }
+  },
+  "store_prices": {
+    "medkit_small": 12,
+    "smoke_bomb": 15,
+    "grenade_f1": 30
+  }
+}

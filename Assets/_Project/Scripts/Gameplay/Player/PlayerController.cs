@@ -25,6 +25,10 @@ namespace ShadowVale.Gameplay.Player
         [SerializeField] private float acceleration = 14f;   // m/s^2 toward the target velocity
         [SerializeField] private float gravity = -20f;
         [SerializeField] private float jumpHeight = 1.4f;
+        public float Gravity=>gravity;
+        public float JumpHeight=>jumpHeight;
+        public bool IsGrounded=>_controller!=null&&_controller.enabled&&_controller.isGrounded;
+        public uint JumpSequence { get; private set; }
 
         [Header("Camera basis")]
         [Tooltip("Transform whose yaw defines 'forward' for input. Defaults to Camera.main.")]
@@ -150,6 +154,7 @@ namespace ShadowVale.Gameplay.Player
                 _sneakToggled = false;
                 IsSneaking = false;
                 _verticalVelocity = Mathf.Sqrt(-2f * gravity * jumpHeight);
+                JumpSequence++;
                 if (animator != null)
                 {
                     animator.SetTrigger(PlayerCombat.AnimatorParams.Jump);
@@ -168,7 +173,7 @@ namespace ShadowVale.Gameplay.Player
             if (animator != null)
             {
                 animator.SetFloat(PlayerCombat.AnimatorParams.Speed, _planarVelocity.magnitude);
-                animator.SetBool(PlayerCombat.AnimatorParams.Grounded, grounded);
+                animator.SetBool(PlayerCombat.AnimatorParams.Grounded, _controller.isGrounded);
                 animator.SetBool(PlayerCombat.AnimatorParams.Sneaking, IsSneaking);
                 // Drives the sneak clip's playback speed: standing still freezes the crouch
                 // instead of shuffling on the spot. There is no crouch-idle clip to blend to.

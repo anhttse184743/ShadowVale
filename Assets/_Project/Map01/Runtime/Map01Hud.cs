@@ -174,11 +174,21 @@ namespace ShadowVale.Map01
         public Texture2D ItemIcon(string id)
         {
             if (id == null) return null;
+            id = CraftVisualId(id);
             if (!itemIcons.TryGetValue(id, out var icon)) itemIcons[id] = icon = Resources.Load<Texture2D>("Hud/ItemIcons/" + id);
             return icon;
         }
         private void HudIcon(Rect r, string id, bool dim = false)
         {
+            if (id == Map01Inventory.RecoveredAmmo || id == Map01Inventory.AkLoadingPack)
+            {
+                HudIcon(r, id == Map01Inventory.RecoveredAmmo ? "scrap_metal" : "ammo_rifle", dim);
+                if (r.width < 44) return;
+                var tag = new Rect(r.x + 2, r.yMax - 20, r.width - 4, 18);
+                HudFill(tag, new Color(.05f, .07f, .03f, .95f));
+                GUI.Label(tag, id == Map01Inventory.RecoveredAmmo ? "THU HỒI" : "GÓI AK", new GUIStyle(hudSmall) { fontSize = Mathf.Clamp(Mathf.RoundToInt(r.width / 6), 8, 14), alignment = TextAnchor.MiddleCenter, wordWrap = false });
+                return;
+            }
             if(id==Map01Story.KeyItem||id==Map01Story.CargoItem){var texture=id==Map01Story.KeyItem?Map01OperationHints.KeyIcon:Map01OperationHints.CargoIcon;if(texture!=null){GUI.DrawTexture(r,texture,ScaleMode.ScaleToFit);return;}}
             if (ItemIcon(id) is Texture2D preview) { var tint = GUI.color; if (dim) GUI.color = new Color(.55f,.55f,.55f,.75f); GUI.DrawTexture(r,preview,ScaleMode.ScaleToFit); GUI.color=tint;
                 if (id == Map01M16.Ammo || id == "ammo_rifle")
@@ -253,6 +263,7 @@ namespace ShadowVale.Map01
             DrawStoneAim(width, height); // Map01Hud.Stone.cs
             DrawScoutFailure(width); // Map01Hud.Scouting.cs
             if (mission.MapOpen) DrawMap(width, height);
+            DrawGrenadeWarning(width, height); // Map01Hud.Grenade.cs — over everything, the bag and the map included.
             if ((mission.PlayerHealth <= 0 && GetComponent<TutorialDirector>() == null) || (objectives?.IsComplete ?? false)) {
                 HudPanel(new Rect(width / 2 - 300, 320, 600, 185));
                 GUI.Label(new Rect(width / 2 - 275, 345, 550, 75), mission.PlayerHealth <= 0 ? "NAM ĐÃ GỤC NGÃ" : "HOÀN THÀNH MAP 1", hudCenter);

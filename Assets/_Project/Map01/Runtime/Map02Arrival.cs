@@ -290,7 +290,7 @@ namespace ShadowVale.Map01
         void Update() {
             if(CurrentPhase==Phase.Loading)return;
             if(CurrentPhase==Phase.Gameplay) {
-                for(int i=1;i<3;i++)poses[i]?.Tick(Time.deltaTime);
+                if(!chapterOwnsPassengers)for(int i=1;i<3;i++)poses[i]?.Tick(Time.deltaTime);
                 if(sceneMission==null && Keyboard.current!=null && Keyboard.current.escapeKey.wasPressedThisFrame) {
                     paused=!paused;Time.timeScale=paused?0:1;Cursor.visible=paused;Cursor.lockState=paused?CursorLockMode.None:CursorLockMode.Locked;
                 }
@@ -384,7 +384,7 @@ namespace ShadowVale.Map01
         void LateUpdate() {
             if(poses==null)return;
             if(CurrentPhase==Phase.Gameplay) {
-                for(int i=1;i<3;i++){poses[i]?.Sample();source.HoldSeatedRifle(actors[i],.16f);GroundStandingFeet(i);}
+                if(!chapterOwnsPassengers)for(int i=1;i<3;i++){poses[i]?.Sample();source.HoldSeatedRifle(actors[i],.16f);GroundStandingFeet(i);}
                 // Aim and rifle carry use different idle poses. Keep the visual
                 // soles planted while those poses settle immediately after handoff.
                 var controller=Passengers[0].GetComponent<CharacterController>();
@@ -608,6 +608,12 @@ namespace ShadowVale.Map01
             foot.rotation=ankleRotation;
         }
         public void Skip(){if(CurrentPhase!=Phase.Loading && CurrentPhase!=Phase.Gameplay)Finish();}
+        bool chapterOwnsPassengers;
+        public void ReleasePassengerAnimation()
+        {
+            if(IsPlaying||chapterOwnsPassengers)return;chapterOwnsPassengers=true;
+            for(int i=1;i<3;i++){poses[i]?.Dispose();poses[i]=null;}
+        }
         void Finish() {
             if(CurrentPhase==Phase.Gameplay)return;
             speech?.Stop();

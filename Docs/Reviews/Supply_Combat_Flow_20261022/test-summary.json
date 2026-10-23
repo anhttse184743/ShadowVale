@@ -1,0 +1,174 @@
+{
+  "latest_unique_tests": 35,
+  "passed": 35,
+  "failed": 0,
+  "runs": [
+    {
+      "file": "flow-tests.xml",
+      "result": "Passed",
+      "total": "18",
+      "passed": "18",
+      "failed": "0"
+    },
+    {
+      "file": "final-tests.xml",
+      "result": "Failed(Child)",
+      "total": "29",
+      "passed": "28",
+      "failed": "1"
+    },
+    {
+      "file": "polish-tests.xml",
+      "result": "Passed",
+      "total": "4",
+      "passed": "4",
+      "failed": "0"
+    }
+  ],
+  "cases": {
+    "ShadowVale.Map01.Tests.BossIntegrationTests.TheCommanderFightsFromC3CoverThrowsGrenadesAndCallsThePost": {
+      "result": "Passed",
+      "evidence": "flow-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.ForestFlowTests.BaseCrateGivesItsKitOnceAndTheShelfOpensTheStoreOnceHungIsHome": {
+      "result": "Passed",
+      "evidence": "flow-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.ForestFlowTests.GuardDamageFollowsMap01Balance": {
+      "result": "Passed",
+      "evidence": "flow-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.ForestFlowTests.NoiseIsLocalAndLootCannotBeDuplicated": {
+      "result": "Passed",
+      "evidence": "flow-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.LootRollerTests.AGuardsPackIsAFewRoundsNotAMagazine": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.LootRollerTests.ATierTheTableLacksFallsToTheNearestLowerOne": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.LootRollerTests.EveryTableGivesItsTierFiveAndOnlyItsOwnItemsInRange": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.LootRollerTests.GunsCarryDurabilityInTheContentBundleAndSkillsCapFieldRepairs": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.LootRollerTests.SavedDataFromBeforeGunsWoreReadsAsNew": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.LootRollerTests.TheSameSeedRollsTheSameAndOtherSeedsVary": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.LootRollerTests.TheShippedDataPassesTheDatabaseConstraints": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.LootRollerTests.TheThreeRoundsShareGunpowderAndAMosinRoundCostsMost": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.LootRollerTests.TiersFollowTheConsumableFocusedFiftyTwoThirtyEightEightTwoProfile": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.LootRollerTests.WithinATierAnEntryComesUpByItsWeightAndTwiceAsOftenWhenBoosted": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.SupplyCombatFlowTests.ActualGuardBurstsLimitGroupFireKeepReloadAndRespectBossCadence": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.SupplyCombatFlowTests.ConsumablesAreGuaranteedBeforeC3AndTheStoreFitsAUsefulFortyPointKit": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.SupplyCombatFlowTests.FieldSuppliesCanBeCollectedBeforeTheBossAndPersistWithoutRefills": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.SupplyCombatFlowTests.ThreeRoundBurstsRestForRecoveryAndThirtyRoundsRequireAReload": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.ACutLineMeansNoRunners": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.ASilentPatrolAtTheCheckInPutsTheCampOnGuard": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.NestASeesTheTowerPlatformBeyondTheMosinsReport": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.NobodyChasesNamPastTheLeash": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.TheGarrisonHoldsItsPostsAndTheCommanderIsHomeFromTheStart": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.TheKiengWakesTheSleepersWhenTheCampIsAlarmed": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.TheKnifeFromBehindWoundsTheCommanderAndNeverKillsHim": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.TheSaveKeepsThePostAsItWas": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.WithoutTheStrikerOneSleeperAnswersAndTheLineBringsRunners": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.ForestFlowTests.ObjectiveGuideFollowsEachQuestStep": {
+      "result": "Passed",
+      "evidence": "polish-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.M16MergeCompatibilityTests.CloningAnM16ThenSelectingAkRestoresOneCorrectModelAndItsBaseline": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.M16MergeCompatibilityTests.PrimaryChangesPreserveK54MosinAndTheReinforcedGarrisonsSavedRifles": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.C3ReservesAndRunnersReceiveOnlyRecordedInformation": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.DistantMosinKillAtRadioTriggersBodySearchAndResponseWithoutKnowingNam": {
+      "result": "Passed",
+      "evidence": "final-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.SupplyCombatFlowTests.SupplyDeliveryGivesReadyThrowablesOnceWithoutLosingThemToAFullBag": {
+      "result": "Passed",
+      "evidence": "polish-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01StoryTests.LegacySupplyAndRadioSavesKeepProgressWithoutDuplicateRewards": {
+      "result": "Passed",
+      "evidence": "polish-tests.xml"
+    },
+    "ShadowVale.Map01.Tests.SupplyCombatFlowTests.StoreShowsTheBottomSmokeOfferAndCanIssueAffordableConsumables": {
+      "result": "Passed",
+      "evidence": "polish-tests.xml"
+    }
+  },
+  "notes": [
+    "Guide regression expected the old path; updated the test to verify Mosin -> field supply -> observation -> officer and reran successfully.",
+    "Store screenshots visually inspected: F1 at top, smoke at bottom, prices and issue buttons visible."
+  ]
+}

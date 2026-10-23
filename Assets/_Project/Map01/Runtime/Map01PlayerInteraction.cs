@@ -9,7 +9,7 @@ namespace ShadowVale.Map01
     /// <summary>
     /// Routes keyboard input to whichever sibling component owns it, guides Hùng home during
     /// the escort, and dispatches world-point interactions (loot, workbench,
-    /// documents, exit — the supplies drop-off defers to Map01Quest for the stage gate). One
+    /// documents and the base store). One
     /// place for "what does this key do right now" instead of it being spread across a dozen
     /// conditions in a mission god-class.
     /// </summary>
@@ -118,6 +118,7 @@ namespace ShadowVale.Map01
                 else if (stoneThrow.Aiming && mouse.leftButton.wasReleasedThisFrame) stoneThrow.Release();
             }
             Nearby = NearestUsable();
+            InteractHighlight.Focus(Nearby != null ? Nearby.transform : null);
             // A stone site's offer depends on the room left in the bag, so its prompt is worded as he stands there.
             if (Nearby != null && Nearby.kind == ForestPointKind.Stones && stoneSites != null) Nearby.label = stoneSites.Prompt(Nearby);
             if (kb.eKey.wasPressedThisFrame) HandleInteractKey();
@@ -209,11 +210,12 @@ namespace ShadowVale.Map01
                     break;
                 case ForestPointKind.Loot:
                     if (point.used) return;
+                    if (point.used) return;
                     string took = TakeItems(point, out bool any);
                     if (!string.IsNullOrEmpty(took)) mission.Say(took, 6);
                     if (!any) break; // A full bag at a pile of stones: no stooping for nothing.
                     // a fallen guard's pack or gun is picked up off the ground; a crate is opened
-                    Rummage(point.GetComponent<Map01EnemyController>() != null || (point.id!=null&&(point.id.StartsWith(Map01RescueStones.IdPrefix)||point.id.StartsWith(Map01Drops.IdPrefix)||point.id.StartsWith(Map01Logistics.GunPointPrefix))) ? Map01NamActions.PickUp : Map01NamActions.OpenChest);
+                    Rummage(point.GetComponent<Map01EnemyController>() != null || (point.id!=null&&(point.id.StartsWith(Map01RescueStones.IdPrefix)||point.id.StartsWith(Map01Drops.IdPrefix)||point.id.StartsWith(Map01Logistics.GunPointPrefix)||point.id.StartsWith(Map01FieldSupplies.IdPrefix))) ? Map01NamActions.PickUp : Map01NamActions.OpenChest);
                     break;
                 case ForestPointKind.Workbench:
                     // [E] opens the bench screen (Map01Hud.Bench) and shuts it again.
@@ -225,9 +227,6 @@ namespace ShadowVale.Map01
                     point.used = true; inventory.Receive("river_documents", 1);
                     Rummage(Map01NamActions.PickUp);
                     mission.Say("Nam: Tài liệu cũ của đơn vị tuần tra — cất đi, có thể còn hữu ích.", 8);
-                    break;
-                case ForestPointKind.Exit:
-                    mission.Say("Bến sông vắng lặng. Đường rút lui vẫn còn đó, nhưng nhiệm vụ chưa xong.", 6);
                     break;
                 case ForestPointKind.Stones:
                     // Straight into the pocket, crouched or standing: no rummaging take to sit through

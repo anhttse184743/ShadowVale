@@ -14,10 +14,10 @@ namespace ShadowVale.Map01
     /// where it lands every guard in earshot leaves his post to check it out (Map01EnemyController).</item>
     /// <item>Smoke bomb: a cloud <see cref="SmokeRadius"/> m round for <see cref="SmokeSeconds"/> s that no guard
     /// sees through (Map01Smoke).</item>
-    /// <item>F1: goes off <see cref="FuseSeconds"/> s after it lands; anyone within <see cref="KillRadius"/> m is
+    /// <item>F1: goes off the moment it lands (3.5 s after it until 2026-10-22); anyone within <see cref="KillRadius"/> m is
     /// killed, within <see cref="WoundRadius"/> m wounded, and the blast is heard <see cref="GrenadeNoise"/> m off
     /// like a shot. Nam is not spared. (Real F1: 3.2-4.2 s fuse, fragments to 200 m; the radii are scaled down
-    /// for a stealth map, starting values from the approved design.)</item>
+    /// for a stealth map, starting values from the approved design; no wait on the ground, by the user's call.)</item>
     /// </list>
     /// </summary>
     [DefaultExecutionOrder(100)]
@@ -27,7 +27,7 @@ namespace ShadowVale.Map01
         [Tooltip("Guards within this distance of Nam (and in his sight) show their hearing ring while he aims.")]
         [SerializeField] private float ringsWithin = 40f;
         private const int ArcPoints = 32, RingPoints = 40, MaxRings = 10;
-        public const float SmokeRadius = 4f, SmokeSeconds = 15f, FuseSeconds = 3.5f, KillRadius = 6f, WoundRadius = 14f, GrenadeNoise = 40f;
+        public const float SmokeRadius = 4f, SmokeSeconds = 15f, KillRadius = 6f, WoundRadius = 14f, GrenadeNoise = 40f;
         private static readonly Color ArcColour = new Color(1f, .92f, .6f, .9f);
         private static readonly Color RingIdle = new Color(1f, 1f, 1f, .35f);
         private static readonly Color RingHears = new Color(1f, .62f, .15f, .95f);
@@ -77,7 +77,13 @@ namespace ShadowVale.Map01
         {
             if (Aiming || !CanAim()) return;
             string ready = inventory.ReadyThrowable();
-            if (ready == null) return;
+            if (ready == null)
+            {
+                mission.Say(inventory.Throwable == "stone"
+                    ? "Hết đá ném. Nhặt thêm ở bờ sông hoặc các bãi đá bên đường."
+                    : $"Hết {ForestInventory.Name(inventory.Throwable).ToLowerInvariant()}. Nhấn 4 để chọn vật ném khác.", 4);
+                return;
+            }
             Item = ready;
             mission.ModernCombat?.CancelReload();
             Aiming = true;
@@ -279,7 +285,7 @@ namespace ShadowVale.Map01
             var stone = Projectile(item);
             stone.transform.position = path[0];
             // The pin and its ring (the smoke bomb's pull cord) stayed in Nam's other hand; the F1's lever springs off
-            // as it leaves his, and its fuse smokes from then on - the three-and-a-half seconds can be watched.
+            // as it leaves his, and its fuse smokes in flight.
             var ring = FindPart(stone.transform, "ring");
             if (ring != null) Destroy(ring.gameObject);
             if (item == "grenade_f1")
@@ -310,10 +316,7 @@ namespace ShadowVale.Map01
             }
             if (item == "grenade_f1")
             {
-                mission.Say($"Lựu đạn đã rút chốt — nổ sau {FuseSeconds:0.#} giây!", FuseSeconds);
-                float fuse = 0;
-                while (fuse < FuseSeconds) { yield return null; if (!mission.Stopped) fuse += Time.deltaTime; }
-                Destroy(stone);
+                Destroy(stone);   // it goes off where it comes down
                 Explode(landing);
                 yield break;
             }
@@ -389,8 +392,9 @@ namespace ShadowVale.Map01
             if (lever != null) Destroy(lever.gameObject, 20f);
         }
 
-        /// <summary>The fuse's thin smoke, trailing in flight and rising from the grenade where it lies until it goes off.</summary>
-        private static void FuseSmoke(Transform grenade)
+        /// <summary>The fuse's thin smoke, trailing in flight (and rising where the commander's grenade lies until it
+        /// goes off, Map01GrenadeWarning).</summary>
+        internal static void FuseSmoke(Transform grenade)
         {
             var wisp = Map01Fx.System(grenade, "Fuse smoke", grenade.position, Map01Fx.Lit, 30f, 60);
             var main = wisp.main;

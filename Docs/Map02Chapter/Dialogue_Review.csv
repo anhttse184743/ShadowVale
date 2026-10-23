@@ -54,9 +54,9 @@ m2v3_scoutreturn_01,m2v3_scoutreturn,Tâm,False,"Chúng nó rà từng bến, t�
 m2v3_scoutreturn_02,m2v3_scoutreturn,Anh Thành,False,Hùng. Máy bắt được chưa?,pending_approval
 m2v3_scoutreturn_03,m2v3_scoutreturn,Hùng,False,"Còn thiếu dây ăng-ten. Trong kho kín có cuộn dây, Nam lấy giúp tôi.",pending_approval
 m2v3_antenna_01,m2v3_antenna,Hùng,False,Xoay qua trái chút... chút nữa... đó! Giữ đó!,pending_approval
-m2v3_antenna_02,m2v3_antenna,Hùng,False,Trạm làng gọi đơn vị bạn. Nghe rõ trả lời.,pending_approval
-m2v3_antenna_03,m2v3_antenna,Đơn vị pháo,True,Nghe rõ. Nói đi.,pending_approval
-m2v3_artillery_01,m2v3_artillery,Anh Thành,False,"Đơn vị bạn có pháo. Muốn chi viện phải gửi tọa độ, chờ vài phút và đưa dân ra khỏi vùng bắn.",pending_approval
+m2v3_antenna_02,m2v3_antenna,Hùng,False,Bông Súng gọi Rạch Tre. Bông Súng gọi Rạch Tre. Nghe rõ trả lời.,pending_approval
+m2v3_antenna_03,m2v3_antenna,Rạch Tre,True,Rạch Tre nghe. Nói đi.,pending_approval
+m2v3_artillery_01,m2v3_artillery,Anh Thành,False,"Bên kia có pháo. Nhưng gọi tới lúc bắn được là mất mấy phút. Cần tọa độ, cần biết dân đã ra khỏi chỗ chưa.",pending_approval
 m2v3_artillery_02,m2v3_artillery,Nam,False,Rõ.,pending_approval
 m2v3_lights_01,m2v3_lights,Nam,False,"Đèn pin. Hai, ba cái. Bên kia đồng.",pending_approval
 m2v3_lights_02,m2v3_lights,Hùng,True,Thấy rồi. Nó đang quay về phía cậu. Nằm xuống.,pending_approval
@@ -74,7 +74,7 @@ m2v3_reconcile_07,m2v3_reconcile,Nam,False,Ừ.,pending_approval
 m2v3_reconcile_08,m2v3_reconcile,Hùng,False,Hôm đó… sao cậu quay lại? Bọn nó đông thế.,pending_approval
 m2v3_reconcile_09,m2v3_reconcile,Nam,False,Là cậu thì cậu cũng quay lại thôi.,pending_approval
 m2v3_demolition_01,m2v3_demolition,Anh Lực,False,Khối bộc phá cuối cùng của du kích. Để dành cho thứ gì to.,pending_approval
-m2v3_demolition_02,m2v3_demolition,Hùng,True,To cỡ nào hả anh?,pending_approval
+m2v3_demolition_02,m2v3_demolition,Hùng,False,To cỡ nào hả anh?,pending_approval
 m2v3_demolition_03,m2v3_demolition,Anh Lực,False,Cỡ nào mà súng không làm gì được.,pending_approval
 m2v3_boats_01,m2v3_boats,Chú Bảy,False,Chiếc này chở được sáu người. Chở bảy là tui với ông Sáu cùng uống nước sông.,pending_approval
 m2v3_families_01,m2v3_families,Hùng,False,"Nhà ông Sáu phải có người cõng. Ông không chịu đâu, nhưng cứ cõng.",pending_approval
@@ -85,13 +85,13 @@ m2v3_supper_02,m2v3_supper,Chị Lành,False,"Cá lóc, me, bạc hà, giá, th�
 m2v3_supper_03,m2v3_supper,Hùng,False,"U em thì chẳng nấu chua thế này bao giờ. Canh cua thôi, vắt tí chanh.",pending_approval
 m2v3_supper_04,m2v3_supper,Chị Lành,False,"Vậy về nấu cho u nếm đi, coi u chê không.",pending_approval
 m2v3_supper_05,m2v3_supper,Hùng,False,Nghe chưa. Hôm ấy cậu phải khen canh cua của u ngon hơn đấy.,pending_approval
-m2v3_lastorder_01,m2v3_lastorder,Anh Thành,False,"Sáng mai đường có thể thông. Tối nay ngủ sớm. Nam, ca đầu.",pending_approval
-m2v3_lastorder_02,m2v3_lastorder,Nam,False,Rõ.,pending_approval
-m2v3_lastorder_03,m2v3_lastorder,Anh Thành,False,"Nếu có chuyện, Nam giữ ngõ đình. Ngõ đó xa bến nhất.",pending_approval
-m2v3_lastorder_04,m2v3_lastorder,Nam,False,Rõ.,pending_approval
-m2v3_lastorder_05,m2v3_lastorder,Hùng,True,Ngõ đình thì một mình cậu à?,pending_approval
-m2v3_lastorder_06,m2v3_lastorder,Nam,False,Có anh Lực.,pending_approval
-m2v3_lastorder_07,m2v3_lastorder,Hùng,True,...Có chuyện thì nhớ về đúng điểm hẹn đấy.,pending_approval
+m2v3_lastorder_01,m2v3_supper,Anh Thành,False,"Sáng mai đường có thể thông. Tối nay ngủ sớm. Nam, ca đầu.",pending_approval
+m2v3_lastorder_02,m2v3_supper,Nam,False,Rõ.,pending_approval
+m2v3_lastorder_03,m2v3_supper,Anh Thành,False,"Nếu có chuyện, Nam giữ ngõ đình. Ngõ đó xa bến nhất.",pending_approval
+m2v3_lastorder_04,m2v3_supper,Nam,False,Rõ.,pending_approval
+m2v3_lastorder_05,m2v3_supper,Hùng,False,Ngõ đình thì một mình cậu à?,pending_approval
+m2v3_lastorder_06,m2v3_supper,Nam,False,Có anh Lực.,pending_approval
+m2v3_lastorder_07,m2v3_supper,Hùng,False,...Có chuyện thì nhớ về đúng điểm hẹn đấy.,pending_approval
 m2v3_attack_01,m2v3_attack,Hùng,False,Nam! Dậy! Nó vào rồi!,pending_approval
 m2v3_attack_02,m2v3_attack,Anh Thành,False,"Hùng, ra bến, giữ máy! Nam, lấy đồ rồi ra ngõ ông Sáu!",pending_approval
 m2v3_attack_03,m2v3_attack,Nam,False,Rõ!,pending_approval
@@ -101,22 +101,22 @@ m2v3_child_01,m2v3_child,Bé Tí,False,Chú Hùng đâu?,pending_approval
 m2v3_child_02,m2v3_child,Nam,False,Ở bến. Chú dẫn con xuống đó.,pending_approval
 m2v3_boatsafe_02,m2v3_child,Chú Bảy,False,Người già xuống trước! Ai khỏe đỡ người yếu! Đừng giành!,pending_approval
 m2v3_boatsafe_01,m2v3_boatsafe,Hùng,True,"Chuyến một đi rồi. Bậc bến chắc lắm, cậu đóng cọc khéo đấy.",pending_approval
-m2v3_wound_01,m2v3_wound,Anh Lực,True,Chốt ngoài không giữ nổi! Tôi lùi!,pending_approval
-m2v3_wound_02,m2v3_wound,Anh Thành,True,"Giữ ngõ đình! Nam, che cho dân xuống bến!",pending_approval
-m2v3_wound_03,m2v3_wound,Nam,False,Rõ!,pending_approval
+m2v3_wound_01,m2v3_fallback,Anh Lực,True,Chốt ngoài không giữ nổi! Tôi lùi!,pending_approval
+m2v3_wound_02,m2v3_fallback,Anh Thành,True,"Lùi về gốc me! Nam, giữ ngõ cho dân qua!",pending_approval
 m2v3_wound_04,m2v3_wound,Anh Lực,False,Xe tăng! Nằm xuống!,pending_approval
 m2v3_wound_05,m2v3_wound,Hùng,True,Nam! Nam! Trả lời tôi!,pending_approval
+m2v3_ammo_01,m2v3_hints,Hùng,True,"Đạn ở xác tụi nó, lấy mà dùng.",pending_approval
 m2v3_alive_01,m2v3_alive,Nam,False,...Còn sống.,pending_approval
 m2v3_alive_02,m2v3_alive,Hùng,True,Về bến. Ngay. Đừng cãi.,pending_approval
-m2v3_coordinates_01,m2v3_coordinates,Hùng,True,"Đơn vị bạn cần tọa độ cuối, dân phải ra khỏi bảy mươi thước quanh ngõ đình.",pending_approval
+m2v3_coordinates_01,m2v3_coordinates,Hùng,True,"Rạch Tre báo: cần tọa độ cuối, dân phải ra khỏi bảy mươi thước quanh ngõ đình.",pending_approval
 m2v3_coordinates_02,m2v3_coordinates,Anh Thành,True,"Nam, dọn cây đổ cho tổ cứu thương. Hùng, đọc tọa độ cho tôi.",pending_approval
 m2v3_coordinates_03,m2v3_coordinates,Nam,False,Rõ.,pending_approval
-m2v3_coordinates_04,m2v3_coordinates,Đơn vị pháo,True,Nhận tọa độ. Ba phút.,pending_approval
+m2v3_coordinates_04,m2v3_coordinates,Rạch Tre,True,Rạch Tre nhận tọa độ. Ba phút.,pending_approval
 m2v3_coordinates_05,m2v3_coordinates,Hùng,True,Ba phút nữa có pháo! Nhưng xe tăng vào trong làng rồi… pháo không bắn vào đây được!,pending_approval
 m2v3_coordinates_06,m2v3_coordinates,Anh Thành,True,Thì phải có người tới gần nó.,pending_approval
 m2v3_farewell_01,m2v3_farewell,Chú Bảy,False,Quay về không kịp! Nó bắn nữa là chìm!,pending_approval
 m2v3_farewell_02,m2v3_farewell,Hùng,False,"Nam, xuống!",pending_approval
-m2v3_farewell_03,m2v3_farewell,Nam,False,Không sao… vết thương thôi.,pending_approval
+m2v3_farewell_03,m2v3_farewell,Nam,False,Không sao… vết cũ thôi.,pending_approval
 m2v3_farewell_04,m2v3_farewell,Hùng,False,Súng không làm gì được nó đâu.,pending_approval
 m2v3_farewell_05,m2v3_farewell,Nam,False,Ba phút nữa có pháo.,pending_approval
 m2v3_farewell_06,m2v3_farewell,Hùng,False,Pháo không bắn vào đây được. Mà nó chỉ cần một loạt nữa thôi.,pending_approval
@@ -125,9 +125,9 @@ m2v3_farewell_08,m2v3_farewell,Hùng,False,"Cậu có thuộc đường bờ mư
 m2v3_farewell_09,m2v3_farewell,Hùng,False,"Này Nam... việc bảo vệ mọi người, từ giờ phải nhờ cả vào cậu rồi. Mình đi diệt nó đây!",pending_approval
 m2v3_farewell_10,m2v3_farewell,Nam,False,"Đừng, Hùng! Cậu điên à? Người nhà... u cậu còn đang đợi cậu cơ mà!",pending_approval
 m2v3_farewell_11,m2v3_farewell,Hùng,False,"Giờ mà không đi... là không ai còn cơ hội về nhà nữa đâu. Thế nhá, người anh em.",pending_approval
-m2v3_sacrifice_01,m2v3_sacrifice,Nam,False,Đi đi! Tôi che cho!,pending_approval
+m2v3_sacrifice_01,m2v3_cover,Nam,False,Đi đi! Tôi che cho!,pending_approval
 m2v3_sacrifice_02,m2v3_sacrifice,Hùng,False,"Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay…",pending_approval
-m2v3_sacrifice_03,m2v3_sacrifice,Đơn vị pháo,True,Bắn.,pending_approval
+m2v3_sacrifice_03,m2v3_sacrifice,Rạch Tre,True,Rạch Tre. Bắn.,pending_approval
 m2v3_sacrifice_04,m2v3_sacrifice,Anh Thành,False,Phản công!,pending_approval
 m2v3_dawn_01,m2v3_dawn,Nam,False,Dân dưới bến an toàn rồi.,pending_approval
 m2v3_dawn_02,m2v3_dawn,Anh Thành,False,Tôi biết.,pending_approval

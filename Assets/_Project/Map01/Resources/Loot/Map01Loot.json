@@ -1,6 +1,6 @@
 {
-  "version": "map01-durability-loot-3",
-  "tierOdds": [60, 26, 11, 3],
+  "version": "map01-field-crafting-5",
+  "tierOdds": [52, 38, 8, 2],
   "repair": {
     "fieldFraction": 0.35,
     "fieldSeconds": 3.0,
@@ -10,9 +10,16 @@
     "benchDiscountLevel": 3,
     "salvageBonusLevel": 2
   },
-  "adaptive": { "lowAmmo": 30, "ammoBoost": 2.0, "lowHealth": 0.6, "medkitBoost": 2.0, "medkitPity": 6 },
+  "adaptive": { "lowAmmo": 30, "ammoBoost": 2.0, "lowHealth": 0.75, "medkitBoost": 3.0, "medkitPity": 3 },
   "logistics": { "turnInFloor": 0.3, "operationCredit": [40, 40, 40, 60] },
+  "fieldCaches": [
+    { "id": "c3_field_ak_v1", "label": "Túi đạn AK — 30 viên, 2 gói tiếp liệu", "x": 109.0, "z": 22.3, "minStage": 7 },
+    { "id": "c3_field_approach_v1", "label": "Tiếp tế trước C3 — 3 băng, 2 khói, 1 F1", "x": 109.0, "z": 21.0, "minStage": 7 },
+    { "id": "c3_field_medic_v1", "label": "Túi quân y sân Tây — 2 băng, 1 khói", "x": 59.0, "z": 56.4, "minStage": 7 }
+  ],
   "items": [
+    { "code": "ammo_recovered", "type": "Material", "rarity": "Common", "baseValue": 1, "weight": 0.08 },
+    { "code": "ak_loading_pack", "type": "Material", "rarity": "Common", "baseValue": 3, "weight": 0.12 },
     {"code": "ammo_556", "type": "Ammo", "rarity": "Common", "baseValue": 1, "weight": 0.02},
     {"code": "rifle_m16", "type": "Weapon", "rarity": "Common", "baseValue": 60, "weight": 3.5, "foundMin": 0.55, "foundMax": 0.75, "salvage": [{"item": "scrap_metal", "min": 2, "max": 2}, {"item": "weapon_parts", "min": 1, "max": 1}], "salvageGood": 0.5, "salvageGoodItem": "weapon_parts"},
     { "code": "rifle_standard", "type": "Weapon", "rarity": "Common", "baseValue": 60, "weight": 3.5, "foundMin": 0.55, "foundMax": 0.75,
@@ -25,9 +32,9 @@
     { "code": "ammo_rifle", "type": "Ammo", "rarity": "Common", "baseValue": 1, "weight": 0.02 },
     { "code": "ammo_pistol", "type": "Ammo", "rarity": "Uncommon", "baseValue": 2, "weight": 0.01 },
     { "code": "ammo_sniper", "type": "Ammo", "rarity": "Rare", "baseValue": 4, "weight": 0.04 },
-    { "code": "medkit_small", "type": "Consumable", "rarity": "Uncommon", "baseValue": 20, "weight": 0.3 },
-    { "code": "smoke_bomb", "type": "Consumable", "rarity": "Rare", "baseValue": 25, "weight": 0.4 },
-    { "code": "grenade_f1", "type": "Consumable", "rarity": "Epic", "baseValue": 40, "weight": 0.6 },
+    { "code": "medkit_small", "type": "Consumable", "rarity": "Uncommon", "baseValue": 12, "weight": 0.3 },
+    { "code": "smoke_bomb", "type": "Consumable", "rarity": "Rare", "baseValue": 15, "weight": 0.4 },
+    { "code": "grenade_f1", "type": "Consumable", "rarity": "Epic", "baseValue": 30, "weight": 0.6 },
     { "code": "stone", "type": "Consumable", "rarity": "Common", "baseValue": 0, "weight": 0.3 },
     { "code": "repair_kit", "type": "Tool", "rarity": "Rare", "baseValue": 30, "weight": 0.8 },
     { "code": "weapon_parts", "type": "Material", "rarity": "Rare", "baseValue": 15, "weight": 0.2 },
@@ -56,6 +63,9 @@
       "lootTable": "lt_m1_commander", "dropMin": 0.35, "dropMax": 0.55, "sidearm": "pistol_k54", "sidearmMin": 0.6, "sidearmMax": 0.8 }
   ],
   "lootTables": [
+    { "code": "lt_c3_field_ak", "name": "Tiếp đạn AK trước C3 (một lần)", "rollsMin": 0, "rollsMax": 0, "entries": [
+      { "item": "ammo_rifle", "tier": 5, "weight": 1, "min": 30, "max": 30 },
+      { "item": "ak_loading_pack", "tier": 5, "weight": 1, "min": 2, "max": 2 } ] },
     { "code": "lt_m1_patrol", "name": "Túi lính tuần tra", "rollsMin": 1, "rollsMax": 1, "entries": [
       { "item": "ammo_rifle", "tier": 5, "weight": 1, "min": 6, "max": 12 },
       { "item": "ammo_rifle", "tier": 1, "weight": 50, "min": 5, "max": 10 },
@@ -92,9 +102,10 @@
       { "item": "gunpowder", "tier": 2, "weight": 35, "min": 2, "max": 2 },
       { "item": "ammo_pistol", "tier": 2, "weight": 25, "min": 6, "max": 8 },
       { "item": "smoke_bomb", "tier": 2, "weight": 20, "min": 1, "max": 1 },
-      { "item": "weapon_parts", "tier": 3, "weight": 40, "min": 1, "max": 1 },
-      { "item": "gun_oil", "tier": 3, "weight": 35, "min": 1, "max": 1 },
-      { "item": "smoke_module", "tier": 3, "weight": 25, "min": 1, "max": 1 },
+      { "item": "weapon_parts", "tier": 3, "weight": 20, "min": 1, "max": 1 },
+      { "item": "gun_oil", "tier": 3, "weight": 25, "min": 1, "max": 1 },
+      { "item": "smoke_module", "tier": 3, "weight": 15, "min": 1, "max": 1 },
+      { "item": "smoke_bomb", "tier": 3, "weight": 40, "min": 1, "max": 1 },
       { "item": "repair_kit", "tier": 4, "weight": 35, "min": 1, "max": 1 },
       { "item": "fuse_module", "tier": 4, "weight": 25, "min": 1, "max": 1 },
       { "item": "blast_charge", "tier": 4, "weight": 15, "min": 1, "max": 1 },
@@ -114,7 +125,9 @@
     { "code": "lt_m1_chest_c1", "name": "Hòm sắt trại C1", "rollsMin": 2, "rollsMax": 2, "entries": [
       { "item": "gun_oil", "tier": 5, "weight": 1, "min": 1, "max": 1 },
       { "item": "ammo_pistol", "tier": 5, "weight": 1, "min": 16, "max": 16 },
-      { "item": "medkit_small", "tier": 5, "weight": 1, "min": 1, "max": 1 },
+      { "item": "medkit_small", "tier": 5, "weight": 1, "min": 2, "max": 2 },
+      { "item": "smoke_bomb", "tier": 5, "weight": 1, "min": 1, "max": 1 },
+      { "item": "grenade_f1", "tier": 5, "weight": 1, "min": 1, "max": 1 },
       { "item": "gunpowder", "tier": 5, "weight": 1, "min": 2, "max": 2 },
       { "item": "ammo_rifle", "tier": 1, "weight": 45, "min": 15, "max": 25 },
       { "item": "cloth", "tier": 1, "weight": 25, "min": 2, "max": 3 },
@@ -127,10 +140,13 @@
       { "item": "repair_kit", "tier": 4, "weight": 60, "min": 1, "max": 1 },
       { "item": "smoke_module", "tier": 4, "weight": 40, "min": 1, "max": 1 } ] },
     { "code": "lt_m1_chest_c2", "name": "Hòm sắt trại C2", "rollsMin": 2, "rollsMax": 3, "entries": [
+      { "item": "ak_loading_pack", "tier": 5, "weight": 1, "min": 2, "max": 2 },
       { "item": "ammo_rifle", "tier": 5, "weight": 1, "min": 60, "max": 60 },
-      { "item": "smoke_module", "tier": 5, "weight": 1, "min": 2, "max": 2 },
-      { "item": "weapon_parts", "tier": 5, "weight": 1, "min": 2, "max": 2 },
-      { "item": "fuse_module", "tier": 5, "weight": 1, "min": 1, "max": 1 },
+      { "item": "smoke_module", "tier": 5, "weight": 1, "min": 1, "max": 1 },
+      { "item": "weapon_parts", "tier": 5, "weight": 1, "min": 1, "max": 1 },
+      { "item": "medkit_small", "tier": 5, "weight": 1, "min": 3, "max": 3 },
+      { "item": "smoke_bomb", "tier": 5, "weight": 1, "min": 2, "max": 2 },
+      { "item": "grenade_f1", "tier": 5, "weight": 1, "min": 1, "max": 1 },
       { "item": "gunpowder", "tier": 5, "weight": 1, "min": 3, "max": 3 },
       { "item": "cloth", "tier": 1, "weight": 35, "min": 2, "max": 3 },
       { "item": "herb", "tier": 1, "weight": 30, "min": 2, "max": 2 },
@@ -164,12 +180,28 @@
     { "code": "lt_m1_mosin_cache", "name": "Súng trinh sát giấu ở đồi Nam trại 3", "rollsMin": 0, "rollsMax": 0, "entries": [
       { "item": "rifle_mosin", "tier": 5, "weight": 1, "min": 1, "max": 1 },
       { "item": "ammo_sniper", "tier": 5, "weight": 1, "min": 5, "max": 5 } ] },
+    { "code": "lt_c3_field_approach", "name": "Tiếp tế trước C3", "rollsMin": 0, "rollsMax": 0, "entries": [
+      { "item": "medkit_small", "tier": 5, "weight": 1, "min": 3, "max": 3 },
+      { "item": "smoke_bomb", "tier": 5, "weight": 1, "min": 2, "max": 2 },
+      { "item": "grenade_f1", "tier": 5, "weight": 1, "min": 1, "max": 1 } ] },
+    { "code": "lt_c3_field_medic", "name": "Quân y sân Tây C3", "rollsMin": 0, "rollsMax": 0, "entries": [
+      { "item": "medkit_small", "tier": 5, "weight": 1, "min": 2, "max": 2 },
+      { "item": "smoke_bomb", "tier": 5, "weight": 1, "min": 1, "max": 1 } ] },
+    { "code": "lt_m1_supply_reward", "name": "Thưởng bàn giao tiếp tế C1", "rollsMin": 0, "rollsMax": 0, "entries": [
+      { "item": "ak_loading_pack", "tier": 5, "weight": 1, "min": 2, "max": 2 },
+      { "item": "medkit_small", "tier": 5, "weight": 1, "min": 2, "max": 2 },
+      { "item": "ammo_rifle", "tier": 5, "weight": 1, "min": 30, "max": 30 },
+      { "item": "smoke_bomb", "tier": 5, "weight": 1, "min": 1, "max": 1 },
+      { "item": "grenade_f1", "tier": 5, "weight": 1, "min": 1, "max": 1 } ] },
     { "code": "lt_m1_base_start", "name": "Thùng vật tư căn cứ A (một lần)", "rollsMin": 0, "rollsMax": 0, "entries": [
       { "item": "ammo_rifle", "tier": 5, "weight": 1, "min": 60, "max": 60 },
       { "item": "medkit_small", "tier": 5, "weight": 1, "min": 2, "max": 2 },
+      { "item": "smoke_bomb", "tier": 5, "weight": 1, "min": 1, "max": 1 },
       { "item": "herb", "tier": 5, "weight": 1, "min": 2, "max": 2 },
       { "item": "cloth", "tier": 5, "weight": 1, "min": 4, "max": 4 } ] },
     { "code": "lt_m1_base_stock", "name": "Kho căn cứ — hàng lĩnh được", "rollsMin": 0, "rollsMax": 0, "entries": [
+      { "item": "ak_loading_pack", "tier": 5, "weight": 1, "min": 1, "max": 1 },
+      { "item": "grenade_f1", "tier": 5, "weight": 1, "min": 1, "max": 1 },
       {"item": "ammo_556", "tier": 5, "weight": 1, "min": 15, "max": 15},
       { "item": "ammo_rifle", "tier": 5, "weight": 1, "min": 15, "max": 15 },
       { "item": "ammo_pistol", "tier": 5, "weight": 1, "min": 8, "max": 8 },
@@ -181,11 +213,15 @@
       { "item": "smoke_bomb", "tier": 5, "weight": 1, "min": 1, "max": 1 } ] }
   ],
   "containers": [
+    { "tag": "c3_field_ak_v1", "lootTable": "lt_c3_field_ak" },
+    { "tag": "c3_field_approach_v1", "lootTable": "lt_c3_field_approach" },
+    { "tag": "c3_field_medic_v1", "lootTable": "lt_c3_field_medic" },
     { "tag": "camp_chest_c1", "lootTable": "lt_m1_chest_c1" },
     { "tag": "camp_chest_c2", "lootTable": "lt_m1_chest_c2" },
     { "tag": "camp_chest_c3", "lootTable": "lt_m1_chest_c3" },
     { "tag": "c3_mosin_cache", "lootTable": "lt_m1_mosin_cache" },
     { "tag": "base_start_crate", "lootTable": "lt_m1_base_start" },
-    { "tag": "base_requisition", "lootTable": "lt_m1_base_stock" }
+    { "tag": "base_requisition", "lootTable": "lt_m1_base_stock" },
+    { "tag": "supply_delivery_reward", "lootTable": "lt_m1_supply_reward" }
   ]
 }

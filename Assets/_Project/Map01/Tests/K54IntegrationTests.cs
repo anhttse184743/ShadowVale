@@ -118,16 +118,16 @@ namespace ShadowVale.Map01.Tests
             var routing=RouteInputToGame();var mouse=InputSystem.AddDevice<Mouse>();heldMouse=mouse;rightDown=false;InputSystem.onBeforeUpdate+=HoldRight;
             try
             {
-                // Let the normal player loop consume a single press edge. Manually calling
-                // InputSystem.Update here consumed that edge before toggle aim could read it.
+                // Aim now follows the held button on both maps. Keep it down through
+                // the captures and reload, then verify that releasing lowers the sights.
                 yield return WaitGameSeconds(.2f);rightDown=true;yield return WaitGameSeconds(.8f);
-                rightDown=false;yield return WaitGameSeconds(.2f);
                 File.WriteAllText(Work+"/aim_diagnostics.txt","combat="+combat.enabled+" kind="+combat.EquippedKind+" aim="+combat.IsAiming+" input="+combat.InputAllowed()+" stopped="+M.Stopped+" cinematic="+M.Cinematic+" paused="+M.Paused+" menu="+ForestMenu.Visible+" suppress="+bag.SuppressFire+" mouse="+Mouse.current?.name+" right="+Mouse.current?.rightButton.isPressed+" sourceFrame="+M.player.GetComponent<Map01Pistol>().SourceFrame);
                 Capture("unity_k54_aim");
                 Assert.IsTrue(combat.IsAiming);Assert.IsTrue(combat.TryReload());yield return WaitGameSeconds(.55f);Capture("unity_k54_reload_1");yield return WaitGameSeconds(.4f);Capture("unity_k54_reload_2");yield return WaitGameSeconds(1f);
                 M.ModernPlayer.RestoreMotion(true);M.Crouched=true;yield return WaitGameSeconds(.7f);Capture("unity_k54_crouch_aim");
+                rightDown=false;yield return WaitGameSeconds(.3f);Assert.IsFalse(combat.IsAiming);
             }
-            finally{InputSystem.onBeforeUpdate-=HoldRight;heldMouse=null;InputSystem.RemoveDevice(mouse);RestoreInputRouting(routing);}
+            finally{rightDown=false;InputSystem.onBeforeUpdate-=HoldRight;heldMouse=null;InputSystem.RemoveDevice(mouse);RestoreInputRouting(routing);}
             yield return new ExitPlayMode();
         }
         static void Capture(string name)

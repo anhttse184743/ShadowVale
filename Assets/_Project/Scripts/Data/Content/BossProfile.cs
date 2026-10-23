@@ -74,8 +74,11 @@ namespace ShadowVale.Data.Content
         /// <summary>From cover he fights in bursts: out to the firing point, back behind the cover, out again.</summary>
         public bool PeekFromCover { get; set; } = true;
         /// <summary>Out 2.5 s, behind 0.8 s: most of the time firing (was 1.4 / 1.6 until 18/10/2026).</summary>
-        public float PeekOutSeconds { get; set; } = 2.5f;
-        public float PeekHideSeconds { get; set; } = .8f;
+        public float PeekOutSeconds { get; set; } = 1.8f;
+        public float PeekHideSeconds { get; set; } = 1.1f;
+        /// <summary>He comes out on either side of his cover (this far from it), not always at the same spot, and
+        /// not where he was just hit. 0 = always at the cover node.</summary>
+        public float PeekSideOffset { get; set; } = .9f;
 
         // Added 18/10/2026: fight more, run less, with his men covering him. Code defaults only, like the above.
         /// <summary>Rounds per burst; 1 = steady fire, one round every <see cref="FireIntervalSeconds"/>.
@@ -91,6 +94,16 @@ namespace ShadowVale.Data.Content
         /// <summary>When he moves to new cover, this many of his men give covering fire for <see cref="CoverFireSeconds"/>.</summary>
         public int CoverFireMen { get; set; } = 2;
         public float CoverFireSeconds { get; set; } = 3f;
+
+        // Added 21/10/2026: one magazine no longer finishes him.
+        /// <summary>Hit this many times within <see cref="SuppressedWindowSeconds"/> he ducks behind his cover at once;
+        /// hit again soon after coming out (<see cref="SuppressedRelocateSeconds"/>) he moves. 0 = never.</summary>
+        public int SuppressedHits { get; set; } = 3;
+        public float SuppressedWindowSeconds { get; set; } = 1f;
+        public float SuppressedRelocateSeconds { get; set; } = 2.5f;
+        /// <summary>Body armour: a round to the body does this share of its damage; one to the head this many times it.</summary>
+        public float ArmorBodyFactor { get; set; } = .5f;
+        public float HeadshotFactor { get; set; } = 2f;
 
         // His own weapon and eyes (19/10/2026), not a cloned guard's times a multiplier. 0 = the multiplier way.
         /// <summary>Damage of each round that hits.</summary>

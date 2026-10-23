@@ -66,12 +66,15 @@ namespace ShadowVale.Map01.Tests
             EventBus.Unsubscribe<PlayerContactEvent>(Contact);EventBus.Unsubscribe<EnemyKilledEvent>(Kill);
             EventBus.Subscribe<PlayerContactEvent>(Contact);EventBus.Subscribe<EnemyKilledEvent>(Kill);
         }
-        static void Equip()
+        static void Equip(bool legacySurvivorProbe=false)
         {
             var bag=M.GetComponent<Map01Inventory>();bag.Add("rifle_mosin",1);bag.Add("ammo_sniper",10);
             int cell=Enumerable.Range(0,Map01Inventory.BagSize).First(i=>bag.Cell(i)?.id=="rifle_mosin");
             Assert.IsTrue(bag.EquipFromCell(cell));Assert.IsTrue(bag.Draw(Map01Inventory.Slot.Primary));
             M.ModernCombat.RestoreMagazine(WeaponKind.Sniper,5);
+            // Surviving-hit memory is still an AI contract. Use an explicitly weakened fixture
+            // for those probes; production Mosin lethality is checked by MosinBalanceTests.
+            if(legacySurvivorProbe){var w=M.ModernCombat.WeaponFor(WeaponKind.Sniper);w.Configure(WeaponKind.Sniper,95,w.Range,.7f,false,w.Muzzle);}
             typeof(PlayerCombat).GetMethod("SetAiming",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(M.ModernCombat,new object[]{true});
         }
         static void Targets(string squad="C1")
@@ -123,7 +126,7 @@ namespace ShadowVale.Map01.Tests
         }
         [UnityTest] public IEnumerator QueuedMosinKeepsItsIdentityWhenSwitchedBeforeTheFinalShotPass()
         {
-            Open();yield return new EnterPlayMode();yield return WaitForMap01Ready();Quiet();Equip();Targets();PlaceNam(M,Lane);
+            Open();yield return new EnterPlayMode();yield return WaitForMap01Ready();Quiet();Equip(true);Targets();PlaceNam(M,Lane);
             Stage(G,Lane+Vector3.forward*35,200);Stage(Ally,Lane+new Vector3(6,0,40),80);
             yield return WaitGameSeconds(.5f);Aim(G.Position+Vector3.up);
             VerifyQueuedSwitchIdentity();yield return null;yield return null;
@@ -162,21 +165,22 @@ namespace ShadowVale.Map01.Tests
                     Aim(G.transform.position+Vector3.up);M.ModernCombat.RestoreMagazine(WeaponKind.Sniper,5);
                     float heardDistance=Vector3.Distance(M.ModernCombat.WeaponFor(WeaponKind.Sniper).Muzzle.position,G.Position);
                     Assert.Greater(heardDistance,30);Fire();yield return null;yield return null;
-                    Assert.AreEqual(Mathf.Max(0,hp-95),G.GetComponent<Health>().Current,.01f,"The real ray must hit.");
+                    Assert.AreEqual(0,G.GetComponent<Health>().Current,.01f,"The production Mosin kills on the first real hit.");
                     NoInventedContact();Assert.AreEqual(0,gunshots);
                     if(G.Alive)Assert.IsTrue(G.Wary&&G.Alerted);else Assert.NotNull(G.GetComponent<ForestPoint>(),"A sniper kill still drops loot.");
                     measurements.Add($"distance={distance} hp={hp} muzzle_distance={heardDistance:F4} sight={sights} contact={contacts.Count} heard={gunshots} alive={G.Alive}");
                     yield return WaitGameSeconds(2f);
                 }
             }
-            Assert.AreEqual(3,kills);Assert.AreEqual(initialShootingXp+3,M.Skills.Xp(SkillKind.Shooting),"Every real lethal hitscan still awards shooting XP once.");
+            Assert.AreEqual(6,kills);Assert.AreEqual(initialShootingXp+6,M.Skills.Xp(SkillKind.Shooting),"Every real lethal hitscan still awards shooting XP once.");
             File.WriteAllLines(Work+"/distance_cases.txt",measurements);
             yield return new ExitPlayMode();
         }
         [UnityTest] public IEnumerator CloseShotIsHeardByEveryListenerAndRemembersTheShotRatherThanNamMoving()
         {
-            Open();yield return new EnterPlayMode();yield return WaitForMap01Ready();Quiet();Equip();Targets();PlaceNam(M,Lane);
-            Stage(G,Lane+Vector3.forward*20,200);Stage(Ally,Lane+Vector3.back*5,80);
+            Open();yield return new EnterPlayMode();yield return WaitForMap01Ready();Quiet();Equip(true);Targets();PlaceNam(M,Lane);
+            // Both within Map01Mission.ShotPinpointMeters (12 m): further off, a Mosin shot is only searched for (MosinSniperShotTests).
+            Stage(G,Lane+Vector3.forward*10,200);Stage(Ally,Lane+Vector3.back*5,80);
             G.transform.rotation=Quaternion.LookRotation(Vector3.forward);
             Ally.transform.rotation=Quaternion.LookRotation(Vector3.back); // Hearing behind the shooter, without a real visual contact.
             yield return WaitGameSeconds(.5f);Aim(G.Position+Vector3.up);
@@ -192,7 +196,7 @@ namespace ShadowVale.Map01.Tests
         }
         [UnityTest] public IEnumerator ActualSightStillFindsNamAndHiddenSniperDamageKeepsThePreviousContact()
         {
-            Open();yield return new EnterPlayMode();yield return WaitForMap01Ready();Quiet();Equip();Targets();PlaceNam(M,Lane);
+            Open();yield return new EnterPlayMode();yield return WaitForMap01Ready();Quiet();Equip(true);Targets();PlaceNam(M,Lane);
             Stage(G,Lane+Vector3.forward*8,200);Stage(Ally,Lane+new Vector3(30,0,40),80);
             yield return WaitGameSeconds(2.3f);Assert.IsTrue(G.Engaged);Assert.Greater(sights,0);
             var known=G.Brain.Memory.LastKnownPlayerPosition;PlaceNam(M,Lane+Vector3.back*50);
@@ -205,7 +209,7 @@ namespace ShadowVale.Map01.Tests
         }
         [UnityTest] public IEnumerator HitEvidenceSurvivesWeaponSwitchAndOtherDamageIsNotMisclassifiedAsMosin()
         {
-            Open();yield return new EnterPlayMode();yield return WaitForMap01Ready();Quiet();Equip();Targets();PlaceNam(M,Lane);
+            Open();yield return new EnterPlayMode();yield return WaitForMap01Ready();Quiet();Equip(true);Targets();PlaceNam(M,Lane);
             Stage(G,Lane+Vector3.forward*40,200);Stage(Ally,Lane+new Vector3(6,0,42),80);
             yield return WaitGameSeconds(.5f);G.enabled=false;Aim(G.Position+Vector3.up);Fire();
             Assert.IsTrue(M.GetComponent<Map01Inventory>().Draw(Map01Inventory.Slot.Pistol));G.enabled=true;
@@ -217,7 +221,7 @@ namespace ShadowVale.Map01.Tests
         }
         [UnityTest] public IEnumerator SaveFileReloadKeepsAnUnknownSniperAttackUnknown()
         {
-            Open();yield return new EnterPlayMode();yield return WaitForMap01Ready();Quiet();Equip();Targets();PlaceNam(M,Lane);
+            Open();yield return new EnterPlayMode();yield return WaitForMap01Ready();Quiet();Equip(true);Targets();PlaceNam(M,Lane);
             Stage(G,Lane+Vector3.forward*40,200);Stage(Ally,Lane+new Vector3(6,0,42),80);
             yield return WaitGameSeconds(.5f);Aim(G.Position+Vector3.up);Fire();yield return null;yield return null;NoInventedContact();
             Assert.NotNull(M,"Mission still exists after the shot.");savedGuardId=G.SaveId;
@@ -292,7 +296,7 @@ namespace ShadowVale.Map01.Tests
         }
         [UnityTest] public IEnumerator TheCommanderAlsoGetsNoContactFromAnUnseenDistantMosinHit()
         {
-            Open();yield return new EnterPlayMode();yield return WaitForMap01Ready();Quiet();Equip();PlaceNam(M,Lane);
+            Open();yield return new EnterPlayMode();yield return WaitForMap01Ready();Quiet();Equip(true);PlaceNam(M,Lane);
             G=C.Commander;Ally=C.Guard("gate");G.Detected+=Detection;Ally.Detected+=Detection;
             float hp=G.GetComponent<Health>().Max;Assert.Greater(hp,95);
             Stage(G,Lane+Vector3.forward*50,hp);Stage(Ally,Lane+new Vector3(6,0,52),100);

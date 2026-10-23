@@ -84,9 +84,10 @@ namespace ShadowVale.Map01
         }
 
         /// <summary>Low-pass cutoff for a blast heard at <paramref name="distance"/> m: open up close, about 1 kHz at the
-        /// edge of hearing, where it is a dull rumble.</summary>
+        /// edge of hearing, where it is a dull rumble. It falls by the same number of octaves per metre (pitch is heard in
+        /// octaves): ~19 kHz at 2 m, ~4.5 kHz at 60 m. The old straight line in hertz still left 7.5 kHz at 60 m.</summary>
         public static float MuffleCutoff(float distance)
-            => Mathf.Lerp(20000f, 1000f, Mathf.Pow(Mathf.Clamp01(distance / SoundFar), .6f));
+            => 20000f * Mathf.Pow(1000f / 20000f, Mathf.Clamp01(distance / SoundFar));
 
         private static Vector3 ListenerPosition(Camera viewer, Vector3 fallback)
         {

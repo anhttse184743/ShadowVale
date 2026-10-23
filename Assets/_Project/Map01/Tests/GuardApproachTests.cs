@@ -29,7 +29,9 @@ namespace ShadowVale.Map01.Tests
             yield return WaitGameSeconds(.5f);
             yield return CaptureGuard();
             var guard=M.GetComponent<Map01Rescue>().Squad[0];var actor=guard.GetComponentInChildren<Animator>();
-            actor.Play("Aim",0,0);yield return WaitGameSeconds(.3f);yield return CaptureGuard("aim");
+            // Held as a fighting guard holds it: AC_Enemy leaves Aim as soon as Engaged is false, and the controllers are off here,
+            // so the old check measured the hand mid-way back to Locomotion (2.2-5.7 cm off, 0.5 cm either side of it).
+            actor.SetBool("Engaged",true);actor.Play("Aim",0,0);yield return WaitGameSeconds(.3f);yield return CaptureGuard("aim");
             Assert.IsTrue(M.GetComponent<Map01Rescue>().Squad[0].GetComponentInChildren<Map01OverseerGrip>().Calibrated);
             Assert.Less(M.GetComponent<Map01Rescue>().Squad[0].GetComponentInChildren<Map01OverseerGrip>().PalmError,.025f);
             mode.SetValue(pipeline,drawer);yield return new ExitPlayMode();

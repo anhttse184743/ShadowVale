@@ -89,7 +89,7 @@ namespace ShadowVale.Gameplay.Combat
         public float AttackCooldownRemaining => Mathf.Max(0, _nextAttackTime - Time.time);
 
         /// <summary>Half-angle of the cone the next shot can land in, in degrees.</summary>
-        public float CurrentSpreadDegrees => _spread.ConeHalfAngle(CurrentStance(), _aiming);
+        public float CurrentSpreadDegrees => _spread.ConeHalfAngle(CurrentStance(), _aiming, _equippedKind, _equipped != null && _equipped.UsesM16Handling);
 
         /// <summary>0 to 1. How far sustained fire has opened the cone.</summary>
         public float SpreadBloom => _spread.Bloom;
@@ -273,6 +273,8 @@ namespace ShadowVale.Gameplay.Combat
         /// <summary>The rifle in hand, or null with anything else out.</summary>
         internal Weapon Gun => !_handsOccupied && _equipped != null && _equipped.IsGun ? _equipped : null;
         private bool _handsOccupied;
+        /// <summary>The hands hold something other than the weapon (a load, a tool); the weapon cannot be used.</summary>
+        public bool HandsOccupied => _handsOccupied;
 
         /// <summary>Free the hands for a held item while preserving the equipped weapon and ammunition.</summary>
         public void SetHandsOccupied(bool occupied)
@@ -543,7 +545,7 @@ namespace ShadowVale.Gameplay.Combat
             else
             {
                 _magazine?.Tick(Time.deltaTime, DrawRounds);
-                _spread.Tick(Time.deltaTime);
+                _spread.Tick(Time.deltaTime, _equipped != null && _equipped.UsesM16Handling);
             }
 
             if (dead || _handsOccupied || (InputAllowed != null && !InputAllowed()))
@@ -891,7 +893,7 @@ namespace ShadowVale.Gameplay.Combat
             {
                 _faceCameraHoldUntil = Time.time + cooldown + faceCameraTail;
                 _fireHoldUntil = _upperBodyHoldUntil;
-                _pendingGunfire.Add(_equipped);
+                _pendingGunfire.Add(new PendingGunShot(_equipped,CurrentStance(),_aiming));
             }
             else
             {
@@ -899,14 +901,19 @@ namespace ShadowVale.Gameplay.Combat
             }
         }
 
-        private readonly System.Collections.Generic.List<Weapon> _pendingGunfire=new();
+        private readonly struct PendingGunShot
+        {
+            public readonly Weapon Gun;public readonly ShooterStance Stance;public readonly bool Aiming;
+            public PendingGunShot(Weapon gun,ShooterStance stance,bool aiming){Gun=gun;Stance=stance;Aiming=aiming;}
+        }
+        private readonly System.Collections.Generic.List<PendingGunShot> _pendingGunfire=new();
 
         internal void ResolvePendingGunfire()
         {
             if(!isActiveAndEnabled){_pendingGunfire.Clear();return;}
             while(isActiveAndEnabled && _pendingGunfire.Count>0) {
-                var gun=_pendingGunfire[0];_pendingGunfire.RemoveAt(0);
-                if(gun!=null)FireGun(gun);
+                var shot=_pendingGunfire[0];_pendingGunfire.RemoveAt(0);
+                if(shot.Gun!=null)FireShot(shot.Gun,shot.Stance,shot.Aiming);
             }
             _pendingGunfire.Clear();
         }
@@ -915,6 +922,9 @@ namespace ShadowVale.Gameplay.Combat
 
         /// <summary>Resolve after animation and barrel aim, using this frame's camera and muzzle.</summary>
         private void FireGun(Weapon gun)
+            => FireShot(gun,CurrentStance(),_aiming);
+
+        private void FireShot(Weapon gun,ShooterStance stance,bool aiming)
         {
             Camera cam = Camera.main;
             if (cam == null)
@@ -928,9 +938,9 @@ namespace ShadowVale.Gameplay.Combat
             // How steady the shooter is decides the cone, and how long they have held the
             // trigger widens it. The weapon's own HipSpread is no longer consulted: one flat
             // number could not tell a crouched aimed tap from a shot fired mid-jump.
-            ShooterStance stance = CurrentStance();
-            Vector2 kick = _spread.Fire(Time.time);
-            direction = WeaponSpreadState.Scatter(direction, _spread.ConeHalfAngle(stance, _aiming));
+            Vector2 kick = _spread.Fire(Time.time, gun.UsesM16Handling);
+            direction = WeaponSpreadState.Scatter(direction, _spread.ConeHalfAngle(stance, aiming, gun.Kind, gun.UsesM16Handling));
+            if (gun.Kind == WeaponKind.Sniper) kick = new Vector2(1.8f,.12f);
             var skills = GetComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();
             if (skills != null) kick *= skills.RecoilMultiplier;
             if (cameraRig != null) cameraRig.AddRecoil(kick.x, kick.y);
@@ -938,12 +948,11 @@ namespace ShadowVale.Gameplay.Combat
             // The trace starts at the camera so the shot lands on the crosshair, but the streak
             // has to come out of the barrel or it looks like the player is firing from their eyes.
             Vector3 endPoint;
-            if (Physics.Raycast(origin, direction, out RaycastHit hit, gun.Range,
-                    hitMask, QueryTriggerInteraction.Ignore))
+            if (TryShotHit(origin, direction, gun.Range, out RaycastHit hit))
             {
                 var health = hit.collider.GetComponentInParent<Health>();
                 bool alive = health != null && !health.IsDead;
-                if (health != null) health.TakeBulletDamageFromWeapon(gun.Damage, hit.point, gameObject, direction, gun.Kind);
+                if (health != null) health.TakeBulletDamageFromWeapon(gun.DamageAgainst(health), hit.point, gameObject, direction, gun.Kind, gun.IsLethalAgainst(health));
                 else ApplyDamage(hit.collider, gun.Damage, hit.point);
                 if (alive && health.IsDead) GunKilled?.Invoke(health.gameObject);
                 endPoint = hit.point;
@@ -955,6 +964,24 @@ namespace ShadowVale.Gameplay.Combat
 
             PlayTracer(gun.Muzzle.position, endPoint)?.AnchorEmission(gun.Muzzle);
             gun.PlayMuzzleFlash();
+        }
+
+        /// <summary>
+        /// Colliders a round goes straight through, set by a map (Map 1: its thatch and zinc roofs, which stop no
+        /// rifle bullet). Null: the first collider on the line stops it, as before.
+        /// </summary>
+        public System.Func<Collider, bool> ShotPassesThrough { get; set; }
+
+        /// <summary>The first thing on the line that stops the round.</summary>
+        private bool TryShotHit(Vector3 origin, Vector3 direction, float range, out RaycastHit hit)
+        {
+            if (ShotPassesThrough == null)
+                return Physics.Raycast(origin, direction, out hit, range, hitMask, QueryTriggerInteraction.Ignore);
+            hit = default;
+            bool found = false;
+            foreach (var h in Physics.RaycastAll(origin, direction, range, hitMask, QueryTriggerInteraction.Ignore))
+                if ((!found || h.distance < hit.distance) && !ShotPassesThrough(h.collider)) { hit = h; found = true; }
+            return found;
         }
 
         /// <summary>Sphere sweep forward from chest height — forgiving enough for a greybox test.</summary>

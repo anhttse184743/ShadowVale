@@ -56,6 +56,20 @@ namespace ShadowVale.Map01.Tests
             Assert.AreEqual(.5f, behaviour.Profile.ReinforceHpThreshold, 1e-6);
             Assert.AreEqual("boss", boss.SquadId);
             Assert.AreEqual(behaviour.Profile.BurstRounds, boss.BurstRounds);
+            // 21/10/2026: body armour (aim for his head), and he shouts his orders within earshot.
+            var armour = boss.GetComponent<Health>().BulletDamageModifier;
+            Assert.IsNotNull(armour, "Body armour.");
+            Vector3 feet = boss.transform.position;
+            Assert.AreEqual(12f, armour(24f, feet + Vector3.up * 1f), 1e-3f, "A round to the body: half.");
+            Assert.AreEqual(48f, armour(24f, new Vector3(feet.x, behaviour.HeadLine() + .1f, feet.z)), 1e-3f, "To the head: double.");
+            Assert.That(behaviour.HeadLine() - feet.y, Is.InRange(1.2f, 1.9f), "His head, not his boots or the sky.");
+            var callouts = boss.GetComponent<Map01CommanderCallouts>();
+            Assert.IsNotNull(callouts, "He shouts his orders.");
+            Vector3 namWas = mission.player.position;
+            PlaceNam(mission, feet + boss.transform.forward * 8f);
+            EventBus.Publish(new BossOrderEvent(((ShadowVale.AI.Agents.IEnemyAgent)boss).Id, "cover_fire", "test"));
+            StringAssert.Contains("Yểm trợ", callouts.LastLine, "Within earshot: a subtitle.");
+            PlaceNam(mission, namWas);
             // His own weapon and eyes (19/10/2026), not a cloned guard's times a multiplier.
             Assert.AreEqual(11.5f, boss.DamagePerShot, 1e-3f, "11.5 a round.");
             Assert.AreEqual(.3f, boss.FireInterval, 1e-3f, "A round every 0.3 s.");

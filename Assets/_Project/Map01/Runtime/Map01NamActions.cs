@@ -59,6 +59,10 @@ namespace ShadowVale.Map01
         private float bandageHideUntil;
         private bool BandageActionPlaying => (locked && ActiveAction == Bandage) || Time.time < bandageHideUntil;
         public bool StoneActionPlaying=>stonePose&&(holding||Time.time<upperUntil);
+        public bool ThrowableHeld=>stonePose&&holding;
+        public bool ThrowableReleasing=>stonePose&&!holding&&Time.time<upperUntil;
+        public float ThrowableElapsed=>ThrowableReleasing?Mathf.Max(0,Time.time-(upperUntil-1.1f)):0;
+        public bool NonThrowableUpperAction=>!stonePose&&(holding||Time.time<upperUntil)||BandageActionPlaying;
 
         private Vector3 modelPosition; private Quaternion modelRotation;
 
@@ -290,13 +294,14 @@ namespace ShadowVale.Map01
             // Keep the equipped weapon and ammunition unchanged while freeing the
             // throwing hand. Renderer overrides also cover weapon switches mid-aim.
             bool stone = StoneActionPlaying;
-            if (stone || BandageActionPlaying || (inventory != null && inventory.ThrowableEquipped)) HideWeaponRenderers();
+            if (stone || BandageActionPlaying || (inventory != null && (inventory.ThrowableEquipped || inventory.IsFieldCrafting))) HideWeaponRenderers();
             else RestoreWeaponVisibility();
             bool selectedStone=inventory!=null && inventory.ThrowableEquipped && inventory.Count(inventory.Throwable)>0;
             bool releasing=stonePose && !holding && Time.time<upperUntil;
             bool showStone=!locked && !BandageActionPlaying && (holding || releasing
                 ? stone && (holding||Time.time<stoneReleaseAt)
                 : selectedStone);
+            if(TryGetComponent<NamMotionRefresh>(out var refresh)&&refresh.ControlsThrowable){if(handStone!=null)handStone.SetActive(false);return;}
             if(showStone) {
                 CurlStoneFingers();
                 string item=holding||releasing?mission.GetComponent<Map01StoneThrow>().Item:inventory.Throwable;

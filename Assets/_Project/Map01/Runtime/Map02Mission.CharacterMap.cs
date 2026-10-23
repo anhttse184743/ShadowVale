@@ -54,7 +54,7 @@ namespace ShadowVale.Map01
                 var actor=Chapter.Actor(role);if(actor==null||actor.visual==null||!actor.visual.gameObject.activeInHierarchy||role=="Hùng"&&Chapter.State.hungDead||!IsExplored(actor.transform.position))continue;
                 var at=Plot(actor.transform.position);if(!OnMap(at))continue;GUI.color=new Color(.3f,.67f,.84f);GUI.DrawTexture(new Rect(at.x-5,at.y-5,10,10),characterAlly);
             }
-            foreach(var enemy in seenEnemies){if(enemy==null||enemy.Dead||!enemy.gameObject.activeInHierarchy)continue;var at=Plot(enemy.transform.position);if(!OnMap(at))continue;GUI.color=new Color(.85f,.22f,.13f);GUI.DrawTexture(new Rect(at.x-7,at.y-7,14,14),characterEnemy);}
+            foreach(var enemy in seenEnemies){if(enemy==null)continue;var at=Plot(enemy.transform.position);if(!OnMap(at))continue;GUI.color=new Color(.85f,.22f,.13f);GUI.DrawTexture(new Rect(at.x-7,at.y-7,14,14),characterEnemy);}
             GUI.color=old;
             if(TrackedObjective!=null)
             {
@@ -75,7 +75,7 @@ namespace ShadowVale.Map01
         {
             if(Chapter.State.phase==3&&Chapter.State.Done("N2_02")&&!Chapter.State.Done("N2_05"))
                 GUI.Label(new Rect(width/2-280,105,560,35),Chapter.State.patrolWarnings>0?"ĐÈN ĐANG TÌM · Đã bị phát hiện 1/2 lần — tìm vật che":"Giữ kín tuyến · Nấp bờ mương, tránh đèn quét",label);
-            foreach(var enemy in seenEnemies.Where(e=>e.Alerted||e.Investigating))
+            foreach(var enemy in seenEnemies.Where(e=>e!=null&&(e.Alerted||e.Investigating)))
             {var p=GameCamera.WorldToViewportPoint(enemy.transform.position+Vector3.up*2.4f);if(p.z>0)CharacterHud.DrawCharacterEye(new Vector2(p.x*width,(1-p.y)*height),enemy.Alerted);}
         }
     }

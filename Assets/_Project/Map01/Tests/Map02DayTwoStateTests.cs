@@ -123,6 +123,9 @@ namespace ShadowVale.Map01.Tests
                     c.State.Complete("N2_03");c.State.Complete("N2_04");m.StoreCheckpoint();m.Restore(RoundTrip());
                     Assert.Greater(c.State.patrolFocusSeconds,2,"Save/load must preserve the inspection hold.");
                     tick.Invoke(c,new object[]{.1f});Assert.AreEqual(1,c.State.patrolWarnings,"Loading one warning must not trigger an immediate second detection.");
+                    // Restore deliberately recovers out-of-world saves. Re-enter this synthetic
+                    // unobstructed detection fixture before testing the second exposure.
+                    Place(m,exposed);Physics.SyncTransforms();
                     Set("patrolLoadGrace",0f);Set("scannedAt",Time.time-period-1);
                     for(int i=0;i<25&&c.State.Done("N2_04");i++){c.State.patrolScanSeconds=period*.5f;tick.Invoke(c,new object[]{.1f});}
                     Assert.AreEqual(0,c.State.patrolWarnings);Assert.IsFalse(c.State.Done("N2_03"));Assert.IsFalse(c.State.Done("N2_04"));

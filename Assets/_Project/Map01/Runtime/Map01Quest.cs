@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using ShadowVale.AI.Boss;
 using ShadowVale.Core.Events;
 using ShadowVale.Data.Content;
@@ -168,9 +168,8 @@ namespace ShadowVale.Map01
         public void BeginCommanderOrder()
         {
             if(Stage!=ReportCampsStage||!story.Progress.radioDisabled||!story.Progress.powerDisabled)return;Stage=BossStage;EnsureCommander();
-            // The transmitted order and Nam's local acknowledgement play once, in sequence.
-            if(GetComponent<Map01C3Mission>()?.CachePoint!=null)
-                mission.Say(Map01C3Dialogue.CommanderOrder,8);
+            // The report dialogue already includes the Mosin location and one reply.
+            // Advancing the stage must not enqueue a second radio conversation.
         }
         // Scanning a camp provides intel only. It cannot complete supply/radio objectives.
         public void CompleteScouting()=>mission.Say("Đã ghi nhận ba vị trí. Tiếp tục mục tiêu chỉ huy đã giao.",5);
@@ -241,6 +240,7 @@ namespace ShadowVale.Map01
             IReinforcementProvider men=c3!=null?new Map01C3Reinforcements(c3):new Map01Reinforcements(mission,template);
             var behaviour=BossBehaviour.Attach(instance,boss,profile,men,seed:1);
             behaviour.Suspended=()=>mission.Stopped;
+            Map01CommanderCallouts.Attach(mission,boss); // He shouts his orders (subtitles) within Nam's earshot.
             if(c3!=null){
                 c3.AutoCallAtHalfHealth=false; // BossBehaviour makes the call now (reinforce_hp_threshold).
                 behaviour.AllowedPosition=p=>c3.Data==null||c3.InsideFence(p);
@@ -259,6 +259,10 @@ namespace ShadowVale.Map01
         void OnBossDown()
         {
             story.Progress.commanderKilled=true;
+            // Killed before Nam watched the camp through the binoculars: the body is the confirmation. Until 21/10/2026
+            // the objective waited for that observation, and players who went straight in were stuck at point 3.
+            var p=story.Progress;
+            if(!p.commanderConfirmed){p.commanderAreaReached=p.commanderConfirmed=p.commanderReported=p.commanderDiscovery=true;}
             TryCompleteCommanderObjective(true);
         }
         public void TryCompleteCommanderObjective(bool playDeath=false)

@@ -10,6 +10,13 @@ namespace ShadowVale.Map01
         public string id,group;
         public Health HitPoints {get;private set;}
         public bool Dead=>HitPoints==null||HitPoints.IsDead;
+        /// <summary>Night 3: his rounds have been picked up.</summary>
+        public bool Looted {get;set;}
+        /// <summary>The tank's escort: holds its spot and fires; ducks when shot at.</summary>
+        public bool HoldPosition {get;set;}
+        public bool Suppressed=>Time.time<suppressedUntil;
+        float suppressedUntil;Transform model;
+        public void Suppress(float seconds=2.5f){if(!Dead)suppressedUntil=Mathf.Max(suppressedUntil,Time.time+seconds);}
         public bool Alerted=>alerted;
         public bool Investigating=>investigate.HasValue;
         public bool CanSilentTakedown(Map02Mission mission)
@@ -29,7 +36,7 @@ namespace ShadowVale.Map01
         {
             patrolHome=transform.position;director=owner;id=key;group=roster;alerted=hostile;
             var visual=owner.Layout!=null&&owner.Layout.enemyArt!=null?owner.Layout.enemyArt:Resources.Load<GameObject>("Characters/EnemyCommanderVisual");
-            if(visual!=null){var model=Instantiate(visual,transform);model.name="Art — replaceable enemy";model.transform.localPosition=Vector3.zero;actor=model.GetComponentInChildren<Animator>();}
+            if(visual!=null){var model=Instantiate(visual,transform);model.name="Art — replaceable enemy";model.transform.localPosition=Vector3.zero;actor=model.GetComponentInChildren<Animator>();this.model=model.transform;}
             if(actor!=null)
             {
                 actor.runtimeAnimatorController=Map01ActorAssets.Load().enemyController;
@@ -42,6 +49,18 @@ namespace ShadowVale.Map01
             agent=gameObject.AddComponent<NavMeshAgent>();agent.height=1.75f;agent.radius=.3f;agent.speed=2.2f;agent.stoppingDistance=9;
             HitPoints.Damaged+=OnDamaged;
             if(hp<=0){body.enabled=false;agent.enabled=false;}
+            HitPoints.Damaged+=_=>Suppress();
+        }
+        void Hold(Transform target,Vector3 from,Vector3 to,float distance,bool sees)
+        {
+            // Escort of the tank: no chase. Ducks while suppressed, otherwise fires at Nam (who cannot fall here).
+            if(agent.isOnNavMesh)agent.isStopped=true;
+            if(model!=null)model.localPosition=Vector3.Lerp(model.localPosition,Suppressed?Vector3.down*.55f:Vector3.zero,Time.deltaTime*10);
+            transform.rotation=Quaternion.RotateTowards(transform.rotation,Quaternion.LookRotation(Vector3.ProjectOnPlane(to-from,Vector3.up)),220*Time.deltaTime);
+            if(Suppressed||!sees||Time.time<shot)return;
+            shot=Time.time+1.1f;var sound=target.GetComponent<CombatAudio>();if(sound!=null&&sound.Gunshot.IsValid){var a=sound.Gunshot;PooledAudioService.Resolve().PlayOneShot(a.clip,from,.65f*a.EffectiveGain,1,0,.85f,a.startTime,a.duration);}
+            if(Physics.Raycast(from,(to-from).normalized,out var actual,distance+.2f,~0,QueryTriggerInteraction.Ignore)&&actual.transform.GetComponentInParent<Health>()==target.GetComponent<Health>())
+                target.GetComponent<Health>().TakeDamage(6,actual.point,gameObject);
         }
         void OnDamaged(DamageNotice notice)
         {
@@ -62,18 +81,16 @@ namespace ShadowVale.Map01
         {
             if(Dead){if(agent!=null&&agent.enabled)agent.enabled=false;return;}
             var mission=director.Mission;
-            if(mission.InputBlocked||mission.Paused||ForestMenu.Visible){if(agent.isOnNavMesh)agent.isStopped=true;return;}
+            if(mission.CharacterWorldBlocked||ForestMenu.Visible){if(agent.isOnNavMesh)agent.isStopped=true;return;}
             if(!agent.isOnNavMesh)return;
-            if(investigate.HasValue&&!alerted){agent.isStopped=false;agent.stoppingDistance=.5f;agent.SetDestination(investigate.Value);if(Vector3.Distance(transform.position,investigate.Value)<1)investigate=null;return;}
-            var target=mission.Player;var from=transform.position+Vector3.up*1.45f;var to=target.position+Vector3.up*(target.GetComponent<ShadowVale.Gameplay.Player.PlayerController>()?.IsProne==true?.4f:1f);
+            if(investigate.HasValue&&!alerted&&!HoldPosition){agent.isStopped=false;agent.stoppingDistance=.5f;agent.SetDestination(investigate.Value);if(Vector3.Distance(transform.position,investigate.Value)<1)investigate=null;return;}
+            var target=mission.Player;var from=transform.position+Vector3.up*1.45f;var to=target.position+Vector3.up;
             float distance=Vector3.Distance(from,to);bool sees=false;
             if(distance<34&&Physics.Raycast(from,(to-from).normalized,out var hit,distance+.1f,~0,QueryTriggerInteraction.Ignore))sees=hit.transform==target||hit.transform.IsChildOf(target);
             if(Map01Smoke.Blocks(from,to))sees=false;
-            bool night=group==Map02ChapterDirector.NightPatrolGroup;
-            if(sees&&distance<(night?12:24)&&Vector3.Angle(transform.forward,to-from)<65||night&&director.NightGuardIlluminates(this))alerted=true;
-            if(night&&!alerted){director.TickNightPatrolUnit(this,agent);return;}
-            if(!alerted){agent.stoppingDistance=.3f;patrolClock+=Time.deltaTime;agent.isStopped=false;if(!agent.pathPending&&agent.remainingDistance<.6f){var point=patrolHome+Quaternion.Euler(0,(Mathf.FloorToInt(patrolClock/4)%3)*120,0)*Vector3.forward*5;if(NavMesh.SamplePosition(point,out var patrol,3,NavMesh.AllAreas))agent.SetDestination(patrol.position);}return;}
-            agent.speed=2.2f;agent.stoppingDistance=9;agent.isStopped=false;repath-=Time.deltaTime;if(repath<=0){repath=.5f;agent.SetDestination(target.position);}
+            if(HoldPosition){Hold(target,from,to,distance,sees);return;}
+            if(sees&&distance<24&&Vector3.Angle(transform.forward,to-from)<65)alerted=true;if(!alerted){agent.stoppingDistance=.3f;patrolClock+=Time.deltaTime;agent.isStopped=false;if(!agent.pathPending&&agent.remainingDistance<.6f){var point=patrolHome+Quaternion.Euler(0,(Mathf.FloorToInt(patrolClock/4)%3)*120,0)*Vector3.forward*5;if(NavMesh.SamplePosition(point,out var patrol,3,NavMesh.AllAreas))agent.SetDestination(patrol.position);}return;}
+            agent.stoppingDistance=9;agent.isStopped=false;repath-=Time.deltaTime;if(repath<=0){repath=.5f;agent.SetDestination(target.position);}
             if(!sees||Time.time<shot)return;
             transform.rotation=Quaternion.RotateTowards(transform.rotation,Quaternion.LookRotation(Vector3.ProjectOnPlane(to-from,Vector3.up)),220*Time.deltaTime);
             shot=Time.time+1.1f;if(actor!=null&&actor.runtimeAnimatorController!=null)actor.SetTrigger(PlayerCombat.AnimatorParams.Attack);

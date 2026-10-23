@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ShadowVale.Map01
 {
-    // Stones and Chest are last: the scene stores these as numbers.
+    // Keep serialized IDs stable. Exit is retired; Map01Extraction owns the boat departure.
     public enum ForestPointKind { Supplies, Loot, Workbench, Documents, Exit, Hide, Cover, Stones, Chest, Sabotage }
 
     public sealed class ForestPoint : MonoBehaviour

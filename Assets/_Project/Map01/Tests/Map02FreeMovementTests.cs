@@ -31,16 +31,17 @@ namespace ShadowVale.Map01.Tests
             {
                 var open=OpenPoint();
                 LoadThrough(m,"D1_03");yield return WaitGameSeconds(1.5f);Interact(m,"D1_04");yield return WaitGameSeconds(.2f);
-                Assert.AreEqual("D1_04",m.Chapter.State.carry);Place(m,open);yield return CheckMovement(m);
+                // A load in both hands walks at CarryPace without sprinting (doc Day 1: "Nam chạy chậm lại khi đang khiêng").
+                Assert.AreEqual("D1_04",m.Chapter.State.carry);Place(m,open);yield return CheckMovement(m,Map02ChapterDirector.CarryPace,false);
                 LoadThrough(m,"D2_04");yield return WaitGameSeconds(1.5f);Interact(m,"D2_05");yield return WaitGameSeconds(.2f);
-                Assert.AreEqual("D2_05",m.Chapter.State.carry);Place(m,open);yield return CheckMovement(m);
+                Assert.AreEqual("D2_05",m.Chapter.State.carry);Place(m,open);yield return CheckMovement(m,Map02ChapterDirector.CarryPace,false);
                 LoadThrough(m,"D2_03");yield return WaitGameSeconds(1.5f);Interact(m,"D2_04");yield return WaitGameSeconds(.2f);
                 var restored=Map02Mission.Parse(JsonUtility.ToJson(m.Capture()));m.Restore(restored);yield return null;
                 Assert.IsNotNull(m.Chapter.Companion);Assert.IsFalse(m.CharacterGearLocked);
                 Place(m,open);var start=m.Chapter.Actor("Tâm").transform.position;
                 Assert.Greater(Vector3.Distance(m.Player.position,start),7);yield return WaitGameSeconds(2);
                 float travelled=Vector3.Distance(start,m.Chapter.Actor("Tâm").transform.position);Assert.Greater(travelled,.3f,"Tâm must follow even beyond 7 m.");Assert.Less(travelled,5,"Following must not teleport.");
-                yield return CheckMovement(m);
+                yield return CheckMovement(m,1,true);   // bringing Tâm back keeps Nam free and armed (chosen 23/10)
                 Assert.IsTrue(m.Bag.Draw(Map01Inventory.Slot.Primary));rightDown=true;keys=new[]{Key.W};yield return WaitGameSeconds(.6f);
                 Assert.IsTrue(m.Player.GetComponent<PlayerCombat>().IsAiming);Assert.Greater(m.Player.GetComponent<PlayerController>().PlanarSpeed,.5f);
                 rightDown=false;yield return WaitGameSeconds(.2f);Assert.IsFalse(m.Player.GetComponent<PlayerCombat>().IsAiming);
@@ -52,10 +53,10 @@ namespace ShadowVale.Map01.Tests
             finally{keys=System.Array.Empty<Key>();rightDown=false;InputSystem.onBeforeUpdate-=Pump;InputSystem.RemoveDevice(keyboard);InputSystem.RemoveDevice(mouse);RestoreInputRouting(routing);}
             yield return new ExitPlayMode();
         }
-        static IEnumerator CheckMovement(Map02Mission m)
+        static IEnumerator CheckMovement(Map02Mission m,float pace,bool sprint)
         {
             var player=m.Player.GetComponent<PlayerController>();var actor=m.Player.GetComponentInChildren<Animator>();
-            Assert.IsFalse(m.InputBlocked);Assert.AreEqual(1,player.SurfaceSpeedMultiplier);Assert.IsTrue(m.CharacterCanSprint);
+            Assert.IsFalse(m.InputBlocked);Assert.AreEqual(pace,player.SurfaceSpeedMultiplier,.001f);Assert.IsTrue(m.CharacterCanSprint);
             player.RestoreMotion(false);
             foreach(var key in new[]{Key.W,Key.S,Key.A,Key.D})
             {
@@ -66,7 +67,8 @@ namespace ShadowVale.Map01.Tests
                 Assert.Greater(Vector3.Distance(pose,actor.transform.InverseTransformPoint(foot.position)),.003f,"Leg animation must advance rather than hold a frozen pose.");
                 keys=System.Array.Empty<Key>();yield return WaitGameSeconds(.3f);
             }
-            keys=new[]{Key.W,Key.LeftShift};yield return WaitGameSeconds(.5f);Assert.IsTrue(player.IsSprinting);Assert.Greater(player.PlanarSpeed,3);
+            keys=new[]{Key.W,Key.LeftShift};yield return WaitGameSeconds(.5f);
+            if(sprint){Assert.IsTrue(player.IsSprinting);Assert.Greater(player.PlanarSpeed,3);}else Assert.IsFalse(player.IsSprinting,"No sprinting with a load or a wounded man to lead.");
             keys=System.Array.Empty<Key>();player.RestoreMotion(false);yield return WaitGameSeconds(.3f);
         }
         static void LoadThrough(Map02Mission m,string id)

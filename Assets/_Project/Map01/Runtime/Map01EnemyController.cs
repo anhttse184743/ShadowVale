@@ -63,6 +63,12 @@ namespace ShadowVale.Map01
         private EnemyBrain _brain;
         private readonly EnemyTuning _tuning = new EnemyTuning();
         private float _nextShot;
+        private readonly Map01GuardFireCycle _guardFireCycle = new Map01GuardFireCycle();
+        private float _guardBurstLeaseUntil;
+        private static readonly Map01GuardFireTuning DefaultGuardFire = new Map01GuardFireTuning();
+        private Map01GuardFireTuning GuardFire => _mission?.Settings?.guardM16 ?? DefaultGuardFire;
+        private bool UsesGuardM16Cycle => !IsBoss && RifleItemId == Map01M16.Id;
+        private float GuardFireStagger => Fnv(LegacyId) % 101 / 100f * Mathf.Max(0, GuardFire.staggerSeconds);
         // Bursts (the commander): rounds per burst, the gap inside one, the pause between them; 1 round = single shots.
         private int _burstRounds = 1, _burstLeft;
         private float _burstGap, _burstInterval;
@@ -272,10 +278,12 @@ namespace ShadowVale.Map01
         public void RefreshRifleLoadout(string savedItemId = null)
         {
             if (_mission == null) return;
+            string previous = RifleItemId;
             // Old saves have no loadout field; new saves keep the guard's actual gun
             // even if waking reserves has changed his index in the roster.
             RifleItemId = savedItemId == Map01M16.Id || savedItemId == "rifle_standard"
                 ? savedItemId : Map01M16.EnemyRifle(_mission, this);
+            if (previous != RifleItemId) { _guardFireCycle.Reset(); _guardBurstLeaseUntil = 0; }
             var held = GetComponentInChildren<Map01Rifle>(true);
             if (held != null) Map01RifleVisual.Apply(held.weapon, RifleItemId);
         }
@@ -320,6 +328,7 @@ namespace ShadowVale.Map01
         /// </summary>
         public void ReturnToPost()
         {
+            _guardFireCycle.Reset(); _guardBurstLeaseUntil = 0; _nextShot = 0;
             ClearDamageEvidence(); _heardShotUntil = float.NegativeInfinity;
             LastStoneHeardAt = float.NegativeInfinity;
             bushCorpse?.Dispose(); bushCorpse = null; silentKind = 0; grappleOwned = false;
@@ -389,6 +398,30 @@ namespace ShadowVale.Map01
         }
 
         bool INoiseListener.OnNoise(Vector3 position, float radius, NoiseKind kind) => Hear(position, radius, kind);
+
+        /// <summary>
+        /// A Mosin shot from beyond <see cref="Map01Mission.ShotPinpointMeters"/> but within <paramref name="radius"/>
+        /// (2026-10-22): loud enough to put him on edge, too far off to tell where it came from. He goes to search round
+        /// a spot roughly that way, vaguer the further it was, and nothing more: no detection, no known threat for
+        /// reinforcements. Only seeing Nam gives him away (stealth sniping as in Sniper Elite or MGS V: shoot, then move).
+        /// True if he heard it.
+        /// </summary>
+        public bool HearDistantShot(Vector3 shooter, float radius)
+        {
+            if (BedPoseOwned || !Alive || (_mission != null && _mission.Cinematic)) return false;
+            if (!HearingSensor.Hears(transform.position, shooter, radius)) return false;
+            if (Engaged) return true;
+            var off = Vector3.ProjectOnPlane(shooter - transform.position, Vector3.up);
+            float d = off.magnitude;
+            if (d < .01f) return true;
+            var along = off / d; var side = Vector3.Cross(Vector3.up, along);
+            var guess = transform.position + along * (d * Random.Range(.6f, 1.15f)) + side * (d * Random.Range(-.35f, .35f));
+            if (_mission != null && Physics.Raycast(guess + Vector3.up * 40f, Vector3.down, out var ground, 80f, _mission.ObstructionMask, QueryTriggerInteraction.Ignore))
+                guess.y = ground.point.y;   // C3 stands on terraces: the spot on the ground there, not at his own height
+            _hearReactionAt = 0;
+            BeginInvestigation(guess);
+            return true;
+        }
 
         /// <summary>
         /// Off to check <paramref name="position"/> (the FSM's Investigate). The overseer does not
@@ -478,6 +511,8 @@ namespace ShadowVale.Map01
             public bool hasKnownPlayer;
             public Vector3 knownPlayer, heardShotPosition;
             public float heardShotRemaining;
+            public int guardBurstShots, guardMagazineSpent;
+            public float guardBurstLeaseRemaining;
         }
         public Snapshot Capture()
         {
@@ -496,7 +531,9 @@ namespace ShadowVale.Map01
                 stopped = _agent.isOnNavMesh && _agent.isStopped,
                 bodyState = _bodyState, wary = Wary,
                 hasKnownPlayer = Engaged, knownPlayer = m.LastKnownPlayerPosition,
-                heardShotPosition = _heardShotPosition, heardShotRemaining = Mathf.Max(0, _heardShotUntil - now)
+                heardShotPosition = _heardShotPosition, heardShotRemaining = Mathf.Max(0, _heardShotUntil - now),
+                guardBurstShots = _guardFireCycle.BurstShots, guardMagazineSpent = _guardFireCycle.MagazineSpent,
+                guardBurstLeaseRemaining = Mathf.Max(0, _guardBurstLeaseUntil - now)
             };
         }
         /// <summary>This guard as he would be fresh at his post: alive, calm, starting his patrol.</summary>
@@ -533,6 +570,8 @@ namespace ShadowVale.Map01
             ApplyLureTuning();
             m.PatrolIndex = Mathf.Clamp(saved.patrolIndex, 0, Mathf.Max(0, patrolPoints.Length - 1));
             _nextShot = now + saved.shotRemaining;
+            _guardFireCycle.Restore(saved.guardBurstShots, saved.guardMagazineSpent, GuardFire);
+            _guardBurstLeaseUntil = now + Mathf.Clamp(saved.guardBurstLeaseRemaining, 0, 1f);
             m.AlertUntil = now + saved.alertRemaining; m.InvestigatePoint = saved.investigate;
             m.SearchUntil = saved.searchRemaining > 0 ? now + saved.searchRemaining : 0;
             m.Returning = saved.returning; m.ReturnPoint = saved.returnPoint; m.ReturnRotation = saved.returnRotation;
@@ -904,13 +943,26 @@ namespace ShadowVale.Map01
             _burstGap = Mathf.Max(.02f, gap); _burstInterval = interval;
         }
 
-        public int BurstRounds => _burstRounds;
+        public int BurstRounds => UsesGuardM16Cycle ? GuardFire.BurstRounds : _burstRounds;
+
+        // Other ordinary M16 guards wait their turn to start a burst. This never grants a contact or looks up Nam.
+        private bool CanStartGuardBurst()
+        {
+            if (!UsesGuardM16Cycle || _mission == null) return true;
+            if (_guardFireCycle.BurstShots > 0 && _guardBurstLeaseUntil > Time.time) return true;
+            int active = _mission.Enemies.Count(g => g != null && g != this && g.Alive && g.enabled
+                && g.UsesGuardM16Cycle && g._guardBurstLeaseUntil > Time.time);
+            if (active < Mathf.Clamp(GuardFire.maxConcurrentBursts, 1, 4)) return true;
+            _nextShot = Time.time + .15f + GuardFireStagger;
+            return false;
+        }
 
         /// <summary>Until the next round may go: inside a burst the gap, after its last round the pause.</summary>
         private float NextShotDelay()
         {
-            if (_burstRounds <= 1) return RifleItemId == Map01M16.Id ? Map01M16.ShotSeconds : fireInterval;
-            if (--_burstLeft > 0) return RifleItemId == Map01M16.Id ? Map01M16.ShotSeconds : _burstGap;
+            if (UsesGuardM16Cycle) return _guardFireCycle.AfterShot(GuardFire, Map01M16.ShotSeconds, GuardFireStagger);
+            if (_burstRounds <= 1) return fireInterval;
+            if (--_burstLeft > 0) return _burstGap;
             _burstLeft = _burstRounds;
             return _burstInterval > 0 ? _burstInterval : fireInterval;
         }
@@ -918,8 +970,9 @@ namespace ShadowVale.Map01
         private void ScheduleNextShot()
         {
             float delay = NextShotDelay();
-            _nextShot = RifleItemId == Map01M16.Id && Time.time - _nextShot <= delay
-                ? _nextShot + delay : Time.time + delay;
+            // NPCs never repay overdue rounds after a slow frame; each visible shot starts a fresh deadline.
+            _nextShot = Time.time + delay;
+            if (UsesGuardM16Cycle) _guardBurstLeaseUntil = Time.time + .2f;
         }
 
         // ---- IEnemyAgent: what the coordinator and the debug tools read -------------------------
@@ -1092,6 +1145,7 @@ namespace ShadowVale.Map01
             float delay = Time.time - _pausedAt;
             m.AlertUntil += delay; m.EngagedUntil += delay; m.SuppressUntil += delay; m.TakeCoverUntil += delay;
             m.CalmUntil += delay; m.PatrolPauseUntil += delay; _nextShot += delay;
+            if (_guardBurstLeaseUntil > _pausedAt) _guardBurstLeaseUntil += delay;
             if (_hearReactionAt > 0) _hearReactionAt += delay;
             if (_heardShotUntil > _pausedAt) _heardShotUntil += delay;
             if (m.SearchUntil > 0) m.SearchUntil += delay;
@@ -1175,13 +1229,13 @@ namespace ShadowVale.Map01
 
         public void FireAtPlayer()
         {
-            if (Time.time < _nextShot || _player == null) return;
+            if (Time.time < _nextShot || _player == null || !CanStartGuardBurst()) return;
             ScheduleNextShot();
             AudibleShots++;
             _animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
             // Hùng is in the line of fire while he is being held or walked home: every third
             // round goes his way when he is in reach.
-            if (++_shots % 3 == 0 && HostageInReach(out var hostage) && SafeShot(hostage)) { FireAtHostage(hostage, damage * (RifleItemId == Map01M16.Id ? .9f : 1f)); return; }
+            if (++_shots % 3 == 0 && HostageInReach(out var hostage) && SafeShot(hostage)) { FireAtHostage(hostage, damage * (RifleItemId == Map01M16.Id ? Map01M16.DamageRelativeToAk : 1f)); return; }
             Vector3 aim = _player.position + Vector3.up;
             // Not every round finds him (ShotAccuracy): a miss flies past him, tracer and all.
             var shot = ShotAccuracy.For(transform.position, _agent != null ? _agent.velocity : Vector3.zero, attackRange,
@@ -1194,13 +1248,13 @@ namespace ShadowVale.Map01
                 return;
             }
             if (FireRound(aim, _player, out var impact))
-                _playerHealth.TakeBulletDamage(damage * (RifleItemId == Map01M16.Id ? .9f : 1f), impact, gameObject, impact - transform.position);
+                _playerHealth.TakeBulletDamage(damage * (RifleItemId == Map01M16.Id ? Map01M16.DamageRelativeToAk : 1f), impact, gameObject, impact - transform.position);
         }
 
         /// <summary>Rounds at the spot Nam was last seen: noise and muzzle flash, no hit.</summary>
         public void FireSuppressive(Vector3 point)
         {
-            if (Time.time < _nextShot) return;
+            if (Time.time < _nextShot || !CanStartGuardBurst()) return;
             ScheduleNextShot();
             AudibleShots++;
             _animator?.SetTrigger(PlayerCombat.AnimatorParams.Attack);
@@ -1243,9 +1297,11 @@ namespace ShadowVale.Map01
 
         public void FireAtAlternative(EnemyContext ctx, Vector3 target)
         {
-            if (Time.time < _nextShot) return;
-            _nextShot = Time.time + (RifleItemId == Map01M16.Id ? Map01M16.ShotSeconds : fireInterval) * 2f;
-            FireAtHostage(target, damage * (RifleItemId == Map01M16.Id ? .9f : 1f));
+            if (Time.time < _nextShot || !CanStartGuardBurst()) return;
+            ScheduleNextShot();
+            // The hostage remains a slower target; M16 also keeps its magazine and burst pauses.
+            _nextShot = Mathf.Max(_nextShot, Time.time + (UsesGuardM16Cycle ? Map01M16.ShotSeconds : fireInterval) * 2f);
+            FireAtHostage(target, damage * (RifleItemId == Map01M16.Id ? Map01M16.DamageRelativeToAk : 1f));
         }
 
         /// <summary>The nearest of Map 1's placed cover points, if one is close enough to reach under fire.</summary>

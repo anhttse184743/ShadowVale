@@ -1,0 +1,9 @@
+﻿id,x,z,phase,name,chance,contents,condition
+P1,106.8,22.7,Chuẩn bị,Ổ Mosin hiện có,1,1 Mosin + 5 đạn nhắm,Từ lúc nhận nhiệm vụ; một lần; giữ vị trí hiện tại
+P2,43,32,Chuẩn bị,Túi trinh sát đường Tây,1,1 bom khói + 8 đạn K54,Một lần; có dấu vải dẫn đường; vị trí mới cần kiểm tra
+P3,57.5,60,Xâm nhập,Túi y tế ngoài cửa nhà Tây,1,1 băng cứu thương (hồi 45 HP),Tiếp cận được mà không giết lính; tránh vùng diễn hoạt trên giường
+P4,75.8,54,Xâm nhập,Hòm đạn sân tiếp tế,1,15 viên đúng súng chính (M16 hoặc AK),Khóa loại đạn vào save khi tạo; không tạo cả hai loại
+P5,91,63,Nhánh tùy chọn,Một cụm đồ ở sườn Đông,0.6,Chọn đúng 1: 2 đạn Mosin (45%) / 1 khói (35%) / 1 sửa súng (20%),60% cụm tồn tại; không bắt buộc cho mục tiêu; seed ổn định
+P6,62,72,Cứu nguy,Hốc cứu nguy cạnh tuyến điện thoại,1,Tối đa 1 gói: 1 băng HOẶC 15 viên đúng súng chính,"Hốc có từ đầu; chốt và lưu đúng một lần khi mở: HP < 40 và không có băng ưu tiên băng, nếu không thì đạn khi đạn súng trường trong băng + dự trữ < 15; khỏe và đủ đạn thì 1 vải; không quay lại đổi phần thưởng"
+P7,71,59.05,Sau mục tiêu,Hòm C3 hiện có,1,1 sửa súng + 2 linh kiện + 3 đạn Mosin; 2 lượt vật liệu,"Chỉ huy chết mới mở; hòm không cấp đồ chuẩn bị; giữ +60 hậu cần hiện có, không cộng trùng"
+P8,52,82,Rút lui,Túi khói đường rút,1,1 bom khói,Mở từ khi chỉ huy chết; không hồi sinh; tránh tuyến tiếp viện thực tế

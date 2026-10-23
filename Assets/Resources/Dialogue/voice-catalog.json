@@ -112,48 +112,6 @@
       "resource": "Dialogue/VI/m1_depart_order"
     },
     {
-      "id": "m2_arrival_sight",
-      "caption": "Hùng: Bến làng ở phía trước rồi.",
-      "speaker": "Hùng",
-      "text": "Bến làng ở phía trước rồi.",
-      "voice": "Clint",
-      "language": "vi",
-      "match": "Hung: The village landing is ahead.",
-      "radio": false,
-      "taskId": "ec37466e-7a7d-48a4-b888-fec6fa657438",
-      "reportedDuration": 1.76,
-      "duration": 1.76,
-      "resource": "Dialogue/VI/m2_arrival_sight"
-    },
-    {
-      "id": "m2_moor_order",
-      "caption": "Chỉ huy: Giữ yên lặng. Đưa thuyền sát bến.",
-      "speaker": "Chỉ huy",
-      "text": "Giữ yên lặng. Đưa thuyền sát bến.",
-      "voice": "Tom",
-      "language": "vi",
-      "match": "Commander: Quiet now. Bring us alongside.",
-      "radio": false,
-      "taskId": "3256f0aa-6bd8-4405-8524-89a6f1e6f925",
-      "reportedDuration": 2.4,
-      "duration": 2.4,
-      "resource": "Dialogue/VI/m2_moor_order"
-    },
-    {
-      "id": "m2_ashore_order",
-      "caption": "Chỉ huy: Nam, lên trước đi. Chúng ta gặp nhau trên bờ.",
-      "speaker": "Chỉ huy",
-      "text": "Nam, lên trước đi. Chúng ta gặp nhau trên bờ.",
-      "voice": "Tom",
-      "language": "vi",
-      "match": "Commander: Nam, go first. We will meet you on the bank.",
-      "radio": false,
-      "taskId": "714dc725-d06b-4ccc-a081-62deaabe2619",
-      "reportedDuration": 3.2,
-      "duration": 3.2,
-      "resource": "Dialogue/VI/m2_ashore_order"
-    },
-    {
       "id": "m1_scout_silent",
       "caption": "Hạ gục lặng lẽ, xa doanh trại — không ai hay biết.",
       "speaker": "Nam",
@@ -1865,6 +1823,520 @@
       "userApproved": true,
       "approvalDate": "2026-10-18",
       "status": "user_approved_and_bytes_validated"
+    },
+    {
+      "id": "m2v3_contact_02",
+      "group": "map2_day1_night1",
+      "speaker": "Nam",
+      "text": "Rõ.",
+      "caption": "Nam: Rõ.",
+      "voice": "Brodie",
+      "model": "eleven_v3",
+      "languageCode": "vi",
+      "speed": 0.85,
+      "radio": false,
+      "estimatedCredits": 0,
+      "resource": "Dialogue/VI/m1_v2_rescue_approach_03_clean",
+      "cleanResource": "Dialogue/VI/m1_v2_rescue_approach_03_clean",
+      "match": "Nam: Rõ.",
+      "taskId": "1865e989-b795-4b98-b840-fac4cf81099e",
+      "duration": 0.38,
+      "sampleRate": 48000,
+      "channels": 1,
+      "provider": "Runway",
+      "sourceSha256": "acfc74770cdee70bc20733b08a596bc9cedeec5ee1ec059abc17ac8ae4621447",
+      "sha256": "cad689268b4f64b4dee1c584580e81c1aa379c8aafebf87e6eb059cdc8d10b3c",
+      "pronunciationReview": "user_approved",
+      "status": "user_approved_and_installed",
+      "language": "vi",
+      "sourceText": "Tôi đã nghe rõ. Rõ, thưa chỉ huy.",
+      "cropSeconds": [
+        1.22,
+        1.6
+      ],
+      "reusedFrom": "m1_v2_rescue_approach_03"
+    },
+    {
+      "id": "m2v3_contact_04",
+      "group": "map2_day1_night1",
+      "speaker": "Nam",
+      "text": "Rõ.",
+      "caption": "Nam: Rõ.",
+      "voice": "Brodie",
+      "model": "eleven_v3",
+      "languageCode": "vi",
+      "speed": 0.85,
+      "radio": false,
+      "estimatedCredits": 0,
+      "resource": "Dialogue/VI/m1_v2_rescue_approach_03_clean",
+      "cleanResource": "Dialogue/VI/m1_v2_rescue_approach_03_clean",
+      "match": "Nam: Rõ.",
+      "taskId": "1865e989-b795-4b98-b840-fac4cf81099e",
+      "duration": 0.38,
+      "sampleRate": 48000,
+      "channels": 1,
+      "provider": "Runway",
+      "sourceSha256": "acfc74770cdee70bc20733b08a596bc9cedeec5ee1ec059abc17ac8ae4621447",
+      "sha256": "cad689268b4f64b4dee1c584580e81c1aa379c8aafebf87e6eb059cdc8d10b3c",
+      "pronunciationReview": "user_approved",
+      "status": "user_approved_and_installed",
+      "language": "vi",
+      "sourceText": "Tôi đã nghe rõ. Rõ, thưa chỉ huy.",
+      "cropSeconds": [
+        1.22,
+        1.6
+      ],
+      "reusedFrom": "m1_v2_rescue_approach_03"
+    },
+    {
+      "id": "m2v3_contact_01",
+      "caption": "Anh Thành: Đường về bị chặn rồi. Mình ở lại đây, chờ tin.",
+      "match": "Anh Thành: Đường về bị chặn rồi. Mình ở lại đây, chờ tin.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_contact_01",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.56
+    },
+    {
+      "id": "m2v3_contact_03",
+      "caption": "Anh Thành: Hùng đi băng lại tay. Nam lo bắt liên lạc.",
+      "match": "Anh Thành: Hùng đi băng lại tay. Nam lo bắt liên lạc.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_contact_03",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.32
+    },
+    {
+      "id": "m2v3_password_01",
+      "caption": "Anh Lực: Nước đã lên chưa?",
+      "match": "Anh Lực: Nước đã lên chưa?",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_password_01",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.36
+    },
+    {
+      "id": "m2v3_password_02",
+      "caption": "Nam: Đò còn đợi ở bến.",
+      "match": "Nam: Đò còn đợi ở bến.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_password_02",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.44
+    },
+    {
+      "id": "m2v3_contact_08",
+      "caption": "Anh Thành: Trong lúc chờ, giao thuốc, cất vật tư vào kho kín rồi sửa bến cùng chú Bảy. Nam giúp một tay.",
+      "match": "Anh Thành: Trong lúc chờ, giao thuốc, cất vật tư vào kho kín rồi sửa bến cùng chú Bảy. Nam giúp một tay.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_contact_08",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 4.72
+    },
+    {
+      "id": "m2v3_contact_09",
+      "caption": "Nam: Rõ.",
+      "match": "Nam: Rõ.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_contact_09",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 0.72
+    },
+    {
+      "id": "m2v3_contact_05",
+      "caption": "Anh Lực: Bộ đội gì mà đi ồn dữ vậy. Nghe tiếng từ ngoài vàm.",
+      "match": "Anh Lực: Bộ đội gì mà đi ồn dữ vậy. Nghe tiếng từ ngoài vàm.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_contact_05",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 3.92
+    },
+    {
+      "id": "m2v3_contact_06",
+      "caption": "Nam: Thì anh cũng nghe ra rồi đó.",
+      "match": "Nam: Thì anh cũng nghe ra rồi đó.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_contact_06",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.76
+    },
+    {
+      "id": "m2v3_contact_07",
+      "caption": "Anh Lực: Vô đi.",
+      "match": "Anh Lực: Vô đi.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_contact_07",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 0.88
+    },
+    {
+      "id": "m2v3_bandage_01",
+      "caption": "Chị Lành: Tay vầy mà còn vác máy. Ngồi xuống đi.",
+      "match": "Chị Lành: Tay vầy mà còn vác máy. Ngồi xuống đi.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_bandage_01",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.64
+    },
+    {
+      "id": "m2v3_bandage_02",
+      "caption": "Hùng: Vâng, nhẹ lắm chị.",
+      "match": "Hùng: Vâng, nhẹ lắm chị.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_bandage_02",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.36
+    },
+    {
+      "id": "m2v3_bandage_03",
+      "caption": "Chị Lành: Nhẹ thì đưa Tí xách thử coi.",
+      "match": "Chị Lành: Nhẹ thì đưa Tí xách thử coi.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_bandage_03",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.76
+    },
+    {
+      "id": "m2v3_medicine_01",
+      "caption": "Ông Sáu: Thuốc hả? Để dành cho tụi trẻ, tui già rồi.",
+      "match": "Ông Sáu: Thuốc hả? Để dành cho tụi trẻ, tui già rồi.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_medicine_01",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.88
+    },
+    {
+      "id": "m2v3_medicine_02",
+      "caption": "Nam: Thuốc này cho ông. Phần tụi trẻ, tôi tự lo.",
+      "match": "Nam: Thuốc này cho ông. Phần tụi trẻ, tôi tự lo.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_medicine_02",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.56
+    },
+    {
+      "id": "m2v3_repair_01",
+      "caption": "Chú Bảy: Cái bậc này mà gãy là ông Sáu xuống sông bằng đầu đó.",
+      "match": "Chú Bảy: Cái bậc này mà gãy là ông Sáu xuống sông bằng đầu đó.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_repair_01",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 3.6
+    },
+    {
+      "id": "m2v3_repair_02",
+      "caption": "Nam: Vậy sửa liền đi chú.",
+      "match": "Nam: Vậy sửa liền đi chú.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_repair_02",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.36
+    },
+    {
+      "id": "m2v3_repair_03",
+      "caption": "Chú Bảy: Đóng cọc dùm tui. Tui già, tay run.",
+      "match": "Chú Bảy: Đóng cọc dùm tui. Tui già, tay run.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_repair_03",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.72
+    },
+    {
+      "id": "m2v3_day1report_01",
+      "caption": "Nam: Thuốc đã giao, ba thùng cất trong kho. Bậc bến nam sửa xong rồi.",
+      "match": "Nam: Thuốc đã giao, ba thùng cất trong kho. Bậc bến nam sửa xong rồi.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_day1report_01",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 3.52
+    },
+    {
+      "id": "m2v3_day1report_02",
+      "caption": "Anh Thành: Được. Tối nay cậu với Hùng kiểm tra hai chốt, rồi thay nhau nghỉ.",
+      "match": "Anh Thành: Được. Tối nay cậu với Hùng kiểm tra hai chốt, rồi thay nhau nghỉ.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_day1report_02",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.96
+    },
+    {
+      "id": "m2v3_day1report_03",
+      "caption": "Nam: Rõ.",
+      "match": "Nam: Rõ.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_day1report_03",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 0.64
+    },
+    {
+      "id": "m2v3_day1report_04",
+      "caption": "Hùng: Cậu ăn phần này đi. Cả ngày vác thùng.",
+      "match": "Hùng: Cậu ăn phần này đi. Cả ngày vác thùng.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_day1report_04",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.08
+    },
+    {
+      "id": "m2v3_day1report_05",
+      "caption": "Nam: Cậu bị thương mà.",
+      "match": "Nam: Cậu bị thương mà.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_day1report_05",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.2
+    },
+    {
+      "id": "m2v3_day1report_06",
+      "caption": "Hùng: Thương tay chứ đâu phải thương bụng.",
+      "match": "Hùng: Thương tay chứ đâu phải thương bụng.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_day1report_06",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.44
+    },
+    {
+      "id": "m2v3_promise_01",
+      "caption": "Hùng: ...Ở quê, u tôi không nấu canh chua đâu. Thế mà ăn vẫn nhớ u.",
+      "match": "Hùng: ...Ở quê, u tôi không nấu canh chua đâu. Thế mà ăn vẫn nhớ u.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_promise_01",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 3.28
+    },
+    {
+      "id": "m2v3_promise_02",
+      "caption": "Nam: Này Hùng... mai mốt hết giặc, cậu tính làm gì?",
+      "match": "Nam: Này Hùng... mai mốt hết giặc, cậu tính làm gì?",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_promise_02",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.56
+    },
+    {
+      "id": "m2v3_promise_03",
+      "caption": "Hùng: Về với u. Ăn một bữa cơm cho tử tế. Đi biền biệt thế này, chẳng biết u còn nhận ra không.",
+      "match": "Hùng: Về với u. Ăn một bữa cơm cho tử tế. Đi biền biệt thế này, chẳng biết u còn nhận ra không.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_promise_03",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 4.96
+    },
+    {
+      "id": "m2v3_promise_04",
+      "caption": "Nam: Rồi sau đó?",
+      "match": "Nam: Rồi sau đó?",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_promise_04",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.04
+    },
+    {
+      "id": "m2v3_promise_05",
+      "caption": "Hùng: Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay, ăn với cà pháo, nhất làng luôn.",
+      "match": "Hùng: Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay, ăn với cà pháo, nhất làng luôn.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_promise_05",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 5.0
+    },
+    {
+      "id": "m2v3_promise_05b",
+      "caption": "Hùng: ...Ngon hơn nồi này nhiều.",
+      "match": "Hùng: ...Ngon hơn nồi này nhiều.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_promise_05b",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.2
+    },
+    {
+      "id": "m2v3_promise_06",
+      "caption": "Chị Lành: Nghe hết đó nha.",
+      "match": "Chị Lành: Nghe hết đó nha.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_promise_06",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.05
+    },
+    {
+      "id": "m2v3_promise_07",
+      "caption": "Nam: Nói rồi đó nha. Tôi nhớ đó.",
+      "match": "Nam: Nói rồi đó nha. Tôi nhớ đó.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_promise_07",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.84
+    },
+    {
+      "id": "m2v3_promise_08",
+      "caption": "Hùng: Ừ, hứa. Còn cậu, cậu tính sao?",
+      "match": "Hùng: Ừ, hứa. Còn cậu, cậu tính sao?",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_promise_08",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.16
+    },
+    {
+      "id": "m2v3_promise_09",
+      "caption": "Nam: Tôi hả... cũng chưa biết. Chỉ mong mau tới ngày đó.",
+      "match": "Nam: Tôi hả... cũng chưa biết. Chỉ mong mau tới ngày đó.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_promise_09",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.8
+    },
+    {
+      "id": "m2v3_promise_10",
+      "caption": "Hùng: Thì về quê cậu chứ sao.",
+      "match": "Hùng: Thì về quê cậu chứ sao.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_promise_10",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.52
+    },
+    {
+      "id": "m2v3_promise_11",
+      "caption": "Nam: Quê tôi... không còn ai đợi.",
+      "match": "Nam: Quê tôi... không còn ai đợi.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_promise_11",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.68
+    },
+    {
+      "id": "m2v3_promise_12",
+      "caption": "Hùng: Thế thì về quê tôi. U tôi là u cậu luôn.",
+      "match": "Hùng: Thế thì về quê tôi. U tôi là u cậu luôn.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_promise_12",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.56
+    },
+    {
+      "id": "m2v3_duck_01",
+      "caption": "Nam: Vịt thôi.",
+      "match": "Nam: Vịt thôi.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_duck_01",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 0.88
+    },
+    {
+      "id": "m2v3_duck_02",
+      "caption": "Hùng: Biết mà.",
+      "match": "Hùng: Biết mà.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_duck_02",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 0.8
+    },
+    {
+      "id": "m2v3_nightwatch_01",
+      "caption": "Nam: Thuốc của tổ gác đây. Tay còn đau không?",
+      "match": "Nam: Thuốc của tổ gác đây. Tay còn đau không?",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_nightwatch_01",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.4
+    },
+    {
+      "id": "m2v3_nightwatch_02",
+      "caption": "Hùng: Ngồi yên mới thấy. Đi một vòng còn dễ chịu hơn.",
+      "match": "Hùng: Ngồi yên mới thấy. Đi một vòng còn dễ chịu hơn.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_nightwatch_02",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.64
+    },
+    {
+      "id": "m2v3_nightwatch_03",
+      "caption": "Nam: Cậu nghỉ đi. Tôi canh tiếp.",
+      "match": "Nam: Cậu nghỉ đi. Tôi canh tiếp.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_nightwatch_03",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.52
+    },
+    {
+      "id": "m2v3_nightwatch_04",
+      "caption": "Hùng: Tới giờ thì gọi tôi. Đừng thức một mình.",
+      "match": "Hùng: Tới giờ thì gọi tôi. Đừng thức một mình.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_nightwatch_04",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.16
+    },
+    {
+      "id": "m2v3_postbamboo_01",
+      "caption": "Nam: Đèn đã che, cửa cài chắc. Lối đi cũng thông rồi.",
+      "match": "Nam: Đèn đã che, cửa cài chắc. Lối đi cũng thông rồi.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_postbamboo_01",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.88
+    },
+    {
+      "id": "m2v3_postbamboo_02",
+      "caption": "Tổ gác: Được. Qua chốt đầu làng kiểm tra nốt đi.",
+      "match": "Tổ gác: Được. Qua chốt đầu làng kiểm tra nốt đi.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_postbamboo_02",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 3.04
+    },
+    {
+      "id": "m2v3_postbamboo_03",
+      "caption": "Nam: Rõ.",
+      "match": "Nam: Rõ.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_postbamboo_03",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 0.64
+    },
+    {
+      "id": "m2v3_repair_done_01",
+      "caption": "Chú Bảy: Chắc rồi. Có người xuống bến cũng yên tâm.",
+      "match": "Chú Bảy: Chắc rồi. Có người xuống bến cũng yên tâm.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_repair_done_01",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.48
+    },
+    {
+      "id": "m2v3_repair_done_02",
+      "caption": "Nam: Xong rồi chú.",
+      "match": "Nam: Xong rồi chú.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_repair_done_02",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.2
+    },
+    {
+      "id": "m2_arrival_sight",
+      "caption": "Hùng: Bến làng ở phía trước rồi.",
+      "match": "Hùng: Bến làng ở phía trước rồi.",
+      "resource": "Dialogue/Map02DayOneFree/m2_arrival_sight",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 1.52
+    },
+    {
+      "id": "m2_moor_order",
+      "caption": "Anh Thành: Giữ yên lặng. Đưa thuyền sát bến.",
+      "match": "Anh Thành: Giữ yên lặng. Đưa thuyền sát bến.",
+      "resource": "Dialogue/Map02DayOneFree/m2_moor_order",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.0
+    },
+    {
+      "id": "m2_ashore_order",
+      "caption": "Anh Thành: Nam, lên trước đi. Chúng ta gặp nhau trên bờ.",
+      "match": "Anh Thành: Nam, lên trước đi. Chúng ta gặp nhau trên bờ.",
+      "resource": "Dialogue/Map02DayOneFree/m2_ashore_order",
+      "language": "vi-VN",
+      "radio": false,
+      "duration": 2.8
     }
   ]
 }

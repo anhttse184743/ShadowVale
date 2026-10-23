@@ -73,7 +73,12 @@ namespace ShadowVale.Map01.Tests
                 var focus=guard.transform.position+Vector3.up*1.05f;var eye=focus+guard.transform.right*3.8f-guard.transform.forward*1.1f+Vector3.up*.7f;
                 M.gameCamera.GetComponent<ShadowVale.Gameplay.Player.ThirdPersonCamera>().SetCinematicView(eye,Quaternion.LookRotation(focus-eye),52,1);
                 yield return Capture("Logs/QuickRescue/hint-ready-body.png");
-                var screenshot=ScreenCapture.CaptureScreenshotAsTexture();if(screenshot!=null){File.WriteAllBytes("Logs/QuickRescue/hint-ready-hud.png",screenshot.EncodeToPNG());Object.Destroy(screenshot);}
+                const string hudShot="Logs/QuickRescue/hint-ready-hud.png";
+                if(File.Exists(hudShot))File.Delete(hudShot);
+                ScreenCapture.CaptureScreenshot(hudShot);
+                float captureUntil=Time.realtimeSinceStartup+5;
+                while(!File.Exists(hudShot)&&Time.realtimeSinceStartup<captureUntil)yield return null;
+                Assert.IsTrue(File.Exists(hudShot),"The HUD must be captured from a completed Game View frame.");
                 M.ModernCombat.RestoreAttackCooldown(.7f);Assert.IsTrue(R.GetTakedownHint(out _,out ready));Assert.IsFalse(ready);M.ModernCombat.RestoreAttackCooldown(0);
                 Place(guard.transform.position+guard.transform.forward*1.4f,guard.transform.rotation);Assert.IsTrue(R.GetTakedownHint(out _,out ready));Assert.IsFalse(ready);
                 M.ModernCombat.Equip(WeaponKind.Rifle);Assert.IsFalse(R.GetTakedownHint(out _,out _));
