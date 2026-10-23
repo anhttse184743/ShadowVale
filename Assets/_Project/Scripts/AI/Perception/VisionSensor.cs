@@ -40,6 +40,7 @@ namespace ShadowVale.AI.Perception
             Vector3 eye = observerPosition + Vector3.up * profile.EyeHeight;
             Vector3 target = player.SightPoint;
             if (!InView(eye, forward, target, engaged, player.IsCrouching, player.IsHidden, profile, out distance)) return false;
+            if (player.VisibilityFactor <= 0f) return false;
             if (occluder != null && occluder.Blocks(eye, target)) return false;
             if (Physics.Raycast(eye, (target - eye).normalized, out var hit, distance, obstructionMask, QueryTriggerInteraction.Ignore))
                 return player.Owns(hit.transform);

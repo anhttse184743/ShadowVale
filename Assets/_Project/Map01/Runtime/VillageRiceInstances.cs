@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using ShadowVale.Gameplay.Player;
 using UnityEngine;
 using UnityEngine.Rendering;
 namespace ShadowVale.Map01
@@ -14,18 +16,46 @@ namespace ShadowVale.Map01
         public float[] sizes = Array.Empty<float>();
         [NonSerialized] Matrix4x4[][] batches;
         [NonSerialized] Matrix4x4 cachedTransform;
-        void OnEnable(){Rebuild();RenderPipelineManager.beginCameraRendering+=Render;}
-        void OnDisable(){RenderPipelineManager.beginCameraRendering-=Render;}
+        static readonly HashSet<VillageRiceInstances> active = new();
+        readonly Dictionary<Vector2Int,List<Vector3>> coverCells = new();
+        void OnEnable(){active.Add(this);Rebuild();RenderPipelineManager.beginCameraRendering+=Render;}
+        void OnDisable(){active.Remove(this);RenderPipelineManager.beginCameraRendering-=Render;}
         void OnValidate(){batches=null;}
         public void Rebuild()
         {
             cachedTransform=transform.localToWorldMatrix;
+            coverCells.Clear();
+            // This renderer also draws roadside grass, which is not a rice hiding spot.
+            if(detailedMesh!=null && detailedMesh.name.IndexOf("Rice_",StringComparison.OrdinalIgnoreCase)>=0)
+                foreach(var plant in plants) {
+                    var point=transform.TransformPoint(new Vector3(plant.x,plant.y,plant.z));
+                    var cell=new Vector2Int(Mathf.FloorToInt(point.x),Mathf.FloorToInt(point.z));
+                    if(!coverCells.TryGetValue(cell,out var points))coverCells[cell]=points=new List<Vector3>();
+                    points.Add(point);
+                }
             batches=new Matrix4x4[(plants.Length+1022)/1023][];
             for(int b=0;b<batches.Length;b++)
             {
                 int count=Mathf.Min(1023,plants.Length-b*1023);batches[b]=new Matrix4x4[count];
                 for(int j=0;j<count;j++){int i=b*1023+j;var p=plants[i];float scale=i<sizes.Length?sizes[i]:1;batches[b][j]=cachedTransform*Matrix4x4.TRS(new Vector3(p.x,p.y,p.z),Quaternion.Euler(0,p.w,0),Vector3.one*scale);}
             }
+        }
+        public static bool Conceals(PlayerController player)
+            => player!=null && player.IsProne && ContainsRice(player.transform.position);
+
+        public static bool ContainsRice(Vector3 position)
+        {
+            foreach(var field in active) {
+                if(field==null || !field.isActiveAndEnabled)continue;
+                if(field.batches==null || field.cachedTransform!=field.transform.localToWorldMatrix)field.Rebuild();
+                // Match actual planted clumps, not the rectangular bounds of the whole field.
+                int x=Mathf.FloorToInt(position.x),z=Mathf.FloorToInt(position.z);
+                for(int dx=-1;dx<=1;dx++)for(int dz=-1;dz<=1;dz++)
+                    if(field.coverCells.TryGetValue(new Vector2Int(x+dx,z+dz),out var points))
+                        foreach(var point in points)
+                            if(Mathf.Abs(position.y-point.y)<.6f && new Vector2(position.x-point.x,position.z-point.z).sqrMagnitude<=.45f*.45f)return true;
+            }
+            return false;
         }
         void Render(ScriptableRenderContext context,Camera camera)
         {

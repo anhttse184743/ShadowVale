@@ -18,6 +18,16 @@ namespace ShadowVale.Map01.Tests
         static void FeedMouse(){if(heldMouse!=null&&InputState.currentUpdateType==InputUpdateType.Dynamic){heldMouse.MakeCurrent();InputSystem.QueueStateEvent(heldMouse,rightHeld?new MouseState().WithButton(MouseButton.Right):new MouseState());}}
         [UnityTest, Timeout(240000)] public IEnumerator MapOneZCrawlsAndSpaceStandsWithoutJumping() => Exercise(1);
         [UnityTest, Timeout(240000)] public IEnumerator MapTwoZCrawlsAndSpaceStandsWithoutJumping() => Exercise(2);
+        static IEnumerator AssertProneBlend(Animator actor, PlayerController player, float seconds)
+        {
+            float until = Time.time + seconds;
+            while (Time.time < until) {
+                yield return new WaitForEndOfFrame();
+                Assert.IsTrue(player.IsProne);
+                Assert.Less(actor.GetBoneTransform(HumanBodyBones.Hips).position.y-player.transform.position.y,.65f,
+                    "Reload transitions must keep the visible hips prone, including the first blend frames.");
+            }
+        }
         IEnumerator Exercise(int map)
         {
             Map01OpeningCutscene.CancelPending();
@@ -98,14 +108,16 @@ namespace ShadowVale.Map01.Tests
                         combat.RestoreMagazine(5);
                         yield return Press(keyboard,Key.R);
                         Assert.IsTrue(combat.IsReloading);Assert.IsTrue(player.IsProne,"R must reload without standing up.");
-                        yield return WaitGameSeconds(combat.BaseReloadSeconds*skills.ReloadMultiplier*.45f);
+                        yield return AssertProneBlend(actor,player,.25f);
+                        yield return WaitGameSeconds(Mathf.Max(0,combat.BaseReloadSeconds*skills.ReloadMultiplier*.45f-.25f));
                         Assert.AreEqual("reload",motion.SelectedPose);
                         Assert.AreEqual(combat.ReloadProgress,motion.ReloadPoseProgress,.06f,"Animation must sample the real skill-adjusted timer.");
                         Assert.IsFalse(magazine.enabled,"Only the authored detachable magazine should be visible during reload.");
                         Capture(session,map,"reload-level"+level);
                         float deadline=Time.realtimeSinceStartup+8;
                         while(combat.IsReloading && Time.realtimeSinceStartup<deadline)yield return null;
-                        Assert.IsFalse(combat.IsReloading);yield return null;yield return null;
+                        Assert.IsFalse(combat.IsReloading);
+                        yield return AssertProneBlend(actor,player,.25f);
                         Assert.IsTrue(player.IsProne);Assert.IsTrue(magazine.enabled,"Magazine must be restored on completion.");
                         Assert.Greater(combat.RoundsInMagazine,5);
                     }

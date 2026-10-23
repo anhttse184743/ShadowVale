@@ -20,6 +20,7 @@ namespace ShadowVale.Map01
         NamProneAnimationData data;
         Transform[] bones;
         Map01PistolAnimationData.Pose[] previous;
+        Map01PistolAnimationData.Pose[] displayed;
         string selected;
         float weight, clock, aim, change = 1;
         Weapon seatedWeapon;
@@ -52,10 +53,12 @@ namespace ShadowVale.Map01
             var nodes = result.actor.GetComponentsInChildren<Transform>(true).GroupBy(t => t.name).ToDictionary(g => g.Key, g => g.First());
             result.bones = data.Find("unarmed").bones.Select(t => nodes[t.name]).ToArray();
             result.previous = new Map01PistolAnimationData.Pose[result.bones.Length];
+            result.displayed = new Map01PistolAnimationData.Pose[result.bones.Length];
             result.twist = result.actor.GetComponent<ForearmTwist>();
             result.rightHand = result.actor.GetBoneTransform(HumanBodyBones.RightHand);
             result.movement.ProneAllowed = () => result.Available && result.movement.enabled && !result.combat.IsReloading;
             result.combat.ProneReloadAvailable = () => result != null && result.CanReloadProne;
+            PlayerStealthAdapter.For(owner.player.gameObject).VisibilityProbe = () => VillageRiceInstances.Conceals(result.movement) ? 0f : 1f;
             return result;
         }
         bool Available => mission != null && !mission.Cinematic && !(mission.ModernHealth?.IsDead ?? false)
@@ -75,14 +78,17 @@ namespace ShadowVale.Map01
             if (movement.IsProne && !Available) movement.TrySetProne(false);
             weight = Mathf.MoveTowards(weight, active ? 1 : 0, Time.deltaTime / .24f);
             if (weight > 0 && !ownsTwist && twist != null) { twist.BeginAuthoredPose(); ownsTwist = true; }
-            if (weight <= 0) { ReleaseTwist(); return; }
+            if (weight <= 0) { ReleaseTwist(); selected = null; return; }
             if (movement.PlanarSpeed > .03f) clock += Time.deltaTime * Mathf.Clamp(movement.PlanarSpeed / .65f, 0, 1.4f);
             string kind = bag != null && bag.ThrowableEquipped ? (bag.Throwable == "stone" ? "stone" : "grenade")
                 : combat == null || combat.EquippedKind == WeaponKind.Unarmed ? "unarmed"
                 : combat.EquippedKind == WeaponKind.Knife ? "knife" : "rifle";
             if (reload) kind = "reload";
             if (kind != selected) {
-                for (int i = 0; i < bones.Length; i++) previous[i] = Map01PistolAnimationData.Pose.Read(bones[i]);
+                // Animator has already evaluated its standing pose this frame.
+                // Continue from the last prone output, including interrupted blends.
+                for (int i = 0; i < bones.Length; i++) previous[i] = selected == null
+                    ? Map01PistolAnimationData.Pose.Read(bones[i]) : displayed[i];
                 selected = kind; change = 0;
             }
             change = Mathf.MoveTowards(change, 1, Time.deltaTime / .2f);
@@ -97,6 +103,7 @@ namespace ShadowVale.Map01
                 var pose = take.bones[i].At(frame);
                 if (kind == "rifle") pose = Map01PistolAnimationData.Pose.Mix(pose, aimed.bones[i].At(frame), aim);
                 if (change < 1) pose = Map01PistolAnimationData.Pose.Mix(previous[i], pose, Mathf.SmoothStep(0, 1, change));
+                displayed[i] = pose;
                 pose.Apply(bones[i], weight);
             }
             if((kind == "rifle" || reload) && take.grip != null && aimed.grip != null && combat != null) {
@@ -190,6 +197,6 @@ namespace ShadowVale.Map01
             hand.rotation=Quaternion.Slerp(hand.rotation,orientation,weight);
         }
         void ReleaseTwist() { if (ownsTwist && twist != null) twist.EndAuthoredPose(); ownsTwist = false; }
-        void OnDisable() { RestoreMagazines(); if(reloadingPose && combat!=null)combat.CancelReload(); reloadingPose=false; ReleaseTwist(); weight = 0; if (movement != null) movement.RestoreMotion(false); }
+        void OnDisable() { RestoreMagazines(); if(reloadingPose && combat!=null)combat.CancelReload(); reloadingPose=false; ReleaseTwist(); weight = 0; selected = null; if (movement != null) movement.RestoreMotion(false); }
     }
 }

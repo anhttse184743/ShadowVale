@@ -12,6 +12,49 @@ namespace ShadowVale.Map01.Tests
 {
     public sealed class SightCoverTests : ForestSceneTestBase
     {
+        [TestCase(false)]
+        [TestCase(true)]
+        public void ProneInRiceBlocksVisionEvenForAlertedGuards(bool engaged)
+        {
+            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            var fieldObject = new GameObject("Rice field");
+            var playerObject = new GameObject("Nam");
+            var mesh = new Mesh { name = "Botanical_Rice_Ripe_LOD0" };
+            try {
+                var field = fieldObject.AddComponent<VillageRiceInstances>();
+                field.detailedMesh = mesh;
+                field.plants = new[] { Vector4.zero, new Vector4(4,0,0,0) };
+                field.Rebuild();
+                var player = playerObject.AddComponent<PlayerController>();
+                var view = PlayerStealthAdapter.For(playerObject);
+                view.VisibilityProbe = () => VillageRiceInstances.Conceals(player) ? 0 : 1;
+                var profile = new ShadowVale.AI.Perception.VisionProfile(30,120);
+                bool Visible() => ShadowVale.AI.Perception.VisionSensor.CanSee(new Vector3(0,0,-1),Vector3.forward,
+                    engaged,profile,view,null,0,out _);
+                Assert.IsTrue(Visible(),"Standing in rice remains visible.");
+                typeof(PlayerController).GetProperty("IsProne").SetValue(player,true);
+                Assert.IsFalse(Visible(),"Prone in rice hides even at close range.");
+                player.transform.position = new Vector3(2,0,0);
+                Assert.IsFalse(VillageRiceInstances.Conceals(player),"A gap between clumps must not hide Nam.");
+                player.transform.position = Vector3.up*2;
+                Assert.IsFalse(VillageRiceInstances.Conceals(player),"Standing above the crop must not count.");
+                player.transform.position = Vector3.zero;
+                field.enabled = false;
+                Assert.IsTrue(Visible(),"Removing rice restores vision immediately.");
+                field.enabled = true;
+                field.transform.position = Vector3.right*10;
+                Assert.IsFalse(VillageRiceInstances.Conceals(player),"Moving the field updates its cover.");
+                field.transform.position = Vector3.zero;
+                mesh.name = "Roadside_Meadow_LOD0";
+                field.Rebuild();
+                Assert.IsTrue(Visible(),"Ordinary ground grass must not act as rice.");
+            } finally {
+                Object.DestroyImmediate(playerObject);
+                Object.DestroyImmediate(fieldObject);
+                Object.DestroyImmediate(mesh);
+            }
+        }
+
         /// <summary>A plant as the scene has them: a LOD group over a renderer, no solid collider.</summary>
         private static GameObject Plant(Vector3 feet, Vector3 size)
         {

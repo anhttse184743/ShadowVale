@@ -19,6 +19,7 @@ namespace ShadowVale.Gameplay.Player
         [SerializeField] private float crouchedSightHeight = .75f;
 
         public Func<bool> CrouchProbe, HiddenProbe, CoverProbe;
+        public Func<float> VisibilityProbe;
 
         public float NoiseScale { get; set; } = 1f;
         public int CurrentNavNode { get; set; } = -1;
@@ -37,8 +38,8 @@ namespace ShadowVale.Gameplay.Player
         public bool IsCrouching => CrouchProbe != null && CrouchProbe();
         public bool IsHidden => HiddenProbe != null && HiddenProbe();
         public bool IsInCover => CoverProbe != null && CoverProbe();
-        /// <summary>No lighting model yet: the player is always fully lit.</summary>
-        public float VisibilityFactor => 1f;
+        /// <summary>Maps may fully conceal the player with local vegetation.</summary>
+        public float VisibilityFactor => VisibilityProbe != null ? Mathf.Clamp01(VisibilityProbe()) : 1f;
         public Vector3 SightPoint => transform.position + Vector3.up * (GetComponent<PlayerController>()?.IsProne == true ? .4f : IsCrouching ? crouchedSightHeight : standingSightHeight);
         public bool IsAlive => Health == null || !Health.IsDead;
         public bool Owns(Transform t) => t != null && (t == transform || t.IsChildOf(transform));

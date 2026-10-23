@@ -1,5 +1,6 @@
 using ShadowVale.Gameplay.Combat;
 using ShadowVale.Gameplay.Audio;
+using ShadowVale.Gameplay.Player;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -29,8 +30,9 @@ namespace ShadowVale.Map01
                 || hit.transform == transform || hit.transform.IsChildOf(transform);
         }
         Vector3? investigate;
-        public void Hear(Vector3 point,bool hostile){if(hostile)alerted=true;else investigate=point;}
+        public void Hear(Vector3 point,bool hostile){if(hostile){alerted=true;lastSeen=point;}else investigate=point;}
         Vector3 patrolHome;float patrolClock;
+        Vector3? lastSeen;
         Map02ChapterDirector director;NavMeshAgent agent;bool alerted;float shot,repath;Animator actor;
         public void Initialize(Map02ChapterDirector owner,string key,string roster,float hp,bool hostile)
         {
@@ -56,7 +58,7 @@ namespace ShadowVale.Map01
             // Escort of the tank: no chase. Ducks while suppressed, otherwise fires at Nam (who cannot fall here).
             if(agent.isOnNavMesh)agent.isStopped=true;
             if(model!=null)model.localPosition=Vector3.Lerp(model.localPosition,Suppressed?Vector3.down*.55f:Vector3.zero,Time.deltaTime*10);
-            transform.rotation=Quaternion.RotateTowards(transform.rotation,Quaternion.LookRotation(Vector3.ProjectOnPlane(to-from,Vector3.up)),220*Time.deltaTime);
+            if(sees)transform.rotation=Quaternion.RotateTowards(transform.rotation,Quaternion.LookRotation(Vector3.ProjectOnPlane(to-from,Vector3.up)),220*Time.deltaTime);
             if(Suppressed||!sees||Time.time<shot)return;
             shot=Time.time+1.1f;var sound=target.GetComponent<CombatAudio>();if(sound!=null&&sound.Gunshot.IsValid){var a=sound.Gunshot;PooledAudioService.Resolve().PlayOneShot(a.clip,from,.65f*a.EffectiveGain,1,0,.85f,a.startTime,a.duration);}
             if(Physics.Raycast(from,(to-from).normalized,out var actual,distance+.2f,~0,QueryTriggerInteraction.Ignore)&&actual.transform.GetComponentInParent<Health>()==target.GetComponent<Health>())
@@ -84,13 +86,14 @@ namespace ShadowVale.Map01
             if(mission.CharacterWorldBlocked||ForestMenu.Visible){if(agent.isOnNavMesh)agent.isStopped=true;return;}
             if(!agent.isOnNavMesh)return;
             if(investigate.HasValue&&!alerted&&!HoldPosition){agent.isStopped=false;agent.stoppingDistance=.5f;agent.SetDestination(investigate.Value);if(Vector3.Distance(transform.position,investigate.Value)<1)investigate=null;return;}
-            var target=mission.Player;var from=transform.position+Vector3.up*1.45f;var to=target.position+Vector3.up;
+            var target=mission.Player;var from=transform.position+Vector3.up*1.45f;var to=PlayerStealthAdapter.For(target.gameObject).SightPoint;
             float distance=Vector3.Distance(from,to);bool sees=false;
             if(distance<34&&Physics.Raycast(from,(to-from).normalized,out var hit,distance+.1f,~0,QueryTriggerInteraction.Ignore))sees=hit.transform==target||hit.transform.IsChildOf(target);
-            if(Map01Smoke.Blocks(from,to))sees=false;
+            if(Map01Smoke.Blocks(from,to)||VillageRiceInstances.Conceals(target.GetComponent<PlayerController>()))sees=false;
+            if(sees)lastSeen=target.position;
             if(HoldPosition){Hold(target,from,to,distance,sees);return;}
             if(sees&&distance<24&&Vector3.Angle(transform.forward,to-from)<65)alerted=true;if(!alerted){agent.stoppingDistance=.3f;patrolClock+=Time.deltaTime;agent.isStopped=false;if(!agent.pathPending&&agent.remainingDistance<.6f){var point=patrolHome+Quaternion.Euler(0,(Mathf.FloorToInt(patrolClock/4)%3)*120,0)*Vector3.forward*5;if(NavMesh.SamplePosition(point,out var patrol,3,NavMesh.AllAreas))agent.SetDestination(patrol.position);}return;}
-            agent.stoppingDistance=9;agent.isStopped=false;repath-=Time.deltaTime;if(repath<=0){repath=.5f;agent.SetDestination(target.position);}
+            agent.stoppingDistance=sees?9:.5f;agent.isStopped=!sees&&!lastSeen.HasValue;repath-=Time.deltaTime;if(repath<=0&&lastSeen.HasValue){repath=.5f;agent.SetDestination(lastSeen.Value);}
             if(!sees||Time.time<shot)return;
             transform.rotation=Quaternion.RotateTowards(transform.rotation,Quaternion.LookRotation(Vector3.ProjectOnPlane(to-from,Vector3.up)),220*Time.deltaTime);
             shot=Time.time+1.1f;if(actor!=null&&actor.runtimeAnimatorController!=null)actor.SetTrigger(PlayerCombat.AnimatorParams.Attack);
