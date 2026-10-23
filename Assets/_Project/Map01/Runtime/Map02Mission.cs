@@ -157,6 +157,12 @@ namespace ShadowVale.Map01
             RefreshRoute();
             if (!World.story.failed) PlaySeconds+=Time.deltaTime;
             if (health != null && health.IsDead && !World.story.failed) { World.story.Fail("Nam đã hy sinh. Trở về checkpoint để thử lại.");CancelConversation();Notify(); }
+            // What [E] would use, and its outline, whatever the input device.
+            if(!dialogue.Active&&!World.story.failed&&Chapter?.LocksInput!=true&&Panel==0)
+            {
+                nearest=Chapter?.HasNearbyPost==true?null:NearestObjective();
+                InteractHighlight.Focus(nearest!=null?Chapter?.HighlightFor(nearest)??nearest.transform:NearestGroundItem()?.transform);
+            }
             var kb=Keyboard.current;if(kb==null)return;bool worldEReady=WorldEReady(kb);
             if(dialogue.Active)
             {
@@ -171,12 +177,16 @@ namespace ShadowVale.Map01
             if(kb.mKey.wasPressedThisFrame){TogglePanel(3);return;}
             if(Panel!=0)return;
             if(Chapter?.HasNearbyPost==true){nearest=null;if(worldEReady)Chapter.TryInteractNearbyPost();return;}
-            nearest=null;float best=float.PositiveInfinity;
+            if(worldEReady&&kb.eKey.wasPressedThisFrame){if(nearest!=null)Interact(nearest);else TryCharacterInteraction();}
+        }
+        Map02ObjectiveObject NearestObjective()
+        {
+            Map02ObjectiveObject found=null;float best=float.PositiveInfinity;
             foreach(var target in targets)
                 if(target!=null)
                 if(ObjectiveAvailable(target)&&(Chapter==null||Chapter.ShowInteractPrompt(target))&&target.WithinReach(Player))
-                {float d=(Player.position-target.transform.position).sqrMagnitude;if(target==TrackedObjective)d=-1;if(d<best){nearest=target;best=d;}}
-            if(worldEReady&&kb.eKey.wasPressedThisFrame){if(nearest!=null)Interact(nearest);else TryCharacterInteraction();}
+                {float d=(Player.position-target.transform.position).sqrMagnitude;if(target==TrackedObjective)d=-1;if(d<best){found=target;best=d;}}
+            return found;
         }
         public bool Interact(Map02ObjectiveObject target)
         {
@@ -208,12 +218,12 @@ namespace ShadowVale.Map01
         {
             voice.Stop();lineStartedAt=Time.unscaledTime;
             voiced=Map02DialogueCatalog.HasApprovedRecording(lines[dialogue.Index]);
-            if(voiced)voice.Play(lines[dialogue.Index].id);
+            if(voiced)voice.Play(lines[dialogue.Index].RecordingId);
         }
         public bool AdvanceConversation()
         {
             if(!Ready||Paused||!dialogue.Active||Time.unscaledTime-lineStartedAt<=.3f)return false;
-            bool finished=!voiced||(!voice.HasSpeech&&Time.unscaledTime-lineStartedAt>=DialogueVoice.Length(lines[dialogue.Index].id));
+            bool finished=!voiced||(!voice.HasSpeech&&Time.unscaledTime-lineStartedAt>=DialogueVoice.Length(lines[dialogue.Index].RecordingId));
             int previous=dialogue.Index;var oldStage=World.story.stage;
             bool advanced=dialogue.Advance(finished);
             if(!dialogue.Active){voice.Stop();lines=null;Notify();if(World.story.stage!=oldStage)StoreCheckpoint();}
@@ -231,7 +241,8 @@ namespace ShadowVale.Map01
         {
             foreach(var target in targets)if(target!=null&&(target.work==Map02Work.MedicinePickup||target.work==Map02Work.CratePickup))
             {
-                bool visible=target.work==Map02Work.MedicinePickup?!World.medicineTaken:!World.crateTaken;
+                // Under the chapter these pre-chapter pickups are not used; the chapter shows its own supplies.
+                bool visible=Chapter==null&&(target.work==Map02Work.MedicinePickup?!World.medicineTaken:!World.crateTaken);
                 foreach(var r in target.GetComponentsInChildren<Renderer>())r.enabled=visible;
                 foreach(var c in target.GetComponents<Collider>())c.enabled=visible;
             }

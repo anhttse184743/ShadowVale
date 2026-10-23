@@ -32,21 +32,28 @@ namespace ShadowVale.Map01
                 if(t.kind=="families")return $"Đã dặn {n}/{t.count} hộ. Tới nhà được đánh dấu, nhấn E nói chuyện.";
                 if(t.kind=="binocular")return $"Tới cầu · Giữ F dùng ống nhòm, thả F để hạ. Nhìn về ánh đèn phía nam cầu, giữ yên 2 giây. Tiến độ {Mathf.Clamp01(observed/t.seconds)*100:0}%.";
                 if(t.kind=="crawl")return "Giữ C để bò về ghim vàng. Không cần nhấn E lần nữa.";
-                if(t.kind=="defend"||t.kind=="coverFire")
+                if(t.kind=="defend")
                 {
-                    if(State.activeTask!=t.id)return "Tới khu vực ghim vàng, nhấn E bắt đầu giữ tuyến.";
-                    if(t.kind=="coverFire"&&State.taskProgress>=t.seconds&&Vector3.Distance(roles["Hùng"].transform.position,ChargePoint)>=2)return "Hùng đang vòng qua vật che. Tiếp tục yểm trợ tới khi cậu ấy áp sát xe tăng.";
-                    if(t.kind=="coverFire")return $"Yểm trợ Hùng: {Mathf.Max(0,t.seconds-State.taskProgress):0} giây còn lại. Có thể xoay camera và dùng súng.";
-                    int alive=Enemies.Count(e=>e!=null&&e.group==t.id&&!e.Dead);
-                    if(!State.combatGroups.Contains(t.id))return "Địch đang tiến vào tuyến. Giữ khu vực ghim vàng.";
-                    if(alive>0)return $"Còn {alive} lính trong tốp chặn đường. Đẩy lùi chúng để đoàn dân đi qua.";
-                    if(Vector3.Distance(Mission.Player.position,markers[t.id].transform.position)>12)return "Tốp địch đã bị đẩy lùi. Trở lại khu vực ghim vàng để bảo vệ đoàn dân.";
-                    return $"Đang cho dân qua tuyến: {Mathf.Clamp01(State.taskProgress/t.seconds)*100:0}% · còn {Mathf.Max(0,t.seconds-State.taskProgress):0} giây.";
+                    if(State.activeTask!=t.id)return "Tới khu vực ghim vàng để giữ ngõ cho dân qua.";
+                    int pressing=SoldiersPressing(t.id);
+                    if(!State.combatGroups.Contains(t.id))return $"Sơ tán {Evacuation}% · Địch đang tiến vào ngõ. Giữ khu vực ghim vàng.";
+                    if(Vector3.Distance(Mission.Player.position,markers[t.id].transform.position)>12)return $"Sơ tán {Evacuation}% · Trở lại ngõ để che cho dân.";
+                    if(pressing>0)return $"Sơ tán {Evacuation}% · Còn {pressing} lính chặn ngõ. Dân đi chậm khi còn địch.";
+                    if(State.taskProgress>=1)return $"Sơ tán {Evacuation}% · Đợt địch tiếp theo đang tới.";
+                    return $"Sơ tán {Evacuation}% · Ngõ đang trống. Giữ vị trí cho dân qua.";
                 }
+                if(t.kind=="coverFire")
+                {
+                    if(State.activeTask!=t.id)return "Tới bờ đất, nhấn E để yểm trợ Hùng.";
+                    return $"Hùng đang bò dọc bờ mương · {Mathf.Clamp01(State.taskProgress)*100:0}% quãng đường. Bắn tốp lính sau xe tăng cho chúng cúi đầu; còn {EscortStanding} tên đang ngẩng lên.";
+                }
+                if(IsPatch(t))return $"E bắt đầu vá · đã xong {n}/{t.count} thuyền. Bấm chuột vào chỗ rò khi vòng ngoài thu khít; càng chuẩn càng nhanh xong.";
                 if(t.kind=="repair")return $"E bắt đầu sửa · đã xong {n}/{t.count} phần. Nhấn Space đúng nhịp; sai được thử lại.";
                 if(t.kind=="antenna")return "E thao tác đài · A/D căn tín hiệu, giữ ổn định 2 giây.";
-                if(t.kind=="clear"||t.kind=="demolition")return "E bắt đầu · giữ Space để thao tác, Esc hủy.";
+                if(t.kind=="demolition")return CrateInstruction(t);
+                if(t.kind=="clear")return "E bắt đầu · giữ Space để thao tác, Esc hủy.";
                 if(t.kind=="reach")return "Đi tới ghim vàng. Tự xác nhận khi vào đúng khu vực.";
+                if(t.id=="N3_07")return "Về bờ đất cạnh bến, chỗ Hùng giữ máy.";
                 return "Tới ghim vàng, nhấn E để nói chuyện hoặc tương tác.";
             }
         }
@@ -55,6 +62,7 @@ namespace ShadowVale.Map01
         {
             var task=Map02ChapterDefinition.Load().Find(marker.chapterId);if(task==null)return true;
             if(task.kind=="reach"||task.kind=="crawl"||task.kind=="binocular")return false;
+            if(task.id=="N3_WOUND"||task.id=="N3_07"||task.id=="N3_09"||task.kind=="defend")return false; // Run on their own.
             return State.activeTask!=task.id||!(escort!=null||task.kind=="defend"||task.kind=="coverFire");
         }
         bool ObservationVisible(Camera cam,Vector3 target)
@@ -73,6 +81,7 @@ namespace ShadowVale.Map01
             if(t.kind=="wire")return State.wireStage==1?"Giao cuộn dây ăng-ten cho Hùng":"Lấy cuộn dây ăng-ten trong kho kín";
             if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)&&State.activeTask==t.id?$"Đặt thùng {n+1}/{t.count} tại {(t.id=="D1_04"?"kho kín":"chỗ trú bến nam")}":$"Nhận thùng {n+1}/{t.count} tại {(t.id=="D1_04"?"bến cập":"kho kín")}";
             if(t.kind=="families")return $"Dặn dò hộ dân {n+1}/{t.count}";
+            if(t.kind=="demolition")return CratePrompt(t);
             if(escort!=null&&State.activeTask==t.id)return $"Dẫn {escort.role} tới {(t.kind.StartsWith("rescue")?"bến nam":t.kind=="escortScout"?"chỗ anh Thành":t.kind=="escortHung"?"nhà chị Lành":t.site=="gate"?"chốt đầu làng":t.site=="rest"?"chỗ nghỉ":"chốt bờ tre")}";
             return t.title;
         }

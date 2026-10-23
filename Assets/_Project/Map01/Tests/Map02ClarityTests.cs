@@ -74,7 +74,10 @@ namespace ShadowVale.Map01.Tests
             Load("N3_01");var family=Mark("N3_02");Place(m,family.transform.position);Assert.IsTrue(m.Interact(family));Assert.AreEqual("N3_02",c.CurrentScene.id);Assert.IsFalse(c.State.Done("N3_02"));typeof(Map02ChapterDirector).GetMethod("EndScene",Private).Invoke(c,null);
             var follower=typeof(Map02ChapterDirector).GetField("secondaryEscort",Private).GetValue(c);Assert.AreSame(c.Actor("Chị Lành"),follower,"Both members of the family must be escorted.");
             var daughterStart=c.Actor("Chị Lành").transform.position;c.Actor("Chị Lành").transform.position=m.Player.position+Vector3.forward*12;
-            Assert.AreSame(c.Actor("Chị Lành"),c.Companion);StringAssert.Contains("ông Sáu và chị Lành",c.Instruction);StringAssert.Contains("cách 12 m",c.Instruction);c.Actor("Chị Lành").transform.position=daughterStart;
+            Assert.AreSame(c.Actor("Chị Lành"),c.Companion);
+            StringAssert.Contains("ông Sáu và chị Lành",c.Instruction);
+            StringAssert.Contains("đang theo sau, cách 12 m",c.Instruction);
+            c.Actor("Chị Lành").transform.position=daughterStart;
             var controller=m.Player.GetComponent<PlayerController>();bool wasEnabled=controller.enabled;controller.enabled=false;
             var body=m.Player.GetComponent<CharacterController>();var path=new NavMeshPath();var destination=c.Sites["southStore"].position;
             Assert.IsTrue(NavMesh.CalculatePath(m.Player.position,destination,NavMesh.AllAreas,path));Assert.AreEqual(NavMeshPathStatus.PathComplete,path.status);

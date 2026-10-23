@@ -30,7 +30,12 @@ namespace ShadowVale.Map01
         public bool Operating{get;private set;}
         public float ObservationProgress=>Layout!=null?Mathf.Clamp01(confirmTime/Mathf.Max(.1f,Mathf.Min(1.2f,Layout.observationSeconds))):0;
         public string ObservationHint{get;private set;}
-        public bool SafeToReport=>mission!=null&&!mission.Enemies.Any(e=>e!=null&&e.Alive&&(e.Engaged||e.Alerted&&Vector3.Distance(e.transform.position,mission.player.position)<35));
+        public bool SafeToReport=>mission!=null&&Hunters==0;
+        /// <summary>Enemies still after Nam: fighting, or searching within 35 m. While any are, he cannot radio in.</summary>
+        public int Hunters=>mission==null?0:mission.Enemies.Count(e=>e!=null&&e.Alive&&(e.Engaged||e.Alerted&&Vector3.Distance(e.transform.position,mission.player.position)<35));
+        /// <summary>After the officer falls, Nam radios for the way out by himself once clear of the fight this long (E still does it at once).</summary>
+        public const float AutoRetreatReportSeconds=3f;
+        float retreatClearFor;
         public bool CanBrief=>quest.Stage==0&&!Progress.rescueAccepted||quest.Stage==2;
         public bool RadioReport=>quest.Stage==4&&!Progress.supplyReported||quest.Stage==6||quest.Stage==8;
         public bool CanDeliver=>quest.Stage==4&&Progress.supplyReported&&!Progress.suppliesDelivered;
@@ -133,7 +138,7 @@ namespace ShadowVale.Map01
                     if(c3!=null&&c3.CachePoint!=null&&!c3.CachePoint.used)return "Điểm 3: lấy khẩu Mosin trinh sát giấu ở vai đồi Đông Nam doanh trại (5 viên), rồi đứng xa trại ít nhất 18 m, giữ [F] quan sát để báo cáo.";
                     return "Điểm 3: đứng xa doanh trại ít nhất 18 m, giữ [F] nhìn về khu trại để báo cáo. Không cần nhắm đúng sĩ quan.";
                 }
-                if(quest.Stage==8)return "Sĩ quan đã bị hạ. Thoát giao tranh rồi liên lạc chỉ huy [E] để nhận đường rút.";
+                if(quest.Stage==8)return SafeToReport?"Sĩ quan đã bị hạ. Liên lạc chỉ huy [E] để nhận đường rút.":$"Sĩ quan đã bị hạ. Thoát giao tranh rồi liên lạc chỉ huy [E] — còn {Hunters} lính đang truy lùng gần bạn.";
                 return null;
             }
         }
@@ -145,13 +150,23 @@ namespace ShadowVale.Map01
             if(!Progress.keyCollected&&inventory.Count(KeyItem)>0){Progress.keyCollected=true;Checkpoint();}
             if(CanBrief&&Near(Commander,mission.Settings.interactRange))Prompt="[E] Nói chuyện với chỉ huy";
             else if(CanDeliver&&Near(Commander,mission.Settings.interactRange))Prompt="[E] Bàn giao túi tiếp tế — nhận lệnh điểm 2";
-            else if(RadioReport)Prompt=SafeToReport?"[E] Liên lạc chỉ huy qua bộ đàm":"Thoát giao tranh rồi liên lạc chỉ huy";
+            else if(RadioReport)Prompt=SafeToReport?"[E] Liên lạc chỉ huy qua bộ đàm":$"Thoát giao tranh rồi liên lạc chỉ huy · còn {Hunters} lính truy lùng";
             else if(quest.Stage==3){
                 if(!Progress.doorUnlocked&&At(Layout.doorApproach))Prompt=RemainingGuards(1)>0?$"Kho còn {RemainingGuards(1)} lính bảo vệ":!Progress.keyCollected?"CỬA KHO BỊ KHÓA · Lấy chìa từ lính gác":"[E] Dùng chìa mở cửa kho";
                 else if(Progress.doorUnlocked&&At(Layout.chestApproach))Prompt=Progress.chestUnlocked?"[E] Mở hòm — lấy túi thuốc":"[E] Giải khóa hòm tiếp tế · 3 vòng số";
             }else if(quest.Stage==5&&Progress.radioDisabled&&Layout.sabotage!=null&&At(Layout.sabotage.powerApproach))Prompt=ResponsePending||RemainingGuards(2)>0?"Dọn trạm đài trước khi phá nguồn":"[E] Phá bộ cấp điện · Ngắt ba cầu chì";
             else if(quest.Stage==5&&!Progress.radioDisabled&&At(Layout.radioApproach))Prompt=ResponsePending?"Xử lý nhóm phản ứng trước khi thao tác đài":RemainingGuards(2)>0?$"Còn {RemainingGuards(2)} lính bảo vệ đài":"[E] Mở bảng mạch · Vô hiệu hóa đài";
             if(Progress.radioResponseCalled&&!Progress.radioResponseSpawned)TrySpawnResponse();ObserveCommander();
+            AutoRetreatReport();
+        }
+        /// <summary>The officer is down and Nam is clear of the fight: he radios for the way out without waiting for E,
+        /// so nobody walks to the jetty and waits for a boat that was never called (21/10/2026).</summary>
+        void AutoRetreatReport()
+        {
+            bool ready=quest.Stage==8&&!Progress.retreatReported&&SafeToReport&&!dialogue.IsPlaying&&!mission.Cinematic&&!Map01NamActions.For(mission).Busy;
+            retreatClearFor=ready?retreatClearFor+Time.deltaTime:0;
+            if(retreatClearFor<AutoRetreatReportSeconds)return;
+            retreatClearFor=0;Report();
         }
         public bool TryInteract()
         {
@@ -194,6 +209,7 @@ namespace ShadowVale.Map01
         }
         void Report()
         {
+            if(dialogue.IsPlaying)return; // Already on the radio (the call after the officer falls starts by itself).
             if(quest.Stage==4)dialogue.Begin(Map01OperationLines.SupplyReport,()=>{Progress.supplyReported=true;Checkpoint();},"Mang hàng về hầm",true);
             else if(quest.Stage==6)dialogue.Begin(Map01OperationLines.RadioReport,()=>{quest.BeginCommanderOrder();Checkpoint();},"Tới điểm 3",true);
             else if(quest.Stage==8)dialogue.Begin(Map01OperationLines.RetreatReport,()=>{Progress.retreatReported=true;quest.CompleteBossDefeat(false);Checkpoint();},"Rút ra bến",true);

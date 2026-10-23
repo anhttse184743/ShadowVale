@@ -13,6 +13,11 @@ namespace ShadowVale.Gameplay.Player
     /// Walking into a wall with the key held down produces no steps, which is the behaviour a
     /// speed-driven version always gets wrong.
     /// </para>
+    /// <para>
+    /// With a humanoid rig a step sounds as an animated foot comes down, so the sound keeps time
+    /// with the legs whatever the pace (carrying, wading, a slowed walk). The distance count stays
+    /// as a backstop for legs that do not lift, such as a test moving the body directly.
+    /// </para>
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
     public sealed class PlayerFootsteps : MonoBehaviour
@@ -25,6 +30,9 @@ namespace ShadowVale.Gameplay.Player
         [SerializeField] private float sneakStride = 0.75f;
         [SerializeField] private float walkStride = 1.0f;
         [SerializeField] private float sprintStride = 1.35f;
+
+        [Tooltip("Time each step to the animated foot coming down (humanoid rigs). Off: by distance only.")]
+        [SerializeField] private bool followFeet = true;
 
         [Header("Volume")]
         [Tooltip("The player's own feet, heard from inside their head: flat stereo, not placed " +
@@ -66,6 +74,13 @@ namespace ShadowVale.Gameplay.Player
         private IAudioService _audio;
         private Vector3 _lastPosition;
         private bool _wasGrounded = true;
+        private Animator _body;
+        private Transform _leftFoot, _rightFoot;
+        private readonly FootContact _leftContact = new(), _rightContact = new();
+        /// <summary>Distance strides without a foot coming down before the backstop steps instead.</summary>
+        private const float BackstopStrides = 1.6f;
+        /// <summary>Below this the character is standing; a shifting idle foot is not a step.</summary>
+        private const float MovingSpeed = 0.25f;
 
         private void Awake()
         {
@@ -78,6 +93,7 @@ namespace ShadowVale.Gameplay.Player
         {
             _lastPosition = transform.position;
             _strider.ResetFully();
+            _leftContact.Reset(); _rightContact.Reset();
         }
 
         private void Update()
@@ -112,10 +128,73 @@ namespace ShadowVale.Gameplay.Player
                 return;
             }
 
+            if (FeetFound())
+            {
+                float dt = Mathf.Max(Time.deltaTime, 0.0001f), ground = position.y;
+                bool moving = delta.magnitude / dt > MovingSpeed;
+                bool left = _leftContact.Planted(_leftFoot.position.y - ground, dt);
+                bool right = _rightContact.Planted(_rightFoot.position.y - ground, dt);
+                bool late = _strider.Advance(delta.magnitude, StrideFor(stance) * BackstopStrides, out bool lateFoot);
+                if (moving && (left || right))
+                {
+                    _strider.Reset();
+                    Emit(position, stance, surface, left, landing: false);
+                }
+                else if (late)
+                {
+                    Emit(position, stance, surface, lateFoot, landing: false);
+                }
+                return;
+            }
+
             if (_strider.Advance(delta.magnitude, StrideFor(stance), out bool leftFoot))
             {
                 Emit(position, stance, surface, leftFoot, landing: false);
             }
+        }
+
+        /// <summary>The humanoid's feet, found again if the visual was swapped.</summary>
+        private bool FeetFound()
+        {
+            if (!followFeet) return false;
+            if (_body == null || !_body.isActiveAndEnabled || _leftFoot == null || _rightFoot == null)
+            {
+                _body = null; _leftFoot = _rightFoot = null;
+                foreach (var animator in GetComponentsInChildren<Animator>())
+                {
+                    if (!animator.isHuman || !animator.isActiveAndEnabled) continue;
+                    _body = animator;
+                    _leftFoot = animator.GetBoneTransform(HumanBodyBones.LeftFoot);
+                    _rightFoot = animator.GetBoneTransform(HumanBodyBones.RightFoot);
+                    _leftContact.Reset(); _rightContact.Reset();
+                    break;
+                }
+            }
+            return _leftFoot != null && _rightFoot != null;
+        }
+
+        /// <summary>
+        /// One foot's height above the character's base, watched for the moment it comes down:
+        /// it must have lifted clear of its lowest recent height, then return close to it. Heights are
+        /// taken from the character's base, so slopes and stairs move both; the lowest height only drifts
+        /// up slowly (a foot held up through its swing must not become the new ground).
+        /// </summary>
+        private sealed class FootContact
+        {
+            private const float LiftHeight = 0.05f, PlantHeight = 0.02f, LowRecovery = 0.025f;   // slower than a swing lasts
+            private float _low = float.PositiveInfinity;
+            private bool _lifted;
+
+            public bool Planted(float height, float dt)
+            {
+                _low = Mathf.Min(height, _low + LowRecovery * dt);
+                if (height > _low + LiftHeight) { _lifted = true; return false; }
+                if (!_lifted || height > _low + PlantHeight) return false;
+                _lifted = false;
+                return true;
+            }
+
+            public void Reset() { _low = float.PositiveInfinity; _lifted = false; }
         }
 
         private void Emit(Vector3 position, MoveStance stance, FootSurface surface,

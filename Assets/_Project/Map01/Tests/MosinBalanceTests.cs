@@ -18,7 +18,8 @@ namespace ShadowVale.Map01.Tests
 {
     public sealed class MosinBalanceTests:ForestSceneTestBase
     {
-        const string Work="Docs/Reviews/MosinBalance_20261022";
+        static string Work=>string.IsNullOrEmpty(Environment.GetEnvironmentVariable("SVL_REGRESSION_REPORT"))
+            ?"Docs/Reviews/MosinBalance_20261022":Path.Combine(Environment.GetEnvironmentVariable("SVL_REGRESSION_REPORT"),"MosinBalance");
         const BindingFlags Private=BindingFlags.Instance|BindingFlags.NonPublic;
         static Map01Mission M=>Object.FindFirstObjectByType<Map01Mission>();
         static Map01EnemyController target;
@@ -28,7 +29,7 @@ namespace ShadowVale.Map01.Tests
         static readonly List<string> evidence=new();
         static void Damaged(DamageNotice notice){damageEvents++;lastDamage=notice;}
         static void Killed(GameObject victim){if(target!=null&&victim==target.gameObject)kills++;}
-        [SetUp]public void Isolate()=>SessionState.SetString(ForestSaveSlots.EditorTestRootKey,Path.GetFullPath(Work+"/TestSaves"));
+        [SetUp]public void Isolate(){Directory.CreateDirectory(Work);SessionState.SetString(ForestSaveSlots.EditorTestRootKey,Path.GetFullPath(Work+"/TestSaves"));}
         [TearDown]public void Cleanup(){SessionState.EraseString(ForestSaveSlots.EditorTestRootKey);Directory.CreateDirectory(Work);File.WriteAllLines(Work+"/last-evidence.txt",evidence);}
 
         [Test]public void ProfilePrefabAndPrecisionSupportARealTwoHundredMetreHeadShot()
@@ -114,6 +115,16 @@ namespace ShadowVale.Map01.Tests
             evidence.Add(label+" one hit, one round, one kill; applied="+lastDamage.Amount);
             File.WriteAllLines(Work+"/one-shot-cases.txt",evidence);
         }
+        static void FireThroughArmour(float hp,int previousKills)
+        {
+            // Create captured callback locals after EnterPlayMode, outside the
+            // coroutine state which Unity serializes across its domain reload.
+            var health=target.GetComponent<Health>();Assert.NotNull(health);
+            var armour=health.BulletDamageModifier;int calls=0;
+            health.BulletDamageModifier=(amount,point)=>{calls++;return armour!=null?armour(amount,point):amount*.25f;};
+            try{Fire();AssertLethal("actual commander torso through armour",hp,previousKills);Assert.AreEqual(1,calls,"Queued fire must apply the armour rule exactly once.");}
+            finally{health.BulletDamageModifier=armour;}
+        }
         [UnityTest]public IEnumerator HeadAndTorsoShotsKillAt35_80_120_199MetresIncludingHeavyAndCommanderHealth()
         {
             K54IntegrationTests.OpenSandbox();SetPreviewResolution(1920,1080);yield return new EnterPlayMode();yield return WaitForMap01Ready();Prepare();yield return WaitGameSeconds(.5f);
@@ -128,7 +139,8 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(M.GetComponent<Map01Inventory>().Draw(Map01Inventory.Slot.Primary));yield return WaitGameSeconds(1.55f);
             // This is the actual commander component, not a sphere with a large HP number.
             FreshTarget(M.GetComponent<Map01C3Mission>().Commander);float bossHp=target.GetComponent<Health>().Max;
-            Stage(120,bossHp);Aim(1.05f);int bossBefore=kills;Fire();AssertLethal("actual commander torso",bossHp,bossBefore);
+            Stage(120,bossHp);Aim(1.05f);int bossBefore=kills;
+            FireThroughArmour(bossHp,bossBefore);
             File.WriteAllLines(Work+"/one-shot-cases.txt",evidence);yield return new ExitPlayMode();
         }
         [UnityTest]public IEnumerator MaxRangeCoverAndCinematicProtectionStillApplyAndScopeShowsTheActualTarget()

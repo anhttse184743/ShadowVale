@@ -88,17 +88,25 @@ namespace ShadowVale.Gameplay.Combat
             }
         }
 
+        /// <summary>Shapes a bullet's damage by where it struck before it is taken (a commander's body armour and
+        /// headshots); null = as fired. Grenades, knives and falls are not bullets and are not shaped.</summary>
+        public System.Func<float, Vector3, float> BulletDamageModifier { get; set; }
+
         public void TakeBulletDamage(float amount, Vector3 hitPoint, GameObject source, Vector3 direction)
-        {
-            if (CinematicInvulnerable || IsDead || amount <= 0f) return;
-            ApplyDamage(amount, hitPoint, source, true);
-            BloodImpact.Play(hitPoint, direction);
-        }
+            => ResolveBulletDamage(amount, hitPoint, source, direction, null, false);
 
         // Deferred gunfire can resolve after a weapon switch; the queued weapon owns the hit.
-        internal void TakeBulletDamageFromWeapon(float amount, Vector3 hitPoint, GameObject source, Vector3 direction, WeaponKind weapon)
+        internal void TakeBulletDamageFromWeapon(float amount, Vector3 hitPoint, GameObject source, Vector3 direction, WeaponKind weapon, bool lethalEnemyHit = false)
+            => ResolveBulletDamage(amount, hitPoint, source, direction, weapon, lethalEnemyHit);
+
+        private void ResolveBulletDamage(float amount, Vector3 hitPoint, GameObject source, Vector3 direction, WeaponKind? weapon, bool lethalEnemyHit)
         {
             if (CinematicInvulnerable || IsDead || amount <= 0f) return;
+            if (BulletDamageModifier != null) amount = BulletDamageModifier(amount, hitPoint);
+            // Only the firing weapon's enemy policy may guarantee a kill. Ordinary
+            // bullets retain armour; protected actors were rejected above.
+            if (lethalEnemyHit) amount = Mathf.Max(amount, _current);
+            if (amount <= 0f) return;
             ApplyDamage(amount, hitPoint, source, true, weapon);
             BloodImpact.Play(hitPoint, direction);
         }

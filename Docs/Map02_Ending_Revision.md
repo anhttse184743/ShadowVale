@@ -1,3 +1,5 @@
+> **Đã cũ (21/10/2026).** Kết cục hiện tại theo kịch bản chi tiết 3 ngày đêm: Hùng gài bộc phá diệt xe tăng chặn đường bến, không hy sinh ở bến nam khi yểm trợ chuyến thuyền cuối. Xem `Docs/Map02Chapter/KeHoach_Ngay3_Dem3_20261021.md` và `Docs/Map02Chapter/Implementation_and_QA.md`.
+
 # Kết cục Map 2 — cập nhật theo xác nhận của người dùng
 
 ## Nội dung đã chốt

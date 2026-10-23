@@ -53,3 +53,5 @@ Không sửa scene, prefab, clip, thông số sát thương hay tầm phát hi�
 ## Kiểm tra sau merge dev — 23/10/2026
 
 `FieldCraftingTests` hiện có **4 ca, đều đạt** trên bản tích hợp: kinh tế vật tư; quy đổi/hủy/hoàn vật liệu Map 1; nguồn AK C3 hữu hạn qua save/load; chế tạo Map 2 giữ thế giới hoạt động và không nhân vật tư khi lưu. Hai ca QIEA cũng đã đạt với solver Python ở đường dẫn người dùng cung cấp. Hồi quy liên quan có 122/123 ca đạt; còn lỗi pose ngón cái cầm đá, đã ghi rõ trong [báo cáo merge](../DevMerge_20261023/KET_QUA.md). Các ghi chú chưa chạy Unity phía trên mô tả giai đoạn triển khai ban đầu.
+
+Đã chạy lại chế tạo 4/4 và QIEA 2/2 sau khi nhận thêm dev `7abc29af`. Kết quả các ca liên quan trên snapshot sau cùng: **101/102 đạt**, còn ca ngón cái cầm đá; xem [báo cáo bổ sung](../DevMergeLatest_20261023/KET_QUA.md).

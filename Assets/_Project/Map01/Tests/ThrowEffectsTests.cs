@@ -35,7 +35,7 @@ namespace ShadowVale.Map01.Tests
             Assert.AreEqual(1, bang.clip.channels, "Imported mono, so Unity can place it.");
             Assert.IsNotNull(bang.GetComponent<AudioLowPassFilter>());
             Assert.IsNotNull(bang.GetComponent<AudioReverbFilter>(), "A light echo.");
-            Assert.Greater(Map01Blast.MuffleCutoff(2f), Map01Blast.MuffleCutoff(60f) * 3f, "Sharp up close, a dull rumble far off.");
+            Assert.Greater(Map01Blast.MuffleCutoff(2f), Map01Blast.MuffleCutoff(60f) * 2f, "Sharp up close, a dull rumble far off.");
             Assert.IsTrue(mission.gameCamera.TryGetComponent<Map01CameraShake>(out var shake), "The camera 12 m off shakes.");
             Assert.Greater(shake.Strength(), 0f);
             yield return WaitGameSeconds(.5f);

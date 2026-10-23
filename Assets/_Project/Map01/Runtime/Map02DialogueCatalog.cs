@@ -11,6 +11,9 @@ namespace ShadowVale.Map01
         {
             public string id, conversation, speaker, text;
             public bool radio;
+            /// <summary>Optional: another recording this line replays (Hùng's promise echoed after the blast).</summary>
+            public string recording;
+            public string RecordingId => string.IsNullOrEmpty(recording) ? id : recording;
             public string Caption => speaker + (radio ? " (bộ đàm): " : ": ") + text;
         }
 
@@ -32,7 +35,7 @@ namespace ShadowVale.Map01
         public static bool HasApprovedRecording(Entry line)
         {
             if (line == null) return false;
-            var recording = DialogueVoice.Find(line.id);
+            var recording = DialogueVoice.Find(line.RecordingId);
             return recording != null && recording.clip != null &&
                 recording.radio == line.radio && recording.caption == line.Caption;
         }

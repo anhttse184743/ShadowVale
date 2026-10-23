@@ -50,7 +50,7 @@ namespace ShadowVale.Map01
         static bool ActiveWeaponPart(Transform part,Transform root){for(var t=part;t!=null&&t!=root;t=t.parent)if(!t.gameObject.activeSelf)return false;return true;}
         void UpdateWorkWeapon()
         {
-            bool occupied=State.carry=="D1_04"||escort!=null||DayActivityActive;
+            bool occupied=State.carry=="D1_04"||escort!=null&&State.phase<4||DayActivityActive;   // Night 3's rescue escorts keep the rifle in hand
             if(!occupied){ReleaseWorkWeapon();return;}
             if(slungWorkRifle==null)
             {

@@ -70,7 +70,7 @@ namespace ShadowVale.Map01
             HudPlate(new Rect(25,300,345,plateHeight));
             GUI.Label(new Rect(44,317,300,35),"VIỆC ĐANG THEO DÕI",hudStencil);
             GUI.Label(new Rect(44,357,300,plateHeight-75),title+"\n\n"+instruction,hudCaption);
-            if(Chapter!=null){var phaseTint=GUI.color;GUI.color=new Color(0,0,0,.65f);GUI.DrawTexture(new Rect(560,20,990,38),Texture2D.whiteTexture);GUI.color=phaseTint;GUI.Label(new Rect(574,23,960,34),Map02ChapterState.PhaseName(Chapter.State.phase)+(Chapter.State.phase==5?" · Sơ tán "+Chapter.State.evacuation+"%":""),hudCaption);}
+            if(Chapter!=null){var phaseTint=GUI.color;GUI.color=new Color(0,0,0,.65f);GUI.DrawTexture(new Rect(560,20,990,38),Texture2D.whiteTexture);GUI.color=phaseTint;GUI.Label(new Rect(574,23,960,34),Map02ChapterState.PhaseName(Chapter.State.phase)+(Chapter.State.phase==5?" · Sơ tán "+Chapter.Evacuation+"%":""),hudCaption);}
             if(objective!=null)
             {
                 float distance=Vector3.Distance(Player.position,Point(objective));

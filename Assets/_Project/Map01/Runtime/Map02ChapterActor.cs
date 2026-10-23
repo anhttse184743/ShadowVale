@@ -10,9 +10,12 @@ namespace ShadowVale.Map01
         public string role;
         public Transform visual;
         public float pace=1.35f;
+        /// <summary>Set by the director while this person walks into a scene; scenes otherwise freeze everyone.</summary>
+        public bool SceneDriven {get;set;}
         Map02Mission mission;Transform follow;NavMeshPath path;int corner;float repath;
         Animator animator;AnimationClip walk,idle;Map01CinematicPose pose;
         float visualY;readonly RaycastHit[] floorHits=new RaycastHit[24];
+        float soleWindow=float.PositiveInfinity,soleOffset;Animator skeleton;
         public Animator Animator=>animator;
         public bool ConversationHeld {get;set;}
         public void SetInjured(bool injured){var resting=GetComponent<Map02ScoutInjuredVisual>();if(resting==null&&injured)resting=gameObject.AddComponent<Map02ScoutInjuredVisual>();if(resting!=null)resting.SetInjured(injured,animator);}
@@ -38,7 +41,7 @@ namespace ShadowVale.Map01
             foreach(var listener in existing.GetComponentsInChildren<AudioListener>(true))listener.enabled=false;
             foreach(var light in existing.GetComponentsInChildren<Light>(true))
                 if(light.name=="Light"&&light.intensity>=100)light.enabled=false; // FBX authoring preview, not a village lamp.
-            visualY=existing.localPosition.y;
+            visualY=existing.localPosition.y;soleWindow=float.PositiveInfinity;soleOffset=0;skeleton=null;
             animator=existing.GetComponentInChildren<Animator>();
             if(animator!=null)animator.applyRootMotion=false;
             if(role=="Anh Thành"&&animator!=null)Map01Rifle.Attach(animator);
@@ -61,7 +64,23 @@ namespace ShadowVale.Map01
                 if(hit.normal.y<.55f||hit.transform.IsChildOf(transform)||hit.collider is CharacterController||hit.collider.GetComponentInParent<ShadowVale.Gameplay.Combat.Health>()!=null||hit.collider.GetComponentInParent<Map02ObjectiveObject>()!=null)continue;
                 floor=Mathf.Max(floor,hit.point.y);
             }
-            if(!float.IsNegativeInfinity(floor)){var local=visual.localPosition;local.y=visualY+Mathf.Clamp(floor-transform.position.y,-.6f,.6f);visual.localPosition=local;}
+            float sole=SettleSoles();
+            var local=visual.localPosition;   // the sole correction holds even where no floor is found under the socket
+            local.y=visualY+(float.IsNegativeInfinity(floor)?0:Mathf.Clamp(floor-transform.position.y,-.6f,.6f))-sole;visual.localPosition=local;
+        }
+        // Some rigs and clips (Hùng's carried-over model, his limp) keep both feet a hand's width above the visual's base.
+        // The lowest toe over the last moments is what stands on the ground: lower the visual to it at once when the
+        // feet come lower, and only slowly let it back, so a walk cycle does not bob. It only ever lowers.
+        float SettleSoles()
+        {
+            if(skeleton==null)skeleton=visual.GetComponentsInChildren<Animator>().FirstOrDefault(a=>a.isHuman);   // not always the first animator
+            if(skeleton==null)return 0;
+            Transform Low(HumanBodyBones toes,HumanBodyBones foot)=>skeleton.GetBoneTransform(toes)??skeleton.GetBoneTransform(foot);
+            var l=Low(HumanBodyBones.LeftToes,HumanBodyBones.LeftFoot);var r=Low(HumanBodyBones.RightToes,HumanBodyBones.RightFoot);if(l==null||r==null)return 0;
+            float lift=Mathf.Min(l.position.y,r.position.y)-visual.position.y;   // toes above the visual's own base: the pose alone
+            soleWindow=Mathf.Min(lift,soleWindow+.06f*Time.deltaTime);
+            soleOffset=Mathf.MoveTowards(soleOffset,Mathf.Clamp(soleWindow-.015f,0,.25f),.5f*Time.deltaTime);
+            return soleOffset;
         }
         public void SetQuietRifle(bool slung)
         {
@@ -75,15 +94,15 @@ namespace ShadowVale.Map01
         public void GoTo(Vector3 destination,float speed){SetInjured(false);travelling=true;follow=null;goal=destination;pace=speed;repath=0;}
         public void StopAt(Vector3 position)
         {
-            travelling=false;follow=null;Supporting=assisted=false;path=null;transform.position=position;goal=position;
+            travelling=false;follow=null;Supporting=assisted=false;path=null;transform.position=position;goal=position;SceneDriven=false;
             if(animator!=null&&animator.runtimeAnimatorController!=null&&animator.parameters.Any(p=>p.name=="Speed"))animator.SetFloat("Speed",0);
         }
         public void SetDead(bool dead){if(dead){travelling=false;follow=null;}if(visual!=null)visual.gameObject.SetActive(!dead);gameObject.name="Actor slot — "+role+(dead?" (đã hy sinh)":"");}
         void Update()
         {
-            mission??=FindFirstObjectByType<Map02Mission>();var m=mission;if(ConversationHeld||m==null||m.Paused||m.InputBlocked)return;
+            mission??=FindFirstObjectByType<Map02Mission>();var m=mission;if(ConversationHeld||m==null||m.Paused||ForestMenu.Visible||(m.InputBlocked&&!SceneDriven))return;
             if(follow==null&&!travelling){DayLocomotion(false);return;}
-            if(!travelling&&Vector3.Distance(transform.position,follow.position)>7){DayLocomotion(false);return;} // Never pull an escort through walls or teleport to Nam.
+            if(!travelling&&m.Chapter!=null&&m.Chapter.State.phase<=1&&Vector3.Distance(transform.position,follow.position)>7){DayLocomotion(false);return;} // Day 1 / Night 1: never pull an escort through walls or teleport to Nam. Later escorts keep following.
             repath-=Time.deltaTime;if(repath<=0){repath=.5f;if(!travelling){var side=follow.position+follow.right*.65f-follow.forward*.15f;seekingSupport=assisted&&!NavMesh.Raycast(follow.position,side,out _,NavMesh.AllAreas);Supporting=seekingSupport&&Vector3.Distance(transform.position,side)<.85f;goal=seekingSupport?side:follow.position-follow.forward*1.6f;}var p=new NavMeshPath();if(NavMesh.SamplePosition(goal,out var found,2,NavMesh.AllAreas))goal=found.position;if(NavMesh.CalculatePath(transform.position,goal,NavMesh.AllAreas,p)&&p.status==NavMeshPathStatus.PathComplete){path=p;corner=1;}else path=null;}
             if(travelling&&Vector3.Distance(transform.position,goal)<.3f){StopAt(goal);return;}
             var before=transform.position;

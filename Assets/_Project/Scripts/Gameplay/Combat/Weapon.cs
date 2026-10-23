@@ -55,9 +55,9 @@ namespace ShadowVale.Gameplay.Combat
         public WeaponKind Kind => kind;
         public float Damage => damage;
         public bool LethalAgainstEnemies => lethalAgainstEnemies;
-        public float DamageAgainst(Health target) => lethalAgainstEnemies && target != null
-            && target.GetComponentInParent<ShadowVale.AI.Agents.IEnemyAgent>() != null
-                ? Mathf.Max(damage,target.Current) : damage;
+        public bool IsLethalAgainst(Health target) => lethalAgainstEnemies && target != null
+            && target.GetComponentInParent<ShadowVale.AI.Agents.IEnemyAgent>() != null;
+        public float DamageAgainst(Health target) => IsLethalAgainst(target) ? Mathf.Max(damage,target.Current) : damage;
         public float Range => range;
         public float Cooldown => cooldown;
         public bool Automatic => automatic;

@@ -270,6 +270,8 @@ namespace ShadowVale.Gameplay.Combat
         /// <summary>The rifle in hand, or null with anything else out.</summary>
         internal Weapon Gun => !_handsOccupied && _equipped != null && _equipped.IsGun ? _equipped : null;
         private bool _handsOccupied;
+        /// <summary>The hands hold something other than the weapon (a load, a tool); the weapon cannot be used.</summary>
+        public bool HandsOccupied => _handsOccupied;
 
         /// <summary>Free the hands for a held item while preserving the equipped weapon and ammunition.</summary>
         public void SetHandsOccupied(bool occupied)
@@ -946,7 +948,7 @@ namespace ShadowVale.Gameplay.Combat
             {
                 var health = hit.collider.GetComponentInParent<Health>();
                 bool alive = health != null && !health.IsDead;
-                if (health != null) health.TakeBulletDamageFromWeapon(gun.DamageAgainst(health), hit.point, gameObject, direction, gun.Kind);
+                if (health != null) health.TakeBulletDamageFromWeapon(gun.DamageAgainst(health), hit.point, gameObject, direction, gun.Kind, gun.IsLethalAgainst(health));
                 else ApplyDamage(hit.collider, gun.Damage, hit.point);
                 if (alive && health.IsDead) GunKilled?.Invoke(health.gameObject);
                 endPoint = hit.point;

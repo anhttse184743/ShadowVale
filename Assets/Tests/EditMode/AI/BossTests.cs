@@ -286,8 +286,8 @@ namespace ShadowVale.Tests.EditMode.AI
         [Test]
         public void HeFightsFromCoverMostOfTheTimeWithSteadyFire()
         {
-            Assert.That(Profile.PeekOutSeconds / (Profile.PeekOutSeconds + Profile.PeekHideSeconds), Is.GreaterThan(.7f),
-                "Out firing three quarters of the time (was 47%).");
+            Assert.That(Profile.PeekOutSeconds / (Profile.PeekOutSeconds + Profile.PeekHideSeconds), Is.InRange(.55f, .7f),
+                "Out firing most of the time, not three quarters of it (2.5/0.8 from 18/10 had him easy to spray down).");
             Assert.AreEqual(1, Profile.BurstRounds, "Steady fire, not bursts (19/10/2026).");
             Assert.AreEqual(.3f, Profile.FireIntervalSeconds, 1e-6, "A round every 0.3 s.");
             Assert.AreEqual(11.5f, Profile.DamagePerRound, 1e-6);
@@ -363,6 +363,50 @@ namespace ShadowVale.Tests.EditMode.AI
             }
             Assert.IsFalse(BossRelocation.TryPick(graph, Profile, Vector3.zero, player, here, null,
                 out _, out _, fallingBack: true, allowed: p => false));
+        }
+
+        [Test]
+        public void RoundsLandingMakeHimDuckAndMoreAfterwardsMoveHim()
+        {
+            var d = new BossDirector(Profile);
+            d.Tick(Sense(0));
+            Assert.IsFalse(d.Tick(Sense(1f, hp: .98f)).Duck);
+            Assert.IsFalse(d.Tick(Sense(1.2f, hp: .96f)).Duck);
+            var duck = d.Tick(Sense(1.4f, hp: .94f));
+            Assert.IsTrue(duck.Duck, "Three rounds in a second: down behind the cover at once.");
+            Assert.AreEqual("suppressed", duck.DuckReason);
+            Assert.IsFalse(duck.Relocate);
+            Assert.IsFalse(d.Tick(Sense(1.8f, hp: .92f)).Relocate, "Behind the cover: a round through it is not a reason to run yet.");
+            var move = d.Tick(Sense(1.4f + Profile.DuckSeconds + .3f, hp: .90f));
+            Assert.IsTrue(move.Relocate, "Hit again as he comes back out: he moves.");
+            Assert.AreEqual("suppressed", move.RelocateReason);
+
+            var steady = new BossDirector(Profile);
+            steady.Tick(Sense(0));
+            for (int i = 1; i <= 5; i++)
+                Assert.IsFalse(steady.Tick(Sense(i * 1.1f, hp: 1f - i * .02f)).Duck, "A round now and then is not being sprayed down.");
+        }
+
+        [Test]
+        public void ArmourHalvesBodyHitsAndHeadshotsDouble()
+        {
+            Assert.AreEqual(.5f, BossDirector.ArmorFactor(Profile, headshot: false), 1e-6);
+            Assert.AreEqual(2f, BossDirector.ArmorFactor(Profile, headshot: true), 1e-6);
+            float health = 700f, perRound = 24f;
+            Assert.Greater(Mathf.CeilToInt(health / (perRound * Profile.ArmorBodyFactor)), 30 * 1.9f, "Body shots: about two magazines, not one.");
+        }
+
+        [Test]
+        public void HeComesOutAtADifferentSpotAndNeverWhereHeWasHit()
+        {
+            var rng = new System.Random(4);
+            for (int i = 0; i < 20; i++)
+                Assert.AreEqual(2, BossBehaviour.NextPeek(3, last: 0, burned: 1, rng), "Not the last spot, not where he was hit.");
+            Assert.AreEqual(1, BossBehaviour.NextPeek(2, 0, -1, rng));
+            Assert.AreEqual(0, BossBehaviour.NextPeek(1, 0, 0, rng), "Only one spot: that one.");
+            var seen = new System.Collections.Generic.HashSet<int>();
+            for (int i = 0; i < 40; i++) seen.Add(BossBehaviour.NextPeek(3, 2, 2, rng));
+            CollectionAssert.AreEquivalent(new[] { 0, 1 }, seen, "Either of the others, at random.");
         }
 
         // ---- Commanding ----------------------------------------------------------------------------

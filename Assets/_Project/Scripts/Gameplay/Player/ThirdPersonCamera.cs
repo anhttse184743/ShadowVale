@@ -169,6 +169,26 @@ namespace ShadowVale.Gameplay.Player
             cinematicFov = fov; cinematicWeight = Mathf.Clamp01(weight);
         }
         public void ClearCinematicView() => cinematicWeight = 0;
+        private float _shakeAmplitude, _shakeUntil, _shakeLength;
+        /// <summary>
+        /// A decaying shake on top of the final view, for blasts and hits in scripted scenes.
+        /// Nothing shakes unless something asks; the strongest pending shake wins.
+        /// </summary>
+        public void Shake(float amplitude, float seconds)
+        {
+            if (amplitude <= 0f || seconds <= 0f) return;
+            if (amplitude < ShakeAmplitude) return;
+            _shakeAmplitude = amplitude; _shakeLength = seconds; _shakeUntil = Time.time + seconds;
+        }
+        /// <summary>Current shake in metres, fading to zero over its length.</summary>
+        public float ShakeAmplitude => Time.time < _shakeUntil ? _shakeAmplitude * ((_shakeUntil - Time.time) / _shakeLength) : 0f;
+        private void ApplyShake()
+        {
+            float amount = ShakeAmplitude;
+            if (amount <= 0f) return;
+            float t = Time.time * 25f;
+            transform.position += new Vector3(Mathf.PerlinNoise(t, 0.3f) - .5f, Mathf.PerlinNoise(0.7f, t) - .5f, Mathf.PerlinNoise(t, t) - .5f) * (2f * amount);
+        }
         private void LateUpdate()
         {
             if (target == null)
@@ -232,6 +252,7 @@ namespace ShadowVale.Gameplay.Player
                     Quaternion.Slerp(transform.rotation, cinematicRotation, cinematicWeight));
                 _camera.fieldOfView = Mathf.Lerp(_camera.fieldOfView, cinematicFov, cinematicWeight);
             }
+            ApplyShake();
         }
 
         private float CameraCollisionRadius()

@@ -32,6 +32,20 @@ namespace ShadowVale.Tests.EditMode.Gameplay
             wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
             wall.transform.position = player.transform.position + offset; wall.transform.localScale = scale;
         }
+        [Test] public void WithoutAShakeTheViewIsExactlyTheSame()
+        {
+            // Map 1 never shakes: the view must not move unless a scene asks.
+            Tick(); var before = view.transform.position; Tick();
+            Assert.AreEqual(0f, rig.ShakeAmplitude); Assert.AreEqual(before, view.transform.position);
+            rig.Shake(0f, 1f); rig.Shake(.5f, 0f); Assert.AreEqual(0f, rig.ShakeAmplitude, "A zero shake is no shake.");
+        }
+        [Test] public void ShakeMovesTheViewWithinItsAmplitudeAndAWeakerOneCannotReplaceIt()
+        {
+            Tick(); var still = view.transform.position;
+            rig.Shake(.5f, 10f); rig.Shake(.1f, 10f); Assert.AreEqual(.5f, rig.ShakeAmplitude, .01f);
+            Tick(); float moved = Vector3.Distance(still, view.transform.position);
+            Assert.Greater(moved, 0f); Assert.LessOrEqual(moved, .5f * 2f * Mathf.Sqrt(3f) * .5f + .001f);
+        }
         [Test] public void NearbyWallRetractsBelowMinimumZoomDistance()
         {
             Wall(new Vector3(0, 1.6f, -.85f), new Vector3(6, 4, .1f)); Tick();

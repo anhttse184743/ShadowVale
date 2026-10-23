@@ -40,7 +40,11 @@ namespace ShadowVale.Map01
         }
         void FreeNamPose(AnimationClip clip,float clock,bool loop=true)
         {if(clip==null)return;dayNamPose??=new Map01CinematicPose(dayNamAnimator,null,false);dayNamPose.Sample(clip,clock,loop);}
-        void ReleaseDayFreePose(){dayNamPose?.Dispose();dayNamPose=null;cargoPose?.Dispose();cargoPose=null;}
+        void ReleaseDayFreePose()
+        {
+            bool held=dayNamPose!=null||cargoPose!=null;dayNamPose?.Dispose();dayNamPose=null;cargoPose?.Dispose();cargoPose=null;
+            if(held)RestoreNamAnimator();   // releasing a pose rebinds Nam's animator, which forgets the weapon in his hands
+        }
         void CreateStoryProps(Material wood,Material cloth,Material iron)
         {
             var family=DayFamily;

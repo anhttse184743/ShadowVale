@@ -115,9 +115,10 @@ namespace ShadowVale.Map01
             var throwing=GetComponent<Map01StoneThrow>();
             if(Bag.ThrowableEquipped&&!CharacterGearLocked&&!Bag.SuppressFire&&Mouse.current!=null){if(Mouse.current.rightButton.wasPressedThisFrame)throwing.Cancel();else if(Mouse.current.leftButton.wasPressedThisFrame)throwing.BeginAim();else if(Mouse.current.leftButton.wasReleasedThisFrame)throwing.Release();}
         }
+        Map02GroundItem NearestGroundItem()=>groundItems.Where(g=>g!=null&&Vector3.Distance(Player.position,g.transform.position)<3).OrderBy(g=>(g.transform.position-Player.position).sqrMagnitude).FirstOrDefault();
         void TryCharacterInteraction()
         {
-            var item=groundItems.Where(g=>g!=null&&Vector3.Distance(Player.position,g.transform.position)<3).OrderBy(g=>(g.transform.position-Player.position).sqrMagnitude).FirstOrDefault();
+            var item=NearestGroundItem();
             if(item!=null){PickupCharacterItem(item);return;}
             if(!CharacterGearLocked&&Bag.NearWorkbench())SetCharacterPanel(4);
         }

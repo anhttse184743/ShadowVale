@@ -51,6 +51,7 @@ namespace ShadowVale.Map01.Editor
             }
             var controller=BuildController();var layout=Resources.Load<Map02ChapterLayout>("Story/Map02ChapterLayout");
             var roles=(layout.actors??Array.Empty<Map02ChapterLayout.RoleArt>()).ToList();var report=new StringBuilder();
+            float nam=NamHeadHeight();
             foreach(var entry in Cast)
             {
                 var root=new GameObject(entry.role+" — Map 2 visual");
@@ -61,21 +62,39 @@ namespace ShadowVale.Map01.Editor
                     var actor=model.GetComponentInChildren<Animator>();
                     if(actor==null||actor.avatar==null||!actor.avatar.isValid||!actor.avatar.isHuman)throw new InvalidOperationException("Invalid humanoid avatar: "+entry.file);
                     actor.runtimeAnimatorController=controller;actor.applyRootMotion=false;actor.cullingMode=AnimatorCullingMode.AlwaysAnimate;actor.Rebind();actor.Update(0);
+                    // All seven exports share an adult-sized rig, including the seven-year-old child. Every adult stands as
+                    // tall as Nam, measured as he is: toes to head bone in the same idle pose (mesh bounds count hats and hair,
+                    // and the raw export's pose is not the one played). Bé Tí is a seven-year-old beside them.
+                    float target=nam*(entry.key=="Ti"?ChildToAdult:1);
+                    for(int pass=0;pass<2;pass++){model.transform.localScale*=target/HeadHeight(actor);actor.Rebind();actor.Update(0);}
                     var bounds=SkinBounds(model);
-                    // All seven exports share an adult-sized rig, including the seven-year-old child.
-                    float height=entry.key=="Ti"?1.15f:entry.key=="Lanh"?1.58f:entry.key=="Sau"?1.62f:entry.key=="Bay"?1.65f:1.72f;
-                    float scale=height/bounds.size.y;
-                    model.transform.localScale*=scale;
-                    model.transform.localPosition-=new Vector3(bounds.center.x,bounds.min.y,bounds.center.z)*scale;
+                    model.transform.localPosition-=new Vector3(bounds.center.x,bounds.min.y,bounds.center.z);   // feet on the root
                     actor.Rebind();actor.Update(0);
+                    float height=HeadHeight(actor);
                     var prefab=PrefabUtility.SaveAsPrefabAsset(root,Folder+"/"+entry.key+".prefab");
                     roles.RemoveAll(r=>r.role==entry.role);roles.Add(new Map02ChapterLayout.RoleArt{role=entry.role,prefab=prefab});
-                    report.AppendLine(entry.role+" <- "+entry.file+" | target height="+height+" | humanoid valid | "+AssetDatabase.GetAssetPath(prefab));
+                    report.AppendLine(entry.role+" <- "+entry.file+" | toes to head "+height.ToString("0.000")+" m (Nam "+nam.ToString("0.000")+") | humanoid valid | "+AssetDatabase.GetAssetPath(prefab));
                 }
                 finally{Object.DestroyImmediate(root);}
             }
             layout.actors=roles.ToArray();EditorUtility.SetDirty(layout);AssetDatabase.SaveAssets();
             Directory.CreateDirectory("Logs/Map02Chapter/Cast");File.WriteAllText("Logs/Map02Chapter/Cast/setup-result.txt",report.ToString());
+        }
+        const float ChildToAdult=.66f;   // a seven-year-old beside an adult
+        /// <summary>Toes (or feet) to the head bone, in the pose the animator is in now.</summary>
+        static float HeadHeight(Animator actor)
+        {
+            var head=actor.GetBoneTransform(HumanBodyBones.Head);
+            Transform Low(HumanBodyBones toes,HumanBodyBones foot)=>actor.GetBoneTransform(toes)??actor.GetBoneTransform(foot);
+            float floor=Mathf.Min(Low(HumanBodyBones.LeftToes,HumanBodyBones.LeftFoot).position.y,Low(HumanBodyBones.RightToes,HumanBodyBones.RightFoot).position.y);
+            return head.position.y-floor;
+        }
+        /// <summary>Nam as the game plays him: the Player prefab, its own controller, first idle frame.</summary>
+        static float NamHeadHeight()
+        {
+            var player=(GameObject)PrefabUtility.InstantiatePrefab(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/Player/Player.prefab"));
+            try{var actor=player.GetComponentsInChildren<Animator>(true).First(a=>a.isHuman);actor.Rebind();actor.Update(0);return HeadHeight(actor);}
+            finally{Object.DestroyImmediate(player);}
         }
         static Bounds SkinBounds(GameObject model)
         {

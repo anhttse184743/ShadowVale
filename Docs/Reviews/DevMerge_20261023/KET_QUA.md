@@ -1,5 +1,7 @@
 # Dev → thinh — 23/10/2026
 
+Đây là đợt ghép `c8667a4e`. Sau đó dev có thêm cập nhật `7abc29af`; kết quả bản tích hợp sau cùng nằm ở [báo cáo bổ sung](../DevMergeLatest_20261023/KET_QUA.md).
+
 Đã lấy `origin/dev` tại `c8667a4e` để merge vào `thinh` tại `3918bba6`. Giữ các commit chế dã chiến, nguồn đạn AK, cân bằng súng, chuyển động Nam và bản hướng dẫn mới của thinh; nhận nội dung ngày 1/đêm 1 Map 2, nhân vật, 49 bản thoại và các sửa rig/hội thoại từ dev.
 
 ## Sửa khi tích hợp

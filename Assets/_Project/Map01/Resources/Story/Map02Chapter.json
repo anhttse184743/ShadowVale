@@ -330,7 +330,7 @@
       "kind": "demolition",
       "site": "ditch",
       "requires": [
-        "N2_05"
+        "D3_01"
       ],
       "count": 1,
       "scene": "demolition",
@@ -344,7 +344,7 @@
       "kind": "repair",
       "site": "dock",
       "requires": [
-        "N2_05"
+        "D3_02"
       ],
       "count": 2,
       "scene": "boats",
@@ -358,7 +358,7 @@
       "kind": "families",
       "site": "family",
       "requires": [
-        "N2_05"
+        "D3_03"
       ],
       "count": 3,
       "scene": "families",
@@ -372,29 +372,26 @@
       "kind": "cinematic",
       "site": "family",
       "requires": [
-        "D3_01",
-        "D3_02",
-        "D3_03",
         "D3_04"
       ],
       "count": 1,
       "scene": "supper",
-      "seconds": 45,
+      "seconds": 54,
       "purpose": "Bữa chiều trước ca trực đêm."
     },
     {
       "id": "D3_06",
-      "title": "Nhận phân công trực đêm từ anh Thành",
+      "title": "Báo cáo anh Thành",
       "phase": 4,
       "kind": "talk",
-      "site": "command",
+      "site": "family",
       "requires": [
         "D3_05"
       ],
       "count": 1,
-      "scene": "lastorder",
+      "scene": "",
       "seconds": 3,
-      "purpose": "Nhận vị trí giữ ngõ đình từ chỉ huy, không tự rời chốt."
+      "purpose": "Báo cáo việc chuẩn bị đã xong rồi nhận ca trực đêm."
     },
     {
       "id": "N3_00",
@@ -426,7 +423,7 @@
     },
     {
       "id": "N3_02",
-      "title": "Mở cửa sau, đưa ông Sáu và chị Lành ra ngõ",
+      "title": "Phá cửa sau, đưa ông Sáu và chị Lành ra ngõ",
       "phase": 5,
       "kind": "rescueFamily",
       "site": "family",
@@ -462,7 +459,7 @@
         "N3_03"
       ],
       "count": 1,
-      "scene": "boatsafe",
+      "scene": "",
       "seconds": 40,
       "purpose": "Dọn đường rồi giữ khu vực cho hai chuyến thuyền đầu đi qua."
     },
@@ -566,7 +563,7 @@
     },
     {
       "id": "N3_08",
-      "title": "Bắn yểm trợ Hùng áp sát xe tăng",
+      "title": "Yểm trợ Hùng",
       "phase": 5,
       "kind": "coverFire",
       "site": "ditch",
@@ -589,8 +586,8 @@
       ],
       "count": 1,
       "scene": "sacrifice",
-      "seconds": 40,
-      "purpose": "Diễn biến cuối trận; không yêu cầu Nam đi tới một điểm trả nhiệm vụ khác."
+      "seconds": 70,
+      "purpose": "Hùng gài bộc phá; pháo bắn ra rìa làng, quân ta phản công. Nam ngồi lại bên bờ đất."
     },
     {
       "id": "DAWN",
@@ -998,21 +995,21 @@
       "id": "m2v3_antenna_02",
       "conversation": "m2v3_antenna",
       "speaker": "Hùng",
-      "text": "Trạm làng gọi đơn vị bạn. Nghe rõ trả lời.",
+      "text": "Bông Súng gọi Rạch Tre. Bông Súng gọi Rạch Tre. Nghe rõ trả lời.",
       "radio": false
     },
     {
       "id": "m2v3_antenna_03",
       "conversation": "m2v3_antenna",
       "speaker": "Anh Thành",
-      "text": "Nghe rõ. Nói đi.",
+      "text": "Rạch Tre nghe. Nói đi.",
       "radio": true
     },
     {
       "id": "m2v3_artillery_01",
       "conversation": "m2v3_artillery",
       "speaker": "Anh Thành",
-      "text": "Đơn vị bạn có pháo. Muốn chi viện phải gửi tọa độ, chờ vài phút và đưa dân ra khỏi vùng bắn.",
+      "text": "Bên kia có pháo. Nhưng gọi tới lúc bắn được là mất mấy phút. Cần tọa độ, cần biết dân đã ra khỏi chỗ chưa.",
       "radio": false
     },
     {
@@ -1139,7 +1136,7 @@
       "conversation": "m2v3_demolition",
       "speaker": "Hùng",
       "text": "To cỡ nào hả anh?",
-      "radio": true
+      "radio": false
     },
     {
       "id": "m2v3_demolition_03",
@@ -1213,45 +1210,45 @@
     },
     {
       "id": "m2v3_lastorder_01",
-      "conversation": "m2v3_lastorder",
+      "conversation": "m2v3_supper",
       "speaker": "Anh Thành",
       "text": "Sáng mai đường có thể thông. Tối nay ngủ sớm. Nam, ca đầu.",
       "radio": false
     },
     {
       "id": "m2v3_lastorder_03",
-      "conversation": "m2v3_lastorder",
+      "conversation": "m2v3_supper",
       "speaker": "Anh Thành",
       "text": "Nếu có chuyện, Nam giữ ngõ đình. Ngõ đó xa bến nhất.",
       "radio": false
     },
     {
       "id": "m2v3_lastorder_04",
-      "conversation": "m2v3_lastorder",
+      "conversation": "m2v3_supper",
       "speaker": "Nam",
       "text": "Rõ.",
       "radio": false
     },
     {
       "id": "m2v3_lastorder_05",
-      "conversation": "m2v3_lastorder",
+      "conversation": "m2v3_supper",
       "speaker": "Hùng",
       "text": "Ngõ đình thì một mình cậu à?",
-      "radio": true
+      "radio": false
     },
     {
       "id": "m2v3_lastorder_06",
-      "conversation": "m2v3_lastorder",
+      "conversation": "m2v3_supper",
       "speaker": "Nam",
       "text": "Có anh Lực.",
       "radio": false
     },
     {
       "id": "m2v3_lastorder_07",
-      "conversation": "m2v3_lastorder",
+      "conversation": "m2v3_supper",
       "speaker": "Hùng",
       "text": "...Có chuyện thì nhớ về đúng điểm hẹn đấy.",
-      "radio": true
+      "radio": false
     },
     {
       "id": "m2v3_attack_01",
@@ -1318,24 +1315,17 @@
     },
     {
       "id": "m2v3_wound_01",
-      "conversation": "m2v3_wound",
+      "conversation": "m2v3_fallback",
       "speaker": "Anh Lực",
       "text": "Chốt ngoài không giữ nổi! Tôi lùi!",
       "radio": true
     },
     {
       "id": "m2v3_wound_02",
-      "conversation": "m2v3_wound",
+      "conversation": "m2v3_fallback",
       "speaker": "Anh Thành",
-      "text": "Giữ ngõ đình! Nam, che cho dân xuống bến!",
+      "text": "Lùi về gốc me! Nam, giữ ngõ cho dân qua!",
       "radio": true
-    },
-    {
-      "id": "m2v3_wound_03",
-      "conversation": "m2v3_wound",
-      "speaker": "Nam",
-      "text": "Rõ!",
-      "radio": false
     },
     {
       "id": "m2v3_wound_04",
@@ -1349,6 +1339,13 @@
       "conversation": "m2v3_wound",
       "speaker": "Hùng",
       "text": "Nam! Nam! Trả lời tôi!",
+      "radio": true
+    },
+    {
+      "id": "m2v3_ammo_01",
+      "conversation": "m2v3_hints",
+      "speaker": "Hùng",
+      "text": "Đạn ở xác tụi nó, lấy mà dùng.",
       "radio": true
     },
     {
@@ -1369,7 +1366,7 @@
       "id": "m2v3_coordinates_01",
       "conversation": "m2v3_coordinates",
       "speaker": "Hùng",
-      "text": "Đơn vị bạn cần tọa độ cuối, dân phải ra khỏi bảy mươi thước quanh ngõ đình.",
+      "text": "Rạch Tre báo: cần tọa độ cuối, dân phải ra khỏi bảy mươi thước quanh ngõ đình.",
       "radio": true
     },
     {
@@ -1390,7 +1387,7 @@
       "id": "m2v3_coordinates_04",
       "conversation": "m2v3_coordinates",
       "speaker": "Anh Thành",
-      "text": "Nhận tọa độ. Ba phút.",
+      "text": "Rạch Tre nhận tọa độ. Ba phút.",
       "radio": true
     },
     {
@@ -1425,7 +1422,7 @@
       "id": "m2v3_farewell_03",
       "conversation": "m2v3_farewell",
       "speaker": "Nam",
-      "text": "Không sao… vết thương thôi.",
+      "text": "Không sao… vết cũ thôi.",
       "radio": false
     },
     {
@@ -1486,7 +1483,7 @@
     },
     {
       "id": "m2v3_sacrifice_01",
-      "conversation": "m2v3_sacrifice",
+      "conversation": "m2v3_cover",
       "speaker": "Nam",
       "text": "Đi đi! Tôi che cho!",
       "radio": false
@@ -1496,13 +1493,14 @@
       "conversation": "m2v3_sacrifice",
       "speaker": "Hùng",
       "text": "Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay…",
-      "radio": false
+      "radio": false,
+      "recording": "m2v3_echo_promise"
     },
     {
       "id": "m2v3_sacrifice_03",
       "conversation": "m2v3_sacrifice",
       "speaker": "Anh Thành",
-      "text": "Bắn.",
+      "text": "Rạch Tre. Bắn.",
       "radio": true
     },
     {

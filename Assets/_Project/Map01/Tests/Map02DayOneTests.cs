@@ -27,7 +27,7 @@ namespace ShadowVale.Map01.Tests
         [Test]public void NamAcknowledgesOnceAfterTheCompleteInstructionBlock(){
             var d=Map02ChapterDefinition.Load();foreach(var group in d.entries.GroupBy(e=>e.conversation))Assert.LessOrEqual(group.Count(e=>e.speaker=="Nam"&&e.text.Trim().StartsWith("Rõ")),1,group.Key);
             var arrival=d.Lines("arrivalbank");Assert.AreEqual("Nam",arrival.Last().speaker);Assert.AreEqual("Rõ.",arrival.Last().text);Assert.AreEqual("m2v3_contact_09",arrival.Last().id);
-            var last=d.Lines("lastorder");Assert.Greater(System.Array.FindIndex(last,e=>e.id=="m2v3_lastorder_04"),System.Array.FindLastIndex(last,e=>e.speaker=="Anh Thành"));
+            var last=d.Lines("supper");   // Day 3's supper scene carries Thành's last orderAssert.Greater(System.Array.FindIndex(last,e=>e.id=="m2v3_lastorder_04"),System.Array.FindLastIndex(last,e=>e.speaker=="Anh Thành"));
         }
         [Test]public void DayOneTasksKeepThreeIndependentBranches(){var d=Map02ChapterDefinition.Load();CollectionAssert.AreEquivalent(new[]{"D1_03","D1_04","D1_05"},d.Find("D1_06").requires);foreach(var id in new[]{"D1_03","D1_04","D1_05"})CollectionAssert.AreEqual(new[]{"D1_02"},d.Find(id).requires);Assert.AreEqual(5,d.Find("D1_05").count);}
     }

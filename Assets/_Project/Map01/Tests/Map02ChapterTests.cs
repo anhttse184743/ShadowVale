@@ -24,6 +24,44 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(d.Lines("coordinates").Any(l=>l.text.Contains("pháo không bắn vào đây")));
             Assert.IsTrue(d.Lines("dawn").Any(l=>l.text.Contains("Tôi hứa với nó rồi")));
         }
+        [Test] public void NothingTheHudShowsBeforeDawnGivesAwayHungsDeath()
+        {
+            var d=Map02ChapterDefinition.Load();var state=new Map02ChapterState();
+            foreach(var t in d.tasks)
+            {
+                foreach(var word in new[]{"hy sinh","chết","tử trận","ngã xuống"})
+                {
+                    if(t.id!="DAWN")StringAssert.DoesNotContain(word,(t.title+" "+t.purpose).ToLowerInvariant(),t.id);
+                    StringAssert.DoesNotContain(word,state.Objective.ToLowerInvariant(),"objective before "+t.id);
+                }
+                state.Complete(t.id);
+            }
+        }
+        [Test] public void DayThreeAndNightThreeFollowTheRevisedScript()
+        {
+            var d=Map02ChapterDefinition.Load();
+            // Anh Thành brings the night-watch order to the supper; Hùng answers him face to face.
+            var supper=d.Lines("supper");Assert.AreEqual(0,d.Lines("lastorder").Length);
+            Assert.IsTrue(supper.Any(l=>l.id=="m2v3_lastorder_01")&&supper.Last().id=="m2v3_lastorder_07");
+            Assert.IsFalse(supper.Any(l=>l.speaker=="Hùng"&&l.radio));
+            Assert.IsFalse(d.Lines("demolition").Single(l=>l.id=="m2v3_demolition_02").radio,"Hùng looks at the bundle himself.");
+            var report=d.Find("D3_06");Assert.AreEqual("family",report.site);Assert.IsTrue(string.IsNullOrEmpty(report.scene));
+            Assert.Greater(d.Find("D3_05").seconds,45);
+            // The artillery is Rạch Tre from the first call to the last order; Anh Thành answers for it on the radio.
+            Assert.IsFalse(d.entries.Any(e=>e.speaker=="Đơn vị pháo"||e.text.Contains("Đơn vị bạn")));
+            Assert.IsTrue(d.Lines("antenna").Any(l=>l.text.Contains("Bông Súng gọi Rạch Tre")));
+            Assert.IsTrue(d.Lines("sacrifice").Any(l=>l.speaker=="Anh Thành"&&l.radio&&l.text=="Rạch Tre. Bắn."));
+            // The wound flash is keyed to this line, not to its position in the scene.
+            Assert.IsTrue(d.Lines("wound").Any(l=>l.id=="m2v3_wound_04"&&l.text.Contains("Xe tăng")));
+            // Radio calls and shouts during play are not cutscenes.
+            Assert.IsTrue(string.IsNullOrEmpty(d.Find("N3_04").scene));
+            Assert.IsTrue(d.Lines("fallback").Select(l=>l.id).SequenceEqual(new[]{"m2v3_wound_01","m2v3_wound_02"}));
+            Assert.AreEqual("Lùi về gốc me! Nam, giữ ngõ cho dân qua!",d.Lines("fallback")[1].text);
+            Assert.IsTrue(d.Lines("cover").Single().text.StartsWith("Đi đi!"));
+            Assert.IsFalse(d.tasks.Any(t=>t.scene=="fallback"||t.scene=="cover"||t.scene=="boatsafe"));
+            // The echo replays the separately recorded promise; it is the first thing heard in the sacrifice scene.
+            var echo=d.Lines("sacrifice")[0];Assert.AreEqual("m2v3_echo_promise",echo.RecordingId);Assert.AreEqual("m2v3_sacrifice_02",echo.id);
+        }
         [Test] public void EntireChapterHasSevenPhasesAndExactlyOneSacrifice()
         {
             var state=new Map02ChapterState();Assert.IsFalse(state.Complete("N3_09"));

@@ -1,0 +1,748 @@
+{
+  "stages": [
+    {
+      "stage": "latest-01",
+      "total": 93,
+      "results": {
+        "Passed": 91,
+        "Failed": 2
+      }
+    },
+    {
+      "stage": "followup-02",
+      "total": 15,
+      "results": {
+        "Passed": 13,
+        "Failed": 2
+      }
+    },
+    {
+      "stage": "final-03",
+      "total": 6,
+      "results": {
+        "Passed": 6
+      }
+    }
+  ],
+  "unique": 102,
+  "latest_results": {
+    "Passed": 101,
+    "Failed": 1
+  },
+  "cases": [
+    {
+      "test": "ShadowVale.Map01.Tests.AiIntegrationTests.WithQieaTheCampIsPlannedByThePythonSidecar",
+      "result": "Passed",
+      "stage": "final-03",
+      "seconds": 23.10386,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.BossIntegrationTests.TheCommanderFightsFromC3CoverThrowsGrenadesAndCallsThePost",
+      "result": "Passed",
+      "stage": "followup-02",
+      "seconds": 20.274788,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.CrouchStoneTests.CrouchedThrowKeepsLegsPlantedAndRestoresKnifeAndRifle",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 27.312296,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.EndingCutsceneTests.AnEarlyKillCountsAndTheRadioCallComesByItselfOnceClear",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 30.853963,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.EndingCutsceneTests.ClearedPointThreeCanReportWithEWhileBesideAWorkbench",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 18.050554,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.EndingCutsceneTests.DefeatUsesExistingDeathThenTheRetreatReportStartsExtraction",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 22.410398,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.EndingCutsceneTests.ReplacementBossFinaleEndsInItsGroundedDeathState",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 21.628509,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.EndingCutsceneTests.ReplacementBossReceivesDeathOnItsOwnAnimator",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 19.202005,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.EndingCutsceneTests.SkipIsIdempotentAndLegacyVictoryDoesNotReplay",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 16.175595,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.FieldCraftingTests.C3AkPouchIsReachableIndependentOfOldCachesAndCannotRefillAfterLoad",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 20.288018,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.FieldCraftingTests.MapOneConversionKeepsMagazinesAndRefundsDamagePauseSaveAndOverflowOnce",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 32.199893,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.FieldCraftingTests.MapTwoFieldPanelLeavesWorldActiveAndSaveCancelsEscrowWithoutDuplicatingPacks",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 10.844442,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.FieldCraftingTests.ResourceLoopHasLossFinitePacksAndSeparateWorkshopRecipes",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.018964,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.M16BalanceTests.ActualM16NeedsFourHitsForAGuardAndCannotReachPastEightyMetres",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 22.565833,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.M16BalanceTests.CaptureCurrentRuntimeC3AndResourceLayoutForTheProposal",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 17.914229,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.M16BalanceTests.RuntimePrefabAndContentAgreeAndDoNotInheritAkDamage",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.018917,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.M16BalanceTests.SustainedM16FireBloomsEarlierKicksMoreAndRecoversForATap",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.004058,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.M16MergeCompatibilityTests.CloningAnM16ThenSelectingAkRestoresOneCorrectModelAndItsBaseline",
+      "result": "Passed",
+      "stage": "followup-02",
+      "seconds": 0.008459,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.M16MergeCompatibilityTests.PrimaryChangesPreserveK54MosinAndTheReinforcedGarrisonsSavedRifles",
+      "result": "Passed",
+      "stage": "followup-02",
+      "seconds": 24.577735,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02BoatPatchingTests.ClosingRingsPatchBothBoatsFasterTheCloserTheClicks",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 9.976401,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02BridgeCollisionTests.RealCharacterCannotWalkThroughRailsAndChildLoadsBesideMother",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 8.899612,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02BridgeCollisionTests.SavedSceneHasSolidSidesOnEveryBridgeWithoutDuplicateBarriers",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.496492,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.CoverFireTakesSixtyToNinetySecondsWhateverNamHits",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 14.118259,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.LaneHoldsFollowEvacuationAndTheFallenDropRounds",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 12.4318,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.RepairAndAntennaRequireActualInputAndCoverFireLocksOnlyMovement",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 14.124806,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.TankAndBoatsAreWhereTheNightThreeStoryPutsThem",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 15.506489,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.WoundBankAndSacrificeRunWithoutPressingEAndRadioCallsKeepControl",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 8.458203,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterTests.DayOneAllowsFreeOrderButDoesNotOpenNightBeforeReport",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.002679,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterTests.DayThreeAndNightThreeFollowTheRevisedScript",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.005601,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterTests.EntireChapterHasSevenPhasesAndExactlyOneSacrifice",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.004542,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterTests.EveryTaskHasValidDependenciesUniqueIdentityAndNoOrphanedDialogue",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.002596,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterTests.InvalidAndOutOfOrderSavesAreRejected",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.002336,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterTests.LiveMapHasReachableObjectivesAndSkipSaveRestorePreserveChapter",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 21.792726,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterTests.NothingTheHudShowsBeforeDawnGivesAwayHungsDeath",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.008295,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ChapterTests.SaveRoundTripKeepsCargoCountsNightWarningAmmoAndEnding",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.001452,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ClarityTests.DialogueFollowsWherePeopleActuallyAreAndWhyTheyMove",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.001304,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ClarityTests.EveryTaskExplainsItsPurposeWithoutRevealingFutureTasksInHud",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.000976,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ClarityTests.FocusIsStableSelectableAndCannotAbandonCarriedCargo",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.000771,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ClarityTests.IconsRotateAtTheirOwnPositionAtEveryHudScale",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.002142,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ClarityTests.LiveFocusPromptsAndRealEscortPathKeepRescuedPeopleAtSafety",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 74.502223,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ClarityTests.NorthUpMapAndCompassShareOneProjection",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.002173,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02ClarityTests.RifleActuallyHitsMapTwoEnemyAndARealWallBlocksTheBullet",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 8.347933,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02FinaleTests.DayThreeCrateAndNightThreeOpeningsAreDressed",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 8.543651,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02FinaleTests.SacrificeAndCounterAttackFollowTheScriptClock",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 8.09913,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02FinaleTests.SkippingTheSacrificeAtAnyMomentLandsOnTheSameDawn",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 8.139187,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02FinaleTests.TankShotAndFarewellAreStagedWithoutCloseUps",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 7.825417,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02FinaleTests.TelemetryStagesKeepTheirOrderThroughTheChapter",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 8.022155,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02FinaleTests.TheTankRollsItsTracksAndWheelsWhenItDrives",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 7.736315,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02FootstepSyncTests.StepsSoundAsAFootComesDownAndALoadIsCarriedAtAWalk",
+      "result": "Passed",
+      "stage": "followup-02",
+      "seconds": 21.759076,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.DayThreeScenesAndTestRunsStartWhereTheyShould",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 9.422369,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.SuppliesGoFromTheStoreCartToWhereTheStoryTakesThem",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 8.724965,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.TheCastStandsAsTallAsNamWithTheirFeetOnTheGround",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 13.209736,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.Map02WeaponHoldCaptureTests.TheRifleStaysInBothHandsThroughEveryDayAndAfterALoad",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 14.942397,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.MosinBalanceTests.HeadAndTorsoShotsKillAt35_80_120_199MetresIncludingHeavyAndCommanderHealth",
+      "result": "Passed",
+      "stage": "final-03",
+      "seconds": 37.322101,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.MosinBalanceTests.LethalityDoesNotLeakIntoNonEnemiesOrAReconfiguredPistol",
+      "result": "Passed",
+      "stage": "final-03",
+      "seconds": 0.008868,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.MosinBalanceTests.MaxRangeCoverAndCinematicProtectionStillApplyAndScopeShowsTheActualTarget",
+      "result": "Passed",
+      "stage": "final-03",
+      "seconds": 34.460781,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.MosinBalanceTests.ProfilePrefabAndPrecisionSupportARealTwoHundredMetreHeadShot",
+      "result": "Passed",
+      "stage": "final-03",
+      "seconds": 0.017793,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.MosinSniperShotTests.AMosinShotFarOffIsSearchedForAndOnlyAClosePlacesNam",
+      "result": "Passed",
+      "stage": "followup-02",
+      "seconds": 19.576572,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.MosinSniperShotTests.OneRoundFromTheGroundKillsTheTowerSentryUnderHisRoof",
+      "result": "Passed",
+      "stage": "followup-02",
+      "seconds": 23.556371,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Map01.Tests.StoneMouseInputTests.SlotFourAndMouseThrowWithoutFiringOrLosingCancelledStones",
+      "result": "Failed",
+      "stage": "latest-01",
+      "seconds": 20.415914,
+      "message": "  The thumb tip must curl too.\n  Expected: greater than 30.0f\n  But was:  20.0052223f\n"
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.AGrenadeGoesToAPlayerWhoCampsBehindCover",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.004718,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.AReloadIsTheMensCueToPush",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.000958,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.ARifleAimedAtHimMakesHimDuckAndMoveOnlyIfItStaysOnHim",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.002771,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.ARifleOnHimSendsHimBehindTheCoverAtOnce",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.000853,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.ArmourHalvesBodyHitsAndHeadshotsDouble",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.001709,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.CallingReinforcementsHeFallsBackTowardsThem",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.009571,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.FromCoverHeFightsInBursts",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.003411,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.GrenadeDamageFallsOffToAThirdAtTheEdge",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.001753,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.HeComesOutAtADifferentSpotAndNeverWhereHeWasHit",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.003715,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.HeDoesNotTurnHisBackAndRunAndPrefersCoverBehindHisMen",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.001454,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.HeFightsFromCoverMostOfTheTimeWithSteadyFire",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.001096,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.HeMovesToCoverWithinReachNeverOntoThePlayerNorBackToWhereHeIs",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.002476,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.HeRelocatesAfterStayingTooLongAndAtOnceWhenHurtThere",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.001125,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.HisGrenadeDrivesThePlayerTowardsHisMen",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.001248,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.HoppingBetweenHidesNearbyStillDrawsAGrenade",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.001028,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.LingeringInAnAreaCountsNotStandingOnOneSpot",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.000712,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.NewFallbackAndShieldingNeverOverrideTheMapBoundary",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.001156,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.NoCoverInReachMeansNoMove",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.000883,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.NoGrenadeForAPlayerWhoKeepsMovingOrStandsInTheOpen",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.000729,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.NoGrenadeOutOfRangeOrAtHisOwnFeet",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.000655,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.OutOfAFightHeDoesNothing",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.0005,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.ReinforcementsAreCalledOnceBelowHalfHealth",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.000598,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.RoundsLandingMakeHimDuckAndMoreAfterwardsMoveHim",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.001522,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.TheCommanderWearsAStarOverHisHead",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.002324,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.TheFallbackBundlesBossCarriesItsProfileAndBadProfilesAreRejected",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.003311,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.TheStopIsCountedFromHisArrivalAndVaries",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.001788,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.UnderHisCommandASquadIsPlannedAsAPincer",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.000479,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.AI.BossTests.WhereThePlayerHidOnceTheGrenadeComesSooner",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.000791,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.Coordination.RemoteSolverClientTests.ALiveSidecarSolvesWithTheRequestedVariant",
+      "result": "Passed",
+      "stage": "final-03",
+      "seconds": 0.246914,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.Gameplay.HealthBulletModifierTests.CinematicProtectionStopsLethalAndLegacyBulletsBeforeModifiers",
+      "result": "Passed",
+      "stage": "followup-02",
+      "seconds": 0.005298,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.Gameplay.HealthBulletModifierTests.LegacyBulletsStillApplyTheSameArmourRule",
+      "result": "Passed",
+      "stage": "followup-02",
+      "seconds": 0.000946,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.Gameplay.HealthBulletModifierTests.QueuedBulletsApplyArmourOnceAndKeepTheirWeapon(Pistol,False,75.0f)",
+      "result": "Passed",
+      "stage": "followup-02",
+      "seconds": 0.000791,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.Gameplay.HealthBulletModifierTests.QueuedBulletsApplyArmourOnceAndKeepTheirWeapon(Rifle,False,75.0f)",
+      "result": "Passed",
+      "stage": "followup-02",
+      "seconds": 0.004022,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.Gameplay.HealthBulletModifierTests.QueuedBulletsApplyArmourOnceAndKeepTheirWeapon(Sniper,True,0.0f)",
+      "result": "Passed",
+      "stage": "followup-02",
+      "seconds": 0.000584,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.Gameplay.ThirdPersonCameraCollisionTests.CursorComesBackWhenTheScreenThatTookItCloses",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.003501,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.Gameplay.ThirdPersonCameraCollisionTests.NearbyWallRetractsBelowMinimumZoomDistance",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.003092,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.Gameplay.ThirdPersonCameraCollisionTests.PlayerCollidersAndTriggersDoNotBlockArm",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.001857,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.Gameplay.ThirdPersonCameraCollisionTests.ShakeMovesTheViewWithinItsAmplitudeAndAWeakerOneCannotReplaceIt",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.003233,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.Gameplay.ThirdPersonCameraCollisionTests.ShoulderCannotStartOnOtherSideOfWall",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.001073,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.Gameplay.ThirdPersonCameraCollisionTests.WallOnDifferentPhysicalLayerAlsoRetractsArm",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.00129,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.Gameplay.ThirdPersonCameraCollisionTests.WideNearPlaneCannotCrossWallAtScreenEdge",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.002349,
+      "message": ""
+    },
+    {
+      "test": "ShadowVale.Tests.EditMode.Gameplay.ThirdPersonCameraCollisionTests.WithoutAShakeTheViewIsExactlyTheSame",
+      "result": "Passed",
+      "stage": "latest-01",
+      "seconds": 0.000781,
+      "message": ""
+    }
+  ]
+}
