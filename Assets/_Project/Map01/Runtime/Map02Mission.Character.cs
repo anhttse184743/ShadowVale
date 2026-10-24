@@ -52,7 +52,11 @@ namespace ShadowVale.Map01
             CharacterHud=gameObject.AddComponent<Map01Hud>();
             InitializeCharacterEffects();
             Map01NamActions.For(CharacterHudSession.For(gameObject));
-            NamProneMotion.Install(CharacterHudSession.For(gameObject));
+            if(NamProneMotion.Install(CharacterHudSession.For(gameObject))!=null)
+            {
+                // Lying prone (Z) belongs to Day 2 / Night 2's stealth; Day 1 and Day 3 / Night 3 are staged without it.
+                var proneAllowed=player.ProneAllowed;player.ProneAllowed=()=>(Chapter==null||Chapter.State.phase==2||Chapter.State.phase==3)&&proneAllowed();
+            }
             combat.SlotPressed=slot=>{if(CharacterGearLocked){Say("Hoàn tất việc đang mang trước khi đổi trang bị.");return true;}return Bag.OnSlotKey(slot);};
             combat.ReserveRounds=()=>Bag.Count(Bag.HeldAmmoId);
             combat.DrawRounds=requested=>{int n=Mathf.Min(requested,Bag.Count(Bag.HeldAmmoId));Bag.Spend(Bag.HeldAmmoId,n);return n;};
