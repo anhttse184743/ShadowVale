@@ -8,7 +8,7 @@ namespace ShadowVale.Map01
         Map02DayOneArt dayArt;
         Map01CinematicPose dayNamPose;
         Map02UpperBodyPose cargoPose;
-        AnimationClip ordinaryWalk;
+        AnimationClip ordinaryWalk,namCalmIdle;   // read once: a scene's pose takes Nam's controller away while it plays
         Animator dayNamAnimator;
         Transform medicineArt,hammerArt,mealRoot,restMat;
         Transform sceneChair,bandageRoll,fishBowl,pot,dayLampFlame;
@@ -60,7 +60,7 @@ namespace ShadowVale.Map01
         AnimationClip hungMapOneWalk;
         void LoadDayPerformances()
         {
-            dayArt=Resources.Load<Map02DayOneArt>("Story/Map02DayOneArt");dayNamAnimator=Mission.Player.GetComponentInChildren<Animator>();ordinaryWalk=dayNamAnimator.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Walk_Tuned");
+            dayArt=Resources.Load<Map02DayOneArt>("Story/Map02DayOneArt");dayNamAnimator=Mission.Player.GetComponentInChildren<Animator>();ordinaryWalk=dayNamAnimator.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Walk_Tuned");namCalmIdle=dayNamAnimator.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned");
             hungMapOneWalk=Resources.Load<Map01HungVisual>("Characters/HungVisual")?.actor?.runtimeAnimatorController?.animationClips.FirstOrDefault(clip=>clip.name.Contains("DiKhapKhieng"))??dayArt?.Find("InjuredWalk");
             if(dayArt==null)Debug.LogWarning("Map 2 Day 1 performance asset is missing. Run ShadowVale.Map01.Editor.Map02DayOneBuilder.Build.",this);
         }
