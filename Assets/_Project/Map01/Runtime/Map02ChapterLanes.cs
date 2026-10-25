@@ -6,14 +6,15 @@ using UnityEngine;
 namespace ShadowVale.Map01
 {
     /// <summary>
-    /// Night 3 lane holds. Evacuation rises while Nam holds the lane (slower while soldiers still press it);
-    /// a stage is held when its mark is reached and no soldier of either wave is left. No countdown.
+    /// Night 3 lane holds. Evacuation rises while Nam holds the lane (slower while soldiers still press it, fast once a
+    /// wave is down, so the next one comes in after a breath, not a wait); a stage is held when its mark is reached and no
+    /// soldier of either wave is left. No countdown.
     /// </summary>
     public sealed partial class Map02ChapterDirector
     {
         static readonly Dictionary<string,Vector2Int> Stages=new Dictionary<string,Vector2Int>
         {{"N3_04",new Vector2Int(0,60)},{"N3_05A",new Vector2Int(60,70)},{"N3_05B",new Vector2Int(70,80)},{"N3_05C",new Vector2Int(80,90)}};
-        const float LaneRadius=12,PressedRate=.4f,SecondWaveAt=.5f;
+        const float LaneRadius=12,PressedRate=.4f,ClearedRate=6,SecondWaveAt=.5f;
         bool ammoHinted;
 
         /// <summary>Evacuation shown to the player, including the stage being held.</summary>
@@ -42,7 +43,7 @@ namespace ShadowVale.Map01
             if(State.taskProgress>=SecondWaveAt&&!State.combatGroups.Contains(t.id+"_b"))EnsureGroup(t.id+"_b",3,true,t.site,1);
             int pressing=SoldiersPressing(t.id);float before=State.taskProgress;
             if(InLane(t)&&State.combatGroups.Contains(t.id))
-                State.taskProgress=Mathf.Min(1,State.taskProgress+dt/Mathf.Max(1,t.seconds)*(pressing>0?PressedRate:1));
+                State.taskProgress=Mathf.Min(1,State.taskProgress+dt/Mathf.Max(1,t.seconds)*(pressing>0?PressedRate:ClearedRate));
             if(t.id=="N3_04"&&before<SecondWaveAt&&State.taskProgress>=SecondWaveAt)Bark("m2v3_boatsafe_01"); // Boat 1 leaves at 30 %.
             if(State.taskProgress<1||pressing>0||!State.combatGroups.Contains(t.id+"_b"))return false;
             BeginScene(t);return true;
