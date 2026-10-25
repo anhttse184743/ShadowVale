@@ -97,14 +97,16 @@ namespace ShadowVale.Map01.Editor
             string day=state.phase==4?"NGÀY 3":"ĐÊM 3";
             Apply(mission,state,site+Vector3.back*4,site,"CHẠY THỬ "+day+(next!=null?" · "+next.purpose:""));
         }
+        // Test runs carry plenty, so a run is about the route and the story, not about scavenging (25/10/2026).
+        const int TestRounds=495,TestMedkits=10,TestRifles=2,TestRepairKits=3;   // a spare gun and kits: one rifle wears out in ~280 shots
         static void Apply(Map02Mission mission,Map02ChapterState state,Vector3 spawn,Vector3 lookAt,string message)
         {
             var snapshot=mission.Capture();snapshot.chapter=state;snapshot.world=new Map02WorldState();
             snapshot.checkpoint=snapshot.patrolCheckpoint=null;snapshot.playSeconds=0;snapshot.attackCooldown=0;
             snapshot.health=100;snapshot.equipped=(int)WeaponKind.Rifle;
             snapshot.magazine=mission.Player.GetComponent<PlayerCombat>().MagazineCapacity;
-            var previewItems=new System.Collections.Generic.List<Map02Mission.Item>{new Map02Mission.Item{id=mission.RifleAmmo,count=90},new Map02Mission.Item{id="medkit_small",count=3},new Map02Mission.Item{id=snapshot.rifleItemId,count=1},new Map02Mission.Item{id="knife",count=1}};
-            string pistol=snapshot.bagLayout?.pistol;if(!string.IsNullOrEmpty(pistol))previewItems.Add(new Map02Mission.Item{id=pistol,count=1});
+            var previewItems=new System.Collections.Generic.List<Map02Mission.Item>{new Map02Mission.Item{id=mission.RifleAmmo,count=TestRounds},new Map02Mission.Item{id="medkit_small",count=TestMedkits},new Map02Mission.Item{id=snapshot.rifleItemId,count=TestRifles},new Map02Mission.Item{id="knife",count=1},new Map02Mission.Item{id="repair_kit",count=TestRepairKits}};
+            string pistol=snapshot.bagLayout?.pistol;if(!string.IsNullOrEmpty(pistol)){previewItems.Add(new Map02Mission.Item{id=pistol,count=1});previewItems.Add(new Map02Mission.Item{id="ammo_pistol",count=99});}
             snapshot.inventory=previewItems.ToArray();
             snapshot.bagLayout=new Map01Inventory.Layout{primary=snapshot.rifleItemId,pistol=pistol,throwable="stone"};
             snapshot.stamina=mission.CharacterSettings.stamina;snapshot.exploration=null;snapshot.crafting=null;snapshot.craftRemaining=0;snapshot.ground=null;
