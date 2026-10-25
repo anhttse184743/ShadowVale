@@ -75,9 +75,10 @@ namespace ShadowVale.Map01
         {
             if(turret==null)return;
             bool atBoat=stage=="emerging"||stage=="blocking";
-            Vector3? target=stage=="breach"?Mission.Player.position:atBoat?water["boatMid"]:(Vector3?)null;
+            // It rolls out with the gun fore and aft, then swings it onto the boat once it stands.
+            Vector3? target=stage=="breach"?Mission.Player.position:stage=="blocking"?water["boatMid"]:(Vector3?)null;
             float aim=target.HasValue?YawTo(target.Value):stage=="destroyed"?turretYaw:0;
-            turretYaw=snap?aim:Mathf.MoveTowardsAngle(turretYaw,aim,22*dt); // "nòng pháo quay chậm về phía Nam"
+            turretYaw=snap?aim:Mathf.MoveTowardsAngle(turretYaw,aim,(stage=="blocking"?32:22)*dt); // "nòng pháo quay chậm về phía Nam"
             var hull=tank.transform.rotation;var traverse=Quaternion.AngleAxis(turretYaw,Vector3.up);
             turret.rotation=hull*traverse*turretRest;
             float droop=stage=="destroyed"?6:0;

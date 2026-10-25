@@ -379,7 +379,7 @@ namespace ShadowVale.Map01
             if(sceneTask.id=="D1_02"){focus=roles["Hùng"].transform.position+Vector3.up*.85f;eye=focus+new Vector3(-3f,.35f,2f);}
             float mealFov=45;if(sceneTask.id=="N1_01")MealShot(out eye,out focus,out mealFov);
             float blend=sceneTask.id=="N1_01"?1:Mathf.SmoothStep(0,1,sceneClock/.8f);   // a cut into the house, not a glide through its wall
-            rig.SetCinematicView(Vector3.Lerp(cameraBefore,eye,blend),Quaternion.Slerp(cameraRotation,Quaternion.LookRotation(focus-eye),blend),Mathf.Lerp(cameraFov,sceneTask.id=="N1_01"?mealFov:sceneTask.id=="D1_02"?45:58,blend),1);
+            rig.SetCinematicView(Vector3.Lerp(cameraBefore,eye,blend),Quaternion.Slerp(cameraRotation,Quaternion.LookRotation(focus-eye),blend),Mathf.Lerp(cameraFov,sceneTask.id=="N1_01"?mealFov:sceneTask.id=="D1_02"?45:stagedFov??58,blend),1);
         }
         void EndScene()
         {

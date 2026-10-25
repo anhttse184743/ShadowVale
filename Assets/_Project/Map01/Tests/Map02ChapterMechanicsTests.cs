@@ -204,7 +204,8 @@ namespace ShadowVale.Map01.Tests
                 Assert.Less(Flat(c.LastBoat.position,c.WaterPoint("boatDock")),.5f,"Boat 1 has left and come back for the last trip.");
                 finish.Invoke(c,new object[]{def.Find("N3_05C")});yield return null;
                 Assert.AreEqual("N3_WOUND",c.CurrentScene?.id);Assert.AreEqual("breach",c.TankStage);Assert.IsTrue(c.Tank.activeSelf);
-                Assert.Less(Flat(c.Tank.transform.position,c.Sites["tankBreach"].position),1);end.Invoke(c,null);
+                Assert.Greater(Flat(c.Tank.transform.position,c.Sites["tankBreach"].position),10,"It drives in from outside the village.");
+                yield return WaitGameSeconds(6f);Assert.Less(Flat(c.Tank.transform.position,c.Sites["tankBreach"].position),1,"Then stands at the breach.");end.Invoke(c,null);
                 Assert.Less(Flat(c.Actor("Anh Lực").transform.position,c.Sites["cover"].position),3,"Anh Lực is in the cover Nam crawls to.");
                 // After the crawl the tank turns away into the village and drops out of sight.
                 Load("N3_CRAWL");yield return null;Assert.AreEqual("leaving",c.TankStage);Assert.IsFalse(c.Tank.activeSelf);

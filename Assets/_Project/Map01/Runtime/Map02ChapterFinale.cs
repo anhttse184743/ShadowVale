@@ -32,7 +32,7 @@ namespace ShadowVale.Map01
         void PrepareFinale(Map02ChapterTask task)
         {
             shotFired=blasted=woundHit=thanhRunning=false;impactsFired=0;
-            if(task.id=="N3_WOUND"){rig.Shake(.05f,2.5f);if(Layout?.tankTracksClip!=null)AudioSource.PlayClipAtPoint(Layout.tankTracksClip,sites["tankBreach"].position,.9f);}
+            if(task.id=="N3_WOUND"){breachApproach=null;rig.Shake(.05f,BreachDrive);if(Layout?.tankTracksClip!=null)AudioSource.PlayClipAtPoint(Layout.tankTracksClip,sites["tankBreach"].position,.9f);}
             if(task.id=="N3_07")
             {
                 // A cut, as the script allows: Hùng is already beside Nam, between him and the tank's fire.
@@ -120,12 +120,12 @@ namespace ShadowVale.Map01
         void TickEffects()
         {
             float red=0,grey=0,black=0,flash=0,cutoff=22000,ringing=0;
-            if(sceneTask?.id=="N3_WOUND"&&lines!=null&&(lineIndex>0||lines[0].id=="m2v3_wound_04"&&lineClock>=1))
+            if(sceneTask?.id=="N3_WOUND"&&lines!=null&&(lineIndex>0||spoken&&lines[0].id=="m2v3_wound_04"&&lineClock>=1))
             {
                 if(!woundHit){woundHit=true;rig.Shake(.35f,.6f);}
                 red=.45f;cutoff=900;
             }
-            if(sceneTask?.id=="N3_WOUND"&&lines!=null&&lines[lineIndex].id=="m2v3_wound_04")flash=Mathf.Clamp01(1-Mathf.Abs(lineClock-1)*3);
+            if(sceneTask?.id=="N3_WOUND"&&lines!=null&&spoken&&lines[lineIndex].id=="m2v3_wound_04")flash=Mathf.Clamp01(1-Mathf.Abs(lineClock-1)*3);
             if(State.Done("N3_WOUND")&&!State.Done("N3_CRAWL")){red=Mathf.Lerp(.35f,.15f,Mathf.Clamp01(State.taskProgress/8));cutoff=900;} // Crawling: blurred red, muffled.
             if(sceneTask?.id=="N3_CRAWL"){red=.12f;cutoff=1800;}
             if(sceneTask?.id=="N3_00")black=sceneClock<1?1:Mathf.Clamp01(1-(sceneClock-1)/.5f); // Nam has just lain down.
@@ -183,24 +183,20 @@ namespace ShadowVale.Map01
         /// <summary>Scene framing for Nhịp 3 and 5. Returns false to keep the default framing.</summary>
         bool FinaleCamera(out Vector3 eye,out Vector3 focus)
         {
-            eye=focus=default;var nam=Mission.Player.position;
+            eye=focus=default;var nam=Mission.Player.position;stagedFov=null;
+            if(sceneTask.id=="N3_07"&&lineIndex==0&&tank!=null){BoatShot(nam,out eye,out focus);return true;}
+            if(sceneTask.id=="N3_WOUND"&&!woundHit&&tank!=null){BreachShot(nam,out eye,out focus);return true;}
             if(sceneTask.id=="N3_WOUND"&&woundHit)
             {
                 // Face down among the rubble, looking toward the tank.
                 var at=tank!=null?tank.transform.position:sites["tankBreach"].position;var dir=Vector3.ProjectOnPlane(at-nam,Vector3.up).normalized;
                 eye=nam+Vector3.up*.35f-dir*.9f+Vector3.Cross(Vector3.up,dir)*.3f;focus=at+Vector3.up*1.4f;return true;
             }
-            if(sceneTask.id=="N3_07")
+            if(sceneTask.id=="N3_07"&&lineIndex==0)
             {
-                if(lineIndex==0)
-                {
-                    // Wide: the boat pinned mid-river and the tank at the head of the road.
-                    var mid=Vector3.Lerp(sites["tankDock"].position,water["boatMid"],.5f);var back=Vector3.ProjectOnPlane(nam-mid,Vector3.up).normalized;
-                    eye=nam+back*3+Vector3.up*2.6f;focus=mid+Vector3.up;return true;
-                }
-                // Behind Nam's shoulder; Hùng between him and the fire, read as a silhouette.
-                var hung=roles["Hùng"].transform.position;var d=Vector3.ProjectOnPlane(hung-nam,Vector3.up).normalized;
-                eye=nam-d*1.7f+Vector3.Cross(Vector3.up,d)*.5f+Vector3.up*1.55f;focus=hung+Vector3.up*1.3f;return true;
+                // No tank to film: wide on the boat pinned mid-river. Later lines are the talk's own shots (TalkCamera).
+                var mid=Vector3.Lerp(sites["tankDock"].position,water["boatMid"],.5f);var back=Vector3.ProjectOnPlane(nam-mid,Vector3.up).normalized;
+                eye=nam+back*3+Vector3.up*2.6f;focus=mid+Vector3.up;return true;
             }
             if(sceneTask.id=="N3_09")
             {
@@ -211,6 +207,46 @@ namespace ShadowVale.Map01
                 eye=nam-dir*4+Vector3.up*3+side*2;focus=Vector3.Lerp(nam,road,.5f)+Vector3.up;return true;
             }
             return false;
+        }
+        /// <summary>The tank comes in: tracked low from beside the road as it drives, a pan round it as it stands in the village
+        /// and the turret turns, then over Nam's shoulder at the gun as Anh Lực shouts.</summary>
+        void BreachShot(Vector3 nam,out Vector3 eye,out Vector3 focus)
+        {
+            var leg=BreachApproach();var at=tank.transform.position;var stop=leg[leg.Length-1];
+            var heading=Vector3.ProjectOnPlane(stop-leg[0],Vector3.up).normalized;var side=Vector3.Cross(Vector3.up,heading);
+            if(Vector3.Dot(nam-stop,side)<0)side=-side;   // the road side Nam is on
+            var tracking=side*7.5f+heading*2.5f+Vector3.up*1.1f;
+            focus=at+Vector3.up*1.5f;
+            if(sceneClock<BreachDrive){eye=at+tracking;return;}
+            var toNam=Vector3.ProjectOnPlane(nam-stop,Vector3.up).normalized;
+            if(sceneClock<BreachLineAt)
+            {
+                float u=Mathf.SmoothStep(0,1,(sceneClock-BreachDrive)/BreachPan);
+                var round=toNam*8+Vector3.Cross(Vector3.up,toNam)*(Vector3.Dot(side,Vector3.Cross(Vector3.up,toNam))>=0?3:-3)+Vector3.up*2.2f;
+                eye=at+Vector3.Slerp(tracking,round,u);return;
+            }
+            var dir=Vector3.ProjectOnPlane(at-nam,Vector3.up).normalized;
+            eye=nam-dir*1.9f+Vector3.Cross(Vector3.up,dir)*.55f+Vector3.up*1.55f;focus=at+Vector3.up*1.4f;
+        }
+        /// <summary>Field of view a staged shot asks for (a long lens on the boat); null keeps the scene default.</summary>
+        float? stagedFov;
+        /// <summary>N3_07 opens on the tank: low by the dock road as it rolls out and stands, rising to the gun as the turret swings
+        /// round, a whip along the barrel to the last boat with the villagers aboard, held on a long lens while chú Bảy shouts.</summary>
+        void BoatShot(Vector3 nam,out Vector3 eye,out Vector3 focus)
+        {
+            var at=tank.transform.position;var dock=sites["tankDock"].position;var boat=lastBoat!=null?lastBoat.transform.position:water["boatMid"];
+            var road=Vector3.ProjectOnPlane(dock-sites["tankHide"].position,Vector3.up);road=road.sqrMagnitude>.01f?road.normalized:tank.transform.forward;
+            var side=Vector3.Cross(Vector3.up,road);if(Vector3.Dot(nam-dock,side)<0)side=-side;
+            var low=dock+side*7+road*5+Vector3.up*.9f;var hull=at+Vector3.up*1.3f;
+            var gun=Vector3.ProjectOnPlane(tank.transform.rotation*Quaternion.AngleAxis(turretYaw,Vector3.up)*Vector3.forward,Vector3.up).normalized;
+            var pivot=turret!=null?turret.position:at+Vector3.up*2.1f;var muzzle=pivot+gun*4.2f;
+            var behind=pivot-gun*3.2f+Vector3.up*1.0f+Vector3.Cross(Vector3.up,gun)*.7f;   // above and behind the turret, along the barrel
+            float t=sceneClock;
+            if(t<EmergeEnd){eye=low;focus=hull;return;}
+            if(t<WhipAt){float u=Mathf.SmoothStep(0,1,(t-EmergeEnd)/TurretRise);eye=Vector3.Lerp(low,behind,u);focus=Vector3.Lerp(hull,muzzle,u);return;}
+            float w=Mathf.SmoothStep(0,1,(t-WhipAt)/WhipTime);
+            eye=behind;focus=behind+Vector3.Slerp((muzzle-behind).normalized,(boat+Vector3.up*.8f-behind).normalized,w)*12;
+            stagedFov=Mathf.Lerp(58,26,w)-Mathf.Clamp01((t-WhipAt-WhipTime)/4)*4;   // a long lens on the boat, creeping in
         }
         AnimationClip NamPoseClip()
         {

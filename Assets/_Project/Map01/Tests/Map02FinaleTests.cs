@@ -110,7 +110,10 @@ namespace ShadowVale.Map01.Tests
             {
                 Assert.AreEqual(0,rig.ShakeAmplitude,"Nothing shakes unless a scene asks.");
                 Load("N3_05B");Call("Finish",Map02ChapterDefinition.Load().Find("N3_05C"));Assert.AreEqual("N3_WOUND",chapter.CurrentScene?.id);
-                for(int i=0;i<40&&chapter.EffectRed==0;i++)Frame();
+                Frame();var gap=Vector3.ProjectOnPlane(chapter.Tank.transform.position-chapter.Sites["tankBreach"].position,Vector3.up).magnitude;
+                Assert.Greater(gap,10,"The tank drives in from outside the village.");Assert.AreEqual(0,chapter.EffectRed,"Nobody is hit while it drives in.");
+                for(int i=0;i<140&&chapter.EffectRed==0;i++)Frame();
+                Assert.Less(Vector3.ProjectOnPlane(chapter.Tank.transform.position-chapter.Sites["tankBreach"].position,Vector3.up).magnitude,1,"It stands at the breach when it fires.");
                 Assert.Greater(chapter.EffectRed,0,"Red, blurred view after the hit.");Assert.Less(chapter.ListenerCutoff,2000,"Sound sinks.");Assert.Greater(rig.ShakeAmplitude,0);
                 Call("EndScene");Call("TickEffects");Assert.Greater(chapter.EffectRed,0,"Still hurt while crawling to cover.");
                 Load("N3_CRAWL");Call("TickEffects");Assert.AreEqual(0,chapter.EffectRed);Assert.AreEqual(22000,chapter.ListenerCutoff);
