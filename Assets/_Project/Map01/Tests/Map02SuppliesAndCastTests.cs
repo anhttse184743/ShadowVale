@@ -36,7 +36,9 @@ namespace ShadowVale.Map01.Tests
             s.carry=carry;snap.chapter=s;snap.equipped=(int)equipped;mission.Restore(snap);
         }
         static IEnumerator Frames(int n){for(int i=0;i<n;i++)yield return null;}
-        static string Stock(){var p=GameObject.Find("The store's stock on the cart");return p==null?"":string.Join(",",Enumerable.Range(0,p.transform.childCount).Select(i=>p.transform.GetChild(i).name));}
+        static Transform Cart()=>GameObject.Find("The store's stock on the cart")?.transform;
+        static string Stock(){var p=Cart();return p==null?"":string.Join(",",Enumerable.Range(0,p.childCount).Select(p.GetChild).Where(t=>t.gameObject.activeSelf).Select(t=>t.name));}
+        static Vector3 Slot(string kind)=>Enumerable.Range(0,Cart().childCount).Select(Cart().GetChild).First(t=>t.name==kind).position;
         static Map02ObjectiveObject Marker(string id)=>Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).First(m=>m.chapterId==id);
         static void Place(Vector3 p){var cc=mission.Player.GetComponent<CharacterController>();cc.enabled=false;mission.Player.position=p;cc.enabled=true;Physics.SyncTransforms();}
         static Animator Skeleton(Transform t)=>t.GetComponentsInChildren<Animator>().FirstOrDefault(a=>a.isHuman);
@@ -78,8 +80,10 @@ namespace ShadowVale.Map01.Tests
             Place(chapter.Sites["store"].position+Vector3.back*.6f);
             bool outlined=false;for(int i=0;i<30&&!outlined;i++){yield return null;outlined=InteractHighlight.Current!=null&&InteractHighlight.Current.name=="medkit";}
             Assert.IsTrue(outlined,"Walking up to the store outlines the medicine on the cart.");
+            var ammoSlot=Slot("ammo");var grenadeSlot=Slot("grenades");
             // Carrying: the bag is in Nam's arms, the rifle out of sight; it is gone from the cart.
             Set("D3_01",null,0,"D3_01");yield return Frames(5);
+            Assert.AreEqual(ammoSlot,Slot("ammo"),"What is left on the cart stays where it was put.");Assert.AreEqual(grenadeSlot,Slot("grenades"));
             Assert.AreEqual("medkit",chapter.HeldCargoKind);Assert.AreEqual("ammo,grenades",Stock());
             Assert.IsFalse(mission.Player.GetComponentsInChildren<Weapon>().Any(),"Both hands are on the load, even after a load: the rifle is put away.");
             // Set down: the rifle comes back, the bag stays at the south shelter.

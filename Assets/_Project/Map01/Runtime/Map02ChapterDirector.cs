@@ -224,7 +224,7 @@ namespace ShadowVale.Map01
             bool leading=LeadingWounded; // Day 3 / Night 3 escorts and Tâm's keep Nam armed and at pace.
             bool carrying=!string.IsNullOrEmpty(State.carry)||leading||DayActivityActive;if(carrying!=handsBusy||carrying&&!combat.HandsOccupied){handsBusy=carrying;combat.SetHandsOccupied(carrying);}   // a bag refresh (each save) frees the hands
             player.SurfaceSpeedMultiplier=leading?EscortPace:!string.IsNullOrEmpty(State.carry)?CarryPace:State.wounded?.7f:1;
-            player.SprintAllowed=()=>!leading&&string.IsNullOrEmpty(State.carry)&&Mission.CharacterCanSprint;
+            player.SprintAllowed=()=>!leading&&(CarrySprintForTesting||string.IsNullOrEmpty(State.carry))&&Mission.CharacterCanSprint;
             if(sceneTask!=null){TickLight(dt);TickScene(dt);return;}
             if(TickDay(dt))return;
             TickBark(dt);
@@ -317,6 +317,8 @@ namespace ShadowVale.Map01
         const float FleeRun=3.4f,ElderFlee=2.4f,NightRun=3.2f;
         /// <summary>Walking pace with a load in both hands.</summary>
         public const float CarryPace=.85f;
+        /// <summary>TEMPORARY (25/10/2026): sprinting with a load, so the chapter can be speed-run while it is tuned. Set false to restore the walk.</summary>
+        public const bool CarrySprintForTesting=true;
         /// <summary>Walking pace while leading Hùng before Day 3 (no sprinting); see LeadingWounded.</summary>
         public const float EscortPace=.55f;
         /// <summary>After a pose on Nam is released (its animator rebinds): the equipped weapon's stance, hands kept busy if they are.</summary>
