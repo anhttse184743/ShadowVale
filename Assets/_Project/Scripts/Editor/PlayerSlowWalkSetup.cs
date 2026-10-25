@@ -38,6 +38,22 @@ namespace ShadowVale.Editor
             tree.children=children;
             foreach(var c in children)Debug.Log($"[SlowWalk] {c.motion.name} at {c.threshold} m/s plays x{c.timeScale:0.000}");
         }
+        /// <summary>
+        /// The unarmed run is an old clip with the legs thrown wide; Nam's own run (made for the knife, the upper body free) is
+        /// what a run with a load should look like. The unarmed tree takes that clip at the knife tree's rate (25/10/2026).
+        /// </summary>
+        [MenuItem("ShadowVale/Player/Use Nam's run when unarmed")]
+        public static void UseNamRun()
+        {
+            var controller=AssetDatabase.LoadAssetAtPath<AnimatorController>(ControllerPath);var states=controller.layers[0].stateMachine.states.Select(s=>s.state).ToArray();
+            var tree=states.FirstOrDefault(s=>s.name==PlayerCombat.LocomotionState)?.motion as BlendTree;var knife=states.FirstOrDefault(s=>s.name=="Locomotion_Knife")?.motion as BlendTree;
+            if(tree==null||knife==null){Debug.LogError("[SlowWalk] Locomotion or Locomotion_Knife tree missing in "+ControllerPath);return;}
+            var run=knife.children.OrderBy(c=>c.threshold).Last();var children=tree.children;int i=System.Array.FindLastIndex(children,c=>c.threshold>=run.threshold-.01f);
+            if(i<0){Debug.LogError("[SlowWalk] No run in the unarmed tree.");return;}
+            children[i].motion=run.motion;children[i].timeScale=run.timeScale;tree.children=children;
+            EditorUtility.SetDirty(tree);EditorUtility.SetDirty(controller);AssetDatabase.SaveAssets();
+            Debug.Log($"[SlowWalk] Unarmed run is now {run.motion.name} x{run.timeScale:0.000}");
+        }
         [MenuItem("ShadowVale/Player/Add slowed walk to locomotion")]
         public static void Apply()
         {
