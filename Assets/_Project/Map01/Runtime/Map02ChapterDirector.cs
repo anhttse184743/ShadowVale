@@ -78,7 +78,16 @@ namespace ShadowVale.Map01
             Site("cover",sites["lane3"].position+Vector3.left*5);Site("fallen",dock+Vector3.forward*8);
             for(int i=0;i<3;i++)Site("family"+i,layout.homePositions[Mathf.Min(i,layout.homePositions.Length-1)]);
             RegisterNightThreeSites();
-            foreach(var old in legacy)old.enabled=false;
+            foreach(var rice in FindObjectsByType<VillageRiceInstances>(FindObjectsSortMode.None))rice.ClearAccess(sites["scout"].position,sites["bridge"].position,3.2f,.85f);
+            foreach(var old in legacy)
+            {
+                old.enabled=false;
+                if(old.work!=Map02Work.ScoutAid)continue;
+                // Retire the prototype cube once the actual injured scout owns this interaction.
+                foreach(var renderer in old.GetComponentsInChildren<Renderer>(true))renderer.enabled=false;
+                foreach(var collider in old.GetComponentsInChildren<Collider>(true))collider.enabled=false;
+            }
+
             foreach(var t in Map02ChapterDefinition.Load().tasks)
             {
                 var go=new GameObject(t.id+" "+t.title);go.transform.SetParent(root.transform);go.transform.position=DayTaskPoint(t);
@@ -135,7 +144,7 @@ namespace ShadowVale.Map01
             foreach(var place in new[]{"command","family","gate","radio","dock","rest","bamboo","store"}){var lamp=new GameObject("Oil lamp light — "+place);lamp.transform.SetParent(root.transform);lamp.transform.position=sites[place].position+Vector3.up*2.6f;var light=lamp.AddComponent<Light>();light.type=LightType.Point;light.color=new Color(1,.65f,.26f);light.range=5;light.intensity=0;light.shadows=LightShadows.None;lamps.Add(light);}
             var search=new GameObject("Enemy searchlight");search.transform.SetParent(root.transform);sweepLight=search.AddComponent<Light>();sweepLight.type=LightType.Spot;sweepLight.range=55;sweepLight.spotAngle=24;sweepLight.intensity=3;sweepLight.color=new Color(.65f,.8f,1);sweepLight.enabled=false;
             combat.Attacked+=OnPlayerShot;
-            EnsureDayState();LoadDayPerformances();BuildDayProps();ready=true;ApplyState();SyncDayProps();StartCoroutine(PreloadDayOneVoices());
+            EnsureDayState();LoadDayPerformances();BuildDayProps();ready=true;ApplyState();SyncDayProps();StartCoroutine(PreloadDayOneVoices());StartCoroutine(LoadChapterSoundscape());
         }
         void Site(string id,Vector3 position)
         {
@@ -214,6 +223,8 @@ namespace ShadowVale.Map01
         void Update()
         {
             PauseMealCrickets(!ready||Mission.Paused||ForestMenu.Visible||Mission.World.story.failed);
+            TickChapterSoundscape();
+
             if(ready)SetBinoculars((binocularHeld||Keyboard.current?.fKey.isPressed==true)&&!Mission.InputBlocked&&!ForestMenu.Visible);
             if(!ready||Mission.Paused||ForestMenu.Visible||Mission.World.story.failed)return;
             float dt=Mathf.Min(Time.deltaTime,.1f);
@@ -278,6 +289,7 @@ namespace ShadowVale.Map01
                 if(t.kind.StartsWith("rescue")&&escort!=null&&workTask==t)pos=Destination(t);
                 if((t.id=="N1_02"||t.id=="N1_03")&&(Day.postsReached&(t.id=="N1_02"?1:2))!=0)pos=PostKeeper(t.id).transform.position;
                 // Dialogue pins follow the person, not a nearby empty site marker.
+                if(t.id=="D2_03")pos=roles["Tâm"].transform.position;
                 if(t.id=="D1_01")pos=roles["Anh Lực"].transform.position;
                 if(t.id=="D1_06")pos=roles["Anh Thành"].transform.position;
                 if(t.id=="D1_03")pos=roles["Chị Lành"].transform.position;

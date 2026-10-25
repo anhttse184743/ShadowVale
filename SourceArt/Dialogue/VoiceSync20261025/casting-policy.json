@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-25",
+  "cost": 0,
+  "voices": {
+    "Hùng": {
+      "voice": "Anh Khôi",
+      "sample": "Hùng A",
+      "castingApproved": true,
+      "tempo": 0.97,
+      "pitch": 0.97
+    },
+    "Ông Sáu": {
+      "voice": "Thiền Tâm Đức",
+      "sample": "Ông Sáu A",
+      "castingApproved": true,
+      "tempo": 0.87,
+      "pitch": 0.94
+    },
+    "Chỉ huy": {
+      "voice": "Minh Đức",
+      "sample": "Chỉ huy B",
+      "castingApproved": true,
+      "tempo": 0.92,
+      "pitch": 0.94,
+      "approvalDate": "2026-10-25"
+    },
+    "Anh Thành": {
+      "voice": "Minh Đức",
+      "sample": "Chỉ huy B",
+      "castingApproved": true,
+      "tempo": 0.92,
+      "pitch": 0.94,
+      "approvalDate": "2026-10-25"
+    }
+  },
+  "enemyPolicy": "Only 15 original Runway Martin recordings; 11 later enemy lines retain subtitles with no audio recording assigned",
+  "otherRoles": "Preserve existing voices; do not imply individual casting or line approval.",
+  "individualLineReview": "Pending user listening; technical validation is separate from pronunciation and acting review.",
+  "enemyCastingApproved": true
+}

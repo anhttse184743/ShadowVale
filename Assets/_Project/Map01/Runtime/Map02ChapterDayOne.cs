@@ -189,7 +189,7 @@ namespace ShadowVale.Map01
             return standard;
         }
         void PlayDaySound(string id)
-        {var clip=Resources.Load<AudioClip>("Map02DayOne/"+id);if(clip!=null)AudioSource.PlayClipAtPoint(clip,Mission.Player.position+Mission.Player.forward*2,.35f);}
+        {VillageOneShot(id,Mission.Player.position+Mission.Player.forward*2,.35f);}
         string DayInstruction(Map02ChapterTask t)
         {
             if(t.id=="D1_04"&&State.Count(t.id)>=3)return "Đã chuyển 3/3 thùng — tới kho kín, nhấn E sắp xếp vào kho.";

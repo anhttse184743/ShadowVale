@@ -1,0 +1,72 @@
+{
+  "date": "2026-10-25",
+  "project": "G:\\game\\Capstone\\ShadowVale",
+  "cost": 0,
+  "testCount": 12,
+  "tests": [
+    {
+      "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.LegacyBriefingUsesAlignedVoiceAssets",
+      "result": "Passed",
+      "source": "Review_Tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.FullGameAudioTests.CastingDistinguishesYoungNamMiddleAgedHungWomanLanhAndElderSau",
+      "result": "Passed",
+      "source": "Review_Tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.FullGameAudioTests.EnemyVoicesUseOnlyOriginalRunwayRecordings",
+      "result": "Passed",
+      "source": "Review_Tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.FullGameAudioTests.EveryCatalogCueHasAnImportedAudibleClipWithCorrectDuration",
+      "result": "Passed",
+      "source": "Review_Tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueApproachTests.FortyMetreIntroPreemptsGuardAndStonesAreFiniteSavedLoot",
+      "result": "Passed",
+      "source": "Review_Tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescuePresentationTests.CaptiveShotIsVisibleAndReturnsNamToStealth",
+      "result": "Passed",
+      "source": "Final_Tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescuePresentationTests.CommanderRemainsSeatedOnBoatAfterShelterHandoff",
+      "result": "Passed",
+      "source": "Final_Tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueRadioIntroTests.RadioReportHoldsNamStillAndRestoresGameplay",
+      "result": "Passed",
+      "source": "Final_Tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueRadioIntroTests.SkipDuringRadioRestoresKnifeCrouchAndAudio",
+      "result": "Passed",
+      "source": "Final_Tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.ExtractionTests.NaturalBoardingDepartsBeforeCompletion",
+      "result": "Passed",
+      "source": "Final_Tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueBushTests.ExecutionShowsBoundDeathThenReturnsToNam",
+      "result": "Passed",
+      "source": "Execution_Retest.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.RescueBushTests.IntroSkipAndRetryKeepSeenFlagAndBushEscOnlyPauses",
+      "result": "Passed",
+      "source": "Retry_Tests.xml"
+    }
+  ],
+  "namMap1Cues": 32,
+  "map2VoicesUnchanged": true,
+  "originalRunwayEnemyFilesUnchanged": true,
+  "commanderBFilesUnchanged": true
+}

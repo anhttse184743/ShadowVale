@@ -1,0 +1,2192 @@
+{
+  "date": "2026-10-25",
+  "cost": 0,
+  "approvedVoice": "Minh Đức",
+  "approvedSample": "ChiHuy_B",
+  "tempo": 0.92,
+  "pitch": 0.94,
+  "lines": [
+    {
+      "id": "m1_depart_order",
+      "caption": "Chỉ huy: Tất cả đã lên thuyền. Rời bến!",
+      "speaker": "Chỉ huy",
+      "text": "Tất cả đã lên thuyền. Rời bến!",
+      "voice": "Minh Triết",
+      "language": "vi",
+      "match": "Chỉ huy: Tất cả đã lên thuyền. Rời bến!",
+      "radio": false,
+      "duration": 1.8823333333333334,
+      "resource": "Dialogue/VI/m1_depart_order",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "1e31063dd0e7731e80f44a6ddc67013c91755ed3f5d7fb941ab0c17bb8d39d1f",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_story_rescue_order_01",
+      "group": "rescue_order",
+      "speaker": "Chỉ huy",
+      "text": "Trinh sát đã thấy Hùng ở bến phía bắc. Anh ấy còn sống, nhưng đang bị giữ.",
+      "radio": false,
+      "voice": "Minh Triết",
+      "model": "v3 Turbo",
+      "speed": 1,
+      "cleanResource": "Dialogue/VI/m1_story_rescue_order_01_clean",
+      "resource": "Dialogue/VI/m1_story_rescue_order_01_clean",
+      "caption": "Chỉ huy: Trinh sát đã thấy Hùng ở bến phía bắc. Anh ấy còn sống, nhưng đang bị giữ.",
+      "duration": 4.081625,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.7800000309944153,
+      "rms": 0.09515035897493362,
+      "cleanSha256": "f2f32f1f22b0ced9b425546ebc5a3f6360e304c72f6958c3ae45509be8935f8b",
+      "sha256": "c410f1b4518835b15813b9d1171af78b66cb2df46e2b02f8664557583531e68d",
+      "language": "vi",
+      "match": "Chỉ huy: Trinh sát đã thấy Hùng ở bến phía bắc. Anh ấy còn sống, nhưng đang bị giữ.",
+      "status": "integrated_for_listening_review",
+      "provider": "VieNeu offline",
+      "provenance": "Generated in the user-controlled workspace for this approved game task; original MP3 and clean PCM master retained.",
+      "userApproved": false,
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_story_rescue_order_03",
+      "group": "rescue_order",
+      "speaker": "Chỉ huy",
+      "text": "Chưa rõ. Cậu tới quan sát trước, tìm cách đưa Hùng ra. Đừng nổ súng khi chúng còn giữ anh ấy.",
+      "radio": false,
+      "voice": "Minh Triết",
+      "model": "v3 Turbo",
+      "speed": 1,
+      "cleanResource": "Dialogue/VI/m1_story_rescue_order_03_clean",
+      "resource": "Dialogue/VI/m1_story_rescue_order_03_clean",
+      "caption": "Chỉ huy: Chưa rõ. Cậu tới quan sát trước, tìm cách đưa Hùng ra. Đừng nổ súng khi chúng còn giữ anh ấy.",
+      "duration": 5.142854166666667,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.7800000309944153,
+      "rms": 0.09508120268583298,
+      "cleanSha256": "16dc7181b7672db35ee95edd5dea998fb95cd58f137e8bfad82f2c075516d66d",
+      "sha256": "493cc00d138a6dd8c39317269375e8d89366ecb59ac0510e7897acaf2f2ee110",
+      "language": "vi",
+      "match": "Chỉ huy: Chưa rõ. Cậu tới quan sát trước, tìm cách đưa Hùng ra. Đừng nổ súng khi chúng còn giữ anh ấy.",
+      "status": "integrated_for_listening_review",
+      "provider": "VieNeu offline",
+      "provenance": "Generated in the user-controlled workspace for this approved game task; original MP3 and clean PCM master retained.",
+      "userApproved": false,
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_story_rescue_order_05",
+      "group": "rescue_order",
+      "speaker": "Chỉ huy",
+      "text": "Kiểm tra trang bị trước khi đi. Cứu được người thì đưa thẳng về hầm.",
+      "radio": false,
+      "voice": "Minh Triết",
+      "model": "v3 Turbo",
+      "speed": 1,
+      "cleanResource": "Dialogue/VI/m1_story_rescue_order_05_clean",
+      "resource": "Dialogue/VI/m1_story_rescue_order_05_clean",
+      "caption": "Chỉ huy: Kiểm tra trang bị trước khi đi. Cứu được người thì đưa thẳng về hầm.",
+      "duration": 3.5102083333333334,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.772860586643219,
+      "rms": 0.10499998927116394,
+      "cleanSha256": "c5279fe52733cf4cbee22b02e277aac497326ce5254f7a500f56b28b89819fd8",
+      "sha256": "01b9e4335bc00665963867ef88b28ff00f158881d69f59119e0b0c3e983636f7",
+      "language": "vi",
+      "match": "Chỉ huy: Kiểm tra trang bị trước khi đi. Cứu được người thì đưa thẳng về hầm.",
+      "status": "integrated_for_listening_review",
+      "provider": "VieNeu offline",
+      "provenance": "Generated in the user-controlled workspace for this approved game task; original MP3 and clean PCM master retained.",
+      "userApproved": false,
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_depart_destination_order",
+      "speaker": "Chỉ huy",
+      "caption": "Chỉ huy: Có điểm liên lạc ở làng ven sông. Tới đó kiểm tra đường rồi tính tiếp.",
+      "text": "Có điểm liên lạc ở làng ven sông. Tới đó kiểm tra đường rồi tính tiếp.",
+      "voice": "Minh Triết",
+      "model": "v3 Turbo",
+      "speed": 0.9,
+      "radio": false,
+      "resource": "Dialogue/VI/m1_depart_destination_order",
+      "match": "Chỉ huy: Có điểm liên lạc ở làng ven sông. Tới đó kiểm tra đường rồi tính tiếp.",
+      "sourceFile": "Map01Extraction.cs",
+      "originalCaption": "Chỉ huy: Có điểm liên lạc ở làng ven sông. Tới đó kiểm tra đường rồi tính tiếp.",
+      "duration": 3.6734791666666666,
+      "sampleRate": 48000,
+      "channels": 1,
+      "language": "vi",
+      "cleanResource": "Dialogue/VI/m1_depart_destination_order",
+      "provider": "VieNeu offline",
+      "status": "integrated_for_listening_review",
+      "sha256": "e99ba8481d3cd7d83114186e710efca996fb9c8ed27850bf30cecb6a6e572e3c",
+      "peak": 0.735496997833252,
+      "rms": 0.10499999672174454,
+      "pronunciationReview": "not_yet_auditioned_by_user",
+      "cleanSha256": "825ff1748706e80ad2d06cf32121c63db61bf2519fcc28556ba16de6dcf2c895",
+      "userApproved": false,
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_v2_rescue_approach_02",
+      "group": "rescue_approach",
+      "speaker": "Chỉ huy",
+      "text": "Vậy hãy xem xét địa hình và tiếp cận chúng một cách lén lút.",
+      "caption": "Chỉ huy (bộ đàm): Vậy hãy xem xét địa hình và tiếp cận chúng một cách lén lút.",
+      "voice": "Minh Triết",
+      "model": "v3 Turbo",
+      "speed": 0.9,
+      "radio": true,
+      "resource": "Dialogue/VI/m1_v2_rescue_approach_02_radio",
+      "cleanResource": "Dialogue/VI/m1_v2_rescue_approach_02_clean",
+      "match": "Chỉ huy (bộ đàm): Vậy hãy xem xét địa hình và tiếp cận chúng một cách lén lút.",
+      "duration": 3.591833333333333,
+      "sampleRate": 48000,
+      "channels": 1,
+      "provider": "VieNeu offline",
+      "sha256": "a7f38a5b4c84cf3d11a625ac997d0eddbef3217787d7145d5f30b6e4441010af",
+      "pronunciationReview": "pending human audition",
+      "status": "integrated_for_listening_review",
+      "language": "vi",
+      "userApproved": false,
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_v2_rescue_return_03",
+      "group": "rescue_return",
+      "speaker": "Chỉ huy",
+      "text": "Nam, tới điểm một lấy lại thuốc và vật tư. Xong thì báo cáo.",
+      "caption": "Chỉ huy: Nam, tới điểm một lấy lại thuốc và vật tư. Xong thì báo cáo.",
+      "voice": "Minh Triết",
+      "model": "v3 Turbo",
+      "speed": 0.9,
+      "radio": false,
+      "resource": "Dialogue/VI/m1_v2_rescue_return_03_clean",
+      "cleanResource": "Dialogue/VI/m1_v2_rescue_return_03_clean",
+      "match": "Chỉ huy: Nam, tới điểm một lấy lại thuốc và vật tư. Xong thì báo cáo.",
+      "duration": 3.4285625,
+      "sampleRate": 48000,
+      "channels": 1,
+      "provider": "VieNeu offline",
+      "sha256": "cead23b1a11ace5a4512271adc1e1655645d01ac0591c3545d3ae55112865187",
+      "pronunciationReview": "pending human audition",
+      "status": "integrated_for_listening_review",
+      "language": "vi",
+      "userApproved": false,
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_v2_supply_report_02",
+      "group": "supply_report",
+      "speaker": "Chỉ huy",
+      "text": "Tốt. Tới điểm hai, ngắt nguồn đài để địch không gọi viện binh.",
+      "caption": "Chỉ huy (bộ đàm): Tốt. Tới điểm hai, ngắt nguồn đài để địch không gọi viện binh.",
+      "voice": "Minh Triết",
+      "model": "v3 Turbo",
+      "speed": 0.9,
+      "radio": true,
+      "resource": "Dialogue/VI/m1_v2_supply_report_02_radio",
+      "cleanResource": "Dialogue/VI/m1_v2_supply_report_02_clean",
+      "match": "Chỉ huy (bộ đàm): Tốt. Tới điểm hai, ngắt nguồn đài để địch không gọi viện binh.",
+      "duration": 2.8571458333333335,
+      "sampleRate": 48000,
+      "channels": 1,
+      "provider": "VieNeu offline",
+      "sha256": "2b3769eb8b33cefb143ebe51817e7191310de6d53c9c173f6d6a0f1232dee511",
+      "pronunciationReview": "pending human audition",
+      "status": "integrated_for_listening_review",
+      "language": "vi",
+      "userApproved": false,
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_v2_radio_report_02",
+      "group": "radio_report",
+      "speaker": "Chỉ huy",
+      "text": "Chuyển tới điểm ba. Xác nhận tên sĩ quan đang điều quân.",
+      "caption": "Chỉ huy (bộ đàm): Chuyển tới điểm ba. Xác nhận tên sĩ quan đang điều quân.",
+      "voice": "Minh Triết",
+      "model": "v3 Turbo",
+      "speed": 0.9,
+      "radio": true,
+      "resource": "Dialogue/VI/m1_v2_radio_report_02_radio",
+      "cleanResource": "Dialogue/VI/m1_v2_radio_report_02_clean",
+      "match": "Chỉ huy (bộ đàm): Chuyển tới điểm ba. Xác nhận tên sĩ quan đang điều quân.",
+      "duration": 2.7755,
+      "sampleRate": 48000,
+      "channels": 1,
+      "provider": "VieNeu offline",
+      "sha256": "588e52d39584695bfc645273a8e3eebb3d68a3549c5c3d7466cec3e96c64cb73",
+      "pronunciationReview": "pending human audition",
+      "status": "integrated_for_listening_review",
+      "language": "vi",
+      "userApproved": false,
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_v2_commander_confirm_02",
+      "group": "commander_confirm",
+      "speaker": "Chỉ huy",
+      "text": "Hạ mục tiêu rồi báo cáo.",
+      "caption": "Chỉ huy (bộ đàm): Hạ mục tiêu rồi báo cáo.",
+      "voice": "Minh Triết",
+      "model": "v3 Turbo",
+      "speed": 0.9,
+      "radio": true,
+      "resource": "Dialogue/VI/m1_v2_commander_confirm_02_radio",
+      "cleanResource": "Dialogue/VI/m1_v2_commander_confirm_02_clean",
+      "match": "Chỉ huy (bộ đàm): Hạ mục tiêu rồi báo cáo.",
+      "duration": 1.4693958333333332,
+      "sampleRate": 48000,
+      "channels": 1,
+      "provider": "VieNeu offline",
+      "sha256": "f1acca52df579683c1f28995fb9e48f141d5430a221886f4ebfb389fdb647a5f",
+      "pronunciationReview": "pending human audition",
+      "status": "integrated_for_listening_review",
+      "language": "vi",
+      "userApproved": false,
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_v2_extraction_02",
+      "group": "extraction",
+      "speaker": "Chỉ huy",
+      "text": "Nam, rút ra bến tàu phía bắc. Tôi và Hùng đang chờ trên thuyền.",
+      "caption": "Chỉ huy (bộ đàm): Nam, rút ra bến tàu phía bắc. Tôi và Hùng đang chờ trên thuyền.",
+      "voice": "Minh Triết",
+      "model": "v3 Turbo",
+      "speed": 0.9,
+      "radio": true,
+      "resource": "Dialogue/VI/m1_v2_extraction_02_radio",
+      "cleanResource": "Dialogue/VI/m1_v2_extraction_02_clean",
+      "match": "Chỉ huy (bộ đàm): Nam, rút ra bến tàu phía bắc. Tôi và Hùng đang chờ trên thuyền.",
+      "duration": 3.8415,
+      "sampleRate": 48000,
+      "channels": 1,
+      "provider": "VieNeu offline",
+      "sha256": "0df2d19146da68d3ec51a61bcac70b1f32c4ccfdd5e9c7c8c5af45e61914e890",
+      "pronunciationReview": "pending human audition",
+      "status": "integrated_for_listening_review",
+      "language": "vi",
+      "userApproved": false,
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_ops_supply_order_01",
+      "speaker": "Chỉ huy",
+      "text": "Địch đã chuyển số hàng ấy vào kho ở điểm một. Nam, lấy lại thuốc rồi mang về đây. Anh em đang cần.",
+      "radio": false,
+      "voiceStatus": "installed_existing_cast",
+      "delivery": "direct_clean",
+      "caption": "Chỉ huy: Địch đã chuyển số hàng ấy vào kho ở điểm một. Nam, lấy lại thuốc rồi mang về đây. Anh em đang cần.",
+      "cleanResource": "Dialogue/VI/m1_ops_supply_order_01_clean",
+      "resource": "Dialogue/VI/m1_ops_supply_order_01_clean",
+      "voice": "Minh Triết",
+      "language": "vi",
+      "match": "Chỉ huy: Địch đã chuyển số hàng ấy vào kho ở điểm một. Nam, lấy lại thuốc rồi mang về đây. Anh em đang cần.",
+      "model": "v3 Turbo",
+      "speed": 0.9,
+      "duration": 5.147625,
+      "sampleRate": 48000,
+      "channels": 1,
+      "provider": "VieNeu offline",
+      "sha256": "05e8104fbd66a3e0a5f333945f32a1bebbd3f0098780b3aa6c8e7754a2d0d707",
+      "pronunciationReview": "pending human listening review",
+      "userApproved": false,
+      "approvalDate": "2026-10-18",
+      "status": "integrated_for_listening_review",
+      "originalCaption": "Chỉ huy: Số thuốc của Hùng còn ở điểm một. Lấy lại rồi mang về hầm, anh em đang cần.",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_ops_supply_report_02",
+      "speaker": "Chỉ huy",
+      "text": "Mang về hầm. Đi cẩn thận, chúng có thể còn lính ngoài đường.",
+      "radio": true,
+      "voiceStatus": "installed_existing_cast",
+      "delivery": "remote_light_radio",
+      "caption": "Chỉ huy (bộ đàm): Mang về hầm. Đi cẩn thận, chúng có thể còn lính ngoài đường.",
+      "cleanResource": "Dialogue/VI/m1_ops_supply_report_02_clean",
+      "resource": "Dialogue/VI/m1_ops_supply_report_02_radio",
+      "voice": "Minh Triết",
+      "language": "vi",
+      "match": "Chỉ huy (bộ đàm): Mang về hầm. Đi cẩn thận, chúng có thể còn lính ngoài đường.",
+      "model": "v3 Turbo",
+      "speed": 0.9,
+      "duration": 3.1884375,
+      "sampleRate": 48000,
+      "channels": 1,
+      "provider": "VieNeu offline",
+      "sha256": "6cbb2e447cdd32e30190796ee5a1276de3a709a53df09820a03535ba7fc4b283",
+      "pronunciationReview": "pending human listening review",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_ops_handoff_03",
+      "speaker": "Chỉ huy",
+      "text": "Đài ở điểm hai vẫn đang điều lính ra các chốt. Nam, tới đó vô hiệu hóa nó, cắt đường gọi viện của chúng.",
+      "radio": false,
+      "voiceStatus": "installed_existing_cast",
+      "delivery": "direct_clean",
+      "caption": "Chỉ huy: Đài ở điểm hai vẫn đang điều lính ra các chốt. Nam, tới đó vô hiệu hóa nó, cắt đường gọi viện của chúng.",
+      "cleanResource": "Dialogue/VI/m1_ops_handoff_03_clean",
+      "resource": "Dialogue/VI/m1_ops_handoff_03_clean",
+      "voice": "Minh Triết",
+      "language": "vi",
+      "match": "Chỉ huy: Đài ở điểm hai vẫn đang điều lính ra các chốt. Nam, tới đó vô hiệu hóa nó, cắt đường gọi viện của chúng.",
+      "model": "v3 Turbo",
+      "speed": 0.9,
+      "duration": 5.632645833333333,
+      "sampleRate": 48000,
+      "channels": 1,
+      "provider": "VieNeu offline",
+      "sha256": "b2a52f4faaa886b523ed11a7a25f38ba9d1a693a3190658ad8e30e66845272b7",
+      "pronunciationReview": "pending human listening review",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_ops_radio_report_02",
+      "speaker": "Chỉ huy",
+      "text": "Tên sĩ quan điều quân đang ở điểm ba. Quan sát từ xa rồi báo tôi trước khi đánh.",
+      "radio": true,
+      "voiceStatus": "installed_existing_cast",
+      "delivery": "remote_light_radio",
+      "caption": "Chỉ huy (bộ đàm): Tên sĩ quan điều quân đang ở điểm ba. Quan sát từ xa rồi báo tôi trước khi đánh.",
+      "cleanResource": "Dialogue/VI/m1_ops_radio_report_02_clean",
+      "resource": "Dialogue/VI/m1_ops_radio_report_02_radio",
+      "voice": "Minh Triết",
+      "language": "vi",
+      "match": "Chỉ huy (bộ đàm): Tên sĩ quan điều quân đang ở điểm ba. Quan sát từ xa rồi báo tôi trước khi đánh.",
+      "model": "v3 Turbo",
+      "speed": 0.9,
+      "duration": 4.4945625,
+      "sampleRate": 48000,
+      "channels": 1,
+      "provider": "VieNeu offline",
+      "sha256": "223bcff20cd7e999944c04ada32ed2206757bdd8954e47d505d2061b5c35c423",
+      "pronunciationReview": "pending human listening review",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_ops_commander_report_02",
+      "speaker": "Chỉ huy",
+      "text": "Hắn đang siết đường ra bến. Chọn vị trí có vật che, hạ hắn rồi rút.",
+      "radio": true,
+      "voiceStatus": "installed_existing_cast",
+      "delivery": "remote_light_radio",
+      "caption": "Chỉ huy (bộ đàm): Hắn đang siết đường ra bến. Chọn vị trí có vật che, hạ hắn rồi rút.",
+      "cleanResource": "Dialogue/VI/m1_ops_commander_report_02_clean",
+      "resource": "Dialogue/VI/m1_ops_commander_report_02_radio",
+      "voice": "Minh Triết",
+      "language": "vi",
+      "match": "Chỉ huy (bộ đàm): Hắn đang siết đường ra bến. Chọn vị trí có vật che, hạ hắn rồi rút.",
+      "model": "v3 Turbo",
+      "speed": 0.9,
+      "duration": 3.591833333333333,
+      "sampleRate": 48000,
+      "channels": 1,
+      "provider": "VieNeu offline",
+      "sha256": "a6de0f91cacf62d25034fcb3440830a5dfd65dfd06e6c95f3fd4c46508ac7b4e",
+      "pronunciationReview": "pending human listening review",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_ops_retreat_02",
+      "speaker": "Chỉ huy",
+      "text": "Ra bến phía bắc. Tôi và Hùng chờ cậu trên thuyền.",
+      "radio": true,
+      "voiceStatus": "installed_existing_cast",
+      "delivery": "remote_light_radio",
+      "caption": "Chỉ huy (bộ đàm): Ra bến phía bắc. Tôi và Hùng chờ cậu trên thuyền.",
+      "cleanResource": "Dialogue/VI/m1_ops_retreat_02_clean",
+      "resource": "Dialogue/VI/m1_ops_retreat_02_radio",
+      "voice": "Minh Triết",
+      "language": "vi",
+      "match": "Chỉ huy (bộ đàm): Ra bến phía bắc. Tôi và Hùng chờ cậu trên thuyền.",
+      "model": "v3 Turbo",
+      "speed": 0.9,
+      "duration": 2.5306041666666665,
+      "sampleRate": 48000,
+      "channels": 1,
+      "provider": "VieNeu offline",
+      "sha256": "10f6ce1be7890124bc4ae2620170be637c191f6e54d93b376cd3b2bda12c2f35",
+      "pronunciationReview": "pending human listening review",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_supply_debrief_commander_question",
+      "caption": "Chỉ huy: Hùng, cậu đã xác nhận được số hàng chưa?",
+      "speaker": "Chỉ huy",
+      "text": "Hùng, cậu đã xác nhận được số hàng chưa?",
+      "voice": "Minh Triết",
+      "language": "vi",
+      "match": "Chỉ huy: Hùng, cậu đã xác nhận được số hàng chưa?",
+      "radio": false,
+      "model": "v3 Turbo",
+      "provider": "VieNeu offline",
+      "duration": 2.1224583333333333,
+      "resource": "Dialogue/VI/m1_supply_debrief_commander_question_clean",
+      "cleanResource": "Dialogue/VI/m1_supply_debrief_commander_question_clean",
+      "sampleRate": 48000,
+      "channels": 1,
+      "sha256": "0625d4b2f1bb40192bee1392076495e98e941f2d730b0b2fff9910d4c7c2d921",
+      "userApproved": false,
+      "approvalDate": "2026-10-18",
+      "status": "integrated_for_listening_review",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m1_c3_mosin_order",
+      "caption": "Chỉ huy (bộ đàm): Trinh sát để lại một khẩu Mosin, năm viên, ở vai đồi phía Đông Nam điểm ba. Từ đó nhìn được chòi canh.",
+      "speaker": "Chỉ huy",
+      "text": "Trinh sát để lại một khẩu Mosin, năm viên, ở vai đồi phía Đông Nam điểm ba. Từ đó nhìn được chòi canh.",
+      "voice": "Minh Triết",
+      "language": "vi",
+      "match": "Chỉ huy (bộ đàm): Trinh sát để lại một khẩu Mosin, năm viên, ở vai đồi phía Đông Nam điểm ba. Từ đó nhìn được chòi canh.",
+      "radio": true,
+      "model": "v3 Turbo",
+      "provider": "VieNeu offline",
+      "duration": 5.9591875,
+      "resource": "Dialogue/VI/m1_c3_mosin_order_radio",
+      "cleanResource": "Dialogue/VI/m1_c3_mosin_order_clean",
+      "sampleRate": 48000,
+      "channels": 1,
+      "sha256": "de2e07d311e3beb20c5755dcbb1cb2d0263b998346f0e4ae662a0e1eb23d40bc",
+      "userApproved": false,
+      "approvalDate": "2026-10-18",
+      "status": "integrated_for_listening_review",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_contact_01",
+      "caption": "Anh Thành: Đường về bị chặn rồi. Mình ở lại đây, chờ tin.",
+      "match": "Anh Thành: Đường về bị chặn rồi. Mình ở lại đây, chờ tin.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_contact_01",
+      "language": "vi",
+      "radio": false,
+      "duration": 2.9387708333333333,
+      "speaker": "Anh Thành",
+      "text": "Đường về bị chặn rồi. Mình ở lại đây, chờ tin.",
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "ffb39b2a7ea001ca1a55d8831c4bc6689b9583db0846f82bc5921aff6994b4a2",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_contact_03",
+      "caption": "Anh Thành: Hùng đi băng lại tay. Nam lo bắt liên lạc.",
+      "match": "Anh Thành: Hùng đi băng lại tay. Nam lo bắt liên lạc.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_contact_03",
+      "language": "vi",
+      "radio": false,
+      "duration": 2.367354166666667,
+      "speaker": "Anh Thành",
+      "text": "Hùng đi băng lại tay. Nam lo bắt liên lạc.",
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "c757787e00f96bb11f771344f593f81f82039899e9b04ede8763be9c0bc637d5",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_contact_08",
+      "caption": "Anh Thành: Trong lúc chờ, giao thuốc, cất vật tư vào kho kín rồi sửa bến cùng chú Bảy. Nam giúp một tay.",
+      "match": "Anh Thành: Trong lúc chờ, giao thuốc, cất vật tư vào kho kín rồi sửa bến cùng chú Bảy. Nam giúp một tay.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_contact_08",
+      "language": "vi",
+      "radio": false,
+      "duration": 5.4693958333333335,
+      "speaker": "Anh Thành",
+      "text": "Trong lúc chờ, giao thuốc, cất vật tư vào kho kín rồi sửa bến cùng chú Bảy. Nam giúp một tay.",
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "79742ad230cd46afb973e24e4fdd5c1ece3d40f9a7a6c4589f2444a1e36b2a37",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_day1report_02",
+      "caption": "Anh Thành: Được. Tối nay cậu với Hùng kiểm tra hai chốt, rồi thay nhau nghỉ.",
+      "match": "Anh Thành: Được. Tối nay cậu với Hùng kiểm tra hai chốt, rồi thay nhau nghỉ.",
+      "resource": "Dialogue/Map02DayOneFree/m2v3_day1report_02",
+      "language": "vi",
+      "radio": false,
+      "duration": 3.4285625,
+      "speaker": "Anh Thành",
+      "text": "Được. Tối nay cậu với Hùng kiểm tra hai chốt, rồi thay nhau nghỉ.",
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "ca0492bf3f6ac9d9ccb563d7093c0a65806c12deabe59201780faa5626a5d113",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2_moor_order",
+      "caption": "Anh Thành: Giữ yên lặng. Đưa thuyền sát bến.",
+      "match": "Anh Thành: Giữ yên lặng. Đưa thuyền sát bến.",
+      "resource": "Dialogue/Map02DayOneFree/m2_moor_order",
+      "language": "vi",
+      "radio": false,
+      "duration": 2.1224583333333333,
+      "speaker": "Anh Thành",
+      "text": "Giữ yên lặng. Đưa thuyền sát bến.",
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "63af3c6cddb7ce1ed978e1ddd5c7eae62043ccc6394cf6979e76fc6d56a4e752",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2_ashore_order",
+      "caption": "Anh Thành: Nam, lên trước đi. Chúng ta gặp nhau trên bờ.",
+      "match": "Anh Thành: Nam, lên trước đi. Chúng ta gặp nhau trên bờ.",
+      "resource": "Dialogue/Map02DayOneFree/m2_ashore_order",
+      "language": "vi",
+      "radio": false,
+      "duration": 2.7755,
+      "speaker": "Anh Thành",
+      "text": "Nam, lên trước đi. Chúng ta gặp nhau trên bờ.",
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "3fc5a20c3ac09af305e467a5c6750ae8fc0b0dc52060fea819a6a8500a2947a2",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_scoutorder_01",
+      "caption": "Anh Thành: Tâm quá hẹn một đêm rồi. Nam đi khu cầu.",
+      "match": "Anh Thành: Tâm quá hẹn một đêm rồi. Nam đi khu cầu.",
+      "speaker": "Anh Thành",
+      "text": "Tâm quá hẹn một đêm rồi. Nam đi khu cầu.",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_scoutorder_01",
+      "radio": false,
+      "language": "vi",
+      "duration": 2.5306041666666665,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "03a039fcf6c2319919aa3dcea2b9715697420721298d71f03689a8ee31163dac",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_scoutorder_06",
+      "caption": "Anh Thành: Hùng ở lại sửa máy. Máy này không ai rành bằng cậu.",
+      "match": "Anh Thành: Hùng ở lại sửa máy. Máy này không ai rành bằng cậu.",
+      "speaker": "Anh Thành",
+      "text": "Hùng ở lại sửa máy. Máy này không ai rành bằng cậu.",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_scoutorder_06",
+      "radio": false,
+      "language": "vi",
+      "duration": 2.9387708333333333,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "244de77e448759d57736a5f04cf9942d6c1855ef862393dab7c9778d181ee09d",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_scoutreturn_02",
+      "caption": "Anh Thành: Hùng. Máy bắt được chưa?",
+      "match": "Anh Thành: Hùng. Máy bắt được chưa?",
+      "speaker": "Anh Thành",
+      "text": "Hùng. Máy bắt được chưa?",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_scoutreturn_02",
+      "radio": false,
+      "language": "vi",
+      "duration": 1.2245,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "2105c2c1f19a4a7a6c8e8ef6881d9208ddd64e1657d1cee83a9098caed99a030",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_antenna_03",
+      "caption": "Anh Thành (bộ đàm): Rạch Tre nghe. Nói đi.",
+      "match": "Anh Thành (bộ đàm): Rạch Tre nghe. Nói đi.",
+      "speaker": "Anh Thành",
+      "text": "Rạch Tre nghe. Nói đi.",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_antenna_03",
+      "radio": true,
+      "language": "vi",
+      "duration": 1.2245,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "834f0a709004921c320f866f66337ee7c7e5144cbd4b4ed41366f3f348e233d9",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_artillery_01",
+      "caption": "Anh Thành: Bên kia có pháo. Nhưng gọi tới lúc bắn được là mất mấy phút. Cần tọa độ, cần biết dân đã ra khỏi chỗ chưa.",
+      "match": "Anh Thành: Bên kia có pháo. Nhưng gọi tới lúc bắn được là mất mấy phút. Cần tọa độ, cần biết dân đã ra khỏi chỗ chưa.",
+      "speaker": "Anh Thành",
+      "text": "Bên kia có pháo. Nhưng gọi tới lúc bắn được là mất mấy phút. Cần tọa độ, cần biết dân đã ra khỏi chỗ chưa.",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_artillery_01",
+      "radio": false,
+      "language": "vi",
+      "duration": 5.551020833333333,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "acfe8ca008f7a2e1ce22fcd62eb811edc6808f6baccbcd73d4d31c13b501628c",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_lastorder_01",
+      "caption": "Anh Thành: Sáng mai đường có thể thông. Tối nay ngủ sớm. Nam, ca đầu.",
+      "match": "Anh Thành: Sáng mai đường có thể thông. Tối nay ngủ sớm. Nam, ca đầu.",
+      "speaker": "Anh Thành",
+      "text": "Sáng mai đường có thể thông. Tối nay ngủ sớm. Nam, ca đầu.",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_lastorder_01",
+      "radio": false,
+      "language": "vi",
+      "duration": 3.1020416666666666,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "1cc5af5d47de6f33cc53fdb4caddd9cefdf45cf86285416fba7d970bf1bf6b34",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_lastorder_03",
+      "caption": "Anh Thành: Nếu có chuyện, Nam giữ ngõ đình. Ngõ đó xa bến nhất.",
+      "match": "Anh Thành: Nếu có chuyện, Nam giữ ngõ đình. Ngõ đó xa bến nhất.",
+      "speaker": "Anh Thành",
+      "text": "Nếu có chuyện, Nam giữ ngõ đình. Ngõ đó xa bến nhất.",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_lastorder_03",
+      "radio": false,
+      "language": "vi",
+      "duration": 3.183666666666667,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "6fe542715cfc9f682cd9b23b5661ad995bdfad553e96d4cdeab454515fc1e17f",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_attack_02",
+      "caption": "Anh Thành: Hùng, ra bến, giữ máy! Nam, lấy đồ rồi ra ngõ ông Sáu!",
+      "match": "Anh Thành: Hùng, ra bến, giữ máy! Nam, lấy đồ rồi ra ngõ ông Sáu!",
+      "speaker": "Anh Thành",
+      "text": "Hùng, ra bến, giữ máy! Nam, lấy đồ rồi ra ngõ ông Sáu!",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_attack_02",
+      "radio": false,
+      "language": "vi",
+      "duration": 2.9387708333333333,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "cdaa76d4fa75f783c002d79c5d0c0882f46815a767f932f8569852746e9aa4ce",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_wound_02",
+      "caption": "Anh Thành (bộ đàm): Lùi về gốc me! Nam, giữ ngõ cho dân qua!",
+      "match": "Anh Thành (bộ đàm): Lùi về gốc me! Nam, giữ ngõ cho dân qua!",
+      "speaker": "Anh Thành",
+      "text": "Lùi về gốc me! Nam, giữ ngõ cho dân qua!",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_wound_02",
+      "radio": true,
+      "language": "vi",
+      "duration": 2.5306041666666665,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "9fc49a3b821f4f7c9f45a6bc9e277d5074fc7af8298d11b83d662911804a2fae",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_coordinates_02",
+      "caption": "Anh Thành (bộ đàm): Nam, dọn cây đổ cho tổ cứu thương. Hùng, đọc tọa độ cho tôi.",
+      "match": "Anh Thành (bộ đàm): Nam, dọn cây đổ cho tổ cứu thương. Hùng, đọc tọa độ cho tôi.",
+      "speaker": "Anh Thành",
+      "text": "Nam, dọn cây đổ cho tổ cứu thương. Hùng, đọc tọa độ cho tôi.",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_coordinates_02",
+      "radio": true,
+      "language": "vi",
+      "duration": 3.8415,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "9a6e2eed6aef734cf4eac40560020c32676e10c154418ac3bb04b9112123cbff",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_coordinates_04",
+      "caption": "Anh Thành (bộ đàm): Rạch Tre nhận tọa độ. Ba phút.",
+      "match": "Anh Thành (bộ đàm): Rạch Tre nhận tọa độ. Ba phút.",
+      "speaker": "Anh Thành",
+      "text": "Rạch Tre nhận tọa độ. Ba phút.",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_coordinates_04",
+      "radio": true,
+      "language": "vi",
+      "duration": 1.7142916666666668,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "ca23e39f80f9f6b98fba406eeb37117b0fe71436f2d40dafe1181ed16844d94a",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_coordinates_06",
+      "caption": "Anh Thành (bộ đàm): Thì phải có người tới gần nó.",
+      "match": "Anh Thành (bộ đàm): Thì phải có người tới gần nó.",
+      "speaker": "Anh Thành",
+      "text": "Thì phải có người tới gần nó.",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_coordinates_06",
+      "radio": true,
+      "language": "vi",
+      "duration": 1.7142916666666668,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "5d75ca34aa5ce9931c608b6f1dfb9b6f9560e088d9d8c1d5c509379d19e09e3e",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_sacrifice_03",
+      "caption": "Anh Thành (bộ đàm): Rạch Tre. Bắn.",
+      "match": "Anh Thành (bộ đàm): Rạch Tre. Bắn.",
+      "speaker": "Anh Thành",
+      "text": "Rạch Tre. Bắn.",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_sacrifice_03",
+      "radio": true,
+      "language": "vi",
+      "duration": 1.0612291666666667,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "0336e3a161033a4923bd730c957542118c253f230a9b0c398a61ff4c2b0ed94f",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_sacrifice_04",
+      "caption": "Anh Thành: Phản công!",
+      "match": "Anh Thành: Phản công!",
+      "speaker": "Anh Thành",
+      "text": "Phản công!",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_sacrifice_04",
+      "radio": false,
+      "language": "vi",
+      "duration": 0.5762083333333333,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "c27d3c85e5d163ef1a8a534aba7f7173d6407b376b9de18819c256b7290bcd05",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_dawn_02",
+      "caption": "Anh Thành: Tôi biết.",
+      "match": "Anh Thành: Tôi biết.",
+      "speaker": "Anh Thành",
+      "text": "Tôi biết.",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_dawn_02",
+      "radio": false,
+      "language": "vi",
+      "duration": 0.4897916666666667,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "16bdd72fd2ba5a3f3941db29804e98e69aa214d1ed0a76f934d8860f270900bf",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2v3_dawn_04",
+      "caption": "Anh Thành: Để tôi tìm. Chi vậy?",
+      "match": "Anh Thành: Để tôi tìm. Chi vậy?",
+      "speaker": "Anh Thành",
+      "text": "Để tôi tìm. Chi vậy?",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_dawn_04",
+      "radio": false,
+      "language": "vi",
+      "duration": 1.4693958333333332,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "24c767671d4708bba333fb8b585eafe4afe7f66185cb380582a44fa5960d5490",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2_contact_01",
+      "caption": "Chỉ huy: Chúng tôi vừa rút khỏi khu rừng. Chỉ huy địch đã bị hạ, nhưng chúng đang tăng quân tìm kiếm.",
+      "match": "Chỉ huy: Chúng tôi vừa rút khỏi khu rừng. Chỉ huy địch đã bị hạ, nhưng chúng đang tăng quân tìm kiếm.",
+      "speaker": "Chỉ huy",
+      "text": "Chúng tôi vừa rút khỏi khu rừng. Chỉ huy địch đã bị hạ, nhưng chúng đang tăng quân tìm kiếm.",
+      "resource": "Dialogue/FullGameFree20261023/m2_contact_01",
+      "radio": false,
+      "language": "vi",
+      "duration": 4.979583333333333,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "1ba2c0f086b6b5764a9289889078b167ca2a8c5dddf54945f4d4a768a1296fe1",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2_encirclement_03",
+      "caption": "Chỉ huy (bộ đàm): Nam, quay về điểm tập kết. Chúng đang khép vòng.",
+      "match": "Chỉ huy (bộ đàm): Nam, quay về điểm tập kết. Chúng đang khép vòng.",
+      "speaker": "Chỉ huy",
+      "text": "Nam, quay về điểm tập kết. Chúng đang khép vòng.",
+      "resource": "Dialogue/FullGameFree20261023/m2_encirclement_03",
+      "radio": true,
+      "language": "vi",
+      "duration": 2.4489791666666667,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "e18d4ed61cc814a75426e64869d725cfb5799bef09d7ea5bd505ad90582d2525",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2_hold_lane_02",
+      "caption": "Chỉ huy: Chúng đã khóa các đường. Cậu ra một mình không mở được đường cho dân. Về giữ ngõ cùng anh em.",
+      "match": "Chỉ huy: Chúng đã khóa các đường. Cậu ra một mình không mở được đường cho dân. Về giữ ngõ cùng anh em.",
+      "speaker": "Chỉ huy",
+      "text": "Chúng đã khóa các đường. Cậu ra một mình không mở được đường cho dân. Về giữ ngõ cùng anh em.",
+      "resource": "Dialogue/FullGameFree20261023/m2_hold_lane_02",
+      "radio": false,
+      "language": "vi",
+      "duration": 4.979583333333333,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "4acd55cfb1e9ca1e189fabd12cd959be6661727225370ddc1810ae6e9ba7cbc6",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "m2_departure_04",
+      "caption": "Chỉ huy: Người cuối đã rút. Giữ thuyền theo đoàn.",
+      "match": "Chỉ huy: Người cuối đã rút. Giữ thuyền theo đoàn.",
+      "speaker": "Chỉ huy",
+      "text": "Người cuối đã rút. Giữ thuyền theo đoàn.",
+      "resource": "Dialogue/FullGameFree20261023/m2_departure_04",
+      "radio": false,
+      "language": "vi",
+      "duration": 2.2857083333333335,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "d2dbcc4344e47a3cb44e464be4978430d42c0e04b5e951af16129d44bc58a3a7",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "free_literal_689a1d6bb4c6",
+      "caption": "Chỉ huy: Đồng chí ra bến tàu phía Bắc nhận tiếp tế cho đơn vị.",
+      "match": "Chỉ huy: Đồng chí ra bến tàu phía Bắc nhận tiếp tế cho đơn vị.",
+      "speaker": "Chỉ huy",
+      "text": "Đồng chí ra bến tàu phía Bắc nhận tiếp tế cho đơn vị.",
+      "resource": "Dialogue/FullGameFree20261023/free_literal_689a1d6bb4c6",
+      "radio": false,
+      "language": "vi",
+      "duration": 2.7755,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "01dd7940c15caeaaa43151b00008e621a8c1eb61b84924ea352b91a11f65ca8d",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "free_literal_266135ffce2b",
+      "caption": "Chỉ huy: Kiểm tra lương thực, thuốc men và trang bị. Phối hợp bốc dỡ, đưa hàng về điểm tập kết.",
+      "match": "Chỉ huy: Kiểm tra lương thực, thuốc men và trang bị. Phối hợp bốc dỡ, đưa hàng về điểm tập kết.",
+      "speaker": "Chỉ huy",
+      "text": "Kiểm tra lương thực, thuốc men và trang bị. Phối hợp bốc dỡ, đưa hàng về điểm tập kết.",
+      "resource": "Dialogue/FullGameFree20261023/free_literal_266135ffce2b",
+      "radio": false,
+      "language": "vi",
+      "duration": 4.7346875,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "992e32abd50850f6ab17b1bc8ac18e5358aaa3af737619bc84dbf5693dcd9b34",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "free_literal_8fcfcdda95f4",
+      "caption": "Chỉ huy: Hùng chưa trở về từ bến tàu. Nếu gặp anh ấy, đưa về căn cứ an toàn. Có trở ngại, báo ngay cho tôi!",
+      "match": "Chỉ huy: Hùng chưa trở về từ bến tàu. Nếu gặp anh ấy, đưa về căn cứ an toàn. Có trở ngại, báo ngay cho tôi!",
+      "speaker": "Chỉ huy",
+      "text": "Hùng chưa trở về từ bến tàu. Nếu gặp anh ấy, đưa về căn cứ an toàn. Có trở ngại, báo ngay cho tôi!",
+      "resource": "Dialogue/FullGameFree20261023/free_literal_8fcfcdda95f4",
+      "radio": false,
+      "language": "vi",
+      "duration": 6.204083333333333,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "4b53b174994b02279bfe1fafd61423653ebe0510c19418d708add89a76f20366",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    },
+    {
+      "id": "free_literal_53c4c39060a3",
+      "caption": "Chỉ huy: Hạ nhóm bảo vệ điểm một, lấy lại thuốc rồi mang về hầm.",
+      "match": "Chỉ huy: Hạ nhóm bảo vệ điểm một, lấy lại thuốc rồi mang về hầm.",
+      "speaker": "Chỉ huy",
+      "text": "Hạ nhóm bảo vệ điểm một, lấy lại thuốc rồi mang về hầm.",
+      "resource": "Dialogue/FullGameFree20261023/free_literal_53c4c39060a3",
+      "radio": false,
+      "language": "vi",
+      "duration": 3.3469375,
+      "voice": "Minh Triết",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "userApproved": false,
+      "status": "integrated_for_listening_review",
+      "sha256": "bef179acc2890c5991b1e222eb851ca8350cce1e01b740f508b1b432838737ca",
+      "cost": 0,
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo"
+    }
+  ],
+  "protected": [
+    {
+      "id": "m1_story_09",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_story_09_clean.wav",
+      "sha256": "a432d6cddb001de8c7d824c8058fce793d13bc24b54aaded5e1d3f32f4b41672"
+    },
+    {
+      "id": "m1_story_10",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_story_10.wav",
+      "sha256": "f39c75fb693d226fdd3147900cd32159e8e6addfe8a0465f0d50abec44684a5d"
+    },
+    {
+      "id": "m1_story_11",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_story_11.wav",
+      "sha256": "984800254dc1e21d6154b2a8cb05077501f08171e6d9f9767b38b08ac4ccad41"
+    },
+    {
+      "id": "m1_story_12",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_story_12.wav",
+      "sha256": "41ced4a4b7c008458fa1ef8492194ea20fa27810814d2c121d8e1fed92534fb3"
+    },
+    {
+      "id": "m1_story_15",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_story_15.wav",
+      "sha256": "97b9a71f93468de75635c23ee80eb5d4063f7faf53b7be45744c530f11650972"
+    },
+    {
+      "id": "m1_story_16",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_story_16.wav",
+      "sha256": "85723972148838cf706830993fd2427ea5a74ae11b16780695f6534dd55a7ad5"
+    },
+    {
+      "id": "m1_scout_silent",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_scout_silent.wav",
+      "sha256": "22c7da1cc498fee0f4cfa8d125f3db73bec6e7cfbdfa20149ddb73274d8c55c2"
+    },
+    {
+      "id": "m1_jetty_observation",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_jetty_observation.wav",
+      "sha256": "107a5401668cf6c84882a83c9c41ac316bc8512ea4968ad92b9093ec313a5e17"
+    },
+    {
+      "id": "m1_rescue_alarm",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_rescue_alarm.wav",
+      "sha256": "159dda2e04866f0047f9ce311b3409fa8185168672240018d96dc5f91da13db0"
+    },
+    {
+      "id": "m1_rescue_execute_order",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_rescue_execute_order.wav",
+      "sha256": "37011a03c8ac6b16c9c3091bdb6b6c03fe2ed17515632b666c4f11334e0ce5eb"
+    },
+    {
+      "id": "m1_rescue_interrogate",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_rescue_interrogate.wav",
+      "sha256": "838a5da78bd366d0a0a6c1eae608e852600919562d189855abedc60c5977976b"
+    },
+    {
+      "id": "m1_rescue_shelter",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_rescue_shelter.wav",
+      "sha256": "26997d8659366ef59b7821bfc8cb6416273e05ce943840a2f21fabd9168f772f"
+    },
+    {
+      "id": "m1_story_rescue_order_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_story_rescue_order_02_clean.wav",
+      "sha256": "9fb5f58dec1dd8e8bdfd411385261b32492799ec90c96fb034a1de120b81a976"
+    },
+    {
+      "id": "m1_story_rescue_order_04",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_story_rescue_order_04_clean.wav",
+      "sha256": "a4ea530e5dac4f22e360347517dce6cf1c12d596a5526f7aba3adc6bb3b3f965"
+    },
+    {
+      "id": "m1_combat_radio_blocked",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_combat_radio_blocked.wav",
+      "sha256": "b699b276d2bedcfb4ac258f55a1ef73d46832b7dabed460b0ad897b7b28bfe7d"
+    },
+    {
+      "id": "m1_rescue_freed",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_rescue_freed_clean.wav",
+      "sha256": "1d31869e07d748f40df1a1659e68e0c677770bbe3da772b909d2038c1aa3d3cc"
+    },
+    {
+      "id": "m1_rescue_whisper_hint",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_rescue_whisper_hint.wav",
+      "sha256": "c0e9b23e1edcf90cc58ce5a519575c601d205f2609fc48d5d42afb597a8a5386"
+    },
+    {
+      "id": "m1_rescue_delivered",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_rescue_delivered_clean.wav",
+      "sha256": "4773999e7019484c69cd22f20379ae096fd36dd14507d48269952788c1db8c5e"
+    },
+    {
+      "id": "m1_depart_destination_question",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_depart_destination_question.wav",
+      "sha256": "637e08d3713365b7173188db0429cfd53ff4f1affa84dcbde8428f17ec40b835"
+    },
+    {
+      "id": "m1_depart_bank_reply",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_depart_bank_reply.wav",
+      "sha256": "86b3514490edca72ff74468fa6554c9520abff438f52fd5912abb14b41569980"
+    },
+    {
+      "id": "m1_board_invite_current",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_board_invite_current.wav",
+      "sha256": "043ad9b9b481391c11b783d3ab86d5b00772d7d82a8bbcaad3dea4dc30c538c9"
+    },
+    {
+      "id": "m1_v2_rescue_approach_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_v2_rescue_approach_01_clean.wav",
+      "sha256": "534eff94a63f4ec477f8a2cab43fa627b2f89b1fb21d55eecbfac58e50097280"
+    },
+    {
+      "id": "m1_v2_rescue_approach_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_v2_rescue_approach_03_clean.wav",
+      "sha256": "c364e599951720ea0c0503ead9be32417054628a82ee84fffc702e7f6cd1db43"
+    },
+    {
+      "id": "m1_v2_rescue_return_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_v2_rescue_return_01_clean.wav",
+      "sha256": "781e66daf53f297b310a3c9e773d56e2ca499d4a4cb77b5de46aec63d169af44"
+    },
+    {
+      "id": "m1_v2_rescue_return_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_v2_rescue_return_02_clean.wav",
+      "sha256": "28281d114600bef1abfcf26b69f9c9e98d56fa7bb181a96752d87744582da60a"
+    },
+    {
+      "id": "m1_v2_supply_report_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_v2_supply_report_01_clean.wav",
+      "sha256": "1c05001dae66345d0eca2cb35e7921a9daed5ed7222eda92771f0f2241c0948c"
+    },
+    {
+      "id": "m1_v2_supply_report_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_v2_supply_report_03_clean.wav",
+      "sha256": "257bb731f9c94303c0681b26851cf0aac6689a853547444903762c57a1182146"
+    },
+    {
+      "id": "m1_v2_radio_report_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_v2_radio_report_01_clean.wav",
+      "sha256": "d21aa09f174bb639d52b2fd991aa4725decbd9ccad19d1ff4cc496e5d41cac2e"
+    },
+    {
+      "id": "m1_v2_radio_report_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_v2_radio_report_03_clean.wav",
+      "sha256": "ed75c2402ee396e339246e73641358192495b76fe147584b375d26b13094ed3b"
+    },
+    {
+      "id": "m1_v2_commander_confirm_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_v2_commander_confirm_01_clean.wav",
+      "sha256": "4d39e7428c2a85aa14a8c4bea3cd9821f803b3ed3a7ceed4862c3509fe77a0b3"
+    },
+    {
+      "id": "m1_v2_extraction_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_v2_extraction_01_clean.wav",
+      "sha256": "ed2834ad5cadf6d74173c3fc7e9fbe112f78686b8f229d0651eaac34a5568e58"
+    },
+    {
+      "id": "m1_v2_extraction_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_v2_extraction_03_clean.wav",
+      "sha256": "b28e8d676b9c2c89aeb23de78fdc105d9d3db1b4d6e768b38bf3a87a1b2526f5"
+    },
+    {
+      "id": "m1_ops_supply_order_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_ops_supply_order_02_clean.wav",
+      "sha256": "071ea6fefdaf8789627f931eac7717a1445b8668f41d1cc73a7ac4970de157c9"
+    },
+    {
+      "id": "m1_ops_supply_order_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_ops_supply_order_03_clean.wav",
+      "sha256": "4612715586940e0cb468b91cd43428e5bc32d0027192671487c504d5d5fcc4d2"
+    },
+    {
+      "id": "m1_ops_supply_report_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_ops_supply_report_01_clean.wav",
+      "sha256": "39978a0e007cd5234433c47d73c930a789451bbd2602038453754435f5542e29"
+    },
+    {
+      "id": "m1_ops_handoff_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_ops_handoff_01_clean.wav",
+      "sha256": "7c2f000656e6cc77f059947cea23f5d278a010c70947388e5e02d0f75ed3b16c"
+    },
+    {
+      "id": "m1_ops_handoff_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_ops_handoff_02_clean.wav",
+      "sha256": "720fc769b94ae0b244b88e6e42ff0a51f5eb70a350068724ac97c0a9e982ef5e"
+    },
+    {
+      "id": "m1_ops_handoff_04",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_ops_handoff_04_clean.wav",
+      "sha256": "2b639942797db8592ceb335f934f486affaed9758d611d91ebb6b94128a5ab80"
+    },
+    {
+      "id": "m1_ops_radio_report_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_ops_radio_report_01_clean.wav",
+      "sha256": "83e45181f4985fc6def8b0937820dc96dd62e15011eba688f61cc7453dbfa383"
+    },
+    {
+      "id": "m1_ops_commander_report_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_ops_commander_report_01_clean.wav",
+      "sha256": "b93a2eb65d04d56dda6c1a9b7e8db3b419da1a795406d48329e6a7bc4161ba22"
+    },
+    {
+      "id": "m1_ops_commander_early_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_ops_commander_early_01_clean.wav",
+      "sha256": "9d0635ca1f21ef24832f1b88ec8e088a3e8f4d1cc7b50e0903dbbc9ed86634f9"
+    },
+    {
+      "id": "m1_ops_retreat_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_ops_retreat_01_clean.wav",
+      "sha256": "3df5ab29249d0b0a88b355d073cf6a5ee7cc26cc74b0db3b2ad55bad6bd4ba52"
+    },
+    {
+      "id": "m1_ops_retreat_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_ops_retreat_03_clean.wav",
+      "sha256": "249ac1aaeeb194c5243dd25e8078e3a90b5c2ae589e760e65ac449959351be3e"
+    },
+    {
+      "id": "m1_ops_radio_alarm",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_ops_radio_alarm_clean.wav",
+      "sha256": "3d00572713d6139750b2a75a7fc8771c4bb697155e685c3b3e47f41aa8846dde"
+    },
+    {
+      "id": "m1_ops_enemy_spotted",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_ops_enemy_spotted_clean.wav",
+      "sha256": "8bd545945e47c2aac7fd591607c0622f06ef157b1b54b23ea1a8f0a00ed5cd06"
+    },
+    {
+      "id": "m1_ops_enemy_order",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_ops_enemy_order_clean.wav",
+      "sha256": "b6d25b750b03df8c68762a1d812ec28c93455697581b17e7bd5ff45e689e8c75"
+    },
+    {
+      "id": "m1_supply_debrief_nam_report",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_supply_debrief_nam_report_clean.wav",
+      "sha256": "24c26b78504618c5d8eb9b76d5b61e0415509ca65e63231bdfdf9025e5732f80"
+    },
+    {
+      "id": "m1_c3_gate_checkin_call",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_c3_gate_checkin_call_radio.wav",
+      "sha256": "bb207cc815fbc0cb1453473608eb5c14811d3036d3364454ff8c0cfcc4daa2f2"
+    },
+    {
+      "id": "m1_c3_gate_checkin_call",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_c3_gate_checkin_call_clean.wav",
+      "sha256": "ee687dc756be24f6afdd197a806b9a10d6adec925e2d6e2af8f12e19f026ab0c"
+    },
+    {
+      "id": "m1_c3_gate_checkin_reply",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_c3_gate_checkin_reply_radio.wav",
+      "sha256": "2d2a5fc65f60a4aefd68c75ac6db4d057366d0fce4c71075d8686757837abed1"
+    },
+    {
+      "id": "m1_c3_gate_checkin_reply",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_c3_gate_checkin_reply_clean.wav",
+      "sha256": "869400bafa63477beff96a3414478a29bbb94aaf2905ce9ea45ed6e852e14d85"
+    },
+    {
+      "id": "m1_c3_gate_no_answer",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_c3_gate_no_answer_radio.wav",
+      "sha256": "7c1061b3b92111405d7cfa88ecc133aa850bff0e4fab9890e592a20033c775be"
+    },
+    {
+      "id": "m1_c3_gate_no_answer",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_c3_gate_no_answer_clean.wav",
+      "sha256": "3fb2278b93d4c1d282e3ed0d4dae630839e4b2aa9372bf8dca6c253867b0a4fa"
+    },
+    {
+      "id": "m1_c3_gate_alarm",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_c3_gate_alarm_radio.wav",
+      "sha256": "cf4ac20482117241b2a1877cb06eaa1e34c85aa21989bc39a051af435efce7e4"
+    },
+    {
+      "id": "m1_c3_gate_alarm",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_c3_gate_alarm_clean.wav",
+      "sha256": "01b42edffcea00a3a47d7b9475c47088a522671b6b429db1b99fdd537baa6a28"
+    },
+    {
+      "id": "m1_c3_enemy_call",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_c3_enemy_call_clean.wav",
+      "sha256": "feedc1a732f4796fb33c0004ca6c552904b882b2adb9996a052ca1e8995d9bad"
+    },
+    {
+      "id": "m1_c3_mallet_removed",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_c3_mallet_removed_clean.wav",
+      "sha256": "503c52bca86f4fb0d960350b83efb6f165fe78d562d8a9ac939094d600b9b119"
+    },
+    {
+      "id": "m1_c3_phone_cut",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_c3_phone_cut_clean.wav",
+      "sha256": "8323a057cf8781786004978f274fe9e9ba57792a6af0a32d5021a4754e1a665b"
+    },
+    {
+      "id": "m2v3_contact_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_v2_rescue_approach_03_clean.wav",
+      "sha256": "c364e599951720ea0c0503ead9be32417054628a82ee84fffc702e7f6cd1db43"
+    },
+    {
+      "id": "m2v3_contact_04",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_v2_rescue_approach_03_clean.wav",
+      "sha256": "c364e599951720ea0c0503ead9be32417054628a82ee84fffc702e7f6cd1db43"
+    },
+    {
+      "id": "m2v3_password_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_password_01.wav",
+      "sha256": "0494f3e9394518226c5b23c048d6c933fe8bd1fb48b2f4f3ebf71cf1847c5380"
+    },
+    {
+      "id": "m2v3_password_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_password_02.wav",
+      "sha256": "630574331b3e15a949eb1ef67c54742f34a2c134391dad40385c5f942698ce16"
+    },
+    {
+      "id": "m2v3_contact_09",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_contact_09.wav",
+      "sha256": "c364e599951720ea0c0503ead9be32417054628a82ee84fffc702e7f6cd1db43"
+    },
+    {
+      "id": "m2v3_contact_05",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_contact_05.wav",
+      "sha256": "ebaa30ad82e7ba193978e12144f08ea37438cb0f49ed2acdfb670585298d6712"
+    },
+    {
+      "id": "m2v3_contact_06",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_contact_06.wav",
+      "sha256": "19cbf4bea771e69b630fcc57d3b16a5d766f8513915d06947b709fa44e104ffb"
+    },
+    {
+      "id": "m2v3_contact_07",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_contact_07.wav",
+      "sha256": "3f0b52ebf03b5f4d7d25fd202b8ad9f4bae5605e642e6c722bb13f4795b41a40"
+    },
+    {
+      "id": "m2v3_bandage_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_bandage_01.wav",
+      "sha256": "9a79e1c18fe45713c4c89015570e143059c1a34d3facd9b01727a7a4307808a0"
+    },
+    {
+      "id": "m2v3_bandage_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_bandage_02.wav",
+      "sha256": "91e5d55e55fbec986c8e898cdf1678b15375915fa71d3abb661a863604f1e2cf"
+    },
+    {
+      "id": "m2v3_bandage_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_bandage_03.wav",
+      "sha256": "c491c3ebcf0ff2ad8a137a612979608f1e0b3ceff520d9e648eb0e8d04b244a7"
+    },
+    {
+      "id": "m2v3_medicine_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_medicine_01.wav",
+      "sha256": "54fcc7fbafa5aa7a1a4d22557fc123b65f098cf86b9584706baa9e833b0909f0"
+    },
+    {
+      "id": "m2v3_medicine_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_medicine_02.wav",
+      "sha256": "ca674f952cfeb6f1bbf1263aee4432b8a08d20fd5d10284820847b983948cd54"
+    },
+    {
+      "id": "m2v3_repair_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_repair_01.wav",
+      "sha256": "af5a066be5ebabed522ea64e0d2c2d6c3bacbc8dfd4790acbd448fd4c3a56db5"
+    },
+    {
+      "id": "m2v3_repair_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_repair_02.wav",
+      "sha256": "245a699e60418d21117454374c627920b592cd54e1063369543526227d17381e"
+    },
+    {
+      "id": "m2v3_repair_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_repair_03.wav",
+      "sha256": "3987cc2dd83fcfcd4f9e13e7fbce486cda8bba4394aadc80d02cdb270a5cf486"
+    },
+    {
+      "id": "m2v3_day1report_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_day1report_01.wav",
+      "sha256": "39fed0661c3f501664ef61b2546b564741a69d5ed3e003661837492bdacb5732"
+    },
+    {
+      "id": "m2v3_day1report_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_day1report_03.wav",
+      "sha256": "c364e599951720ea0c0503ead9be32417054628a82ee84fffc702e7f6cd1db43"
+    },
+    {
+      "id": "m2v3_day1report_04",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_day1report_04.wav",
+      "sha256": "475dc7f6e8e7220203ae138b46d70cf0a270ae1ffaaebf4da27b3d8ad0a322d8"
+    },
+    {
+      "id": "m2v3_day1report_05",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_day1report_05.wav",
+      "sha256": "5876cbb2df9e5c731d84ea4784150b9d97e914d1ce4e9710928cf6e048a22df2"
+    },
+    {
+      "id": "m2v3_day1report_06",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_day1report_06.wav",
+      "sha256": "631344fd912726303b97314c625d97e1a88330549db81812b3c172cd71dfd169"
+    },
+    {
+      "id": "m2v3_promise_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_01.wav",
+      "sha256": "e5f674a86966d84f16e45b694d111d90a9b4816efd3cdd234fd6399b54cf36fd"
+    },
+    {
+      "id": "m2v3_promise_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_02.wav",
+      "sha256": "c8f8501c406d53a854eb06d8bb4f41d1fec7928226405bb7419de4302732be20"
+    },
+    {
+      "id": "m2v3_promise_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_03.wav",
+      "sha256": "a334b8c8c7ad40cab146f56aba1fbe4e36df81e5fd7f2d37d2b62460a7a30f48"
+    },
+    {
+      "id": "m2v3_promise_04",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_04.wav",
+      "sha256": "4d682d4123ac8f7940dbce1b3ab5605737f66b158ac68b52c1fb46c002bc0c40"
+    },
+    {
+      "id": "m2v3_promise_05",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_05.wav",
+      "sha256": "6f4f7370dd3f1288d79559f1858b05f021e4914ce5d834a7f2e75659a4692eb7"
+    },
+    {
+      "id": "m2v3_promise_06",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_06.wav",
+      "sha256": "81d47fb6e102bff39e8c6a8abf049d5052de7edcefd7c5dbdd00c27651209838"
+    },
+    {
+      "id": "m2v3_promise_07",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_07.wav",
+      "sha256": "7689fc994539463a4c03f7cc1c48f44f6172c84d47ad12f240c3f57c1caed61a"
+    },
+    {
+      "id": "m2v3_promise_08",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_08.wav",
+      "sha256": "0188986b51a7bbf3b800d9d855c52e46062d087fcf5954c4680ec10b78a3b855"
+    },
+    {
+      "id": "m2v3_promise_09",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_09.wav",
+      "sha256": "2c742b0f14f59b5ea8860216d0a7c1a30f1df0d4128816cf90f1b96be6c0b9c7"
+    },
+    {
+      "id": "m2v3_promise_10",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_10.wav",
+      "sha256": "83c7ecbcba1e30baa5a85567cf3b938af28eee952daad50a518bc8c85036c678"
+    },
+    {
+      "id": "m2v3_promise_11",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_11.wav",
+      "sha256": "390e4147c9d19f62e6ad2e8e6ef2e72608e2c4a6b65dc51ce1e7bfb7a9413b72"
+    },
+    {
+      "id": "m2v3_promise_12",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_12.wav",
+      "sha256": "bee12ebf62c943dc7848efdee4ee78d0f40622335edd8930a57909533ad18425"
+    },
+    {
+      "id": "m2v3_duck_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_duck_01.wav",
+      "sha256": "59111467bd9bc99da7400e8ecace193953d848b1a727111dd8f4e699dc91de93"
+    },
+    {
+      "id": "m2v3_duck_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_duck_02.wav",
+      "sha256": "31423420acb718fcffca5dcccd0d08a6dbe53eef722ea3e330dbb61f4e5784d4"
+    },
+    {
+      "id": "m2v3_nightwatch_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_nightwatch_01.wav",
+      "sha256": "cec7c2877d06008eecb196cedfb1d3e4024566d3731432fb48089b07b44309dc"
+    },
+    {
+      "id": "m2v3_nightwatch_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_nightwatch_02.wav",
+      "sha256": "90ef2f1445d52d051dfc9c01349d6aa6bc700837bbfa197f446fad78630d67be"
+    },
+    {
+      "id": "m2v3_nightwatch_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_nightwatch_03.wav",
+      "sha256": "c893c6bd6be57b1ea1de00c21128c1d6c782839bf63f7018dfae6657dc53d3fd"
+    },
+    {
+      "id": "m2v3_nightwatch_04",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_nightwatch_04.wav",
+      "sha256": "7154c0afca10e73395511103dfa798d5330f01e454d51b40941abb8ffcb22bf4"
+    },
+    {
+      "id": "m2v3_postbamboo_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_postbamboo_01.wav",
+      "sha256": "eb7c99375bea6af5341ee29462b0efca61a641ea069c29714edd07fa6b6590b0"
+    },
+    {
+      "id": "m2v3_postbamboo_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_postbamboo_02.wav",
+      "sha256": "2cf1b1e0343d1cd38dfbb74456b93fbc30d7e67e9db309d88fc328f12ea69364"
+    },
+    {
+      "id": "m2v3_postbamboo_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_postbamboo_03.wav",
+      "sha256": "c364e599951720ea0c0503ead9be32417054628a82ee84fffc702e7f6cd1db43"
+    },
+    {
+      "id": "m2v3_repair_done_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_repair_done_01.wav",
+      "sha256": "a0fd9dc84f91b267ca016e749ce1e06a117597a832d42f989e03e19efa5cee73"
+    },
+    {
+      "id": "m2v3_repair_done_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_repair_done_02.wav",
+      "sha256": "73007b244e4834815e58645ca284875eeec31a7a8e5809cbe8fb7ab22f82dd71"
+    },
+    {
+      "id": "m2_arrival_sight",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2_arrival_sight.wav",
+      "sha256": "a8701ccacd8719a882806a340b98b1cdbc21b8953941b2a645a760726643f8d0"
+    },
+    {
+      "id": "m2v3_scoutorder_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_scoutorder_02.wav",
+      "sha256": "c364e599951720ea0c0503ead9be32417054628a82ee84fffc702e7f6cd1db43"
+    },
+    {
+      "id": "m2v3_scoutorder_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_scoutorder_03.wav",
+      "sha256": "c89ae816fe0080eb00979f3b5233bfec45dac387de34c791f142ec00f5dd5d9a"
+    },
+    {
+      "id": "m2v3_scoutorder_04",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_scoutorder_04.wav",
+      "sha256": "adab309823cb45f9bb25e18bad546dee3d48b99af3e89c6781deb2c402b28f36"
+    },
+    {
+      "id": "m2v3_scoutorder_05",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_scoutorder_05.wav",
+      "sha256": "371b55ea584a32d735ba78ff525f6005bd3894e9cc83d57ffddceb7b0d378985"
+    },
+    {
+      "id": "m2v3_scoutfound_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_scoutfound_01.wav",
+      "sha256": "828d7420c91b13f01bb5b8fb20379f988186d76f0d1a78076f2dd48009548f19"
+    },
+    {
+      "id": "m2v3_scoutfound_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_scoutfound_02.wav",
+      "sha256": "44ba24399e01b45da5735e01fc8d184a3122e15706d2ec9e39582bab131bb194"
+    },
+    {
+      "id": "m2v3_scoutfound_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_scoutfound_03.wav",
+      "sha256": "1b91d3cdf8f73f80db12bd8c7ee42170f1f9902d5bc72d044869230cd362412c"
+    },
+    {
+      "id": "m2v3_scoutreturn_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_scoutreturn_01.wav",
+      "sha256": "a73f4544ff484bc7fcae77c63261968bf9cdf23bc8a1ccc143c4872ff80a852c"
+    },
+    {
+      "id": "m2v3_scoutreturn_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_scoutreturn_03.wav",
+      "sha256": "de92440fbba207c53a0145486ad7c4486e57de46a7c7ca9b184d6a4334fee97e"
+    },
+    {
+      "id": "m2v3_antenna_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_antenna_01.wav",
+      "sha256": "17f21ac5f5deeb933d376197fab908cc95b6a54c0d9a949e75690296a97fe991"
+    },
+    {
+      "id": "m2v3_antenna_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_antenna_02.wav",
+      "sha256": "a7ab3397bed7d39003e2c462253e098c8a5e4f24892549aaa388578ad36cea0b"
+    },
+    {
+      "id": "m2v3_artillery_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_artillery_02.wav",
+      "sha256": "c364e599951720ea0c0503ead9be32417054628a82ee84fffc702e7f6cd1db43"
+    },
+    {
+      "id": "m2v3_lights_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_lights_01.wav",
+      "sha256": "7bf667afeaadc0ecde0d0848304bc6aa2033234aadc1307fa5f0e6cc5957db3c"
+    },
+    {
+      "id": "m2v3_lights_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_lights_02.wav",
+      "sha256": "0c15156b87ab610fb7becea908b272e49bb842476321bebd26c057e939b82be0"
+    },
+    {
+      "id": "m2v3_lights_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_lights_03.wav",
+      "sha256": "415c48ea0ec2d7d44a79f7156a3d34ce8888ed4e7e521ac9f7a56cd2912f5089"
+    },
+    {
+      "id": "m2v3_lights_04",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_lights_04.wav",
+      "sha256": "afd76fa1df200dc526d22dfeae637b557a085ba660e99127dc627a21ae78d332"
+    },
+    {
+      "id": "m2v3_lights_05",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_lights_05.wav",
+      "sha256": "9623633fc90a58e226494b3a8675dd8a540e26af2d8b16990f034bceddd18c9e"
+    },
+    {
+      "id": "m2v3_lights_06",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_lights_06.wav",
+      "sha256": "adef3b980e8de6052d77c3baaab16f968701f488e3bc017fe694127c5677d39c"
+    },
+    {
+      "id": "m2v3_reconcile_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_reconcile_01.wav",
+      "sha256": "99381d4c1e8b3198f67d00227712bed50743319fdab2f2122b186ae58f5245d6"
+    },
+    {
+      "id": "m2v3_reconcile_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_reconcile_02.wav",
+      "sha256": "b23b3d1e68a238aef7adb1de1000fdca04c792f1b68d7324de51ab73b5be8324"
+    },
+    {
+      "id": "m2v3_reconcile_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_reconcile_03.wav",
+      "sha256": "d15a136e41977ee3253727d65b870419584ff13523d74bc2a6d7c3b922d92af9"
+    },
+    {
+      "id": "m2v3_reconcile_04",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_reconcile_04.wav",
+      "sha256": "3b98406cd497c9fbfa84ea9c098784fd8265c072a55066f2f8af89be42851a42"
+    },
+    {
+      "id": "m2v3_reconcile_05",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_reconcile_05.wav",
+      "sha256": "4fa4a178fdd51e6d418d6b5d275306a5496034b39f880e76a8c5162da1fc2a86"
+    },
+    {
+      "id": "m2v3_reconcile_06",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_reconcile_06.wav",
+      "sha256": "2ac03802e8aed8eb850001d4ec2348c7aa44fe33a6a7d9023f2a94dcc42ad437"
+    },
+    {
+      "id": "m2v3_reconcile_07",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_reconcile_07.wav",
+      "sha256": "db09ac1fabbdfbf67b3fe29d382c005757663ab2de123435aabf0d62ac54f5f4"
+    },
+    {
+      "id": "m2v3_reconcile_08",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_reconcile_08.wav",
+      "sha256": "08a28f56eb52e50af4c1519e9574443226574931dee9f4b941b58f545ea2d63b"
+    },
+    {
+      "id": "m2v3_reconcile_09",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_reconcile_09.wav",
+      "sha256": "c0302809b2fe30c0d711a1c5e98b3fffdfe4dfbbbd66aa1269e0a8f3c071bc76"
+    },
+    {
+      "id": "m2v3_demolition_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_demolition_01.wav",
+      "sha256": "8edc3263fb25c609cb617fa2a94b4df32eae36827e69a6068e1444ba1494683a"
+    },
+    {
+      "id": "m2v3_demolition_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_demolition_02.wav",
+      "sha256": "8759fbe12f2b6c2366859bef9fe6479da71d7d8bbee40802b01a38eb21f7c2b3"
+    },
+    {
+      "id": "m2v3_demolition_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_demolition_03.wav",
+      "sha256": "afebd73182694ad1a75e6051a2230620fa61f13046ebe4d7bc385a1606bc34c2"
+    },
+    {
+      "id": "m2v3_boats_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_boats_01.wav",
+      "sha256": "8dd394b41a8bc88ccc14c1c67dc15b3e0d89d894283f3a71ebb7955516c879e5"
+    },
+    {
+      "id": "m2v3_families_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_families_01.wav",
+      "sha256": "5de8d81850d4995117fd3c6b066a8c564fafecf24541e73932c3c0aab576f8aa"
+    },
+    {
+      "id": "m2v3_families_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_families_02.wav",
+      "sha256": "f88fd776e3d88f19b0d7a0d9e2566cd51f97936fdac3870f90587d00c67e3a37"
+    },
+    {
+      "id": "m2v3_families_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_families_03.wav",
+      "sha256": "92b918885d2bbff2a50812ac35f5d79b88c828e776a4312c8f063842ce3fbd9c"
+    },
+    {
+      "id": "m2v3_supper_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_supper_01.wav",
+      "sha256": "7a943ca32e250d2bec1153cde0041c525e0e0dee836111523208ba104a3d0f06"
+    },
+    {
+      "id": "m2v3_supper_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_supper_02.wav",
+      "sha256": "bacaf0dae0ca650bb24aef7386b13a4f9c012b620e8206c9e4c699ef63a3d6ad"
+    },
+    {
+      "id": "m2v3_supper_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_supper_03.wav",
+      "sha256": "60faca1f7d1e30d4f229a7adc534cac0101fb27dbe7f9da77023675022e475fc"
+    },
+    {
+      "id": "m2v3_supper_04",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_supper_04.wav",
+      "sha256": "5f3ed87264349bb0cf122d55eed65cd6a9e3ef33b2b633947b225c51418c3822"
+    },
+    {
+      "id": "m2v3_supper_05",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_supper_05.wav",
+      "sha256": "048cfa1fadfd6106fd86844378ea04d8ef0a839eb11db838acbbfa866c8ca5ad"
+    },
+    {
+      "id": "m2v3_lastorder_04",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_lastorder_04.wav",
+      "sha256": "c364e599951720ea0c0503ead9be32417054628a82ee84fffc702e7f6cd1db43"
+    },
+    {
+      "id": "m2v3_lastorder_05",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_lastorder_05.wav",
+      "sha256": "1181b8b2f0a391aac1df3cb4155c4cb8bfcbc3799352738760feaf1e11b99f16"
+    },
+    {
+      "id": "m2v3_lastorder_06",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_lastorder_06.wav",
+      "sha256": "689f75ec6673cbdc67d3b612ef87b4b5303a7e13e20c7be3da47948994e31198"
+    },
+    {
+      "id": "m2v3_lastorder_07",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_lastorder_07.wav",
+      "sha256": "cc989a9e3291c3fc136a68b9af599f4ccd5cfc4bd08424741c899ecd69cb4348"
+    },
+    {
+      "id": "m2v3_attack_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_attack_01.wav",
+      "sha256": "18ba6e7cd7b2fa14a35d1284e4c912a198bcb891467b89b8011731b72559e905"
+    },
+    {
+      "id": "m2v3_attack_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_attack_03.wav",
+      "sha256": "5c95659e5c74a1dff3ea401959bd4ba515b6000d7b034980d0eba64700179e77"
+    },
+    {
+      "id": "m2v3_fire_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_fire_01.wav",
+      "sha256": "a0f2e2bb49f544a32d5368386dfbb97082a252f82426a4a15ef2e711a2d99146"
+    },
+    {
+      "id": "m2v3_fire_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_fire_02.wav",
+      "sha256": "184e8c5320e5bba8137de66d3067d7ea0de7d5155cf76630e6f02451523f602a"
+    },
+    {
+      "id": "m2v3_child_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_child_01.wav",
+      "sha256": "4ef1a076dff70db0ede2f28dac6cc309304715e539a3aa4ddae49b74a89318bf"
+    },
+    {
+      "id": "m2v3_child_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_child_02.wav",
+      "sha256": "dec7b6d76db77959cd8709f451059e8f468cdc384d330393341b903d780b9003"
+    },
+    {
+      "id": "m2v3_boatsafe_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_boatsafe_02.wav",
+      "sha256": "6da8327cfa270ac9a3a1166b3111543fcbd0ff68fbe2754853c33fcea2b5612c"
+    },
+    {
+      "id": "m2v3_boatsafe_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_boatsafe_01.wav",
+      "sha256": "d21f72215ef952db7b5c6fa1b228e2a778abd0e41d4ac4ba2a469130eae454e5"
+    },
+    {
+      "id": "m2v3_wound_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_wound_01.wav",
+      "sha256": "99f80e6a9c33bd471d9965ed9cb1b187407d4794da21574307f8f0275095ebbd"
+    },
+    {
+      "id": "m2v3_wound_04",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_wound_04.wav",
+      "sha256": "7def8b415ae9a7e4b17de1addef1cb440c6fce2422c89a81fdd7b9cd573ef90b"
+    },
+    {
+      "id": "m2v3_wound_05",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_wound_05.wav",
+      "sha256": "c5e335741c57d6d61ae542facf6f05505f4f13d278dcde2df3917ddd8e71c291"
+    },
+    {
+      "id": "m2v3_ammo_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_ammo_01.wav",
+      "sha256": "7943f0874c9ec89e954548bd392b84896c5ab339f19f54b3afe9da834f7f3b0f"
+    },
+    {
+      "id": "m2v3_alive_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_alive_01.wav",
+      "sha256": "d2b680875893ebc1500e280416b7a74673986cfa4467a5efd36044a4ad85b5ee"
+    },
+    {
+      "id": "m2v3_alive_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_alive_02.wav",
+      "sha256": "d00f85702f6308bcbde1aa8c681c1b6ca204ae8557b23b1c774c0ca7d391ad0d"
+    },
+    {
+      "id": "m2v3_coordinates_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_coordinates_01.wav",
+      "sha256": "78585b74e7e6799913398d2456041949a652adc20bf1329c4141570599574bb1"
+    },
+    {
+      "id": "m2v3_coordinates_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_coordinates_03.wav",
+      "sha256": "c364e599951720ea0c0503ead9be32417054628a82ee84fffc702e7f6cd1db43"
+    },
+    {
+      "id": "m2v3_coordinates_05",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_coordinates_05.wav",
+      "sha256": "f9a3d3a1f20fa6c85f15fca7771f310cea17bbb9eccde3673d76931ae07f03fa"
+    },
+    {
+      "id": "m2v3_farewell_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_farewell_01.wav",
+      "sha256": "5755f80d0001b0604ba19b5c248f6c9202980d584a69bff23767c7de1060c1ff"
+    },
+    {
+      "id": "m2v3_farewell_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_farewell_02.wav",
+      "sha256": "77418babe7a4f215bcf8ec6ff88f6f48a43477c764bdc3927c5c036a03759358"
+    },
+    {
+      "id": "m2v3_farewell_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_farewell_03.wav",
+      "sha256": "074d6491de82ac20cd041ee942da4a75c76e3ead2d9f84f287c6ec152f9fdee1"
+    },
+    {
+      "id": "m2v3_farewell_04",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_farewell_04.wav",
+      "sha256": "74e281797a3bd403af6b89ae348487fa248f7350377c237cc955d3229d9f75c0"
+    },
+    {
+      "id": "m2v3_farewell_05",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_farewell_05.wav",
+      "sha256": "1aff0d9979176e442998fa073b76bc0ab5459d5e37437a6d5374531a2af7a9ef"
+    },
+    {
+      "id": "m2v3_farewell_06",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_farewell_06.wav",
+      "sha256": "630d624252d301a6465baf2943f3c3d95a0646ceb3eea628edf9aaa12a8a0331"
+    },
+    {
+      "id": "m2v3_farewell_07",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_farewell_07.wav",
+      "sha256": "56d394b99426644e39d8b38755027494efe3849689be2ff61110a5bfbbf00139"
+    },
+    {
+      "id": "m2v3_farewell_08",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_farewell_08.wav",
+      "sha256": "bf1d0cbce4cde4c3ba4c4c343f6272e63dcb21eaa849a63639ee7aecbd38e1dd"
+    },
+    {
+      "id": "m2v3_farewell_09",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_farewell_09.wav",
+      "sha256": "4c8116bfd5c1007f3c7bb341dcd4f4bd4c3ec999ddb1c4f849bc5e9bb9ed4ad7"
+    },
+    {
+      "id": "m2v3_farewell_10",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_farewell_10.wav",
+      "sha256": "23e693840d6a6f9034af06848721ecb4847342e400377e6e4e10d50cb35289a6"
+    },
+    {
+      "id": "m2v3_farewell_11",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_farewell_11.wav",
+      "sha256": "553395618ac62f4fc73395beb0061d6f471f42f73311bc7714be8b8a2d20ddd4"
+    },
+    {
+      "id": "m2v3_sacrifice_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_sacrifice_01.wav",
+      "sha256": "b9b9d3fceb819ed8c0e0851728094e9bf36dc86d3828c710b01057c84764421c"
+    },
+    {
+      "id": "m2v3_sacrifice_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_sacrifice_02.wav",
+      "sha256": "d8d172e80b856b1349cdf07ae282cd0f104feabb7501b6613eced6cd9588e5e6"
+    },
+    {
+      "id": "m2v3_dawn_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_dawn_01.wav",
+      "sha256": "5c283af2a879424355e45317305f47e18077ab36c4646bc754732c377ee226ce"
+    },
+    {
+      "id": "m2v3_dawn_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_dawn_03.wav",
+      "sha256": "3d787af64904d2b4b859a86f863609e57d9260a19c7b6c636e70ad3a236ff7e0"
+    },
+    {
+      "id": "m2v3_dawn_05",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_dawn_05.wav",
+      "sha256": "9db0f2183689e39cf977aefdbc230a5153d19958cc84583006e78b80398534f6"
+    },
+    {
+      "id": "m2_contact_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_contact_02.wav",
+      "sha256": "525fc7361ffde15de61bc6c57f5a8ea3c335c3ab41bc302b1d893d4a94a25eab"
+    },
+    {
+      "id": "m2_contact_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_contact_03.wav",
+      "sha256": "dd88a18ac7ba574d28f78ce2778445145d820c4796ee9f5e97e3be0e2ee7c548"
+    },
+    {
+      "id": "m2_contact_04",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_contact_04.wav",
+      "sha256": "4ddd8dbd24ba8a2367d21f61a8a96b4f46d11c7b9def069e1a754dcb22747d8c"
+    },
+    {
+      "id": "m2_family_medicine_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_family_medicine_01.wav",
+      "sha256": "427e2c087e924ff5f0d1eb3987a61841da6d868cf9530898a7d78dca0d8fa476"
+    },
+    {
+      "id": "m2_family_medicine_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_family_medicine_02.wav",
+      "sha256": "82559f3d7b28e266dfdcca20d7821ec8c2c10e2b87d892827349acfe7fbe2c51"
+    },
+    {
+      "id": "m2_family_medicine_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_family_medicine_03.wav",
+      "sha256": "e5bf1efbd15a115714509ab8927b3fda879912a2ac53585b3e7d3c4bfc099770"
+    },
+    {
+      "id": "m2_family_medicine_04",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_family_medicine_04.wav",
+      "sha256": "a0e37016b3684c0d1846db046b4cc8b8af69618c3b59b6b914aeb46d0e4d2fcd"
+    },
+    {
+      "id": "m2_scout_order_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_scout_order_01.wav",
+      "sha256": "b839f1cd892d587da8cda7d3633cb1298f8a0c902d87c68bd4241594705d8497"
+    },
+    {
+      "id": "m2_scout_order_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_scout_order_02.wav",
+      "sha256": "28a90ea2dd8b2403c5e2e90c23bf0f36dc9892a20e31fc760fed5d42be1ca10b"
+    },
+    {
+      "id": "m2_scout_order_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_scout_order_03.wav",
+      "sha256": "c54b944b99bcfe339e224392742cfca77b471de3d586c79fb6410e189f8ee583"
+    },
+    {
+      "id": "m2_scout_found_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_scout_found_01.wav",
+      "sha256": "47c54690b55e74bc9c8794c22e638ec48850ecb45da3cbb3d4d13f81b4260b85"
+    },
+    {
+      "id": "m2_scout_found_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_scout_found_02.wav",
+      "sha256": "3b73da9f7961d2b500fe64c48a66700515973ae961dc2ba82d6abe32c03ae254"
+    },
+    {
+      "id": "m2_scout_found_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_scout_found_03.wav",
+      "sha256": "17cacfea6c13833c0ba7563a6409fff186e368d74738af48dc6f228c48408a71"
+    },
+    {
+      "id": "m2_prepare_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_prepare_01.wav",
+      "sha256": "c718238c057dbb206b27e5aba455f5ab98dada21752d3b83470c5cecb84e9e97"
+    },
+    {
+      "id": "m2_prepare_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_prepare_02.wav",
+      "sha256": "79bfdcb76efba5e4769047a1860e3fc429d3bf3d344a2d11af236a4cdc9c57c5"
+    },
+    {
+      "id": "m2_prepare_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_prepare_03.wav",
+      "sha256": "5b7ffdde18fdd23758df9bc6d2a79b0e01fac91ff637d29b6648f24d1f369089"
+    },
+    {
+      "id": "m2_encirclement_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_encirclement_01.wav",
+      "sha256": "4444f01e98f6c9cd7bedf47a5f8e0f16d8646186b2c328a3dbad09788603765a"
+    },
+    {
+      "id": "m2_encirclement_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_encirclement_02.wav",
+      "sha256": "52307992f7b1f02cb10a5ffef7cc666845f215d102ab2c97d5e0b8c300d77ae1"
+    },
+    {
+      "id": "m2_hold_lane_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_hold_lane_01.wav",
+      "sha256": "d6476cb06dc676dc608913fcef137336a24d7ee52a763c81ddecc1f04cbf2f84"
+    },
+    {
+      "id": "m2_hold_lane_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_hold_lane_03.wav",
+      "sha256": "499e3c9b7d7553b8d3f27b39c51f909d837c0750d2c05a335f14c0d240cbb36e"
+    },
+    {
+      "id": "m2_family_rescue_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_family_rescue_01.wav",
+      "sha256": "f41f1f0243dd3c82cd22bceace8cd349787e65bf543d693af17520bfd6227ed9"
+    },
+    {
+      "id": "m2_family_rescue_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_family_rescue_02.wav",
+      "sha256": "c4a1a86d4452b5d9403062837eb26d1678d5d3e99dd0dc233a5d15c97a5b0b3d"
+    },
+    {
+      "id": "m2_family_rescue_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_family_rescue_03.wav",
+      "sha256": "418d044b5096da7df7490ae58570058a91842a980e787991f4d5913eaca4ca5d"
+    },
+    {
+      "id": "m2_breakout_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_breakout_01.wav",
+      "sha256": "e026874c79c8a758728284fa749009895d91cc7205a7daa41813aa434ad9c74d"
+    },
+    {
+      "id": "m2_breakout_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_breakout_02.wav",
+      "sha256": "66794980c1d8095eb707e358ec1951671ab06d4503572581fbb2c189be0ca8e4"
+    },
+    {
+      "id": "m2_breakout_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_breakout_03.wav",
+      "sha256": "037e441b92e9557916c2cf859a15434f1f917091afdabfb3149aa266d1ce4ba3"
+    },
+    {
+      "id": "m2_departure_01",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_departure_01.wav",
+      "sha256": "d4d1c4eaa2aa271a9ffff8c0ae4f673516b6a43838a94503cf3dbeea070e7939"
+    },
+    {
+      "id": "m2_departure_02",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_departure_02.wav",
+      "sha256": "28b14bf331e7aa487da9d6973d7343b7e9cae768b1b74453a6244b2e4704da1f"
+    },
+    {
+      "id": "m2_departure_03",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_departure_03.wav",
+      "sha256": "3323f7844f85a315e0afbffe9b0af3f993e0fb0f050670bdc9ca89d9bb44854c"
+    },
+    {
+      "id": "free_literal_7be0a5941d33",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\free_literal_7be0a5941d33.wav",
+      "sha256": "8be51e859be9c15f74f8d265012fe5e4df043b1d9a503ec93975346db32a5626"
+    },
+    {
+      "id": "free_literal_689edd27ba1b",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\free_literal_689edd27ba1b.wav",
+      "sha256": "85e60086e2d4bc0b2ba23abd72116787e290da02d1f78ffc459610afa19afdd6"
+    },
+    {
+      "id": "free_literal_75d2ff10e751",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\free_literal_75d2ff10e751.wav",
+      "sha256": "0668584b26d1f03b5dec2bab9ad0b9039e790632597636ef13f2a1f99ff748bd"
+    },
+    {
+      "id": "free_literal_3fdef854373d",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\free_literal_3fdef854373d.wav",
+      "sha256": "78cd6ac6543ce9497a556207ab01f6d36a77f12e3ccaba7148c7370d33701301"
+    },
+    {
+      "id": "free_literal_7366ec68ae7c",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\free_literal_7366ec68ae7c.wav",
+      "sha256": "c3a4041324969ac9f58efd8079cc208aa4465ef2fdc6d1b37906a205136ce27d"
+    },
+    {
+      "id": "m2v3_echo_promise",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_sacrifice_02.wav",
+      "sha256": "d8d172e80b856b1349cdf07ae282cd0f104feabb7501b6613eced6cd9588e5e6"
+    },
+    {
+      "id": "m2v3_promise_05b",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_05b.wav",
+      "sha256": "8ddcb331ad17b1fa0967302b6dc5ba71d2d89ebd74649f1010a90ca427d914f5"
+    }
+  ]
+}

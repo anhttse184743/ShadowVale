@@ -1,0 +1,13 @@
+{
+  "cost": 0,
+  "updatedCues": 32,
+  "map2AudioUnchanged": true,
+  "enemyAndCommanderAudioUnchanged": true,
+  "referenceIds": [
+    "m2v3_promise_02",
+    "m2v3_promise_07",
+    "m2v3_promise_09"
+  ],
+  "tests": "Passed",
+  "evidence": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\output\\Rescue_Clarity_20261025\\report.json"
+}

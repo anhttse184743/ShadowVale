@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -33,6 +33,7 @@ namespace ShadowVale.Map01
         public Vector3 patrolFocusDirection;
         public int night2GuidanceStage;
         public bool night2ChainCuePlayed;
+        public float villageDaySeconds; public bool villagePlanePlayed;
         public List<string> night2RouteVisited=new List<string>();
         public bool PatrolRouteActive=>phase==3&&Done("N2_02")&&!Done("N2_05");
         public bool TakeWire()

@@ -1,0 +1,119 @@
+[
+  {
+    "name": "village_crickets",
+    "page": "https://freesound.org/people/FreethinkerAnon/sounds/129678/",
+    "preview": "https://cdn.freesound.org/previews/129/129678_2362707-hq.mp3",
+    "license": "CC0-1.0",
+    "sha256": "7245065a6dbb48f8432f6038f3d6ac83f1d3e972912c9c21445e7e13a180b963",
+    "file": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\work\\full-game-audio-20261023\\crickets.wav"
+  },
+  {
+    "name": "rooster",
+    "page": "https://freesound.org/people/BenjaminNelan/sounds/435506/",
+    "preview": "https://cdn.freesound.org/previews/435/435506_1196020-hq.mp3",
+    "license": "CC0-1.0",
+    "sha256": "7ef754c89ab86fe2deb8daca559554fcbb4627adecd6f4196f81f80594d6d934",
+    "file": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\work\\full-game-audio-20261023\\rooster.wav"
+  },
+  {
+    "name": "oars",
+    "page": "https://freesound.org/people/craigsmith/sounds/438846/",
+    "preview": "https://cdn.freesound.org/previews/438/438846_2524442-hq.mp3",
+    "license": "CC0-1.0",
+    "sha256": "277db9466ee92e87781d1cfd2d48f157097a8bd895c6a8194b5f4821c04e99d3",
+    "file": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\work\\full-game-audio-20261023\\oars.wav"
+  },
+  {
+    "name": "fire",
+    "page": "https://freesound.org/people/samarobryn/sounds/414767/",
+    "preview": "https://cdn.freesound.org/previews/414/414767_4955305-hq.mp3",
+    "license": "CC0-1.0",
+    "sha256": "e77676fe5929bc6c7a113421274e4862b19d997ce5e7817b2157976886982bd7",
+    "file": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\work\\full-game-audio-20261023\\fire.wav"
+  },
+  {
+    "name": "cough",
+    "page": "https://commons.wikimedia.org/wiki/File:Cough_2.ogg",
+    "author": "ezwa",
+    "license": "Public domain",
+    "sha256": "c286298c6e5d0e3e4cf7fc95ced1f7b80970dd0150e1025a359015ec6a8a9573"
+  },
+  {
+    "name": "night_river",
+    "page": "https://swanson.run/frogs/",
+    "author": "Michael G. Swanson",
+    "license": "CC0-1.0",
+    "changes": "First short excerpt mixed with FreethinkerAnon crickets; generic environment substitute, not Vietnam field recording",
+    "sha256": "c66892265f262d0cef9393af1e000710acd16f55649aa52e83026380a28eff6c"
+  },
+  {
+    "name": "hung_laugh",
+    "page": "https://opengameart.org/content/do-you-remember-laughter",
+    "author": "Supergeek",
+    "license": "CC0-1.0",
+    "changes": "Short excerpt; mild pitch adjustment, requires perceptual review",
+    "sha256": "ab53c4a228d63967260fc4d0e8b60e8d4e0f4e278d5beb9242646bd546c28d39"
+  },
+  {
+    "name": "bamboo",
+    "source": "Original procedural synthesis",
+    "license": "CC0-1.0",
+    "description": "Soft wind/foliage rustle; synthesized, not a field recording.",
+    "sha256": "b0d86eac664b317e1b08d0cc4d124b593ebb085068caa185bd26d597b6aa7cf3"
+  },
+  {
+    "name": "plane",
+    "source": "Original procedural synthesis",
+    "license": "CC0-1.0",
+    "description": "Distant propeller-like engine, synthesized; no historical aircraft identity claimed.",
+    "sha256": "74ac23396e4f4eb44ba53af87eb62543496bc0781063e7eab067c22cb72942ae"
+  },
+  {
+    "name": "duck",
+    "source": "Original procedural synthesis",
+    "license": "CC0-1.0",
+    "description": "Short wing-flap foley; synthesized rustling, no duck vocal imitation.",
+    "sha256": "37128877763ebf07a74d29026b0f5a5b895fbe983c5d4c10114afb23a9e15381"
+  },
+  {
+    "name": "crate",
+    "source": "Original procedural synthesis",
+    "license": "CC0-1.0",
+    "description": "Wooden crate contact foley, synthesized impact.",
+    "sha256": "47cb7d3f10048cb5f6bddf36c761d1c45e6235f41ed4e5a9226da4df0ac44e44"
+  },
+  {
+    "name": "hung_theme",
+    "source": "Original procedural synthesis",
+    "license": "CC0-1.0",
+    "description": "Original sparse solo plucked-string theme; procedural composition, not an existing song or authentic instrument recording.",
+    "sha256": "e8cc082a8a29a814923dc7dac95cf26545f532d3a5c82649a1024da7277ac9d3"
+  },
+  {
+    "name": "tank_tracks",
+    "source": "Original procedural synthesis",
+    "license": "CC0-1.0",
+    "sha256": "911e3b60c638f6aa642f70f7c036c62a770663ca20392e8fe0d2ec2fe30af616"
+  },
+  {
+    "name": "children",
+    "source": "VieNeu-TTS preset, original environment call: Chờ với! Qua đây nè!",
+    "license": "Apache-2.0 (model/presets)",
+    "sha256": "f47f64ab8ba7fd60c261473986944b3dd3c5f330b99886db517c8adffbe278e2"
+  },
+  {
+    "name": "hung_invitation",
+    "source": "VieNeu-TTS, Anh Khôi preset; user approved Hung A",
+    "license": "Apache-2.0 (model/presets)",
+    "sha256": "6f4f7370dd3f1288d79559f1858b05f021e4914ce5d834a7f2e75659a4692eb7"
+  },
+  {
+    "name": "crickets",
+    "page": "https://opengameart.org/content/crickets-ambient-noise-loopable",
+    "author": "Wolfgang_ / Ted Kerr",
+    "license": "CC0-1.0",
+    "file": "Assets/Resources/Map02DayOne/crickets.mp3",
+    "sha256": "5b5bd1f744087888c5623543c3ff80be9c2ce106093993e7c8a8492b0280b2c0",
+    "usage": "Preserved dev final supper hold; other night layer fades out during meal."
+  }
+]

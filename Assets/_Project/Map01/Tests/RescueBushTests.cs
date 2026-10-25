@@ -248,6 +248,11 @@ public sealed class RescueBushTests:ForestSceneTestBase {
     }
     static IEnumerator LifecycleReview(){
         Setup();yield return Warmup();yield return TakeRescueOrder(M);var cc=M.player.GetComponent<CharacterController>();cc.enabled=false;M.player.position=R.RetryPoint;cc.enabled=true;
+        var saves=M.GetComponent<Map01SaveSystem>();saves.MarkRescueCheckpoint(true);
+        var checkpointField=typeof(Map01SaveSystem).GetField("rescueStart",BindingFlags.Instance|BindingFlags.NonPublic);
+        var oldCheckpoint=(string)checkpointField.GetValue(saves);Assert.IsNotEmpty(oldCheckpoint);
+        StringAssert.Contains("\"revision\":5",oldCheckpoint);
+        checkpointField.SetValue(saves,oldCheckpoint.Replace("\"revision\":5","\"revision\":4"));
         var director=M.GetComponent<Map01RescueCinematic>()??M.gameObject.AddComponent<Map01RescueCinematic>();
         Assert.IsTrue(director.ShowIntro(R,R.Squad[0]));director.Skip();Assert.IsTrue(R.IntroSeen);Assert.IsFalse(M.Cinematic);
         Assert.IsTrue(M.GetComponent<Map01SaveSystem>().RestartRescue(false));yield return WaitGameSeconds(.9f);Assert.IsTrue(R.IntroSeen);
@@ -280,6 +285,9 @@ public sealed class RescueBushTests:ForestSceneTestBase {
         try{Time.captureDeltaTime=name.StartsWith("Bush")?1f/60:0;while(playing()&&Time.realtimeSinceStartup<deadline){
             if(Time.time<next){yield return null;continue;}next=Time.time+(name=="Intro"||name=="Execution"?.5f:1f/30);
             bool done=false;Exception error=null;pump.draw=()=>{try{
+                // The director may finish in Update before this queued LateUpdate capture.
+                // Its pose graph has already been disposed; record active cinematic frames only.
+                if(!playing())return;
                 step();
                 Capture(M.gameCamera,folder+"/"+frame.ToString("D4")+".png");
                 ScreenCapture.CaptureScreenshot(folder+"/GameView/"+frame.ToString("D4")+".png");

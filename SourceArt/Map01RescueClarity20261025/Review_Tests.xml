@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="9" result="Passed" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-25 16:14:08Z" end-time="2026-10-25 16:14:20Z" duration="11.951471">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="791" result="Passed" start-time="2026-10-25 16:14:08Z" end-time="2026-10-25 16:14:20Z" duration="11.951471" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1721" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/Capstone/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="568" result="Passed" start-time="2026-10-25 16:14:08Z" end-time="2026-10-25 16:14:20Z" duration="11.525540" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="13064" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1722" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="568" result="Passed" start-time="2026-10-25 16:14:08Z" end-time="2026-10-25 16:14:20Z" duration="11.488360" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1723" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="568" result="Passed" start-time="2026-10-25 16:14:08Z" end-time="2026-10-25 16:14:20Z" duration="11.453937" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1632" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="568" result="Passed" start-time="2026-10-25 16:14:08Z" end-time="2026-10-25 16:14:20Z" duration="11.410182" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1091" name="DialogueVoiceTests" fullname="ShadowVale.Map01.Tests.DialogueVoiceTests" classname="ShadowVale.Map01.Tests.DialogueVoiceTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-10-25 16:09:31Z" end-time="2026-10-25 16:09:31Z" duration="0.287839" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1093" name="LegacyBriefingUsesAlignedVoiceAssets" fullname="ShadowVale.Map01.Tests.DialogueVoiceTests.LegacyBriefingUsesAlignedVoiceAssets" methodname="LegacyBriefingUsesAlignedVoiceAssets" classname="ShadowVale.Map01.Tests.DialogueVoiceTests" runstate="Runnable" seed="550805846" result="Passed" start-time="2026-10-25 16:09:31Z" end-time="2026-10-25 16:09:31Z" duration="0.254495" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1171" name="FullGameAudioTests" fullname="ShadowVale.Map01.Tests.FullGameAudioTests" classname="ShadowVale.Map01.Tests.FullGameAudioTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-25 16:09:31Z" end-time="2026-10-25 16:09:41Z" duration="9.733090" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1175" name="CastingDistinguishesYoungNamMiddleAgedHungWomanLanhAndElderSau" fullname="ShadowVale.Map01.Tests.FullGameAudioTests.CastingDistinguishesYoungNamMiddleAgedHungWomanLanhAndElderSau" methodname="CastingDistinguishesYoungNamMiddleAgedHungWomanLanhAndElderSau" classname="ShadowVale.Map01.Tests.FullGameAudioTests" runstate="Runnable" seed="1056711337" result="Passed" start-time="2026-10-25 16:09:31Z" end-time="2026-10-25 16:09:31Z" duration="0.011382" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1173" name="EnemyVoicesUseOnlyOriginalRunwayRecordings" fullname="ShadowVale.Map01.Tests.FullGameAudioTests.EnemyVoicesUseOnlyOriginalRunwayRecordings" methodname="EnemyVoicesUseOnlyOriginalRunwayRecordings" classname="ShadowVale.Map01.Tests.FullGameAudioTests" runstate="Runnable" seed="1482084225" result="Passed" start-time="2026-10-25 16:09:31Z" end-time="2026-10-25 16:09:31Z" duration="0.006115" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1172" name="EveryCatalogCueHasAnImportedAudibleClipWithCorrectDuration" fullname="ShadowVale.Map01.Tests.FullGameAudioTests.EveryCatalogCueHasAnImportedAudibleClipWithCorrectDuration" methodname="EveryCatalogCueHasAnImportedAudibleClipWithCorrectDuration" classname="ShadowVale.Map01.Tests.FullGameAudioTests" runstate="Runnable" seed="2121521625" result="Passed" start-time="2026-10-25 16:09:31Z" end-time="2026-10-25 16:09:41Z" duration="9.705898" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1537" name="RescueApproachTests" fullname="ShadowVale.Map01.Tests.RescueApproachTests" classname="ShadowVale.Map01.Tests.RescueApproachTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-25 16:11:06Z" end-time="2026-10-25 16:11:29Z" duration="22.872012" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1538" name="FortyMetreIntroPreemptsGuardAndStonesAreFiniteSavedLoot" fullname="ShadowVale.Map01.Tests.RescueApproachTests.FortyMetreIntroPreemptsGuardAndStonesAreFiniteSavedLoot" methodname="FortyMetreIntroPreemptsGuardAndStonesAreFiniteSavedLoot" classname="ShadowVale.Map01.Tests.RescueApproachTests" runstate="Runnable" seed="1523444693" result="Passed" start-time="2026-10-25 16:09:41Z" end-time="2026-10-25 16:11:29Z" duration="108.339521" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1556" name="RescuePresentationTests" fullname="ShadowVale.Map01.Tests.RescuePresentationTests" classname="ShadowVale.Map01.Tests.RescuePresentationTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-25 16:12:45Z" end-time="2026-10-25 16:12:54Z" duration="9.450941" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1557" name="CaptiveShotIsVisibleAndReturnsNamToStealth" fullname="ShadowVale.Map01.Tests.RescuePresentationTests.CaptiveShotIsVisibleAndReturnsNamToStealth" methodname="CaptiveShotIsVisibleAndReturnsNamToStealth" classname="ShadowVale.Map01.Tests.RescuePresentationTests" runstate="Runnable" seed="1622553479" result="Passed" start-time="2026-10-25 16:11:29Z" end-time="2026-10-25 16:12:17Z" duration="47.740983" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+              <test-case id="1558" name="CommanderRemainsSeatedOnBoatAfterShelterHandoff" fullname="ShadowVale.Map01.Tests.RescuePresentationTests.CommanderRemainsSeatedOnBoatAfterShelterHandoff" methodname="CommanderRemainsSeatedOnBoatAfterShelterHandoff" classname="ShadowVale.Map01.Tests.RescuePresentationTests" runstate="Runnable" seed="512398413" result="Passed" start-time="2026-10-25 16:12:17Z" end-time="2026-10-25 16:12:54Z" duration="37.298097" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1559" name="RescueRadioIntroTests" fullname="ShadowVale.Map01.Tests.RescueRadioIntroTests" classname="ShadowVale.Map01.Tests.RescueRadioIntroTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-25 16:14:09Z" end-time="2026-10-25 16:14:20Z" duration="10.825642" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1560" name="RadioReportHoldsNamStillAndRestoresGameplay" fullname="ShadowVale.Map01.Tests.RescueRadioIntroTests.RadioReportHoldsNamStillAndRestoresGameplay" methodname="RadioReportHoldsNamStillAndRestoresGameplay" classname="ShadowVale.Map01.Tests.RescueRadioIntroTests" runstate="Runnable" seed="152506002" result="Passed" start-time="2026-10-25 16:12:54Z" end-time="2026-10-25 16:13:44Z" duration="49.145902" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1561" name="SkipDuringRadioRestoresKnifeCrouchAndAudio" fullname="ShadowVale.Map01.Tests.RescueRadioIntroTests.SkipDuringRadioRestoresKnifeCrouchAndAudio" methodname="SkipDuringRadioRestoresKnifeCrouchAndAudio" classname="ShadowVale.Map01.Tests.RescueRadioIntroTests" runstate="Runnable" seed="379382628" result="Passed" start-time="2026-10-25 16:13:44Z" end-time="2026-10-25 16:14:20Z" duration="36.067791" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/dangk/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
