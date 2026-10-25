@@ -18,6 +18,8 @@ namespace ShadowVale.Map01
         float soleWindow=float.PositiveInfinity,soleOffset;Animator skeleton;
         public Animator Animator=>animator;
         public bool ConversationHeld {get;set;}
+        /// <summary>On the way to a spot (GoTo), not standing or following.</summary>
+        public bool Travelling=>travelling;
         public void SetInjured(bool injured){var resting=GetComponent<Map02ScoutInjuredVisual>();if(resting==null&&injured)resting=gameObject.AddComponent<Map02ScoutInjuredVisual>();if(resting!=null)resting.SetInjured(injured,animator);}
         public void SetVisible(bool visible){if(visual!=null)visual.gameObject.SetActive(visible);}
         public void SetSitting(bool sitting){if(animator!=null&&animator.runtimeAnimatorController!=null&&animator.parameters.Any(p=>p.name=="Sitting"))animator.SetBool("Sitting",sitting);}

@@ -68,7 +68,7 @@ namespace ShadowVale.Map01
             if(NavMesh.SamplePosition(to,out var hit,3,NavMesh.AllAreas))to=hit.position;
             var actor=roles[role];float distance=Vector3.Distance(actor.transform.position,to);
             if(distance<2)return;
-            if(distance>8)actor.StopAt(BehindCamera());
+            if(distance>8||WalkClearance(actor.transform.position,to)<1.3f)actor.StopAt(EntryPoint(to));
             entrances.Add(new Entrance{actor=actor,to=to,startLine=startLine,gateLine=gateLine});
         }
         Vector3 BehindCamera()
@@ -76,6 +76,34 @@ namespace ShadowVale.Map01
             // The scene camera sits behind Nam, so a point further back is out of frame.
             var point=Mission.Player.position-Mission.Player.forward*7;
             return NavMesh.SamplePosition(point,out var hit,4,NavMesh.AllAreas)?hit.position:point;
+        }
+        /// <summary>Where a far-off entrant starts: out of shot (behind the camera if it can be), on a walk that goes round Nam
+        /// rather than through him.</summary>
+        Vector3 EntryPoint(Vector3 to)
+        {
+            var nam=Mission.Player.position;var look=Vector3.ProjectOnPlane(rig.transform.forward,Vector3.up).normalized;
+            Vector3 best=BehindCamera();float bestScore=float.NegativeInfinity;
+            for(int i=0;i<16;i++)
+            {
+                var dir=Quaternion.Euler(0,i*22.5f,0)*Vector3.forward;
+                if(!NavMesh.SamplePosition(nam+dir*7,out var hit,3,NavMesh.AllAreas))continue;
+                if(WalkClearance(hit.position,to)<1.3f)continue;
+                float score=-Vector3.Dot(dir,look);if(score>bestScore){bestScore=score;best=hit.position;}
+            }
+            return best;
+        }
+        /// <summary>How close a walk from <paramref name="from"/> to <paramref name="to"/> passes Nam (0 if it cannot be walked).</summary>
+        float WalkClearance(Vector3 from,Vector3 to)
+        {
+            var path=new NavMeshPath();if(!NavMesh.CalculatePath(from,to,NavMesh.AllAreas,path)||path.status!=NavMeshPathStatus.PathComplete)return 0;
+            float clear=float.PositiveInfinity;var c=path.corners;var nam=Mission.Player.position;
+            for(int k=1;k<c.Length;k++)clear=Mathf.Min(clear,FlatSegmentDistance(c[k-1],c[k],nam));
+            return clear;
+        }
+        static float FlatSegmentDistance(Vector3 a,Vector3 b,Vector3 p)
+        {
+            var ab=new Vector2(b.x-a.x,b.z-a.z);var ap=new Vector2(p.x-a.x,p.z-a.z);
+            float t=ab.sqrMagnitude>1e-6f?Mathf.Clamp01(Vector2.Dot(ap,ab)/ab.sqrMagnitude):0;return (ap-ab*t).magnitude;
         }
         void ClearEntrances(){foreach(var e in entrances)e.actor.SceneDriven=false;entrances.Clear();}
         /// <summary>Starts walks cued by the current line, then speaks it unless it must wait for someone or something.</summary>

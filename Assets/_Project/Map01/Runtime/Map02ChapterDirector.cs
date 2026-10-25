@@ -340,7 +340,7 @@ namespace ShadowVale.Map01
             foreach(var weapon in Mission.Player.GetComponentsInChildren<Weapon>(true))if(weapon.gameObject.activeSelf){hiddenWeapons.Add(weapon.gameObject);weapon.gameObject.SetActive(false);}
             var cam=rig.GetComponent<Camera>();cameraBefore=cam.transform.position;cameraRotation=cam.transform.rotation;cameraFov=cam.fieldOfView;
             protectedBefore=health.CinematicInvulnerable;health.CinematicInvulnerable=true;
-            PlanEntrances(task);StartLine();
+            PlanEntrances(task);StageTalk(task);StartLine();
         }
         void Speak(){voice.Stop();lineClock=0;if(HoldMealVoice)return;if(Map02DialogueCatalog.HasApprovedRecording(lines[lineIndex]))voice.Play(lines[lineIndex].RecordingId);}
         void TickScene(float dt)
@@ -365,17 +365,17 @@ namespace ShadowVale.Map01
         void LateUpdate()
         {
             DayLateUpdate();UpdateWorkWeapon();if(!ready)return;PanToHung();HoldCargo();if(sceneTask==null){UpdateHungRadio();return;}
-            HoldConversation();MoveDaySceneRoots();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=NamPoseClip();namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null);
+            HoldConversation();FaceTalk();MoveDaySceneRoots();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=NamPoseClip();namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null);
             SampleDayScene();UpdateHungRadio();
             string speaker=lines[lineIndex].speaker;Vector3 subject=Mission.Player.position;
             if(!lines[lineIndex].radio&&speaker!="Nam"&&roles.TryGetValue(speaker,out var actor))subject=actor.transform.position;
             var focus=Vector3.Lerp(subject,Mission.Player.position,.3f)+Vector3.up*1.25f;
             if(Vector3.Distance(subject,Mission.Player.position)>10)focus=Mission.Player.position+Vector3.up*1.25f;
             var eye=focus-Mission.Player.forward*3.4f+Mission.Player.right*2.5f+Vector3.up*1.4f;
-            if(FinaleCamera(out var staged,out var stagedFocus)){eye=staged;focus=stagedFocus;}
+            if(FinaleCamera(out var staged,out var stagedFocus)){eye=staged;focus=stagedFocus;}else if(TalkCamera(out var talkEye,out var talkFocus)){eye=talkEye;focus=talkFocus;}
             if(sceneTask.id=="DAWN"){focus=Vector3.Lerp(Mission.Player.position,memorialArt!=null?memorialArt.transform.position:sites["ditch"].position,.5f)+Vector3.up*.8f;eye=focus-Mission.Player.forward*4+Mission.Player.right*3+Vector3.up*1.5f;}
             // Medium/wide framing; obstruction tested below.
-            var ray=eye-focus;foreach(var hit in Physics.SphereCastAll(focus,.12f,ray.normalized,ray.magnitude,~0,QueryTriggerInteraction.Ignore))if(hit.collider.GetComponentInParent<Health>()==null&&hit.distance>.65f)eye=focus+ray.normalized*Mathf.Min(ray.magnitude,Mathf.Max(.7f,hit.distance-.12f));
+            var ray=eye-focus;foreach(var hit in Physics.SphereCastAll(focus,.12f,ray.normalized,ray.magnitude,~0,QueryTriggerInteraction.Ignore))if(hit.collider.GetComponentInParent<Health>()==null&&hit.collider.GetComponentInParent<Map02ChapterActor>()==null&&(tank==null||!hit.transform.IsChildOf(tank.transform))&&hit.distance>.65f)eye=focus+ray.normalized*Mathf.Min(ray.magnitude,Mathf.Max(.7f,hit.distance-.12f));
             if(sceneTask.id=="D1_02"){focus=roles["Hùng"].transform.position+Vector3.up*.85f;eye=focus+new Vector3(-3f,.35f,2f);}
             float mealFov=45;if(sceneTask.id=="N1_01")MealShot(out eye,out focus,out mealFov);
             float blend=sceneTask.id=="N1_01"?1:Mathf.SmoothStep(0,1,sceneClock/.8f);   // a cut into the house, not a glide through its wall
