@@ -341,7 +341,10 @@ namespace ShadowVale.Map01
             Restore(Parse(saved));patrolCheckpoint=saved;checkpoint=saved;SetPaused(false);return true;
         }
         public void StoreCheckpoint(){if(!Ready||!CanSave())return;if(Chapter?.State.PatrolRouteActive!=true)patrolCheckpoint=null;var data=Capture();data.checkpoint=null;checkpoint=JsonUtility.ToJson(data);}
-        public bool Retry(){if(string.IsNullOrEmpty(checkpoint))return false;var saved=checkpoint;Restore(Parse(saved));checkpoint=saved;SetPaused(false);return true;}
+        // A checkpoint is stored as each task closes, often mid-sprint or wounded: a retry gives back the bag as it was, but
+        // fresh legs and at least half health, so a retry is never a slower or weaker start than the fight that was lost.
+        public bool Retry(){if(string.IsNullOrEmpty(checkpoint))return false;var saved=checkpoint;Restore(Parse(saved));checkpoint=saved;SetPaused(false);
+            Stamina=CharacterSettings.stamina;if(health!=null&&health.Current<health.Max*.5f)health.RestoreHealth(health.Max*.5f);return true;}
         public bool SaveSlot(int slot,out string error)
         {
             error=SaveBlockReason();if(!string.IsNullOrEmpty(error))return false;
