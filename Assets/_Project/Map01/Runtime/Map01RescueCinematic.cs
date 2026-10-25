@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using ShadowVale.Gameplay.Combat;
 using ShadowVale.Gameplay.Player;
@@ -65,6 +65,9 @@ namespace ShadowVale.Map01
         private float introRadioAt,introReleaseAt;
         private (Transform bone,Vector3 position,Quaternion rotation)[] introLowerBody;
         private readonly System.Collections.Generic.List<GameObject> introHiddenWeapons=new();
+        private Vector3 introCaptiveView,introCaptiveFocus;
+        const float IntroCutIn=.65f,IntroCutOut=4.5f;
+        public bool IntroShowsCaptive=>CurrentMode==Mode.Intro&&Elapsed>=IntroCutIn&&Elapsed<IntroCutOut;
 
         public bool ControlsEnemy(Map01EnemyController guard) => (CurrentMode == Mode.Execution || CurrentMode==Mode.Intro) && guard == enemy;
 
@@ -135,7 +138,33 @@ namespace ShadowVale.Map01
             canApproach=NavMesh.SamplePosition(desired,out var contact,.4f,NavMesh.AllAreas)&&!NavMesh.Raycast(interrogatorStart,contact.position,out _,NavMesh.AllAreas);
             interrogatorClose=canApproach?contact.position:interrogatorStart;
             interrogatorWalk=Map01CinematicPose.Clip("Enemy_Interrogate_Walk");
-            OwnStoryActors();owner.MarkIntroSeen();return true;
+            OwnStoryActors();
+            var hungChest=captiveVisual.actor.GetBoneTransform(HumanBodyBones.Chest).position;
+            var guardChest=enemy.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.Chest).position;
+            introCaptiveFocus=Vector3.Lerp(hungChest,guardChest,.5f);
+            var side=Vector3.Cross(Vector3.up,direction);
+            float distance=Mathf.Clamp(3+Vector3.Distance(hungChest,guardChest)*.5f,3.6f,7);
+            introCaptiveView=FindStoryLens(introCaptiveFocus,side,distance*1.45f,.55f);
+            bool found=false;
+            foreach(float scale in new[]{1f,1.2f,1.45f}){
+                foreach(float turn in new[]{0f,25f,-25f,50f,-50f,180f,90f,-90f}){
+                    var candidate=introCaptiveFocus+Quaternion.Euler(0,turn,0)*side*distance*scale+Vector3.up*.55f;
+                    if(IntroFrameContains(candidate,hungChest)&&IntroFrameContains(candidate,guardChest)
+                        &&ShelterCameraClear(hungChest,candidate)&&ShelterCameraClear(guardChest,candidate)
+                        &&!Physics.CheckSphere(candidate,.16f,mission.ObstructionMask,QueryTriggerInteraction.Ignore)){
+                        introCaptiveView=candidate;found=true;break;
+                    }
+                }
+                if(found)break;
+            }
+            owner.MarkIntroSeen();return true;
+        }
+        bool IntroFrameContains(Vector3 lens,Vector3 point){
+            var rotation=Quaternion.LookRotation(introCaptiveFocus-lens);
+            var local=Quaternion.Inverse(rotation)*(point-lens);
+            if(local.z<.1f)return false;
+            float halfHeight=local.z*Mathf.Tan(23*Mathf.Deg2Rad);
+            return Mathf.Abs(local.x)<halfHeight*mission.gameCamera.aspect*.72f&&Mathf.Abs(local.y)<halfHeight*.72f;
         }
         public void ExecuteHostage(Map01Rescue owner,Map01EnemyController overseer,Map01EnemyController reporter=null){
             if(IsPlaying)return;
@@ -203,14 +232,20 @@ namespace ShadowVale.Map01
             // bindings. The recoil clip's rest wrists can sit inside the torso;
             // switching from it at impact made the hands suddenly reappear.
             captivePose.Sample(CurrentMode==Mode.Execution?boundExecution:Map01CinematicPose.Clip("Hung_Captive_Recoil"),captiveTime);
-            interrogatorPose.Sample(walking&&interrogatorWalk!=null?interrogatorWalk:Map01CinematicPose.Clip("Enemy_Interrogate_Strike"),walking?travel*.65f:CurrentMode==Mode.Intro?Mathf.Clamp(Elapsed-2,0,3):0,walking);
+            if(CurrentMode==Mode.Intro&&executionAim!=null)interrogatorPose.Sample(executionAim,Elapsed,true);
+            else interrogatorPose.Sample(walking&&interrogatorWalk!=null?interrogatorWalk:Map01CinematicPose.Clip("Enemy_Interrogate_Strike"),walking?travel*.65f:0,walking);
             captivePose.Ground(mission.hung.position.y);interrogatorPose.Ground(enemy.transform.position.y);captiveVisual.SampleCaptiveContacts();
-            if(CurrentMode==Mode.Execution&&storyBeat>=2){
+            if(CurrentMode==Mode.Intro||CurrentMode==Mode.Execution&&storyBeat>=2){
                 if(executionAim!=null)interrogatorPose.Sample(executionAim,Elapsed-beatAt,true);
                 AimExecution();
             }
             // Establish Nam first, then cut to the real bound captive and back.
             // Never fly the camera across the forest or move either actor to a stage.
+            if(IntroShowsCaptive){
+                float push=.12f*Mathf.SmoothStep(0,1,(Elapsed-IntroCutIn)/(IntroCutOut-IntroCutIn));
+                var lens=Vector3.MoveTowards(introCaptiveView,introCaptiveFocus,push);
+                SetStoryView(lens,Quaternion.LookRotation(introCaptiveFocus-lens),46);return;
+            }
             if(ExecutionShowsCaptive){
                 float push=Mathf.SmoothStep(0,1,(Elapsed-beatAt)/4.5f)*.18f;
                 var lens=Vector3.MoveTowards(executionView,executionFocus,push);
@@ -593,7 +628,9 @@ namespace ShadowVale.Map01
                 if(mission!=null&&mission.player!=null&&mission.ModernPlayer!=null&&mission.ModernCombat!=null){
                     var cc=mission.player.GetComponent<CharacterController>();if(cc!=null)cc.enabled=storyCCEnabled;
                     if(storyActions!=null)storyActions.enabled=storyActionsEnabled;mission.ModernPlayer.enabled=storyPlayerEnabled;mission.ModernCombat.enabled=storyCombatEnabled;
-                    mission.ModernPlayer.RestoreMotion(storySneaking);
+                    bool resumeSneaking=storySneaking||(mode==Mode.Intro&&!restoring);
+                    mission.Crouched=resumeSneaking;
+                    mission.ModernPlayer.RestoreMotion(resumeSneaking);
                 }
             }
             if(mission==null)return;
@@ -610,6 +647,10 @@ namespace ShadowVale.Map01
                 hungVisual?.RestoreAfterCinematic();
             }
             if(mode!=Mode.Takedown)mission.ModernCombat?.RestoreAfterCinematic();
+            if(mode==Mode.Intro&&!restoring){
+                rescue.CompleteApproachIntro();
+                mission.Say("Hùng đang bị giam giữ. Đã chuyển sang đi lén — [C] đổi tư thế. Tận dụng vật che để tiếp cận.",6);
+            }
         }
         private void OnGUI()
         {
@@ -635,6 +676,11 @@ namespace ShadowVale.Map01
             if(CurrentMode==Mode.Intro&&storyVoice!=null&&!string.IsNullOrEmpty(storyVoice.CurrentCaption)){
                 var subtitle=new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter,wordWrap=true,fontSize=Mathf.RoundToInt(Screen.height*.031f)};
                 GUI.color=Color.white;GUI.Label(new Rect(Screen.width*.12f,Screen.height*.91f,Screen.width*.76f,Screen.height*.08f),storyVoice.CurrentCaption,subtitle);GUI.color=color;
+            }
+            if(CurrentMode==Mode.Intro){
+                // A short blink conceals the distant edit; the lens only moves locally at the hostage.
+                float alpha=Mathf.Max(1-Mathf.Abs(Elapsed-IntroCutIn)/.12f,1-Mathf.Abs(Elapsed-IntroCutOut)/.12f);
+                if(alpha>0){GUI.color=new Color(0,0,0,Mathf.Clamp01(alpha));GUI.DrawTexture(new Rect(0,0,Screen.width,Screen.height),Texture2D.whiteTexture);GUI.color=color;}
             }
         }
 

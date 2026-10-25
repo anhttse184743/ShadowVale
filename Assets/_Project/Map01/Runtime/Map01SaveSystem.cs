@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -277,7 +277,10 @@ namespace ShadowVale.Map01
             string checkpoint=escort?escortStart:rescueStart;
             if(string.IsNullOrEmpty(checkpoint)){mission.Say("Chưa có checkpoint nhiệm vụ. Hãy tải bản lưu hoặc chơi lại.",5);return false;}
             var data=PrepareRetry(JsonUtility.FromJson<CheckpointData>(checkpoint));
-            if(!escort&&GetComponent<Map01Rescue>().IntroSeen&&data.rescue!=null)data.rescue.introSeen=true;
+            if(!escort&&GetComponent<Map01Rescue>().IntroSeen&&data.rescue!=null){
+                data.rescue.introSeen=true;
+                data.rescue.revision=Map01Rescue.SnapshotRevision;
+            }
             // Keep the non-recursive retry snapshots across repeated retries.
             data.rescueStart=rescueStart;data.escortStart=escortStart;
             pendingCheckpoint=JsonUtility.ToJson(data);pendingSeconds=mission.PlaySeconds;

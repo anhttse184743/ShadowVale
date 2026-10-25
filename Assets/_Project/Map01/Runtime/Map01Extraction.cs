@@ -213,6 +213,7 @@ namespace ShadowVale.Map01
             hungActor.transform.localPosition=Vector3.zero;
             hungPose = new PosePlayer(hungActor,hungClips); commanderPose = new PosePlayer(commanderActor);
             hungPose.Play(seatedReady); commanderPose.Play(seatedReady);
+            FitCommanderSeat();
             EnsureRifle(hungActor); EnsureRifle(commanderActor);
             BuildOar();
             SpawnBlockers();
@@ -276,6 +277,15 @@ namespace ShadowVale.Map01
             actor.SetParent(boat, true);
             actor.localPosition = new Vector3(0,-.13f,z);
             actor.localRotation = Quaternion.Euler(0,270,0); // Both aim to port, never through the other benches.
+        }
+        private void FitCommanderSeat()
+        {
+            // His longer retargeted legs must rest inside the narrow sampan, not through the port side.
+            // Keep the authored animation and bench height; move only this seated root across the bench.
+            var left=commanderActor.GetBoneTransform(HumanBodyBones.LeftFoot);
+            var right=commanderActor.GetBoneTransform(HumanBodyBones.RightFoot);
+            float outer=Mathf.Min(boat.InverseTransformPoint(left.position).x,boat.InverseTransformPoint(right.position).x);
+            commander.localPosition+=Vector3.right*Mathf.Clamp(-.30f-outer,0,.25f);
         }
         private void EnsureRifle(Animator actor)
         {

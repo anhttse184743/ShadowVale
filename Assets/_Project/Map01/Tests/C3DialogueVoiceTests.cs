@@ -25,7 +25,7 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual(entry.resource,line.resource,entry.id);
                 StringAssert.EndsWith(entry.radio?"_radio":"_clean",line.resource);
                 Assert.AreEqual(48000,line.clip.frequency);Assert.AreEqual(1,line.clip.channels);
-                Assert.Greater(line.clip.length,.3f);Assert.That(line.clip.length,Is.EqualTo(entry.duration).Within(.035f));
+                Assert.Greater(line.clip.length,.3f);Assert.That(line.clip.length,Is.EqualTo(CurrentVoiceRevision.For(entry.id).duration).Within(.035f));
             }
             Assert.AreEqual(Map01C3Dialogue.PhoneCut,DialogueVoice.Caption("m1_c3_phone_cut"));
             Assert.AreEqual(Map01C3Dialogue.MalletRemoved,DialogueVoice.Caption("m1_c3_mallet_removed"));

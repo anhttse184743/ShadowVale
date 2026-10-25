@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -63,7 +63,8 @@ namespace ShadowVale.Map01.Tests {
                 Assert.AreEqual(original.caption,alias.caption,alias.id);Assert.AreEqual(original.radio,alias.radio,alias.id);
                 Assert.AreEqual(original.resource,alias.resource,alias.id);Assert.AreEqual(original.cleanResource,alias.cleanResource,alias.id);
             }
-            CollectionAssert.AreEquivalent(RadioIds,catalog.entries.Where(e=>e.radio).Select(e=>e.id));
+            CollectionAssert.IsSubsetOf(RadioIds,catalog.entries.Where(e=>e.radio).Select(e=>e.id));
+            CollectionAssert.AreEquivalent(CurrentVoiceRevision.All.Where(e=>e.radio).Select(e=>e.id),catalog.entries.Where(e=>e.radio).Select(e=>e.id));
             foreach(var line in catalog.entries) {
                 Assert.IsNotEmpty(line.id);Assert.IsNotEmpty(line.caption,line.id);
                 var imported=DialogueVoice.Find(line.id);Assert.NotNull(imported,line.id);Assert.NotNull(imported.clip,line.id);

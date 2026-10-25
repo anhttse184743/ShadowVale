@@ -21,6 +21,7 @@ namespace ShadowVale.Map01
                 if(t.id=="D1_06")return "Ba việc đã xong. Gặp anh Thành và nhấn E báo cáo để chuyển sang Đêm 1.";
                 if(t.id=="N1_01")return "Tới hiên nhà chị Lành, nhấn E ngồi ăn cùng Hùng. Sau bữa cơm mới bắt đầu ca gác.";
                 if(t.id=="N1_04")return "Tới chiếu nghỉ, nhấn E đổi ca. Cảnh nghỉ kết thúc mới sang Ngày 2.";
+                if(t.id=="D2_03")return "Theo lối lúa bị giẫm từ cầu tới khoảng trống. Tâm nằm bị thương tại ghim vàng; đến gần, nhấn E để giúp.";
                 if(t.kind=="wire")return State.wireStage==1?"Đang mang cuộn dây. Tới trạm ở ghim vàng, nhấn E giao cho Hùng.":"Tới kho kín ở ghim vàng, nhấn E lấy cuộn dây ăng-ten.";
                 if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)?$"Đang mang thùng {n+1}/{t.count}. Tới ghim vàng rồi nhấn E để đặt.":$"Đã chuyển {n}/{t.count}. Tới ghim vàng, nhấn E nhận thùng tiếp theo.";
                 if(escort!=null)
@@ -81,6 +82,7 @@ namespace ShadowVale.Map01
         public string Prompt(Map02ChapterTask t)
         {
             int n=State.Count(t.id);
+            if(t.id=="D2_03")return "Giúp Tâm — trinh sát bị thương";
             if(t.id=="D1_04"&&n>=3)return "Sắp xếp ba thùng vào kho kín";
             if(t.kind=="wire")return State.wireStage==1?"Giao cuộn dây ăng-ten cho Hùng":"Lấy cuộn dây ăng-ten trong kho kín";
             if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)&&State.activeTask==t.id?$"Đặt thùng {n+1}/{t.count} tại {(t.id=="D1_04"?"kho kín":"chỗ trú bến nam")}":$"Nhận thùng {n+1}/{t.count} tại {(t.id=="D1_04"?"bến cập":"kho kín")}";

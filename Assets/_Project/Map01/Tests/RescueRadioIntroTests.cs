@@ -67,7 +67,7 @@ public sealed class RescueRadioIntroTests:ForestSceneTestBase {
             Assert.IsFalse(heard.Contains("m1_rescue_intro_nam"));
             Assert.AreSame(controller,actor.runtimeAnimatorController);Assert.AreSame(avatar,actor.avatar);
             Assert.IsTrue(m.ModernPlayer.enabled&&m.ModernCombat.enabled&&m.player.GetComponent<CharacterController>().enabled);
-            Assert.AreEqual(skip,m.ModernPlayer.IsSneaking);Assert.AreEqual(ammo,m.ModernCombat.RoundsInMagazine);Assert.AreEqual(hp,m.ModernHealth.Current);
+            Assert.IsTrue(m.ModernPlayer.IsSneaking&&m.Crouched,"Natural completion and skip both return Nam to stealth.");Assert.AreEqual(ammo,m.ModernCombat.RoundsInMagazine);Assert.AreEqual(hp,m.ModernHealth.Current);
             foreach(var w in weapons)Assert.AreEqual(w.Value,w.Key.gameObject.activeSelf,"Restore equipped props without changing the inventory.");
             Assert.IsFalse(m.GetComponentsInChildren<DialogueVoice>().Any(v=>v.HasSpeech));
             File.WriteAllLines("Logs/RescueRadio/"+(skip?"skip":"natural")+".txt",heard);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using ShadowVale.AI.Contracts;
@@ -328,7 +328,7 @@ namespace ShadowVale.Map01
                 return;
             }
             var speech=DialogueVoice.For(gameObject);
-            speech.CanSpeak=()=>!Cinematic&&!ForestMenu.Visible;
+            speech.CanSpeak=()=>!Paused&&(!Cinematic||GetComponent<TutorialCaptureCutscene>()?.Playing==true)&&!ForestMenu.Visible;
             speech.LineStarted=line=>{
                 Dialogue=GameplayCaption(line.caption);DialogueUntil=Time.time+line.clip.length+.2f;
                 if(line.caption.StartsWith("Hùng") && hung!=null)hung.GetComponentInChildren<Map01HungVisual>()?.Speak(line.clip.length+.2f);

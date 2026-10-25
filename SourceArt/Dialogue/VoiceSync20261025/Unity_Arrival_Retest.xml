@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Passed" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-25 13:55:03Z" end-time="2026-10-25 13:55:14Z" duration="11.2328156">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="787" result="Passed" start-time="2026-10-25 13:55:03Z" end-time="2026-10-25 13:55:14Z" duration="11.232816" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1716" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/Capstone/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="564" result="Passed" start-time="2026-10-25 13:55:03Z" end-time="2026-10-25 13:55:14Z" duration="11.186541" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="19228" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1717" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="564" result="Passed" start-time="2026-10-25 13:55:03Z" end-time="2026-10-25 13:55:14Z" duration="11.170309" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1718" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="564" result="Passed" start-time="2026-10-25 13:55:03Z" end-time="2026-10-25 13:55:14Z" duration="11.154700" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1627" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="564" result="Passed" start-time="2026-10-25 13:55:03Z" end-time="2026-10-25 13:55:14Z" duration="11.138355" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1065" name="C3DialogueVoiceTests" fullname="ShadowVale.Map01.Tests.C3DialogueVoiceTests" classname="ShadowVale.Map01.Tests.C3DialogueVoiceTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-25 13:55:03Z" end-time="2026-10-25 13:55:03Z" duration="0.077292" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1067" name="SourceAndRuntimeCatalogStayIdenticalAfterPrepare" fullname="ShadowVale.Map01.Tests.C3DialogueVoiceTests.SourceAndRuntimeCatalogStayIdenticalAfterPrepare" methodname="SourceAndRuntimeCatalogStayIdenticalAfterPrepare" classname="ShadowVale.Map01.Tests.C3DialogueVoiceTests" runstate="Runnable" seed="284947248" result="Passed" start-time="2026-10-25 13:55:03Z" end-time="2026-10-25 13:55:03Z" duration="0.035327" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1091" name="DialogueVoiceTests" fullname="ShadowVale.Map01.Tests.DialogueVoiceTests" classname="ShadowVale.Map01.Tests.DialogueVoiceTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-10-25 13:55:03Z" end-time="2026-10-25 13:55:14Z" duration="10.853142" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1094" name="EveryStoryLineHasVietnameseAudioAndOnlyRadioIsFiltered" fullname="ShadowVale.Map01.Tests.DialogueVoiceTests.EveryStoryLineHasVietnameseAudioAndOnlyRadioIsFiltered" methodname="EveryStoryLineHasVietnameseAudioAndOnlyRadioIsFiltered" classname="ShadowVale.Map01.Tests.DialogueVoiceTests" runstate="Runnable" seed="956180865" result="Passed" start-time="2026-10-25 13:55:03Z" end-time="2026-10-25 13:55:14Z" duration="10.831251" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1171" name="FullGameAudioTests" fullname="ShadowVale.Map01.Tests.FullGameAudioTests" classname="ShadowVale.Map01.Tests.FullGameAudioTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-10-25 13:55:14Z" end-time="2026-10-25 13:55:14Z" duration="0.050156" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1174" name="CastingDistinguishesYoungNamMiddleAgedHungWomanLanhAndElderSau" fullname="ShadowVale.Map01.Tests.FullGameAudioTests.CastingDistinguishesYoungNamMiddleAgedHungWomanLanhAndElderSau" methodname="CastingDistinguishesYoungNamMiddleAgedHungWomanLanhAndElderSau" classname="ShadowVale.Map01.Tests.FullGameAudioTests" runstate="Runnable" seed="1089446954" result="Passed" start-time="2026-10-25 13:55:14Z" end-time="2026-10-25 13:55:14Z" duration="0.005244" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1173" name="EntireCurrentMapTwoScriptHasExactVoicesIncludingFinale" fullname="ShadowVale.Map01.Tests.FullGameAudioTests.EntireCurrentMapTwoScriptHasExactVoicesIncludingFinale" methodname="EntireCurrentMapTwoScriptHasExactVoicesIncludingFinale" classname="ShadowVale.Map01.Tests.FullGameAudioTests" runstate="Runnable" seed="1107261326" result="Passed" start-time="2026-10-25 13:55:14Z" end-time="2026-10-25 13:55:14Z" duration="0.033934" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1384" name="Map02DayOneVoiceCoverageTests" fullname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests" classname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-25 13:55:14Z" end-time="2026-10-25 13:55:14Z" duration="0.006379" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1385" name="AllDayOneAndNightOneSpokenCuesHaveExactDedicatedRecordings" fullname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests.AllDayOneAndNightOneSpokenCuesHaveExactDedicatedRecordings" methodname="AllDayOneAndNightOneSpokenCuesHaveExactDedicatedRecordings" classname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests" runstate="Runnable" seed="134335835" result="Passed" start-time="2026-10-25 13:55:14Z" end-time="2026-10-25 13:55:14Z" duration="0.004498" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: Logs/Map02Chapter/latest-full-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

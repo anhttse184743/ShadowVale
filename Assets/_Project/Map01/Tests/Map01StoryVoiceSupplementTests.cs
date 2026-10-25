@@ -26,8 +26,8 @@ namespace ShadowVale.Map01.Tests
                 var v=DialogueVoice.Find(e.id);Assert.NotNull(v,e.id);Assert.NotNull(v.clip,e.id);
                 Assert.AreEqual(e.caption,v.caption);Assert.AreEqual(e.resource,v.resource);Assert.IsFalse(v.radio);
                 Assert.AreEqual(48000,v.clip.frequency);Assert.AreEqual(1,v.clip.channels);
-                Assert.That(v.clip.length,Is.EqualTo(e.duration).Within(.035f));
-                Assert.Contains(e.voice,new[]{"Brodie","Clint","Tom"});
+                Assert.That(v.clip.length,Is.EqualTo(CurrentVoiceRevision.For(e.id).duration).Within(.035f));
+                Assert.Contains(CurrentVoiceRevision.For(e.id).voice,new[]{"Adam","Anh Khôi","Minh Đức"});
             }
         }
         [UnityTest]public IEnumerator RemainingGameplayAndBoatDialogueSpeakInOrderBeforeCompletion()

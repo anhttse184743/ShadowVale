@@ -53,9 +53,9 @@ MonoBehaviour:
   commanderVoice: {fileID: 8300000, guid: 3e81f26567044b14fa86357da186061c, type: 3}
   soldierVoice: {fileID: 8300000, guid: 9a4077950c2e8c2449877d4a3ab344f2, type: 3}
   commanderSubtitleStarts:
-  - 0
-  - 3.69
-  - 9.62
+  - 0.0
+  - 4.076083333333333
+  - 10.50175
   saluteRaiseSeconds: 0.7
   saluteLowerSeconds: 1.0000001
   saluteHoldTime: 0.7

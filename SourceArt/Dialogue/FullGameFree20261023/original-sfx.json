@@ -1,0 +1,32 @@
+[
+  {
+    "name": "bamboo",
+    "source": "Original procedural synthesis",
+    "license": "CC0-1.0",
+    "description": "Soft wind/foliage rustle; synthesized, not a field recording."
+  },
+  {
+    "name": "plane",
+    "source": "Original procedural synthesis",
+    "license": "CC0-1.0",
+    "description": "Distant propeller-like engine, synthesized; no historical aircraft identity claimed."
+  },
+  {
+    "name": "duck",
+    "source": "Original procedural synthesis",
+    "license": "CC0-1.0",
+    "description": "Short wing-flap foley; synthesized rustling, no duck vocal imitation."
+  },
+  {
+    "name": "crate",
+    "source": "Original procedural synthesis",
+    "license": "CC0-1.0",
+    "description": "Wooden crate contact foley, synthesized impact."
+  },
+  {
+    "name": "hung_theme",
+    "source": "Original procedural synthesis",
+    "license": "CC0-1.0",
+    "description": "Original sparse solo plucked-string theme; procedural composition, not an existing song or authentic instrument recording."
+  }
+]
