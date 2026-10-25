@@ -105,6 +105,27 @@ namespace ShadowVale.Map01.Editor
             if(first||bounds.size.y<.001f)throw new InvalidOperationException("Character has no skinned geometry: "+model.name);
             return bounds;
         }
+        /// <summary>The run the villagers lacked (idle, walk, sit only): Nam's own run, at the rate its stride needs for
+        /// <see cref="CivilianRunSpeed"/>, so Night 3's flight to the dock is a run and not a slide (25/10/2026).</summary>
+        public const float CivilianRunSpeed=3.6f;
+        [MenuItem("ShadowVale/Map 2/Thêm động tác chạy cho dân làng")]
+        public static void AddCivilianRun()
+        {
+            var controller=AssetDatabase.LoadAssetAtPath<AnimatorController>(Folder+"/Map02Civilian.controller");if(controller==null){Debug.LogError("[Map02Cast] No civilian controller.");return;}
+            var tree=controller.layers[0].stateMachine.states.Select(s=>s.state.motion).OfType<BlendTree>().FirstOrDefault();if(tree==null){Debug.LogError("[Map02Cast] No locomotion tree.");return;}
+            var (run,rate)=NamRun();if(run==null){Debug.LogError("[Map02Cast] Nam's run clip is missing.");return;}
+            var children=tree.children.Where(c=>c.threshold<CivilianRunSpeed-.01f).ToList();
+            children.Add(new ChildMotion{motion=run,threshold=CivilianRunSpeed,timeScale=rate,directBlendParameter="Blend"});tree.children=children.ToArray();
+            EditorUtility.SetDirty(tree);EditorUtility.SetDirty(controller);AssetDatabase.SaveAssets();Debug.Log($"[Map02Cast] Villagers run with {run.name} x{rate:0.000} at {CivilianRunSpeed} m/s");
+        }
+        /// <summary>Nam's run from the player's knife tree, with the rate it is played at for his sprint, scaled to the villagers' pace.</summary>
+        static (AnimationClip clip,float rate) NamRun()
+        {
+            var player=AssetDatabase.LoadAssetAtPath<AnimatorController>("Assets/_Project/Art/Characters/Animations/Controllers/AC_Player.controller");
+            var knife=player?.layers[0].stateMachine.states.Select(s=>s.state).FirstOrDefault(s=>s.name=="Locomotion_Knife")?.motion as BlendTree;
+            if(knife==null)return (null,1);var run=knife.children.OrderBy(c=>c.threshold).Last();
+            return (run.motion as AnimationClip,run.timeScale*CivilianRunSpeed/Mathf.Max(.1f,run.threshold));
+        }
         static AnimatorController BuildController()
         {
             string path=Folder+"/Map02Civilian.controller";var existing=AssetDatabase.LoadAssetAtPath<AnimatorController>(path);if(existing!=null)return existing;
@@ -114,7 +135,7 @@ namespace ShadowVale.Map01.Editor
             var crouch=source.animationClips.First(c=>c.name.Contains("Crouch")&&c.name.Contains("Idle"));
             var controller=AnimatorController.CreateAnimatorControllerAtPath(path);controller.AddParameter("Speed",AnimatorControllerParameterType.Float);controller.AddParameter("Sitting",AnimatorControllerParameterType.Bool);
             var machine=controller.layers[0].stateMachine;var moving=machine.AddState("Locomotion");machine.defaultState=moving;
-            var tree=new BlendTree{name="Idle / Walk",blendParameter="Speed",useAutomaticThresholds=false};AssetDatabase.AddObjectToAsset(tree,controller);tree.AddChild(idle,0);tree.AddChild(walk,1.35f);moving.motion=tree;
+            var tree=new BlendTree{name="Idle / Walk",blendParameter="Speed",useAutomaticThresholds=false};AssetDatabase.AddObjectToAsset(tree,controller);tree.AddChild(idle,0);tree.AddChild(walk,1.35f);{var (run,rate)=NamRun();if(run!=null){tree.AddChild(run,CivilianRunSpeed);var all=tree.children;all[all.Length-1].timeScale=rate;tree.children=all;}}moving.motion=tree;
             var sitting=machine.AddState("Sitting");sitting.motion=crouch;
             var down=moving.AddTransition(sitting);down.hasExitTime=false;down.duration=.2f;down.AddCondition(AnimatorConditionMode.If,0,"Sitting");
             var up=sitting.AddTransition(moving);up.hasExitTime=false;up.duration=.2f;up.AddCondition(AnimatorConditionMode.IfNot,0,"Sitting");

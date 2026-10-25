@@ -27,8 +27,8 @@ namespace ShadowVale.Map01
         float SceneDuration=>sceneTask?.id=="N1_04"||sceneTask?.id=="N1_01"?DaySceneMinimum:sceneTask?.seconds??0;
         void StartRescueEscort(Map02ChapterTask task)
         {
-            escort=roles[task.kind=="rescueChild"?"Bé Tí":"Ông Sáu"];escort.Follow(Mission.Player,1.5f);
-            secondaryEscort=task.kind=="rescueFamily"?roles["Chị Lành"]:null;secondaryEscort?.Follow(Mission.Player,1.45f);
+            escort=roles[task.kind=="rescueChild"?"Bé Tí":"Ông Sáu"];escort.Follow(Mission.Player,task.kind=="rescueChild"?FleeRun:ElderFlee);   // the village is burning: they run (the old man as best he can)
+            secondaryEscort=task.kind=="rescueFamily"?roles["Chị Lành"]:null;secondaryEscort?.Follow(Mission.Player,FleeRun);
             Mission.Say(secondaryEscort!=null?"Đưa cả ông Sáu và chị Lành tới bến nam. Giữ hai người trong tầm đi cùng.":"Đưa bé Tí tới bến nam, nơi chị Lành đang chờ.");UpdateMarkers();
         }
         void PrepareSceneMotion(Map02ChapterTask task)

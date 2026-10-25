@@ -242,7 +242,7 @@ namespace ShadowVale.Map01
                 if((t.kind=="escortHung"||t.kind=="escortScout"||t.kind=="patrolHung"||t.kind.StartsWith("rescue"))&&escort!=null&&workTask==t)
                 {
                     var dest=Destination(t);if(Vector3.Distance(Mission.Player.position,dest)<3&&Vector3.Distance(escort.transform.position,dest)<4&&(secondaryEscort==null||Vector3.Distance(secondaryEscort.transform.position,dest)<5))
-                    {escort.StopAt(dest+(t.id=="D1_02"?Vector3.forward*.6f:Vector3.right*1.4f));escort=null;secondaryEscort?.StopAt(dest+Vector3.left*1.4f);secondaryEscort=null;if(t.kind=="rescueFamily")Finish(t);else if(t.kind=="rescueChild")BeginScene(t,2);else if(t.id=="N1_02"||t.id=="N1_03")StartPost(t);else BeginScene(t);break;}
+                    {bool rescue=t.kind.StartsWith("rescue");escort.StopAt(rescue?SafeSpot(escort.role):dest+(t.id=="D1_02"?Vector3.forward*.6f:Vector3.right*1.4f));escort=null;secondaryEscort?.StopAt(rescue?SafeSpot(secondaryEscort.role):dest+Vector3.left*1.4f);secondaryEscort=null;if(t.kind=="rescueFamily")Finish(t);else if(t.kind=="rescueChild")BeginScene(t,2);else if(t.id=="N1_02"||t.id=="N1_03")StartPost(t);else BeginScene(t);break;}
                 }
                 if(t.kind=="binocular")
                 {
@@ -261,6 +261,10 @@ namespace ShadowVale.Map01
             }
         }
         Vector3 SupperYard=>sites["family"].position+Vector3.left*2;
+        /// <summary>Where each of Lành's family waits at the south shelter once brought there: on the far side from the bank
+        /// hole, which shares the shelter's spot and where Hùng keeps watch. Bé Tí stays just behind her mother.</summary>
+        Vector3 SafeSpot(string role){var lanh=sites["southStore"].position+Vector3.left*1.4f;return role=="Chị Lành"?lanh:role=="Bé Tí"?BesideMother(lanh):lanh+Vector3.left*1.2f+Vector3.forward*1f;}
+        static Vector3 BesideMother(Vector3 mother)=>mother+Vector3.back*1f+Vector3.left*.5f;   // behind her, clear of whoever stands at her right
         Vector3 Destination(Map02ChapterTask t)=>t.kind.StartsWith("rescue")?sites["southStore"].position:DayTaskPoint(t);
         public void UpdateMarkers()
         {
@@ -309,7 +313,9 @@ namespace ShadowVale.Map01
             }
             if(workTask.kind!="repair"){holdClock=kb.spaceKey.isPressed?holdClock+dt:0;if(holdClock>=workTask.seconds)EndWork(true);}
         }
-        /// <summary>Walking pace with a load in both hands (no sprinting).</summary>
+        /// <summary>Night 3, the village under attack: people run (m/s); Ông Sáu at a laboured jog.</summary>
+        const float FleeRun=3.4f,ElderFlee=2.4f,NightRun=3.2f;
+        /// <summary>Walking pace with a load in both hands.</summary>
         public const float CarryPace=.85f;
         /// <summary>Walking pace while leading Hùng before Day 3 (no sprinting); see LeadingWounded.</summary>
         public const float EscortPace=.55f;
@@ -396,7 +402,7 @@ namespace ShadowVale.Map01
             if(task.id=="N1_03")roles["Hùng"].GoTo(sites["nightOneRest"].position,1.25f);
             if(task.id=="D1_01")roles["Anh Thành"].GoTo(sites["command"].position,1.6f);
             if(task.id=="D2_04")roles["Tâm"].StopAt(sites["command"].position+Vector3.right*1.5f);
-            if(task.id=="N3_00")roles["Hùng"].GoTo(sites["ditch"].position,1.8f);
+            if(task.id=="N3_00")roles["Hùng"].GoTo(sites["ditch"].position,NightRun);
             StageNightThree(task);
             ApplyState();Mission.RefreshChapter();
             if(task.id=="N2_02")Mission.EnsurePatrolCheckpoint();
@@ -427,13 +433,13 @@ namespace ShadowVale.Map01
             if(State.phase==0&&State.Done("D1_01"))roles["Anh Thành"].GoTo(sites["command"].position,1.6f);
             if(State.phase==4&&State.Done("D3_05"))roles["Anh Thành"].StopAt(SupperYard);
             if(State.phase>=5&&State.Done("N3_02"))foreach(var name in new[]{"Ông Sáu","Chị Lành"})if(Vector3.Distance(roles[name].transform.position,sites["southStore"].position)>8)roles[name].StopAt(sites["southStore"].position+(name=="Ông Sáu"?Vector3.right:Vector3.left)*1.4f);
-            if(State.phase>=5&&State.Done("N3_03")&&Vector3.Distance(roles["Bé Tí"].transform.position,sites["southStore"].position)>8)roles["Bé Tí"].StopAt(sites["southStore"].position+Vector3.forward*1.4f);
+            if(State.phase>=5&&State.Done("N3_03")&&Vector3.Distance(roles["Bé Tí"].transform.position,sites["southStore"].position)>8)roles["Bé Tí"].StopAt(SafeSpot("Bé Tí"));
             hungCanal=null;
             if(State.activeTask=="N3_08"&&State.taskProgress>1){State.coverClock=State.taskProgress;State.taskProgress=Mathf.Clamp01(State.coverClock/CoverSlowest);} // Saves that counted seconds.
             if(State.phase==5&&State.Done("N3_00")&&!State.hungDead)
             {
                 if(State.activeTask=="N3_08"){TickTank(0,true);roles["Hùng"].StopAt(Along(HungCanal,State.taskProgress*Length(HungCanal)));pansDone=Mathf.FloorToInt(State.taskProgress*3);}
-                else if(State.Done("N3_08"))roles["Hùng"].StopAt(ChargePoint);else roles["Hùng"].GoTo(sites["ditch"].position,1.8f);
+                else if(State.Done("N3_08"))roles["Hùng"].StopAt(ChargePoint);else roles["Hùng"].GoTo(sites["ditch"].position,NightRun);
             }
             if(State.Available(workTask))
             {
@@ -475,10 +481,9 @@ namespace ShadowVale.Map01
             {
                 if(!fresh)roles["Anh Thành"].StopAt(State.phase==6?sites["ditch"].position+Vector3.right*2.5f:sites["command"].position);
                 roles["Anh Lực"].StopAt(State.phase==6?sites["ditch"].position+Vector3.left*2.5f:(State.phase==4?sites["ditch"].position:State.phase==5?LucNightThree():sites["gate"].position));
-                var safe=sites["southStore"].position;
-                roles["Chị Lành"].StopAt(State.Done("N3_02")?safe+Vector3.left*1.4f:State.phase<=1?DayFamily+Vector3.left*.8f:sites["family"].position);
-                roles["Ông Sáu"].StopAt(State.Done("N3_02")?safe+Vector3.right*1.4f:State.phase<=1?DayFamily+Vector3.forward*3.5f+Vector3.left*1.4f:sites["family"].position+Vector3.right*1.4f);   // Day 1 / Night 1: the family's seat; later days: the yard
-                roles["Bé Tí"].StopAt(State.Done("N3_03")?safe+Vector3.forward*1.4f:State.phase<=1?DayFamily+Vector3.left*1.3f+Vector3.forward*3.1f:sites[State.phase==5?"child":"family"].position+Vector3.back*.8f);   // Night 3: lost at the buffalo pen
+                roles["Chị Lành"].StopAt(State.Done("N3_02")?SafeSpot("Chị Lành"):State.phase<=1?DayFamily+Vector3.left*.8f:sites["family"].position);
+                roles["Ông Sáu"].StopAt(State.Done("N3_02")?SafeSpot("Ông Sáu"):State.phase<=1?DayFamily+Vector3.forward*3.5f+Vector3.left*1.4f:SauYard);   // the open yard in front: behind is the house wall   // Day 1 / Night 1: the family's seat; later days: the yard
+                roles["Bé Tí"].StopAt(State.Done("N3_03")?SafeSpot("Bé Tí"):State.phase<=1?DayFamily+Vector3.left*1.3f+Vector3.forward*3.1f:sites[State.phase==5?"child":"family"].position+Vector3.back*.8f);   // Night 3: lost at the buffalo pen
                 roles["Chú Bảy"].StopAt(sites["dock"].position);
                 roles["Tâm"].StopAt(sites[State.phase==5&&State.Done("N3_CRAWL")?"tamCover":State.Done("D2_04")?"bamboo":"scout"].position);
                 if(!fresh&&!State.hungDead&&escort!=roles["Hùng"])roles["Hùng"].StopAt(sites[State.phase==5?(State.Done("N3_00")?"ditch":"rest"):State.phase==4?"family":State.phase>=2?"radio":State.phase==1?(State.Done("N1_03")?"gate":State.Done("N1_02")?"bamboo":"family"):State.Done("D1_02")?"family":"arrival"].position+Vector3.right*1.4f);
@@ -510,7 +515,7 @@ namespace ShadowVale.Map01
             // Keep the authored lost-child/rescue segment in Night 3; normal village life stays by Lành.
             if(State.phase<=1||State.phase==5&&!State.Done("N3_03"))return;
             var mother=roles["Chị Lành"].transform;
-            roles["Bé Tí"].StopAt(mother.position+Vector3.right*1.05f+Vector3.back*.55f);
+            roles["Bé Tí"].StopAt(BesideMother(mother.position));
             roles["Bé Tí"].SetSitting(false);
         }
         void TickLight(float dt)
