@@ -48,6 +48,7 @@ namespace ShadowVale.Map01
             gameObject.AddComponent<Map01StoneThrow>();
             SyncBagFromTotals(true,arrival?.CharacterBag);
             Bag.Changed+=WriteBagTotals;
+            Bag.GunBroke+=OnCharacterGunBroke;
             Bag.RestoreFieldToolkit(arrival?.CharacterBag?.fieldKitVersion ?? 0);
             CharacterHud=gameObject.AddComponent<Map01Hud>();
             InitializeCharacterEffects();
@@ -71,6 +72,28 @@ namespace ShadowVale.Map01
         void CharacterAttack(WeaponKind kind,Vector3 at)
         {
             var held=Bag.HeldGun();if(held!=null)Bag.Wear(held.Value,Bag.WearPerShot(Bag.IdOf(Map01Inventory.Gun.InSlot(held.Value))));
+        }
+        string brokenGun;
+        // Swapped on the next frame, not inside the shot that wore the gun out.
+        void OnCharacterGunBroke(Map01Inventory.Gun gun,string id){if(gun.Slot==Map01Inventory.Slot.Primary)brokenGun=id;}
+        /// <summary>The long gun in hand wore out: a working one from the bag takes its place, the worn one goes into the bag.</summary>
+        void SwapToSpareGun()
+        {
+            var id=brokenGun;brokenGun=null;
+            for(int i=0;i<Map01Inventory.BagSize;i++)
+            {
+                var cell=Bag.Cell(i);
+                if(cell==null||Map01Inventory.SlotOf(cell.id)!=Map01Inventory.Slot.Primary||Bag.IsBroken(Map01Inventory.Gun.InCell(i)))continue;
+                if(!Bag.EquipFromCell(i))return;
+                Bag.Draw(Map01Inventory.Slot.Primary);Say("Súng hỏng — đã đổi sang khẩu dự phòng. Khẩu hỏng để trong túi (Tab).");return;
+            }
+            Say(ForestInventory.Name(id)+" vừa hỏng hẳn — kẹt cò. Sửa bằng bộ sửa chữa (Tab) hoặc dùng súng ngắn / dao.");
+        }
+        /// <summary>Night 3's gear: a second long gun in the bag, for when the first wears out in the fighting. True if given.</summary>
+        public bool IssueSpareRifle()
+        {
+            int have=Inventory.TryGetValue(RifleItemId,out int n)?n:0;if(have>=2)return false;
+            Inventory[RifleItemId]=2;SyncBagFromTotals();return true;
         }
         public void SyncBagFromTotals(bool initial=false,Map01Inventory.Layout layout=null)
         {
@@ -108,6 +131,7 @@ namespace ShadowVale.Map01
         void TickCharacter()
         {
             SyncBagFromTotals();
+            if(brokenGun!=null)SwapToSpareGun();
             if(Exploration.Reveal(Player.position,14))RefreshExplorationTexture();
             if(InputBlocked)return;
             bool running=player.IsSprinting&&player.IsMoving;

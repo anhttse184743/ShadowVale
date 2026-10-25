@@ -171,6 +171,7 @@ namespace ShadowVale.Map01
             if(t.kind=="gear")
             {
                 if(State.gearStored){Mission.Inventory[Mission.RifleAmmo]=Inventory(Mission.RifleAmmo)+State.storedRounds;State.storedRounds=0;State.gearStored=false;}
+                if(t.id=="N3_01"&&Mission.IssueSpareRifle())Mission.Say("Nhận thêm một khẩu súng dự phòng trong túi. Súng đang cầm hỏng thì tự đổi sang khẩu này.");
                 combat.Equip(WeaponKind.Rifle);Finish(t);return true;
             }
             if(t.kind=="escortHung"||t.kind=="escortScout"||t.kind=="patrolHung")
