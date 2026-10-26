@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ShadowVale.AI.Coordination;
 using ShadowVale.AI.Perception;
+using ShadowVale.AI.Tactical;
 using ShadowVale.Gameplay.Combat;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -38,6 +40,10 @@ namespace ShadowVale.Map01
             if(data==null||data.balance==null||data.content==null)throw new InvalidOperationException("Missing shared character HUD data.");
             CharacterSettings=JsonUtility.FromJson<ForestSettings>(data.balance.text);
             CharacterContent=JsonUtility.FromJson<ForestBundle>(data.content.text);
+            // Night 3's waves are squads like Map 1's: Map 2's baked tactical graph (Resources/TacticalGraphs/Map 2) and the
+            // squad coordinator, which plans each wave with the session's solver.
+            TacticalGraphHost.Attach(gameObject,~0,null);
+            SquadCoordinator.Attach(gameObject,CoordinationSettings.ForScene(gameObject.scene.name));
             Stamina=arrival?.CharacterBag!=null?arrival.CharacterStamina:CharacterSettings.stamina;
             Exploration=new MapExploration(Rect.MinMaxRect(-Map02Navigation.HalfSize,-Map02Navigation.HalfSize,Map02Navigation.HalfSize,Map02Navigation.HalfSize));
             Bag=gameObject.AddComponent<Map01Inventory>();

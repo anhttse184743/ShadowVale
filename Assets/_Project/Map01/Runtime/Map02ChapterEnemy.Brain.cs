@@ -1,3 +1,4 @@
+using ShadowVale.AI.Agents;
 using ShadowVale.AI.Contracts;
 using ShadowVale.AI.Fsm;
 using ShadowVale.Gameplay.Audio;
@@ -10,11 +11,13 @@ namespace ShadowVale.Map01
 {
     /// <summary>
     /// Night 3's riflemen fight with Map 1's enemy brain (the shared six-state FSM: patrol, investigate, spot, take cover,
-    /// engage, retreat): they make for cover on contact, fire from it, hunt where Nam was last seen and pass sightings to their
-    /// own group. Cover is found on the spot from the village's own walls and trees (<see cref="Map02CoverTactics"/>). The
-    /// tank's escort keeps its hold, and Day 2 / Night 2's patrols keep their stealth rules.
+    /// engage, retreat) and, like Map 1's squads, under the squad coordinator: each wave is a squad (its group id), and the
+    /// coordinator plans it on Map 2's baked tactical graph with the session's solver (QUBO; greedy as fallback), giving each
+    /// man a node and a role. Until a plan lands, or without one, cover is found on the spot from the village's own walls and
+    /// trees (<see cref="Map02CoverTactics"/>). The tank's escort keeps its hold, and Day 2 / Night 2's patrols keep their
+    /// stealth rules; neither is registered with the coordinator.
     /// </summary>
-    public sealed partial class Map02ChapterEnemy : IEnemyWeapon
+    public sealed partial class Map02ChapterEnemy : IEnemyWeapon, IEnemyAgent
     {
         EnemyBrain brain;NavMeshEnemyBody brainBody;float sharedAt=-10,lastFired=-10;
         /// <summary>At his cover and not shooting: down behind it, up for a moment as he fires.</summary>
@@ -38,10 +41,11 @@ namespace ShadowVale.Map01
             {
                 brainBody=new NavMeshEnemyBody(transform,agent,null,HitPoints);   // LateUpdate animates him
                 brain=new EnemyBrain(id,brainBody,this,NightThreeTuning(),Map02CoverTactics.Instance);
+                AgentRegistry.Register(this);   // the coordinator plans the wave from here on
                 if(alerted)brain.ShareContact(target.position,Time.time,Time.time);   // a wave comes in knowing where the lane is held
             }
             agent.stoppingDistance=.5f;
-            brain.Tick(new PerceptionSample(sees,distance,target.position),Time.time,Time.deltaTime);
+            SeesPlayer=sees;brain.Tick(new PerceptionSample(sees,distance,target.position),Time.time,Time.deltaTime);
             if(!sees&&Time.time<returnFireUntil){brainBody.Face(returnFireAt);FireSuppressive(returnFireAt);}
             alerted=alerted||brain.Memory.Engaged(Time.time);
             bool atCover=brain.Memory.HasAssignment&&brain.Memory.ReachedAssignment&&agent.velocity.sqrMagnitude<.04f&&brain.State!=EnemyStateId.Retreat;
@@ -54,6 +58,22 @@ namespace ShadowVale.Map01
                 foreach(var other in director.Enemies)if(other!=null&&other!=this&&other.group==group&&!other.Dead)other.brain?.ShareContact(target.position,Time.time,Time.time);
             }
         }
+        // IEnemyAgent: what the squad coordinator, telemetry and the F8 console read.
+        string IEnemyAgent.Id=>id;
+        public string SquadId=>brain!=null?group:"";
+        public EnemyBrain Brain=>brain;
+        public Vector3 Position=>transform.position;
+        public Vector3 Forward=>transform.forward;
+        public bool Alive=>brain!=null&&!Dead;
+        public float HealthFraction=>HitPoints!=null&&HitPoints.Max>0?HitPoints.Current/HitPoints.Max:0;
+        public bool SeesPlayer {get;private set;}
+        float IEnemyAgent.VisionRange=>brain!=null?brain.Tuning.VisionRange:34;
+        float IEnemyAgent.VisionConeAngle=>130;
+        public void DebugEngage(float seconds){if(brain!=null&&director?.Mission!=null)brain.ShareContact(director.Mission.Player.position,Time.time,Time.time);}
+        public void DebugDamage(float fractionOfMax){if(HitPoints!=null)HitPoints.TakeDamage(HitPoints.Max*fractionOfMax,transform.position+Vector3.up,null);}
+        void OnEnable(){if(brain!=null)AgentRegistry.Register(this);}
+        void OnDisable()=>AgentRegistry.Unregister(this);
+
         // IEnemyWeapon: the brain says when; the rifleman's own sight, aim and rate say what happens.
         public void FireAtPlayer()
         {
