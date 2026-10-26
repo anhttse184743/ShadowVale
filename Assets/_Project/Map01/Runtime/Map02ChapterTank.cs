@@ -20,10 +20,18 @@ namespace ShadowVale.Map01
         /// <summary>Nhịp 3 (N3_WOUND): the tank drives in from outside the village for <see cref="BreachDrive"/> s and brakes at
         /// the breach, the camera pans round it as the turret turns for <see cref="BreachPan"/> s, then Anh Lực's warning.</summary>
         const float BreachDrive=5.5f,BreachPan=3,BreachLineAt=BreachDrive+BreachPan,BreachRun=24;
-        /// <summary>N3_07's opening: the tank rolls out to the head of the dock road (<see cref="EmergeEnd"/> s), the turret swings
-        /// to the boat as the camera rises to the gun (<see cref="TurretRise"/> s), a whip along the gun to the last boat, then
-        /// chú Bảy's shout.</summary>
-        const float EmergeEnd=5,TurretRise=3.5f,WhipAt=EmergeEnd+TurretRise,WhipTime=.5f,BoatLineAt=WhipAt+WhipTime+.4f;
+        /// <summary>Into Anh Lực's "Xe tăng! Nằm xuống!" (seconds of that line): the .50's burst starts, walks in on Nam, a
+        /// round grazes his left shoulder at <see cref="BurstHit"/> (the wound he carries to dawn), and it stops.</summary>
+        const float BurstStart=.35f,BurstHit=1.5f,BurstEnd=1.75f;
+        LineRenderer tracer;float tracerUntil;ParticleSystem shoulderGraze;bool grazed;
+        /// <summary>The burst's round that grazed Nam's shoulder has been fired.</summary>
+        public bool ShoulderGrazed=>grazed;
+        bool BreachBurst=>sceneTask?.id=="N3_WOUND"&&spoken&&lines!=null&&lines[lineIndex].id=="m2v3_wound_04"&&lineClock>=BurstStart&&lineClock<BurstEnd;
+        /// <summary>N3_07's opening: the tank rolls out to the head of the dock road (<see cref="EmergeEnd"/> s); the turret swings
+        /// to the boat as the camera rises to the gun and follows it (<see cref="TurretRise"/> s), goes round along the barrel
+        /// and stops in front of its muzzle (<see cref="FrontAt"/>), then pans to the boat and closes in on it
+        /// (<see cref="WhipAt"/> + <see cref="BoatMove"/>) as the machine gun opens up; then chú Bảy's shout.</summary>
+        const float EmergeEnd=5,TurretRise=3.5f,FrontAt=EmergeEnd+TurretRise+1.4f,WhipAt=FrontAt+.8f,BoatMove=1.8f,BoatLineAt=WhipAt+BoatMove+.2f;
         Light gunFlash;ParticleSystem splash;
         public GameObject Tank=>tank;
         public string TankStage {get;private set;}="hidden";
@@ -123,6 +131,51 @@ namespace ShadowVale.Map01
             bool road=NavMesh.CalculatePath(from,at,NavMesh.AllAreas,path)&&path.status==NavMeshPathStatus.PathComplete&&Length(path.corners)<BreachRun*1.6f;
             return breachApproach=road?path.corners:new[]{from,at};
         }
+        /// <summary>One round of the burst at Nam: it strikes the ground short of him and walks in until it reaches him.</summary>
+        void BurstRound()
+        {
+            var nam=Mission.Player.position;var from=mgMuzzle!=null?mgMuzzle.position:tank.transform.position+Vector3.up*2.3f;
+            float walk=Mathf.Clamp01((lineClock-BurstStart)/(BurstHit-BurstStart));
+            var toward=Vector3.ProjectOnPlane(nam-from,Vector3.up).normalized;var across=Vector3.Cross(Vector3.up,toward);
+            if(!grazed&&lineClock>=BurstHit-.1f)
+            {
+                // The round that wounds him: past his left shoulder, close enough to tear it, into the ground behind him.
+                grazed=true;var body=Mission.Player.GetComponentInChildren<Animator>();var arm=body!=null&&body.isHuman?body.GetBoneTransform(HumanBodyBones.LeftUpperArm):null;
+                var shoulder=arm!=null?arm.position:nam+Vector3.up*1.4f-Mission.Player.right*.2f;
+                var line=(shoulder-Mission.Player.right*.06f-from).normalized;var end=shoulder+line*8;
+                if(Physics.Raycast(shoulder+line*.4f,line,out var behind,8,~0,QueryTriggerInteraction.Ignore)&&!behind.transform.IsChildOf(Mission.Player)){end=behind.point;CoverImpact.Play(behind.point,behind.normal);}
+                Trace(from,end);Graze(shoulder,line);
+            }
+            else
+            {
+                var spot=nam-toward*Mathf.Lerp(3.5f,.35f,walk)+across*UnityEngine.Random.Range(-1.4f,1.4f)*(1-walk*.6f);
+                if(Physics.Raycast(spot+Vector3.up*2,Vector3.down,out var ground,4,~0,QueryTriggerInteraction.Ignore)&&!ground.transform.IsChildOf(Mission.Player)){CoverImpact.Play(ground.point,ground.normal);Trace(from,ground.point);}
+            }
+            var sound=Mission.Player.GetComponent<CombatAudio>();
+            if(sound!=null&&sound.Gunshot.IsValid){var clip=sound.Gunshot;PooledAudioService.Resolve().PlayOneShot(clip.clip,from,.55f*clip.EffectiveGain,.9f,0,.85f,clip.startTime,clip.duration);}
+        }
+        /// <summary>A tracer for one frame or two along a round's flight.</summary>
+        void Trace(Vector3 a,Vector3 b)
+        {
+            if(tracer==null)
+            {
+                var go=new GameObject("Tank machine-gun tracer");go.transform.SetParent(root.transform,false);tracer=go.AddComponent<LineRenderer>();
+                tracer.material=Map01Fx.Glow;tracer.useWorldSpace=true;tracer.positionCount=2;tracer.startWidth=.05f;tracer.endWidth=.02f;
+                tracer.startColor=tracer.endColor=new Color(1,.55f,.25f,.9f);tracer.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;
+            }
+            tracer.SetPosition(0,a);tracer.SetPosition(1,b);tracer.enabled=true;tracerUntil=Time.time+.05f;
+        }
+        /// <summary>Blood thrown from the torn shoulder, along the round's line.</summary>
+        void Graze(Vector3 at,Vector3 along)
+        {
+            if(shoulderGraze==null)
+            {
+                shoulderGraze=Map01Fx.System(root.transform,"Shoulder graze",at,Map01Fx.Unlit,.4f,40);
+                var main=shoulderGraze.main;main.startLifetime=.45f;main.startSpeed=1.6f;main.startSize=.06f;main.gravityModifier=.7f;main.startColor=new Color(.42f,.02f,.02f,.95f);
+                var shape=shoulderGraze.shape;shape.shapeType=ParticleSystemShapeType.Cone;shape.angle=25;shape.radius=.03f;
+            }
+            shoulderGraze.transform.SetPositionAndRotation(at,Quaternion.LookRotation(along));shoulderGraze.Emit(18);
+        }
         Vector3[] Leg(string from,string to)
         {
             var path=new NavMeshPath();
@@ -140,7 +193,14 @@ namespace ShadowVale.Map01
                 var main=splash.main;main.startLifetime=.7f;main.startSpeed=3.2f;main.startSize=.3f;main.gravityModifier=1;main.startColor=new Color(.85f,.92f,1,.8f);
                 var shape=splash.shape;shape.shapeType=ParticleSystemShapeType.Cone;shape.angle=18;shape.radius=.15f;shape.rotation=new Vector3(-90,0,0);
             }
-            gunFlash.enabled=false;
+            gunFlash.enabled=false;if(tracer!=null)tracer.enabled=Time.time<tracerUntil;
+            if(BreachBurst)
+            {
+                if(dt<=0)return;
+                float last=Mathf.Repeat(gunClock,.09f);gunClock+=dt;gunFlash.enabled=Mathf.Repeat(gunClock,.09f)<.04f;
+                if(Mathf.Repeat(gunClock,.09f)<last)BurstRound();
+                return;
+            }
             bool firing=(stage=="emerging"||stage=="blocking")&&!(sceneTask?.id=="N3_07"&&sceneClock<WhipAt);   // the gun opens up as the camera reaches the boat
             if(!firing||dt<=0)return;
             float before=Mathf.Repeat(gunClock,.15f);gunClock+=dt;float cycle=Mathf.Repeat(gunClock,2.6f);

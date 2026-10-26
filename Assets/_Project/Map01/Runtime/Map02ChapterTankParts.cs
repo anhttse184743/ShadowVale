@@ -75,19 +75,22 @@ namespace ShadowVale.Map01
         {
             if(turret==null)return;
             bool atBoat=stage=="emerging"||stage=="blocking";
-            // It rolls out with the gun fore and aft, then swings it onto the boat once it stands.
-            Vector3? target=stage=="breach"?Mission.Player.position:stage=="blocking"?water["boatMid"]:(Vector3?)null;
+            // At the breach the main gun stays fore and aft: only the .50 comes onto Nam (decided 26/10/2026, over the script's
+            // "nòng pháo quay chậm về phía Nam"). At the dock road it rolls out the same way, then swings the gun onto the boat.
+            Vector3? target=WreckOpening?WreckAim:stage=="blocking"?water["boatMid"]:stage=="leaving"||stage=="waiting"?shellAim:(Vector3?)null;
             float aim=target.HasValue?YawTo(target.Value):stage=="destroyed"?turretYaw:0;
             turretYaw=snap?aim:Mathf.MoveTowardsAngle(turretYaw,aim,(stage=="blocking"?32:22)*dt); // "nòng pháo quay chậm về phía Nam"
             var hull=tank.transform.rotation;var traverse=Quaternion.AngleAxis(turretYaw,Vector3.up);
             turret.rotation=hull*traverse*turretRest;
             float droop=stage=="destroyed"?6:0;
             if(gunPart!=null)gunPart.rotation=hull*traverse*Quaternion.AngleAxis(droop,Vector3.right)*gunRest;
-            float mgAim=atBoat?YawTo(water["boatMid"])-turretYaw:0;
+            var namChest=Mission.Player.position+Vector3.up*1.1f;   // at the breach the .50 comes onto Nam
+            float mgAim=atBoat?YawTo(water["boatMid"])-turretYaw:stage=="breach"?YawTo(namChest)-turretYaw:0;
             mgYaw=snap?mgAim:Mathf.MoveTowardsAngle(mgYaw,mgAim,60*dt);
             var mgTraverse=Quaternion.AngleAxis(turretYaw+mgYaw,Vector3.up);
             if(mgMount!=null)mgMount.rotation=hull*mgTraverse*mountRest;
-            if(mgPart!=null)mgPart.rotation=hull*mgTraverse*Quaternion.AngleAxis(atBoat?9:0,Vector3.right)*mgRest; // Down at the water.
+            float mgDip=atBoat?9:stage=="breach"&&mgPart!=null?Mathf.Clamp(Mathf.Atan2(mgPart.position.y-namChest.y,Vector3.ProjectOnPlane(namChest-mgPart.position,Vector3.up).magnitude)*Mathf.Rad2Deg,0,20):0;
+            if(mgPart!=null)mgPart.rotation=hull*mgTraverse*Quaternion.AngleAxis(mgDip,Vector3.right)*mgRest; // Down at the water, or at Nam.
             if(hatchCommander!=null)hatchCommander.rotation=hull*traverse*Quaternion.AngleAxis(stage=="destroyed"?-75:0,Vector3.right)*hatchRest;
             float driven=Vector3.Dot(tank.transform.position-lastTankPosition,tank.transform.forward);lastTankPosition=tank.transform.position;
             if(!snap&&Mathf.Abs(driven)>.0001f)

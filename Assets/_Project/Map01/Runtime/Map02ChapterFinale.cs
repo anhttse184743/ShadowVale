@@ -120,12 +120,12 @@ namespace ShadowVale.Map01
         void TickEffects()
         {
             float red=0,grey=0,black=0,flash=0,cutoff=22000,ringing=0;
-            if(sceneTask?.id=="N3_WOUND"&&lines!=null&&(lineIndex>0||spoken&&lines[0].id=="m2v3_wound_04"&&lineClock>=1))
+            if(sceneTask?.id=="N3_WOUND"&&lines!=null&&(lineIndex>0||spoken&&lines[0].id=="m2v3_wound_04"&&lineClock>=BurstHit))
             {
                 if(!woundHit){woundHit=true;rig.Shake(.35f,.6f);}
                 red=.45f;cutoff=900;
             }
-            if(sceneTask?.id=="N3_WOUND"&&lines!=null&&spoken&&lines[lineIndex].id=="m2v3_wound_04")flash=Mathf.Clamp01(1-Mathf.Abs(lineClock-1)*3);
+            if(sceneTask?.id=="N3_WOUND"&&lines!=null&&spoken&&lines[lineIndex].id=="m2v3_wound_04")flash=Mathf.Clamp01(1-Mathf.Abs(lineClock-BurstHit)*3);
             if(State.Done("N3_WOUND")&&!State.Done("N3_CRAWL")){red=Mathf.Lerp(.35f,.15f,Mathf.Clamp01(State.taskProgress/8));cutoff=900;} // Crawling: blurred red, muffled.
             if(sceneTask?.id=="N3_CRAWL"){red=.12f;cutoff=1800;}
             if(sceneTask?.id=="N3_00")black=sceneClock<1?1:Mathf.Clamp01(1-(sceneClock-1)/.5f); // Nam has just lain down.
@@ -208,8 +208,8 @@ namespace ShadowVale.Map01
             }
             return false;
         }
-        /// <summary>The tank comes in: tracked low from beside the road as it drives, a pan round it as it stands in the village
-        /// and the turret turns, then over Nam's shoulder at the gun as Anh Lực shouts.</summary>
+        /// <summary>The tank comes in: tracked low from beside the road as it drives; stopped, close on its machine gun as it
+        /// swings onto Nam; then, as Anh Lực shouts, from above at 45 degrees on Nam as the burst walks in and hits him.</summary>
         void BreachShot(Vector3 nam,out Vector3 eye,out Vector3 focus)
         {
             var leg=BreachApproach();var at=tank.transform.position;var stop=leg[leg.Length-1];
@@ -218,15 +218,17 @@ namespace ShadowVale.Map01
             var tracking=side*7.5f+heading*2.5f+Vector3.up*1.1f;
             focus=at+Vector3.up*1.5f;
             if(sceneClock<BreachDrive){eye=at+tracking;return;}
-            var toNam=Vector3.ProjectOnPlane(nam-stop,Vector3.up).normalized;
             if(sceneClock<BreachLineAt)
             {
-                float u=Mathf.SmoothStep(0,1,(sceneClock-BreachDrive)/BreachPan);
-                var round=toNam*8+Vector3.Cross(Vector3.up,toNam)*(Vector3.Dot(side,Vector3.Cross(Vector3.up,toNam))>=0?3:-3)+Vector3.up*2.2f;
-                eye=at+Vector3.Slerp(tracking,round,u);return;
+                // Close on the .50 on the turret as it swings onto Nam, pushing in.
+                var mg=mgPart!=null?mgPart:mgMount!=null?mgMount:turret;var gunAt=mg!=null?mg.position:at+Vector3.up*2.4f;
+                var aim=Vector3.ProjectOnPlane(tank.transform.rotation*Quaternion.AngleAxis(turretYaw+mgYaw,Vector3.up)*Vector3.forward,Vector3.up).normalized;
+                eye=gunAt-aim*1.1f+Vector3.Cross(Vector3.up,aim)*.55f+Vector3.up*.3f;focus=gunAt+aim*2.2f;
+                stagedFov=Mathf.Lerp(50,24,Mathf.SmoothStep(0,1,(sceneClock-BreachDrive)/BreachPan));return;
             }
-            var dir=Vector3.ProjectOnPlane(at-nam,Vector3.up).normalized;
-            eye=nam-dir*1.9f+Vector3.Cross(Vector3.up,dir)*.55f+Vector3.up*1.55f;focus=at+Vector3.up*1.4f;
+            // From above at 45 degrees, down on Nam: the burst walks in round him and hits him.
+            var dir=Vector3.ProjectOnPlane(at-nam,Vector3.up).normalized;var off=(-dir*.75f+Vector3.Cross(Vector3.up,dir)*.66f).normalized;
+            eye=nam+off*3.6f+Vector3.up*3.6f;focus=nam+Vector3.up*.7f;
         }
         /// <summary>Field of view a staged shot asks for (a long lens on the boat); null keeps the scene default.</summary>
         float? stagedFov;
