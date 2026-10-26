@@ -1,0 +1,2316 @@
+{
+  "files": [
+    {
+      "path": "Assets/Resources/Dialogue/Map02DayOneFree/m2v3_echo_promise.wav",
+      "bytes": 446444,
+      "sha256": "a251547742bd6fb95fd1f9cbdce03b49a99beb7d45964edc613a9b0406c6b76b"
+    },
+    {
+      "path": "Assets/Resources/Dialogue/Map02DayOneFree/m2v3_echo_promise.wav.meta",
+      "bytes": 485,
+      "sha256": "baba61cadb2b8eadd48a472127c122b0a050b72679f05b981ae7031eeed59405"
+    },
+    {
+      "path": "Assets/Resources/Dialogue/voice-catalog.json",
+      "bytes": 279058,
+      "sha256": "81956a8c996478927f47d5d4ef7be1c0b3de750fb1abcb8828d7ebfb9ddb50b0"
+    },
+    {
+      "path": "Assets/Resources/Equipment/Map02TorchLens.mat",
+      "bytes": 3828,
+      "sha256": "ebbec241fc5657eac98cf1e3d8cb89ad684048ba2cf54b91ed2392d14d00efdc"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/C1Pack.json",
+      "bytes": 39675,
+      "sha256": "b19be881c340af1d8a10860bea383858e44643cebe442c7f2195ebced49239a9"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/C1Pack.json.meta",
+      "bytes": 158,
+      "sha256": "8598014adeca70aeb797dea3d8e31576bf98ca8c09bb8df89ff374570d5c6f97"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/C1Travel.json",
+      "bytes": 4390,
+      "sha256": "62b05f9db7e6d0af927b700f02426b824ee918db4ef868c37536309c350ed777"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/C1Travel.json.meta",
+      "bytes": 158,
+      "sha256": "3165758d0a3507671e8f27054a504f64d31f8de7ba52d40f30a1ee213bf3633d"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/LoiHuaProps.json",
+      "bytes": 768756,
+      "sha256": "fa53e19b1c421968bf0da97e022ddc7119c05e6bd970563c802bf325441160ad"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/LoiHuaProps.json.meta",
+      "bytes": 158,
+      "sha256": "54c7decfa8605d4749ef12a63555838f0487fb024ae5884bb4059cb591612571"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/child_giggle.wav",
+      "bytes": 242144,
+      "sha256": "7eaa14101d899cd3573df757ba5082893e4cf3ec51b428551d0e0f56bc083d55"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/child_giggle.wav.meta",
+      "bytes": 488,
+      "sha256": "bd78b47c6d4ce2cc200f298fef1120093501850d3be8e030070bf01e2ac38b79"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/cough.wav",
+      "bytes": 230444,
+      "sha256": "9a1c46cf75fcf059ae03407a08f07c58e58b6b97976b60d7527204695f9175fb"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/cough.wav.meta",
+      "bytes": 488,
+      "sha256": "45338d7f1988b6f3b32b0819ce8a4ba29c07a4df497a23b15e135fa6df04a248"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/crate_place.wav",
+      "bytes": 72044,
+      "sha256": "e8e5529e39b1a103323739ed54dee0c8f5a1d31de4f2f7fc2b30be0f74815ec8"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/crate_place.wav.meta",
+      "bytes": 488,
+      "sha256": "50fd4347105d41f508b7841d225ae71f54cc92adab4f4b2e7592bddae82f5bc2"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/crate_wrong.wav",
+      "bytes": 19548,
+      "sha256": "14fca6d3d1b394b21899ca8efb14cc9942d3a0db74297714a2c05532ebe5be8e"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/crate_wrong.wav.meta",
+      "bytes": 488,
+      "sha256": "4ef7194221d0547773644e2ba183b391259cd234c815268e6f17beafe20dac66"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/d1_bamboo_loop.wav",
+      "bytes": 14400044,
+      "sha256": "b225f5278084d9a26dae8a28e4cfe167b354ce986a8088870342e670dbcf974d"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/d1_bamboo_loop.wav.meta",
+      "bytes": 487,
+      "sha256": "1909db430a9c88d942a017610604f3d8aa5ab69b0fd509ada860812efb4d4feb"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/d1_children_loop.wav",
+      "bytes": 2880044,
+      "sha256": "3d74bf342a969396c28f2e4dd276aba67f6f5e41b233d6c360dc9e93e97a7565"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/d1_children_loop.wav.meta",
+      "bytes": 487,
+      "sha256": "a3cee2c3cc5b5a55c98d1db3ae1db3b9bd30ee28d2770b433a06dcf75b6a5c71"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/d1_oars_loop.wav",
+      "bytes": 2880044,
+      "sha256": "cfbbe6c4d2a00c9a357d62e99265c3707befc4747c5549924a765e65acec5b67"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/d1_oars_loop.wav.meta",
+      "bytes": 487,
+      "sha256": "1ed2b54eed050642f5ca5dd47386d185f0967468b9c27a026213f61050cf2f35"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/d1_plane_far.wav",
+      "bytes": 8091354,
+      "sha256": "92e684cd98018e997841cf857239bbc718dc00aba2f5c1523ff9a83a085fda1b"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/d1_plane_far.wav.meta",
+      "bytes": 487,
+      "sha256": "db2ea014b1286fd4cb09a01890a97c90838ccf027db54e38cf3d9207e3e5975f"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/d1_rooster.wav",
+      "bytes": 207126,
+      "sha256": "1a573c807a2fe265a728fdcfa505c43a33d253f9cfbbce02c660f2c1bd40820f"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/d1_rooster.wav.meta",
+      "bytes": 488,
+      "sha256": "47bcec2ddd81d54b3b3ee31eea100cf097864ea08eb305b443faac6887f82b6a"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/duck.wav",
+      "bytes": 182444,
+      "sha256": "fc5e108aae080b0672dc3713d2a5947f6a066b698ff42d0223b1f137cb80dde8"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/duck.wav.meta",
+      "bytes": 488,
+      "sha256": "cf4934bed9683b2a8181b89ca9c5b5b1d601cfd7cf734d3e4ce57dcd5dd5bc06"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/hung_laugh.wav",
+      "bytes": 180522,
+      "sha256": "5890200e60e2149f15fb290a2f475631b05f449bd59bdb926fa6430a11666a3f"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/hung_laugh.wav.meta",
+      "bytes": 488,
+      "sha256": "fe71ca6f82ee0a62f7e9f865b957a8343d4ffb7845f111b3f5605efe570d8ad2"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/hung_theme.wav",
+      "bytes": 3379244,
+      "sha256": "670214ce4d32f1aee81a02ac3209633646623206fbadaf17bc3bc0dc0e3b92a5"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/hung_theme.wav.meta",
+      "bytes": 487,
+      "sha256": "9be64a8146f60c98fb8133e818a1526bf31f53efe09dd6c5e0be880fbad7b4da"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/n1_fire_loop.wav",
+      "bytes": 4320044,
+      "sha256": "047fd0388c84323a947488cc56ceb6979acaef784f69bd035cb9e61f1989d336"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/n1_fire_loop.wav.meta",
+      "bytes": 487,
+      "sha256": "cb1aa6a4cba4109a58da94b589a4585f90afb80ce8b96edbc04786369fa57643"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/n1_frogs_loop.wav",
+      "bytes": 11520044,
+      "sha256": "95f18a0409c65d5ff7a1588a4ea52dbbb3a5145d06c20225450a289c52673058"
+    },
+    {
+      "path": "Assets/Resources/Map02DayOne/n1_frogs_loop.wav.meta",
+      "bytes": 487,
+      "sha256": "32674f754a81a9f35c2f911a450885d3decdf1202ec43a98d588d366010fde85"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap.meta",
+      "bytes": 172,
+      "sha256": "ec0aee6304ea7e83a99f5bfdd8c229844409f91ead78403aa1f2cd6bdf84737c"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Bay_GiuCoc.fbx",
+      "bytes": 471564,
+      "sha256": "395bca7471d8c28518ef666e9a9cc4cc6812ecda75c7152ddb6331dbbc8a0731"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Bay_GiuCoc.fbx.meta",
+      "bytes": 15288,
+      "sha256": "fb4b2a8c6c8d0c3de1dd3214943e9e37f2ca20429dd347e753d49a64c572303b"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Hung_DiOmTay.fbx",
+      "bytes": 262476,
+      "sha256": "d65818f2fcb54c9d7b656b564823426b6441795ed03bab25f1b708f9cbbd5e3b"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Hung_DiOmTay.fbx.meta",
+      "bytes": 15769,
+      "sha256": "5db0cf6051372457ac039d42eaf212c25617ba78caaa8c6c025a1614fc2f8434"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Hung_DoiCa.fbx",
+      "bytes": 854508,
+      "sha256": "9cccf53f011f598ecd1a6d1893669b425d86b3007b170e7c09622921ace56ae5"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Hung_DoiCa.fbx.meta",
+      "bytes": 15768,
+      "sha256": "3767cf6f18ff1f4b86880755b7cf1e03bfe54ea26844adfa771c7f0e823ec2b7"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Hung_GiatMinh.fbx",
+      "bytes": 341676,
+      "sha256": "32d43c0a6fba3453049af0e2e0c12011b8da85aa95eb28655c9852fea681a84d"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Hung_GiatMinh.fbx.meta",
+      "bytes": 15769,
+      "sha256": "597cb1f463180bfaa47e5c023861970147b432abe9f67b93542a5d8800a7086b"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Hung_GiatMinh_ChopVai.fbx",
+      "bytes": 434236,
+      "sha256": "621df7b92781602d82120150b4e8f8f12189822ef2521cf84a8a6d9e9c3a40fa"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Hung_GiatMinh_ChopVai.fbx.meta",
+      "bytes": 15774,
+      "sha256": "c9aa1950c4ad1b6abf22355aa5390ca68ade676ae06a48dc4db12945ae81a31d"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Hung_HutChan.fbx",
+      "bytes": 511340,
+      "sha256": "1871f54798550b88c1f8409a1d70413af63f7aa602fb1fef86446b3861573bb4"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Hung_HutChan.fbx.meta",
+      "bytes": 15770,
+      "sha256": "1e25ec99009f35a6ccfdc31fddd6256666487f6c6878a329c49e42584a5836b8"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Hung_ThayBang.fbx",
+      "bytes": 1432508,
+      "sha256": "6035d159c84a7229a74a057b69ae84b91ca0ffa5049c9b27b28b3e51ed21b53e"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Hung_ThayBang.fbx.meta",
+      "bytes": 15771,
+      "sha256": "b6e6238dbde6b27dbec790e3668dc38dedd0998648c5669f56e5e7adf105e0df"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Lanh_NhanThuoc.fbx",
+      "bytes": 458060,
+      "sha256": "988efd8f270ab16706975112d8c648a0ed6c754e2e2a268ca7a46166739d2d22"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Lanh_NhanThuoc.fbx.meta",
+      "bytes": 15286,
+      "sha256": "7ea2b9ccfe308121a72ceb81f5d77dde533703785f0ab39442e19f99148e3824"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Lanh_ThayBang.fbx",
+      "bytes": 1459180,
+      "sha256": "f8fbb2da1fb132c76a469ff030c79543d38bfb080b167bd4e1d513e176dc0e5e"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Lanh_ThayBang.fbx.meta",
+      "bytes": 15285,
+      "sha256": "f8b7a2bb6e2061c81608e259da4910086d2ea92af2752b7f023181dc9febbce8"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/LoiHua_Hung.fbx",
+      "bytes": 3575724,
+      "sha256": "3e00f57f6e33bacf5f7a3c697dd48607e6cb37202616f9c6a832adbfbd5f1712"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/LoiHua_Hung.fbx.meta",
+      "bytes": 15770,
+      "sha256": "70f125e5185abba19b2671529441a215e2902fe4a6e8f7c76d8e3991c97f86a2"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/LoiHua_Nam.fbx",
+      "bytes": 7826812,
+      "sha256": "78c890a68302b28582917008550e10eb6f31e3626765e77c78b073cb606a1ac4"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/LoiHua_Nam.fbx.meta",
+      "bytes": 24848,
+      "sha256": "a88d0b0eace63c6bafe0c41f0377a7e426242130d962c6eeb8a838d3d5b4eca2"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Nam_DoHung.fbx",
+      "bytes": 1467036,
+      "sha256": "7d038c840af10180b01cfa8ef2542a9ea204d999250f58790fe64fa113755ece"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Nam_DoHung.fbx.meta",
+      "bytes": 24847,
+      "sha256": "511f0b208217fc641d9fd54c293548fd4d2506db5cbe48e1fd344fb64c19410f"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Nam_DoiCa.fbx",
+      "bytes": 1685900,
+      "sha256": "06ec60e1ab6ac0db5adfc7015a4c7e7379acecfee495ffe0b951794aea842df6"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Nam_DoiCa.fbx.meta",
+      "bytes": 24846,
+      "sha256": "5809bdd89887906309e37c1da85cf26e4a7aea9d6d721114a842ff30928f00a6"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Nam_TraoThuoc.fbx",
+      "bytes": 964140,
+      "sha256": "5bf4797bf3aa944d88abeda24fe50610097d73a333497066929e4e3f8eaf05d4"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Nam_TraoThuoc.fbx.meta",
+      "bytes": 24850,
+      "sha256": "fed5ea276ae1a7e46daf33ba56953b76a645151311e82f7d5638107e112f097e"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Nam_VoCoc.fbx",
+      "bytes": 517788,
+      "sha256": "8e5a0d23077016d2159574f45af1aa25e5dfd6c8f5cc1948033250190f1cd0dc"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Nam_VoCoc.fbx.meta",
+      "bytes": 24845,
+      "sha256": "8f91cb489d77c02059863efe48a80ab61bda8b5385cac8ac1f57d12b097932a3"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Sau_NgoiNghi.fbx",
+      "bytes": 873692,
+      "sha256": "cd420e22c5af763ee7d3d17232f48ac909492e028a51109e106db70b2f55f9fa"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Sau_NgoiNghi.fbx.meta",
+      "bytes": 15366,
+      "sha256": "d525914a4e2ddf96a7b689e9491469f127ec5eb46d943f4862bb4079e4a1a97a"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Ti_Cuoi.fbx",
+      "bytes": 343868,
+      "sha256": "42dbdfe1859b8903af0336a29120af06b919cd5b346dcc054ae472101b221c65"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Ti_Cuoi.fbx.meta",
+      "bytes": 15261,
+      "sha256": "75bc512350b98589cd25170699529c16de7c8a4145743a95d674b2292342cb17"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Ti_NapCot.fbx",
+      "bytes": 251660,
+      "sha256": "1afdba5de07ea68b29c75560aca97cc82f1256a1f4c682c227e3942f1b1281f3"
+    },
+    {
+      "path": "Assets/_Project/Art/Map02DayOne/Mocap/Ti_NapCot.fbx.meta",
+      "bytes": 15263,
+      "sha256": "607150ad74932611cebea90c01dc9e5fec44f6ae5af711092b1d9bf09262399d"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02AudioImport.cs",
+      "bytes": 1787,
+      "sha256": "63e976cccebe0321a4bf8aed9f82f499db12a9c7e4e6d28528a238aac8f675f7"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02AudioImport.cs.meta",
+      "bytes": 59,
+      "sha256": "758225950a7936fcf95eff746f65d6c637b50cb1c65d9c2a456f84f3e57956cb"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02MocapImport.cs",
+      "bytes": 5091,
+      "sha256": "022d219d1566f8e55da3159ee3e7f10545a2b882f6d8b559336fc21b386ec7e7"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02MocapImport.cs.meta",
+      "bytes": 59,
+      "sha256": "fca18aedd9657521c737b27a51848a4dd210c53bab41082332c31b3d89943424"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02RoutePreview.cs",
+      "bytes": 11631,
+      "sha256": "b1ff73147110b16348ddf6d40972e396557d51635bf87d1f416112d8e57080bd"
+    },
+    {
+      "path": "Assets/_Project/Map01/Resources/Story/Map02DayOneArt.asset",
+      "bytes": 3971,
+      "sha256": "f9e0911d2611d642bf8ca3fd3df0d7584fd87f7264dd4a60a1fe2d6ddd30edc3"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01CinematicPose.cs",
+      "bytes": 6399,
+      "sha256": "f7ad49fbae8a45c06102ce45b9439b26c0c819a79915b094e68dc9dddf39112e"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterActor.cs",
+      "bytes": 11853,
+      "sha256": "7263781844097c8a0a2e2539c4f2dc9c67f235c2ed7f149002874522af8b0e8d"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterCinematics.cs",
+      "bytes": 3014,
+      "sha256": "5478e20da5c73259f65733ca32cbf81c92188b7618364e97f96a8689d1873a4d"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Ambience.cs",
+      "bytes": 5373,
+      "sha256": "5638ad81f8f498e974cd24530f54ba3cd112418ae9cbe7fe2ebed2b5f491465b"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Ambience.cs.meta",
+      "bytes": 59,
+      "sha256": "3e5bada136f3be9050140ef27cb4fba4993312cf48d1f5de6a05d33c4f65711f"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Bandage.cs",
+      "bytes": 4635,
+      "sha256": "50bc3ab051dbb1311ceacfcad85cb30ee7085aa3fd64253abee47e6f300de792"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Bandage.cs.meta",
+      "bytes": 59,
+      "sha256": "751bada7c70ecce928c44c7dd8f0a9ea4d15584b49ec50cecad0c00d8b5a0b50"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Child.cs",
+      "bytes": 2834,
+      "sha256": "f9dd1096c99634a56c987b0d36081fd44d2844de05dab961be1e10007cd85b1e"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Child.cs.meta",
+      "bytes": 59,
+      "sha256": "79e419f4f0e09797b263ddf743018fad2584acfb6d4a14c3293a7d8736901976"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Dock.cs",
+      "bytes": 4679,
+      "sha256": "9a16a01c639ba94d0924ff96b57d49a0e926b6d8f45060bf7c7df2f2a78a4a82"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Dock.cs.meta",
+      "bytes": 59,
+      "sha256": "90a6275e6506888a8858b5627fde778ab9f470135337bbea59616604142e50b3"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Duck.cs",
+      "bytes": 6551,
+      "sha256": "af357e55530d3d40ca191a3e2f6e7bf5b7f26037e8ce6dfb9d93f7bb15529364"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Duck.cs.meta",
+      "bytes": 59,
+      "sha256": "e2e50245ead70ebaae052d5a693e70e22d51ce6423bf7c2244868bc8865e127a"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Gui.cs",
+      "bytes": 11190,
+      "sha256": "f0e96cb94df62561c014a56b07b9756d9d79eb25ea27ad017acb7f2a4a9f511d"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Lighting.cs",
+      "bytes": 6704,
+      "sha256": "228292090ed6467dfbc37f054839d4aaa9f884697d061dfd3234be7f94f69251"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Medicine.cs",
+      "bytes": 4102,
+      "sha256": "c442d457b013038692da21cfdb1604debd186d54c25470664972ff2199c0d235"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Medicine.cs.meta",
+      "bytes": 59,
+      "sha256": "5b776e06ee5a998a262f4b9bf38193ef97461eb14749ac2eccaf0e2b4000bdf8"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Performance.cs",
+      "bytes": 22334,
+      "sha256": "c30f5fbe0efc21b5fbc32c1c1f3514b938969d10840d7f2e756aedcf607421c9"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Presentation.cs",
+      "bytes": 10124,
+      "sha256": "41a943a71a81dafddd13ec50eeaaf15729b611380ee1f9878f8184d46acc31ca"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Props.cs",
+      "bytes": 7265,
+      "sha256": "c952c316f2d6d6c36cf7055f67cfddbe1b478b3ee2111f6886abfea9ac98ec36"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Shift.cs",
+      "bytes": 3248,
+      "sha256": "8111c437c886142d395b8430f9c982401e31ddb9b551c25411a6c4e604880bac"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Shift.cs.meta",
+      "bytes": 59,
+      "sha256": "2787711149108e22cb7d1701b44b9b80dd565ebbd4299743e76f2c2d8349328e"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Store.cs",
+      "bytes": 13397,
+      "sha256": "c9868063e4ab2b926a240f42338aba3b17ec6d554822f5598fa990679213877c"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Store.cs.meta",
+      "bytes": 59,
+      "sha256": "e1a45dca1077f4a02f2d1bc699cffddd52777842b3a488465abc8fb52dcaf4dd"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Supper.cs",
+      "bytes": 13627,
+      "sha256": "0b0ddfdcbbc58f0911bef622617cec0ec474caf1c61a1d3f36e42177d75afecc"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Supper.cs.meta",
+      "bytes": 59,
+      "sha256": "d56d20aa3c005d482d3faf80f5c831c05bbc97d94ca6b94cb617ff956457c2bc"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.WorkView.cs",
+      "bytes": 5262,
+      "sha256": "11ebfcdc6188dc452f97e894297c903c118a1dd6163ca2eaf9e2f1e92002b35d"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.WorkView.cs.meta",
+      "bytes": 59,
+      "sha256": "404bb34901f457575a59856845c3f315e1fe02d3275d69b49bddbc70262366ea"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.cs",
+      "bytes": 15744,
+      "sha256": "671def55741b0649bf9ba3a3446c17f15e34c58b387bdaa228f6de30ea852de0"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDirector.cs",
+      "bytes": 59303,
+      "sha256": "f2b4608b29fa9fdfe6389037975a2b370df552e0267676a831c48ef01b179e87"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterEnemy.cs",
+      "bytes": 8618,
+      "sha256": "a416cf0c1defb59623e9ee0411c45bb3c93df9995e987d6754361dcb25af5f30"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterGuidance.cs",
+      "bytes": 9664,
+      "sha256": "e6d50056584f2b5ddf8213769556b75a95c510f26add9e53c1601a814f90d36e"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02ChapterTests.cs",
+      "bytes": 10986,
+      "sha256": "c4cebab7a422c77b97c7f6e17d8efd9e77c12399731b8c165083d9467222f056"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02DayOneAudioTests.cs",
+      "bytes": 8942,
+      "sha256": "1638279dc1db2e454e5393df72dfca64451550866583dbd3892db2ce5de32b0c"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02DayOneAudioTests.cs.meta",
+      "bytes": 59,
+      "sha256": "6630e6e9eff8dea33691fd82b38b06fc363259cb679176e07141d7e1809bf0e8"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02DayOneCompletionTests.cs",
+      "bytes": 20435,
+      "sha256": "35b1769f78ba9f77f781da6fa1cfd4cd5cfa1863e8eebf92e433854a2473a5a3"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02DayOnePlayableFlowTests.cs",
+      "bytes": 12699,
+      "sha256": "f89e49fe5e51b00f0d6d98d6e965f5e26496682e4ca1f9a89ea2b67069cf1006"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02DayTwoRouteTests.cs",
+      "bytes": 10974,
+      "sha256": "713cc6181ba43158aa5718db05184b767e847381c78fbf5784e9fb3923acf93c"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02FinaleTests.cs",
+      "bytes": 21673,
+      "sha256": "9505e89d7cf9a8e46ef571e546f1e69f145a6e77a5eb358cb7c4f5c201560f34"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02GroupBTests.cs",
+      "bytes": 10907,
+      "sha256": "9c12e7b69032c7f85033665a2d5e87c7d719919e33b7d438aadd789eb2f27d97"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02GroupBTests.cs.meta",
+      "bytes": 59,
+      "sha256": "c41a845d5bbc31cc4622d7a18760153ae7588711c1c0f277d6ac0bb660080ed3"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02PerformanceTests.cs",
+      "bytes": 7551,
+      "sha256": "5b8ae8cb7b1ff7e7d9884fb429363a1ce2d2543bd50df036440b29372b389814"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02PresentationTests.cs",
+      "bytes": 31056,
+      "sha256": "9172232754a5a5ec1d51b5a18bdc7ee8d77764496aec50d0a315c3ebe5d19ca2"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02RoutePreviewTests.cs",
+      "bytes": 3157,
+      "sha256": "ac57af3b36139d1970fefe663a7d682b67931c0c37058ca5e58b177ecef35e08"
+    },
+    {
+      "path": "Docs/Handoff/Map02_3NgayDem_RaSoat_KeHoach_2026-10-26.md",
+      "bytes": 33202,
+      "sha256": "88058a9cbc06ad29fca35dc430ca41b9ac9f66c536971c8b9fdd69fc29a5e117"
+    },
+    {
+      "path": "Docs/Handoff/Map02_Ngay1Dem1_KeHoachSua_2026-10-23.md",
+      "bytes": 58570,
+      "sha256": "4206a8ef2cf6bda92e1fa27756dc277ac6cedd990c863bd67b99f56785489dbe"
+    },
+    {
+      "path": "Docs/Map02Chapter/DayOne/AUDIO_CREDITS.md",
+      "bytes": 1216,
+      "sha256": "659c9c2398c58f45b2b444abb99b9128ac4a9d3cd9fd7903c4492b8403d8f505"
+    },
+    {
+      "path": "Docs/Reviews/ClaudeContinuation_20261023/radio-clearance.txt",
+      "bytes": 2411,
+      "sha256": "9eaf48f58d0f3441b7e5a1781431c9a56f4f0737b3b9b0433938a710686f4abe"
+    },
+    {
+      "path": "Docs/Reviews/ClaudeContinuation_20261023/supper-timeline.txt",
+      "bytes": 96,
+      "sha256": "0f2c6d2ba782f0a187901aceb86d85a279f4954bd475da4a23281880f69be9e0"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/SUA_NHANH.md",
+      "bytes": 7217,
+      "sha256": "77cf7f3b25ad117ad8d4cb0c3dcab8b768ce1765ea5a1f428c7ddaecaade2d34"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/asset-dependencies.json",
+      "bytes": 324,
+      "sha256": "76df4641c2ce4333502838869cf3655242222b30eb8d1cc2556d7972a63c3757"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/audit-tests.xml",
+      "bytes": 27972,
+      "sha256": "e9f727b063b85f0a7ed6943bf61f97ce6a04fa16e6cd765c6148fe4e714dea46"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/before-tests.xml",
+      "bytes": 89017,
+      "sha256": "76cce9a9799c0ed33902a92ce43ed8265bd2d2721c3900f76ec56024aaaa537b"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/catalog-completeness.json",
+      "bytes": 8664,
+      "sha256": "faf3b7e5f49008ff5a4ba4ba742e67f2a02cbaf19a43eb3db56c2fa994ec625b"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/dev-night2-cover.png",
+      "bytes": 1136614,
+      "sha256": "feefbcffb30ffd1877464e62f5363462a7a0378838588988a24c20dc959995eb"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/dev-night2-sleep.png",
+      "bytes": 1135651,
+      "sha256": "1ff7fd874b1cb4f0f14ce801b292cf17021182c07e1dba4674feda6f594210e9"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/dev-snapshot.json",
+      "bytes": 24996,
+      "sha256": "8a267cbf82781538ebb340ebd991523e0b1525bd0e078ce52952839eda89aeee"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/main-catalog.xml",
+      "bytes": 10014,
+      "sha256": "eebd51b0ed8b5892f3dc98a0ad592a59a53d040d0635dd1d7f8f69bb54a46718"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/main-day-two-handover.png",
+      "bytes": 2808983,
+      "sha256": "e3d8a59ce7e70db60e8c6572a628a928f7da0e6635c01140875c6290e4aa040c"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/main-delivery.json",
+      "bytes": 3287,
+      "sha256": "236eac155320fa5bd4e48bd26d9e5f209d38c9f8df27db18b0185c6b7e0ecbd9"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/main-integrated-final.xml",
+      "bytes": 66812,
+      "sha256": "29db9eaaac4cf830ee09c562e40fc02f475540ebf4969df965283fb75a7d4e99"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/main-player-input-completed.json",
+      "bytes": 21378,
+      "sha256": "b24cf79f1df74c2d273352c6d0535ac319dd101ccb311a1a01afce43594e054e"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/main-player-input-steps.txt",
+      "bytes": 1339,
+      "sha256": "0f7ec52c0cd5ebf9b899c067d5868c8b94202cf78f19e9117ee0c5a25cb9adc3"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/main-test-summary.json",
+      "bytes": 16027,
+      "sha256": "7db0a4e8b50f7eae050ec6252974fd036664569e1300df715db668f316d320a4"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/quick-fixes.patch",
+      "bytes": 47703,
+      "sha256": "14c8c9a950f8edec1972aebead7c7a43c07f8d470e0b925c731eadc8b6027f87"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/retry-performance.xml",
+      "bytes": 6723,
+      "sha256": "cbee6dd7ba8269bfeaf42ff8ff711764cf95ad454b4d539d859d79dbaf844c6c"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/retry-preview.xml",
+      "bytes": 4008,
+      "sha256": "88aff4fc12c65b8fe5b62d2337ce77144453f8f089bda5db5807487dfeabec32"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/retry-two.xml",
+      "bytes": 8193,
+      "sha256": "da956b344f7c4c7309ab6735f8a7ab15b4e7f137e687f7fb9c171ec93417bf1b"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/script-blocks.json",
+      "bytes": 68840,
+      "sha256": "cf4498a808eed11bc2c32fa3fa14112e5b869f5df3196a70a7df962045789074"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/script-numbered.txt",
+      "bytes": 52704,
+      "sha256": "9036000f7a5d70f1582abf497e25c84b3cd81c6e43fb34f7c2dc4189ee06fcef"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source-receipt.json",
+      "bytes": 224,
+      "sha256": "bb9dfe42aea1290f0b783c2b76289e2d00a7f1ebc7a6f044625520f13a0104f8"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02ArrivalC1Import.cs",
+      "bytes": 7858,
+      "sha256": "645f47cb0abed0425df1540ca367df650ffdccff81338c2db54ae9c2f5dc60a4"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02ArrivalPreview.cs",
+      "bytes": 2772,
+      "sha256": "35fd1f306be979469fc65c843163812fc883a535057e25443cdd4fb15d7d432a"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02ArrivalSetup.cs",
+      "bytes": 5173,
+      "sha256": "f4d1c3969427625c82370303873b455db590798dfb45023500e77ccd35f712f7"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02ArrivalSurvey.cs",
+      "bytes": 2483,
+      "sha256": "7d8d295c3e7d92acb63e142932ca6c2b3a03c25f782808682d51190bc00c7fc1"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02BotanicalLayout.cs",
+      "bytes": 11141,
+      "sha256": "36c8189d96470f026affea19cf8cc5805f01fdc9d087eb42473d060ba7f5fbb5"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02BridgeRailSetup.cs",
+      "bytes": 2033,
+      "sha256": "73fc97a175d8a18d568de7f08b177779fe0f18fa4222eac70ff270ba2b16f366"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02CharacterSetup.cs",
+      "bytes": 9669,
+      "sha256": "7d522f3e2c32a989e189a748910d4409adadbe347276f78a72ca4c066ed088b7"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02ClearingGrass.cs",
+      "bytes": 4974,
+      "sha256": "ad34b09b039089259c73bbb60cc69eb684ebde91ba33cbae8405eeaca825f03a"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02ClusterLayout.cs",
+      "bytes": 13214,
+      "sha256": "635b71b33354491d4d5162e676f4945cf44b0d9d3ad3315a1fd5d352b88cfa34"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02ConversationValidation.cs",
+      "bytes": 904,
+      "sha256": "5d721c39ecb6474db7d60953639c8550eca0cbb6d9eda753d09750c1bdc8f81d"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02DayOneBuilder.cs",
+      "bytes": 13990,
+      "sha256": "00077f8bafe607cd95414b0ae5dec6ff1e46f1a98fa650acd15ca37ac3387bc4"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02FieldTrees.cs",
+      "bytes": 6062,
+      "sha256": "7529ba8011206fcd904cd0e7caa1a22e51a83d4167b55fb9cc8d47eb50f9003d"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02FlashlightAsset.cs",
+      "bytes": 3477,
+      "sha256": "786f7744832c5347e6b76a3c61703e8d2e2553dae3f1142e6225c901aa839707"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02FlashlightPreview.cs",
+      "bytes": 10546,
+      "sha256": "769dbbc2ddc1f1674584c9b0c9d5e603c739c51a5556c9fa1333b17089cdad44"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02GroundMeadow.cs",
+      "bytes": 12463,
+      "sha256": "2250e3721939196dc2ae8de9784d0f42e982ec12356c432e0d5dc1598b21d819"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02JoinedSoil.cs",
+      "bytes": 11626,
+      "sha256": "5e4feaa42fdc866f8dca66f754626d17606376215ec2150d557583a6cab7eeb9"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02MeadowPolish.cs",
+      "bytes": 5724,
+      "sha256": "fb96b250ad832a0c20af0b8bf998a7d5a123e5255b546fe99be3bfc976ad03b2"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02ModelSetup.cs",
+      "bytes": 15252,
+      "sha256": "942f336cf9d61af4150a52a713100493f0af8d05ed226806cace8fd06dd7f134"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02NaturalLayout.cs",
+      "bytes": 17339,
+      "sha256": "69ae47677477eb1985f292649c80370494a46323e9a8e05877d8b2ff5709ed67"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02ObjectLayout.cs",
+      "bytes": 8738,
+      "sha256": "ae4d59322c3173ab4261617ba8508b2f979aa85aa9d9c8326ae4aad2a50c5afc"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02PhysicalRiver.cs",
+      "bytes": 8520,
+      "sha256": "e1e0a0e821f89571491604d4f35c5745092b9f60f5924643dd89fd0465ef4081"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02PlayerPlayValidation.cs",
+      "bytes": 6205,
+      "sha256": "24e142122e61e2b6bf5cde2e2342217d24ab2eb6443ccb984fc00da2b30fafb2"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02PlayerSetup.cs",
+      "bytes": 5671,
+      "sha256": "784b2814ff62761af0f8a54ad24f934b2ac91984d6c0efdfa6b9782a4888f4e7"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02PresentationRepair.cs",
+      "bytes": 1277,
+      "sha256": "7b8cb3aaec843fd2914a28f0aedd03e363c44c702f93497687c19335be752665"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02ReferenceLayout.cs",
+      "bytes": 14025,
+      "sha256": "a87a275697996850f7da1798be4e8513e2940cd7813e29595f40fd0e53dee8d8"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02RiverPlayCheck.cs",
+      "bytes": 4759,
+      "sha256": "8a8530c02afa25ec9224f92d405148ad19f5fc66ac647068b07410b510313589"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02RoadsideLayout.cs",
+      "bytes": 20093,
+      "sha256": "dda649ebcb0b4247e211c5877ff3bc48015ee718d39e8318d73f8018cffa1d04"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02RoutePreview.cs",
+      "bytes": 9457,
+      "sha256": "13f6cc754ec49aeccddedb105e37c155605de86ad68780c8cde50a3937bd721b"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02ScoutPoseValidation.cs",
+      "bytes": 2749,
+      "sha256": "ac4b95163fc82cdcb38374899c30d1ad01e43b87fb23374ed39e1af4e1d2f9ea"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02Surroundings.cs",
+      "bytes": 17185,
+      "sha256": "2b6022f5ee1bcb392b7bc8933e09ac25dc1d588b52bc4ddd8c7df31f15bfd913"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02TestAudit.cs",
+      "bytes": 1677,
+      "sha256": "f6ee556d75defbae02e1b8cabdd1fdf2c7aef25b2ffc834ac0eb45abdb9eaba6"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02VegetationGrounding.cs",
+      "bytes": 16425,
+      "sha256": "14231aac2e21625ee216c4e36d633dd89f4c67a7d309554ae04b61c37181ed31"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Editor/Map02VillageBuilder.cs",
+      "bytes": 21551,
+      "sha256": "183226dc4ad26970d4ff94ef6081ab2f854b6707fbf14a91613589c185f98816"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Resources/Story/Map02Chapter.json",
+      "bytes": 43749,
+      "sha256": "4d702d1e6f3856a3ebdcacde8d5df2e5ceb3e34ca9499e676733d7a9ecd8a037"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Resources/Story/Map02ChapterLayout.asset",
+      "bytes": 4871,
+      "sha256": "aa61665ef9f98429d0619515c19912bb3263ee9a2a991fecc8f1e6012ed41d42"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Resources/Story/Map02DayOneArt.asset",
+      "bytes": 2023,
+      "sha256": "81b07ea4415562fbc2546ec3736a390f9d152cd049402a88ae14c6ec7f587e4c"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/ForestSaveSlots.cs",
+      "bytes": 4134,
+      "sha256": "44ae020d151937c348b4f95a9a97f2cb60822c6501ff45832f8468af4a30a1b2"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map01CinematicPose.cs",
+      "bytes": 6301,
+      "sha256": "a4effa509a5bc4ecf0821211b0e72d7d205837e5bbc1bf5388567ab31d09b657"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02Arrival.ApprovedC1.cs",
+      "bytes": 4548,
+      "sha256": "eb81b41cb95a8549c725f218b1c92635c8b61f742a3bcdf81f93fb5dd22a53b8"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02Arrival.Misstep.cs",
+      "bytes": 26851,
+      "sha256": "61c660eede9f6c5d52c63f3af4badf303594703d364c2dcda8811db97751d3ad"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02Arrival.cs",
+      "bytes": 47507,
+      "sha256": "3ce6c29ba7e166f788ffaac3f61c74eeb82ba8015369ab3014216d7e72d56124"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ArrivalC1Data.cs",
+      "bytes": 421,
+      "sha256": "c2cc3ea5eac08a83029b2e512d9d6193d34f17d59d10d02d3e776c7b2cfa5ae6"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02BridgeRails.cs",
+      "bytes": 2114,
+      "sha256": "63536b2f9a55fe0265ed93034b6d269e76237982d06262b356d0ed949e8925a6"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterActor.cs",
+      "bytes": 10966,
+      "sha256": "5d0cabc47d4ef07e90e34dbf9405419697c50ea2b2a997fd3763a02dadc12cf0"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterCinematics.cs",
+      "bytes": 2942,
+      "sha256": "d9ca12a292e2126d686a69487b08fb898caa239f6b08a383f13eccf580d56b70"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterConversationBlocking.cs",
+      "bytes": 3987,
+      "sha256": "cfe0631e09a08ee2eb528757ef37fa3dfb75c2ca05b5d1a13099563337774772"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterCover.cs",
+      "bytes": 6861,
+      "sha256": "6e42d706e3c64a8804931ee9118f95f064c08d601af636a5ddb4874cd7de7227"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Gui.cs",
+      "bytes": 13794,
+      "sha256": "ccd9b8f719dae3b586811d02971104063e6cfad2abb4d258f0588fa8859907ef"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Lighting.cs",
+      "bytes": 6581,
+      "sha256": "0239c8e388b0086fff40ec9b32a80db969a528e94fc115aaae85f691f01a6c22"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Performance.cs",
+      "bytes": 23281,
+      "sha256": "c282517a8bf7bf04bf141c294e7b497fe11a69f6c32dffdbd951180400720d63"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Presentation.cs",
+      "bytes": 10086,
+      "sha256": "e80a322e5169c6fb1d8a2daa3a9e9317fdd5ced113fbe78dc14a0474c47f1603"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Props.cs",
+      "bytes": 7345,
+      "sha256": "36fd3c445cd53fa28020bfc183dd560d0c22e4b94305304bfaf863334024ad73"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterDayOne.cs",
+      "bytes": 15510,
+      "sha256": "3428bf25adcb25520a89e0639254f7f2466ae514214c9ff14a4c1e7e1bcdfb25"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterDayTwo.cs",
+      "bytes": 16074,
+      "sha256": "b9987ebdbf91be2f3be9c2a151e21c7f924e0c88cad334941043460020825edc"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterDirector.cs",
+      "bytes": 57102,
+      "sha256": "c31927bc7e3fbb7fef8728186a1bedda89aaa00b8637ba447d291ea144848b2b"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterDressing.cs",
+      "bytes": 20947,
+      "sha256": "2796dedf9615b831d2da6d720310c78ddf6cd1a208c89305e123da6d48873093"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterEnemy.cs",
+      "bytes": 8286,
+      "sha256": "1fb115ad629386222e106e3a4d1837cd05db27d8d42569efd9067fe841d74513"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterFinale.cs",
+      "bytes": 15645,
+      "sha256": "9f3ab1bdda6159f6a796adb32cc5ed40db4f241bb188b0bb51dc26421d88c35a"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterGuidance.cs",
+      "bytes": 8413,
+      "sha256": "649f24a77a253eee8e080684cdec266f9571dd1aedc0c8b01cd224314e454a9d"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterLanes.cs",
+      "bytes": 4375,
+      "sha256": "4476f9e429a9ff55d49b51225d0491321fa35970a7584756d23c0e5dcb6224dc"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterLayout.cs",
+      "bytes": 2271,
+      "sha256": "0a687211ce8984c0928a226f7cb485b017fbcaee4fda25deb74b9a1d9de94622"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterNightPatrol.cs",
+      "bytes": 11402,
+      "sha256": "26e74d0d747139226e068dba458dbd649ecec40b90f77836102e642409edf185"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterNightRoute.cs",
+      "bytes": 9947,
+      "sha256": "3eb34b596e39bbe5b6eaaca19a634eca6493827b4d8c0f8eab2731e6fffc52ae"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterPatching.cs",
+      "bytes": 10511,
+      "sha256": "b213a19ad84f57ad25b712dcd1c1b4372c6d0f5a3fb3da383f1da7ee4ffcee49"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterPerformance.cs",
+      "bytes": 16055,
+      "sha256": "7e45a27c52420960b123439228275c762592fe08c44a56c765bfde9589ef2fca"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterSoundscape.cs",
+      "bytes": 5114,
+      "sha256": "8bb24b8f5d73d4d4a625b0b43b9fe01a5600df4953702c0b5dd7a5d3037b9034"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterStaging.cs",
+      "bytes": 6172,
+      "sha256": "8d9bbd31d5519efa2a485012aa970d1382e429bf444c7be3b757a4fe86a71023"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterState.cs",
+      "bytes": 10792,
+      "sha256": "bfaa10f14840ec4ae67d12500fd5afe868a245a29d3e20f72f73938c60d82c5a"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterTank.cs",
+      "bytes": 13779,
+      "sha256": "52388452cec3326981327cc1a1c143bd2df05519858057041d0fa17484ab1246"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ChapterTankParts.cs",
+      "bytes": 6404,
+      "sha256": "e61d9b76b2479580c1aec08877bc9b26e4a106cc9a4b49f6d0aaf010d7ec4c19"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ConversationSession.cs",
+      "bytes": 3573,
+      "sha256": "b09a7bee3c8d6ff9387e31ebebe5fd86410ca89fe24f59a6762cbb322bf1e032"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02DayOneArt.cs",
+      "bytes": 681,
+      "sha256": "233d3d7ca3c7d348fd21bf95f73338ebf881cef385f1e27e82137d5ac486a29f"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02DayOneState.cs",
+      "bytes": 6542,
+      "sha256": "af477a38433f5ba5978a8ac76a9c0382b5796be98c1f250c650a200c958a93b1"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02DialogueCatalog.cs",
+      "bytes": 1862,
+      "sha256": "6da62baae7cea3e6cdccaa9416535fdeea8a3ebcb513e77e2a45a785f4e8b319"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02Exploration.cs",
+      "bytes": 1734,
+      "sha256": "693ec7dabc86502aede697f851fa442f48fe24dde8d003a04593ea7f4b8e9b82"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02Mission.Character.cs",
+      "bytes": 13087,
+      "sha256": "f4778f2a028ecedd0b3c634374963b3eb82c5e00e7ca6b327d164b0226826365"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02Mission.CharacterMap.cs",
+      "bytes": 6652,
+      "sha256": "41998eb889643e444cc52d4965838cdf3161f8804e213a27841938f52c243987"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02Mission.Hud.cs",
+      "bytes": 11058,
+      "sha256": "6f0c5ec1aeb58ceb58e79f276166929883dd2e23f8f0c7d3e62f91b485fe6487"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02Mission.Inventory.cs",
+      "bytes": 4473,
+      "sha256": "2ef94c0d24110e9fe7eef030265a6b07f00ee1f98e3f48edecaed2bc2553c31b"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02Mission.Navigation.cs",
+      "bytes": 1900,
+      "sha256": "1525f36d9563a85e0fb133378034dca78f05a3110734dd3718b4d86f958ee399"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02Mission.Safety.cs",
+      "bytes": 3891,
+      "sha256": "e016ef1c07a0e938238c867c557ec80e9582e8077f12342e13dfa7c30542c57d"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02Mission.ScreenEffects.cs",
+      "bytes": 2264,
+      "sha256": "ec1ab04f0aff26321824ac918ecfa54d8f2c98a2cef81f4772d6bfa7a416385b"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02Mission.Skills.cs",
+      "bytes": 5032,
+      "sha256": "f69a28b045770004ed785dd5a0cee69694efbd8f455bdb2dfe548373d915a23b"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02Mission.cs",
+      "bytes": 27704,
+      "sha256": "6ea29c500a2130dec1596baf28f72a307707014cf744580a867597be0557bc04"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02Navigation.cs",
+      "bytes": 958,
+      "sha256": "e790e9fc5e9ca9c7e42ce79f95530b202665ccf3c9ca3c12634ea67979e8ac52"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ObjectiveObject.cs",
+      "bytes": 951,
+      "sha256": "fdc92ef1e6f5a7e8cf9c3a33d27eef9210eff925698b3c1e314187c680e55555"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02PatrolFlashlight.cs",
+      "bytes": 4300,
+      "sha256": "e8473f2005ef008dff7993da09b1085078dd195be3cbf8ba0c6e9fcdf911d812"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02Progress.cs",
+      "bytes": 4827,
+      "sha256": "3a6a16e17de6e459814f722c992a494beb32923e75fae7ea91f42679936f2a29"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02QuestLayout.cs",
+      "bytes": 326,
+      "sha256": "1a64af0312cf36826eaf05ab2b339c83b266beb438a366a0a69bb09f842cb10d"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02ScoutInjuredVisual.cs",
+      "bytes": 2897,
+      "sha256": "1c7a8a538f271ea85e9a2bce7de92df31f6bc189abba20a2e3f6f13f7a37505f"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02UpperBodyPose.cs",
+      "bytes": 2104,
+      "sha256": "d873892a599b707c4fdf1f3ee1c8062e0810d2b1c044252f08d98f66ca4128af"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Runtime/Map02WorldState.cs",
+      "bytes": 5973,
+      "sha256": "16d70da142fda68925ac09e7525d37be33c0a919ee4fd08b2e25d3f88f0c81b8"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02ApprovedC1Tests.cs",
+      "bytes": 5801,
+      "sha256": "5ab3e51a79067bd24ec0614d1e588aff48b277ed4c760201f4e217d56c3fcf6c"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02ArrivalMisstepFilm.cs",
+      "bytes": 3717,
+      "sha256": "444fed8e72d56d5389000faefdb2b059bfaedc243e3602c1cbb2448d52db02d6"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02ArrivalMisstepTests.cs",
+      "bytes": 13901,
+      "sha256": "d118921d77aedc76c8d434440c045e5edb98cdbb946e0849e4a5dd4dbfe57b85"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02ArrivalMovieTests.cs",
+      "bytes": 2467,
+      "sha256": "40ffb52dc8897553c506889985a5466dfd2fb759bc64e9ba27157de44cf8fdc1"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02ArrivalTests.cs",
+      "bytes": 32225,
+      "sha256": "5b36bc677dd94fa36048b13eec05d57a04dcc17a1933e98511a64657eb772027"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02BoatPatchingTests.cs",
+      "bytes": 4911,
+      "sha256": "20b18e496e4d1027b02c0069aafd6aa36590cb2ae55d6d83ce89c9e5acbc51b9"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02BoundaryGuidanceTests.cs",
+      "bytes": 3920,
+      "sha256": "9619a1717b47241720f972dc4dfbc5adb77598fefad37fe0db2139ebbe3ebc2f"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02BridgeCollisionTests.cs",
+      "bytes": 6092,
+      "sha256": "0f861d8a62427ebe57b550ca1194e35b57ca234f378959fbb303fe6a347760bd"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02CastTests.cs",
+      "bytes": 12106,
+      "sha256": "64c1978b9cad090e564e5874fd7783e3644131f6b5b20f70e7c0bfb673dffde6"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02ChapterMechanicsTests.cs",
+      "bytes": 25731,
+      "sha256": "fc04819da8f5906d80426438a62bc7d40d99cce2100401d387574715fe3f3535"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02ChapterTests.cs",
+      "bytes": 10392,
+      "sha256": "6a91807c785b67b457eb8853df0d8d727e9b01207ec7b8c672acccfdff25d9bf"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02CharacterHudTests.cs",
+      "bytes": 7664,
+      "sha256": "88bab55e19e602020cfbe250409de7476d50a773172650922b460b81fa61f81f"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02ClarityTests.cs",
+      "bytes": 13276,
+      "sha256": "c577bf1f106527f20b1df5168437bd78c59ee74ded95d447199d9e171e35e53d"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02ConversationTests.cs",
+      "bytes": 4552,
+      "sha256": "1baf030665e758eb7cbd4d2064f4012875a3af64df82dfa27d8e8a31a661114f"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02DayOneCompletionTests.cs",
+      "bytes": 20383,
+      "sha256": "fe31c7068b3116f5b6d01d6fc3ebf0f103a338b195c90721af63d6184b1d8180"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02DayOneIntegrationTests.cs",
+      "bytes": 4798,
+      "sha256": "4219541cae9e350456283e5727da76cc6745942f35df19ddc18c3edb76994c5f"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02DayOnePlayableFlowTests.cs",
+      "bytes": 10686,
+      "sha256": "8743e860a46b140317d7cf2a031ff3e92a2810910c6818d46c8f43363a1ba00b"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02DayOneTests.cs",
+      "bytes": 5487,
+      "sha256": "514f35121550e1f3ae4a6ab018c6120afdfff5b7ceb906273eb3af371b477c64"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02DayOneVisualTests.cs",
+      "bytes": 7062,
+      "sha256": "aef6861dbb867b56c9855a6dffc25b1cf729d1b68aeaddd71d415735f465314f"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02DayOneVoiceCoverageTests.cs",
+      "bytes": 3531,
+      "sha256": "16b40a03d36389e00682422f0f209e5e0a3d4b638c488e9b763034a04f052655"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02DayTwoRouteTests.cs",
+      "bytes": 10520,
+      "sha256": "c982d0ef14d090cafefb1d118237327509049d3466aa2036360a19467000f97e"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02DayTwoStateTests.cs",
+      "bytes": 18357,
+      "sha256": "b99ee90368eb2accd750eff918e895cc66834cbf03fd3701daf037c8ba3c9bca"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02EndingTests.cs",
+      "bytes": 1426,
+      "sha256": "a19a3a8fd5e51da5bbbea401352587cc615cf02e729337fad0bf0e54416991fb"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02EnemyAnimationTests.cs",
+      "bytes": 5946,
+      "sha256": "097ea21134a3e1c6da779bc3d53141761b3554b694f3615a17fffc9e6d884bde"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02FinaleTests.cs",
+      "bytes": 21189,
+      "sha256": "cfa62ca11e1376cbe5c8b201568d947367b374fc12da1a4919c6c44b1be83f4a"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02FlowMovieTests.cs",
+      "bytes": 18179,
+      "sha256": "6ba6dcece315bb3248dda05a20c20973f833b4f7f002b3ceb6e354512112b321"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02FootstepSyncTests.cs",
+      "bytes": 7517,
+      "sha256": "1350a5bf2c70c7a540c5fa51f40fadc7e4c6d24c24854b78752b063a9cc79d2f"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02FreeMovementTests.cs",
+      "bytes": 7895,
+      "sha256": "cb94c94e9d9ccbee69d930e6e9f2a4f398cf94e2d01cb41891ceff7e5f0f7036"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02M16SaveCompatibilityTests.cs",
+      "bytes": 4690,
+      "sha256": "01e1b66bf1bb53aa0825b043227172ae6f2b776fcf52c1dabc6b57808ab8bcc4"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02NightTwoRouteTests.cs",
+      "bytes": 15562,
+      "sha256": "b60d19dd9f90878d8cbc5ced66db4b7d8b2317b9bd36442833cbe2106c2b0cd9"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02PerformanceTests.cs",
+      "bytes": 7447,
+      "sha256": "5a999e447ec8eb01affb53346e1a6628fc9e3dbe6c5e083a55bed91b94848adc"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02PresentationTests.cs",
+      "bytes": 26206,
+      "sha256": "e68717b1397f98bf6ded67739c026f9337b927898aaec0e8354ba8f3a05566b4"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02ProgressTests.cs",
+      "bytes": 3642,
+      "sha256": "483f57bc66e5bdaff838bd807d9590edd6421c69b178d00e4d82d4728f6b7c9e"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02ReportAndNightPatrolTests.cs",
+      "bytes": 8719,
+      "sha256": "128eb12cd9e46bc3384ad9e7d2651364b491da4330c40b7262d9e6972f030046"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02RoutePreviewTests.cs",
+      "bytes": 3031,
+      "sha256": "70e0e60e8d968e8a1075317d6929d875fcaf1fd3cdc71dc8978761cf194936a8"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02RuntimeTests.cs",
+      "bytes": 6497,
+      "sha256": "7a82dc6ac3accbb61f88fcf2b8003d5b759bf3ca65baf24e19ccff64cd6eefcf"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02SkillsTests.cs",
+      "bytes": 6187,
+      "sha256": "8aee70789bd96f9014c309829591044a85d814901fec812721f96801ad7fe9c5"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02StartSaveExportTests.cs",
+      "bytes": 3147,
+      "sha256": "61e990c40c214313ea980823eaf858f8210c3ad08cdd68272031869cea713e08"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02SuppliesAndCastTests.cs",
+      "bytes": 11267,
+      "sha256": "d201aa29ab6efc8b6b15f635218220a79c3d052f52ac3ddcde47eb0b25836f16"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02WeaponHoldCaptureTests.cs",
+      "bytes": 10193,
+      "sha256": "3e8b1513f718d117e6b680f4cfcdadefb47fdd401e2f22900cf4f3d5db140406"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Assets/_Project/Map01/Tests/Map02WorldStateTests.cs",
+      "bytes": 3092,
+      "sha256": "af18cf6ca23b51cd59622d7e9a48722836eb54b781f5d1e27885ffb22a327116"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/source/Docs/Handoff/Map02_Ngay1Dem1_KeHoachSua_2026-10-23.md",
+      "bytes": 39119,
+      "sha256": "4c3747ee0341073935dd24a3aaf90981fce83062692057d5144d901363fca7e9"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/tasks-summary.txt",
+      "bytes": 4745,
+      "sha256": "588329186c70dc8fc2176a2a8ae4dfc3b1170284134e3e12beb90b9f7f4fb961"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/test-summary.json",
+      "bytes": 22152,
+      "sha256": "654426750698e7ebcc4724de04802703f8fa9ba6b6680f8c03ea2c30a2fe4000"
+    },
+    {
+      "path": "Docs/Reviews/Map02_Audit_20261026/voice-choice.json",
+      "bytes": 40423,
+      "sha256": "78cb563469a5705f3b3d05ea1ab0d6068f980d1b3ac306ad1f6ef5ec0b69007d"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/README.md",
+      "bytes": 5576,
+      "sha256": "c4d8347a61a8606097933876490fdaf6060109afe36f3cf88e22463d05f9038d"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/analyse.py",
+      "bytes": 1448,
+      "sha256": "4f1f4fb5506dcf2e1dc971599096fe5f8d995a5270351debedbffcdec3930ac4"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/build_audio.py",
+      "bytes": 6222,
+      "sha256": "fa9dca66bbf526879aa0c1906ecfea052caaaabffd781b424351547006991c57"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/built.json",
+      "bytes": 3019,
+      "sha256": "2255a54a26def80189f720180a80d97288be6f46ce1223c18c8f0d1bb31c3ad3"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/review_hung_theme_dizi.wav",
+      "bytes": 3878444,
+      "sha256": "cb6415da13b431227d27beb11f729b149cd8f21687f55da395d11cf6f34f04d1"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/source/178615_hq.mp3",
+      "bytes": 27759,
+      "sha256": "dd2bdde18543e3a687931b2d623bc6af4c6cbeb67f9af1a8ed7d3e815c94f037"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/source/32655_hq.mp3",
+      "bytes": 2066976,
+      "sha256": "3f5213796b6aa8c6a692643b9c7dee0de29734b8b7e36892e0c6dc70887fc441"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/source/335891_hq.mp3",
+      "bytes": 3657552,
+      "sha256": "7a4370992ab7fae5da26535a6eb2a4880f2e60907deff1c9025cf5e5141591c0"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/source/339357_hq.mp3",
+      "bytes": 597611,
+      "sha256": "148af772608361b3aa9d30c32a3c2189dcc9bf0ee284935ce7759994bcdaff9c"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/source/348595_hq.mp3",
+      "bytes": 1887926,
+      "sha256": "632bceca0745b8a24be6186713f2dd8587a4165963a16bdd2327907df5856b78"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/source/367493_hq.mp3",
+      "bytes": 62512,
+      "sha256": "53e243945395f22404dc68e282930fa93f3cdeded3f5e57adea9f357c95fcec0"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/source/372072_hq.mp3",
+      "bytes": 460454,
+      "sha256": "f0808c24e3253e038fc44d7ff525bd40bab151a28eb8489049f454a48035ff13"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/source/406938_hq.mp3",
+      "bytes": 786816,
+      "sha256": "b2b8077a356fc499792f6c270583b87e0f60ee810b8176fd242424942a9bbd80"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/source/418509_hq.mp3",
+      "bytes": 20976,
+      "sha256": "c90a95578c3ef17211b900078fed89a2f92f8a8a57e3c8071e19b8695e8711ff"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/source/435508_hq.mp3",
+      "bytes": 54006,
+      "sha256": "dd1369d41efac7883ce2ce041a19f02c5e2456177be7d0ec759679fd8541d650"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/source/530127_hq.mp3",
+      "bytes": 88368,
+      "sha256": "14410e723221c71adbbaf445d8becf5d5c84bac2f9e71cb18c3a373859f3ea09"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/source/532191_hq.mp3",
+      "bytes": 1625184,
+      "sha256": "b71bc772eee62b0348bc48e1fbd5ebb1da8c064f23ae0e528524ebdbb01bcad3"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/source/588308_hq.mp3",
+      "bytes": 1029552,
+      "sha256": "a670931fad725dc7d89447e2df863645ce572b60c9e3854a3fdeaf823126593a"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/source/648959_hq.mp3",
+      "bytes": 114024,
+      "sha256": "682b9c9fabf68657eb80c689bdaeb117a98b9747aaca09144e998ded97d05dfd"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/source/719107_hq.mp3",
+      "bytes": 57504,
+      "sha256": "1800e65e9de2c45cc037154719d613ece0da98c6555483529774a07d9a25150f"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/source/720133_hq.mp3",
+      "bytes": 78899,
+      "sha256": "6f6e6f93fea21dad85259ef0c3e728b83a05c4a8e4bee1d9d7a71166d4d4eb09"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/source/742356_hq.mp3",
+      "bytes": 7098,
+      "sha256": "0f2db4265c5e1d58abf0b6b6a672a45cdc52a28f2b098bb30fc82189d6de1745"
+    },
+    {
+      "path": "SourceArt/Audio/Map02_DayOne_20261025/sources.json",
+      "bytes": 9709,
+      "sha256": "cabc6a12d0e4dbd7a5953dae8452a8dfa4ef569991990fb0eefdd6f5745fdb23"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_board_invite_current_clean.wav",
+      "bytes": 192044,
+      "sha256": "a828c584aa397a4adb593b0ac2c5f0c51bcb0aeda48aa43bc6394049dfab481b"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_board_invite_current_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "318d6ee97cc4fca32daee76a0be47c3a4dd62a3c4009b6c50195c8862fcb531b"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_c3_mallet_removed_clean.wav",
+      "bytes": 182444,
+      "sha256": "a0fbb801ee458e9498420b89b8fc039c3379c0ff1435b10c3bb8985259a20c98"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_c3_mallet_removed_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "dd18064366d3936bdb5186982c9ced0f0f9d592e3a85eb9df64eb9d3e716af2c"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_c3_mosin_order_clean.wav",
+      "bytes": 568364,
+      "sha256": "068ad1edf852499fff2002f6ca04f92f1235213ca4ad663c274bd3f09afb4ea3"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_c3_mosin_order_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "12ab042cbc2093c15e0154fdfcb844ae448e7c3c518d6ac9e0915985166d24c2"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_c3_mosin_order_radio.wav",
+      "bytes": 568364,
+      "sha256": "f855d17c03e253a81932991d4ed56dc9da42532ca9c8b88c41aecbed3f02d266"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_c3_mosin_order_radio.wav.meta",
+      "bytes": 485,
+      "sha256": "00a8e76f39e26365dccca52b1e43a3b09a18aea44bdad652454dd0de192801a6"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_c3_phone_cut_clean.wav",
+      "bytes": 90284,
+      "sha256": "87c3241e0337a60f4b8e412bceabf9a88dd08b523ce5d5ece84ee49cdb0f7d34"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_c3_phone_cut_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "4304ef4853551ffca84acf9260452a17d2af39dfc8996d9426f205f8f1ebb603"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_combat_radio_blocked_clean.wav",
+      "bytes": 208364,
+      "sha256": "685e8a895341baa755753692682d19978bc66e378540a10a64e2ea7b210fe73f"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_combat_radio_blocked_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "899d70e1bba8774ce75411ad4db9f5e6e06f4340e9ac4a61d79a87387cee53f6"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_depart_bank_reply_clean.wav",
+      "bytes": 129644,
+      "sha256": "0ec11a9e179f060a488df7ec4061f62694f1fc0a6d823ebeda0966706f3ff5e2"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_depart_bank_reply_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "4e57d702b7b96635c8d2288d1dc27a56fd7fd15480139ee32d842bff43c72abb"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_depart_destination_order_clean.wav",
+      "bytes": 337964,
+      "sha256": "a80a6814da6e3e96eb4ffd3d1405e5f44a59b9e62cac1f61ca59141fdf69a536"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_depart_destination_order_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "244fa9d711182560ff8cb8961c0895524131cbe89648fe02b480a3c56c94080c"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_depart_destination_question_clean.wav",
+      "bytes": 86444,
+      "sha256": "58e788f800d5b16235463b91f7713ecba06352d9d7d5c2d23afa5f5cc7185a30"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_depart_destination_question_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "eeb1261942054b055c51cf4cc4998735e84f72e89e12da0a51bf26f0a7ef49a4"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_depart_order_clean.wav",
+      "bytes": 160364,
+      "sha256": "712bea126124e273dbbacd6b4ba38cc15e13e86fd23f9c2bb21864f88cf911fa"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_depart_order_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "bfc56044b2ab2657890db3b91e116445a87263d2e622b8b6832748ddbc64b92b"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_commander_early_01_clean.wav",
+      "bytes": 323564,
+      "sha256": "e1e003476f74ee54c50818e6834fbef153d438d1d58f8d72223224ed82feaa5e"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_commander_early_01_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "9c100f902dec9fd9e8460bd2f17b7452016ea8b7ee2ee161245928fb76fac276"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_commander_report_01_clean.wav",
+      "bytes": 313964,
+      "sha256": "28a1ec6297e540eadfd8a80d8c18fdfb34b737782b1c08d08e3410acaca4fa03"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_commander_report_01_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "da428855fb529883e1d35211f7b4648a5c5ee86aab77fb1e8b3039c21bda8b5b"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_commander_report_02_clean.wav",
+      "bytes": 337004,
+      "sha256": "42ec88aad727ec2509186e79d8824c610d38465d56769d96f2c16a3b6df8c73b"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_commander_report_02_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "eaab2669a49f02cdfdf3d509eb7d9430aa5dc6d04ec578d2cfa27c1a93494186"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_commander_report_02_radio.wav",
+      "bytes": 337004,
+      "sha256": "4e5d757a85f896ce6602c49fe4fb797d3f17b275639a4f8e071af6e2e641cef8"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_commander_report_02_radio.wav.meta",
+      "bytes": 485,
+      "sha256": "b5800f8b41eb8ebad683d3c9720090de6d772dc21f6e6746746104c2f30f1d43"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_handoff_01_clean.wav",
+      "bytes": 218924,
+      "sha256": "ac02075766090f6352ede0698cc9d10bc310c92fddc81a14fda82336267748e0"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_handoff_01_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "70bcd090946e65695557641d12d8ed0c82d8f82dea647f9e4c0c444b6b51dd63"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_handoff_02_clean.wav",
+      "bytes": 136364,
+      "sha256": "db32ce3ff24481c267c2f274e394fc1790a1d0f6fcbc03c79f99c8f0253cb94d"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_handoff_02_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "2e571b6422525d9d33f3ebdeaa7e6e628c8fcda0eb4927e32e50643ac9aab6c8"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_handoff_03_clean.wav",
+      "bytes": 505964,
+      "sha256": "8a96d83b1cb9d888154c27ea14707d7819ff52658a680ba64d931c541814b02b"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_handoff_03_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "818e7154129def807746d2d45a9082c2e3b8ef410d447b84f76d79fb800f15a3"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_handoff_04_clean.wav",
+      "bytes": 137324,
+      "sha256": "7b036fa023cd6a946c325a6d37030d1aba704d84ba23a906807d70a333b63415"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_handoff_04_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "fe402ce5fe98ea55323b26e6564d53d4d75f35bfc57ea3dc1e97065ce96ca4b2"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_radio_report_01_clean.wav",
+      "bytes": 313964,
+      "sha256": "f17d8d113a885a005bdc2aaf76b42db75a731934afc295ae7ed8895b4754f199"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_radio_report_01_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "e154f94517b9e363b29933b0835123bcaa5b013023435dd011ce18f54c9e9e3e"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_radio_report_02_clean.wav",
+      "bytes": 390764,
+      "sha256": "16fbe6abce66c633be155ceaf47079a3d5f49578fcb5733026eda29e983c4152"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_radio_report_02_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "202ed9b311477737a31ebb43afffeab0fffca0bfa15241756ea84eb361b39e4b"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_radio_report_02_radio.wav",
+      "bytes": 390764,
+      "sha256": "d17a4e4a1306d0daa13b233cbb83ae53f225d7da0d212dc78be015966398325d"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_radio_report_02_radio.wav.meta",
+      "bytes": 485,
+      "sha256": "a275ba6ff4ed58b582899e5d26b7ff444b96a84b92e7d0d4b372a2d0b5b5a8b6"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_retreat_01_clean.wav",
+      "bytes": 245804,
+      "sha256": "9087f6843556dcbd2d8d27925212f89924361cc3883266dab6da44d46e24b411"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_retreat_01_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "5d4a139f58db06ce4fbd9412f0e074c35bef03438fb3d601ce8b36d1d2420989"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_retreat_02_clean.wav",
+      "bytes": 268844,
+      "sha256": "a147e20495a739fe9ad217027be0318966da72485b72c5b50aec4d5bb316d728"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_retreat_02_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "1b8cf7e2a876e72451677a27f4f122feb11edafed6b3741b496164327a40b69e"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_retreat_02_radio.wav",
+      "bytes": 268844,
+      "sha256": "1578b0ba33a110153c9d5105ba37ed88dffa4689ae6a70c4f0ec15171b9ee449"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_retreat_02_radio.wav.meta",
+      "bytes": 485,
+      "sha256": "674cffaf9a1a4c445d58b2175360ac35771baae252904d1c03e9c09984d1338e"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_retreat_03_clean.wav",
+      "bytes": 68204,
+      "sha256": "3b0d5f7a0dd4c60abdcb89b6be6c9aba1ff5b9b4da8e05cff50020a383bb986b"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_retreat_03_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "59e51fee3bba990a9eac655bc79456eba19f3cd5142e5e38a268d781de9f9166"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_supply_order_01_clean.wav",
+      "bytes": 496364,
+      "sha256": "89a6864e5be1c20e6d144349cf246f28919b96316934f4dd54f11c7bd8519316"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_supply_order_01_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "00359fb6bdfe31e8004818693eaba6a9acc3b3ddda2440e22b85cc24c500ab6d"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_supply_order_02_clean.wav",
+      "bytes": 320684,
+      "sha256": "2b0308a573e83f4bcdd8c42a71d966f593f9977bdddbe3ccdbd40d69d83698b6"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_supply_order_02_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "9c078d56e12db91e8d7c3832069d7c9fbb543fbd90fbc33b3eee7b3ddbb0d819"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_supply_order_03_clean.wav",
+      "bytes": 103724,
+      "sha256": "3d2989b0aa153e886c35a9967779779d2bb339a71919e2e2721f083de1a9229c"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_supply_order_03_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "4e0f4470cf942fb25de5dd9aed18121d708ce38162d04441fddc80ee4cf74957"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_supply_report_01_clean.wav",
+      "bytes": 278444,
+      "sha256": "bf8dc252df0469f78a9a638d2f1860955ee47f34fe2b114365049a997c69e7ab"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_supply_report_01_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "192e6fc1f1961ddfc378d37a982fcf5912d290269f56c87a26c9e0009b49bcad"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_supply_report_02_clean.wav",
+      "bytes": 314924,
+      "sha256": "205fb8a508d225df43d0db232910382f23ee7752703bd077aa6750c4c5209ed4"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_supply_report_02_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "9d0f7534b75b1a9092e55c48cd8fe0a4e47ffc03deee1ada3c116df4d087e207"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_supply_report_02_radio.wav",
+      "bytes": 314924,
+      "sha256": "008daa7924bf373f89d08fc98989612dbb8f185761f009c981fdaf9cab1063c3"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_ops_supply_report_02_radio.wav.meta",
+      "bytes": 485,
+      "sha256": "2f4085c5a723e39778f1634c1d9cecc02b52ef839a5f0edf9ccb8b073be24281"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_rescue_delivered_clean.wav",
+      "bytes": 359084,
+      "sha256": "2ea828b8ee8edb3ac14c07ecfed069a65101ed6bba5953cc6655029035946e57"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_rescue_delivered_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "c3f12eabda81b63604e8e9f4b3a350d1575ac625c5980c6d1391dcc86aaa2618"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_rescue_freed_clean.wav",
+      "bytes": 413804,
+      "sha256": "3564ccf8e59c90f408d2dd5e909b7648a6387b1d7a2ff85930ae6c5c71df7114"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_rescue_freed_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "44bbfe0e3573ff0851467137c82417094a830ff6ef9691f7e14874970899b677"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_rescue_shelter_clean.wav",
+      "bytes": 215084,
+      "sha256": "7b65df869928c3fd7cdf7fc68debab032f921793ba1959e74902d3c07893420f"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_rescue_shelter_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "b214274221b3867c06bd955f5a21865780dac452e13c83bde8ee487d5f699181"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_rescue_whisper_hint_clean.wav",
+      "bytes": 361004,
+      "sha256": "8edf6582efbcb2499bcd57d8b8ad9b19e4c989bcc2f177be6abd7a8f1f792382"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_rescue_whisper_hint_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "567bfd16ed731e1a9669e53ada58714a53bb6379265082f6b23f12fe804a2eb4"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_story_15_clean.wav",
+      "bytes": 196844,
+      "sha256": "18e4ef1cd6417b7ee0a3fa358b13acc308ef7de2c4633c1209681fd4e3c7bc26"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_story_15_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "1fc85f5aeee8f9f29b7d64231a926fa58808ecbca5dac380c584f5056301bfe3"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_story_16_clean.wav",
+      "bytes": 342764,
+      "sha256": "825681bfaa4688ce2da56a2b9b266d0e4cb85981461cec29aa2c0c8625058f3b"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_story_16_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "3c54fb9c479fd83bd8b1b9b7c773db7cdc52f2305a6a61e0a84149586cf771f1"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_story_rescue_order_01_clean.wav",
+      "bytes": 391724,
+      "sha256": "f55534156c73188d5ec21c0499c33bf1c4d4b635c59a01d280ff58f8b32a32cf"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_story_rescue_order_01_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "6433c35f9214eec41d28935da4e8ed1dd893c23d86e7f3846f5d480bbb088395"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_story_rescue_order_02_clean.wav",
+      "bytes": 107564,
+      "sha256": "78312d4fee8467ffa5ed9e508ff1b7e227cf5742276b392134447d51350c86be"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_story_rescue_order_02_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "65b0ec95694f6f2b3ca80b45525980fd9a3b0d56cb74ad295cfd1f2c1fc8813b"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_story_rescue_order_03_clean.wav",
+      "bytes": 491564,
+      "sha256": "04f267205bc910b183c7fec3b68d1f9aa5268f960582d8f803740ec35b9f96a6"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_story_rescue_order_03_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "6c290c2c2def8bfda0ee336ac5fe60c586988c2b16f096c2e21971e676e8427c"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_story_rescue_order_04_clean.wav",
+      "bytes": 212204,
+      "sha256": "7f8cec0c1657c586b961603532ebe5bf04af16a2b762ca2d5ff092eeb6d495c6"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_story_rescue_order_04_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "043b7ae15371e5798d58ae62600e0808baa169dd3d6b24a4bcdd3869c24a8cbb"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_story_rescue_order_05_clean.wav",
+      "bytes": 344684,
+      "sha256": "d19f9ed464443bfe80a58267d3cb7e8ed2935bcafcbe4f5411782d0f23bb3230"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_story_rescue_order_05_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "4bcb3511661f75d4aa20fef5347db95fd7397f591c84605a26f22530ff4cef68"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_supply_debrief_commander_question_clean.wav",
+      "bytes": 199724,
+      "sha256": "2fd4110c084e6eb95d22eeb12b40353d4e9fd2d68c38225b4df8e1a526b8b12b"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_supply_debrief_commander_question_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "9280cb590d51db475f6013c15b63a4ec13c25a7de98465ccb1c8ddc9ba60dfc4"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_supply_debrief_nam_report_clean.wav",
+      "bytes": 154604,
+      "sha256": "38e28a121189e4c46b363d6286679e60fe0a52019ca115a4ce43aafbcab97b9d"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_supply_debrief_nam_report_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "87962d20b7e074a98880b7c4ec91aaaf96fa758e2edd268461194a9f2ae47261"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_commander_confirm_01_clean.wav",
+      "bytes": 212204,
+      "sha256": "3ec6eb21dcb790b63f2441b7f895267aa12b32ea87713f0aeec2a9c3aacbc3b7"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_commander_confirm_01_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "cc1833baf876023843750219a8ff6538c16e8631d23f0e480b923efb6549340f"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_commander_confirm_02_clean.wav",
+      "bytes": 130604,
+      "sha256": "b94ec80ec5cc372f8da6ebc71b2e4f1c3d6491a19a85c7b09566aba9614a5640"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_commander_confirm_02_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "d4a091351792df16450ff78c1560a3626a8ce02238624fe36ee199795547b2fc"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_commander_confirm_02_radio.wav",
+      "bytes": 130604,
+      "sha256": "e9543fdd6704bab0d2bc10c5389693b3c8f6f5c5f576c167b978e17de77d9385"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_commander_confirm_02_radio.wav.meta",
+      "bytes": 485,
+      "sha256": "75885545463029424b9dc3ae57f95f50ec844f5682752079d5531fd9ba355dbe"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_extraction_01_clean.wav",
+      "bytes": 237164,
+      "sha256": "a13dbd7964dcce86b77e7ef9a0ddf2050be43b5136dadf0891d3a82ef3fb3d11"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_extraction_01_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "df3108a87026a3c9a116b385968d7915e0c016a449bce52792e7da798b320078"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_extraction_02_clean.wav",
+      "bytes": 322604,
+      "sha256": "bfd3bdec5add8db56506dffced773278985dcc79a9879f096bd5083b82307c6a"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_extraction_02_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "cc493d258fd7ccfd54ef256600e656fe31eeef04fd6c775ce4baf356b5d2dd28"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_extraction_02_radio.wav",
+      "bytes": 322604,
+      "sha256": "c3451f3038f4eac10ed397b138ec69b268eba89407f433953579dea41bff352d"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_extraction_02_radio.wav.meta",
+      "bytes": 485,
+      "sha256": "69ac39f61ba191bcab7ace41a24ce2bfa3fdfe5ffd490e1a0052451b84bb4cbd"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_extraction_03_clean.wav",
+      "bytes": 119084,
+      "sha256": "7c9ffe0bbe439eed52ba617ac4a9ea3f772fe86b3c9f5dca7bc8b08f3a883935"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_extraction_03_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "8f9dc11c6437efeaa4327649a3e0734365b56e02e1cc6fcf16bb92d75f0b1df6"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_radio_report_01_clean.wav",
+      "bytes": 155564,
+      "sha256": "e9edb1439090458619fc4748346afb7b829ec2abb5f8593ccf62a0a3f358d375"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_radio_report_01_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "4e6620198a8bb2519d6ee36c902ad8e1d0658ec3e6dbe39073fb156afd070f77"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_radio_report_02_clean.wav",
+      "bytes": 268844,
+      "sha256": "29dae22b7cad9b6fc6cc7a470fa04e190f49dc1798c072cdef9057fc7c607418"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_radio_report_02_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "266c1f28d5ebbb9d13b9d9ab1886b5ac50e321cc8f060e201f3a35d16868c91c"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_radio_report_02_radio.wav",
+      "bytes": 268844,
+      "sha256": "5e4d59d3bc3bbb5dda9eaf1f4d5c5873891c5a2cea9d10e788f4562478cfa4c8"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_radio_report_02_radio.wav.meta",
+      "bytes": 485,
+      "sha256": "2cd41904e47a02016c14b27121955033102f38803af9cc1925b0f8a6c2d8d70d"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_radio_report_03_clean.wav",
+      "bytes": 114284,
+      "sha256": "c41274f0ba5f9a41cfb66c7b4c92dfa4f8741362753310bbd3a9bab0b81d3ed6"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_radio_report_03_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "e9a2e16229889ebb6271f45edb1e783dc13184d1465dea33d1ef9cab5c5a21ac"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_rescue_approach_01_clean.wav",
+      "bytes": 218924,
+      "sha256": "858ff23d967335ddb46755498bdc36e2c7937329e139fad1bc442a3663d351d5"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_rescue_approach_01_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "9b8e05fd054d3176b00d84e4ae5a550cf8344d7ea94b6f2fccd9067f9a0e8951"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_rescue_approach_02_clean.wav",
+      "bytes": 314924,
+      "sha256": "a70acad0e7bb95943453198346965b96bea5bdc7b4bb7faaed5ea1488bd71bc3"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_rescue_approach_02_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "07fa6c06ee9b776cc6ef860628086a7782eb28bb53b6f7b225682cc6c5f11243"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_rescue_approach_02_radio.wav",
+      "bytes": 314924,
+      "sha256": "6d037b6cab75c7d2eeeeced7f54c90dce94f81f95877ac88f0d991fe535757fb"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_rescue_approach_02_radio.wav.meta",
+      "bytes": 485,
+      "sha256": "07dd15d69214b387ca73aee18e9489ac14e5b0870132bf7af17a09df96171e56"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_rescue_approach_03_clean.wav",
+      "bytes": 61484,
+      "sha256": "5d2726a2bd8e3da45a8656bb5ed438b1f1866f7bd38f71543845b27c8434bb81"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_rescue_approach_03_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "fef8042b1cf6080c0d871e6282c08f9739083b383b162d360776a681fff3bf7d"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_rescue_return_01_clean.wav",
+      "bytes": 161324,
+      "sha256": "46f3297bdc25adb06e95c5adbf89bdee14c3dbb8d44e1c0141a8279128fc9142"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_rescue_return_01_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "a1a9b82d25b6c9442070336c3a2008dd38e51f9a1b609230193319cb101dbb25"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_rescue_return_02_clean.wav",
+      "bytes": 245804,
+      "sha256": "a54f65e2913368a59547a57ed8b85c453ba8a14d84acd1a71c2cefbf1413e0d6"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_rescue_return_02_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "f902ce742c161539a282d255b05078019f879273c43a02215e19ec71b01e8f3a"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_rescue_return_03_clean.wav",
+      "bytes": 366764,
+      "sha256": "1ed9baed19fe5532a7d93f249ee57012ad806b2a64280664c8ebba2d4dfd9d60"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_rescue_return_03_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "e31f8007f044628cb0ab478a4aa6ecdc65ace109ea77e5d52b8a3f0b9f2fdd70"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_supply_report_01_clean.wav",
+      "bytes": 221804,
+      "sha256": "aa124300854959cb9d1bef2cc06f95a59bbb97544dc3b3c24e7ceb84ab2a0740"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_supply_report_01_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "f65ff642e461bc7c6f5fcf985e2949b0d7e31b8dee46e82bedb3328a1b720bda"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_supply_report_02_clean.wav",
+      "bytes": 307244,
+      "sha256": "4b44d9dc0366b9204735043a5268584a5b732cf83c3718695767d66471112920"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_supply_report_02_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "9728fab9af15489615a23c9ad68cf11d6e171abb94f5d1068369890619f77128"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_supply_report_02_radio.wav",
+      "bytes": 307244,
+      "sha256": "15d7265a925cacc15eee6b79da50c77d76ff812e8a0e666d933d954f62b8df7b"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_supply_report_02_radio.wav.meta",
+      "bytes": 485,
+      "sha256": "857bad070c41e1658a46de43bd9f2a9c8b2e0e060d8bd66f10d33b1b5fc2fa27"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_supply_report_03_clean.wav",
+      "bytes": 186284,
+      "sha256": "4b271df6a237de30c4534b2cfe17e80b237e35760dbede3548b4eae01a45bbca"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/Audio/m1_v2_supply_report_03_clean.wav.meta",
+      "bytes": 485,
+      "sha256": "947da0d8c9c1d66f9724145de5637e756705e0c5bb69c058436d502a1fd9b8e3"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/ProposalTests/C3DialogueVoiceTests.cs",
+      "bytes": 4462,
+      "sha256": "a7e3a8f4afe21c023d20d745beb3eed66d2afd634865223b1a880d9aa4018f6f"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/ProposalTests/DialogueVoiceTests.cs",
+      "bytes": 18057,
+      "sha256": "7a55eb92ddc05b0f852b4a24f73ab14961cad6620709e33ebd28e28d6fcd20d2"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/ProposalTests/Map01Revoice.cs",
+      "bytes": 981,
+      "sha256": "92b49f949fc7f4e21aa44f45f3689d2d3c5b378e9524106ba1cded7378688953"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/ProposalTests/Map01StoryVoiceTests.cs",
+      "bytes": 8651,
+      "sha256": "af58de574b8027a00354e8b840770214e5906522d306f8b4c3fc7a272e15836f"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/REVIEW_STATUS.md",
+      "bytes": 1174,
+      "sha256": "7533a45ba7f36c8dcbccafbdf28f4f764aff860ffa039869c0734f7fe3858cac"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/generate.py",
+      "bytes": 4834,
+      "sha256": "6149e40e1fc418e5029a7a2579ec01532ea399888c20d8dd3b0d062f5b9c22b3"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/runtime-catalog-proposal.json",
+      "bytes": 109365,
+      "sha256": "6e8e36069999a1b1baef8cae27eace2448ffc15e3ac15381b9e9a00b90b1455f"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/source-catalog-proposal.json",
+      "bytes": 109365,
+      "sha256": "6e8e36069999a1b1baef8cae27eace2448ffc15e3ac15381b9e9a00b90b1455f"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/unity-folder.meta",
+      "bytes": 172,
+      "sha256": "1d6899bc1829ddc690eea2ab1cd28f0d0fd2693605144f6f7130551b6d04b36e"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map01Map2Voice/voice-manifest.json",
+      "bytes": 53945,
+      "sha256": "51e54a943e816ebc93d682b58124caf830c4a8fc8c63d5499b7c4d01f3fa118e"
+    },
+    {
+      "path": "SourceArt/Dialogue/Map02DayOneFree/voice-manifest.json",
+      "bytes": 36177,
+      "sha256": "efad56dc5a6506f1125c9afa49845250262cc11b3a6612b228043d1cc1ac4ac2"
+    },
+    {
+      "path": "SourceArt/Dialogue/voice-catalog.json",
+      "bytes": 279058,
+      "sha256": "81956a8c996478927f47d5d4ef7be1c0b3de750fb1abcb8828d7ebfb9ddb50b0"
+    },
+    {
+      "path": "Tools/Map02Audit_20261026/extract_spec.py",
+      "bytes": 1463,
+      "sha256": "a401b14352d074a71245423a65cb68eeb5ab9740a0444524fc34a97c650f0081"
+    },
+    {
+      "path": "Tools/Map02Audit_20261026/prepare_commit_manifest.py",
+      "bytes": 3207,
+      "sha256": "74ff8845bca5425602e3ec34b0e888db69a5503561d51ebad4347292d84c07f0"
+    },
+    {
+      "path": "Tools/Map02Audit_20261026/read_code.py",
+      "bytes": 534,
+      "sha256": "8efbfc2211b123b6fa7b5634018bcc1aff03e84da49749b46b3f81a17f1236d7"
+    },
+    {
+      "path": "Tools/Map02Audit_20261026/run_tests.ps1",
+      "bytes": 1113,
+      "sha256": "8e40de8668ad6b35275214c0be9eaa2d12ac72d2d6b409e2df6ca344d4707d29"
+    },
+    {
+      "path": "Tools/Map02Audit_20261026/snapshot_dev.py",
+      "bytes": 1749,
+      "sha256": "885a13e36e6a65726c4762184cdce7659e260e51ef5648821e6efbe30c8fc183"
+    },
+    {
+      "path": "Tools/Map02Audit_20261026/summarize_tests.py",
+      "bytes": 1417,
+      "sha256": "f544cfa9514013c82e993b973822227eb96dcc3ef09dba63dacd8f58f0ffb823"
+    }
+  ],
+  "count": 462,
+  "bytes": 116220157
+}

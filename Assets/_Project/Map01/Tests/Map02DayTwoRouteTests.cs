@@ -107,7 +107,14 @@ namespace ShadowVale.Map01.Tests
         }
         static void StartAntenna(Map02Mission m){var c=m.Chapter;Place(m,Marker("D2_06").transform.position);Assert.IsTrue(m.Interact(Marker("D2_06")));if(c.ConversationActive)Call(c,"EndScene");Assert.IsTrue(c.Busy);}
         static Map02ObjectiveObject Marker(string id)=>Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId==id);
-        static object Call(Map02ChapterDirector c,string method,params object[] args)=>typeof(Map02ChapterDirector).GetMethod(method,BindingFlags.Instance|BindingFlags.NonPublic).Invoke(c,args);
+        static object Call(Map02ChapterDirector c,string method,params object[] args)
+        {
+            var target=typeof(Map02ChapterDirector).GetMethod(method,BindingFlags.Instance|BindingFlags.NonPublic);
+            var parameters=target.GetParameters();
+            // Reflection does not supply C# optional arguments when a helper gained parameters.
+            var values=parameters.Select((parameter,i)=>i<args.Length?args[i]:parameter.DefaultValue).ToArray();
+            return target.Invoke(c,values);
+        }
         static void Step(Map02ChapterDirector c,float dt,bool up=false,bool down=false,bool left=false,bool right=false,bool tie=false,bool cancel=false)=>Call(c,"StepAntennaTraversal",dt,up,down,left,right,tie,cancel);
         static void Load(Map02Mission m,string through){var save=m.Capture();save.chapter=new Map02ChapterState();foreach(var t in Map02ChapterDefinition.Load().tasks){Assert.IsTrue(save.chapter.Complete(t.id),t.id);if(t.id==through)break;}save.patrolCheckpoint=null;m.Restore(save);}
         static void Place(Map02Mission m,Vector3 p){var body=m.Player.GetComponent<CharacterController>();body.enabled=false;m.Player.position=p;body.enabled=true;Physics.SyncTransforms();}

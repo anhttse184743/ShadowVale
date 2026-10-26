@@ -1,0 +1,446 @@
+{
+    "version": 1,
+    "world": {
+        "version": 1,
+        "story": {
+            "version": 2,
+            "stage": 2,
+            "medicineDelivered": false,
+            "crateStored": false,
+            "scoutFound": false,
+            "scoutSheltered": false,
+            "weakGroupGathered": false,
+            "southStockMoved": false,
+            "boatsChecked": false,
+            "firstWaveCleared": false,
+            "secondWaveCleared": false,
+            "frontGroupSafe": false,
+            "fireteamCleared": false,
+            "boatsEvacuated": false,
+            "hungSacrificeConfirmed": false,
+            "rescuedGroups": 0,
+            "failed": false,
+            "failureCause": ""
+        },
+        "medicineTaken": false,
+        "medicineCarried": false,
+        "crateTaken": false,
+        "crateCarried": false,
+        "southStockTaken": false,
+        "southStockCarried": false
+    },
+    "chapter": {
+        "dayOne": {
+            "carriedWeapon": -1,
+            "schema": 1,
+            "seed": 185254889,
+            "wetPattern": 0,
+            "stakeHits": 6,
+            "medicineMask": 3,
+            "postsReached": 3,
+            "initialized": true,
+            "stockCredited": true,
+            "duckSeen": true,
+            "arrivalSeen": true,
+            "crates": [
+                {
+                    "x": 2,
+                    "y": 0,
+                    "rotated": false,
+                    "offset": 0.0
+                },
+                {
+                    "x": 2,
+                    "y": 2,
+                    "rotated": false,
+                    "offset": 0.0
+                },
+                {
+                    "x": 5,
+                    "y": 0,
+                    "rotated": false,
+                    "offset": 0.0
+                }
+            ],
+            "boards": [
+                {
+                    "x": 0,
+                    "y": 0,
+                    "rotated": false,
+                    "offset": 0.01410666387528181
+                },
+                {
+                    "x": 1,
+                    "y": 1,
+                    "rotated": false,
+                    "offset": 0.015487812459468842
+                },
+                {
+                    "x": 2,
+                    "y": 2,
+                    "rotated": false,
+                    "offset": 0.013719821348786354
+                }
+            ],
+            "boardOrder": [
+                0,
+                1,
+                4,
+                3,
+                2
+            ],
+            "posts": [
+                {
+                    "faults": 1,
+                    "lampAngle": 156.35801696777345,
+                    "gateClosed": true,
+                    "latchSeated": true,
+                    "bundleStowed": true
+                },
+                {
+                    "faults": 6,
+                    "lampAngle": 180.0,
+                    "gateClosed": true,
+                    "latchSeated": true,
+                    "bundleStowed": true
+                }
+            ]
+        },
+        "version": 3,
+        "phase": 2,
+        "evacuation": 0,
+        "patrolWarnings": 0,
+        "storedRounds": 90,
+        "wireStage": 0,
+        "patrolScanSeconds": 0.0,
+        "patrolFocusSeconds": 0.0,
+        "patrolFocusDirection": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+        },
+        "night2GuidanceStage": 0,
+        "night2ChainCuePlayed": false,
+        "villageDaySeconds": 0.0,
+        "villagePlanePlayed": false,
+        "night2RouteVisited": [],
+        "introduced": [
+            "D1_05"
+        ],
+        "completed": [
+            "D1_01",
+            "D1_02",
+            "D1_03",
+            "D1_04",
+            "D1_05",
+            "D1_06",
+            "N1_01",
+            "N1_02",
+            "N1_03",
+            "N1_04"
+        ],
+        "counts": [
+            {
+                "id": "D1_04",
+                "count": 3
+            },
+            {
+                "id": "D1_05",
+                "count": 5
+            }
+        ],
+        "combatGroups": [],
+        "enemies": [],
+        "activeTask": "",
+        "carry": "",
+        "trackedTask": "D2_01",
+        "actors": [
+            {
+                "role": "Anh Thành",
+                "position": {
+                    "x": -79.29000091552735,
+                    "y": 1.0971262454986573,
+                    "z": 10.90999984741211
+                }
+            },
+            {
+                "role": "Anh Lực",
+                "position": {
+                    "x": -79.29000091552735,
+                    "y": 1.0250000953674317,
+                    "z": 19.90999984741211
+                }
+            },
+            {
+                "role": "Hùng",
+                "position": {
+                    "x": -72.88999938964844,
+                    "y": 1.0812917947769166,
+                    "z": 10.90999984741211
+                }
+            },
+            {
+                "role": "Chị Lành",
+                "position": {
+                    "x": -48.459999084472659,
+                    "y": 1.0250000953674317,
+                    "z": -30.489999771118165
+                }
+            },
+            {
+                "role": "Ông Sáu",
+                "position": {
+                    "x": -47.05999755859375,
+                    "y": 1.0250000953674317,
+                    "z": -30.489999771118165
+                }
+            },
+            {
+                "role": "Bé Tí",
+                "position": {
+                    "x": -47.40999984741211,
+                    "y": 1.0250000953674317,
+                    "z": -31.03999900817871
+                }
+            },
+            {
+                "role": "Chú Bảy",
+                "position": {
+                    "x": -27.75,
+                    "y": 0.8250002861022949,
+                    "z": -86.19000244140625
+                }
+            },
+            {
+                "role": "Tâm",
+                "position": {
+                    "x": 29.0,
+                    "y": 0.774398148059845,
+                    "z": -16.65999984741211
+                }
+            },
+            {
+                "role": "Tổ gác",
+                "position": {
+                    "x": -64.59000396728516,
+                    "y": 1.0250000953674317,
+                    "z": 11.210000038146973
+                }
+            },
+            {
+                "role": "Tổ gác 2",
+                "position": {
+                    "x": -67.84000396728516,
+                    "y": 1.0250000953674317,
+                    "z": 11.059999465942383
+                }
+            }
+        ],
+        "taskProgress": 0.0,
+        "coverClock": 0.0,
+        "workCount": 0,
+        "wounded": false,
+        "hungDead": false,
+        "radioTransferred": false,
+        "tankDestroyed": false,
+        "artilleryFired": false,
+        "finished": false,
+        "gearStored": true
+    },
+    "bagLayout": {
+        "fieldKitVersion": 1,
+        "ids": [
+            "ak_loading_pack",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            ""
+        ],
+        "counts": [
+            2,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+        ],
+        "primary": "rifle_standard",
+        "pistol": "",
+        "throwable": "stone",
+        "conditions": [
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0,
+            -1.0
+        ],
+        "primaryCondition": 100.0,
+        "pistolCondition": -1.0
+    },
+    "exploration": {
+        "version": 1,
+        "resolution": 128,
+        "bounds": {
+            "serializedVersion": "2",
+            "x": -110.0,
+            "y": -110.0,
+            "width": 220.0,
+            "height": 220.0
+        },
+        "cells": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwBwAAAAAAAAAAAAAAAAAA+A8AAAAAAAAAAAAAAAAAAP4/AAAAAAAAAAAAAAAAAAD/PwAAAAAAAAAAAAAAAACA/38AAAAAAAAAAAAAAAAAwP9/AAAAAAAAAAAAAAAAAPD//wAAAAAAAAAAAAAAAAD4//8AAAAAAAAAAAAAAAAA+P//AAAAAAAAAAAAAAAAAPz//wAAAAAAAAAAAAAAAAD8/38AAAAAAAAAAAAAAAAA/v9/AAAAAAAAAAAAAAAAAP//fwAAAAAAAAAAAAAAAAD//z8AAAAAAAAAAAAAAAAA//8/AAAAAAAAAAAAAAAAAP//HwAAAAAAAAAAAAAAAAD//x8AAAAAAAAAAAAAAACA//8PAAAAAAAAAAAAAAAAgP//DwAAAAAAAAAAAAAAAMD//wcAAAAAAAAAAAAAAADA//8DAAAAAAAAAAAAAAAAwP//AwAAAAAAAAAAAAAAAOD//wMAAAAAAAAAAAAAAADg//8DAAAAAAAAAAAAAAAA4P//AwAAAAAAAAAAAAAAAOD//wMAAAAAAAAAAAAAAADg//8DAAAAAAAAAAAAAAAA4P//AQAAAAAAAAAAAAAAAOD//wEAAAAAAAAAAAAAAADg//8BAAAAAAAAAAAAAAAA8P//AQAAAAAAAAAAAAAAAPD//wEAAAAAAAAAAAAAAADw//8BAAAAAAAAAAAAAAAA+P//AQAAAAAAAAAAAAAAAPj//wEAAAAAAAAAAAAAAAD8//8AAAAAAAAAAAAAAAAA/v//AAAAAAAAAAAAAAAAAP7//wAAAAAAAAAAAAAAAAD///8AAAAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAP//fwAAAAAAAAAAAAAAAPD//38AAAAAAAAAAAAAAAD+//9/AAAAAAAAAAAAAACA////fwAAAAAAAAAAAAAAwP///38AAAAAAAAAAAAAAOD///9/AAAAAAAAAAAAAADw////PwAAAAAAAAAAAAAA+P///z8AAAAAAAAAAAAAAPj///8/AAAAAAAAAAAAAAD4////PwAAAAAAAAAAAAAA+P///z8AAAAAAAAAAAAAAPj///8fAAAAAAAAAAAAAAD4////HwAAAAAAAAAAAAAA/P///x8AAAAAAAAAAAAAAPz///8fAAAAAAAAAAAAAAD4////HwAAAAAAAAAAAAAA+P///x8AAAAAAAAAAAAAAPj///8fAAAAAAAAAAAAAAD4////DwAAAAAAAAAAAAAA/P///x8AAAAAAAAAAAAAAPz///8fAAAAAAAAAAAAAAD8////HwAAAAAAAAAAAAAA/P///x8AAAAAAAAAAAAAAPz///8/AAAAAAAAAAAAAAD8////PwAAAAAAAAAAAAAA/P///z8AAAAAAAAAAAAAAPz///8/AAAAAAAAAAAAAAD8////fwAAAAAAAAAAAAAA/P///38AAAAAAAAAAAAAAPz///9/AAAAAAAAAAAAAAD8////fwAAAAAAAAAAAAAA/P////8AAAAAAAAAAAAAAPz/////AAAAAAAAAAAAAAD4/////wAAAAAAAAAAAAAA+P////8AAAAAAAAAAAAAAPD/////AAAAAAAAAAAAAADg/////wEAAAAAAAAAAAAAwP////8BAAAAAAAAAAAAAAD+////AQAAAAAAAAAAAAAA+P///wEAAAAAAAAAAAAAAPj///8BAAAAAAAAAAAAAADw////AQAAAAAAAAAAAAAA4P///wMAAAAAAAAAAAAAAMD///8DAAAAAAAAAAAAAAAA////AwAAAAAAAAAAAAAAAP///wMAAAAAAAAAAAAAAAD+//8HAAAAAAAAAAAAAAAA/P///wcAAAAAAAAAAAAAAPj///8fAAAAAAAAAAAAAAD4////fwAAAAAAAAAAAAAA8P////8BAAAAAAAAAAAAAOD/////AwAAAAAAAAAAAADA/////wcAAAAAAAAAAAAAgP////8HAAAAAAAAAAAAAID/////DwAAAAAAAAAAAAAA/////w8AAAAAAAAAAAAAAP7///8PAAAAAAAAAAAAAAD8////DwAAAAAAAAAAAAAA+P///w8AAAAAAAAAAAAAAPD///8PAAAAAAAAAAAAAADA////BwAAAAAAAAAAAAAAAP///wcAAAAAAAAAAAAAAAAA//8DAAAAAAAAAAAAAAAAAID/AQAAAAAAAAAAAAAAAAAAfgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+    },
+    "hasCharacterState": true,
+    "stamina": 300.0,
+    "craftRemaining": 0.0,
+    "crafting": "",
+    "ground": [],
+    "position": {
+        "x": -48.164947509765628,
+        "y": 1.2100000381469727,
+        "z": -36.714271545410159
+    },
+    "yaw": 246.84176635742188,
+    "health": 100.0,
+    "playSeconds": 578.4584350585938,
+    "attackCooldown": 0.0,
+    "magazine": 30,
+    "equipped": 2,
+    "stones": 0,
+    "rifleMagazine": 30,
+    "pistolMagazine": 0,
+    "sniperMagazine": 0,
+    "rifleItemId": "rifle_standard",
+    "inventory": [
+        {
+            "id": "ak_loading_pack",
+            "count": 2
+        },
+        {
+            "id": "knife",
+            "count": 1
+        },
+        {
+            "id": "rifle_standard",
+            "count": 1
+        }
+    ],
+    "skills": {
+        "shooting": 0,
+        "stealth": 0,
+        "engineering": 0
+    },
+    "skillMission": {
+        "id": "map2_phase_2",
+        "attemptId": "142e13582dba4a60a1833d40301d9339",
+        "shooting": 0,
+        "stealth": 0,
+        "failed": false
+    },
+    "checkpoint": "{\"version\":1,\"world\":{\"version\":1,\"story\":{\"version\":2,\"stage\":2,\"medicineDelivered\":false,\"crateStored\":false,\"scoutFound\":false,\"scoutSheltered\":false,\"weakGroupGathered\":false,\"southStockMoved\":false,\"boatsChecked\":false,\"firstWaveCleared\":false,\"secondWaveCleared\":false,\"frontGroupSafe\":false,\"fireteamCleared\":false,\"boatsEvacuated\":false,\"hungSacrificeConfirmed\":false,\"rescuedGroups\":0,\"failed\":false,\"failureCause\":\"\"},\"medicineTaken\":false,\"medicineCarried\":false,\"crateTaken\":false,\"crateCarried\":false,\"southStockTaken\":false,\"southStockCarried\":false},\"chapter\":{\"dayOne\":{\"carriedWeapon\":-1,\"schema\":1,\"seed\":185254889,\"wetPattern\":0,\"stakeHits\":6,\"medicineMask\":3,\"postsReached\":3,\"initialized\":true,\"stockCredited\":true,\"duckSeen\":true,\"arrivalSeen\":true,\"crates\":[{\"x\":2,\"y\":0,\"rotated\":false,\"offset\":0.0},{\"x\":2,\"y\":2,\"rotated\":false,\"offset\":0.0},{\"x\":5,\"y\":0,\"rotated\":false,\"offset\":0.0}],\"boards\":[{\"x\":0,\"y\":0,\"rotated\":false,\"offset\":0.01410666387528181},{\"x\":1,\"y\":1,\"rotated\":false,\"offset\":0.015487812459468842},{\"x\":2,\"y\":2,\"rotated\":false,\"offset\":0.013719821348786354}],\"boardOrder\":[0,1,4,3,2],\"posts\":[{\"faults\":1,\"lampAngle\":156.35801696777345,\"gateClosed\":true,\"latchSeated\":true,\"bundleStowed\":true},{\"faults\":6,\"lampAngle\":180.0,\"gateClosed\":true,\"latchSeated\":true,\"bundleStowed\":true}]},\"version\":3,\"phase\":2,\"evacuation\":0,\"patrolWarnings\":0,\"storedRounds\":90,\"wireStage\":0,\"patrolScanSeconds\":0.0,\"patrolFocusSeconds\":0.0,\"patrolFocusDirection\":{\"x\":0.0,\"y\":0.0,\"z\":0.0},\"night2GuidanceStage\":0,\"night2ChainCuePlayed\":false,\"villageDaySeconds\":0.0,\"villagePlanePlayed\":false,\"night2RouteVisited\":[],\"introduced\":[\"D1_05\"],\"completed\":[\"D1_01\",\"D1_02\",\"D1_03\",\"D1_04\",\"D1_05\",\"D1_06\",\"N1_01\",\"N1_02\",\"N1_03\",\"N1_04\"],\"counts\":[{\"id\":\"D1_04\",\"count\":3},{\"id\":\"D1_05\",\"count\":5}],\"combatGroups\":[],\"enemies\":[],\"activeTask\":\"\",\"carry\":\"\",\"trackedTask\":\"N1_04\",\"actors\":[{\"role\":\"Anh Thành\",\"position\":{\"x\":-79.29000091552735,\"y\":1.0971262454986573,\"z\":10.90999984741211}},{\"role\":\"Anh Lực\",\"position\":{\"x\":-79.29000091552735,\"y\":1.0250000953674317,\"z\":19.90999984741211}},{\"role\":\"Hùng\",\"position\":{\"x\":-72.88999938964844,\"y\":1.0812917947769166,\"z\":10.90999984741211}},{\"role\":\"Chị Lành\",\"position\":{\"x\":-48.459999084472659,\"y\":1.0250000953674317,\"z\":-30.489999771118165}},{\"role\":\"Ông Sáu\",\"position\":{\"x\":-47.05999755859375,\"y\":1.0250000953674317,\"z\":-30.489999771118165}},{\"role\":\"Bé Tí\",\"position\":{\"x\":-47.40999984741211,\"y\":1.0250000953674317,\"z\":-31.03999900817871}},{\"role\":\"Chú Bảy\",\"position\":{\"x\":-27.75,\"y\":0.8250002861022949,\"z\":-86.19000244140625}},{\"role\":\"Tâm\",\"position\":{\"x\":29.0,\"y\":0.774398148059845,\"z\":-16.65999984741211}},{\"role\":\"Tổ gác\",\"position\":{\"x\":-64.59000396728516,\"y\":1.0250000953674317,\"z\":11.210000038146973}},{\"role\":\"Tổ gác 2\",\"position\":{\"x\":-67.84000396728516,\"y\":1.0250000953674317,\"z\":11.059999465942383}}],\"taskProgress\":0.0,\"coverClock\":0.0,\"workCount\":0,\"wounded\":false,\"hungDead\":false,\"radioTransferred\":false,\"tankDestroyed\":false,\"artilleryFired\":false,\"finished\":false,\"gearStored\":true},\"bagLayout\":{\"fieldKitVersion\":1,\"ids\":[\"ak_loading_pack\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\",\"\"],\"counts\":[2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\"primary\":\"rifle_standard\",\"pistol\":\"\",\"throwable\":\"stone\",\"conditions\":[-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0,-1.0],\"primaryCondition\":100.0,\"pistolCondition\":-1.0},\"exploration\":{\"version\":1,\"resolution\":128,\"bounds\":{\"serializedVersion\":\"2\",\"x\":-110.0,\"y\":-110.0,\"width\":220.0,\"height\":220.0},\"cells\":\"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwBwAAAAAAAAAAAAAAAAAA+A8AAAAAAAAAAAAAAAAAAP4/AAAAAAAAAAAAAAAAAAD/PwAAAAAAAAAAAAAAAACA/38AAAAAAAAAAAAAAAAAwP9/AAAAAAAAAAAAAAAAAPD//wAAAAAAAAAAAAAAAAD4//8AAAAAAAAAAAAAAAAA+P//AAAAAAAAAAAAAAAAAPz//wAAAAAAAAAAAAAAAAD8/38AAAAAAAAAAAAAAAAA/v9/AAAAAAAAAAAAAAAAAP//fwAAAAAAAAAAAAAAAAD//z8AAAAAAAAAAAAAAAAA//8/AAAAAAAAAAAAAAAAAP//HwAAAAAAAAAAAAAAAAD//x8AAAAAAAAAAAAAAACA//8PAAAAAAAAAAAAAAAAgP//DwAAAAAAAAAAAAAAAMD//wcAAAAAAAAAAAAAAADA//8DAAAAAAAAAAAAAAAAwP//AwAAAAAAAAAAAAAAAOD//wMAAAAAAAAAAAAAAADg//8DAAAAAAAAAAAAAAAA4P//AwAAAAAAAAAAAAAAAOD//wMAAAAAAAAAAAAAAADg//8DAAAAAAAAAAAAAAAA4P//AQAAAAAAAAAAAAAAAOD//wEAAAAAAAAAAAAAAADg//8BAAAAAAAAAAAAAAAA8P//AQAAAAAAAAAAAAAAAPD//wEAAAAAAAAAAAAAAADw//8BAAAAAAAAAAAAAAAA+P//AQAAAAAAAAAAAAAAAPj//wEAAAAAAAAAAAAAAAD8//8AAAAAAAAAAAAAAAAA/v//AAAAAAAAAAAAAAAAAP7//wAAAAAAAAAAAAAAAAD///8AAAAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAP//fwAAAAAAAAAAAAAAAPD//38AAAAAAAAAAAAAAAD+//9/AAAAAAAAAAAAAACA////fwAAAAAAAAAAAAAAwP///38AAAAAAAAAAAAAAOD///9/AAAAAAAAAAAAAADw////PwAAAAAAAAAAAAAA+P///z8AAAAAAAAAAAAAAPj///8/AAAAAAAAAAAAAAD4////PwAAAAAAAAAAAAAA+P///z8AAAAAAAAAAAAAAPj///8fAAAAAAAAAAAAAAD4////HwAAAAAAAAAAAAAA/P///x8AAAAAAAAAAAAAAPz///8fAAAAAAAAAAAAAAD4////HwAAAAAAAAAAAAAA+P///x8AAAAAAAAAAAAAAPj///8fAAAAAAAAAAAAAAD4////DwAAAAAAAAAAAAAA/P///x8AAAAAAAAAAAAAAPz///8fAAAAAAAAAAAAAAD8////HwAAAAAAAAAAAAAA/P///x8AAAAAAAAAAAAAAPz///8/AAAAAAAAAAAAAAD8////PwAAAAAAAAAAAAAA/P///z8AAAAAAAAAAAAAAPz///8/AAAAAAAAAAAAAAD8////fwAAAAAAAAAAAAAA/P///38AAAAAAAAAAAAAAPz///9/AAAAAAAAAAAAAAD8////fwAAAAAAAAAAAAAA/P////8AAAAAAAAAAAAAAPz/////AAAAAAAAAAAAAAD4/////wAAAAAAAAAAAAAA+P////8AAAAAAAAAAAAAAPD/////AAAAAAAAAAAAAADg/////wEAAAAAAAAAAAAAwP////8BAAAAAAAAAAAAAAD+////AQAAAAAAAAAAAAAA+P///wEAAAAAAAAAAAAAAPj///8BAAAAAAAAAAAAAADw////AQAAAAAAAAAAAAAA4P///wMAAAAAAAAAAAAAAMD///8DAAAAAAAAAAAAAAAA////AwAAAAAAAAAAAAAAAP///wMAAAAAAAAAAAAAAAD+//8HAAAAAAAAAAAAAAAA/P///wcAAAAAAAAAAAAAAPj///8fAAAAAAAAAAAAAAD4////fwAAAAAAAAAAAAAA8P////8BAAAAAAAAAAAAAOD/////AwAAAAAAAAAAAADA/////wcAAAAAAAAAAAAAgP////8HAAAAAAAAAAAAAID/////DwAAAAAAAAAAAAAA/////w8AAAAAAAAAAAAAAP7///8PAAAAAAAAAAAAAAD8////DwAAAAAAAAAAAAAA+P///w8AAAAAAAAAAAAAAPD///8PAAAAAAAAAAAAAADA////BwAAAAAAAAAAAAAAAP///wcAAAAAAAAAAAAAAAAA//8DAAAAAAAAAAAAAAAAAID/AQAAAAAAAAAAAAAAAAAAfgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\"},\"hasCharacterState\":true,\"stamina\":300.0,\"craftRemaining\":0.0,\"crafting\":\"\",\"ground\":[],\"position\":{\"x\":-48.164947509765628,\"y\":1.2100000381469727,\"z\":-36.714271545410159},\"yaw\":246.84176635742188,\"health\":100.0,\"playSeconds\":576.9497680664063,\"attackCooldown\":0.0,\"magazine\":30,\"equipped\":2,\"stones\":0,\"rifleMagazine\":30,\"pistolMagazine\":0,\"sniperMagazine\":0,\"rifleItemId\":\"rifle_standard\",\"inventory\":[{\"id\":\"ak_loading_pack\",\"count\":2},{\"id\":\"knife\",\"count\":1},{\"id\":\"rifle_standard\",\"count\":1}],\"skills\":{\"shooting\":0,\"stealth\":0,\"engineering\":0},\"skillMission\":{\"id\":\"map2_phase_2\",\"attemptId\":\"142e13582dba4a60a1833d40301d9339\",\"shooting\":0,\"stealth\":0,\"failed\":false},\"checkpoint\":\"\",\"patrolCheckpoint\":\"\",\"skillRunId\":\"ca29fd11588443ecb8769dfa26393e03\"}",
+    "patrolCheckpoint": "",
+    "skillRunId": "ca29fd11588443ecb8769dfa26393e03"
+}

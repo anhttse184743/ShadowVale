@@ -27,7 +27,7 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual(phase==2?"D2_01":"N2_01",m.Chapter.TrackedTask.id);
                 Assert.AreEqual(snapshotRifle(m),m.Bag.SlotItem(Map01Inventory.Slot.Primary),"Preview must seed an actual owned primary, not just a weapon visual.");
                 Assert.AreEqual(phase==3,m.Chapter.State.Done("D2_07"));Assert.IsFalse(m.Chapter.State.Done(phase==2?"D2_01":"N2_01"));
-                var site=m.Chapter.Sites["command"].position;
+                var site=m.Chapter.Sites[phase==2?"command":"bridge"].position; // Start beside the selected route, matching ApplyToMission.
                 Assert.Less(Vector3.Distance(m.Player.position,site),8);Assert.AreEqual(90,m.Inventory[m.RifleAmmo]);
                 var snapshot=Map02Mission.Parse(JsonUtility.ToJson(m.Capture()));m.Restore(snapshot);
                 Assert.AreEqual(phase,m.Chapter.State.phase);Assert.AreEqual(90,m.Chapter.State.storedRounds);

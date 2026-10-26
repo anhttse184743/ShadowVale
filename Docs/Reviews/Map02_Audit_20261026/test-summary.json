@@ -1,0 +1,564 @@
+{
+  "runs": [
+    {
+      "file": "before-tests.xml",
+      "sha256": "76cce9a9799c0ed33902a92ce43ed8265bd2d2721c3900f76ec56024aaaa537b",
+      "total": 26,
+      "passed": 17,
+      "failed": 9,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.CoverFireTakesSixtyToNinetySecondsWhateverNamHits",
+          "result": "Passed",
+          "message": null,
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.LaneHoldsFollowEvacuationAndTheFallenDropRounds",
+          "result": "Passed",
+          "message": null,
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.RepairAndAntennaRequireActualInputAndCoverFireLocksOnlyMovement",
+          "result": "Failed",
+          "message": "  Expected: 4.0d +/- 0.0099999997764825821d\n  But was:  0.0d\n",
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.TankAndBoatsAreWhereTheNightThreeStoryPutsThem",
+          "result": "Passed",
+          "message": null,
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.WoundBankAndSacrificeRunWithoutPressingEAndRadioCallsKeepControl",
+          "result": "Passed",
+          "message": null,
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoRouteTests.DayTwoRoutesRescueWireAndAntennaArePlayable",
+          "result": "Failed",
+          "message": "System.NullReferenceException : Object reference not set to an instance of an object",
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.InvalidNewStateIsRejectedWithoutChangingVersionThree",
+          "result": "Passed",
+          "message": null,
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.LiveWireEscortAndPatrolSaveLoadKeepTheirContracts",
+          "result": "Failed",
+          "message": "System.Collections.Generic.KeyNotFoundException : The given key 'nightPatrol' was not present in the dictionary.",
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.OldVersionThreeWireSavesKeepCompletedTasksAndPendingWork",
+          "result": "Passed",
+          "message": null,
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.PatrolResetRewindsOnlyNightRouteAndKeepsChapterResources",
+          "result": "Passed",
+          "message": null,
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.WireRequiresPickupAndDeliveryAndCannotBeDuplicated",
+          "result": "Passed",
+          "message": null,
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.CastAndPropsCapture",
+          "result": "Passed",
+          "message": null,
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.DayThreeCrateAndNightThreeOpeningsAreDressed",
+          "result": "Failed",
+          "message": "  Expected: False\n  But was:  True\n",
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.NightThreePerformanceProbe",
+          "result": "Passed",
+          "message": null,
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.SacrificeAndCounterAttackFollowTheScriptClock",
+          "result": "Failed",
+          "message": "  String lengths are both 17. Strings differ at index 16.\n  Expected: \"m2v3_sacrifice_03\"\n  But was:  \"m2v3_sacrifice_02\"\n  ---------------------------^\n",
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.SkippingTheSacrificeAtAnyMomentLandsOnTheSameDawn",
+          "result": "Passed",
+          "message": null,
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.TankShotAndFarewellAreStagedWithoutCloseUps",
+          "result": "Failed",
+          "message": "  String lengths are both 16. Strings differ at index 15.\n  Expected: \"m2v3_farewell_09\"\n  But was:  \"m2v3_farewell_01\"\n  --------------------------^\n",
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.TelemetryStagesKeepTheirOrderThroughTheChapter",
+          "result": "Passed",
+          "message": null,
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.TheTankRollsItsTracksAndWheelsWhenItDrives",
+          "result": "Passed",
+          "message": null,
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02NightTwoRouteTests.NightCanBeCompletedWithoutCombatUsingRealDoorAndOrderedRoute",
+          "result": "Failed",
+          "message": "  Expected: 3\n  But was:  0\n",
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02NightTwoRouteTests.PatrolCarriesApprovedTorchAndFiresOnlyThroughClearSight",
+          "result": "Failed",
+          "message": "System.Collections.Generic.KeyNotFoundException : The given key 'nightPatrol' was not present in the dictionary.",
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02NightTwoRouteTests.VersionThreeDefaultsKeepCompletedTasksAndResetTheWholeNightRoute",
+          "result": "Passed",
+          "message": null,
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02PerformanceTests.DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel",
+          "result": "Failed",
+          "message": "System.NullReferenceException : Object reference not set to an instance of an object",
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.DayThreeScenesAndTestRunsStartWhereTheyShould",
+          "result": "Passed",
+          "message": null,
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.SuppliesGoFromTheStoreCartToWhereTheStoryTakesThem",
+          "result": "Passed",
+          "message": null,
+          "source": "before-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.TheCastStandsAsTallAsNamWithTheirFeetOnTheGround",
+          "result": "Passed",
+          "message": null,
+          "source": "before-tests.xml"
+        }
+      ]
+    },
+    {
+      "file": "audit-tests.xml",
+      "sha256": "e9f727b063b85f0a7ed6943bf61f97ce6a04fa16e6cd765c6148fe4e714dea46",
+      "total": 26,
+      "passed": 24,
+      "failed": 2,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.CoverFireTakesSixtyToNinetySecondsWhateverNamHits",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.LaneHoldsFollowEvacuationAndTheFallenDropRounds",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.RepairAndAntennaRequireActualInputAndCoverFireLocksOnlyMovement",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.TankAndBoatsAreWhereTheNightThreeStoryPutsThem",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.WoundBankAndSacrificeRunWithoutPressingEAndRadioCallsKeepControl",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoRouteTests.DayTwoRoutesRescueWireAndAntennaArePlayable",
+          "result": "Failed",
+          "message": "System.Reflection.TargetParameterCountException : Number of parameters specified does not match the expected number.",
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.InvalidNewStateIsRejectedWithoutChangingVersionThree",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.LiveWireEscortAndPatrolSaveLoadKeepTheirContracts",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.OldVersionThreeWireSavesKeepCompletedTasksAndPendingWork",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.PatrolResetRewindsOnlyNightRouteAndKeepsChapterResources",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.WireRequiresPickupAndDeliveryAndCannotBeDuplicated",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.CastAndPropsCapture",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.DayThreeCrateAndNightThreeOpeningsAreDressed",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.NightThreePerformanceProbe",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.SacrificeAndCounterAttackFollowTheScriptClock",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.SkippingTheSacrificeAtAnyMomentLandsOnTheSameDawn",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.TankShotAndFarewellAreStagedWithoutCloseUps",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.TelemetryStagesKeepTheirOrderThroughTheChapter",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.TheTankRollsItsTracksAndWheelsWhenItDrives",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02NightTwoRouteTests.NightCanBeCompletedWithoutCombatUsingRealDoorAndOrderedRoute",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02NightTwoRouteTests.PatrolCarriesApprovedTorchAndFiresOnlyThroughClearSight",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02NightTwoRouteTests.VersionThreeDefaultsKeepCompletedTasksAndResetTheWholeNightRoute",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02PerformanceTests.DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel",
+          "result": "Failed",
+          "message": "  Expected: True\n  But was:  False\n",
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.DayThreeScenesAndTestRunsStartWhereTheyShould",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.SuppliesGoFromTheStoreCartToWhereTheStoryTakesThem",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.TheCastStandsAsTallAsNamWithTheirFeetOnTheGround",
+          "result": "Passed",
+          "message": null,
+          "source": "audit-tests.xml"
+        }
+      ]
+    },
+    {
+      "file": "retry-two.xml",
+      "sha256": "da956b344f7c4c7309ab6735f8a7ab15b4e7f137e687f7fb9c171ec93417bf1b",
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoRouteTests.DayTwoRoutesRescueWireAndAntennaArePlayable",
+          "result": "Passed",
+          "message": null,
+          "source": "retry-two.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02PerformanceTests.DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel",
+          "result": "Failed",
+          "message": "System.Reflection.TargetInvocationException : Exception has been thrown by the target of an invocation.\n  ----> System.NullReferenceException : Object reference not set to an instance of an object",
+          "source": "retry-two.xml"
+        }
+      ]
+    },
+    {
+      "file": "retry-performance.xml",
+      "sha256": "cbee6dd7ba8269bfeaf42ff8ff711764cf95ad454b4d539d859d79dbaf844c6c",
+      "total": 2,
+      "passed": 1,
+      "failed": 1,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "ShadowVale.Map01.Tests.Map02PerformanceTests.DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel",
+          "result": "Passed",
+          "message": null,
+          "source": "retry-performance.xml"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02RoutePreviewTests.PreviewStartsAtTheSelectedRouteAndCreatesItsOwnRetryPoint",
+          "result": "Failed",
+          "message": "  Expected: less than 8.0f\n  But was:  109.871323f\n",
+          "source": "retry-performance.xml"
+        }
+      ]
+    },
+    {
+      "file": "retry-preview.xml",
+      "sha256": "88aff4fc12c65b8fe5b62d2337ce77144453f8f089bda5db5807487dfeabec32",
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0,
+      "cases": [
+        {
+          "name": "ShadowVale.Map01.Tests.Map02RoutePreviewTests.PreviewStartsAtTheSelectedRouteAndCreatesItsOwnRetryPoint",
+          "result": "Passed",
+          "message": null,
+          "source": "retry-preview.xml"
+        }
+      ]
+    }
+  ],
+  "latest_per_distinct_case": [
+    {
+      "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.CoverFireTakesSixtyToNinetySecondsWhateverNamHits",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.LaneHoldsFollowEvacuationAndTheFallenDropRounds",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.RepairAndAntennaRequireActualInputAndCoverFireLocksOnlyMovement",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.TankAndBoatsAreWhereTheNightThreeStoryPutsThem",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.WoundBankAndSacrificeRunWithoutPressingEAndRadioCallsKeepControl",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02DayTwoRouteTests.DayTwoRoutesRescueWireAndAntennaArePlayable",
+      "result": "Passed",
+      "message": null,
+      "source": "retry-two.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.InvalidNewStateIsRejectedWithoutChangingVersionThree",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.LiveWireEscortAndPatrolSaveLoadKeepTheirContracts",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.OldVersionThreeWireSavesKeepCompletedTasksAndPendingWork",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.PatrolResetRewindsOnlyNightRouteAndKeepsChapterResources",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.WireRequiresPickupAndDeliveryAndCannotBeDuplicated",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02FinaleTests.CastAndPropsCapture",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02FinaleTests.DayThreeCrateAndNightThreeOpeningsAreDressed",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02FinaleTests.NightThreePerformanceProbe",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02FinaleTests.SacrificeAndCounterAttackFollowTheScriptClock",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02FinaleTests.SkippingTheSacrificeAtAnyMomentLandsOnTheSameDawn",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02FinaleTests.TankShotAndFarewellAreStagedWithoutCloseUps",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02FinaleTests.TelemetryStagesKeepTheirOrderThroughTheChapter",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02FinaleTests.TheTankRollsItsTracksAndWheelsWhenItDrives",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02NightTwoRouteTests.NightCanBeCompletedWithoutCombatUsingRealDoorAndOrderedRoute",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02NightTwoRouteTests.PatrolCarriesApprovedTorchAndFiresOnlyThroughClearSight",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02NightTwoRouteTests.VersionThreeDefaultsKeepCompletedTasksAndResetTheWholeNightRoute",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02PerformanceTests.DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel",
+      "result": "Passed",
+      "message": null,
+      "source": "retry-performance.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.DayThreeScenesAndTestRunsStartWhereTheyShould",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.SuppliesGoFromTheStoreCartToWhereTheStoryTakesThem",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.TheCastStandsAsTallAsNamWithTheirFeetOnTheGround",
+      "result": "Passed",
+      "message": null,
+      "source": "audit-tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02RoutePreviewTests.PreviewStartsAtTheSelectedRouteAndCreatesItsOwnRetryPoint",
+      "result": "Passed",
+      "message": null,
+      "source": "retry-preview.xml"
+    }
+  ],
+  "distinct_total": 27,
+  "distinct_passed": 27,
+  "distinct_failed": 0,
+  "note": "Union of latest result per test across targeted reruns; not a single full clean run or a visual/FPS certification."
+}

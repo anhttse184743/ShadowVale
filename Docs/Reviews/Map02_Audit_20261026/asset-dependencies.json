@@ -1,0 +1,7 @@
+{
+  "chosen_files": 453,
+  "missing_meta": [],
+  "references_to_excluded_assets": [],
+  "unresolved_guids": [],
+  "note": "Checks changed serialized references against tracked and selected asset/meta files; a folder meta own GUID is not an external dependency. Dynamic resource strings are checked by runtime tests."
+}

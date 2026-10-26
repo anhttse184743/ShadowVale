@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-26 06:57:35Z" end-time="2026-10-26 06:57:38Z" duration="3,1803104">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="798" result="Failed" site="Child" start-time="2026-10-26 06:57:35Z" end-time="2026-10-26 06:57:38Z" duration="3.180310" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1731" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/Admin/.codex/worktrees/map1-boot-investigation-20261023/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="575" result="Failed" site="Child" start-time="2026-10-26 06:57:37Z" end-time="2026-10-26 06:57:38Z" duration="1.524135" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="7688" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1732" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="575" result="Failed" site="Child" start-time="2026-10-26 06:57:37Z" end-time="2026-10-26 06:57:38Z" duration="0.953900" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1733" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="575" result="Failed" site="Child" start-time="2026-10-26 06:57:38Z" end-time="2026-10-26 06:57:38Z" duration="0.698952" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="SetUpFixture" id="1642" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="575" result="Failed" site="Child" start-time="2026-10-26 06:57:38Z" end-time="2026-10-26 06:57:38Z" duration="0.672996" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1435" name="Map02PerformanceTests" fullname="ShadowVale.Map01.Tests.Map02PerformanceTests" classname="ShadowVale.Map01.Tests.Map02PerformanceTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-26 06:57:30Z" end-time="2026-10-26 06:57:31Z" duration="1.068909" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1436" name="DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel" fullname="ShadowVale.Map01.Tests.Map02PerformanceTests.DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel" methodname="DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel" classname="ShadowVale.Map01.Tests.Map02PerformanceTests" runstate="Runnable" seed="1742479330" result="Passed" start-time="2026-10-26 06:57:22Z" end-time="2026-10-26 06:57:31Z" duration="8.957252" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1453" name="Map02RoutePreviewTests" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 06:57:38Z" end-time="2026-10-26 06:57:38Z" duration="0.637021" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1454" name="PreviewStartsAtTheSelectedRouteAndCreatesItsOwnRetryPoint" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.PreviewStartsAtTheSelectedRouteAndCreatesItsOwnRetryPoint" methodname="PreviewStartsAtTheSelectedRouteAndCreatesItsOwnRetryPoint" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="969208062" result="Failed" start-time="2026-10-26 06:57:31Z" end-time="2026-10-26 06:57:38Z" duration="7.055100" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: less than 8.0f
+  But was:  109.871323f
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.Map02RoutePreviewTests+<PreviewStartsAtTheSelectedRouteAndCreatesItsOwnRetryPoint>d__0.MoveNext () [0x002aa] in C:\Users\Admin\.codex\worktrees\map1-boot-investigation-20261023\ShadowVale\Assets\_Project\Map01\Tests\Map02RoutePreviewTests.cs:31
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Saving results to: Logs/Map02Chapter/latest-full-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -14,6 +14,13 @@ namespace ShadowVale.Map01.Tests
 {
     public sealed class Map02ChapterTests : ForestSceneTestBase
     {
+        [Test] public void EverySpokenChapterCueKeepsItsExactRecordingAcrossAllSevenPhases()
+        {
+            // A Day 1-only catalog must never silently remove the later chapter's recordings during a merge.
+            foreach (var line in Map02ChapterDefinition.Load().entries.Where(e=>!string.IsNullOrWhiteSpace(e.text)))
+                Assert.IsTrue(Map02DialogueCatalog.HasApprovedRecording(line), line.id+" lost its exact chapter recording");
+        }
+
         [Test] public void EveryTaskHasValidDependenciesUniqueIdentityAndNoOrphanedDialogue()
         {
             var d=Map02ChapterDefinition.Load();Assert.AreEqual(43,d.tasks.Length);
