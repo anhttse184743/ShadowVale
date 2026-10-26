@@ -84,6 +84,7 @@ namespace ShadowVale.Map01
                 var go=new GameObject(t.id+" "+t.title);go.transform.SetParent(root.transform);go.transform.position=DayTaskPoint(t);
                 var marker=go.AddComponent<Map02ObjectiveObject>();marker.saveId="m2v3_"+t.id;marker.chapterId=t.id;marker.prompt=t.title;marker.radius=3;marker.standPoint=go.transform;markers.Add(t.id,marker);
             }
+            markers["N3_CRAWL"].transform.position=HiddenFromTank(sites["cover"].position);   // he answers Hùng from behind a wall, not in the lane
             var arrival=FindFirstObjectByType<Map02Arrival>();
             foreach(var role in new[]{"Anh Thành","Anh Lực","Hùng","Chị Lành","Ông Sáu","Bé Tí","Chú Bảy","Tâm",Guard,SeatedGuard})
             {
@@ -483,12 +484,12 @@ namespace ShadowVale.Map01
             if(!placedActors||placedPhase!=State.phase)
             {
                 if(!fresh)roles["Anh Thành"].StopAt(State.phase==6?sites["ditch"].position+Vector3.right*2.5f:sites["command"].position);
-                roles["Anh Lực"].StopAt(State.phase==6?sites["ditch"].position+Vector3.left*2.5f:(State.phase==4?sites["ditch"].position:State.phase==5?LucNightThree():sites["gate"].position));
+                roles["Anh Lực"].StopAt(State.phase==6?sites["ditch"].position+Vector3.left*2.5f:(State.phase==4?sites["ditch"].position:State.phase==5?(State.Done("N3_05C")?LucCover():LucNightThree()):sites["gate"].position));
                 roles["Chị Lành"].StopAt(State.Done("N3_02")?SafeSpot("Chị Lành"):State.phase<=1?DayFamily+Vector3.left*.8f:sites["family"].position);
                 roles["Ông Sáu"].StopAt(State.Done("N3_02")?SafeSpot("Ông Sáu"):State.phase<=1?DayFamily+Vector3.forward*3.5f+Vector3.left*1.4f:SauYard);   // the open yard in front: behind is the house wall   // Day 1 / Night 1: the family's seat; later days: the yard
                 roles["Bé Tí"].StopAt(State.Done("N3_03")?SafeSpot("Bé Tí"):State.phase<=1?DayFamily+Vector3.left*1.3f+Vector3.forward*3.1f:sites[State.phase==5?"child":"family"].position+Vector3.back*.8f);   // Night 3: lost at the buffalo pen
                 roles["Chú Bảy"].StopAt(sites["dock"].position);
-                roles["Tâm"].StopAt(sites[State.phase==5&&State.Done("N3_CRAWL")?"tamCover":State.Done("D2_04")?"bamboo":"scout"].position);
+                roles["Tâm"].StopAt(State.phase==5&&State.Done("N3_CRAWL")?HiddenFromTank(sites["tamCover"].position):sites[State.Done("D2_04")?"bamboo":"scout"].position);
                 if(!fresh&&!State.hungDead&&escort!=roles["Hùng"])roles["Hùng"].StopAt(sites[State.phase==5?(State.Done("N3_00")?"ditch":"rest"):State.phase==4?"family":State.phase>=2?"radio":State.phase==1?(State.Done("N1_03")?"gate":State.Done("N1_02")?"bamboo":"family"):State.Done("D1_02")?"family":"arrival"].position+Vector3.right*1.4f);
                 placedActors=true;placedPhase=State.phase;
             }

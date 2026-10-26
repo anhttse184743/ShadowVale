@@ -209,8 +209,9 @@ namespace ShadowVale.Map01
         {
             if(State.phase!=5)return;
             if(finished.id=="N3_00"||finished.id=="N3_04")roles["Anh Lực"].GoTo(LucNightThree(),2.2f); // Out to the outer post, then back to the tamarind.
-            if(finished.id=="N3_05C")roles["Anh Lực"].StopAt(LucNightThree()); // Already in cover when the tank fires.
-            if(finished.id=="N3_CRAWL")roles["Tâm"].StopAt(sites["tamCover"].position);
+            if(finished.id=="N3_05C"){var post=sites["lane3"].position+Vector3.left*3;if(NavMesh.SamplePosition(post,out var hit,3,NavMesh.AllAreas))post=hit.position;roles["Anh Lực"].StopAt(post);}   // beside Nam at the third lane: he falls back as the tank comes
+            if(finished.id=="N3_WOUND")foreach(var pair in retreats)if(roles.TryGetValue(pair.Key,out var who)&&Flat(who.transform.position,pair.Value)>1.5f)who.StopAt(pair.Value);   // a skipped scene lands them in cover
+            if(finished.id=="N3_CRAWL")roles["Tâm"].StopAt(HiddenFromTank(sites["tamCover"].position));   // covering the tree from behind a wall
         }
     }
 }

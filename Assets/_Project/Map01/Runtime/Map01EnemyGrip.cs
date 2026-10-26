@@ -14,6 +14,7 @@ namespace ShadowVale.Map01
         public static void ResetPatrolCalibration() { patrolMounts.Clear(); }
         Animator actor;Map01Rifle rifle;Map01EnemyController owner;Mount mount;Vector3 grip;
         Map02ChapterEnemy chapterOwner;
+        bool standalone;
         public bool Calibrated{get;private set;}
         public float PalmError{get;private set;}
         public float WristBend{get;private set;}
@@ -21,6 +22,13 @@ namespace ShadowVale.Map01
         {
             var result=actor.gameObject.AddComponent<Map01EnemyGrip>();
             result.actor=actor;result.rifle=Map01Rifle.Attach(actor);result.Calibrate();return result;
+        }
+        /// <summary>The engaged grip for someone who is not a guard (Night 3's comrades on Map 2, on the guards' controller).</summary>
+        public static Map01EnemyGrip BindStandalone(Animator actor)
+        {
+            if(actor==null||!actor.isHuman)return null;
+            var result=actor.GetComponent<Map01EnemyGrip>();if(result==null)result=actor.gameObject.AddComponent<Map01EnemyGrip>();
+            result.standalone=true;result.actor=actor;result.rifle=Map01Rifle.Attach(actor);result.Calibrate();return result;
         }
         public static Map01EnemyGrip Bind(Map01EnemyController guard)
         {
@@ -78,6 +86,7 @@ namespace ShadowVale.Map01
         }
         void LateUpdate()
         {
+            if(standalone){if(Calibrated&&rifle!=null&&rifle.weapon!=null&&rifle.weapon.gameObject.activeInHierarchy)Apply();return;}
             if(chapterOwner!=null)
             {
                 if(Calibrated&&!chapterOwner.Dead&&rifle!=null&&rifle.weapon!=null&&rifle.weapon.gameObject.activeInHierarchy)
