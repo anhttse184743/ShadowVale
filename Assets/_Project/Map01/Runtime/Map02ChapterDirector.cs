@@ -25,7 +25,10 @@ namespace ShadowVale.Map01
         public void HoldBinoculars(bool held){binocularHeld=held;SetBinoculars(held&&!Mission.InputBlocked);}
         void SetBinoculars(bool held){if(binocular==held)return;binocular=held;rig?.SetBinoculars(held,held?2:1);}
         public bool LocksInput=>Busy||DayReturningInput||State.finished||Transitioning;
-        public bool MovementLocked=>State.activeTask=="N3_08"&&!State.Done("N3_08")||State.Done("N3_WOUND")&&!State.Done("N3_CRAWL");
+        public bool MovementLocked=>false;   // nothing holds Nam in place any more: the cover fire (N3_08) only slows him (CoverPace)
+        /// <summary>Covering Hùng (N3_08): Nam can shift along the bank, slowly, never sprint.</summary>
+        public bool CoverFireActive=>State.activeTask=="N3_08"&&!State.Done("N3_08");
+        public const float CoverPace=.45f;
         public bool MaySave=>!Busy;
         public string SaveReason=>"Hãy hoàn tất thao tác hoặc hội thoại trước khi lưu.";
         public IReadOnlyDictionary<string,Transform> Sites=>sites;

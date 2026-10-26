@@ -60,7 +60,7 @@ namespace ShadowVale.Map01
         public Map02ChapterActor Companion=>escort==null&&State.activeTask=="N3_08"?roles["Hùng"]:secondaryEscort!=null&&escort!=null&&Vector3.Distance(secondaryEscort.transform.position,Mission.Player.position)>Vector3.Distance(escort.transform.position,Mission.Player.position)?secondaryEscort:escort;
         // Bringing Tâm back (Day 2) keeps Nam armed, free to change gear and at full pace (Tài's design, chosen 23/10);
         // leading Hùng before Day 3 slings the rifle and slows Nam to a walk.
-        public bool CompanionLocksGear=>Companion!=null&&Companion.role!="Tâm";
+        public bool CompanionLocksGear=>Companion!=null&&Companion.role!="Tâm"&&!CoverFireActive;   // covering Hùng is shooting
         bool LeadingWounded=>escort!=null&&State.phase<4&&escort.role!="Tâm";
         public bool ShowInteractPrompt(Map02ObjectiveObject marker)
         {

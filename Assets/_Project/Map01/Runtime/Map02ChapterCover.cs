@@ -13,7 +13,9 @@ namespace ShadowVale.Map01
     /// </summary>
     public sealed partial class Map02ChapterDirector
     {
-        public const float CoverFastest=60,CoverSlowest=90;
+        public const float CoverFastest=40,CoverSlowest=55,EscortDownBeat=1.5f,CoverLeash=3.5f;   // with the tank 30 m off, a steady crouched run along the ditch (the script had 60–90 s)
+        float hungDitchAt;
+        float escortDownFor;
         const string Escort="N3_08";
         Vector3[] hungCanal;float panClock;int pansDone;ParticleSystem sparks;
         public Vector3[] HungCanal=>hungCanal??=BuildCanal();
@@ -49,10 +51,21 @@ namespace ShadowVale.Map01
         }
         void StartCover(Map02ChapterTask t)
         {
-            SpawnEscort();health.CinematicInvulnerable=true;hungCanal=null;pansDone=Mathf.FloorToInt(State.taskProgress*3);
+            SpawnEscort();health.CinematicInvulnerable=true;hungCanal=null;pansDone=Mathf.FloorToInt(State.taskProgress*3);hungDitchAt=State.taskProgress*Length(HungCanal);
             roles["Hùng"].StopAt(Along(HungCanal,State.taskProgress*Length(HungCanal)));
+            combat.Equip(WeaponKind.Rifle);combat.SetHandsOccupied(false);
             Mission.Say("Yểm trợ Hùng: bắn tốp lính sau xe tăng cho chúng cúi đầu.");Bark("m2v3_sacrifice_01");
         }
+        /// <summary>Covering Hùng, Nam holds the bank: he can shift a few metres along it, never go after Hùng.</summary>
+        void HoldCoverPosition()
+        {
+            if(!CoverFireActive||sceneTask!=null||!markers.TryGetValue("N3_08",out var mark))return;
+            var off=Vector3.ProjectOnPlane(Mission.Player.position-mark.transform.position,Vector3.up);if(off.magnitude<=CoverLeash)return;
+            var cc=Mission.Player.GetComponent<CharacterController>();var back=-off.normalized*(off.magnitude-CoverLeash);
+            if(cc!=null&&cc.enabled)cc.Move(back);else Mission.Player.position+=back;
+            if(Time.time>leashSaidAt+4){leashSaidAt=Time.time;Mission.Say("Giữ vị trí trên bờ đất mà yểm trợ — Hùng tự tiếp cận xe tăng.");}
+        }
+        float leashSaidAt=-10;
         /// <summary>Returns true when Hùng has reached the tracks and the sacrifice begins.</summary>
         bool TickCover(Map02ChapterTask t,float dt)
         {
@@ -60,11 +73,14 @@ namespace ShadowVale.Map01
             var squad=Enemies.Where(e=>e!=null&&e.group==Escort).ToArray();int down=squad.Count(e=>e.Dead||e.Suppressed);
             float pace=squad.Length>0&&squad.All(e=>e.Dead)?2:down*2>=squad.Length?1.5f:1;
             State.coverClock+=dt;
+            // The men round the tank all down: no one left to see the ditch, Hùng goes for the tracks now.
+            if(squad.Length>0&&squad.All(e=>e.Dead)){escortDownFor+=dt;if(escortDownFor>=EscortDownBeat){health.CinematicInvulnerable=false;State.taskProgress=1;BeginScene(t);return true;}}else escortDownFor=0;
             // Never ahead of the 60 s schedule, never behind the 90 s one.
             State.taskProgress=Mathf.Clamp(State.taskProgress+dt/CoverSlowest*pace,State.coverClock/CoverSlowest,State.coverClock/CoverFastest);
             State.taskProgress=Mathf.Clamp01(State.taskProgress);
             float distance=State.taskProgress*Length(HungCanal);
-            roles["Hùng"].SceneMove(Along(HungCanal,distance),Along(HungCanal,distance+.6f),.6f);
+            float walk=dt>0?Mathf.Clamp((distance-hungDitchAt)/dt,0,3):0;hungDitchAt=distance;   // the walk plays at the speed he really moves
+            roles["Hùng"].SceneMove(Along(HungCanal,distance),Along(HungCanal,distance+.6f),walk);
             if(pansDone<2&&State.taskProgress>=(pansDone+1)/3f){pansDone++;panClock=1.5f;} // Glance at Hùng a third and two thirds of the way.
             if(State.taskProgress<1||State.coverClock<CoverFastest)return false;
             health.CinematicInvulnerable=false;BeginScene(t);return true;
