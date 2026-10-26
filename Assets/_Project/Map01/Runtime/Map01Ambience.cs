@@ -6,7 +6,7 @@ namespace ShadowVale.Map01
     [DisallowMultipleComponent]
     public sealed class Map01Ambience : MonoBehaviour
     {
-        public const float WindLevel = .15f, BirdLevel = .095f;
+        public const float WindLevel = .12f, BirdLevel = .075f;
         Map01Mission mission;
         AudioSource wind, birds;
         BoxCollider shelterFloor, shelterRoof;
