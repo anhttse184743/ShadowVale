@@ -61,7 +61,7 @@ namespace ShadowVale.Map01.Editor
                 var instance=UnityEngine.Object.Instantiate(model);try
                 {
                     var nodes=paths.Select(p=>instance.transform.Find(p)).ToArray();if(nodes.Any(t=>t==null))throw new InvalidOperationException("Missing escort source bones: "+who);
-                    var data=new Map02EscortPoseData{names=nodes.Select(t=>t.name).ToArray(),duration=walk.length};
+                    var data=new Map02EscortPoseData{names=nodes.Select(t=>t.name).ToArray(),duration=walk.length,visualScale=who=="Tam"?1.0406817f:1f};
                     idle.SampleAnimation(instance,0);data.idle=new Map02EscortPoseData.Frame{bones=nodes.Select(Map01PistolAnimationData.Pose.Read).ToArray()};
                     int count=Mathf.RoundToInt(walk.length*30)+1;data.walk=new Map02EscortPoseData.Frame[count];
                     for(int frame=0;frame<count;frame++){walk.SampleAnimation(instance,walk.length*frame/(count-1));data.walk[frame]=new Map02EscortPoseData.Frame{bones=nodes.Select(Map01PistolAnimationData.Pose.Read).ToArray()};}

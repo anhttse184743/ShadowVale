@@ -11,6 +11,7 @@ namespace ShadowVale.Map01
     {
         Map02ChapterDirector owner;Animator nam,tam;
         Map02EscortPoseData namData,tamData;Transform[] namBones,tamBones;Vector3 lastPlayerPosition;
+        Map01PistolAnimationData.Pose[] namOriginalPose,tamOriginalPose;
         Vector3 namBase,tamBase;float clock;bool bound;
         PlayerCombat combat;float gunWeight,lastShot=-100;
         Transform leftShoulder,rightUpper;
@@ -29,6 +30,7 @@ namespace ShadowVale.Map01
             namData=Map02EscortPoseData.Load("Nam");tamData=Map02EscortPoseData.Load("Tam");
             if(nam==null||tam==null||namData==null||tamData==null){Debug.LogError("Tâm escort bone motion data are missing.",this);return;}
             namBones=namData.Bind(nam);tamBones=tamData.Bind(tam);lastPlayerPosition=owner.Mission.Player.position;
+            namOriginalPose=namBones.Select(Map01PistolAnimationData.Pose.Read).ToArray();tamOriginalPose=tamBones.Select(Map01PistolAnimationData.Pose.Read).ToArray();
             namBase=nam.transform.localPosition;tamBase=tam.transform.localPosition;
             rightArm=nam.GetComponentsInChildren<Transform>(true).Where(t=>t.name.StartsWith("RightHand")||t.name=="RightShoulder"||t.name=="RightArm"||t.name=="RightForeArm").ToArray();
             positions=new Vector3[rightArm.Length];rotations=new Quaternion[rightArm.Length];clock=0;bound=true;
@@ -58,9 +60,9 @@ namespace ShadowVale.Map01
             gunWeight=Mathf.MoveTowards(gunWeight,combat.IsAiming||Time.time-lastShot<.6f?1:0,Time.deltaTime/.18f);
             if(Time.time-lastShot<.06f)gunWeight=1; // The shot resolves later, after this frame's raised hand.
             for(int i=0;i<rightArm.Length;i++)rightArm[i].SetLocalPositionAndRotation(Vector3.Lerp(rightArm[i].localPosition,positions[i],gunWeight),Quaternion.Slerp(rightArm[i].localRotation,rotations[i],gunWeight));
-            float bob=walking?.008f*Mathf.Cos(clock/.6f*Mathf.PI*4):0;
-            nam.transform.localPosition=namBase+Vector3.down*(walking?.17f:.115f)+Vector3.up*bob;
-            tam.transform.localPosition=tamBase+Vector3.down*(walking?.07f:.015f)+Vector3.up*bob;
+            // The upright take supplies the leg pose; sole grounding determines body height.
+            nam.transform.localPosition=namBase;
+            tam.transform.localPosition=tamBase;
             Ground(nam,namContact,namFeet,namSkins,player.position.y);
             Ground(tam,tamContact,tamFeet,tamSkins,player.position.y);
             if(combat.IsReloading)rightUpper.rotation=Quaternion.AngleAxis(ReloadLowering(combat.ReloadProgress)*42,player.right)*rightUpper.rotation;
@@ -104,6 +106,8 @@ namespace ShadowVale.Map01
             if(combat!=null)combat.Attacked-=Shot;
             if(cameraRig!=null&&cameraRig.IgnoredCompanion==companionRoot)cameraRig.IgnoredCompanion=previousIgnoredCompanion;
             nam.transform.localPosition=namBase;tam.transform.localPosition=tamBase;
+            for(int i=0;i<namBones.Length;i++)namOriginalPose[i].Apply(namBones[i]);
+            for(int i=0;i<tamBones.Length;i++)tamOriginalPose[i].Apply(tamBones[i]);
             if(nam.isActiveAndEnabled)nam.Update(0);if(tam.isActiveAndEnabled)tam.Update(0);
             bound=false;
             if(groundMesh!=null){if(Application.isPlaying)Destroy(groundMesh);else DestroyImmediate(groundMesh);groundMesh=null;}

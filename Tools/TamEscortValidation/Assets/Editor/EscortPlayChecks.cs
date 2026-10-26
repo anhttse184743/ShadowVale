@@ -32,6 +32,7 @@ using Object=UnityEngine.Object;
     static void Finish(string error)
     {
         File.WriteAllText("live-checks.txt",string.IsNullOrEmpty(error)?"PASS 110 actual Play Mode frames\nPASS both knee joints animate while moving: Nam="+driver.namMotion+" degrees; Tam="+driver.tamMotion+" degrees\nPASS gait remains active when PlanarSpeed is zero\nPASS approved shoulder pose overrides earlier animation layers\nPASS root moved "+driver.travel+" m at configured walk speed "+driver.motor.WalkSpeed:"FAIL "+error);
+        if(string.IsNullOrEmpty(error))File.AppendAllText("live-checks.txt","\nPASS actual CharacterController measured normal walk="+driver.measuredWalk+" m/s; assisted walk="+driver.measuredEscort+" m/s (requested 1.8 m/s)\n");
         SessionState.SetInt(Key+"Exit",string.IsNullOrEmpty(error)?0:1);SessionState.SetInt(Key,3);EditorApplication.isPlaying=false;
     }
     static void Setup()

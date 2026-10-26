@@ -134,7 +134,12 @@ namespace ShadowVale.Gameplay.Player
             if (stoodFromProne) TrySetProne(false);
             else if (kb != null && kb.zKey.wasPressedThisFrame) TrySetProne(true);
             UpdateStanceToggles(kb);
-            if(AssistedWalkSpeed.HasValue){SetProne(false,true);_sneakToggled=IsSneaking=false;_sprintToggled=IsSprinting=false;}
+            if(AssistedWalkSpeed.HasValue)
+            {
+                // Changing stance clears velocity. Do this only when leaving prone, not every frame.
+                if(IsProne)SetProne(false,true);
+                _sneakToggled=IsSneaking=false;_sprintToggled=IsSprinting=false;
+            }
 
             Vector3 move = ToCameraSpace(input);
 

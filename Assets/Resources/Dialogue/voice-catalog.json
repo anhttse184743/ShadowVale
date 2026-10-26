@@ -6363,6 +6363,35 @@
       "castingApproved": true,
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025"
+    },
+    {
+      "id": "m2v3_scoutescort_warning_01",
+      "conversation": "m2v3_scoutescort_warning",
+      "speaker": "Anh Thành",
+      "text": "Đồng chí đưa thương binh về cẩn thận, địch đã phát hiện và bố trí lực lượng đánh chặn",
+      "radio": true,
+      "caption": "Anh Thành (bộ đàm): Đồng chí đưa thương binh về cẩn thận, địch đã phát hiện và bố trí lực lượng đánh chặn",
+      "match": "Anh Thành (bộ đàm): Đồng chí đưa thương binh về cẩn thận, địch đã phát hiện và bố trí lực lượng đánh chặn",
+      "resource": "Dialogue/VI/m2v3_scoutescort_warning_01_radio",
+      "language": "vi",
+      "voice": "Minh Đức",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "tempo": 0.92,
+      "pitch": 0.94,
+      "cost": 0,
+      "castingApproved": true,
+      "userApproved": false,
+      "status": "integrated_existing_cast_pending_line_listening",
+      "voiceRevision": "ScoutEscort_20261026",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "license": "Apache-2.0 (model and bundled presets)",
+      "duration": 5.652166666666667,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.4010009765625,
+      "rms": 0.06586901843547821,
+      "sha256": "183919f9876da793ee2bd2bac142b91a7fbeb371173b413f02ed821a32b19f8b"
     }
   ]
 }

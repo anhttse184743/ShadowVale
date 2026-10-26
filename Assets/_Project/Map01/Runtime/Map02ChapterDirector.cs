@@ -185,7 +185,7 @@ namespace ShadowVale.Map01
             }
             if(t.kind=="escortHung"||t.kind=="escortScout"||t.kind=="patrolHung")
             {
-                if(t.id=="D2_04"){StartScoutEscort();Mission.Say("Dìu Tâm về chốt · tốc độ đi bộ · chỉ dùng K54. Địch sẽ xuất hiện lần lượt từ hai bên đường ruộng.");UpdateMarkers();Mission.StoreCheckpoint();return true;}
+                if(t.id=="D2_04"){StartScoutEscort();Mission.Say("Dìu Tâm về chốt · 1,8 m/s · chỉ dùng K54. Địch sẽ xuất hiện lần lượt từ hai bên đường ruộng.");UpdateMarkers();Mission.StoreCheckpoint();return true;}
                 escort=roles[t.kind=="escortScout"?"Tâm":"Hùng"];escort.Follow(Mission.Player,t.id=="D1_02"?1.25f:1.35f,false);Mission.Say(escort.role=="Hùng"?"Đi bộ và giữ Hùng trong phạm vi 4 m. Đến điểm đánh dấu để hoàn tất.":"Tâm sẽ đi theo. Đưa cả hai tới điểm đánh dấu để hoàn tất.");UpdateMarkers();return true;
             }
             if(t.kind=="rescueFamily"||t.kind=="rescueChild")
@@ -409,6 +409,7 @@ namespace ShadowVale.Map01
         void CommitFinishedTask(Map02ChapterTask task)
         {
             TaskCompleted?.Invoke(task.id);
+            if(task.id=="D2_03")QueueScoutWarning();
             if(task.id=="N1_03")roles["Hùng"].GoTo(sites["nightOneRest"].position,1.25f);
             if(task.id=="D1_01")roles["Anh Thành"].GoTo(sites["command"].position,1.6f);
             if(task.id=="D2_04")roles["Tâm"].StopAt(sites["command"].position+Vector3.right*1.5f);

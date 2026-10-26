@@ -26,10 +26,12 @@ namespace ShadowVale.Map01
     {
         public Map02DayOneState dayOne=new Map02DayOneState();
         public int version=3,phase,evacuation,patrolWarnings,storedRounds;
-        public bool scoutPistolIssued;
-        public int scoutAmbushSpawned;
+        public bool scoutPistolIssued,scoutWarningHeard;
+        public int scoutAmbushSpawned,scoutAmbushPlanVersion;
+        public bool scoutAmbushPassedBridge;
         public bool scoutRescueOriginSet,scoutAmbushStarted;
         public Vector3 scoutRescueOrigin;
+        public List<Vector3> scoutAmbushPoints=new List<Vector3>();
         public bool TryStartScoutAmbush(Vector3 position)
         {
             if(!scoutRescueOriginSet)return false;
@@ -117,6 +119,8 @@ namespace ShadowVale.Map01
             if(completed==null||enemies==null||combatGroups==null)throw new System.IO.InvalidDataException("Dữ liệu Map 2 bị thiếu.");
             actors??=new List<ActorSnapshot>();
             if(scoutAmbushSpawned<0||scoutAmbushSpawned>5)throw new System.IO.InvalidDataException("Tốp phục kích dìu Tâm không hợp lệ.");
+            scoutAmbushPoints??=new List<Vector3>();
+            if((scoutAmbushPoints.Count!=0&&scoutAmbushPoints.Count!=5)||scoutAmbushPoints.Any(p=>!float.IsFinite(p.x)||!float.IsFinite(p.y)||!float.IsFinite(p.z)))throw new System.IO.InvalidDataException("Các điểm phục kích dìu Tâm không hợp lệ.");
             if(!float.IsFinite(scoutRescueOrigin.x)||!float.IsFinite(scoutRescueOrigin.y)||!float.IsFinite(scoutRescueOrigin.z))throw new System.IO.InvalidDataException("Điểm đón Tâm không hợp lệ.");
             night2RouteVisited??=new List<string>();
             if(night2GuidanceStage<0||night2GuidanceStage>7||!float.IsFinite(patrolFocusSeconds)||patrolFocusSeconds<0||patrolFocusSeconds>3.01f||

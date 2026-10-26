@@ -12,6 +12,7 @@ namespace ShadowVale.Map01
         public Frame idle;
         public Frame[] walk;
         public float duration;
+        public float visualScale=1;
         public static Map02EscortPoseData Load(string who)
         {
             var text=Resources.Load<TextAsset>("Story/TamEscort/"+who+"Poses");
@@ -32,6 +33,12 @@ namespace ShadowVale.Map01
             {
                 var pose=moving?Map01PistolAnimationData.Pose.Mix(walk[first].bones[i],walk[second].bones[i],weight):idle.bones[i];
                 pose.Apply(bones[i]);
+                // Scale the skeleton root, leaving the skin renderer's transform unchanged for sole evaluation.
+                if(names[i]=="Hips"&&visualScale!=1)
+                {
+                    bones[i].localPosition*=visualScale;
+                    bones[i].localScale*=visualScale;
+                }
             }
         }
     }

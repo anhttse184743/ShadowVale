@@ -19,8 +19,28 @@ public static class EscortRuntimeChecks
     static void Property(object target,string name,object value)=>target.GetType().GetProperty(name).SetValue(target,value);
     public static void Run()
     {
-        TamClips();StateRoundTrip();ReloadAndEquipment();SpawnPositions();VisualStates();
+        ScoutRadioWarning();TamClips();StateRoundTrip();ReloadAndEquipment();SpawnPositions();VisualStates();
         File.WriteAllLines("runtime-checks.txt",results);Debug.Log(string.Join("\n",results));
+    }
+    static void ScoutRadioWarning()
+    {
+        const string id="m2v3_scoutescort_warning_01";
+        var line=Map02ChapterDefinition.Load().entries.Single(e=>e.id==id);
+        Check(line.radio&&line.speaker=="Anh Thành"&&line.text=="Đồng chí đưa thương binh về cẩn thận, địch đã phát hiện và bố trí lực lượng đánh chặn","Thành radio warning uses exact requested text");
+        Check(Map02DialogueCatalog.HasApprovedRecording(line),"new warning resolves exact caption, radio channel and imported audio");
+        Check(DialogueVoice.Length(id)>5&&DialogueVoice.Length(id)<8,"new warning has valid spoken duration");
+        var root=new GameObject("Scout radio test");try
+        {
+            var chapter=root.AddComponent<Map02ChapterDirector>();chapter.enabled=false;
+            var queue=typeof(Map02ChapterDirector).GetMethod("QueueScoutWarning",BindingFlags.Instance|BindingFlags.NonPublic);
+            Check((bool)queue.Invoke(chapter,null)&&chapter.HasBark(id)&&!chapter.Busy,"rescue warning queues without blocking movement");
+            Check(!(bool)queue.Invoke(chapter,null),"rescue warning queues only once");
+            var voice=DialogueVoice.For(root);if(root.GetComponent<AudioSource>()==null)typeof(DialogueVoice).GetMethod("Awake",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(voice,null);Set(chapter,"voice",voice);
+            typeof(Map02ChapterDirector).GetMethod("TickBark",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(chapter,new object[]{.01f});
+            Check(chapter.CurrentBark?.id==id&&voice.CurrentId==id,"rescue radio bark starts the new voice clip with its caption");
+            var saved=JsonUtility.FromJson<Map02ChapterState>(JsonUtility.ToJson(chapter.State));
+            Property(chapter,"State",saved);Check(!(bool)queue.Invoke(chapter,null),"save/load does not repeat rescue radio warning");
+        }finally{Object.DestroyImmediate(root);}
     }
     public static void RenderPose()
     {
@@ -84,7 +104,7 @@ public static class EscortRuntimeChecks
     }
     static void ReloadAndEquipment()
     {
-        Check(Mathf.Abs(Map02ChapterDirector.ScoutAuthoredSpeed-1.9444444f)<.00001f,"source gait keeps its authored distance calibration");
+        Check(Mathf.Abs(Map02ChapterDirector.ScoutAuthoredSpeed-2.5f)<.00001f,"source gait keeps its authored distance calibration");
         Check(Map02ScoutEscortVisual.ReloadLowering(0)==0&&Map02ScoutEscortVisual.ReloadLowering(.5f)==1&&Map02ScoutEscortVisual.ReloadLowering(1)==0,"reload lowers, holds, raises on normal normalized magazine progress");
         var root=new GameObject("Equipment test");var pawn=new GameObject("Pawn");pawn.transform.SetParent(root.transform);
         try
@@ -103,15 +123,30 @@ public static class EscortRuntimeChecks
     }
     static void SpawnPositions()
     {
+        Check(!Map02ChapterDirector.ScoutAmbushDistanceClear(new Vector3(20.1f,0,0),Vector3.zero,new Vector3(.48f,0,0)),"spawn outside 20 m of Nam is rejected if too close to Tam");
+        Check(Map02ChapterDirector.ScoutAmbushDistanceClear(new Vector3(20.5f,0,0),Vector3.zero,new Vector3(.48f,0,0)),"spawn requires at least 20 m from both Nam and Tam");
+        Check(!Map02ChapterDirector.ScoutAmbushDistanceClear(new Vector3(19,100,0),Vector3.zero,Vector3.zero),"spawn separation uses horizontal ground distance");
         var settings=NavMesh.GetSettingsByIndex(0);var data=NavMeshBuilder.BuildNavMeshData(settings,new List<NavMeshBuildSource>{new(){shape=NavMeshBuildSourceShape.Box,size=new Vector3(100,.1f,100),transform=Matrix4x4.TRS(Vector3.down*.05f,Quaternion.identity,Vector3.one)}},new Bounds(Vector3.zero,new Vector3(100,10,100)),Vector3.zero,Quaternion.identity);var instance=NavMesh.AddNavMeshData(data);
         var root=new GameObject("Spawn positions");var pawn=new GameObject("Pawn");try
         {
             var motor=pawn.AddComponent<PlayerController>();var mission=root.AddComponent<Map02Mission>();mission.enabled=false;Set(mission,"player",motor);
             var chapter=root.AddComponent<Map02ChapterDirector>();Property(chapter,"Mission",mission);Set(chapter,"player",motor);
             var sites=(Dictionary<string,Transform>)typeof(Map02ChapterDirector).GetField("sites",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(chapter);
-            foreach(var item in new[]{("command",new Vector3(0,0,35)),("scout",new Vector3(0,0,-25))}){var site=new GameObject(item.Item1);site.transform.SetParent(root.transform);site.transform.position=item.Item2;sites[item.Item1]=site.transform;}
+            foreach(var item in new[]{("command",new Vector3(0,0,35)),("scout",new Vector3(0,0,-25)),("bridge",new Vector3(0,0,5))}){var site=new GameObject(item.Item1);site.transform.SetParent(root.transform);site.transform.position=item.Item2;sites[item.Item1]=site.transform;}
             var method=typeof(Map02ChapterDirector).GetMethod("TryScoutAmbushPoint",BindingFlags.Instance|BindingFlags.NonPublic);
-            for(int i=0;i<5;i++){object[] args={i,Vector3.zero};Check((bool)method.Invoke(chapter,args),"valid reachable spawn point "+i);var p=(Vector3)args[1];Check(i%2==0?p.x< -8:p.x>8,"field side alternates left/right for soldier "+i);}
+            var deck=new GameObject("Walkable bridge deck");deck.transform.SetParent(root.transform);deck.transform.position=new Vector3(0,0,20);deck.transform.rotation=Quaternion.Euler(0,90,0);deck.AddComponent<BoxCollider>().size=new Vector3(12,.2f,4);
+            var fixedPoints=new List<Vector3>();
+            for(int i=0;i<5;i++){object[] args={i,Vector3.zero};Check((bool)method.Invoke(chapter,args),"valid reachable spawn point "+i);var p=(Vector3)args[1];fixedPoints.Add(p);Check(p.z<12,"spawn stays on field bank before bridge "+i);Check(i%2==0?p.x<= -19.5f:p.x>=19.5f,"field side alternates left/right for soldier "+i);if(i>0)Check(p.z>fixedPoints[i-1].z,"ambush points progress towards camp "+i);}
+
+            pawn.transform.position=new Vector3(20,0,20);
+            for(int i=0;i<5;i++){object[] args={i,Vector3.zero};Check((bool)method.Invoke(chapter,args)&&Vector3.Distance((Vector3)args[1],fixedPoints[i])<.001f,"moving player cannot move fixed spawn "+i);}
+            var saved=JsonUtility.FromJson<Map02ChapterState>(JsonUtility.ToJson(chapter.State));
+            Check(saved.scoutAmbushPoints.SequenceEqual(fixedPoints),"save/load retains all five fixed ambush points");
+            var cross=typeof(Map02ChapterDirector).GetMethod("UpdateScoutBridgeCrossing",BindingFlags.Instance|BindingFlags.NonPublic);
+            Check(!(bool)cross.Invoke(chapter,new object[]{new Vector3(0,0,13)}),"field approach keeps ambush available before bridge");
+            Check((bool)cross.Invoke(chapter,new object[]{new Vector3(0,0,15)})&&chapter.State.scoutAmbushPassedBridge,"stepping onto bridge permanently stops further ambush spawns");
+            Check(!(bool)cross.Invoke(chapter,new object[]{new Vector3(0,0,0)})&&chapter.State.scoutAmbushPassedBridge,"returning to field does not restart stopped ambush");
+            saved=JsonUtility.FromJson<Map02ChapterState>(JsonUtility.ToJson(chapter.State));Check(saved.scoutAmbushPassedBridge,"bridge cutoff persists through save/load");
         }finally{Object.DestroyImmediate(root);Object.DestroyImmediate(pawn);instance.Remove();Object.DestroyImmediate(data);}
     }
     static void VisualStates()
@@ -130,7 +165,7 @@ public static class EscortRuntimeChecks
             var tamModel=Object.Instantiate(AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Art/Characters/NPCs/Anh Tâm.fbx"));NestedAnimator(tamModel);actor.Bind(tamModel.transform);
             tamModel.transform.localPosition=Vector3.down*.7f;
             var chapter=root.AddComponent<Map02ChapterDirector>();chapter.enabled=false;Property(chapter,"Mission",mission);Property(mission,"Chapter",chapter);Set(chapter,"player",motor);Set(chapter,"combat",combat);Set(chapter,"escort",actor);chapter.State.activeTask="D2_04";
-            Set(motor,"walkSpeed",2.75f);Check(Mathf.Abs(chapter.ScoutEscortSpeed-motor.WalkSpeed)<.0001f,"escort uses configured normal walk speed rather than hard-coded 7 km/h");
+            Set(motor,"walkSpeed",2.75f);Check(Mathf.Abs(chapter.ScoutEscortSpeed-1.8f)<.0001f,"escort uses requested 1.8 m/s independently of configured walk speed");
             var roles=(Dictionary<string,Map02ChapterActor>)typeof(Map02ChapterDirector).GetField("roles",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(chapter);roles["Tâm"]=actor;
             var bones=nam.GetComponentsInChildren<Transform>().ToDictionary(t=>t.name,t=>t);
             var gun=new GameObject("Pistol muzzle");gun.transform.SetParent(bones["RightHand"],false);var weapon=gun.AddComponent<Weapon>();weapon.Configure(WeaponKind.Pistol,25,35,3,false,gun.transform);
@@ -139,15 +174,32 @@ public static class EscortRuntimeChecks
             Check(!bag.DropSlot(Map01Inventory.Slot.Pistol)&&!bag.Unequip(Map01Inventory.Slot.Pistol),"K54 cannot be dropped or stowed during paired escort");
             var view=new GameObject("Aim camera");view.transform.SetParent(root.transform);view.tag="MainCamera";var camera=view.AddComponent<Camera>();view.transform.rotation=Quaternion.Euler(-17,9,0);
             var follow=view.AddComponent<ThirdPersonCamera>();Set(follow,"target",pawn.transform);Set(mission,"cameraRig",follow);
+            Property(mission,"CharacterSettings",new ForestSettings{playerHP=100,medkitHeal=45});
+            health.RestoreHealth(30);bag.Receive("medkit_small",2);int medkits=bag.Count("medkit_small");
+            Check(mission.CharacterGearLocked&&mission.CharacterCanHeal,"escort allows healing while keeping weapon changes locked");
+            Check(bag.UseItem("medkit_small")&&Mathf.Abs(health.Current-75)<.001f&&bag.Count("medkit_small")==medkits-1,"medkit heals normally and consumes exactly one while escorting");
+            Check(!bag.UseItem("medkit_small")&&bag.Count("medkit_small")==medkits-1,"healing cooldown prevents repeated immediate consumption");
             var visual=root.AddComponent<Map02ScoutEscortVisual>();visual.Bind(chapter);
             var tick=typeof(Map02ScoutEscortVisual).GetMethod("LateUpdate",BindingFlags.Instance|BindingFlags.NonPublic);
-            tick.Invoke(visual,null);var support=bones["LeftHand"].position;var lowered=bones["RightArm"].rotation;
+            tick.Invoke(visual,null);
+            foreach(var model in new[]{nam,tamModel})
+            {
+                var joints=model.GetComponentsInChildren<Transform>().ToDictionary(t=>t.name,t=>t);
+                foreach(var side in new[]{"Left","Right"})
+                {
+                    float bend=Vector3.Angle(joints[side+"Leg"].position-joints[side+"UpLeg"].position,joints[side+"Foot"].position-joints[side+"Leg"].position);
+                    Check(bend<20,model.name+" "+side+" standing knee is nearly straight: "+bend);
+                }
+            }
+            Check(Mathf.Abs(tamModel.GetComponentsInChildren<Transform>().First(t=>t.name=="Hips").localScale.x-Map02EscortPoseData.Load("Tam").visualScale)<.001f,"Tâm height adjustment applied only to escort visual");
+            var support=bones["LeftHand"].position;var lowered=bones["RightArm"].rotation;
             var tamData=Map02EscortPoseData.Load("Tam");var tamNodes=tamModel.GetComponentsInChildren<Transform>().ToDictionary(t=>t.name,t=>t);
+            Check(Mathf.Abs(bones["Head"].position.y-tamNodes["Head"].position.y)<.06f,"Nam and Tâm escort head heights match within 6 cm: "+bones["Head"].position.y+" / "+tamNodes["Head"].position.y);
             int upper=Array.IndexOf(tamData.names,"RightArm");Check(Quaternion.Angle(tamNodes["RightArm"].localRotation,tamData.idle.bones[upper].rotation)<.1f,"approved shoulder pose binds with nested Animator root");
-            var kneeStart=tamNodes["LeftLeg"].localRotation;pawn.transform.position+=Vector3.forward*.25f;tick.Invoke(visual,null);
-            Check(Quaternion.Angle(kneeStart,tamNodes["LeftLeg"].localRotation)>5,"real displacement advances Tâm leg animation even when PlanarSpeed is zero");
+            var kneeStart=tamNodes["LeftUpLeg"].localRotation;pawn.transform.position+=Vector3.forward*.25f;tick.Invoke(visual,null);
+            Check(Quaternion.Angle(kneeStart,tamNodes["LeftUpLeg"].localRotation)>5,"real displacement advances Tâm leg animation even when PlanarSpeed is zero");
             pawn.transform.position=Vector3.zero;Set(visual,"clock",0f);Set(visual,"lastPlayerPosition",Vector3.zero);tick.Invoke(visual,null);support=bones["LeftHand"].position;
-            Check(Mathf.Abs(Lowest(nam)-.005f)<.01f&&Mathf.Abs(Lowest(tamModel)-.005f)<.01f,"both characters stand on ground despite deeply offset incoming model roots");
+            Check(Mathf.Abs(Lowest(nam)-.005f)<.01f&&Mathf.Abs(Lowest(tamModel)-.005f)<.01f,"both characters stand on ground despite deeply offset incoming model roots: Nam="+Lowest(nam)+" Tam="+Lowest(tamModel));
             var terrain=GameObject.CreatePrimitive(PrimitiveType.Cube);terrain.transform.SetParent(root.transform);terrain.transform.position=new Vector3(0,.9f,0);terrain.transform.localScale=new Vector3(20,.2f,20);pawn.transform.position=Vector3.up;Physics.SyncTransforms();
             tick.Invoke(visual,null);Check(Mathf.Abs(Lowest(nam)-1.005f)<.01f&&Mathf.Abs(Lowest(tamModel)-1.005f)<.01f,"both soles follow raised road surface without sinking");
             support=bones["LeftHand"].position;
@@ -164,7 +216,7 @@ public static class EscortRuntimeChecks
             float free=(float)clear.Invoke(follow,new object[]{eye,Vector3.left,2f,.1f});Check(Mathf.Abs(free-2)<.001f,"Tâm collider does not retract normal aim camera framing");
             var wall=GameObject.CreatePrimitive(PrimitiveType.Cube);wall.transform.SetParent(root.transform);wall.transform.position=eye+Vector3.left*1.6f;wall.transform.localScale=new Vector3(.15f,3,3);Physics.SyncTransforms();
             float blocked=(float)clear.Invoke(follow,new object[]{eye,Vector3.left,2f,.1f});Check(blocked>0&&blocked<1.6f,"camera still collides with real world walls");
-            visual.Release();Check(follow.IgnoredCompanion==null,"camera companion exception removed after escort");
+            visual.Release();Check(Vector3.Distance(tamModel.transform.localScale,Vector3.one)<.001f,"Tâm normal height restored after escort");Check(follow.IgnoredCompanion==null,"camera companion exception removed after escort");
         }finally{Object.DestroyImmediate(root);}
     }
     public static Animator NestedAnimator(GameObject model)

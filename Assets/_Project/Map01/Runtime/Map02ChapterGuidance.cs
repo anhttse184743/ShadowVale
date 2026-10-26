@@ -26,8 +26,9 @@ namespace ShadowVale.Map01
                 if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)?$"Đang mang thùng {n+1}/{t.count}. Tới ghim vàng rồi nhấn E để đặt.":$"Đã chuyển {n}/{t.count}. Tới ghim vàng, nhấn E nhận thùng tiếp theo.";
                 if(ScoutEscortActive)
                 {
-                    if(!State.scoutAmbushStarted)return $"Dìu Tâm về chốt · tốc độ đi bộ · K54. Đi ra ngoài bán kính 4 m quanh điểm đón Tâm (còn {Mathf.Max(0,4-Vector3.ProjectOnPlane(Mission.Player.position-State.scoutRescueOrigin,Vector3.up).magnitude):0.0} m).";
-                    return $"Dìu Tâm về chốt · tốc độ đi bộ · K54. Còn {Mathf.Max(0,ScoutAmbushRemaining)}/5 địch trên đường về.";
+                    if(!State.scoutAmbushStarted)return $"Dìu Tâm về chốt · 1,8 m/s · K54 · H hồi máu. Đi ra ngoài bán kính 4 m quanh điểm đón Tâm (còn {Mathf.Max(0,4-Vector3.ProjectOnPlane(Mission.Player.position-State.scoutRescueOrigin,Vector3.up).magnitude):0.0} m).";
+                    if(State.scoutAmbushPassedBridge)return ScoutAmbushRemaining>0?"Đã lên cầu. Hạ lính phục kích còn sống rồi dìu Tâm về chốt · H hồi máu.":"Đã qua khu phục kích. Dìu Tâm về chốt · H hồi máu.";
+                    return $"Dìu Tâm về chốt · 1,8 m/s · K54 · H hồi máu. Còn {Mathf.Max(0,ScoutAmbushRemaining)}/5 địch ở hai bờ ruộng trước cầu.";
                 }
                 if(escort!=null)
                 {

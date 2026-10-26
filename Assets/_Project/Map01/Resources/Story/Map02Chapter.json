@@ -195,7 +195,7 @@
       "count": 1,
       "scene": "scoutreturn",
       "seconds": 3,
-      "purpose": "Dìu Tâm về chốt với tốc độ đi bộ, chỉ dùng K54. Hạ 5 lính phục kích xuất hiện lần lượt từ hai bên đường ruộng."
+      "purpose": "Dìu Tâm về chốt với 1,8 m/s, chỉ dùng K54. Địch phục kích xuất hiện lần lượt ở hai bờ ruộng trước cầu, tối đa 5 lính. Lên cầu sẽ dừng các lượt chưa xuất hiện."
     },
     {
       "id": "D2_05",
@@ -968,6 +968,13 @@
       "speaker": "Tâm",
       "text": "Nổi. Anh đừng thả tay ra là nổi.",
       "radio": false
+    },
+    {
+      "id": "m2v3_scoutescort_warning_01",
+      "conversation": "m2v3_scoutescort_warning",
+      "speaker": "Anh Thành",
+      "text": "Đồng chí đưa thương binh về cẩn thận, địch đã phát hiện và bố trí lực lượng đánh chặn",
+      "radio": true
     },
     {
       "id": "m2v3_scoutreturn_01",
