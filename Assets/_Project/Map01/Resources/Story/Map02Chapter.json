@@ -521,7 +521,7 @@
     },
     {
       "id": "N3_CRAWL",
-      "title": "Giữ C để bò vào chỗ nấp của anh Lực",
+      "title": "Đi khom vào chỗ nấp của anh Lực",
       "phase": 5,
       "kind": "crawl",
       "site": "cover",
@@ -531,7 +531,7 @@
       "count": 1,
       "scene": "alive",
       "seconds": 5,
-      "purpose": "Bò tới chỗ nấp của anh Lực để tránh hỏa lực xe tăng."
+      "purpose": "Đi khom tới chỗ nấp của anh Lực để tránh hỏa lực xe tăng."
     },
     {
       "id": "N3_06",

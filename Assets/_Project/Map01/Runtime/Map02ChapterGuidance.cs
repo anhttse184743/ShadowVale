@@ -31,7 +31,7 @@ namespace ShadowVale.Map01
                 if(t.kind=="escortHung"||t.kind=="escortScout"||t.kind=="patrolHung"||t.kind.StartsWith("rescue"))return "Tới ghim vàng, nhấn E đón người trước khi dẫn tới nơi an toàn.";
                 if(t.kind=="families")return $"Đã dặn {n}/{t.count} hộ. Tới nhà được đánh dấu, nhấn E nói chuyện.";
                 if(t.kind=="binocular")return $"Tới cầu · Giữ F dùng ống nhòm, thả F để hạ. Nhìn về ánh đèn phía nam cầu, giữ yên 2 giây. Tiến độ {Mathf.Clamp01(observed/t.seconds)*100:0}%.";
-                if(t.kind=="crawl")return "Giữ C để bò về ghim vàng. Không cần nhấn E lần nữa.";
+                if(t.kind=="crawl")return "Đi khom tới chỗ nấp của anh Lực ở ghim vàng. Không cần nhấn E.";
                 if(t.kind=="defend")
                 {
                     if(State.activeTask!=t.id)return "Tới khu vực ghim vàng để giữ ngõ cho dân qua.";

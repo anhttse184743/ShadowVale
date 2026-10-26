@@ -252,7 +252,13 @@ namespace ShadowVale.Map01
                     bool view=binocular&&!player.IsMoving&&Vector3.Distance(Mission.Player.position,sites["scout"].position)>8&&Vector3.Angle(cam.transform.forward,delta)<Mathf.Min(32,cam.fieldOfView*.5f+8)&&ObservationVisible(cam,sites["scout"].position+Vector3.up);
                     observed=view?observed+dt:0;if(observed>=t.seconds){Finish(t);break;}
                 }
-                if(t.kind=="crawl"&&Keyboard.current?.cKey.isPressed==true){var path=new NavMeshPath();if(NavMesh.CalculatePath(Mission.Player.position,mark.transform.position,NavMesh.AllAreas,path)&&path.status==NavMeshPathStatus.PathComplete){var next=path.corners.FirstOrDefault(p=>Vector3.Distance(p,Mission.Player.position)>.15f);if(Vector3.Distance(Mission.Player.position,mark.transform.position)>1.2f){var delta=Vector3.ProjectOnPlane(next-Mission.Player.position,Vector3.up).normalized*.8f*dt;Mission.Player.GetComponent<CharacterController>().Move(delta);State.taskProgress+=dt;}}if(Vector3.Distance(Mission.Player.position,mark.transform.position)<1.5f){health.CinematicInvulnerable=false;BeginScene(t);break;}}
+                if(t.kind=="crawl")
+                {
+                    // Wounded, he keeps low (the crouch, held for him) and makes his own way to anh Lực's cover.
+                    if(!player.IsSneaking)player.RestoreMotion(true);
+                    if(player.IsMoving)State.taskProgress+=dt;
+                    if(Vector3.Distance(Mission.Player.position,mark.transform.position)<1.5f){health.CinematicInvulnerable=false;BeginScene(t);break;}
+                }
                 if(t.kind=="defend")
                 {
                     // Holding starts on reaching the lane, never by pressing E.
