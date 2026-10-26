@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d87067a89bdc3f4459862ca18806c1d2, type: 3}
+  m_Name: Approved
+  m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map02ArrivalC1Data
+  nam: {fileID: 330225290533594390, guid: 02a412ccf19951e4699ae3935028a90b, type: 3}
+  hung: {fileID: 8466026582100891607, guid: 3d351e9c7c831a546b9bf1e7d2b24f30, type: 3}
+  namMotion: {fileID: -623603649343465320, guid: 724c8ea0f1f513c4999bf819ba80326c, type: 3}
+  hungMotion: {fileID: -623603649343465320, guid: 22c7543c7edfcea4381b33500fa09511, type: 3}
+  backpackMesh: {fileID: 4300000, guid: 88651fcc1a23ced40b11de98801db04e, type: 2}
+  pack: {fileID: 4900000, guid: ad12018ffbe5e4b4cb29008e05489260, type: 3}
+  travel: {fileID: 4900000, guid: 5ed79af08abdd2d448ec489637c9ad73, type: 3}
+  reviewPoses: {fileID: 4900000, guid: 808c52a929395ca4ca34f2892f683ffa, type: 3}
+  sourceSha256: 15723d4da3281b245f401c11446c7ee006ec79889436096adf5fc9b7a8234ae0

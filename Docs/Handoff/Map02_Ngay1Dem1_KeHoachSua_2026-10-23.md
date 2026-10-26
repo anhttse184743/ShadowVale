@@ -1,5 +1,7 @@
 # Map 2 – Ngày 1 / Đêm 1: rà soát và kế hoạch sửa (bản 2, 2026-10-23)
 
+**Cập nhật C1 mới nhất: xem mục tích hợp v4 cuối tài liệu và báo cáo kèm theo.**
+
 Bản này **thay bản 1** viết sáng cùng ngày. Bản 1 đọc nhầm code cũ, trước khi `thinh` nhận merge dev (`7c8118c6`, `a9119fcc`). Bản merge đó có phần Ngày 1/Đêm 1 của Khoa (commit `1331bab3`):
 - thoại có giọng đọc;
 - 16 clip hoạt ảnh;
@@ -447,3 +449,14 @@ Ba test Cast và test Bé Tí cạnh mẹ hỏng ở lượt sáng (chạy giữ
 - UI trong thế giới vs. UI phủ màn hình: [Fagerholt & Lorentzon, *Beyond the HUD* (Chalmers 2009)](https://odr.chalmers.se/handle/20.500.12380/111921).
 - Rõ mục tiêu / bước tiếp theo: [Xbox Accessibility Guideline 109](https://learn.microsoft.com/en-us/xbox/accessibility/xbox-accessibility-guidelines/109). Khoa đã dùng cho HUD nhiệm vụ.
 - Quy tắc trục 180° cho cảnh hội thoại / bàn ăn: [180 degree rule](https://www.showmeshorts.co.nz/mini-movie-making-7180degreerule).
+
+
+## C1 — tích hợp v4 ngày 26/10/2026
+
+Người dùng đã yêu cầu đưa cảnh Nam đỡ Hùng vào game, commit/push thinh rồi merge dev. Hai prefab C1 giữ Nam 62 / Hùng 28 xương, mép cổ tay và chuyển động v4; không thay model gameplay hoặc scene. Ba lô theo thân/tay/sàn đúng giai đoạn, ẩn súng khi đỡ và trả mô hình/trang bị sau cảnh hoặc skip. Chỉnh riêng gối phải cho mặt sàn game, giữ thân/tay đã duyệt.
+
+Bảy ca Arrival, ba ca C1 và ba ca nguồn/đầu gối/ba lô đã qua qua các lượt riêng; số liệu và kết quả sau merge ghi tại [báo cáo C1](../Reviews/C1_Unity_20261026/KET_QUA.md). [Video Unity](../Reviews/C1_Unity_20261026/C1_v4_Unity_1080p60.mp4), [nguồn Blender nén](../../SourceArt/Map02_C1_Unity_20261026/C1_Approved_v4.blend), [bàn giao mới nhất](C1_Animation_Latest_20261026.md).
+
+Còn 5 cờ tự va chạm, 1 cờ nhịp xoay cẳng tay và nhịp buông nhanh của v4 đã duyệt. Không đánh dấu mọi lỗi mỹ thuật hoặc toàn bộ Ngày 1/Đêm 1 hoàn tất. Các việc dở ngoài C1 trong thư mục chính được giữ riêng.
+
+**Bàn giao C1 mới nhất:** thinh đã push `f784a124` và `617a289c`; bản gộp với dev `978f6c6c` đã có 13 ca riêng biệt đạt qua lượt đầu (12/13) và lượt chạy lại ca quay (1/1) sau khi cách ly thư mục lưu test. Không đổi cơ chế save của game. [Báo cáo tích hợp và video dev](../Reviews/C1_Unity_20261026/KET_QUA.md).
