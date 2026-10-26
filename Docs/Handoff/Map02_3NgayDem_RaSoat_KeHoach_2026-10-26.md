@@ -189,3 +189,6 @@ Không ấn định số ngày làm khi chưa duyệt số clip và xem chất l
 | [Skill character-animation](C:/Users/Admin/.codex/skills/character-animation/SKILL.md) và các mục 6,10,15–17 | Đã đọc phần quy trình game, QA, khớp/tay/tương tác | Blocking → duyệt → polish; giữ xương; tay bám có lực; tự chê và đo. Các video liệt kê trong skill không có nghĩa đã xem lại ở lượt này. |
 
 **Chưa làm trong lượt rà soát:** chưa chấm thẩm mỹ tất cả 43 mục tiêu bằng video thời gian thật; chưa đo toàn chương 97–118 phút; chưa benchmark build đủ cảnh; chưa xác nhận mọi nguồn/mocap của Claude đã được duyệt. Các hạng mục này nằm trong công việc tiếp theo, không được đánh dấu hoàn tất nhờ test state.
+
+
+**Đối chiếu Git sau giao bản:** commit code `be7ea870` đã push thành công lên cả `thinh` và `dev`, hai remote cùng mã sau lần push; nhánh local vẫn là `thinh`, local `dev` đã đồng bộ. [Biên nhận tích hợp](D:/DO_AN_GAME/ShadowVale/Docs/Reviews/Map02_Audit_20261026/PUSH_RECEIPT.json). Commit tiếp theo chỉ ghi tài liệu kết quả này. Các thay đổi cục bộ ngoài phạm vi vẫn được giữ trên máy.

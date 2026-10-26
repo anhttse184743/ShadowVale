@@ -57,3 +57,6 @@ Kiểm phụ thuộc asset đã chọn: không thiếu meta, không có GUID tr�
 ## Git
 
 Đã kiểm dự án chính trước commit/push `thinh`, sau đó đồng bộ `dev` theo yêu cầu. Biên nhận Git được ghi sau khi đối chiếu remote. Demo cũ không liên quan, scene sandbox, hai ảnh báo cáo M16 và backup cục bộ không thuộc commit này. `testCraftingKit=false`; scene Map 1/Map 2 không đổi.
+
+
+**Đối chiếu Git sau giao bản:** commit code `be7ea870` đã push thành công lên cả `thinh` và `dev`, hai remote cùng mã sau lần push; nhánh local vẫn là `thinh`, local `dev` đã đồng bộ. [Biên nhận tích hợp](D:/DO_AN_GAME/ShadowVale/Docs/Reviews/Map02_Audit_20261026/PUSH_RECEIPT.json). Commit tiếp theo chỉ ghi tài liệu kết quả này. Các thay đổi cục bộ ngoài phạm vi vẫn được giữ trên máy.
