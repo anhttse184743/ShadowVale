@@ -27,6 +27,8 @@ namespace ShadowVale.Map01.Tests
         [UnityTest,Timeout(300000),Explicit("Record the natural C1 handoff in Unity for visual review.")]
         public IEnumerator RecordMisstepContactReview()
         {
+            // A long film run must not replace the shared checkpoint another fixture just wrote.
+            UnityEditor.SessionState.SetString(ForestSaveSlots.EditorTestRootKey,Path.GetFullPath("Temp/C1FilmSaves/"+System.Guid.NewGuid().ToString("N")));
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");SetPreviewResolution(1920,1080);yield return new EnterPlayMode();
             yield return Check(false,true);yield return new ExitPlayMode();
         }
