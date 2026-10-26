@@ -55,7 +55,7 @@ public sealed class RescueBushTests:ForestSceneTestBase {
         var gameplayView=M.gameCamera.transform.position;var gameplayRotation=M.gameCamera.transform.rotation;
         yield return Record("Intro",()=>d.IsPlaying,()=>{
             Assert.IsTrue(h.RopeVisible);Assert.IsFalse(M.GetComponent<Map01SaveSystem>().SaveSlot(1,out _,true));
-            if(d.Elapsed>6.55f){Assert.Less(Vector3.Distance(gameplayView,M.gameCamera.transform.position),.03f,"The radio conversation belongs to the restored player view.");Assert.Less(Quaternion.Angle(gameplayRotation,M.gameCamera.transform.rotation),.2f);}
+            if(d.IntroReturning&&!d.IntroShowsCaptive){Assert.Less(Vector3.Distance(gameplayView,M.gameCamera.transform.position),.03f,"The radio conversation belongs to the restored player view.");Assert.Less(Quaternion.Angle(gameplayRotation,M.gameCamera.transform.rotation),.2f);}
         });
         Assert.GreaterOrEqual(d.Elapsed,8);Assert.IsTrue(M.ModernCombat.enabled&&M.ModernPlayer.enabled);
         yield return ExecutionReview();

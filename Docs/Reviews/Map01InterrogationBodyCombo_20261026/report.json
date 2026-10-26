@@ -1,0 +1,58 @@
+{
+  "tests": {
+    "id": "2",
+    "testcasecount": "3",
+    "result": "Passed",
+    "total": "3",
+    "passed": "3",
+    "failed": "0",
+    "inconclusive": "0",
+    "skipped": "0",
+    "asserts": "0",
+    "engine-version": "3.5.0.0",
+    "clr-version": "4.0.30319.42000",
+    "start-time": "2026-10-26 06:03:57Z",
+    "end-time": "2026-10-26 06:04:09Z",
+    "duration": "11.6321677"
+  },
+  "metrics": {
+    "Approach": {
+      "leftContact": 0.004631138,
+      "rightContact": 0.01183868,
+      "frames": 132,
+      "rounds": 0,
+      "hits": 2
+    },
+    "Execution": {
+      "leftContact": null,
+      "rightContact": null,
+      "frames": 118,
+      "rounds": 10,
+      "hits": 0
+    }
+  },
+  "cost": 0,
+  "voiceChanges": "None in body-combo revision",
+  "files": [
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01RescueCinematic.cs",
+      "sha256": "a9b6cb597dd17c8b938faf3a93e5a11b86b48162b98b020f141fd86b132b3cdf"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01InterrogationSling.cs",
+      "sha256": "e2a7f925fb0d78cdffe5d44e3adf1768f762459b891ad48e06170d6d101d3a91"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/InterrogationMotionSetup.cs",
+      "sha256": "2d483ee38586ff08edf72bc5e06f0dd94d5345136ceff6fdebe4e3973bd85407"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/RescueDefianceTests.cs",
+      "sha256": "e3bb60f7403816a741514a7cc6c5bfb2473a9222142c9c729ae297f6011c8f19"
+    },
+    {
+      "path": "Assets/Resources/Rescue/Story/Enemy_Interrogation_Punch_Left.anim",
+      "sha256": "2e43831b94181192b00600166eb70e90e777e56e85785b18c847016c39ad5f1f"
+    }
+  ]
+}

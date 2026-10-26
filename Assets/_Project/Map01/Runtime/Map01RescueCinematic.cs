@@ -42,6 +42,38 @@ namespace ShadowVale.Map01
         private Map01HungVisual captiveVisual;
         private int storyBeat;
         private float beatAt,impactAt;
+        private float introReturnAt,finalBurstAt=-1,lastRoundAt=-10,dyingReleaseAt=-1;
+        private int executionRounds;
+        private bool introImpact,introRightImpact;
+        private float introRightImpactAt;
+        private float leftContactError=-1,rightContactError=-1;
+        private float leftLean,rightLean;
+        private Quaternion leftFacing,rightFacing;
+        private Vector3 leftBodyTarget,rightBodyTarget;
+        public Vector3 LeftBodyDelta{get;private set;}
+        public Vector3 RightBodyDelta{get;private set;}
+        private AnimationClip interrogationLeftPunch;
+        public int InterrogationHits=>(introImpact?1:0)+(introRightImpact?1:0);
+        public float LeftBodyContactError=>leftContactError;
+        public float RightBodyContactError=>rightContactError;
+        private float introImpactAt;
+        private AudioSource contactSource;
+        private AudioClip contactThud;
+        private Vector3 strikeTarget;
+        private AnimationClip interrogationPunch,interrogationWalk,interrogationIdle;
+        private Map01InterrogationSling interrogationSling;
+        private Vector3 introContactPoint;
+        private float interrogationLean;
+        private Quaternion interrogationFacing;
+        private (Transform bone,Vector3 position,Quaternion rotation)[] interrogationStanding;
+        public float InterrogatorRifleBehindPack=>interrogationSling?.BehindChest??0;
+        public bool InterrogatorRifleSlung=>interrogationSling!=null&&interrogationSling.Weight>.95f;
+        public int ExecutionRounds=>executionRounds;
+        public float InterrogationContactError{get;private set;}
+        public bool HungSpeakingLastWords=>CurrentMode==Mode.Execution&&storyBeat==4;
+        public bool IntroReturning=>CurrentMode==Mode.Intro&&introReturnAt>0;
+        static readonly float[] OpeningRounds={0,.12f,.24f,.95f,1.07f,1.19f};
+        static readonly float[] ClosingRounds={0,.12f,.24f,.36f};
         private bool storyPlayerEnabled,storyCombatEnabled,storyActionsEnabled,storyCCEnabled,storySneaking;
         private Map01NamActions storyActions;
         private Vector3 interrogatorStart,interrogatorClose;
@@ -53,10 +85,10 @@ namespace ShadowVale.Map01
         private Vector3 alarmRetreat;
         private AnimationClip alarmWalk,alarmCrouch;
         private bool alarmReverseWalk;
-        private Vector3 executionView,executionFocus,reactionView;
+        private Vector3 executionView,executionFocus,reactionView,lastWordsView;
         const float CollapseViewSeconds=3.3f,ReactionViewSeconds=1.7f,FailureFadeSeconds=.8f;
-        public bool ExecutionShowsCaptive=>CurrentMode==Mode.Execution&&storyBeat>=2&&(!shot||Elapsed-impactAt<CollapseViewSeconds);
-        public bool ExecutionShowsReaction=>CurrentMode==Mode.Execution&&shot&&Elapsed-impactAt>=CollapseViewSeconds;
+        public bool ExecutionShowsCaptive=>CurrentMode==Mode.Execution&&storyBeat>=2&&(dyingReleaseAt<0||Elapsed-dyingReleaseAt<.65f);
+        public bool ExecutionShowsReaction=>CurrentMode==Mode.Execution&&dyingReleaseAt>=0&&Elapsed-dyingReleaseAt>=.65f;
         public float ExecutionTension=>CurrentMode==Mode.Execution?Mathf.Clamp01(Elapsed/3):0;
         private Map01CinematicPose introNamPose;
         private AnimationClip introNamIdle;
@@ -66,7 +98,8 @@ namespace ShadowVale.Map01
         private (Transform bone,Vector3 position,Quaternion rotation)[] introLowerBody;
         private readonly System.Collections.Generic.List<GameObject> introHiddenWeapons=new();
         private Vector3 introCaptiveView,introCaptiveFocus;
-        const float IntroCutIn=.65f,IntroCutOut=4.5f;
+        const float IntroPanAt=.65f,IntroCutIn=1.3f,IntroWalkAt=2f,IntroStrikeAt=3.35f,IntroHitAt=3.95f,IntroRightStrikeAt=4.65f,IntroRightHitAt=5.25f,IntroWalkBackAt=6.05f;
+        float IntroCutOut=>introReturnAt>0?introReturnAt+.85f:float.PositiveInfinity;
         public bool IntroShowsCaptive=>CurrentMode==Mode.Intro&&Elapsed>=IntroCutIn&&Elapsed<IntroCutOut;
 
         public bool ControlsEnemy(Map01EnemyController guard) => (CurrentMode == Mode.Execution || CurrentMode==Mode.Intro) && guard == enemy;
@@ -104,7 +137,7 @@ namespace ShadowVale.Map01
             storyVoice.CanSpeak=()=>IsPlaying&&!mission.Paused&&!ForestMenu.Visible;return storyVoice;
         }
         void OwnStoryActors(){
-            DialogueVoice.StopAll();storyBeat=0;beatAt=impactAt=0;shot=false;
+            DialogueVoice.StopAll();storyBeat=0;beatAt=impactAt=0;shot=false;introReturnAt=0;introImpact=introRightImpact=false;introImpactAt=introRightImpactAt=0;leftContactError=rightContactError=-1;finalBurstAt=dyingReleaseAt=-1;executionRounds=0;lastRoundAt=-10;InterrogationContactError=-1;
             storyPlayerEnabled=mission.ModernPlayer.enabled;storyCombatEnabled=mission.ModernCombat.enabled;storySneaking=mission.Crouched;
             var cc=mission.player.GetComponent<CharacterController>();storyCCEnabled=cc.enabled;cc.enabled=false;
             storyActions=Map01NamActions.For(mission);storyActionsEnabled=storyActions.enabled;storyActions.enabled=false;
@@ -114,6 +147,16 @@ namespace ShadowVale.Map01
             executionAim=guardActor.runtimeAnimatorController?.animationClips.FirstOrDefault(c=>c.name=="Enemy_Rifle_AimIdle");
             boundExecution=CurrentMode==Mode.Execution?Map01CinematicPose.Clip("Hung_Bound_Execution"):null;
             captivePose=new Map01CinematicPose(captiveVisual.actor);interrogatorPose=new Map01CinematicPose(guardActor);
+            if(CurrentMode==Mode.Intro){
+                interrogationPunch=Map01CinematicPose.Clip("Enemy_Interrogation_Punch");
+                interrogationLeftPunch=Map01CinematicPose.Clip("Enemy_Interrogation_Punch_Left");
+                interrogationWalk=Map01CinematicPose.Clip("Enemy_Interrogation_Walk");
+                interrogationIdle=Map01CinematicPose.Clip("Enemy_Interrogation_Idle");
+                interrogatorPose.Sample(executionAim,0);
+                var standingBones=new[]{HumanBodyBones.Hips,HumanBodyBones.LeftUpperLeg,HumanBodyBones.LeftLowerLeg,HumanBodyBones.LeftFoot,HumanBodyBones.LeftToes,HumanBodyBones.RightUpperLeg,HumanBodyBones.RightLowerLeg,HumanBodyBones.RightFoot,HumanBodyBones.RightToes};
+                interrogationStanding=standingBones.Select(guardActor.GetBoneTransform).Where(t=>t!=null).Select(t=>(t,t.localPosition,t.localRotation)).ToArray();
+                interrogationSling=new Map01InterrogationSling(guardActor,enemy.transform);
+            }
             if(CurrentMode==Mode.Intro || CurrentMode==Mode.Execution){
                 introNamPosition=mission.player.position;introNamRotation=mission.player.rotation;
                 introRadioAt=introReleaseAt=0;
@@ -130,15 +173,18 @@ namespace ShadowVale.Map01
         }
         AnimationClip ownerIdle()=>rescue.Layout.namIdle??Resources.Load<AnimationClip>("Rescue/Nam_Shelter_Idle");
         public bool ShowIntro(Map01Rescue owner,Map01EnemyController overseer){
-            if(IsPlaying||Map01CinematicPose.Clip("Hung_Captive_Recoil")==null||Map01CinematicPose.Clip("Enemy_Interrogate_Strike")==null)return false;
-            enemy=overseer;Begin(owner,Mode.Intro,Mathf.Max(8,DialogueVoice.Length("m1_v2_rescue_approach_01")+DialogueVoice.Length("m1_v2_rescue_approach_02")+DialogueVoice.Length("m1_v2_rescue_approach_03")+1.8f));
+            if(IsPlaying||Map01CinematicPose.Clip("Hung_Captive_Recoil")==null||Map01CinematicPose.Clip("Enemy_Interrogation_Punch")==null||Map01CinematicPose.Clip("Enemy_Interrogation_Punch_Left")==null)return false;
+            enemy=overseer;Begin(owner,Mode.Intro,24);
             interrogatorStart=enemy.transform.position;
             var direction=Vector3.ProjectOnPlane(interrogatorStart-mission.hung.position,Vector3.up).normalized;
-            var desired=mission.hung.position+direction*1.05f;
-            canApproach=NavMesh.SamplePosition(desired,out var contact,.4f,NavMesh.AllAreas)&&!NavMesh.Raycast(interrogatorStart,contact.position,out _,NavMesh.AllAreas);
+            var desired=mission.hung.position+direction*1.02f;
+            canApproach=NavMesh.SamplePosition(desired,out var contact,.18f,NavMesh.AllAreas)&&!NavMesh.Raycast(interrogatorStart,contact.position,out _,NavMesh.AllAreas);
             interrogatorClose=canApproach?contact.position:interrogatorStart;
-            interrogatorWalk=Map01CinematicPose.Clip("Enemy_Interrogate_Walk");
+            interrogatorWalk=Map01CinematicPose.Clip("Enemy_Interrogate_Walk")
+                ??enemy.GetComponentInChildren<Animator>().runtimeAnimatorController?.animationClips.FirstOrDefault(c=>c.name=="Enemy_Patrol_Walk")
+                ??enemy.GetComponentInChildren<Animator>().runtimeAnimatorController?.animationClips.FirstOrDefault(c=>c.name.Contains("Walk"));
             OwnStoryActors();
+            CalibrateInterrogationContact(direction);
             var hungChest=captiveVisual.actor.GetBoneTransform(HumanBodyBones.Chest).position;
             var guardChest=enemy.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.Chest).position;
             introCaptiveFocus=Vector3.Lerp(hungChest,guardChest,.5f);
@@ -168,7 +214,7 @@ namespace ShadowVale.Map01
         }
         public void ExecuteHostage(Map01Rescue owner,Map01EnemyController overseer,Map01EnemyController reporter=null){
             if(IsPlaying)return;
-            enemy=overseer;Begin(owner,Mode.Execution,20);
+            enemy=overseer;Begin(owner,Mode.Execution,30);
             // The cinematic pose owns and detaches the controller; collect its
             // locomotion clips before that handoff, never from the detached actor.
             var actor=mission.player.GetComponentInChildren<Animator>();var clips=actor.runtimeAnimatorController!=null?actor.runtimeAnimatorController.animationClips:Array.Empty<AnimationClip>();
@@ -204,47 +250,117 @@ namespace ShadowVale.Map01
                 cameraStart=FindStoryLens(namFocus,-mission.player.forward+mission.player.right*.5f,2.5f,.6f);
                 cameraRotation=Quaternion.LookRotation(namFocus-cameraStart);
             }
-            reactionView=Vector3.zero; // resolved after Nam's retreat, at the cut
+            reactionView=lastWordsView=Vector3.zero; // resolved after the posed actor is sampled
         }
         void UpdateStory(){
             if(CurrentMode==Mode.Intro){
-                if(storyBeat==0&&Elapsed>=.7f){introRadioAt=Elapsed;Voice().Play("m1_v2_rescue_approach_01");storyBeat=2;}
+                // The hostile exchange belongs to the captive shot. Nam's radio
+                // report starts only after the lens has returned to him.
+                if(storyBeat==0&&Elapsed>=IntroWalkAt){Voice().Play("m1_rescue_interrogate");storyBeat=1;}
+                if(!introImpact&&Elapsed>=IntroHitAt){introImpact=true;introImpactAt=Elapsed;if(canApproach)PlayContactThud();}
+                if(!introRightImpact&&Elapsed>=IntroRightHitAt+Mathf.Max(0,introImpactAt-IntroHitAt)){introRightImpact=true;introRightImpactAt=Elapsed;if(canApproach)PlayContactThud();}
+                if(storyBeat==1&&Elapsed>=4.1f&&!Voice().HasSpeech){Voice().Play("m1_story_11");storyBeat=6;}
+                else if(storyBeat==6&&Elapsed>=9.35f&&!Voice().HasSpeech){introReturnAt=Elapsed;storyBeat=7;}
+                else if(storyBeat==7&&Elapsed>=IntroCutOut+.3f){introRadioAt=Elapsed;Voice().Play("m1_v2_rescue_approach_01");storyBeat=2;}
                 else if(storyBeat==2&&!Voice().HasSpeech){Voice().Play("m1_v2_rescue_approach_02");storyBeat=3;}
                 else if(storyBeat==3&&!Voice().HasSpeech){Voice().Play("m1_v2_rescue_approach_03");storyBeat=4;}
                 else if(storyBeat==4&&!Voice().HasSpeech){introReleaseAt=Elapsed;storyBeat=5;}
-                else if(storyBeat==5&&Elapsed>=Mathf.Max(duration,introReleaseAt+.8f))Finish();
+                else if(storyBeat==5&&Elapsed>=introReleaseAt+.8f)Finish();
                 return;
             }
             UpdateExecutionSound();
             if(storyBeat==1&&!Voice().HasSpeech&&Elapsed>=1.4f){storyBeat=2;beatAt=Elapsed;}
             else if(storyBeat==2&&Elapsed-beatAt>=Mathf.Max(1.6f,rescue.Layout.executionAimSeconds)){
                 shot=true;impactAt=Elapsed;storyBeat=3;
-                enemy.FireAtHostage(captiveVisual.actor.GetBoneTransform(HumanBodyBones.Chest).position,0,true);
-                rescue.CompleteExecution();
-            }else if(storyBeat==3&&Elapsed-impactAt>=CollapseViewSeconds+ReactionViewSeconds+FailureFadeSeconds)Finish();
+            }
+            if(storyBeat==3){
+                FireExecutionBurst(OpeningRounds,impactAt,0);
+                if(executionRounds==OpeningRounds.Length&&Elapsed-impactAt>=1.75f){finalBurstAt=Elapsed;storyBeat=5;}
+            }
+            if(storyBeat==5){
+                FireExecutionBurst(ClosingRounds,finalBurstAt,OpeningRounds.Length);
+                // All reports end, then the whole bound collapse completes.
+                // Hung is still alive when his exhausted last words begin.
+                if(executionRounds==OpeningRounds.Length+ClosingRounds.Length&&Elapsed-finalBurstAt>=2.65f){
+                    Voice().Play("m1_rescue_hung_defiance");storyBeat=4;beatAt=Elapsed;
+                }
+            }else if(storyBeat==4&&!Voice().HasSpeech&&Elapsed-beatAt>=DialogueVoice.Length("m1_rescue_hung_defiance",4)+.35f){
+                dyingReleaseAt=Elapsed;storyBeat=6;rescue.CompleteExecution();
+            }else if(storyBeat==6&&Elapsed-dyingReleaseAt>=.65f+ReactionViewSeconds+FailureFadeSeconds)Finish();
+        }
+        void FireExecutionBurst(float[] rounds,float started,int offset){
+            int index=executionRounds-offset;
+            // At most one round per frame. Slow frames lengthen a burst instead
+            // of repaying several overdue reports/flashes in the same frame.
+            if(index<0||index>=rounds.Length||Elapsed-started<rounds[index]||Elapsed-lastRoundAt<.10f)return;
+            var chest=captiveVisual.actor.GetBoneTransform(HumanBodyBones.Chest).position;
+            enemy.FireAtHostage(chest,0,true,true);executionRounds++;lastRoundAt=Elapsed;
         }
         void RenderStory(){
             RenderIntroNam();
-            bool walking=false;float travel=0;
             enemy.FaceImmediate(mission.hung.position);
-            float captiveTime=CurrentMode==Mode.Execution?(shot?Elapsed-impactAt:0):Mathf.Clamp(Elapsed-2,0,3);
-            // Both sides of the shot share the same bound pose and retarget
-            // bindings. The recoil clip's rest wrists can sit inside the torso;
-            // switching from it at impact made the hands suddenly reappear.
+            float captiveTime=CurrentMode==Mode.Execution?(shot?(finalBurstAt<0?Mathf.Min(.55f,(Elapsed-impactAt)*.6f):.55f+(Elapsed-finalBurstAt)*1.1f):0)
+                :.8f;
+            // Keep a single bound wrist binding from the first shot to the body.
             captivePose.Sample(CurrentMode==Mode.Execution?boundExecution:Map01CinematicPose.Clip("Hung_Captive_Recoil"),captiveTime);
-            if(CurrentMode==Mode.Intro&&executionAim!=null)interrogatorPose.Sample(executionAim,Elapsed,true);
-            else interrogatorPose.Sample(walking&&interrogatorWalk!=null?interrogatorWalk:Map01CinematicPose.Clip("Enemy_Interrogate_Strike"),walking?travel*.65f:0,walking);
-            captivePose.Ground(mission.hung.position.y);interrogatorPose.Ground(enemy.transform.position.y);captiveVisual.SampleCaptiveContacts();
-            if(CurrentMode==Mode.Intro||CurrentMode==Mode.Execution&&storyBeat>=2){
+            if(CurrentMode==Mode.Intro){
+                RenderInterrogation();
+                if(introImpact){
+                    float age=Elapsed-(introRightImpact?introRightImpactAt:introImpactAt);
+                    float fold=Mathf.SmoothStep(0,1,(age-.045f)/.10f)*(1-Mathf.SmoothStep(0,1,(age-.32f)/.62f));
+                    var actor=captiveVisual.actor;
+                    // Belly impact: the torso folds and the head follows. Wrists
+                    // remain bound behind the back, no early face recoil.
+                    var foldAxis=Vector3.Cross(Vector3.up,Vector3.ProjectOnPlane(enemy.transform.position-mission.hung.position,Vector3.up).normalized);
+                    foreach(var pair in new[]{(HumanBodyBones.Spine,25f),(HumanBodyBones.Chest,20f),(HumanBodyBones.Neck,10f),(HumanBodyBones.Head,10f)}){
+                        var bone=actor.GetBoneTransform(pair.Item1);if(bone!=null)bone.rotation=Quaternion.AngleAxis(pair.Item2*fold,foldAxis)*bone.rotation;
+                    }
+                    var chest=actor.GetBoneTransform(HumanBodyBones.Chest);
+                    chest.rotation=Quaternion.AngleAxis((introRightImpact?-4:4)*fold,Vector3.up)*chest.rotation;
+                }
+            }
+            else {
                 if(executionAim!=null)interrogatorPose.Sample(executionAim,Elapsed-beatAt,true);
                 AimExecution();
+                float kick=Mathf.Exp(-Mathf.Max(0,Elapsed-lastRoundAt)*25)*3;
+                var actor=enemy.GetComponentInChildren<Animator>();
+                var shoulder=actor.GetBoneTransform(HumanBodyBones.RightUpperArm);
+                if(shoulder!=null)shoulder.rotation=Quaternion.AngleAxis(-kick,enemy.transform.right)*shoulder.rotation;
+                actor.GetComponent<Map01EnemyGrip>()?.Apply();
+                // Hùng gathers his breath without standing or unbinding his hands.
+                var chest=captiveVisual.actor.GetBoneTransform(HumanBodyBones.Chest);
+                var head=captiveVisual.actor.GetBoneTransform(HumanBodyBones.Head);
+                float held=shot&&finalBurstAt<0?Mathf.SmoothStep(0,1,(Elapsed-impactAt)/.6f):0;
+                if(chest!=null)chest.rotation=Quaternion.AngleAxis((2+Mathf.Sin(Elapsed*3)*.7f)*held,mission.hung.right)*chest.rotation;
+                if(head!=null)head.rotation=Quaternion.AngleAxis(-7*held,mission.hung.right)*head.rotation;
+                if(HungSpeakingLastWords&&chest!=null){
+                    // A shallow breath in the collapsed pose, never lifting him
+                    // back to a kneeling speaking idle.
+                    float breath=Mathf.Sin((Elapsed-beatAt)*2.8f)*.65f;
+                    chest.rotation=Quaternion.AngleAxis(breath,mission.hung.right)*chest.rotation;
+                }
             }
-            // Establish Nam first, then cut to the real bound captive and back.
-            // Never fly the camera across the forest or move either actor to a stage.
+            captivePose.Ground(mission.hung.position.y);interrogatorPose.Ground(enemy.transform.position.y);captiveVisual.SampleCaptiveContacts();
+            if(CurrentMode==Mode.Intro&&interrogationSling!=null)interrogationSling.Sample(interrogationSling.Weight,false);
             if(IntroShowsCaptive){
-                float push=.12f*Mathf.SmoothStep(0,1,(Elapsed-IntroCutIn)/(IntroCutOut-IntroCutIn));
-                var lens=Vector3.MoveTowards(introCaptiveView,introCaptiveFocus,push);
-                SetStoryView(lens,Quaternion.LookRotation(introCaptiveFocus-lens),46);return;
+                var lens=Vector3.MoveTowards(introCaptiveView,introCaptiveFocus,.12f*Mathf.SmoothStep(0,1,(Elapsed-IntroCutIn)/4));
+                var look=Quaternion.LookRotation(introCaptiveFocus-lens);
+                if(introReturnAt>0){
+                    float turn=Mathf.SmoothStep(0,1,(Elapsed-introReturnAt)/.85f);
+                    look=Quaternion.Slerp(look,Quaternion.LookRotation(introNamPosition+Vector3.up-introCaptiveView),turn*.65f);
+                }
+                SetStoryView(lens,look,46);return;
+            }
+            if(CurrentMode==Mode.Intro&&Elapsed>=IntroPanAt&&Elapsed<IntroCutIn){
+                var look=Quaternion.LookRotation(introCaptiveFocus-cameraStart);
+                SetStoryView(cameraStart,Quaternion.Slerp(cameraRotation,look,Mathf.SmoothStep(0,1,(Elapsed-IntroPanAt)/(IntroCutIn-IntroPanAt))),cameraFov);return;
+            }
+            if(HungSpeakingLastWords){
+                var head=captiveVisual.actor.GetBoneTransform(HumanBodyBones.Head).position;
+                var chest=captiveVisual.actor.GetBoneTransform(HumanBodyBones.Chest).position;
+                var focus=Vector3.Lerp(chest,head,.7f);
+                if(lastWordsView==Vector3.zero)lastWordsView=FindStoryLens(focus,mission.hung.right+mission.hung.forward*.35f,1.9f,.3f);
+                SetStoryView(lastWordsView,Quaternion.LookRotation(focus-lastWordsView),42);return;
             }
             if(ExecutionShowsCaptive){
                 float push=Mathf.SmoothStep(0,1,(Elapsed-beatAt)/4.5f)*.18f;
@@ -257,10 +373,126 @@ namespace ShadowVale.Map01
                 SetStoryView(reactionView,Quaternion.LookRotation(target-reactionView),42);return;
             }
             float tension=ExecutionTension;
-            float recoil=CurrentMode==Mode.Execution&&shot?Mathf.Exp(-(Elapsed-impactAt)*18):0;
-            var sway=Quaternion.Euler(tension*Mathf.Sin(Elapsed*4.3f)*.08f-recoil*.45f,tension*Mathf.Sin(Elapsed*3.1f)*.07f,0);
+            var sway=Quaternion.Euler(tension*Mathf.Sin(Elapsed*4.3f)*.08f,tension*Mathf.Sin(Elapsed*3.1f)*.07f,0);
             var follow=CurrentMode==Mode.Execution?mission.player.position-introNamPosition:Vector3.zero;
             SetStoryView(cameraStart+follow,cameraRotation*sway,cameraFov-5*tension);
+        }
+        static float InterrogationRecoilTime(float age)=>age<.1f?.8f+.55f*Mathf.Clamp01(age/.1f):age<.3f?1.35f:Mathf.Lerp(1.35f,3,Mathf.Clamp01((age-.3f)/.5f));
+        void RestoreInterrogationStanding(){
+            if(interrogationStanding!=null)foreach(var b in interrogationStanding)b.bone.SetLocalPositionAndRotation(b.position,b.rotation);
+        }
+        static Vector3 PunchKnuckle(Animator actor,bool left=false){
+            var knuckle=actor.GetBoneTransform(left?HumanBodyBones.LeftMiddleProximal:HumanBodyBones.RightMiddleProximal);
+            return knuckle!=null?knuckle.position:actor.GetBoneTransform(left?HumanBodyBones.LeftHand:HumanBodyBones.RightHand).position;
+        }
+        void CalibrateInterrogationContact(Vector3 direction){
+            var actor=enemy.GetComponentInChildren<Animator>();var initial=enemy.transform.rotation;
+            var hips=captiveVisual.actor.GetBoneTransform(HumanBodyBones.Hips).position;
+            var chest=captiveVisual.actor.GetBoneTransform(HumanBodyBones.Chest).position;
+            // Upper abdomen below the rib cage, above the belt and hip pouches.
+            var belly=Vector3.Lerp(hips,chest,.38f)+Vector3.up*.15f+direction*.16f;
+            leftBodyTarget=belly-mission.hung.right*.035f;rightBodyTarget=belly+mission.hung.right*.035f;
+            float floor=interrogatorStart.y;
+            Vector3 Measure(AnimationClip clip,bool left,Vector3 target,out float lean){
+                lean=0;float best=float.PositiveInfinity;
+                for(int angle=0;angle<=54;angle+=2){
+                    enemy.transform.rotation=initial;interrogatorPose.Sample(clip,clip.length*(.7f/1.7f));LeanPunch(actor,angle);interrogatorPose.Ground(floor);
+                    float error=Mathf.Abs(PunchKnuckle(actor,left).y-target.y);
+                    if(error<best){best=error;lean=angle;}
+                }
+                interrogatorPose.Sample(clip,clip.length*(.7f/1.7f));LeanPunch(actor,lean);interrogatorPose.Ground(floor);
+                return Quaternion.Inverse(initial)*(PunchKnuckle(actor,left)-enemy.transform.position);
+            }
+            Vector3 leftOffset=default,rightOffset=default;
+            var samplePosition=interrogatorStart;
+            // Ground contact belongs to the final stance, not the guard's
+            // original post (the pier/navmesh heights can differ).
+            for(int pass=0;pass<3;pass++){
+                enemy.transform.position=samplePosition;floor=samplePosition.y;
+                leftOffset=Measure(interrogationLeftPunch,true,leftBodyTarget,out leftLean);
+                rightOffset=Measure(interrogationPunch,false,rightBodyTarget,out rightLean);
+                float reach=(Vector3.ProjectOnPlane(leftOffset,Vector3.up).magnitude+Vector3.ProjectOnPlane(rightOffset,Vector3.up).magnitude)*.5f;
+                var desired=belly+direction*reach;desired.y=samplePosition.y;
+                canApproach=NavMesh.SamplePosition(desired,out var contact,.18f,NavMesh.AllAreas)&&!NavMesh.Raycast(interrogatorStart,contact.position,out _,NavMesh.AllAreas);
+                interrogatorClose=canApproach?contact.position:interrogatorStart;samplePosition=interrogatorClose;
+            }
+            Quaternion Aim(Vector3 offset,Vector3 target){
+                var to=Vector3.ProjectOnPlane(target-interrogatorClose,Vector3.up).normalized;
+                return Quaternion.LookRotation(to)*Quaternion.AngleAxis(-Mathf.Atan2(offset.x,offset.z)*Mathf.Rad2Deg,Vector3.up);
+            }
+            leftFacing=Aim(leftOffset,leftBodyTarget);rightFacing=Aim(rightOffset,rightBodyTarget);interrogationFacing=leftFacing;
+            enemy.transform.SetPositionAndRotation(interrogatorStart,initial);
+        }
+        void LeanPunch(Animator actor,float degrees){
+            var spine=actor.GetBoneTransform(HumanBodyBones.Spine);
+            if(spine!=null)spine.rotation=Quaternion.AngleAxis(degrees,enemy.transform.right)*spine.rotation;
+        }
+        void RenderInterrogation(){
+            float walkIn=Mathf.SmoothStep(0,1,(Elapsed-IntroWalkAt)/1.35f);
+            float walkOut=Mathf.SmoothStep(0,1,(Elapsed-IntroWalkBackAt)/1.25f);
+            enemy.transform.position=Vector3.Lerp(interrogatorStart,interrogatorClose,walkIn*(1-walkOut));
+            enemy.FaceImmediate(mission.hung.position);
+            // The mocap punch crosses the torso. Lock its authored heading
+            // at the stance anchor; re-aiming the root at Hung would turn the
+            // whole arc away from the calibrated contact point.
+            float stance=Mathf.SmoothStep(0,1,(Elapsed-IntroStrikeAt+.25f)/.25f)*(1-Mathf.SmoothStep(0,1,(Elapsed-IntroWalkBackAt)/.25f));
+            var fightingFacing=Elapsed<IntroRightStrikeAt?leftFacing:Quaternion.Slerp(leftFacing,rightFacing,Mathf.SmoothStep(0,1,(Elapsed-IntroRightStrikeAt)/.4f));
+            enemy.transform.rotation=Quaternion.Slerp(enemy.transform.rotation,fightingFacing,stance);
+            var actor=enemy.GetComponentInChildren<Animator>();
+            var held=executionAim??interrogationIdle;
+            float sling=0;
+            if(Elapsed<1.8f){
+                sling=Mathf.SmoothStep(0,1,(Elapsed-.05f)/1.45f);
+                interrogatorPose.SampleBlend(held,0,interrogationIdle,Elapsed,Mathf.SmoothStep(0,1,(sling-.45f)/.55f));RestoreInterrogationStanding();
+            }else if(Elapsed<IntroWalkAt){
+                interrogatorPose.Sample(interrogationIdle,Elapsed,true);RestoreInterrogationStanding();sling=1;
+            }else if(Elapsed<IntroStrikeAt){
+                float phase=Vector3.Distance(interrogatorStart,interrogatorClose)*walkIn/1.4f;
+                float weight=Mathf.Min(Mathf.SmoothStep(0,1,(Elapsed-IntroWalkAt)/.16f),1-Mathf.SmoothStep(0,1,(Elapsed-IntroStrikeAt+.16f)/.16f));
+                interrogatorPose.SampleBlend(interrogationIdle,0,interrogationWalk,phase,weight);sling=1;
+            }else if(Elapsed<IntroWalkBackAt){
+                bool left=Elapsed<IntroRightStrikeAt;
+                var clip=left?interrogationLeftPunch:interrogationPunch;
+                float begin=left?IntroStrikeAt:IntroRightStrikeAt;
+                float planned=left?IntroHitAt:IntroRightHitAt;
+                float actual=left?introImpactAt:introRightImpactAt;bool impacted=left?introImpact:introRightImpact;
+                float age=Elapsed-begin-(impacted?Mathf.Max(0,actual-planned):0);
+                float time=age<.45f?age*.4f/.45f:age<.6f?.4f+(age-.45f)*2:age<.68f?.7f+(age-.6f)*2.5f:.9f+(age-.68f)*(.8f/.52f);
+                float nativeTime=Mathf.Clamp01(time/1.7f)*clip.length;
+                float enter=Mathf.SmoothStep(0,1,age/.13f);
+                float end=left?IntroRightStrikeAt:IntroWalkBackAt;
+                float exit=Mathf.SmoothStep(0,1,(Elapsed-end+.18f)/.18f);
+                if(exit>0)interrogatorPose.SampleBlend(clip,nativeTime,interrogationIdle,0,exit);
+                else interrogatorPose.SampleBlend(interrogationIdle,0,clip,nativeTime,enter);
+                LeanPunch(actor,(left?leftLean:rightLean)*enter*(1-exit));sling=1;
+                // Measure the rendered, grounded fist, matching stance calibration.
+                interrogatorPose.Ground(enemy.transform.position.y);
+                if(impacted&&Elapsed-actual<.13f){
+                    float error=Vector3.Distance(PunchKnuckle(actor,left),left?leftBodyTarget:rightBodyTarget);
+                    if(left&&(leftContactError<0||error<leftContactError)){leftContactError=error;LeftBodyDelta=PunchKnuckle(actor,true)-leftBodyTarget;}
+                    else if(!left&&(rightContactError<0||error<rightContactError)){rightContactError=error;RightBodyDelta=PunchKnuckle(actor,false)-rightBodyTarget;}
+                    InterrogationContactError=Mathf.Max(leftContactError,rightContactError);
+                }
+            }else if(Elapsed<7.3f){
+                float phase=Vector3.Distance(interrogatorStart,interrogatorClose)*walkOut/1.4f;
+                float weight=Mathf.Min(Mathf.SmoothStep(0,1,(Elapsed-IntroWalkBackAt)/.15f),1-Mathf.SmoothStep(0,1,(Elapsed-7.15f)/.15f));
+                interrogatorPose.SampleBlend(interrogationIdle,0,interrogationWalk,Mathf.Max(0,interrogationWalk.length-Mathf.Repeat(phase,interrogationWalk.length)),weight);sling=1;
+            }else if(Elapsed<9.1f){
+                float age=Elapsed-7.3f;
+                sling=1-Mathf.SmoothStep(0,1,(age-.15f)/1.45f);
+                interrogatorPose.SampleBlend(held,0,interrogationIdle,age,Mathf.SmoothStep(0,1,(sling-.45f)/.55f));RestoreInterrogationStanding();
+            }else interrogatorPose.Sample(held,0);
+            if(sling<.001f)actor.GetComponent<Map01EnemyGrip>()?.Apply();
+            interrogationSling?.Sample(sling);
+        }
+        void PlayContactThud(){
+            if(contactSource==null){contactSource=gameObject.AddComponent<AudioSource>();contactSource.playOnAwake=false;contactSource.spatialBlend=0;contactSource.volume=.26f;}
+            if(contactThud==null){
+                var data=new float[7200];uint seed=8128;
+                for(int i=0;i<data.Length;i++){seed=1664525*seed+1013904223;float t=i/48000f;data[i]=(Mathf.Sin(t*2*Mathf.PI*95)*.6f+((seed>>8)/8388607.5f-1)*.13f)*Mathf.Exp(-t*38);}
+                contactThud=AudioClip.Create("Authored cloth contact",data.Length,1,48000,false);contactThud.SetData(data,0);
+            }
+            contactSource.PlayOneShot(contactThud);
         }
         void SetStoryView(Vector3 position,Quaternion rotation,float fov){
             rig.SetCinematicView(position,rotation,fov,1);
@@ -286,7 +518,7 @@ namespace ShadowVale.Map01
                 if(alarmReverseWalk)walkTime=alarmWalk.length-walkTime;
                 introNamPose.SampleBlend(alarmWalk,walkTime,alarmCrouch,Mathf.Max(0,Elapsed-1.1f),Mathf.SmoothStep(0,1,(Elapsed-.85f)/.65f));
             }else introNamPose.Sample(introNamIdle,idleTime,true);
-            if(CurrentMode==Mode.Intro&&storyBeat>=2){
+            if(CurrentMode==Mode.Intro&&introRadioAt>0){
                 float weight=storyBeat==5?1-Mathf.SmoothStep(0,1,(Elapsed-introReleaseAt)/.8f):Mathf.SmoothStep(0,1,(Elapsed-introRadioAt)/.7f);
                 Map01ArmContact.Radio(mission.player.GetComponentInChildren<Animator>(),weight);
             }
@@ -599,7 +831,7 @@ namespace ShadowVale.Map01
         {
             if (!IsPlaying) return;
             var mode=CurrentMode;
-            if(mode==Mode.Execution&&!shot){shot=true;rescue.CompleteExecution();}
+            if(mode==Mode.Execution){shot=true;rescue.CompleteExecution();}
             if(mode==Mode.Shelter){
                 mission.player.position=namPath[namPath.Length-1];mission.hung.position=hungPath[hungPath.Length-1];
                 namPose.Sample(namCovered/Mathf.Max(.1f,namCycleSpeed),0);hungPose.Sample(hungCovered/Mathf.Max(.1f,rescue.Layout.hungWalkCycleSpeed),0);
@@ -619,9 +851,10 @@ namespace ShadowVale.Map01
         {
             var mode=CurrentMode;CurrentMode=Mode.None;
             namPose?.Dispose();hungPose?.Dispose();namPose=hungPose=null;
-            tensionSource?.Stop();
-            storyVoice?.Stop();captivePose?.Dispose();interrogatorPose?.Dispose();captivePose=interrogatorPose=null;
-            introNamPose?.Dispose();introNamPose=null;introLowerBody=null;
+            tensionSource?.Stop();contactSource?.Stop();
+            if(mode==Mode.Intro&&enemy!=null)enemy.transform.position=interrogatorStart;
+            storyVoice?.Stop();interrogationSling?.Dispose();interrogationSling=null;interrogationStanding=null;captivePose?.Dispose();interrogatorPose?.Dispose();captivePose=interrogatorPose=null;
+            introNamPose?.Dispose();introNamPose=null;introLowerBody=null;interrogationSling?.Dispose();interrogationSling=null;
             foreach(var weapon in introHiddenWeapons)if(weapon!=null)weapon.SetActive(true);introHiddenWeapons.Clear();
             if(mode==Mode.Intro||mode==Mode.Execution){
                 if(captiveVisual!=null)captiveVisual.EndCaptivePresentation(mode==Mode.Execution&&!restoring);
@@ -670,22 +903,22 @@ namespace ShadowVale.Map01
                 GUI.color=new Color(1,.65f,.3f,ExecutionShowsCaptive||ExecutionShowsReaction?0:.9f);
                 var danger=new GUIStyle(GUI.skin.label){fontSize=Mathf.RoundToInt(Screen.height*.05f),fontStyle=FontStyle.Bold,alignment=TextAnchor.MiddleCenter};
                 GUI.Label(new Rect(Screen.width*(.5f+side*.3f)-24,Screen.height*.14f,48,48),"!",danger);
-                if(shot){GUI.color=new Color(0,0,0,Mathf.SmoothStep(0,1,(Elapsed-impactAt-CollapseViewSeconds-ReactionViewSeconds)/FailureFadeSeconds));GUI.DrawTexture(new Rect(0,0,Screen.width,Screen.height),Texture2D.whiteTexture);}
+                if(dyingReleaseAt>=0){GUI.color=new Color(0,0,0,Mathf.SmoothStep(0,1,(Elapsed-dyingReleaseAt-.65f-ReactionViewSeconds)/FailureFadeSeconds));GUI.DrawTexture(new Rect(0,0,Screen.width,Screen.height),Texture2D.whiteTexture);}
                 GUI.color=color;
             }
-            if(CurrentMode==Mode.Intro&&storyVoice!=null&&!string.IsNullOrEmpty(storyVoice.CurrentCaption)){
+            if((CurrentMode==Mode.Intro||CurrentMode==Mode.Execution)&&storyVoice!=null&&!string.IsNullOrEmpty(storyVoice.CurrentCaption)){
                 var subtitle=new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter,wordWrap=true,fontSize=Mathf.RoundToInt(Screen.height*.031f)};
                 GUI.color=Color.white;GUI.Label(new Rect(Screen.width*.12f,Screen.height*.91f,Screen.width*.76f,Screen.height*.08f),storyVoice.CurrentCaption,subtitle);GUI.color=color;
             }
             if(CurrentMode==Mode.Intro){
-                // A short blink conceals the distant edit; the lens only moves locally at the hostage.
+                // The pan carries the look; a brief blink hides only the distant edit.
                 float alpha=Mathf.Max(1-Mathf.Abs(Elapsed-IntroCutIn)/.12f,1-Mathf.Abs(Elapsed-IntroCutOut)/.12f);
                 if(alpha>0){GUI.color=new Color(0,0,0,Mathf.Clamp01(alpha));GUI.DrawTexture(new Rect(0,0,Screen.width,Screen.height),Texture2D.whiteTexture);GUI.color=color;}
             }
         }
 
         private void OnDisable(){if(IsPlaying)Cleanup();}
-        private void OnDestroy(){if(heartbeat!=null)Destroy(heartbeat);if(tensionSource!=null)Destroy(tensionSource);}
+        private void OnDestroy(){if(heartbeat!=null)Destroy(heartbeat);if(tensionSource!=null)Destroy(tensionSource);if(contactThud!=null)Destroy(contactThud);if(contactSource!=null)Destroy(contactSource);}
         private sealed class PosePlayer : IDisposable
         {
             private readonly Animator actor;

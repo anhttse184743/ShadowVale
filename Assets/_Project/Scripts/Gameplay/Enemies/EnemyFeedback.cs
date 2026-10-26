@@ -63,13 +63,14 @@ namespace ShadowVale.Gameplay.Enemies
                 PlayAudio(slice, volume, pitch, transform.position, 20f, gainIncluded: true);
         }
 
-        private void PlayAudio(AudioSlice slice, float volume, float pitch, Vector3 position, float range, bool gainIncluded = false)
+        private void PlayAudio(AudioSlice slice, float volume, float pitch, Vector3 position, float range, bool gainIncluded = false, bool cinematicListener = false)
         {
             if (!slice.IsValid || player == null || Time.timeScale <= 0f) return;
-            if (Vector3.Distance(position, player.transform.position) >= range) return;
+            var listener=cinematicListener&&Camera.main!=null?Camera.main.transform.position:player.transform.position;
+            if (Vector3.Distance(position, listener) >= range) return;
             // Preserve world direction, but measure distance from Nam instead of the trailing camera.
             var camera = Camera.main;
-            Vector3 audioPosition = camera != null
+            Vector3 audioPosition = camera != null && !cinematicListener
                 ? camera.transform.position + position - (player.transform.position + Vector3.up) : position;
             PooledAudioService.Resolve().PlayOneShot(slice.clip, audioPosition,
                 volume * (gainIncluded ? 1f : slice.EffectiveGain), pitch, spatialBlend: 1f,
@@ -87,7 +88,7 @@ namespace ShadowVale.Gameplay.Enemies
         /// 19/10/2026 only the muzzle counted: Map 1's commander hit 0 of 40 rounds standing by a door. The tracer
         /// always leaves the muzzle.
         /// </summary>
-        public bool Fire(Vector3 targetPoint, Transform victim, int mask, out Vector3 impact, Vector3? from = null)
+        public bool Fire(Vector3 targetPoint, Transform victim, int mask, out Vector3 impact, Vector3? from = null, bool cinematicListener = false)
         {
             if (weapon == null) weapon = GetComponentInChildren<Weapon>();
             Vector3 muzzle = weapon != null && weapon.Muzzle != null
@@ -109,7 +110,7 @@ namespace ShadowVale.Gameplay.Enemies
                 cursor = (cursor + 1) % tracers.Length;
             }
             weapon?.PlayMuzzleFlash();
-            PlayAudio(GunshotClip != null ? new AudioSlice(GunshotClip, 0f, 0f, 1f) : gunshot, .85f, UnityEngine.Random.Range(.94f, 1.06f), muzzle, 65f);
+            PlayAudio(GunshotClip != null ? new AudioSlice(GunshotClip, 0f, 0f, 1f) : gunshot, .85f, UnityEngine.Random.Range(.94f, 1.06f), muzzle, 65f, cinematicListener: cinematicListener);
             return reachesVictim;
         }
 

@@ -46,7 +46,7 @@ public sealed class RescuePresentationTests:ForestSceneTestBase {
             m.Crouched=false;m.ModernPlayer.RestoreMotion(false);Assert.IsTrue(d.ShowIntro(r,r.Squad[0]));yield return null;d.CancelForRestore();
             Assert.IsFalse(m.Crouched||m.ModernPlayer.IsSneaking,"Loading a save cancels, rather than commits, automatic stealth.");
             var old=r.Capture();old.revision=4;old.introSeen=true;r.Restore(old,Array.Empty<Map01EnemyController.Snapshot>());Assert.IsFalse(r.IntroSeen,"The old radio-only save gets the new captive shot once.");
-            old.revision=5;r.Restore(old,Array.Empty<Map01EnemyController.Snapshot>());Assert.IsTrue(r.IntroSeen);
+            old.revision=Map01Rescue.SnapshotRevision;r.Restore(old,Array.Empty<Map01EnemyController.Snapshot>());Assert.IsTrue(r.IntroSeen);
         }finally{Time.timeScale=1;if(d.IsPlaying)d.CancelForRestore();InputSystem.RemoveDevice(keyboard);RestoreInputRouting(routing);}
     }
     [UnityTest,Timeout(240000)] public IEnumerator CommanderRemainsSeatedOnBoatAfterShelterHandoff(){
