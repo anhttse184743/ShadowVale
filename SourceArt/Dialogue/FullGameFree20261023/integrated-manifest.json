@@ -1,6 +1,6 @@
 {
-  "cues": 260,
-  "date": "2026-10-25",
+  "cues": 261,
+  "date": "2026-10-26",
   "lines": [
     {
       "id": "m1_story_09",
@@ -6859,6 +6859,27 @@
       "voiceRevision": "20261025",
       "peak": 0.787139892578125,
       "rms": 0.10517654276497246
+    },
+    {
+      "id": "m1_rescue_hung_defiance",
+      "speaker": "Hùng",
+      "text": "Đồng đội của tao... sẽ giết hết... chúng mày.",
+      "caption": "Hùng: Đồng đội của tao... sẽ giết hết... chúng mày.",
+      "match": "Đồng đội của tao sẽ giết hết chúng mày!",
+      "language": "vi",
+      "radio": false,
+      "voice": "Anh Khôi",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "resource": "Dialogue/Rescue20261026/hung_last_words",
+      "duration": 3.7425208333333333,
+      "sha256": "2991d9328b8e82bff27c94083718d8dd7761b268356aecc1963a55aeeea96127",
+      "voiceRevision": "Hung_A_Weak_Collapsed_20261026",
+      "userApproved": false,
+      "status": "Requested weak last words, existing approved Hung A voice; pending listening review",
+      "performance": "Quieter, slower, breath-separated clauses, declining intensity; spoken after the entire collapse",
+      "peak": 0.44927978515625,
+      "rms": 0.04717470513416762
     }
   ]
 }

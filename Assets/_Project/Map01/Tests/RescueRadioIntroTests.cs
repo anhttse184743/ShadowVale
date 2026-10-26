@@ -63,7 +63,7 @@ public sealed class RescueRadioIntroTests:ForestSceneTestBase {
                 yield return null;
             }
             Assert.IsFalse(d.IsPlaying);Assert.IsTrue(rescue.IntroSeen);Assert.IsFalse(rescue.Failed||m.Cinematic);
-            if(!skip){CollectionAssert.AreEqual(new[]{"m1_v2_rescue_approach_01","m1_v2_rescue_approach_02","m1_v2_rescue_approach_03"},heard);Assert.Greater(d.Elapsed,8);Assert.Less(d.Elapsed,13);}
+            if(!skip){CollectionAssert.AreEqual(new[]{"m1_rescue_interrogate","m1_story_11","m1_v2_rescue_approach_01","m1_v2_rescue_approach_02","m1_v2_rescue_approach_03"},heard);Assert.Greater(d.Elapsed,8);Assert.Less(d.Elapsed,24);}
             Assert.IsFalse(heard.Contains("m1_rescue_intro_nam"));
             Assert.AreSame(controller,actor.runtimeAnimatorController);Assert.AreSame(avatar,actor.avatar);
             Assert.IsTrue(m.ModernPlayer.enabled&&m.ModernCombat.enabled&&m.player.GetComponent<CharacterController>().enabled);
