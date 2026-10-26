@@ -232,8 +232,9 @@ namespace ShadowVale.Map01
         }
         /// <summary>Field of view a staged shot asks for (a long lens on the boat); null keeps the scene default.</summary>
         float? stagedFov;
-        /// <summary>N3_07 opens on the tank: low by the dock road as it rolls out and stands, rising to the gun as the turret swings
-        /// round, a whip along the barrel to the last boat with the villagers aboard, held on a long lens while chú Bảy shouts.</summary>
+        /// <summary>N3_07 opens on the tank: low by the dock road as it rolls out and stands; rising to the gun and following it
+        /// as the turret swings round; round along the barrel to stop in front of its muzzle; then a pan to the last boat and
+        /// in close on it, the villagers aboard, while the machine gun fires and chú Bảy shouts.</summary>
         void BoatShot(Vector3 nam,out Vector3 eye,out Vector3 focus)
         {
             var at=tank.transform.position;var dock=sites["tankDock"].position;var boat=lastBoat!=null?lastBoat.transform.position:water["boatMid"];
@@ -241,14 +242,26 @@ namespace ShadowVale.Map01
             var side=Vector3.Cross(Vector3.up,road);if(Vector3.Dot(nam-dock,side)<0)side=-side;
             var low=dock+side*7+road*5+Vector3.up*.9f;var hull=at+Vector3.up*1.3f;
             var gun=Vector3.ProjectOnPlane(tank.transform.rotation*Quaternion.AngleAxis(turretYaw,Vector3.up)*Vector3.forward,Vector3.up).normalized;
+            var across=Vector3.Cross(Vector3.up,gun);if(Vector3.Dot(across,side)<0)across=-across;   // round the barrel on the camera's side
             var pivot=turret!=null?turret.position:at+Vector3.up*2.1f;var muzzle=pivot+gun*4.2f;
-            var behind=pivot-gun*3.2f+Vector3.up*1.0f+Vector3.Cross(Vector3.up,gun)*.7f;   // above and behind the turret, along the barrel
-            float t=sceneClock;
+            // Along the barrel: behind it (167 degrees off its line) round to just off its front (20 degrees).
+            Vector3 Round(float degrees,float radius,float height){float r=degrees*Mathf.Deg2Rad;return pivot+(gun*Mathf.Cos(r)+across*Mathf.Sin(r))*radius+Vector3.up*height;}
+            var behind=Round(167,3.3f,1);var front=Round(20,5.8f,.35f);
+            float t=sceneClock,riseEnd=EmergeEnd+TurretRise;
             if(t<EmergeEnd){eye=low;focus=hull;return;}
-            if(t<WhipAt){float u=Mathf.SmoothStep(0,1,(t-EmergeEnd)/TurretRise);eye=Vector3.Lerp(low,behind,u);focus=Vector3.Lerp(hull,muzzle,u);return;}
-            float w=Mathf.SmoothStep(0,1,(t-WhipAt)/WhipTime);
-            eye=behind;focus=behind+Vector3.Slerp((muzzle-behind).normalized,(boat+Vector3.up*.8f-behind).normalized,w)*12;
-            stagedFov=Mathf.Lerp(58,26,w)-Mathf.Clamp01((t-WhipAt-WhipTime)/4)*4;   // a long lens on the boat, creeping in
+            if(t<riseEnd){float u=Mathf.SmoothStep(0,1,(t-EmergeEnd)/TurretRise);eye=Vector3.Lerp(low,behind,u);focus=Vector3.Lerp(hull,muzzle,u);return;}
+            if(t<FrontAt)
+            {
+                float u=Mathf.SmoothStep(0,1,(t-riseEnd)/(FrontAt-riseEnd));
+                eye=Round(Mathf.Lerp(167,20,u),Mathf.Lerp(3.3f,5.8f,u),Mathf.Lerp(1,.35f,u));focus=muzzle;stagedFov=Mathf.Lerp(58,40,u);return;
+            }
+            if(t<WhipAt){eye=front;focus=muzzle;stagedFov=40;return;}   // held in front of the muzzle
+            // Then round to the boat and in close on it, the pan leading the move.
+            float w=Mathf.SmoothStep(0,1,Mathf.Clamp01((t-WhipAt)/BoatMove));
+            var toBoat=Vector3.ProjectOnPlane(boat-front,Vector3.up);toBoat=toBoat.sqrMagnitude>.01f?toBoat.normalized:gun;
+            var near=boat-toBoat*4.5f+Vector3.Cross(Vector3.up,toBoat)*1.2f+Vector3.up*1.6f;
+            eye=Vector3.Lerp(front,near,w);focus=Vector3.Lerp(muzzle,boat+Vector3.up*.8f,Mathf.SmoothStep(0,1,Mathf.Clamp01(w*1.6f)));
+            stagedFov=Mathf.Lerp(40,34,w)-Mathf.Clamp01((t-WhipAt-BoatMove)/4)*4;
         }
         AnimationClip NamPoseClip()
         {

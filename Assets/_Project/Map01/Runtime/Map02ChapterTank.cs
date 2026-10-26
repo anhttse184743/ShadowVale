@@ -43,9 +43,9 @@ namespace ShadowVale.Map01
         {
             var ditch=sites["ditch"].position;
             Site("tankBreach",sites["lane3"].position+Vector3.forward*8);
-            // The road from the lanes to the south dock: the tank waits in the bamboo and blocks its head, 18 m from the bank.
+            // The road from the lanes to the south dock: the tank waits in the bamboo and blocks its head, 32 m from the bank.
             var road=new NavMeshPath();bool known=NavMesh.CalculatePath(ditch,sites["lane3"].position,NavMesh.AllAreas,road)&&road.status==NavMeshPathStatus.PathComplete;
-            Site("tankDock",known?Along(road.corners,18):ditch+Vector3.forward*18);Site("tankHide",known?Along(road.corners,30):ditch+Vector3.forward*30);
+            Site("tankDock",known?Along(road.corners,32):ditch+Vector3.forward*32);Site("tankHide",known?Along(road.corners,44):ditch+Vector3.forward*44);   // well back from the bank (26/10/2026)
             Site("tamCover",sites["fallen"].position+Vector3.left*6);Site("militiaEntry",known?Along(road.corners,62):sites["lane3"].position);
             var edge=sites["lane1"].position; // The guns fall on the village edge, cutting the road the enemy reinforces by.
             Water("artyImpact1",edge+Vector3.forward*30);Water("artyImpact2",edge+Vector3.forward*36+Vector3.right*14);Water("artyImpact3",edge+Vector3.forward*33+Vector3.left*16);

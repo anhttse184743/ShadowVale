@@ -367,7 +367,7 @@ namespace ShadowVale.Map01
             if(next)
             {
                 if(lineIndex+1<lines.Length){lineIndex++;StartLine();}
-                else if((sceneTask.kind!="cinematic"&&sceneTask.id!="N1_04"&&sceneTask.id!="D1_02")||sceneClock>=SceneDuration)EndScene();
+                else if((sceneTask.kind!="cinematic"&&sceneTask.id!="N1_04"&&sceneTask.id!="D1_02")||sceneTask.id=="N3_07"||sceneClock>=SceneDuration)EndScene();   // the farewell goes straight on to the cover fire: its 120 s is a cap, not a hold
             }
         }
         void LateUpdate()
