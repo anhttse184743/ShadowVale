@@ -250,7 +250,9 @@ namespace ShadowVale.Map01
         }
         AnimationClip NamPoseClip()
         {
-            if(Layout==null||sceneTask==null)return null;
+            if(sceneTask==null)return null;
+            if(HandoverWalking)return ordinaryWalk;   // walking up to hand over the watch
+            if(Layout==null)return null;
             if(sceneTask.id=="DAWN")return Layout.namMournClip;
             if(sceneTask.id=="N3_WOUND"&&woundHit)return Layout.namProneClip;
             if(sceneTask.id=="N3_09"&&sceneClock>=BlastAt)return sceneClock<25?Layout.namLieBackClip:Layout.namSitRadioClip;
