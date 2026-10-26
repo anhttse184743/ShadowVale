@@ -25,6 +25,58 @@ namespace ShadowVale.Map01.Tests
             yield return BoatInPlayMode();
             yield return new ExitPlayMode();
         }
+        [UnityTest,Timeout(300000)]public IEnumerator AfterTheHitNamKeepsLowAndMakesHisOwnWayToAnhLucsCover()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
+            yield return CrouchInPlayMode();
+            yield return new ExitPlayMode();
+        }
+        static IEnumerator CrouchInPlayMode()
+        {
+            Map02Mission m=null;yield return Ready(x=>m=x);var c=m.Chapter;
+            yield return Before(m,"N3_CRAWL");
+            Assert.IsFalse(c.MovementLocked,"He walks there himself, no scripted slide.");
+            var walker=m.Player.GetComponent<ShadowVale.Gameplay.Player.PlayerController>();
+            float wait=Time.time+.5f;while(Time.time<wait)yield return null;
+            Assert.IsTrue(walker.IsSneaking,"Wounded, he keeps low: the crouch.");
+            var mark=Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(o=>o.chapterId=="N3_CRAWL").transform.position;
+            var cc=m.Player.GetComponent<CharacterController>();cc.enabled=false;m.Player.position=mark+Vector3.back*.8f;cc.enabled=true;Physics.SyncTransforms();
+            wait=Time.time+3;while(Time.time<wait&&c.CurrentScene?.id!="N3_CRAWL")yield return null;
+            Assert.AreEqual("N3_CRAWL",c.CurrentScene?.id,"Reaching anh Lực's cover plays \"...Còn sống.\"");
+        }
+        [UnityTest,Timeout(300000)]public IEnumerator WoundedNamRunsALittleSlowerAndBleedsUntilBandaged()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
+            yield return BleedInPlayMode();
+            yield return new ExitPlayMode();
+        }
+        static IEnumerator BleedInPlayMode()
+        {
+            Map02Mission m=null;yield return Ready(x=>m=x);var c=m.Chapter;
+            yield return Before(m,"N3_06");var hp=m.Player.GetComponent<Health>();hp.CinematicInvulnerable=false;hp.RestoreHealth(90);
+            Assert.IsTrue(c.Bleeding,"The shoulder bleeds after the hit.");Assert.IsTrue(m.CharacterCanSprint,"Wounded, he can still run.");
+            float before=hp.Current,from=Time.time;while(Time.time<from+2)yield return null;
+            Assert.AreEqual(before-(Time.time-from)*Map02ChapterDirector.BleedPerSecond,hp.Current,1.2f,"2 HP a second.");
+            m.Bag.Add("medkit_small",2);yield return null;Assert.IsTrue(m.Bag.UseItem("medkit_small"),"A medkit dresses it.");yield return null;
+            Assert.IsFalse(c.Bleeding);before=hp.Current;from=Time.time;while(Time.time<from+1.5f)yield return null;
+            Assert.AreEqual(before,hp.Current,.01f,"No more bleeding once bandaged.");
+        }
+        [UnityTest,Timeout(300000)]public IEnumerator TheTankShellsTheVillageBeforeTheRadioCall()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
+            yield return WreckInPlayMode();
+            yield return new ExitPlayMode();
+        }
+        static IEnumerator WreckInPlayMode()
+        {
+            Map02Mission m=null;yield return Ready(x=>m=x);var c=m.Chapter;
+            yield return Before(m,"N3_06");Begin(c,"N3_06");Assert.AreEqual("N3_06",c.CurrentScene?.id);
+            float start=Time.time;while(Time.time<start+1.6f)yield return null;
+            Assert.IsTrue(c.Tank.activeSelf,"The tank is in the lanes, shelling.");Assert.IsTrue(c.WaitingForLine,"The radio call waits for the shelling.");
+            Assert.GreaterOrEqual(c.WreckFiresBurning,1,"The first house hit burns.");
+            while(Time.time<start+7&&c.WaitingForLine)yield return null;
+            Assert.AreEqual(3,c.WreckFiresBurning,"Three houses burning.");Assert.AreEqual("m2v3_coordinates_01",c.CurrentLineId);
+        }
         const System.Reflection.BindingFlags Flags=System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Instance;
         static IEnumerator Ready(System.Action<Map02Mission> found)
         {
@@ -84,9 +136,9 @@ namespace ShadowVale.Map01.Tests
             var boat=c.LastBoat.position;var tank=c.Tank.transform;
             var gun=Vector3.ProjectOnPlane(tank.rotation*Quaternion.AngleAxis(c.TurretYaw,Vector3.up)*Vector3.forward,Vector3.up);
             Assert.Less(Vector3.Angle(gun,Vector3.ProjectOnPlane(boat-tank.position,Vector3.up)),15,"The gun is on the boat.");
-            Assert.Less(Vector3.Angle(cam.transform.forward,boat-cam.transform.position),15,"The camera has whipped to the boat.");
-            Assert.Less(cam.GetComponent<Camera>().fieldOfView,35,"On a long lens.");
-            Assert.Less(Vector3.Distance(cam.transform.position,tank.position),8,"From behind the gun.");
+            Assert.Less(Vector3.Angle(cam.transform.forward,boat-cam.transform.position),15,"The camera has panned to the boat.");
+            Assert.Less(Vector3.Distance(cam.transform.position,boat),7.5f,"Close on the boat.");
+            Assert.Less(cam.GetComponent<Camera>().fieldOfView,40);
         }
     }
 }

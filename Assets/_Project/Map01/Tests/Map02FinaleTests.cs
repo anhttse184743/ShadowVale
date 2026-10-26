@@ -154,8 +154,14 @@ namespace ShadowVale.Map01.Tests
                 if(sun!=null)Assert.Greater(sun.color.r-sun.color.b,.3f,"Golden Day 3 light.");
                 // Nhịp 1: black, then the flare; Ông Sáu's roof is burning.
                 Load("D3_06");var attack=Mark("N3_00");Place(attack.transform.position);Assert.IsTrue(mission.Interact(attack));Assert.AreEqual("N3_00",chapter.CurrentScene?.id);
-                Call("TickEffects");Assert.AreEqual(1,chapter.EffectBlack);Assert.IsTrue(chapter.WaitingForLine);
-                Until("N3_00",1.5f);Call("TickDressing",.1f);Assert.IsFalse(chapter.WaitingForLine);Assert.Greater(chapter.FlareLight.intensity,0);Assert.IsTrue(chapter.HouseFire.enabled);
+                Call("TickEffects");Assert.AreEqual(0,chapter.EffectBlack,"The shift change is seen, not cut.");Assert.IsTrue(chapter.WaitingForLine);
+                Assert.Greater(chapter.HandoverWatchers.Count,0,"The men at the rest spot.");
+                Until("N3_00",4f);var locked=(Vector3)typeof(Map02ChapterDirector).GetField("lockedPosition",Private).GetValue(chapter);
+                Assert.Less(Vector3.ProjectOnPlane(locked-chapter.HandoverSpot,Vector3.up).magnitude,.1f,"Nam has walked up to anh Lực.");
+                foreach(var w in chapter.HandoverWatchers)Assert.Less(Vector3.Angle(Vector3.ProjectOnPlane(w.transform.forward,Vector3.up),Vector3.ProjectOnPlane(locked-w.transform.position,Vector3.up)),30,w.role+" turns to Nam.");
+                Assert.IsTrue(chapter.WaitingForLine,"Nobody shouts during the handover.");
+                Until("N3_00",5f);Call("TickEffects");Assert.AreEqual(1,chapter.EffectBlack,"Then dark: Nam lies down.");
+                Until("N3_00",6f);Call("TickDressing",.1f);Assert.IsFalse(chapter.WaitingForLine);Assert.Greater(chapter.FlareLight.intensity,0);Assert.IsTrue(chapter.HouseFire.enabled);
                 Call("EndScene");
                 // Nhịp 4: Tâm fires from the bamboo while Nam clears the tree.
                 Load("N3_CRAWL");Call("TickDressing",1.7f);Assert.NotNull(chapter.TamFlash);

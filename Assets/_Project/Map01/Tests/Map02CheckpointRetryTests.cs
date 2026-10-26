@@ -2,6 +2,8 @@ using System.Collections;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using ShadowVale.AI.Coordination;
+using ShadowVale.Core.Events;
 using ShadowVale.Gameplay.Combat;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -36,7 +38,21 @@ namespace ShadowVale.Map01.Tests
             var lane=Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(o=>o.chapterId=="N3_04").transform.position;
             var cc=m.Player.GetComponent<CharacterController>();cc.enabled=false;m.Player.position=lane;cc.enabled=true;Physics.SyncTransforms();
             var seen=new System.Collections.Generic.HashSet<ShadowVale.AI.Fsm.EnemyStateId>();until=Time.time+25;
-            while(Time.time<until){yield return null;foreach(var e in c.Enemies)if(e!=null&&!e.Dead&&e.group=="N3_04"&&e.BrainState.HasValue)seen.Add(e.BrainState.Value);}
+            var plans=new System.Collections.Generic.List<PlanAppliedEvent>();System.Action<PlanAppliedEvent> onPlan=plans.Add;EventBus.Subscribe(onPlan);
+            var allies=new[]{"Anh Lực","Tâm","Anh Thành"}.Select(r=>c.Actor(r)).Where(a=>a!=null&&a.visual!=null&&a.visual.gameObject.activeInHierarchy).ToArray();
+            var start=allies.ToDictionary(a=>a,a=>a.transform.position);float moved=0;
+            try
+            {
+                while(Time.time<until)
+                {
+                    yield return null;foreach(var e in c.Enemies)if(e!=null&&!e.Dead&&e.group=="N3_04"&&e.BrainState.HasValue)seen.Add(e.BrainState.Value);
+                    foreach(var a in allies)moved=Mathf.Max(moved,Vector3.Distance(a.transform.position,start[a]));
+                }
+            }
+            finally{EventBus.Unsubscribe(onPlan);}
+            Assert.IsTrue(plans.Any(p=>p.Group.Contains("N3_04")),"The squad coordinator plans the wave with the solver, as on Map 1 ("+string.Join(", ",plans.Select(p=>p.Group+":"+p.Variant))+").");
+            foreach(var a in allies)Assert.IsTrue(c.AllyInCombatPose(a.role),a.role+" fights with the rifleman's animations.");
+            if(allies.Length>0)Assert.Greater(moved,.7f,"Nam's comrades shift between firing spots.");
             var wave=c.Enemies.Where(e=>e!=null&&e.group=="N3_04").ToArray();
             Assert.Greater(wave.Length,0,"The lane's wave comes in.");
             Assert.IsTrue(wave.All(e=>e.BrainState.HasValue),"Every rifleman of the wave runs on the shared brain.");
