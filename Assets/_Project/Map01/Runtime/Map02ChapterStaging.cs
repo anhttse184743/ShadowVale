@@ -113,7 +113,8 @@ namespace ShadowVale.Map01
             foreach(var e in entrances.Where(e=>e.startLine==id)){e.actor.SceneDriven=true;e.actor.GoTo(e.to,1.6f);}
             var waiting=entrances.Where(e=>e.gateLine==id).ToArray();
             if(waiting.Length>0){lineGate=()=>waiting.All(e=>Vector3.Distance(e.actor.transform.position,e.to)<1.5f);gateUntil=sceneClock+7;}
-            else if(sceneTask.id=="N3_00"&&lineIndex==0){lineGate=()=>sceneClock>=1.2f;gateUntil=float.PositiveInfinity;} // One second of black before the flare.
+            else if(sceneTask.id=="N3_00"&&lineIndex==0){lineGate=()=>AttackClock>=1.2f;gateUntil=float.PositiveInfinity;} // The handover, then a second of black before the flare.
+            else if(sceneTask.id=="N3_06"&&lineIndex==0&&id=="m2v3_coordinates_01"){lineGate=()=>sceneClock>=WreckEnd;gateUntil=float.PositiveInfinity;} // The tank shelling the village first.
             else if(sceneTask.id=="N3_07"&&lineIndex==0){lineGate=()=>sceneClock>=BoatLineAt;gateUntil=float.PositiveInfinity;} // The tank, its gun, then the boat it is aimed at.
             else if(sceneTask.id=="N3_WOUND"&&lineIndex==0){lineGate=()=>sceneClock>=BreachLineAt;gateUntil=float.PositiveInfinity;} // The tank drives in and stands before anyone shouts.
             else if(sceneTask.id=="N3_09"){float at=SacrificeLineAt(id);lineGate=()=>sceneClock>=at;gateUntil=float.PositiveInfinity;} // The echo after the blast, then the guns, then the counter-attack.

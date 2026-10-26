@@ -225,11 +225,11 @@ namespace ShadowVale.Map01
             TickEffects();
             if(phaseFade>0){phaseFade=Mathf.Max(0,phaseFade-dt);TickLight(dt);return;}
             if(State.finished)return;
-            TickTank(dt);TickBoats(dt);TickDressing(dt);TickStepsRehearsal(dt);TickAllies();
+            TickTank(dt);TickBoats(dt);TickDressing(dt);TickStepsRehearsal(dt);TickAllies();TickWreck(dt);TickBleeding(dt);
             bool leading=LeadingWounded; // Day 3 / Night 3 escorts and Tâm's keep Nam armed and at pace.
             bool carrying=!string.IsNullOrEmpty(State.carry)||leading||DayActivityActive;if(carrying!=handsBusy||carrying&&!combat.HandsOccupied){handsBusy=carrying;combat.SetHandsOccupied(carrying);}   // a bag refresh (each save) frees the hands
-            player.SurfaceSpeedMultiplier=leading?EscortPace:!string.IsNullOrEmpty(State.carry)?CarryPace:State.wounded?.7f:1;
-            player.SprintAllowed=()=>!leading&&(CarrySprintForTesting||string.IsNullOrEmpty(State.carry))&&Mission.CharacterCanSprint;
+            player.SurfaceSpeedMultiplier=leading?EscortPace:!string.IsNullOrEmpty(State.carry)?CarryPace:CoverFireActive?CoverPace:State.wounded?WoundedPace:1;
+            player.SprintAllowed=()=>!leading&&!CoverFireActive&&(CarrySprintForTesting||string.IsNullOrEmpty(State.carry))&&Mission.CharacterCanSprint;
             if(sceneTask!=null){TickLight(dt);TickScene(dt);return;}
             if(TickDay(dt))return;
             TickBark(dt);
@@ -358,6 +358,8 @@ namespace ShadowVale.Map01
         {
             sceneClock+=dt;lineClock+=dt;TickMealVoice();TickMealCrickets();
             if(sceneTask.id=="N3_09"&&tank!=null)SampleSacrifice();
+            if(sceneTask.id=="N3_00")TickHandover(dt);
+            if(sceneTask.id=="N3_WOUND")TickRetreats();
             SceneSampled?.Invoke(sceneTask.id,sceneClock);
             if(sceneTask.id=="N3_WOUND"&&sceneClock>2)health.CinematicInvulnerable=true;var kb=Keyboard.current;
             skipHeld=kb?.escapeKey.isPressed==true?skipHeld+Time.unscaledDeltaTime:0;
@@ -375,8 +377,8 @@ namespace ShadowVale.Map01
         }
         void LateUpdate()
         {
-            DayLateUpdate();UpdateWorkWeapon();if(!ready)return;PanToHung();HoldCargo();if(sceneTask==null){UpdateHungRadio();return;}
-            HoldConversation();FaceTalk();MoveDaySceneRoots();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=NamPoseClip();namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null);
+            DayLateUpdate();UpdateWorkWeapon();if(!ready)return;PanToHung();HoldCargo();HungChargeLate();if(sceneTask==null){HoldCoverPosition();UpdateHungRadio();return;}
+            HoldConversation();FaceTalk();MoveDaySceneRoots();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=NamPoseClip();namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null||overrideClip==ordinaryWalk);
             SampleDayScene();UpdateHungRadio();
             string speaker=lines[lineIndex].speaker;Vector3 subject=Mission.Player.position;
             if(!lines[lineIndex].radio&&speaker!="Nam"&&roles.TryGetValue(speaker,out var actor))subject=actor.transform.position;

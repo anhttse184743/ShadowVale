@@ -32,7 +32,8 @@ namespace ShadowVale.Map01
         void PrepareFinale(Map02ChapterTask task)
         {
             shotFired=blasted=woundHit=thanhRunning=false;impactsFired=0;
-            if(task.id=="N3_WOUND"){breachApproach=null;rig.Shake(.05f,BreachDrive);if(Layout?.tankTracksClip!=null)AudioSource.PlayClipAtPoint(Layout.tankTracksClip,sites["tankBreach"].position,.9f);}
+            if(task.id=="N3_00")PrepareHandover();
+            if(task.id=="N3_WOUND"){breachApproach=null;grazed=false;PlanRetreats();rig.Shake(.05f,BreachDrive);if(Layout?.tankTracksClip!=null)AudioSource.PlayClipAtPoint(Layout.tankTracksClip,sites["tankBreach"].position,.9f);}
             if(task.id=="N3_07")
             {
                 // A cut, as the script allows: Hùng is already beside Nam, between him and the tank's fire.
@@ -134,7 +135,8 @@ namespace ShadowVale.Map01
             if(sceneTask?.id=="N3_WOUND"&&lines!=null&&spoken&&lines[lineIndex].id=="m2v3_wound_04")flash=Mathf.Clamp01(1-Mathf.Abs(lineClock-BurstHit)*3);
             if(State.Done("N3_WOUND")&&!State.Done("N3_CRAWL")){red=Mathf.Lerp(.35f,.15f,Mathf.Clamp01(State.taskProgress/8));cutoff=900;} // Crawling: blurred red, muffled.
             if(sceneTask?.id=="N3_CRAWL"){red=.12f;cutoff=1800;}
-            if(sceneTask?.id=="N3_00")black=sceneClock<1?1:Mathf.Clamp01(1-(sceneClock-1)/.5f); // Nam has just lain down.
+            if(Bleeding&&sceneTask==null)red=Mathf.Max(red,.04f+.05f*Mathf.Max(0,Mathf.Sin(Time.time*7.5f)));   // bleeding: a faint red pulse
+            if(sceneTask?.id=="N3_00")black=AttackClock<0?Mathf.Clamp01((sceneClock-(Handover-HandoverFade))/HandoverFade):AttackClock<1?1:Mathf.Clamp01(1-(AttackClock-1)/.5f); // The watch handed over, Nam lies down.
             if(sceneTask?.id=="N3_09")
             {
                 float t=sceneClock;
@@ -190,7 +192,9 @@ namespace ShadowVale.Map01
         bool FinaleCamera(out Vector3 eye,out Vector3 focus)
         {
             eye=focus=default;var nam=Mission.Player.position;stagedFov=null;
+            if(HandingOver&&roles.ContainsKey("Anh Lực")){HandoverShot(out eye,out focus);return true;}
             if(sceneTask.id=="N3_07"&&lineIndex==0&&tank!=null){BoatShot(nam,out eye,out focus);return true;}
+            if(WreckOpening&&sceneClock<WreckEnd&&wreckPlaced){WreckShot(nam,out eye,out focus);return true;}
             if(sceneTask.id=="N3_WOUND"&&!woundHit&&tank!=null){BreachShot(nam,out eye,out focus);return true;}
             if(sceneTask.id=="N3_WOUND"&&woundHit)
             {

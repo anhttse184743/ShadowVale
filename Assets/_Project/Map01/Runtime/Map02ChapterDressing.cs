@@ -234,7 +234,7 @@ namespace ShadowVale.Map01
         void TickFlare()
         {
             // Nhịp 1: one second of black, then an enemy flare over the roofs.
-            if(sceneTask?.id=="N3_00"&&sceneClock>=1&&flareStarted<0)flareStarted=Time.time;
+            if(sceneTask?.id=="N3_00"&&AttackClock>=1&&flareStarted<0)flareStarted=Time.time;
             if(flareStarted<0)return;
             if(FlareLight==null)
             {
@@ -247,7 +247,7 @@ namespace ShadowVale.Map01
         void TickHouseFire()
         {
             // Nhịp 2: Ông Sáu's back roof burns from the attack through the night.
-            bool burning=State.phase==5&&(State.Done("N3_00")||sceneTask?.id=="N3_00"&&sceneClock>=1);
+            bool burning=State.phase==5&&(State.Done("N3_00")||sceneTask?.id=="N3_00"&&AttackClock>=1);
             if(burning&&HouseFire==null)
             {
                 var roof=sites["family"].position+Vector3.up*4.2f+Vector3.back*1.5f;
