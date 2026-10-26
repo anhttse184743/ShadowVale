@@ -19,7 +19,7 @@ namespace ShadowVale.Map01
         public Camera GameCamera=>cameraRig!=null?cameraRig.GetComponent<Camera>():Camera.main;
         public float Stamina {get;private set;}
         public bool CharacterGearLocked=>!string.IsNullOrEmpty(Chapter?.State.carry)||Chapter?.CompanionLocksGear==true||Chapter?.DayActivityActive==true||Chapter?.MovementLocked==true;
-        public bool CharacterCanSprint=>Chapter?.MovementLocked!=true&&Stamina>2&&Chapter?.State.wounded!=true;
+        public bool CharacterCanSprint=>Chapter?.MovementLocked!=true&&Stamina>2;   // wounded he still runs, a little slower (WoundedPace)
         // The player's panel still blocks controls, but field crafting must leave enemies active.
         public bool CharacterWorldBlocked=>!Ready||Paused||Cinematic||Chapter?.LocksInput==true||World.story.failed
             ||(Panel!=0&&!(Panel==1&&CharacterHud?.FieldCraftingOpen==true));

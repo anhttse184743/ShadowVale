@@ -80,6 +80,8 @@ namespace ShadowVale.Map01
         public float coverClock;
         public int workCount;
         public bool wounded,hungDead,radioTransferred,tankDestroyed,artilleryFired,finished,gearStored;
+        /// <summary>Nam's shoulder has been dressed with a medkit: it no longer bleeds.</summary>
+        public bool bandaged;
         [Serializable] public sealed class UnitSnapshot {public string id,group;public Vector3 position;public float health;public bool looted;}
         public bool Done(string id)=>completed.Contains(id);
         public bool Available(Map02ChapterTask t)=>t!=null&&!finished&&t.phase==phase&&!Done(t.id)&&(t.requires??Array.Empty<string>()).All(Done);
