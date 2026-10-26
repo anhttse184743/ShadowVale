@@ -129,7 +129,7 @@ Assert.IsFalse(renderer.isPartOfStaticBatch);Assert.AreNotSame(originalHull,rend
 Assert.IsFalse(originalHull.enabled,"Do not draw duplicate source geometry.");
 Assert.AreEqual(3,arrival.GetComponentsInChildren<MeshRenderer>().Count(r=>r.name=="Boat bench"&&r.enabled));
 Assert.Less(Vector3.Distance(renderer.bounds.center,arrival.transform.position),1,"The visible hull must move with its passengers.");
-Assert.IsFalse(arrival.Passengers[2].GetComponentsInChildren<Weapon>(true).Any(w=>w.IsGun&&w.gameObject.activeInHierarchy),"Hung must have two free hands for the paddle, even after loading a completed checkpoint.");
+Assert.IsFalse(arrival.Passengers[2].GetComponentsInChildren<Weapon>(true).Any(w=>w.IsGun&&w.gameObject.activeInHierarchy),"Hung supports his injured arm, even after loading a completed checkpoint.");
 LogAssert.Expect(LogType.Log,"Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.");arrival.Skip();
 yield return WaitGameSeconds(.2f);AssertDryPartySpawn(arrival);VerifyGameplayRifle(arrival.Passengers[0]);
 Capture(Camera.main,"Logs/Map02/Checkpoint/gameplay.png");yield return new ExitPlayMode();
@@ -277,7 +277,7 @@ var ankle=(float[,])typeof(Map02Arrival).GetField("ankleOffsets",BindingFlags.In
 while(arrival.IsPlaying && Time.realtimeSinceStartup<limit) {
 bool rendered=false;System.Exception captureFailure=null;var phase=arrival.CurrentPhase;float time=arrival.CinematicTime;
 pump.draw=()=>{try {
-if(arrival.IsPlaying)Assert.IsFalse(arrival.Passengers[2].GetComponentsInChildren<Weapon>(true).Any(w=>w.IsGun&&w.gameObject.activeInHierarchy),"Hung's hands must stay free throughout rowing, stowing and disembarking.");
+if(arrival.IsPlaying)Assert.IsFalse(arrival.Passengers[2].GetComponentsInChildren<Weapon>(true).Any(w=>w.IsGun&&w.gameObject.activeInHierarchy),"Hung supports his injured arm throughout arrival and disembarking.");
 if(phase==Map02Arrival.Phase.Approaching)foreach(var x in new[]{-.7f,.7f})foreach(var z in new[]{-2.7f,2.7f})
 Assert.IsTrue(waters.Any(w=>w.TrySample(arrival.transform.TransformPoint(new Vector3(x,0,z)),Time.time,out _)),"Hull must stay inside the actual river banks.");
 Assert.Greater(arrival.transform.TransformPoint(new Vector3(0,-.15f,0)).y,.07f,"Interior floor must stay clear of the canal water.");

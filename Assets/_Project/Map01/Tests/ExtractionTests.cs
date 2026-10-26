@@ -51,16 +51,8 @@ namespace ShadowVale.Map01.Tests
             var previousPosition=mission.gameCamera.transform.position;var previousRotation=mission.gameCamera.transform.rotation;
             mission.gameCamera.transform.SetPositionAndRotation(new Vector3(.1f,1.8f,83.5f),Quaternion.LookRotation(new Vector3(1.55f,.8f,85.4f)-new Vector3(.1f,1.8f,83.5f)));
             Capture(mission,"waiting-hands-close");
-            var gripLog=new System.Collections.Generic.List<string>();
-            foreach(var a in new[]{hung,Object.FindObjectsByType<Animator>(FindObjectsSortMode.None).First(a=>a.name==Map01OpeningCutscene.CommanderVisualName)}) {
-                var g=a.GetComponent<Map01Rifle>();var h=a.GetBoneTransform(HumanBodyBones.LeftHand);
-                var tip=h.Cast<Transform>().First(t=>t.name.EndsWith("_end"));
-                Assert.Less(Vector3.Distance(Vector3.Lerp(h.position,tip.position,.45f),g.support.position),.025f,a.name+" palm must reach rifle support");
-                gripLog.Add("PALM_ERROR="+Vector3.Distance(Vector3.Lerp(h.position,tip.position,.45f),g.support.position));
-                gripLog.Add(a.name+" hand="+h.position+" support="+g.support.position+" children="+string.Join(",",h.Cast<Transform>().Select(t=>t.name+":"+t.position)));
-                foreach(var r in g.GetComponentsInChildren<Renderer>().Where(r=>r.name.Contains("mag") || r.name.Contains("grip")))gripLog.Add(r.name+" gunlocal="+g.weapon.transform.InverseTransformPoint(r.bounds.center));
-            }
-            File.WriteAllLines("Logs/Extraction/grip-metrics.txt",gripLog);
+            foreach(var actor in new[]{extraction.HungAnimator,extraction.CommanderAnimator})
+                Assert.IsFalse(actor.GetComponentsInChildren<Weapon>(true).Any(w=>w.IsGun&&w.gameObject.activeInHierarchy),"Injured Hung and the rower have free hands.");
             mission.gameCamera.transform.SetPositionAndRotation(previousPosition,previousRotation);
             Assert.That(hung.GetBoneTransform(HumanBodyBones.Hips).position.y,Is.InRange(.28f,.43f),"Hung must actually sit at bench height.");
             foreach(var enemy in mission.Enemies) enemy.GetComponent<Health>().TakeDamage(99999,enemy.transform.position,null);
@@ -98,7 +90,7 @@ namespace ShadowVale.Map01.Tests
             File.WriteAllLines("Logs/Extraction/cover-diagnostics.txt",diagnostic);
 
             var cameraPosition=mission.gameCamera.transform.position;var cameraRotation=mission.gameCamera.transform.rotation;
-            var rower=mission.hung.position;mission.gameCamera.transform.SetPositionAndRotation(rower+new Vector3(3,1.6f,-1),Quaternion.LookRotation(rower+Vector3.up*.7f-(rower+new Vector3(3,1.6f,-1))));
+            var rower=extraction.CommanderRoot.position;mission.gameCamera.transform.SetPositionAndRotation(rower+new Vector3(3,1.6f,-1),Quaternion.LookRotation(rower+Vector3.up*.7f-(rower+new Vector3(3,1.6f,-1))));
             Capture(mission,"rowing-close");mission.gameCamera.transform.SetPositionAndRotation(cameraPosition,cameraRotation);
             File.WriteAllLines("Logs/Extraction/paddle-diagnostics.txt",Object.FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None).Where(r=>r.name.StartsWith("Oar ")).Select(r=>r.name+" active="+r.gameObject.activeInHierarchy+" enabled="+r.enabled+" hidden="+r.forceRenderingOff+" position="+r.transform.position+" bounds="+r.bounds));
             Assert.AreEqual(Map01Extraction.Phase.Departing,extraction.CurrentPhase);
@@ -107,7 +99,7 @@ namespace ShadowVale.Map01.Tests
             // The bank was cleared above. A pursuer behind the jetty may be visible only to
             // the higher-seated commander; do not demand that Nam shoot through solid decking.
             // SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot separately requires
-            // BOTH actors to fire when its living targets have a clear line.
+            // Nam to fire when his living targets have a clear line; the commander rows.
             Assert.Greater(extraction.NamCoverShots+extraction.CommanderCoverShots,0,"A party member with a safe line must cover departure.");
             Assert.Greater(extraction.CoverKills,0,"Cover fire must actually kill a living enemy.");
             File.WriteAllText("Logs/Extraction/cover-results.txt",$"Nam shots={extraction.NamCoverShots}, Commander shots={extraction.CommanderCoverShots}, Kills={extraction.CoverKills}");
@@ -193,7 +185,7 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsFalse(guard.Alive,guard.name+" must be killed by covering fire.");
                 Assert.IsNull(guard.GetComponent<ForestPoint>(),"Cinematic kills must not generate loot.");
             }
-            Assert.Greater(extraction.NamCoverShots,0);Assert.Greater(extraction.CommanderCoverShots,0);
+            Assert.Greater(extraction.NamCoverShots,0);Assert.AreEqual(0,extraction.CommanderCoverShots,"The commander rows; only Nam fires.");
             Assert.AreEqual(ammo,mission.ModernCombat.RoundsInMagazine);
             Capture(mission,"live-guards-defeated");
             File.WriteAllText("Logs/Extraction/live-cover-results.txt",$"Nam={extraction.NamCoverShots} Commander={extraction.CommanderCoverShots} Kills={extraction.CoverKills} Ammo={ammo}");
@@ -223,7 +215,7 @@ namespace ShadowVale.Map01.Tests
                         if(sequence.CurrentPhase==Map01Extraction.Phase.Departing) {
                             string closeFolder="Logs/Extraction/RowingCloseFrames";Directory.CreateDirectory(closeFolder);
                             var position=camera.transform.position;var rotation=camera.transform.rotation;
-                            var root=mission.hung.parent;var focus=mission.hung.position+root.up*.72f;
+                            var root=mission.hung.parent;var focus=sequence.CommanderRoot.position+root.up*.72f;
                             camera.transform.SetPositionAndRotation(focus+root.right*2.7f+root.up*.65f-root.forward*.6f,Quaternion.LookRotation(-root.right*2.7f-root.up*.65f+root.forward*.6f));
                             camera.Render();texture.ReadPixels(new Rect(0,0,960,540),0,0);texture.Apply();
                             File.WriteAllBytes(closeFolder+"/frame-"+frame.ToString("D05")+".jpg",texture.EncodeToJPG(85));
