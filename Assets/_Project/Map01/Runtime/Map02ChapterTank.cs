@@ -33,6 +33,7 @@ namespace ShadowVale.Map01
         /// (<see cref="WhipAt"/> + <see cref="BoatMove"/>) as the machine gun opens up; then chú Bảy's shout.</summary>
         const float EmergeEnd=5,TurretRise=3.5f,FrontAt=EmergeEnd+TurretRise+1.4f,WhipAt=FrontAt+.8f,BoatMove=1.8f,BoatLineAt=WhipAt+BoatMove+.2f;
         Light gunFlash;ParticleSystem splash;
+        (Light light,ParticleSystem smoke,ParticleSystem flame) tankBlaze;bool tankBlazeMade;
         public GameObject Tank=>tank;
         public string TankStage {get;private set;}="hidden";
         public Transform LastBoat=>lastBoat!=null?lastBoat.transform:null;
@@ -58,7 +59,9 @@ namespace ShadowVale.Map01
         /// <summary>Points that are not walked to (on the water, at the village edge): never snapped to the NavMesh.</summary>
         void Water(string id,Vector3 fallback){var authored=Layout?.sites?.FirstOrDefault(s=>s.id==id);water[id]=authored!=null?authored.position:fallback;}
 
-        // ---- Tank: breach at the third lane, turns into the village road, hidden in Nhịp 4, blocks the dock road in Nhịp 5.
+        // ---- Tank: breach at the third lane, then loose in the village lanes (Nhịp 4), blocks the dock road in Nhịp 5.
+        float roamAt,roamPause;int roamDir=1;bool roaming;
+        const float RoamNear=.2f,RoamFar=.8f,RoamMid=.55f,RoamSpeed=3,RoamTurn=2.6f;
         string TankStageNow()
         {
             if(!State.Done("N3_05C"))return "hidden";
@@ -73,14 +76,20 @@ namespace ShadowVale.Map01
             var stage=TankStageNow();
             if(stage=="hidden"){if(tank!=null)tank.SetActive(false);TankStage=stage;return;}
             if(tank==null)CreateTank();
-            if(stage!=TankStage){TankStage=stage;tankLegClock=0;tankLeg=stage=="leaving"?Leg("tankBreach","tankHide"):stage=="emerging"?Leg("tankHide","tankDock"):Array.Empty<Vector3>();}
-            tankLegClock=snap?1e5f:tankLegClock+dt; // A load lands at the end of the drive and stays there.
-            bool visible=stage!="waiting";Vector3 at,face;
-            if(tankLeg.Length>1)
+            if(stage!=TankStage)
             {
-                float travelled=tankLegClock*(stage=="leaving"?4.5f:3f);
+                bool keepRoaming=TankStage=="leaving"&&stage=="waiting";   // the same lanes: it just keeps going
+                TankStage=stage;tankLegClock=0;
+                tankLeg=stage=="leaving"||stage=="waiting"?Leg("tankBreach","tankHide"):stage=="emerging"?Leg("tankHide","tankDock"):Array.Empty<Vector3>();
+                if(!keepRoaming){roamDir=1;roamPause=0;roaming=stage=="waiting";roamAt=roaming?Length(tankLeg)*RoamMid:0;}
+            }
+            tankLegClock=snap?1e5f:tankLegClock+dt; // A load lands at the end of the drive and stays there.
+            bool visible=true;Vector3 at,face;
+            if((stage=="leaving"||stage=="waiting")&&tankLeg.Length>1)RoamTank(dt,snap,out at,out face);
+            else if(tankLeg.Length>1)
+            {
+                float travelled=tankLegClock*3f;
                 at=Along(tankLeg,travelled);face=Along(tankLeg,Mathf.Min(travelled,Length(tankLeg)-.05f)+1)-at;
-                if(stage=="leaving"&&travelled>=Length(tankLeg))visible=false; // Out of sight in the village until it reappears at the dock road.
             }
             else if(BreachDriving&&!snap)
             {
@@ -95,6 +104,7 @@ namespace ShadowVale.Map01
                 at=sites[stage=="breach"?"tankBreach":stage=="waiting"?"tankHide":"tankDock"].position;
                 face=(stage=="breach"?sites["lane3"].position:water["boatMid"])-at; // Turret toward Nam, then toward the last boat.
             }
+            if(WreckOpening){PlaceWreck();at=wreckSpot;face=WreckCenter-at;visible=true;if(tankLeg.Length>1){roaming=true;roamAt=Length(tankLeg)*RoamMid;}}   // shelling the houses before the radio call
             tank.SetActive(visible);tank.transform.position=at;
             var flat=Vector3.ProjectOnPlane(face,Vector3.up);
             if(flat.sqrMagnitude>.01f)tank.transform.rotation=snap?Quaternion.LookRotation(flat):Quaternion.RotateTowards(tank.transform.rotation,Quaternion.LookRotation(flat),70*Mathf.Max(dt,.0001f));
@@ -103,7 +113,7 @@ namespace ShadowVale.Map01
                 if(State.tankDestroyed&&!tankSmoke.isPlaying)tankSmoke.Play();
                 else if(!State.tankDestroyed&&sceneTask?.id!="N3_09"&&tankSmoke.isPlaying)tankSmoke.Stop(true,ParticleSystemStopBehavior.StopEmittingAndClear);
             }
-            if(stage=="destroyed")BurnTank();
+            if(stage=="destroyed")BurnTank();else if(tankBlazeMade)Burn(tankBlaze,0);   // a retry to before the blast puts it out
             AnimateTankParts(dt,stage,snap);
             TickMachineGun(dt,stage);
         }
@@ -118,6 +128,26 @@ namespace ShadowVale.Map01
                 tankFire=go.AddComponent<Light>();tankFire.type=LightType.Point;tankFire.range=22;tankFire.color=new Color(1,.55f,.22f);tankFire.shadows=LightShadows.None;
             }
             tankFire.intensity=State.phase>=6?.6f:3.2f+Mathf.PerlinNoise(Time.time*3,0)*1.6f; // Only embers left at dawn.
+            if(!tankBlazeMade){tankBlazeMade=true;tankBlaze=Fire(tank.transform.position+Vector3.up*.5f);}
+            Burn(tankBlaze,State.phase>=6?.25f:1);   // flames off the hull until dawn, smoke after
+        }
+        /// <summary>After the breach the tank stays in sight: it drives on into the village, then up and down its lanes (the
+        /// road from the breach towards the dock), turning at each end and holding while Nam is close ahead of it.</summary>
+        void RoamTank(float dt,bool snap,out Vector3 at,out Vector3 face)
+        {
+            float run=Length(tankLeg);
+            if(snap&&!roaming){roaming=true;roamAt=run*RoamMid;roamDir=1;}
+            if(!roaming){roamAt+=4.5f*dt;if(roamAt>=run*RoamFar){roamAt=run*RoamFar;roaming=true;roamDir=-1;roamPause=RoamTurn;}}
+            else if(roamPause>0)roamPause-=dt;
+            else if(!WreckOpening&&dt>0)
+            {
+                var ahead=Along(tankLeg,Mathf.Clamp(roamAt+roamDir*6,0,run));
+                if(Flat(ahead,Mission.Player.position)>12)roamAt+=roamDir*RoamSpeed*dt;
+                if(roamAt>=run*RoamFar){roamAt=run*RoamFar;roamDir=-1;roamPause=RoamTurn;}
+                else if(roamAt<=run*RoamNear){roamAt=run*RoamNear;roamDir=1;roamPause=RoamTurn;}
+            }
+            at=Along(tankLeg,roamAt);face=Along(tankLeg,Mathf.Clamp(roamAt+roamDir*1.5f,0,run))-at;
+            if(Vector3.ProjectOnPlane(face,Vector3.up).sqrMagnitude<.01f)face=tank.transform.forward;
         }
         bool BreachDriving=>TankStage=="breach"&&sceneTask?.id=="N3_WOUND"&&sceneClock<BreachDrive;
         /// <summary>The breach drive: from <see cref="BreachRun"/> m out, on the far side of the breach from the lane, to the breach.</summary>

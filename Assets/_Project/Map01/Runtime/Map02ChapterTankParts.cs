@@ -79,7 +79,7 @@ namespace ShadowVale.Map01
             // "nòng pháo quay chậm về phía Nam"). At the dock road it rolls out the same way, then swings the gun onto the boat.
             Vector3? target=WreckOpening?WreckAim:stage=="blocking"?water["boatMid"]:stage=="leaving"||stage=="waiting"?shellAim:(Vector3?)null;
             float aim=target.HasValue?YawTo(target.Value):stage=="destroyed"?turretYaw:0;
-            turretYaw=snap?aim:Mathf.MoveTowardsAngle(turretYaw,aim,(stage=="blocking"?32:22)*dt); // "nòng pháo quay chậm về phía Nam"
+            turretYaw=snap?aim:Mathf.MoveTowardsAngle(turretYaw,aim,(WreckOpening?90:stage=="blocking"?32:22)*dt);
             var hull=tank.transform.rotation;var traverse=Quaternion.AngleAxis(turretYaw,Vector3.up);
             turret.rotation=hull*traverse*turretRest;
             float droop=stage=="destroyed"?6:0;
