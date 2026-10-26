@@ -1,0 +1,34 @@
+{
+  "cost": 0,
+  "integrated": false,
+  "lines": [
+    {
+      "option": "C",
+      "id": "free_literal_7be0a5941d33",
+      "text": "Rõ! Tôi sẽ hoàn thành nhiệm vụ!",
+      "file": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\output\\Supply_Tower_Nam_20261026\\C-0.wav",
+      "seconds": 1.660375
+    },
+    {
+      "option": "C",
+      "id": "m1_ops_supply_report_01",
+      "text": "Tôi lấy được túi tiếp tế rồi. Thuốc vẫn còn nguyên.",
+      "file": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\output\\Supply_Tower_Nam_20261026\\C-1.wav",
+      "seconds": 2.4383333333333335
+    },
+    {
+      "option": "D",
+      "id": "free_literal_7be0a5941d33",
+      "text": "Rõ! Tôi sẽ hoàn thành nhiệm vụ!",
+      "file": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\output\\Supply_Tower_Nam_20261026\\D-0.wav",
+      "seconds": 1.9950625
+    },
+    {
+      "option": "D",
+      "id": "m1_ops_supply_report_01",
+      "text": "Tôi lấy được túi tiếp tế rồi. Thuốc vẫn còn nguyên.",
+      "file": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\output\\Supply_Tower_Nam_20261026\\D-1.wav",
+      "seconds": 2.5009166666666665
+    }
+  ]
+}
