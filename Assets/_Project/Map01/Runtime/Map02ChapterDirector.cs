@@ -531,6 +531,21 @@ namespace ShadowVale.Map01
             roles["Bé Tí"].StopAt(BesideMother(mother.position));
             roles["Bé Tí"].SetSitting(false);
         }
+        /// <summary>0 in the dark of Night 3, rising from the farewell (the sky greys), through the cover fire, to dawn as the
+        /// tank goes up and the counter-attack comes in (decided 26/10/2026: the battle runs from night into first light).</summary>
+        public float FirstLight
+        {
+            get
+            {
+                if(State.phase!=5)return 0;
+                if(State.Done("N3_09"))return .9f;
+                if(sceneTask?.id=="N3_09")return Mathf.Lerp(.6f,.9f,Mathf.Clamp01(sceneClock/FadeAt));
+                if(State.Done("N3_08"))return .6f;
+                if(State.activeTask=="N3_08")return Mathf.Lerp(.35f,.6f,Mathf.Clamp01(State.coverClock/CoverSlowest));
+                if(State.Done("N3_07")||sceneTask?.id=="N3_07")return sceneTask?.id=="N3_07"?Mathf.Lerp(.15f,.35f,Mathf.Clamp01(sceneClock/60)):.35f;
+                return 0;
+            }
+        }
         void TickLight(float dt)
         {
             bool night=State.phase==1||State.phase==3||State.phase==5;bool afternoon=State.phase==0&&State.Available(Map02ChapterDefinition.Load().Find("D1_06"));
@@ -540,9 +555,11 @@ namespace ShadowVale.Map01
             if(phaseApplied!=State.phase){phaseApplied=State.phase;}
             if(TickNaturalLighting(dt))return;
             bool golden=State.phase==4; // Day 3: the warmest afternoon of the chapter, against Night 3.
-            if(sun!=null){sun.intensity=Mathf.Lerp(sun.intensity,night?(Layout!=null?Layout.nightSunIntensity:.08f):State.phase==6?.45f:golden?sunIntensity*.9f:afternoon?sunIntensity*.65f:sunIntensity,dt*.6f);sun.color=Color.Lerp(sun.color,night?new Color(.5f,.63f,1):golden?new Color(1,.74f,.46f):afternoon?new Color(1,.67f,.36f):new Color(1,.9f,.75f),dt*.6f);sun.transform.rotation=Quaternion.Slerp(sun.transform.rotation,night?Quaternion.Euler(25,190,0):golden?Quaternion.Euler(14,250,0):afternoon?Quaternion.Euler(18,220,0):sunRotation,dt*.6f);}
-            if(chapterSky!=null&&chapterSky.HasProperty("_Exposure"))chapterSky.SetFloat("_Exposure",Mathf.Lerp(chapterSky.GetFloat("_Exposure"),night?(Layout!=null?Layout.nightSkyExposure:.08f):1f,dt));
-            RenderSettings.ambientLight=Color.Lerp(RenderSettings.ambientLight,night?new Color(.12f,.15f,.23f):golden?Color.Lerp(ambientBefore,new Color(.62f,.48f,.34f),.45f):ambientBefore,dt*.6f);
+            // Night 3 is fought into first light: the sky greys from the farewell and the tank goes up at dawn (FirstLight).
+            float dawn=FirstLight,nightSun=Layout!=null?Layout.nightSunIntensity:.08f,nightSky=Layout!=null?Layout.nightSkyExposure:.08f;
+            if(sun!=null){sun.intensity=Mathf.Lerp(sun.intensity,night?Mathf.Lerp(nightSun,.4f,dawn):State.phase==6?.45f:golden?sunIntensity*.9f:afternoon?sunIntensity*.65f:sunIntensity,dt*.6f);sun.color=Color.Lerp(sun.color,night?Color.Lerp(new Color(.5f,.63f,1),new Color(1,.66f,.5f),dawn):golden?new Color(1,.74f,.46f):afternoon?new Color(1,.67f,.36f):new Color(1,.9f,.75f),dt*.6f);sun.transform.rotation=Quaternion.Slerp(sun.transform.rotation,night?Quaternion.Slerp(Quaternion.Euler(25,190,0),Quaternion.Euler(7,95,0),dawn):golden?Quaternion.Euler(14,250,0):afternoon?Quaternion.Euler(18,220,0):sunRotation,dt*.6f);}
+            if(chapterSky!=null&&chapterSky.HasProperty("_Exposure"))chapterSky.SetFloat("_Exposure",Mathf.Lerp(chapterSky.GetFloat("_Exposure"),night?Mathf.Lerp(nightSky,.75f,dawn):1f,dt));
+            RenderSettings.ambientLight=Color.Lerp(RenderSettings.ambientLight,night?Color.Lerp(new Color(.12f,.15f,.23f),new Color(.42f,.38f,.43f),dawn):golden?Color.Lerp(ambientBefore,new Color(.62f,.48f,.34f),.45f):ambientBefore,dt*.6f);
         }
         void TickPatrol(float dt)
         {
