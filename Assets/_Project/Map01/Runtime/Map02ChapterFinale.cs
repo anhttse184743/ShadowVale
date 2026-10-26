@@ -42,6 +42,7 @@ namespace ShadowVale.Map01
             }
             if(task.id=="N3_09")
             {
+                KeepNamClearOfTheBlast();ClearCounterAttack();
                 // He comes up out of the ditch a few metres short of the tracks.
                 hungRiseFrom=Along(HungCanal,Mathf.Max(0,Length(HungCanal)-4));
                 sacrificePath=new[]{hungRiseFrom,ChargePoint};sacrificeTravel=RiseEnd;
@@ -87,31 +88,32 @@ namespace ShadowVale.Map01
                 else{var sound=Mission.Player.GetComponent<CombatAudio>();if(sound!=null&&sound.Gunshot.IsValid){var clip=sound.Gunshot;PooledAudioService.Resolve().PlayOneShot(clip.clip,at,1.2f*clip.EffectiveGain,.35f,0,.85f,clip.startTime,clip.duration);}}
             }
             if(impactLight!=null)impactLight.intensity=Mathf.MoveTowards(impactLight.intensity,0,Time.deltaTime*14);
+            if(t>=PocketAt)SpawnPocket();
             if(t>=MilitiaAt&&militia.Count==0)SpawnMilitia();
-            for(int i=0;i<militia.Count;i++)
-            {
-                if(militia[i]==null)continue;float d=Mathf.Max(0,(t-MilitiaAt-i*.4f)*4.2f);
-                var side=Vector3.Cross(Vector3.up,(Along(militiaRoad,d+1)-Along(militiaRoad,d)).normalized)*((i%3-1)*1.6f);
-                militia[i].position=Along(militiaRoad,d)+side;var ahead=Along(militiaRoad,d+1)-Along(militiaRoad,d);if(ahead.sqrMagnitude>.01f)militia[i].rotation=Quaternion.LookRotation(Vector3.ProjectOnPlane(ahead,Vector3.up));
-            }
-            if(t>=ThanhAt&&!thanhRunning){thanhRunning=true;var thanh=roles["Anh Thành"];thanh.StopAt(BehindCamera());thanh.SceneDriven=true;thanh.GoTo(sites["tankDock"].position,3.6f);}
+            while(militiaRoadAt.Count<militia.Count)militiaRoadAt.Add(0);
+            TickMilitiaFight(t);TickShell(t);
+            if(t>=ThanhAt&&!thanhRunning){thanhRunning=true;var thanh=roles["Anh Thành"];thanh.StopAt(BehindCamera());thanh.SceneDriven=true;thanh.GoTo(pocket.Count>0?pocketCenter:sites["tankDock"].position,3.6f);}
         }
         void SpawnMilitia()
         {
-            // Silhouettes against the gun flashes: the militia model again, no new soldiers' model.
-            militiaRoad=Leg("militiaEntry","tankDock");
+            // Silhouettes against the gun flashes: the militia model again, no new soldiers' model. Into the village, at the
+            // soldiers still holding a lane, not at the tank.
+            var road=new NavMeshPath();var entry=sites["militiaEntry"].position;var to=pocket.Count>0?pocketCenter:sites["tankDock"].position;
+            militiaRoad=NavMesh.CalculatePath(entry,to,NavMesh.AllAreas,road)&&road.status==NavMeshPathStatus.PathComplete?road.corners:new[]{entry,to};
             var art=Layout?.militiaArt!=null?Layout.militiaArt:Layout?.actors?.FirstOrDefault(a=>a.role=="Anh Lực")?.prefab;
             for(int i=0;i<7;i++)
             {
                 GameObject body;
                 if(art!=null)body=Instantiate(art);
                 else{body=GameObject.CreatePrimitive(PrimitiveType.Capsule);Destroy(body.GetComponent<Collider>());var block=new MaterialPropertyBlock();block.SetColor("_BaseColor",new Color(.05f,.05f,.05f));body.GetComponent<Renderer>().SetPropertyBlock(block);body.transform.localScale=new Vector3(.6f,.9f,.6f);}
-                body.name="Counter-attack silhouette "+i;body.transform.SetParent(root.transform);militia.Add(body.transform);
+                body.name="Counter-attack silhouette "+i;body.transform.SetParent(root.transform);militia.Add(body.transform);ArmMilitiaman(body.transform);
             }
         }
         void ClearFinale()
         {
-            foreach(var m in militia)if(m!=null)Destroy(m.gameObject);militia.Clear();
+            foreach(var m in militia)if(m!=null)Destroy(m.gameObject);militia.Clear();DropCharge();
+            if(thanhRunning&&pocket.Count>0){roles["Anh Thành"].StopAt(pocketCenter);thanhRunning=false;}
+            ClearCounterAttack();
             if(impactLight!=null)impactLight.intensity=0;if(rearFlash!=null)rearFlash.enabled=false;
             if(thanhRunning){roles["Anh Thành"].StopAt(sites["tankDock"].position);thanhRunning=false;}
         }
@@ -136,7 +138,7 @@ namespace ShadowVale.Map01
                 if(t>=BlastAt)
                 {
                     float after=t-BlastAt;
-                    cutoff=after<1?10:Mathf.Lerp(500,22000,Mathf.Clamp01((after-1)/9f)*Mathf.Clamp01((after-1)/9f)); // Deaf, then the ringing fades.
+                    cutoff=after<.3f?22000:after<1?10:Mathf.Lerp(500,22000,Mathf.Clamp01((after-1)/9f)*Mathf.Clamp01((after-1)/9f)); // Deaf, then the ringing fades.
                     ringing=after<10?Mathf.Lerp(.28f,0,after/10f):0;grey=after<10?Mathf.Lerp(.5f,0,after/10f):0;
                 }
                 if(t>=FadeAt)black=Mathf.Clamp01((t-FadeAt)/8f);
@@ -203,6 +205,7 @@ namespace ShadowVale.Map01
                 var at=tank!=null?tank.transform.position:sites["tankDock"].position;var dir=Vector3.ProjectOnPlane(at-nam,Vector3.up).normalized;var side=Vector3.Cross(Vector3.up,dir);
                 if(sceneClock<BlastAt){eye=nam-dir*2.2f+Vector3.up*1.7f+side*.6f;focus=Vector3.Lerp(roles["Hùng"].transform.position,at,.3f)+Vector3.up;return true;}
                 if(sceneClock<FireOrderAt){eye=nam+Vector3.up*.6f-dir*1.2f+side;focus=Vector3.Lerp(water["boatMid"],at,.5f)+Vector3.up*.8f;return true;}
+                if(CounterAttackCamera(sceneClock,out eye,out focus))return true;
                 var road=militia.Count>0&&militia[0]!=null?militia[0].position:at;
                 eye=nam-dir*4+Vector3.up*3+side*2;focus=Vector3.Lerp(nam,road,.5f)+Vector3.up;return true;
             }
