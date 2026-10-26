@@ -73,6 +73,33 @@ namespace ShadowVale.Map01.Tests
    var sound=mission.GetComponent<Map01Ambience>();Assert.NotNull(sound);Assert.True(sound.Ready);
    Assert.AreSame(sound,Map01Ambience.Attach(mission));Assert.AreEqual(1,Object.FindObjectsByType<Map01Ambience>(FindObjectsSortMode.None).Length);
    Assert.AreEqual(2,sound.GetComponentsInChildren<AudioSource>().Count(s=>s.name.StartsWith("Map 1 —")));
+   // Exercise the actual authored room and roof, including loading/starting indoors.
+   var floor=GameObject.Find("ShelterShell").GetComponentsInChildren<BoxCollider>().Single(c=>c.name=="Floor");
+   var roof=GameObject.Find("ShelterShell").GetComponentsInChildren<BoxCollider>().Single(c=>c.name=="Earth covered roof");
+   var original=mission.player.position;
+   var controller=mission.player.GetComponent<CharacterController>();bool wasEnabled=controller!=null&&controller.enabled;
+   bool movementEnabled=mission.ModernPlayer.enabled;mission.ModernPlayer.enabled=false;
+   if(controller!=null)controller.enabled=false;
+   foreach(var menu in Object.FindObjectsByType<ForestMenu>(FindObjectsSortMode.None))typeof(ForestMenu).GetField("visible",Private).SetValue(menu,false);
+   mission.SetPaused(false);
+   var room=floor.transform.TransformPoint(floor.center+Vector3.up*(floor.size.y*.5f+.08f));
+   var outside=floor.transform.TransformPoint(floor.center+new Vector3(floor.size.x*.5f+3,0,0));
+   var bed=(AudioSource)typeof(Map01Ambience).GetField("wind",Private).GetValue(sound);
+   var calls=(AudioSource)typeof(Map01Ambience).GetField("birds",Private).GetValue(sound);
+   try
+   {
+    mission.player.position=room;yield return new WaitForSecondsRealtime(.8f);
+    Assert.True(sound.InsideShelter,"Room floor must silence outdoor ambience");Assert.AreEqual(0,sound.WindVolume,.0001f);Assert.False(bed.isPlaying);Assert.False(calls.isPlaying);
+    // The ground on top of the roof is outside, despite sharing the room's X/Z.
+    mission.player.position=new Vector3(room.x,roof.bounds.max.y+.3f,room.z);
+    yield return new WaitForSecondsRealtime(1.6f);
+    Assert.False(sound.InsideShelter);Assert.True(bed.isPlaying);Assert.Greater(sound.WindVolume,.01f);
+    mission.player.position=room;yield return new WaitForSecondsRealtime(.8f);
+    Assert.True(sound.InsideShelter);Assert.False(bed.isPlaying);Assert.AreEqual(0,sound.WindVolume,.0001f);
+    mission.player.position=outside;yield return new WaitForSecondsRealtime(1.6f);
+    Assert.False(sound.InsideShelter);Assert.True(bed.isPlaying);Assert.Greater(sound.WindVolume,.01f);
+   }
+   finally{mission.player.position=original;if(controller!=null)controller.enabled=wasEnabled;mission.ModernPlayer.enabled=movementEnabled;}
   }
  }
 }

@@ -12,3 +12,9 @@ PCM masters measured wind RMS 0.0849 and birds 0.0989–0.0998 before runtime ga
 Two initial test harness issues were corrected: a deliberately unconfigured mission logged initialization errors, and the automatically opened title menu paused the isolated audio fixture. Clip sample inspection was replaced with import/load verification because compressed-in-memory clips do not support GetData; original WAV levels are recorded in sources.json. Final tests contain no suppressed gameplay errors.
 
 Sources and rebuild script: SourceArt/Audio/Map01_Ambience_20261026. Map 2 audio and all voice files untouched. Existing saves need no conversion. No paid assets/services.
+
+## Shelter/volume revision
+
+Wind gain reduced 0.20 → 0.15; birds 0.13 → 0.095 (about 25% quieter). The authored underground room now mutes birds and fades wind to zero, then pauses playback. Outdoor ground above the roof remains audible. No new assets or license changes.
+
+Unity final 3/3 passed (Tests-shelter.xml), including real Map 1: enter room → wind/calls silent and stopped; move above roof → wind audible; re-enter → silent; leave floor footprint → audible. Existing playback, speech ducking and pause/resume tests still pass. The teleport test also suspends player locomotion while its CharacterController is disabled; no gameplay errors were suppressed.
