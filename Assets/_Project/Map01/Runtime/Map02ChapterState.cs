@@ -41,6 +41,7 @@ namespace ShadowVale.Map01
         // Additive version 3 fields: older completed tasks stay completed.
         public int wireStage; // 0 in store, 1 carried, 2 delivered
         public float patrolScanSeconds;
+        public int nightPatrolSeed,nightPatrolCycle;
         public float patrolFocusSeconds;
         public Vector3 patrolFocusDirection;
         public int night2GuidanceStage;

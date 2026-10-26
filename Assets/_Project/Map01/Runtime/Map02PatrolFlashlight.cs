@@ -40,7 +40,7 @@ namespace ShadowVale.Map01
             if(unit.Alerted)
             {
                 // Free both hands for the rifle while the torch remains on the shoulder strap.
-                torch.SetPositionAndRotation(chest.position-right*.16f+forward*.16f,Quaternion.LookRotation(forward));return;
+                torch.SetPositionAndRotation(chest.position-right*.16f+forward*.16f,Quaternion.LookRotation(direction.sqrMagnitude>.01f?direction:forward));return;
             }
             var hand=actor.GetBoneTransform(HumanBodyBones.LeftHand);hand.localRotation=leftWrist;
             Map01ArmContact.Reach(actor,true,head.position-right*.25f+forward*.32f-Vector3.up*.12f,
@@ -61,6 +61,7 @@ namespace ShadowVale.Map01
     public sealed class Map02PatrolLightSync:MonoBehaviour
     {
         public Map02ChapterDirector owner;
+        void Update(){if(owner!=null&&owner.enabled)owner.TickNightPatrolWorld(Time.deltaTime);}
         void LateUpdate(){if(owner!=null&&owner.enabled)owner.SyncNightPatrolPresentation();}
     }
 }

@@ -21,6 +21,7 @@ namespace ShadowVale.Map01
                 if(t.id=="D1_06")return "Ba việc đã xong. Gặp anh Thành và nhấn E báo cáo để chuyển sang Đêm 1.";
                 if(t.id=="N1_01")return "Tới hiên nhà chị Lành, nhấn E ngồi ăn cùng Hùng. Sau bữa cơm mới bắt đầu ca gác.";
                 if(t.id=="N1_04")return "Tới chiếu nghỉ, nhấn E đổi ca. Cảnh nghỉ kết thúc mới sang Ngày 2.";
+                if(t.id=="N2_01")return "Giữ F quan sát tổ đèn pin. Đèn quét tới 40 m; bị phát hiện rất dễ trúng đạn. Nhấn Z nằm xuống để cắt dấu vết, chờ vùng tối rồi di chuyển.";
                 if(t.id=="D2_03")return "Theo lối lúa bị giẫm từ cầu tới khoảng trống. Tâm nằm bị thương tại ghim vàng; đến gần, nhấn E để giúp.";
                 if(t.kind=="wire")return State.wireStage==1?"Đang mang cuộn dây. Tới trạm ở ghim vàng, nhấn E giao cho Hùng.":"Tới kho kín ở ghim vàng, nhấn E lấy cuộn dây ăng-ten.";
                 if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)?$"Đang mang thùng {n+1}/{t.count}. Tới ghim vàng rồi nhấn E để đặt.":$"Đã chuyển {n}/{t.count}. Tới ghim vàng, nhấn E nhận thùng tiếp theo.";

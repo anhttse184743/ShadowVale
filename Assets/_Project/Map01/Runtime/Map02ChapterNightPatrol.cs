@@ -7,6 +7,11 @@ namespace ShadowVale.Map01
     public sealed partial class Map02ChapterDirector
     {
         public const string NightPatrolGroup="night2_patrol";
+        public bool NightObservationRulesActive=>State.phase==3&&!State.Done("N2_05");
+        public float NightPatrolScanRate=>NightObservationRulesActive?.5f:1f;
+        public float NightPatrolDetectionRange=>NightObservationRulesActive?40:Layout!=null?Mathf.Clamp(Layout.nightPatrolLightRange,10,55):28;
+        bool NightPatrolConceals(ShadowVale.Gameplay.Player.PlayerController motor)=>
+            motor!=null&&(NightObservationRulesActive?motor.IsProne:VillageRiceInstances.Conceals(motor));
         GameObject nightBeamRoot;
         readonly Mesh[] nightBeamMeshes=new Mesh[3];
         readonly Transform[] nightBeams=new Transform[3];
@@ -18,10 +23,47 @@ namespace ShadowVale.Map01
         Material nightBeamMaterial;
         Vector3 nightNominalOrigin,nightSweepDirection=Vector3.forward;
         public Vector3 NightPatrolPosition=>sites["nightPatrol"].position;
+        BoxCollider nightObservationBridge;
+        BoxCollider NightObservationBridge
+        {
+            get
+            {
+                if(nightObservationBridge==null)nightObservationBridge=FindObjectsByType<BoxCollider>(FindObjectsSortMode.None)
+                    .Where(c=>c.enabled&&(c.name=="Walkable bridge deck"||c.name=="Bridge deck"))
+                    .OrderBy(c=>Vector3.Distance(c.bounds.center,sites["bridge"].position)).FirstOrDefault();
+                return nightObservationBridge;
+            }
+        }
+        public Vector3 NightObservationSpawn
+        {
+            get
+            {
+                var deck=NightObservationBridge;if(deck==null)return sites["bridge"].position;
+                var a=deck.transform.TransformPoint(deck.center-Vector3.right*deck.size.x*.5f);
+                var b=deck.transform.TransformPoint(deck.center+Vector3.right*deck.size.x*.5f);
+                var end=Vector3.Distance(a,sites["bridge"].position)<Vector3.Distance(b,sites["bridge"].position)?a:b;
+                var point=Vector3.MoveTowards(end,deck.bounds.center,1.5f);
+                return NavMesh.SamplePosition(point,out var hit,1.5f,NavMesh.AllAreas)?hit.position:point;
+            }
+        }
+        public bool AtNightObservationBridge(Vector3 position)
+        {
+            if(Vector3.Distance(position,sites["bridge"].position)<16)return true;
+            var deck=NightObservationBridge;if(deck==null)return false;
+            var local=deck.transform.InverseTransformPoint(position)-deck.center;
+            return Mathf.Abs(local.x)<=deck.size.x*.5f+.5f&&Mathf.Abs(local.z)<=deck.size.z*.5f+.5f&&Mathf.Abs(local.y)<2;
+        }
+        Vector3 NightPatrolPost(int i)
+        {
+            var center=sites["bridge"].position;
+            var offset=Vector3.ProjectOnPlane(NightPatrolPosition-center,Vector3.up).normalized*35;
+            // Three points on the same 35 m radius: a triangle, with adjacent chords of 10 m.
+            float angle=2*Mathf.Asin(10f/(2*35))*Mathf.Rad2Deg;
+            return center+Quaternion.AngleAxis(i==0?0:i==1?angle:-angle,Vector3.up)*offset;
+        }
         Vector3 MigrateNightPatrolPosition(string id,Vector3 position)
         {
-            if(Vector3.Distance(position,sites["scout"].position)>12||Vector3.Distance(NightPatrolPosition,sites["scout"].position)<20)return position;
-            var target=NightPatrolPosition+(id.EndsWith("_0")?Vector3.zero:new Vector3(id.EndsWith("_1")?3:-3,0,-2));
+            var target=NightPatrolPost(id.EndsWith("_0")?0:id.EndsWith("_1")?1:2);
             return NavMesh.SamplePosition(target,out var floor,4,NavMesh.AllAreas)?floor.position:position;
         }
         public Light NightPatrolLight=>sweepLight;
@@ -34,17 +76,18 @@ namespace ShadowVale.Map01
         void RefreshNightPatrol()
         {
             bool active=State.phase==3&&!State.Done("N2_05");
-            if(active&&!State.combatGroups.Contains(NightPatrolGroup))
+            if(active)
             {
-                var positions=new Vector3[3];
+                if(State.nightPatrolSeed==0)State.nightPatrolSeed=Random.Range(1,int.MaxValue);
                 for(int i=0;i<3;i++)
                 {
-                    var p=NightPatrolPosition+(i==0?Vector3.zero:new Vector3(i==1?3:-3,0,-2));
-                    if(!NavMesh.SamplePosition(p,out var floor,4,NavMesh.AllAreas))return;
-                    positions[i]=floor.position;
+                    string id=NightPatrolGroup+"_"+i;
+                    if(Enemies.Any(unit=>unit!=null&&unit.id==id))continue;
+                    var p=NightPatrolPost(i);
+                    if(!NavMesh.SamplePosition(p,out var floor,4,NavMesh.AllAreas))continue;
+                    SpawnEnemy(id,NightPatrolGroup,floor.position,100,false);
                 }
-                for(int i=0;i<3;i++)SpawnEnemy(NightPatrolGroup+"_"+i,NightPatrolGroup,positions[i],100,false);
-                State.combatGroups.Add(NightPatrolGroup);
+                if(!State.combatGroups.Contains(NightPatrolGroup))State.combatGroups.Add(NightPatrolGroup);
             }
             foreach(var unit in Enemies)if(unit!=null&&unit.group==NightPatrolGroup){unit.gameObject.SetActive(active);if(active)Map02PatrolFlashlight.Bind(unit);}
             if(active&&nightBeamRoot==null)BuildNightBeam();
@@ -53,17 +96,11 @@ namespace ShadowVale.Map01
         }
         public void TickNightPatrolUnit(Map02ChapterEnemy unit,NavMeshAgent agent)
         {
-            // Unalerted guards keep their authored patrol. Sight or damage enters normal combat.
-            if(unit.id==NightPatrolGroup+"_0")
-            {
-                agent.isStopped=true;var facing=Vector3.ProjectOnPlane(sweepLight.transform.forward,Vector3.up);if(facing.sqrMagnitude>.001f)unit.transform.rotation=Quaternion.LookRotation(facing);return;
-            }
-            agent.isStopped=false;agent.speed=1;agent.stoppingDistance=.4f;
-            if(agent.pathPending||agent.hasPath&&agent.remainingDistance>.6f)return;
-            int side=unit.id.EndsWith("_1")?1:-1;
-            float shift=Mathf.PingPong(State.patrolScanSeconds,6)-3;
-            var target=NightPatrolPosition+new Vector3(side*3,0,-3+shift);
-            if(NavMesh.SamplePosition(target,out var floor,3,NavMesh.AllAreas))agent.SetDestination(floor.position);
+            // Hold the three posts ten metres apart; only the beam scans until combat starts.
+            agent.isStopped=true;
+            int i=unit.id.EndsWith("_0")?0:unit.id.EndsWith("_1")?1:2;
+            var facing=Vector3.ProjectOnPlane(NightLightDirection(i,nightSweepDirection),Vector3.up);
+            if(facing.sqrMagnitude>.001f)unit.transform.rotation=Quaternion.LookRotation(facing);
         }
         void BuildNightBeam()
         {
@@ -74,7 +111,7 @@ namespace ShadowVale.Map01
             {
                 nightLights[i]=i==0?sweepLight:new GameObject("Đèn quét phụ "+i).AddComponent<Light>();
                 if(i>0)nightLights[i].transform.SetParent(nightBeamRoot.transform,false);
-                var light=nightLights[i];light.type=LightType.Spot;light.range=Layout!=null?Mathf.Clamp(Layout.nightPatrolLightRange,10,55):28;light.spotAngle=24;light.shadows=LightShadows.Hard;light.intensity=i==0?7:4;light.color=new Color(.67f,.8f,1);
+                var light=nightLights[i];light.type=LightType.Spot;light.range=NightPatrolDetectionRange;light.spotAngle=24;light.shadows=LightShadows.Hard;light.intensity=i==0?7:4;light.color=new Color(.67f,.8f,1);
                 nightBeamMeshes[i]=new Mesh{name="Night patrol cone "+i};
                 var beam=new GameObject(i==0?"Luồng đèn nhìn thấy được":"Luồng đèn phụ "+i);beam.transform.SetParent(nightBeamRoot.transform,false);beam.AddComponent<MeshFilter>().sharedMesh=nightBeamMeshes[i];var renderer=beam.AddComponent<MeshRenderer>();renderer.sharedMaterial=nightBeamMaterial;renderer.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;renderer.receiveShadows=false;nightBeams[i]=beam.transform;
             }
@@ -82,9 +119,34 @@ namespace ShadowVale.Map01
         Vector3 NightLightDirection(int i,Vector3 main)
         {
             var unit=NightUnit(i);var prop=unit!=null?unit.GetComponent<Map02PatrolFlashlight>():null;
-            if(unit!=null&&unit.Alerted&&prop?.Emitter!=null)return prop.Emitter.forward;
-            return i==0||unit==null?main:Quaternion.AngleAxis(Mathf.Sin(State.patrolScanSeconds*.6f)*18,Vector3.up)*unit.transform.forward;
+            if(unit!=null&&unit.TrackingVisibleTarget&&prop?.Emitter!=null)return prop.Emitter.forward;
+            return i==0?main:NightPatrolSweepDirection(i);
         }
+        public bool NightPatrolDarkWindow=>State.patrolScanSeconds>=Mathf.Max(10,Layout!=null?Layout.patrolSweepSeconds:15)-4;
+        static float PatrolRandom(int seed,int cycle,int index)
+        {
+            unchecked{uint value=(uint)seed^(uint)(cycle*747796405)^(uint)((index+1)*2891336453u);value^=value>>16;value*=2246822519u;value^=value>>13;return (value&0xffffff)/16777216f;}
+        }
+        Vector3 NightPatrolMissionDirection(int i)
+        {
+            var unit=NightUnit(i);var origin=unit!=null?unit.transform.position:NightPatrolPost(i);
+            return Vector3.ProjectOnPlane(sites["bridge"].position-origin,Vector3.up).normalized;
+        }
+        Vector3 NightPatrolSweepDirection(int i)
+        {
+            float period=Mathf.Max(10,Layout!=null?Layout.patrolSweepSeconds:15),active=period-4;
+            var towardMission=NightPatrolMissionDirection(i);
+            // Randomise the rhythm inside the mission-facing sector, never its global heading.
+            float edge=PatrolRandom(State.nightPatrolSeed,State.nightPatrolCycle,6)>.5f?60:-60;
+            if(NightPatrolDarkWindow)return Quaternion.AngleAxis(edge,Vector3.up)*towardMission;
+            float t=Mathf.Clamp01(State.patrolScanSeconds/active);
+            float phase=PatrolRandom(State.nightPatrolSeed,State.nightPatrolCycle,i)*Mathf.PI*2;
+            float sign=PatrolRandom(State.nightPatrolSeed,State.nightPatrolCycle,i+3)>.5f?1:-1;
+            float angle=Mathf.Sin(phase+t*Mathf.PI*2*sign)*60;
+            float blend=Mathf.Min(Mathf.SmoothStep(0,1,State.patrolScanSeconds),Mathf.SmoothStep(0,1,active-State.patrolScanSeconds));
+            return Quaternion.AngleAxis(Mathf.Lerp(edge,angle,blend),Vector3.up)*towardMission;
+        }
+
         Map02ChapterEnemy NightUnit(int i)=>Enemies.FirstOrDefault(e=>e!=null&&e.id==NightPatrolGroup+"_"+i);
         Vector3 NightLightOrigin(int i,Vector3 main)
         {
@@ -95,10 +157,16 @@ namespace ShadowVale.Map01
         }
         public bool NightGuardIlluminates(Map02ChapterEnemy unit)
         {
+            if(NightPatrolConceals(Mission.Player.GetComponent<ShadowVale.Gameplay.Player.PlayerController>()))return false;
             int i=unit.id.EndsWith("_0")?0:unit.id.EndsWith("_1")?1:2;
             var from=NightLightOrigin(i,nightNominalOrigin);var delta=Mission.Player.position+Vector3.up*(Mission.Player.GetComponent<ShadowVale.Gameplay.Player.PlayerController>()?.IsProne==true?.4f:1f)-from;
-            if(delta.magnitude>(nightLights[i]!=null?nightLights[i].range:28)||Vector3.Angle(NightLightDirection(i,nightSweepDirection),delta)>=11||Map01Smoke.Blocks(from,from+delta))return false;
+            if(delta.magnitude>NightPatrolDetectionRange||Vector3.Angle(NightLightDirection(i,nightSweepDirection),delta)>=11||Map01Smoke.Blocks(from,from+delta))return false;
             return Physics.Raycast(from,delta.normalized,out var hit,delta.magnitude+.2f,~0,QueryTriggerInteraction.Ignore)&&(hit.transform==Mission.Player||hit.transform.IsChildOf(Mission.Player));
+        }
+        public void TickNightPatrolWorld(float dt)
+        {
+            if(!ready||Mission==null||Mission.Paused||ForestMenu.Visible||Mission.World.story.failed||Mission.Panel!=0||sceneTask!=null||phaseFade>0||State.finished)return;
+            TickPatrol(Mathf.Clamp(dt,0,.1f));
         }
         public void SyncNightPatrolPresentation(){if(nightBeamRoot!=null&&State.phase==3&&!State.Done("N2_05"))UpdateNightPatrolPresentation(nightNominalOrigin,nightSweepDirection);}
         bool NightGuardAlive(int i)=>Enemies.Any(e=>e!=null&&e.id==NightPatrolGroup+"_"+i&&!e.Dead&&e.gameObject.activeInHierarchy);
@@ -110,7 +178,7 @@ namespace ShadowVale.Map01
             for(int i=0;i<3;i++)
             {
                 var unit=NightUnit(i);var prop=unit!=null?unit.GetComponent<Map02PatrolFlashlight>():null;
-                bool live=NightGuardAlive(i);nightLights[i].enabled=live;nightBeams[i].gameObject.SetActive(live);if(!live)continue;
+                bool live=NightGuardAlive(i);nightLights[i].range=NightPatrolDetectionRange;nightLights[i].enabled=live;nightBeams[i].gameObject.SetActive(live);if(!live)continue;
                 var from=NightLightOrigin(i,origin);var toward=NightLightDirection(i,direction);var rotation=Quaternion.LookRotation(toward);
                 prop?.SetDirection(toward);
                 nightLights[i].transform.SetPositionAndRotation(from,rotation);nightBeams[i].SetPositionAndRotation(from,rotation);
@@ -125,12 +193,13 @@ namespace ShadowVale.Map01
         bool NightPatrolExposure(Vector3 origin,Vector3 direction,out float angle,out float distance)
         {
             bool exposed=false;angle=180;distance=float.MaxValue;
+            bool concealed=NightPatrolConceals(Mission.Player.GetComponent<ShadowVale.Gameplay.Player.PlayerController>());
             for(int i=0;i<3;i++)
             {
                 if(!NightGuardAlive(i))continue;
                 var from=NightLightOrigin(i,origin);var delta=Mission.Player.position+Vector3.up*(Mission.Player.GetComponent<ShadowVale.Gameplay.Player.PlayerController>()?.IsProne==true?.4f:1f)-from;var toward=NightLightDirection(i,direction);
                 float a=Vector3.Angle(toward,delta);angle=Mathf.Min(angle,a);distance=Mathf.Min(distance,delta.magnitude);
-                if(a>=11||delta.magnitude>=(nightLights[i]!=null?nightLights[i].range:28))continue;
+                if(concealed||Map01Smoke.Blocks(from,from+delta)||a>=11||delta.magnitude>=NightPatrolDetectionRange)continue;
                 if(Physics.Raycast(from,delta.normalized,out var seen,delta.magnitude+.2f,~0,QueryTriggerInteraction.Ignore)&&(seen.transform==Mission.Player||seen.transform.IsChildOf(Mission.Player)))exposed=true;
             }
             return exposed;

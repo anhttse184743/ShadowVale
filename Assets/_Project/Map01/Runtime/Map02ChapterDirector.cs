@@ -74,6 +74,7 @@ namespace ShadowVale.Map01
             Site("dayOneFamily",new Vector3(-50.7f,1.03f,-35.7f));Site("nightOneRest",sites["dayOneFamily"].position+Vector3.right*3);
             Site("rest",command+Vector3.back*4);Site("bamboo",command+Vector3.right*14);
             Site("scout",Legacy(Map02Work.ScoutAid,command));Site("bridge",sites["scout"].position+Vector3.forward*12);
+            Site("nightPatrol",sites["bridge"].position+new Vector3(1,0,-1).normalized*35);
             Site("child",Legacy(Map02Work.RescueNeighbours,command));
             Site("lane1",command+Vector3.forward*14);Site("lane2",command+Vector3.forward*5);Site("lane3",command+Vector3.back*5);
             Site("cover",sites["lane3"].position+Vector3.left*5);Site("fallen",dock+Vector3.forward*8);
@@ -244,7 +245,7 @@ namespace ShadowVale.Map01
             TickBark(dt);
             if(doingWork){TickWork(dt);return;}
             if(Mission.Panel!=0)return;
-            TickLight(dt);TickPatrol(dt);TickCrawlCall(dt);TickAmmo();
+            TickLight(dt);TickCrawlCall(dt);TickAmmo();
             if(State.phase==5&&State.Done("N3_00")&&!State.Done("N3_04"))EnsureGroup("initial_attack",4);
             if(State.wounded&&!Mission.Cinematic)rig.AddRecoil(Mathf.Sin(Time.time*2)*dt*.08f,Mathf.Sin(Time.time*3)*dt*.06f);
             foreach(var t in State.AvailableTasks.ToArray())
@@ -261,8 +262,8 @@ namespace ShadowVale.Map01
                 }
                 if(t.kind=="binocular")
                 {
-                    var cam=rig.GetComponent<Camera>();var delta=sites["scout"].position+Vector3.up-cam.transform.position;
-                    bool view=binocular&&!player.IsMoving&&Vector3.Distance(Mission.Player.position,sites["scout"].position)>8&&Vector3.Angle(cam.transform.forward,delta)<Mathf.Min(32,cam.fieldOfView*.5f+8)&&ObservationVisible(cam,sites["scout"].position+Vector3.up);
+                    var cam=rig.GetComponent<Camera>();var target=NightObservationPoint;var delta=target-cam.transform.position;
+                    bool view=binocular&&!player.IsMoving&&NightPatrolExists&&AtNightObservationBridge(Mission.Player.position)&&Vector3.Distance(Mission.Player.position,NightPatrolPosition)>8&&Vector3.Angle(cam.transform.forward,delta)<Mathf.Min(32,cam.fieldOfView*.5f+8)&&ObservationVisible(cam,target);
                     observed=view?observed+dt:0;if(observed>=t.seconds){Finish(t);break;}
                 }
                 if(t.kind=="crawl"&&Keyboard.current?.cKey.isPressed==true){var path=new NavMeshPath();if(NavMesh.CalculatePath(Mission.Player.position,mark.transform.position,NavMesh.AllAreas,path)&&path.status==NavMeshPathStatus.PathComplete){var next=path.corners.FirstOrDefault(p=>Vector3.Distance(p,Mission.Player.position)>.15f);if(Vector3.Distance(Mission.Player.position,mark.transform.position)>1.2f){var delta=Vector3.ProjectOnPlane(next-Mission.Player.position,Vector3.up).normalized*.8f*dt;Mission.Player.GetComponent<CharacterController>().Move(delta);State.taskProgress+=dt;}}if(Vector3.Distance(Mission.Player.position,mark.transform.position)<1.5f){health.CinematicInvulnerable=false;BeginScene(t);break;}}
@@ -433,7 +434,7 @@ namespace ShadowVale.Map01
             Cancel();State=state??new Map02ChapterState();State.Validate();EnsureDayState();workTask=Map02ChapterDefinition.Load().Find(State.activeTask);
             Mission.World.story.stage=State.finished?Map02Stage.Complete:Map02Stage.Contact;
             foreach(var e in Enemies)if(e!=null)Destroy(e.gameObject);Enemies.Clear();
-            foreach(var saved in State.enemies)SpawnEnemy(saved.id,saved.group,saved.position,saved.health,saved.group!="scout_patrol",saved.looted);
+            foreach(var saved in State.enemies)SpawnEnemy(saved.id,saved.group,saved.group==NightPatrolGroup&&saved.health>0?MigrateNightPatrolPosition(saved.id,saved.position):saved.position,saved.health,saved.group!="scout_patrol"&&saved.group!=NightPatrolGroup,saved.looted);
             ammoHinted=false;
             // Saves from before evacuation-driven lanes stored seconds held.
             var held=Map02ChapterDefinition.Load().Find(State.activeTask);if(held!=null&&held.kind=="defend"&&State.taskProgress>1)State.taskProgress=Mathf.Clamp01(State.taskProgress/Mathf.Max(1,held.seconds));
@@ -514,7 +515,7 @@ namespace ShadowVale.Map01
             foreach(var unit in Enemies)if(unit!=null){if(State.Done("N3_09"))unit.gameObject.SetActive(false);else if(unit.group=="scout_patrol")unit.gameObject.SetActive(State.phase==2);}
             roles["Hùng"].SetLocomotion(State.phase<=1?DayClip("InjuredIdle"):null,State.phase<=1?HungMapOneWalk:null);
             roles["Hùng"].PrimeLocomotion();roles["Anh Thành"].SetQuietRifle(State.phase<=1);roles["Anh Thành"].SetLocomotion(State.phase<=1?dayNamAnimator.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned"):null,State.phase<=1?ordinaryWalk:null);ArrangeDayFamily();
-            SyncDayProps();RefreshMemorial();UpdateMarkers();
+            SyncDayProps();RefreshMemorial();UpdateMarkers();RefreshNightPatrol();
         }
         void PlaceChildWithMother()
         {
@@ -540,23 +541,38 @@ namespace ShadowVale.Map01
         void TickPatrol(float dt)
         {
             if(State.phase!=3||State.Done("N2_05"))return;
-            float period=Mathf.Max(6,Layout!=null?Layout.patrolSweepSeconds:15);
-            State.patrolScanSeconds=Mathf.Repeat(State.patrolScanSeconds+dt,period);float phase=State.patrolScanSeconds;
+            float period=Mathf.Max(10,Layout!=null?Layout.patrolSweepSeconds:15);
+            bool focusing=State.patrolFocusSeconds>0;
+            if(focusing)State.patrolFocusSeconds=Mathf.Max(0,State.patrolFocusSeconds-dt);
+            else
+            {
+                float elapsed=State.patrolScanSeconds+dt*NightPatrolScanRate;
+                State.nightPatrolCycle=(State.nightPatrolCycle+Mathf.FloorToInt(elapsed/period))%1000000;
+                State.patrolScanSeconds=Mathf.Repeat(elapsed,period);
+            }
+            float phase=State.patrolScanSeconds;
             // A sweep can notice Nam only with line of sight and without cover; one warning per pass.
-            var origin=sites["scout"].position+Vector3.up*1.7f;var delta=Mission.Player.position+Vector3.up-origin;
+            var origin=NightPatrolPosition+Vector3.up*1.7f;var delta=Mission.Player.position+Vector3.up-origin;
             sweepLight.transform.position=origin;
-            var sweep=Quaternion.Euler(0,Mathf.Lerp(-50,50,phase/period),0)*(sites["store"].position-origin).normalized;
+            var sweep=NightPatrolSweepDirection(0);
+            if(focusing&&!NightPatrolDarkWindow&&State.patrolFocusDirection.sqrMagnitude>.001f)
+            {
+                var towardMission=NightPatrolMissionDirection(0);
+                float focusAngle=Mathf.Clamp(Vector3.SignedAngle(towardMission,Vector3.ProjectOnPlane(State.patrolFocusDirection,Vector3.up),Vector3.up),-60,60);
+                sweep=Quaternion.AngleAxis(focusAngle,Vector3.up)*towardMission;
+            }
             sweepLight.transform.rotation=Quaternion.LookRotation(sweep);
+            UpdateNightPatrolPresentation(origin,sweep);
             if(patrolLoadGrace>0){patrolLoadGrace=Mathf.Max(0,patrolLoadGrace-dt);return;}
             if(!State.Done("N2_02"))return;
-            bool clear=Physics.Raycast(origin,delta.normalized,out var seen,delta.magnitude+.2f,~0,QueryTriggerInteraction.Ignore)&&(seen.transform==Mission.Player||seen.transform.IsChildOf(Mission.Player));
-            bool exposed=phase>period*.13f&&phase<period*.87f&&Vector3.Angle(sweep,delta)<11&&delta.magnitude<55&&clear;
+            bool exposed=NightPatrolExposure(origin,sweep,out float angle,out float distance);
+            TickNightRadio(dt,angle,angle<previousNightAngle,distance);previousNightAngle=angle;
             detectionClock=exposed?detectionClock+dt:Mathf.Max(0,detectionClock-dt*2);
             if(detectionClock>=(player.IsSneaking?2f:1.4f)&&Time.time-scannedAt>period)
             {
                 detectionClock=0;scannedAt=Time.time;State.patrolWarnings++;
                 if(State.patrolWarnings>=2){Mission.RetryPatrol();Mission.Say("Bị tuần tra phát hiện. Đã trở lại đầu cầu; dùng bờ mương và vật che để tránh đèn.");}
-                else Mission.Say("Hùng: Đèn đang quét. Nằm thấp xuống, chờ nó đi qua.");
+                else {State.patrolFocusSeconds=3;State.patrolFocusDirection=delta.normalized;Mission.Say("Hùng: Nó dừng lại soi thêm. Hạ thấp người, dùng vật che; chờ đèn quay đi.");}
             }
         }
         void EnsureGroup(string id,int count,bool hostile=true,string site=null,int minimum=0)
@@ -626,18 +642,16 @@ namespace ShadowVale.Map01
             if(Busy){GUI.Box(new Rect(430,32,1050,42),GUIContent.none);GUI.Label(new Rect(443,36,1030,35),Map02ChapterState.PhaseName(State.phase),label);}
             if(State.phase==3&&!State.Done("N2_01")&&binocular)
             {
-                var cam=rig.GetComponent<Camera>();var point=cam.WorldToViewportPoint(sites["scout"].position+Vector3.up);
-                if(point.z>0&&point.x>.05f&&point.x<.95f&&point.y>.08f&&point.y<.9f)GUI.Label(new Rect(point.x*1600-140,(1-point.y)*900-40,280,65),"◇ VÙNG ĐÈN TUẦN TRA",new GUIStyle(label){alignment=TextAnchor.MiddleCenter,fontSize=19});
-                else GUI.Label(new Rect(530,120,720,50),"Quay ống nhòm về phía nam cầu để tìm ánh đèn tuần tra.",label);
+                DrawNightObservationGuide(label);
             }
-            if(State.phase==3&&State.Done("N2_02")&&!State.Done("N2_05")&&Vector3.Distance(Mission.Player.position,sites["scout"].position)<55)
+            if(State.phase==3&&State.Done("N2_02")&&!State.Done("N2_05")&&Vector3.Distance(Mission.Player.position,NightPatrolPosition)<55)
                 GUI.Label(new Rect(1060,165,500,75),$"Đèn đang quét · Chú ý {State.patrolWarnings}/2\nBị soi thấy: {Mathf.Clamp01(detectionClock/(player.IsSneaking?2f:1.4f))*100:0}% · Dùng vật che",new GUIStyle(label){fontSize=18});
             if(State.finished){GUI.Box(new Rect(430,280,740,220),"MAP 2 HOÀN THÀNH");GUI.Label(new Rect(465,340,670,120),State.Objective,label);}
             if(phaseFade>0){var tint=GUI.color;GUI.color=new Color(0,0,0,Mathf.Clamp01(phaseFade/1.2f));GUI.DrawTexture(new Rect(0,0,1600,900),Texture2D.whiteTexture);GUI.color=tint;}
         }
         void OnDestroy()
         {
-            Cancel();ResetEffects();RestoreNaturalLighting();ReleaseDayArt();if(combat!=null){combat.EquipAllowed=null;combat.Attacked-=OnPlayerShot;combat.ReloadDurationMultiplier=1;combat.SetHandsOccupied(false);}if(player!=null){player.SurfaceSpeedMultiplier=1;player.SprintAllowed=null;}
+            ReleaseNightPatrolPresentation();Cancel();ResetEffects();RestoreNaturalLighting();ReleaseDayArt();if(combat!=null){combat.EquipAllowed=null;combat.Attacked-=OnPlayerShot;combat.ReloadDurationMultiplier=1;combat.SetHandsOccupied(false);}if(player!=null){player.SurfaceSpeedMultiplier=1;player.SprintAllowed=null;}
             RenderSettings.skybox=originalSky;RenderSettings.ambientMode=originalAmbientMode;if(chapterSky!=null)Destroy(chapterSky);RenderSettings.ambientLight=ambientBefore;RenderSettings.fog=fogBefore;RenderSettings.fogColor=fogColorBefore;RenderSettings.fogDensity=fogDensityBefore;
             if(sun!=null){sun.intensity=sunIntensity;sun.transform.rotation=sunRotation;sun.color=originalSunColor;}
         }

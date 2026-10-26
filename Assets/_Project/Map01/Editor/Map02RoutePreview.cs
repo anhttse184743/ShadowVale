@@ -87,9 +87,10 @@ namespace ShadowVale.Map01.Editor
         }
         public static void ApplyToMission(Map02Mission mission,int phase)
         {
-            var spawn=mission.Chapter.Sites[phase==2?"command":"bridge"].position+Vector3.back*3;
-            Apply(mission,BuildPreviewState(phase),spawn,mission.Chapter.Sites[phase==2?"command":"scout"].position,
-                phase==2?"CHẠY THỬ NGÀY 2 · Tới gặp anh Thành, nhấn E nhận lệnh tìm Tâm.":"CHẠY THỬ ĐÊM 2 · Tới điểm quan sát cầu, F mở ống nhòm nhìn ánh đèn ngoài đồng.");
+            var spawn=phase==2?mission.Chapter.Sites["command"].position+Vector3.back*3:mission.Chapter.NightObservationSpawn;
+            var lookAt=phase==2?mission.Chapter.Sites["command"].position:mission.Chapter.NightPatrolPosition;
+            Apply(mission,BuildPreviewState(phase),spawn,lookAt,
+                phase==2?"CHẠY THỬ NGÀY 2 · Tới gặp anh Thành, nhấn E nhận lệnh tìm Tâm.":"CHẠY THỬ ĐÊM 2 · Bắt đầu tại cầu. Giữ F quan sát tổ đèn pin ngoài đồng; nhấn Z nằm xuống để tránh bị phát hiện.");
         }
         /// <summary>Day 3 / Night 3: the chapter as it stands once <paramref name="task"/> is done, Nam a few metres from the next task.</summary>
         public static void ApplyAfter(Map02Mission mission,string task)

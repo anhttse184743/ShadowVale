@@ -24,6 +24,10 @@ public static class ScoutMapSpawnAudit
    {var site=new GameObject(item.Item1);site.transform.SetParent(root.transform);site.transform.position=NavMesh.SamplePosition(item.Item2,out var hit,12,NavMesh.AllAreas)?hit.position:item.Item2;sites[item.Item1]=site.transform;report.Add(item.Item1+"="+site.transform.position.ToString("F3"));}
    foreach(var loc in new[]{new Vector3(-6.764572f,1,-5.646862f),new Vector3(-13.1754265f,1,-8.113138f)})
    {var deck=new GameObject("Walkable bridge deck");deck.transform.SetParent(root.transform);deck.transform.position=loc;deck.transform.rotation=new Quaternion(0,-.18237078f,0,.9832298f);deck.transform.localScale=new Vector3(.88f,1,1);deck.AddComponent<BoxCollider>().size=new Vector3(24,.18f,3.7f);}
+   var previewSpawn=chapter.NightObservationSpawn;
+   var physicalDeck=root.GetComponentsInChildren<BoxCollider>().Any(d=>{var p=d.transform.InverseTransformPoint(previewSpawn)-d.center;return Mathf.Abs(p.x)<=d.size.x*.5f&&Mathf.Abs(p.z)<=d.size.z*.5f;});
+   if(!physicalDeck||!chapter.AtNightObservationBridge(previewSpawn))throw new Exception("Night 2 preview must start on actual bridge deck and allow observation");
+   report.Add("PASS Night 2 preview spawns on actual bridge and can observe there: "+previewSpawn.ToString("F3"));
    var prepare=typeof(Map02ChapterDirector).GetMethod("PrepareScoutBridge",BindingFlags.Instance|BindingFlags.NonPublic);prepare.Invoke(chapter,null);
    foreach(var field in new[]{"scoutBridgeEntry","scoutBridgeForward"})report.Add(field+"="+typeof(Map02ChapterDirector).GetField(field,BindingFlags.Instance|BindingFlags.NonPublic).GetValue(chapter));
    var cross=typeof(Map02ChapterDirector).GetMethod("UpdateScoutBridgeCrossing",BindingFlags.Instance|BindingFlags.NonPublic);report.Add("crossed at rescue="+cross.Invoke(chapter,new object[]{sites["scout"].position}));

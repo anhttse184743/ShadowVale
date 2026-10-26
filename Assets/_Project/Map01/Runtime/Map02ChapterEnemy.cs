@@ -19,6 +19,7 @@ namespace ShadowVale.Map01
         float suppressedUntil;Transform model;
         public void Suppress(float seconds=2.5f){if(!Dead)suppressedUntil=Mathf.Max(suppressedUntil,Time.time+seconds);}
         public bool Alerted=>alerted;
+        public bool TrackingVisibleTarget {get;private set;}
         public bool Investigating=>investigate.HasValue;
         public bool CanSilentTakedown(Map02Mission mission)
         {
@@ -37,7 +38,7 @@ namespace ShadowVale.Map01
         public void Initialize(Map02ChapterDirector owner,string key,string roster,float hp,bool hostile)
         {
             patrolHome=transform.position;director=owner;id=key;group=roster;alerted=hostile;
-            var visual=owner.Layout!=null&&owner.Layout.enemyArt!=null?owner.Layout.enemyArt:Resources.Load<GameObject>("Characters/EnemyCommanderVisual");
+            var visual=roster==Map02ChapterDirector.NightPatrolGroup?Resources.Load<GameObject>("Characters/EnemyCommanderVisual"):owner.Layout!=null&&owner.Layout.enemyArt!=null?owner.Layout.enemyArt:Resources.Load<GameObject>("Characters/EnemyCommanderVisual");
             if(visual!=null){var model=Instantiate(visual,transform);model.name="Art — replaceable enemy";model.transform.localPosition=Vector3.zero;actor=model.GetComponentInChildren<Animator>();this.model=model.transform;}
             if(actor!=null)
             {
@@ -79,27 +80,47 @@ namespace ShadowVale.Map01
             actor.SetBool("Searching",!alerted&&investigate.HasValue&&(!moving||agent.velocity.sqrMagnitude<.04f));
         }
         void OnDestroy(){if(HitPoints!=null)HitPoints.Damaged-=OnDamaged;}
+        public static bool NightObservationShotHits(float roll)=>roll<.9f;
         void Update()
         {
+            TrackingVisibleTarget=false;
             if(Dead){if(agent!=null&&agent.enabled)agent.enabled=false;return;}
             var mission=director.Mission;
             if(mission.CharacterWorldBlocked||ForestMenu.Visible){if(agent.isOnNavMesh)agent.isStopped=true;return;}
             if(!agent.isOnNavMesh)return;
+            bool night=group==Map02ChapterDirector.NightPatrolGroup;
+            bool observationRules=night&&director.NightObservationRulesActive;
+            if(observationRules&&mission.Player.GetComponent<PlayerController>()?.IsProne==true)
+            {
+                alerted=false;lastSeen=null;investigate=null;agent.ResetPath();
+                director.TickNightPatrolUnit(this,agent);return;
+            }
             if(investigate.HasValue&&!alerted&&!HoldPosition){agent.isStopped=false;agent.stoppingDistance=.5f;agent.SetDestination(investigate.Value);if(Vector3.Distance(transform.position,investigate.Value)<1)investigate=null;return;}
             var target=mission.Player;var from=transform.position+Vector3.up*1.45f;var to=PlayerStealthAdapter.For(target.gameObject).SightPoint;
             float distance=Vector3.Distance(from,to);bool sees=false;
-            if(distance<34&&Physics.Raycast(from,(to-from).normalized,out var hit,distance+.1f,~0,QueryTriggerInteraction.Ignore))sees=hit.transform==target||hit.transform.IsChildOf(target);
+            if(distance<(observationRules?director.NightPatrolDetectionRange:34)&&Physics.Raycast(from,(to-from).normalized,out var hit,distance+.1f,~0,QueryTriggerInteraction.Ignore))sees=hit.transform==target||hit.transform.IsChildOf(target);
             if(Map01Smoke.Blocks(from,to)||VillageRiceInstances.Conceals(target.GetComponent<PlayerController>()))sees=false;
             if(sees)lastSeen=target.position;
             if(HoldPosition){Hold(target,from,to,distance,sees);return;}
-            if(sees&&distance<24&&Vector3.Angle(transform.forward,to-from)<65)alerted=true;if(!alerted){agent.stoppingDistance=.3f;patrolClock+=Time.deltaTime;agent.isStopped=false;if(!agent.pathPending&&agent.remainingDistance<.6f){var point=patrolHome+Quaternion.Euler(0,(Mathf.FloorToInt(patrolClock/4)%3)*120,0)*Vector3.forward*5;if(NavMesh.SamplePosition(point,out var patrol,3,NavMesh.AllAreas))agent.SetDestination(patrol.position);}return;}
-            agent.stoppingDistance=sees?9:.5f;agent.isStopped=!sees&&!lastSeen.HasValue;repath-=Time.deltaTime;if(repath<=0&&lastSeen.HasValue){repath=.5f;agent.SetDestination(lastSeen.Value);}
+            if(observationRules)
+            {
+                if(director.NightGuardIlluminates(this))alerted=true;
+            }
+            else if(sees&&distance<(night?12:24)&&Vector3.Angle(transform.forward,to-from)<65||night&&director.NightGuardIlluminates(this))alerted=true;
+            TrackingVisibleTarget=sees&&alerted;
+            if(night&&!alerted){director.TickNightPatrolUnit(this,agent);return;}
+            if(!alerted){agent.stoppingDistance=.3f;patrolClock+=Time.deltaTime;agent.isStopped=false;if(!agent.pathPending&&agent.remainingDistance<.6f){var point=patrolHome+Quaternion.Euler(0,(Mathf.FloorToInt(patrolClock/4)%3)*120,0)*Vector3.forward*5;if(NavMesh.SamplePosition(point,out var patrol,3,NavMesh.AllAreas))agent.SetDestination(patrol.position);}return;}
+            if(observationRules){agent.ResetPath();agent.isStopped=true;}
+            else
+            {
+                agent.stoppingDistance=sees?9:.5f;agent.isStopped=!sees&&!lastSeen.HasValue;repath-=Time.deltaTime;if(repath<=0&&lastSeen.HasValue){repath=.5f;agent.SetDestination(lastSeen.Value);}
+            }
             if(!sees||Time.time<shot)return;
             transform.rotation=Quaternion.RotateTowards(transform.rotation,Quaternion.LookRotation(Vector3.ProjectOnPlane(to-from,Vector3.up)),220*Time.deltaTime);
             shot=Time.time+1.1f;if(actor!=null&&actor.runtimeAnimatorController!=null)actor.SetTrigger(PlayerCombat.AnimatorParams.Attack);
             var sound=target.GetComponent<CombatAudio>();if(sound!=null&&sound.Gunshot.IsValid){var a=sound.Gunshot;PooledAudioService.Resolve().PlayOneShot(a.clip,from,.65f*a.EffectiveGain,1,0,.85f,a.startTime,a.duration);}
             // Every damage event requires an actual unobstructed hit, never a periodic HP tax.
-            if(Physics.Raycast(from,(to-from).normalized,out var actual,distance+.2f,~0,QueryTriggerInteraction.Ignore)&&actual.transform.GetComponentInParent<Health>()==target.GetComponent<Health>())
+            if(Physics.Raycast(from,(to-from).normalized,out var actual,distance+.2f,~0,QueryTriggerInteraction.Ignore)&&actual.transform.GetComponentInParent<Health>()==target.GetComponent<Health>()&&(!observationRules||NightObservationShotHits(Random.value)))
                 target.GetComponent<Health>().TakeDamage(6,actual.point,gameObject);
         }
     }
