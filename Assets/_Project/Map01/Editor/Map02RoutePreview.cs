@@ -21,6 +21,15 @@ namespace ShadowVale.Map01.Editor
         public static void PlayDayTwo()=>Begin(2);
         [MenuItem("ShadowVale/Map 2/Chạy thử Đêm 2",priority=21)]
         public static void PlayNightTwo()=>Begin(3);
+        [MenuItem("ShadowVale/Map 2/Xem diễn xuất/Nhận lệnh Ngày 2",priority=30)]
+        public static void PreviewDayTwoScene()=>BeginPerformancePreview("D2_01",2);
+        [MenuItem("ShadowVale/Map 2/Xem diễn xuất/Kết Đêm 2",priority=31)]
+        public static void PreviewNightTwoScene()=>BeginPerformancePreview("N2_05",3);
+        [MenuItem("ShadowVale/Map 2/Xem diễn xuất/Nhận lệnh Ngày 2",true)]
+        [MenuItem("ShadowVale/Map 2/Xem diễn xuất/Kết Đêm 2",true)]
+        static bool CanPreviewPerformance()=>CanBegin();
+        static void BeginPerformancePreview(string id,int phase)
+        {Begin(phase);if(SessionState.GetInt(Key+".phase",0)==phase)SessionState.SetString(Key+".performance",id);}
         // Day 3 / Night 3: every task up to the named one is done; Nam starts by the next one.
         [MenuItem("ShadowVale/Map 2/Chạy thử Ngày 3",priority=22)]
         public static void PlayDayThree()=>BeginAfter("N2_05");
@@ -48,6 +57,7 @@ namespace ShadowVale.Map01.Editor
             SessionState.SetString(Key+".startScene",AssetDatabase.GetAssetPath(EditorSceneManager.playModeStartScene));
             SessionState.SetString(Key+".saveRoot",SessionState.GetString(ForestSaveSlots.EditorTestRootKey,""));
             SessionState.SetString(ForestSaveSlots.EditorTestRootKey,Path.GetFullPath("Temp/Map02RoutePreviewSaves/"+saves));
+            SessionState.EraseString(Key+".performance");
             SessionState.SetBool(Key+".active",true);choose();
             EditorSceneManager.playModeStartScene=map;
             EditorApplication.EnterPlaymode();
@@ -62,6 +72,8 @@ namespace ShadowVale.Map01.Editor
             if(mission?.Ready!=true||mission.Chapter==null)return;
             SessionState.SetInt(Key+".phase",0);SessionState.EraseString(Key+".after");
             if(after!=""){ApplyAfter(mission,after);Debug.Log("[Map 2 chạy thử] Đã xong mọi nhiệm vụ tới "+after+". Save thử nằm trong Temp/Map02RoutePreviewSaves.");return;}
+            var performance=SessionState.GetString(Key+".performance","");SessionState.EraseString(Key+".performance");
+            if(performance!=""){ApplyPerformancePreview(mission,performance);return;}
             ApplyToMission(mission,phase);
             Debug.Log("[Map 2 chạy thử] "+(phase==2?"Ngày 2: nhận lệnh tìm Tâm.":"Đêm 2: quan sát đèn tuần tra ở cầu.")+" Save thử nằm trong Temp/Map02RoutePreviewSaves.");
         }
@@ -81,6 +93,19 @@ namespace ShadowVale.Map01.Editor
             var state=new Map02ChapterState();
             foreach(var t in tasks){if(!state.Complete(t.id))throw new InvalidOperationException("Không thể dựng mốc thử: "+t.id);if(t.id==task)break;}
             state.storedRounds=90;state.gearStored=true;state.Validate();return state;
+        }
+        public static bool ApplyPerformancePreview(Map02Mission mission,string id)
+        {
+            if(id!="D2_01"&&id!="N2_05")throw new ArgumentOutOfRangeException(nameof(id));
+            ApplyToMission(mission,id=="D2_01"?2:3);
+            if(id=="N2_05")
+            {
+                var saved=mission.Capture();foreach(var task in Map02ChapterDefinition.Load().tasks.Where(t=>t.phase==3&&t.id!=id))saved.chapter.Complete(task.id);
+                saved.chapter.night2GuidanceStage=7;saved.chapter.night2ChainCuePlayed=true;saved.patrolCheckpoint=null;mission.Restore(saved);
+            }
+            var marker=Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId==id);
+            var body=mission.Player.GetComponent<CharacterController>();bool enabled=body.enabled;body.enabled=false;mission.Player.position=marker.transform.position+Vector3.back*1.6f;body.enabled=enabled;Physics.SyncTransforms();
+            return mission.Interact(marker);
         }
         public static void ApplyToMission(Map02Mission mission,int phase)
         {

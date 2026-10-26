@@ -63,7 +63,7 @@ namespace ShadowVale.Map01 {
                 }
             actor.avatar=avatar;actor.Rebind();
         }
-        public void SampleBlend(AnimationClip first,float firstTime,AnimationClip recovery,float recoveryTime,float weight){
+        public void SampleBlend(AnimationClip first,float firstTime,AnimationClip recovery,float recoveryTime,float weight,bool loopFirst=false){
             if(first==null||recovery==null){Sample(first,firstTime);return;}
             if(!mixed||selected!=first||secondaryClip!=recovery){
                 ResetGraph();playable=AnimationClipPlayable.Create(graph,first);secondary=AnimationClipPlayable.Create(graph,recovery);
@@ -71,7 +71,7 @@ namespace ShadowVale.Map01 {
                 mixer=AnimationMixerPlayable.Create(graph,2);graph.Connect(playable,0,mixer,0);graph.Connect(secondary,0,mixer,1);
                 AnimationPlayableOutput.Create(graph,"Rescue recovery",actor).SetSourcePlayable(mixer);selected=first;secondaryClip=recovery;mixed=true;
             }
-            playable.SetTime(Mathf.Clamp(firstTime,0,first.length));secondary.SetTime(Mathf.Repeat(Mathf.Max(0,recoveryTime),Mathf.Max(.001f,recovery.length)));
+            playable.SetTime(loopFirst?Mathf.Repeat(Mathf.Max(0,firstTime),Mathf.Max(.001f,first.length)):Mathf.Clamp(firstTime,0,first.length));secondary.SetTime(Mathf.Repeat(Mathf.Max(0,recoveryTime),Mathf.Max(.001f,recovery.length)));
             weight=Mathf.Clamp01(weight);mixer.SetInputWeight(0,1-weight);mixer.SetInputWeight(1,weight);graph.Evaluate(0);
         }
         public void Dispose() {

@@ -1,0 +1,98 @@
+[
+ {
+  "file": "Assets/Resources/Map02DayOne/n1_frogs_loop.wav",
+  "seconds": 60.0,
+  "channels": 2,
+  "sha256": "95f18a0409c65d5ff7a1588a4ea52dbbb3a5145d06c20225450a289c52673058"
+ },
+ {
+  "file": "Assets/Resources/Map02DayOne/n1_fire_loop.wav",
+  "seconds": 45.0,
+  "channels": 1,
+  "sha256": "047fd0388c84323a947488cc56ceb6979acaef784f69bd035cb9e61f1989d336"
+ },
+ {
+  "file": "Assets/Resources/Map02DayOne/d1_bamboo_loop.wav",
+  "seconds": 75.0,
+  "channels": 2,
+  "sha256": "b225f5278084d9a26dae8a28e4cfe167b354ce986a8088870342e670dbcf974d"
+ },
+ {
+  "file": "Assets/Resources/Map02DayOne/d1_children_loop.wav",
+  "seconds": 30.0,
+  "channels": 1,
+  "sha256": "3d74bf342a969396c28f2e4dd276aba67f6f5e41b233d6c360dc9e93e97a7565"
+ },
+ {
+  "file": "Assets/Resources/Map02DayOne/d1_oars_loop.wav",
+  "seconds": 30.0,
+  "channels": 1,
+  "sha256": "cfbbe6c4d2a00c9a357d62e99265c3707befc4747c5549924a765e65acec5b67"
+ },
+ {
+  "file": "Assets/Resources/Map02DayOne/d1_rooster.wav",
+  "seconds": 2.157,
+  "channels": 1,
+  "sha256": "1a573c807a2fe265a728fdcfa505c43a33d253f9cfbbce02c660f2c1bd40820f"
+ },
+ {
+  "file": "Assets/Resources/Map02DayOne/d1_plane_far.wav",
+  "seconds": 84.284,
+  "channels": 1,
+  "sha256": "92e684cd98018e997841cf857239bbc718dc00aba2f5c1523ff9a83a085fda1b"
+ },
+ {
+  "file": "Assets/Resources/Map02DayOne/duck.wav",
+  "seconds": 1.9,
+  "channels": 1,
+  "sha256": "fc5e108aae080b0672dc3713d2a5947f6a066b698ff42d0223b1f137cb80dde8"
+ },
+ {
+  "file": "Assets/Resources/Map02DayOne/cough.wav",
+  "seconds": 2.4,
+  "channels": 1,
+  "sha256": "9a1c46cf75fcf059ae03407a08f07c58e58b6b97976b60d7527204695f9175fb"
+ },
+ {
+  "file": "Assets/Resources/Map02DayOne/crate_place.wav",
+  "seconds": 0.75,
+  "channels": 1,
+  "sha256": "e8e5529e39b1a103323739ed54dee0c8f5a1d31de4f2f7fc2b30be0f74815ec8"
+ },
+ {
+  "file": "Assets/Resources/Map02DayOne/crate_wrong.wav",
+  "seconds": 0.203,
+  "channels": 1,
+  "sha256": "14fca6d3d1b394b21899ca8efb14cc9942d3a0db74297714a2c05532ebe5be8e"
+ },
+ {
+  "file": "Assets/Resources/Map02DayOne/hung_theme.wav",
+  "seconds": 17.6,
+  "channels": 2,
+  "sha256": "670214ce4d32f1aee81a02ac3209633646623206fbadaf17bc3bc0dc0e3b92a5"
+ },
+ {
+  "file": "SourceArt/Audio/Map02_DayOne_20261025/review_hung_theme_dizi.wav",
+  "seconds": 20.2,
+  "channels": 2,
+  "sha256": "cb6415da13b431227d27beb11f729b149cd8f21687f55da395d11cf6f34f04d1"
+ },
+ {
+  "file": "Assets/Resources/Map02DayOne/child_giggle.wav",
+  "seconds": 2.522,
+  "channels": 1,
+  "sha256": "7eaa14101d899cd3573df757ba5082893e4cf3ec51b428551d0e0f56bc083d55"
+ },
+ {
+  "file": "Assets/Resources/Map02DayOne/hung_laugh.wav",
+  "seconds": 1.88,
+  "channels": 1,
+  "sha256": "5890200e60e2149f15fb290a2f475631b05f449bd59bdb926fa6430a11666a3f"
+ },
+ {
+  "file": "Assets/Resources/Dialogue/Map02DayOneFree/m2v3_echo_promise.wav",
+  "seconds": 4.65,
+  "channels": 1,
+  "sha256": "a251547742bd6fb95fd1f9cbdce03b49a99beb7d45964edc613a9b0406c6b76b"
+ }
+]

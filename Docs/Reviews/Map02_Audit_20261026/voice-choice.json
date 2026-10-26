@@ -1,0 +1,726 @@
+{
+  "choice": "Keep dev Map 1 voices; archive Claude proposal pending review",
+  "ids": [
+    "m1_board_invite_current",
+    "m1_c3_mallet_removed",
+    "m1_c3_mosin_order",
+    "m1_c3_phone_cut",
+    "m1_combat_radio_blocked",
+    "m1_depart_bank_reply",
+    "m1_depart_destination_order",
+    "m1_depart_destination_question",
+    "m1_depart_order",
+    "m1_ops_commander_early_01",
+    "m1_ops_commander_report_01",
+    "m1_ops_commander_report_02",
+    "m1_ops_handoff_01",
+    "m1_ops_handoff_02",
+    "m1_ops_handoff_03",
+    "m1_ops_handoff_04",
+    "m1_ops_radio_report_01",
+    "m1_ops_radio_report_02",
+    "m1_ops_retreat_01",
+    "m1_ops_retreat_02",
+    "m1_ops_retreat_03",
+    "m1_ops_supply_order_01",
+    "m1_ops_supply_order_02",
+    "m1_ops_supply_order_03",
+    "m1_ops_supply_report_01",
+    "m1_ops_supply_report_02",
+    "m1_rescue_delivered",
+    "m1_rescue_freed",
+    "m1_rescue_shelter",
+    "m1_rescue_whisper_hint",
+    "m1_story_15",
+    "m1_story_16",
+    "m1_story_rescue_order_01",
+    "m1_story_rescue_order_02",
+    "m1_story_rescue_order_03",
+    "m1_story_rescue_order_04",
+    "m1_story_rescue_order_05",
+    "m1_supply_debrief_commander_question",
+    "m1_supply_debrief_nam_report",
+    "m1_v2_commander_confirm_01",
+    "m1_v2_commander_confirm_02",
+    "m1_v2_extraction_01",
+    "m1_v2_extraction_02",
+    "m1_v2_extraction_03",
+    "m1_v2_radio_report_01",
+    "m1_v2_radio_report_02",
+    "m1_v2_radio_report_03",
+    "m1_v2_rescue_approach_01",
+    "m1_v2_rescue_approach_02",
+    "m1_v2_rescue_approach_03",
+    "m1_v2_rescue_return_01",
+    "m1_v2_rescue_return_02",
+    "m1_v2_rescue_return_03",
+    "m1_v2_supply_report_01",
+    "m1_v2_supply_report_02",
+    "m1_v2_supply_report_03",
+    "m2v3_contact_02",
+    "m2v3_contact_04"
+  ],
+  "original_manifest_rows": 56,
+  "moves": [
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_board_invite_current_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_board_invite_current_clean.wav",
+      "sha256": "a828c584aa397a4adb593b0ac2c5f0c51bcb0aeda48aa43bc6394049dfab481b"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_board_invite_current_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_board_invite_current_clean.wav.meta",
+      "sha256": "318d6ee97cc4fca32daee76a0be47c3a4dd62a3c4009b6c50195c8862fcb531b"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_c3_mallet_removed_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_c3_mallet_removed_clean.wav",
+      "sha256": "a0fbb801ee458e9498420b89b8fc039c3379c0ff1435b10c3bb8985259a20c98"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_c3_mallet_removed_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_c3_mallet_removed_clean.wav.meta",
+      "sha256": "dd18064366d3936bdb5186982c9ced0f0f9d592e3a85eb9df64eb9d3e716af2c"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_c3_mosin_order_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_c3_mosin_order_clean.wav",
+      "sha256": "068ad1edf852499fff2002f6ca04f92f1235213ca4ad663c274bd3f09afb4ea3"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_c3_mosin_order_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_c3_mosin_order_clean.wav.meta",
+      "sha256": "12ab042cbc2093c15e0154fdfcb844ae448e7c3c518d6ac9e0915985166d24c2"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_c3_mosin_order_radio.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_c3_mosin_order_radio.wav",
+      "sha256": "f855d17c03e253a81932991d4ed56dc9da42532ca9c8b88c41aecbed3f02d266"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_c3_mosin_order_radio.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_c3_mosin_order_radio.wav.meta",
+      "sha256": "00a8e76f39e26365dccca52b1e43a3b09a18aea44bdad652454dd0de192801a6"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_c3_phone_cut_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_c3_phone_cut_clean.wav",
+      "sha256": "87c3241e0337a60f4b8e412bceabf9a88dd08b523ce5d5ece84ee49cdb0f7d34"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_c3_phone_cut_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_c3_phone_cut_clean.wav.meta",
+      "sha256": "4304ef4853551ffca84acf9260452a17d2af39dfc8996d9426f205f8f1ebb603"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_combat_radio_blocked_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_combat_radio_blocked_clean.wav",
+      "sha256": "685e8a895341baa755753692682d19978bc66e378540a10a64e2ea7b210fe73f"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_combat_radio_blocked_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_combat_radio_blocked_clean.wav.meta",
+      "sha256": "899d70e1bba8774ce75411ad4db9f5e6e06f4340e9ac4a61d79a87387cee53f6"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_depart_bank_reply_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_depart_bank_reply_clean.wav",
+      "sha256": "0ec11a9e179f060a488df7ec4061f62694f1fc0a6d823ebeda0966706f3ff5e2"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_depart_bank_reply_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_depart_bank_reply_clean.wav.meta",
+      "sha256": "4e57d702b7b96635c8d2288d1dc27a56fd7fd15480139ee32d842bff43c72abb"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_depart_destination_order_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_depart_destination_order_clean.wav",
+      "sha256": "a80a6814da6e3e96eb4ffd3d1405e5f44a59b9e62cac1f61ca59141fdf69a536"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_depart_destination_order_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_depart_destination_order_clean.wav.meta",
+      "sha256": "244fa9d711182560ff8cb8961c0895524131cbe89648fe02b480a3c56c94080c"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_depart_destination_question_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_depart_destination_question_clean.wav",
+      "sha256": "58e788f800d5b16235463b91f7713ecba06352d9d7d5c2d23afa5f5cc7185a30"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_depart_destination_question_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_depart_destination_question_clean.wav.meta",
+      "sha256": "eeb1261942054b055c51cf4cc4998735e84f72e89e12da0a51bf26f0a7ef49a4"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_depart_order_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_depart_order_clean.wav",
+      "sha256": "712bea126124e273dbbacd6b4ba38cc15e13e86fd23f9c2bb21864f88cf911fa"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_depart_order_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_depart_order_clean.wav.meta",
+      "sha256": "bfc56044b2ab2657890db3b91e116445a87263d2e622b8b6832748ddbc64b92b"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_commander_early_01_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_commander_early_01_clean.wav",
+      "sha256": "e1e003476f74ee54c50818e6834fbef153d438d1d58f8d72223224ed82feaa5e"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_commander_early_01_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_commander_early_01_clean.wav.meta",
+      "sha256": "9c100f902dec9fd9e8460bd2f17b7452016ea8b7ee2ee161245928fb76fac276"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_commander_report_01_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_commander_report_01_clean.wav",
+      "sha256": "28a1ec6297e540eadfd8a80d8c18fdfb34b737782b1c08d08e3410acaca4fa03"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_commander_report_01_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_commander_report_01_clean.wav.meta",
+      "sha256": "da428855fb529883e1d35211f7b4648a5c5ee86aab77fb1e8b3039c21bda8b5b"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_commander_report_02_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_commander_report_02_clean.wav",
+      "sha256": "42ec88aad727ec2509186e79d8824c610d38465d56769d96f2c16a3b6df8c73b"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_commander_report_02_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_commander_report_02_clean.wav.meta",
+      "sha256": "eaab2669a49f02cdfdf3d509eb7d9430aa5dc6d04ec578d2cfa27c1a93494186"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_commander_report_02_radio.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_commander_report_02_radio.wav",
+      "sha256": "4e5d757a85f896ce6602c49fe4fb797d3f17b275639a4f8e071af6e2e641cef8"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_commander_report_02_radio.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_commander_report_02_radio.wav.meta",
+      "sha256": "b5800f8b41eb8ebad683d3c9720090de6d772dc21f6e6746746104c2f30f1d43"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_handoff_01_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_handoff_01_clean.wav",
+      "sha256": "ac02075766090f6352ede0698cc9d10bc310c92fddc81a14fda82336267748e0"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_handoff_01_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_handoff_01_clean.wav.meta",
+      "sha256": "70bcd090946e65695557641d12d8ed0c82d8f82dea647f9e4c0c444b6b51dd63"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_handoff_02_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_handoff_02_clean.wav",
+      "sha256": "db32ce3ff24481c267c2f274e394fc1790a1d0f6fcbc03c79f99c8f0253cb94d"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_handoff_02_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_handoff_02_clean.wav.meta",
+      "sha256": "2e571b6422525d9d33f3ebdeaa7e6e628c8fcda0eb4927e32e50643ac9aab6c8"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_handoff_03_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_handoff_03_clean.wav",
+      "sha256": "8a96d83b1cb9d888154c27ea14707d7819ff52658a680ba64d931c541814b02b"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_handoff_03_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_handoff_03_clean.wav.meta",
+      "sha256": "818e7154129def807746d2d45a9082c2e3b8ef410d447b84f76d79fb800f15a3"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_handoff_04_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_handoff_04_clean.wav",
+      "sha256": "7b036fa023cd6a946c325a6d37030d1aba704d84ba23a906807d70a333b63415"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_handoff_04_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_handoff_04_clean.wav.meta",
+      "sha256": "fe402ce5fe98ea55323b26e6564d53d4d75f35bfc57ea3dc1e97065ce96ca4b2"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_radio_report_01_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_radio_report_01_clean.wav",
+      "sha256": "f17d8d113a885a005bdc2aaf76b42db75a731934afc295ae7ed8895b4754f199"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_radio_report_01_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_radio_report_01_clean.wav.meta",
+      "sha256": "e154f94517b9e363b29933b0835123bcaa5b013023435dd011ce18f54c9e9e3e"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_radio_report_02_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_radio_report_02_clean.wav",
+      "sha256": "16fbe6abce66c633be155ceaf47079a3d5f49578fcb5733026eda29e983c4152"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_radio_report_02_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_radio_report_02_clean.wav.meta",
+      "sha256": "202ed9b311477737a31ebb43afffeab0fffca0bfa15241756ea84eb361b39e4b"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_radio_report_02_radio.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_radio_report_02_radio.wav",
+      "sha256": "d17a4e4a1306d0daa13b233cbb83ae53f225d7da0d212dc78be015966398325d"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_radio_report_02_radio.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_radio_report_02_radio.wav.meta",
+      "sha256": "a275ba6ff4ed58b582899e5d26b7ff444b96a84b92e7d0d4b372a2d0b5b5a8b6"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_retreat_01_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_retreat_01_clean.wav",
+      "sha256": "9087f6843556dcbd2d8d27925212f89924361cc3883266dab6da44d46e24b411"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_retreat_01_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_retreat_01_clean.wav.meta",
+      "sha256": "5d4a139f58db06ce4fbd9412f0e074c35bef03438fb3d601ce8b36d1d2420989"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_retreat_02_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_retreat_02_clean.wav",
+      "sha256": "a147e20495a739fe9ad217027be0318966da72485b72c5b50aec4d5bb316d728"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_retreat_02_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_retreat_02_clean.wav.meta",
+      "sha256": "1b8cf7e2a876e72451677a27f4f122feb11edafed6b3741b496164327a40b69e"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_retreat_02_radio.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_retreat_02_radio.wav",
+      "sha256": "1578b0ba33a110153c9d5105ba37ed88dffa4689ae6a70c4f0ec15171b9ee449"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_retreat_02_radio.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_retreat_02_radio.wav.meta",
+      "sha256": "674cffaf9a1a4c445d58b2175360ac35771baae252904d1c03e9c09984d1338e"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_retreat_03_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_retreat_03_clean.wav",
+      "sha256": "3b0d5f7a0dd4c60abdcb89b6be6c9aba1ff5b9b4da8e05cff50020a383bb986b"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_retreat_03_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_retreat_03_clean.wav.meta",
+      "sha256": "59e51fee3bba990a9eac655bc79456eba19f3cd5142e5e38a268d781de9f9166"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_supply_order_01_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_supply_order_01_clean.wav",
+      "sha256": "89a6864e5be1c20e6d144349cf246f28919b96316934f4dd54f11c7bd8519316"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_supply_order_01_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_supply_order_01_clean.wav.meta",
+      "sha256": "00359fb6bdfe31e8004818693eaba6a9acc3b3ddda2440e22b85cc24c500ab6d"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_supply_order_02_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_supply_order_02_clean.wav",
+      "sha256": "2b0308a573e83f4bcdd8c42a71d966f593f9977bdddbe3ccdbd40d69d83698b6"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_supply_order_02_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_supply_order_02_clean.wav.meta",
+      "sha256": "9c078d56e12db91e8d7c3832069d7c9fbb543fbd90fbc33b3eee7b3ddbb0d819"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_supply_order_03_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_supply_order_03_clean.wav",
+      "sha256": "3d2989b0aa153e886c35a9967779779d2bb339a71919e2e2721f083de1a9229c"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_supply_order_03_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_supply_order_03_clean.wav.meta",
+      "sha256": "4e0f4470cf942fb25de5dd9aed18121d708ce38162d04441fddc80ee4cf74957"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_supply_report_01_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_supply_report_01_clean.wav",
+      "sha256": "bf8dc252df0469f78a9a638d2f1860955ee47f34fe2b114365049a997c69e7ab"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_supply_report_01_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_supply_report_01_clean.wav.meta",
+      "sha256": "192e6fc1f1961ddfc378d37a982fcf5912d290269f56c87a26c9e0009b49bcad"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_supply_report_02_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_supply_report_02_clean.wav",
+      "sha256": "205fb8a508d225df43d0db232910382f23ee7752703bd077aa6750c4c5209ed4"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_supply_report_02_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_supply_report_02_clean.wav.meta",
+      "sha256": "9d0f7534b75b1a9092e55c48cd8fe0a4e47ffc03deee1ada3c116df4d087e207"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_supply_report_02_radio.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_supply_report_02_radio.wav",
+      "sha256": "008daa7924bf373f89d08fc98989612dbb8f185761f009c981fdaf9cab1063c3"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_ops_supply_report_02_radio.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_ops_supply_report_02_radio.wav.meta",
+      "sha256": "2f4085c5a723e39778f1634c1d9cecc02b52ef839a5f0edf9ccb8b073be24281"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_rescue_delivered_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_rescue_delivered_clean.wav",
+      "sha256": "2ea828b8ee8edb3ac14c07ecfed069a65101ed6bba5953cc6655029035946e57"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_rescue_delivered_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_rescue_delivered_clean.wav.meta",
+      "sha256": "c3f12eabda81b63604e8e9f4b3a350d1575ac625c5980c6d1391dcc86aaa2618"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_rescue_freed_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_rescue_freed_clean.wav",
+      "sha256": "3564ccf8e59c90f408d2dd5e909b7648a6387b1d7a2ff85930ae6c5c71df7114"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_rescue_freed_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_rescue_freed_clean.wav.meta",
+      "sha256": "44bbfe0e3573ff0851467137c82417094a830ff6ef9691f7e14874970899b677"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_rescue_shelter_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_rescue_shelter_clean.wav",
+      "sha256": "7b65df869928c3fd7cdf7fc68debab032f921793ba1959e74902d3c07893420f"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_rescue_shelter_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_rescue_shelter_clean.wav.meta",
+      "sha256": "b214274221b3867c06bd955f5a21865780dac452e13c83bde8ee487d5f699181"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_rescue_whisper_hint_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_rescue_whisper_hint_clean.wav",
+      "sha256": "8edf6582efbcb2499bcd57d8b8ad9b19e4c989bcc2f177be6abd7a8f1f792382"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_rescue_whisper_hint_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_rescue_whisper_hint_clean.wav.meta",
+      "sha256": "567bfd16ed731e1a9669e53ada58714a53bb6379265082f6b23f12fe804a2eb4"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_story_15_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_story_15_clean.wav",
+      "sha256": "18e4ef1cd6417b7ee0a3fa358b13acc308ef7de2c4633c1209681fd4e3c7bc26"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_story_15_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_story_15_clean.wav.meta",
+      "sha256": "1fc85f5aeee8f9f29b7d64231a926fa58808ecbca5dac380c584f5056301bfe3"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_story_16_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_story_16_clean.wav",
+      "sha256": "825681bfaa4688ce2da56a2b9b266d0e4cb85981461cec29aa2c0c8625058f3b"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_story_16_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_story_16_clean.wav.meta",
+      "sha256": "3c54fb9c479fd83bd8b1b9b7c773db7cdc52f2305a6a61e0a84149586cf771f1"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_story_rescue_order_01_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_story_rescue_order_01_clean.wav",
+      "sha256": "f55534156c73188d5ec21c0499c33bf1c4d4b635c59a01d280ff58f8b32a32cf"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_story_rescue_order_01_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_story_rescue_order_01_clean.wav.meta",
+      "sha256": "6433c35f9214eec41d28935da4e8ed1dd893c23d86e7f3846f5d480bbb088395"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_story_rescue_order_02_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_story_rescue_order_02_clean.wav",
+      "sha256": "78312d4fee8467ffa5ed9e508ff1b7e227cf5742276b392134447d51350c86be"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_story_rescue_order_02_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_story_rescue_order_02_clean.wav.meta",
+      "sha256": "65b0ec95694f6f2b3ca80b45525980fd9a3b0d56cb74ad295cfd1f2c1fc8813b"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_story_rescue_order_03_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_story_rescue_order_03_clean.wav",
+      "sha256": "04f267205bc910b183c7fec3b68d1f9aa5268f960582d8f803740ec35b9f96a6"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_story_rescue_order_03_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_story_rescue_order_03_clean.wav.meta",
+      "sha256": "6c290c2c2def8bfda0ee336ac5fe60c586988c2b16f096c2e21971e676e8427c"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_story_rescue_order_04_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_story_rescue_order_04_clean.wav",
+      "sha256": "7f8cec0c1657c586b961603532ebe5bf04af16a2b762ca2d5ff092eeb6d495c6"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_story_rescue_order_04_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_story_rescue_order_04_clean.wav.meta",
+      "sha256": "043b7ae15371e5798d58ae62600e0808baa169dd3d6b24a4bcdd3869c24a8cbb"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_story_rescue_order_05_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_story_rescue_order_05_clean.wav",
+      "sha256": "d19f9ed464443bfe80a58267d3cb7e8ed2935bcafcbe4f5411782d0f23bb3230"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_story_rescue_order_05_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_story_rescue_order_05_clean.wav.meta",
+      "sha256": "4bcb3511661f75d4aa20fef5347db95fd7397f591c84605a26f22530ff4cef68"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_supply_debrief_commander_question_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_supply_debrief_commander_question_clean.wav",
+      "sha256": "2fd4110c084e6eb95d22eeb12b40353d4e9fd2d68c38225b4df8e1a526b8b12b"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_supply_debrief_commander_question_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_supply_debrief_commander_question_clean.wav.meta",
+      "sha256": "9280cb590d51db475f6013c15b63a4ec13c25a7de98465ccb1c8ddc9ba60dfc4"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_supply_debrief_nam_report_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_supply_debrief_nam_report_clean.wav",
+      "sha256": "38e28a121189e4c46b363d6286679e60fe0a52019ca115a4ce43aafbcab97b9d"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_supply_debrief_nam_report_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_supply_debrief_nam_report_clean.wav.meta",
+      "sha256": "87962d20b7e074a98880b7c4ec91aaaf96fa758e2edd268461194a9f2ae47261"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_commander_confirm_01_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_commander_confirm_01_clean.wav",
+      "sha256": "3ec6eb21dcb790b63f2441b7f895267aa12b32ea87713f0aeec2a9c3aacbc3b7"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_commander_confirm_01_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_commander_confirm_01_clean.wav.meta",
+      "sha256": "cc1833baf876023843750219a8ff6538c16e8631d23f0e480b923efb6549340f"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_commander_confirm_02_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_commander_confirm_02_clean.wav",
+      "sha256": "b94ec80ec5cc372f8da6ebc71b2e4f1c3d6491a19a85c7b09566aba9614a5640"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_commander_confirm_02_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_commander_confirm_02_clean.wav.meta",
+      "sha256": "d4a091351792df16450ff78c1560a3626a8ce02238624fe36ee199795547b2fc"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_commander_confirm_02_radio.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_commander_confirm_02_radio.wav",
+      "sha256": "e9543fdd6704bab0d2bc10c5389693b3c8f6f5c5f576c167b978e17de77d9385"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_commander_confirm_02_radio.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_commander_confirm_02_radio.wav.meta",
+      "sha256": "75885545463029424b9dc3ae57f95f50ec844f5682752079d5531fd9ba355dbe"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_extraction_01_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_extraction_01_clean.wav",
+      "sha256": "a13dbd7964dcce86b77e7ef9a0ddf2050be43b5136dadf0891d3a82ef3fb3d11"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_extraction_01_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_extraction_01_clean.wav.meta",
+      "sha256": "df3108a87026a3c9a116b385968d7915e0c016a449bce52792e7da798b320078"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_extraction_02_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_extraction_02_clean.wav",
+      "sha256": "bfd3bdec5add8db56506dffced773278985dcc79a9879f096bd5083b82307c6a"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_extraction_02_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_extraction_02_clean.wav.meta",
+      "sha256": "cc493d258fd7ccfd54ef256600e656fe31eeef04fd6c775ce4baf356b5d2dd28"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_extraction_02_radio.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_extraction_02_radio.wav",
+      "sha256": "c3451f3038f4eac10ed397b138ec69b268eba89407f433953579dea41bff352d"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_extraction_02_radio.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_extraction_02_radio.wav.meta",
+      "sha256": "69ac39f61ba191bcab7ace41a24ce2bfa3fdfe5ffd490e1a0052451b84bb4cbd"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_extraction_03_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_extraction_03_clean.wav",
+      "sha256": "7c9ffe0bbe439eed52ba617ac4a9ea3f772fe86b3c9f5dca7bc8b08f3a883935"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_extraction_03_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_extraction_03_clean.wav.meta",
+      "sha256": "8f9dc11c6437efeaa4327649a3e0734365b56e02e1cc6fcf16bb92d75f0b1df6"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_radio_report_01_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_radio_report_01_clean.wav",
+      "sha256": "e9edb1439090458619fc4748346afb7b829ec2abb5f8593ccf62a0a3f358d375"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_radio_report_01_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_radio_report_01_clean.wav.meta",
+      "sha256": "4e6620198a8bb2519d6ee36c902ad8e1d0658ec3e6dbe39073fb156afd070f77"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_radio_report_02_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_radio_report_02_clean.wav",
+      "sha256": "29dae22b7cad9b6fc6cc7a470fa04e190f49dc1798c072cdef9057fc7c607418"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_radio_report_02_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_radio_report_02_clean.wav.meta",
+      "sha256": "266c1f28d5ebbb9d13b9d9ab1886b5ac50e321cc8f060e201f3a35d16868c91c"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_radio_report_02_radio.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_radio_report_02_radio.wav",
+      "sha256": "5e4d59d3bc3bbb5dda9eaf1f4d5c5873891c5a2cea9d10e788f4562478cfa4c8"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_radio_report_02_radio.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_radio_report_02_radio.wav.meta",
+      "sha256": "2cd41904e47a02016c14b27121955033102f38803af9cc1925b0f8a6c2d8d70d"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_radio_report_03_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_radio_report_03_clean.wav",
+      "sha256": "c41274f0ba5f9a41cfb66c7b4c92dfa4f8741362753310bbd3a9bab0b81d3ed6"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_radio_report_03_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_radio_report_03_clean.wav.meta",
+      "sha256": "e9a2e16229889ebb6271f45edb1e783dc13184d1465dea33d1ef9cab5c5a21ac"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_rescue_approach_01_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_rescue_approach_01_clean.wav",
+      "sha256": "858ff23d967335ddb46755498bdc36e2c7937329e139fad1bc442a3663d351d5"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_rescue_approach_01_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_rescue_approach_01_clean.wav.meta",
+      "sha256": "9b8e05fd054d3176b00d84e4ae5a550cf8344d7ea94b6f2fccd9067f9a0e8951"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_rescue_approach_02_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_rescue_approach_02_clean.wav",
+      "sha256": "a70acad0e7bb95943453198346965b96bea5bdc7b4bb7faaed5ea1488bd71bc3"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_rescue_approach_02_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_rescue_approach_02_clean.wav.meta",
+      "sha256": "07fa6c06ee9b776cc6ef860628086a7782eb28bb53b6f7b225682cc6c5f11243"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_rescue_approach_02_radio.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_rescue_approach_02_radio.wav",
+      "sha256": "6d037b6cab75c7d2eeeeced7f54c90dce94f81f95877ac88f0d991fe535757fb"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_rescue_approach_02_radio.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_rescue_approach_02_radio.wav.meta",
+      "sha256": "07dd15d69214b387ca73aee18e9489ac14e5b0870132bf7af17a09df96171e56"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_rescue_approach_03_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_rescue_approach_03_clean.wav",
+      "sha256": "5d2726a2bd8e3da45a8656bb5ed438b1f1866f7bd38f71543845b27c8434bb81"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_rescue_approach_03_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_rescue_approach_03_clean.wav.meta",
+      "sha256": "fef8042b1cf6080c0d871e6282c08f9739083b383b162d360776a681fff3bf7d"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_rescue_return_01_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_rescue_return_01_clean.wav",
+      "sha256": "46f3297bdc25adb06e95c5adbf89bdee14c3dbb8d44e1c0141a8279128fc9142"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_rescue_return_01_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_rescue_return_01_clean.wav.meta",
+      "sha256": "a1a9b82d25b6c9442070336c3a2008dd38e51f9a1b609230193319cb101dbb25"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_rescue_return_02_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_rescue_return_02_clean.wav",
+      "sha256": "a54f65e2913368a59547a57ed8b85c453ba8a14d84acd1a71c2cefbf1413e0d6"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_rescue_return_02_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_rescue_return_02_clean.wav.meta",
+      "sha256": "f902ce742c161539a282d255b05078019f879273c43a02215e19ec71b01e8f3a"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_rescue_return_03_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_rescue_return_03_clean.wav",
+      "sha256": "1ed9baed19fe5532a7d93f249ee57012ad806b2a64280664c8ebba2d4dfd9d60"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_rescue_return_03_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_rescue_return_03_clean.wav.meta",
+      "sha256": "e31f8007f044628cb0ab478a4aa6ecdc65ace109ea77e5d52b8a3f0b9f2fdd70"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_supply_report_01_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_supply_report_01_clean.wav",
+      "sha256": "aa124300854959cb9d1bef2cc06f95a59bbb97544dc3b3c24e7ceb84ab2a0740"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_supply_report_01_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_supply_report_01_clean.wav.meta",
+      "sha256": "f65ff642e461bc7c6f5fcf985e2949b0d7e31b8dee46e82bedb3328a1b720bda"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_supply_report_02_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_supply_report_02_clean.wav",
+      "sha256": "4b44d9dc0366b9204735043a5268584a5b732cf83c3718695767d66471112920"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_supply_report_02_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_supply_report_02_clean.wav.meta",
+      "sha256": "9728fab9af15489615a23c9ad68cf11d6e171abb94f5d1068369890619f77128"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_supply_report_02_radio.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_supply_report_02_radio.wav",
+      "sha256": "15d7265a925cacc15eee6b79da50c77d76ff812e8a0e666d933d954f62b8df7b"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_supply_report_02_radio.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_supply_report_02_radio.wav.meta",
+      "sha256": "857bad070c41e1658a46de43bd9f2a9c8b2e0e060d8bd66f10d33b1b5fc2fa27"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_supply_report_03_clean.wav",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_supply_report_03_clean.wav",
+      "sha256": "4b271df6a237de30c4534b2cfe17e80b237e35760dbede3548b4eae01a45bbca"
+    },
+    {
+      "from": "Assets\\Resources\\Dialogue\\Map01Map2Voice\\m1_v2_supply_report_03_clean.wav.meta",
+      "to": "SourceArt\\Dialogue\\Map01Map2Voice\\Audio\\m1_v2_supply_report_03_clean.wav.meta",
+      "sha256": "947da0d8c9c1d66f9724145de5637e756705e0c5bb69c058436d502a1fd9b8e3"
+    }
+  ]
+}

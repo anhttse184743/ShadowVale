@@ -131,7 +131,14 @@ Assert.AreEqual(3,arrival.GetComponentsInChildren<MeshRenderer>().Count(r=>r.nam
 Assert.Less(Vector3.Distance(renderer.bounds.center,arrival.transform.position),1,"The visible hull must move with its passengers.");
 Assert.IsFalse(arrival.Passengers[2].GetComponentsInChildren<Weapon>(true).Any(w=>w.IsGun&&w.gameObject.activeInHierarchy),"Hung supports his injured arm, even after loading a completed checkpoint.");
 LogAssert.Expect(LogType.Log,"Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.");arrival.Skip();
-yield return WaitGameSeconds(.2f);AssertDryPartySpawn(arrival);VerifyGameplayRifle(arrival.Passengers[0]);
+yield return WaitGameSeconds(.2f);yield return AssertDryPartyAfterLateUpdate(arrival);
+// The bank briefing now starts automatically on this checkpoint path too. Its pose deliberately stows the rifle;
+// check its grounded actors above, then verify the gameplay grip after it hands control back, as in the skip test.
+var chapter=Object.FindFirstObjectByType<Map02Mission>()?.Chapter;
+if(chapter?.CurrentScene?.id=="D1_01"){
+typeof(Map02ChapterDirector).GetMethod("EndScene",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(chapter,null);
+Assert.IsFalse(chapter.State.Done("D1_01"),"The bank briefing must not complete contact with Lực.");yield return WaitGameSeconds(.2f);}
+VerifyGameplayRifle(arrival.Passengers[0]);
 Capture(Camera.main,"Logs/Map02/Checkpoint/gameplay.png");yield return new ExitPlayMode();
 }
 [Test]public void StairContactsGatherBothFeetAndKeepSupportPlanted() {
@@ -233,6 +240,24 @@ AssertDryPartySpawn(arrival);
 ShotTracerLifecycleTests.FireAfterArrival(arrival.Passengers[0].GetComponent<PlayerCombat>());
 yield return new ExitPlayMode();
 }
+static IEnumerator AssertDryPartyAfterLateUpdate(Map02Arrival arrival) {
+// A coroutine resumes before LateUpdate. Sample the same final pose the camera renders, including the
+// arrival/chapter's grounding, instead of observing the transient pose between their updates.
+var pump=arrival.gameObject.AddComponent<ExtractionCapturePump>();bool captured=false;System.Exception failure=null;
+pump.draw=()=>{try{DumpCheckpointSoles(arrival);AssertDryPartySpawn(arrival);}catch(System.Exception error){failure=error;}captured=true;};
+float until=Time.realtimeSinceStartup+10;while(!captured&&Time.realtimeSinceStartup<until)yield return null;
+Object.Destroy(pump);Assert.IsTrue(captured,"The handed-over party must have a rendered pose.");if(failure!=null)throw failure;
+}
+static void DumpCheckpointSoles(Map02Arrival arrival) {
+var lines=new System.Collections.Generic.List<string>();var mission=Object.FindFirstObjectByType<Map02Mission>();
+var remaining=typeof(Map02Arrival).GetField("groundHandoffRemaining",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(arrival);
+lines.Add($"missionReady={mission?.Ready} chapter={mission?.Chapter!=null} scene={mission?.Chapter?.CurrentScene?.id} remaining={remaining} speed={arrival.Passengers[0].GetComponent<ShadowVale.Gameplay.Player.PlayerController>().PlanarSpeed} controllerVelocity={arrival.Passengers[0].GetComponent<CharacterController>().velocity}");
+for(int i=0;i<3;i++){
+float sole=float.PositiveInfinity;foreach(var skin in arrival.Passengers[i].GetComponentsInChildren<SkinnedMeshRenderer>()){var mesh=new Mesh();skin.BakeMesh(mesh);foreach(var v in mesh.vertices)sole=Mathf.Min(sole,skin.transform.TransformPoint(v).y);Object.Destroy(mesh);}
+var animator=arrival.Passengers[i].GetComponentInChildren<Animator>();
+lines.Add($"actor={i} sole={sole:F5} spawn={arrival.SpawnPoints[i]} root={arrival.Passengers[i].position} visual={animator.transform.position} hips={animator.GetBoneTransform(HumanBodyBones.Hips).position} slot={arrival.Passengers[i].parent?.position}");}
+Directory.CreateDirectory("Logs/Map02/Checkpoint");File.WriteAllLines("Logs/Map02/Checkpoint/sole-contacts.txt",lines);
+}
 static void AssertDryPartySpawn(Map02Arrival arrival) {
 for(int i=0;i<3;i++) {
 Assert.Less(Vector3.ProjectOnPlane(arrival.Passengers[i].position-arrival.SpawnPoints[i],Vector3.up).magnitude,.1f);
@@ -283,6 +308,8 @@ Assert.IsTrue(waters.Any(w=>w.TrySample(arrival.transform.TransformPoint(new Vec
 Assert.Greater(arrival.transform.TransformPoint(new Vector3(0,-.15f,0)).y,.07f,"Interior floor must stay clear of the canal water.");
 float sampled=arrival.CinematicTime;
 for(int i=0;i<3;i++) {
+// C1 (the misstep at the top of the stairs): those contacts and the looks are authored on mocap; Map02ArrivalMisstepTests checks them.
+if(arrival.MisstepOwns(i))continue;
 float headAngle=Quaternion.Angle(neutralHeads[i],Quaternion.Inverse(actors[i].transform.rotation)*actors[i].GetBoneTransform(HumanBodyBones.Head).rotation);
 Assert.Less(headAngle,35,"Arrival gaze must stay restrained, actor "+i+" time "+sampled);
 float footError=0,shoePenetration=0,walkingPitch=0;string penetrationDetail="";
@@ -293,7 +320,7 @@ var upper=actors[i].GetBoneTransform(side==0?HumanBodyBones.LeftUpperLeg:HumanBo
 var hips=actors[i].GetBoneTransform(HumanBodyBones.Hips);
 float lateral=Mathf.Sign(Vector3.Dot(upper.position-hips.position,arrival.transform.forward))*.13f;
 var expected=Map02Arrival.StairContact((localTime-start)/4.4f,side);
-var target=arrival.transform.TransformPoint(new Vector3(expected.x,expected.y+ankle[i,side],(i==0?0:i==1?.8f:-.8f)+lateral));
+var target=arrival.transform.TransformPoint(new Vector3(expected.x,expected.y+ankle[i,side],arrival.LaneOf(i)+lateral));
 var foot=actors[i].GetBoneTransform(side==0?HumanBodyBones.LeftFoot:HumanBodyBones.RightFoot);
 footError=Mathf.Max(footError,Vector3.Distance(foot.position,target));
 }
@@ -370,5 +397,3 @@ if(u>=-.001f && t>=-.001f && u+t<=1.001f)return true;
 }
 static void Capture(Camera camera,string path){var old=camera.targetTexture;var active=RenderTexture.active;var rt=RenderTexture.GetTemporary(960,540,24);var image=new Texture2D(960,540,TextureFormat.RGB24,false);try{camera.targetTexture=rt;camera.Render();RenderTexture.active=rt;image.ReadPixels(new Rect(0,0,960,540),0,0);image.Apply();File.WriteAllBytes(path,image.EncodeToPNG());}finally{camera.targetTexture=old;RenderTexture.active=active;RenderTexture.ReleaseTemporary(rt);Object.Destroy(image);}}
 }}
-
-

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 namespace ShadowVale.Map01
 {
@@ -19,14 +19,7 @@ namespace ShadowVale.Map01
         {
             dayProps=new GameObject("Day 1–Night 1 · work props").transform;dayProps.SetParent(root.transform,false);
             var wood=DayMaterial("Weathered wood",new Color(.25f,.17f,.085f));var edge=DayMaterial("Crate battens",new Color(.36f,.27f,.14f));var iron=DayMaterial("Iron latch",new Color(.13f,.14f,.12f));var cloth=DayMaterial("Canvas",new Color(.26f,.3f,.16f));var amber=DayMaterial("Lamp shield",new Color(.5f,.37f,.15f));
-            for(int i=0;i<3;i++)
-            {
-                var crate=Group("Supply crate "+(i+1),sites["arrival"].position+new Vector3(i*.8f,0,1.8f));
-                Part(crate,"Closed wooden body",new Vector3(0,.26f,0),new Vector3(.55f,.5f,.42f),wood);
-                foreach(float x in new[]{-.23f,.23f})Part(crate,"Binding batten",new Vector3(x,.26f,0),new Vector3(.055f,.54f,.47f),edge);
-                foreach(float side in new[]{-.285f,.285f})Part(crate,"Raised carrying grip",new Vector3(side,.21f,-.15f),new Vector3(.06f,.10f,.18f),edge);
-                physicalCrates.Add(crate);
-            }
+            for(int i=0;i<3;i++)physicalCrates.Add(BuildCrate(i,sites["arrival"].position+new Vector3(i*1.0f,0,1.8f),wood,edge));   // 3×2, 2×2 and 1×3 cells, as in the store
             var store=Group("Hidden store receiving bay",sites["store"].position);Part(store,"Dry raised floor",new Vector3(1.25f,.025f,.7f),new Vector3(2.7f,.05f,2.2f),wood);
             // Small crate dimensions remain independent of the abstract puzzle grid.
             for(int i=0;i<2;i++)
@@ -49,7 +42,8 @@ namespace ShadowVale.Map01
                 Part(lamp,"Oil reservoir",Vector3.zero,new Vector3(.18f,.15f,.18f),iron,PrimitiveType.Cylinder);
                 var hood=Part(lamp,"Rotating hood",new Vector3(0,.18f,0),new Vector3(.25f,.27f,.14f),amber);postLamps.Add(lamp);
                 Part(lamp,"Lamp support",new Vector3(0,-.45f,0),new Vector3(.055f,.9f,.055f),wood);
-                var light=new GameObject("Shielded pool of light").AddComponent<Light>();light.transform.SetParent(lamp,false);light.transform.localPosition=new Vector3(0,.18f,.1f);light.type=LightType.Spot;light.range=3.5f;light.spotAngle=65;light.color=new Color(1,.72f,.35f);light.intensity=.45f;light.transform.localRotation=Quaternion.Euler(35,0,0);
+                var light=new GameObject("Shielded pool of light").AddComponent<Light>();light.transform.SetParent(lamp,false);light.transform.localPosition=new Vector3(0,.18f,.1f);light.type=LightType.Spot;light.range=4.5f;light.spotAngle=65;light.color=new Color(1,.72f,.35f);light.intensity=1.2f;   // a pool on the ground that shows which way the hood is turned
+                light.transform.localRotation=Quaternion.Euler(35,0,0);
                 var gate=Group("Inspect small fence door "+i,site+new Vector3(2,0,1));
                 for(int slat=0;slat<5;slat++)Part(gate,"Fence slat",new Vector3(slat*.17f,.55f,0),new Vector3(.11f,1.1f,.06f),wood);
                 Part(gate,"Cross brace",new Vector3(.34f,.7f,0),new Vector3(.84f,.06f,.08f),edge);postGates.Add(gate);
@@ -57,7 +51,7 @@ namespace ShadowVale.Map01
                 var bundle=Group("Inspect patrol path bundle "+i,site+new Vector3(0,0,2));for(int j=0;j<5;j++)Part(bundle,"Firewood",new Vector3(j*.1f-.2f,.11f,0),new Vector3(.09f,.16f,.7f),wood);postBundles.Add(bundle);
                 var rack=Group("Bundle rack "+i,site+new Vector3(-2,0,-1));Part(rack,"Storage shelf",new Vector3(0,.14f,0),new Vector3(.85f,.22f,.8f),cloth);
             }
-            CreateStoryProps(wood,cloth,iron);SyncDayProps();
+            CreateStoryProps(wood,cloth,iron);ClearDockGrass();SyncDayProps();
         }
         void SyncDayProps()
         {
@@ -67,15 +61,15 @@ namespace ShadowVale.Map01
             {
                 var crate=physicalCrates[i];if(State.carry=="D1_04"&&i==delivered)continue; // LateUpdate exclusively owns the held prop.
                 var packed=Day.crates[i];crate.gameObject.SetActive(true);
-                if(packed.x>=0){crate.position=sites["store"].position+new Vector3(.25f+(packed.x-2)*.58f,0,packed.y*.48f);crate.rotation=Quaternion.Euler(0,packed.rotated?90:0,0);}
-                else if(i<delivered)crate.position=sites["store"].position+new Vector3(-.7f,0,i*.7f);
-                else crate.position=sites["arrival"].position+new Vector3(i*.8f,0,1.8f);
+                if(packed.x>=0){crate.position=StoredCrate(i,packed);crate.rotation=Quaternion.Euler(0,packed.rotated?90:0,0);}   // the cell and turn it was given
+                else if(i<delivered){crate.position=sites["store"].position+new Vector3(-.7f,0,i*.8f);crate.rotation=Quaternion.identity;}
+                else{crate.position=sites["arrival"].position+new Vector3(i*1.0f,0,1.8f);crate.rotation=Quaternion.identity;}
             }
             for(int i=0;i<physicalStakes.Count;i++)physicalStakes[i].position=sites["dock"].position+new Vector3(i*1.05f-.525f,-Mathf.Clamp(Day.stakeHits-i*3,0,3)*.12f,1.25f);
             for(int b=0;b<physicalBoards.Count;b++)
             {
                 var board=physicalBoards[b];int slot=System.Array.FindIndex(Day.boards,p=>p.x==b);
-                board.position=slot>=0?sites["dock"].position+new Vector3(Day.boards[slot].offset,.27f,1.05f+slot*.3f):sites["dock"].position+new Vector3(1.8f,.08f+System.Array.IndexOf(Day.boardOrder,b)*.07f,0);
+                board.rotation=Quaternion.identity;board.position=slot>=0?sites["dock"].position+new Vector3(Day.boards[slot].offset,.27f,1.05f+slot*.3f):sites["dock"].position+new Vector3(1.8f,.08f+System.Array.IndexOf(Day.boardOrder,b)*.07f,0);
             }
             for(int i=0;i<postLamps.Count;i++)
             {
@@ -84,6 +78,6 @@ namespace ShadowVale.Map01
                 postBundles[i].position=sites[i==0?"bamboo":"gate"].position+(p.bundleStowed?new Vector3(-2,.2f,-1):new Vector3(0,0,2));
             }
         }
-        void ReleaseDayArt(){foreach(var mat in dayMaterials)if(mat!=null)Destroy(mat);dayMaterials.Clear();}
+        void ReleaseDayArt(){foreach(var mat in dayMaterials)if(mat!=null)Destroy(mat);dayMaterials.Clear();foreach(var mesh in dayMeshes)if(mesh!=null)Destroy(mesh);dayMeshes.Clear();}
     }
 }

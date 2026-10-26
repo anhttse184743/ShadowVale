@@ -33,7 +33,7 @@ namespace ShadowVale.Map01
         bool TickNaturalLighting(float dt)
         {
             if(dayLampFlame!=null)dayLampFlame.gameObject.SetActive(State.phase==1);
-            if(mealRoot!=null)mealRoot.gameObject.SetActive(State.phase==1);   // supper is laid out on Night 1 only, not through Day 1 or later days
+            if(mealRoot!=null)mealRoot.gameObject.SetActive(State.phase==1&&(!State.Done("N1_01")||sceneTask?.id=="N1_01"));   // supper is laid out on Night 1 until it is eaten; the watch mat takes its place
             bool scoped=State.phase<=1;SetNightSurfaces(State.phase==1);if(dayToneVolume!=null)dayToneVolume.weight=scoped?1:0;
             var camera=rig.GetComponent<UniversalAdditionalCameraData>();if(camera!=null)camera.renderPostProcessing=scoped||originalCameraPost;
             if(!scoped){RenderSettings.ambientMode=AmbientMode.Flat;RenderSettings.reflectionIntensity=originalReflectionIntensity;if(sun!=null)sun.shadowStrength=originalShadowStrength;return false;}

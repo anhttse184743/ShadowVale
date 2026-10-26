@@ -92,8 +92,10 @@ namespace ShadowVale.Map01
             if(Map01Smoke.Blocks(from,to)||VillageRiceInstances.Conceals(target.GetComponent<PlayerController>()))sees=false;
             if(sees)lastSeen=target.position;
             if(HoldPosition){Hold(target,from,to,distance,sees);return;}
-            if(sees&&distance<24&&Vector3.Angle(transform.forward,to-from)<65)alerted=true;if(!alerted){agent.stoppingDistance=.3f;patrolClock+=Time.deltaTime;agent.isStopped=false;if(!agent.pathPending&&agent.remainingDistance<.6f){var point=patrolHome+Quaternion.Euler(0,(Mathf.FloorToInt(patrolClock/4)%3)*120,0)*Vector3.forward*5;if(NavMesh.SamplePosition(point,out var patrol,3,NavMesh.AllAreas))agent.SetDestination(patrol.position);}return;}
-            agent.stoppingDistance=sees?9:.5f;agent.isStopped=!sees&&!lastSeen.HasValue;repath-=Time.deltaTime;if(repath<=0&&lastSeen.HasValue){repath=.5f;agent.SetDestination(lastSeen.Value);}
+            bool night=group==Map02ChapterDirector.NightPatrolGroup;
+            if(sees&&distance<(night?12:24)&&Vector3.Angle(transform.forward,to-from)<65||night&&director.NightGuardIlluminates(this))alerted=true;
+            if(night&&!alerted){director.TickNightPatrolUnit(this,agent);return;}if(!alerted){agent.stoppingDistance=.3f;patrolClock+=Time.deltaTime;agent.isStopped=false;if(!agent.pathPending&&agent.remainingDistance<.6f){var point=patrolHome+Quaternion.Euler(0,(Mathf.FloorToInt(patrolClock/4)%3)*120,0)*Vector3.forward*5;if(NavMesh.SamplePosition(point,out var patrol,3,NavMesh.AllAreas))agent.SetDestination(patrol.position);}return;}
+            agent.speed=2.2f;agent.stoppingDistance=sees?9:.5f;agent.isStopped=!sees&&!lastSeen.HasValue;repath-=Time.deltaTime;if(repath<=0&&lastSeen.HasValue){repath=.5f;agent.SetDestination(lastSeen.Value);}
             if(!sees||Time.time<shot)return;
             transform.rotation=Quaternion.RotateTowards(transform.rotation,Quaternion.LookRotation(Vector3.ProjectOnPlane(to-from,Vector3.up)),220*Time.deltaTime);
             shot=Time.time+1.1f;if(actor!=null&&actor.runtimeAnimatorController!=null)actor.SetTrigger(PlayerCombat.AnimatorParams.Attack);

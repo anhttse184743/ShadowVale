@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using ShadowVale.Gameplay.Combat;
 using UnityEngine;
 using UnityEngine.AI;
@@ -62,13 +62,14 @@ namespace ShadowVale.Map01
         void OpenDay(DayActivity activity,Map02ChapterTask task)
         {
             dayActivity=activity;workTask=task;dayClock=0;packingCursor=new Vector2Int(2,0);dockSlot=System.Array.FindIndex(Day.boards,p=>p.x<0);if(dockSlot<0)dockSlot=0;dockOffset=.24f;dayFeedback="";selectedCrate=selectedBoard=-1;selectionRotated=false;daySpaceReleased=false;dayAttemptCycle=-1;
+            if(activity==DayActivity.Packing){selectedCrate=System.Array.FindIndex(Day.crates,p=>p.x<0);if(selectedCrate>=0)selectionRotated=Day.crates[selectedCrate].rotated;}   // the first crate still to store is in hand
             dayWeapon=combat.EquippedKind;combat.Equip(WeaponKind.Unarmed);combat.SetHandsOccupied(true);player.RestoreMotion(false);
             dayCursorVisible=Cursor.visible;dayCursorLock=Cursor.lockState;Cursor.lockState=CursorLockMode.None;Cursor.visible=true;
         }
         void CloseDay(bool checkpoint=true)
         {
             if(!DayActivityActive)return;
-            dayActivity=DayActivity.None;dayReturnInput=DayInputHeld;dayReturnUntil=Time.unscaledTime+.12f;Cursor.visible=dayCursorVisible;Cursor.lockState=dayCursorLock;
+            dayActivity=DayActivity.None;EndWorkView();dayReturnInput=DayInputHeld;dayReturnUntil=Time.unscaledTime+.12f;Cursor.visible=dayCursorVisible;Cursor.lockState=dayCursorLock;
             combat.Equip(dayWeapon);combat.SetHandsOccupied(false);combat.RestoreAfterCinematic();player.RestoreMotion(false);ForestMenu.SuppressKeysAfterCutscene();
             SyncDayProps();if(checkpoint)Mission.StoreCheckpoint();
         }
@@ -79,7 +80,7 @@ namespace ShadowVale.Map01
         }
         bool TickDay(float dt)
         {
-            EnsureDayState();
+            EnsureDayState();TickDuck(dt);
             if(dayReturnInput){if(DayReturningInput)return true;dayReturnInput=false;}
             if(State.phase==0&&!Day.arrivalSeen&&!State.Done("D1_01")&&sceneTask==null&&!DayActivityActive){dayArrivalStarting=true;BeginScene(Map02ChapterDefinition.Load().Find("D1_01"));scenePurpose=5;return true;}
             if(DayActivityActive)
@@ -92,7 +93,7 @@ namespace ShadowVale.Map01
                 if(kb?.spaceKey.isPressed!=true)daySpaceReleased=true;
                 if(dayActivity==DayActivity.Dock&&Day.stakeHits<6&&kb?.spaceKey.wasPressedThisFrame==true&&daySpaceReleased)
                 {
-                    daySpaceReleased=false;int cycle=Mathf.FloorToInt(dayClock/Map02DayOneState.SweepSeconds(Day.stakeHits/3));if(cycle==dayAttemptCycle)return true;dayAttemptCycle=cycle;bool good=Day.Strike(Mathf.PingPong(dayClock/Map02DayOneState.SweepSeconds(Day.stakeHits/3),1));
+                    daySpaceReleased=false;int cycle=Mathf.FloorToInt(dayClock/Map02DayOneState.SweepSeconds(Day.stakeHits/3));if(cycle==dayAttemptCycle)return true;dayAttemptCycle=cycle;StrikeStake();bool good=Day.Strike(Mathf.PingPong(dayClock/Map02DayOneState.SweepSeconds(Day.stakeHits/3),1));
                     dayFeedback=good?"✓ Cọc đã xuống thêm một nhịp.":"Chưa đúng nhịp. Thử lại nhịp này.";
                     if(good){dayClock=0;dayAttemptCycle=-1;SyncRepairCount();SyncDayProps();if(Day.stakeHits%3==0)SaveDayProgress();}
                 }
@@ -105,7 +106,7 @@ namespace ShadowVale.Map01
             }
             if(State.activeTask!="N1_02")duckPoint=null;
             if(State.phase==1&&sceneTask==null&&escort!=null&&!Day.duckSeen&&State.activeTask=="N1_02"&&DuckReached())
-            {Day.duckSeen=true;var duck=Map02ChapterDefinition.Load().Lines("duckevent");Mission.Say(string.Join("\n",duck.Select(line=>line.Caption)));if(duck.All(Map02DialogueCatalog.HasApprovedRecording))voice.SpeakText(string.Join("\n",duck.Select(line=>line.Caption)));PlayDaySound("duck");}
+            {Day.duckSeen=true;BeginDuckStartle();}
             if(State.phase!=1||sceneTask!=null||escort!=null||Mission.Panel!=0)return false;
             return false;
         }
@@ -136,6 +137,7 @@ namespace ShadowVale.Map01
                 packingCursor.x=Mathf.Clamp(packingCursor.x+(kb.rightArrowKey.wasPressedThisFrame?1:0)-(kb.leftArrowKey.wasPressedThisFrame?1:0),0,5);
                 packingCursor.y=Mathf.Clamp(packingCursor.y+(kb.upArrowKey.wasPressedThisFrame?1:0)-(kb.downArrowKey.wasPressedThisFrame?1:0),0,3);
                 if(kb.eKey.wasPressedThisFrame)PlacePackingSelection(packingCursor.x,packingCursor.y);
+                if(kb.backspaceKey.wasPressedThisFrame){int under=CrateAt(packingCursor.x,packingCursor.y);if(under>=0)LiftCrate(under);}
                 if(kb.enterKey.wasPressedThisFrame)CompletePacking();
             }else if(dayActivity==DayActivity.Dock&&Day.stakeHits>=6){
                 if(number>=0){selectedBoard=Day.boardOrder[number];selectionRotated=false;dockOffset=.24f;}
@@ -152,7 +154,6 @@ namespace ShadowVale.Map01
                 if(kb.eKey.wasPressedThisFrame)ConfirmPostPart();
             }
         }
-        void PlacePackingSelection(int x,int y){if(Day.PlaceCrate(selectedCrate,x,y,selectionRotated,out var reason)){dayFeedback="✓ Đã đặt thùng. Chọn thùng tiếp theo; Enter xác nhận cả kho.";SyncDayProps();}else dayFeedback=reason;}
         void ConfirmPostPart(){var p=Day.posts[postIndex];bool okay=dayActivity==DayActivity.Lamp?p.LampSafe:dayActivity==DayActivity.Gate?p.gateClosed&&p.latchSeated:p.bundleStowed;if(okay)CloseDay();else dayFeedback=dayActivity==DayActivity.Lamp?"Ánh sáng vẫn lọt ra ngoài làng.":dayActivity==DayActivity.Gate?"Cửa rào chưa khép và cài chắc.":"Bó vật liệu vẫn nằm trên lối đi.";}
         void SaveDayProgress()
         {
@@ -188,8 +189,8 @@ namespace ShadowVale.Map01
             if(dayDockEnding)return Map02ChapterDefinition.Load().Lines("repairdone");
             return standard;
         }
-        void PlayDaySound(string id)
-        {VillageOneShot(id,Mission.Player.position+Mission.Player.forward*2,.35f);}
+        void PlayDaySound(string id,float volume=.35f,Vector3? at=null)
+        {var clip=Resources.Load<AudioClip>("Map02DayOne/"+id);if(clip!=null)AudioSource.PlayClipAtPoint(clip,at??Mission.Player.position+Mission.Player.forward*2,volume);}
         string DayInstruction(Map02ChapterTask t)
         {
             if(t.id=="D1_04"&&State.Count(t.id)>=3)return "Đã chuyển 3/3 thùng — tới kho kín, nhấn E sắp xếp vào kho.";
