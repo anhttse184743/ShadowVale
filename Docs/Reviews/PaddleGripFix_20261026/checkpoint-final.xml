@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-26 16:23:14Z" end-time="2026-10-26 16:25:07Z" duration="112.7727455">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="820" result="Passed" start-time="2026-10-26 16:23:14Z" end-time="2026-10-26 16:25:07Z" duration="112.772746" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1763" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/Capstone/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="597" result="Passed" start-time="2026-10-26 16:23:14Z" end-time="2026-10-26 16:25:07Z" duration="112.268510" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="23608" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1764" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="597" result="Passed" start-time="2026-10-26 16:23:14Z" end-time="2026-10-26 16:25:07Z" duration="112.238818" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1765" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="597" result="Passed" start-time="2026-10-26 16:23:14Z" end-time="2026-10-26 16:25:07Z" duration="112.213267" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1671" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="597" result="Passed" start-time="2026-10-26 16:23:14Z" end-time="2026-10-26 16:25:07Z" duration="112.186568" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1121" name="ExtractionTransitionRegressionTests" fullname="ShadowVale.Map01.Tests.ExtractionTransitionRegressionTests" classname="ShadowVale.Map01.Tests.ExtractionTransitionRegressionTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-26 16:23:14Z" end-time="2026-10-26 16:25:07Z" duration="112.127213" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1122" name="CompleteCheckpointWithExistingGripChannelsReachesMap2Gameplay" fullname="ShadowVale.Map01.Tests.ExtractionTransitionRegressionTests.CompleteCheckpointWithExistingGripChannelsReachesMap2Gameplay" methodname="CompleteCheckpointWithExistingGripChannelsReachesMap2Gameplay" classname="ShadowVale.Map01.Tests.ExtractionTransitionRegressionTests" runstate="Runnable" seed="236286858" result="Passed" start-time="2026-10-26 16:22:15Z" end-time="2026-10-26 16:25:07Z" duration="171.817725" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="420000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+Saving results to: C:/Users/dangk/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

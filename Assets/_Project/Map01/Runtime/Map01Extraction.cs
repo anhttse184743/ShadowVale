@@ -28,7 +28,8 @@ namespace ShadowVale.Map01
         public Vector3[] blockingPosts;
         public enum Phase { Dormant, Radio, Extraction, Approach, Boarding, Seating, Departing, Complete }
         public Phase CurrentPhase { get; private set; }
-        public bool Prepared => boat != null;
+        private bool preparationReady;
+        public bool Prepared => preparationReady;
         public bool HasDeparted => CurrentPhase == Phase.Complete;
         public Vector3 ObjectivePosition => approach;
         private Map01Mission mission;
@@ -185,7 +186,7 @@ namespace ShadowVale.Map01
 
         private bool Prepare()
         {
-            if (boat != null) return true;
+            if (boat != null) return preparationReady;
             var hull = FindObjectsByType<MeshFilter>(FindObjectsSortMode.None)
                 .FirstOrDefault(f => f.sharedMesh != null && f.name == "Moored wooden sampan");
             if (hull == null || board == null || sit == null || radio == null || seatedReady == null || travel == null
@@ -248,6 +249,7 @@ namespace ShadowVale.Map01
             wakeMaterial.SetFloat("_Surface",1);wakeMaterial.SetFloat("_SrcBlend",5);wakeMaterial.SetFloat("_DstBlend",10);wakeMaterial.SetFloat("_ZWrite",0);
             wakeMaterial.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");wakeMaterial.renderQueue=3000;
             renderer.sharedMaterial = wakeMaterial;
+            preparationReady=true;
             return true;
         }
 

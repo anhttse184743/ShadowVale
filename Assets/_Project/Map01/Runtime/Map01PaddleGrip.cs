@@ -5,7 +5,7 @@ namespace ShadowVale.Map01 {
 /// <summary>Reversible grip shapes for the commander's wrist-only hand rig. Original meshes/Avatar stay untouched.</summary>
 public sealed class Map01PaddleGrip:IDisposable {
  struct Hand {public Transform bone;public Vector3 fingers,normal,spread,anchor;}
- struct Skin {public SkinnedMeshRenderer renderer;public Mesh original,copy;public int left,right;}
+ struct Skin {public SkinnedMeshRenderer renderer;public Mesh original,copy;public int left,right;public float[] originalWeights;}
  readonly List<Skin> skins=new();readonly Dictionary<Transform,Hand> hands=new();
  public Map01PaddleGrip(Animator actor){
   foreach(var skin in actor.GetComponentsInChildren<SkinnedMeshRenderer>()){
@@ -40,15 +40,44 @@ public sealed class Map01PaddleGrip:IDisposable {
      float thumbBlend=1-Mathf.SmoothStep(0,1,(Mathf.Abs(z)/length-.20f)/.05f);
      deltas[i]=(inverse.MultiplyPoint3x4(curved)-vertices[i])*w*thumbBlend;changed[i]+=deltas[i];
     }
-    copy??=UnityEngine.Object.Instantiate(readable);copy.name=original.name+" (temporary paddle grip)";
+    if(copy==null){copy=UnityEngine.Object.Instantiate(readable);RemoveOwnedShapes(copy);}
+    copy.name=original.name+" (temporary paddle grip)";
     shapes[side]=copy.blendShapeCount;
     var normals=readable.normals;var temp=UnityEngine.Object.Instantiate(readable);temp.vertices=changed;temp.RecalculateNormals();var shapedNormals=temp.normals;UnityEngine.Object.Destroy(temp);
     var normalDeltas=new Vector3[vertices.Length];if(normals.Length==vertices.Length)for(int i=0;i<vertices.Length;i++)normalDeltas[i]=shapedNormals[i]-normals[i];
     copy.AddBlendShapeFrame(side==0?"PaddleGripLeft":"PaddleGripRight",100,deltas,normalDeltas,new Vector3[vertices.Length]);
     hands[hand]=new Hand{bone=hand,fingers=fingers,normal=normal,spread=spread,anchor=fingers*knuckle+normal*radius};
    }
-   if(copy!=null){skin.sharedMesh=copy;skins.Add(new Skin{renderer=skin,original=original,copy=copy,left=shapes[0],right=shapes[1]});}
+   if(copy!=null){
+    var saved=new float[original.blendShapeCount];
+    for(int i=0;i<saved.Length;i++)saved[i]=skin.GetBlendShapeWeight(i);
+    skin.sharedMesh=copy;
+    for(int i=0;i<saved.Length;i++){
+     string name=original.GetBlendShapeName(i);int target=copy.GetBlendShapeIndex(name);
+     if(target>=0&&!OwnedShape(name))skin.SetBlendShapeWeight(target,saved[i]);
+    }
+    foreach(int index in shapes)if(index>=0)skin.SetBlendShapeWeight(index,0);
+    skins.Add(new Skin{renderer=skin,original=original,copy=copy,left=shapes[0],right=shapes[1],originalWeights=saved});
+   }
   }
+ }
+ static bool OwnedShape(string name)=>name=="PaddleGripLeft"||name=="PaddleGripRight";
+ struct Frame {public string name;public float weight;public Vector3[] vertices,normals,tangents;}
+ static void RemoveOwnedShapes(Mesh mesh){
+  bool found=false;for(int i=0;i<mesh.blendShapeCount;i++)found|=OwnedShape(mesh.GetBlendShapeName(i));
+  if(!found)return;
+  // A loaded/reused commander may already have our temporary shapes. Unity can
+  // append frames only to the last shape, so rebuild only our channels on the copy.
+  // Preserve every unrelated facial/clothing shape, including all of its frames.
+  var keep=new List<Frame>();
+  for(int i=0;i<mesh.blendShapeCount;i++){
+   string name=mesh.GetBlendShapeName(i);if(OwnedShape(name))continue;
+   for(int f=0;f<mesh.GetBlendShapeFrameCount(i);f++){
+    var frame=new Frame{name=name,weight=mesh.GetBlendShapeFrameWeight(i,f),vertices=new Vector3[mesh.vertexCount],normals=new Vector3[mesh.vertexCount],tangents=new Vector3[mesh.vertexCount]};
+    mesh.GetBlendShapeFrameVertices(i,f,frame.vertices,frame.normals,frame.tangents);keep.Add(frame);
+   }
+  }
+  mesh.ClearBlendShapes();foreach(var frame in keep)mesh.AddBlendShapeFrame(frame.name,frame.weight,frame.vertices,frame.normals,frame.tangents);
  }
  static float Influence(BoneWeight w,int bone)=>(w.boneIndex0==bone?w.weight0:0)+(w.boneIndex1==bone?w.weight1:0)+(w.boneIndex2==bone?w.weight2:0)+(w.boneIndex3==bone?w.weight3:0);
  public bool TryGrip(Transform hand,out Vector3 point){if(hands.TryGetValue(hand,out var h)){point=hand.TransformPoint(h.anchor);return true;}point=default;return false;}
@@ -64,6 +93,9 @@ public sealed class Map01PaddleGrip:IDisposable {
   hand.rotation=Quaternion.Slerp(hand.rotation,best,weight);
  }
  public void Set(float left,float right){foreach(var skin in skins)if(skin.renderer!=null){if(skin.left>=0)skin.renderer.SetBlendShapeWeight(skin.left,100*Mathf.Clamp01(left));if(skin.right>=0)skin.renderer.SetBlendShapeWeight(skin.right,100*Mathf.Clamp01(right));}}
- public void Dispose(){foreach(var skin in skins){if(skin.renderer!=null)skin.renderer.sharedMesh=skin.original;if(skin.copy!=null)UnityEngine.Object.Destroy(skin.copy);}skins.Clear();hands.Clear();}
+ public void Dispose(){foreach(var skin in skins){if(skin.renderer!=null&&skin.renderer.sharedMesh==skin.copy){
+ skin.renderer.sharedMesh=skin.original;
+ for(int i=0;i<skin.originalWeights.Length;i++)skin.renderer.SetBlendShapeWeight(i,skin.originalWeights[i]);
+}if(skin.copy!=null)UnityEngine.Object.Destroy(skin.copy);}skins.Clear();hands.Clear();}
 }
 }

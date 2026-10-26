@@ -37,7 +37,8 @@ var guards=m.Enemies.Where(x=>x.name=="Extraction guard 0"||x.name=="Extraction 
 foreach(var enemy in m.Enemies.Except(guards))enemy.GetComponent<Health>().TakeDamage(99999,enemy.transform.position,null);
 for(int i=0;i<guards.Length;i++)if(UnityEngine.AI.NavMesh.SamplePosition(new Vector3(-4,2,90+i*2),out var hit,5,UnityEngine.AI.NavMesh.AllAreas))guards[i].GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(hit.position);
 var body=m.player.GetComponent<CharacterController>();body.enabled=false;m.player.position=e.approach;body.enabled=true;
-float deadline=Time.realtimeSinceStartup+200;bool closeMap1=false,closeMap2=false;Map02Arrival arrival=null;
+// Capture at 1 Hz: heavy synchronous PNG readback must not slow the arrival clock past its test deadline.
+float deadline=Time.realtimeSinceStartup+360;bool closeMap1=false,closeMap2=false;Map02Arrival arrival=null;
 try{
 while(Time.realtimeSinceStartup<deadline){
  yield return null;
@@ -64,7 +65,7 @@ while(Time.realtimeSinceStartup<deadline){
   }
  }
  if(camera!=null&&Time.realtimeSinceStartup>=next&&(arrival==null||arrival.CurrentPhase!=Map02Arrival.Phase.Loading)){
-  next=Time.realtimeSinceStartup+.2f;Capture(camera,folder+"/"+frame.ToString("D4")+".png");rows.Add(frame+","+(Time.realtimeSinceStartup-start).ToString("F4",System.Globalization.CultureInfo.InvariantCulture)+","+(arrival==null?"Map1-"+e.CurrentPhase:"Map2-"+arrival.CurrentPhase)+","+e.NamCoverShots+","+e.CommanderCoverShots+","+(e.GetComponent<DialogueVoice>()?.CurrentId??""));frame++;
+  next=Time.realtimeSinceStartup+1f;Capture(camera,folder+"/"+frame.ToString("D4")+".png");rows.Add(frame+","+(Time.realtimeSinceStartup-start).ToString("F4",System.Globalization.CultureInfo.InvariantCulture)+","+(arrival==null?"Map1-"+e.CurrentPhase:"Map2-"+arrival.CurrentPhase)+","+e.NamCoverShots+","+e.CommanderCoverShots+","+(e.GetComponent<DialogueVoice>()?.CurrentId??""));frame++;
  }
 }
 Assert.NotNull(arrival);Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);Assert.IsTrue(closeMap1&&closeMap2);Assert.IsTrue(arrival.Passengers[0].GetComponent<ShadowVale.Gameplay.Player.PlayerController>().enabled);
