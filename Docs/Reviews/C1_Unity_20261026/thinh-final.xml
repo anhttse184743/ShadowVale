@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="7" result="Passed" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-26 04:38:39Z" end-time="2026-10-26 04:38:49Z" duration="9,8063709">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="775" result="Passed" start-time="2026-10-26 04:38:39Z" end-time="2026-10-26 04:38:49Z" duration="9.806371" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1700" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/Admin/.codex/worktrees/map1-boot-investigation-20261023/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="552" result="Passed" start-time="2026-10-26 04:38:39Z" end-time="2026-10-26 04:38:49Z" duration="9.511489" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="198548" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1701" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="552" result="Passed" start-time="2026-10-26 04:38:39Z" end-time="2026-10-26 04:38:49Z" duration="9.482874" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1702" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="552" result="Passed" start-time="2026-10-26 04:38:39Z" end-time="2026-10-26 04:38:49Z" duration="9.456016" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1611" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="552" result="Passed" start-time="2026-10-26 04:38:40Z" end-time="2026-10-26 04:38:49Z" duration="9.427742" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1290" name="Map02ApprovedC1Tests" fullname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests" classname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-26 04:32:51Z" end-time="2026-10-26 04:32:51Z" duration="0.100766" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1292" name="ApprovedMeshesAndDirectTracksMatchTheBlenderSource" fullname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests.ApprovedMeshesAndDirectTracksMatchTheBlenderSource" methodname="ApprovedMeshesAndDirectTracksMatchTheBlenderSource" classname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests" runstate="Runnable" seed="1466908149" result="Passed" start-time="2026-10-26 04:32:51Z" end-time="2026-10-26 04:32:51Z" duration="0.082314" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1291" name="SupportingKneeFitsSolidLandingWithoutMovingTheApprovedHandsOrAnkle" fullname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests.SupportingKneeFitsSolidLandingWithoutMovingTheApprovedHandsOrAnkle" methodname="SupportingKneeFitsSolidLandingWithoutMovingTheApprovedHandsOrAnkle" classname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests" runstate="Runnable" seed="1670687253" result="Passed" start-time="2026-10-26 04:32:51Z" end-time="2026-10-26 04:32:51Z" duration="0.005990" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1293" name="Map02ArrivalMisstepTests" fullname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests" classname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-26 04:35:33Z" end-time="2026-10-26 04:36:24Z" duration="51.306959" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1294" name="HungMissesTheLastStairAndNamHelpsHimUp" fullname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests.HungMissesTheLastStairAndNamHelpsHimUp" methodname="HungMissesTheLastStairAndNamHelpsHimUp" classname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests" runstate="Runnable" seed="2123771983" result="Passed" start-time="2026-10-26 04:32:51Z" end-time="2026-10-26 04:34:08Z" duration="76.328489" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+                <output><![CDATA[Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+]]></output>
+              </test-case>
+              <test-case id="1296" name="RecordMisstepContactReview" fullname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests.RecordMisstepContactReview" methodname="RecordMisstepContactReview" classname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests" runstate="Explicit" seed="1051692837" result="Passed" start-time="2026-10-26 04:34:08Z" end-time="2026-10-26 04:35:21Z" duration="73.010280" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="_SKIPREASON" value="Record the natural C1 handoff in Unity for visual review." />
+                </properties>
+                <output><![CDATA[Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+]]></output>
+              </test-case>
+              <test-case id="1295" name="SkippingWhileThePackIsDownRestoresTheWornPack" fullname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests.SkippingWhileThePackIsDownRestoresTheWornPack" methodname="SkippingWhileThePackIsDownRestoresTheWornPack" classname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests" runstate="Runnable" seed="222261298" result="Passed" start-time="2026-10-26 04:35:21Z" end-time="2026-10-26 04:36:24Z" duration="63.812633" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+                <output><![CDATA[Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1299" name="Map02ArrivalTests" fullname="ShadowVale.Map01.Tests.Map02ArrivalTests" classname="ShadowVale.Map01.Tests.Map02ArrivalTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-26 04:38:40Z" end-time="2026-10-26 04:38:49Z" duration="9.316300" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1305" name="NaturalArrivalPreservesPartyAndEquipment" fullname="ShadowVale.Map01.Tests.Map02ArrivalTests.NaturalArrivalPreservesPartyAndEquipment" methodname="NaturalArrivalPreservesPartyAndEquipment" classname="ShadowVale.Map01.Tests.Map02ArrivalTests" runstate="Runnable" seed="1623446914" result="Passed" start-time="2026-10-26 04:36:24Z" end-time="2026-10-26 04:38:27Z" duration="122.556041" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+                <output><![CDATA[Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+]]></output>
+              </test-case>
+              <test-case id="1306" name="SkippedArrivalUsesSameDrySpawn" fullname="ShadowVale.Map01.Tests.Map02ArrivalTests.SkippedArrivalUsesSameDrySpawn" methodname="SkippedArrivalUsesSameDrySpawn" classname="ShadowVale.Map01.Tests.Map02ArrivalTests" runstate="Runnable" seed="963747808" result="Passed" start-time="2026-10-26 04:38:27Z" end-time="2026-10-26 04:38:49Z" duration="21.893542" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+Saving results to: Logs/Map02Chapter/latest-full-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

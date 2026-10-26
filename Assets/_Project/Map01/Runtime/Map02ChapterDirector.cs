@@ -33,6 +33,7 @@ namespace ShadowVale.Map01
         public List<Map02ChapterEnemy> Enemies {get;}=new List<Map02ChapterEnemy>();
         public Map02ChapterLayout Layout {get;private set;}
         float holdClock,detectionClock;Vector3 workOrigin;AudioSource signalAudio;
+        float arrivalBriefingFloor;
         Map01CinematicPose namPose;AnimationClip namIdle;readonly List<GameObject> hiddenWeapons=new List<GameObject>();
         Material originalSky,chapterSky;UnityEngine.Rendering.AmbientMode originalAmbientMode;Color originalSunColor;
         readonly Dictionary<string,Transform> sites=new Dictionary<string,Transform>();
@@ -328,7 +329,8 @@ namespace ShadowVale.Map01
             DropBarks();if(task.id=="N3_07")SpawnEscort(); // They come up behind the tank.
             ReleaseDayFreePose();sceneTask=task;PrepareSceneMotion(task);PrepareDayScene(task);lineIndex=0;lineClock=sceneClock=skipHeld=0;lockedPosition=Mission.Player.position;lockedRotation=Mission.Player.rotation;if(State.phase>=2)StageConversation(task);
             player.RestoreMotion(false);DialogueVoice.StopAll();
-            var actor=Mission.Player.GetComponentInChildren<Animator>();namIdle=actor.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned");namPose=new Map01CinematicPose(actor,null,false);
+            var actor=Mission.Player.GetComponentInChildren<Animator>();namIdle=actor.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned");namPose=new Map01CinematicPose(actor,null,task.id=="D1_01");
+            if(task.id=="D1_01"){var arrival=FindFirstObjectByType<Map02Arrival>();arrivalBriefingFloor=arrival?.SpawnPoints?.Length>0?arrival.SpawnPoints[0].y:lockedPosition.y;}
             foreach(var weapon in Mission.Player.GetComponentsInChildren<Weapon>(true))if(weapon.gameObject.activeSelf){hiddenWeapons.Add(weapon.gameObject);weapon.gameObject.SetActive(false);}
             var cam=rig.GetComponent<Camera>();cameraBefore=cam.transform.position;cameraRotation=cam.transform.rotation;cameraFov=cam.fieldOfView;
             protectedBefore=health.CinematicInvulnerable;health.CinematicInvulnerable=true;
@@ -358,6 +360,7 @@ namespace ShadowVale.Map01
         {
             DayLateUpdate();UpdateWorkWeapon();if(!ready)return;PanToHung();HoldCargo();if(sceneTask==null){UpdateHungRadio();return;}
             HoldConversation();MoveDaySceneRoots();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=NamPoseClip();namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null);
+            if(sceneTask.id=="D1_01")namPose?.Ground(arrivalBriefingFloor);
             SampleDayScene();UpdateHungRadio();
             string speaker=lines[lineIndex].speaker;Vector3 subject=Mission.Player.position;
             if(!lines[lineIndex].radio&&speaker!="Nam"&&roles.TryGetValue(speaker,out var actor))subject=actor.transform.position;
@@ -495,7 +498,7 @@ namespace ShadowVale.Map01
             if(State.phase==5&&State.activeTask=="N3_08")health.CinematicInvulnerable=true;
             foreach(var unit in Enemies)if(unit!=null){if(State.Done("N3_09"))unit.gameObject.SetActive(false);else if(unit.group=="scout_patrol")unit.gameObject.SetActive(State.phase==2);}
             roles["Hùng"].SetLocomotion(State.phase<=1?DayClip("InjuredIdle"):null,State.phase<=1?HungMapOneWalk:null);
-            roles["Hùng"].PrimeLocomotion();roles["Anh Thành"].SetQuietRifle(State.phase<=1);roles["Anh Thành"].SetLocomotion(State.phase<=1?dayNamAnimator.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned"):null,State.phase<=1?ordinaryWalk:null);ArrangeDayFamily();
+            roles["Hùng"].PrimeLocomotion();roles["Anh Thành"].SetQuietRifle(State.phase<=1);roles["Anh Thành"].SetLocomotion(State.phase<=1?dayNamAnimator.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned"):null,State.phase<=1?ordinaryWalk:null);roles["Anh Thành"].PrimeLocomotion();ArrangeDayFamily();
             SyncDayProps();RefreshMemorial();UpdateMarkers();
         }
         void PlaceChildWithMother()

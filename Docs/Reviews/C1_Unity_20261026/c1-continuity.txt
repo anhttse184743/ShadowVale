@@ -1,0 +1,1 @@
+Nam assisting spine peak angular speed: 29,99 degrees/second at 3,300 s (2.75–4.95 s). Limit 500; a broken endpoint solve exceeded 970–1030 degrees/second.
