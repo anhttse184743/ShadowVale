@@ -65,6 +65,19 @@ namespace ShadowVale.Map01
                 foreach (var (id, count) in TestCraftingKit) Add(id, count);
         }
 
+        public void PrepareScoutPistol()
+        {
+            // A quest loan only when the slot is empty; never duplicate carried weapons.
+            if(SlotItem(Slot.Pistol)==null)
+            {
+                int index=System.Array.FindIndex(bag,c=>c!=null&&c.id=="pistol_k54");
+                if(index>=0){SetSlot(Slot.Pistol,"pistol_k54",bag[index].condition);bag[index]=null;Changed?.Invoke();}
+                else Add("pistol_k54",1);
+            }
+            if(Condition(Slot.Pistol)<=0)SetConditionOf(Gun.InSlot(Slot.Pistol),MaxCondition("pistol_k54"));
+            Draw(Slot.Pistol);
+        }
+
         /// <summary>TEMPORARY: enough of every material to make each bench recipe several times, and what the
         /// camp chests hold, so the bench can be tried from the start.</summary>
         public static readonly (string id, int count)[] TestCraftingKit =

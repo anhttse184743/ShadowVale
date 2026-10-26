@@ -48,11 +48,13 @@ namespace ShadowVale.Map01
         /// <summary>All samples, and how many the last <see cref="LowestY"/> had to evaluate.</summary>
         public int Samples{get;private set;}
         public int Evaluated{get;private set;}
-        public Map01SkinContact(Animator actor)
+        public Map01SkinContact(Animator actor):this(actor,null){}
+        public Map01SkinContact(Animator actor,Transform skinRoot)
         {
             var saved=Resources.Load<Map01SkinContactData>("Rescue/SkinContactData");
-            foreach(var renderer in actor.GetComponentsInChildren<SkinnedMeshRenderer>())
+            foreach(var renderer in (skinRoot!=null?skinRoot:actor.transform).GetComponentsInChildren<SkinnedMeshRenderer>())
             {
+                if(skinRoot!=null&&(!renderer.enabled||!renderer.gameObject.activeInHierarchy))continue;
                 var mesh=renderer.sharedMesh;if(mesh==null)continue;
                 Map01SkinContactData.Vertex[] cached=null;
                 if(saved!=null)foreach(var profile in saved.skins)if(profile.mesh==mesh){cached=profile.vertices;break;}

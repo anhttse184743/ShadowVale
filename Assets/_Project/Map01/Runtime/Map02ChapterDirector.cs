@@ -23,7 +23,7 @@ namespace ShadowVale.Map01
         public bool Binoculars=>binocular;
         bool binocularHeld;
         public void HoldBinoculars(bool held){binocularHeld=held;SetBinoculars(held&&!Mission.InputBlocked);}
-        void SetBinoculars(bool held){if(binocular==held)return;binocular=held;rig?.SetBinoculars(held,held?2:1);}
+        void SetBinoculars(bool held){if(ScoutEscortActive)held=false;if(binocular==held)return;binocular=held;rig?.SetBinoculars(held,held?2:1);}
         public bool LocksInput=>Busy||DayReturningInput||State.finished||Transitioning;
         public bool MovementLocked=>State.activeTask=="N3_08"&&!State.Done("N3_08")||State.Done("N3_WOUND")&&!State.Done("N3_CRAWL");
         public bool MaySave=>!Busy;
@@ -60,6 +60,7 @@ namespace ShadowVale.Map01
         {
             Layout=Resources.Load<Map02ChapterLayout>("Story/Map02ChapterLayout");
             Mission=mission;player=mission.Player.GetComponent<PlayerController>();combat=mission.Player.GetComponent<PlayerCombat>();health=mission.Player.GetComponent<Health>();
+            combat.EquipAllowed=kind=>!ScoutEscortActive||kind==WeaponKind.Pistol;
             rig=FindObjectsByType<ThirdPersonCamera>(FindObjectsSortMode.None).First(c=>c.GetComponent<Camera>()?.enabled==true);
             voice=DialogueVoice.For(gameObject);voice.CanSpeak=()=>!mission.Paused&&!ForestMenu.Visible;
             root=new GameObject("Map 2 chapter markers — replace art under Actor slots");root.transform.SetParent(transform);
@@ -184,6 +185,7 @@ namespace ShadowVale.Map01
             }
             if(t.kind=="escortHung"||t.kind=="escortScout"||t.kind=="patrolHung")
             {
+                if(t.id=="D2_04"){StartScoutEscort();Mission.Say("Dìu Tâm về chốt · tốc độ đi bộ · chỉ dùng K54. Địch sẽ xuất hiện lần lượt từ hai bên đường ruộng.");UpdateMarkers();Mission.StoreCheckpoint();return true;}
                 escort=roles[t.kind=="escortScout"?"Tâm":"Hùng"];escort.Follow(Mission.Player,t.id=="D1_02"?1.25f:1.35f,false);Mission.Say(escort.role=="Hùng"?"Đi bộ và giữ Hùng trong phạm vi 4 m. Đến điểm đánh dấu để hoàn tất.":"Tâm sẽ đi theo. Đưa cả hai tới điểm đánh dấu để hoàn tất.");UpdateMarkers();return true;
             }
             if(t.kind=="rescueFamily"||t.kind=="rescueChild")
@@ -229,6 +231,7 @@ namespace ShadowVale.Map01
             if(!ready||Mission.Paused||ForestMenu.Visible||Mission.World.story.failed)return;
             float dt=Mathf.Min(Time.deltaTime,.1f);
             TickEffects();
+            TickScoutEscort();
             if(phaseFade>0){phaseFade=Mathf.Max(0,phaseFade-dt);TickLight(dt);return;}
             if(State.finished)return;
             TickTank(dt);TickBoats(dt);TickDressing(dt);
@@ -252,8 +255,9 @@ namespace ShadowVale.Map01
                 if(t.id=="D2_02")EnsureGroup("scout_patrol",3,false);
                 if((t.kind=="escortHung"||t.kind=="escortScout"||t.kind=="patrolHung"||t.kind.StartsWith("rescue"))&&escort!=null&&workTask==t)
                 {
+                    if(t.id=="D2_04"&&!ScoutAmbushCleared)continue;
                     var dest=Destination(t);if(Vector3.Distance(Mission.Player.position,dest)<3&&Vector3.Distance(escort.transform.position,dest)<4&&(secondaryEscort==null||Vector3.Distance(secondaryEscort.transform.position,dest)<5))
-                    {escort.StopAt(dest+(t.id=="D1_02"?Vector3.forward*.6f:Vector3.right*1.4f));escort=null;secondaryEscort?.StopAt(dest+Vector3.left*1.4f);secondaryEscort=null;if(t.kind=="rescueFamily")Finish(t);else if(t.kind=="rescueChild")BeginScene(t,2);else if(t.id=="N1_02"||t.id=="N1_03")StartPost(t);else BeginScene(t);break;}
+                    {if(t.id=="D2_04")EndScoutEscort();escort.StopAt(dest+(t.id=="D1_02"?Vector3.forward*.6f:Vector3.right*1.4f));escort=null;secondaryEscort?.StopAt(dest+Vector3.left*1.4f);secondaryEscort=null;if(t.kind=="rescueFamily")Finish(t);else if(t.kind=="rescueChild")BeginScene(t,2);else if(t.id=="N1_02"||t.id=="N1_03")StartPost(t);else BeginScene(t);break;}
                 }
                 if(t.kind=="binocular")
                 {
@@ -450,7 +454,7 @@ namespace ShadowVale.Map01
             if(State.Available(workTask))
             {
                 if(workTask.kind=="escortScout"||workTask.kind=="escortHung"||workTask.kind=="patrolHung")
-                {escort=roles[workTask.kind=="escortScout"?"Tâm":"Hùng"];escort.Follow(Mission.Player,1.35f);}
+                {if(workTask.id=="D2_04")StartScoutEscort(true);else{escort=roles[workTask.kind=="escortScout"?"Tâm":"Hùng"];escort.Follow(Mission.Player,1.35f);}}
                 else if(workTask.kind=="rescueFamily"||workTask.kind=="rescueChild")
                 {if(State.introduced.Contains(workTask.id))StartRescueEscort(workTask);}
             }
@@ -475,6 +479,7 @@ namespace ShadowVale.Map01
         }
         public void Cancel()
         {
+            EndScoutEscort();
             ReleaseWorkWeapon();ReleaseDayScene();ReleaseDayFreePose();CloseDay(false);dayReturnInput=false;dayArrivalStarting=dayDockEnding=false;
             if(health!=null&&sceneTask!=null)health.CinematicInvulnerable=protectedBefore;
             ClearEntrances();DropBarks();ReleaseConversation();ReleaseSceneAction();phaseFade=0;binocularHeld=false;binocular=false;observed=0;detectionClock=0;if(rig!=null)rig.SetBinoculars(false,1);if(combat!=null)combat.SetHandsOccupied(false);handsBusy=false;if(namPose!=null){namPose.Dispose();namPose=null;combat?.RestoreAfterCinematic();}foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}voice?.Stop();if(Patching)EndPatch();sceneTask=null;doingWork=false;lines=null;escort?.StopAt(escort.transform.position);escort=null;secondaryEscort?.StopAt(secondaryEscort.transform.position);secondaryEscort=null;rig?.ClearCinematicView();
@@ -631,7 +636,7 @@ namespace ShadowVale.Map01
         }
         void OnDestroy()
         {
-            Cancel();ResetEffects();RestoreNaturalLighting();ReleaseDayArt();if(combat!=null){combat.Attacked-=OnPlayerShot;combat.ReloadDurationMultiplier=1;combat.SetHandsOccupied(false);}if(player!=null){player.SurfaceSpeedMultiplier=1;player.SprintAllowed=null;}
+            Cancel();ResetEffects();RestoreNaturalLighting();ReleaseDayArt();if(combat!=null){combat.EquipAllowed=null;combat.Attacked-=OnPlayerShot;combat.ReloadDurationMultiplier=1;combat.SetHandsOccupied(false);}if(player!=null){player.SurfaceSpeedMultiplier=1;player.SprintAllowed=null;}
             RenderSettings.skybox=originalSky;RenderSettings.ambientMode=originalAmbientMode;if(chapterSky!=null)Destroy(chapterSky);RenderSettings.ambientLight=ambientBefore;RenderSettings.fog=fogBefore;RenderSettings.fogColor=fogColorBefore;RenderSettings.fogDensity=fogDensityBefore;
             if(sun!=null){sun.intensity=sunIntensity;sun.transform.rotation=sunRotation;sun.color=originalSunColor;}
         }

@@ -17,6 +17,7 @@ namespace ShadowVale.Gameplay.Player
     public sealed class ThirdPersonCamera : MonoBehaviour
     {
         [SerializeField] private Transform target;
+        public Transform IgnoredCompanion {get;set;}
 
         [Header("Arm")]
         [Tooltip("Pivot height above the target's feet — roughly head height.")]
@@ -282,7 +283,7 @@ namespace ShadowVale.Gameplay.Player
             {
                 var obstacle = hits[i].collider;
                 if (obstacle == null || obstacle.transform.IsChildOf(target) || obstacle.transform == transform
-                    || target.IsChildOf(obstacle.transform)) continue;
+                    || target.IsChildOf(obstacle.transform)||IgnoredCompanion!=null&&obstacle.transform.IsChildOf(IgnoredCompanion)) continue;
                 clear = Mathf.Min(clear, Mathf.Max(0f, hits[i].distance - collisionPadding));
             }
             return clear;

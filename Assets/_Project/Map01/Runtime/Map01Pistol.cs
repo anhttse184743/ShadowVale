@@ -91,12 +91,14 @@ namespace ShadowVale.Map01
             clock+=Time.deltaTime;
             bool levelled=combat.IsAiming||Time.time-shotAt<.6f;
             aim=Mathf.MoveTowards(aim,levelled?1:0,Time.deltaTime/.35f);
-            if(combat.IsReloading)SourceFrame=Mathf.Lerp(301,492,combat.ReloadProgress);
+            bool assisted=mission.MapTwo?.Chapter?.ScoutEscortActive==true;
+            if(combat.IsReloading&&assisted)SourceFrame=aim>=.5f?153+Mathf.Repeat(clock*60,99):1+Mathf.Repeat(clock*60,79);
+            else if(combat.IsReloading)SourceFrame=Mathf.Lerp(301,492,combat.ReloadProgress);
             else if(wasReloading)SourceFrame=492;
             else if(Time.time-shotAt<Weapon.Cooldown)SourceFrame=Mathf.Lerp(253,300,(Time.time-shotAt)/Weapon.Cooldown);
             else if(aim>0&&aim<1)SourceFrame=levelled?Mathf.Lerp(81,152,aim):Mathf.Lerp(493,572,1-aim);
             else SourceFrame=aim>=1?153+Mathf.Repeat(clock*60,99):1+Mathf.Repeat(clock*60,79);
-            wasReloading=combat.IsReloading;
+            wasReloading=combat.IsReloading&&!assisted;
             if(combat.EquippedKind==WeaponKind.Pistol)combat.GunPresentationReady=active && (aim>=.95f || Time.time-shotAt<Weapon.Cooldown);
             if(TryGetComponent<NamMotionRefresh>(out var refresh)&&refresh.ControlsPistol)return;
             for(int i=0;i<bones.Length;i++)if(bones[i]!=null)data.bones[i].At(SourceFrame).Apply(bones[i],weight);

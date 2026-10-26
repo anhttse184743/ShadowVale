@@ -26,6 +26,16 @@ namespace ShadowVale.Map01
     {
         public Map02DayOneState dayOne=new Map02DayOneState();
         public int version=3,phase,evacuation,patrolWarnings,storedRounds;
+        public bool scoutPistolIssued;
+        public int scoutAmbushSpawned;
+        public bool scoutRescueOriginSet,scoutAmbushStarted;
+        public Vector3 scoutRescueOrigin;
+        public bool TryStartScoutAmbush(Vector3 position)
+        {
+            if(!scoutRescueOriginSet)return false;
+            if(Vector3.ProjectOnPlane(position-scoutRescueOrigin,Vector3.up).sqrMagnitude>=16)scoutAmbushStarted=true;
+            return scoutAmbushStarted;
+        }
         // Additive version 3 fields: older completed tasks stay completed.
         public int wireStage; // 0 in store, 1 carried, 2 delivered
         public float patrolScanSeconds;
@@ -106,6 +116,8 @@ namespace ShadowVale.Map01
             var def=Map02ChapterDefinition.Load();
             if(completed==null||enemies==null||combatGroups==null)throw new System.IO.InvalidDataException("Dữ liệu Map 2 bị thiếu.");
             actors??=new List<ActorSnapshot>();
+            if(scoutAmbushSpawned<0||scoutAmbushSpawned>5)throw new System.IO.InvalidDataException("Tốp phục kích dìu Tâm không hợp lệ.");
+            if(!float.IsFinite(scoutRescueOrigin.x)||!float.IsFinite(scoutRescueOrigin.y)||!float.IsFinite(scoutRescueOrigin.z))throw new System.IO.InvalidDataException("Điểm đón Tâm không hợp lệ.");
             night2RouteVisited??=new List<string>();
             if(night2GuidanceStage<0||night2GuidanceStage>7||!float.IsFinite(patrolFocusSeconds)||patrolFocusSeconds<0||patrolFocusSeconds>3.01f||
                 !float.IsFinite(patrolFocusDirection.x)||!float.IsFinite(patrolFocusDirection.y)||!float.IsFinite(patrolFocusDirection.z))

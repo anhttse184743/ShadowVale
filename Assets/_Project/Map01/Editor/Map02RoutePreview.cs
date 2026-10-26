@@ -19,6 +19,8 @@ namespace ShadowVale.Map01.Editor
 
         [MenuItem("ShadowVale/Map 2/Chạy thử Ngày 2",priority=20)]
         public static void PlayDayTwo()=>Begin(2);
+        [MenuItem("ShadowVale/Map 2/Checkpoint cứu Tâm · M2_D2_04",priority=20)]
+        public static void PlayScoutRescue()=>BeginAfter("D2_03");
         [MenuItem("ShadowVale/Map 2/Chạy thử Đêm 2",priority=21)]
         public static void PlayNightTwo()=>Begin(3);
         // Day 3 / Night 3: every task up to the named one is done; Nam starts by the next one.
@@ -31,6 +33,7 @@ namespace ShadowVale.Map01.Editor
         [MenuItem("ShadowVale/Map 2/Chạy thử Đêm 3 · Hùng ở lại yểm trợ",priority=25)]
         public static void PlayNightThreeCover()=>BeginAfter("N3_07");
         [MenuItem("ShadowVale/Map 2/Chạy thử Ngày 2",true)]
+        [MenuItem("ShadowVale/Map 2/Checkpoint cứu Tâm · M2_D2_04",true)]
         [MenuItem("ShadowVale/Map 2/Chạy thử Đêm 2",true)]
         [MenuItem("ShadowVale/Map 2/Chạy thử Ngày 3",true)]
         [MenuItem("ShadowVale/Map 2/Chạy thử Đêm 3",true)]
@@ -92,6 +95,13 @@ namespace ShadowVale.Map01.Editor
         public static void ApplyAfter(Map02Mission mission,string task)
         {
             var state=BuildStateAfter(task);
+            if(task=="D2_03")
+            {
+                state.activeTask=state.trackedTask="D2_04";state.Validate();
+                var rescue=mission.Chapter.Sites["scout"].position;
+                Apply(mission,state,rescue,mission.Chapter.Sites["command"].position,"CHECKPOINT CỨU TÂM · Đang dìu Tâm, chỉ dùng K54. Đi ra khỏi bán kính 4 m để bắt đầu phục kích.");
+                return;
+            }
             var next=Map02ChapterDefinition.Load().tasks.FirstOrDefault(state.Available);
             var site=next!=null&&!string.IsNullOrEmpty(next.site)&&mission.Chapter.Sites.TryGetValue(next.site,out var s)&&s!=null?s.position:mission.Player.position;
             string day=state.phase==4?"NGÀY 3":"ĐÊM 3";
@@ -109,6 +119,10 @@ namespace ShadowVale.Map01.Editor
             snapshot.bagLayout=new Map01Inventory.Layout{primary=snapshot.rifleItemId,pistol=pistol,throwable="stone"};
             snapshot.stamina=mission.CharacterSettings.stamina;snapshot.exploration=null;snapshot.crafting=null;snapshot.craftRemaining=0;snapshot.ground=null;
             if(NavMesh.SamplePosition(spawn,out var hit,4,NavMesh.AllAreas))spawn=hit.position;
+            if(state.activeTask=="D2_04")
+            {
+                state.scoutRescueOrigin=spawn;state.scoutRescueOriginSet=true;state.scoutAmbushStarted=false;
+            }
             snapshot.position=spawn;
             var look=Vector3.ProjectOnPlane(lookAt-spawn,Vector3.up);
             snapshot.yaw=look.sqrMagnitude>1e-4f?Quaternion.LookRotation(look).eulerAngles.y:snapshot.yaw;

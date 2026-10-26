@@ -24,6 +24,11 @@ namespace ShadowVale.Map01
                 if(t.id=="D2_03")return "Theo lối lúa bị giẫm từ cầu tới khoảng trống. Tâm nằm bị thương tại ghim vàng; đến gần, nhấn E để giúp.";
                 if(t.kind=="wire")return State.wireStage==1?"Đang mang cuộn dây. Tới trạm ở ghim vàng, nhấn E giao cho Hùng.":"Tới kho kín ở ghim vàng, nhấn E lấy cuộn dây ăng-ten.";
                 if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)?$"Đang mang thùng {n+1}/{t.count}. Tới ghim vàng rồi nhấn E để đặt.":$"Đã chuyển {n}/{t.count}. Tới ghim vàng, nhấn E nhận thùng tiếp theo.";
+                if(ScoutEscortActive)
+                {
+                    if(!State.scoutAmbushStarted)return $"Dìu Tâm về chốt · tốc độ đi bộ · K54. Đi ra ngoài bán kính 4 m quanh điểm đón Tâm (còn {Mathf.Max(0,4-Vector3.ProjectOnPlane(Mission.Player.position-State.scoutRescueOrigin,Vector3.up).magnitude):0.0} m).";
+                    return $"Dìu Tâm về chốt · tốc độ đi bộ · K54. Còn {Mathf.Max(0,ScoutAmbushRemaining)}/5 địch trên đường về.";
+                }
                 if(escort!=null)
                 {
                     var person=Companion;float distance=Vector3.Distance(person.transform.position,Mission.Player.position);
@@ -59,9 +64,8 @@ namespace ShadowVale.Map01
             }
         }
         public Map02ChapterActor Companion=>escort==null&&State.activeTask=="N3_08"?roles["Hùng"]:secondaryEscort!=null&&escort!=null&&Vector3.Distance(secondaryEscort.transform.position,Mission.Player.position)>Vector3.Distance(escort.transform.position,Mission.Player.position)?secondaryEscort:escort;
-        // Bringing Tâm back (Day 2) keeps Nam armed, free to change gear and at full pace (Tài's design, chosen 23/10);
-        // leading Hùng before Day 3 slings the rifle and slows Nam to a walk.
-        public bool CompanionLocksGear=>Companion!=null&&Companion.role!="Tâm";
+        // Tâm's paired escort keeps the K54 available; Hùng's earlier escort occupies both hands.
+        public bool CompanionLocksGear=>ScoutEscortActive||Companion!=null&&Companion.role!="Tâm";
         bool LeadingWounded=>escort!=null&&State.phase<4&&escort.role!="Tâm";
         public bool ShowInteractPrompt(Map02ObjectiveObject marker)
         {

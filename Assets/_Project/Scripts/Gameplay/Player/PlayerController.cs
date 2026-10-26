@@ -68,6 +68,8 @@ namespace ShadowVale.Gameplay.Player
         public System.Func<bool> InputAllowed { get; set; }
         public System.Func<bool> SprintAllowed { get; set; }
         public float SurfaceSpeedMultiplier { get; set; } = 1;
+        public float? AssistedWalkSpeed { get; set; }
+        public float WalkSpeed=>walkSpeed;
         public void RestoreMotion(bool sneaking)
         {
             SetProne(false, true);
@@ -132,13 +134,14 @@ namespace ShadowVale.Gameplay.Player
             if (stoodFromProne) TrySetProne(false);
             else if (kb != null && kb.zKey.wasPressedThisFrame) TrySetProne(true);
             UpdateStanceToggles(kb);
+            if(AssistedWalkSpeed.HasValue){SetProne(false,true);_sneakToggled=IsSneaking=false;_sprintToggled=IsSprinting=false;}
 
             Vector3 move = ToCameraSpace(input);
 
             ApplyRotation(move);
 
             float targetSpeed = IsProne ? crawlSpeed : IsSneaking ? sneakSpeed : IsSprinting ? sprintSpeed : walkSpeed;
-            Vector3 targetVelocity = move * targetSpeed * SurfaceSpeedMultiplier;
+            Vector3 targetVelocity = move * (AssistedWalkSpeed??(targetSpeed * SurfaceSpeedMultiplier));
             _planarVelocity = Vector3.MoveTowards(
                 _planarVelocity, targetVelocity, acceleration * Time.deltaTime);
 
@@ -148,7 +151,7 @@ namespace ShadowVale.Gameplay.Player
                 _verticalVelocity = -2f; // Stick to slopes instead of ratcheting downhill.
             }
 
-            if (grounded && !IsProne && !stoodFromProne && kb != null && kb.spaceKey.wasPressedThisFrame)
+            if (!AssistedWalkSpeed.HasValue && grounded && !IsProne && !stoodFromProne && kb != null && kb.spaceKey.wasPressedThisFrame)
             {
                 // Jumping stands you up instead of being swallowed by the crouch.
                 _sneakToggled = false;
