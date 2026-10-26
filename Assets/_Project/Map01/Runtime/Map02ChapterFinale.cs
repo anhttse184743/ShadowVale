@@ -44,7 +44,7 @@ namespace ShadowVale.Map01
             {
                 KeepNamClearOfTheBlast();ClearCounterAttack();
                 // He comes up out of the ditch a few metres short of the tracks.
-                hungRiseFrom=Along(HungCanal,Mathf.Max(0,Length(HungCanal)-4));
+                hungRiseFrom=Along(HungCanal,Mathf.Max(0,Length(HungCanal)-7));   // a hard run to the tracks
                 sacrificePath=new[]{hungRiseFrom,ChargePoint};sacrificeTravel=RiseEnd;
             }
         }
@@ -53,17 +53,21 @@ namespace ShadowVale.Map01
             var hung=roles["Hùng"];var t=sceneClock;var tracks=tank.transform.position;
             if(t<RiseEnd)hung.SceneMove(Vector3.Lerp(hungRiseFrom,ChargePoint,t/RiseEnd),tracks,2.6f);
             else if(t<PlantEnd)hung.SceneMove(ChargePoint,tracks,0);
-            else if(t<ShotAt)hung.SceneMove(Vector3.Lerp(ChargePoint,RetreatPoint,(t-PlantEnd)/(ShotAt-PlantEnd)),RetreatPoint,2.6f);
-            else if(!shotFired)
+            else if(t<BlastAt)
             {
-                // A muzzle flash from behind the tank; he falls a few metres from it.
-                shotFired=true;hung.StopAt(RetreatPoint);if(Layout?.hungFallClip==null)hung.SetDead(true);
-                RearFlash();var sound=Mission.Player.GetComponent<CombatAudio>();if(sound!=null&&sound.Gunshot.IsValid){var clip=sound.Gunshot;PooledAudioService.Resolve().PlayOneShot(clip.clip,RetreatPoint,.7f*clip.EffectiveGain,1,0,.85f,clip.startTime,clip.duration);}
+                // Set: he steps back from the tracks and turns to look at Nam (26/10/2026: no shot from behind the tank).
+                float u=Mathf.Clamp01((t-PlantEnd)/(LookBackFrom-PlantEnd));
+                hung.SceneMove(Vector3.Lerp(ChargePoint,LookBackSpot,u),t<LookBackFrom?LookBackSpot:Mission.Player.position,t<LookBackFrom?1.3f:0);
             }
-            if(t>=BlastAt&&!blasted){blasted=true;rig.Shake(.6f,1.2f);}
-            var clipNow=t<ShotAt?Layout?.hungPlantRetreatClip:Layout?.hungFallClip;
+            else if(!shotFired){shotFired=true;hung.StopAt(LookBackSpot);hung.SetDead(true);}   // gone in the blast
+            if(t>=BlastAt&&!blasted)
+            {
+                blasted=true;rig.Shake(.6f,1.2f);BlowTank();
+                foreach(var e in Enemies)if(e!=null&&!e.Dead&&e.group==Escort)e.HitPoints.TakeDamage(1000,e.transform.position+Vector3.up,null);   // the escort goes with it
+            }
+            var clipNow=t<PlantEnd?Layout?.hungPlantRetreatClip:t<LookBackFrom?ordinaryWalk:t<BlastAt?namCalmIdle:null;
             if(t>=RiseEnd&&clipNow!=null&&hung.visual!=null)
-            {var animator=hung.visual.GetComponentInChildren<Animator>();if(animator!=null){hungActionPose??=new Map01CinematicPose(animator,null,false);hungActionPose.Sample(clipNow,t<ShotAt?t-RiseEnd:t-ShotAt,false);}}
+            {var animator=hung.visual.GetComponentInChildren<Animator>();if(animator!=null){hungActionPose??=new Map01CinematicPose(animator,null,false);hungActionPose.Sample(clipNow,t-RiseEnd,t>=PlantEnd);}}
             TickNhipSau(t);
         }
         void RearFlash()
@@ -134,7 +138,7 @@ namespace ShadowVale.Map01
             if(sceneTask?.id=="N3_09")
             {
                 float t=sceneClock;
-                flash=Mathf.Clamp01(1-Mathf.Abs(t-BlastAt)*3);
+                flash=t<BlastAt-.35f?0:t<BlastAt+.15f?(t-(BlastAt-.35f))/.5f:t<BlastAt+1.2f?1:Mathf.Clamp01(1-(t-BlastAt-1.2f)/1.4f);   // white as it goes up, coming back slowly
                 if(t>=BlastAt)
                 {
                     float after=t-BlastAt;
@@ -203,7 +207,21 @@ namespace ShadowVale.Map01
             if(sceneTask.id=="N3_09")
             {
                 var at=tank!=null?tank.transform.position:sites["tankDock"].position;var dir=Vector3.ProjectOnPlane(at-nam,Vector3.up).normalized;var side=Vector3.Cross(Vector3.up,dir);
-                if(sceneClock<BlastAt){eye=nam-dir*2.2f+Vector3.up*1.7f+side*.6f;focus=Vector3.Lerp(roles["Hùng"].transform.position,at,.3f)+Vector3.up;return true;}
+                var hungAt=roles["Hùng"].transform.position;
+                if(sceneClock<RiseEnd){eye=nam-dir*2.2f+Vector3.up*1.7f+side*.6f;focus=Vector3.Lerp(hungAt,at,.3f)+Vector3.up;return true;}
+                if(sceneClock<PlantEnd)
+                {
+                    // Close at the tracks: his hands setting the charge.
+                    var toTank=Vector3.ProjectOnPlane(at-ChargePoint,Vector3.up).normalized;var across=Vector3.Cross(Vector3.up,toTank);if(Vector3.Dot(nam-ChargePoint,across)<0)across=-across;
+                    eye=ChargePoint+across*2.1f-toTank*1.1f+Vector3.up*.85f;focus=ChargePoint+toTank*.8f+Vector3.up*.6f;stagedFov=46;return true;
+                }
+                if(sceneClock<BlastAt)
+                {
+                    // From Nam, on a long lens: Hùng steps back and turns to look at him.
+                    var toHung=Vector3.ProjectOnPlane(hungAt-nam,Vector3.up).normalized;
+                    eye=nam+Vector3.up*1.3f+toHung*1.2f+Vector3.Cross(Vector3.up,toHung)*.3f;focus=hungAt+Vector3.up*1.5f;
+                    stagedFov=Mathf.Lerp(28,16,Mathf.SmoothStep(0,1,(sceneClock-PlantEnd)/(BlastAt-PlantEnd)));return true;
+                }
                 if(sceneClock<FireOrderAt){eye=nam+Vector3.up*.6f-dir*1.2f+side;focus=Vector3.Lerp(water["boatMid"],at,.5f)+Vector3.up*.8f;return true;}
                 if(CounterAttackCamera(sceneClock,out eye,out focus))return true;
                 var road=militia.Count>0&&militia[0]!=null?militia[0].position:at;
