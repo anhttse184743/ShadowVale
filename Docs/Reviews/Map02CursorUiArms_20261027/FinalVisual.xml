@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-27 10:26:48Z" end-time="2026-10-27 10:26:53Z" duration="4.8224485">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="831" result="Passed" start-time="2026-10-27 10:26:48Z" end-time="2026-10-27 10:26:53Z" duration="4.822449" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1780" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/Capstone/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="608" result="Passed" start-time="2026-10-27 10:26:50Z" end-time="2026-10-27 10:26:53Z" duration="3.054951" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="34352" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1781" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="608" result="Passed" start-time="2026-10-27 10:26:50Z" end-time="2026-10-27 10:26:53Z" duration="2.261658" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1782" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="608" result="Passed" start-time="2026-10-27 10:26:51Z" end-time="2026-10-27 10:26:53Z" duration="2.033769" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1688" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="608" result="Passed" start-time="2026-10-27 10:26:51Z" end-time="2026-10-27 10:26:53Z" duration="1.999613" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1310" name="Map02ArmSceneQaTests" fullname="ShadowVale.Map01.Tests.Map02ArmSceneQaTests" classname="ShadowVale.Map01.Tests.Map02ArmSceneQaTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-27 10:26:38Z" end-time="2026-10-27 10:26:43Z" duration="5.390706" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1311" name="CaptureMealAndSleepArms" fullname="ShadowVale.Map01.Tests.Map02ArmSceneQaTests.CaptureMealAndSleepArms" methodname="CaptureMealAndSleepArms" classname="ShadowVale.Map01.Tests.Map02ArmSceneQaTests" runstate="Runnable" seed="129636664" result="Passed" start-time="2026-10-27 10:26:06Z" end-time="2026-10-27 10:26:43Z" duration="37.298366" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1326" name="Map02BandageQaTests" fullname="ShadowVale.Map01.Tests.Map02BandageQaTests" classname="ShadowVale.Map01.Tests.Map02BandageQaTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-27 10:26:51Z" end-time="2026-10-27 10:26:53Z" duration="1.963024" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1327" name="CaptureBandageContacts" fullname="ShadowVale.Map01.Tests.Map02BandageQaTests.CaptureBandageContacts" methodname="CaptureBandageContacts" classname="ShadowVale.Map01.Tests.Map02BandageQaTests" runstate="Runnable" seed="2128926372" result="Passed" start-time="2026-10-27 10:26:43Z" end-time="2026-10-27 10:26:53Z" duration="9.598265" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: Logs/Map02Chapter/latest-full-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

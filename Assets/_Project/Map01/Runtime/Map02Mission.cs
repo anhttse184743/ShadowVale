@@ -47,7 +47,7 @@ namespace ShadowVale.Map01
         public bool Ready { get; private set; }
         public bool Paused { get; private set; }
         public bool Cinematic => !Ready || dialogue?.Active == true || (Chapter?.Busy==true||Chapter?.Transitioning==true) || World.story.IsCinematic;
-        public bool InputBlocked => !Ready || Paused || Panel != 0 || dialogue?.Active == true || Chapter?.LocksInput==true || World.story.failed || World.story.IsCinematic;
+        public bool InputBlocked => !Ready || ForestMenu.Visible || ShadowVale.Core.Services.InputFocus.OverlayOpen || Paused || Panel != 0 || dialogue?.Active == true || Chapter?.LocksInput==true || World.story.failed || World.story.IsCinematic;
         public int Panel { get; private set; } // 1 inventory, 2 journal, 3 map
         public readonly Dictionary<string,int> Inventory = new Dictionary<string,int>();
         public int Stones { get; private set; }
@@ -234,12 +234,14 @@ namespace ShadowVale.Map01
             return advanced;
         }
         public void CancelConversation(){voice?.Stop();dialogue?.Cancel();lines=null;}
+        bool PointerUiOpen=>Paused||Panel!=0||ForestMenu.Visible||Chapter?.DayActivityActive==true||Chapter?.Patching==true||ShadowVale.Core.Services.InputFocus.OverlayOpen;
+        void UpdatePointerMode(){bool open=PointerUiOpen;Cursor.lockState=open?CursorLockMode.None:CursorLockMode.Locked;Cursor.visible=open;}
         public void SetPaused(bool value)
         {
-            Paused=value;Time.timeScale=value?0:1;Cursor.visible=value||Panel!=0;Cursor.lockState=Cursor.visible?CursorLockMode.None:CursorLockMode.Locked;
+            Paused=value;Time.timeScale=value?0:1;UpdatePointerMode();
         }
-        void TogglePanel(int panel){Panel=Panel==panel?0:panel;player.RestoreMotion(false);Cursor.visible=Panel!=0;Cursor.lockState=Cursor.visible?CursorLockMode.None:CursorLockMode.Locked;}
-        public bool CloseGameplayPanel(){if(Panel==0)return false;Panel=0;Cursor.visible=false;Cursor.lockState=CursorLockMode.Locked;return true;}
+        void TogglePanel(int panel){Panel=Panel==panel?0:panel;player.RestoreMotion(false);UpdatePointerMode();}
+        public bool CloseGameplayPanel(){if(Panel==0)return false;Panel=0;UpdatePointerMode();return true;}
         void Notify()
         {
             foreach(var target in targets)if(target!=null&&(target.work==Map02Work.MedicinePickup||target.work==Map02Work.CratePickup))

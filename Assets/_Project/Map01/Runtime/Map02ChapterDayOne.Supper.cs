@@ -11,7 +11,7 @@ namespace ShadowVale.Map01
         [System.Serializable] sealed class SupperProp{public string name,shape;public float[] size,pos,rot;}
         [System.Serializable] sealed class SupperTrack{public int fps,frames;public SupperProp[] props;}
         SupperTrack supperTrack;readonly List<(SupperProp data,Transform art)> supperArt=new();
-        static readonly Vector3 NamSeatLocal=new Vector3(.76f,0,-.35f),HungSeatLocal=new Vector3(.76f,0,.35f);
+        static readonly Vector3 NamSeatLocal=new Vector3(.92f,0,-.35f),HungSeatLocal=new Vector3(.92f,0,.35f);
         const float MealEnd=70;
         // Blender's LINES, with the rice-bowl exchange set into the silent opening: Nam has just pushed the fish over (8.0 s);
         // Hùng pushes it back while laying his chopsticks aside, Nam answers, Hùng sips and says his belly is fine.
@@ -127,7 +127,7 @@ namespace ShadowVale.Map01
             HungNativeBody(true);NamSupperGear(false);LaySupperRifle(true);
             namPose?.Sample(DayClip("LoiHuaNam")??namIdle,t,false);hung.SamplePerformance(DayClip("LoiHuaHung")??DayClip("RestHung"),t,false);
             AlignBody(hung.transform,hung.Animator.transform,MealSeat(true),MealFacing,out var hp,out var hr);hung.transform.SetPositionAndRotation(hp,hr);
-            SampleSupperProps(t);
+            SampleSupperProps(t);CorrectMealHands(t);
         }
         void SeatNam()
         {

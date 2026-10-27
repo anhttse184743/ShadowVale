@@ -59,7 +59,7 @@ namespace ShadowVale.Map01.Tests
                 var stake=((System.Collections.Generic.List<Transform>)Get("physicalStakes"))[0];var bay=c.Actor("Chú Bảy").Animator;
                 Assert.AreEqual(.95f,Vector3.Distance(Flat(m.Player.position),Flat(stake.position)),.1f,"Nam stands at the stake.");
                 Assert.Less(Vector3.Distance(bay.GetBoneTransform(HumanBodyBones.LeftHand).position,stake.position+Vector3.up*(1.08f-.62f)),.2f,"Chú Bảy's hands are on the stake.");
-                Call("StrikeStake");Set("strikeClock",.12f-Time.deltaTime);Call("DayLateUpdate");   // the late update adds this frame's time
+                Call("StrikeStake",true);Set("strikeClock",.12f-Time.deltaTime);Call("DayLateUpdate");   // the late update adds this frame's time
                 var mallet=(Transform)Get("twoHandMallet");var head=mallet.position+mallet.up*.6f;
                 Assert.Less(Vector3.Distance(Flat(head),Flat(stake.position)),.3f,"The blow lands on the stake.");Assert.Less(Mathf.Abs(head.y-(stake.position.y+1.08f)),.3f);
                 Set("strikeClock",5f);Call("DayLateUpdate");Assert.Greater(mallet.position.y+mallet.up.y*.6f-m.Player.position.y,1.8f,"Raised and ready between blows.");
@@ -67,7 +67,7 @@ namespace ShadowVale.Map01.Tests
                 // The dock is worked in the world: the camera is in on the stake, side on, and the controls are a strip.
                 var lens2=Object.FindObjectsByType<Camera>(FindObjectsSortMode.None).First(x=>x.enabled&&x.targetTexture==null).transform;
                 Assert.Less(Vector3.Distance(lens2.position,stake.position),4.5f,"The camera comes in on the stake.");Assert.Greater(Vector3.Dot(lens2.forward,(stake.position-lens2.position).normalized),.8f,"The stake is in view.");
-                Call("StrikeStake");yield return WaitGameSeconds(.1f);ScreenCapture.CaptureScreenshot(Folder+"/stake-blow.png");yield return null;c.enabled=false;Call("CloseDay",false);c.Cancel();
+                Call("StrikeStake",true);yield return WaitGameSeconds(.1f);ScreenCapture.CaptureScreenshot(Folder+"/stake-blow.png");yield return null;c.enabled=false;Call("CloseDay",false);c.Cancel();
                 // Laying the boards: the board in hand hangs over the step it would go on.
                 LoadBefore("D1_05");c.State.dayOne.stakeHits=6;typeof(Map02ChapterDirector).GetMethod("OpenDay",Private).Invoke(c,new object[]{System.Enum.Parse(kind,"Dock"),dock});
                 {var cc=m.Player.GetComponent<CharacterController>();cc.enabled=false;m.Player.SetPositionAndRotation(new Vector3(stake.position.x,c.Sites["dock"].position.y,stake.position.z)-Vector3.forward*.95f,Quaternion.identity);cc.enabled=true;}

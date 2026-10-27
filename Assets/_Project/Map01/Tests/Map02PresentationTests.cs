@@ -55,8 +55,8 @@ namespace ShadowVale.Map01.Tests
                 float deadline=Time.time+30;while(MealClock()<.8f&&Time.time<deadline)yield return null;
                 // "Lời hứa" as approved in Blender: cross-legged side by side behind the tray, facing the doorway, Hùng on Nam's right.
                 var supper=(Transform)Get("mealRoot");var namBody=m.Player.GetComponentInChildren<Animator>().transform;var hungBody=c.Actor("Hùng").Animator.transform;
-                Assert.Less(Vector3.Distance(namBody.position,supper.TransformPoint(new Vector3(.76f,0,-.35f))),.03f,"Nam sits at his place behind the tray.");
-                Assert.Less(Vector3.Distance(hungBody.position,supper.TransformPoint(new Vector3(.76f,0,.35f))),.03f,"Hùng sits on his right.");
+                Assert.Less(Vector3.Distance(namBody.position,supper.TransformPoint(new Vector3(.92f,0,-.35f))),.03f,"Nam sits at his place behind the tray.");
+                Assert.Less(Vector3.Distance(hungBody.position,supper.TransformPoint(new Vector3(.92f,0,.35f))),.03f,"Hùng sits on his right.");
                 Assert.Greater(Vector3.Dot(namBody.forward,-supper.right),.99f);Assert.Greater(Vector3.Dot(hungBody.forward,-supper.right),.99f,"Both face the tray and the doorway.");
                 Assert.AreEqual(1f,hungBody.lossyScale.y,.01f,"Hùng at his own size for the supper, as it was made.");
                 Assert.AreEqual("LoiHuaHung",((AnimationClip)typeof(Map01CinematicPose).GetField("selected",flags).GetValue(typeof(Map02ChapterActor).GetField("pose",flags).GetValue(c.Actor("Hùng")))).name);

@@ -37,6 +37,7 @@ namespace ShadowVale.Map01
         void DrawDayOverlayContent()
         {
             if(!DayActivityActive||Mission.Paused||ForestMenu.Visible){DrawNearbyDayProps();return;}
+            if(dayActivity==DayActivity.Dock&&!DockHammering){DrawDockBoardPanel();return;}
             if(dayActivity!=DayActivity.Packing){DrawWorkStrip();return;}
             var prior=GUI.color;GUI.color=new Color(0,0,0,.88f);GUI.DrawTexture(new Rect(80,75,1440,745),Texture2D.whiteTexture);GUI.color=prior;
             GUI.Label(new Rect(115,100,1350,48),"HẦM DƯỚI BỤI CHUỐI · CẤT VẬT TƯ",DayHeading);
@@ -73,47 +74,6 @@ namespace ShadowVale.Map01
                 GUI.Label(new Rect(1250,731,250,80),StrikeRecovering?"Đang hạ / nâng búa…":daySpaceReleased?"Bấm SPACE khi kim nằm trong ✓":"Nhả SPACE trước nhịp tiếp theo",StripHint);
                 GUI.Label(new Rect(105,804,1400,32),"Mỗi lần nhấn là một nhát. Chờ búa nâng lên; trượt nhịp giữ nguyên các nhịp đã đạt.",StripHint);return;
             }
-            if(Day.DockReady)
-            {
-                GUI.Label(new Rect(105,736,1000,40),"Hai cọc và ba tấm ván đã xong. Nhờ chú Bảy thử bậc trước khi rời việc.",StripText);
-                if(DayButton(new Rect(105,784,600,48),"Nhờ chú Bảy kiểm tra bến [E]"))ConfirmDockBoard();return;
-            }
-            GUI.Label(new Rect(105,724,560,26),"1. Chọn ván chưa dùng (chuột hoặc 1–5)",StripHint);
-            for(int i=0;i<5;i++)
-            {
-                int board=Day.boardOrder[i];bool used=System.Array.Exists(Day.boards,p=>p.x==board);var chip=new Rect(105+i*112,754,104,78);
-                bool enabled=GUI.enabled;GUI.enabled=enabled&&!used;
-                if(GUI.Button(chip,GUIContent.none))SelectDockBoard(i);
-                GUI.enabled=enabled;
-                GUI.Label(new Rect(chip.x+4,chip.y+4,96,26),(selectedBoard==board?"▶ ":"")+"Ván "+(i+1),new GUIStyle(StripText){fontSize=18,alignment=TextAnchor.MiddleCenter});
-                float length=board==4?40:84;Cell(new Rect(chip.center.x-length*.5f,chip.y+39,length,9),"",used?new Color(.4f,.33f,.22f):new Color(.67f,.48f,.25f));
-                if(board==3)GUI.Label(new Rect(chip.center.x-22,chip.y+28,60,25),"╱╲╱",new GUIStyle(StripHint){fontSize=17});
-                GUI.Label(new Rect(chip.x+3,chip.y+54,98,22),used?"✓ đã dùng":selectedBoard==board?"đang chọn":"bấm chọn",new GUIStyle(StripHint){fontSize=14,alignment=TextAnchor.MiddleCenter});
-            }
-            for(int i=0;i<3;i++)
-            {
-                bool occupied=Day.boards[i].x>=0,enabled=GUI.enabled;GUI.enabled=enabled&&!occupied;
-                if(GUI.Button(new Rect(690+i*164,724,156,30),(dockSlot==i?"▶ ":"")+"Bậc "+(i+1)+(occupied?" ✓":" · trống"),new GUIStyle(GUI.skin.button){fontSize=17,wordWrap=false}))dockSlot=i;
-                GUI.enabled=enabled;
-            }
-            const float centre=935,perMetre=234;
-            foreach(float x in new[]{-.53f,.53f})Cell(new Rect(centre+x*perMetre-16,764,32,42),"",new Color(.48f,.36f,.2f));
-            if(selectedBoard>=0)
-            {
-                float length=(selectedBoard==4?.62f:1.28f)*perMetre;
-                string problem=Day.BoardProblem(selectedBoard,dockSlot,selectionRotated);
-                bool spans=problem==null&&Mathf.Abs(dockOffset)<=.07f;
-                var tint=spans?new Color(.45f,.62f,.32f):new Color(.72f,.5f,.25f);
-                if(selectionRotated)Cell(new Rect(centre+dockOffset*perMetre-9,754,18,52),"✕",tint);
-                else Cell(new Rect(centre+dockOffset*perMetre-length*.5f,777,length,18),spans?"✓":"",tint);
-                GUI.Label(new Rect(690,755,490,22),problem??(spans?"Hai đầu đã tựa chắc — có thể kê":"Căn hai đầu lên đỡ, chừa mép an toàn"),new GUIStyle(StripHint){fontSize=15});
-            }
-            else GUI.Label(new Rect(820,772,290,26),"Chọn ván để xem và căn",StripHint);
-            if(DayButton(new Rect(690,808,45,28),"◀"))dockOffset=Mathf.Max(-.45f,dockOffset-.03f);
-            dockOffset=GUI.HorizontalSlider(new Rect(755,818,360,18),dockOffset,-.45f,.45f);
-            if(DayButton(new Rect(1135,808,45,28),"▶"))dockOffset=Mathf.Min(.45f,dockOffset+.03f);
-            if(DayButton(new Rect(1210,746,295,50),"Kê ván đang chọn [E]"))ConfirmDockBoard();
-            if(DayButton(new Rect(1210,804,295,30),"Xoay ván [R]")){if(selectedBoard>=0)selectionRotated=!selectionRotated;else dayFeedback="Chọn một tấm ván trước.";}
         }
         void DrawPost()
         {

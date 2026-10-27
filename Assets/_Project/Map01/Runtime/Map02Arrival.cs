@@ -148,6 +148,7 @@ namespace ShadowVale.Map01
             PrepareBoatRendering(true);
             foreach(var other in FindObjectsByType<Camera>(FindObjectsSortMode.None))if(other!=camera) {
                 other.enabled=false;other.tag="Untagged";
+                var unusedRig=other.GetComponent<ThirdPersonCamera>();if(unusedRig!=null)unusedRig.enabled=false;
                 var listener=other.GetComponent<AudioListener>();if(listener!=null)listener.enabled=false;
             }
             camera.tag="MainCamera";camera.GetComponent<AudioListener>().enabled=true;
@@ -266,6 +267,7 @@ namespace ShadowVale.Map01
         void MuteVillageCameras(Scene scene,LoadSceneMode mode) {
             foreach(var root in scene.GetRootGameObjects())foreach(var other in root.GetComponentsInChildren<Camera>(true))if(other!=camera) {
                 other.enabled=false;other.tag="Untagged";
+                var unusedRig=other.GetComponent<ThirdPersonCamera>();if(unusedRig!=null)unusedRig.enabled=false;
                 var listener=other.GetComponent<AudioListener>();if(listener!=null)listener.enabled=false;
             }
         }

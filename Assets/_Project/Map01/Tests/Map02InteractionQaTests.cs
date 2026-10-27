@@ -32,7 +32,7 @@ namespace ShadowVale.Map01.Tests {
    // inside Repaint changes its type but does not refresh IMGUI's cached mouse position.
    var at=new Vector2(point.x*Screen.width/1600f,point.y*Screen.height/900f);
    UnityEditor.EditorGUIUtility.QueueGameViewInputEvent(new Event{type=type,button=0,mousePosition=at});
-   for(int i=0;i<4;i++)yield return null;
+   yield return new WaitForSecondsRealtime(.12f);for(int i=0;i<4;i++)yield return null;
    System.IO.Directory.CreateDirectory("Logs/Map02Qa_20261027");System.IO.File.AppendAllText("Logs/Map02Qa_20261027/native-ui.txt",$"{method} {type} requested={point} screen={Screen.width}x{Screen.height} crate={Get<int>(c,"selectedCrate")} board={Get<int>(c,"selectedBoard")} feedback={Get<string>(c,"dayFeedback")}\n");
   }
   static IEnumerator Click(Map02ChapterDirector c,Vector2 point,string method="DrawPacking"){yield return Gui(c,EventType.MouseDown,point,method);yield return Gui(c,EventType.MouseUp,point,method);}
@@ -41,7 +41,8 @@ namespace ShadowVale.Map01.Tests {
    for(int i=0;i<3;i++)c.State.Increment("D1_04");Open(c,"Packing","D1_04");Set(c,"dayInputReady",true);
    c.State.dayOne.wetPattern=0;
    try{foreach(float scale in new[]{.75f,1f,1.2f}){
-    SetPreviewResolution(Mathf.RoundToInt(1600*scale),Mathf.RoundToInt(900*scale));for(int frame=0;frame<4;frame++)yield return null;
+    int width=Mathf.RoundToInt(1600*scale),height=Mathf.RoundToInt(900*scale);float resizeUntil=Time.realtimeSinceStartup+15;int stable=0;SetPreviewResolution(width,height);
+    while(stable<3){Assert.Less(Time.realtimeSinceStartup,resizeUntil,"GameView resize did not settle");yield return new WaitForSecondsRealtime(.2f);if(Screen.width==width&&Screen.height==height)stable++;else{stable=0;SetPreviewResolution(width,height);}}
     Call(c,"ResetPacking");Set(c,"dayInputReady",true);Assert.AreEqual(Mathf.RoundToInt(1600*scale),Screen.width);Assert.AreEqual(Mathf.RoundToInt(900*scale),Screen.height);
     yield return Click(c,new Vector2(382,454));
     Assert.AreEqual(2,c.State.dayOne.crates[0].x,"Top-left pointer x at scale "+scale);Assert.AreEqual(0,c.State.dayOne.crates[0].y,"Top-left pointer y at scale "+scale);
@@ -56,18 +57,18 @@ namespace ShadowVale.Map01.Tests {
    Map02Mission m=null;yield return Ready(x=>m=x);var c=m.Chapter;c.Cancel();c.enabled=false;Prefix(m);
    Open(c,"Dock","D1_05");Set(c,"dayInputReady",true);c.State.dayOne.stakeHits=6;
    
-   IEnumerator Card(int board)=>Click(c,new Vector2(157+Array.IndexOf(c.State.dayOne.boardOrder,board)*112,776),"DrawDock");
-   IEnumerator Confirm()=>Click(c,new Vector2(1357,771),"DrawDock");
-   IEnumerator Align(){yield return Gui(c,EventType.MouseDown,new Vector2(1030,826),"DrawDock");yield return Gui(c,EventType.MouseDrag,new Vector2(935,826),"DrawDock");yield return Gui(c,EventType.MouseUp,new Vector2(935,826),"DrawDock");}
+   IEnumerator Card(int board)=>Click(c,new Vector2(290,290+Array.IndexOf(c.State.dayOne.boardOrder,board)*90),"DrawDock");
+   IEnumerator Confirm()=>Click(c,new Vector2(1340,625),"DrawDock");
+   IEnumerator Align(){yield return Gui(c,EventType.MouseDown,new Vector2(907,665),"DrawDock");yield return Gui(c,EventType.MouseDrag,new Vector2(825,665),"DrawDock");yield return Gui(c,EventType.MouseUp,new Vector2(825,665),"DrawDock");}
    try{
     yield return Card(3);yield return Confirm();Assert.AreEqual(0,c.State.dayOne.BoardCount);StringAssert.Contains("nứt",Get<string>(c,"dayFeedback"));
     yield return Card(4);yield return Confirm();Assert.AreEqual(0,c.State.dayOne.BoardCount);StringAssert.Contains("dài",Get<string>(c,"dayFeedback"));
     yield return Card(0);yield return Align();Assert.LessOrEqual(Mathf.Abs(Get<float>(c,"dockOffset")),.07f);
-    yield return Click(c,new Vector2(1357,819),"DrawDock");yield return Confirm();Assert.AreEqual(0,c.State.dayOne.BoardCount);StringAssert.Contains("đầu",Get<string>(c,"dayFeedback"));
-    yield return Click(c,new Vector2(1357,819),"DrawDock");yield return Confirm();Assert.AreEqual(1,c.State.dayOne.BoardCount);
-    yield return Click(c,new Vector2(768,738),"DrawDock");Assert.AreEqual(1,Get<int>(c,"dockSlot"),"A finished step must not steal selection from an empty step");
+    yield return Click(c,new Vector2(1340,535),"DrawDock");yield return Confirm();Assert.AreEqual(0,c.State.dayOne.BoardCount);StringAssert.Contains("đầu",Get<string>(c,"dayFeedback"));
+    yield return Click(c,new Vector2(1340,535),"DrawDock");yield return Confirm();Assert.AreEqual(1,c.State.dayOne.BoardCount);
+    yield return Click(c,new Vector2(550,310),"DrawDock");Assert.AreEqual(1,Get<int>(c,"dockSlot"),"A finished step must not steal selection from an empty step");
     for(int board=1;board<3;board++){yield return Card(board);yield return Align();yield return Confirm();Assert.AreEqual(board+1,c.State.dayOne.BoardCount);}
-    yield return Click(c,new Vector2(405,808),"DrawDock");Assert.False(c.DayActivityActive);Assert.AreEqual("D1_05",c.CurrentScene?.id);Call(c,"EndScene");Assert.True(c.State.Done("D1_05"));
+    yield return Click(c,new Vector2(1340,625),"DrawDock");Assert.False(c.DayActivityActive);Assert.AreEqual("D1_05",c.CurrentScene?.id);Call(c,"EndScene");Assert.True(c.State.Done("D1_05"));
    }finally{c.Cancel();c.enabled=true;}
   }
   static IEnumerator Hammer(){

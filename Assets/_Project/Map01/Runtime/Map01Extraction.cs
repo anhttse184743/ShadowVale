@@ -496,6 +496,17 @@ namespace ShadowVale.Map01
             foreach(var actor in new[]{commanderActor,hungActor})if(actor!=null)
                 foreach(var weapon in actor.GetComponentsInChildren<Weapon>(true))if(weapon.IsGun)weapon.gameObject.SetActive(false);
         }
+        // Save restoration runs after the quest event has already prepared the seats.
+        // It must not attach Hùng's standing controller or ground his skin through the hull.
+        public bool RestoreSeatedPassenger()
+        {
+            if(!Prepared||quest==null||quest.Stage<Map01Quest.ExtractionStage||hungActor==null)return false;
+            hungPose?.Dispose();hungPose=null;StopAgent(mission.hung);Seat(mission.hung,1.6f);
+            var visual=mission.hung.GetComponentInChildren<Map01HungVisual>();if(visual!=null)visual.enabled=false;
+            hungActor.transform.localPosition=Vector3.zero;hungActor.Rebind();
+            hungPose=new PosePlayer(hungActor,hungClips);hungPose.Play(travel);HidePassengerGuns();ApplyInjuredPassenger();
+            return true;
+        }
         public AnimationClip InjuredTravel => hungClips?.FirstOrDefault(c=>c.name==travel.name.Replace("Nam_","Hung_"))??travel;
         public void ApplyInjuredPassenger(float weight=1) {
             if(hungActor==null || weight<=0)return;

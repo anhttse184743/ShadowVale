@@ -68,15 +68,27 @@ namespace ShadowVale.Map01
         void MeasureDressingRadius()
         {
             if(dressingMeasured)return;dressingMeasured=true;
-            var body=roles["Hùng"].Animator;var a=body.GetBoneTransform(HumanBodyBones.RightUpperArm).position;var b=body.GetBoneTransform(HumanBodyBones.RightLowerArm).position;var axis=b-a;
+            var body=roles["Hùng"].Animator;var upper=body.GetBoneTransform(HumanBodyBones.RightUpperArm);var a=upper.position;var b=body.GetBoneTransform(HumanBodyBones.RightLowerArm).position;var axis=b-a;
             var radii=new System.Collections.Generic.List<float>();var baked=new Mesh();
             foreach(var skin in body.GetComponentsInChildren<SkinnedMeshRenderer>())
             {
                 skin.BakeMesh(baked);
-                foreach(var v in baked.vertices){var p=skin.transform.TransformPoint(v);float along=Vector3.Dot(p-a,axis)/axis.sqrMagnitude;if(along<.3f||along>.8f)continue;float radius=Vector3.Distance(p,a+axis*along);if(radius>.025f&&radius<.115f)radii.Add(radius);}
+                // Measure the sleeve, not nearby chest/pouches caught by the same axial slice.
+                var weights=skin.sharedMesh!=null&&skin.sharedMesh.isReadable?skin.sharedMesh.boneWeights:null;
+                var bones=skin.bones;var armBones=new bool[bones.Length];
+                for(int i=0;i<bones.Length;i++)armBones[i]=bones[i]!=null&&(bones[i]==upper||bones[i].IsChildOf(upper));
+                var vertices=baked.vertices;
+                for(int i=0;i<vertices.Length;i++){
+                    if(weights!=null&&weights.Length==vertices.Length){var w=weights[i];
+                        float influence=(armBones[w.boneIndex0]?w.weight0:0)+(armBones[w.boneIndex1]?w.weight1:0)+(armBones[w.boneIndex2]?w.weight2:0)+(armBones[w.boneIndex3]?w.weight3:0);
+                        if(influence<.2f)continue;
+                    }
+                    var p=skin.transform.TransformPoint(vertices[i]);float along=Vector3.Dot(p-a,axis)/axis.sqrMagnitude;if(along<.3f||along>.8f)continue;
+                    float radius=Vector3.Distance(p,a+axis*along);if(radius>.025f&&radius<.115f)radii.Add(radius);
+                }
             }
             Destroy(baked);
-            if(radii.Count>20){radii.Sort();dressingRadius=Mathf.Clamp(radii[(int)(radii.Count*.9f)]+.004f,.057f,.095f)/Mathf.Abs(body.transform.lossyScale.y);}
+            if(radii.Count>20){radii.Sort();dressingRadius=Mathf.Clamp(radii[(int)(radii.Count*.85f)]+.004f,.045f,Mathf.Clamp(axis.magnitude*.24f,.055f,.075f))/Mathf.Abs(body.transform.lossyScale.y);}
         }
 
         void DressingFrame(out Vector3 a,out Vector3 b,out Quaternion rotation,out float radius)
