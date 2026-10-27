@@ -18,7 +18,7 @@ namespace ShadowVale.Map01
         public Map02ChapterActor Actor(string role)=>roles.TryGetValue(role,out var actor)?actor:null;
         public Map02ChapterState State {get;private set;}=new Map02ChapterState();
         public Map02Mission Mission {get;private set;}
-        public bool Busy=>sceneTask!=null||doingWork||DayActivityActive||UndergroundStore?.IsClimbing==true;
+        public bool Busy=>NightPatrolFailureActive||sceneTask!=null||doingWork||DayActivityActive||UndergroundStore?.IsClimbing==true;
         public bool ConversationActive=>sceneTask!=null;
         public bool Binoculars=>binocular;
         bool binocularHeld;
@@ -26,7 +26,7 @@ namespace ShadowVale.Map01
         void SetBinoculars(bool held){if(ScoutEscortActive)held=false;if(binocular==held)return;binocular=held;rig?.SetBinoculars(held,held?2:1);}
         public bool LocksInput=>Busy||DayReturningInput||State.finished||Transitioning;
         public bool MovementLocked=>State.activeTask=="N3_08"&&!State.Done("N3_08")||State.Done("N3_WOUND")&&!State.Done("N3_CRAWL");
-        public bool MaySave=>!Busy;
+        public bool MaySave=>!Busy&&State.patrolFocusSeconds<=0;
         public string SaveReason=>"Hãy hoàn tất thao tác hoặc hội thoại trước khi lưu.";
         public IReadOnlyDictionary<string,Transform> Sites=>sites;
         public Map02ChapterTask CurrentScene=>sceneTask;
@@ -234,8 +234,11 @@ namespace ShadowVale.Map01
             TickChapterSoundscape();
 
             if(ready)SetBinoculars((binocularHeld||Keyboard.current?.fKey.isPressed==true)&&!Mission.InputBlocked&&!ForestMenu.Visible);
-            if(!ready||Mission.Paused||ForestMenu.Visible||Mission.World.story.failed)return;
+            if(nightWarningAudio!=null){if(Mission.Paused||ForestMenu.Visible)nightWarningAudio.Pause();else nightWarningAudio.UnPause();}
+            if(!ready||Mission.Paused||ForestMenu.Visible)return;
             float dt=Mathf.Min(Time.deltaTime,.1f);
+            if(NightPatrolFailureActive){TickNightPatrolFailure(dt);return;}
+            if(Mission.World.story.failed)return;
             TickNightStoreArrival();
             if(State.phase==3&&NightPatrolStopped&&!State.Done("N2_05"))TickNightRadio(dt,180,false,100);
             TickEffects();
@@ -383,6 +386,7 @@ namespace ShadowVale.Map01
         }
         void LateUpdate()
         {
+            if(NightPatrolFailureActive){PresentNightPatrolFailure();return;}
             DayLateUpdate();UpdateWorkWeapon();if(!ready)return;PanToHung();HoldCargo();if(sceneTask==null){UpdateHungRadio();return;}
             HoldConversation();MoveDaySceneRoots();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=NamPoseClip();namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null);
             SampleDayScene();UpdateHungRadio();
@@ -496,6 +500,7 @@ namespace ShadowVale.Map01
         }
         public void Cancel()
         {
+            CancelNightPatrolFailure();
             UndergroundStore?.CancelTraversal();
             CancelNightRadio();
             EndScoutEscort();
@@ -561,7 +566,16 @@ namespace ShadowVale.Map01
             if(NightPatrolStopped){StopNightPatrolAtStore();return;}
             float period=Mathf.Max(10,Layout!=null?Layout.patrolSweepSeconds:15);
             bool focusing=State.patrolFocusSeconds>0;
-            if(focusing)State.patrolFocusSeconds=Mathf.Max(0,State.patrolFocusSeconds-dt);
+            if(focusing)
+            {
+                State.patrolFocusSeconds=Mathf.Max(0,State.patrolFocusSeconds-dt);
+                if(State.patrolFocusSeconds<=0&&NightPatrolScriptedApproach)
+                {
+                    if(!nightWarningHidden&&!player.IsProne){BeginNightPatrolFailure();return;}
+                    nightWarningHidden=false;
+                }
+                else if(player.IsProne)nightWarningHidden=true;
+            }
             else
             {
                 float elapsed=State.patrolScanSeconds+dt*NightPatrolScanRate;
@@ -573,24 +587,24 @@ namespace ShadowVale.Map01
             var origin=NightPatrolPosition+Vector3.up*1.7f;var delta=Mission.Player.position+Vector3.up-origin;
             sweepLight.transform.position=origin;
             var sweep=NightPatrolSweepDirection(0);
-            if(focusing&&!NightPatrolDarkWindow&&State.patrolFocusDirection.sqrMagnitude>.001f)
-            {
-                var towardMission=NightPatrolMissionDirection(0);
-                float focusAngle=Mathf.Clamp(Vector3.SignedAngle(towardMission,Vector3.ProjectOnPlane(State.patrolFocusDirection,Vector3.up),Vector3.up),-60,60);
-                sweep=Quaternion.AngleAxis(focusAngle,Vector3.up)*towardMission;
-            }
+            if(focusing&&State.patrolFocusDirection.sqrMagnitude>.001f)sweep=NightPatrolFocusDirection(0);
             sweepLight.transform.rotation=Quaternion.LookRotation(sweep);
             UpdateNightPatrolPresentation(origin,sweep);
             if(patrolLoadGrace>0){patrolLoadGrace=Mathf.Max(0,patrolLoadGrace-dt);return;}
             if(!State.Done("N2_02"))return;
             bool exposed=NightPatrolExposure(origin,sweep,out float angle,out float distance);
             TickNightRadio(dt,angle,angle<previousNightAngle,distance);previousNightAngle=angle;
-            detectionClock=exposed?detectionClock+dt:Mathf.Max(0,detectionClock-dt*2);
-            if(detectionClock>=(player.IsSneaking?2f:1.4f)&&Time.time-scannedAt>period)
+            if(focusing)return;
+            if(exposed)
             {
-                detectionClock=0;scannedAt=Time.time;State.patrolWarnings++;
-                if(State.patrolWarnings>=2){Mission.RetryPatrol();Mission.Say("Bị tuần tra phát hiện. Đã trở lại đầu cầu; dùng bờ mương và vật che để tránh đèn.");}
-                else {State.patrolFocusSeconds=3;State.patrolFocusDirection=delta.normalized;Mission.Say("Hùng: Nó dừng lại soi thêm. Hạ thấp người, dùng vật che; chờ đèn quay đi.");}
+                State.patrolWarnings=Mathf.Min(2,State.patrolWarnings+1);
+                if(State.patrolWarnings>=2)BeginNightPatrolFailure();
+                else
+                {
+                    nightWarningHidden=false;State.patrolFocusSeconds=NightPatrolWarningSeconds;
+                    State.patrolFocusDirection=Mission.Player.position; // Fixed world point, shared by all guards.
+                    ShowNightPatrolSuspicion();
+                }
             }
         }
         void EnsureGroup(string id,int count,bool hostile=true,string site=null,int minimum=0)
@@ -632,11 +646,14 @@ namespace ShadowVale.Map01
         }
         public void DrawOverlay()
         {
+            if(NightPatrolFailureActive){DrawNightPatrolFailure();return;}
             DrawDayOverlay();
             UndergroundStore?.DrawGuide();
             var label=new GUIStyle(GUI.skin.label){fontSize=24,wordWrap=true};var title=new GUIStyle(label){fontSize=28,fontStyle=FontStyle.Bold};
-            DrawLiveNightRadio(label,title);
+            if(!NightSuspicionSpeaking)DrawLiveNightRadio(label,title);
             DrawEffects();DrawBark(label);DrawAmmoMarks(label);DrawCover(label);
+            DrawNightPatrolSuspicion();
+            DrawNightPatrolSuspicionDialogue();
             if(sceneTask!=null&&spoken&&!HoldMealVoice&&sceneTask.id!="N1_04")
             {
                 GUI.Box(new Rect(150,700,1300,175),GUIContent.none);var line=lines[lineIndex];
@@ -664,8 +681,6 @@ namespace ShadowVale.Map01
             {
                 DrawNightObservationGuide(label);
             }
-            if(State.phase==3&&State.Done("N2_02")&&!NightPatrolStopped&&Vector3.Distance(Mission.Player.position,NightPatrolPosition)<55)
-                GUI.Label(new Rect(1060,165,500,75),$"Đèn đang quét · Chú ý {State.patrolWarnings}/2\nBị soi thấy: {Mathf.Clamp01(detectionClock/(player.IsSneaking?2f:1.4f))*100:0}% · Dùng vật che",new GUIStyle(label){fontSize=18});
             if(State.finished){GUI.Box(new Rect(430,280,740,220),"MAP 2 HOÀN THÀNH");GUI.Label(new Rect(465,340,670,120),State.Objective,label);}
             if(phaseFade>0){var tint=GUI.color;GUI.color=new Color(0,0,0,Mathf.Clamp01(phaseFade/1.2f));GUI.DrawTexture(new Rect(0,0,1600,900),Texture2D.whiteTexture);GUI.color=tint;}
         }

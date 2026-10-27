@@ -387,7 +387,7 @@ namespace ShadowVale.Map01
                 if(Chapter?.Busy!=true)DrawGameplayHud();
             }
             if(Panel==0)Chapter?.DrawOverlay();
-            if(World.story.failed){GUI.Box(new Rect(420,290,760,240),GUIContent.none);GUI.Label(new Rect(455,320,690,95),World.story.failureCause,body);if(GUI.Button(new Rect(650,440,300,55),"Thử lại checkpoint"))Retry();}
+            if(World.story.failed&&Chapter?.NightPatrolFailureActive!=true){GUI.Box(new Rect(420,290,760,240),GUIContent.none);GUI.Label(new Rect(455,320,690,95),World.story.failureCause,body);if(GUI.Button(new Rect(650,440,300,55),"Thử lại checkpoint"))Retry();}
             if(Panel==0&&CharacterHud==null&&Chapter?.Busy!=true&&Chapter?.Transitioning!=true&&Time.unscaledTime<messageUntil)GUI.Label(new Rect(400,250,800,90),message,body);
             GUI.matrix=matrix;GUI.color=color;GUI.depth=depth;
         }

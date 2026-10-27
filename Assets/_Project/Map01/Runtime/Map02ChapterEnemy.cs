@@ -1,6 +1,7 @@
 using ShadowVale.Gameplay.Combat;
 using ShadowVale.Gameplay.Audio;
 using ShadowVale.Gameplay.Player;
+using ShadowVale.Gameplay.Enemies;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -84,6 +85,18 @@ namespace ShadowVale.Map01
         }
         void OnDestroy(){if(HitPoints!=null)HitPoints.Damaged-=OnDamaged;}
         public static bool NightObservationShotHits(float roll)=>roll<.9f;
+        EnemyFeedback nightCinematicFeedback;
+        public void FireNightPatrolCinematic(Vector3 target)
+        {
+            var facing=Vector3.ProjectOnPlane(target-transform.position,Vector3.up);
+            if(facing.sqrMagnitude>.001f)transform.rotation=Quaternion.LookRotation(facing);
+            alerted=true;
+            if(actor!=null&&actor.runtimeAnimatorController!=null){actor.SetBool("Engaged",true);actor.SetTrigger(PlayerCombat.AnimatorParams.Attack);}
+            if(nightCinematicFeedback==null)nightCinematicFeedback=EnemyFeedback.Attach(gameObject,director.Mission.Player.GetComponent<PlayerController>());
+            // Shared gunfire feedback emits the tracer from the rifle muzzle and clips it at cover.
+            // This is presentation only; the cutscene still owns Nam's death and the checkpoint retry.
+            nightCinematicFeedback.Fire(target,director.Mission.Player,~0,out _);
+        }
         public void StopAtStoreArrival()
         {
             alerted=false;TrackingVisibleTarget=false;lastSeen=null;investigate=null;
@@ -98,6 +111,11 @@ namespace ShadowVale.Map01
             if(!agent.isOnNavMesh)return;
             bool night=group==Map02ChapterDirector.NightPatrolGroup;
             if(night&&director.NightPatrolStopped){StopAtStoreArrival();return;}
+            // After the radio report the mission owns detection, warning and the lethal volley.
+            if(night&&director.NightPatrolScriptedApproach)
+            {
+                StopAtStoreArrival();director.TickNightPatrolUnit(this,agent);return;
+            }
             bool observationRules=night&&director.NightObservationRulesActive;
             if(observationRules&&mission.Player.GetComponent<PlayerController>()?.IsProne==true)
             {

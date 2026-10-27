@@ -189,6 +189,7 @@ namespace ShadowVale.Map01
         }
         void TickNightRadio(float dt,float nearestAngle,bool approaching,float distance)
         {
+            if(State.patrolFocusSeconds>0||NightSuspicionSpeaking||NightPatrolFailureActive)return;
             if(State.phase!=3||!State.Done("N2_02")||State.Done("N2_05"))return;
             if(hissRemaining>0){hissRemaining-=dt;if(hissRemaining<=0&&nightHiss!=null)nightHiss.Stop();}
             if(liveRadioRemaining>0){liveRadioRemaining=Mathf.Max(0,liveRadioRemaining-dt);if(liveRadioRemaining>0)return;liveRadio=null;}
