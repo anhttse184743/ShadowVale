@@ -80,7 +80,7 @@ namespace ShadowVale.Map01
             sceneChair=Group("Bandaging chair",family+Vector3.right*1.4f);
             foreach(float x in new[]{-.21f,.21f})foreach(float z in new[]{-.2f,.2f})Part(sceneChair,"Leg",new Vector3(x,.22f,z),new Vector3(.045f,.44f,.045f),wood);
             Part(sceneChair,"Seat",new Vector3(0,.45f,0),new Vector3(.52f,.055f,.5f),wood);
-            bandageRoll=Group("Clean bandage roll",family+new Vector3(.8f,.6f,.3f));Part(bandageRoll,"Cotton",Vector3.zero,new Vector3(.075f,.1f,.075f),cloth,PrimitiveType.Cylinder);
+            bandageRoll=Group("Clean bandage roll",family+new Vector3(.8f,.6f,.3f));Part(bandageRoll,"Cotton",Vector3.zero,new Vector3(.075f,.1f,.075f),cloth,PrimitiveType.Cylinder);bandageRoll.gameObject.SetActive(false);
             medicineArt=Group("Two reserved medicine packets",family);Part(medicineArt,"Wrapped medicine",Vector3.zero,new Vector3(.15f,.09f,.1f),cloth);medicineArt.gameObject.SetActive(false);
             hammerArt=Group("Dock repair hammer",sites["dock"].position);Part(hammerArt,"Handle",new Vector3(0,.1f,0),new Vector3(.035f,.32f,.035f),wood);Part(hammerArt,"Head",new Vector3(0,.26f,0),new Vector3(.21f,.075f,.065f),iron);hammerArt.gameObject.SetActive(false);
             // "Lời hứa" (doc): Nam and Hùng alone at a round tray on chị Lành's porch, side by side behind it, facing the doorway.
@@ -233,7 +233,7 @@ namespace ShadowVale.Map01
         {
             if(!ready||Mission.Paused||ForestMenu.Visible)return;
             if(sceneTask!=null)return;DuckLateUpdate();
-            bool carry=State.carry=="D1_04";bool hammer=dayActivity==DayActivity.Dock&&Day.stakeHits<6;
+            bool carry=State.carry=="D1_04";bool hammer=dayActivity==DayActivity.Dock&&DockHammering;
             if(carry)
             {
                 dayNamPose?.Dispose();dayNamPose=null;

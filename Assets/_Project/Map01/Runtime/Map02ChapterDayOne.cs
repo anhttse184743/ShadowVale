@@ -13,7 +13,7 @@ namespace ShadowVale.Map01
         DayActivity dayActivity;
         Map02DayOneState Day=>State.dayOne;
         int selectedCrate=-1,selectedBoard=-1,postIndex,postPart;
-        bool selectionRotated,daySpaceReleased;
+        bool selectionRotated,daySpaceReleased,dayInputReady,dayCloseRequested;
         float dayClock;int dayAttemptCycle=-1;
         int dockSlot;float dockOffset;
         Vector2Int packingCursor=new Vector2Int(2,0);
@@ -21,7 +21,7 @@ namespace ShadowVale.Map01
         string dayFeedback="";
         bool dayCursorVisible;CursorLockMode dayCursorLock;
         WeaponKind dayWeapon;bool dayReturnInput;float dayReturnUntil;
-        bool DayInputHeld=>Mouse.current?.leftButton.isPressed==true||Mouse.current?.rightButton.isPressed==true||Keyboard.current?.spaceKey.isPressed==true||Keyboard.current?.eKey.isPressed==true;
+        bool DayInputHeld=>Mouse.current?.leftButton.isPressed==true||Mouse.current?.rightButton.isPressed==true||Keyboard.current?.spaceKey.isPressed==true||Keyboard.current?.eKey.isPressed==true||Keyboard.current?.enterKey.isPressed==true||Keyboard.current?.numpadEnterKey.isPressed==true;
         bool DayReturningInput=>dayReturnInput&&(DayInputHeld||Time.unscaledTime<dayReturnUntil);
         Transform dayProps;
         readonly System.Collections.Generic.List<Transform> physicalCrates=new();
@@ -61,15 +61,20 @@ namespace ShadowVale.Map01
         }
         void OpenDay(DayActivity activity,Map02ChapterTask task)
         {
-            dayActivity=activity;workTask=task;dayClock=0;packingCursor=new Vector2Int(2,0);dockSlot=System.Array.FindIndex(Day.boards,p=>p.x<0);if(dockSlot<0)dockSlot=0;dockOffset=.24f;dayFeedback="";selectedCrate=selectedBoard=-1;selectionRotated=false;daySpaceReleased=false;dayAttemptCycle=-1;
+            dayInputReady=false;dayCloseRequested=false;packingMouseControl=false;ResetStakeStrike();dayActivity=activity;workTask=task;dayClock=0;packingCursor=new Vector2Int(2,0);dockSlot=System.Array.FindIndex(Day.boards,p=>p.x<0);if(dockSlot<0)dockSlot=0;dockOffset=.24f;dayFeedback="";selectedCrate=selectedBoard=-1;selectionRotated=false;daySpaceReleased=false;dayAttemptCycle=-1;
             if(activity==DayActivity.Packing){selectedCrate=System.Array.FindIndex(Day.crates,p=>p.x<0);if(selectedCrate>=0)selectionRotated=Day.crates[selectedCrate].rotated;}   // the first crate still to store is in hand
             dayWeapon=combat.EquippedKind;combat.Equip(WeaponKind.Unarmed);combat.SetHandsOccupied(true);player.RestoreMotion(false);
             dayCursorVisible=Cursor.visible;dayCursorLock=Cursor.lockState;Cursor.lockState=CursorLockMode.None;Cursor.visible=true;
         }
+        void RequestCloseDay()
+        {
+            if(dayActivity==DayActivity.Dock&&StrikeRecovering){dayCloseRequested=true;dayFeedback="Đợi nhát búa kết thúc rồi rời việc.";return;}
+            CloseDay();
+        }
         void CloseDay(bool checkpoint=true)
         {
             if(!DayActivityActive)return;
-            dayActivity=DayActivity.None;EndWorkView();dayReturnInput=DayInputHeld;dayReturnUntil=Time.unscaledTime+.12f;Cursor.visible=dayCursorVisible;Cursor.lockState=dayCursorLock;
+            dayActivity=DayActivity.None;ResetStakeStrike();dayCloseRequested=false;EndWorkView();dayReturnInput=DayInputHeld;dayReturnUntil=Time.unscaledTime+.12f;Cursor.visible=dayCursorVisible;Cursor.lockState=dayCursorLock;
             combat.Equip(dayWeapon);combat.SetHandsOccupied(false);combat.RestoreAfterCinematic();player.RestoreMotion(false);ForestMenu.SuppressKeysAfterCutscene();
             SyncDayProps();if(checkpoint)Mission.StoreCheckpoint();
         }
@@ -86,20 +91,27 @@ namespace ShadowVale.Map01
             if(DayActivityActive)
             {
                 Cursor.visible=true;Cursor.lockState=CursorLockMode.None;
-                var kb=Keyboard.current;if(kb?.escapeKey.wasPressedThisFrame==true){CloseDay();return true;}
-                dayClock+=dt;
+                var kb=Keyboard.current;
+                if(!dayInputReady){if(!DayInputHeld){dayInputReady=true;dayClock=0;}return true;}
+                TickStakeCommit();
+                if(dayCloseRequested&&!StrikeRecovering){CloseDay();return true;}
+                if(kb?.escapeKey.wasPressedThisFrame==true){RequestCloseDay();return true;}
+                dayClock+=Time.deltaTime;
                 TickDayKeyboard(kb);if(!DayActivityActive)return true;
-                if(kb?.rKey.wasPressedThisFrame==true)selectionRotated=!selectionRotated;
                 if(kb?.spaceKey.isPressed!=true)daySpaceReleased=true;
                 if(dayActivity==DayActivity.Dock&&Day.stakeHits<6&&kb?.spaceKey.wasPressedThisFrame==true&&daySpaceReleased)
                 {
-                    daySpaceReleased=false;int cycle=Mathf.FloorToInt(dayClock/Map02DayOneState.SweepSeconds(Day.stakeHits/3));if(cycle==dayAttemptCycle)return true;dayAttemptCycle=cycle;StrikeStake();bool good=Day.Strike(Mathf.PingPong(dayClock/Map02DayOneState.SweepSeconds(Day.stakeHits/3),1));
-                    dayFeedback=good?"✓ Cọc đã xuống thêm một nhịp.":"Chưa đúng nhịp. Thử lại nhịp này.";
-                    if(good){dayClock=0;dayAttemptCycle=-1;SyncRepairCount();SyncDayProps();if(Day.stakeHits%3==0)SaveDayProgress();}
+                    daySpaceReleased=false;
+                    if(StrikeRecovering){dayFeedback="Đợi búa nâng lên rồi nhấn nhịp tiếp theo.";return true;}
+                    int cycle=Mathf.FloorToInt(dayClock/Map02DayOneState.SweepSeconds(Day.stakeHits/3));
+                    if(cycle==dayAttemptCycle){dayFeedback="Đợi kim quay lại lượt mới; mỗi lượt chỉ nhận một nhát.";return true;}
+                    dayAttemptCycle=cycle;
+                    float needle=Mathf.PingPong(dayClock/Map02DayOneState.SweepSeconds(Day.stakeHits/3),1);
+                    bool good=Mathf.Abs(needle-.5f)<=Map02DayOneState.ZoneWidth(Day.stakeHits/3)*.5f;
+                    StrikeStake(good);dayFeedback=good?"✓ Đúng nhịp — đang hạ búa.":"Trượt nhịp. Nhả Space, đợi lượt kim mới rồi thử lại.";
                 }
-                if(dayActivity==DayActivity.Dock&&Day.stakeHits>=6&&kb!=null){
-                    dockOffset=Mathf.Clamp(dockOffset+((kb.dKey.isPressed?1:0)-(kb.aKey.isPressed?1:0))*.3f*dt,-.45f,.45f);
-
+                if(dayActivity==DayActivity.Dock&&Day.stakeHits>=6&&!DockHammering&&kb!=null){
+                    dockOffset=Mathf.Clamp(dockOffset+((kb.dKey.isPressed?1:0)-(kb.aKey.isPressed?1:0))*.3f*Time.deltaTime,-.45f,.45f);
                 }
                 if(dayActivity==DayActivity.Lamp&&kb!=null){var p=Day.posts[postIndex];p.lampAngle=Mathf.Repeat(p.lampAngle+((kb.dKey.isPressed?1:0)-(kb.aKey.isPressed?1:0))*65*dt,360);SyncDayProps();}
                 return true;
@@ -133,14 +145,17 @@ namespace ShadowVale.Map01
             if(kb==null)return;
             int number=kb.digit1Key.wasPressedThisFrame?0:kb.digit2Key.wasPressedThisFrame?1:kb.digit3Key.wasPressedThisFrame?2:kb.digit4Key.wasPressedThisFrame?3:kb.digit5Key.wasPressedThisFrame?4:-1;
             if(dayActivity==DayActivity.Packing){
-                if(number>=0&&number<3){selectedCrate=number;selectionRotated=Day.crates[number].rotated;}
-                packingCursor.x=Mathf.Clamp(packingCursor.x+(kb.rightArrowKey.wasPressedThisFrame?1:0)-(kb.leftArrowKey.wasPressedThisFrame?1:0),0,5);
-                packingCursor.y=Mathf.Clamp(packingCursor.y+(kb.upArrowKey.wasPressedThisFrame?1:0)-(kb.downArrowKey.wasPressedThisFrame?1:0),0,3);
+                if(kb.leftArrowKey.wasPressedThisFrame||kb.rightArrowKey.wasPressedThisFrame||kb.upArrowKey.wasPressedThisFrame||kb.downArrowKey.wasPressedThisFrame)packingMouseControl=false;
+                if(number>=0&&number<3)SelectPackingCrate(number);
+                if(kb.rightArrowKey.wasPressedThisFrame||kb.leftArrowKey.wasPressedThisFrame)packingCursor.x=Mathf.Clamp(packingCursor.x+(kb.rightArrowKey.wasPressedThisFrame?1:-1),0,5);
+                if(kb.upArrowKey.wasPressedThisFrame||kb.downArrowKey.wasPressedThisFrame)packingCursor.y=Mathf.Clamp(packingCursor.y+(kb.upArrowKey.wasPressedThisFrame?1:-1),0,3);
+                if(kb.rKey.wasPressedThisFrame&&selectedCrate>=0)selectionRotated=!selectionRotated;
                 if(kb.eKey.wasPressedThisFrame)PlacePackingSelection(packingCursor.x,packingCursor.y);
                 if(kb.backspaceKey.wasPressedThisFrame){int under=CrateAt(packingCursor.x,packingCursor.y);if(under>=0)LiftCrate(under);}
                 if(kb.enterKey.wasPressedThisFrame)CompletePacking();
             }else if(dayActivity==DayActivity.Dock&&Day.stakeHits>=6){
-                if(number>=0){selectedBoard=Day.boardOrder[number];selectionRotated=false;dockOffset=.24f;}
+                if(number>=0)SelectDockBoard(number);
+                if(kb.rKey.wasPressedThisFrame&&selectedBoard>=0)selectionRotated=!selectionRotated;
                 if(kb.upArrowKey.wasPressedThisFrame)dockSlot=(dockSlot+2)%3;if(kb.downArrowKey.wasPressedThisFrame)dockSlot=(dockSlot+1)%3;
                 if(kb.eKey.wasPressedThisFrame)ConfirmDockBoard();
             }else if(dayActivity==DayActivity.Lamp){if(kb.eKey.wasPressedThisFrame)ConfirmPostPart();}
@@ -172,6 +187,7 @@ namespace ShadowVale.Map01
         }
         void ConfirmDockBoard()
         {
+            if(DockHammering){dayFeedback="Đợi nhát búa cuối kết thúc rồi kê ván.";return;}
             if(Day.DockReady){CompleteDock();return;}
             if(Day.LayBoard(selectedBoard,dockSlot,selectionRotated,dockOffset,out var reason)){
                 SyncRepairCount();SyncDayProps();SaveDayProgress();dayFeedback="✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.";

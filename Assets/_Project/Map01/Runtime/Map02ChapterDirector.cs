@@ -387,7 +387,7 @@ namespace ShadowVale.Map01
             if(sceneTask.id=="DAWN"){focus=Vector3.Lerp(Mission.Player.position,memorialArt!=null?memorialArt.transform.position:sites["ditch"].position,.5f)+Vector3.up*.8f;eye=focus-Mission.Player.forward*4+Mission.Player.right*3+Vector3.up*1.5f;}
             // Medium/wide framing; obstruction tested below.
             var ray=eye-focus;foreach(var hit in Physics.SphereCastAll(focus,.12f,ray.normalized,ray.magnitude,~0,QueryTriggerInteraction.Ignore))if(hit.collider.GetComponentInParent<Health>()==null&&hit.distance>.65f)eye=focus+ray.normalized*Mathf.Min(ray.magnitude,Mathf.Max(.7f,hit.distance-.12f));
-            if(sceneTask.id=="D1_02"&&BandageMocap){var right=bandageFacing*Vector3.right;focus=bandageAt+right*.3f+Vector3.up*.75f;eye=focus+bandageFacing*Vector3.forward*2.4f+right*.9f+Vector3.up*.55f;}   // her profile, his face
+            if(sceneTask.id=="D1_02"&&BandageMocap){var right=bandageFacing*Vector3.right;focus=bandageAt+right*.3f+Vector3.up*.75f;eye=focus+bandageFacing*Vector3.forward*2.4f+right*.05f+Vector3.up*.55f;}   // Both hands and the upper-arm dressing stay in view.
             else if(sceneTask.id=="D1_02"){focus=roles["Hùng"].transform.position+Vector3.up*.85f;eye=focus+new Vector3(-3f,.35f,2f);}
             float mealFov=45;if(sceneTask.id=="N1_01")MealShot(out eye,out focus,out mealFov);
             bool shift=sceneTask.id=="N1_04"&&ShiftMocap;if(shift){ShiftShot(out eye,out focus);mealFov=40;}

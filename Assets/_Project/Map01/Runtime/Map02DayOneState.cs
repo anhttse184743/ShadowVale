@@ -66,6 +66,7 @@ namespace ShadowVale.Map01
             if(board==4)return "Tấm này không đủ dài để tựa hai đầu.";
             if(board<0||board>4||slot<0||slot>2)return "Chọn tấm ván và vị trí đặt.";
             if(rotated)return "Một đầu chưa có chỗ đỡ.";
+            if(boards[slot].x>=0&&boards[slot].x!=board)return "Bậc này đã có ván. Chọn bậc còn trống.";
             if(boards.Where((p,i)=>i!=slot).Any(p=>p.x==board))return "Tấm ván này đã được kê.";
             return null;
         }

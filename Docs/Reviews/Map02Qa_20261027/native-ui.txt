@@ -1,0 +1,210 @@
+DrawDock mouseDown requested=(381.00, 776.00) screen=1920x1080 crate=-1 board=-1 feedback=
+DrawDock mouseUp requested=(381.00, 776.00) screen=1920x1080 crate=-1 board=3 feedback=Quan sát vết nứt giữa thân ván; chọn tấm chịu lực tốt hơn.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=3 feedback=Quan sát vết nứt giữa thân ván; chọn tấm chịu lực tốt hơn.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=3 feedback=Tấm này bị nứt, không chịu được tải.
+DrawDock mouseDown requested=(605.00, 776.00) screen=1920x1080 crate=-1 board=3 feedback=Tấm này bị nứt, không chịu được tải.
+DrawDock mouseUp requested=(605.00, 776.00) screen=1920x1080 crate=-1 board=4 feedback=Tấm ván này ngắn hơn khoảng cách hai thanh đỡ.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=4 feedback=Tấm ván này ngắn hơn khoảng cách hai thanh đỡ.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=4 feedback=Tấm này không đủ dài để tựa hai đầu.
+DrawDock mouseDown requested=(493.00, 776.00) screen=1920x1080 crate=-1 board=4 feedback=Tấm này không đủ dài để tựa hai đầu.
+DrawDock mouseUp requested=(493.00, 776.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1030.00, 826.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDrag requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1357.00, 819.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(1357.00, 819.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=0 feedback=Một đầu chưa có chỗ đỡ.
+DrawDock mouseDown requested=(1357.00, 819.00) screen=1920x1080 crate=-1 board=0 feedback=Một đầu chưa có chỗ đỡ.
+DrawDock mouseUp requested=(1357.00, 819.00) screen=1920x1080 crate=-1 board=0 feedback=Một đầu chưa có chỗ đỡ.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=0 feedback=Một đầu chưa có chỗ đỡ.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseDown requested=(768.00, 738.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseUp requested=(768.00, 738.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseDown requested=(157.00, 776.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseUp requested=(157.00, 776.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1030.00, 826.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDrag requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseDown requested=(269.00, 776.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseUp requested=(269.00, 776.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1030.00, 826.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDrag requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseDown requested=(405.00, 808.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseUp requested=(405.00, 808.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1200x675 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1200x675 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1200x675 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1200x675 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseDown requested=(1295.00, 637.00) screen=1200x675 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(1295.00, 637.00) screen=1200x675 crate=0 board=-1 feedback=Đã đưa ba hòm về khu chờ. Mẫu nền ẩm giữ nguyên; chưa nhận thêm vật tư.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1600x900 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1600x900 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1600x900 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1600x900 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseDown requested=(1295.00, 637.00) screen=1600x900 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(1295.00, 637.00) screen=1600x900 crate=0 board=-1 feedback=Đã đưa ba hòm về khu chờ. Mẫu nền ẩm giữ nguyên; chưa nhận thêm vật tư.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1920x1080 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1920x1080 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1920x1080 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1920x1080 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseDown requested=(1295.00, 637.00) screen=1920x1080 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(1295.00, 637.00) screen=1920x1080 crate=0 board=-1 feedback=Đã đưa ba hòm về khu chờ. Mẫu nền ẩm giữ nguyên; chưa nhận thêm vật tư.
+DrawDock mouseDown requested=(605.00, 776.00) screen=1920x1080 crate=-1 board=-1 feedback=
+DrawDock mouseUp requested=(605.00, 776.00) screen=1920x1080 crate=-1 board=3 feedback=Quan sát vết nứt giữa thân ván; chọn tấm chịu lực tốt hơn.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=3 feedback=Quan sát vết nứt giữa thân ván; chọn tấm chịu lực tốt hơn.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=3 feedback=Tấm này bị nứt, không chịu được tải.
+DrawDock mouseDown requested=(157.00, 776.00) screen=1920x1080 crate=-1 board=3 feedback=Tấm này bị nứt, không chịu được tải.
+DrawDock mouseUp requested=(157.00, 776.00) screen=1920x1080 crate=-1 board=4 feedback=Tấm ván này ngắn hơn khoảng cách hai thanh đỡ.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=4 feedback=Tấm ván này ngắn hơn khoảng cách hai thanh đỡ.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=4 feedback=Tấm này không đủ dài để tựa hai đầu.
+DrawDock mouseDown requested=(493.00, 776.00) screen=1920x1080 crate=-1 board=4 feedback=Tấm này không đủ dài để tựa hai đầu.
+DrawDock mouseUp requested=(493.00, 776.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1030.00, 826.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDrag requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1357.00, 819.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(1357.00, 819.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=0 feedback=Một đầu chưa có chỗ đỡ.
+DrawDock mouseDown requested=(1357.00, 819.00) screen=1920x1080 crate=-1 board=0 feedback=Một đầu chưa có chỗ đỡ.
+DrawDock mouseUp requested=(1357.00, 819.00) screen=1920x1080 crate=-1 board=0 feedback=Một đầu chưa có chỗ đỡ.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=0 feedback=Một đầu chưa có chỗ đỡ.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseDown requested=(768.00, 738.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseUp requested=(768.00, 738.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseDown requested=(269.00, 776.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseUp requested=(269.00, 776.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1030.00, 826.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDrag requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseDown requested=(381.00, 776.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseUp requested=(381.00, 776.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1030.00, 826.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDrag requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseDown requested=(405.00, 808.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseUp requested=(405.00, 808.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1200x675 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1200x675 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1200x675 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1200x675 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseDown requested=(1295.00, 637.00) screen=1200x675 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(1295.00, 637.00) screen=1200x675 crate=0 board=-1 feedback=Đã đưa ba hòm về khu chờ. Mẫu nền ẩm giữ nguyên; chưa nhận thêm vật tư.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1600x900 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1600x900 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1600x900 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1600x900 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseDown requested=(1295.00, 637.00) screen=1600x900 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(1295.00, 637.00) screen=1600x900 crate=0 board=-1 feedback=Đã đưa ba hòm về khu chờ. Mẫu nền ẩm giữ nguyên; chưa nhận thêm vật tư.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1920x1080 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1920x1080 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1920x1080 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1920x1080 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseDown requested=(1295.00, 637.00) screen=1920x1080 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(1295.00, 637.00) screen=1920x1080 crate=0 board=-1 feedback=Đã đưa ba hòm về khu chờ. Mẫu nền ẩm giữ nguyên; chưa nhận thêm vật tư.
+DrawDock mouseDown requested=(381.00, 776.00) screen=1920x1080 crate=-1 board=-1 feedback=
+DrawDock mouseUp requested=(381.00, 776.00) screen=1920x1080 crate=-1 board=3 feedback=Quan sát vết nứt giữa thân ván; chọn tấm chịu lực tốt hơn.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=3 feedback=Quan sát vết nứt giữa thân ván; chọn tấm chịu lực tốt hơn.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=3 feedback=Tấm này bị nứt, không chịu được tải.
+DrawDock mouseDown requested=(157.00, 776.00) screen=1920x1080 crate=-1 board=3 feedback=Tấm này bị nứt, không chịu được tải.
+DrawDock mouseUp requested=(157.00, 776.00) screen=1920x1080 crate=-1 board=4 feedback=Tấm ván này ngắn hơn khoảng cách hai thanh đỡ.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=4 feedback=Tấm ván này ngắn hơn khoảng cách hai thanh đỡ.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=4 feedback=Tấm này không đủ dài để tựa hai đầu.
+DrawDock mouseDown requested=(493.00, 776.00) screen=1920x1080 crate=-1 board=4 feedback=Tấm này không đủ dài để tựa hai đầu.
+DrawDock mouseUp requested=(493.00, 776.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1030.00, 826.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDrag requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1357.00, 819.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(1357.00, 819.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=0 feedback=Một đầu chưa có chỗ đỡ.
+DrawDock mouseDown requested=(1357.00, 819.00) screen=1920x1080 crate=-1 board=0 feedback=Một đầu chưa có chỗ đỡ.
+DrawDock mouseUp requested=(1357.00, 819.00) screen=1920x1080 crate=-1 board=0 feedback=Một đầu chưa có chỗ đỡ.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=0 feedback=Một đầu chưa có chỗ đỡ.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseDown requested=(768.00, 738.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseUp requested=(768.00, 738.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseDown requested=(605.00, 776.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseUp requested=(605.00, 776.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1030.00, 826.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDrag requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseDown requested=(269.00, 776.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseUp requested=(269.00, 776.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1030.00, 826.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDrag requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseDown requested=(405.00, 808.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseUp requested=(405.00, 808.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1200x675 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1200x675 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1200x675 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1200x675 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseDown requested=(1295.00, 637.00) screen=1200x675 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(1295.00, 637.00) screen=1200x675 crate=0 board=-1 feedback=Đã đưa ba hòm về khu chờ. Mẫu nền ẩm giữ nguyên; chưa nhận thêm vật tư.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1600x900 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1600x900 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1600x900 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1600x900 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseDown requested=(1295.00, 637.00) screen=1600x900 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(1295.00, 637.00) screen=1600x900 crate=0 board=-1 feedback=Đã đưa ba hòm về khu chờ. Mẫu nền ẩm giữ nguyên; chưa nhận thêm vật tư.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1920x1080 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1920x1080 crate=1 board=-1 feedback=✓ Đã đặt hòm đạn 7,62. Tiếp: hòm thuốc.
+DrawPacking mouseDown requested=(382.00, 454.00) screen=1920x1080 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(382.00, 454.00) screen=1920x1080 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseDown requested=(1295.00, 637.00) screen=1920x1080 crate=1 board=-1 feedback=Hai thùng đang chồng nhau.
+DrawPacking mouseUp requested=(1295.00, 637.00) screen=1920x1080 crate=0 board=-1 feedback=Đã đưa ba hòm về khu chờ. Mẫu nền ẩm giữ nguyên; chưa nhận thêm vật tư.
+DrawDock mouseDown requested=(381.00, 776.00) screen=1920x1080 crate=-1 board=-1 feedback=
+DrawDock mouseUp requested=(381.00, 776.00) screen=1920x1080 crate=-1 board=3 feedback=Quan sát vết nứt giữa thân ván; chọn tấm chịu lực tốt hơn.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=3 feedback=Quan sát vết nứt giữa thân ván; chọn tấm chịu lực tốt hơn.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=3 feedback=Tấm này bị nứt, không chịu được tải.
+DrawDock mouseDown requested=(605.00, 776.00) screen=1920x1080 crate=-1 board=3 feedback=Tấm này bị nứt, không chịu được tải.
+DrawDock mouseUp requested=(605.00, 776.00) screen=1920x1080 crate=-1 board=4 feedback=Tấm ván này ngắn hơn khoảng cách hai thanh đỡ.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=4 feedback=Tấm ván này ngắn hơn khoảng cách hai thanh đỡ.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=4 feedback=Tấm này không đủ dài để tựa hai đầu.
+DrawDock mouseDown requested=(157.00, 776.00) screen=1920x1080 crate=-1 board=4 feedback=Tấm này không đủ dài để tựa hai đầu.
+DrawDock mouseUp requested=(157.00, 776.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1030.00, 826.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDrag requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1357.00, 819.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(1357.00, 819.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=0 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=0 feedback=Một đầu chưa có chỗ đỡ.
+DrawDock mouseDown requested=(1357.00, 819.00) screen=1920x1080 crate=-1 board=0 feedback=Một đầu chưa có chỗ đỡ.
+DrawDock mouseUp requested=(1357.00, 819.00) screen=1920x1080 crate=-1 board=0 feedback=Một đầu chưa có chỗ đỡ.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=0 feedback=Một đầu chưa có chỗ đỡ.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseDown requested=(768.00, 738.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseUp requested=(768.00, 738.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseDown requested=(493.00, 776.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseUp requested=(493.00, 776.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1030.00, 826.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDrag requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=1 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseDown requested=(269.00, 776.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseUp requested=(269.00, 776.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1030.00, 826.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDrag requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(935.00, 826.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseDown requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=2 feedback=Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.
+DrawDock mouseUp requested=(1357.00, 771.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseDown requested=(405.00, 808.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
+DrawDock mouseUp requested=(405.00, 808.00) screen=1920x1080 crate=-1 board=-1 feedback=✓ Ván đã kê chắc. Chọn tấm tiếp theo; đủ ba tấm thì kiểm tra bến.
