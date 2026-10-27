@@ -143,6 +143,8 @@ namespace ShadowVale.Map01
             InstallMapSafety();
             arrival?.ReleasePassengerAnimation();
             Chapter=gameObject.AddComponent<Map02ChapterDirector>();Chapter.Initialize(this,questLayout);RefreshChapter();
+            if(GetComponent<Map01FoliageReveal>()==null)gameObject.AddComponent<Map01FoliageReveal>();
+            if(GetComponent<Map02SightCover>()==null)gameObject.AddComponent<Map02SightCover>();
             InitializeCharacter();
             StartCoroutine(PrepareHudChart());
             if (pending != null) { var data=pending; pending=null; Restore(data); }

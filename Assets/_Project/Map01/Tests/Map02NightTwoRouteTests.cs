@@ -113,17 +113,16 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsTrue(store.Inside);Place(m,store.InspectionPoint);c.UpdateMarkers();Assert.IsTrue(m.Interact(Marker("N2_03")));Assert.IsTrue(c.State.Done("N2_03"));Assert.IsTrue(c.State.night2ChainCuePlayed);Assert.IsFalse(c.NightBankMovementRestricted);
                 CaptureDoor(c);
                 Place(m,store.BottomStand);m.Player.GetComponent<CharacterController>().Move(Vector3.down*.12f);Assert.IsTrue(store.TryEnterLadder());for(int i=0;i<90&&store.IsClimbing;i++)store.StepTraversal(.1f,false,true);Assert.IsFalse(store.Inside);
-                Assert.AreEqual(4,c.NightTwoRoute.Length);Survey(c);
-                Place(m,c.Sites["command"].position);WalkEvacuationRoute(m);
-                Place(m,c.Sites["dock"].position);Call(c,"TickNightTwoRoute",0f);Assert.IsFalse(c.State.Done("N2_04"));Assert.AreEqual(0,c.NightTwoRouteProgress);
-                Place(m,c.NightTwoRoute[1]);Call(c,"TickNightTwoRoute",0f);Assert.AreEqual(0,c.NightTwoRouteProgress,"Visiting out of order must not advance.");
-                for(int i=0;i<3;i++)
-                {
-                    Place(m,c.NightTwoRoute[i]);Call(c,"TickNightTwoRoute",0f);Assert.AreEqual(i+1,c.NightTwoRouteProgress);
-                    Assert.Less(Vector3.Distance(Marker("N2_04").transform.position,c.NightTwoRoute[i+1]),.05f);
-                    m.Restore(Map02Mission.Parse(JsonUtility.ToJson(m.Capture())));yield return null;Assert.AreEqual(i+1,c.NightTwoRouteProgress);
-                }
-                Place(m,c.NightTwoRoute[3]);Call(c,"TickNightTwoRoute",0f);Assert.IsFalse(c.State.Done("N2_04"));Assert.IsTrue(m.Interact(Marker("N2_04")));Assert.IsTrue(c.State.Done("N2_04"));Assert.AreEqual(4,c.NightTwoRouteProgress);
+                Place(m,c.EvacuationChoicePoint(0));Call(c,"TickNightTwoRoute",0f);
+                Assert.IsTrue(c.EvacuationMenuVisible);
+                Assert.IsTrue(c.SelectEvacuationChoice(3),"Village can be the first and only inspected route.");
+                Assert.Less(Vector3.Distance(Marker("N2_04").transform.position,c.EvacuationChoicePoint(3)),.05f);
+                Assert.AreEqual(5,c.Enemies.Count(e=>e.group==Map02ChapterDirector.EvacuationPatrolGroup));
+                Place(m,c.EvacuationChoicePoint(3));Assert.IsFalse(c.State.Done("N2_04"),"Arrival alone does not report.");
+                Assert.IsTrue(m.Interact(Marker("N2_04")));
+                Call(c,"TickEvacuationModal",30f);Assert.IsFalse(c.State.Done("N2_04"),"Wait for commander's response.");
+                Call(c,"TickEvacuationModal",30f);Assert.IsTrue(c.State.Done("N2_04"));
+                Assert.AreEqual(0,c.State.night2RejectedRoutes);
                 // No warning or kill is required for any of these inspections.
                 Assert.AreEqual(0,c.State.patrolWarnings);Assert.AreEqual(3,c.Enemies.Count(e=>e.group==Map02ChapterDirector.NightPatrolGroup&&!e.Dead));
                 Place(m,Marker("N2_05").transform.position);Call(c,"TickNightRadio",20f,90f,false,90f);Assert.IsTrue(m.Interact(Marker("N2_05")));Assert.AreEqual("N2_05",c.CurrentScene?.id);Call(c,"EndScene");Assert.AreEqual(4,c.State.phase);

@@ -24,6 +24,7 @@ namespace ShadowVale.Map01
         public bool Investigating=>investigate.HasValue;
         public bool CanSilentTakedown(Map02Mission mission)
         {
+            if(group==Map02ChapterDirector.EvacuationPatrolGroup)return false;
             if(group==Map02ChapterDirector.NightPatrolGroup&&director.NightObservationRulesActive)return false;
             if (Dead || alerted || !gameObject.activeInHierarchy || mission == null || mission.InputBlocked || mission.Skills == null) return false;
             float range = mission.Skills.TakedownRange(1.6f);
@@ -107,8 +108,11 @@ namespace ShadowVale.Map01
             TrackingVisibleTarget=false;
             if(Dead){if(agent!=null&&agent.enabled)agent.enabled=false;return;}
             var mission=director.Mission;
+            if(group==Map02ChapterDirector.EvacuationPatrolGroup&&director.EvacuationCaptureActive)
+            {director.ControlEvacuationCaptureUnit(this,agent);return;}
             if(mission.CharacterWorldBlocked||ForestMenu.Visible){if(agent.isOnNavMesh)agent.isStopped=true;return;}
             if(!agent.isOnNavMesh)return;
+            if(director.ControlsEvacuationUnit(this,agent))return;
             bool night=group==Map02ChapterDirector.NightPatrolGroup;
             if(night&&director.NightPatrolStopped){StopAtStoreArrival();return;}
             // After the radio report the mission owns detection, warning and the lethal volley.

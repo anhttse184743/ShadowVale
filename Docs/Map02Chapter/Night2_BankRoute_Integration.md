@@ -1,5 +1,7 @@
 # Đêm 2 — tuyến bờ mương tới hầm kho
 
+N2_04 đã chuyển sang chọn một trong ba hướng theo `Night2_Evacuation_Choices.md` ngày 27/10/2026. Mô tả kiểm tra lần lượt bốn đoạn dưới đây là lịch sử của N2_04 cũ, không còn là điều kiện hoàn thành.
+
 Quy tắc mới nhất về chặn đường, sát thương, máu lính và thời điểm ngừng quét nằm trong `Night2_Stealth_Balance.md`: chỉ chặn sông, không khóa hành lang; tới cửa kho dừng tuần tra. Các mô tả khóa hành lang phía dưới là lịch sử thiết kế đã được thay thế.
 
 Áp dụng theo ảnh đánh dấu `codex-clipboard-0f9a7615-e167-44ab-b324-560a664497b6.png`:

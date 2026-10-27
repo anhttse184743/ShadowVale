@@ -1,6 +1,12 @@
 Shader "ShadowVale/Map Vertex Color"
 {
-    Properties { _BaseColor("Tint", Color) = (1,1,1,1) [PerRendererData] _InstanceTone("Instance tone", Float) = 1 }
+    Properties {
+        _BaseColor("Tint", Color) = (1,1,1,1)
+        [PerRendererData] _InstanceTone("Instance tone", Float) = 1
+        [HideInInspector] _SrcBlend("Source blend", Float) = 1
+        [HideInInspector] _DstBlend("Destination blend", Float) = 0
+        [HideInInspector] _ZWrite("Depth write", Float) = 1
+    }
     SubShader
     {
         Tags { "RenderType"="Opaque" "RenderPipeline"="UniversalPipeline" "Queue"="Geometry" }
@@ -9,6 +15,8 @@ Shader "ShadowVale/Map Vertex Color"
         {
             Name "ForwardLit"
             Tags { "LightMode"="UniversalForward" }
+            Blend [_SrcBlend] [_DstBlend]
+            ZWrite [_ZWrite]
             HLSLPROGRAM
             #pragma vertex Vert
             #pragma fragment Frag
@@ -49,7 +57,7 @@ Shader "ShadowVale/Map Vertex Color"
                 half ndl=saturate(dot(n,l.direction));
                 half3 light=SampleSH(n)+l.color*(.16h+.84h*ndl)*l.shadowAttenuation;
                 half grain=.86h+.20h*Noise(i.world.xz*2.5+i.world.y*.7);
-                return half4(MixFog(i.c.rgb*light*grain,i.fog),1);
+                return half4(MixFog(i.c.rgb*light*grain,i.fog),_BaseColor.a);
             }
             ENDHLSL
         }

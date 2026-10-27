@@ -23,6 +23,8 @@ namespace ShadowVale.Map01.Editor
         public static void PlayScoutRescue()=>BeginAfter("D2_03");
         [MenuItem("ShadowVale/Map 2/Chạy thử Đêm 2",priority=21)]
         public static void PlayNightTwo()=>Begin(3);
+        [MenuItem("ShadowVale/Map 2/Checkpoint kiểm tra đường sơ tán · N2_04",priority=22)]
+        public static void PlayEvacuationChoices()=>BeginAfter("N2_03");
         // Day 3 / Night 3: every task up to the named one is done; Nam starts by the next one.
         [MenuItem("ShadowVale/Map 2/Chạy thử Ngày 3",priority=22)]
         public static void PlayDayThree()=>BeginAfter("N2_05");
@@ -35,6 +37,7 @@ namespace ShadowVale.Map01.Editor
         [MenuItem("ShadowVale/Map 2/Chạy thử Ngày 2",true)]
         [MenuItem("ShadowVale/Map 2/Checkpoint cứu Tâm · M2_D2_04",true)]
         [MenuItem("ShadowVale/Map 2/Chạy thử Đêm 2",true)]
+        [MenuItem("ShadowVale/Map 2/Checkpoint kiểm tra đường sơ tán · N2_04",true)]
         [MenuItem("ShadowVale/Map 2/Chạy thử Ngày 3",true)]
         [MenuItem("ShadowVale/Map 2/Chạy thử Đêm 3",true)]
         [MenuItem("ShadowVale/Map 2/Chạy thử Đêm 3 · ra bến, xe tăng chặn đường",true)]
@@ -96,6 +99,17 @@ namespace ShadowVale.Map01.Editor
         public static void ApplyAfter(Map02Mission mission,string task)
         {
             var state=BuildStateAfter(task);
+            if(task=="N2_03")
+            {
+                state.trackedTask="N2_04";
+                state.night2ObservationCheckpointReached=state.night2HatchOpen=state.night2ReachedStore=true;
+                state.night2InsideStore=false;state.night2GuidanceStage=7;state.night2ChainCuePlayed=true;
+                state.Validate();
+                var start=mission.Chapter.EvacuationChoicePoint(0);
+                Apply(mission,state,start+Vector3.back*3.5f,start,
+                    "CHECKPOINT N2_04 · Kho đã kiểm tra. Tới ghim gần hầm để chọn đường ruộng, đường qua sông hoặc đường trong làng. N mở lại danh sách.");
+                return;
+            }
             if(task=="D2_03")
             {
                 state.activeTask=state.trackedTask="D2_04";state.Validate();

@@ -65,6 +65,28 @@ namespace ShadowVale.Map01
         public int nightPatrolHealthVersion;
         public float villageDaySeconds; public bool villagePlanePlayed;
         public List<string> night2RouteVisited=new List<string>();
+        // 0: choosing; 1: field; 2: river; 3: village. Old four-stop saves start at the new briefing.
+        public bool night2EvacuationStarted,night2FieldObserved;
+        public int night2EvacuationChoice,night2RejectedRoutes;
+        public float night2EvacuationPatrolClock;
+        public float night2EvacuationSideSweepSeconds;
+        public bool night2EvacuationPatrolAtEnd;
+        public bool night2EvacuationPatrolTriggered;
+        public int night2EvacuationPatrolVersion,night2EvacuationPatrolDirection=1;
+        public bool SelectEvacuationRoute(int choice)
+        {
+            if(!Available(Map02ChapterDefinition.Load().Find("N2_04"))||!night2EvacuationStarted||choice<1||choice>3||
+                (night2RejectedRoutes&(1<<(choice-1)))!=0)return false;
+            night2EvacuationChoice=choice;return true;
+        }
+        public bool CanReportEvacuationRoute=>Available(Map02ChapterDefinition.Load().Find("N2_04"))&&night2EvacuationStarted&&
+            night2EvacuationChoice>=1&&night2EvacuationChoice<=3&&(night2EvacuationChoice!=1||night2FieldObserved);
+        public bool ResolveEvacuationReport()
+        {
+            if(!CanReportEvacuationRoute)return false;
+            if(night2EvacuationChoice==3)return Complete("N2_04");
+            night2RejectedRoutes|=1<<(night2EvacuationChoice-1);night2EvacuationChoice=0;return true;
+        }
         public bool PatrolRouteActive=>phase==3&&Done("N2_02")&&!Done("N2_05");
         public bool TakeWire()
         {
@@ -83,6 +105,10 @@ namespace ShadowVale.Map01
             introduced.RemoveAll(id=>id=="N2_03"||id=="N2_04"||id=="N2_05");
             activeTask=carry=null;trackedTask="N2_03";taskProgress=0;workCount=0;
             patrolWarnings=0;patrolScanSeconds=patrolFocusSeconds=0;patrolFocusDirection=Vector3.zero;night2GuidanceStage=1;night2ChainCuePlayed=false;night2HatchOpen=night2InsideStore=night2ReachedStore=false;night2RouteVisited.Clear();
+            night2EvacuationStarted=night2FieldObserved=false;night2EvacuationChoice=night2RejectedRoutes=0;night2EvacuationPatrolClock=0;
+            night2EvacuationPatrolAtEnd=false;
+            night2EvacuationPatrolTriggered=false;night2EvacuationPatrolVersion=0;night2EvacuationPatrolDirection=1;
+            night2EvacuationSideSweepSeconds=0;
         }
         public List<string> introduced=new List<string>();
         public List<string> completed=new List<string>();
@@ -141,6 +167,16 @@ namespace ShadowVale.Map01
             if((scoutAmbushPoints.Count!=0&&scoutAmbushPoints.Count!=5)||scoutAmbushPoints.Any(p=>!float.IsFinite(p.x)||!float.IsFinite(p.y)||!float.IsFinite(p.z)))throw new System.IO.InvalidDataException("Các điểm phục kích dìu Tâm không hợp lệ.");
             if(!float.IsFinite(scoutRescueOrigin.x)||!float.IsFinite(scoutRescueOrigin.y)||!float.IsFinite(scoutRescueOrigin.z))throw new System.IO.InvalidDataException("Điểm đón Tâm không hợp lệ.");
             night2RouteVisited??=new List<string>();
+            if(!float.IsFinite(night2EvacuationSideSweepSeconds)||night2EvacuationSideSweepSeconds<0||night2EvacuationSideSweepSeconds>6.01f)
+                throw new System.IO.InvalidDataException("Nhịp quét bên hông đường ruộng không hợp lệ.");
+            if(night2EvacuationPatrolVersion<0||night2EvacuationPatrolVersion>1||
+                night2EvacuationPatrolVersion==1&&(night2EvacuationPatrolDirection!=1&&night2EvacuationPatrolDirection!=-1||night2EvacuationPatrolClock>3.01f))
+                throw new System.IO.InvalidDataException("Trạng thái tuần tra qua lại đường ruộng không hợp lệ.");
+            if(night2EvacuationChoice<0||night2EvacuationChoice>3||night2RejectedRoutes<0||night2RejectedRoutes>3||
+                !float.IsFinite(night2EvacuationPatrolClock)||night2EvacuationPatrolClock<0||
+                night2EvacuationStarted&&!Done("N2_03")||!night2EvacuationStarted&&(night2EvacuationChoice!=0||night2RejectedRoutes!=0||night2FieldObserved)||
+                night2EvacuationChoice>0&&(night2RejectedRoutes&(1<<(night2EvacuationChoice-1)))!=0)
+                throw new System.IO.InvalidDataException("Trạng thái chọn đường sơ tán Đêm 2 không hợp lệ.");
             if(night2StoreLootOrder<0||night2StoreLootOrder>=6||night2StoreLootMask<0||night2StoreLootMask>7||!night2StoreLootInitialized&&night2StoreLootMask!=0)
                 throw new System.IO.InvalidDataException("Trạng thái hộp vật tư trong hầm kho không hợp lệ.");
             if(night2InsideStore&&(!night2HatchOpen||!Done("N2_02")))throw new System.IO.InvalidDataException("Trạng thái vào hầm không khớp nắp hầm và nhiệm vụ quan sát.");

@@ -151,12 +151,11 @@ namespace ShadowVale.Map01
             if(task.kind=="inspectDoor")
             {
                 if(UndergroundStore?.CanInspect!=true){Mission.Say("E mở nắp · tới cạnh miệng hầm, Ctrl để bám thang xuống kho. Trong kho, đến kệ vật tư rồi nhấn E kiểm tra.");return false;}
-                Mission.Say("Kho vật tư còn an toàn. Lên thang trở lại mặt đất rồi qua sông kiểm tra tuyến sơ tán.");Finish(task);return true;
+                Mission.Say("Kho vật tư còn an toàn. Lên mặt đất, tới điểm kiểm tra gần kho để chọn hướng khảo sát đường sơ tán.");Finish(task);return true;
             }
             if(task.kind=="inspectRoute")
             {
-                if(NightTwoRouteProgress!=NightRouteIds.Length-1){Mission.Say("Theo các ghim để kiểm tra lần lượt bờ mương, lối qua xóm và bờ nam.");return false;}
-                State.night2RouteVisited.Add(NightRouteIds[NightTwoRouteProgress]);Finish(task);Mission.Say("Bậc bến chắc chắn. Đường sơ tán đã được kiểm tra đủ bốn đoạn.");return true;
+                return InteractEvacuationChoice(task);
             }
             if(task.id=="N2_05"&&NightReturnPending)
             {
@@ -168,16 +167,9 @@ namespace ShadowVale.Map01
         void TickNightTwoRoute(float dt)
         {
             if(State.phase!=3)return;
-            if(State.Available(Map02ChapterDefinition.Load().Find("N2_04")))
-            {
-                int i=NightTwoRouteProgress;
-                if(NightTwoRoute.Length==4&&i<3&&Vector3.Distance(Mission.Player.position,NightTwoRoute[i])<2.4f)
-                {
-                    State.night2RouteVisited.Add(NightRouteIds[i]);Mission.Say($"Đã kiểm tra {NightRouteNames[i]} · {i+1}/4 đoạn.");UpdateMarkers();Mission.StoreCheckpoint();
-                }
-            }
+            TickEvacuationChoices(dt);
         }
-        Vector3 NightRouteMarker=>NightTwoRoute.Length==4?NightTwoRoute[Mathf.Min(3,NightTwoRouteProgress)]:sites["dock"].position;
+        Vector3 NightRouteMarker=>EvacuationMarker;
         void ShowNightRadio(int index)
         {
             var entries=Map02ChapterDefinition.Load().Lines("lights");if(index<0||index>=entries.Length)return;
@@ -189,6 +181,7 @@ namespace ShadowVale.Map01
         }
         void TickNightRadio(float dt,float nearestAngle,bool approaching,float distance)
         {
+            if(EvacuationChoicesActive){CancelNightRadio();return;}
             if(State.patrolFocusSeconds>0||NightSuspicionSpeaking||NightPatrolFailureActive)return;
             if(State.phase!=3||!State.Done("N2_02")||State.Done("N2_05"))return;
             if(hissRemaining>0){hissRemaining-=dt;if(hissRemaining<=0&&nightHiss!=null)nightHiss.Stop();}

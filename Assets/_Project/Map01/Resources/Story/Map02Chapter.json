@@ -283,7 +283,7 @@
     },
     {
       "id": "N2_04",
-      "title": "Kiểm tra đường sơ tán ra bến nam",
+      "title": "Chọn hướng kiểm tra đường sơ tán",
       "phase": 3,
       "kind": "inspectRoute",
       "site": "dock",
@@ -293,7 +293,7 @@
       "count": 1,
       "scene": "",
       "seconds": 3,
-      "purpose": "Kiểm tra lại con đường sơ tán đã chuẩn bị hôm trước."
+      "purpose": "Khảo sát đường ruộng, đường qua sông hoặc đường trong làng. Báo cáo chỉ huy để chọn một tuyến an toàn cho người dân; không cần kiểm tra đủ ba hướng."
     },
     {
       "id": "N2_05",
@@ -1592,6 +1592,62 @@
       "speaker": "Nam",
       "text": "Xong rồi chú.",
       "radio": false
+    },
+    {
+      "id": "m2v3_evac_field_01",
+      "conversation": "m2v3_evac_field",
+      "speaker": "Nam",
+      "text": "Báo cáo, lối này có địch không thể sơ tán được",
+      "radio": true
+    },
+    {
+      "id": "m2v3_evac_field_02",
+      "conversation": "m2v3_evac_field",
+      "speaker": "Anh Thành",
+      "text": "Cậu hãy mau chóng rời khỏi đó, rút lui an toàn và tìm con đường khác",
+      "radio": true
+    },
+    {
+      "id": "m2v3_evac_field_03",
+      "conversation": "m2v3_evac_field",
+      "speaker": "Nam",
+      "text": "rõ",
+      "radio": true
+    },
+    {
+      "id": "m2v3_evac_river_01",
+      "conversation": "m2v3_evac_river",
+      "speaker": "Nam",
+      "text": "Báo cáo thủ trưởng, lối này khá an toàn, tuy nhiên phải lội qua sông ạ",
+      "radio": true
+    },
+    {
+      "id": "m2v3_evac_river_02",
+      "conversation": "m2v3_evac_river",
+      "speaker": "Anh Thành",
+      "text": "Không được, phải ưu tiên đường an toàn để sơ tán mọi người",
+      "radio": true
+    },
+    {
+      "id": "m2v3_evac_river_03",
+      "conversation": "m2v3_evac_river",
+      "speaker": "Nam",
+      "text": "rõ!",
+      "radio": true
+    },
+    {
+      "id": "m2v3_evac_village_01",
+      "conversation": "m2v3_evac_village",
+      "speaker": "Nam",
+      "text": "Báo cáo thủ trưởng, lối này không có địch đi tuần, rất an toàn, người dân có thể sơ tán ạ",
+      "radio": true
+    },
+    {
+      "id": "m2v3_evac_village_02",
+      "conversation": "m2v3_evac_village",
+      "speaker": "Anh Thành",
+      "text": "Làm tốt lắm, giờ cậu hãy quay trở về căn cứ để chuẩn bị sơ tán người dân",
+      "radio": true
     }
   ]
 }

@@ -18,12 +18,12 @@ namespace ShadowVale.Map01
         public Map02ChapterActor Actor(string role)=>roles.TryGetValue(role,out var actor)?actor:null;
         public Map02ChapterState State {get;private set;}=new Map02ChapterState();
         public Map02Mission Mission {get;private set;}
-        public bool Busy=>NightPatrolFailureActive||sceneTask!=null||doingWork||DayActivityActive||UndergroundStore?.IsClimbing==true;
+        public bool Busy=>EvacuationCaptureActive||EvacuationModal||NightPatrolFailureActive||sceneTask!=null||doingWork||DayActivityActive||UndergroundStore?.IsClimbing==true;
         public bool ConversationActive=>sceneTask!=null;
         public bool Binoculars=>binocular;
         bool binocularHeld;
         public void HoldBinoculars(bool held){binocularHeld=held;SetBinoculars(held&&!Mission.InputBlocked);}
-        void SetBinoculars(bool held){if(ScoutEscortActive)held=false;if(binocular==held)return;binocular=held;rig?.SetBinoculars(held,held?2:1);}
+        void SetBinoculars(bool held){if(ScoutEscortActive||held&&player?.IsProne==true&&EvacuationChoicesActive&&State.night2EvacuationChoice==1)held=false;if(binocular==held)return;binocular=held;rig?.SetBinoculars(held,held?2:1);}
         public bool LocksInput=>Busy||DayReturningInput||State.finished||Transitioning;
         public bool MovementLocked=>State.activeTask=="N3_08"&&!State.Done("N3_08")||State.Done("N3_WOUND")&&!State.Done("N3_CRAWL");
         public bool MaySave=>!Busy&&State.patrolFocusSeconds<=0;
@@ -148,7 +148,7 @@ namespace ShadowVale.Map01
             foreach(var place in new[]{"command","family","gate","radio","dock","rest","bamboo","store"}){var lamp=new GameObject("Oil lamp light — "+place);lamp.transform.SetParent(root.transform);lamp.transform.position=sites[place].position+Vector3.up*2.6f;var light=lamp.AddComponent<Light>();light.type=LightType.Point;light.color=new Color(1,.65f,.26f);light.range=5;light.intensity=0;light.shadows=LightShadows.None;lamps.Add(light);}
             var search=new GameObject("Enemy searchlight");search.transform.SetParent(root.transform);sweepLight=search.AddComponent<Light>();sweepLight.type=LightType.Spot;sweepLight.range=55;sweepLight.spotAngle=24;sweepLight.intensity=3;sweepLight.color=new Color(.65f,.8f,1);sweepLight.enabled=false;
             combat.Attacked+=OnPlayerShot;
-            EnsureDayState();LoadDayPerformances();BuildDayProps();BuildNightTwoRoute();ready=true;ApplyState();SyncDayProps();StartCoroutine(PreloadDayOneVoices());StartCoroutine(LoadChapterSoundscape());
+            EnsureDayState();LoadDayPerformances();BuildDayProps();BuildNightTwoRoute();BuildEvacuationChoices();ready=true;ApplyState();SyncDayProps();StartCoroutine(PreloadDayOneVoices());StartCoroutine(LoadChapterSoundscape());
         }
         void Site(string id,Vector3 position)
         {
@@ -237,8 +237,10 @@ namespace ShadowVale.Map01
             if(nightWarningAudio!=null){if(Mission.Paused||ForestMenu.Visible)nightWarningAudio.Pause();else nightWarningAudio.UnPause();}
             if(!ready||Mission.Paused||ForestMenu.Visible)return;
             float dt=Mathf.Min(Time.deltaTime,.1f);
+            if(EvacuationCaptureActive){TickEvacuationCapture(dt);return;}
             if(NightPatrolFailureActive){TickNightPatrolFailure(dt);return;}
             if(Mission.World.story.failed)return;
+            if(EvacuationModal){if(Mission.Panel==0)TickEvacuationModal(dt);return;}
             TickNightStoreArrival();
             if(State.phase==3&&NightPatrolStopped&&!State.Done("N2_05"))TickNightRadio(dt,180,false,100);
             TickEffects();
@@ -386,6 +388,7 @@ namespace ShadowVale.Map01
         }
         void LateUpdate()
         {
+            if(EvacuationCaptureActive){PresentEvacuationCapture();return;}
             if(NightPatrolFailureActive){PresentNightPatrolFailure();return;}
             DayLateUpdate();UpdateWorkWeapon();if(!ready)return;PanToHung();HoldCargo();if(sceneTask==null){UpdateHungRadio();return;}
             HoldConversation();MoveDaySceneRoots();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=NamPoseClip();namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null);
@@ -451,7 +454,7 @@ namespace ShadowVale.Map01
             foreach(var saved in State.enemies)
             {
                 float hp=saved.group==NightPatrolGroup?NightPatrolSavedHealth(saved.health,State.nightPatrolHealthVersion):saved.health;
-                SpawnEnemy(saved.id,saved.group,saved.group==NightPatrolGroup&&hp>0?MigrateNightPatrolPosition(saved.id,saved.position):saved.position,hp,saved.group!="scout_patrol"&&saved.group!=NightPatrolGroup,saved.looted);
+                SpawnEnemy(saved.id,saved.group,saved.group==NightPatrolGroup&&hp>0?MigrateNightPatrolPosition(saved.id,saved.position):saved.position,hp,saved.group!="scout_patrol"&&saved.group!=NightPatrolGroup&&saved.group!=EvacuationPatrolGroup,saved.looted);
             }
             State.nightPatrolHealthVersion=1;
             ammoHinted=false;
@@ -500,6 +503,8 @@ namespace ShadowVale.Map01
         }
         public void Cancel()
         {
+            CancelEvacuationCapture();
+            CancelEvacuationChoices();
             CancelNightPatrolFailure();
             UndergroundStore?.CancelTraversal();
             CancelNightRadio();
@@ -537,7 +542,7 @@ namespace ShadowVale.Map01
             foreach(var unit in Enemies)if(unit!=null){if(State.Done("N3_09"))unit.gameObject.SetActive(false);else if(unit.group=="scout_patrol")unit.gameObject.SetActive(State.phase==2);}
             roles["Hùng"].SetLocomotion(State.phase<=1?DayClip("InjuredIdle"):null,State.phase<=1?HungMapOneWalk:null);
             roles["Hùng"].PrimeLocomotion();roles["Anh Thành"].SetQuietRifle(State.phase<=1);roles["Anh Thành"].SetLocomotion(State.phase<=1?dayNamAnimator.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned"):null,State.phase<=1?ordinaryWalk:null);ArrangeDayFamily();
-            SyncDayProps();RefreshMemorial();UpdateMarkers();RefreshNightPatrol();SyncNightBankState();
+            SyncDayProps();RefreshMemorial();UpdateMarkers();RefreshNightPatrol();SyncNightBankState();SyncEvacuationPatrol();
         }
         void PlaceChildWithMother()
         {
@@ -646,10 +651,12 @@ namespace ShadowVale.Map01
         }
         public void DrawOverlay()
         {
+            if(EvacuationCaptureActive){DrawEvacuationCapture();return;}
             if(NightPatrolFailureActive){DrawNightPatrolFailure();return;}
             DrawDayOverlay();
             UndergroundStore?.DrawGuide();
             var label=new GUIStyle(GUI.skin.label){fontSize=24,wordWrap=true};var title=new GUIStyle(label){fontSize=28,fontStyle=FontStyle.Bold};
+            if(EvacuationModal){DrawEvacuationChoices(label,title);return;}
             if(!NightSuspicionSpeaking)DrawLiveNightRadio(label,title);
             DrawEffects();DrawBark(label);DrawAmmoMarks(label);DrawCover(label);
             DrawNightPatrolSuspicion();
@@ -686,6 +693,7 @@ namespace ShadowVale.Map01
         }
         void OnDestroy()
         {
+            ReleaseEvacuationLightPresentation();
             ReleaseNightPatrolPresentation();ReleaseNightRiverCrossing();Cancel();ResetEffects();RestoreNaturalLighting();ReleaseDayArt();if(combat!=null){combat.EquipAllowed=null;combat.Attacked-=OnPlayerShot;combat.ReloadDurationMultiplier=1;combat.SetHandsOccupied(false);}if(player!=null){player.SurfaceSpeedMultiplier=1;player.SprintAllowed=null;player.MovementConstraint=null;}
             RenderSettings.skybox=originalSky;RenderSettings.ambientMode=originalAmbientMode;if(chapterSky!=null)Destroy(chapterSky);RenderSettings.ambientLight=ambientBefore;RenderSettings.fog=fogBefore;RenderSettings.fogColor=fogColorBefore;RenderSettings.fogDensity=fogDensityBefore;
             if(sun!=null){sun.intensity=sunIntensity;sun.transform.rotation=sunRotation;sun.color=originalSunColor;}

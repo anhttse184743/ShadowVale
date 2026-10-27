@@ -144,3 +144,10 @@ MonoBehaviour:
   tankTracksClip: {fileID: 8300000, guid: c9cede260dc54b2c9701cd7100065e8e, type: 3}
   tinnitusClip: {fileID: 0}
   artilleryClip: {fileID: 8300000, guid: 3a4f76312f644b0e9be64e3523059d37, type: 3}
+  nightEvacuationStart: {x: -4, y: 1, z: -42}
+  nightEvacuationFieldBush: {x: 25, y: 1, z: -56.5}
+  nightEvacuationRiver: {x: -8, y: 1, z: -57}
+  nightEvacuationVillage: {x: -53, y: 1, z: -39}
+  nightEvacuationPatrolStart: {x: 15.861885, y: 1, z: -70.561386}
+  nightEvacuationPatrolEnd: {x: 34.138115, y: 1, z: -62.438614}
+  nightEvacuationBushArt: {fileID: 1120759363065600250, guid: bb11d4410e8bf774c8b1d6f87a7f02cf, type: 3}

@@ -24,6 +24,15 @@ namespace ShadowVale.Map01
         public Vector3[] dayTwoCoveredRoute={new Vector3(-65,1,-15),new Vector3(-25,1,-24)};
         [Min(2)] public float antennaHeight=4;
         public Vector3[] nightTwoEvacuationRoute={new Vector3(-29.324f,1,-30.592f),new Vector3(-36.655f,1,-44.419f),new Vector3(-36.044f,1,-64.069f)};
+        [Header("Night 2 evacuation choices: field, river, village")]
+        public Vector3 nightEvacuationStart=new Vector3(-4,1,-42);
+        public Vector3 nightEvacuationFieldBush=new Vector3(25,1,-56.5f);
+        public Vector3 nightEvacuationRiver=new Vector3(-8,1,-57);
+        public Vector3 nightEvacuationVillage=new Vector3(-53,1,-39);
+        // The two points describe the road heading; the patrol spans exactly 10 m each side of their midpoint.
+        public Vector3 nightEvacuationPatrolStart=new Vector3(15.861885f,1,-70.561386f);
+        public Vector3 nightEvacuationPatrolEnd=new Vector3(34.138115f,1,-62.438614f);
+        public GameObject nightEvacuationBushArt;
         [Header("Night 2 river-bank infiltration (latest marked Map 2 overview)")]
         public Vector3 nightTwoHatch=new Vector3(-3.96654f,.8f,-51.858f);
         // Reference is the first guard; remaining guards continue along the straight river-facing row.

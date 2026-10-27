@@ -24,7 +24,7 @@ namespace ShadowVale.Map01
                 if(t.id=="N2_01")return !State.night2ObservationCheckpointReached?"Đi qua ghim quan sát ở đầu cầu trước. Sau đó chọn chỗ nhìn tổ tuần tra trong bán kính 40 m, giữ F quan sát đủ 2 giây. Chưa quan sát xong sẽ chưa thực hiện được nhiệm vụ tiếp theo.":$"Đã qua checkpoint. Chọn vị trí bất kỳ cách tổ tuần tra tối đa 40 m, giữ F và nhìn rõ tổ tuần tra đủ 2 giây ({Mathf.Clamp01(observed/t.seconds)*100:0}%). Z nằm tránh đèn quét. Quan sát và báo bộ đàm xong mới vào kho.";
                 if(t.id=="N2_02")return "Tại đầu cầu, nhấn E báo bộ đàm rồi men bờ mương phía ruộng đến kho.";
                 if(t.id=="N2_03")return UndergroundStore?.Inside==true?"Tới kệ vật tư ở ghim vàng, nhấn E kiểm tra kho. Tới chân thang, Space bám thang · W lên / S xuống.":"Men bờ mương tới nắp hầm. E mở nắp, tới điểm cạnh miệng hầm và nhấn Ctrl bám thang xuống · Space bám thang lên · W lên / S xuống. Không thể nhảy xuống.";
-                if(t.id=="N2_04")return UndergroundStore?.Inside==true?"Kho đã kiểm tra. Tới chân thang ở ghim vàng · Space bám thang · W lên mặt đất, rồi qua sông kiểm tra tuyến sơ tán.":$"Đã mở lối sang bờ làng. Kiểm tra lần lượt bờ mương → lối xóm → bờ nam → bậc bến · {NightTwoRouteProgress}/4. Đến ghim cuối, nhấn E xác nhận.";
+                if(t.id=="N2_04")return EvacuationInstruction;
                 if(t.id=="D2_03")return "Theo lối lúa bị giẫm từ cầu tới khoảng trống. Tâm nằm bị thương tại ghim vàng; đến gần, nhấn E để giúp.";
                 if(t.kind=="wire")return State.wireStage==1?"Đang mang cuộn dây. Tới trạm ở ghim vàng, nhấn E giao cho Hùng.":"Tới kho kín ở ghim vàng, nhấn E lấy cuộn dây ăng-ten.";
                 if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)?$"Đang mang thùng {n+1}/{t.count}. Tới ghim vàng rồi nhấn E để đặt.":$"Đã chuyển {n}/{t.count}. Tới ghim vàng, nhấn E nhận thùng tiếp theo.";
@@ -91,6 +91,7 @@ namespace ShadowVale.Map01
         public string Prompt(Map02ChapterTask t)
         {
             int n=State.Count(t.id);
+            if(t.id=="N2_04")return EvacuationPrompt;
             if(t.id=="N2_03")return UndergroundStore?.Inside==true?"Kiểm tra kệ vật tư trong hầm":"Mở nắp hầm kho · Ctrl để xuống";
             if(t.id=="D2_03")return "Giúp Tâm — trinh sát bị thương";
             if(t.id=="D1_04"&&n>=3)return "Sắp xếp ba thùng vào kho kín";
