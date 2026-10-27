@@ -58,8 +58,9 @@ namespace ShadowVale.Map01
         {
             ClearEntrances();
             var nam=Mission.Player;
-            if(task.id=="D3_02")Enter("Hùng",sites["ditch"].position+Vector3.right*1.4f,"m2v3_demolition_01","m2v3_demolition_02");
-            if(task.id=="D3_04"){Enter("Hùng",nam.position+nam.right*1.5f,"m2v3_families_01","m2v3_families_01");Enter("Ông Sáu",nam.position+nam.forward*2.2f,"m2v3_families_01","m2v3_families_02");}
+            // Day 3's talks: those who walk up stand in an open ring round Nam (the camera's side left open), not in a row.
+            if(task.id=="D3_02")Enter("Hùng",TalkSpot(nam,40,1.5f,"Hùng"),"m2v3_demolition_01","m2v3_demolition_02");
+            if(task.id=="D3_04"){Enter("Hùng",TalkSpot(nam,50,1.4f,"Hùng"),"m2v3_families_01","m2v3_families_01");Enter("Ông Sáu",TalkSpot(nam,-25,1.9f,"Ông Sáu"),"m2v3_families_01","m2v3_families_02");}
             if(task.id=="D3_05"){Enter("Hùng",HungAtSupper,"m2v3_supper_01","m2v3_supper_01");Enter("Anh Thành",SupperYard,"m2v3_supper_05","m2v3_lastorder_01");}
         }
         void Enter(string role,Vector3 to,string startLine,string gateLine)
@@ -70,6 +71,21 @@ namespace ShadowVale.Map01
             if(distance<2)return;
             if(distance>8||WalkClearance(actor.transform.position,to)<1.3f)actor.StopAt(EntryPoint(to));
             entrances.Add(new Entrance{actor=actor,to=to,startLine=startLine,gateLine=gateLine});
+        }
+        /// <summary>A place for <paramref name="role"/> to stand <paramref name="distance"/> m from Nam, <paramref name="degrees"/>
+        /// off his facing (right is positive): on the NavMesh, clear of walls and of everyone already standing there (or
+        /// walking in), the nearest such angle if that one is not.</summary>
+        Vector3 TalkSpot(Transform nam,float degrees,float distance,string role)
+        {
+            bool Taken(Vector3 p)=>roles.Values.Any(a=>a!=null&&a.role!=role&&a.visual!=null&&a.visual.gameObject.activeInHierarchy&&Flat(a.transform.position,p)<1.3f)||entrances.Any(e=>Flat(e.to,p)<1.3f);
+            for(int i=0;i<13;i++)
+            {
+                float a=degrees+(i+1)/2*(i%2==1?15:-15);var p=nam.position+Quaternion.Euler(0,a,0)*nam.forward*distance;
+                if(!UnityEngine.AI.NavMesh.SamplePosition(p,out var hit,.5f,UnityEngine.AI.NavMesh.AllAreas))continue;
+                if(Physics.CheckCapsule(hit.position+Vector3.up*.5f,hit.position+Vector3.up*1.5f,.28f,~0,QueryTriggerInteraction.Ignore)||Taken(hit.position))continue;
+                return hit.position;
+            }
+            return nam.position+Quaternion.Euler(0,degrees,0)*nam.forward*distance;
         }
         Vector3 BehindCamera()
         {

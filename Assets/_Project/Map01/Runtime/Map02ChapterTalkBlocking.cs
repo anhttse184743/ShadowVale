@@ -39,7 +39,7 @@ namespace ShadowVale.Map01
         /// <summary>Where someone stands to talk with Nam: where they are, unless that is on him or on someone else already marked.</summary>
         Vector3 TalkMark(Vector3 at,Vector3 nam)
         {
-            bool Crowded(Vector3 p)=>Flat(p,nam)<TalkGap||talkers.Any(t=>Flat(t.transform.position,p)<TalkGap);
+            bool Crowded(Vector3 p)=>Flat(p,nam)<TalkGap||talkers.Any(t=>Flat(t.transform.position,p)<TalkGap)||entrances.Any(e=>Flat(e.to,p)<TalkGap);   // nor where someone is walking in to
             if(!Crowded(at))return at;
             var outward=Vector3.ProjectOnPlane(at-nam,Vector3.up);if(outward.sqrMagnitude<.01f)outward=Mission.Player.forward;outward.Normalize();
             for(int i=0;i<12;i++)
@@ -84,6 +84,14 @@ namespace ShadowVale.Map01
         bool TalkCamera(out Vector3 eye,out Vector3 focus)
         {
             eye=focus=default;if(!talkStaged||lines==null)return false;
+            // Someone still walking up: a wide two-shot from the open side, Nam and him coming in, before the over-the-shoulders.
+            var coming=entrances.FirstOrDefault(e=>Flat(e.actor.transform.position,e.to)>1.2f&&(e.actor.Travelling||!spoken));
+            if(coming!=null)
+            {
+                var nam=Mission.Player.position;var who=coming.actor.transform.position;var mid=Vector3.Lerp(nam,who,.5f);
+                var axis=Vector3.ProjectOnPlane(who-nam,Vector3.up);axis=axis.sqrMagnitude>.01f?axis.normalized:Mission.Player.forward;
+                eye=mid+talkSide*Mathf.Clamp(Flat(nam,who)*.7f,3,6)-axis*1.2f+Vector3.up*1.6f;focus=mid+Vector3.up*1.3f;return true;
+            }
             var speaker=Speaker(lineIndex);if(speaker==null)return false;
             var listener=Addressee(speaker);
             if(lines[lineIndex].radio||listener==null)
