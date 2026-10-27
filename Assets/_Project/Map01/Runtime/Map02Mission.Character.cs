@@ -17,6 +17,7 @@ namespace ShadowVale.Map01
         public Camera GameCamera=>cameraRig!=null?cameraRig.GetComponent<Camera>():Camera.main;
         public float Stamina {get;private set;}
         public bool CharacterGearLocked=>!string.IsNullOrEmpty(Chapter?.State.carry)||Chapter?.CompanionLocksGear==true||Chapter?.DayActivityActive==true||Chapter?.MovementLocked==true;
+        public bool CharacterCanHeal=>!CharacterGearLocked||Chapter?.ScoutEscortActive==true;
         public bool CharacterCanSprint=>Chapter?.MovementLocked!=true&&Stamina>2&&Chapter?.State.wounded!=true;
         // The player's panel still blocks controls, but field crafting must leave enemies active.
         public bool CharacterWorldBlocked=>!Ready||Paused||Cinematic||Chapter?.LocksInput==true||World.story.failed
@@ -112,7 +113,7 @@ namespace ShadowVale.Map01
             if(Bag.ThrowableEquipped&&!CharacterGearLocked)
             {if(kb.digit1Key.wasPressedThisFrame)Bag.OnSlotKey(0);else if(kb.digit2Key.wasPressedThisFrame)Bag.OnSlotKey(1);else if(kb.digit3Key.wasPressedThisFrame)Bag.OnSlotKey(2);else if(kb.digit4Key.wasPressedThisFrame)Bag.OnSlotKey(3);}
             if(Mouse.current==null||!Mouse.current.leftButton.isPressed)Bag.SuppressFire=false;
-            if(kb.hKey.wasPressedThisFrame&&!CharacterGearLocked)Bag.UseItem("medkit_small");
+            if(kb.hKey.wasPressedThisFrame&&CharacterCanHeal)Bag.UseItem("medkit_small");
             if(kb.backquoteKey.wasPressedThisFrame)CharacterHud.ToggleObjective();
             var throwing=GetComponent<Map01StoneThrow>();
             if(Bag.ThrowableEquipped&&!CharacterGearLocked&&!Bag.SuppressFire&&Mouse.current!=null){if(Mouse.current.rightButton.wasPressedThisFrame)throwing.Cancel();else if(Mouse.current.leftButton.wasPressedThisFrame)throwing.BeginAim();else if(Mouse.current.leftButton.wasReleasedThisFrame)throwing.Release();}

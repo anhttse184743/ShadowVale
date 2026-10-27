@@ -74,6 +74,7 @@ namespace ShadowVale.Gameplay.Combat
         /// magazine, so a broken gun keeps its rounds and mimes no shot. Left unset, every gun fires.
         /// </summary>
         public System.Func<bool> GunUsable { get; set; }
+        public System.Func<WeaponKind,bool> EquipAllowed { get; set; }
 
         /// <summary>
         /// Asked for rounds when the magazine reloads; returns how many the reserve could give.
@@ -781,6 +782,7 @@ namespace ShadowVale.Gameplay.Combat
         /// </summary>
         public bool Equip(WeaponKind kind)
         {
+            if(EquipAllowed!=null&&!EquipAllowed(kind))return false;
             _weapons.TryGetValue(kind, out Weapon next);
             if (next == null)
             {

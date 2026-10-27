@@ -22,7 +22,12 @@ namespace ShadowVale.Map01
         public void SetVisible(bool visible){if(visual!=null)visual.gameObject.SetActive(visible);}
         public void SetSitting(bool sitting){if(animator!=null&&animator.runtimeAnimatorController!=null&&animator.parameters.Any(p=>p.name=="Sitting"))animator.SetBool("Sitting",sitting);}
         public bool Supporting {get;private set;}
+<<<<<<< HEAD
         bool assisted,seekingSupport;Vector3 goal;bool travelling;AnimationClip dayIdle,dayWalk;float dayPoseClock,dayWalkSpeed,walkWeight;
+=======
+        public bool PairedEscort {get;set;}
+        bool assisted,seekingSupport;Vector3 goal;bool travelling;AnimationClip dayIdle,dayWalk;float dayPoseClock;
+>>>>>>> Tai
         AnimationClip seatedRest;
         public void SetSeatedRest(AnimationClip clip){seatedRest=clip;if(clip==null)ReleasePerformance();}
         /// <param name="walkSpeed">Ground speed (m/s) at which the walk plants its feet at 1x; Hùng's falls back to his Map 1 limp.</param>
@@ -64,6 +69,7 @@ namespace ShadowVale.Map01
         }
         void LateUpdate()
         {
+            if(PairedEscort)return;
             if(dayIdle!=null||visual==null||!visual.gameObject.activeInHierarchy)return;
             // NavMesh sockets can sit a little above the rendered village floor.
             // Correct only the visual, keeping navigation and saved actor coordinates unchanged.
@@ -111,6 +117,7 @@ namespace ShadowVale.Map01
         public void SetDead(bool dead){if(dead){travelling=false;follow=null;}if(visual!=null)visual.gameObject.SetActive(!dead);gameObject.name="Actor slot — "+role+(dead?" (đã hy sinh)":"");}
         void Update()
         {
+            if(PairedEscort)return;
             mission??=FindFirstObjectByType<Map02Mission>();var m=mission;if(ConversationHeld||m==null||m.Paused||ForestMenu.Visible||(m.InputBlocked&&!SceneDriven))return;
             if(follow==null&&!travelling){DayLocomotion(false);return;}
             if(!travelling&&m.Chapter!=null&&m.Chapter.State.phase<=1&&Vector3.Distance(transform.position,follow.position)>7){DayLocomotion(false);return;} // Day 1 / Night 1: never pull an escort through walls or teleport to Nam. Later escorts keep following.

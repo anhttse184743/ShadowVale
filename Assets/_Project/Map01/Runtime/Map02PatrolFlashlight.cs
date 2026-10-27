@@ -8,7 +8,7 @@ namespace ShadowVale.Map01
     public sealed class Map02PatrolFlashlight:MonoBehaviour
     {
         Animator actor;Map02ChapterEnemy unit;Transform torch,emitter;Map01Rifle rifle;
-        Quaternion leftWrist;Vector3 rifleGrip;Vector3 direction;
+        Quaternion leftWrist;Vector3 rifleGrip;Vector3 direction,displayedDirection;
         public Transform Emitter=>emitter;
         public void SetDirection(Vector3 value){direction=value;}
         public static Map02PatrolFlashlight Bind(Map02ChapterEnemy unit)
@@ -35,12 +35,18 @@ namespace ShadowVale.Map01
         {
             if(torch==null||actor==null)return;
             torch.gameObject.SetActive(!unit.Dead);if(unit.Dead)return;
+            if(unit.group==Map02ChapterDirector.EvacuationPatrolGroup)
+            {
+                if(displayedDirection.sqrMagnitude<.01f)displayedDirection=actor.transform.forward;
+                displayedDirection=Vector3.RotateTowards(displayedDirection,direction.sqrMagnitude>.01f?direction:actor.transform.forward,120*Mathf.Deg2Rad*Time.deltaTime,0).normalized;
+                direction=displayedDirection;
+            }
             var root=actor.transform;var forward=root.forward;var right=root.right;
             var chest=actor.GetBoneTransform(HumanBodyBones.Chest);var head=actor.GetBoneTransform(HumanBodyBones.Head);
             if(unit.Alerted)
             {
                 // Free both hands for the rifle while the torch remains on the shoulder strap.
-                torch.SetPositionAndRotation(chest.position-right*.16f+forward*.16f,Quaternion.LookRotation(forward));return;
+                torch.SetPositionAndRotation(chest.position-right*.16f+forward*.16f,Quaternion.LookRotation(direction.sqrMagnitude>.01f?direction:forward));return;
             }
             var hand=actor.GetBoneTransform(HumanBodyBones.LeftHand);hand.localRotation=leftWrist;
             Map01ArmContact.Reach(actor,true,head.position-right*.25f+forward*.32f-Vector3.up*.12f,
@@ -58,9 +64,16 @@ namespace ShadowVale.Map01
         }
     }
     [DefaultExecutionOrder(250)]
+    public sealed class Map02EvacuationLightSync:MonoBehaviour
+    {
+        public Map02ChapterDirector owner;
+        void LateUpdate(){if(owner!=null&&owner.enabled)owner.SyncEvacuationPatrolLights();}
+    }
+    [DefaultExecutionOrder(250)]
     public sealed class Map02PatrolLightSync:MonoBehaviour
     {
         public Map02ChapterDirector owner;
+        void Update(){if(owner!=null&&owner.enabled)owner.TickNightPatrolWorld(Time.deltaTime);}
         void LateUpdate(){if(owner!=null&&owner.enabled)owner.SyncNightPatrolPresentation();}
     }
 }

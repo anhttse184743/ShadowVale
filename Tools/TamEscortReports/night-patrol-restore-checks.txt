@@ -1,0 +1,269 @@
+PASS stale saved group marker repairs all three missing night NPCs
+PASS actual approved NPC model imported and visible: night2_patrol_0
+PASS flashlight bound to actual humanoid: night2_patrol_0
+PASS NPC remains 35 m from mission point: night2_patrol_0
+PASS one flashlight per NPC: night2_patrol_0
+PASS actual approved NPC model imported and visible: night2_patrol_1
+PASS flashlight bound to actual humanoid: night2_patrol_1
+PASS NPC remains 35 m from mission point: night2_patrol_1
+PASS one flashlight per NPC: night2_patrol_1
+PASS actual approved NPC model imported and visible: night2_patrol_2
+PASS flashlight bound to actual humanoid: night2_patrol_2
+PASS NPC remains 35 m from mission point: night2_patrol_2
+PASS one flashlight per NPC: night2_patrol_2
+PASS triangle spacing >=10 m: 0/1 = 10.00001
+PASS triangle spacing >=10 m: 0/2 = 10.00536
+PASS triangle spacing >=10 m: 1/2 = 19.79779
+PASS three guard posts form a triangle
+PASS refresh does not duplicate NPCs
+PASS all three lights use 28 m range
+PASS random pass remains within 120 degrees: 0/0/1
+PASS random pass remains within 120 degrees: 0/0/1.5
+PASS random pass remains within 120 degrees: 0/0/2
+PASS random pass remains within 120 degrees: 0/0/2.5
+PASS random pass remains within 120 degrees: 0/0/3
+PASS random pass remains within 120 degrees: 0/0/3.5
+PASS random pass remains within 120 degrees: 0/0/4
+PASS random pass remains within 120 degrees: 0/0/4.5
+PASS random pass remains within 120 degrees: 0/0/5
+PASS random pass remains within 120 degrees: 0/0/5.5
+PASS random pass remains within 120 degrees: 0/0/6
+PASS random pass remains within 120 degrees: 0/0/6.5
+PASS random pass remains within 120 degrees: 0/0/7
+PASS random pass remains within 120 degrees: 0/0/7.5
+PASS random pass remains within 120 degrees: 0/0/8
+PASS random pass remains within 120 degrees: 0/0/8.5
+PASS random pass remains within 120 degrees: 0/0/9
+PASS random pass remains within 120 degrees: 0/0/9.5
+PASS random pass remains within 120 degrees: 0/0/10
+PASS random pass remains within 120 degrees: 0/1/1
+PASS random pass remains within 120 degrees: 0/1/1.5
+PASS random pass remains within 120 degrees: 0/1/2
+PASS random pass remains within 120 degrees: 0/1/2.5
+PASS random pass remains within 120 degrees: 0/1/3
+PASS random pass remains within 120 degrees: 0/1/3.5
+PASS random pass remains within 120 degrees: 0/1/4
+PASS random pass remains within 120 degrees: 0/1/4.5
+PASS random pass remains within 120 degrees: 0/1/5
+PASS random pass remains within 120 degrees: 0/1/5.5
+PASS random pass remains within 120 degrees: 0/1/6
+PASS random pass remains within 120 degrees: 0/1/6.5
+PASS random pass remains within 120 degrees: 0/1/7
+PASS random pass remains within 120 degrees: 0/1/7.5
+PASS random pass remains within 120 degrees: 0/1/8
+PASS random pass remains within 120 degrees: 0/1/8.5
+PASS random pass remains within 120 degrees: 0/1/9
+PASS random pass remains within 120 degrees: 0/1/9.5
+PASS random pass remains within 120 degrees: 0/1/10
+PASS random pass remains within 120 degrees: 0/2/1
+PASS random pass remains within 120 degrees: 0/2/1.5
+PASS random pass remains within 120 degrees: 0/2/2
+PASS random pass remains within 120 degrees: 0/2/2.5
+PASS random pass remains within 120 degrees: 0/2/3
+PASS random pass remains within 120 degrees: 0/2/3.5
+PASS random pass remains within 120 degrees: 0/2/4
+PASS random pass remains within 120 degrees: 0/2/4.5
+PASS random pass remains within 120 degrees: 0/2/5
+PASS random pass remains within 120 degrees: 0/2/5.5
+PASS random pass remains within 120 degrees: 0/2/6
+PASS random pass remains within 120 degrees: 0/2/6.5
+PASS random pass remains within 120 degrees: 0/2/7
+PASS random pass remains within 120 degrees: 0/2/7.5
+PASS random pass remains within 120 degrees: 0/2/8
+PASS random pass remains within 120 degrees: 0/2/8.5
+PASS random pass remains within 120 degrees: 0/2/9
+PASS random pass remains within 120 degrees: 0/2/9.5
+PASS random pass remains within 120 degrees: 0/2/10
+PASS random pass remains within 120 degrees: 1/0/1
+PASS random pass remains within 120 degrees: 1/0/1.5
+PASS random pass remains within 120 degrees: 1/0/2
+PASS random pass remains within 120 degrees: 1/0/2.5
+PASS random pass remains within 120 degrees: 1/0/3
+PASS random pass remains within 120 degrees: 1/0/3.5
+PASS random pass remains within 120 degrees: 1/0/4
+PASS random pass remains within 120 degrees: 1/0/4.5
+PASS random pass remains within 120 degrees: 1/0/5
+PASS random pass remains within 120 degrees: 1/0/5.5
+PASS random pass remains within 120 degrees: 1/0/6
+PASS random pass remains within 120 degrees: 1/0/6.5
+PASS random pass remains within 120 degrees: 1/0/7
+PASS random pass remains within 120 degrees: 1/0/7.5
+PASS random pass remains within 120 degrees: 1/0/8
+PASS random pass remains within 120 degrees: 1/0/8.5
+PASS random pass remains within 120 degrees: 1/0/9
+PASS random pass remains within 120 degrees: 1/0/9.5
+PASS random pass remains within 120 degrees: 1/0/10
+PASS scan direction changes between cycles: 0
+PASS random pass remains within 120 degrees: 1/1/1
+PASS random pass remains within 120 degrees: 1/1/1.5
+PASS random pass remains within 120 degrees: 1/1/2
+PASS random pass remains within 120 degrees: 1/1/2.5
+PASS random pass remains within 120 degrees: 1/1/3
+PASS random pass remains within 120 degrees: 1/1/3.5
+PASS random pass remains within 120 degrees: 1/1/4
+PASS random pass remains within 120 degrees: 1/1/4.5
+PASS random pass remains within 120 degrees: 1/1/5
+PASS random pass remains within 120 degrees: 1/1/5.5
+PASS random pass remains within 120 degrees: 1/1/6
+PASS random pass remains within 120 degrees: 1/1/6.5
+PASS random pass remains within 120 degrees: 1/1/7
+PASS random pass remains within 120 degrees: 1/1/7.5
+PASS random pass remains within 120 degrees: 1/1/8
+PASS random pass remains within 120 degrees: 1/1/8.5
+PASS random pass remains within 120 degrees: 1/1/9
+PASS random pass remains within 120 degrees: 1/1/9.5
+PASS random pass remains within 120 degrees: 1/1/10
+PASS scan direction changes between cycles: 1
+PASS random pass remains within 120 degrees: 1/2/1
+PASS random pass remains within 120 degrees: 1/2/1.5
+PASS random pass remains within 120 degrees: 1/2/2
+PASS random pass remains within 120 degrees: 1/2/2.5
+PASS random pass remains within 120 degrees: 1/2/3
+PASS random pass remains within 120 degrees: 1/2/3.5
+PASS random pass remains within 120 degrees: 1/2/4
+PASS random pass remains within 120 degrees: 1/2/4.5
+PASS random pass remains within 120 degrees: 1/2/5
+PASS random pass remains within 120 degrees: 1/2/5.5
+PASS random pass remains within 120 degrees: 1/2/6
+PASS random pass remains within 120 degrees: 1/2/6.5
+PASS random pass remains within 120 degrees: 1/2/7
+PASS random pass remains within 120 degrees: 1/2/7.5
+PASS random pass remains within 120 degrees: 1/2/8
+PASS random pass remains within 120 degrees: 1/2/8.5
+PASS random pass remains within 120 degrees: 1/2/9
+PASS random pass remains within 120 degrees: 1/2/9.5
+PASS random pass remains within 120 degrees: 1/2/10
+PASS scan direction changes between cycles: 2
+PASS random pass remains within 120 degrees: 2/0/1
+PASS random pass remains within 120 degrees: 2/0/1.5
+PASS random pass remains within 120 degrees: 2/0/2
+PASS random pass remains within 120 degrees: 2/0/2.5
+PASS random pass remains within 120 degrees: 2/0/3
+PASS random pass remains within 120 degrees: 2/0/3.5
+PASS random pass remains within 120 degrees: 2/0/4
+PASS random pass remains within 120 degrees: 2/0/4.5
+PASS random pass remains within 120 degrees: 2/0/5
+PASS random pass remains within 120 degrees: 2/0/5.5
+PASS random pass remains within 120 degrees: 2/0/6
+PASS random pass remains within 120 degrees: 2/0/6.5
+PASS random pass remains within 120 degrees: 2/0/7
+PASS random pass remains within 120 degrees: 2/0/7.5
+PASS random pass remains within 120 degrees: 2/0/8
+PASS random pass remains within 120 degrees: 2/0/8.5
+PASS random pass remains within 120 degrees: 2/0/9
+PASS random pass remains within 120 degrees: 2/0/9.5
+PASS random pass remains within 120 degrees: 2/0/10
+PASS scan direction changes between cycles: 0
+PASS random pass remains within 120 degrees: 2/1/1
+PASS random pass remains within 120 degrees: 2/1/1.5
+PASS random pass remains within 120 degrees: 2/1/2
+PASS random pass remains within 120 degrees: 2/1/2.5
+PASS random pass remains within 120 degrees: 2/1/3
+PASS random pass remains within 120 degrees: 2/1/3.5
+PASS random pass remains within 120 degrees: 2/1/4
+PASS random pass remains within 120 degrees: 2/1/4.5
+PASS random pass remains within 120 degrees: 2/1/5
+PASS random pass remains within 120 degrees: 2/1/5.5
+PASS random pass remains within 120 degrees: 2/1/6
+PASS random pass remains within 120 degrees: 2/1/6.5
+PASS random pass remains within 120 degrees: 2/1/7
+PASS random pass remains within 120 degrees: 2/1/7.5
+PASS random pass remains within 120 degrees: 2/1/8
+PASS random pass remains within 120 degrees: 2/1/8.5
+PASS random pass remains within 120 degrees: 2/1/9
+PASS random pass remains within 120 degrees: 2/1/9.5
+PASS random pass remains within 120 degrees: 2/1/10
+PASS scan direction changes between cycles: 1
+PASS random pass remains within 120 degrees: 2/2/1
+PASS random pass remains within 120 degrees: 2/2/1.5
+PASS random pass remains within 120 degrees: 2/2/2
+PASS random pass remains within 120 degrees: 2/2/2.5
+PASS random pass remains within 120 degrees: 2/2/3
+PASS random pass remains within 120 degrees: 2/2/3.5
+PASS random pass remains within 120 degrees: 2/2/4
+PASS random pass remains within 120 degrees: 2/2/4.5
+PASS random pass remains within 120 degrees: 2/2/5
+PASS random pass remains within 120 degrees: 2/2/5.5
+PASS random pass remains within 120 degrees: 2/2/6
+PASS random pass remains within 120 degrees: 2/2/6.5
+PASS random pass remains within 120 degrees: 2/2/7
+PASS random pass remains within 120 degrees: 2/2/7.5
+PASS random pass remains within 120 degrees: 2/2/8
+PASS random pass remains within 120 degrees: 2/2/8.5
+PASS random pass remains within 120 degrees: 2/2/9
+PASS random pass remains within 120 degrees: 2/2/9.5
+PASS random pass remains within 120 degrees: 2/2/10
+PASS scan direction changes between cycles: 2
+PASS guaranteed shared 4 s dark interval: 11
+PASS light faces away from escape corridor during dark window: 0
+PASS light faces away from escape corridor during dark window: 1
+PASS light faces away from escape corridor during dark window: 2
+PASS guaranteed shared 4 s dark interval: 11.25
+PASS light faces away from escape corridor during dark window: 0
+PASS light faces away from escape corridor during dark window: 1
+PASS light faces away from escape corridor during dark window: 2
+PASS guaranteed shared 4 s dark interval: 11.5
+PASS light faces away from escape corridor during dark window: 0
+PASS light faces away from escape corridor during dark window: 1
+PASS light faces away from escape corridor during dark window: 2
+PASS guaranteed shared 4 s dark interval: 11.75
+PASS light faces away from escape corridor during dark window: 0
+PASS light faces away from escape corridor during dark window: 1
+PASS light faces away from escape corridor during dark window: 2
+PASS guaranteed shared 4 s dark interval: 12
+PASS light faces away from escape corridor during dark window: 0
+PASS light faces away from escape corridor during dark window: 1
+PASS light faces away from escape corridor during dark window: 2
+PASS guaranteed shared 4 s dark interval: 12.25
+PASS light faces away from escape corridor during dark window: 0
+PASS light faces away from escape corridor during dark window: 1
+PASS light faces away from escape corridor during dark window: 2
+PASS guaranteed shared 4 s dark interval: 12.5
+PASS light faces away from escape corridor during dark window: 0
+PASS light faces away from escape corridor during dark window: 1
+PASS light faces away from escape corridor during dark window: 2
+PASS guaranteed shared 4 s dark interval: 12.75
+PASS light faces away from escape corridor during dark window: 0
+PASS light faces away from escape corridor during dark window: 1
+PASS light faces away from escape corridor during dark window: 2
+PASS guaranteed shared 4 s dark interval: 13
+PASS light faces away from escape corridor during dark window: 0
+PASS light faces away from escape corridor during dark window: 1
+PASS light faces away from escape corridor during dark window: 2
+PASS guaranteed shared 4 s dark interval: 13.25
+PASS light faces away from escape corridor during dark window: 0
+PASS light faces away from escape corridor during dark window: 1
+PASS light faces away from escape corridor during dark window: 2
+PASS guaranteed shared 4 s dark interval: 13.5
+PASS light faces away from escape corridor during dark window: 0
+PASS light faces away from escape corridor during dark window: 1
+PASS light faces away from escape corridor during dark window: 2
+PASS guaranteed shared 4 s dark interval: 13.75
+PASS light faces away from escape corridor during dark window: 0
+PASS light faces away from escape corridor during dark window: 1
+PASS light faces away from escape corridor during dark window: 2
+PASS guaranteed shared 4 s dark interval: 14
+PASS light faces away from escape corridor during dark window: 0
+PASS light faces away from escape corridor during dark window: 1
+PASS light faces away from escape corridor during dark window: 2
+PASS guaranteed shared 4 s dark interval: 14.25
+PASS light faces away from escape corridor during dark window: 0
+PASS light faces away from escape corridor during dark window: 1
+PASS light faces away from escape corridor during dark window: 2
+PASS guaranteed shared 4 s dark interval: 14.5
+PASS light faces away from escape corridor during dark window: 0
+PASS light faces away from escape corridor during dark window: 1
+PASS light faces away from escape corridor during dark window: 2
+PASS guaranteed shared 4 s dark interval: 14.75
+PASS light faces away from escape corridor during dark window: 0
+PASS light faces away from escape corridor during dark window: 1
+PASS light faces away from escape corridor during dark window: 2
+PASS exposed player inside flashlight cone is visible
+PASS player beyond 28 m is not illuminated
+PASS player outside narrow light cone is not illuminated
+PASS solid wall blocks flashlight detection
+PASS lying in actual planted rice hides Nam from flashlight
+PASS rice also blocks mission warning/exposure counter
+PASS standing up in rice removes concealment
+PASS random scan sequence persists in checkpoint
+PASS night patrol hides after night objective ends

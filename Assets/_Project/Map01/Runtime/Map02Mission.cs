@@ -143,6 +143,8 @@ namespace ShadowVale.Map01
             InstallMapSafety();
             arrival?.ReleasePassengerAnimation();
             Chapter=gameObject.AddComponent<Map02ChapterDirector>();Chapter.Initialize(this,questLayout);RefreshChapter();
+            if(GetComponent<Map01FoliageReveal>()==null)gameObject.AddComponent<Map01FoliageReveal>();
+            if(GetComponent<Map02SightCover>()==null)gameObject.AddComponent<Map02SightCover>();
             InitializeCharacter();
             StartCoroutine(PrepareHudChart());
             if (pending != null) { var data=pending; pending=null; Restore(data); }
@@ -180,7 +182,7 @@ namespace ShadowVale.Map01
             if(kb.mKey.wasPressedThisFrame){TogglePanel(3);return;}
             if(Panel!=0)return;
             if(Chapter?.HasNearbyPost==true){nearest=null;if(worldEReady)Chapter.TryInteractNearbyPost();return;}
-            if(worldEReady&&kb.eKey.wasPressedThisFrame){if(nearest!=null)Interact(nearest);else TryCharacterInteraction();}
+            if(worldEReady&&kb.eKey.wasPressedThisFrame){if(Chapter?.UndergroundStore?.TryLootInteraction()==true||Chapter?.UndergroundStore?.TryDoorInteraction()==true)return;if(nearest!=null)Interact(nearest);else TryCharacterInteraction();}
         }
         Map02ObjectiveObject NearestObjective()
         {
@@ -332,7 +334,7 @@ namespace ShadowVale.Map01
             // Old v3 saves may already be at the store/dock. Rebuild only the route baseline,
             // preserving the saved inventory, weapon and health rather than inventing supplies.
             var data=Capture();data.checkpoint=data.patrolCheckpoint=null;
-            data.chapter.ResetPatrolRoute();data.position=Chapter.Sites["bridge"].position;
+            data.chapter.ResetPatrolRoute();data.position=Chapter.NightObservationSpawn;
             patrolCheckpoint=JsonUtility.ToJson(data);
         }
         public bool RetryPatrol()
@@ -389,7 +391,7 @@ namespace ShadowVale.Map01
                 if(Chapter?.Busy!=true)DrawGameplayHud();
             }
             if(Panel==0)Chapter?.DrawOverlay();
-            if(World.story.failed){GUI.Box(new Rect(420,290,760,240),GUIContent.none);GUI.Label(new Rect(455,320,690,95),World.story.failureCause,body);if(GUI.Button(new Rect(650,440,300,55),"Thử lại checkpoint"))Retry();}
+            if(World.story.failed&&Chapter?.NightPatrolFailureActive!=true){GUI.Box(new Rect(420,290,760,240),GUIContent.none);GUI.Label(new Rect(455,320,690,95),World.story.failureCause,body);if(GUI.Button(new Rect(650,440,300,55),"Thử lại checkpoint"))Retry();}
             if(Panel==0&&CharacterHud==null&&Chapter?.Busy!=true&&Chapter?.Transitioning!=true&&Time.unscaledTime<messageUntil)GUI.Label(new Rect(400,250,800,90),message,body);
             GUI.matrix=matrix;GUI.color=color;GUI.depth=depth;
         }

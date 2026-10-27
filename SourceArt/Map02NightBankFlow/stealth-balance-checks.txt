@@ -1,0 +1,39 @@
+PASS all three real patrol NPCs spawn with 1440 HP
+PASS binocular view before mission checkpoint cannot complete observation
+PASS passing outside checkpoint radius does not activate observation
+PASS passing mission checkpoint activates observation without binoculars
+PASS visible patrol can be observed for two seconds from direction (0.00, 0.00, 1.00)
+PASS visible patrol can be observed for two seconds from direction (0.00, 0.00, -1.00)
+PASS visible patrol can be observed for two seconds from direction (-1.00, 0.00, 0.00)
+PASS visible patrol can be observed for two seconds from direction (1.00, 0.00, 0.00)
+PASS outside forty metres resets observation progress
+PASS exact forty metre boundary permits observation
+PASS obstructed line of sight resets observation even after checkpoint
+PASS checkpoint latch survives validated save round trip
+PASS radio and warehouse remain locked before observation completes
+PASS reaching warehouse marker cannot bypass observation prerequisites
+PASS dry field detour is not blocked after observation
+PASS village bank is not blocked by corridor bounds
+PASS player can leave old narrow corridor on dry ground
+PASS only actual river blocks walking and jumping shortcuts
+PASS first actual unblocked patrol bullet removes 50 percent of maximum player HP
+PASS second actual unblocked patrol bullet kills an unhealed player
+PASS 59 bullets leave enemy alive for raw damage 22
+PASS bullet 60 kills enemy for raw damage 22
+PASS 59 bullets leave enemy alive for raw damage 24
+PASS bullet 60 kills enemy for raw damage 24
+PASS 59 bullets leave enemy alive for raw damage 250
+PASS bullet 60 kills enemy for raw damage 250
+PASS queued lethal-weapon override cannot bypass sixty-hit patrol durability
+PASS ordinary enemies retain standard bullet damage
+PASS ordinary enemies retain existing lethal-weapon policy
+PASS old saves migrate health fraction; dead/current-version soldiers are preserved
+PASS arrival does not trigger outside three metres
+PASS reaching hatch ends patrol approach without skipping interior inspection
+PASS all three searchlights turn off immediately at hatch
+PASS hatch arrival clears all patrol target locks
+PASS after arrival patrol cannot resume scanning or shooting
+PASS arrival ceasefire and health version persist in save
+PASS refresh/load keeps searchlights off after hatch arrival
+PASS radio/chain guidance still finishes after patrol shuts down
+PASS retry resets patrol encounter

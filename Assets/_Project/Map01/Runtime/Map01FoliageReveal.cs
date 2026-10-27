@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 namespace ShadowVale.Map01 {
-    /// <summary>Map 1 presentation only. Opaque original cover/detection geometry is untouched.</summary>
+    /// <summary>Local foliage presentation for both maps. Cover/detection geometry is untouched.</summary>
     public sealed class Map01FoliageReveal : MonoBehaviour {
         sealed class Plant { public Bounds bounds;public Renderer[] renderers;public Material[][] materials;public MaterialPropertyBlock[] blocks;public MaterialPropertyBlock[][] indexed;public float opacity=1;public bool swapped; }
         const float Cell=4;
@@ -13,24 +13,40 @@ namespace ShadowVale.Map01 {
         readonly HashSet<Plant> active=new();
         readonly List<Plant> update=new();
         readonly Dictionary<Material,Material> variants=new();
+        readonly HashSet<Renderer> registered=new();
         MaterialPropertyBlock properties;
         Map01Mission mission;
-        [Range(.4f,1f)] public float minimumOpacity=.62f;
-        [Range(.4f,1.5f)] public float revealRadius=.85f;
+        Map02Mission map2;
+        [Range(.15f,1f)] public float minimumOpacity=.62f;
+        [Range(.1f,1.5f)] public float revealRadius=.85f;
         public Transform ExtraFocus{get;set;}
         public int ActivePlants=>active.Count;
         void Awake(){properties=new MaterialPropertyBlock();}
         void Start() {
             mission=GetComponent<Map01Mission>();
-            if(mission==null||gameObject.scene.name!="Map 1"){enabled=false;return;}
-            foreach(var lod in FindObjectsByType<LODGroup>(FindObjectsSortMode.None)) {
+            map2=GetComponent<Map02Mission>();
+            if(map2==null&&(mission==null||gameObject.scene.name!="Map 1")){enabled=false;return;}
+            if(map2!=null){minimumOpacity=.28f;revealRadius=.15f;}
+            foreach(var lod in FindObjectsByType<LODGroup>(map2!=null?FindObjectsInactive.Include:FindObjectsInactive.Exclude,FindObjectsSortMode.None)) {
                 // Reveal only authored hiding foliage, never crates, fences or shared tree trunks.
                 string label=lod.name.ToLowerInvariant();
-                if(!label.Contains("shrub")&&!label.Contains("grass")&&!label.Contains("bush")&&!label.Contains("fern"))continue;
+                if(!FoliageName(label))continue;
                 var renderers=lod.GetLODs().SelectMany(l=>l.renderers).Where(r=>r!=null&&r is MeshRenderer).Distinct().ToArray();
-                if(renderers.Length==0)continue;
+                Register(renderers);
+            }
+            // BushA/B and the runtime quest bush have mesh children but no LODGroup.
+            if(map2!=null)foreach(var t in FindObjectsByType<Transform>(FindObjectsInactive.Include,FindObjectsSortMode.None))
+                if(FoliageName(t.name.ToLowerInvariant()))Register(t.GetComponentsInChildren<MeshRenderer>(true));
+        }
+        bool FoliageName(string label)=>label.Contains("shrub")||label.Contains("bush")||
+            (map2!=null?label.Contains("hedge")||label.Contains("bụi cây"):label.Contains("grass")||label.Contains("fern"));
+        void Register(Renderer[] candidates)
+        {
+                var renderers=candidates.Where(r=>r!=null&&!registered.Contains(r)).Distinct().ToArray();
+                if(renderers.Length==0)return;
                 var bounds=renderers[0].bounds;foreach(var r in renderers)bounds.Encapsulate(r.bounds);
-                if(bounds.size.y<.3f||bounds.size.y>4||bounds.size.x>8||bounds.size.z>8)continue;
+                if(bounds.size.y<.3f||bounds.size.y>4||bounds.size.x>8||bounds.size.z>8)return;
+                foreach(var r in renderers)registered.Add(r);
                 var plant=new Plant{bounds=bounds,renderers=renderers,materials=renderers.Select(r=>r.sharedMaterials).ToArray(),blocks=new MaterialPropertyBlock[renderers.Length],indexed=new MaterialPropertyBlock[renderers.Length][]};
                 for(int i=0;i<renderers.Length;i++){
                     plant.blocks[i]=new MaterialPropertyBlock();renderers[i].GetPropertyBlock(plant.blocks[i]);
@@ -41,15 +57,15 @@ namespace ShadowVale.Map01 {
                 for(int z=Mathf.FloorToInt(bounds.min.z/Cell);z<=Mathf.FloorToInt(bounds.max.z/Cell);z++) {
                     var key=new Vector2Int(x,z);if(!grid.TryGetValue(key,out var list))grid[key]=list=new List<Plant>();list.Add(plant);
                 }
-            }
         }
+        static void Float(Material material,string name,float value){if(material.HasProperty(name))material.SetFloat(name,value);}
         Material Variant(Material source) {
             if(source==null)return null;
             if(variants.TryGetValue(source,out var result))return result;
-            result=new Material(source){name=source.name+" (Map 1 reveal)",renderQueue=3000};
-            result.SetFloat("_Surface",1);result.SetFloat("_SrcBlend",(float)BlendMode.SrcAlpha);result.SetFloat("_DstBlend",(float)BlendMode.OneMinusSrcAlpha);
-            result.SetFloat("_ZWrite",0);result.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");result.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-            result.SetFloat("_AlphaClip",0);result.DisableKeyword("_ALPHATEST_ON");
+            result=new Material(source){name=source.name+" (local foliage reveal)",renderQueue=3000};
+            Float(result,"_Surface",1);Float(result,"_SrcBlend",(float)BlendMode.SrcAlpha);Float(result,"_DstBlend",(float)BlendMode.OneMinusSrcAlpha);
+            Float(result,"_ZWrite",0);result.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");result.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+            Float(result,"_AlphaClip",0);result.DisableKeyword("_ALPHATEST_ON");
             result.SetOverrideTag("RenderType","Transparent");result.SetShaderPassEnabled("DepthOnly",false);
             result.SetShaderPassEnabled("DepthNormalsOnly",false);
             variants.Add(source,result);return result;
@@ -57,17 +73,19 @@ namespace ShadowVale.Map01 {
         void Query(Vector3 position) {
             var cell=new Vector2Int(Mathf.FloorToInt(position.x/Cell),Mathf.FloorToInt(position.z/Cell));
             for(int x=-1;x<=1;x++)for(int z=-1;z<=1;z++)if(grid.TryGetValue(cell+new Vector2Int(x,z),out var list))
-                foreach(var plant in list)if(Vector3.Distance(plant.bounds.ClosestPoint(position+Vector3.up*.7f),position+Vector3.up*.7f)<revealRadius)near.Add(plant);
+                foreach(var plant in list)if(plant.renderers.Any(r=>r!=null&&r.gameObject.activeInHierarchy)&&Vector3.Distance(plant.bounds.ClosestPoint(position+Vector3.up*.7f),position+Vector3.up*.7f)<revealRadius)near.Add(plant);
         }
         void LateUpdate() {
-            if(mission==null||mission.player==null)return;
-            near.Clear();if(mission.TryGetHideSpot(mission.player.position,out _))Query(mission.player.position);
-            if(ExtraFocus!=null){Query(mission.player.position);Query(ExtraFocus.position);}
+            var focus=map2!=null?map2.Player:mission!=null?mission.player:null;
+            if(focus==null)return;
+            near.Clear();
+            if(map2!=null||mission.TryGetHideSpot(focus.position,out _))Query(focus.position);
+            if(ExtraFocus!=null){Query(focus.position);Query(ExtraFocus.position);}
             foreach(var plant in near)active.Add(plant);
             update.Clear();update.AddRange(active);
             foreach(var plant in update) {
                 float goal=near.Contains(plant)?minimumOpacity:1;
-                plant.opacity=Mathf.MoveTowards(plant.opacity,goal,Time.deltaTime*(1-minimumOpacity)/(goal<1?.35f:.45f));
+                plant.opacity=Mathf.MoveTowards(plant.opacity,goal,Time.deltaTime*Mathf.Max(.01f,1-minimumOpacity)/(goal<1?.35f:.45f));
                 if(!plant.swapped&&plant.opacity<.999f) {
                     for(int i=0;i<plant.renderers.Length;i++)if(plant.renderers[i]!=null)plant.renderers[i].sharedMaterials=plant.materials[i].Select(Variant).ToArray();plant.swapped=true;
                 }
@@ -76,7 +94,11 @@ namespace ShadowVale.Map01 {
                     var renderer=plant.renderers[i];if(renderer==null)continue;
                     for(int j=0;j<plant.materials[i].Length;j++){
                         var material=plant.materials[i][j];if(material==null||!material.HasProperty("_BaseColor"))continue;
-                        renderer.GetPropertyBlock(properties,j);var color=material.GetColor("_BaseColor");color.a*=plant.opacity;
+                        renderer.GetPropertyBlock(properties,j);
+                        var original=plant.indexed[i][j];
+                        var color=original.HasColor("_BaseColor")?original.GetColor("_BaseColor"):
+                            plant.blocks[i].HasColor("_BaseColor")?plant.blocks[i].GetColor("_BaseColor"):material.GetColor("_BaseColor");
+                        color.a*=plant.opacity;
                         properties.SetColor("_BaseColor",color);renderer.SetPropertyBlock(properties,j);
                     }
                 }

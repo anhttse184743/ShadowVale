@@ -1,0 +1,218 @@
+PASS NamIdle loaded from runtime Resources
+PASS NamIdle shin length preserved at sample 0
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 1
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 2
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 3
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 4
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 5
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 6
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 7
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 8
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 9
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 10
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 11
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 12
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 13
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 14
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 15
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 16
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 17
+PASS NamIdle head at human height
+PASS NamIdle shin length preserved at sample 18
+PASS NamIdle head at human height
+PASS NamWalk loaded from runtime Resources
+PASS NamWalk shin length preserved at sample 0
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 1
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 2
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 3
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 4
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 5
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 6
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 7
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 8
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 9
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 10
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 11
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 12
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 13
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 14
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 15
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 16
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 17
+PASS NamWalk head at human height
+PASS NamWalk shin length preserved at sample 18
+PASS NamWalk head at human height
+PASS TamIdle loaded from runtime Resources
+PASS TamIdle shin length preserved at sample 0
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 1
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 2
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 3
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 4
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 5
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 6
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 7
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 8
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 9
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 10
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 11
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 12
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 13
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 14
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 15
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 16
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 17
+PASS TamIdle head at human height
+PASS TamIdle shin length preserved at sample 18
+PASS TamIdle head at human height
+PASS TamWalk loaded from runtime Resources
+PASS TamWalk shin length preserved at sample 0
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 1
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 2
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 3
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 4
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 5
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 6
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 7
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 8
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 9
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 10
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 11
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 12
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 13
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 14
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 15
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 16
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 17
+PASS TamWalk head at human height
+PASS TamWalk shin length preserved at sample 18
+PASS TamWalk head at human height
+PASS save/load retains issued K54, two deaths and exactly one living ambush enemy
+PASS next soldier allowed after kill 0
+PASS living soldier prevents another spawn 0
+PASS next soldier allowed after kill 1
+PASS living soldier prevents another spawn 1
+PASS next soldier allowed after kill 2
+PASS living soldier prevents another spawn 2
+PASS next soldier allowed after kill 3
+PASS living soldier prevents another spawn 3
+PASS next soldier allowed after kill 4
+PASS living soldier prevents another spawn 4
+PASS no sixth soldier
+PASS invalid ambush save rejected
+PASS vertical displacement never starts ambush
+PASS no ambush inside rescue radius of 4 metres
+PASS save/load inside 4 metre radius stays unarmed
+PASS first ambush starts at horizontal displacement of 4 metres
+PASS activated ambush remains active across save/load and return to rescue point
+PASS source gait keeps its authored distance calibration
+PASS reload lowers, holds, raises on normal normalized magazine progress
+PASS quest equips one K54 and repeated preparation never duplicates it
+PASS weapon gate rejects rifle and knife
+PASS escort presentation preserves configured normal reload duration
+PASS normal magazine reload still starts
+PASS valid reachable spawn point 0
+PASS field side alternates left/right for soldier 0
+PASS valid reachable spawn point 1
+PASS field side alternates left/right for soldier 1
+PASS ambush points progress towards camp 1
+PASS valid reachable spawn point 2
+PASS field side alternates left/right for soldier 2
+PASS ambush points progress towards camp 2
+PASS valid reachable spawn point 3
+PASS field side alternates left/right for soldier 3
+PASS ambush points progress towards camp 3
+PASS valid reachable spawn point 4
+PASS field side alternates left/right for soldier 4
+PASS ambush points progress towards camp 4
+PASS moving player cannot move fixed spawn 0
+PASS moving player cannot move fixed spawn 1
+PASS moving player cannot move fixed spawn 2
+PASS moving player cannot move fixed spawn 3
+PASS moving player cannot move fixed spawn 4
+PASS save/load retains all five fixed ambush points
+PASS escort uses three times configured normal walk speed
+PASS K54 cannot be dropped or stowed during paired escort
+PASS escort allows healing while keeping weapon changes locked
+PASS medkit heals normally and consumes exactly one while escorting
+PASS healing cooldown prevents repeated immediate consumption
+PASS approved shoulder pose binds with nested Animator root
+PASS real displacement advances Tâm leg animation even when PlanarSpeed is zero
+PASS both characters stand on ground despite deeply offset incoming model roots
+PASS both soles follow raised road surface without sinking
+PASS aim raises right arm and aligns muzzle with camera pitch/yaw
+PASS left supporting hand does not move while aiming
+PASS carry and aim have different right arm poses
+PASS half of normal reload time corresponds to half animation progress
+PASS left supporting hand stays planted at midpoint of reload
+PASS reload completes at normal time with normal magazine refill
+PASS Tâm collider does not retract normal aim camera framing
+PASS camera still collides with real world walls
+PASS camera companion exception removed after escort

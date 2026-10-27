@@ -1,0 +1,16 @@
+{
+    "status": "location proposal only; no scene changes",
+    "patrolCenter": {
+        "x": 30.239999771118165,
+        "y": 0.7250001430511475,
+        "z": -12.397218704223633
+    },
+    "hatchPosition": {
+        "x": 67.39446258544922,
+        "y": 0.795741617679596,
+        "z": -14.791300773620606
+    },
+    "roadEdgeDistanceMeters": 10.0,
+    "hatchOnNavMesh": true,
+    "patrolOnNavMesh": true
+}

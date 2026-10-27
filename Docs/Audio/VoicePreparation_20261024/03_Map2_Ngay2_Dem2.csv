@@ -1,4 +1,4 @@
-﻿batch,id,scene,speaker,text,radio,voice,performance,resource,status,approved
+batch,id,scene,speaker,text,radio,voice,performance,resource,status,approved
 03_Map2_Ngay2_Dem2,m2v3_scoutorder_01,m2v3_scoutorder,Anh Thành,Tâm quá hẹn một đêm rồi. Nam đi khu cầu.,False,Minh Đức,"middle aged, clear concise authority",Dialogue/FullGameFree20261023/m2v3_scoutorder_01,Đã tích hợp chỉ huy B,False
 03_Map2_Ngay2_Dem2,m2v3_scoutorder_02,m2v3_scoutorder,Nam,Rõ.,False,Adam,"young adult, healthy, energetic",Dialogue/FullGameFree20261023/m2v3_scoutorder_02,Cần nghe duyệt,False
 03_Map2_Ngay2_Dem2,m2v3_scoutorder_03,m2v3_scoutorder,Hùng,Em đi với.,False,Anh Khôi,"middle aged, right arm injured; restrained pain, not elderly",Dialogue/FullGameFree20261023/m2v3_scoutorder_03,Đã đồng bộ trong game 25/10/2026; chờ nghe kiểm tra từng câu,False
@@ -31,3 +31,11 @@
 03_Map2_Ngay2_Dem2,m2v3_reconcile_07,m2v3_reconcile,Nam,Ừ.,False,Adam,"young adult, healthy, energetic",Dialogue/FullGameFree20261023/m2v3_reconcile_07,Cần nghe duyệt,False
 03_Map2_Ngay2_Dem2,m2v3_reconcile_08,m2v3_reconcile,Hùng,Hôm đó… sao cậu quay lại? Bọn nó đông thế.,False,Anh Khôi,"middle aged, right arm injured; restrained pain, not elderly",Dialogue/FullGameFree20261023/m2v3_reconcile_08,Đã đồng bộ trong game 25/10/2026; chờ nghe kiểm tra từng câu,False
 03_Map2_Ngay2_Dem2,m2v3_reconcile_09,m2v3_reconcile,Nam,Là cậu thì cậu cũng quay lại thôi.,False,Adam,"young adult, healthy, energetic",Dialogue/FullGameFree20261023/m2v3_reconcile_09,Cần nghe duyệt,False
+03_Map2_Ngay2_Dem2,m2v3_evac_field_01,m2v3_evac_field,Nam,"Báo cáo, lối này có địch không thể sơ tán được",True,Adam,existing cast; radio report,Dialogue/VI/m2v3_evac_field_01_radio,Đã tích hợp 27/10/2026; chờ nghe duyệt từng câu,False
+03_Map2_Ngay2_Dem2,m2v3_evac_field_02,m2v3_evac_field,Anh Thành,"Cậu hãy mau chóng rời khỏi đó, rút lui an toàn và tìm con đường khác",True,Minh Đức,existing cast; radio report,Dialogue/VI/m2v3_evac_field_02_radio,Đã tích hợp 27/10/2026; chờ nghe duyệt từng câu,False
+03_Map2_Ngay2_Dem2,m2v3_evac_field_03,m2v3_evac_field,Nam,rõ,True,Adam,existing cast; radio report,Dialogue/VI/m2v3_evac_field_03_radio,Đã tích hợp 27/10/2026; chờ nghe duyệt từng câu,False
+03_Map2_Ngay2_Dem2,m2v3_evac_river_01,m2v3_evac_river,Nam,"Báo cáo thủ trưởng, lối này khá an toàn, tuy nhiên phải lội qua sông ạ",True,Adam,existing cast; radio report,Dialogue/VI/m2v3_evac_river_01_radio,Đã tích hợp 27/10/2026; chờ nghe duyệt từng câu,False
+03_Map2_Ngay2_Dem2,m2v3_evac_river_02,m2v3_evac_river,Anh Thành,"Không được, phải ưu tiên đường an toàn để sơ tán mọi người",True,Minh Đức,existing cast; radio report,Dialogue/VI/m2v3_evac_river_02_radio,Đã tích hợp 27/10/2026; chờ nghe duyệt từng câu,False
+03_Map2_Ngay2_Dem2,m2v3_evac_river_03,m2v3_evac_river,Nam,rõ!,True,Adam,existing cast; radio report,Dialogue/VI/m2v3_evac_river_03_radio,Đã tích hợp 27/10/2026; chờ nghe duyệt từng câu,False
+03_Map2_Ngay2_Dem2,m2v3_evac_village_01,m2v3_evac_village,Nam,"Báo cáo thủ trưởng, lối này không có địch đi tuần, rất an toàn, người dân có thể sơ tán ạ",True,Adam,existing cast; radio report,Dialogue/VI/m2v3_evac_village_01_radio,Đã tích hợp 27/10/2026; chờ nghe duyệt từng câu,False
+03_Map2_Ngay2_Dem2,m2v3_evac_village_02,m2v3_evac_village,Anh Thành,"Làm tốt lắm, giờ cậu hãy quay trở về căn cứ để chuẩn bị sơ tán người dân",True,Minh Đức,existing cast; radio report,Dialogue/VI/m2v3_evac_village_02_radio,Đã tích hợp 27/10/2026; chờ nghe duyệt từng câu,False

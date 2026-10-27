@@ -67,7 +67,14 @@ namespace ShadowVale.Gameplay.Player
         public float PlanarSpeed { get; private set; }
         public System.Func<bool> InputAllowed { get; set; }
         public System.Func<bool> SprintAllowed { get; set; }
+        // A nearby ladder may consume Space before stance changes and jumping.
+        public System.Func<bool> JumpInteraction { get; set; }
+        public System.Func<bool> CrouchInteraction { get; set; }
+        // Mission-local movement bounds; applied before collision, including sprint and jump travel.
+        public System.Func<Vector3,Vector3,Vector3> MovementConstraint { get; set; }
         public float SurfaceSpeedMultiplier { get; set; } = 1;
+        public float? AssistedWalkSpeed { get; set; }
+        public float WalkSpeed=>walkSpeed;
         public void RestoreMotion(bool sneaking)
         {
             SetProne(false, true);
@@ -126,19 +133,33 @@ namespace ShadowVale.Gameplay.Player
                 return;
             }
             Keyboard kb = dead ? null : Keyboard.current;
+            if(kb!=null&&(kb.leftCtrlKey.wasPressedThisFrame||kb.rightCtrlKey.wasPressedThisFrame)&&CrouchInteraction?.Invoke()==true)
+            {
+                _planarVelocity=Vector3.zero;PlanarSpeed=0;return;
+            }
+            if(kb?.spaceKey.wasPressedThisFrame==true&&JumpInteraction?.Invoke()==true)
+            {
+                _planarVelocity=Vector3.zero;PlanarSpeed=0;return;
+            }
 
             Vector2 input = ReadMoveInput(kb);
             bool stoodFromProne = IsProne && kb != null && (kb.zKey.wasPressedThisFrame || kb.spaceKey.wasPressedThisFrame);
             if (stoodFromProne) TrySetProne(false);
             else if (kb != null && kb.zKey.wasPressedThisFrame) TrySetProne(true);
             UpdateStanceToggles(kb);
+            if(AssistedWalkSpeed.HasValue)
+            {
+                // Changing stance clears velocity. Do this only when leaving prone, not every frame.
+                if(IsProne)SetProne(false,true);
+                _sneakToggled=IsSneaking=false;_sprintToggled=IsSprinting=false;
+            }
 
             Vector3 move = ToCameraSpace(input);
 
             ApplyRotation(move);
 
             float targetSpeed = IsProne ? crawlSpeed : IsSneaking ? sneakSpeed : IsSprinting ? sprintSpeed : walkSpeed;
-            Vector3 targetVelocity = move * targetSpeed * SurfaceSpeedMultiplier;
+            Vector3 targetVelocity = move * (AssistedWalkSpeed??(targetSpeed * SurfaceSpeedMultiplier));
             _planarVelocity = Vector3.MoveTowards(
                 _planarVelocity, targetVelocity, acceleration * Time.deltaTime);
 
@@ -148,7 +169,7 @@ namespace ShadowVale.Gameplay.Player
                 _verticalVelocity = -2f; // Stick to slopes instead of ratcheting downhill.
             }
 
-            if (grounded && !IsProne && !stoodFromProne && kb != null && kb.spaceKey.wasPressedThisFrame)
+            if (!AssistedWalkSpeed.HasValue && grounded && !IsProne && !stoodFromProne && kb != null && kb.spaceKey.wasPressedThisFrame)
             {
                 // Jumping stands you up instead of being swallowed by the crouch.
                 _sneakToggled = false;
@@ -166,7 +187,9 @@ namespace ShadowVale.Gameplay.Player
             Vector3 velocity = _planarVelocity;
             velocity.y = _verticalVelocity;
             Vector3 beforeMove = transform.position;
-            _controller.Move(velocity * Time.deltaTime);
+            Vector3 displacement = velocity * Time.deltaTime;
+            if (MovementConstraint != null) displacement = MovementConstraint(beforeMove, displacement);
+            _controller.Move(displacement);
             PlanarSpeed = Time.deltaTime > 0f
                 ? Vector3.ProjectOnPlane(transform.position - beforeMove, Vector3.up).magnitude / Time.deltaTime : 0f;
 

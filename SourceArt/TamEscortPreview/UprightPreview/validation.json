@@ -1,0 +1,141 @@
+{
+  "revision": 5,
+  "nam_knee_lowering_m": 0,
+  "tam_shoulder_lift_m": 0,
+  "standing_review_frame": 0,
+  "tam_offset_towards_nam_m": 0.1,
+  "tam_right_shoulder_elevation_degrees": 30,
+  "tam_hip_counter_tilt_degrees": -2,
+  "speed_kmh": 9,
+  "speed_mps": 2.5,
+  "fps": 30,
+  "loop_frames": 18,
+  "loop_seconds": 0.6,
+  "source": "Blender authored paired animation; original game rigs",
+  "shoulder_max_error_m": 0.0008556946102548758,
+  "waist_max_error_m": 0.02040680886099119,
+  "foot_max_error_m": 0.0015347579288590937,
+  "contacts": [
+    {
+      "frame": 0,
+      "shoulder_error_m": 0.0008492819593728304,
+      "waist_error_m": 0.01281671181693536
+    },
+    {
+      "frame": 1,
+      "shoulder_error_m": 0.0008537628252690438,
+      "waist_error_m": 0.0017537398999451735
+    },
+    {
+      "frame": 2,
+      "shoulder_error_m": 0.00085208102576074,
+      "waist_error_m": 0.0017315212092064174
+    },
+    {
+      "frame": 3,
+      "shoulder_error_m": 0.0008510085256167331,
+      "waist_error_m": 0.00443169772809251
+    },
+    {
+      "frame": 4,
+      "shoulder_error_m": 0.0008499819213572175,
+      "waist_error_m": 0.009051976272280195
+    },
+    {
+      "frame": 5,
+      "shoulder_error_m": 0.0008491106234432301,
+      "waist_error_m": 0.013212246211212848
+    },
+    {
+      "frame": 6,
+      "shoulder_error_m": 0.0008486537036429862,
+      "waist_error_m": 0.016965438323822583
+    },
+    {
+      "frame": 7,
+      "shoulder_error_m": 0.0008479395479767909,
+      "waist_error_m": 0.02040680886099119
+    },
+    {
+      "frame": 8,
+      "shoulder_error_m": 0.0008496382595455567,
+      "waist_error_m": 0.010853643398215143
+    },
+    {
+      "frame": 9,
+      "shoulder_error_m": 0.000853561397397558,
+      "waist_error_m": 0.0017510531254824285
+    },
+    {
+      "frame": 10,
+      "shoulder_error_m": 0.0008556946102548758,
+      "waist_error_m": 0.0017749569160695946
+    },
+    {
+      "frame": 11,
+      "shoulder_error_m": 0.0008538828853024026,
+      "waist_error_m": 0.001753907528314699
+    },
+    {
+      "frame": 12,
+      "shoulder_error_m": 0.0008531044960069894,
+      "waist_error_m": 0.0017433616834331702
+    },
+    {
+      "frame": 13,
+      "shoulder_error_m": 0.0008518429332811685,
+      "waist_error_m": 0.0017272813277205365
+    },
+    {
+      "frame": 14,
+      "shoulder_error_m": 0.0008509419948398334,
+      "waist_error_m": 0.004294460319119698
+    },
+    {
+      "frame": 15,
+      "shoulder_error_m": 0.0008501583888893024,
+      "waist_error_m": 0.007883392096619798
+    },
+    {
+      "frame": 16,
+      "shoulder_error_m": 0.0008496037703063454,
+      "waist_error_m": 0.011231006292476198
+    },
+    {
+      "frame": 17,
+      "shoulder_error_m": 0.0008503799579016272,
+      "waist_error_m": 0.006720131101180614
+    },
+    {
+      "frame": 18,
+      "shoulder_error_m": 0.000853307963580407,
+      "waist_error_m": 0.0017465742954165728
+    },
+    {
+      "frame": 19,
+      "shoulder_error_m": 0.0008537628252690438,
+      "waist_error_m": 0.0017537398999451735
+    }
+  ],
+  "worst_foot": {
+    "frame": 6,
+    "actor": "Tam",
+    "side": "Left",
+    "error": 0.0015347579288590937,
+    "target": [
+      0.29499998688697815,
+      0.061666667461395264,
+      0.10499999672174454
+    ],
+    "actual": [
+      0.2960447669029236,
+      0.06187620386481285,
+      0.1061045378446579
+    ],
+    "hip": [
+      0.28370124101638794,
+      0.026372740045189857,
+      0.980965793132782
+    ]
+  }
+}
