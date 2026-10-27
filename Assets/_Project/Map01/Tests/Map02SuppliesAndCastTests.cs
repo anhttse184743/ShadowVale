@@ -138,7 +138,7 @@ namespace ShadowVale.Map01.Tests
             Set("D3_04");yield return Frames(3);float settle=Time.time+1.5f;while(Time.time<settle)yield return null;   // past the day's fade
             var finish=typeof(Map02ChapterDirector).GetMethod("Finish",System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Instance);
             finish.Invoke(chapter,new object[]{Map02ChapterDefinition.Load().Find("D3_04")});
-            Assert.IsTrue(chapter.StepsRehearsal,"Hùng sets off with Ông Sáu once the families are told.");Assert.IsFalse(mission.InputBlocked,"Nam keeps his controls meanwhile.");
+            Assert.IsTrue(chapter.StepsRehearsal,"Hùng sets off with Ông Sáu once the families are told.");Assert.IsTrue(mission.InputBlocked,"It plays as a cutscene.");
             var hung=chapter.Actor("Hùng").transform;var sau=chapter.Actor("Ông Sáu").transform;float apart=0;bool reached=false;float joined=Time.time+3;   // he steps over to Hùng first
             Time.timeScale=4;
             try
@@ -148,11 +148,12 @@ namespace ShadowVale.Map01.Tests
                 {
                     yield return null;
                     if(Time.time>joined)apart=Mathf.Max(apart,Vector3.Distance(hung.position,sau.position));
-                    reached|=Vector3.Distance(hung.position,chapter.DockSteps)<1.2f;
+                    reached|=Vector3.Distance(hung.position,chapter.StepsBottom)<1.2f;
                 }
             }
             finally{Time.timeScale=1;}
-            Assert.IsTrue(reached,"Hùng gets down to the dock steps.");
+            Assert.IsTrue(reached,"Hùng gets him down to the bottom step.");
+            float settle2=Time.time+1;while(Time.time<settle2)yield return null;Assert.IsFalse(mission.InputBlocked,"Nam has his controls back after it.");
             Assert.IsFalse(chapter.StepsRehearsal,"…and brings the old man home again.");
             Assert.Less(apart,2.5f,"Ông Sáu stays at Hùng's side the whole way.");
             Assert.Less(Vector3.Distance(hung.position,chapter.Sites["family"].position),3,"Hùng is home for supper.");

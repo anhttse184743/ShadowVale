@@ -18,7 +18,7 @@ namespace ShadowVale.Map01
         public Map02ChapterActor Actor(string role)=>roles.TryGetValue(role,out var actor)?actor:null;
         public Map02ChapterState State {get;private set;}=new Map02ChapterState();
         public Map02Mission Mission {get;private set;}
-        public bool Busy=>sceneTask!=null||doingWork||DayActivityActive;
+        public bool Busy=>sceneTask!=null||doingWork||DayActivityActive||stepsCut;   // the dock-steps walk is a cutscene too
         public bool ConversationActive=>sceneTask!=null;
         public bool Binoculars=>binocular;
         bool binocularHeld;
@@ -377,7 +377,7 @@ namespace ShadowVale.Map01
         }
         void LateUpdate()
         {
-            DayLateUpdate();UpdateWorkWeapon();if(!ready)return;PanToHung();HoldCargo();HungChargeLate();if(sceneTask==null){HoldCoverPosition();UpdateHungRadio();return;}
+            DayLateUpdate();UpdateWorkWeapon();if(!ready)return;PanToHung();HoldCargo();HungChargeLate();HoldStepsPair();if(sceneTask==null){HoldCoverPosition();UpdateHungRadio();return;}
             HoldConversation();FaceTalk();MoveDaySceneRoots();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=NamPoseClip();namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null||overrideClip==ordinaryWalk);
             SampleDayScene();UpdateHungRadio();
             string speaker=lines[lineIndex].speaker;Vector3 subject=Mission.Player.position;
@@ -486,7 +486,7 @@ namespace ShadowVale.Map01
         {
             ReleaseWorkWeapon();ReleaseDayScene();ReleaseDayFreePose();CloseDay(false);dayReturnInput=false;dayArrivalStarting=dayDockEnding=false;
             if(health!=null&&sceneTask!=null)health.CinematicInvulnerable=protectedBefore;
-            ClearEntrances();DropBarks();ReleaseConversation();ReleaseSceneAction();phaseFade=0;binocularHeld=false;binocular=false;observed=0;detectionClock=0;if(rig!=null)rig.SetBinoculars(false,1);if(combat!=null)combat.SetHandsOccupied(false);handsBusy=false;if(namPose!=null){namPose.Dispose();namPose=null;combat?.RestoreAfterCinematic();}foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}voice?.Stop();if(Patching)EndPatch();EndStepsRehearsal(false);sceneTask=null;doingWork=false;lines=null;escort?.StopAt(escort.transform.position);escort=null;secondaryEscort?.StopAt(secondaryEscort.transform.position);secondaryEscort=null;rig?.ClearCinematicView();
+            ClearEntrances();DropBarks();ReleaseConversation();ReleaseSceneAction();phaseFade=0;binocularHeld=false;binocular=false;observed=0;detectionClock=0;if(rig!=null)rig.SetBinoculars(false,1);if(combat!=null)combat.SetHandsOccupied(false);handsBusy=false;if(namPose!=null){namPose.Dispose();namPose=null;combat?.RestoreAfterCinematic();}foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}voice?.Stop();if(Patching)EndPatch();EndStepsRehearsal();sceneTask=null;doingWork=false;lines=null;escort?.StopAt(escort.transform.position);escort=null;secondaryEscort?.StopAt(secondaryEscort.transform.position);secondaryEscort=null;rig?.ClearCinematicView();
         }
         void ApplyState()
         {

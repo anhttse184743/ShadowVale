@@ -149,6 +149,7 @@ namespace ShadowVale.Map01
                 }
                 if(t>=FadeAt)black=Mathf.Clamp01((t-FadeAt)/8f);
             }
+            black=Mathf.Max(black,StepsBlack);   // the dock-steps cutscene's dark
             EffectRed=red;EffectGrey=grey;EffectBlack=black;EffectFlash=flash;ListenerCutoff=cutoff;
             ApplyHearing(cutoff,ringing);
             RefreshRadioProp();
