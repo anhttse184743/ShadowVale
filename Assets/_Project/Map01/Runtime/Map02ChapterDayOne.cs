@@ -61,7 +61,7 @@ namespace ShadowVale.Map01
         }
         void OpenDay(DayActivity activity,Map02ChapterTask task)
         {
-            dayInputReady=false;dayCloseRequested=false;packingMouseControl=false;ResetStakeStrike();dayActivity=activity;workTask=task;dayClock=0;packingCursor=new Vector2Int(2,0);dockSlot=System.Array.FindIndex(Day.boards,p=>p.x<0);if(dockSlot<0)dockSlot=0;dockOffset=.24f;dayFeedback="";selectedCrate=selectedBoard=-1;selectionRotated=false;daySpaceReleased=false;dayAttemptCycle=-1;
+            postHelp=false;dayInputReady=false;dayCloseRequested=false;packingMouseControl=false;ResetStakeStrike();dayActivity=activity;workTask=task;dayClock=0;packingCursor=new Vector2Int(2,0);dockSlot=System.Array.FindIndex(Day.boards,p=>p.x<0);if(dockSlot<0)dockSlot=0;dockOffset=.24f;dayFeedback="";selectedCrate=selectedBoard=-1;selectionRotated=false;daySpaceReleased=false;dayAttemptCycle=-1;
             if(activity==DayActivity.Packing){selectedCrate=System.Array.FindIndex(Day.crates,p=>p.x<0);if(selectedCrate>=0)selectionRotated=Day.crates[selectedCrate].rotated;}   // the first crate still to store is in hand
             dayWeapon=combat.EquippedKind;combat.Equip(WeaponKind.Unarmed);combat.SetHandsOccupied(true);player.RestoreMotion(false);
             dayCursorVisible=Cursor.visible;dayCursorLock=Cursor.lockState;Cursor.lockState=CursorLockMode.None;Cursor.visible=true;
@@ -160,16 +160,21 @@ namespace ShadowVale.Map01
                 if(kb.eKey.wasPressedThisFrame)ConfirmDockBoard();
             }else if(dayActivity==DayActivity.Lamp){if(kb.eKey.wasPressedThisFrame)ConfirmPostPart();}
             else if(dayActivity==DayActivity.Gate){
-                var p=Day.posts[postIndex];if(kb.aKey.wasPressedThisFrame){p.gateClosed=true;SyncDayProps();}
-                if(kb.dKey.wasPressedThisFrame){if(p.gateClosed){p.latchSeated=true;SyncDayProps();}else dayFeedback="Phải khép cửa sát khung trước.";}
+                var p=Day.posts[postIndex];if(kb.aKey.wasPressedThisFrame)ClosePostGate();
+                if(kb.dKey.wasPressedThisFrame)LatchPostGate();
                 if(kb.eKey.wasPressedThisFrame)ConfirmPostPart();
             }else if(dayActivity==DayActivity.Path){
                 if(number==0)dayFeedback="Bó củi sẽ chắn khoảng mở cửa. Chọn vị trí khác.";
-                if(number==1){Day.posts[postIndex].bundleStowed=true;SyncDayProps();}
+                if(number==1)StowPostBundle();
                 if(kb.eKey.wasPressedThisFrame)ConfirmPostPart();
             }
         }
-        void ConfirmPostPart(){var p=Day.posts[postIndex];bool okay=dayActivity==DayActivity.Lamp?p.LampSafe:dayActivity==DayActivity.Gate?p.gateClosed&&p.latchSeated:p.bundleStowed;if(okay)CloseDay();else dayFeedback=dayActivity==DayActivity.Lamp?"Ánh sáng vẫn lọt ra ngoài làng.":dayActivity==DayActivity.Gate?"Cửa rào chưa khép và cài chắc.":"Bó vật liệu vẫn nằm trên lối đi.";}
+        void ConfirmPostPart(){
+            var p=Day.posts[postIndex];int part=dayActivity==DayActivity.Lamp?0:dayActivity==DayActivity.Gate?1:2;p.inspected|=1<<part;
+            bool okay=part==0?p.LampSafe:part==1?p.gateClosed&&p.latchSeated:p.bundleStowed;
+            if(!okay){dayFeedback=part==0?"Chưa đạt: ánh sáng vẫn lọt ra ngoài làng. Xoay chụp rồi xác nhận lại.":part==1?"Chưa đạt: cửa phải khép sát và thanh chốt vào ngàm.":"Chưa đạt: bó củi vẫn chắn lối. Chuyển tới chỗ cất rồi xác nhận.";return;}
+            CloseDay();Mission.Say(p.Safe?"Chốt đã an toàn. Trở lại "+(postIndex==0?"tổ gác":"anh Lực")+" tại ghim vàng, nhấn E báo chốt sẵn sàng.":"Đã kiểm tra "+PostPartName(part).ToLower()+". Tiếp tục kiểm tra các đồ vật còn lại tại chốt.");
+        }
         void SaveDayProgress()
         {
             // Session state is already atomic. Allow a checkpoint only between completed units.
@@ -211,6 +216,7 @@ namespace ShadowVale.Map01
         {
             if(t.id=="D1_04"&&State.Count(t.id)>=3)return "Đã chuyển 3/3 thùng — tới kho kín, nhấn E sắp xếp vào kho.";
             if(t.id=="D1_05")return $"Hai cọc: {Day.stakeHits/3}/2 · ba ván: {Day.BoardCount}/3. E làm việc cùng chú Bảy.";
+            if((t.id=="N1_02"||t.id=="N1_03")&&(Day.postsReached&(t.id=="N1_02"?1:2))!=0&&Day.posts[t.id=="N1_02"?0:1].Safe)return "Chốt đã an toàn — trở lại "+(t.id=="N1_02"?"tổ gác":"anh Lực")+" tại ghim vàng, nhấn E báo cáo.";
             if((t.id=="N1_02"||t.id=="N1_03")&&(Day.postsReached&(t.id=="N1_02"?1:2))!=0)return "Kiểm tra ba hạng mục: đèn dầu, cửa rào và lối đi. Đến gần từng vật để thấy nhắc E. Sửa xong, quay lại "+(t.id=="N1_02"?"tổ gác":"anh Lực")+" ở ghim vàng báo chốt sẵn sàng.";
             return null;
         }

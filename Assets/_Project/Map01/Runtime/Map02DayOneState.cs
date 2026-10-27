@@ -10,7 +10,7 @@ namespace ShadowVale.Map01
         [Serializable] public sealed class Placement { public int x=-1,y=-1; public bool rotated; public float offset; }
         [Serializable] public sealed class Post
         {
-            public int faults; public float lampAngle; public bool gateClosed,latchSeated,bundleStowed;
+            public int faults,inspected; public float lampAngle; public bool gateClosed,latchSeated,bundleStowed;
             public bool LampSafe=>Mathf.Abs(Mathf.DeltaAngle(lampAngle,180))<=25;
             public bool Safe=>LampSafe&&gateClosed&&latchSeated&&bundleStowed;
             public string Problems=>string.Join(" · ",new[]{LampSafe?null:"ánh đèn lọt ra ngoài",gateClosed&&latchSeated?null:"cửa rào chưa cài chắc",bundleStowed?null:"lối đi chưa thông"}.Where(s=>s!=null));

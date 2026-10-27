@@ -179,7 +179,7 @@ namespace ShadowVale.Map01
                 PrepareShoeContacts(i);
                 poses[i].Dispose();poses[i]=new Map01Extraction.PosePlayer(actors[i],i==2?source.hungClips:null);
                 poses[i].Play(i==1?Resources.Load<AnimationClip>("Cutscenes/Map02/Hung_Arrival_Row_Loop"):i==2?source.InjuredTravel:Resources.Load<AnimationClip>("Cutscenes/Map02/Nam_Arrival_Travel"));
-                if(i==0)Map01Rifle.Attach(actors[i]).weapon.gameObject.SetActive(true);
+                if(i==0)Map01BoatCarry.For(actors[i]).Stow();
             }
             HideRowersRifle();
             stow=Resources.Load<AnimationClip>("Cutscenes/Map02/Hung_Oar_Stow");LoadMisstep();
@@ -413,7 +413,8 @@ namespace ShadowVale.Map01
                 // The C1 take owns Nam's hands while he removes the pack and supports Hùng.
                 if(MisstepOwnsFeet(i)){if(i==0)SlingRifle();continue;}
                 float rise=CurrentPhase==Phase.Disembarking?Mathf.Clamp01((clock-i*PassengerDelay)/StandDuration):0;
-                source.HoldSeatedRifle(actors[i],Mathf.Lerp(.32f,.16f,rise));
+                Map01BoatCarry.For(actors[i]).Stow();
+                if(CurrentPhase!=Phase.Disembarking)source.ArrivalRestHands(actors[i],clock);
             }
             // Authored hand support/release and arm swing must remain visible while rising/walking.
             if(CurrentPhase==Phase.Disembarking){source.SetPaddleGrip(0,0);if(clock<PassengerDelay)source.ArrivalRestHands(actors[1],clock);}
@@ -623,7 +624,7 @@ namespace ShadowVale.Map01
         }
         void Finish() {
             if(CurrentPhase==Phase.Gameplay)return;
-            speech?.Stop();source.SetPaddleGrip(0,0);EndMisstep();
+            speech?.Stop();source.SetPaddleGrip(0,0);EndMisstep();Map01BoatCarry.For(actors[0]).Restore();
             transform.SetPositionAndRotation(Docked,DockRotation);
             for(int i=0;i<3;i++) {
                 poses[i]?.Dispose();
