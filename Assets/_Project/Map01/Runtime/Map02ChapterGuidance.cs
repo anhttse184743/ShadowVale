@@ -26,7 +26,7 @@ namespace ShadowVale.Map01
                 if(t.id=="N2_03")return UndergroundStore?.Inside==true?"Tới kệ vật tư ở ghim vàng, nhấn E kiểm tra kho. Tới chân thang, Space bám thang · W lên / S xuống.":"Men bờ mương tới nắp hầm. E mở nắp, tới điểm cạnh miệng hầm và nhấn Ctrl bám thang xuống · Space bám thang lên · W lên / S xuống. Không thể nhảy xuống.";
                 if(t.id=="N2_04")return EvacuationInstruction;
                 if(t.id=="D2_03")return "Theo lối lúa bị giẫm từ cầu tới khoảng trống. Tâm nằm bị thương tại ghim vàng; đến gần, nhấn E để giúp.";
-                if(t.kind=="wire")return State.wireStage==1?"Đang mang cuộn dây. Tới trạm ở ghim vàng, nhấn E giao cho Hùng.":"Tới kho kín ở ghim vàng, nhấn E lấy cuộn dây ăng-ten.";
+                if(t.kind=="wire")return State.wireStage==1?"Đang mang cuộn dây và ăng-ten. Tới trạm ở ghim vàng, nhấn E giao cho Hùng.":"Tới kho kín ở ghim vàng, nhấn E lấy cuộn dây và ăng-ten.";
                 if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)?$"Đang mang thùng {n+1}/{t.count}. Tới ghim vàng rồi nhấn E để đặt.":$"Đã chuyển {n}/{t.count}. Tới ghim vàng, nhấn E nhận thùng tiếp theo.";
                 if(ScoutEscortActive)
                 {
@@ -60,7 +60,7 @@ namespace ShadowVale.Map01
                 }
                 if(IsPatch(t))return $"E bắt đầu vá · đã xong {n}/{t.count} thuyền. Bấm chuột vào chỗ rò khi vòng ngoài thu khít; càng chuẩn càng nhanh xong.";
                 if(t.kind=="repair")return $"E bắt đầu sửa · đã xong {n}/{t.count} phần. Nhấn Space đúng nhịp; sai được thử lại.";
-                if(t.kind=="antenna")return "E thao tác đài · A/D căn tín hiệu, giữ ổn định 2 giây.";
+                if(t.kind=="antenna")return "E leo thang lên cây dừa · W lên / S xuống · A/D chỉnh hướng · giữ Space cột ăng-ten sau khi tín hiệu ổn định 2 giây.";
                 if(t.kind=="demolition")return CrateInstruction(t);
                 if(t.kind=="clear")return "E bắt đầu · giữ Space để thao tác, Esc hủy.";
                 if(t.kind=="reach")return "Đi tới ghim vàng. Tự xác nhận khi vào đúng khu vực.";
@@ -95,7 +95,7 @@ namespace ShadowVale.Map01
             if(t.id=="N2_03")return UndergroundStore?.Inside==true?"Kiểm tra kệ vật tư trong hầm":"Mở nắp hầm kho · Ctrl để xuống";
             if(t.id=="D2_03")return "Giúp Tâm — trinh sát bị thương";
             if(t.id=="D1_04"&&n>=3)return "Sắp xếp ba thùng vào kho kín";
-            if(t.kind=="wire")return State.wireStage==1?"Giao cuộn dây ăng-ten cho Hùng":"Lấy cuộn dây ăng-ten trong kho kín";
+            if(t.kind=="wire")return State.wireStage==1?"Giao cuộn dây và ăng-ten cho Hùng":"Lấy cuộn dây và ăng-ten trong kho kín";
             if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)&&State.activeTask==t.id?$"Đặt thùng {n+1}/{t.count} tại {(t.id=="D1_04"?"kho kín":"chỗ trú bến nam")}":$"Nhận thùng {n+1}/{t.count} tại {(t.id=="D1_04"?"bến cập":"kho kín")}";
             if(t.kind=="families")return $"Dặn dò hộ dân {n+1}/{t.count}";
             if(t.kind=="demolition")return CratePrompt(t);

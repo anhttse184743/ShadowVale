@@ -199,7 +199,7 @@
     },
     {
       "id": "D2_05",
-      "title": "Lấy cuộn dây trong kho kín và mang về giao Hùng",
+      "title": "Lấy cuộn dây và ăng-ten trong kho kín, mang về trạm",
       "phase": 2,
       "kind": "wire",
       "site": "store",
@@ -209,11 +209,11 @@
       "count": 1,
       "scene": "",
       "seconds": 3,
-      "purpose": "Mang cuộn dây từ số vật tư đã cất hôm trước về trạm để Hùng dựng lại ăng-ten."
+      "purpose": "Mang cuộn dây và ăng-ten từ kho về trạm, chuẩn bị leo thang lên cây dừa để lắp."
     },
     {
       "id": "D2_06",
-      "title": "Dựng và chỉnh hướng ăng-ten theo tín hiệu của Hùng",
+      "title": "Leo thang gắn ăng-ten lên cây dừa theo tín hiệu của Hùng",
       "phase": 2,
       "kind": "antenna",
       "site": "radio",
@@ -223,7 +223,7 @@
       "count": 1,
       "scene": "antenna",
       "seconds": 3,
-      "purpose": "Khôi phục đường liên lạc với đơn vị bạn."
+      "purpose": "Leo thang lên cây dừa, chỉnh hướng và cột dây cố định ăng-ten. Ăng-ten ở lại trên cây sau khi lắp để duy trì liên lạc."
     },
     {
       "id": "D2_07",

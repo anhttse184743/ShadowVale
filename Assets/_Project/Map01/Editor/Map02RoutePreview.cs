@@ -21,6 +21,8 @@ namespace ShadowVale.Map01.Editor
         public static void PlayDayTwo()=>Begin(2);
         [MenuItem("ShadowVale/Map 2/Checkpoint cứu Tâm · M2_D2_04",priority=20)]
         public static void PlayScoutRescue()=>BeginAfter("D2_03");
+        [MenuItem("ShadowVale/Map 2/Checkpoint lắp ăng-ten · M2_D2_06",priority=21)]
+        public static void PlayAntenna()=>BeginAfter("D2_05");
         [MenuItem("ShadowVale/Map 2/Chạy thử Đêm 2",priority=21)]
         public static void PlayNightTwo()=>Begin(3);
         [MenuItem("ShadowVale/Map 2/Checkpoint kiểm tra đường sơ tán · N2_04",priority=22)]
@@ -36,6 +38,7 @@ namespace ShadowVale.Map01.Editor
         public static void PlayNightThreeCover()=>BeginAfter("N3_07");
         [MenuItem("ShadowVale/Map 2/Chạy thử Ngày 2",true)]
         [MenuItem("ShadowVale/Map 2/Checkpoint cứu Tâm · M2_D2_04",true)]
+        [MenuItem("ShadowVale/Map 2/Checkpoint lắp ăng-ten · M2_D2_06",true)]
         [MenuItem("ShadowVale/Map 2/Chạy thử Đêm 2",true)]
         [MenuItem("ShadowVale/Map 2/Checkpoint kiểm tra đường sơ tán · N2_04",true)]
         [MenuItem("ShadowVale/Map 2/Chạy thử Ngày 3",true)]
@@ -108,6 +111,14 @@ namespace ShadowVale.Map01.Editor
                 var start=mission.Chapter.EvacuationChoicePoint(0);
                 Apply(mission,state,start+Vector3.back*3.5f,start,
                     "CHECKPOINT N2_04 · Kho đã kiểm tra. Tới ghim gần hầm để chọn đường ruộng, đường qua sông hoặc đường trong làng. N mở lại danh sách.");
+                return;
+            }
+            if(task=="D2_05")
+            {
+                state.trackedTask="D2_06";state.Validate();
+                var tree=mission.Chapter.AntennaBase.position;
+                Apply(mission,state,tree+Vector3.back*1.5f,tree,
+                    "CHECKPOINT M2_D2_06 · Đã có cuộn dây và ăng-ten. Tới chân thang nhấn E · W lên / S xuống · A/D chỉnh hướng · giữ Space cột dây sau khi tín hiệu ổn định.");
                 return;
             }
             if(task=="D2_03")

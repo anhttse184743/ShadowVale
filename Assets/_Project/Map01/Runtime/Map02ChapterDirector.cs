@@ -148,7 +148,7 @@ namespace ShadowVale.Map01
             foreach(var place in new[]{"command","family","gate","radio","dock","rest","bamboo","store"}){var lamp=new GameObject("Oil lamp light — "+place);lamp.transform.SetParent(root.transform);lamp.transform.position=sites[place].position+Vector3.up*2.6f;var light=lamp.AddComponent<Light>();light.type=LightType.Point;light.color=new Color(1,.65f,.26f);light.range=5;light.intensity=0;light.shadows=LightShadows.None;lamps.Add(light);}
             var search=new GameObject("Enemy searchlight");search.transform.SetParent(root.transform);sweepLight=search.AddComponent<Light>();sweepLight.type=LightType.Spot;sweepLight.range=55;sweepLight.spotAngle=24;sweepLight.intensity=3;sweepLight.color=new Color(.65f,.8f,1);sweepLight.enabled=false;
             combat.Attacked+=OnPlayerShot;
-            EnsureDayState();LoadDayPerformances();BuildDayProps();BuildNightTwoRoute();BuildEvacuationChoices();ready=true;ApplyState();SyncDayProps();StartCoroutine(PreloadDayOneVoices());StartCoroutine(LoadChapterSoundscape());
+            EnsureDayState();LoadDayPerformances();BuildDayProps();BuildDayTwoAntenna();BuildNightTwoRoute();BuildEvacuationChoices();ready=true;ApplyState();SyncDayProps();StartCoroutine(PreloadDayOneVoices());StartCoroutine(LoadChapterSoundscape());
         }
         void Site(string id,Vector3 position)
         {
@@ -178,7 +178,7 @@ namespace ShadowVale.Map01
             if(t.kind=="families") {if(!State.introduced.Contains(t.id)){BeginScene(t);scenePurpose=2;}else CompleteFamily(t);return true;}
             if(t.kind=="wire")
             {
-                if(State.TakeWire()){UpdateMarkers();Mission.StoreCheckpoint();Mission.Say("Đã lấy cuộn dây. Mang về trạm, nhấn E giao cho Hùng.");return true;}
+                if(State.TakeWire()){UpdateMarkers();Mission.StoreCheckpoint();Mission.Say("Đã lấy cuộn dây và ăng-ten. Mang về trạm, nhấn E giao cho Hùng.");return true;}
                 if(State.DeliverWire()){CommitFinishedTask(t);return true;}
                 return false;
             }
@@ -225,6 +225,7 @@ namespace ShadowVale.Map01
             Cursor.visible=false;Cursor.lockState=CursorLockMode.Locked;doingWork=true;workTask=task;workClock=holdClock=0;heldReleased=false;signalHold=0;workOrigin=Mission.Player.position;
             if(task.kind=="antenna"){signalAudio=gameObject.AddComponent<AudioSource>();signalAudio.clip=Resources.Load<AudioClip>("OperationsAudio/radio_off");signalAudio.loop=true;signalAudio.volume=.2f;signalAudio.Play();}
             equippedBefore=combat.EquippedKind;combat.Equip(WeaponKind.Unarmed);player.RestoreMotion(false);
+            if(task.kind=="antenna")StartAntennaTraversal();
             if(IsPatch(task))BeginPatch();
         }
         void Update()
@@ -292,9 +293,11 @@ namespace ShadowVale.Map01
         Vector3 Destination(Map02ChapterTask t)=>t.kind.StartsWith("rescue")?sites["southStore"].position:DayTaskPoint(t);
         public void UpdateMarkers()
         {
+            RefreshDayTwoProps();
             foreach(var t in Map02ChapterDefinition.Load().tasks)
             {
                 var mark=markers[t.id];Vector3 pos=DayTaskPoint(t);
+                if(t.kind=="antenna"&&antennaBase!=null)pos=antennaBase.position;
                 if(t.kind=="wire"&&State.wireStage==1)pos=sites["radio"].position;
                 if(t.kind=="carry"&&State.activeTask==t.id&&string.IsNullOrEmpty(State.carry))pos=sites[t.id=="D1_04"?"arrival":"store"].position;
                 if(t.kind=="carry"&&State.activeTask!=t.id)pos=sites[t.id=="D1_04"?"arrival":"store"].position;
@@ -319,17 +322,11 @@ namespace ShadowVale.Map01
         void TickWork(float dt)
         {
             workClock+=dt;var kb=Keyboard.current;
+            if(workTask.kind=="antenna"){TickAntennaTraversal(dt,kb);return;}
             if(kb?.escapeKey.wasPressedThisFrame==true){EndWork(false);return;}
             if(Patching){TickPatch(dt);return;}
             if(kb==null)return;
             if(!kb.spaceKey.isPressed)heldReleased=true;
-            if(workTask.kind=="antenna")
-            {
-                signal=Mathf.Clamp01(signal+(kb.dKey.isPressed?dt*.22f:0)-(kb.aKey.isPressed?dt*.22f:0));
-                if(signalAudio!=null)signalAudio.volume=Mathf.Abs(signal-.72f)*.35f;
-                signalHold=Mathf.Abs(signal-.72f)<.055f?signalHold+dt:0;
-                if(signalHold>=2)EndWork(true);return;
-            }
             if(kb.spaceKey.wasPressedThisFrame&&heldReleased)
             {
                 heldReleased=false;
@@ -349,7 +346,7 @@ namespace ShadowVale.Map01
         void RestoreNamAnimator(){if(combat==null)return;combat.RestoreAfterCinematic();if(handsBusy)combat.SetHandsOccupied(true);}
         void EndWork(bool success)
         {
-            var task=workTask;if(IsPatch(task))EndPatch();if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}doingWork=false;combat.Equip(equippedBefore);combat.RestoreAfterCinematic();ForestMenu.SuppressKeysAfterCutscene();
+            var task=workTask;if(IsPatch(task))EndPatch();if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}doingWork=false;if(task.kind=="antenna")ReleaseAntennaTraversal();combat.Equip(equippedBefore);combat.RestoreAfterCinematic();ForestMenu.SuppressKeysAfterCutscene();
             if(success){if(task.kind=="antenna")BeginScene(task,1);else if(task.kind=="clear")BeginScene(task,3);else Finish(task);}
         }
         void BeginScene(Map02ChapterTask task,int from=0,int take=0)
@@ -390,7 +387,7 @@ namespace ShadowVale.Map01
         {
             if(EvacuationCaptureActive){PresentEvacuationCapture();return;}
             if(NightPatrolFailureActive){PresentNightPatrolFailure();return;}
-            DayLateUpdate();UpdateWorkWeapon();if(!ready)return;PanToHung();HoldCargo();if(sceneTask==null){UpdateHungRadio();return;}
+            DayLateUpdate();UpdateWorkWeapon();if(!ready)return;PanToHung();HoldCargo();if(doingWork&&workTask?.kind=="antenna"){SampleAntennaTraversal();SampleAntennaSupport();return;}if(sceneTask==null){UpdateHungRadio();return;}
             HoldConversation();MoveDaySceneRoots();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=NamPoseClip();namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null);
             SampleDayScene();UpdateHungRadio();
             string speaker=lines[lineIndex].speaker;Vector3 subject=Mission.Player.position;
@@ -503,6 +500,8 @@ namespace ShadowVale.Map01
         }
         public void Cancel()
         {
+            if(doingWork&&workTask?.kind=="antenna"){doingWork=false;ReleaseAntennaTraversal();}
+            antennaTied=false;
             CancelEvacuationCapture();
             CancelEvacuationChoices();
             CancelNightPatrolFailure();
@@ -668,6 +667,7 @@ namespace ShadowVale.Map01
                 GUI.Label(new Rect(180,844,1240,32),$"{lineIndex+1}/{lines.Length} · E tiếp tục · Giữ Esc 1 giây bỏ cảnh",label);
             }
             if(Patching)DrawPatch(label,title);
+            else if(doingWork&&workTask?.kind=="antenna")DrawAntennaWork(label,title);
             else if(doingWork)
             {
                 GUI.Box(new Rect(350,270,900,350),GUIContent.none);GUI.Label(new Rect(385,300,830,80),workTask.title,title);
@@ -694,7 +694,7 @@ namespace ShadowVale.Map01
         void OnDestroy()
         {
             ReleaseEvacuationLightPresentation();
-            ReleaseNightPatrolPresentation();ReleaseNightRiverCrossing();Cancel();ResetEffects();RestoreNaturalLighting();ReleaseDayArt();if(combat!=null){combat.EquipAllowed=null;combat.Attacked-=OnPlayerShot;combat.ReloadDurationMultiplier=1;combat.SetHandsOccupied(false);}if(player!=null){player.SurfaceSpeedMultiplier=1;player.SprintAllowed=null;player.MovementConstraint=null;}
+            ReleaseNightPatrolPresentation();ReleaseNightRiverCrossing();Cancel();ResetEffects();RestoreNaturalLighting();ReleaseDayArt();ReleaseDayTwoProps();if(combat!=null){combat.EquipAllowed=null;combat.Attacked-=OnPlayerShot;combat.ReloadDurationMultiplier=1;combat.SetHandsOccupied(false);}if(player!=null){player.SurfaceSpeedMultiplier=1;player.SprintAllowed=null;player.MovementConstraint=null;}
             RenderSettings.skybox=originalSky;RenderSettings.ambientMode=originalAmbientMode;if(chapterSky!=null)Destroy(chapterSky);RenderSettings.ambientLight=ambientBefore;RenderSettings.fog=fogBefore;RenderSettings.fogColor=fogColorBefore;RenderSettings.fogDensity=fogDensityBefore;
             if(sun!=null){sun.intensity=sunIntensity;sun.transform.rotation=sunRotation;sun.color=originalSunColor;}
         }

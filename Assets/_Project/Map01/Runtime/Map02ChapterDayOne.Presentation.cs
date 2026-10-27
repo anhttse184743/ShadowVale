@@ -69,6 +69,15 @@ namespace ShadowVale.Map01
         Vector3 slingBarrel,slingSide,slingCentre;
         void UpdateWorkWeapon()
         {
+            if(doingWork&&workTask?.kind=="antenna")
+            {
+                // Climbing uses both hands. Hide the gameplay gun and any work sling.
+                if(slungWorkRifle!=null)slungWorkRifle.SetActive(false);
+                foreach(var weapon in Mission.Player.GetComponentsInChildren<Weapon>(true))
+                    foreach(var renderer in weapon.GetComponentsInChildren<Renderer>(true))
+                    {if(!workWeaponRenderers.ContainsKey(renderer))workWeaponRenderers.Add(renderer,renderer.forceRenderingOff);renderer.forceRenderingOff=true;}
+                return;
+            }
             bool occupied=State.carry=="D1_04"||LeadingWounded||DayActivityActive;   // Tâm's and Night 3's rescue escorts keep the rifle in hand
             if(!occupied){ReleaseWorkWeapon();return;}
             if(slungWorkRifle==null)
