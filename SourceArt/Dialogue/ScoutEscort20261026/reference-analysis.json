@@ -1,0 +1,76 @@
+{
+  "preset": "Minh Đức",
+  "tempo": 0.92,
+  "pitch": 0.94,
+  "sourceRecipe": "SourceArt/Dialogue/CommanderB20261025/integrate_commander_b.py",
+  "cleanFilter": "rubberband=tempo=0.92:pitch=0.94,highpass=f=65,lowpass=f=7200,alimiter=limit=0.9:level=0",
+  "radioFilter": "highpass=f=320,lowpass=f=3200",
+  "references": [
+    {
+      "id": "m2v3_antenna_03",
+      "voice": "Minh Đức",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_antenna_03",
+      "duration": 2.1739166666666665,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.40667724609375,
+      "rms": 0.06376723945140839,
+      "sha256": "f145d97e11c91bb120e34c1e2bcf61df4a0cc6cbe67422d2b5d8e10c42ed3493"
+    },
+    {
+      "id": "m2v3_wound_02",
+      "voice": "Minh Đức",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_wound_02",
+      "duration": 3.739125,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.4122314453125,
+      "rms": 0.061909113079309464,
+      "sha256": "bbe1974b5428f812d71253c15bfb6c0a277765e75e56c6f243595deaaf3d0219"
+    },
+    {
+      "id": "m2v3_coordinates_02",
+      "voice": "Minh Đức",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_coordinates_02",
+      "duration": 5.3913125,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.519500732421875,
+      "rms": 0.07180958241224289,
+      "sha256": "70d142f3f1fea503f3e3ec5a7d78b9ce58ca7f8f08019195525067b9a7118425"
+    },
+    {
+      "id": "m2v3_coordinates_04",
+      "voice": "Minh Đức",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_coordinates_04",
+      "duration": 2.4347916666666665,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.427398681640625,
+      "rms": 0.07185706496238708,
+      "sha256": "e89cfd21275f814b441b503031c6979bfe1ae352fbda5638c4a22cbbd4a16386"
+    },
+    {
+      "id": "m2v3_coordinates_06",
+      "voice": "Minh Đức",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_coordinates_06",
+      "duration": 2.0,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.371368408203125,
+      "rms": 0.06560225039720535,
+      "sha256": "eec7bbf13e380f399db2c20e5a83200acf805dc90bdde288566aa029e654ac34"
+    },
+    {
+      "id": "m2v3_sacrifice_03",
+      "voice": "Minh Đức",
+      "resource": "Dialogue/FullGameFree20261023/m2v3_sacrifice_03",
+      "duration": 1.3043541666666667,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.586822509765625,
+      "rms": 0.0679238811135292,
+      "sha256": "17394e3ca079cbc2dc34ea4264c23766ba352cb4ce175240a5a4e94d191af944"
+    }
+  ]
+}

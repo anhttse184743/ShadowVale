@@ -73,8 +73,6 @@ namespace ShadowVale.Map01
         }
         public void DrawCharacterAwareness(float width,float height,GUIStyle label)
         {
-            if(Chapter.State.phase==3&&Chapter.State.Done("N2_02")&&!Chapter.State.Done("N2_05"))
-                GUI.Label(new Rect(width/2-280,105,560,35),Chapter.State.patrolWarnings>0?"ĐÈN ĐANG TÌM · Đã bị phát hiện 1/2 lần — tìm vật che":"Giữ kín tuyến · Nấp bờ mương, tránh đèn quét",label);
             foreach(var enemy in seenEnemies.Where(e=>e!=null&&(e.Alerted||e.Investigating)))
             {var p=GameCamera.WorldToViewportPoint(enemy.transform.position+Vector3.up*2.4f);if(p.z>0)CharacterHud.DrawCharacterEye(new Vector2(p.x*width,(1-p.y)*height),enemy.Alerted);}
         }

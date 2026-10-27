@@ -21,11 +21,21 @@ namespace ShadowVale.Map01
                 if(t.id=="D1_06")return "Ba việc đã xong. Gặp anh Thành và nhấn E báo cáo để chuyển sang Đêm 1.";
                 if(t.id=="N1_01")return "Tới hiên nhà chị Lành, nhấn E ngồi ăn cùng Hùng. Sau bữa cơm mới bắt đầu ca gác.";
                 if(t.id=="N1_04")return "Tới chiếu nghỉ, nhấn E đổi ca. Cảnh nghỉ kết thúc mới sang Ngày 2.";
+                if(t.id=="N2_01")return !State.night2ObservationCheckpointReached?"Đi qua ghim quan sát ở đầu cầu trước. Sau đó chọn chỗ nhìn tổ tuần tra trong bán kính 40 m, giữ F quan sát đủ 2 giây. Chưa quan sát xong sẽ chưa thực hiện được nhiệm vụ tiếp theo.":$"Đã qua checkpoint. Chọn vị trí bất kỳ cách tổ tuần tra tối đa 40 m, giữ F và nhìn rõ tổ tuần tra đủ 2 giây ({Mathf.Clamp01(observed/t.seconds)*100:0}%). Z nằm tránh đèn quét. Quan sát và báo bộ đàm xong mới vào kho.";
+                if(t.id=="N2_02")return "Tại đầu cầu, nhấn E báo bộ đàm rồi men bờ mương phía ruộng đến kho.";
+                if(t.id=="N2_03")return UndergroundStore?.Inside==true?"Tới kệ vật tư ở ghim vàng, nhấn E kiểm tra kho. Tới chân thang, Space bám thang · W lên / S xuống.":"Men bờ mương tới nắp hầm. E mở nắp, tới điểm cạnh miệng hầm và nhấn Ctrl bám thang xuống · Space bám thang lên · W lên / S xuống. Không thể nhảy xuống.";
+                if(t.id=="N2_04")return EvacuationInstruction;
                 if(t.id=="D2_03")return "Theo lối lúa bị giẫm từ cầu tới khoảng trống. Tâm nằm bị thương tại ghim vàng; đến gần, nhấn E để giúp.";
                 if(t.kind=="inspectDoor")return "Tới ghim trước nắp hầm kho kín, nhìn vào chốt rồi nhấn E kiểm tra. Đến gần thôi chưa tính hoàn tất.";
                 if(t.kind=="inspectRoute")return NightTwoRouteProgress<3?$"Đã kiểm {NightTwoRouteProgress}/4 đoạn. Đi theo ghim kế tiếp: {NightRouteNames[NightTwoRouteProgress]}. Phải kiểm theo thứ tự; không đi tắt tới bến.":"Đã kiểm 3/4 đoạn. Tới bậc bến ở ghim vàng, nhấn E xác nhận bậc chắc chắn.";
-                if(t.kind=="wire")return State.wireStage==1?"Đang mang cuộn dây. Tới trạm ở ghim vàng, nhấn E giao cho Hùng.":"Tới kho kín ở ghim vàng, nhấn E lấy cuộn dây ăng-ten.";
+                if(t.kind=="wire")return State.wireStage==1?"Đang mang cuộn dây và ăng-ten. Tới trạm ở ghim vàng, nhấn E giao cho Hùng.":"Tới kho kín ở ghim vàng, nhấn E lấy cuộn dây và ăng-ten.";
                 if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)?$"Đang mang thùng {n+1}/{t.count}. Tới ghim vàng rồi nhấn E để đặt.":$"Đã chuyển {n}/{t.count}. Tới ghim vàng, nhấn E nhận thùng tiếp theo.";
+                if(ScoutEscortActive)
+                {
+                    if(!State.scoutAmbushStarted)return $"Dìu Tâm về chốt · 1,8 m/s · K54 · H hồi máu. Đi ra ngoài bán kính 4 m quanh điểm đón Tâm (còn {Mathf.Max(0,4-Vector3.ProjectOnPlane(Mission.Player.position-State.scoutRescueOrigin,Vector3.up).magnitude):0.0} m).";
+                    if(State.scoutAmbushPassedBridge)return ScoutAmbushRemaining>0?"Đã lên cầu. Hạ lính phục kích còn sống rồi dìu Tâm về chốt · H hồi máu.":"Đã qua khu phục kích. Dìu Tâm về chốt · H hồi máu.";
+                    return $"Dìu Tâm về chốt · 1,8 m/s · K54 · H hồi máu. Còn {Mathf.Max(0,ScoutAmbushRemaining)}/5 địch ở hai bờ ruộng trước cầu.";
+                }
                 if(escort!=null)
                 {
                     var person=Companion;float distance=Vector3.Distance(person.transform.position,Mission.Player.position);
@@ -34,7 +44,7 @@ namespace ShadowVale.Map01
                 if(t.kind=="escortHung"||t.kind=="escortScout"||t.kind=="patrolHung"||t.kind.StartsWith("rescue"))return "Tới ghim vàng, nhấn E đón người trước khi dẫn tới nơi an toàn.";
                 if(t.kind=="families")return $"Đã dặn {n}/{t.count} hộ. Tới nhà được đánh dấu, nhấn E nói chuyện.";
                 if(t.kind=="binocular")return $"Tới đầu cầu, nhìn về NAM rồi chếch trái ra cánh đồng: tổ 3 lính ở xa cầu khoảng {Vector3.Distance(sites["bridge"].position,NightPatrolPosition):0} m. Giữ F, nhìn người cầm đèn 2 giây. Một vòng quét {Layout.patrolSweepSeconds:0} giây. Tiến độ {Mathf.Clamp01(observed/t.seconds)*100:0}%.";
-                if(t.kind=="crawl")return "Giữ C để bò về ghim vàng. Không cần nhấn E lần nữa.";
+                if(t.kind=="crawl")return "Đi khom tới chỗ nấp của anh Lực ở ghim vàng. Không cần nhấn E.";
                 if(t.kind=="defend")
                 {
                     if(State.activeTask!=t.id)return "Tới khu vực ghim vàng để giữ ngõ cho dân qua.";
@@ -52,7 +62,7 @@ namespace ShadowVale.Map01
                 }
                 if(IsPatch(t))return $"E bắt đầu vá · đã xong {n}/{t.count} thuyền. Bấm chuột vào chỗ rò khi vòng ngoài thu khít; càng chuẩn càng nhanh xong.";
                 if(t.kind=="repair")return $"E bắt đầu sửa · đã xong {n}/{t.count} phần. Nhấn Space đúng nhịp; sai được thử lại.";
-                if(t.kind=="antenna")return "Tới cây cạnh trạm, E bắt đầu · giữ W leo, S xuống · A/D căn tín hiệu ổn định 2 giây · giữ Space cột dây rồi xuống đất.";
+                if(t.kind=="antenna")return "E leo thang lên cây dừa · W lên / S xuống · A/D chỉnh hướng · giữ Space cột ăng-ten sau khi tín hiệu ổn định 2 giây.";
                 if(t.kind=="demolition")return CrateInstruction(t);
                 if(t.kind=="clear")return "E bắt đầu · giữ Space để thao tác, Esc hủy.";
                 if(t.kind=="reach")return "Đi tới ghim vàng. Tự xác nhận khi vào đúng khu vực.";
@@ -61,9 +71,8 @@ namespace ShadowVale.Map01
             }
         }
         public Map02ChapterActor Companion=>escort==null&&State.activeTask=="N3_08"?roles["Hùng"]:secondaryEscort!=null&&escort!=null&&Vector3.Distance(secondaryEscort.transform.position,Mission.Player.position)>Vector3.Distance(escort.transform.position,Mission.Player.position)?secondaryEscort:escort;
-        // Bringing Tâm back (Day 2) keeps Nam armed, free to change gear and at full pace (Tài's design, chosen 23/10);
-        // leading Hùng before Day 3 slings the rifle and slows Nam to a walk.
-        public bool CompanionLocksGear=>Companion!=null&&Companion.role!="Tâm";
+        // Tâm's paired escort keeps the K54 available; Hùng's earlier escort occupies both hands; covering Hùng (N3_08) is shooting.
+        public bool CompanionLocksGear=>ScoutEscortActive||Companion!=null&&Companion.role!="Tâm"&&!CoverFireActive;
         bool LeadingWounded=>escort!=null&&State.phase<4&&escort.role!="Tâm";
         public bool ShowInteractPrompt(Map02ObjectiveObject marker)
         {
@@ -85,11 +94,13 @@ namespace ShadowVale.Map01
         public string Prompt(Map02ChapterTask t)
         {
             int n=State.Count(t.id);
+            if(t.id=="N2_04")return EvacuationPrompt;
+            if(t.id=="N2_03")return UndergroundStore?.Inside==true?"Kiểm tra kệ vật tư trong hầm":"Mở nắp hầm kho · Ctrl để xuống";
             if(t.id=="D2_03")return "Giúp Tâm — trinh sát bị thương";
             if(t.id=="D1_04"&&n>=3)return "Sắp xếp ba thùng vào kho kín";
             if(t.kind=="inspectDoor")return "Kiểm tra chốt cửa hầm còn kín";
             if(t.kind=="inspectRoute")return NightTwoRouteProgress<3?$"Kiểm tra {NightRouteNames[NightTwoRouteProgress]} ({NightTwoRouteProgress}/4)":"Xác nhận bậc bến chắc chắn (3/4)";
-            if(t.kind=="wire")return State.wireStage==1?"Giao cuộn dây ăng-ten cho Hùng":"Lấy cuộn dây ăng-ten trong kho kín";
+            if(t.kind=="wire")return State.wireStage==1?"Giao cuộn dây và ăng-ten cho Hùng":"Lấy cuộn dây và ăng-ten trong kho kín";
             if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)&&State.activeTask==t.id?$"Đặt thùng {n+1}/{t.count} tại {(t.id=="D1_04"?"kho kín":"chỗ trú bến nam")}":$"Nhận thùng {n+1}/{t.count} tại {(t.id=="D1_04"?"bến cập":"kho kín")}";
             if(t.kind=="families")return $"Dặn dò hộ dân {n+1}/{t.count}";
             if(t.kind=="demolition")return CratePrompt(t);

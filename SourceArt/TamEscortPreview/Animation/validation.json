@@ -1,0 +1,161 @@
+{
+  "speed_kmh": 7,
+  "speed_mps": 1.9444444444444444,
+  "fps": 30,
+  "loop_frames": 24,
+  "loop_seconds": 0.8,
+  "source": "Blender authored paired animation; original game rigs",
+  "shoulder_max_error_m": 0.0008225039199332043,
+  "waist_max_error_m": 0.0017222903192569037,
+  "foot_max_error_m": 0.0011656729560349795,
+  "contacts": [
+    {
+      "frame": 1,
+      "shoulder_error_m": 0.0008224093285324591,
+      "waist_error_m": 0.0017222903192569037
+    },
+    {
+      "frame": 2,
+      "shoulder_error_m": 0.0008224168191788445,
+      "waist_error_m": 0.001722066550366075
+    },
+    {
+      "frame": 3,
+      "shoulder_error_m": 0.0008224372949921005,
+      "waist_error_m": 0.001721999202763768
+    },
+    {
+      "frame": 4,
+      "shoulder_error_m": 0.0008224229274178414,
+      "waist_error_m": 0.001722072656990608
+    },
+    {
+      "frame": 5,
+      "shoulder_error_m": 0.0008225039199332043,
+      "waist_error_m": 0.0017222565800240643
+    },
+    {
+      "frame": 6,
+      "shoulder_error_m": 0.0008225008186066712,
+      "waist_error_m": 0.0017220450408465173
+    },
+    {
+      "frame": 7,
+      "shoulder_error_m": 0.0008224777094683364,
+      "waist_error_m": 0.0017219485438466835
+    },
+    {
+      "frame": 8,
+      "shoulder_error_m": 0.0008225008186066712,
+      "waist_error_m": 0.0017220450408465173
+    },
+    {
+      "frame": 9,
+      "shoulder_error_m": 0.0008225039199332043,
+      "waist_error_m": 0.0017222565800240643
+    },
+    {
+      "frame": 10,
+      "shoulder_error_m": 0.0008224229274178414,
+      "waist_error_m": 0.001722072656990608
+    },
+    {
+      "frame": 11,
+      "shoulder_error_m": 0.0008224372949921005,
+      "waist_error_m": 0.001721999202763768
+    },
+    {
+      "frame": 12,
+      "shoulder_error_m": 0.0008224168191788445,
+      "waist_error_m": 0.001722066550366075
+    },
+    {
+      "frame": 13,
+      "shoulder_error_m": 0.0008224093285324591,
+      "waist_error_m": 0.0017222903192569037
+    },
+    {
+      "frame": 14,
+      "shoulder_error_m": 0.0008224168191788445,
+      "waist_error_m": 0.001722066550366075
+    },
+    {
+      "frame": 15,
+      "shoulder_error_m": 0.0008224372949921005,
+      "waist_error_m": 0.001721999202763768
+    },
+    {
+      "frame": 16,
+      "shoulder_error_m": 0.0008224229274178414,
+      "waist_error_m": 0.001722072656990608
+    },
+    {
+      "frame": 17,
+      "shoulder_error_m": 0.0008225039199332043,
+      "waist_error_m": 0.0017222565800240643
+    },
+    {
+      "frame": 18,
+      "shoulder_error_m": 0.0008225008186066712,
+      "waist_error_m": 0.0017220450408465173
+    },
+    {
+      "frame": 19,
+      "shoulder_error_m": 0.0008224777094683364,
+      "waist_error_m": 0.0017219485438466835
+    },
+    {
+      "frame": 20,
+      "shoulder_error_m": 0.0008225008186066712,
+      "waist_error_m": 0.0017220450408465173
+    },
+    {
+      "frame": 21,
+      "shoulder_error_m": 0.0008225039199332043,
+      "waist_error_m": 0.0017222565800240643
+    },
+    {
+      "frame": 22,
+      "shoulder_error_m": 0.0008224229274178414,
+      "waist_error_m": 0.001722072656990608
+    },
+    {
+      "frame": 23,
+      "shoulder_error_m": 0.0008224372949921005,
+      "waist_error_m": 0.001721999202763768
+    },
+    {
+      "frame": 24,
+      "shoulder_error_m": 0.0008224168191788445,
+      "waist_error_m": 0.001722066550366075
+    },
+    {
+      "frame": 25,
+      "shoulder_error_m": 0.0008224093285324591,
+      "waist_error_m": 0.0017222903192569037
+    }
+  ],
+  "worst_foot": {
+    "frame": 17,
+    "actor": "Nam",
+    "side": "Left",
+    "error": 0.0011656729560349795,
+    "target": [
+      -0.1849999874830246,
+      0.187242791056633,
+      0.18727241456508636
+    ],
+    "actual": [
+      -0.18514542281627655,
+      0.18809182941913605,
+      0.1880577653646469
+    ],
+    "hip": [
+      -0.19415193796157837,
+      0.05890470743179321,
+      0.7503302097320557
+    ]
+  },
+  "preview_gif_frames": 24,
+  "preview_gif_duration_ms": 800
+}

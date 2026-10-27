@@ -195,11 +195,11 @@
       "count": 1,
       "scene": "scoutreturn",
       "seconds": 3,
-      "purpose": "Đưa Tâm bị thương về chốt để được cứu chữa."
+      "purpose": "Dìu Tâm về chốt với 1,8 m/s, chỉ dùng K54. Địch phục kích xuất hiện lần lượt ở hai bờ ruộng trước cầu, tối đa 5 lính. Lên cầu sẽ dừng các lượt chưa xuất hiện."
     },
     {
       "id": "D2_05",
-      "title": "Lấy cuộn dây trong kho kín và mang về giao Hùng",
+      "title": "Lấy cuộn dây và ăng-ten trong kho kín, mang về trạm",
       "phase": 2,
       "kind": "wire",
       "site": "store",
@@ -209,11 +209,11 @@
       "count": 1,
       "scene": "",
       "seconds": 3,
-      "purpose": "Mang cuộn dây từ số vật tư đã cất hôm trước về trạm để Hùng dựng lại ăng-ten."
+      "purpose": "Mang cuộn dây và ăng-ten từ kho về trạm, chuẩn bị leo thang lên cây dừa để lắp."
     },
     {
       "id": "D2_06",
-      "title": "Dựng và chỉnh hướng ăng-ten theo tín hiệu của Hùng",
+      "title": "Leo thang gắn ăng-ten lên cây dừa theo tín hiệu của Hùng",
       "phase": 2,
       "kind": "antenna",
       "site": "radio",
@@ -223,7 +223,7 @@
       "count": 1,
       "scene": "antenna",
       "seconds": 3,
-      "purpose": "Khôi phục đường liên lạc với đơn vị bạn."
+      "purpose": "Leo thang lên cây dừa, chỉnh hướng và cột dây cố định ăng-ten. Ăng-ten ở lại trên cây sau khi lắp để duy trì liên lạc."
     },
     {
       "id": "D2_07",
@@ -269,7 +269,7 @@
     },
     {
       "id": "N2_03",
-      "title": "Đi kín đáo tới kho, xác nhận cửa hầm còn kín",
+      "title": "Xuống hầm kiểm tra kho vật tư",
       "phase": 3,
       "kind": "inspectDoor",
       "site": "store",
@@ -279,11 +279,11 @@
       "count": 1,
       "scene": "",
       "seconds": 3,
-      "purpose": "Xem kho vật tư có còn an toàn sau lượt tuần tra hay không."
+      "purpose": "Mở nắp, dùng thang xuống kho và xác nhận vật tư vẫn an toàn sau lượt tuần tra."
     },
     {
       "id": "N2_04",
-      "title": "Kiểm tra đường sơ tán ra bến nam",
+      "title": "Chọn hướng kiểm tra đường sơ tán",
       "phase": 3,
       "kind": "inspectRoute",
       "site": "dock",
@@ -293,7 +293,7 @@
       "count": 1,
       "scene": "",
       "seconds": 3,
-      "purpose": "Kiểm tra lại con đường sơ tán đã chuẩn bị hôm trước."
+      "purpose": "Khảo sát đường ruộng, đường qua sông hoặc đường trong làng. Báo cáo chỉ huy để chọn một tuyến an toàn cho người dân; không cần kiểm tra đủ ba hướng."
     },
     {
       "id": "N2_05",
@@ -521,7 +521,7 @@
     },
     {
       "id": "N3_CRAWL",
-      "title": "Giữ C để bò vào chỗ nấp của anh Lực",
+      "title": "Đi khom vào chỗ nấp của anh Lực",
       "phase": 5,
       "kind": "crawl",
       "site": "cover",
@@ -531,7 +531,7 @@
       "count": 1,
       "scene": "alive",
       "seconds": 5,
-      "purpose": "Bò tới chỗ nấp của anh Lực để tránh hỏa lực xe tăng."
+      "purpose": "Đi khom tới chỗ nấp của anh Lực để tránh hỏa lực xe tăng."
     },
     {
       "id": "N3_06",
@@ -968,6 +968,13 @@
       "speaker": "Tâm",
       "text": "Nổi. Anh đừng thả tay ra là nổi.",
       "radio": false
+    },
+    {
+      "id": "m2v3_scoutescort_warning_01",
+      "conversation": "m2v3_scoutescort_warning",
+      "speaker": "Anh Thành",
+      "text": "Đồng chí đưa thương binh về cẩn thận, địch đã phát hiện và bố trí lực lượng đánh chặn",
+      "radio": true
     },
     {
       "id": "m2v3_scoutreturn_01",
@@ -1585,6 +1592,62 @@
       "speaker": "Nam",
       "text": "Xong rồi chú.",
       "radio": false
+    },
+    {
+      "id": "m2v3_evac_field_01",
+      "conversation": "m2v3_evac_field",
+      "speaker": "Nam",
+      "text": "Báo cáo, lối này có địch không thể sơ tán được",
+      "radio": true
+    },
+    {
+      "id": "m2v3_evac_field_02",
+      "conversation": "m2v3_evac_field",
+      "speaker": "Anh Thành",
+      "text": "Cậu hãy mau chóng rời khỏi đó, rút lui an toàn và tìm con đường khác",
+      "radio": true
+    },
+    {
+      "id": "m2v3_evac_field_03",
+      "conversation": "m2v3_evac_field",
+      "speaker": "Nam",
+      "text": "rõ",
+      "radio": true
+    },
+    {
+      "id": "m2v3_evac_river_01",
+      "conversation": "m2v3_evac_river",
+      "speaker": "Nam",
+      "text": "Báo cáo thủ trưởng, lối này khá an toàn, tuy nhiên phải lội qua sông ạ",
+      "radio": true
+    },
+    {
+      "id": "m2v3_evac_river_02",
+      "conversation": "m2v3_evac_river",
+      "speaker": "Anh Thành",
+      "text": "Không được, phải ưu tiên đường an toàn để sơ tán mọi người",
+      "radio": true
+    },
+    {
+      "id": "m2v3_evac_river_03",
+      "conversation": "m2v3_evac_river",
+      "speaker": "Nam",
+      "text": "rõ!",
+      "radio": true
+    },
+    {
+      "id": "m2v3_evac_village_01",
+      "conversation": "m2v3_evac_village",
+      "speaker": "Nam",
+      "text": "Báo cáo thủ trưởng, lối này không có địch đi tuần, rất an toàn, người dân có thể sơ tán ạ",
+      "radio": true
+    },
+    {
+      "id": "m2v3_evac_village_02",
+      "conversation": "m2v3_evac_village",
+      "speaker": "Anh Thành",
+      "text": "Làm tốt lắm, giờ cậu hãy quay trở về căn cứ để chuẩn bị sơ tán người dân",
+      "radio": true
     }
   ]
 }

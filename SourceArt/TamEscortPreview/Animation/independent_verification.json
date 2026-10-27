@@ -1,0 +1,20 @@
+{
+  "Nam": {
+    "bones": 62,
+    "loop_position_error_m": 0.0,
+    "loop_rotation_error_rad": 0.0,
+    "fbx_animation_frame_range": [
+      2.0,
+      26.0
+    ]
+  },
+  "Tam": {
+    "bones": 28,
+    "loop_position_error_m": 0.0,
+    "loop_rotation_error_rad": 0.0,
+    "fbx_animation_frame_range": [
+      2.0,
+      26.0
+    ]
+  }
+}

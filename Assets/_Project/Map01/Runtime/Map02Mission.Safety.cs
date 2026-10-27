@@ -9,6 +9,7 @@ namespace ShadowVale.Map01
         // playable ground ends at x +/-110 and z +/-100 (Map02Surroundings).
         public const float PlayableHalfX=108.5f,PlayableHalfZ=98.5f;
         Vector3 lastSafeGround;bool hasSafeGround;float safeSampleAt;
+        MeshCollider riverGround;
         public int BoundaryRecoveryCount {get;private set;}
         public static bool WithinPlayableBounds(Vector3 p)=>float.IsFinite(p.x)&&float.IsFinite(p.y)&&float.IsFinite(p.z)&&Mathf.Abs(p.x)<PlayableHalfX&&Mathf.Abs(p.z)<PlayableHalfZ;
         void InstallMapSafety()
@@ -22,8 +23,20 @@ namespace ShadowVale.Map01
             ResetMapSafety();
         }
         void ResetMapSafety(){hasSafeGround=false;safeSampleAt=0;}
+        bool SafeRiverGround(Vector3 at,out Vector3 point)
+        {
+            point=at;
+            if(!WithinPlayableBounds(at)||Chapter==null||!Chapter.TryUnlockedRiverSurface(at,out var water)||at.y<water-1.6f||at.y>water+1.5f)return false;
+            if(riverGround==null)riverGround=GameObject.Find("Continuous ground with meandering canal")?.GetComponent<MeshCollider>();
+            if(riverGround==null||!riverGround.enabled)return false;
+            // Only the authored terrain supports wading. Missing ground or falling below it
+            // still invokes normal map recovery; the seven-metre store is not a river bed.
+            if(!riverGround.Raycast(new Ray(new Vector3(at.x,water+.75f,at.z),Vector3.down),out var hit,2.4f)||hit.normal.y<=.5f||at.y<hit.point.y-.2f||at.y>hit.point.y+1.4f)return false;
+            point=hit.point;return true;
+        }
         bool SafeGround(Vector3 at,out Vector3 point)
         {
+            if(SafeRiverGround(at,out point))return true;
             point=at;if(!WithinPlayableBounds(at)||at.y<-.35f||at.y>35)return false;
             // A real collider and NavMesh must agree; decorative skirts and water are not safe ground.
             if(!NavMesh.SamplePosition(at,out var nav,1.25f,NavMesh.AllAreas)||!WithinPlayableBounds(nav.position)||Mathf.Abs(nav.position.y-at.y)>1)return false;
@@ -36,7 +49,8 @@ namespace ShadowVale.Map01
         {
             if(Player==null||health==null||health.IsDead||Cinematic)return;
             var p=Player.position;
-            bool invalid=!WithinPlayableBounds(p)||p.y<-.65f||p.y>60;
+            if(Chapter?.UndergroundStore?.ContainsAuthorizedPlayer(p)==true)return;
+            bool invalid=!WithinPlayableBounds(p)||(p.y<-.65f&&!SafeRiverGround(p,out _))||p.y>60;
             if(!invalid)
             {
                 if(Time.unscaledTime>=safeSampleAt){safeSampleAt=Time.unscaledTime+.25f;if(SafeGround(p,out var ground)){lastSafeGround=ground;hasSafeGround=true;}}

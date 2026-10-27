@@ -6,12 +6,13 @@ namespace ShadowVale.Map01 {
     public sealed class Map02UpperBodyPose:IDisposable {
         readonly Animator actor; readonly PlayableGraph graph; readonly AnimationLayerMixerPlayable mixer;
         AnimationClipPlayable legs; readonly AnimationClipPlayable arms; AnimationClip selected; readonly AvatarMask mask;
-        public Map02UpperBodyPose(Animator target,AnimationClip upper) {
+        /// <param name="armsOnly">Only the arms from <paramref name="upper"/>: the spine and hips stay with the lower clip (a crouch).</param>
+        public Map02UpperBodyPose(Animator target,AnimationClip upper,bool armsOnly=false) {
             actor=target;graph=PlayableGraph.Create("Map 2 cargo upper body");graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);
             mixer=AnimationLayerMixerPlayable.Create(graph,2);arms=AnimationClipPlayable.Create(graph,upper);arms.SetSpeed(0);arms.SetApplyFootIK(false);
             graph.Connect(arms,0,mixer,1);mixer.SetInputWeight(0,1);mixer.SetInputWeight(1,1);
             mask=new AvatarMask();for(int i=0;i<(int)AvatarMaskBodyPart.LastBodyPart;i++)mask.SetHumanoidBodyPartActive((AvatarMaskBodyPart)i,false);
-            foreach(var p in new[]{AvatarMaskBodyPart.Body,AvatarMaskBodyPart.LeftArm,AvatarMaskBodyPart.RightArm,AvatarMaskBodyPart.LeftFingers,AvatarMaskBodyPart.RightFingers})mask.SetHumanoidBodyPartActive(p,true);
+            foreach(var p in new[]{AvatarMaskBodyPart.Body,AvatarMaskBodyPart.LeftArm,AvatarMaskBodyPart.RightArm,AvatarMaskBodyPart.LeftFingers,AvatarMaskBodyPart.RightFingers})if(!armsOnly||p!=AvatarMaskBodyPart.Body)mask.SetHumanoidBodyPartActive(p,true);
             mixer.SetLayerMaskFromAvatarMask(1,mask);AnimationPlayableOutput.Create(graph,"Cargo",actor).SetSourcePlayable(mixer);graph.Play();
         }
         public void Sample(AnimationClip lower,float time) {

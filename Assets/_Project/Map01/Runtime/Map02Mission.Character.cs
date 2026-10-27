@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ShadowVale.AI.Coordination;
 using ShadowVale.AI.Perception;
+using ShadowVale.AI.Tactical;
 using ShadowVale.Gameplay.Combat;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -17,7 +19,8 @@ namespace ShadowVale.Map01
         public Camera GameCamera=>cameraRig!=null?cameraRig.GetComponent<Camera>():Camera.main;
         public float Stamina {get;private set;}
         public bool CharacterGearLocked=>!string.IsNullOrEmpty(Chapter?.State.carry)||Chapter?.CompanionLocksGear==true||Chapter?.DayActivityActive==true||Chapter?.MovementLocked==true;
-        public bool CharacterCanSprint=>Chapter?.MovementLocked!=true&&Stamina>2&&Chapter?.State.wounded!=true;
+        public bool CharacterCanHeal=>!CharacterGearLocked||Chapter?.ScoutEscortActive==true;
+        public bool CharacterCanSprint=>Chapter?.MovementLocked!=true&&Stamina>2;   // wounded he still runs, a little slower (WoundedPace)
         // The player's panel still blocks controls, but field crafting must leave enemies active.
         public bool CharacterWorldBlocked=>!Ready||Paused||Cinematic||Chapter?.LocksInput==true||World.story.failed
             ||(Panel!=0&&!(Panel==1&&CharacterHud?.FieldCraftingOpen==true));
@@ -38,6 +41,11 @@ namespace ShadowVale.Map01
             if(data==null||data.balance==null||data.content==null)throw new InvalidOperationException("Missing shared character HUD data.");
             CharacterSettings=JsonUtility.FromJson<ForestSettings>(data.balance.text);
             CharacterContent=JsonUtility.FromJson<ForestBundle>(data.content.text);
+            // Night 3's waves are squads like Map 1's: Map 2's baked tactical graph (Resources/TacticalGraphs/Map 2) and the
+            // squad coordinator, which plans each wave with the session's solver.
+            TacticalGraphHost.Attach(gameObject,~0,null);
+            // Day 2's bridge ambush comes one soldier at a time (Tài's pacing, kept): a squad of one is planned too.
+            SquadCoordinator.Attach(gameObject,CoordinationSettings.ForScene(gameObject.scene.name)).Settings.MinGroupAgents=1;
             Stamina=arrival?.CharacterBag!=null?arrival.CharacterStamina:CharacterSettings.stamina;
             Exploration=new MapExploration(Rect.MinMaxRect(-Map02Navigation.HalfSize,-Map02Navigation.HalfSize,Map02Navigation.HalfSize,Map02Navigation.HalfSize));
             Bag=gameObject.AddComponent<Map01Inventory>();
@@ -48,11 +56,16 @@ namespace ShadowVale.Map01
             gameObject.AddComponent<Map01StoneThrow>();
             SyncBagFromTotals(true,arrival?.CharacterBag);
             Bag.Changed+=WriteBagTotals;
+            Bag.GunBroke+=OnCharacterGunBroke;
             Bag.RestoreFieldToolkit(arrival?.CharacterBag?.fieldKitVersion ?? 0);
             CharacterHud=gameObject.AddComponent<Map01Hud>();
             InitializeCharacterEffects();
             Map01NamActions.For(CharacterHudSession.For(gameObject));
-            NamProneMotion.Install(CharacterHudSession.For(gameObject));
+            if(NamProneMotion.Install(CharacterHudSession.For(gameObject))!=null)
+            {
+                // Lying prone (Z) belongs to Day 2 / Night 2's stealth; Day 1 and Day 3 / Night 3 are staged without it.
+                var proneAllowed=player.ProneAllowed;player.ProneAllowed=()=>(Chapter==null||Chapter.State.phase==2||Chapter.State.phase==3)&&proneAllowed();
+            }
             combat.SlotPressed=slot=>{if(CharacterGearLocked){Say("Hoàn tất việc đang mang trước khi đổi trang bị.");return true;}return Bag.OnSlotKey(slot);};
             combat.ReserveRounds=()=>Bag.Count(Bag.HeldAmmoId);
             combat.DrawRounds=requested=>{int n=Mathf.Min(requested,Bag.Count(Bag.HeldAmmoId));Bag.Spend(Bag.HeldAmmoId,n);return n;};
@@ -67,6 +80,28 @@ namespace ShadowVale.Map01
         void CharacterAttack(WeaponKind kind,Vector3 at)
         {
             var held=Bag.HeldGun();if(held!=null)Bag.Wear(held.Value,Bag.WearPerShot(Bag.IdOf(Map01Inventory.Gun.InSlot(held.Value))));
+        }
+        string brokenGun;
+        // Swapped on the next frame, not inside the shot that wore the gun out.
+        void OnCharacterGunBroke(Map01Inventory.Gun gun,string id){if(gun.Slot==Map01Inventory.Slot.Primary)brokenGun=id;}
+        /// <summary>The long gun in hand wore out: a working one from the bag takes its place, the worn one goes into the bag.</summary>
+        void SwapToSpareGun()
+        {
+            var id=brokenGun;brokenGun=null;
+            for(int i=0;i<Map01Inventory.BagSize;i++)
+            {
+                var cell=Bag.Cell(i);
+                if(cell==null||Map01Inventory.SlotOf(cell.id)!=Map01Inventory.Slot.Primary||Bag.IsBroken(Map01Inventory.Gun.InCell(i)))continue;
+                if(!Bag.EquipFromCell(i))return;
+                Bag.Draw(Map01Inventory.Slot.Primary);Say("Súng hỏng — đã đổi sang khẩu dự phòng. Khẩu hỏng để trong túi (Tab).");return;
+            }
+            Say(ForestInventory.Name(id)+" vừa hỏng hẳn — kẹt cò. Sửa bằng bộ sửa chữa (Tab) hoặc dùng súng ngắn / dao.");
+        }
+        /// <summary>Night 3's gear: a second long gun in the bag, for when the first wears out in the fighting. True if given.</summary>
+        public bool IssueSpareRifle()
+        {
+            int have=Inventory.TryGetValue(RifleItemId,out int n)?n:0;if(have>=2)return false;
+            Inventory[RifleItemId]=2;SyncBagFromTotals();return true;
         }
         public void SyncBagFromTotals(bool initial=false,Map01Inventory.Layout layout=null)
         {
@@ -104,6 +139,7 @@ namespace ShadowVale.Map01
         void TickCharacter()
         {
             SyncBagFromTotals();
+            if(brokenGun!=null)SwapToSpareGun();
             if(Exploration.Reveal(Player.position,14))RefreshExplorationTexture();
             if(InputBlocked)return;
             bool running=player.IsSprinting&&player.IsMoving;
@@ -112,7 +148,7 @@ namespace ShadowVale.Map01
             if(Bag.ThrowableEquipped&&!CharacterGearLocked)
             {if(kb.digit1Key.wasPressedThisFrame)Bag.OnSlotKey(0);else if(kb.digit2Key.wasPressedThisFrame)Bag.OnSlotKey(1);else if(kb.digit3Key.wasPressedThisFrame)Bag.OnSlotKey(2);else if(kb.digit4Key.wasPressedThisFrame)Bag.OnSlotKey(3);}
             if(Mouse.current==null||!Mouse.current.leftButton.isPressed)Bag.SuppressFire=false;
-            if(kb.hKey.wasPressedThisFrame&&!CharacterGearLocked)Bag.UseItem("medkit_small");
+            if(kb.hKey.wasPressedThisFrame&&CharacterCanHeal)Bag.UseItem("medkit_small");
             if(kb.backquoteKey.wasPressedThisFrame)CharacterHud.ToggleObjective();
             var throwing=GetComponent<Map01StoneThrow>();
             if(Bag.ThrowableEquipped&&!CharacterGearLocked&&!Bag.SuppressFire&&Mouse.current!=null){if(Mouse.current.rightButton.wasPressedThisFrame)throwing.Cancel();else if(Mouse.current.leftButton.wasPressedThisFrame)throwing.BeginAim();else if(Mouse.current.leftButton.wasReleasedThisFrame)throwing.Release();}

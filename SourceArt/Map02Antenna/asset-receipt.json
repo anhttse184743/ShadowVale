@@ -1,0 +1,7 @@
+{
+  "ladder_meshes": 5,
+  "antenna_meshes": 4,
+  "ladder_height": 4.8,
+  "rung_spacing": 0.285,
+  "export_axis": "-Z forward / Y up"
+}

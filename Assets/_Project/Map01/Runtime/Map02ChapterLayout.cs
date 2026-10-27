@@ -23,7 +23,25 @@ namespace ShadowVale.Map01
         public Vector3[] dayTwoOpenRoute={new Vector3(-52,1,15),new Vector3(-20,1,14)};
         public Vector3[] dayTwoCoveredRoute={new Vector3(-65,1,-15),new Vector3(-25,1,-24)};
         [Min(2)] public float antennaHeight=4;
-        public Vector3[] nightTwoEvacuationRoute={new Vector3(-56,1,-12),new Vector3(-48,1,-34),new Vector3(-37,1,-59)};
+        public Vector3[] nightTwoEvacuationRoute={new Vector3(-29.324f,1,-30.592f),new Vector3(-36.655f,1,-44.419f),new Vector3(-36.044f,1,-64.069f)};
+        [Header("Night 2 evacuation choices: field, river, village")]
+        public Vector3 nightEvacuationStart=new Vector3(-4,1,-42);
+        public Vector3 nightEvacuationFieldBush=new Vector3(25,1,-56.5f);
+        public Vector3 nightEvacuationRiver=new Vector3(-8,1,-57);
+        public Vector3 nightEvacuationVillage=new Vector3(-53,1,-39);
+        // The two points describe the road heading; the patrol spans exactly 10 m each side of their midpoint.
+        public Vector3 nightEvacuationPatrolStart=new Vector3(15.861885f,1,-70.561386f);
+        public Vector3 nightEvacuationPatrolEnd=new Vector3(34.138115f,1,-62.438614f);
+        public GameObject nightEvacuationBushArt;
+        [Header("Night 2 river-bank infiltration (latest marked Map 2 overview)")]
+        public Vector3 nightTwoHatch=new Vector3(-3.96654f,.8f,-51.858f);
+        // Reference is the first guard; remaining guards continue along the straight river-facing row.
+        public Vector3 nightTwoPatrolCenter=new Vector3(36.247412f,.8f,-18.801694f);
+        public Vector3 nightTwoPatrolRowDirection=new Vector3(-.4606423f,0,-.8875859f);
+        public Vector3 nightTwoRiverEntry=new Vector3(-3.971f,.8f,-23.858f);
+        public Vector3 nightTwoRiverExit=new Vector3(-28,1,-26);
+        public Vector3[] nightTwoBankRoute={new Vector3(4.582f,.8f,-.753f),new Vector3(.305f,.8f,-5.483f),new Vector3(-1.833f,.8f,-11.669f),new Vector3(-3.971f,.8f,-17.128f),new Vector3(-3.971f,.8f,-21.858f),new Vector3(-3.9695f,.8f,-31.858f),new Vector3(-3.968f,.8f,-41.858f),new Vector3(-3.96654f,.8f,-51.858f)};
+        [Min(1)] public float nightTwoBankHalfWidth=3;
         [Header("Night 3 art slots (empty: placeholder or idle pose)")]
         public GameObject radioPropArt,explosivesArt,soupBowlArt,militiaArt;
         public AnimationClip namProneClip,namLieBackClip,namSitRadioClip,hungFallClip;

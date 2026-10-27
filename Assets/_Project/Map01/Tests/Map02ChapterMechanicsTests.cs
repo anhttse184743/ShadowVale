@@ -46,9 +46,9 @@ namespace ShadowVale.Map01.Tests
                 Load("N3_07");var cover=Mark("N3_08");Move(cover);Assert.IsTrue(m.Interact(cover));
                 Assert.IsTrue(c.HasBark("m2v3_sacrifice_01"),"\"Đi đi! Tôi che cho!\" opens the cover fire without taking control away.");Assert.IsFalse(c.Busy);
                 var controller=m.Player.GetComponent<ShadowVale.Gameplay.Player.PlayerController>();var combat=m.Player.GetComponent<ShadowVale.Gameplay.Combat.PlayerCombat>();var hp=m.Player.GetComponent<ShadowVale.Gameplay.Combat.Health>();
-                Assert.IsTrue(c.MovementLocked);var approach=new UnityEngine.AI.NavMeshPath();Assert.IsTrue(UnityEngine.AI.NavMesh.CalculatePath(c.Actor("Hùng").transform.position,c.ChargePoint,UnityEngine.AI.NavMesh.AllAreas,approach));Assert.AreEqual(UnityEngine.AI.NavMeshPathStatus.PathComplete,approach.status);Assert.IsFalse(controller.InputAllowed());Assert.IsTrue(combat.InputAllowed());Assert.IsTrue(hp.CinematicInvulnerable);
+                Assert.IsTrue(c.CoverFireActive);var approach=new UnityEngine.AI.NavMeshPath();Assert.IsTrue(UnityEngine.AI.NavMesh.CalculatePath(c.Actor("Hùng").transform.position,c.ChargePoint,UnityEngine.AI.NavMesh.AllAreas,approach));Assert.AreEqual(UnityEngine.AI.NavMeshPathStatus.PathComplete,approach.status);Assert.IsFalse(controller.InputAllowed());Assert.IsTrue(combat.InputAllowed());Assert.IsTrue(hp.CinematicInvulnerable);
                 var before=hp.Current;hp.TakeDamage(100000,m.Player.position,null);Assert.AreEqual(before,hp.Current);
-                var saved=m.Capture();m.Restore(saved);Assert.IsTrue(c.MovementLocked&&hp.CinematicInvulnerable,"Load during cover fire must preserve the no-failure rule.");
+                var saved=m.Capture();m.Restore(saved);Assert.IsTrue(c.CoverFireActive&&hp.CinematicInvulnerable,"Load during cover fire must preserve the no-failure rule.");
                 c.enabled=true; // Hùng's crawl is paced by the director.
                 var startHung=c.Actor("Hùng").transform.position;var initialDistance=Vector3.Distance(startHung,c.ChargePoint);
                 float moveDeadline=Time.time+6;while(Time.time<moveDeadline&&Vector3.Distance(startHung,c.Actor("Hùng").transform.position)<2){yield return null;}
@@ -96,6 +96,18 @@ namespace ShadowVale.Map01.Tests
             finally{c.Cancel();c.enabled=true;}
             yield return new ExitPlayMode();
         }
+        /// <summary>A fallen soldier lying on his own (a squad falls together at its cover), so one pickup is his alone.
+        /// Static, not a closure: lambdas over the test's locals do not survive the domain reload of EnterPlayMode.</summary>
+        static Map02ChapterEnemy LoneBody(System.Collections.Generic.List<Map02ChapterEnemy> all)
+        {
+            foreach(var e in all)
+            {
+                if(e==null||!e.Dead||e.Looted)continue;bool alone=true;
+                foreach(var o in all)if(o!=null&&o!=e&&o.Dead&&!o.Looted&&Vector3.Distance(o.transform.position,e.transform.position)<2.5f){alone=false;break;}
+                if(alone)return e;
+            }
+            return null;
+        }
         [UnityTest,Timeout(240000)]public IEnumerator LaneHoldsFollowEvacuationAndTheFallenDropRounds()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
@@ -129,7 +141,7 @@ namespace ShadowVale.Map01.Tests
                 Kill("N3_05A_b");until=Time.time+3;while(Time.time<until&&!c.State.Done("N3_05A"))yield return null;
                 Assert.IsTrue(c.State.Done("N3_05A"));Assert.AreEqual(70,c.State.evacuation);
                 // The fallen give their rounds once; a load does not give them again.
-                hp.CinematicInvulnerable=true;var body=c.Enemies.First(e=>e!=null&&e.Dead&&!e.Looted);int before=m.Inventory.TryGetValue(m.RifleAmmo,out int had)?had:0;
+                hp.CinematicInvulnerable=true;var body=LoneBody(c.Enemies);int before=m.Inventory.TryGetValue(m.RifleAmmo,out int had)?had:0;
                 Place(body.transform.position);yield return null;yield return null;
                 int after=m.Inventory[m.RifleAmmo];Assert.That(after-before,Is.InRange(5,8));Assert.IsTrue(body.Looted);
                 var saved=m.Capture();m.Restore(saved);hp.CinematicInvulnerable=true;var again=c.Enemies.First(e=>e.id==body.id);Assert.IsTrue(again.Looted);
@@ -172,15 +184,13 @@ namespace ShadowVale.Map01.Tests
                 typeof(Map02ChapterDirector).GetMethod("SuppressAlong",BindingFlags.NonPublic|BindingFlags.Instance).Invoke(c,new object[]{new Ray(chest+Vector3.right*20+Vector3.up*.8f,(chest+Vector3.up*.8f-(chest+Vector3.right*20+Vector3.up*.8f)).normalized)});
                 Assert.IsTrue(target.Suppressed);
                 // Nobody hit: Hùng still reaches the tracks by 90 s.
-                c.State.coverClock=89f;c.State.taskProgress=89f/90f;float until=Time.time+5;while(Time.time<until&&c.CurrentScene==null)yield return null;
-                Assert.AreEqual("N3_09",c.CurrentScene?.id);Assert.LessOrEqual(c.State.coverClock,91f);
-                // Everyone down at once: Hùng goes faster, but not before 60 s.
+                c.State.coverClock=Map02ChapterDirector.CoverSlowest-1;c.State.taskProgress=(Map02ChapterDirector.CoverSlowest-1)/Map02ChapterDirector.CoverSlowest;float until=Time.time+5;while(Time.time<until&&c.CurrentScene==null)yield return null;
+                Assert.AreEqual("N3_09",c.CurrentScene?.id);Assert.LessOrEqual(c.State.coverClock,Map02ChapterDirector.CoverSlowest+1);
+                // Everyone round the tank down: Hùng goes for the tracks at once (26/10/2026), whatever the clock says.
                 yield return Begin();
                 foreach(var e in Squad())e.HitPoints.TakeDamage(1000,e.transform.position,m.Player.gameObject);
-                c.State.coverClock=30;c.State.taskProgress=.3f;yield return WaitGameSeconds(2f);
-                Assert.IsNull(c.CurrentScene);Assert.LessOrEqual(c.State.taskProgress,c.State.coverClock/60f+.001f);Assert.Greater(c.State.taskProgress,.3f+2f/90f,"With the escort down he crawls faster than the slowest pace.");
-                c.State.coverClock=59.5f;c.State.taskProgress=59.5f/60f;float started=Time.time;until=Time.time+5;while(Time.time<until&&c.CurrentScene==null)yield return null;
-                Assert.AreEqual("N3_09",c.CurrentScene?.id);Assert.GreaterOrEqual(Time.time-started,.45f,"Not before the 60 s mark.");
+                c.State.coverClock=30;c.State.taskProgress=.3f;float started=Time.time;until=Time.time+8;while(Time.time<until&&c.CurrentScene==null)yield return null;
+                Assert.AreEqual("N3_09",c.CurrentScene?.id,"With the escort down the sacrifice follows at once.");Assert.Less(Time.time-started,5,"A beat, not the rest of the minute.");
             }
             finally{c.Cancel();}
         }
@@ -204,13 +214,14 @@ namespace ShadowVale.Map01.Tests
                 Assert.Less(Flat(c.LastBoat.position,c.WaterPoint("boatDock")),.5f,"Boat 1 has left and come back for the last trip.");
                 finish.Invoke(c,new object[]{def.Find("N3_05C")});yield return null;
                 Assert.AreEqual("N3_WOUND",c.CurrentScene?.id);Assert.AreEqual("breach",c.TankStage);Assert.IsTrue(c.Tank.activeSelf);
-                Assert.Less(Flat(c.Tank.transform.position,c.Sites["tankBreach"].position),1);end.Invoke(c,null);
-                Assert.Less(Flat(c.Actor("Anh Lực").transform.position,c.Sites["cover"].position),3,"Anh Lực is in the cover Nam crawls to.");
-                // After the crawl the tank turns away into the village and drops out of sight.
-                Load("N3_CRAWL");yield return null;Assert.AreEqual("leaving",c.TankStage);Assert.IsFalse(c.Tank.activeSelf);
-                Assert.Less(Flat(c.Actor("Tâm").transform.position,c.Sites["tamCover"].position),2,"Tâm covers the fallen tree from the bamboo.");
+                Assert.Greater(Flat(c.Tank.transform.position,c.Sites["tankBreach"].position),10,"It drives in from outside the village.");
+                yield return WaitGameSeconds(6f);Assert.Less(Flat(c.Tank.transform.position,c.Sites["tankBreach"].position),1,"Then stands at the breach.");end.Invoke(c,null);
+                Assert.Less(Flat(c.Actor("Anh Lực").transform.position,c.Sites["cover"].position),8,"Anh Lực is behind a wall by the cover Nam makes for.");
+                // After the crawl the tank turns away into the village and roams its lanes, in sight.
+                Load("N3_CRAWL");yield return null;Assert.AreEqual("leaving",c.TankStage);Assert.IsTrue(c.Tank.activeSelf);
+                Assert.Less(Flat(c.Actor("Tâm").transform.position,c.Sites["tamCover"].position),8,"Tâm covers the fallen tree from behind a wall.");
                 // Reaching the bank: the last boat is mid-river with the family, the tank comes out at the head of the dock road.
-                Load("N3_06");yield return null;Assert.AreEqual("waiting",c.TankStage);Assert.IsFalse(c.Tank.activeSelf);
+                Load("N3_06");yield return null;Assert.AreEqual("waiting",c.TankStage);Assert.IsTrue(c.Tank.activeSelf,"Still loose in the village.");
                 Assert.Less(Flat(c.LastBoat.position,c.WaterPoint("boatMid")),.5f);
                 foreach(var person in new[]{"Chị Lành","Ông Sáu","Bé Tí","Chú Bảy"})Assert.Less(Vector3.Distance(c.Actor(person).transform.position,c.LastBoat.position),3.5f,person+" is on the last boat.");
                 Assert.Less(Flat(c.SecondBoat.position,c.WaterPoint("boatFar2")),.5f,"Boat 2 left at 60 %.");

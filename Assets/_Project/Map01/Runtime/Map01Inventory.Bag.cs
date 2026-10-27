@@ -195,6 +195,7 @@ namespace ShadowVale.Map01
         /// weapon of the same kind, they swap) or the first empty one. The knife stays.</summary>
         public bool Unequip(Slot slot, int to = -1)
         {
+            if(slot==Slot.Pistol&&mission?.MapTwo?.Chapter?.ScoutEscortActive==true)return false;
             string id = SlotItem(slot);
             if (id == null || slot == Slot.Knife) return false;
             if (to >= 0 && Cell(to) != null && SlotOf(Cell(to).id) == slot) return EquipFromCell(to);
@@ -225,6 +226,7 @@ namespace ShadowVale.Map01
         /// <summary>The weapon in <paramref name="slot"/> on the ground. The knife cannot go.</summary>
         public bool DropSlot(Slot slot)
         {
+            if(slot==Slot.Pistol&&mission?.MapTwo?.Chapter?.ScoutEscortActive==true)return false;
             string id = SlotItem(slot);
             if (id == null) return false;
             if (slot == Slot.Knife) { mission?.Say("Dao luôn mang theo, không vứt được.", 3); return false; }
@@ -241,7 +243,7 @@ namespace ShadowVale.Map01
         public bool Draw(Slot slot)
         {
             CancelFieldCraft();
-            if(mission?.MapTwo?.CharacterGearLocked==true)return false;
+            if(mission?.MapTwo?.CharacterGearLocked==true&&!(slot==Slot.Pistol&&mission.MapTwo.Chapter.ScoutEscortActive))return false;
             string id = SlotItem(slot);
             if (id == null || mission == null || mission.ModernCombat == null) return false;
             if (!Drawable(id))

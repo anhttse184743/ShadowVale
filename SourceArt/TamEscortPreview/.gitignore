@@ -1,0 +1,8 @@
+*.blend1
+__pycache__/
+Animation/
+Animation_v2/
+Animation_v3/
+Animation_v4/frames/
+inspect_rigs.py
+UprightPreview/frames/

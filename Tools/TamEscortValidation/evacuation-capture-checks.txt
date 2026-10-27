@@ -1,0 +1,14 @@
+PASS capture starts with input/save lock and no immediate failure
+PASS capture resolves actual humanoid knot-working clip and Nam prone pose data
+PASS cutscene begins at current camera without a cut
+PASS camera has an intermediate position during slow travel
+PASS captors wait until camera reaches enemy side
+PASS pinning begins only after camera travel and actual approach
+PASS captors reach Nam through native NavMesh movement before restraint
+PASS camera travel and approach both occurred before failure
+PASS pin and tying beats finish before failure screen
+PASS two wrist bindings visible at final restrained pose
+PASS capture failure does not kill or damage Nam
+PASS restrained pose uses real humanoid wrists
+POSE head height=0.349
+PASS retry/cancel releases pose and invulnerability

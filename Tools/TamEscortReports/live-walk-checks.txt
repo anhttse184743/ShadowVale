@@ -1,0 +1,5 @@
+PASS 110 actual Play Mode frames
+PASS both knee joints animate while moving: Nam=33.5875 degrees; Tam=46.03666 degrees
+PASS gait remains active when PlanarSpeed is zero
+PASS approved shoulder pose overrides earlier animation layers
+PASS root moved 3.357248 m at configured walk speed 2.5

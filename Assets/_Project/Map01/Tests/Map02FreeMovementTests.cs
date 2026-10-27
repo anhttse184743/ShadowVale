@@ -37,14 +37,17 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual("D2_05",m.Chapter.State.carry);Place(m,open);yield return CheckMovement(m,Map02ChapterDirector.CarryPace,false);
                 LoadThrough(m,"D2_03");yield return WaitGameSeconds(1.5f);Interact(m,"D2_04");yield return WaitGameSeconds(.2f);
                 var restored=Map02Mission.Parse(JsonUtility.ToJson(m.Capture()));m.Restore(restored);yield return null;
-                Assert.IsNotNull(m.Chapter.Companion);Assert.IsFalse(m.CharacterGearLocked);
-                Place(m,open);var start=m.Chapter.Actor("Tâm").transform.position;
-                Assert.Greater(Vector3.Distance(m.Player.position,start),7);yield return WaitGameSeconds(2);
-                float travelled=Vector3.Distance(start,m.Chapter.Actor("Tâm").transform.position);Assert.Greater(travelled,.3f,"Tâm must follow even beyond 7 m.");Assert.Less(travelled,5,"Following must not teleport.");
-                yield return CheckMovement(m,1,true);   // bringing Tâm back keeps Nam free and armed (chosen 23/10)
-                Assert.IsTrue(m.Bag.Draw(Map01Inventory.Slot.Primary));rightDown=true;keys=new[]{Key.W};yield return WaitGameSeconds(.6f);
+                Assert.IsNotNull(m.Chapter.Companion);Assert.IsTrue(m.CharacterGearLocked);Assert.IsTrue(m.CharacterCanHeal);
+                m.Chapter.State.scoutAmbushPassedBridge=true; // Isolate movement from the separately tested ambush.
+                Place(m,open);yield return WaitGameSeconds(.2f);
+                Assert.Less(Vector3.Distance(m.Player.position,m.Chapter.Actor("Tâm").transform.position),2,"The pair must stay together.");
+                Assert.AreEqual(1.8f,m.Player.GetComponent<PlayerController>().AssistedWalkSpeed);
+                yield return CheckMovement(m,1,false,true);
+                Assert.IsFalse(m.Bag.Draw(Map01Inventory.Slot.Primary));Assert.AreEqual(WeaponKind.Pistol,m.Player.GetComponent<PlayerCombat>().EquippedKind);rightDown=true;keys=new[]{Key.W};yield return WaitGameSeconds(.6f);
                 Assert.IsTrue(m.Player.GetComponent<PlayerCombat>().IsAiming);Assert.Greater(m.Player.GetComponent<PlayerController>().PlanarSpeed,.5f);
                 rightDown=false;yield return WaitGameSeconds(.2f);Assert.IsFalse(m.Player.GetComponent<PlayerCombat>().IsAiming);
+                keys=new[]{Key.F};yield return WaitGameSeconds(.2f);Assert.IsFalse(m.Chapter.Binoculars,"The escort keeps Nam's free hand on the K54.");
+                LoadThrough(m,"D2_04");Place(m,open);yield return WaitGameSeconds(1.5f);
                 keys=new[]{Key.F,Key.W};yield return WaitGameSeconds(.4f);Assert.IsTrue(m.Chapter.Binoculars);Assert.Greater(m.Player.GetComponent<PlayerController>().PlanarSpeed,.5f);
                 keys=new[]{Key.W};yield return WaitGameSeconds(.2f);Assert.IsFalse(m.Chapter.Binoculars,"Releasing F must immediately lower the binoculars.");
                 keys=new[]{Key.F};yield return WaitGameSeconds(.2f);Assert.IsTrue(m.Chapter.Binoculars);
@@ -53,7 +56,7 @@ namespace ShadowVale.Map01.Tests
             finally{keys=System.Array.Empty<Key>();rightDown=false;InputSystem.onBeforeUpdate-=Pump;InputSystem.RemoveDevice(keyboard);InputSystem.RemoveDevice(mouse);RestoreInputRouting(routing);}
             yield return new ExitPlayMode();
         }
-        static IEnumerator CheckMovement(Map02Mission m,float pace,bool sprint)
+        static IEnumerator CheckMovement(Map02Mission m,float pace,bool sprint,bool assisted=false)
         {
             var player=m.Player.GetComponent<PlayerController>();var actor=m.Player.GetComponentInChildren<Animator>();
             Assert.IsFalse(m.InputBlocked);Assert.AreEqual(pace,player.SurfaceSpeedMultiplier,.001f);Assert.IsTrue(m.CharacterCanSprint);
@@ -63,7 +66,7 @@ namespace ShadowVale.Map01.Tests
                 var before=m.Player.position;keys=new[]{key};yield return WaitGameSeconds(.35f);
                 var foot=actor.GetBoneTransform(HumanBodyBones.LeftFoot);var pose=actor.transform.InverseTransformPoint(foot.position);
                 yield return WaitGameSeconds(.17f);
-                Assert.Greater(Vector3.Distance(before,m.Player.position),.3f,key+" must move Nam.");Assert.Greater(actor.GetFloat("Speed"),.3f);
+                Assert.Greater(Vector3.Distance(before,m.Player.position),.3f,key+" must move Nam.");if(!assisted)Assert.Greater(actor.GetFloat("Speed"),.3f);
                 Assert.Greater(Vector3.Distance(pose,actor.transform.InverseTransformPoint(foot.position)),.003f,"Leg animation must advance rather than hold a frozen pose.");
                 keys=System.Array.Empty<Key>();yield return WaitGameSeconds(.3f);
             }

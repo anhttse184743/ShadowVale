@@ -1,0 +1,21 @@
+scout=(29.000, 0.774, -16.660)
+bridge=(29.000, 0.725, -4.660)
+command=(-79.290, 1.097, 10.910)
+PASS Night 2 preview spawns on actual bridge and can observe there: (1.693, 1.125, -2.398)
+scoutBridgeEntry=(3.09, 1.00, -1.86)
+scoutBridgeForward=(-0.93, 0.00, -0.36)
+crossed at rescue=False
+end sample=True (5.89, 1.08, -0.78)
+PASS trigger stays off at 3.99 m and turns on at 4 m on actual Map 2
+PASS spawn 0 valid=True point=(8.250, 0.782, -13.158)
+PASS first enemy clears both actors at trigger: Nam=20.75598 m; Tam=20.27612 m
+PASS actual enemy 0 created on Map 2 NavMesh; only one alive
+PASS spawn 1 valid=True point=(49.983, 0.927, -7.413)
+PASS actual enemy 1 created on Map 2 NavMesh; only one alive
+PASS spawn 2 valid=True point=(22.068, 0.768, -24.537)
+PASS actual enemy 2 created on Map 2 NavMesh; only one alive
+PASS spawn 3 valid=True point=(22.994, 0.791, 17.387)
+PASS actual enemy 3 created on Map 2 NavMesh; only one alive
+PASS spawn 4 valid=True point=(10.188, 0.750, -22.544)
+PASS actual enemy 4 created on Map 2 NavMesh; only one alive
+PASS actual bridge deck stops spawning; field points do not

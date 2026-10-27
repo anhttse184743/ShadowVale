@@ -16,8 +16,24 @@ namespace ShadowVale.Map01
     {
         readonly Dictionary<string,Vector3> water=new Dictionary<string,Vector3>();
         RiverBuoyantBody lastBoat;Transform secondBoat;Vector3 lastBoatHome;Quaternion lastBoatHomeRotation;bool boatsOwned;
-        Vector3[] tankLeg=Array.Empty<Vector3>();float tankLegClock,gunClock;
+        Vector3[] tankLeg=Array.Empty<Vector3>(),breachApproach;float tankLegClock,gunClock;
+        /// <summary>Nhịp 3 (N3_WOUND): the tank drives in from outside the village for <see cref="BreachDrive"/> s and brakes at
+        /// the breach, the camera pans round it as the turret turns for <see cref="BreachPan"/> s, then Anh Lực's warning.</summary>
+        const float BreachDrive=5.5f,BreachPan=3,BreachLineAt=BreachDrive+BreachPan,BreachRun=24;
+        /// <summary>Into Anh Lực's "Xe tăng! Nằm xuống!" (seconds of that line): the .50's burst starts, walks in on Nam, a
+        /// round grazes his left shoulder at <see cref="BurstHit"/> (the wound he carries to dawn), and it stops.</summary>
+        const float BurstStart=.35f,BurstHit=1.5f,BurstEnd=1.75f;
+        LineRenderer tracer;float tracerUntil;ParticleSystem shoulderGraze;bool grazed;
+        /// <summary>The burst's round that grazed Nam's shoulder has been fired.</summary>
+        public bool ShoulderGrazed=>grazed;
+        bool BreachBurst=>sceneTask?.id=="N3_WOUND"&&spoken&&lines!=null&&lines[lineIndex].id=="m2v3_wound_04"&&lineClock>=BurstStart&&lineClock<BurstEnd;
+        /// <summary>N3_07's opening: the tank rolls out to the head of the dock road (<see cref="EmergeEnd"/> s); the turret swings
+        /// to the boat as the camera rises to the gun and follows it (<see cref="TurretRise"/> s), goes round along the barrel
+        /// and stops in front of its muzzle (<see cref="FrontAt"/>), then pans to the boat and closes in on it
+        /// (<see cref="WhipAt"/> + <see cref="BoatMove"/>) as the machine gun opens up; then chú Bảy's shout.</summary>
+        const float EmergeEnd=5,TurretRise=3.5f,FrontAt=EmergeEnd+TurretRise+1.4f,WhipAt=FrontAt+.8f,BoatMove=1.8f,BoatLineAt=WhipAt+BoatMove+.2f;
         Light gunFlash;ParticleSystem splash;
+        (Light light,ParticleSystem smoke,ParticleSystem flame) tankBlaze;bool tankBlazeMade;
         public GameObject Tank=>tank;
         public string TankStage {get;private set;}="hidden";
         public Transform LastBoat=>lastBoat!=null?lastBoat.transform:null;
@@ -28,9 +44,9 @@ namespace ShadowVale.Map01
         {
             var ditch=sites["ditch"].position;
             Site("tankBreach",sites["lane3"].position+Vector3.forward*8);
-            // The road from the lanes to the south dock: the tank waits in the bamboo and blocks its head, 18 m from the bank.
+            // The road from the lanes to the south dock: the tank waits in the bamboo and blocks its head, 32 m from the bank.
             var road=new NavMeshPath();bool known=NavMesh.CalculatePath(ditch,sites["lane3"].position,NavMesh.AllAreas,road)&&road.status==NavMeshPathStatus.PathComplete;
-            Site("tankDock",known?Along(road.corners,18):ditch+Vector3.forward*18);Site("tankHide",known?Along(road.corners,30):ditch+Vector3.forward*30);
+            Site("tankDock",known?Along(road.corners,32):ditch+Vector3.forward*32);Site("tankHide",known?Along(road.corners,44):ditch+Vector3.forward*44);   // well back from the bank (26/10/2026)
             Site("tamCover",sites["fallen"].position+Vector3.left*6);Site("militiaEntry",known?Along(road.corners,62):sites["lane3"].position);
             var edge=sites["lane1"].position; // The guns fall on the village edge, cutting the road the enemy reinforces by.
             Water("artyImpact1",edge+Vector3.forward*30);Water("artyImpact2",edge+Vector3.forward*36+Vector3.right*14);Water("artyImpact3",edge+Vector3.forward*33+Vector3.left*16);
@@ -43,14 +59,16 @@ namespace ShadowVale.Map01
         /// <summary>Points that are not walked to (on the water, at the village edge): never snapped to the NavMesh.</summary>
         void Water(string id,Vector3 fallback){var authored=Layout?.sites?.FirstOrDefault(s=>s.id==id);water[id]=authored!=null?authored.position:fallback;}
 
-        // ---- Tank: breach at the third lane, turns into the village road, hidden in Nhịp 4, blocks the dock road in Nhịp 5.
+        // ---- Tank: breach at the third lane, then loose in the village lanes (Nhịp 4), blocks the dock road in Nhịp 5.
+        float roamAt,roamPause;int roamDir=1;bool roaming;
+        const float RoamNear=.2f,RoamFar=.8f,RoamMid=.55f,RoamSpeed=3,RoamTurn=2.6f;
         string TankStageNow()
         {
             if(!State.Done("N3_05C"))return "hidden";
             if(!State.Done("N3_CRAWL"))return "breach";
             if(!State.Done("N3_06"))return "leaving";
             if(State.tankDestroyed||sceneTask?.id=="N3_09"&&sceneClock>=BlastAt)return "destroyed";
-            if(!State.Done("N3_07"))return sceneTask?.id=="N3_07"?(sceneClock<5?"emerging":"blocking"):"waiting";
+            if(!State.Done("N3_07"))return sceneTask?.id=="N3_07"?(sceneClock<EmergeEnd?"emerging":"blocking"):"waiting";
             return "blocking";
         }
         void TickTank(float dt,bool snap=false)
@@ -58,20 +76,35 @@ namespace ShadowVale.Map01
             var stage=TankStageNow();
             if(stage=="hidden"){if(tank!=null)tank.SetActive(false);TankStage=stage;return;}
             if(tank==null)CreateTank();
-            if(stage!=TankStage){TankStage=stage;tankLegClock=0;tankLeg=stage=="leaving"?Leg("tankBreach","tankHide"):stage=="emerging"?Leg("tankHide","tankDock"):Array.Empty<Vector3>();}
-            tankLegClock=snap?1e5f:tankLegClock+dt; // A load lands at the end of the drive and stays there.
-            bool visible=stage!="waiting";Vector3 at,face;
-            if(tankLeg.Length>1)
+            if(stage!=TankStage)
             {
-                float travelled=tankLegClock*(stage=="leaving"?4.5f:3f);
+                bool keepRoaming=TankStage=="leaving"&&stage=="waiting";   // the same lanes: it just keeps going
+                TankStage=stage;tankLegClock=0;
+                tankLeg=stage=="leaving"||stage=="waiting"?Leg("tankBreach","tankHide"):stage=="emerging"?Leg("tankHide","tankDock"):Array.Empty<Vector3>();
+                if(!keepRoaming){roamDir=1;roamPause=0;roaming=stage=="waiting";roamAt=roaming?Length(tankLeg)*RoamMid:0;}
+            }
+            tankLegClock=snap?1e5f:tankLegClock+dt; // A load lands at the end of the drive and stays there.
+            bool visible=true;Vector3 at,face;
+            if((stage=="leaving"||stage=="waiting")&&tankLeg.Length>1)RoamTank(dt,snap,out at,out face);
+            else if(tankLeg.Length>1)
+            {
+                float travelled=tankLegClock*3f;
                 at=Along(tankLeg,travelled);face=Along(tankLeg,Mathf.Min(travelled,Length(tankLeg)-.05f)+1)-at;
-                if(stage=="leaving"&&travelled>=Length(tankLeg))visible=false; // Out of sight in the village until it reappears at the dock road.
+            }
+            else if(BreachDriving&&!snap)
+            {
+                // It comes in along the road from outside and brakes to a stop at the breach.
+                var leg=BreachApproach();float u=Mathf.Clamp01(sceneClock/BreachDrive),run=Length(leg),travelled=run*(1-(1-u)*(1-u));
+                at=Along(leg,travelled);face=Along(leg,Mathf.Min(travelled+1,run))-at;
+                if(face.sqrMagnitude<.01f)face=leg[leg.Length-1]-leg[leg.Length-2];
+                if(sceneClock<.15f)tank.transform.rotation=Quaternion.LookRotation(Vector3.ProjectOnPlane(face,Vector3.up).normalized);
             }
             else
             {
                 at=sites[stage=="breach"?"tankBreach":stage=="waiting"?"tankHide":"tankDock"].position;
                 face=(stage=="breach"?sites["lane3"].position:water["boatMid"])-at; // Turret toward Nam, then toward the last boat.
             }
+            if(WreckOpening){PlaceWreck();at=wreckSpot;face=WreckCenter-at;visible=true;if(tankLeg.Length>1){roaming=true;roamAt=Length(tankLeg)*RoamMid;}}   // shelling the houses before the radio call
             tank.SetActive(visible);tank.transform.position=at;
             var flat=Vector3.ProjectOnPlane(face,Vector3.up);
             if(flat.sqrMagnitude>.01f)tank.transform.rotation=snap?Quaternion.LookRotation(flat):Quaternion.RotateTowards(tank.transform.rotation,Quaternion.LookRotation(flat),70*Mathf.Max(dt,.0001f));
@@ -80,7 +113,7 @@ namespace ShadowVale.Map01
                 if(State.tankDestroyed&&!tankSmoke.isPlaying)tankSmoke.Play();
                 else if(!State.tankDestroyed&&sceneTask?.id!="N3_09"&&tankSmoke.isPlaying)tankSmoke.Stop(true,ParticleSystemStopBehavior.StopEmittingAndClear);
             }
-            if(stage=="destroyed")BurnTank();
+            if(stage=="destroyed")BurnTank();else if(tankBlazeMade)Burn(tankBlaze,0);   // a retry to before the blast puts it out
             AnimateTankParts(dt,stage,snap);
             TickMachineGun(dt,stage);
         }
@@ -95,6 +128,83 @@ namespace ShadowVale.Map01
                 tankFire=go.AddComponent<Light>();tankFire.type=LightType.Point;tankFire.range=22;tankFire.color=new Color(1,.55f,.22f);tankFire.shadows=LightShadows.None;
             }
             tankFire.intensity=State.phase>=6?.6f:3.2f+Mathf.PerlinNoise(Time.time*3,0)*1.6f; // Only embers left at dawn.
+            if(!tankBlazeMade){tankBlazeMade=true;tankBlaze=Fire(tank.transform.position+Vector3.up*.5f);}
+            Burn(tankBlaze,State.phase>=6?.25f:1);   // flames off the hull until dawn, smoke after
+        }
+        /// <summary>After the breach the tank stays in sight: it drives on into the village, then up and down its lanes (the
+        /// road from the breach towards the dock), turning at each end and holding while Nam is close ahead of it.</summary>
+        void RoamTank(float dt,bool snap,out Vector3 at,out Vector3 face)
+        {
+            float run=Length(tankLeg);
+            if(snap&&!roaming){roaming=true;roamAt=run*RoamMid;roamDir=1;}
+            if(!roaming){roamAt+=4.5f*dt;if(roamAt>=run*RoamFar){roamAt=run*RoamFar;roaming=true;roamDir=-1;roamPause=RoamTurn;}}
+            else if(roamPause>0)roamPause-=dt;
+            else if(!WreckOpening&&dt>0)
+            {
+                var ahead=Along(tankLeg,Mathf.Clamp(roamAt+roamDir*6,0,run));
+                if(Flat(ahead,Mission.Player.position)>12)roamAt+=roamDir*RoamSpeed*dt;
+                if(roamAt>=run*RoamFar){roamAt=run*RoamFar;roamDir=-1;roamPause=RoamTurn;}
+                else if(roamAt<=run*RoamNear){roamAt=run*RoamNear;roamDir=1;roamPause=RoamTurn;}
+            }
+            at=Along(tankLeg,roamAt);face=Along(tankLeg,Mathf.Clamp(roamAt+roamDir*1.5f,0,run))-at;
+            if(Vector3.ProjectOnPlane(face,Vector3.up).sqrMagnitude<.01f)face=tank.transform.forward;
+        }
+        bool BreachDriving=>TankStage=="breach"&&sceneTask?.id=="N3_WOUND"&&sceneClock<BreachDrive;
+        /// <summary>The breach drive: from <see cref="BreachRun"/> m out, on the far side of the breach from the lane, to the breach.</summary>
+        Vector3[] BreachApproach()
+        {
+            if(breachApproach!=null)return breachApproach;
+            var at=sites["tankBreach"].position;var outward=Vector3.ProjectOnPlane(at-sites["lane3"].position,Vector3.up);
+            var from=at+(outward.sqrMagnitude>.01f?outward.normalized:Vector3.forward)*BreachRun;
+            if(NavMesh.SamplePosition(from,out var hit,6,NavMesh.AllAreas))from=hit.position;
+            var path=new NavMeshPath();
+            bool road=NavMesh.CalculatePath(from,at,NavMesh.AllAreas,path)&&path.status==NavMeshPathStatus.PathComplete&&Length(path.corners)<BreachRun*1.6f;
+            return breachApproach=road?path.corners:new[]{from,at};
+        }
+        /// <summary>One round of the burst at Nam: it strikes the ground short of him and walks in until it reaches him.</summary>
+        void BurstRound()
+        {
+            var nam=Mission.Player.position;var from=mgMuzzle!=null?mgMuzzle.position:tank.transform.position+Vector3.up*2.3f;
+            float walk=Mathf.Clamp01((lineClock-BurstStart)/(BurstHit-BurstStart));
+            var toward=Vector3.ProjectOnPlane(nam-from,Vector3.up).normalized;var across=Vector3.Cross(Vector3.up,toward);
+            if(!grazed&&lineClock>=BurstHit-.1f)
+            {
+                // The round that wounds him: past his left shoulder, close enough to tear it, into the ground behind him.
+                grazed=true;var body=Mission.Player.GetComponentInChildren<Animator>();var arm=body!=null&&body.isHuman?body.GetBoneTransform(HumanBodyBones.LeftUpperArm):null;
+                var shoulder=arm!=null?arm.position:nam+Vector3.up*1.4f-Mission.Player.right*.2f;
+                var line=(shoulder-Mission.Player.right*.06f-from).normalized;var end=shoulder+line*8;
+                if(Physics.Raycast(shoulder+line*.4f,line,out var behind,8,~0,QueryTriggerInteraction.Ignore)&&!behind.transform.IsChildOf(Mission.Player)){end=behind.point;CoverImpact.Play(behind.point,behind.normal);}
+                Trace(from,end);Graze(shoulder,line);
+            }
+            else
+            {
+                var spot=nam-toward*Mathf.Lerp(3.5f,.35f,walk)+across*UnityEngine.Random.Range(-1.4f,1.4f)*(1-walk*.6f);
+                if(Physics.Raycast(spot+Vector3.up*2,Vector3.down,out var ground,4,~0,QueryTriggerInteraction.Ignore)&&!ground.transform.IsChildOf(Mission.Player)){CoverImpact.Play(ground.point,ground.normal);Trace(from,ground.point);}
+            }
+            var sound=Mission.Player.GetComponent<CombatAudio>();
+            if(sound!=null&&sound.Gunshot.IsValid){var clip=sound.Gunshot;PooledAudioService.Resolve().PlayOneShot(clip.clip,from,.55f*clip.EffectiveGain,.9f,0,.85f,clip.startTime,clip.duration);}
+        }
+        /// <summary>A tracer for one frame or two along a round's flight.</summary>
+        void Trace(Vector3 a,Vector3 b)
+        {
+            if(tracer==null)
+            {
+                var go=new GameObject("Tank machine-gun tracer");go.transform.SetParent(root.transform,false);tracer=go.AddComponent<LineRenderer>();
+                tracer.material=Map01Fx.Glow;tracer.useWorldSpace=true;tracer.positionCount=2;tracer.startWidth=.05f;tracer.endWidth=.02f;
+                tracer.startColor=tracer.endColor=new Color(1,.55f,.25f,.9f);tracer.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;
+            }
+            tracer.SetPosition(0,a);tracer.SetPosition(1,b);tracer.enabled=true;tracerUntil=Time.time+.05f;
+        }
+        /// <summary>Blood thrown from the torn shoulder, along the round's line.</summary>
+        void Graze(Vector3 at,Vector3 along)
+        {
+            if(shoulderGraze==null)
+            {
+                shoulderGraze=Map01Fx.System(root.transform,"Shoulder graze",at,Map01Fx.Unlit,.4f,40);
+                var main=shoulderGraze.main;main.startLifetime=.45f;main.startSpeed=1.6f;main.startSize=.06f;main.gravityModifier=.7f;main.startColor=new Color(.42f,.02f,.02f,.95f);
+                var shape=shoulderGraze.shape;shape.shapeType=ParticleSystemShapeType.Cone;shape.angle=25;shape.radius=.03f;
+            }
+            shoulderGraze.transform.SetPositionAndRotation(at,Quaternion.LookRotation(along));shoulderGraze.Emit(18);
         }
         Vector3[] Leg(string from,string to)
         {
@@ -113,8 +223,15 @@ namespace ShadowVale.Map01
                 var main=splash.main;main.startLifetime=.7f;main.startSpeed=3.2f;main.startSize=.3f;main.gravityModifier=1;main.startColor=new Color(.85f,.92f,1,.8f);
                 var shape=splash.shape;shape.shapeType=ParticleSystemShapeType.Cone;shape.angle=18;shape.radius=.15f;shape.rotation=new Vector3(-90,0,0);
             }
-            gunFlash.enabled=false;
-            bool firing=stage=="emerging"||stage=="blocking";
+            gunFlash.enabled=false;if(tracer!=null)tracer.enabled=Time.time<tracerUntil;
+            if(BreachBurst)
+            {
+                if(dt<=0)return;
+                float last=Mathf.Repeat(gunClock,.09f);gunClock+=dt;gunFlash.enabled=Mathf.Repeat(gunClock,.09f)<.04f;
+                if(Mathf.Repeat(gunClock,.09f)<last)BurstRound();
+                return;
+            }
+            bool firing=(stage=="emerging"||stage=="blocking")&&!(sceneTask?.id=="N3_07"&&sceneClock<WhipAt);   // the gun opens up as the camera reaches the boat
             if(!firing||dt<=0)return;
             float before=Mathf.Repeat(gunClock,.15f);gunClock+=dt;float cycle=Mathf.Repeat(gunClock,2.6f);
             if(cycle>.9f)return; // A burst, then a pause.
@@ -182,8 +299,9 @@ namespace ShadowVale.Map01
         {
             if(State.phase!=5)return;
             if(finished.id=="N3_00"||finished.id=="N3_04")roles["Anh Lực"].GoTo(LucNightThree(),2.2f); // Out to the outer post, then back to the tamarind.
-            if(finished.id=="N3_05C")roles["Anh Lực"].StopAt(LucNightThree()); // Already in cover when the tank fires.
-            if(finished.id=="N3_CRAWL")roles["Tâm"].StopAt(sites["tamCover"].position);
+            if(finished.id=="N3_05C"){var post=sites["lane3"].position+Vector3.left*3;if(NavMesh.SamplePosition(post,out var hit,3,NavMesh.AllAreas))post=hit.position;roles["Anh Lực"].StopAt(post);}   // beside Nam at the third lane: he falls back as the tank comes
+            if(finished.id=="N3_WOUND")foreach(var pair in retreats)if(roles.TryGetValue(pair.Key,out var who)&&Flat(who.transform.position,pair.Value)>1.5f)who.StopAt(pair.Value);   // a skipped scene lands them in cover
+            if(finished.id=="N3_CRAWL")roles["Tâm"].StopAt(HiddenFromTank(sites["tamCover"].position));   // covering the tree from behind a wall
         }
     }
 }
