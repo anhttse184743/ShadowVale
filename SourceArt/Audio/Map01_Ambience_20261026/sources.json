@@ -1,0 +1,54 @@
+{
+  "sources": [
+    {
+      "name": "wind",
+      "creator": "Yoyodaman234",
+      "page": "https://freesound.org/people/Yoyodaman234/sounds/335891/",
+      "download": "https://cdn.freesound.org/previews/335/335891_2792951-hq.mp3",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sha256": "7a4370992ab7fae5da26535a6eb2a4880f2e60907deff1c9025cf5e5141591c0"
+    },
+    {
+      "name": "birds",
+      "creator": "Lizardhood",
+      "page": "https://freesound.org/people/Lizardhood/sounds/427040/",
+      "download": "https://cdn.freesound.org/previews/427/427040_5459890-hq.mp3",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "sha256": "7afec03ece0385415e520b3f0b2129207057ec1dc981d6d8b29f1a3347ef44cf"
+    }
+  ],
+  "assets": [
+    {
+      "file": "wind_leaves.wav",
+      "seconds": 45.0,
+      "rms": 0.08493757992982864,
+      "peak": 0.6499999761581421,
+      "sha256": "9695cc3c943ced18aec28164a88a9c0ca0310da80fbd1467e559bd6d951c7669"
+    },
+    {
+      "file": "birds_1.wav",
+      "seconds": 5.0,
+      "rms": 0.09981028735637665,
+      "peak": 0.6499999761581421,
+      "sha256": "da41a0393ddd1165747f386b16cabbe84f3d1758812d52c0df7cd6213e53a093"
+    },
+    {
+      "file": "birds_2.wav",
+      "seconds": 5.0,
+      "rms": 0.09888415038585663,
+      "peak": 0.6499999761581421,
+      "sha256": "2f06479d13de1db5d492d203f490f2645ad3d43b2be5ba31574445814d868e19"
+    },
+    {
+      "file": "birds_3.wav",
+      "seconds": 5.0,
+      "rms": 0.09956835955381393,
+      "peak": 0.6499999761581421,
+      "sha256": "65e83cb97f900a66265e1cd5267dda554e10eb3dd3a0cc960b17bf43cd98b310"
+    }
+  ],
+  "processing": "48 kHz mono PCM16; filtered, quiet RMS; wind end/start overlapped 3 seconds; bird excerpts faded. Species/location not asserted.",
+  "checked": "2026-10-26"
+}

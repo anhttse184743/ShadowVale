@@ -1,0 +1,5 @@
+device=Direct3D12
+gpuResidentDrawer=InstancedDrawing
+arrival=Gameplay
+sourceReady=True
+existing grip channels rebuilt without duplicate name; gameplay controls returned

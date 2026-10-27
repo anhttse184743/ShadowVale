@@ -14,12 +14,29 @@ namespace ShadowVale.Map01
         const float CellMetres=.3f;   // one floor cell of the store, in the village
         const float StoreX=160,StoreY=262,CellW=105,CellH=92;   // the 6×4 floor on the 1600×900 HUD
         static readonly Color StoreInk=new Color(.93f,.86f,.68f),StoreDim=new Color(.78f,.74f,.62f),StoreGood=new Color(.42f,.78f,.38f),StoreBad=new Color(.92f,.32f,.25f);
-        Vector2 storeMouse;Texture2D storePanel;
+        Vector2 storeMouse;Texture2D storePanel;bool packingMouseControl;
         static Rect StoreCell(int x,int y,int w=1,int h=1)=>new Rect(StoreX+x*CellW,StoreY+(4-y-h)*CellH,w*CellW,h*CellH);
         static bool StoreCellAt(Vector2 point,out Vector2Int cell)
         {
             cell=new Vector2Int(Mathf.FloorToInt((point.x-StoreX)/CellW),3-Mathf.FloorToInt((point.y-StoreY)/CellH));
             return point.x>=StoreX&&point.y>=StoreY&&cell.x>=0&&cell.x<6&&cell.y>=0&&cell.y<4;
+        }
+        Vector2Int PackingAnchor(Vector2Int cell)
+        {
+            if(selectedCrate<0)return cell;
+            var size=Map02DayOneState.Size(selectedCrate,selectionRotated);
+            return new Vector2Int(cell.x,cell.y-size.y+1); // pointer is the visible top-left corner
+        }
+        void SelectPackingCrate(int index)
+        {
+            if(Day.crates[index].x>=0){LiftCrate(index);return;}
+            selectedCrate=index;selectionRotated=Day.crates[index].rotated;
+            dayFeedback="Bấm để đặt góc trên-trái của hòm. R hoặc chuột phải để xoay; khung đỏ có lý do bên cạnh.";
+        }
+        void ResetPacking()
+        {
+            Day.ResetCrates();selectedCrate=0;selectionRotated=false;packingCursor=new Vector2Int(2,0);SyncDayProps();
+            dayFeedback="Đã đưa ba hòm về khu chờ. Mẫu nền ẩm giữ nguyên; chưa nhận thêm vật tư.";
         }
         int CrateAt(int x,int y)
         {
@@ -69,7 +86,7 @@ namespace ShadowVale.Map01
             for(int i=0;i<3;i++){var p=Day.crates[i];if(p.x<0)continue;var s=Map02DayOneState.Size(i,p.rotated);DrawCrateTop(i,StoreCell(p.x,p.y,s.x,s.y),1);}
             // the mouse moves the cursor (the arrow keys still do)
             var e=Event.current;
-            if(e.type==EventType.Repaint){if((e.mousePosition-storeMouse).sqrMagnitude>4&&StoreCellAt(e.mousePosition,out var hover))packingCursor=hover;storeMouse=e.mousePosition;}
+            if(e.type==EventType.Repaint){if((e.mousePosition-storeMouse).sqrMagnitude>4&&StoreCellAt(e.mousePosition,out _))packingMouseControl=true;if(packingMouseControl&&StoreCellAt(e.mousePosition,out var hover))packingCursor=PackingAnchor(hover);storeMouse=e.mousePosition;}
             // the held crate's ghost where it would go: green if it may, red with the reason beside it if not
             if(selectedCrate>=0)
             {
@@ -79,11 +96,14 @@ namespace ShadowVale.Map01
                 if(problem!=null){var tag=new Rect(Mathf.Min(shown.xMax+8,pit.xMax-190),Mathf.Max(shown.y-36,pit.y-58),190,32);Fill(tag,new Color(.1f,.05f,.04f,.92f));GUI.Label(tag,ShortReason(problem),StoreText(19,StoreBad,FontStyle.Bold,TextAnchor.MiddleCenter));}
             }
             else Frame(StoreCell(packingCursor.x,packingCursor.y),StoreInk,3);
-            if(e.type==EventType.MouseDown&&StoreCellAt(e.mousePosition,out var cell))
+            if(dayInputReady&&GUI.enabled&&e.type==EventType.MouseDown&&StoreCellAt(e.mousePosition,out var cell))
             {
-                packingCursor=cell;
-                if(e.button==1)selectionRotated=!selectionRotated;
-                else if(e.button==0){int under=CrateAt(cell.x,cell.y);if(under>=0&&under!=selectedCrate)LiftCrate(under);else PlacePackingSelection(cell.x,cell.y);}
+                if(e.button==1&&selectedCrate>=0)selectionRotated=!selectionRotated;
+                packingMouseControl=true;packingCursor=PackingAnchor(cell);
+                if(e.button==0){
+                    if(selectedCrate>=0)PlacePackingSelection(packingCursor.x,packingCursor.y);
+                    else{int under=CrateAt(cell.x,cell.y);if(under>=0)LiftCrate(under);else dayFeedback="Chọn một hòm ở bên phải trước.";}
+                }
                 e.Use();
             }
             // the three crates
@@ -95,11 +115,13 @@ namespace ShadowVale.Map01
                 GUI.Label(new Rect(card.x+110,card.y+8,300,34),$"{i+1}. {CrateGoods[i]}",StoreText(23,StoreInk,FontStyle.Bold));
                 GUI.Label(new Rect(card.x+110,card.y+44,300,34),$"{CrateKind[i]} · {size.x}×{size.y} ô",StoreText(19,StoreDim));
                 GUI.Label(new Rect(card.x+360,card.y+8,150,72),held?"đang cầm":placed?"✓ đã cất":"chưa cất",StoreText(20,held?StoreInk:placed?StoreGood:StoreDim,FontStyle.Bold,TextAnchor.MiddleRight));
-                if(GUI.Button(card,GUIContent.none,GUIStyle.none)){selectedCrate=i;selectionRotated=Day.crates[i].rotated;dayFeedback=placed?"Bấm ô khác để dời hòm này, hoặc bấm lên nó trên sơ đồ để nhấc ra.":"Rê tới chỗ đặt; bóng xanh là đặt được. Chuột phải hoặc R để xoay.";}
+                if(GUI.Button(card,GUIContent.none,GUIStyle.none))SelectPackingCrate(i);
             }
-            GUI.Label(new Rect(900,552,520,92),"Chuột: bấm ô để đặt · bấm hòm để nhấc · chuột phải xoay\nPhím: 1–3 chọn hòm · mũi tên dời · E đặt · R xoay\nBackspace nhấc hòm ở ô đang chọn",StoreText(18,StoreDim));
-            var enabled=GUI.enabled;GUI.enabled=Day.Packed;
-            if(DayButton(new Rect(900,652,520,58),$"Cất xong · Enter ({CratesPlaced}/3)"))CompletePacking();
+            GUI.Label(new Rect(900,552,520,64),"Chuột: bấm ô để đặt · bấm hòm để nhấc · chuột phải xoay\nPhím: 1–3 chọn hòm · mũi tên dời · E đặt · R xoay\nBackspace nhấc hòm ở ô đang chọn",StoreText(18,StoreDim));
+            if(DayButton(new Rect(900,618,250,38),"Xoay hòm [R]")){if(selectedCrate>=0)selectionRotated=!selectionRotated;else dayFeedback="Chọn hòm cần di chuyển trước.";}
+            if(DayButton(new Rect(1170,618,250,38),"Xếp lại"))ResetPacking();
+            var enabled=GUI.enabled;GUI.enabled=enabled&&Day.Packed;
+            if(DayButton(new Rect(900,665,520,54),$"Cất xong · Enter ({CratesPlaced}/3)"))CompletePacking();
             GUI.enabled=enabled;
         }
         void LiftCrate(int crate)

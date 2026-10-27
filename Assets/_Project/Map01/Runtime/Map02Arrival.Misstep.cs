@@ -35,7 +35,7 @@ namespace ShadowVale.Map01
         public float LaneOf(int index)=>Lane(index);
         public bool MisstepOwns(int index)=>MisstepOwnsFeet(index);
         public static Vector3 MisstepPoint(Vector3 blender)=>C1Point(blender);
-        float Lane(int index)=>index==0?0:index==1?.8f:Misstep?C1Lane:-.8f;
+        float Lane(int index)=>index==0?0:index==1?-.8f:Misstep?C1Lane:.8f;
         // Hùng reaches the top tread at his stair cycle C1StairCycle; both then play their takes and walk on.
         float ExitLength=>Misstep?2*PassengerDelay+StandDuration+LaneDuration+C1StairCycle/StairX.Length*StairDuration+Mathf.Max(c1Hung.length+C1HungWalk,c1Nam.length+C1NamWalk)+.8f:ExitDuration;
         void LoadMisstep()
@@ -254,7 +254,7 @@ namespace ShadowVale.Map01
         float RevealStart=>Misstep?(c1Start>=0?c1Start+c1Nam.length-.5f:float.MaxValue):7;
         GameObject c1Rifle;
         /// <summary>Nam's hands are free for the pack and for Hùng: his rifle goes on his back (out of the shot) as he turns.</summary>
-        void SlingRifle(){var gun=actors[0].GetComponent<Map01Rifle>();if(gun!=null&&gun.weapon.gameObject.activeSelf){c1Rifle=gun.weapon.gameObject;c1Rifle.SetActive(false);}}
+        void SlingRifle(){var gun=actors[0].GetComponent<Map01Rifle>();if(gun!=null&&gun.weapon.gameObject.activeSelf){c1Rifle=gun.weapon.gameObject;c1Rifle.SetActive(false);actors[0].GetComponent<Map01BoatCarry>()?.Suspend();}}
         void EndMisstep(){EndPack();RestoreApprovedVisual(0);RestoreApprovedVisual(2);if(c1Rifle!=null)c1Rifle.SetActive(true);c1Rifle=null;}
         // ---- the pack: Nam's own (baked from his skinned pack), on his back, in his hand, on the ground and back on ------
         void TickPack(float n)

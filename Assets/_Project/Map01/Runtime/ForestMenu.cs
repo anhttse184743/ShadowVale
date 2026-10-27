@@ -18,6 +18,7 @@ namespace ShadowVale.Map01
         private Map01SaveSystem saveSystem;
         private TutorialDirector tutorial;
         private bool choosingTutorial;
+        private NewGameIntro intro;
         private Map02Mission map2;
         private bool HasGameplay => mission != null || map2 != null;
         private bool GameplayPaused => mission != null ? mission.Paused : map2 != null && map2.Paused;
@@ -88,6 +89,7 @@ namespace ShadowVale.Map01
         private void OnScene(Scene scene, LoadSceneMode mode) => BindScene();
         private void BindScene()
         {
+            intro?.Cancel();
             CancelInvoke(nameof(GoToTitle)); // A Boot timer must not redirect a scene explicitly loaded afterwards.
             map2=FindFirstObjectByType<Map02Mission>();
             exploringMap2 = FindFirstObjectByType<Map02Exploration>() != null && map2 == null;
@@ -137,7 +139,7 @@ namespace ShadowVale.Map01
         }
         private void Update()
         {
-            if (exploringMap2) return;
+            if (exploringMap2 || intro!=null&&intro.Active) return;
             float now = Time.realtimeSinceStartup;
             if (settleFrames > 0) { settleFrames--; if (now - lastFrameAt > .2f) ignoreKeysUntil = Mathf.Max(ignoreKeysUntil, now + .5f); }
             lastFrameAt = now;
@@ -186,7 +188,7 @@ namespace ShadowVale.Map01
         private void MainAction(int index)
         {
             if (choosingTutorial) {
-                if (index == 0) { loading = true; Map01OpeningCutscene.CancelPending(); Time.timeScale = 1; SceneManager.LoadScene(TutorialDirector.SceneName); }
+                if (index == 0) PlayTutorialIntro();
                 if (index == 1) { Map01OpeningCutscene.RequestNewGame(); StartGame(-1); }
                 if (index == 2) { choosingTutorial = false; selected = 1; }
                 return;
@@ -211,6 +213,29 @@ namespace ShadowVale.Map01
                 if (index == 3) Ask("Tự động lưu và về menu chính?", GoToTitle);
                 if (index == 4) Ask("Tự động lưu và thoát game?", Quit);
             }
+        }
+        private void PlayTutorialIntro()
+        {
+            if(intro!=null&&intro.Active)return;
+            CancelInvoke(nameof(GoToTitle));choosingTutorial=false;visible=false;loading=false;
+            Map01OpeningCutscene.CancelPending();Time.timeScale=1;
+            intro=GetComponent<NewGameIntro>()??gameObject.AddComponent<NewGameIntro>();
+            intro.Play(()=>
+            {
+                loading=true;SuppressKeysAfterCutscene();StartCoroutine(LoadTutorialAfterIntro());
+            },error=>
+            {
+                loading=false;visible=true;choosingTutorial=true;selected=0;message=error;
+                ignoreKeysUntil=Time.realtimeSinceStartup+.5f;
+            });
+        }
+        private System.Collections.IEnumerator LoadTutorialAfterIntro()
+        {
+            // Let the loading overlay replace the video before starting the asynchronous scene load.
+            yield return null;
+            var operation=SceneManager.LoadSceneAsync(TutorialDirector.SceneName);
+            while(operation!=null&&!operation.isDone)yield return null;
+            SuppressKeysAfterCutscene();
         }
         private void SlotAction()
         {
@@ -320,6 +345,7 @@ namespace ShadowVale.Map01
         }
         private void OnGUI()
         {
+            if(intro!=null&&intro.Active)return;
             if (loading) { DrawLoading(); return; }
             if (!visible) return;
             Styles(); GUI.depth = -100;
@@ -401,6 +427,7 @@ namespace ShadowVale.Map01
         }
         private void OnDestroy()
         {
+            intro?.Cancel();
             SceneManager.sceneLoaded -= OnScene;
             Application.wantsToQuit -= WantsToQuit;
             foreach (var texture in previews) if (texture != null) Destroy(texture);

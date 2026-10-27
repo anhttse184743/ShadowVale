@@ -1,0 +1,5 @@
+Reported exception: ArgumentException: Blend shape name already exists
+Map01PaddleGrip constructor → Map01Extraction.Prepare → ContinueToMap2
+BatchDrawCommand invalid-ID messages: 290
+Telemetry: backend localhost:5000 unreachable; 50 sessions remain queued. Informational; queue is preserved.
+Sidecar: solver launched on port 8001. Informational.

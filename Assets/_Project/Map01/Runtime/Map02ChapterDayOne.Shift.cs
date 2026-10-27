@@ -16,7 +16,7 @@ namespace ShadowVale.Map01
         void PlaceRestMat(){if(restMat==null)return;FindPorch();restMat.SetPositionAndRotation(ShiftMat,Quaternion.LookRotation(porchAlong));}   // along the veranda, in front of the doorway
         void StageShift()
         {
-            dayApproachDuration=0;PlaceRestMat();HungNativeBody(true);shiftNamAt=ShiftNam;
+            sleepTorsoDepth=0;dayApproachDuration=0;PlaceRestMat();HungNativeBody(true);shiftNamAt=ShiftNam;
             var hung=roles["Hùng"];hung.StopAt(ShiftMat+porchAlong*ShiftHungAlong);hung.transform.rotation=Quaternion.LookRotation(-porchAlong);
             if(dayNamAnimator!=null)   // on his place at once, under the fade (BeginScene locks him where he stands now)
             {
@@ -30,6 +30,7 @@ namespace ShadowVale.Map01
             hung.SamplePerformance(DayClip("HungDoiCa"),t,false);namPose?.Sample(DayClip("NamDoiCa"),t,false);
             AlignBody(hung.transform,hung.Animator.transform,ShiftMat+porchAlong*ShiftHungAlong,Quaternion.LookRotation(-porchAlong),out var hp,out var hr);hung.transform.SetPositionAndRotation(hp,hr);
             if(dayNamAnimator!=null)AlignBody(Mission.Player,dayNamAnimator.transform,shiftNamAt,Quaternion.LookRotation(porchOut),out lockedPosition,out lockedRotation);
+            CorrectShiftArms();
         }
         void ShiftShot(out Vector3 eye,out Vector3 focus)
         {

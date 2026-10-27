@@ -158,7 +158,7 @@ namespace ShadowVale.Gameplay.Player
             {
                 _yaw = target.eulerAngles.y;
             }
-            SetCursorLocked(true);
+            if (_camera.isActiveAndEnabled && (InputAllowed == null || InputAllowed())) SetCursorLocked(true);
         }
 
         public System.Func<float?> SurfaceCameraFloor { get; set; }
@@ -193,7 +193,9 @@ namespace ShadowVale.Gameplay.Player
         }
         private void LateUpdate()
         {
-            if (target == null)
+            // Only the rendering camera owns look input and the global cursor.
+            // Arrival leaves a second village rig in the scene with its Camera disabled.
+            if (target == null || _camera == null || !_camera.isActiveAndEnabled)
             {
                 return;
             }

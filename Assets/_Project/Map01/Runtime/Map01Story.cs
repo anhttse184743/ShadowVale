@@ -184,7 +184,7 @@ namespace ShadowVale.Map01
                 }
                 if(Progress.doorUnlocked&&At(Layout.chestApproach)){
                     if(RemainingGuards(1)>0||!SafeToReport){mission.Say("Dọn nhóm bảo vệ và thoát giao tranh trước khi mở hòm.",4);return true;}
-                    if(Progress.chestUnlocked)StartCoroutine(Collect());else BeginLock();return true;
+                    if(Progress.chestUnlocked)Collect();else BeginLock();return true;
                 }
             }
             if(quest.Stage==5&&Progress.radioDisabled&&Layout.sabotage!=null&&At(Layout.sabotage.powerApproach)){
@@ -221,7 +221,7 @@ namespace ShadowVale.Map01
             var puzzle=new Map01SupplyLock(secret,Progress.lockHistory,Progress.lockAttemptStart);Operating=true;
             if(!puzzleUI.Begin(mission,puzzle,null,Layout.supply.position+Vector3.up*.5f,result=>{
                 Progress.lockHistory=puzzle.History.ToArray();Progress.lockAttemptStart=puzzle.AttemptStart;Operating=false;
-                if(result==Map01OperationResult.Success){Progress.chestUnlocked=true;StartCoroutine(Collect());}
+                if(result==Map01OperationResult.Success){Progress.chestUnlocked=true;Collect();}
             }))Operating=false;
         }
         void BeginCircuit()
@@ -251,18 +251,23 @@ namespace ShadowVale.Map01
                 }else if(result==Map01OperationResult.Failure){Progress.powerSeed=0;Progress.powerStep=0;mission.Say("Chưa phá được bộ nguồn. Có thể thử lại [E].",4);}
             },puzzle))Operating=false;
         }
-        IEnumerator Collect()
+        void Collect()
         {
-            if(Operating||Progress.supplies)yield break;Operating=true;yield return AnimateSupply(false);Operating=false;RefreshProps();Checkpoint();
+            if(Operating||Progress.supplies)return;
+            // The solved lock is the complete interaction: quest cargo goes straight into the bag.
+            Progress.supplies=true;
+            var bag=GetComponent<Map01Inventory>();if(bag.Count(CargoItem)==0)bag.Add(CargoItem,1);
+            quest.SuppliesRecovered();RefreshProps();Checkpoint();
         }
         IEnumerator Deliver()
         {
             if(Operating||!CanDeliver)yield break;Operating=true;
             bool proceed=false;
-            if(!dialogue.Begin(Map01OperationLines.Handoff.Take(2).ToArray(),()=>proceed=true,"Đặt túi tiếp tế")){Operating=false;yield break;}
+            if(!dialogue.Begin(Map01OperationLines.Handoff.Take(2).ToArray(),()=>proceed=true,"Bàn giao túi tiếp tế")){Operating=false;yield break;}
             while(dialogue.IsPlaying)yield return null;
             if(!proceed){Operating=false;yield break;}
-            yield return AnimateSupply(true);Operating=false;
+            // Hand over directly where the commander conversation takes place.
+            Operating=false;
             dialogue.Begin(Map01OperationLines.Handoff.Skip(2).ToArray(),()=>{
                 if(Progress.suppliesDelivered)return;Progress.suppliesDelivered=true;
                 var bag=GetComponent<Map01Inventory>();if(bag.Count(CargoItem)>0)bag.Spend(CargoItem,1);

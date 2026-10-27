@@ -153,7 +153,7 @@ namespace ShadowVale.Map01
         public void SetCharacterPanel(int panel)
         {
             Panel=panel;player.RestoreMotion(false);Bag.SuppressFire=true;
-            Cursor.visible=panel!=0;Cursor.lockState=Cursor.visible?CursorLockMode.None:CursorLockMode.Locked;
+            UpdatePointerMode();
         }
         public void DropCharacterItem(string id,int count,float condition)
         {

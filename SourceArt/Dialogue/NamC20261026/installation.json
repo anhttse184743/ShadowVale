@@ -1,0 +1,10 @@
+{
+  "voice": "Minh Quân",
+  "updatedCues": 89,
+  "otherAudioFilesUnchanged": 186,
+  "cost": 0,
+  "tests": "pending",
+  "existingCatalogEntriesWithoutHash": [
+    "m2v3_echo_promise"
+  ]
+}

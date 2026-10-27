@@ -29,7 +29,7 @@ namespace ShadowVale.Map01.Tests
         }
         [Test] public void CastingDistinguishesYoungNamMiddleAgedHungWomanLanhAndElderSau()
         {
-            var bank=Read();foreach(var e in bank.Where(e=>e.speaker=="Nam"))Assert.AreEqual("Adam",e.voice,e.id);
+            var bank=Read();foreach(var e in bank.Where(e=>e.speaker=="Nam"))Assert.AreEqual("Minh Quân",e.voice,e.id);
             foreach(var e in bank.Where(e=>e.speaker=="Chỉ huy"||e.speaker=="Anh Thành"))Assert.AreEqual("Minh Đức",e.voice,e.id);
             foreach(var e in bank.Where(e=>e.speaker=="Hùng"))Assert.AreEqual("Anh Khôi",e.voice,e.id);
             foreach(var e in bank.Where(e=>e.speaker=="Chị Lành"))Assert.AreEqual("Thục Đoan",e.voice,e.id);

@@ -7,13 +7,37 @@ namespace ShadowVale.Map01
         // with a two-handed mallet held up, ready; each Space press plays one blow that lands 0.12 s in (on the press), then
         // he raises it again. Chú Bảy squats beside the stake holding it low, his hands following it down as it is driven.
         const float StakeStand=.95f,StakeHolder=.42f;
-        float strikeClock=9;Transform twoHandMallet;bool stakeStaged;
+        float strikeClock=9;Transform twoHandMallet;bool stakeStaged,strikePending,strikeCheckpointPending;
+        int strikeStake,stagedStake=-1;
+        bool StrikeRecovering=>strikeClock<.8f;
+        bool DockHammering=>Day.stakeHits<6||StrikeRecovering;
+        int VisibleStakeIndex=>StrikeRecovering?strikeStake:Mathf.Min(Day.stakeHits/3,1);
         bool StakeMocap=>DayClip("NamVoCoc")!=null&&DayClip("BayGiuCoc")!=null;
-        Transform Stake=>physicalStakes.Count>0?physicalStakes[Mathf.Min(Day.stakeHits/3,physicalStakes.Count-1)]:null;
-        void StrikeStake(){strikeClock=0;}
+        Transform Stake=>physicalStakes.Count>0?physicalStakes[Mathf.Min(VisibleStakeIndex,physicalStakes.Count-1)]:null;
+        void ResetStakeStrike(){strikeClock=9;strikePending=strikeCheckpointPending=false;stagedStake=-1;}
+        void StrikeStake(bool good){strikeStake=Mathf.Min(Day.stakeHits/3,1);strikeClock=0;strikePending=good;}
+        void TickStakeCommit()
+        {
+            if(dayActivity!=DayActivity.Dock)return;
+            if(strikePending&&strikeClock>=.12f){
+                strikePending=false;Day.Strike(.5f);dayClock=0;dayAttemptCycle=-1;
+                SyncRepairCount();SyncDayProps();PlayDaySound("crate_place",.25f,Stake.position);
+                strikeCheckpointPending=Day.stakeHits%3==0;
+                dayFeedback=Day.stakeHits==6?"✓ Hai cọc đã chắc. Chờ búa nâng lên rồi chọn ván.":"✓ Cọc xuống thêm một nhịp.";
+            }
+            if(strikeCheckpointPending&&!StrikeRecovering){strikeCheckpointPending=false;SaveDayProgress();}
+        }
+        void SelectDockBoard(int card)
+        {
+            if(card<0||card>=Day.boardOrder.Length)return;
+            int board=Day.boardOrder[card];
+            if(System.Array.Exists(Day.boards,p=>p.x==board)){dayFeedback="Tấm này đã kê. Chọn tấm chưa dùng.";return;}
+            selectedBoard=board;selectionRotated=false;dockOffset=.24f;
+            dayFeedback=board==3?"Quan sát vết nứt giữa thân ván; chọn tấm chịu lực tốt hơn.":board==4?"Tấm ván này ngắn hơn khoảng cách hai thanh đỡ.":"Căn hai đầu lên thanh đỡ bằng thanh trượt hoặc A/D; E để kê.";
+        }
         void StageStake()
         {
-            var stake=Stake;if(stake==null)return;stakeStaged=true;var at=new Vector3(stake.position.x,sites["dock"].position.y,stake.position.z);
+            var stake=Stake;if(stake==null)return;stakeStaged=true;stagedStake=VisibleStakeIndex;var at=new Vector3(stake.position.x,sites["dock"].position.y,stake.position.z);
             var cc=Mission.Player.GetComponent<CharacterController>();if(cc!=null)cc.enabled=false;
             Mission.Player.SetPositionAndRotation(at-Vector3.forward*StakeStand,Quaternion.LookRotation(Vector3.forward));if(cc!=null)cc.enabled=true;
             var bay=roles["Chú Bảy"];bay.StopAt(at+Vector3.right*StakeHolder);bay.transform.rotation=Quaternion.LookRotation(Vector3.left);
@@ -38,7 +62,7 @@ namespace ShadowVale.Map01
         void ReleaseStake(){if(!stakeStaged)return;stakeStaged=false;roles["Chú Bảy"].ReleasePerformance();roles["Chú Bảy"].StopAt(sites["dock"].position);if(twoHandMallet!=null)twoHandMallet.gameObject.SetActive(false);}
         void SampleStake(float dt)
         {
-            if(!stakeStaged)StageStake();var stake=Stake;if(stake==null)return;strikeClock+=dt;
+            if(!stakeStaged||stagedStake!=VisibleStakeIndex)StageStake();var stake=Stake;if(stake==null)return;strikeClock+=dt;
             FreeNamPose(DayClip("NamVoCoc"),Mathf.Min(strikeClock,DayClip("NamVoCoc").length),false);
             // The mallet's way is the take's own (map2_dongcoc_mixamo.py), aimed at this stake's real top at the blow; his hands
             // are put on its handle (the retarget alone leaves them a hand's width off, which a 15 cm grip turns into a wild swing).

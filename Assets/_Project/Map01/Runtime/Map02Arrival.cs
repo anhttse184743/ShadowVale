@@ -110,8 +110,8 @@ namespace ShadowVale.Map01
             HideRowersRifle();
             for(int i=0;i<3;i++) {
                 Passengers[i].SetParent(transform,true);
-                Passengers[i].localPosition=new Vector3(0,-.13f,i==0?0:i==1?1.6f:-1.6f);
-                Passengers[i].localRotation=Quaternion.Euler(0,i==2?0:270,0);
+                Passengers[i].localPosition=new Vector3(0,-.13f,i==0?0:i==1?-1.6f:1.6f);
+                Passengers[i].localRotation=Quaternion.Euler(0,i==1?0:270,0);
             }
             player.enabled=combat.enabled=false;
             var footsteps=Passengers[0].GetComponent<PlayerFootsteps>();if(footsteps!=null)footsteps.enabled=false;health.CinematicInvulnerable=true;
@@ -148,6 +148,7 @@ namespace ShadowVale.Map01
             PrepareBoatRendering(true);
             foreach(var other in FindObjectsByType<Camera>(FindObjectsSortMode.None))if(other!=camera) {
                 other.enabled=false;other.tag="Untagged";
+                var unusedRig=other.GetComponent<ThirdPersonCamera>();if(unusedRig!=null)unusedRig.enabled=false;
                 var listener=other.GetComponent<AudioListener>();if(listener!=null)listener.enabled=false;
             }
             camera.tag="MainCamera";camera.GetComponent<AudioListener>().enabled=true;
@@ -166,7 +167,7 @@ namespace ShadowVale.Map01
             }
             stand=new AnimationClip[3];step=new AnimationClip[3];walk=new AnimationClip[3];turn=new AnimationClip[3];poses=new Map01Extraction.PosePlayer[3];
             for(int i=0;i<3;i++) {
-                string who=i==2?"Hung":"Nam";
+                string who=i==1?"Hung":"Nam";
                 stand[i]=Resources.Load<AnimationClip>("Cutscenes/Map02/"+who+"_Boat_Stand");
                 step[i]=Resources.Load<AnimationClip>("Cutscenes/Map02/"+who+"_Jetty_StepUp");
                 walk[i]=Resources.Load<AnimationClip>("Cutscenes/Map02/"+who+"_Walk_Ashore");
@@ -177,8 +178,8 @@ namespace ShadowVale.Map01
                 PrepareBindFeet(i);
                 PrepareShoeContacts(i);
                 poses[i].Dispose();poses[i]=new Map01Extraction.PosePlayer(actors[i],i==2?source.hungClips:null);
-                poses[i].Play(Resources.Load<AnimationClip>("Cutscenes/Map02/"+who+(i==2?"_Arrival_Row_Loop":"_Arrival_Travel")));
-                if(i!=2)Map01Rifle.Attach(actors[i]).weapon.gameObject.SetActive(true);
+                poses[i].Play(i==1?Resources.Load<AnimationClip>("Cutscenes/Map02/Hung_Arrival_Row_Loop"):i==2?source.InjuredTravel:Resources.Load<AnimationClip>("Cutscenes/Map02/Nam_Arrival_Travel"));
+                if(i==0)Map01BoatCarry.For(actors[i]).Stow();
             }
             HideRowersRifle();
             stow=Resources.Load<AnimationClip>("Cutscenes/Map02/Hung_Oar_Stow");LoadMisstep();
@@ -195,12 +196,7 @@ namespace ShadowVale.Map01
             Cursor.lockState=CursorLockMode.None;Cursor.visible=false;
             ApplyArrival(0);yield return null;
         }
-        void HideRowersRifle() {
-            // Loading a completed Map 1 checkpoint bypasses StartDeparture,
-            // which used to be the only place that hid Hung's rifle.
-            foreach(var weapon in actors[2].GetComponentsInChildren<Weapon>(true))
-                if(weapon.IsGun)weapon.gameObject.SetActive(false);
-        }
+        void HideRowersRifle() => source.HidePassengerGuns();
         void PrepareBoatRendering(bool destinationScene=false) {
             if(!boatVisualsPrepared) {
                 foreach(var mesh in GetComponentsInChildren<MeshFilter>(true)) {
@@ -271,6 +267,7 @@ namespace ShadowVale.Map01
         void MuteVillageCameras(Scene scene,LoadSceneMode mode) {
             foreach(var root in scene.GetRootGameObjects())foreach(var other in root.GetComponentsInChildren<Camera>(true))if(other!=camera) {
                 other.enabled=false;other.tag="Untagged";
+                var unusedRig=other.GetComponent<ThirdPersonCamera>();if(unusedRig!=null)unusedRig.enabled=false;
                 var listener=other.GetComponent<AudioListener>();if(listener!=null)listener.enabled=false;
             }
         }
@@ -305,7 +302,7 @@ namespace ShadowVale.Map01
                 ApplyArrival(Mathf.Clamp01(clock/ApproachDuration));
                 int stroke=Mathf.FloorToInt(clock/2.4f);
                 if(stroke!=lastStroke && rowingAudio!=null){lastStroke=stroke;rowingAudio.PlayOneShot(source.paddleAudio,.35f);}
-                if(clock>=ApproachDuration){CurrentPhase=Phase.Mooring;clock=0;speech.Play("m2_moor_order");poses[2].Play(stow??source.rowStop);paddleStart=paddle.localPosition;paddleStartRotation=paddle.localRotation;}
+                if(clock>=ApproachDuration){CurrentPhase=Phase.Mooring;clock=0;speech.Play("m2_moor_order");poses[1].Play(stow??source.rowStop);paddleStart=paddle.localPosition;paddleStartRotation=paddle.localRotation;}
             } else if(CurrentPhase==Phase.Mooring) {
                 transform.SetPositionAndRotation(Docked,DockRotation);
                 if(clock>=MoorDuration){CurrentPhase=Phase.Disembarking;clock=0;speech.Play("m2_ashore_order");}
@@ -336,18 +333,18 @@ namespace ShadowVale.Map01
         void ExitPassenger(int index,float t) {
             if(t<0 || ashore[index])return;
             if(MisstepPassenger(index,t))return;
-            var passenger=Passengers[index];var pose=poses[index];float seatLane=index==0?0:index==1?1.6f:-1.6f;
+            var passenger=Passengers[index];var pose=poses[index];float seatLane=index==0?0:index==1?-1.6f:1.6f;
             float lane=Lane(index);
             float stairStart=index==0?StandDuration:StandDuration+LaneDuration;
             if(t<StandDuration) {
                 pose.Play(stand[index]);pose.Rate(stand[index].length/StandDuration);
                 // Hung rises facing the bow with his feet under him; turn only when taking the first step.
-                passenger.localRotation=index==2?Quaternion.identity:Quaternion.Euler(0,270,0);
+                passenger.localRotation=index==1?Quaternion.identity:Quaternion.Euler(0,270,0);
                 passenger.localPosition=new Vector3(0,Mathf.Lerp(-.13f,InteriorFloor,Mathf.SmoothStep(0,1,t/StandDuration)),seatLane);
             } else if(t<stairStart) {
                 float moveTime=t-StandDuration;
-                var laneHeading=Quaternion.Euler(0,index==1?180:0,0);
-                var initialHeading=index==2?Quaternion.identity:Quaternion.Euler(0,270,0);
+                var laneHeading=Quaternion.Euler(0,index==1?0:180,0);
+                var initialHeading=index==1?Quaternion.identity:Quaternion.Euler(0,270,0);
                 float laneProgress=Mathf.Clamp01((moveTime-.55f)/1.2f);
                 passenger.localPosition=new Vector3(0,InteriorFloor,Mathf.Lerp(seatLane,lane,laneProgress));
                 if(moveTime<.55f) {
@@ -409,17 +406,20 @@ namespace ShadowVale.Map01
                 paddle.localRotation=Quaternion.Slerp(paddleStartRotation,paddleParkRotation,p);
                 float leftRelease=Mathf.SmoothStep(0,1,(p-.50f)/.22f);
                 float rightRelease=Mathf.SmoothStep(0,1,(p-.74f)/.23f);
-                source.ArrivalStowContacts(1-leftRelease,1-rightRelease);
-                source.ArrivalRestHands(actors[2],clock,leftRelease,rightRelease);
+                source.ArrivalStowContacts(1-leftRelease,1-rightRelease);source.SetPaddleGrip(1-leftRelease,1-rightRelease);
+                source.ArrivalRestHands(actors[1],clock,leftRelease,rightRelease);
             }
-            for(int i=0;i<2;i++) {
+            for(int i=0;i<1;i++) {
                 // The C1 take owns Nam's hands while he removes the pack and supports Hùng.
                 if(MisstepOwnsFeet(i)){if(i==0)SlingRifle();continue;}
                 float rise=CurrentPhase==Phase.Disembarking?Mathf.Clamp01((clock-i*PassengerDelay)/StandDuration):0;
-                source.HoldSeatedRifle(actors[i],Mathf.Lerp(.32f,.16f,rise));
+                Map01BoatCarry.For(actors[i]).Stow();
+                if(CurrentPhase!=Phase.Disembarking)source.ArrivalRestHands(actors[i],clock);
             }
             // Authored hand support/release and arm swing must remain visible while rising/walking.
-            if(CurrentPhase==Phase.Disembarking && clock<2*PassengerDelay)source.ArrivalRestHands(actors[2],clock);
+            if(CurrentPhase==Phase.Disembarking){source.SetPaddleGrip(0,0);if(clock<PassengerDelay)source.ArrivalRestHands(actors[1],clock);}
+            // Injured arm stays supported throughout arrival; release to the chapter driver only at handoff.
+            source.ApplyInjuredPassenger();
             if(CurrentPhase==Phase.Disembarking)for(int i=0;i<3;i++) {
                 if(ashore[i])GroundStandingFeet(i);
                 float t=clock-i*PassengerDelay;
@@ -624,7 +624,7 @@ namespace ShadowVale.Map01
         }
         void Finish() {
             if(CurrentPhase==Phase.Gameplay)return;
-            speech?.Stop();EndMisstep();
+            speech?.Stop();source.SetPaddleGrip(0,0);EndMisstep();Map01BoatCarry.For(actors[0]).Restore();
             transform.SetPositionAndRotation(Docked,DockRotation);
             for(int i=0;i<3;i++) {
                 poses[i]?.Dispose();
@@ -637,7 +637,7 @@ namespace ShadowVale.Map01
                 }
                 GroundSkin(actors[i],SpawnPoints[i].y);
                 // Nam's weapon belongs to PlayerCombat and its gameplay grip configuration.
-                if(i>0){var gun=Map01Rifle.Attach(actors[i]);if(gun!=null)gun.weapon.gameObject.SetActive(true);}
+                if(i==1){var gun=Map01Rifle.Attach(actors[i]);if(gun!=null)gun.weapon.gameObject.SetActive(true);}
             }
             camera.transform.SetParent(null,true);
             paddle.localPosition=paddlePark;paddle.localRotation=paddleParkRotation;

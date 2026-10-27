@@ -13,13 +13,13 @@ namespace ShadowVale.Map01
             if(dayActivity==DayActivity.Dock)
             {
                 var dock=sites["dock"].position;
-                if(Day.stakeHits<6&&Stake!=null)
+                if(DockHammering&&Stake!=null)
                 {
                     // Side on to the swing: Nam in profile with the mallet's arc, chú Bảy beyond the stake facing us.
                     var stake=Stake.position;focus=new Vector3(stake.x,dock.y+1.05f,stake.z)-Vector3.forward*.45f;eye=focus+new Vector3(-2.6f,.65f,-.45f);fov=44;return true;
                 }
-                // Above the steps from the stack's side: the two rails, the board held over its step, Nam and chú Bảy beyond.
-                focus=dock+new Vector3(.3f,.25f,1.15f);eye=dock+new Vector3(2.5f,2.5f,3.1f);return true;
+                // Steep overhead view: the held plank and both bearings clear Nam in the foreground; screen-right remains world +X.
+                focus=dock+new Vector3(.3f,.25f,1.15f);eye=dock+new Vector3(.3f,5.5f,-1.65f);return true;
             }
             if(dayActivity!=DayActivity.Lamp&&dayActivity!=DayActivity.Gate&&dayActivity!=DayActivity.Path)return false;
             int p=postIndex;fov=50;

@@ -84,3 +84,4 @@ MonoBehaviour:
   shiftSeconds: 12
   carryOffset: {x: 0, y: 0.87, z: 0.36}
   medicinePacket: {fileID: 0}
+  namFingerReference: {fileID: 9000000, guid: 794717c306d135343803072263688cf8, type: 3}

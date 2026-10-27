@@ -13,5 +13,6 @@ namespace ShadowVale.Map01
         [Min(1)] public float bandageSeconds=24,shiftSeconds=12;
         public Vector3 carryOffset=new Vector3(0,.87f,.36f);
         public GameObject medicinePacket;
+        [Tooltip("Finger-complete calibration on Nam's existing skeleton; does not replace the gameplay Avatar.")] public Avatar namFingerReference;
     }
 }

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-26 10:13:46Z" end-time="2026-10-26 10:13:55Z" duration="9.2325505">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="807" result="Failed" site="Child" start-time="2026-10-26 10:13:46Z" end-time="2026-10-26 10:13:55Z" duration="9.232551" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1744" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/Capstone/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="584" result="Failed" site="Child" start-time="2026-10-26 10:13:46Z" end-time="2026-10-26 10:13:55Z" duration="8.837810" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="15864" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1745" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="584" result="Failed" site="Child" start-time="2026-10-26 10:13:46Z" end-time="2026-10-26 10:13:55Z" duration="8.802668" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1746" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="584" result="Failed" site="Child" start-time="2026-10-26 10:13:46Z" end-time="2026-10-26 10:13:55Z" duration="8.770085" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="SetUpFixture" id="1655" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="584" result="Failed" site="Child" start-time="2026-10-26 10:13:46Z" end-time="2026-10-26 10:13:55Z" duration="8.737821" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1401" name="Map02DayOneVoiceCoverageTests" fullname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests" classname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-26 10:12:15Z" end-time="2026-10-26 10:12:16Z" duration="1.520162" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1402" name="AllDayOneAndNightOneSpokenCuesHaveExactDedicatedRecordings" fullname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests.AllDayOneAndNightOneSpokenCuesHaveExactDedicatedRecordings" methodname="AllDayOneAndNightOneSpokenCuesHaveExactDedicatedRecordings" classname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests" runstate="Runnable" seed="606943031" result="Passed" start-time="2026-10-26 10:12:15Z" end-time="2026-10-26 10:12:16Z" duration="1.497709" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1510" name="MosinScopedDamageTests" fullname="ShadowVale.Map01.Tests.MosinScopedDamageTests" classname="ShadowVale.Map01.Tests.MosinScopedDamageTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 10:13:46Z" end-time="2026-10-26 10:13:55Z" duration="8.626585" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1511" name="ScopedClickKeepsItsAimRayWhenTheBoltLowersTheScope" fullname="ShadowVale.Map01.Tests.MosinScopedDamageTests.ScopedClickKeepsItsAimRayWhenTheBoltLowersTheScope" methodname="ScopedClickKeepsItsAimRayWhenTheBoltLowersTheScope" classname="ShadowVale.Map01.Tests.MosinScopedDamageTests" runstate="Runnable" seed="702293445" result="Failed" start-time="2026-10-26 10:12:16Z" end-time="2026-10-26 10:13:55Z" duration="98.719031" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  A scoped click on the torso must kill even when the bolt camera has moved before resolution
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.MosinScopedDamageTests+<Run>d__4.MoveNext () [0x005bf] in G:\game\Capstone\ShadowVale\Assets\_Project\Map01\Tests\MosinScopedDamageTests.cs:45
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Saving results to: Logs/Map02Chapter/latest-full-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

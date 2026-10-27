@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="8" result="Passed" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-26 10:21:41Z" end-time="2026-10-26 10:21:49Z" duration="8.6991928">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="807" result="Passed" start-time="2026-10-26 10:21:41Z" end-time="2026-10-26 10:21:49Z" duration="8.699193" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1744" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/Capstone/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="584" result="Passed" start-time="2026-10-26 10:21:41Z" end-time="2026-10-26 10:21:49Z" duration="7.954717" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="12968" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1745" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="584" result="Passed" start-time="2026-10-26 10:21:41Z" end-time="2026-10-26 10:21:49Z" duration="7.902687" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1746" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="584" result="Passed" start-time="2026-10-26 10:21:41Z" end-time="2026-10-26 10:21:49Z" duration="7.854461" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1655" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="584" result="Passed" start-time="2026-10-26 10:21:41Z" end-time="2026-10-26 10:21:49Z" duration="7.799556" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1372" name="Map02DayOneIntegrationTests" fullname="ShadowVale.Map01.Tests.Map02DayOneIntegrationTests" classname="ShadowVale.Map01.Tests.Map02DayOneIntegrationTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-26 10:18:14Z" end-time="2026-10-26 10:18:16Z" duration="2.140225" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1373" name="ActualChapterRequiresPackingDockAndPostSafetyWithoutTouchingLaterDays" fullname="ShadowVale.Map01.Tests.Map02DayOneIntegrationTests.ActualChapterRequiresPackingDockAndPostSafetyWithoutTouchingLaterDays" methodname="ActualChapterRequiresPackingDockAndPostSafetyWithoutTouchingLaterDays" classname="ShadowVale.Map01.Tests.Map02DayOneIntegrationTests" runstate="Runnable" seed="1066811289" result="Passed" start-time="2026-10-26 10:17:37Z" end-time="2026-10-26 10:18:16Z" duration="39.085189" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1401" name="Map02DayOneVoiceCoverageTests" fullname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests" classname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-26 10:18:16Z" end-time="2026-10-26 10:18:17Z" duration="0.963113" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1402" name="AllDayOneAndNightOneSpokenCuesHaveExactDedicatedRecordings" fullname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests.AllDayOneAndNightOneSpokenCuesHaveExactDedicatedRecordings" methodname="AllDayOneAndNightOneSpokenCuesHaveExactDedicatedRecordings" classname="ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests" runstate="Runnable" seed="821634097" result="Passed" start-time="2026-10-26 10:18:16Z" end-time="2026-10-26 10:18:17Z" duration="0.958313" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1497" name="MosinBalanceTests" fullname="ShadowVale.Map01.Tests.MosinBalanceTests" classname="ShadowVale.Map01.Tests.MosinBalanceTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-26 10:20:28Z" end-time="2026-10-26 10:20:42Z" duration="13.636824" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1500" name="HeadAndTorsoShotsKillAt35_80_120_199MetresIncludingHeavyAndCommanderHealth" fullname="ShadowVale.Map01.Tests.MosinBalanceTests.HeadAndTorsoShotsKillAt35_80_120_199MetresIncludingHeavyAndCommanderHealth" methodname="HeadAndTorsoShotsKillAt35_80_120_199MetresIncludingHeavyAndCommanderHealth" classname="ShadowVale.Map01.Tests.MosinBalanceTests" runstate="Runnable" seed="1628090329" result="Passed" start-time="2026-10-26 10:18:17Z" end-time="2026-10-26 10:20:02Z" duration="104.934422" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1499" name="LethalityDoesNotLeakIntoNonEnemiesOrAReconfiguredPistol" fullname="ShadowVale.Map01.Tests.MosinBalanceTests.LethalityDoesNotLeakIntoNonEnemiesOrAReconfiguredPistol" methodname="LethalityDoesNotLeakIntoNonEnemiesOrAReconfiguredPistol" classname="ShadowVale.Map01.Tests.MosinBalanceTests" runstate="Runnable" seed="1180360385" result="Passed" start-time="2026-10-26 10:20:02Z" end-time="2026-10-26 10:20:02Z" duration="0.022197" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1501" name="MaxRangeCoverAndCinematicProtectionStillApplyAndScopeShowsTheActualTarget" fullname="ShadowVale.Map01.Tests.MosinBalanceTests.MaxRangeCoverAndCinematicProtectionStillApplyAndScopeShowsTheActualTarget" methodname="MaxRangeCoverAndCinematicProtectionStillApplyAndScopeShowsTheActualTarget" classname="ShadowVale.Map01.Tests.MosinBalanceTests" runstate="Runnable" seed="571393583" result="Passed" start-time="2026-10-26 10:20:02Z" end-time="2026-10-26 10:20:42Z" duration="39.734731" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+              <test-case id="1498" name="ProfilePrefabAndPrecisionSupportARealTwoHundredMetreHeadShot" fullname="ShadowVale.Map01.Tests.MosinBalanceTests.ProfilePrefabAndPrecisionSupportARealTwoHundredMetreHeadShot" methodname="ProfilePrefabAndPrecisionSupportARealTwoHundredMetreHeadShot" classname="ShadowVale.Map01.Tests.MosinBalanceTests" runstate="Runnable" seed="599251773" result="Passed" start-time="2026-10-26 10:20:42Z" end-time="2026-10-26 10:20:42Z" duration="0.101444" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1510" name="MosinScopedDamageTests" fullname="ShadowVale.Map01.Tests.MosinScopedDamageTests" classname="ShadowVale.Map01.Tests.MosinScopedDamageTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-26 10:21:09Z" end-time="2026-10-26 10:21:16Z" duration="6.909533" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1511" name="ScopedClickKeepsItsAimRayWhenTheBoltLowersTheScope" fullname="ShadowVale.Map01.Tests.MosinScopedDamageTests.ScopedClickKeepsItsAimRayWhenTheBoltLowersTheScope" methodname="ScopedClickKeepsItsAimRayWhenTheBoltLowersTheScope" classname="ShadowVale.Map01.Tests.MosinScopedDamageTests" runstate="Runnable" seed="1425243831" result="Passed" start-time="2026-10-26 10:20:42Z" end-time="2026-10-26 10:21:16Z" duration="33.764228" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1512" name="MosinSniperShotTests" fullname="ShadowVale.Map01.Tests.MosinSniperShotTests" classname="ShadowVale.Map01.Tests.MosinSniperShotTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-26 10:21:42Z" end-time="2026-10-26 10:21:49Z" duration="7.332284" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1513" name="OneRoundFromTheGroundKillsTheTowerSentryUnderHisRoof" fullname="ShadowVale.Map01.Tests.MosinSniperShotTests.OneRoundFromTheGroundKillsTheTowerSentryUnderHisRoof" methodname="OneRoundFromTheGroundKillsTheTowerSentryUnderHisRoof" classname="ShadowVale.Map01.Tests.MosinSniperShotTests" runstate="Runnable" seed="1597725421" result="Passed" start-time="2026-10-26 10:21:16Z" end-time="2026-10-26 10:21:49Z" duration="33.376456" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: Logs/Map02Chapter/latest-full-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

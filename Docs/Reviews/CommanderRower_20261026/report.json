@@ -1,0 +1,70 @@
+{
+  "tests": {
+    "id": "2",
+    "testcasecount": "3",
+    "result": "Passed",
+    "total": "3",
+    "passed": "3",
+    "failed": "0",
+    "inconclusive": "0",
+    "skipped": "0",
+    "asserts": "0",
+    "engine-version": "3.5.0.0",
+    "clr-version": "4.0.30319.42000",
+    "start-time": "2026-10-26 08:45:40Z",
+    "end-time": "2026-10-26 08:46:44Z",
+    "duration": "63.2090533"
+  },
+  "earlierCoverTest": "Diagnostic_Tests.xml: SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot passed, Nam=6 Commander=0 Kills=2 Ammo=30",
+  "latestNamShots": 6,
+  "latestCommanderShots": 0,
+  "protected": [
+    {
+      "path": "Assets/Resources/Dialogue/voice-catalog.json",
+      "sha256": "69f01f29669fe2bbfd6642c36d976b535cf5e513761b95d63c3ad3ab7aeec658"
+    },
+    {
+      "path": "SourceArt/Dialogue/voice-catalog.json",
+      "sha256": "69f01f29669fe2bbfd6642c36d976b535cf5e513761b95d63c3ad3ab7aeec658"
+    },
+    {
+      "path": "Assets/_Project/Art/Characters/NPCs/chỉ huy mình.fbx",
+      "sha256": "48e94152962a15411b5aedc053d5f43ca168f108146c2bda64ee132f43d55cdf"
+    },
+    {
+      "path": "Assets/_Project/Art/Characters/NPCs/chỉ huy mình.fbx.meta",
+      "sha256": "464d257a6abb5112ff3003a8701eead253433625bdc23c429191ba89a25d43a4"
+    }
+  ],
+  "cost": 0,
+  "files": [
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01Extraction.cs",
+      "sha256": "8488a93e15a69681404cf2c97ca3c8c677449fa363256413f0859056dcf11860"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02Arrival.cs",
+      "sha256": "c0724e797261aab5cd5f6cbf11c06601c48b20b138e754623d1e69e0ccfcb639"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01PaddleGrip.cs",
+      "sha256": "304e0b909456b010dd47c8466af5afb6b78d466ee2d6159245a9d58f925e49e7"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/CommanderPaddleGripSetup.cs",
+      "sha256": "b3ec973c9b916b848cc0853eb113cc249d933de8a9eb3c8f658a23c84b1fbb39"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/CommanderRowerTests.cs",
+      "sha256": "a50f393d80c1dd64b03448a776e5cf707b873c97c55921e1b4e89cbcbd5381fb"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/ExtractionTests.cs",
+      "sha256": "7b3dc120b2f13e48d7286a608725839ca6d1868745ce5ce7924ce60eeeade0a6"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02ArrivalTests.cs",
+      "sha256": "a9229b7dcd1b55d49b55c4fc68dd2b5dc443eee1a3cc983f7040cdbc276939a6"
+    }
+  ]
+}
