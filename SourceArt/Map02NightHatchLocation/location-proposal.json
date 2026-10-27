@@ -1,0 +1,24 @@
+{
+  "status": "location proposal only; no scene or gameplay changes",
+  "mapImage": "Tools/Map02Reports/map02-field-trees-overview.png",
+  "patrolApproxXZ": [
+    30.24,
+    -12.397218754661425
+  ],
+  "markedHatchApproxXZ": [
+    69.94909090909091,
+    -8.030573446857339
+  ],
+  "hatchPosition": [
+    67.39446115959433,
+    0.72800004,
+    -14.791300727992667
+  ],
+  "nearestRoadEdgeXZ": [
+    69.35483870967741,
+    -4.985337243401759
+  ],
+  "roadEdgeDistanceMeters": 10.0,
+  "riceVerifiedFromSavedScene": true,
+  "distanceAssumption": "10 metres from nearest road edge, not from patrol"
+}

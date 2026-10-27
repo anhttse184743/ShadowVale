@@ -67,6 +67,10 @@ namespace ShadowVale.Gameplay.Player
         public float PlanarSpeed { get; private set; }
         public System.Func<bool> InputAllowed { get; set; }
         public System.Func<bool> SprintAllowed { get; set; }
+        // A nearby ladder may consume Space before stance changes and jumping.
+        public System.Func<bool> JumpInteraction { get; set; }
+        // Mission-local movement bounds; applied before collision, including sprint and jump travel.
+        public System.Func<Vector3,Vector3,Vector3> MovementConstraint { get; set; }
         public float SurfaceSpeedMultiplier { get; set; } = 1;
         public float? AssistedWalkSpeed { get; set; }
         public float WalkSpeed=>walkSpeed;
@@ -128,6 +132,10 @@ namespace ShadowVale.Gameplay.Player
                 return;
             }
             Keyboard kb = dead ? null : Keyboard.current;
+            if(kb?.spaceKey.wasPressedThisFrame==true&&JumpInteraction?.Invoke()==true)
+            {
+                _planarVelocity=Vector3.zero;PlanarSpeed=0;return;
+            }
 
             Vector2 input = ReadMoveInput(kb);
             bool stoodFromProne = IsProne && kb != null && (kb.zKey.wasPressedThisFrame || kb.spaceKey.wasPressedThisFrame);
@@ -174,7 +182,9 @@ namespace ShadowVale.Gameplay.Player
             Vector3 velocity = _planarVelocity;
             velocity.y = _verticalVelocity;
             Vector3 beforeMove = transform.position;
-            _controller.Move(velocity * Time.deltaTime);
+            Vector3 displacement = velocity * Time.deltaTime;
+            if (MovementConstraint != null) displacement = MovementConstraint(beforeMove, displacement);
+            _controller.Move(displacement);
             PlanarSpeed = Time.deltaTime > 0f
                 ? Vector3.ProjectOnPlane(transform.position - beforeMove, Vector3.up).magnitude / Time.deltaTime : 0f;
 

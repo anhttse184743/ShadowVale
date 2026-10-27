@@ -269,7 +269,7 @@
     },
     {
       "id": "N2_03",
-      "title": "Đi kín đáo tới kho, xác nhận cửa hầm còn kín",
+      "title": "Xuống hầm kiểm tra kho vật tư",
       "phase": 3,
       "kind": "inspectDoor",
       "site": "store",
@@ -279,7 +279,7 @@
       "count": 1,
       "scene": "",
       "seconds": 3,
-      "purpose": "Xem kho vật tư có còn an toàn sau lượt tuần tra hay không."
+      "purpose": "Mở nắp, dùng thang xuống kho và xác nhận vật tư vẫn an toàn sau lượt tuần tra."
     },
     {
       "id": "N2_04",

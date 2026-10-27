@@ -7,6 +7,9 @@ namespace ShadowVale.Map01
     public sealed partial class Map02ChapterDirector
     {
         public const string NightPatrolGroup="night2_patrol";
+        public const float NightPatrolBulletDamage=24,NightPatrolHealth=60*NightPatrolBulletDamage;
+        public static float NightPatrolSavedHealth(float hp,int version)=>version==0?Mathf.Clamp01(hp/100)*NightPatrolHealth:hp;
+        public bool NightPatrolStopped=>State.phase!=3||State.night2ReachedStore||State.Done("N2_03")||State.Done("N2_05");
         public bool NightObservationRulesActive=>State.phase==3&&!State.Done("N2_05");
         public float NightPatrolScanRate=>NightObservationRulesActive?.5f:1f;
         public float NightPatrolDetectionRange=>NightObservationRulesActive?40:Layout!=null?Mathf.Clamp(Layout.nightPatrolLightRange,10,55):28;
@@ -23,6 +26,22 @@ namespace ShadowVale.Map01
         Material nightBeamMaterial;
         Vector3 nightNominalOrigin,nightSweepDirection=Vector3.forward;
         public Vector3 NightPatrolPosition=>sites["nightPatrol"].position;
+        public const float NightObservationRange=40;
+        public bool TryReachNightObservationCheckpoint(Vector3 position)
+        {
+            if(State.phase!=3||State.night2ObservationCheckpointReached||State.Done("N2_01")||Vector3.Distance(position,NightObservationSpawn)>3)return false;
+            State.night2ObservationCheckpointReached=true;return true;
+        }
+        public bool NightObservationPositionAllowed(Vector3 position)=>
+            State.phase==3&&State.night2ObservationCheckpointReached&&
+            Vector3.ProjectOnPlane(position-NightPatrolPosition,Vector3.up).sqrMagnitude<=NightObservationRange*NightObservationRange;
+        bool TickNightObservation(float dt,float seconds)
+        {
+            var cam=rig.GetComponent<Camera>();var target=NightObservationPoint;var delta=target-cam.transform.position;
+            bool view=binocular&&!player.IsMoving&&NightPatrolExists&&NightObservationPositionAllowed(Mission.Player.position)&&
+                Vector3.Angle(cam.transform.forward,delta)<Mathf.Min(32,cam.fieldOfView*.5f+8)&&ObservationVisible(cam,target);
+            observed=view?observed+dt:0;return observed>=seconds;
+        }
         BoxCollider nightObservationBridge;
         BoxCollider NightObservationBridge
         {
@@ -55,11 +74,7 @@ namespace ShadowVale.Map01
         }
         Vector3 NightPatrolPost(int i)
         {
-            var center=sites["bridge"].position;
-            var offset=Vector3.ProjectOnPlane(NightPatrolPosition-center,Vector3.up).normalized*35;
-            // Three points on the same 35 m radius: a triangle, with adjacent chords of 10 m.
-            float angle=2*Mathf.Asin(10f/(2*35))*Mathf.Rad2Deg;
-            return center+Quaternion.AngleAxis(i==0?0:i==1?angle:-angle,Vector3.up)*offset;
+            return NightPatrolPosition+Vector3.ProjectOnPlane(Layout.nightTwoPatrolRowDirection,Vector3.up).normalized*(i*10);
         }
         Vector3 MigrateNightPatrolPosition(string id,Vector3 position)
         {
@@ -85,19 +100,37 @@ namespace ShadowVale.Map01
                     if(Enemies.Any(unit=>unit!=null&&unit.id==id))continue;
                     var p=NightPatrolPost(i);
                     if(!NavMesh.SamplePosition(p,out var floor,4,NavMesh.AllAreas))continue;
-                    SpawnEnemy(id,NightPatrolGroup,floor.position,100,false);
+                    SpawnEnemy(id,NightPatrolGroup,floor.position,NightPatrolHealth,false);
                 }
                 if(!State.combatGroups.Contains(NightPatrolGroup))State.combatGroups.Add(NightPatrolGroup);
+                State.nightPatrolHealthVersion=1;
             }
             foreach(var unit in Enemies)if(unit!=null&&unit.group==NightPatrolGroup){unit.gameObject.SetActive(active);if(active)Map02PatrolFlashlight.Bind(unit);}
             if(active&&nightBeamRoot==null)BuildNightBeam();
             if(nightBeamRoot!=null)nightBeamRoot.SetActive(active);
-            if(active)TickPatrol(0);
+            if(active){TickNightStoreArrival();TickPatrol(0);}
+            if(NightPatrolStopped)StopNightPatrolAtStore();
+        }
+        public void TickNightStoreArrival()
+        {
+            if(State.phase!=3||State.night2ReachedStore||!State.Done("N2_02")||!sites.ContainsKey("nightHatch"))return;
+            var delta=Mission.Player.position-NightDoorStand;
+            if(Mathf.Abs(delta.y)>1.2f||Vector3.ProjectOnPlane(delta,Vector3.up).sqrMagnitude>9)return;
+            State.night2ReachedStore=true;detectionClock=0;State.patrolFocusSeconds=0;
+            StopNightPatrolAtStore();Mission.Say("Đã tới cửa hầm kho. Tổ tuần tra ngừng quét. E mở nắp · Space dùng thang · S xuống · W lên.");Mission.StoreCheckpoint();
+        }
+        void StopNightPatrolAtStore()
+        {
+            if(sweepLight!=null)sweepLight.enabled=false;
+            foreach(var light in nightLights)if(light!=null)light.enabled=false;
+            if(nightBeamRoot!=null)nightBeamRoot.SetActive(false);
+            foreach(var unit in Enemies)if(unit!=null&&unit.group==NightPatrolGroup)unit.StopAtStoreArrival();
         }
         public void TickNightPatrolUnit(Map02ChapterEnemy unit,NavMeshAgent agent)
         {
             // Hold the three posts ten metres apart; only the beam scans until combat starts.
             agent.isStopped=true;
+            if(NightPatrolStopped)return;
             int i=unit.id.EndsWith("_0")?0:unit.id.EndsWith("_1")?1:2;
             var facing=Vector3.ProjectOnPlane(NightLightDirection(i,nightSweepDirection),Vector3.up);
             if(facing.sqrMagnitude>.001f)unit.transform.rotation=Quaternion.LookRotation(facing);
@@ -130,7 +163,8 @@ namespace ShadowVale.Map01
         Vector3 NightPatrolMissionDirection(int i)
         {
             var unit=NightUnit(i);var origin=unit!=null?unit.transform.position:NightPatrolPost(i);
-            return Vector3.ProjectOnPlane(sites["bridge"].position-origin,Vector3.up).normalized;
+            var bank=NightBankScanPoint(origin);
+            return Vector3.ProjectOnPlane(bank-origin,Vector3.up).normalized;
         }
         Vector3 NightPatrolSweepDirection(int i)
         {
@@ -157,6 +191,7 @@ namespace ShadowVale.Map01
         }
         public bool NightGuardIlluminates(Map02ChapterEnemy unit)
         {
+            if(NightPatrolStopped)return false;
             if(NightPatrolConceals(Mission.Player.GetComponent<ShadowVale.Gameplay.Player.PlayerController>()))return false;
             int i=unit.id.EndsWith("_0")?0:unit.id.EndsWith("_1")?1:2;
             var from=NightLightOrigin(i,nightNominalOrigin);var delta=Mission.Player.position+Vector3.up*(Mission.Player.GetComponent<ShadowVale.Gameplay.Player.PlayerController>()?.IsProne==true?.4f:1f)-from;
@@ -166,6 +201,7 @@ namespace ShadowVale.Map01
         public void TickNightPatrolWorld(float dt)
         {
             if(!ready||Mission==null||Mission.Paused||ForestMenu.Visible||Mission.World.story.failed||Mission.Panel!=0||sceneTask!=null||phaseFade>0||State.finished)return;
+            TickNightStoreArrival();
             TickPatrol(Mathf.Clamp(dt,0,.1f));
         }
         public void SyncNightPatrolPresentation(){if(nightBeamRoot!=null&&State.phase==3&&!State.Done("N2_05"))UpdateNightPatrolPresentation(nightNominalOrigin,nightSweepDirection);}
@@ -174,7 +210,8 @@ namespace ShadowVale.Map01
         {
             if(nightBeamRoot==null)return;
             nightNominalOrigin=origin;nightSweepDirection=direction;
-            nightBeamRoot.SetActive(State.phase==3&&!State.Done("N2_05"));
+            nightBeamRoot.SetActive(!NightPatrolStopped);
+            if(NightPatrolStopped){StopNightPatrolAtStore();return;}
             for(int i=0;i<3;i++)
             {
                 var unit=NightUnit(i);var prop=unit!=null?unit.GetComponent<Map02PatrolFlashlight>():null;
@@ -193,6 +230,7 @@ namespace ShadowVale.Map01
         bool NightPatrolExposure(Vector3 origin,Vector3 direction,out float angle,out float distance)
         {
             bool exposed=false;angle=180;distance=float.MaxValue;
+            if(NightPatrolStopped)return false;
             bool concealed=NightPatrolConceals(Mission.Player.GetComponent<ShadowVale.Gameplay.Player.PlayerController>());
             for(int i=0;i<3;i++)
             {
@@ -209,11 +247,11 @@ namespace ShadowVale.Map01
             var camera=rig.GetComponent<Camera>();var target=NightObservationPoint;var point=camera.WorldToViewportPoint(target);float distance=Vector3.Distance(Mission.Player.position,NightPatrolPosition);
             var style=new GUIStyle(label){alignment=TextAnchor.MiddleCenter,fontSize=20};
             if(point.z>0&&point.x>.1f&&point.x<.9f&&point.y>.12f&&point.y<.85f&&ObservationVisible(camera,target))
-                GUI.Label(new Rect(point.x*1600-190,(1-point.y)*900-80,380,75),$"◇ TỔ TUẦN TRA · {distance:0} m\nGiữ F · nhìn người cầm đèn",style);
+                GUI.Label(new Rect(point.x*1600-190,(1-point.y)*900-80,380,75),$"◇ TỔ TUẦN TRA · {distance:0} m\n{(!State.night2ObservationCheckpointReached?"Đi qua ghim quan sát trước":!NightObservationPositionAllowed(Mission.Player.position)?"Tới trong bán kính 40 m":"Giữ F · nhìn người cầm đèn")}",style);
             else
             {
                 string turn=point.z<0?"phía sau":point.x<.5f?"bên trái":"bên phải";
-                GUI.Box(new Rect(460,95,810,65),GUIContent.none);GUI.Label(new Rect(470,102,790,55),$"Tổ tuần tra ở {turn} · {distance:0} m · đồng bên trái khi nhìn về nam\nTới đầu cầu, nhìn theo ghim tổ tuần tra và giữ F",style);
+                GUI.Box(new Rect(460,95,810,65),GUIContent.none);GUI.Label(new Rect(470,102,790,55),$"Tổ tuần tra ở {turn} · {distance:0} m\n{(!State.night2ObservationCheckpointReached?"Đi qua ghim quan sát ở đầu cầu trước":"Chọn chỗ trong bán kính 40 m · nhìn theo ghim tổ tuần tra và giữ F")}",style);
             }
         }
         void ReleaseNightPatrolPresentation()

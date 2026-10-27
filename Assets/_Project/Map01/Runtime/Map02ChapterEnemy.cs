@@ -23,6 +23,7 @@ namespace ShadowVale.Map01
         public bool Investigating=>investigate.HasValue;
         public bool CanSilentTakedown(Map02Mission mission)
         {
+            if(group==Map02ChapterDirector.NightPatrolGroup&&director.NightObservationRulesActive)return false;
             if (Dead || alerted || !gameObject.activeInHierarchy || mission == null || mission.InputBlocked || mission.Skills == null) return false;
             float range = mission.Skills.TakedownRange(1.6f);
             var delta = mission.Player.position - transform.position;
@@ -48,7 +49,9 @@ namespace ShadowVale.Map01
                 Map01EnemyGrip.Bind(this);
             }
             var body=gameObject.AddComponent<CapsuleCollider>();body.height=1.75f;body.radius=.3f;body.center=Vector3.up*.875f;
-            HitPoints=gameObject.AddComponent<Health>();HitPoints.KeepCheckpointCorpse();HitPoints.BindAnimator(actor);HitPoints.RestoreHealth(hp);
+            HitPoints=gameObject.AddComponent<Health>();HitPoints.KeepCheckpointCorpse();HitPoints.BindAnimator(actor);
+            if(roster==Map02ChapterDirector.NightPatrolGroup){HitPoints.SetMaxHealth(Map02ChapterDirector.NightPatrolHealth);HitPoints.AllowsLethalBulletOverride=false;HitPoints.BulletDamageModifier=(amount,point)=>amount>0?Map02ChapterDirector.NightPatrolBulletDamage:0;}
+            HitPoints.RestoreHealth(hp);
             agent=gameObject.AddComponent<NavMeshAgent>();agent.height=1.75f;agent.radius=.3f;agent.speed=2.2f;agent.stoppingDistance=9;
             HitPoints.Damaged+=OnDamaged;
             if(hp<=0){body.enabled=false;agent.enabled=false;}
@@ -81,6 +84,11 @@ namespace ShadowVale.Map01
         }
         void OnDestroy(){if(HitPoints!=null)HitPoints.Damaged-=OnDamaged;}
         public static bool NightObservationShotHits(float roll)=>roll<.9f;
+        public void StopAtStoreArrival()
+        {
+            alerted=false;TrackingVisibleTarget=false;lastSeen=null;investigate=null;
+            if(agent!=null&&agent.enabled&&agent.isOnNavMesh){agent.ResetPath();agent.isStopped=true;}
+        }
         void Update()
         {
             TrackingVisibleTarget=false;
@@ -89,6 +97,7 @@ namespace ShadowVale.Map01
             if(mission.CharacterWorldBlocked||ForestMenu.Visible){if(agent.isOnNavMesh)agent.isStopped=true;return;}
             if(!agent.isOnNavMesh)return;
             bool night=group==Map02ChapterDirector.NightPatrolGroup;
+            if(night&&director.NightPatrolStopped){StopAtStoreArrival();return;}
             bool observationRules=night&&director.NightObservationRulesActive;
             if(observationRules&&mission.Player.GetComponent<PlayerController>()?.IsProne==true)
             {
@@ -121,7 +130,7 @@ namespace ShadowVale.Map01
             var sound=target.GetComponent<CombatAudio>();if(sound!=null&&sound.Gunshot.IsValid){var a=sound.Gunshot;PooledAudioService.Resolve().PlayOneShot(a.clip,from,.65f*a.EffectiveGain,1,0,.85f,a.startTime,a.duration);}
             // Every damage event requires an actual unobstructed hit, never a periodic HP tax.
             if(Physics.Raycast(from,(to-from).normalized,out var actual,distance+.2f,~0,QueryTriggerInteraction.Ignore)&&actual.transform.GetComponentInParent<Health>()==target.GetComponent<Health>()&&(!observationRules||NightObservationShotHits(Random.value)))
-                target.GetComponent<Health>().TakeDamage(6,actual.point,gameObject);
+                target.GetComponent<Health>().TakeDamage(observationRules?target.GetComponent<Health>().Max*.5f:6,actual.point,gameObject);
         }
     }
 }

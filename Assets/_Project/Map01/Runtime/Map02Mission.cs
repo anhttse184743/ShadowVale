@@ -180,7 +180,7 @@ namespace ShadowVale.Map01
             if(kb.mKey.wasPressedThisFrame){TogglePanel(3);return;}
             if(Panel!=0)return;
             if(Chapter?.HasNearbyPost==true){nearest=null;if(worldEReady)Chapter.TryInteractNearbyPost();return;}
-            if(worldEReady&&kb.eKey.wasPressedThisFrame){if(nearest!=null)Interact(nearest);else TryCharacterInteraction();}
+            if(worldEReady&&kb.eKey.wasPressedThisFrame){if(Chapter?.UndergroundStore?.TryDoorInteraction()==true)return;if(nearest!=null)Interact(nearest);else TryCharacterInteraction();}
         }
         Map02ObjectiveObject NearestObjective()
         {
@@ -330,7 +330,7 @@ namespace ShadowVale.Map01
             // Old v3 saves may already be at the store/dock. Rebuild only the route baseline,
             // preserving the saved inventory, weapon and health rather than inventing supplies.
             var data=Capture();data.checkpoint=data.patrolCheckpoint=null;
-            data.chapter.ResetPatrolRoute();data.position=Chapter.Sites["bridge"].position;
+            data.chapter.ResetPatrolRoute();data.position=Chapter.NightObservationSpawn;
             patrolCheckpoint=JsonUtility.ToJson(data);
         }
         public bool RetryPatrol()

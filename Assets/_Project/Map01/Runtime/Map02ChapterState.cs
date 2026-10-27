@@ -46,6 +46,10 @@ namespace ShadowVale.Map01
         public Vector3 patrolFocusDirection;
         public int night2GuidanceStage;
         public bool night2ChainCuePlayed;
+        public bool night2HatchOpen,night2InsideStore;
+        public bool night2ReachedStore;
+        public bool night2ObservationCheckpointReached;
+        public int nightPatrolHealthVersion;
         public float villageDaySeconds; public bool villagePlanePlayed;
         public List<string> night2RouteVisited=new List<string>();
         public bool PatrolRouteActive=>phase==3&&Done("N2_02")&&!Done("N2_05");
@@ -65,7 +69,7 @@ namespace ShadowVale.Map01
             completed.RemoveAll(id=>id=="N2_03"||id=="N2_04");
             introduced.RemoveAll(id=>id=="N2_03"||id=="N2_04"||id=="N2_05");
             activeTask=carry=null;trackedTask="N2_03";taskProgress=0;workCount=0;
-            patrolWarnings=0;patrolScanSeconds=patrolFocusSeconds=0;patrolFocusDirection=Vector3.zero;night2GuidanceStage=1;night2ChainCuePlayed=false;night2RouteVisited.Clear();
+            patrolWarnings=0;patrolScanSeconds=patrolFocusSeconds=0;patrolFocusDirection=Vector3.zero;night2GuidanceStage=1;night2ChainCuePlayed=false;night2HatchOpen=night2InsideStore=night2ReachedStore=false;night2RouteVisited.Clear();
         }
         public List<string> introduced=new List<string>();
         public List<string> completed=new List<string>();
@@ -124,6 +128,7 @@ namespace ShadowVale.Map01
             if((scoutAmbushPoints.Count!=0&&scoutAmbushPoints.Count!=5)||scoutAmbushPoints.Any(p=>!float.IsFinite(p.x)||!float.IsFinite(p.y)||!float.IsFinite(p.z)))throw new System.IO.InvalidDataException("Các điểm phục kích dìu Tâm không hợp lệ.");
             if(!float.IsFinite(scoutRescueOrigin.x)||!float.IsFinite(scoutRescueOrigin.y)||!float.IsFinite(scoutRescueOrigin.z))throw new System.IO.InvalidDataException("Điểm đón Tâm không hợp lệ.");
             night2RouteVisited??=new List<string>();
+            if(night2InsideStore&&(!night2HatchOpen||!Done("N2_02")))throw new System.IO.InvalidDataException("Trạng thái vào hầm không khớp nắp hầm và nhiệm vụ quan sát.");
             if(night2GuidanceStage<0||night2GuidanceStage>7||!float.IsFinite(patrolFocusSeconds)||patrolFocusSeconds<0||patrolFocusSeconds>3.01f||
                 !float.IsFinite(patrolFocusDirection.x)||!float.IsFinite(patrolFocusDirection.y)||!float.IsFinite(patrolFocusDirection.z))
                 throw new System.IO.InvalidDataException("Trạng thái đèn và hướng dẫn bộ đàm Đêm 2 không hợp lệ.");
