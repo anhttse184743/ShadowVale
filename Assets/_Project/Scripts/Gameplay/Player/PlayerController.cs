@@ -69,6 +69,7 @@ namespace ShadowVale.Gameplay.Player
         public System.Func<bool> SprintAllowed { get; set; }
         // A nearby ladder may consume Space before stance changes and jumping.
         public System.Func<bool> JumpInteraction { get; set; }
+        public System.Func<bool> CrouchInteraction { get; set; }
         // Mission-local movement bounds; applied before collision, including sprint and jump travel.
         public System.Func<Vector3,Vector3,Vector3> MovementConstraint { get; set; }
         public float SurfaceSpeedMultiplier { get; set; } = 1;
@@ -132,6 +133,10 @@ namespace ShadowVale.Gameplay.Player
                 return;
             }
             Keyboard kb = dead ? null : Keyboard.current;
+            if(kb!=null&&(kb.leftCtrlKey.wasPressedThisFrame||kb.rightCtrlKey.wasPressedThisFrame)&&CrouchInteraction?.Invoke()==true)
+            {
+                _planarVelocity=Vector3.zero;PlanarSpeed=0;return;
+            }
             if(kb?.spaceKey.wasPressedThisFrame==true&&JumpInteraction?.Invoke()==true)
             {
                 _planarVelocity=Vector3.zero;PlanarSpeed=0;return;

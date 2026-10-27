@@ -1,0 +1,18 @@
+PASS top interaction accepts the extra 30 cm margin
+PASS top interaction rejects positions beyond 1.1 m
+PASS top interaction still requires the correct floor height
+PASS bottom interaction accepts the extra 30 cm margin
+PASS bottom interaction rejects points outside the added radius
+PASS bottom padding uses a rounded radius rather than expanded square corners
+PASS Space on the surface does not attach for descent and preserves normal jump handling
+PASS Ctrl at the expanded surface zone consumes crouch and attaches to descend
+PASS S input descends the ladder
+PASS releasing both keys stops ladder movement
+PASS opposing keys do not move the player
+PASS S reaches the bottom and begins the room landing
+PASS Ctrl at the bottom does not attach for ascent
+PASS Space at the expanded bottom zone attaches for ascent without jumping
+PASS W input ascends the ladder
+PASS pause stops ladder processing
+PASS W reaches the top and begins the surface landing
+PASS store cleanup restores previous jump and crouch handlers

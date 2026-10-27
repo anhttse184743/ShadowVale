@@ -180,7 +180,7 @@ namespace ShadowVale.Map01
             if(kb.mKey.wasPressedThisFrame){TogglePanel(3);return;}
             if(Panel!=0)return;
             if(Chapter?.HasNearbyPost==true){nearest=null;if(worldEReady)Chapter.TryInteractNearbyPost();return;}
-            if(worldEReady&&kb.eKey.wasPressedThisFrame){if(Chapter?.UndergroundStore?.TryDoorInteraction()==true)return;if(nearest!=null)Interact(nearest);else TryCharacterInteraction();}
+            if(worldEReady&&kb.eKey.wasPressedThisFrame){if(Chapter?.UndergroundStore?.TryLootInteraction()==true||Chapter?.UndergroundStore?.TryDoorInteraction()==true)return;if(nearest!=null)Interact(nearest);else TryCharacterInteraction();}
         }
         Map02ObjectiveObject NearestObjective()
         {

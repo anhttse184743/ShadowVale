@@ -150,7 +150,7 @@ namespace ShadowVale.Map01
             }
             if(task.kind=="inspectDoor")
             {
-                if(UndergroundStore?.CanInspect!=true){Mission.Say("E mở nắp · tới điểm Space để bám thang. Xuống kho, đến kệ vật tư rồi nhấn E kiểm tra.");return false;}
+                if(UndergroundStore?.CanInspect!=true){Mission.Say("E mở nắp · tới cạnh miệng hầm, Ctrl để bám thang xuống kho. Trong kho, đến kệ vật tư rồi nhấn E kiểm tra.");return false;}
                 Mission.Say("Kho vật tư còn an toàn. Lên thang trở lại mặt đất rồi qua sông kiểm tra tuyến sơ tán.");Finish(task);return true;
             }
             if(task.kind=="inspectRoute")

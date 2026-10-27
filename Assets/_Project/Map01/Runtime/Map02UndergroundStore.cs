@@ -8,12 +8,13 @@ using UnityEngine.InputSystem;
 
 namespace ShadowVale.Map01
 {
-    /// <summary>Space at the ladder consumes jump input and takes exclusive traversal control.</summary>
+    /// <summary>Ctrl/Space attach to the ladder; W/S control movement once attached.</summary>
     [DefaultExecutionOrder(160)]
     public sealed class Map02UndergroundStore : MonoBehaviour
     {
         public const float Depth=7,RoomLength=8,RoomWidth=5,RoomHeight=4;
         const float TopLatchDepth=1.1f;
+        public const float LadderApproachPadding=.3f,TopApproachRadius=.8f+LadderApproachPadding;
         public Map02ChapterDirector Owner {get;private set;}
         public bool IsClimbing {get;private set;}
         public bool Inside=>Owner!=null&&Owner.State.night2InsideStore;
@@ -28,10 +29,66 @@ namespace ShadowVale.Map01
         Animator actor;Map01CinematicPose climbPose;AnimationClip idle;WeaponKind priorWeapon;
         readonly Dictionary<Transform,Quaternion> climbRest=new();
         Func<bool> previousJumpInteraction,jumpHandler;
+        Func<bool> previousCrouchInteraction,crouchHandler;
         bool bodyWasEnabled;float depth,transition;Vector3 transitionFrom;int entrySide; // 1 surface, -1 room
         bool exiting;Vector3 exitTarget;
         Mesh sourceTerrain,cutTerrain;MeshCollider terrainCollider;MeshFilter terrainFilter;
         readonly List<(VillageRiceInstances field,Vector4[] plants,float[] sizes)> crops=new();
+        readonly Transform[] lootCrates=new Transform[3];
+        static readonly string[] LootIds={"ammo_rifle","ammo_pistol","medkit_small"};
+        static readonly int[] LootAmounts={30,21,2};
+        static readonly string[] LootNames={"viên đạn AK","viên đạn K54","băng cứu thương"};
+        public (string id,int count) LootContents(int box)
+        {
+            int kind=Owner.State.StoreLootKind(box);return (LootIds[kind],LootAmounts[kind]);
+        }
+        void EnsureLootLayout()
+        {
+            if(Owner.State.night2StoreLootInitialized)return;
+            Owner.State.night2StoreLootOrder=UnityEngine.Random.Range(0,6);Owner.State.night2StoreLootInitialized=true;
+        }
+        static readonly string[] LootShelves={"ShelfFront","ShelfBack","ShelfEast"};
+        static readonly Vector3[] ShelfLootCenters={new Vector3(3.1f,-5.89f,-1.08f),new Vector3(3.1f,-5.89f,3.08f),new Vector3(6.58f,-5.89f,1)};
+        static readonly Vector3[] ShelfLootApproaches={new Vector3(3.1f,-5.89f,-.68f),new Vector3(3.1f,-5.89f,2.68f),new Vector3(6.18f,-5.89f,1)};
+        Vector3 LootApproachPoint(int box)=>transform.TransformPoint(ShelfLootApproaches[box]);
+        void BindShelfLoot()
+        {
+            EnsureLootLayout();
+            for(int i=0;i<3;i++)
+            {
+                var shelf=GetComponentsInChildren<Transform>(true).First(t=>t.name==LootShelves[i]);
+                var point=new GameObject("Loot — existing shelf crate "+(i+1)).transform;point.SetParent(shelf,false);point.position=transform.TransformPoint(ShelfLootCenters[i]);lootCrates[i]=point;
+            }
+        }
+        int NearbyLootCrate()
+        {
+            if(!Inside||IsClimbing||Owner.Mission.InputBlocked||Owner.State.phase<3||!Owner.State.Done("N2_02"))return -1;
+            int nearest=-1;float distance=1.7f*1.7f;
+            for(int i=0;i<3;i++)
+            {
+                var crate=lootCrates[i];if(crate==null||Owner.State.StoreLootTaken(i))continue;
+                var approach=LootApproachPoint(i);
+                float d=(Owner.Mission.Player.position-approach).sqrMagnitude;if(d>=distance)continue;
+                // The authored shelf is one mesh with a solid collider: interact at its exposed face.
+                var from=Owner.Mission.Player.position+Vector3.up*.9f;var to=approach;
+                if(Physics.Linecast(from,to,out var hit,~0,QueryTriggerInteraction.Ignore)&&hit.transform!=crate&&!hit.transform.IsChildOf(crate)&&hit.transform!=Owner.Mission.Player&&!hit.transform.IsChildOf(Owner.Mission.Player))continue;
+                nearest=i;distance=d;
+            }
+            return nearest;
+        }
+        public bool TryLootInteraction()
+        {
+            int box=NearbyLootCrate();var bag=Owner.Mission.Bag;
+            if(box<0||bag==null||!Owner.State.TryClaimStoreLoot(box))return false;
+            int kind=Owner.State.StoreLootKind(box);var contents=LootContents(box);
+            bag.Receive(contents.id,contents.count);
+            Owner.Mission.RequireInteractionRelease();Owner.Mission.Say($"Đã lấy {contents.count} {LootNames[kind]} từ hộp vật tư.");Owner.Mission.StoreCheckpoint();return true;
+        }
+        void DrawLootGuide()
+        {
+            int box=NearbyLootCrate();if(box<0)return;
+            GUI.Box(new Rect(450,635,700,48),"E · Lấy đồ trong hộp vật tư",new GUIStyle(GUI.skin.box){fontSize=22,alignment=TextAnchor.MiddleCenter});
+        }
         public bool ContainsAuthorizedPlayer(Vector3 world)
         {
             if(!Inside&&!IsClimbing)return false;
@@ -42,13 +99,14 @@ namespace ShadowVale.Map01
         public void Initialize(Map02ChapterDirector owner)
         {
             Owner=owner;var pawn=owner.Mission.Player;body=pawn.GetComponent<CharacterController>();motor=pawn.GetComponent<PlayerController>();combat=pawn.GetComponent<PlayerCombat>();
-            previousJumpInteraction=motor.JumpInteraction;jumpHandler=()=>TryEnterLadder()||(previousJumpInteraction?.Invoke()??false);motor.JumpInteraction=jumpHandler;
+            previousJumpInteraction=motor.JumpInteraction;jumpHandler=()=>TryEnterLadder(true)||(previousJumpInteraction?.Invoke()??false);motor.JumpInteraction=jumpHandler;
+            previousCrouchInteraction=motor.CrouchInteraction;crouchHandler=()=>TryEnterLadder(false)||(previousCrouchInteraction?.Invoke()??false);motor.CrouchInteraction=crouchHandler;
             cameraRig=FindObjectsByType<ThirdPersonCamera>(FindObjectsSortMode.None).FirstOrDefault(c=>c.GetComponent<Camera>()?.enabled==true);
             var authoredHinge=GetComponentsInChildren<Transform>(true).First(t=>t.name=="HatchPivot");
             hinge=new GameObject("HatchControl").transform;hinge.SetParent(transform,false);hinge.localPosition=new Vector3(1,.14f,0);
             foreach(var child in authoredHinge.Cast<Transform>().ToArray())child.SetParent(hinge,true);
             closedRotation=hinge.localRotation;
-            BuildCollision();CutTerrainOpening();ClearMouthPlants();SyncState();Physics.SyncTransforms();
+            BuildCollision();BindShelfLoot();CutTerrainOpening();ClearMouthPlants();SyncState();Physics.SyncTransforms();
         }
         void ClearMouthPlants()
         {
@@ -80,7 +138,7 @@ namespace ShadowVale.Map01
             Box("Supply shelf back",new Vector3(3.1f,-5.9f,3.08f),new Vector3(3.8f,2.2f,.66f));
             Box("Supply shelf east",new Vector3(6.58f,-5.9f,1),new Vector3(.66f,2.2f,2.8f));
             // Never disabled: the controlled traversal temporarily disables only Nam's capsule.
-            FallGuard=Box("Space ladder entry only — permanent fall guard",new Vector3(0,-.06f,0),new Vector3(2,.20f,3));
+            FallGuard=Box("Controlled ladder entry only — permanent fall guard",new Vector3(0,-.06f,0),new Vector3(2,.20f,3));
             FallGuard.gameObject.layer=2;
             Box("Single wooden hatch leaf",new Vector3(-1,0,0),new Vector3(2,.12f,3),hinge);
             for(int i=0;i<2;i++)
@@ -94,24 +152,26 @@ namespace ShadowVale.Map01
             if(IsClimbing||Inside||Vector3.Distance(Owner.Mission.Player.position,TopStand)>2)return false;
             if(Owner.State.phase<3||!Owner.State.Done("N2_02")){Owner.Mission.Say("Quan sát tổ tuần tra và báo bộ đàm trước khi vào kho.");return true;}
             Owner.State.night2HatchOpen=!IsOpen;Owner.Mission.RequireInteractionRelease();Owner.Mission.StoreCheckpoint();
-            Owner.Mission.Say(IsOpen?"Nắp đã mở. Đứng tại điểm cạnh miệng hầm, nhấn Space bám thang. S xuống · W lên.":"Đã đóng nắp hầm.");return true;
+            Owner.Mission.Say(IsOpen?"Nắp đã mở. Tới cạnh miệng hầm, Ctrl bám thang xuống · Space bám thang lên · W lên / S xuống.":"Đã đóng nắp hầm.");return true;
         }
         bool AtBottomApproach(Vector3 world)
         {
             var p=transform.InverseTransformPoint(world);
-            return Mathf.Abs(p.y+Depth)<=.4f&&p.x>=-.78f&&p.x<=1.3f&&Mathf.Abs(p.z)<=.85f;
+            var closest=new Vector2(Mathf.Clamp(p.x,-.78f,1.3f),Mathf.Clamp(p.z,-.85f,.85f));
+            return Mathf.Abs(p.y+Depth)<=.4f&&(new Vector2(p.x,p.z)-closest).sqrMagnitude<=LadderApproachPadding*LadderApproachPadding;
         }
+        bool AtTopApproach(Vector3 world){var delta=world-TopStand;return Mathf.Abs(delta.y)<=.4f&&Vector3.ProjectOnPlane(delta,Vector3.up).sqrMagnitude<=TopApproachRadius*TopApproachRadius;}
         bool HasFootSupport()
         {
             if(motor.IsGrounded)return true;
             return Physics.RaycastAll(Owner.Mission.Player.position+Vector3.up*.16f,Vector3.down,.4f,~0,QueryTriggerInteraction.Ignore)
                 .Any(h=>h.normal.y>.5f&&!h.transform.IsChildOf(Owner.Mission.Player)&&h.transform!=Owner.Mission.Player);
         }
-        public bool TryEnterLadder()
+        public bool TryEnterLadder(bool ascend=false)
         {
             if(IsClimbing||!IsOpen||hatchAngle<95||Owner.Mission.InputBlocked||motor.IsProne||!HasFootSupport())return false;
             bool below=AtBottomApproach(Owner.Mission.Player.position);
-            if(!below&&(Inside||Vector3.Distance(Owner.Mission.Player.position,TopStand)>.8f))return false;
+            if(ascend!=below||!below&&(Inside||!AtTopApproach(Owner.Mission.Player.position)))return false;
             if(below)Owner.State.night2InsideStore=true;
             entrySide=below?-1:1;depth=below?Depth:TopLatchDepth;IsClimbing=true;exiting=false;transition=0;transitionFrom=Owner.Mission.Player.position;
             bodyWasEnabled=body.enabled;body.enabled=false;motor.RestoreMotion(false);
@@ -130,7 +190,8 @@ namespace ShadowVale.Map01
             var kb=Keyboard.current;
             if(!IsClimbing)
             {
-                if(kb?.spaceKey.wasPressedThisFrame==true&&TryEnterLadder())return;
+                if(kb?.spaceKey.wasPressedThisFrame==true&&TryEnterLadder(true))return;
+                if((kb?.leftCtrlKey.wasPressedThisFrame==true||kb?.rightCtrlKey.wasPressedThisFrame==true)&&TryEnterLadder(false))return;
                 return;
             }
             if(Owner.Mission.Player.GetComponent<Health>()?.IsDead==true){CancelTraversal();return;}
@@ -187,25 +248,26 @@ namespace ShadowVale.Map01
         }
         public void SyncState()
         {
+            EnsureLootLayout();
             CancelTraversal();hatchAngle=IsOpen?105:0;hinge.localRotation=closedRotation*Quaternion.AngleAxis(-hatchAngle,Vector3.forward);
             if(Inside&&!ContainsAuthorizedPlayer(Owner.Mission.Player.position)){Owner.State.night2InsideStore=false;}
         }
         public void DrawGuide()
         {
-            if(Owner==null||Owner.Mission.Paused||ForestMenu.Visible)return;
-            var stand=Inside?BottomStand:TopStand;
-            if(IsOpen&&!IsClimbing&&cameraRig!=null&&Vector3.Distance(Owner.Mission.Player.position,stand)<6)
-            {
-                var point=cameraRig.GetComponent<Camera>().WorldToScreenPoint(stand+Vector3.up*.15f);
-                if(point.z>0)GUI.Box(new Rect(point.x-90,Screen.height-point.y-30,180,30),"◇ Space · Bám thang");
-            }
+            if(Owner==null||Owner.Mission.Paused||ForestMenu.Visible||IsClimbing)return;
+            DrawLootGuide();
             string text=null;
-            if(IsClimbing)text="S · Xuống     W · Lên";
-            else if(IsOpen&&hatchAngle<95&&Vector3.Distance(Owner.Mission.Player.position,TopStand)<3)text="Đang mở nắp hầm…";
-            else if(Vector3.Distance(Owner.Mission.Player.position,Inside?BottomStand:TopStand)<1.8f)
-                text=IsOpen?(AtBottomApproach(Owner.Mission.Player.position)||Vector3.Distance(Owner.Mission.Player.position,TopStand)<=.8f?"Space · Bám thang     S · Xuống     W · Lên":"Tới sát chân thang · Space để bám thang") : "E · Mở nắp hầm";
+            if(!Owner.Mission.InputBlocked)
+            {
+                var at=Owner.Mission.Player.position;
+                if(Inside&&IsOpen&&AtBottomApproach(at))text="Dùng phím Space để bám thang";
+                else if(!Inside&&AtTopApproach(at))text=!IsOpen?"Dùng phím E để mở nắp hầm":hatchAngle<95?"Đang mở nắp hầm…":"Dùng phím Ctrl để bám thang";
+            }
             if(text==null)return;
-            GUI.Box(new Rect(Screen.width*.5f-260,Screen.height-150,520,58),text,new GUIStyle(GUI.skin.box){fontSize=19,alignment=TextAnchor.MiddleCenter});
+            var area=new Rect(250,420,1100,60);
+            var style=new GUIStyle(GUI.skin.label){fontSize=14,alignment=TextAnchor.MiddleCenter,normal={textColor=Color.black}};
+            GUI.Label(new Rect(area.x+1,area.y+1,area.width,area.height),text,style);
+            style.normal.textColor=Color.white;GUI.Label(area,text,style);
         }
         // Clip only triangles touching the 2 x 3 m aperture, preserving the original soil UVs/colours.
         struct V {public Vector3 p,n;public Vector2 uv;public Color c;public static V Lerp(V a,V b,float t)=>new V{p=Vector3.Lerp(a.p,b.p,t),n=Vector3.Lerp(a.n,b.n,t),uv=Vector2.Lerp(a.uv,b.uv,t),c=Color.Lerp(a.c,b.c,t)};}
@@ -238,6 +300,7 @@ namespace ShadowVale.Map01
         void OnDestroy()
         {
             if(motor!=null&&motor.JumpInteraction==jumpHandler)motor.JumpInteraction=previousJumpInteraction;
+            if(motor!=null&&motor.CrouchInteraction==crouchHandler)motor.CrouchInteraction=previousCrouchInteraction;
             foreach(var entry in crops)if(entry.field!=null){entry.field.plants=entry.plants;entry.field.sizes=entry.sizes;entry.field.Rebuild();}
             CancelTraversal();if(cutTerrain!=null){if(terrainFilter!=null)terrainFilter.sharedMesh=sourceTerrain;if(terrainCollider!=null)terrainCollider.sharedMesh=sourceTerrain;Destroy(cutTerrain);}
         }

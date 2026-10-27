@@ -258,7 +258,7 @@ namespace ShadowVale.Map01
             var delta=Mission.Player.position-NightDoorStand;
             if(Mathf.Abs(delta.y)>1.2f||Vector3.ProjectOnPlane(delta,Vector3.up).sqrMagnitude>9)return;
             State.night2ReachedStore=true;detectionClock=0;State.patrolFocusSeconds=0;
-            StopNightPatrolAtStore();Mission.Say("Đã tới cửa hầm kho. Tổ tuần tra ngừng quét. E mở nắp · Space dùng thang · S xuống · W lên.");Mission.StoreCheckpoint();
+            StopNightPatrolAtStore();Mission.Say("Đã tới cửa hầm kho. Tổ tuần tra ngừng quét. E mở nắp · Ctrl bám thang xuống · Space bám thang lên · W lên / S xuống.");Mission.StoreCheckpoint();
         }
         void StopNightPatrolAtStore()
         {
