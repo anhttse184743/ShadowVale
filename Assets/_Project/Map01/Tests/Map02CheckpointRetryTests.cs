@@ -60,6 +60,34 @@ namespace ShadowVale.Map01.Tests
             Assert.Greater(c.AllyShotsFired,0,"Nam's comrades fire on the soldiers they can see.");
             Assert.IsFalse(seen.Contains(ShadowVale.AI.Fsm.EnemyStateId.Patrol)&&!seen.Contains(ShadowVale.AI.Fsm.EnemyStateId.Engage)&&!seen.Contains(ShadowVale.AI.Fsm.EnemyStateId.TakeCover),"A wave does not stroll about.");
         }
+        [UnityTest,Timeout(300000)]public IEnumerator DayTwoAmbushFightsUnderTheCoordinatorAndThePatrolKeepsItsStealth()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
+            yield return DayTwoInPlayMode();
+            yield return new ExitPlayMode();
+        }
+        static IEnumerator DayTwoInPlayMode()
+        {
+            Map02Mission m=null;float deadline=Time.realtimeSinceStartup+100;
+            while(Time.realtimeSinceStartup<deadline){m=Object.FindFirstObjectByType<Map02Mission>();if(m?.Chapter!=null&&m.Ready)break;Object.FindFirstObjectByType<Map02Arrival>()?.Skip();yield return null;}
+            var c=m.Chapter;m.Player.GetComponent<Health>().CinematicInvulnerable=true;
+            var snap=m.Capture();var s=new Map02ChapterState();foreach(var t in Map02ChapterDefinition.Load().tasks){if(t.id=="D2_04")break;s.Complete(t.id);}
+            snap.chapter=s;m.Restore(snap);float until=Time.time+1.5f;while(Time.time<until)yield return null;
+            Assert.AreEqual(2,c.State.phase);
+            var spawn=typeof(Map02ChapterDirector).GetMethod("SpawnEnemy",System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Instance);
+            var nam=m.Player.position;var spots=new System.Collections.Generic.List<Vector3>();
+            for(int i=0;i<16&&spots.Count<4;i++){var p=nam+Quaternion.Euler(0,i*22.5f,0)*Vector3.forward*16;if(UnityEngine.AI.NavMesh.SamplePosition(p,out var hit,3,UnityEngine.AI.NavMesh.AllAreas))spots.Add(hit.position);}
+            Assert.GreaterOrEqual(spots.Count,4);
+            for(int i=0;i<3;i++)spawn.Invoke(c,new object[]{"test_ambush_"+i,Map02ChapterDirector.ScoutAmbushGroup,spots[i],100f,true,false});
+            spawn.Invoke(c,new object[]{"test_patrol_0","scout_patrol",spots[3],100f,false,false});
+            var plans=new System.Collections.Generic.List<PlanAppliedEvent>();System.Action<PlanAppliedEvent> onPlan=plans.Add;EventBus.Subscribe(onPlan);
+            try{until=Time.time+8;while(Time.time<until)yield return null;}
+            finally{EventBus.Unsubscribe(onPlan);}
+            var ambush=c.Enemies.Where(e=>e!=null&&e.group==Map02ChapterDirector.ScoutAmbushGroup).ToArray();var patrol=c.Enemies.First(e=>e!=null&&e.id=="test_patrol_0");
+            Assert.IsTrue(ambush.All(e=>e.BrainState.HasValue),"The ambush fights on the shared brain.");
+            Assert.IsTrue(plans.Any(p=>p.Group.Contains(Map02ChapterDirector.ScoutAmbushGroup)),"…and the squad coordinator plans it with the solver ("+string.Join(", ",plans.Select(p=>p.Group))+").");
+            if(!patrol.Alerted)Assert.IsFalse(patrol.BrainState.HasValue,"A patrol that has not found Nam keeps its stealth rules.");
+        }
         [UnityTest,Timeout(120000)]public IEnumerator AWallTakesTheRoundsAndOpenGroundDoesNot()
         {
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene,NewSceneMode.Single);yield return new EnterPlayMode();

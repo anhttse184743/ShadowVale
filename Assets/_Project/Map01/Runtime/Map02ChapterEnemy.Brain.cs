@@ -14,8 +14,10 @@ namespace ShadowVale.Map01
     /// engage, retreat) and, like Map 1's squads, under the squad coordinator: each wave is a squad (its group id), and the
     /// coordinator plans it on Map 2's baked tactical graph with the session's solver (QUBO; greedy as fallback), giving each
     /// man a node and a role. Until a plan lands, or without one, cover is found on the spot from the village's own walls and
-    /// trees (<see cref="Map02CoverTactics"/>). The tank's escort keeps its hold, and Day 2 / Night 2's patrols keep their
-    /// stealth rules; neither is registered with the coordinator.
+    /// trees (<see cref="Map02CoverTactics"/>). Day 2's soldiers round the bridge fight the same way (27/10/2026): the ambush
+    /// on the way back with Tâm from the moment it appears, the patrol by the bridge once it has found Nam (until then it
+    /// keeps Tài's stealth rules, the rice hiding Nam). The tank's escort keeps its hold and Night 2's patrol its own rules;
+    /// neither is registered with the coordinator.
     /// </summary>
     public sealed partial class Map02ChapterEnemy : IEnemyWeapon, IEnemyAgent
     {
@@ -23,7 +25,7 @@ namespace ShadowVale.Map01
         /// <summary>At his cover and not shooting: down behind it, up for a moment as he fires.</summary>
         public bool InCoverDucked {get;private set;}
         /// <summary>The open battle of Night 3 (not the tank's escort).</summary>
-        bool Fighting=>director!=null&&director.State.phase==5&&!HoldPosition;
+        bool Fighting=>director!=null&&!HoldPosition&&(director.State.phase==5||director.State.phase==2&&(group==Map02ChapterDirector.ScoutAmbushGroup||group=="scout_patrol"&&alerted));
         public EnemyStateId? BrainState=>brain?.State;
         Vector3 returnFireAt;float returnFireUntil;
         /// <summary>Shot at by one of Nam's comrades: for a few seconds, unless he has Nam in sight, he answers towards the shooter.</summary>
@@ -35,12 +37,19 @@ namespace ShadowVale.Map01
             TakeCoverTimeoutSeconds=5,CoverArriveDistance=1,InvestigatePace=1.4f,HuntWhenLost=true,EngageInRangeFirst=false,
             RetreatHealthFraction=.25f,RetreatDistance=10,RetreatHoldSeconds=5,
         };
+        /// <summary>Day 2 by the bridge: a little shorter sight in daylight over the paddies, the same cover and hunting.</summary>
+        static EnemyTuning DayTwoTuning()=>new EnemyTuning
+        {
+            VisionRange=30,DetectionSeconds=.7f,EngagedMemorySeconds=8,AttackRange=22,
+            TakeCoverTimeoutSeconds=5,CoverArriveDistance=1,InvestigatePace=1.4f,HuntWhenLost=true,EngageInRangeFirst=false,
+            RetreatHealthFraction=.25f,RetreatDistance=10,RetreatHoldSeconds=5,
+        };
         void TickBrain(Transform target,float distance,bool sees)
         {
             if(brain==null)
             {
                 brainBody=new NavMeshEnemyBody(transform,agent,null,HitPoints);   // LateUpdate animates him
-                brain=new EnemyBrain(id,brainBody,this,NightThreeTuning(),Map02CoverTactics.Instance);
+                brain=new EnemyBrain(id,brainBody,this,director.State.phase==2?DayTwoTuning():NightThreeTuning(),Map02CoverTactics.Instance);
                 AgentRegistry.Register(this);   // the coordinator plans the wave from here on
                 if(alerted)brain.ShareContact(target.position,Time.time,Time.time);   // a wave comes in knowing where the lane is held
             }
