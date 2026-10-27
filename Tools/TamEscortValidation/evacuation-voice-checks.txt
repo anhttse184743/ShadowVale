@@ -1,0 +1,8 @@
+PASS m2v3_evac_field_01 caption/radio match; decoded mono 48 kHz; 2.640 seconds
+PASS m2v3_evac_field_02 caption/radio match; decoded mono 48 kHz; 4.957 seconds
+PASS m2v3_evac_field_03 caption/radio match; decoded mono 48 kHz; 0.720 seconds
+PASS m2v3_evac_river_01 caption/radio match; decoded mono 48 kHz; 3.520 seconds
+PASS m2v3_evac_river_02 caption/radio match; decoded mono 48 kHz; 4.087 seconds
+PASS m2v3_evac_river_03 caption/radio match; decoded mono 48 kHz; 0.565 seconds
+PASS m2v3_evac_village_01 caption/radio match; decoded mono 48 kHz; 4.880 seconds
+PASS m2v3_evac_village_02 caption/radio match; decoded mono 48 kHz; 5.304 seconds
