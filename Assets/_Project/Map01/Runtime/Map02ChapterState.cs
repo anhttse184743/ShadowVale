@@ -49,6 +49,19 @@ namespace ShadowVale.Map01
         public bool night2HatchOpen,night2InsideStore;
         public bool night2ReachedStore;
         public bool night2ObservationCheckpointReached;
+        public bool night2StoreLootInitialized;
+        public int night2StoreLootOrder,night2StoreLootMask;
+        public int StoreLootKind(int box)
+        {
+            if(box<0||box>=3)throw new System.ArgumentOutOfRangeException(nameof(box));
+            return (night2StoreLootOrder%3+(night2StoreLootOrder>=3?3-box:box))%3;
+        }
+        public bool StoreLootTaken(int box)=>box>=0&&box<3&&(night2StoreLootMask&(1<<box))!=0;
+        public bool TryClaimStoreLoot(int box)
+        {
+            if(!night2StoreLootInitialized||box<0||box>=3||StoreLootTaken(box))return false;
+            night2StoreLootMask|=1<<box;return true;
+        }
         public int nightPatrolHealthVersion;
         public float villageDaySeconds; public bool villagePlanePlayed;
         public List<string> night2RouteVisited=new List<string>();
@@ -128,6 +141,8 @@ namespace ShadowVale.Map01
             if((scoutAmbushPoints.Count!=0&&scoutAmbushPoints.Count!=5)||scoutAmbushPoints.Any(p=>!float.IsFinite(p.x)||!float.IsFinite(p.y)||!float.IsFinite(p.z)))throw new System.IO.InvalidDataException("Các điểm phục kích dìu Tâm không hợp lệ.");
             if(!float.IsFinite(scoutRescueOrigin.x)||!float.IsFinite(scoutRescueOrigin.y)||!float.IsFinite(scoutRescueOrigin.z))throw new System.IO.InvalidDataException("Điểm đón Tâm không hợp lệ.");
             night2RouteVisited??=new List<string>();
+            if(night2StoreLootOrder<0||night2StoreLootOrder>=6||night2StoreLootMask<0||night2StoreLootMask>7||!night2StoreLootInitialized&&night2StoreLootMask!=0)
+                throw new System.IO.InvalidDataException("Trạng thái hộp vật tư trong hầm kho không hợp lệ.");
             if(night2InsideStore&&(!night2HatchOpen||!Done("N2_02")))throw new System.IO.InvalidDataException("Trạng thái vào hầm không khớp nắp hầm và nhiệm vụ quan sát.");
             if(night2GuidanceStage<0||night2GuidanceStage>7||!float.IsFinite(patrolFocusSeconds)||patrolFocusSeconds<0||patrolFocusSeconds>3.01f||
                 !float.IsFinite(patrolFocusDirection.x)||!float.IsFinite(patrolFocusDirection.y)||!float.IsFinite(patrolFocusDirection.z))

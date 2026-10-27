@@ -1,0 +1,28 @@
+PASS old saves default to uninitialized unclaimed loot
+PASS loot binds to the three original shelf meshes
+PASS binding loot adds no new visible crates or floor props
+PASS permutation 0 has exact AK/K54/bandage totals
+PASS permutation 1 has exact AK/K54/bandage totals
+PASS permutation 2 has exact AK/K54/bandage totals
+PASS permutation 3 has exact AK/K54/bandage totals
+PASS permutation 4 has exact AK/K54/bandage totals
+PASS permutation 5 has exact AK/K54/bandage totals
+PASS all six random arrangements are distinct
+PASS refresh never rerolls an existing layout
+PASS cannot loot from outside the store
+PASS cannot loot while using the ladder
+PASS cannot loot while paused
+PASS shelf or wall blocks looting through it
+PASS E interaction loots crate 0
+PASS crate 0 cannot grant loot twice
+PASS checkpoint persists crate 0 claim and layout
+PASS E interaction loots crate 1
+PASS crate 1 cannot grant loot twice
+PASS checkpoint persists crate 1 claim and layout
+PASS E interaction loots crate 2
+PASS crate 2 cannot grant loot twice
+PASS checkpoint persists crate 2 claim and layout
+PASS looting all three adds exact requested totals to the real inventory
+PASS restored save keeps every emptied crate claimed
+PASS route reset does not reroll or replenish warehouse loot
+PASS invalid loot masks are rejected by save validation

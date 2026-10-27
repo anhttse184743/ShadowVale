@@ -1,4 +1,5 @@
 using System.Linq;
+using ShadowVale.Gameplay.Combat;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,6 +12,145 @@ namespace ShadowVale.Map01
         public static float NightPatrolSavedHealth(float hp,int version)=>version==0?Mathf.Clamp01(hp/100)*NightPatrolHealth:hp;
         public bool NightPatrolStopped=>State.phase!=3||State.night2ReachedStore||State.Done("N2_03")||State.Done("N2_05");
         public bool NightObservationRulesActive=>State.phase==3&&!State.Done("N2_05");
+        public const float NightPatrolWarningSeconds=1.5f;
+        public const string NightPatrolWarningText="I think something moved. Keep a close watch.";
+        public const string NightPatrolFireOrderText="There's a little rat out there. Squad, open fire on that position!";
+        public const float NightPatrolCameraTravelSeconds=3;
+        public bool NightPatrolScriptedApproach=>State.phase==3&&State.Done("N2_02")&&!NightPatrolStopped;
+        public bool NightPatrolFailureActive=>nightFailureClock>=0;
+        float nightFailureClock=-1,nightVolleyClock;
+        bool nightWarningHidden,nightFailureHit,nightFailureProtected,nightFireOrderStarted;
+        Vector3 nightFailurePosition;
+        Quaternion nightFailureRotation;
+        Vector3 nightFailureCameraPosition;
+        Quaternion nightFailureCameraRotation;
+        float nightFailureCameraFov;
+        AudioSource nightWarningAudio;
+        string nightPatrolCaption;
+        bool NightSuspicionSpeaking=>nightWarningAudio!=null&&nightWarningAudio.isPlaying;
+
+        Vector3 NightPatrolFocusDirection(int i)
+        {
+            var unit=NightUnit(i);var from=unit!=null?unit.transform.position:NightPatrolPost(i);
+            return (State.patrolFocusDirection+Vector3.up-from-Vector3.up*1.7f).normalized;
+        }
+        void ShowNightPatrolSuspicion()
+        {
+            DropBarks();voice?.Stop();
+            PlayNightPatrolLine("night2_patrol_warning",NightPatrolWarningText);
+        }
+        void PlayNightPatrolLine(string resource,string caption)
+        {
+            if(nightWarningAudio==null){nightWarningAudio=gameObject.AddComponent<AudioSource>();nightWarningAudio.playOnAwake=false;nightWarningAudio.spatialBlend=0;nightWarningAudio.volume=.9f;}
+            nightWarningAudio.Stop();nightWarningAudio.priority=16;nightPatrolCaption=caption;
+            nightWarningAudio.clip=Resources.Load<AudioClip>("OperationsAudio/"+resource);nightWarningAudio.Play();
+        }
+        void DrawNightPatrolSuspicionDialogue()
+        {
+            if(nightWarningAudio==null||!nightWarningAudio.isPlaying)return;
+            var style=new GUIStyle(GUI.skin.label){fontSize=24,wordWrap=true,alignment=TextAnchor.MiddleCenter,normal={textColor=Color.white}};
+            GUI.Box(new Rect(250,705,1100,95),GUIContent.none);
+            GUI.Label(new Rect(270,715,1060,75),"Enemy patrol: "+nightPatrolCaption,style);
+        }
+        void DrawNightPatrolSuspicion()
+        {
+            if(State.patrolFocusSeconds<=0||!NightPatrolScriptedApproach||NightPatrolFailureActive)return;
+            var camera=rig.GetComponent<Camera>();
+            var style=new GUIStyle(GUI.skin.label){fontSize=48,fontStyle=FontStyle.Bold,alignment=TextAnchor.MiddleCenter,normal={textColor=new Color(1,.85f,.2f)}};
+            var shadow=new GUIStyle(style);shadow.normal.textColor=Color.black;
+            for(int i=0;i<3;i++)
+            {
+                var unit=NightUnit(i);if(unit==null||unit.Dead||!unit.gameObject.activeInHierarchy)continue;
+                var point=camera.WorldToViewportPoint(unit.transform.position+Vector3.up*2.25f);
+                if(point.z<=0||point.x<0||point.x>1||point.y<0||point.y>1)continue;
+                var rect=new Rect(point.x*1600-30,(1-point.y)*900-55,60,65);
+                GUI.Label(new Rect(rect.x+2,rect.y+2,rect.width,rect.height),"?",shadow);GUI.Label(rect,"?",style);
+            }
+        }
+        void BeginNightPatrolFailure()
+        {
+            if(NightPatrolFailureActive)return;
+            nightFailureClock=nightVolleyClock=0;nightFailureHit=false;
+            nightFireOrderStarted=false;
+            nightFailureCameraPosition=rig.transform.position;nightFailureCameraRotation=rig.transform.rotation;
+            nightFailureCameraFov=rig.GetComponent<Camera>().fieldOfView;
+            nightFailurePosition=Mission.Player.position;nightFailureRotation=Mission.Player.rotation;
+            nightFailureProtected=health.CinematicInvulnerable;health.CinematicInvulnerable=true;
+            State.patrolFocusSeconds=0;State.patrolFocusDirection=nightFailurePosition;
+            SetBinoculars(false);player.RestoreMotion(false);combat.SetHandsOccupied(true);
+            rig.SetCinematicView(nightFailureCameraPosition,nightFailureCameraRotation,nightFailureCameraFov,1);
+            DropBarks();voice?.Stop();
+            foreach(var unit in Enemies)if(unit!=null&&unit.group==NightPatrolGroup)unit.StopAtStoreArrival();
+        }
+        void TickNightPatrolFailure(float dt)
+        {
+            nightFailureClock+=dt;
+            float actionTime=nightFailureClock-NightPatrolCameraTravelSeconds;
+            if(actionTime<0)return;
+            if(!nightFireOrderStarted){nightFireOrderStarted=true;PlayNightPatrolLine("night2_patrol_fire_order",NightPatrolFireOrderText);}
+            nightVolleyClock-=dt;
+            if(actionTime<4.8f&&nightVolleyClock<=0)
+            {
+                nightVolleyClock=.18f;
+                foreach(var unit in Enemies)if(unit!=null&&unit.group==NightPatrolGroup&&!unit.Dead)unit.FireNightPatrolCinematic(nightFailurePosition+Vector3.up);
+            }
+            if(!nightFailureHit&&actionTime>=3.3f)
+            {
+                nightFailureHit=true;
+                var actor=Mission.Player.GetComponentInChildren<Animator>();
+                if(actor!=null&&actor.runtimeAnimatorController!=null)actor.SetTrigger(PlayerCombat.AnimatorParams.Die);
+            }
+            if(actionTime>=5&&!Mission.World.story.failed)Mission.World.story.Fail("Nam đã trúng đạn và hy sinh. Nhiệm vụ thất bại.");
+            if(actionTime>=6.5f)
+            {
+                CancelNightPatrolFailure();
+                if(!Mission.RetryPatrol())Mission.Retry();
+                Mission.Say("Đã trở về checkpoint tiếp cận kho. Quan sát và báo cáo Hùng đã hoàn tất.");
+            }
+        }
+        void PresentNightPatrolFailure()
+        {
+            Mission.Player.SetPositionAndRotation(nightFailurePosition,nightFailureRotation);
+            var guards=Enemies.Where(e=>e!=null&&e.group==NightPatrolGroup&&!e.Dead).ToArray();
+            var group=guards.Length>0?guards.Aggregate(Vector3.zero,(sum,e)=>sum+e.transform.position)/guards.Length:NightPatrolPosition;
+            var forward=Vector3.ProjectOnPlane(nightFailurePosition-group,Vector3.up).normalized;
+            if(forward.sqrMagnitude<.01f)forward=Vector3.forward;
+            var side=Vector3.Cross(Vector3.up,forward);
+            float spread=guards.Length>0?guards.Max(e=>Vector3.Distance(e.transform.position,group)):0;
+            var start=group-forward*Mathf.Max(5,spread*2.2f)+Vector3.up*3;
+            var end=nightFailurePosition-forward*3+side*2+Vector3.up*1.3f;
+            float actionTime=nightFailureClock-NightPatrolCameraTravelSeconds;
+            if(actionTime<0)
+            {
+                float travel=Mathf.SmoothStep(0,1,nightFailureClock/NightPatrolCameraTravelSeconds);
+                var rearRotation=Quaternion.LookRotation(nightFailurePosition+Vector3.up-start);
+                rig.SetCinematicView(Vector3.Lerp(nightFailureCameraPosition,start,travel),Quaternion.Slerp(nightFailureCameraRotation,rearRotation,travel),Mathf.Lerp(nightFailureCameraFov,52,travel),1);
+                UpdateNightPatrolPresentation(nightNominalOrigin,forward);return;
+            }
+            float move=Mathf.SmoothStep(0,1,(actionTime-1.5f)/1.8f);
+            var eye=Vector3.Lerp(start,end,move);
+            var focus=nightFailurePosition+Vector3.up*Mathf.Lerp(1,.35f,Mathf.Clamp01((actionTime-3.3f)/1.2f));
+            rig.SetCinematicView(eye,Quaternion.LookRotation(focus-eye),52,1);
+            UpdateNightPatrolPresentation(nightNominalOrigin,forward);
+        }
+        void DrawNightPatrolFailure()
+        {
+            var tint=GUI.color;GUI.color=Color.black;
+            GUI.DrawTexture(new Rect(0,0,1600,85),Texture2D.whiteTexture);GUI.DrawTexture(new Rect(0,815,1600,85),Texture2D.whiteTexture);
+            GUI.color=tint;
+            DrawNightPatrolSuspicionDialogue();
+            if(nightFailureClock>=NightPatrolCameraTravelSeconds+5)GUI.Label(new Rect(400,380,800,150),"NAM ĐÃ HY SINH\nNHIỆM VỤ THẤT BẠI\nĐang trở về checkpoint…",new GUIStyle(GUI.skin.label){fontSize=30,alignment=TextAnchor.MiddleCenter,normal={textColor=Color.white}});
+        }
+        void CancelNightPatrolFailure()
+        {
+            if(NightPatrolFailureActive)
+            {
+                health.CinematicInvulnerable=nightFailureProtected;combat.SetHandsOccupied(false);rig.ClearCinematicView();
+                var actor=Mission.Player.GetComponentInChildren<Animator>();
+                if(actor!=null&&actor.runtimeAnimatorController!=null){actor.ResetTrigger(PlayerCombat.AnimatorParams.Die);actor.Play(PlayerCombat.LocomotionState,0,0);}
+            }
+            nightFailureClock=-1;nightWarningHidden=false;nightWarningAudio?.Stop();
+        }
         public float NightPatrolScanRate=>NightObservationRulesActive?.5f:1f;
         public float NightPatrolDetectionRange=>NightObservationRulesActive?40:Layout!=null?Mathf.Clamp(Layout.nightPatrolLightRange,10,55):28;
         bool NightPatrolConceals(ShadowVale.Gameplay.Player.PlayerController motor)=>
@@ -113,11 +253,12 @@ namespace ShadowVale.Map01
         }
         public void TickNightStoreArrival()
         {
+            if(NightPatrolFailureActive||State.patrolFocusSeconds>0)return;
             if(State.phase!=3||State.night2ReachedStore||!State.Done("N2_02")||!sites.ContainsKey("nightHatch"))return;
             var delta=Mission.Player.position-NightDoorStand;
             if(Mathf.Abs(delta.y)>1.2f||Vector3.ProjectOnPlane(delta,Vector3.up).sqrMagnitude>9)return;
             State.night2ReachedStore=true;detectionClock=0;State.patrolFocusSeconds=0;
-            StopNightPatrolAtStore();Mission.Say("Đã tới cửa hầm kho. Tổ tuần tra ngừng quét. E mở nắp · Space dùng thang · S xuống · W lên.");Mission.StoreCheckpoint();
+            StopNightPatrolAtStore();Mission.Say("Đã tới cửa hầm kho. Tổ tuần tra ngừng quét. E mở nắp · Ctrl bám thang xuống · Space bám thang lên · W lên / S xuống.");Mission.StoreCheckpoint();
         }
         void StopNightPatrolAtStore()
         {
@@ -151,6 +292,7 @@ namespace ShadowVale.Map01
         }
         Vector3 NightLightDirection(int i,Vector3 main)
         {
+            if(NightPatrolFailureActive||State.patrolFocusSeconds>0)return NightPatrolFocusDirection(i);
             var unit=NightUnit(i);var prop=unit!=null?unit.GetComponent<Map02PatrolFlashlight>():null;
             if(unit!=null&&unit.TrackingVisibleTarget&&prop?.Emitter!=null)return prop.Emitter.forward;
             return i==0?main:NightPatrolSweepDirection(i);
@@ -200,7 +342,7 @@ namespace ShadowVale.Map01
         }
         public void TickNightPatrolWorld(float dt)
         {
-            if(!ready||Mission==null||Mission.Paused||ForestMenu.Visible||Mission.World.story.failed||Mission.Panel!=0||sceneTask!=null||phaseFade>0||State.finished)return;
+            if(!ready||Mission==null||Mission.Paused||ForestMenu.Visible||Mission.World.story.failed||NightPatrolFailureActive||Mission.Panel!=0||sceneTask!=null||phaseFade>0||State.finished)return;
             TickNightStoreArrival();
             TickPatrol(Mathf.Clamp(dt,0,.1f));
         }

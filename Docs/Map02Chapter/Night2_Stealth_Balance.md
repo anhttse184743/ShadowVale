@@ -20,3 +20,19 @@
 
 Kiểm chứng Play Mode trong project tách biệt với NPC và NavMesh thật: `SourceArt/Map02NightBankFlow/stealth_checks.cs`, báo cáo `stealth-balance-checks.txt`.
 Bao gồm sát thương hai viên với Nam có 200 HP, 60 viên cho sát thương gốc 22/24/250, chặn one-shot có sẵn trong hàng đợi bắn, hồi quy Health bình thường, đường khô/sông, bán kính tới kho, tắt đèn/ngừng bắn, load/refresh và hoàn thành bộ đàm khi quét đã dừng.
+
+## Tiếp cận kho sau báo cáo Hùng — cập nhật 27/10/2026
+
+- Phạm vi: từ khi hoàn thành N2_02 đến khi tới cửa hầm kho. Trong đoạn này bộ điều khiển nhiệm vụ quản lý phát hiện và thất bại, lính không bắn gây sát thương tự do trước cutscene.
+- Lần đầu một đèn soi trúng Nam đang không nằm, với đường nhìn không bị vật cản/khói che: ghi một lần phát hiện ngay, dừng đồng hồ quét và giữ cả ba đèn hướng tới vị trí vừa phát hiện trong đúng 1,5 giây thực của gameplay. Pause/menu dừng bộ đếm.
+- Hiện dấu `?` màu vàng trên đầu các lính trong cửa sổ 1,5 giây. Lính nói với nhau bằng tiếng Anh: “I think something moved. Keep a close watch.” Có phụ đề câu thoại; không hiện thông báo hướng dẫn phải nấp hoặc đếm ngược cho người chơi. File âm thanh hiện dùng giọng tổng hợp Microsoft David Desktop của Windows.
+- Nằm xuống trong cửa sổ phản ứng giúp tránh cutscene, nhưng vẫn giữ một lần phát hiện. Nằm tiếp không tạo thêm lần phát hiện. Ra khỏi chùm đèn hoặc núp sau tường khi vẫn đứng không thay thế yêu cầu nằm xuống ở lần đầu.
+- Hết 1,5 giây mà chưa nằm, hoặc đèn soi trúng khi đã có một lần phát hiện: khóa điều khiển/lưu và chạy cùng cutscene. Máy bắt đầu ở góc nhìn hiện tại của Nam, di chuyển mượt trong 3 giây ra sau lưng tổ địch; tới nơi mới hô khai hỏa và bắn liên tục, sau đó máy tiến về Nam, Nam diễn hoạt hy sinh, hiện thất bại rồi tự thử lại checkpoint tuyến tuần tra. Không phải làm lại quan sát và báo cáo Hùng; số lần phát hiện về 0.
+- Tới cửa kho vẫn kết thúc tuyến tuần tra, chưa tự hoàn tất kiểm tra vật tư bên trong. Không cho vượt qua cảnh nghi ngờ đang chờ kết quả bằng cách chạy tới cửa kho.
+- Thoại bộ đàm tạm dừng tiến độ trong lúc nghi ngờ/lính nói để không chồng lên câu thoại địch.
+
+Kiểm tra: `SourceArt/Map02NightBankFlow/warning_checks.cs`, kết quả `warning-checks.txt`: 24 kiểm tra logic Unity với capsule, tia đèn và assembly runtime thật. Bao gồm hai nhánh phản ứng, lần phát hiện thứ hai, khóa input/save, nhập audio, trạng thái thất bại và reset tuyến. Đây là kiểm tra biệt lập; chưa xác minh hình ảnh icon, hoạt ảnh và đường máy bằng lượt chơi toàn cảnh Map 2.
+
+- Thoại sau khi máy tới sau lưng tổ địch trong cutscene thất bại (cả quá 1,5 giây chưa nấp và phát hiện lần hai): “There's a little rat out there. Squad, open fire on that position!” Phát bằng giọng Microsoft David Desktop và hiển thị phụ đề đồng bộ, thay câu hoài nghi đang phát để không chồng thoại. Nấp kịp ở lần đầu vẫn chỉ nghe câu hoài nghi. Bốn kiểm tra bổ sung xác nhận nhập audio và chọn câu thoại đúng ở cả ba kết quả.
+
+- Nhịp camera mới: 3 giây di chuyển từ vị trí/góc xoay/FOV đang hiển thị của người chơi đến góc sau lưng tổ địch bằng SmoothStep và Slerp, không cắt máy tức thì. Không phát lệnh khai hỏa hoặc bắn trong nhịp di chuyển này. Các mốc bắn, quay về Nam, hy sinh, thất bại và retry đều dời thêm 3 giây để giữ đủ thời lượng. Kiểm tra thêm điểm bắt đầu camera, vị trí trung gian, chưa bắn trước khi tới nơi và phát lệnh/bắn sau khi tới nơi ở cả hai nhánh thất bại.

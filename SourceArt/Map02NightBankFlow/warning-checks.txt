@@ -1,0 +1,24 @@
+PASS scripted rules wait until report to Hung completes
+PASS scripted rules start after the radio report
+PASS first beam contact counts once and starts exactly 1.5 seconds
+PASS warning permits player input and prevents saving a partial reaction window
+PASS English spoken warning imports as nonempty audio
+PASS fire order imports as nonempty spoken audio
+PASS standing does not fail before deadline; sweep clock stays frozen
+PASS standing at deadline starts failure cutscene and blocks controls/save
+PASS failure begins without an immediate fire order
+PASS camera starts at the existing player view without a cut
+PASS camera travels gradually towards the rear of the squad
+PASS no fire order or gunfire feedback before the camera arrives
+PASS camera arrival starts the fire order and squad gunfire
+PASS missed hiding deadline selects the fire order subtitle/audio cue after camera travel
+PASS cutscene reaches the mission failed state
+PASS cancel/load clears cinematic state and temporary invulnerability
+PASS lying down within deadline survives and retains one detection
+PASS hiding in time keeps the suspicious dialogue without a fire order
+PASS remaining prone does not create another detection
+PASS second beam contact starts failure immediately without a grace period
+PASS second detection also waits for camera travel before the order
+PASS second detection selects the same fire order subtitle/audio cue after camera travel
+PASS reaching store ends the approach rule
+PASS retry baseline resets detections and retains observation/report progress

@@ -150,7 +150,7 @@ namespace ShadowVale.Map01
             }
             if(task.kind=="inspectDoor")
             {
-                if(UndergroundStore?.CanInspect!=true){Mission.Say("E mở nắp · tới điểm Space để bám thang. Xuống kho, đến kệ vật tư rồi nhấn E kiểm tra.");return false;}
+                if(UndergroundStore?.CanInspect!=true){Mission.Say("E mở nắp · tới cạnh miệng hầm, Ctrl để bám thang xuống kho. Trong kho, đến kệ vật tư rồi nhấn E kiểm tra.");return false;}
                 Mission.Say("Kho vật tư còn an toàn. Lên thang trở lại mặt đất rồi qua sông kiểm tra tuyến sơ tán.");Finish(task);return true;
             }
             if(task.kind=="inspectRoute")
@@ -189,6 +189,7 @@ namespace ShadowVale.Map01
         }
         void TickNightRadio(float dt,float nearestAngle,bool approaching,float distance)
         {
+            if(State.patrolFocusSeconds>0||NightSuspicionSpeaking||NightPatrolFailureActive)return;
             if(State.phase!=3||!State.Done("N2_02")||State.Done("N2_05"))return;
             if(hissRemaining>0){hissRemaining-=dt;if(hissRemaining<=0&&nightHiss!=null)nightHiss.Stop();}
             if(liveRadioRemaining>0){liveRadioRemaining=Mathf.Max(0,liveRadioRemaining-dt);if(liveRadioRemaining>0)return;liveRadio=null;}
