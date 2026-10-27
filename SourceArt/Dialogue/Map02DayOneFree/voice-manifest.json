@@ -870,5 +870,27 @@
   "spokenCount": 49,
   "silentCueCount": 1,
   "paidGenerationAuthorized": false,
-  "modelRevision": "61b85e3d937fbbacb387714180e8182823512523"
+  "modelRevision": "61b85e3d937fbbacb387714180e8182823512523",
+  "derived": [
+    {
+      "id": "m2v3_echo_promise",
+      "usedBy": "m2v3_sacrifice_02 (Night 3, the promise remembered)",
+      "speaker": "Hùng",
+      "text": "Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay…",
+      "radio": false,
+      "voice": "Minh Quân",
+      "file": "Assets/Resources/Dialogue/Map02DayOneFree/m2v3_echo_promise.wav",
+      "sha256": "a251547742bd6fb95fd1f9cbdce03b49a99beb7d45964edc613a9b0406c6b76b",
+      "derivedFrom": {
+        "id": "m2v3_promise_05",
+        "sha256": "5bb3618dea22637fbb4337485e6f38f7b580c3ff88a0acf384c716923cb59a03",
+        "seconds": "0.00-3.45 (third pause, after \"rau đay\")"
+      },
+      "processing": "SourceArt/Audio/Map02_DayOne_20261025/build_audio.py: crop, 0.12 s fade, echoes at 0.19 s (x0.32) and 0.38 s (x0.16), one-pole lowpass 6 kHz, 0.6 s fade, peak -3 dBFS",
+      "status": "derived_20261025_awaiting_listen",
+      "duration": 4.65,
+      "resource": "Dialogue/Map02DayOneFree/m2v3_echo_promise",
+      "caption": "Hùng: Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay…"
+    }
+  ]
 }

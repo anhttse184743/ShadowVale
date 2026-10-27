@@ -1,0 +1,36 @@
+Final: Passed — 29/29
+Visual: Passed — 5/5
+UiFinal: Passed — 2/2
+
+30 distinct cases passed; repeated native UI checks after visual changes.
+
+Passed: ShadowVale.Map01.Tests.Map02BandageQaTests.CaptureBandageContacts
+Passed: ShadowVale.Map01.Tests.Map02DayOneCompletionTests.RadioClearsTheActualShirtAndFollowsTheSignaller
+Passed: ShadowVale.Map01.Tests.Map02DayOneCompletionTests.SupperCricketsWaitForTheVoiceAndStopOnCancelOrLoad
+Passed: ShadowVale.Map01.Tests.Map02DayOneCompletionTests.SupperFinishesItsTimelineAndLoadingKeepsItComplete
+Passed: ShadowVale.Map01.Tests.Map02DayOneIntegrationTests.ActualChapterRequiresPackingDockAndPostSafetyWithoutTouchingLaterDays
+Passed: ShadowVale.Map01.Tests.Map02DayOnePlayableFlowTests.LandingToDayTwoThroughPlayerInput
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.ApprovedAcknowledgementsReuseExactCaptionOnly
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.CorruptSavedGeometryIsRejected
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.DayOneTasksKeepThreeIndependentBranches
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport("D1_03","D1_04","D1_05")
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport("D1_03","D1_05","D1_04")
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport("D1_04","D1_03","D1_05")
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport("D1_04","D1_05","D1_03")
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport("D1_05","D1_03","D1_04")
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport("D1_05","D1_04","D1_03")
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.EveryWetTemplateHasSolution(0)
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.EveryWetTemplateHasSolution(1)
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.EveryWetTemplateHasSolution(2)
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.InvalidCrateMoveLeavesPreviousPosition
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.LampNeedsShieldAndGateNeedsBothSteps
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.NamAcknowledgesOnceAfterTheCompleteInstructionBlock
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.PostsContainOnlySpecifiedFaultCounts
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.SaveAndResetKeepPuzzleIdentity
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.StakeHitsAndRepairUnitsAreDifferent
+Passed: ShadowVale.Map01.Tests.Map02DayOneTests.TwoQuestPacketsAreIdempotent
+Passed: ShadowVale.Map01.Tests.Map02InteractionQaTests.DockMouseCanInspectRotateAlignAndCompleteAllThreeSteps
+Passed: ShadowVale.Map01.Tests.Map02InteractionQaTests.HammerCommitsAtContactRetainsLastStakeAndHonoursPauseCloseAndRelease
+Passed: ShadowVale.Map01.Tests.Map02InteractionQaTests.PackingMouseAtThreeScalesDoesNotLiftOtherCratesAndResetKeepsTemplate
+Passed: ShadowVale.Map01.Tests.Map02InteractionQaTests.PlankCannotReplaceACompletedStepOrSpendUsedBoard
+Passed: ShadowVale.Map01.Tests.Map02WorkViewQaTests.WorkRemainsVisibleAndBandageUsesTheActualSceneCamera

@@ -1,0 +1,7 @@
+{
+  "approved_original_sha256": "15723d4da3281b245f401c11446c7ee006ec79889436096adf5fc9b7a8234ae0",
+  "archive": "C1_Approved_v4.blend",
+  "archive_sha256": "507039ba2d004898ea26cc5b632e78d214c240cb37282f85f493c45d77a00da7",
+  "bytes": 66251956,
+  "note": "Compressed portable scene. Removed unused other cast/actions only; active Nam/Hung meshes, rigs, motion, pack, review camera and steps retained. Original file untouched."
+}

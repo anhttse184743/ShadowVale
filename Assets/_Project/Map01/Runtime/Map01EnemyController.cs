@@ -858,13 +858,13 @@ namespace ShadowVale.Map01
         }
 
         /// <param name="bodyPoint">Aim at <paramref name="target"/> itself (a bone, in the execution film) rather than his chest above it.</param>
-        public void FireAtHostage(Vector3 target, float amount, bool bodyPoint = false)
+        public void FireAtHostage(Vector3 target, float amount, bool bodyPoint = false, bool cinematicListener = false)
         {
             FaceImmediate(target);
             if (_animator != null && _animator.runtimeAnimatorController != null) _animator.SetTrigger(PlayerCombat.AnimatorParams.Attack);
             if (_rescue == null || _mission == null || _mission.hung == null) return;
             AudibleShots++;
-            if (!FireRound(target + (bodyPoint ? Vector3.zero : Vector3.up * .9f), _mission.hung, out var impact)) return;
+            if (!FireRound(target + (bodyPoint ? Vector3.zero : Vector3.up * .9f), _mission.hung, out var impact, cinematicListener)) return;
             float before = _rescue.HungHealth;
             _rescue.HitHung(amount);
             if (_rescue.HungHealth < before) BloodImpact.Play(impact, impact - transform.position);
@@ -1269,11 +1269,11 @@ namespace ShadowVale.Map01
         private float _flashUntil;
 
         /// <summary>One round through the shared feedback (tracer, report heard within 65 m), with his rifle's muzzle flash.</summary>
-        private bool FireRound(Vector3 at, Transform victim, out Vector3 impact)
+        private bool FireRound(Vector3 at, Transform victim, out Vector3 impact, bool cinematicListener = false)
         {
             _feedback ??= EnemyFeedback.Attach(gameObject);
             _feedback.GunshotClip ??= RifleReport;
-            bool reached = _feedback.Fire(at, victim, obstructionMask, out impact);
+            bool reached = _feedback.Fire(at, victim, obstructionMask, out impact, cinematicListener: cinematicListener);
             var muzzle = GetComponentInChildren<Map01Rifle>()?.weapon?.Muzzle;
             if (muzzle != null)
             {

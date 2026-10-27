@@ -1,5 +1,7 @@
 # Map 2 – Ngày 1 / Đêm 1: rà soát và kế hoạch sửa (bản 2, 2026-10-23)
 
+**Cập nhật tiến độ gần nhất: 26/10/2026.** Đã tiếp nhận phần Claude Ngày 1–Đêm 1 và ghép với dev `cf9d9090`, giữ giọng dev theo quyết định mới. Xem bảng **Tiến độ** và mục 11; các ghi nhận ngày 23–25/10 và demo v3/v4 phía dưới là lịch sử.
+
 Bản này **thay bản 1** viết sáng cùng ngày. Bản 1 đọc nhầm code cũ, trước khi `thinh` nhận merge dev (`7c8118c6`, `a9119fcc`). Bản merge đó có phần Ngày 1/Đêm 1 của Khoa (commit `1331bab3`):
 - thoại có giọng đọc;
 - 16 clip hoạt ảnh;
@@ -29,6 +31,22 @@ Phần lớn những gì bản 1 ghi "chưa có" thì nay đã có. Bản này r
 | 4 | Giọng Nam / Hùng / anh Thành | **Theo Map 2** (VieNeu-TTS: Nam "Adam", Hùng "Minh Quân", Thành "Minh Triết"). Thu lại các câu Map 1 của ba người bằng đúng preset đó, xem P9. |
 
 ### Tiến độ
+
+**Bảng theo dõi hiện tại — 26/10/2026**
+
+| Bước / phần việc | Đã có, theo bằng chứng bàn giao | Còn lại / trạng thái duyệt |
+|---|---|---|
+| 1–3: lỗi code, dẫn Tâm, dàn cảnh Lời hứa và tổ gác | Các lượt sửa và kết quả test đã ghi ngày 23/10; lượt tiếp nhận ngày 25/10 kiểm tra hồi quy cùng C1. | Giữ các quyết định đã chốt; không mở lại phạm vi đã làm. Xem mục 8 để phân biệt kết quả code với nghiệm thu art. |
+| 4: hoạt ảnh nhóm A | Theo bàn giao 25/10: bữa cơm ngồi xếp bằng, đi ôm tay phải và giật mình đã vào game. | Không suy ra toàn bộ art Ngày 1–Đêm 1 đã được nghiệm thu chỉ từ test đạt. |
+| 5: âm thanh | Theo bàn giao 25/10: âm nền, nhạc Hùng, tiếng động và câu nhớ lại đã có. | Nhạc chủ đề và câu nhớ lại còn chờ nghe duyệt. |
+| 6: kho và hoạt ảnh nhóm B | Theo bàn giao 25/10: giao diện kho, kích thước hòm, thay băng, trao thuốc, nghỉ, đổi ca và đóng cọc đã vào game. | Các phần mỹ thuật cận cảnh còn mở theo mục 8; lượt 26/10 không sửa các phần này. |
+| 7 — C1: Hùng hụt chân, Nam đỡ Hùng | **Người dùng đã yêu cầu đưa v4 vào game và commit/push thinh → merge dev.** Đã tích hợp hai prefab C1, giữ Nam 62 / Hùng 28 xương và chuyển động tay đã duyệt; sửa tiếp xúc gối với sàn, ba lô và hiển thị súng. | Kiểm tra Unity, video và trạng thái Git ở [báo cáo tích hợp](../Reviews/C1_Unity_20261026/KET_QUA.md). Còn 5 cờ tự va chạm, 1 cờ nhịp xoay và nhịp buông nhanh của bản được duyệt; không coi mọi lỗi mỹ thuật đã hết. |
+| 7 — thoại và đạo cụ | Bộ Claude có 56 ID gốc dùng tại 58 mục catalog. **Quyết định mới: giữ giọng dev; bộ Claude lưu tại `SourceArt/Dialogue/Map01Map2Voice` để duyệt sau**, không nằm trong Resources. Khôi phục đủ 261 mục catalog dev, gồm các câu Ngày 2–Đêm 3; giữ riêng echo đang làm. | Nhạc/echo còn chờ nghe; art đạo cụ cận/nền bến và cách dùng thuốc còn mở. Các ghi nhận giọng cũ cần đối chiếu lại với bộ dev hiện tại trước khi đổi. |
+| 8: chơi thử và thời lượng | Lượt bot ×1 trước đó: Ngày 1 = 7,2 phút; Đêm 1 = 4,2 phút. Lượt 25/10 hoàn thành 10 mục tiêu và sang Ngày 2; **72/72 ca riêng biệt đạt**. | Chưa chạy lại phép đo thời lượng; còn chênh mục tiêu doc 18–22 / 12–14 phút. **72/72 là kết quả ngày 25/10, không phải test cho demo Blender v3.** |
+
+**Phạm vi mới nhất 26/10:** người dùng đã mở rộng sang tiếp nhận và commit/push phần Claude Ngày 1–Đêm 1, sửa nhanh các lỗi rõ ràng của Map 2, đồng bộ thinh/dev. Không đánh dấu toàn bộ chương hoàn tất về mỹ thuật. [Kế hoạch đủ ba ngày–ba đêm](Map02_3NgayDem_RaSoat_KeHoach_2026-10-26.md), [kết quả sửa nhanh](../Reviews/Map02_Audit_20261026/SUA_NHANH.md).
+
+**Lịch sử các lượt trước:**
 
 **Bước 1 đã sửa (23/10), chưa commit:**
 
@@ -327,7 +345,7 @@ Nguồn: thư viện miễn phí (Freesound CC0, Sonniss GDC bundle), ghi giấy
 
 ### P10 – Những điểm còn thiếu khác
 
-- **Cập bến:** thiếu nhịp "Hùng bước lên, hụt chân. Nam đặt ba lô xuống trước rồi mới đỡ". Thêm vào `Map02Arrival` (pha Disembarking), khoảng 4 giây.
+- **Cập bến — ghi nhận ban đầu 23/10:** thiếu nhịp "Hùng bước lên, hụt chân. Nam đặt ba lô xuống trước rồi mới đỡ". **Cập nhật:** chuỗi này đã có code và kiểm thử ngày 25/10 (mục 8); demo sửa tay/thân v3 ngày 26/10 còn chờ duyệt, chưa thay clip Unity (mục 9). Không coi đây là việc chưa bắt đầu hoặc tự rút cảnh hiện có về 4 giây.
 - **Câu thêm khi cập bến:** anh Thành có thêm câu giao việc dài ("Trong lúc chờ, giao thuốc, cất vật tư…"). Doc không có, nhưng giúp người chơi biết việc, có thể giữ. Doc có "Nam: Rõ." sau câu đầu của Thành, nay chỉ còn ở cuối.
 - **Đổi ca (N1_04):**
   - Nam ngồi bằng tư thế "ngồi ghế thuyền" cạnh chiếu (hình dựng `RestNam`), tức ngồi trên không nếu không có bậc.
@@ -368,7 +386,7 @@ Cần làm (theo luật working-copy: .blend riêng, không ghi đè master/FBX 
 | B | Chú Bảy ngồi xổm giữ cọc; Nam vồ hai tay khớp nhịp | D1_05 |
 | B | Nam ngồi bậc cửa; Hùng nằm thẳng | N1_04 |
 | B | Ông Sáu ngồi nghỉ (thay `MealNam`); chị Lành nhận gói thuốc | D1_03, nền Ngày 1 |
-| C | Hùng hụt chân + Nam đặt ba lô đỡ | Cập bến |
+| C | Hùng hụt chân + Nam đặt ba lô đỡ | Cập bến — code/test 25/10 đã có; demo sửa tay/thân v3 ngày 26/10 chờ duyệt, xem mục 9 |
 | C | Bé Tí nấp cột, cười, chạy | D1_02 |
 | C | Tháo mũ / đặt ba lô / dựng súng khi vào mâm | N1_01 |
 
@@ -377,6 +395,26 @@ Cần làm (theo luật working-copy: .blend riêng, không ghi đè master/FBX 
 ## 5. Thứ tự làm đề xuất
 
 **Cập nhật lượt hoàn tất bước 3 (23/10):** người dùng yêu cầu làm xong bước 3 rồi ghép lên `dev`. Giữ nguyên các quyết định đã duyệt ở trên. Đã bổ sung bản thu dế CC0 cho đoạn giữ hình sau câu cuối, fade vào/ra, dừng khi kết thúc/bỏ qua/tải lại và theo tạm dừng. Xóa nhãn chờ thu âm còn sót ở các câu đã có bản thu được duyệt. Kết quả kiểm tra và phạm vi ghép được ghi tại `Docs/Reviews/ClaudeContinuation_20261023/BUOC_3.md`.
+
+**Cập nhật 25/10 (chưa commit):**
+- Bước 4 đã vào game: bữa cơm "Lời hứa" chạy đúng bản mocap đã duyệt trong Blender (ngồi xếp bằng cạnh nhau, đồ vật theo từng khung, các mốc thoại và góc máy của bản Blender, mờ đen lúc ngồi xuống). Hùng đi ôm tay phải (Day 1–Night 1) và giật mình chộp vai Nam khi vịt vỗ cánh.
+- Bước 5 xong: âm nền theo phase, nhạc chủ đề Hùng, tiếng cười, vịt, ho, tiếng hòm trong kho, và câu nhớ lại "Đợi tới lúc đó…" cho Đêm 3. Nguồn CC0 ghi ở `SourceArt/Audio/Map02_DayOne_20261025/README.md`. Nhạc và câu nhớ lại chờ nghe duyệt.
+- Bước 6: giao diện kho kín làm lại theo P4a, 3 hòm thật đúng cỡ ô. Hoạt ảnh nhóm B trên mocap Mixamo, đã vào game:
+  - thay băng: chị Lành quỳ quấn băng, Hùng ngồi ghế đẩu, có cuộn băng và lớp băng trên tay;
+  - trao thuốc: Nam đưa gói bằng hai tay, chị Lành đỡ lấy; ông Sáu ho và nói trong buồng;
+  - ông Sáu ngồi nghỉ;
+  - đổi ca: Hùng nằm trên chiếu, Nam ngồi mép hiên quay lưng vào nhà, máy quay trong nhà;
+  - đóng cọc: mỗi lần Space là một nhát vồ hai tay, chú Bảy giữ cọc.
+
+  Script và file `.blend` ở `chuyen_dong/blender_scripts/map2_*_mixamo.py`, video duyệt ở `Docs/Reviews/NhomB_20261025/`.
+- Bước 7:
+  - Nhóm C: bé Tí nấp cột, cười rồi chạy; Nam tháo ba lô, đặt súng trên chiếu khi ăn.
+  - **C1 — cập nhật thay trạng thái “chưa làm”:** chuỗi `Map02Arrival` của Khoa đã được tiếp nhận, sửa code và kiểm thử ngày 25/10 (mục 8). Ngày 26/10 có demo Blender v3 sửa tay/thân để duyệt; chưa xuất thay clip trong game (mục 9).
+  - Thu âm P9: 58 câu Map 1 của Nam / Hùng / Chỉ huy đã thu lại bằng VieNeu-TTS v3 Turbo, đúng giọng Map 2 (Adam / Minh Quân / Minh Triết). Kết quả ở `SourceArt/Dialogue/Map01Map2Voice/`; catalog đã trỏ sang, bản cũ trong `Dialogue/VI` vẫn giữ. Chờ nghe duyệt.
+  - Câu đổi chữ promise 05–06 và câu tổ gác đã có bản thu từ trước.
+- Test 25/10: chạy 14 nhóm test Map 2 và giọng nói, gồm 62 test. Lần đầu 61 qua; test hỏng là `Map02DayOneVisualTests`: lúc quỳ, chị Lành lún sàn 11 cm. Đã sửa bằng cách dùng `GroundPerformance` trong cảnh thay băng và trao thuốc, chạy lại thì qua hết.
+- Cần nhóm quyết: khung mini-game toàn màn hình (đóng cọc, kho) che gần hết hoạt ảnh vung vồ của Nam. Có thể làm HUD gọn ở mép dưới để người chơi thấy động tác.
+- Bước 8: test `DayOneAndNightOneAtRealPace` (tốc độ ×1, nghe hết thoại, bot đi thẳng) cho Ngày 1 = 7,2 phút, Đêm 1 = 4,2 phút. Doc yêu cầu 18–22 và 12–14 phút. Người chơi thật sẽ lâu hơn bot, nhưng vẫn thiếu nội dung so với mục tiêu doc. Đây là việc thiết kế cần nhóm quyết.
 
 Bước 3 ở đây là dàn cảnh bằng code, camera, nhịp thoại/giữ hình và tổ gác. Các clip ngồi xếp bằng, đũa/hích vai/đẩy nồi và art chi tiết vẫn thuộc bước 4 trở đi; giữ nguyên yêu cầu duyệt Blender trước khi xuất. Phần này không phải nghiệm thu art cuối hoặc toàn bộ Ngày 1–Đêm 1.
 
@@ -447,3 +485,83 @@ Ba test Cast và test Bé Tí cạnh mẹ hỏng ở lượt sáng (chạy giữ
 - UI trong thế giới vs. UI phủ màn hình: [Fagerholt & Lorentzon, *Beyond the HUD* (Chalmers 2009)](https://odr.chalmers.se/handle/20.500.12380/111921).
 - Rõ mục tiêu / bước tiếp theo: [Xbox Accessibility Guideline 109](https://learn.microsoft.com/en-us/xbox/accessibility/xbox-accessibility-guidelines/109). Khoa đã dùng cho HUD nhiệm vụ.
 - Quy tắc trục 180° cho cảnh hội thoại / bàn ăn: [180 degree rule](https://www.showmeshorts.co.nz/mini-movie-making-7180degreerule).
+
+---
+
+## 8. Tiếp nhận đoạn Claude dừng — 25/10, Codex
+
+**Cập nhật này thay trạng thái “chưa làm C1” và “HUD cần quyết” trong bản chụp tiến độ cũ phía trên.** Đã đối chiếu yêu cầu thực của phiên Claude `726401ed-229f-4023-92ec-949b225bc358`; yêu cầu mới hơn đã cho Claude sửa HUD thao tác và làm C1. Không quay lại thiết kế/bản code trước merge.
+
+- **C1 lên bờ Map 2 — bản code đã kiểm thử ngày 25/10:** giữ các FBX `HungHutChan`/`NamDoHung`, track ba lô/di chuyển và trình tự Claude đã dựng: Hùng hụt chân, bảo vệ tay phải, Nam đặt ba lô rồi giúp tay trái, đứng lên, nhặt lại và đi tiếp. Đây là bản Unity trước demo Blender v3 ngày 26/10; không phải nghiệm thu mỹ thuật bản mới.
+- Sửa tay Hùng không tới ván bằng tư thế thân/quỳ trên xương hiện có, giữ cổ chân và độ cao gối; ngăn lớp cầm súng chung ghi đè tay Nam. Không đổi rig/mesh/FBX.
+- Video liên tục phát hiện bộ tìm góc nghiêng làm thân Nam giật mạnh. Đã sửa cách tìm khoảng góc có thể với tới, không ép góc cực đại; thả lớp nghiêng thêm trước nhịp đứng dậy. Có test theo từng LateUpdate, không chỉ ảnh tĩnh.
+- Sửa camera C1 tránh đường Thành đi, theo cặp Nam–Hùng và lùi theo độ tách xa để giữ đầu/mũ, tay, chân trong khung.
+- Thêm test bỏ qua khi ba lô còn đặt dưới đất; cleanup đạo cụ/khôi phục súng, ba lô khi kết thúc hoặc hủy Arrival.
+- Hồi quy phát hiện Nam/Thành nổi chân trong briefing D1_01 khi tải checkpoint đã hoàn thành. Đã căn pose tại bên nhận: Nam có skin grounding trong D1_01; Thành PrimeLocomotion trước lúc giữ hội thoại. Sai số mẫu cuối so với mặt đất khoảng 0–2 mm, giới hạn test vẫn 2 cm. Test checkpoint lấy mẫu sau LateUpdate và kiểm grip gameplay sau briefing, giữ khẳng định briefing không hoàn thành D1_01.
+- **Kết quả kiểm thử lượt 25/10: 72/72 ca riêng biệt đạt, 0 lỗi/0 bỏ qua.** Bao gồm đủ 62 ca Claude trước (14 nhóm), 7 Arrival và 3 C1 (có lượt quay). Lượt input hoàn thành đủ 10 mục tiêu và chuyển sang Ngày 2. Không chạy lại lượt bot ×1 đo thời lượng. Kết quả này không bao gồm demo Blender v3 chưa nhập Unity.
+- **Còn mở:** L12 hai ông chung giọng Thái Sơn; nghe duyệt nhạc/câu nhớ lại/58 câu Map 1; nội dung để đạt thời lượng doc; thuốc nhiệm vụ so với medkit Map 1; art đạo cụ cận/nền bến. Không tự chọn lại giọng, thêm nhiệm vụ hoặc thay scene/art chưa duyệt. Có test đạt không đồng nghĩa art/âm thanh đã được người dùng nghiệm thu.
+- Scene Map 1/Map 2, FBX Nam, hai ảnh M16 và các thay đổi có sẵn ngoài phạm vi giữ nguyên. Chưa commit/merge/push; HEAD `thinh` vẫn `473a7940`.
+
+Báo cáo: [KET_QUA.md](../Reviews/ClaudeTakeover_20261025/KET_QUA.md), [đối chiếu toàn bộ yêu cầu](../Reviews/ClaudeTakeover_20261025/DOI_CHIEU_YEU_CAU.md), [verification.json](../Reviews/ClaudeTakeover_20261025/verification.json). Clip camera Unity ở `Docs/Reviews/ClaudeTakeover_20261025/C1_ThucTe_Unity_1080p60.mp4` (1080p/60 fps đầu ra, có lặp khung khi chụp chậm; không phải benchmark 60 FPS).
+
+## 9. Cập nhật demo C1 — 26/10, Codex
+
+**Phạm vi:** tay và thân Nam đỡ Hùng ở cảnh cập bến Map 2, tiếp tục đúng logic Claude đang dùng. Hùng giữ tay phải bị thương và chống tay trái; Nam đặt ba lô → đỡ tay trái/vai trái → cùng đứng → buông tay → nhặt ba lô → đi tiếp. Không phải trại C1 của Map 1.
+
+| Hạng mục C1 | Kết quả hiện tại | Việc còn lại |
+|---|---|---|
+| Chuyển động bản sao | Demo v3 sửa chuỗi vai–khuỷu–cổ tay, đường đưa tay và chuyển trọng tâm; không thêm xương, không kéo dài xương. | Nhịp buông tay còn nhanh, điểm đỡ dưới chưa ôm tay áo chặt ở mọi góc. Chưa duyệt chuyển động. |
+| Da tay | Khôi phục nguyên vật liệu da từ Nam K54 v12 đã duyệt, thay atlas áo quần gán nhầm cho bàn tay ở nguồn C1. | Mép nối bàn tay–ống tay áo vẫn thô/gappy; sửa vật liệu không sửa được hình học. |
+| Kiểm tra khớp và tiếp xúc | 127 khung kiểm góc khớp: không vượt giới hạn gập/xoắn; còn 1 cảnh báo nhịp xoay cẳng tay phải tại frame 127. Hai bàn tay so với Hùng: **0/113 khung bị báo xuyên**, ngưỡng 1 mm. | Kiểm ngón tay với thân Nam còn **6 khung bị báo**, chủ yếu vùng cổ tay/ống tay áo, có tiếp xúc hông 2,64 mm. Không gọi là đã sạch lỗi; chưa kiểm tự động toàn thân/mũ/ba lô. |
+| Mô hình và nguồn — trạng thái v3 | Nam 62 xương, Hùng 28 xương; lưới, trọng số, rest pose và file chủ giữ nguyên ở v3. Vật liệu da là bản đã duyệt được khôi phục riêng. | Hùng chưa có xương ngón tay. **Lượt tiếp theo người dùng đã cho sửa riêng mép lưới cổ tay Nam trên bản sao; kết quả v4 ở mục 10.** Không tự thêm xương hay đổi trọng số phần cũ. |
+| Bản xem | File mới đã mở trong Blender. MP4 đã xác minh **1920×1080, 60,0 fps, 740 khung, 12,333 giây**, có toàn cảnh và cận tay; 740 ảnh đầu vào khác nhau. | Đây là render xem chuyển động, không phải bằng chứng hiệu năng Unity 60 FPS hoặc ánh sáng thành phẩm. |
+| Đưa vào game và test | **Chưa xuất/import v3, chưa chạy lại Unity test trong lượt demo.** Code Unity và kết quả 72/72 của ngày 25/10 giữ riêng. | Sau khi duyệt phải đối chiếu lớp bù tay `Map02Arrival.Misstep.cs` với clip mới, đồng bộ C1Pack/C1Travel, chạy test C1/Arrival và quay Unity. Không chỉ thay FBX rồi coi là xong. |
+
+**Mở bản mới nhất:**
+
+- Blender: `D:\DO_AN_GAME\chuyen_dong\Map2_C1_NamDoHung_Demo_2026-10-26_v3.blend`; bản tương ứng trong repo: [C1_Nam_DoHung_DEMO_v3.blend](../../SourceArt/Map02_C1_Polish_20261025/C1_Nam_DoHung_DEMO_v3.blend).
+- [Video Blender 1080p/60 fps](../Reviews/Map02_C1_Polish_20261025/C1_Nam_DoHung_v3_1080p60.mp4), [ảnh toàn cảnh](../Reviews/Map02_C1_Polish_20261025/C1_v3_Still_1080p.png), [góc ngoài điểm đỡ](../Reviews/Map02_C1_Polish_20261025/FinalAngles_v3/0114_outside.png), [cận vùng cổ tay còn lỗi](../Reviews/Map02_C1_Polish_20261025/FinalAngles_v3/0081_below.png).
+- [Báo cáo tự phê bình, nguồn tham khảo và số đo](../Reviews/Map02_C1_Polish_20261025/KET_QUA_20261026.md); [điểm tiếp tục cho phiên sau](C1_Animation_Latest_20261026.md).
+
+**Chưa đóng việc C1.** Quyền sửa mép lưới đã được người dùng chấp thuận ở lượt tiếp theo; xem mục 10. Chỉ xuất sang Unity sau khi người dùng duyệt bản xem theo mục 0 của `C3_ViecConLai_Prompts.md`. Không commit/merge/push ở lượt này; HEAD `thinh` vẫn `473a7940`.
+
+## 10. C1 v4 — đã được phép sửa riêng mép cổ tay, 26/10
+
+Người dùng chọn **“Cho sửa mép lưới trên bản sao”**. Đã thực hiện trên v4 riêng, giữ nguyên file v3 và file chủ. Đây là cho phép sửa mesh, chưa phải duyệt hình/chuyển động để xuất Unity.
+
+| Phần việc | Đã làm / kiểm | Còn lại |
+|---|---|---|
+| Mép áo hai cổ tay | Dọn phần ẩn nắm tay cũ, dựng vòng mép gập trong, thu gọn gốc da dưới áo. Mép hiện có một biên gập đều mỗi bên thay hai biên răng cưa; độ lệch dọc trục rest pose từ tối đa 21,30 / 33,91 mm còn <0,01 mm. | Cần duyệt ngoại hình v4. Không coi phép đo rest pose là bảo đảm mọi tư thế đều sạch. |
+| Bảo toàn mô hình/chuyển động | Rig/rest pose giữ nguyên, Nam 62 xương; **toàn bộ F-curve giống v3**. Trọng số đỉnh cũ giữ lại không đổi; mặt cắt và mép mới kế thừa trọng số quanh mép. Không đổi tỉ lệ hay vật liệu da đã duyệt. | Hùng vẫn 28 xương, chưa có xương ngón. Không tự thay rig. |
+| Va chạm/khớp | Hai tay với Hùng 0/113 khung báo xuyên, ngưỡng 1 mm. Tự va chạm ngón–Nam giảm **6→5 khung**; cảnh báo cẳng tay phải frame 127 giữ nguyên. Bản mép dài làm tăng lên 28 đã bị bỏ. | Còn cờ vùng cổ tay và tiếp xúc hông/đùi tại frame 71, nhịp buông tay nhanh. Chưa kiểm toàn thân/mũ/ba lô. Không gọi là đã sửa hết animation. |
+| Bản xem / Unity | Đã mở/chạy bản v4 trong cửa sổ Blender mới; có ảnh trước–sau và cận nhiều góc. MP4 đã xác minh **1920×1080, 60,0 fps, 740 khung / 12,333 giây**, 740 ảnh đầu vào khác nhau; không phải đo FPS Unity. | **Chưa xuất Unity, chưa chạy lại Unity test.** 72/72 vẫn là kết quả code ngày 25/10; sau duyệt mới đồng bộ FBX, lớp bù tay và dữ liệu ba lô/di chuyển rồi kiểm lại. |
+
+[Báo cáo và số đo v4](../Reviews/Map02_C1_Cuff_20261026/KET_QUA.md), [ảnh so sánh](../Reviews/Map02_C1_Cuff_20261026/C1_Cuff_v3_v4_Compare.png), [video v4](../Reviews/Map02_C1_Cuff_20261026/C1_Nam_DoHung_v4_1080p60.mp4), [Blender trong repo](../../SourceArt/Map02_C1_Cuff_20261026/C1_Nam_DoHung_DEMO_v4.blend).
+
+Bản xem cạnh nguồn: `D:\DO_AN_GAME\chuyen_dong\Map2_C1_NamDoHung_Demo_2026-10-26_v4_CoTay.blend`. Chưa commit/merge/push; các việc còn mở của toàn Ngày 1–Đêm 1 ở mục 8 không đổi.
+
+
+## C1 — tích hợp v4 ngày 26/10/2026
+
+Người dùng đã yêu cầu đưa cảnh Nam đỡ Hùng vào game, commit/push thinh rồi merge dev. Hai prefab C1 giữ Nam 62 / Hùng 28 xương, mép cổ tay và chuyển động v4; không thay model gameplay hoặc scene. Ba lô theo thân/tay/sàn đúng giai đoạn, ẩn súng khi đỡ và trả mô hình/trang bị sau cảnh hoặc skip. Chỉnh riêng gối phải cho mặt sàn game, giữ thân/tay đã duyệt.
+
+Bảy ca Arrival, ba ca C1 và ba ca nguồn/đầu gối/ba lô đã qua qua các lượt riêng; số liệu và kết quả sau merge ghi tại [báo cáo C1](../Reviews/C1_Unity_20261026/KET_QUA.md). [Video Unity](../Reviews/C1_Unity_20261026/C1_v4_Unity_1080p60.mp4), [nguồn Blender nén](../../SourceArt/Map02_C1_Unity_20261026/C1_Approved_v4.blend), [bàn giao mới nhất](C1_Animation_Latest_20261026.md).
+
+Còn 5 cờ tự va chạm, 1 cờ nhịp xoay cẳng tay và nhịp buông nhanh của v4 đã duyệt. Không đánh dấu mọi lỗi mỹ thuật hoặc toàn bộ Ngày 1/Đêm 1 hoàn tất. Các việc dở ngoài C1 trong thư mục chính được giữ riêng.
+
+**Bàn giao C1 mới nhất:** thinh đã push `f784a124` và `617a289c`; bản gộp với dev `978f6c6c` đã có 13 ca riêng biệt đạt qua lượt đầu (12/13) và lượt chạy lại ca quay (1/1) sau khi cách ly thư mục lưu test. Không đổi cơ chế save của game. [Báo cáo tích hợp và video dev](../Reviews/C1_Unity_20261026/KET_QUA.md).
+
+
+## 11. Tiếp nhận phần Claude và sửa nhanh Map 2 — 26/10/2026
+
+- Đã ghép phần Ngày 1–Đêm 1 đang dở với dev `cf9d9090`, giữ C1 v4 và thay đổi thẩm vấn mới của nhóm. Có đủ mocap/meta, đạo cụ, mini game kho/bến/chốt và âm nền cục bộ; tránh bật hai hệ âm nền trùng nhau. Không sửa scene hay tạo animation/rig mới trong lượt này.
+- Người dùng chốt **giữ giọng dev, lưu bộ Claude chờ duyệt**. Bộ đề xuất 56 ID gốc/58 mục sử dụng được lưu ngoài Resources; khôi phục đủ 261 mục catalog của dev, giữ riêng chỉnh sửa echo cục bộ chưa nghe duyệt.
+- Sửa nối tuyến Ngày 2, leo ăng-ten thật; tổ/đèn tuần tra, kiểm cửa và tuyến bốn đoạn Đêm 2; nối diễn xuất/camera/cleanup hiện có; chặn kết thúc cảnh hai lần. Các pose Đêm 2 còn thô, chưa nghiệm thu mỹ thuật.
+- **Kiểm dự án chính: 83/83 ca tích hợp + 8/8 ca catalog đều đạt, hai Unity runner exit 0; tổng 87 ca riêng biệt qua hai lượt.** Luồng phím và di chuyển thật hoàn tất đủ 10 mục tiêu Ngày 1–Đêm 1 và sang Ngày 2. Không chạy lại phép đo bot ×1; các số thời lượng cũ không phải kết quả hôm nay.
+- Bản sửa nhanh trên dev riêng đạt 27/27 ca ở kết quả mới nhất từng ca qua các lượt kiểm; tách khỏi số dự án chính. Không dùng test logic hoặc video encode để chứng minh 60 FPS.
+- **Còn mở:** nhạc/echo cần nghe, đối chiếu casting hiện tại trước khi đổi hai ông, thời lượng chơi, thuốc nhiệm vụ/medkit, đạo cụ cận/nền bến; các gói diễn xuất Ngày 2–Bình minh ở kế hoạch toàn chương. Không đánh dấu mọi animation đã đẹp.
+
+[Kết quả và biên nhận](../Reviews/Map02_Audit_20261026/SUA_NHANH.md), [kế hoạch ba ngày–ba đêm](Map02_3NgayDem_RaSoat_KeHoach_2026-10-26.md). Người dùng đã cho phép commit/push phần Claude và sửa nhanh lên thinh rồi đồng bộ dev; mã commit được ghi sau khi đối chiếu remote.
+
+
+**Đối chiếu Git sau giao bản:** commit code `be7ea870` đã push thành công lên cả `thinh` và `dev`, hai remote cùng mã sau lần push; nhánh local vẫn là `thinh`, local `dev` đã đồng bộ. [Biên nhận tích hợp](D:/DO_AN_GAME/ShadowVale/Docs/Reviews/Map02_Audit_20261026/PUSH_RECEIPT.json). Commit tiếp theo chỉ ghi tài liệu kết quả này. Các thay đổi cục bộ ngoài phạm vi vẫn được giữ trên máy.

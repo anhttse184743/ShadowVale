@@ -1,0 +1,1722 @@
+[
+  {
+    "id": 1,
+    "type": "paragraph",
+    "text": "ShadowVale Map 2 – Kịch bản chi tiết 3 ngày đêm"
+  },
+  {
+    "id": 2,
+    "type": "paragraph",
+    "text": "Oct 20, 2026 · @Anh"
+  },
+  {
+    "id": 3,
+    "type": "paragraph",
+    "text": "Thay đổi so với bản 20/10"
+  },
+  {
+    "id": 4,
+    "type": "paragraph",
+    "text": "Bản này giữ nguyên khung ba ngày đêm và kết cục ta giữ được làng, đồng thời lồng thêm lời hứa về nhà ăn cơm u nấu của Hùng làm sợi chỉ cảm xúc xuyên suốt. Cách Hùng hy sinh chuyển từ đỡ đạn cho Nam sang chủ động diệt chiếc xe tăng (boss) đang chặn bến, để chuyến thuyền cuối kịp rời đi."
+  },
+  {
+    "id": 5,
+    "type": "table",
+    "text": "Hạng mục | Bản 20/10 | Bản này\nCài cảm xúc | Không có lời báo trước | Lời hứa về nhà ăn cơm u nấu ở Đêm 1, nhắc lại ở Đêm 2 và Ngày 3, trả ở Nhịp 5 và Bình minh\nNhịp 5 | Hùng lấy thân che, trúng đạn | Nam đã bị thương từ Nhịp 3; Nam bắn yểm trợ, Hùng gài bộc phá vào xích xe tăng bằng tay trái, diệt xe và trúng đạn. Nhịp 6 rút thành cutscene: pháo bắn, quân ta tràn vào\nLời cuối của Hùng | Hỏi Nam có sao không, hỏi người dưới bến | \"Giờ mà không đi... là không ai còn cơ hội về nhà nữa đâu. Thế nhá, người anh em.\" (thoại bản gõ tay)\nNhân vật phụ | Chỉ có vai trò | Có tên và nét riêng: anh Thành, chú Bảy, ông Sáu, chị Lành, bé Tí, anh Lực, Tâm"
+  },
+  {
+    "id": 6,
+    "type": "paragraph",
+    "text": "Lấy từ bản gõ tay: câu hỏi \"hết chiến tranh cậu tính làm gì\", lời mời về nhà ăn cơm u nấu, câu \"bảo vệ mọi người nhờ cậu\", nụ cười cũ của Hùng ở lần quay lại cuối, và tiếng ù tai cùng âm thanh hồi tưởng sau tiếng nổ. Toàn bộ thoại đoạn kết ở Nhịp 5 dùng gần như nguyên văn bản gõ tay, giữ nguyên cả \"u\" và \"cơ mà\"."
+  },
+  {
+    "id": 7,
+    "type": "paragraph",
+    "text": "Không lấy, vì lệch với kế hoạch đã duyệt:"
+  },
+  {
+    "id": 8,
+    "type": "paragraph",
+    "text": "Tướng địch (boss) dạng nhân vật: game giữ giọng hiện thực, không gán đơn vị cụ thể. Boss là một chiếc xe tăng thiết kế chung, không sao chép mẫu xe có thật; địch còn lại là các tốp lính bộ binh."
+  },
+  {
+    "id": 9,
+    "type": "paragraph",
+    "text": "Hùng ôm thuốc nổ lao vào giữa đội hình địch: thi thể không còn, nên mất cảnh Nam ngồi bên Hùng lúc bình minh. Thay bằng gài bộc phá vào xích xe rồi lùi ra, trúng đạn cách xe vài mét."
+  },
+  {
+    "id": 10,
+    "type": "paragraph",
+    "text": "Thuyền chở Nam rời bến, mở hướng sang Map 3: kế hoạch hiện khép game ở hai map. Lời hứa thăm u của Hùng vẫn có thể làm móc nối nếu sau này có thêm Map 3."
+  },
+  {
+    "id": 11,
+    "type": "paragraph",
+    "text": "Câu \"Ghi âm rồi đấy\" và chữ \"ngon đỉnh cao\": là cách nói hiện đại, lệch thời đại. Thay bằng \"Nói rồi đó nha, tôi nhớ đó.\""
+  },
+  {
+    "id": 12,
+    "type": "paragraph",
+    "text": "Cần anh/chị chốt:"
+  },
+  {
+    "id": 13,
+    "type": "paragraph",
+    "text": "Phương ngữ. Đã chốt: Hùng là lính miền Bắc, gọi mẹ là \"u\", nhớ canh cua rau đay với cà pháo của u. Làng và dân làng (chị Lành, chú Bảy, ông Sáu) giữ giọng Nam Bộ. Hùng ăn canh chua của chị Lành, không giống món của u, nhưng vẫn nhớ nhà."
+  },
+  {
+    "id": 14,
+    "type": "paragraph",
+    "text": "Nam bị thương ở vai. Đây là chi tiết mới, khiến Nhịp 6 cần thêm hoạt ảnh tay ngắm rung nhẹ."
+  },
+  {
+    "id": 15,
+    "type": "paragraph",
+    "text": "Xưng hô. Bản này thống nhất \"tôi – cậu\" giữa Nam và Hùng, khớp với thoại mẫu bản 20/10, thay cho \"tớ – mình\" trong bản gõ tay."
+  },
+  {
+    "id": 16,
+    "type": "paragraph",
+    "text": "Nhân vật và bảng cài – trả"
+  },
+  {
+    "id": 17,
+    "type": "paragraph",
+    "text": "Mỗi nhân vật phụ được giới thiệu ở Ngày 1 và có việc riêng trong Đêm 3. Người chơi phải nhận ra họ khi họ gặp nguy."
+  },
+  {
+    "id": 18,
+    "type": "table",
+    "text": "Nhân vật | Vai trò | Nét riêng | Việc trong Đêm 3\nNam | Nhân vật chính | Ít nói, làm trước rồi mới nói; trực quá sức | Mở đường, giữ ngõ, trúng mảnh tường do xe tăng bắn ở Nhịp 3; bắn yểm trợ cho Hùng ở Nhịp 5\nHùng | Đồng đội, lính thông tin | Tay phải bị thương, phải ăn bằng tay trái; người miền Bắc, hiền, hay nhường phần; nhớ u | Giữ liên lạc ở bến, đưa người yếu xuống thuyền, diệt xe tăng bằng bộc phá\nAnh Thành | Chỉ huy đi cùng Nam | Nói ngắn, quyết nhanh, không đọc diễn văn | Gọi pháo, điều phản công\nAnh Lực | Du kích trực chốt đầu làng | Cục tính, hay chê bộ đội \"đi ồn quá\" | Giữ chốt ngoài, lôi Nam rời khỏi xác Hùng để lên tuyến\nChú Bảy | Người chèo đò bến nam | Hay than, nhưng đã làm thì làm tới nơi | Chèo các chuyến sơ tán, chuyến cuối bị xe tăng ghìm giữa dòng\nÔng Sáu | Cha già, bệnh ho | Không chịu để ai cõng | Được Nam cứu khỏi nhà cháy, có mặt trên chuyến thuyền cuối\nChị Lành | Con gái ông Sáu | Nấu canh chua khéo, chăm Hùng như em | Dắt bé Tí và ông Sáu xuống bến; lúc bình minh bưng chén canh\nBé Tí | Con chị Lành, khoảng 7 tuổi | Bám theo Hùng xem máy đàm | Bị lạc trong đêm, Nam tìm thấy\nTâm | Trinh sát mất liên lạc | Trẻ, bị thương chân | Báo địch rà bến; Đêm 3 bắn yểm trợ từ bờ tre"
+  },
+  {
+    "id": 19,
+    "type": "paragraph",
+    "text": "Cài – trả: mỗi chi tiết cài ban ngày phải có tác dụng nhìn thấy được về sau."
+  },
+  {
+    "id": 20,
+    "type": "table",
+    "text": "Chi tiết | Cài ở | Nhắc lại ở | Trả ở\nLời hứa về nhà ăn cơm u nấu | Đêm 1 | Đêm 2 (câu đùa), Ngày 3 (cảnh \"Bữa chiều\") | Nhịp 5 (\"U cậu còn đang đợi\"), Bình minh (chén canh, \"Tôi hứa với nó rồi\")\nTay phải Hùng bị thương | Ngày 1 | Đêm 1 (ăn tay trái), Ngày 2 (không leo cây được), Ngày 3 (nhặt rau tay trái) | Nhịp 5: kéo Nam và gài bộc phá bằng tay trái\nThuốc cho ông Sáu | Ngày 1 | Ngày 3 (ông đã bớt ho) | Nhịp 2: Nam cứu đúng nhà ông\nBậc bến nam đã sửa | Ngày 1 | Ngày 3 (kiểm tra thuyền) | Nhịp 2: nơi đỡ người già xuống thuyền\nVật tư trong kho kín | Ngày 1 | — | Nhịp 1: nơi Nam lấy trang bị\nTrạm liên lạc và đơn vị pháo | Ngày 2 | Đêm 2 | Nhịp 4 – 6: gọi pháo và các lần báo giờ bắn\nKhối bộc phá cất ở hố bờ đất cạnh bến | Ngày 3 | — | Nhịp 5: Hùng dùng để diệt xe tăng\nHùng mất ngủ | Đêm 1 | Đêm 2 (lần đầu ngủ được) | Bình minh: \"Chỗ trực còn trống\"\nNam quay lại cứu Hùng ở Map 1 | Map 1 | Đêm 2 (\"Bữa đó… sao cậu quay lại?\") | Nhịp 5: đến lượt Hùng \"quay lại\" vì Nam\nQuê Nam không còn ai đợi | Đêm 1 | Đêm 1 (\"U tôi là u cậu luôn\") | Bình minh: \"Tôi hứa với nó rồi\", Nam đi tìm người mẹ duy nhất mình còn\nCâu \"Tay vậy đi làm gì. Vướng.\" | Ngày 2 | Đêm 2 (làm lành) | Nhịp 5: người bị chê \"vướng\" là người cứu cả chuyến thuyền\nNam giữ ngõ đình, xa bến nhất (mồi đánh lạc hướng) | Ngày 3 | Nhịp 3 (Nam bị thương, Hùng hoảng hốt gọi qua đàm) | Nhịp 5: người chơi đang lo cho Nam nên không đoán trước Hùng; vết thương cũng là lý do Nam không tự đi được\nTiếng xích sắt xe tăng | Đêm 2 (\"Tiếng gì thế?\") | Nhịp 3 (xe tăng hiện ra sau bức tường) | Nhịp 5: boss chặn bến, Hùng hy sinh để diệt nó\nNam hay gánh một mình; lời dặn \"Đừng thức một mình\" | Đêm 1 | Đêm 2 (Nam thức trực, đắp áo cho Hùng) | Bình minh: anh Lực ngồi trực cùng, Nam không đuổi đi; một chỗ bên cạnh để trống"
+  },
+  {
+    "id": 21,
+    "type": "paragraph",
+    "text": "Ngày 1 – Có chỗ nghỉ chân (18–22 phút)"
+  },
+  {
+    "id": 22,
+    "type": "paragraph",
+    "text": "Cốt truyện"
+  },
+  {
+    "id": 23,
+    "type": "paragraph",
+    "text": "Thuyền cập bến nam (giữ cảnh cập bến hiện có). Anh Thành cho biết đường về đơn vị đã bị chặn, cả nhóm phải trú lại trong làng chờ tin. Nam đưa Hùng tới nhà chị Lành để thay băng, rồi đi làm quen với những người sẽ có mặt trong đêm cuối. Người chơi tự đi qua con đường sơ tán trong lúc nó còn yên bình."
+  },
+  {
+    "id": 24,
+    "type": "paragraph",
+    "text": "Nhiệm vụ"
+  },
+  {
+    "id": 25,
+    "type": "table",
+    "text": "ID | Mục tiêu hiển thị | Điều kiện hoàn thành\nM2_D1_01 | Bắt liên lạc với du kích địa phương | Nam đến chốt đầu làng và đối mật khẩu với anh Lực\nM2_D1_02 | Đưa Hùng tới nhà chị Lành | Hùng đi theo Nam (tốc độ chậm) tới hiên nhà, chạy xong cảnh thay băng\nM2_D1_03 | Giao thuốc cho ông Sáu | Trao gói thuốc từ túi đồ của Map 1 cho chị Lành\nM2_D1_04 | Cất vật tư vào kho kín | Khiêng 3 thùng từ bến vào hầm dưới bụi chuối\nM2_D1_05 | Sửa bậc lên xuống bến nam | Đóng 2 cọc và kê 3 tấm ván cùng chú Bảy\nM2_D1_06 | Báo cáo anh Thành | Nói chuyện với anh Thành, chuyển sang Đêm 1"
+  },
+  {
+    "id": 26,
+    "type": "paragraph",
+    "text": "M2_D1_03 đến M2_D1_05 làm theo thứ tự tùy ý."
+  },
+  {
+    "id": 27,
+    "type": "paragraph",
+    "text": "Thoại"
+  },
+  {
+    "id": 28,
+    "type": "paragraph",
+    "text": "Cập bến. Hùng bước lên, hụt chân. Nam đặt ba lô xuống trước rồi mới đỡ."
+  },
+  {
+    "id": 29,
+    "type": "paragraph",
+    "text": "Anh Thành: \"Đường về bị chặn rồi. Mình ở lại đây, chờ tin.\""
+  },
+  {
+    "id": 30,
+    "type": "paragraph",
+    "text": "Nam: \"Rõ.\""
+  },
+  {
+    "id": 31,
+    "type": "paragraph",
+    "text": "Anh Thành: \"Hùng đi băng lại tay. Nam lo bắt liên lạc.\""
+  },
+  {
+    "id": 32,
+    "type": "paragraph",
+    "text": "Chốt đầu làng."
+  },
+  {
+    "id": 33,
+    "type": "paragraph",
+    "text": "Anh Lực: \"Bộ đội gì mà đi ồn dữ vậy. Nghe tiếng từ ngoài vàm.\""
+  },
+  {
+    "id": 34,
+    "type": "paragraph",
+    "text": "Nam: \"Thì anh cũng nghe ra rồi đó.\""
+  },
+  {
+    "id": 35,
+    "type": "paragraph",
+    "text": "Anh Lực: (nhếch mép) \"Vô đi.\""
+  },
+  {
+    "id": 36,
+    "type": "paragraph",
+    "text": "Nhà chị Lành. Bé Tí nấp sau cột, nhìn chiếc máy đàm đeo sau lưng Hùng."
+  },
+  {
+    "id": 37,
+    "type": "paragraph",
+    "text": "Chị Lành: \"Tay vầy mà còn vác máy. Ngồi xuống đi.\""
+  },
+  {
+    "id": 38,
+    "type": "paragraph",
+    "text": "Hùng: \"Vâng, nhẹ lắm chị.\""
+  },
+  {
+    "id": 39,
+    "type": "paragraph",
+    "text": "Chị Lành: \"Nhẹ thì đưa Tí xách thử coi.\""
+  },
+  {
+    "id": 40,
+    "type": "paragraph",
+    "text": "Bé Tí cười khúc khích rồi chạy mất."
+  },
+  {
+    "id": 41,
+    "type": "paragraph",
+    "text": "Ông Sáu: (ho, từ trong buồng) \"Thuốc hả? Để dành cho tui trẻ, tui già rồi.\""
+  },
+  {
+    "id": 42,
+    "type": "paragraph",
+    "text": "Nam: \"Thuốc này cho ông. Phần tui trẻ, tui tự lo.\""
+  },
+  {
+    "id": 43,
+    "type": "paragraph",
+    "text": "Bến nam. Chú Bảy đang lấy chân thử một tấm ván mục."
+  },
+  {
+    "id": 44,
+    "type": "paragraph",
+    "text": "Chú Bảy: \"Cái bậc này mà gãy là ông Sáu xuống sông bằng đầu đó.\""
+  },
+  {
+    "id": 45,
+    "type": "paragraph",
+    "text": "Nam: \"Vậy sửa liền đi chú.\""
+  },
+  {
+    "id": 46,
+    "type": "paragraph",
+    "text": "Chú Bảy: \"Đóng cọc dùm tui. Tui già, tay run.\""
+  },
+  {
+    "id": 47,
+    "type": "paragraph",
+    "text": "Cuối ngày, hiên nhà. Hùng đẩy chén cơm qua."
+  },
+  {
+    "id": 48,
+    "type": "paragraph",
+    "text": "Hùng: \"Cậu ăn phần này đi. Cả ngày vác thùng.\""
+  },
+  {
+    "id": 49,
+    "type": "paragraph",
+    "text": "Nam: \"Cậu bị thương mà.\""
+  },
+  {
+    "id": 50,
+    "type": "paragraph",
+    "text": "Hùng: \"Thương tay chứ đâu phải thương bụng.\""
+  },
+  {
+    "id": 51,
+    "type": "paragraph",
+    "text": "Hoạt ảnh và dàn cảnh"
+  },
+  {
+    "id": 52,
+    "type": "paragraph",
+    "text": "Hùng: dáng đi ôm tay phải sát người, bước chậm, để Nam dìu."
+  },
+  {
+    "id": 53,
+    "type": "paragraph",
+    "text": "Nam đặt ba lô xuống rồi đỡ Hùng ngồi: một cảnh dựng ngắn."
+  },
+  {
+    "id": 54,
+    "type": "paragraph",
+    "text": "Chị Lành thay băng: Hùng nhăn mặt, tay trái bám mép ghế."
+  },
+  {
+    "id": 55,
+    "type": "paragraph",
+    "text": "Khiêng thùng: dùng hoạt ảnh mang vật nặng, Nam chạy chậm lại khi đang khiêng."
+  },
+  {
+    "id": 56,
+    "type": "paragraph",
+    "text": "Đóng cọc: vòng ba nhịp bấm theo lúc chú Bảy giữ cọc. Không có trường hợp thất bại."
+  },
+  {
+    "id": 57,
+    "type": "paragraph",
+    "text": "Ánh sáng: trưa nắng gắt, chuyển mềm sang chiều vàng khi M2_D1_06 mở."
+  },
+  {
+    "id": 58,
+    "type": "paragraph",
+    "text": "Âm thanh"
+  },
+  {
+    "id": 59,
+    "type": "paragraph",
+    "text": "Gà gáy xa, tiếng chèo khua nước, trẻ con gọi nhau. Không có nhạc chiến đấu. Chỉ có một động cơ máy bay rất xa, một lần."
+  },
+  {
+    "id": 60,
+    "type": "paragraph",
+    "text": "Đêm 1 – Buổi trực chung (12–14 phút)"
+  },
+  {
+    "id": 61,
+    "type": "paragraph",
+    "text": "Cốt truyện"
+  },
+  {
+    "id": 62,
+    "type": "paragraph",
+    "text": "Chị Lành nấu một nồi canh chua cá lóc đãi bộ đội. Hùng ăn bằng tay trái, vụng về, nên Nam đẩy chén cá sang. Vị canh làm Hùng nhớ u, dù u ở ngoài Bắc chẳng bao giờ nấu canh chua, và hai người có cuộc trò chuyện về ngày hòa bình. Nam lần đầu nói ra rằng quê mình không còn ai đợi. Sau bữa cơm, hai người đi kiểm tra hai chốt ven làng rồi đổi ca. Không có trận đánh. Nam nhận ra Hùng vẫn giật mình và mất ngủ sau lần bị bắt."
+  },
+  {
+    "id": 63,
+    "type": "paragraph",
+    "text": "Nhiệm vụ"
+  },
+  {
+    "id": 64,
+    "type": "table",
+    "text": "ID | Mục tiêu hiển thị | Điều kiện hoàn thành\nM2_N1_01 | Ăn cơm tối | Ngồi xuống mâm, chạy xong cảnh \"Lời hứa\"\nM2_N1_02 | Kiểm tra chốt bờ tre | Hùng đi kèm, Nam đến chốt và hỏi tổ gác\nM2_N1_03 | Kiểm tra chốt đầu làng | Đến chốt và giao gói thuốc cho anh Lực\nM2_N1_04 | Đổi ca | Nam tương tác với chỗ nằm, chạy cảnh ngắn rồi chuyển sang Ngày 2"
+  },
+  {
+    "id": 65,
+    "type": "paragraph",
+    "text": "Thoại – cảnh \"Lời hứa\" (cutscene, khoảng 90 giây)"
+  },
+  {
+    "id": 66,
+    "type": "paragraph",
+    "text": "Hiên nhà chị Lành, đèn dầu che thấp. Camera đặt xa, nhìn qua khung cửa. Hùng cầm đũa tay trái, lúng túng. Nam lặng lẽ đẩy chén cá sang phía Hùng."
+  },
+  {
+    "id": 67,
+    "type": "paragraph",
+    "text": "Hùng: (húp một ngụm, khựng lại) \"...Ở quê, u tôi không nấu canh chua đâu. Thế mà ăn vẫn nhớ u.\""
+  },
+  {
+    "id": 68,
+    "type": "paragraph",
+    "text": "Nam ngừng đũa. Nhìn ngọn đèn một lúc."
+  },
+  {
+    "id": 69,
+    "type": "paragraph",
+    "text": "Nam: \"Này Hùng... mai mốt hết giặc, cậu tính làm gì?\""
+  },
+  {
+    "id": 70,
+    "type": "paragraph",
+    "text": "Hùng: (cười hiền) \"Về với u. Ăn một bữa cơm cho tử tế. Đi biền biệt thế này, chẳng biết u còn nhận ra không.\""
+  },
+  {
+    "id": 71,
+    "type": "paragraph",
+    "text": "Nam: (nhoài người sang) \"Rồi sau đó?\""
+  },
+  {
+    "id": 72,
+    "type": "paragraph",
+    "text": "Hùng: (hích vai Nam bằng vai trái, giọng hăng hái) \"Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay, ăn với cà pháo, nhất làng luôn.\" (liếc vào bếp, hạ giọng) \"...Ngon hơn nồi này nhiều.\""
+  },
+  {
+    "id": 73,
+    "type": "paragraph",
+    "text": "Chị Lành: (từ trong bếp, không quay ra) \"Nghe hết đó nha.\""
+  },
+  {
+    "id": 74,
+    "type": "paragraph",
+    "text": "Hùng rụt cổ. Nam bật cười, đấm nhẹ vào vai trái Hùng."
+  },
+  {
+    "id": 75,
+    "type": "paragraph",
+    "text": "Nam: \"Nói rồi đó nha. Tôi nhớ đó.\""
+  },
+  {
+    "id": 76,
+    "type": "paragraph",
+    "text": "Hùng: (cười) \"Ừ, hứa.\" (một nhịp) \"Còn cậu, cậu tính sao?\""
+  },
+  {
+    "id": 77,
+    "type": "paragraph",
+    "text": "Nam: (nụ cười nhạt dần, nhìn ra khoảng tối ngoài hiên) \"Tôi hả... cũng chưa biết. Chỉ mong mau tới ngày đó.\""
+  },
+  {
+    "id": 78,
+    "type": "paragraph",
+    "text": "Hùng: \"Thì về quê cậu chứ sao.\""
+  },
+  {
+    "id": 79,
+    "type": "paragraph",
+    "text": "Nam im một lúc. Tiếng dế."
+  },
+  {
+    "id": 80,
+    "type": "paragraph",
+    "text": "Nam: \"Quê tôi... không còn ai đợi.\""
+  },
+  {
+    "id": 81,
+    "type": "paragraph",
+    "text": "Hùng đặt đũa xuống. Không hỏi thêm."
+  },
+  {
+    "id": 82,
+    "type": "paragraph",
+    "text": "Hùng: \"Thế thì về quê tôi. U tôi là u cậu luôn.\""
+  },
+  {
+    "id": 83,
+    "type": "paragraph",
+    "text": "Hùng đẩy nồi canh về phía Nam. Giữ khung hình ba giây với tiếng dế rồi trả điều khiển."
+  },
+  {
+    "id": 84,
+    "type": "paragraph",
+    "text": "Thoại – đi tuần (trong lúc chơi)"
+  },
+  {
+    "id": 85,
+    "type": "paragraph",
+    "text": "Trên đường ra chốt bờ tre, một con vịt vỗ cánh trong bụi. Hùng giật bắn người, tay trái chộp lấy vai Nam."
+  },
+  {
+    "id": 86,
+    "type": "paragraph",
+    "text": "Nam: \"Vịt thôi.\""
+  },
+  {
+    "id": 87,
+    "type": "paragraph",
+    "text": "Hùng: (thả tay ra, cười gượng) \"Biết mà.\""
+  },
+  {
+    "id": 88,
+    "type": "paragraph",
+    "text": "Ở chốt đầu làng, sau khi giao thuốc."
+  },
+  {
+    "id": 89,
+    "type": "paragraph",
+    "text": "Nam: \"Tay còn đau không?\""
+  },
+  {
+    "id": 90,
+    "type": "paragraph",
+    "text": "Hùng: \"Ngồi yên mới thấy. Đi một vòng còn dễ chịu hơn.\""
+  },
+  {
+    "id": 91,
+    "type": "paragraph",
+    "text": "Nam: \"Cậu nghỉ đi. Tôi canh tiếp.\""
+  },
+  {
+    "id": 92,
+    "type": "paragraph",
+    "text": "Hùng: \"Tới giờ thì gọi tôi. Đừng thức một mình.\""
+  },
+  {
+    "id": 93,
+    "type": "paragraph",
+    "text": "Đổi ca: Hùng nằm nhưng mắt vẫn mở, nhìn lên mái lá. Nam ngồi ở ngưỡng cửa, quay lưng lại. Không ai nói gì."
+  },
+  {
+    "id": 94,
+    "type": "paragraph",
+    "text": "Hoạt ảnh và dàn cảnh"
+  },
+  {
+    "id": 95,
+    "type": "paragraph",
+    "text": "Ăn bằng tay trái: quay xa qua khung cửa; chỉ cần Hùng cầm đũa lúng túng và Nam đẩy chén sang. Không cần hoạt ảnh gắp."
+  },
+  {
+    "id": 96,
+    "type": "paragraph",
+    "text": "Hùng hích vai, Nam đấm nhẹ vai trái Hùng: tránh vai phải đang bị thương."
+  },
+  {
+    "id": 97,
+    "type": "paragraph",
+    "text": "Hùng giật mình khi nghe tiếng động: hoạt ảnh ngắn, dùng lại được cho các tiếng động bất ngờ về đêm."
+  },
+  {
+    "id": 98,
+    "type": "paragraph",
+    "text": "Không cần biểu cảm khuôn mặt chi tiết: nụ cười của Hùng thể hiện qua tiếng cười ghi âm và cái hích vai."
+  },
+  {
+    "id": 99,
+    "type": "paragraph",
+    "text": "Ánh sáng: đèn dầu chỉ chiếu phần mâm, ngoài hiên là ánh trăng lạnh. Đường ra chốt đọc được nhờ đèn che."
+  },
+  {
+    "id": 100,
+    "type": "paragraph",
+    "text": "Âm thanh"
+  },
+  {
+    "id": 101,
+    "type": "paragraph",
+    "text": "Dế, ếch, tiếng củi nổ lách tách trong bếp. Ghi riêng tiếng cười của Hùng và câu \"Đợi tới lúc đó, cậu ra nhà tôi\" làm tệp riêng để dùng lại trong đoạn hồi tưởng ở Nhịp 5 và 6. Nhạc nền: một đàn solo rất nhẹ, chỉ có trong cảnh này. Đây là đoạn nhạc chủ đề của Hùng."
+  },
+  {
+    "id": 102,
+    "type": "paragraph",
+    "text": "Ngày 2 – Người chưa trở về (20–25 phút)"
+  },
+  {
+    "id": 103,
+    "type": "paragraph",
+    "text": "Cốt truyện"
+  },
+  {
+    "id": 104,
+    "type": "paragraph",
+    "text": "Trinh sát Tâm quá hẹn một đêm chưa về. Anh Thành giao Nam ra khu cầu tìm. Hùng muốn đi cùng, Nam gạt đi \"Tay vậy đi làm gì. Vướng.\", và Hùng tự ái. Anh Thành giao Hùng ở lại sửa trạm liên lạc. Nam đưa Tâm bị thương chân về, và Tâm báo địch đang rà các bến dọc sông. Buổi chiều, Nam leo cây dựng ăng-ten (việc Hùng không tự làm được vì tay đau). Hùng bắt được liên lạc với đơn vị bạn có pháo ở ngoài map. Người chơi hiểu pháo đến từ đâu và cần bao lâu mới bắn được."
+  },
+  {
+    "id": 105,
+    "type": "paragraph",
+    "text": "Nhiệm vụ"
+  },
+  {
+    "id": 106,
+    "type": "table",
+    "text": "ID | Mục tiêu hiển thị | Điều kiện hoàn thành\nM2_D2_01 | Nhận lệnh tìm trinh sát | Nói chuyện với anh Thành\nM2_D2_02 | Đến khu cầu | Chọn đường ruộng (trống, nhanh) hoặc đường tre (kín, chậm) để đến điểm cuối cùng Tâm báo về\nM2_D2_03 | Tìm Tâm | Theo vết máu và dấu chân tới gầm cầu. Né hoặc xử lý tổ tuần tra 3 lính, không bắt buộc tiêu diệt\nM2_D2_04 | Đưa Tâm về làng | Dìu Tâm (tốc độ chậm, chỉ dùng súng ngắn) về đến chốt đầu làng\nM2_D2_05 | Mang dây ăng-ten cho Hùng | Lấy cuộn dây trong kho kín đã cất ở Ngày 1\nM2_D2_06 | Dựng ăng-ten | Leo cây dừa cạnh trạm; Hùng hướng dẫn từ dưới. Cột đúng hướng khi tín hiệu âm thanh rõ nhất\nM2_D2_07 | Báo cáo anh Thành | Chạy cảnh gọi máy, chuyển sang Đêm 2"
+  },
+  {
+    "id": 107,
+    "type": "paragraph",
+    "text": "Thoại"
+  },
+  {
+    "id": 108,
+    "type": "paragraph",
+    "text": "Sáng, trước trạm liên lạc."
+  },
+  {
+    "id": 109,
+    "type": "paragraph",
+    "text": "Anh Thành: \"Tâm quá hẹn một đêm rồi. Nam đi khu cầu.\""
+  },
+  {
+    "id": 110,
+    "type": "paragraph",
+    "text": "Hùng: \"Em đi với.\""
+  },
+  {
+    "id": 111,
+    "type": "paragraph",
+    "text": "Nam: (không nhìn Hùng, đang kiểm tra súng) \"Tay vậy đi làm gì. Vướng.\""
+  },
+  {
+    "id": 112,
+    "type": "paragraph",
+    "text": "Hùng khựng lại. Bé Tí đang ngồi xổm cạnh máy cũng ngẩng lên."
+  },
+  {
+    "id": 113,
+    "type": "paragraph",
+    "text": "Hùng: (nhỏ) \"...Ừ. Vướng.\""
+  },
+  {
+    "id": 114,
+    "type": "paragraph",
+    "text": "Anh Thành: \"Hùng ở lại sửa máy. Máy này không ai rành bằng cậu.\""
+  },
+  {
+    "id": 115,
+    "type": "paragraph",
+    "text": "Hùng quay vào trạm, không nhìn Nam. Nam đứng thêm một nhịp như muốn nói gì đó, rồi đi."
+  },
+  {
+    "id": 116,
+    "type": "paragraph",
+    "text": "Gầm cầu. Tâm nằm sau trụ, ôm chân."
+  },
+  {
+    "id": 117,
+    "type": "paragraph",
+    "text": "Tâm: \"Trời... tưởng bị bỏ rồi chớ.\""
+  },
+  {
+    "id": 118,
+    "type": "paragraph",
+    "text": "Nam: \"Ai bỏ. Đứng dậy nổi không?\""
+  },
+  {
+    "id": 119,
+    "type": "paragraph",
+    "text": "Tâm: \"Nổi. Anh đừng thả tay ra là nổi.\""
+  },
+  {
+    "id": 120,
+    "type": "paragraph",
+    "text": "Về tới làng."
+  },
+  {
+    "id": 121,
+    "type": "paragraph",
+    "text": "Tâm: \"Chúng nó rà từng bến, từ trên xuống. Chậm lắm hai ba bữa là tới đây.\""
+  },
+  {
+    "id": 122,
+    "type": "paragraph",
+    "text": "Anh Thành: (im một lúc) \"Hùng. Máy bắt được chưa?\""
+  },
+  {
+    "id": 123,
+    "type": "paragraph",
+    "text": "Chiều, Nam trên cây dừa, Hùng đeo tai nghe ở dưới."
+  },
+  {
+    "id": 124,
+    "type": "paragraph",
+    "text": "Hùng: \"Xoay qua trái chút... chút nữa... đó! Giữ đó!\""
+  },
+  {
+    "id": 125,
+    "type": "paragraph",
+    "text": "Hùng: (vào máy) \"Bông Súng gọi Rạch Tre. Bông Súng gọi Rạch Tre. Nghe rõ trả lời.\""
+  },
+  {
+    "id": 126,
+    "type": "paragraph",
+    "text": "Giọng trong máy: (rè rè) \"Rạch Tre nghe. Nói đi.\""
+  },
+  {
+    "id": 127,
+    "type": "paragraph",
+    "text": "Hùng giơ ngón cái tay trái lên với Nam, cười. Rồi như nhớ ra chuyện hồi sáng, Hùng hạ tay xuống, quay lại với chiếc máy."
+  },
+  {
+    "id": 128,
+    "type": "paragraph",
+    "text": "Anh Thành: (cầm ống nghe, nói với cả nhóm sau khi gác máy) \"Bên kia có pháo. Nhưng gọi tới lúc bắn được là mất mấy phút. Cần tọa độ, cần biết dân đã ra khỏi chỗ chưa.\""
+  },
+  {
+    "id": 129,
+    "type": "paragraph",
+    "text": "Nam: \"Rõ.\""
+  },
+  {
+    "id": 130,
+    "type": "paragraph",
+    "text": "Hoạt ảnh và dàn cảnh"
+  },
+  {
+    "id": 131,
+    "type": "paragraph",
+    "text": "Dìu người bị thương: Tâm quàng tay qua vai Nam, Nam chỉ bắn được súng ngắn một tay."
+  },
+  {
+    "id": 132,
+    "type": "paragraph",
+    "text": "Leo cây dừa: leo theo điểm bám, xoay cột ăng-ten theo phản hồi âm thanh (tiếng rè nhỏ dần). Hùng đứng dưới chỉ tay trái."
+  },
+  {
+    "id": 133,
+    "type": "paragraph",
+    "text": "Hùng giơ ngón cái tay trái: cử chỉ ngắn, có thể dùng lại ở Nhịp 4."
+  },
+  {
+    "id": 134,
+    "type": "paragraph",
+    "text": "Bé Tí ngồi xổm cạnh Hùng xem máy suốt buổi chiều (hoạt ảnh ngồi chờ lặp lại)."
+  },
+  {
+    "id": 135,
+    "type": "paragraph",
+    "text": "Ánh sáng: sáng sương mù ở khu cầu, chiều nắng xiên trên trạm."
+  },
+  {
+    "id": 136,
+    "type": "paragraph",
+    "text": "Âm thanh"
+  },
+  {
+    "id": 137,
+    "type": "paragraph",
+    "text": "Khu cầu: nước vỗ trụ, tiếng giao tiếp của tổ tuần tra địch (không phụ đề). Tiếng rè của máy đàm là ký hiệu âm thanh gắn với Hùng và pháo, được dùng lại ở Nhịp 4 – 6."
+  },
+  {
+    "id": 138,
+    "type": "paragraph",
+    "text": "Đêm 2 – Giữ một khoảng yên (10–12 phút)"
+  },
+  {
+    "id": 139,
+    "type": "paragraph",
+    "text": "Cốt truyện"
+  },
+  {
+    "id": 140,
+    "type": "paragraph",
+    "text": "Nam đi kiểm tra cầu, kho và đường ra bến. Hùng ngồi trực máy ở chốt gần đó, làm \"mắt\" cho Nam qua bộ đàm cầm tay. Nam phát hiện đèn pin của tổ tuần tra địch ngoài đồng. Hùng dẫn Nam né, không để lộ làng. Nam về đúng điểm hẹn. Hai người làm lành sau câu nói hồi sáng. Trước khi ngủ, Hùng hỏi vì sao bữa đó Nam quay lại cứu mình. Đêm này Hùng ngủ được lần đầu."
+  },
+  {
+    "id": 141,
+    "type": "paragraph",
+    "text": "Nhiệm vụ"
+  },
+  {
+    "id": 142,
+    "type": "table",
+    "text": "ID | Mục tiêu hiển thị | Điều kiện hoàn thành\nM2_N2_01 | Kiểm tra cầu | Đến điểm quan sát, dùng ống nhòm phát hiện đèn pin\nM2_N2_02 | Báo dấu hiệu tuần tra | Báo qua đàm. Hùng hướng dẫn né khi đèn quét qua\nM2_N2_03 | Kiểm tra kho | Đến kho, xác nhận cửa hầm còn kín\nM2_N2_04 | Kiểm tra đường bến | Đi hết đường sơ tán tới bậc bến đã sửa\nM2_N2_05 | Về điểm hẹn | Trở về chốt của Hùng (không tính giờ)"
+  },
+  {
+    "id": 143,
+    "type": "paragraph",
+    "text": "Nếu bị đèn quét trúng, tổ tuần tra chỉ dừng lại soi thêm. Bị phát hiện lần thứ hai thì quay lại checkpoint đầu cầu. Không có giao tranh bắt buộc."
+  },
+  {
+    "id": 144,
+    "type": "paragraph",
+    "text": "Thoại"
+  },
+  {
+    "id": 145,
+    "type": "paragraph",
+    "text": "Qua bộ đàm, giọng Hùng nhỏ và bình tĩnh."
+  },
+  {
+    "id": 146,
+    "type": "paragraph",
+    "text": "Nam: \"Đèn pin. Hai, ba cái. Bên kia đồng.\""
+  },
+  {
+    "id": 147,
+    "type": "paragraph",
+    "text": "Hùng: \"Thấy rồi. Nó đang quay về phía cậu. Nằm xuống.\""
+  },
+  {
+    "id": 148,
+    "type": "paragraph",
+    "text": "Đèn quét qua đầu Nam."
+  },
+  {
+    "id": 149,
+    "type": "paragraph",
+    "text": "Hùng: \"...Qua rồi. Đi đi. Theo bờ mương, đừng lên bờ ruộng.\""
+  },
+  {
+    "id": 150,
+    "type": "paragraph",
+    "text": "Nam: \"Sao cậu biết?\""
+  },
+  {
+    "id": 151,
+    "type": "paragraph",
+    "text": "Hùng: \"Đêm qua cậu ngủ, tôi thức đếm. Nó quét mỗi lần mười lăm nhịp.\""
+  },
+  {
+    "id": 152,
+    "type": "paragraph",
+    "text": "Rất xa ngoài đồng, một tiếng xích sắt nghiến ken két, kéo dài vài giây rồi tắt."
+  },
+  {
+    "id": 153,
+    "type": "paragraph",
+    "text": "Hùng: (qua đàm, nhỏ) \"Tiếng gì thế?\""
+  },
+  {
+    "id": 154,
+    "type": "paragraph",
+    "text": "Nam không trả lời. Cả hai cùng nghe. Chỉ còn tiếng dế."
+  },
+  {
+    "id": 155,
+    "type": "paragraph",
+    "text": "Về điểm hẹn. Hùng đứng dậy khi thấy bóng Nam."
+  },
+  {
+    "id": 156,
+    "type": "paragraph",
+    "text": "Nam: \"Hồi sáng… tôi nói bậy.\""
+  },
+  {
+    "id": 157,
+    "type": "paragraph",
+    "text": "Hùng: (không nhìn Nam) \"Ừ. Bậy thật.\" (một nhịp) \"Mà tối nay không có cái thằng vướng này, cậu nằm ngoài ruộng rồi đấy.\""
+  },
+  {
+    "id": 158,
+    "type": "paragraph",
+    "text": "Nam bật cười khẽ. Hùng cũng cười."
+  },
+  {
+    "id": 159,
+    "type": "paragraph",
+    "text": "Hùng: \"Thôi, về. Tưởng cậu bỏ tôi đi ăn canh một mình.\""
+  },
+  {
+    "id": 160,
+    "type": "paragraph",
+    "text": "Nam: \"Nhà u cậu ở đâu tôi còn chưa biết.\""
+  },
+  {
+    "id": 161,
+    "type": "paragraph",
+    "text": "Hùng: (cười khẽ) \"Thì để tôi dẫn đi.\""
+  },
+  {
+    "id": 162,
+    "type": "paragraph",
+    "text": "Đổi ca. Nam ngồi trực ở ngưỡng cửa, quay lưng vào trong. Hùng nằm, mắt vẫn mở."
+  },
+  {
+    "id": 163,
+    "type": "paragraph",
+    "text": "Hùng: \"Nam.\""
+  },
+  {
+    "id": 164,
+    "type": "paragraph",
+    "text": "Nam: \"Ừ.\""
+  },
+  {
+    "id": 165,
+    "type": "paragraph",
+    "text": "Hùng: \"Hôm đó… sao cậu quay lại? Bọn nó đông thế.\""
+  },
+  {
+    "id": 166,
+    "type": "paragraph",
+    "text": "Nam: (không quay đầu) \"Là cậu thì cậu cũng quay lại thôi.\""
+  },
+  {
+    "id": 167,
+    "type": "paragraph",
+    "text": "Hùng không đáp. Một lúc sau, hơi thở Hùng đều lại. Nam quay đầu nhìn: Hùng đã ngủ. Nam cởi áo khoác đắp lên người Hùng rồi quay lại nhìn ra ngoài."
+  },
+  {
+    "id": 168,
+    "type": "paragraph",
+    "text": "Hoạt ảnh và dàn cảnh"
+  },
+  {
+    "id": 169,
+    "type": "paragraph",
+    "text": "Nam nằm sát khi đèn quét qua: dùng tư thế nằm sẵn có, thêm vệt sáng đèn pin lướt trên đầu."
+  },
+  {
+    "id": 170,
+    "type": "paragraph",
+    "text": "Hùng ngủ: khác với Đêm 1 (mắt mở, nằm ngửa cứng). Lần này Hùng nằm nghiêng, tay trái ôm tay phải."
+  },
+  {
+    "id": 171,
+    "type": "paragraph",
+    "text": "Nam cởi áo đắp cho Hùng: cảnh dựng ngắn, không thoại."
+  },
+  {
+    "id": 172,
+    "type": "paragraph",
+    "text": "Ánh sáng: trăng khuyết, sương mỏng trên đồng. Đèn pin địch có màu trắng lạnh, khác hẳn ánh đèn dầu vàng của làng."
+  },
+  {
+    "id": 173,
+    "type": "paragraph",
+    "text": "Âm thanh"
+  },
+  {
+    "id": 174,
+    "type": "paragraph",
+    "text": "Tiếng rè bộ đàm trước mỗi câu của Hùng. Tiếng xích sắt xe tăng rất xa: ghi thành tệp riêng, dùng lại mỗi lần xe tăng xuất hiện ở Đêm 3. Khi Hùng ngủ, để lại đoạn chủ đề của Hùng (Đêm 1) nhưng chỉ vài nốt, bỏ lửng."
+  },
+  {
+    "id": 175,
+    "type": "paragraph",
+    "text": "Ngày 3 – Lo cho người ở lại (12–15 phút)"
+  },
+  {
+    "id": 176,
+    "type": "paragraph",
+    "text": "Cốt truyện"
+  },
+  {
+    "id": 177,
+    "type": "paragraph",
+    "text": "Làng chuẩn bị nhưng chưa biết địch đến lúc nào. Nam chuyển thuốc, đạn, một thùng lựu đạn và khối bộc phá cuối cùng của du kích tới chỗ trú cạnh bến nam, cùng chú Bảy kiểm tra thuyền. Hùng tự nhớ nhà nào cần người cõng xuống bến. Buổi chiều, Hùng ngồi nhặt rau bằng tay trái, kể cho chị Lành nghe u mình ngoài Bắc nấu canh cua ra sao. Anh Thành báo đường có thể thông vào sáng mai, và giao Nam giữ ngõ đình, chốt xa bến nhất, nếu có chuyện. Lần đầu tiên Hùng lo cho Nam ra mặt."
+  },
+  {
+    "id": 178,
+    "type": "paragraph",
+    "text": "Nhiệm vụ"
+  },
+  {
+    "id": 179,
+    "type": "table",
+    "text": "ID | Mục tiêu hiển thị | Điều kiện hoàn thành\nM2_D3_01 | Chuyển thuốc và đạn tới chỗ trú | 2 chuyến từ kho kín đến hầm trú bến nam\nM2_D3_02 | Cất thùng lựu đạn và khối bộc phá | Đặt thùng vào hốc sau bờ đất cạnh bến (đây là vị trí của Nhịp 5)\nM2_D3_03 | Kiểm tra thuyền | Cùng chú Bảy trét chỗ rò trên 2 chiếc thuyền\nM2_D3_04 | Phân công giúp các gia đình | Nói chuyện với 3 nhà. Hùng gợi ý ai cần giúp gì\nM2_D3_05 | Bữa chiều | Ngồi cạnh Hùng và chị Lành, chạy cảnh \"Bữa chiều\"\nM2_D3_06 | Báo cáo anh Thành | Chuyển sang Đêm 3"
+  },
+  {
+    "id": 180,
+    "type": "paragraph",
+    "text": "M2_D3_05 là nhiệm vụ bắt buộc, nhưng chỉ mở sau khi xong M2_D3_01 đến M2_D3_04. Đặt nó ở cuối ngày để là khoảnh khắc yên cuối cùng trước trận."
+  },
+  {
+    "id": 181,
+    "type": "paragraph",
+    "text": "Thoại"
+  },
+  {
+    "id": 182,
+    "type": "paragraph",
+    "text": "Phân công. Nam định đi qua nhà ông Sáu."
+  },
+  {
+    "id": 183,
+    "type": "paragraph",
+    "text": "Hùng: \"Nhà ông Sáu phải có người cõng. Ông không chịu đâu, nhưng cứ cõng.\""
+  },
+  {
+    "id": 184,
+    "type": "paragraph",
+    "text": "Ông Sáu: \"Tui còn đi được!\" (ho) \"...Đỡ ho hơn rồi, nhờ thuốc bữa trước.\""
+  },
+  {
+    "id": 185,
+    "type": "paragraph",
+    "text": "Hùng: \"Vâng. Thế ông đi, cháu đỡ.\""
+  },
+  {
+    "id": 186,
+    "type": "paragraph",
+    "text": "Bến nam. Chú Bảy vỗ vào mạn thuyền."
+  },
+  {
+    "id": 187,
+    "type": "paragraph",
+    "text": "Chú Bảy: \"Chiếc này chở được sáu người. Chở bảy là tui với ông Sáu cùng uống nước sông.\""
+  },
+  {
+    "id": 188,
+    "type": "paragraph",
+    "text": "Hố bờ đất cạnh bến. Anh Lực đặt thêm một gói vải buộc dây cạnh thùng lựu đạn."
+  },
+  {
+    "id": 189,
+    "type": "paragraph",
+    "text": "Anh Lực: \"Khối bộc phá cuối cùng của du kích. Để dành cho thứ gì to.\""
+  },
+  {
+    "id": 190,
+    "type": "paragraph",
+    "text": "Hùng: (nhìn gói vải) \"To cỡ nào hả anh?\""
+  },
+  {
+    "id": 191,
+    "type": "paragraph",
+    "text": "Anh Lực: \"Cỡ nào mà súng không làm gì được.\""
+  },
+  {
+    "id": 192,
+    "type": "paragraph",
+    "text": "Cảnh \"Bữa chiều\" (cutscene, khoảng 45 giây). Hiên nhà chị Lành, chiều vàng. Hùng ngồi nhặt rau bằng tay trái, tay phải đặt yên trên đùi. Nam ngồi chẻ củi gần đó."
+  },
+  {
+    "id": 193,
+    "type": "paragraph",
+    "text": "Hùng: \"Chị Lành chỉ em cách nấu đi. Về em nấu cho u ăn thử.\""
+  },
+  {
+    "id": 194,
+    "type": "paragraph",
+    "text": "Chị Lành: (đếm trên ngón tay) \"Cá lóc, me, bạc hà, giá, thơm. Nêm ngọt trước rồi mới chua. Đợi sôi hẳn mới thả cá.\""
+  },
+  {
+    "id": 195,
+    "type": "paragraph",
+    "text": "Hùng: \"U em thì chẳng nấu chua thế này bao giờ. Canh cua thôi, vắt tí chanh.\""
+  },
+  {
+    "id": 196,
+    "type": "paragraph",
+    "text": "Chị Lành: \"Vậy về nấu cho u nếm đi, coi u chê không.\""
+  },
+  {
+    "id": 197,
+    "type": "paragraph",
+    "text": "Hùng cười, ném một cọng rau về phía Nam."
+  },
+  {
+    "id": 198,
+    "type": "paragraph",
+    "text": "Hùng: \"Nghe chưa. Hôm ấy cậu phải khen canh cua của u ngon hơn đấy.\""
+  },
+  {
+    "id": 199,
+    "type": "paragraph",
+    "text": "Anh Thành bước vào sân."
+  },
+  {
+    "id": 200,
+    "type": "paragraph",
+    "text": "Anh Thành: \"Sáng mai đường có thể thông. Tối nay ngủ sớm. Nam, ca đầu.\""
+  },
+  {
+    "id": 201,
+    "type": "paragraph",
+    "text": "Anh Thành: \"Nếu có chuyện, Nam giữ ngõ đình. Ngõ đó xa bến nhất.\""
+  },
+  {
+    "id": 202,
+    "type": "paragraph",
+    "text": "Hùng ngẩng lên khỏi rổ rau."
+  },
+  {
+    "id": 203,
+    "type": "paragraph",
+    "text": "Hùng: \"Ngõ đình thì một mình cậu à?\""
+  },
+  {
+    "id": 204,
+    "type": "paragraph",
+    "text": "Nam: \"Có anh Lực.\""
+  },
+  {
+    "id": 205,
+    "type": "paragraph",
+    "text": "Hùng: (nhìn Nam một lúc lâu) \"...Có chuyện thì nhớ về đúng điểm hẹn đấy.\""
+  },
+  {
+    "id": 206,
+    "type": "paragraph",
+    "text": "Hoạt ảnh và dàn cảnh"
+  },
+  {
+    "id": 207,
+    "type": "paragraph",
+    "text": "Hùng nhặt rau bằng tay trái, tay phải đặt yên trên đùi: nhắc lại tay phải chưa dùng được, chuẩn bị cho việc gài bộc phá bằng tay trái ở Nhịp 5."
+  },
+  {
+    "id": 208,
+    "type": "paragraph",
+    "text": "Hùng đỡ ông Sáu đi thử xuống bậc bến: hoạt ảnh dìu người già, dùng lại ở Nhịp 2."
+  },
+  {
+    "id": 209,
+    "type": "paragraph",
+    "text": "Ánh sáng: chiều vàng ấm nhất trong cả chương, để tương phản với Đêm 3."
+  },
+  {
+    "id": 210,
+    "type": "paragraph",
+    "text": "Âm thanh"
+  },
+  {
+    "id": 211,
+    "type": "paragraph",
+    "text": "Tiếng dao thái rau, nồi sôi, trẻ con cười. Chủ đề của Hùng trở lại đầy đủ trong cảnh \"Bữa chiều\". Đây là lần cuối đoạn nhạc này vang lên trọn vẹn."
+  },
+  {
+    "id": 212,
+    "type": "paragraph",
+    "text": "Đêm 3 – Không kịp trở tay (23–28 phút)"
+  },
+  {
+    "id": 213,
+    "type": "paragraph",
+    "text": "Cốt truyện"
+  },
+  {
+    "id": 214,
+    "type": "paragraph",
+    "text": "Địch đánh nhiều hướng cùng lúc, ngay sau khi Nam vừa giao ca: các tốp lính bộ binh, và một chiếc xe tăng (boss) theo đường đồng vào làng. Đó chính là tiếng xích sắt ở Đêm 2. Nam cứu những người đã quen, giữ ngõ đình thì bị xe tăng bắn sập tường, mảnh găm vào vai. Anh Thành gọi pháo ngay từ đầu, nhưng pháo chỉ bắn được ngoài rìa làng. Khi xe tăng đã lọt vào trong làng và chặn đường ra bến, súng trên xe chĩa vào chuyến thuyền cuối đang giữa dòng, không còn cách nào ngoài áp sát nó. Hùng lấy khối bộc phá, giao lại mọi người cho Nam. Nam bắn yểm trợ, Hùng gài bộc phá vào xích xe và trúng đạn khi lùi ra. Xe tăng nổ tung. Pháo bắn, quân ta tràn vào. Chương khép lại bằng một cảnh bình minh ngắn."
+  },
+  {
+    "id": 215,
+    "type": "paragraph",
+    "text": "Nguyên tắc: người chơi không được có cảm giác Hùng chết vì mình chơi kém. Đoạn bắn yểm trợ ở Nhịp 5 không có thất bại: bắn trúng hay trượt, kết quả như nhau, và Nam không thể chết trong đoạn này. Câu \"pháo không bắn vào đây được\" ở Nhịp 4 cho người chơi hiểu vì sao không thể chờ pháo."
+  },
+  {
+    "id": 216,
+    "type": "paragraph",
+    "text": "Địch"
+  },
+  {
+    "id": 217,
+    "type": "table",
+    "text": "Lực lượng | Xuất hiện | Vai trò\nTốp lính bộ binh (3–5 người mỗi tốp) | Nhịp 1 – 5 | Đánh vào làng nhiều hướng; người chơi giao tranh trực tiếp\nXe tăng (boss) | Đêm 2 (tiếng xích), Nhịp 3, Nhịp 5 | Súng bộ binh không hạ được; chỉ bị diệt bằng bộc phá trong cutscene\nTốp bộ binh đi kèm xe tăng | Nhịp 5 | Mục tiêu của đoạn bắn yểm trợ"
+  },
+  {
+    "id": 218,
+    "type": "paragraph",
+    "text": "Nhiệm vụ"
+  },
+  {
+    "id": 219,
+    "type": "table",
+    "text": "ID | Nhịp | Mục tiêu hiển thị | Điều kiện hoàn thành\nM2_N3_01 | 1 | Lấy trang bị | Đến kho kín, lấy súng và đạn (số đạn theo lượng đã cất, không tự nạp đầy)\nM2_N3_02 | 2 | Cứu nhà ông Sáu | Phá cửa sau, đưa ông Sáu và chị Lành ra ngõ\nM2_N3_03 | 2 | Tìm bé Tí | Tìm bé Tí trong chuồng trâu, dắt về với chị Lành\nM2_N3_04 | 2 | Yểm trợ chuyến thuyền 1 và 2 | Giữ đường sơ tán tới khi sơ tán đạt 60%\nM2_N3_05 | 3 | Giữ ngõ đình | Giữ 3 vị trí lùi dần theo mốc sơ tán (70%, 80%, 90%), không tính giờ. Ở vị trí thứ ba, xe tăng xuất hiện và có cảnh Nam bị thương cố định\nM2_N3_06 | 4 | Về bến, dọn đường | Về bến với băng vai; dọn cây đổ chắn tuyến cứu hộ, Tâm yểm trợ từ bờ tre\nM2_N3_07 | 5 | (cutscene cố định) | Chạy hết cảnh \"Thế nhá, người anh em\". Đặt checkpoint ngay sau cảnh\nM2_N3_08 | 5 | Yểm trợ Hùng | Bắn tốp bộ binh đi kèm xe tăng trong 60–90 giây. Không có thất bại: hết giờ hoặc tốp lính bị áp chế thì cảnh tự chạy tiếp\nM2_N3_09 | 5–6 | (cutscene cố định) | Hùng diệt xe tăng; pháo bắn, quân ta tràn vào; chuyển sang Bình minh"
+  },
+  {
+    "id": 220,
+    "type": "paragraph",
+    "text": "Nhịp 1 – Giấc ngủ bị cắt ngang"
+  },
+  {
+    "id": 221,
+    "type": "paragraph",
+    "text": "Nam vừa giao ca cho anh Lực, nằm xuống. Màn hình tối hẳn một giây. Một quả pháo sáng địch bừng lên, mái lá đỏ rực. Người chạy qua cửa. Hùng đã dậy, đang khoác máy đàm."
+  },
+  {
+    "id": 222,
+    "type": "paragraph",
+    "text": "Hùng: \"Nam! Dậy! Nó vào rồi!\""
+  },
+  {
+    "id": 223,
+    "type": "paragraph",
+    "text": "Anh Thành: (ngoài sân) \"Hùng, ra bến, giữ máy! Nam, lấy đồ rồi ra ngõ ông Sáu!\""
+  },
+  {
+    "id": 224,
+    "type": "paragraph",
+    "text": "Nam: \"Rõ!\""
+  },
+  {
+    "id": 225,
+    "type": "paragraph",
+    "text": "Nhịp 2 – Cứu những người đã quen"
+  },
+  {
+    "id": 226,
+    "type": "paragraph",
+    "text": "Nhà ông Sáu cháy mái sau."
+  },
+  {
+    "id": 227,
+    "type": "paragraph",
+    "text": "Chị Lành: \"Tí! Tí đâu rồi!\""
+  },
+  {
+    "id": 228,
+    "type": "paragraph",
+    "text": "Ông Sáu: \"Để tui! Tui đi được…\" (ho sặc sụa)"
+  },
+  {
+    "id": 229,
+    "type": "paragraph",
+    "text": "Tìm thấy bé Tí trong chuồng trâu."
+  },
+  {
+    "id": 230,
+    "type": "paragraph",
+    "text": "Bé Tí: (ôm cổ Nam) \"Chú Hùng đâu?\""
+  },
+  {
+    "id": 231,
+    "type": "paragraph",
+    "text": "Nam: \"Ở bến. Chú dẫn con xuống đó.\""
+  },
+  {
+    "id": 232,
+    "type": "paragraph",
+    "text": "Bến nam, qua đàm."
+  },
+  {
+    "id": 233,
+    "type": "paragraph",
+    "text": "Hùng: \"Chuyến một đi rồi. Bậc bến chắc lắm, cậu đóng cọc khéo đấy.\""
+  },
+  {
+    "id": 234,
+    "type": "paragraph",
+    "text": "Chú Bảy: \"Người già xuống trước! Ai khỏe đỡ người yếu! Đừng dành!\""
+  },
+  {
+    "id": 235,
+    "type": "paragraph",
+    "text": "Nhịp 3 – Giữ ngõ đình"
+  },
+  {
+    "id": 236,
+    "type": "paragraph",
+    "text": "Anh Lực: (qua đàm, tiếng súng dồn) \"Chốt ngoài không giữ nổi! Tôi lùi!\""
+  },
+  {
+    "id": 237,
+    "type": "paragraph",
+    "text": "Anh Thành: \"Lùi về gốc me! Nam, giữ ngõ cho dân qua!\""
+  },
+  {
+    "id": 238,
+    "type": "paragraph",
+    "text": "Người chơi chuyển vị trí theo mốc sơ tán. Giữa hai vị trí, để một đoạn ngắn Nam chạy qua nhà chị Lành: nồi canh còn trên bếp, mái đang cháy. Không dừng, không thoại."
+  },
+  {
+    "id": 239,
+    "type": "paragraph",
+    "text": "Ở vị trí thứ ba, sát ngõ đình, mặt đất rung. Tiếng xích sắt của Đêm 2 trở lại, lần này ngay sau bức tường. Một chiếc xe tăng húc đổ hàng rào tre, nòng pháo quay chậm về phía Nam."
+  },
+  {
+    "id": 240,
+    "type": "paragraph",
+    "text": "Anh Lực: \"Xe tăng! Nằm xuống!\""
+  },
+  {
+    "id": 241,
+    "type": "paragraph",
+    "text": "Phát đạn trúng bức tường Nam đang nấp. Nháy trắng, rung màn hình. Cắt sang góc nhìn của Nam đang nằm sấp giữa gạch vụn, vai trái đau buốt, màn hình nhòe đỏ, âm thanh chìm xuống. Không cần dựng cảnh tường sập."
+  },
+  {
+    "id": 242,
+    "type": "paragraph",
+    "text": "Hùng: (qua đàm, lần đầu giọng hoảng hốt) \"Nam! Nam! Trả lời tôi!\""
+  },
+  {
+    "id": 243,
+    "type": "paragraph",
+    "text": "Người chơi tự bò vào chỗ nấp (giữ phím), trong lúc tiếng Hùng gọi lặp lại qua đàm. Anh Lực kéo Nam vào sau đống gạch, băng vội."
+  },
+  {
+    "id": 244,
+    "type": "paragraph",
+    "text": "Nam: (thở dốc, vào đàm) \"...Còn sống.\""
+  },
+  {
+    "id": 245,
+    "type": "paragraph",
+    "text": "Hùng: (im một nhịp) \"Về bến. Ngay. Đừng cãi.\""
+  },
+  {
+    "id": 246,
+    "type": "paragraph",
+    "text": "Xe tăng không đuổi theo Nam. Nó rẽ vào đường làng, hướng ra phía bến."
+  },
+  {
+    "id": 247,
+    "type": "paragraph",
+    "text": "Từ đây đến hết chương, Nam mang băng vai: tâm ngắm rung, nạp đạn chậm, không chạy nước rút được. Cảnh bị thương là cố định, không phải thất bại gameplay. Mục đích: từ lúc này, người chơi lo Nam là người sẽ không qua khỏi đêm nay."
+  },
+  {
+    "id": 248,
+    "type": "paragraph",
+    "text": "Nhịp 4 – Pháo không bắn vào được"
+  },
+  {
+    "id": 249,
+    "type": "paragraph",
+    "text": "Hùng: (qua đàm) \"Rạch Tre báo: cần tọa độ cuối, dân phải ra khỏi bảy mươi thước quanh ngõ đình.\""
+  },
+  {
+    "id": 250,
+    "type": "paragraph",
+    "text": "Anh Thành: \"Nam, dọn cây đổ cho tổ cứu thương. Hùng, đọc tọa độ cho tôi.\""
+  },
+  {
+    "id": 251,
+    "type": "paragraph",
+    "text": "Sau khi dọn xong:"
+  },
+  {
+    "id": 252,
+    "type": "paragraph",
+    "text": "Giọng trong máy: (rè) \"Rạch Tre nhận tọa độ. Ba phút.\""
+  },
+  {
+    "id": 253,
+    "type": "paragraph",
+    "text": "Hùng: \"Ba phút nữa có pháo! Nhưng xe tăng vào trong làng rồi… pháo không bắn vào đây được!\""
+  },
+  {
+    "id": 254,
+    "type": "paragraph",
+    "text": "Anh Thành: (im một nhịp) \"Thì phải có người tới gần nó.\""
+  },
+  {
+    "id": 255,
+    "type": "paragraph",
+    "text": "Nhịp 5 – \"Thế nhá, người anh em\" (trận boss)"
+  },
+  {
+    "id": 256,
+    "type": "paragraph",
+    "text": "Phần 1 – cutscene cố định (khoảng 2 phút)"
+  },
+  {
+    "id": 257,
+    "type": "paragraph",
+    "text": "Chuyến thuyền cuối đã ra được giữa dòng: chị Lành, bé Tí, ông Sáu và ba người nữa. Ở đầu đường bến, chiếc xe tăng trồi ra khỏi bóng tre, tốp lính bộ binh lom khom theo sau. Súng máy trên xe quét một loạt xuống mặt nước ngay trước mũi thuyền. Chú Bảy ghìm mái chèo. Thuyền chòng chành giữa sông, không có chỗ nấp."
+  },
+  {
+    "id": 258,
+    "type": "paragraph",
+    "text": "Chú Bảy: (hét vọng vào bờ) \"Quay về không kịp! Nó bắn nữa là chìm!\""
+  },
+  {
+    "id": 259,
+    "type": "paragraph",
+    "text": "Nam đứng dậy bắn trả, đạn dội keng vào thép. Vết thương ở vai toác ra, Nam khuỵu xuống. Hùng lao tới, dùng tay trái kéo cổ áo Nam lôi vào sau bờ đất. Đây là đúng chỗ cất thùng lựu đạn và khối bộc phá ở Ngày 3."
+  },
+  {
+    "id": 260,
+    "type": "paragraph",
+    "text": "Hùng: \"Nam, xuống!\""
+  },
+  {
+    "id": 261,
+    "type": "paragraph",
+    "text": "Nam: (nghiến răng, ôm vai) \"Không sao… vết cũ thôi.\""
+  },
+  {
+    "id": 262,
+    "type": "paragraph",
+    "text": "Hùng: (nhìn chiếc xe tăng, rồi nhìn ra sông) \"Súng không làm gì được nó đâu.\""
+  },
+  {
+    "id": 263,
+    "type": "paragraph",
+    "text": "Nam: \"Ba phút nữa có pháo.\""
+  },
+  {
+    "id": 264,
+    "type": "paragraph",
+    "text": "Hùng: \"Pháo không bắn vào đây được. Mà nó chỉ cần một loạt nữa thôi.\""
+  },
+  {
+    "id": 265,
+    "type": "paragraph",
+    "text": "Hùng kéo gói vải ra khỏi hố bằng tay trái: khối bộc phá anh Lực để lại. Nam chống tay định bật dậy. Vai trái nhói, Nam khuỵu xuống nửa chừng."
+  },
+  {
+    "id": 266,
+    "type": "paragraph",
+    "text": "Nam: \"Để tôi đi!\""
+  },
+  {
+    "id": 267,
+    "type": "paragraph",
+    "text": "Hùng ấn vai lành của Nam xuống bờ đất."
+  },
+  {
+    "id": 268,
+    "type": "paragraph",
+    "text": "Hùng: \"Cậu có thuộc đường bờ mương đâu. Tôi thức đếm hai đêm rồi, tôi thuộc.\" (một nhịp) \"Cậu đi thì ai lo cho mọi người?\""
+  },
+  {
+    "id": 269,
+    "type": "paragraph",
+    "text": "Hùng tháo máy đàm đặt vào lòng Nam."
+  },
+  {
+    "id": 270,
+    "type": "paragraph",
+    "text": "Hùng: (nghiến răng, nhìn thẳng vào Nam) \"Này Nam... việc bảo vệ mọi người, từ giờ phải nhờ cả vào cậu rồi. Mình đi diệt nó đây!\""
+  },
+  {
+    "id": 271,
+    "type": "paragraph",
+    "text": "Nam: (bàng hoàng, cố gượng dậy, vươn tay hoảng hốt nắm lấy áo Hùng) \"Đừng, Hùng! Cậu điên à? Người nhà... u cậu còn đang đợi cậu cơ mà!\""
+  },
+  {
+    "id": 272,
+    "type": "paragraph",
+    "text": "Hùng gỡ tay Nam ra, quay lại nhìn bạn mình. Camera đặt sau lưng Nam: Hùng ngược sáng ánh lửa, chỉ thấy bóng đầu hơi nghiêng. Cảm xúc nằm hết trong giọng nói."
+  },
+  {
+    "id": 273,
+    "type": "paragraph",
+    "text": "Hùng: \"Giờ mà không đi... là không ai còn cơ hội về nhà nữa đâu.\" (một nhịp) \"Thế nhá, người anh em.\""
+  },
+  {
+    "id": 274,
+    "type": "paragraph",
+    "text": "Phần 2 – người chơi điều khiển: yểm trợ Hùng (60–90 giây)"
+  },
+  {
+    "id": 275,
+    "type": "paragraph",
+    "text": "Hùng ôm khối bộc phá lăn xuống bờ mương (đúng đường mà Đêm 2 Hùng dặn Nam đi). Nam nghiến răng, tì súng lên bờ đất bằng cánh tay lành. Hiện mục tiêu \"Yểm trợ Hùng\"."
+  },
+  {
+    "id": 276,
+    "type": "paragraph",
+    "text": "Nam: (hét theo Hùng) \"Đi đi! Tôi che cho!\""
+  },
+  {
+    "id": 277,
+    "type": "paragraph",
+    "text": "Người chơi bắn tốp bộ binh đi kèm xe tăng để chúng cúi đầu, không nhìn xuống bờ mương. Camera thỉnh thoảng lia theo bóng Hùng đang bò. Xe tăng không bị đạn của Nam làm gì. Không có thất bại: hết 60–90 giây hoặc khi tốp lính bị áp chế, cảnh tự chạy tiếp."
+  },
+  {
+    "id": 278,
+    "type": "paragraph",
+    "text": "Phần 3 – cutscene cố định"
+  },
+  {
+    "id": 279,
+    "type": "paragraph",
+    "text": "Camera từ sau vai Nam, đặt xa, nhìn qua khói và ánh lửa. Bóng Hùng bật dậy từ bờ mương, hét lớn, lao tới chân xe tăng, cúi xuống chỗ bánh xích. Bóng ấy quay lại, chạy được vài bước. Một tia lửa súng lóe lên từ phía sau xe. Bóng Hùng ngã xuống, cách xe vài mét. Một giây. Nháy trắng toàn màn hình, rung mạnh, âm thanh tắt. Khi hình trở lại, chiếc xe tăng đã bốc cháy và đứng im, Nam nằm ngửa sau bờ đất."
+  },
+  {
+    "id": 280,
+    "type": "paragraph",
+    "text": "Tai Nam ù đi, mọi âm thanh nghẹn lại. Quay chậm: chiếc thuyền từ từ trôi xa về phía bờ bên kia, bé Tí ngoái nhìn lại. Nam chống tay gượng dậy, vươn tay về phía chiếc xe tăng giờ chỉ còn một cuộn khói đen mù mịt. Trong tiếng ù, lời hứa về bữa cơm quê nhà vang lên văng vẳng (âm thanh hồi tưởng từ Đêm 1): \"Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay…\" Nam gục đầu, cắn chặt môi. Khi ngẩng lên, ánh mắt chuyển từ đau thương sang một sự quyết tâm tột độ."
+  },
+  {
+    "id": 281,
+    "type": "paragraph",
+    "text": "Nhịp 6 – Quân ta tràn vào (cutscene, khoảng 40 giây)"
+  },
+  {
+    "id": 282,
+    "type": "paragraph",
+    "text": "Giọng trong máy: (rè, từ chiếc máy đàm Hùng để lại trong lòng Nam) \"Rạch Tre. Bắn.\""
+  },
+  {
+    "id": 283,
+    "type": "paragraph",
+    "text": "Tiếng rít trên đầu. Pháo nổ ngoài rìa làng, cắt đường tiếp viện của địch. Từ phía đồng, bóng bộ đội và du kích ngược ánh pháo tràn vào ngõ. Anh Thành chạy qua, hô \"Phản công!\". Nam không đứng dậy. Nam ngồi tựa bờ đất, ôm chiếc máy đàm, nhìn về phía chiếc xe tăng đang cháy. Tiếng súng xa dần. Màn hình tối."
+  },
+  {
+    "id": 284,
+    "type": "paragraph",
+    "text": "Hoạt ảnh và dàn cảnh"
+  },
+  {
+    "id": 285,
+    "type": "paragraph",
+    "text": "Nhịp 1: Nam bật dậy, chộp súng. Ánh pháo sáng chiếu qua khe vách, che bớt chi tiết."
+  },
+  {
+    "id": 286,
+    "type": "paragraph",
+    "text": "Nhịp 2: phá cửa sau (dùng lại hoạt ảnh đạp cửa nếu đã có); dìu người già (dùng lại từ Ngày 3)."
+  },
+  {
+    "id": 287,
+    "type": "paragraph",
+    "text": "Nhịp 3: xe tăng chỉ cần đọc được dưới dạng bóng tối, đèn pha và tia lửa nòng súng. Không dựng tường sập: nháy trắng, rung màn hình, cắt sang góc nhìn Nam nằm sấp. Bò vào chỗ nấp bằng giữ phím."
+  },
+  {
+    "id": 288,
+    "type": "paragraph",
+    "text": "Nhịp 5, cần làm mới (tất cả quay từ xa hoặc từ sau vai Nam):"
+  },
+  {
+    "id": 289,
+    "type": "paragraph",
+    "text": "Xe tăng chạy theo đường định sẵn. Súng máy trên xe chỉ cần tia lửa và vệt đạn trên mặt nước. Trạng thái bị phá hủy: đổi vật liệu sẫm màu, thêm lửa và khói."
+  },
+  {
+    "id": 290,
+    "type": "paragraph",
+    "text": "Nam đứng bắn rồi khuỵu; tì súng lên bờ đất."
+  },
+  {
+    "id": 291,
+    "type": "paragraph",
+    "text": "Hùng kéo Nam vào chỗ nấp: có thể cắt cảnh (Nam ngã ra khỏi khung, khung sau đã nằm sau bờ đất) thay cho hoạt ảnh kéo liền."
+  },
+  {
+    "id": 292,
+    "type": "paragraph",
+    "text": "Hùng gài bộc phá: chỉ cần bóng lao tới, cúi xuống, quay lại, ngã. Khói và ánh lửa che chuyển động. Không ragdoll."
+  },
+  {
+    "id": 293,
+    "type": "paragraph",
+    "text": "Vụ nổ: nháy trắng toàn màn hình, rung, âm thanh tắt. Không cần mô phỏng mảnh vỡ."
+  },
+  {
+    "id": 294,
+    "type": "paragraph",
+    "text": "Nam vươn tay về phía khói: quay chậm, ngược sáng."
+  },
+  {
+    "id": 295,
+    "type": "paragraph",
+    "text": "Không dùng cận cảnh khuôn mặt Hùng. Đoạn chia tay quay từ sau lưng Nam, Hùng ngược sáng."
+  },
+  {
+    "id": 296,
+    "type": "paragraph",
+    "text": "Nhịp 6: bóng người ngược sáng ánh pháo (dùng lại model du kích, không cần model bộ đội mới); Nam ngồi tựa bờ đất ôm máy đàm, quay xa."
+  },
+  {
+    "id": 297,
+    "type": "paragraph",
+    "text": "Ánh sáng: pháo sáng địch màu trắng, lửa cháy màu cam. Từ Nhịp 5, xe tăng đang cháy là nguồn sáng chính. Sau tiếng nổ, bảng màu nhạt đi trong 10 giây."
+  },
+  {
+    "id": 298,
+    "type": "paragraph",
+    "text": "Âm thanh"
+  },
+  {
+    "id": 299,
+    "type": "paragraph",
+    "text": "Nhạc chiến đấu từ Nhịp 1 đến Nhịp 4. Tiếng xích sắt xe tăng (tệp từ Đêm 2) báo trước mỗi lần xe tăng xuất hiện. Nhịp 5 cắt nhạc ngay khi súng máy trên xe mở lửa vào thuyền; đoạn bắn yểm trợ chỉ có tiếng súng, tiếng xích và tim đập. Sau tiếng nổ: ù tai, giọng Hùng Đêm 1 (tệp đã ghi riêng). Nhịp 6: không nhạc, chỉ tiếng rè máy đàm, tiếng pháo xa và tiếng hô."
+  },
+  {
+    "id": 300,
+    "type": "paragraph",
+    "text": "Bình minh – Chỗ trực còn trống (khoảng 2 phút)"
+  },
+  {
+    "id": 301,
+    "type": "paragraph",
+    "text": "Cốt truyện"
+  },
+  {
+    "id": 302,
+    "type": "paragraph",
+    "text": "Một cảnh duy nhất, không có nhiệm vụ. Ta giữ được làng, dân đã về lại từ bờ bên kia. Nam ngồi bên Hùng ở bờ đất cạnh bến, phía sau là xác chiếc xe tăng đã nguội. Chị Lành đặt một chén canh bên cạnh Hùng. Nam hỏi quê Hùng. Cuối cảnh, anh Lực lặng lẽ ngồi xuống trực cùng Nam, và Nam không đuổi đi: lần đầu Nam không gánh một mình, đúng lời Hùng dặn \"đừng thức một mình\". Khép chương và khép game."
+  },
+  {
+    "id": 303,
+    "type": "paragraph",
+    "text": "Thoại"
+  },
+  {
+    "id": 304,
+    "type": "paragraph",
+    "text": "Bờ đất cạnh bến, sương sớm. Xác xe tăng còn bốc khói mỏng phía sau. Nam ngồi cạnh Hùng, vai băng. Camera đặt xa, ngang tầm bờ đất, không cận mặt ai trong cả cảnh. Ai đó đã đắp một tấm khăn lên mặt Hùng. Anh Thành đến, ngồi xuống bên cạnh."
+  },
+  {
+    "id": 305,
+    "type": "paragraph",
+    "text": "Nam: \"Dân dưới bến an toàn rồi.\""
+  },
+  {
+    "id": 306,
+    "type": "paragraph",
+    "text": "Anh Thành: \"Tôi biết.\""
+  },
+  {
+    "id": 307,
+    "type": "paragraph",
+    "text": "Một lúc lâu không ai nói gì. Chị Lành đến, bưng một chén canh. Đứng lặng một lúc rồi đặt chén xuống bên cạnh Hùng. Chị đi."
+  },
+  {
+    "id": 308,
+    "type": "paragraph",
+    "text": "Nam: \"Anh Thành. Quê Hùng ở đâu?\""
+  },
+  {
+    "id": 309,
+    "type": "paragraph",
+    "text": "Anh Thành: \"Để tôi tìm.\" (một nhịp) \"Chi vậy?\""
+  },
+  {
+    "id": 310,
+    "type": "paragraph",
+    "text": "Nam: (nhìn xuống Hùng) \"Tôi hứa với nó rồi.\""
+  },
+  {
+    "id": 311,
+    "type": "paragraph",
+    "text": "Anh Thành đặt tay lên vai lành của Nam một giây rồi đứng dậy đi. Nam ngồi một mình, lưng thẳng, mắt nhìn ra sông như đang trực."
+  },
+  {
+    "id": 312,
+    "type": "paragraph",
+    "text": "Một lúc sau, anh Lực đến. Không nói gì, anh ngồi xuống bên kia Nam, gác súng lên đùi, cùng nhìn ra sông. Nam liếc sang. Không đuổi đi. Nam đặt khẩu súng xuống cạnh người, lần đầu tiên kể từ đêm qua."
+  },
+  {
+    "id": 313,
+    "type": "paragraph",
+    "text": "Giữ hình: hai người ngồi trực, một chỗ bên cạnh để trống. Mặt trời lên trên sông. Tiếng cười của Hùng ở Đêm 1 vang lên thật nhỏ, rồi tắt. Màn hình tối dần."
+  },
+  {
+    "id": 314,
+    "type": "paragraph",
+    "text": "Hoạt ảnh và dàn cảnh"
+  },
+  {
+    "id": 315,
+    "type": "paragraph",
+    "text": "Nam ngồi với băng vai; không cần đoạn đi bộ."
+  },
+  {
+    "id": 316,
+    "type": "paragraph",
+    "text": "Đạo cụ: chén canh; xác xe tăng (dùng trạng thái bị phá hủy từ Nhịp 5, thêm khói mỏng)."
+  },
+  {
+    "id": 317,
+    "type": "paragraph",
+    "text": "NPC nền: người dân thu dọn ở xa, không ai reo mừng. Bé Tí đứng xa, nắm tay chị Lành, nhìn về phía Nam."
+  },
+  {
+    "id": 318,
+    "type": "paragraph",
+    "text": "Ánh sáng: bình minh xám lạnh, chỉ ấm dần trong 10 giây cuối."
+  },
+  {
+    "id": 319,
+    "type": "paragraph",
+    "text": "Âm thanh"
+  },
+  {
+    "id": 320,
+    "type": "paragraph",
+    "text": "Không nhạc chiến đấu. Nước sông vỗ bờ, tiếng người thu dọn ở xa. Chủ đề của Hùng chỉ vào ở khung hình cuối, chơi chậm, thiếu nốt cuối."
+  },
+  {
+    "id": 321,
+    "type": "paragraph",
+    "text": "Ghi chú: câu \"Tôi hứa với nó rồi\" khép được game ở hai map. Nếu sau này có Map 3, đây là móc nối tự nhiên: Nam ra Bắc tìm u của Hùng."
+  },
+  {
+    "id": 322,
+    "type": "paragraph",
+    "text": "Dàn cảnh cho model đơn giản"
+  },
+  {
+    "id": 323,
+    "type": "paragraph",
+    "text": "Cảm xúc của chương do giọng nói, âm thanh, ánh sáng và khoảng cách camera gánh, không dựa vào biểu cảm khuôn mặt. Mọi chỉ dẫn camera trong tài liệu đã sửa theo các nguyên tắc dưới đây."
+  },
+  {
+    "id": 324,
+    "type": "paragraph",
+    "text": "Không có cận cảnh khuôn mặt trong toàn chương. Gần nhất là ngang vai, từ sau lưng hoặc nghiêng."
+  },
+  {
+    "id": 325,
+    "type": "paragraph",
+    "text": "Các cảnh then chốt đều ở trong bóng tối, dưới đèn dầu hoặc ánh lửa. Tận dụng ngược sáng để che chi tiết model."
+  },
+  {
+    "id": 326,
+    "type": "paragraph",
+    "text": "Động tác nhỏ (gắp thức ăn, vai chùng xuống) được thay bằng động tác lớn đọc được từ xa (đẩy chén, đặt súng xuống)."
+  },
+  {
+    "id": 327,
+    "type": "paragraph",
+    "text": "Khoảnh khắc khó dựng (tường sập, vụ nổ, ngã) dùng cắt cảnh, nháy trắng, rung màn hình và âm thanh."
+  },
+  {
+    "id": 328,
+    "type": "paragraph",
+    "text": "Thoại qua bộ đàm không cần hình. Tận dụng tối đa cho các khoảnh khắc căng thẳng."
+  },
+  {
+    "id": 329,
+    "type": "paragraph",
+    "text": "Ưu tiên ngân sách:"
+  },
+  {
+    "id": 330,
+    "type": "paragraph",
+    "text": "Lồng tiếng Nam và Hùng."
+  },
+  {
+    "id": 331,
+    "type": "paragraph",
+    "text": "Ánh sáng và âm thanh của Đêm 1, Nhịp 5 và Bình minh."
+  },
+  {
+    "id": 332,
+    "type": "paragraph",
+    "text": "Hoạt ảnh bóng Hùng gài bộc phá (chỉ cần đọc được dưới dạng bóng người)."
+  },
+  {
+    "id": 333,
+    "type": "paragraph",
+    "text": "Mọi thứ còn lại."
+  },
+  {
+    "id": 334,
+    "type": "paragraph",
+    "text": "Thời lượng, asset phát sinh và kiểm thử"
+  },
+  {
+    "id": 335,
+    "type": "paragraph",
+    "text": "Thời lượng: cộng các buổi lại được khoảng 97–118 phút, nằm trong mục tiêu 90–120 phút. Đêm 3 còn 23–28 phút vì Nhịp 6 rút thành cutscene, dù có thêm đoạn bắn yểm trợ. Bình minh còn khoảng 2 phút."
+  },
+  {
+    "id": 336,
+    "type": "paragraph",
+    "text": "Asset mới so với bản 20/10"
+  },
+  {
+    "id": 337,
+    "type": "table",
+    "text": "Loại | Hạng mục | Dùng ở\nHoạt ảnh | Hùng cầm đũa và nhặt rau bằng tay trái (quay xa); Nam đẩy chén sang | Đêm 1, Ngày 3\nHoạt ảnh | Leo cây và xoay ăng-ten | Ngày 2\nHoạt ảnh | Nam trúng mảnh tường ở vai, ngã sấp, bò vào chỗ nấp; khuỵu vì vết thương toác | Đêm 3 Nhịp 3 và 5\nHoạt ảnh | Hùng bò áp sát, gài bộc phá vào xích xe bằng tay trái, giật ngòi, lùi ra thì trúng đạn, ngã sấp | Đêm 3 Nhịp 5\nHoạt ảnh | Nam đi với băng vai; tâm ngắm rung và nạp đạn chậm | Nhịp 6, Bình minh\nBiểu cảm | Không làm biểu cảm chi tiết; thay bằng góc máy xa, ngược sáng và lồng tiếng | Đêm 1, Nhịp 5\nĐạo cụ | Nồi và chén canh; thùng lựu đạn; khối bộc phá; cột ăng-ten | Đêm 1 – Bình minh\nModel | 7 nhân vật phụ có tên; bé Tí là model trẻ em mới | Toàn chương\nÂm thanh | Chủ đề của Hùng (bản đầy đủ, bản bỏ lửng, bản thiếu nốt cuối); tệp riêng câu hứa ở Đêm 1 và tiếng cười của Hùng; ù tai; rè máy đàm | Đêm 1 – Bình minh\nModel | Xe tăng (boss): mẫu thiết kế chung, chạy theo đường định sẵn, súng máy trên xe, trạng thái bị phá hủy (cháy, khói, xác nguội); tốp bộ binh đi kèm; tiếng xích sắt. Không cần AI hay cơ chế người chơi phá xe | Đêm 2 (âm thanh), Nhịp 3, Nhịp 5, Bình minh"
+  },
+  {
+    "id": 338,
+    "type": "paragraph",
+    "text": "Kiểm thử thêm cho bản này"
+  },
+  {
+    "id": 339,
+    "type": "paragraph",
+    "text": "☐ Người chơi nhớ lời hứa về nhà ăn cơm u nấu khi đến Nhịp 5 (hỏi sau buổi chơi thử: \"Hùng muốn làm gì sau chiến tranh?\")."
+  },
+  {
+    "id": 340,
+    "type": "paragraph",
+    "text": "☐ Người chơi không nghĩ \"pháo bắn sớm hơn thì Hùng đã sống\": kiểm tra xem họ có nghe câu \"pháo không bắn vào đây được\" ở Nhịp 4 hay không. Hỏi thêm: bạn có nghĩ Hùng chết vì mình bắn yểm trợ kém không?"
+  },
+  {
+    "id": 341,
+    "type": "paragraph",
+    "text": "☐ Tay phải Hùng không được dùng trong bất kỳ cảnh nào từ Ngày 1 đến Nhịp 5, kể cả hoạt ảnh chờ."
+  },
+  {
+    "id": 342,
+    "type": "paragraph",
+    "text": "☐ Khối bộc phá ở Nhịp 5 xuất hiện đúng vị trí người chơi đã đặt ở Ngày 3 (hoặc vị trí cố định nếu đặt sai chỗ)."
+  },
+  {
+    "id": 343,
+    "type": "paragraph",
+    "text": "☐ Skip Nhịp 5 vẫn chuyển máy đàm sang vai Nam và giữ băng vai cho đoạn kết và Bình minh."
+  },
+  {
+    "id": 344,
+    "type": "paragraph",
+    "text": "☐ Load save sau Nhịp 5 không làm Hùng xuất hiện lại ở bất kỳ đâu, kể cả trong thoại nền của NPC."
+  }
+]

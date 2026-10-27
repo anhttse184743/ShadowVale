@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-26 08:45:40Z" end-time="2026-10-26 08:46:44Z" duration="63.2090533">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="795" result="Passed" start-time="2026-10-26 08:45:40Z" end-time="2026-10-26 08:46:44Z" duration="63.209053" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1727" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/Capstone/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="572" result="Passed" start-time="2026-10-26 08:45:41Z" end-time="2026-10-26 08:46:44Z" duration="62.860212" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="15192" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1728" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="572" result="Passed" start-time="2026-10-26 08:45:41Z" end-time="2026-10-26 08:46:44Z" duration="62.832834" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1729" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="572" result="Passed" start-time="2026-10-26 08:45:41Z" end-time="2026-10-26 08:46:44Z" duration="62.808564" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1638" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="572" result="Passed" start-time="2026-10-26 08:45:41Z" end-time="2026-10-26 08:46:44Z" duration="62.781448" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1089" name="CommanderRowerTests" fullname="ShadowVale.Map01.Tests.CommanderRowerTests" classname="ShadowVale.Map01.Tests.CommanderRowerTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-26 08:39:56Z" end-time="2026-10-26 08:43:20Z" duration="204.507784" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1090" name="CommanderRowsAndHungSupportsArmAcrossBothMaps" fullname="ShadowVale.Map01.Tests.CommanderRowerTests.CommanderRowsAndHungSupportsArmAcrossBothMaps" methodname="CommanderRowsAndHungSupportsArmAcrossBothMaps" classname="ShadowVale.Map01.Tests.CommanderRowerTests" runstate="Runnable" seed="1121460332" result="Passed" start-time="2026-10-26 08:38:56Z" end-time="2026-10-26 08:43:20Z" duration="264.102052" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                </properties>
+                <output><![CDATA[Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1302" name="Map02ArrivalTests" fullname="ShadowVale.Map01.Tests.Map02ArrivalTests" classname="ShadowVale.Map01.Tests.Map02ArrivalTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-26 08:45:41Z" end-time="2026-10-26 08:46:44Z" duration="62.420026" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1305" name="CompletedCheckpointTransfersVisibleBoatAndKeepsRowersHandsFree" fullname="ShadowVale.Map01.Tests.Map02ArrivalTests.CompletedCheckpointTransfersVisibleBoatAndKeepsRowersHandsFree" methodname="CompletedCheckpointTransfersVisibleBoatAndKeepsRowersHandsFree" classname="ShadowVale.Map01.Tests.Map02ArrivalTests" runstate="Runnable" seed="1063479434" result="Passed" start-time="2026-10-26 08:43:20Z" end-time="2026-10-26 08:44:59Z" duration="98.674028" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <output><![CDATA[Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+]]></output>
+              </test-case>
+              <test-case id="1309" name="SkippedArrivalUsesSameDrySpawn" fullname="ShadowVale.Map01.Tests.Map02ArrivalTests.SkippedArrivalUsesSameDrySpawn" methodname="SkippedArrivalUsesSameDrySpawn" classname="ShadowVale.Map01.Tests.Map02ArrivalTests" runstate="Runnable" seed="178040138" result="Passed" start-time="2026-10-26 08:44:59Z" end-time="2026-10-26 08:46:44Z" duration="104.767207" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+Saving results to: Logs/Map02Chapter/latest-full-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

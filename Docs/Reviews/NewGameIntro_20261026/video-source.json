@@ -1,0 +1,11 @@
+{
+  "source": "G:\\game\\Capstone\\ShadowVale_Intro_3Phan_CapCut.mp4",
+  "bundled": "Assets\\StreamingAssets\\Video\\ShadowVale_Intro.mp4",
+  "bytes": 55961626,
+  "durationSeconds": 52.78,
+  "video": "H.264 constrained baseline, 1920x1080, 30 fps, no B-frames",
+  "audio": "AAC stereo, 48000 Hz, 192 kbps",
+  "processing": "Bundled derivative re-encoded with ffmpeg libx264 baseline CRF18 preset fast, 30fps, -bf 0, AAC192k/48k, faststart; removed container metadata. Original file untouched.",
+  "originalSha256": "991072d610d197ecc51588e41657305fdeb4db7253ff55480ac9307ec99bd5df",
+  "bundledSha256": "8a2a1ceab7ebdc5893d0913231175d8866cd945b2187dec60d48c32e52db9559"
+}

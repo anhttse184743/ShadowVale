@@ -267,6 +267,7 @@ namespace ShadowVale.Map01
             foreach (var enemy in Enemies) enemy.BindMission(this);
             // Map 1's story pieces; the tutorial (no Hùng to rescue, no quest) has none of them.
             if (hung != null && quest != null) Map01OpeningCutscene.Attach(this);
+            if (gameObject.scene.name == "Map 1") Map01Ambience.Attach(this);
             GetComponent<Map01Story>()?.Initialize();
             GetComponent<Map01Quest>()?.EnsureCommander();
             if (hung != null && quest != null) Map01HungVisual.Attach(this);
@@ -346,6 +347,7 @@ namespace ShadowVale.Map01
             return text.StartsWith("Lính")||text.StartsWith("Sĩ quan")||text.StartsWith("Hùng:")||text.StartsWith("Hùng (")||text.StartsWith("Nam:")?null:text;
         }
         public void ReleaseForNextMap() {
+            GetComponent<Map01Ambience>()?.StopForTransition();
             // The carried actor outlives Map 1; its scene-specific arm/scope drivers must not.
             if(player.TryGetComponent(out Map01Pistol pistolMotion))pistolMotion.enabled=false;
             if(player.TryGetComponent(out Map01Mosin mosinMotion))mosinMotion.enabled=false;

@@ -1,5 +1,5 @@
-approach=91,110
-supper=92,390
-lastLineAndHold=6,250
+approach=91,540
+supper=70,210
+lastLineAndHold=6,750
 cricketsPlayed=True
 completedAfterLoad=True

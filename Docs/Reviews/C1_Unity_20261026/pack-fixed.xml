@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Failed(Child)" total="4" passed="2" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-26 04:44:43Z" end-time="2026-10-26 04:45:22Z" duration="38,6699624">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="775" result="Failed" site="Child" start-time="2026-10-26 04:44:43Z" end-time="2026-10-26 04:45:22Z" duration="38.669962" total="4" passed="2" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1700" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/Admin/.codex/worktrees/map1-boot-investigation-20261023/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="552" result="Failed" site="Child" start-time="2026-10-26 04:44:44Z" end-time="2026-10-26 04:45:22Z" duration="38.383744" total="4" passed="2" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="203360" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1701" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="552" result="Failed" site="Child" start-time="2026-10-26 04:44:44Z" end-time="2026-10-26 04:45:22Z" duration="38.355349" total="4" passed="2" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1702" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="552" result="Failed" site="Child" start-time="2026-10-26 04:44:44Z" end-time="2026-10-26 04:45:22Z" duration="38.328736" total="4" passed="2" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="SetUpFixture" id="1611" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="552" result="Failed" site="Child" start-time="2026-10-26 04:44:44Z" end-time="2026-10-26 04:45:22Z" duration="38.301419" total="4" passed="2" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1290" name="Map02ApprovedC1Tests" fullname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests" classname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-26 04:43:34Z" end-time="2026-10-26 04:43:34Z" duration="0.100120" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1292" name="ApprovedMeshesAndDirectTracksMatchTheBlenderSource" fullname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests.ApprovedMeshesAndDirectTracksMatchTheBlenderSource" methodname="ApprovedMeshesAndDirectTracksMatchTheBlenderSource" classname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests" runstate="Runnable" seed="379957933" result="Passed" start-time="2026-10-26 04:43:34Z" end-time="2026-10-26 04:43:34Z" duration="0.081979" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1291" name="SupportingKneeFitsSolidLandingWithoutMovingTheApprovedHandsOrAnkle" fullname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests.SupportingKneeFitsSolidLandingWithoutMovingTheApprovedHandsOrAnkle" methodname="SupportingKneeFitsSolidLandingWithoutMovingTheApprovedHandsOrAnkle" classname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests" runstate="Runnable" seed="450332006" result="Passed" start-time="2026-10-26 04:43:34Z" end-time="2026-10-26 04:43:34Z" duration="0.006129" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1293" name="Map02ArrivalMisstepTests" fullname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests" classname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-26 04:44:44Z" end-time="2026-10-26 04:45:22Z" duration="38.201153" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1296" name="RecordMisstepContactReview" fullname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests.RecordMisstepContactReview" methodname="RecordMisstepContactReview" classname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests" runstate="Explicit" seed="2075285960" result="Failed" start-time="2026-10-26 04:43:34Z" end-time="2026-10-26 04:44:31Z" duration="57.208417" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="_SKIPREASON" value="Record the natural C1 handoff in Unity for visual review." />
+                </properties>
+                <failure>
+                  <message><![CDATA[  No detached floating pack.
+  Expected: less than 0.550000012f
+  But was:  130.393799f
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.Map02ArrivalMisstepTests+<Check>d__4.MoveNext () [0x00958] in C:\Users\Admin\.codex\worktrees\map1-boot-investigation-20261023\ShadowVale\Assets\_Project\Map01\Tests\Map02ArrivalMisstepTests.cs:87
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1295" name="SkippingWhileThePackIsDownRestoresTheWornPack" fullname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests.SkippingWhileThePackIsDownRestoresTheWornPack" methodname="SkippingWhileThePackIsDownRestoresTheWornPack" classname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests" runstate="Runnable" seed="1176426631" result="Failed" start-time="2026-10-26 04:44:31Z" end-time="2026-10-26 04:45:22Z" duration="50.913972" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  No detached floating pack.
+  Expected: less than 0.550000012f
+  But was:  130.393814f
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.Map02ArrivalMisstepTests+<Check>d__4.MoveNext () [0x00958] in C:\Users\Admin\.codex\worktrees\map1-boot-investigation-20261023\ShadowVale\Assets\_Project\Map01\Tests\Map02ArrivalMisstepTests.cs:87
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Saving results to: Logs/Map02Chapter/latest-full-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

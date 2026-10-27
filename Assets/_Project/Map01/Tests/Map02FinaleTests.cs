@@ -29,7 +29,9 @@ namespace ShadowVale.Map01.Tests
             foreach(var t in Map02ChapterDefinition.Load().tasks){s.Complete(t.id);if(t.id==id)break;}
             snapshot.chapter=s;mission.Restore(snapshot);
         }
-        static void Frame(float dt=.1f){Call("TickScene",dt);Call("TickTank",dt,false);Call("TickEffects");}
+        // The scene clock is synthetic; real audio cannot advance in this tight loop.
+        // Keep authored line durations/gates, and release only the audio completion wait.
+        static void Frame(float dt=.1f){DialogueVoice.StopAll();Call("TickScene",dt);Call("TickTank",dt,false);Call("TickEffects");}
         static void Until(string scene,float time){while(chapter.CurrentScene?.id==scene&&Clock<time)Frame();}
         static void Place(Vector3 p){var cc=mission.Player.GetComponent<CharacterController>();cc.enabled=false;mission.Player.position=p;cc.enabled=true;Physics.SyncTransforms();}
         // Without bound art there is nothing to see either way; with art, it must match the story.

@@ -1,0 +1,43 @@
+D1_01 | 0 | talk | gate | [] | 1 | 3 | contact | Bắt liên lạc với anh Lực tại chốt đầu làng
+D1_02 | 0 | escortHung | family | ['D1_01'] | 1 | 24 | bandage | Đưa Hùng tới hiên nhà chị Lành để thay băng
+D1_03 | 0 | medicine | family | ['D1_02'] | 1 | 3 | medicine | Trao gói thuốc mang theo cho chị Lành
+D1_04 | 0 | carry | store | ['D1_02'] | 3 | 3 |  | Chuyển ba thùng từ bến vào kho kín
+D1_05 | 0 | repair | dock | ['D1_02'] | 5 | 3 | repair | Sửa bậc bến nam cùng chú Bảy: hai cọc, ba tấm ván
+D1_06 | 0 | talk | command | ['D1_03', 'D1_04', 'D1_05'] | 1 | 3 | day1report | Báo cáo anh Thành trước khi trời tối
+N1_01 | 1 | cinematic | family | ['D1_06'] | 1 | 90 | promise | Ngồi vào mâm cơm cùng Hùng
+N1_02 | 1 | patrolHung | bamboo | ['N1_01'] | 1 | 3 | postbamboo | Cùng Hùng kiểm tra chốt bờ tre
+N1_03 | 1 | patrolHung | gate | ['N1_02'] | 1 | 3 | nightwatch | Cùng Hùng mang thuốc tới chốt đầu làng
+N1_04 | 1 | cinematic | rest | ['N1_03'] | 1 | 12 | shift | Cùng Hùng về chỗ nghỉ và đổi ca
+D2_01 | 2 | talk | command | ['N1_04'] | 1 | 3 | scoutorder | Nhận lệnh tìm Tâm từ anh Thành
+D2_02 | 2 | reach | bridge | ['D2_01'] | 1 | 3 |  | Đến điểm mất liên lạc ở khu cầu
+D2_03 | 2 | talk | scout | ['D2_02'] | 1 | 3 | scoutfound | Tìm và giúp Tâm bị thương gần khu cầu
+D2_04 | 2 | escortScout | command | ['D2_03'] | 1 | 3 | scoutreturn | Đưa Tâm bị thương về gặp anh Thành
+D2_05 | 2 | wire | store | ['D2_04'] | 1 | 3 |  | Lấy cuộn dây trong kho kín và mang về giao Hùng
+D2_06 | 2 | antenna | radio | ['D2_05'] | 1 | 3 | antenna | Dựng và chỉnh hướng ăng-ten theo tín hiệu của Hùng
+D2_07 | 2 | talk | command | ['D2_06'] | 1 | 3 | artillery | Báo cáo liên lạc với đơn vị pháo cho anh Thành
+N2_01 | 3 | binocular | bridge | ['D2_07'] | 1 | 2 |  | Đứng xa dùng ống nhòm quan sát tổ tuần tra ngoài đồng
+N2_02 | 3 | patrolReport | bridge | ['N2_01'] | 1 | 3 | lights | Báo dấu hiệu đèn pin qua bộ đàm
+N2_03 | 3 | inspectDoor | store | ['N2_02'] | 1 | 3 |  | Đi kín đáo tới kho, xác nhận cửa hầm còn kín
+N2_04 | 3 | inspectRoute | dock | ['N2_03'] | 1 | 3 |  | Kiểm tra đường sơ tán ra bến nam
+N2_05 | 3 | cinematic | radio | ['N2_04'] | 1 | 48 | reconcile | Về đúng điểm hẹn với Hùng
+D3_01 | 4 | carry | southStore | ['N2_05'] | 2 | 3 |  | Chuyển thuốc và đạn từ kho tới chỗ trú bến nam: hai chuyến
+D3_02 | 4 | demolition | ditch | ['D3_01'] | 1 | 3 | demolition | Cất thùng lựu đạn và khối bộc phá vào hốc bờ đất
+D3_03 | 4 | repair | dock | ['D3_02'] | 2 | 3 | boats | Cùng chú Bảy vá chỗ rò trên hai chiếc thuyền
+D3_04 | 4 | families | family | ['D3_03'] | 3 | 3 | families | Cùng Hùng phân công giúp ba gia đình
+D3_05 | 4 | cinematic | family | ['D3_04'] | 1 | 54 | supper | Ngồi lại bên Hùng trong bữa chiều
+D3_06 | 4 | talk | family | ['D3_05'] | 1 | 3 |  | Báo cáo anh Thành
+N3_00 | 5 | cinematic | rest | ['D3_06'] | 1 | 14 | attack | Đổi ca với anh Lực rồi nghỉ
+N3_01 | 5 | gear | store | ['N3_00'] | 1 | 3 |  | Lấy lại trang bị và số đạn đã cất trong kho
+N3_02 | 5 | rescueFamily | family | ['N3_01'] | 1 | 3 | fire | Phá cửa sau, đưa ông Sáu và chị Lành ra ngõ
+N3_03 | 5 | rescueChild | child | ['N3_02'] | 1 | 3 | child | Tìm bé Tí ở chuồng trâu và đưa về với chị Lành
+N3_04 | 5 | defend | lane1 | ['N3_03'] | 1 | 40 |  | Giữ tuyến sơ tán cho hai chuyến thuyền đầu
+N3_05A | 5 | defend | lane1 | ['N3_04'] | 1 | 35 |  | Giữ ngõ thứ nhất đến khi sơ tán đạt 70%
+N3_05B | 5 | defend | lane2 | ['N3_05A'] | 1 | 35 |  | Lùi về gốc me, giữ tuyến đến mốc 80%
+N3_05C | 5 | defend | lane3 | ['N3_05B'] | 1 | 35 |  | Lùi về ngõ đình, giữ tuyến đến mốc 90%
+N3_WOUND | 5 | cinematic | lane3 | ['N3_05C'] | 1 | 12 | wound | Nằm xuống khi xe tăng khai hỏa
+N3_CRAWL | 5 | crawl | cover | ['N3_WOUND'] | 1 | 5 | alive | Giữ C để bò vào chỗ nấp của anh Lực
+N3_06 | 5 | clear | fallen | ['N3_CRAWL'] | 1 | 6 | coordinates | Dọn cây đổ chắn đường tổ cứu thương tới bến
+N3_07 | 5 | cinematic | ditch | ['N3_06'] | 1 | 120 | farewell | Cùng Hùng nhìn ra chuyến thuyền cuối
+N3_08 | 5 | coverFire | ditch | ['N3_07'] | 1 | 75 |  | Yểm trợ Hùng
+N3_09 | 5 | cinematic | ditch | ['N3_08'] | 1 | 70 | sacrifice | Hùng gài bộc phá; quân ta phản công
+DAWN | 6 | cinematic | ditch | ['N3_09'] | 1 | 120 | dawn | Bình minh: chỗ trực còn trống

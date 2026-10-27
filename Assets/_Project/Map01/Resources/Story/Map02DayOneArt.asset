@@ -43,8 +43,45 @@ MonoBehaviour:
     clip: {fileID: 7400000, guid: 124476d29a14bd14380f3d41ddbd6c32, type: 2}
   - id: RestHung
     clip: {fileID: 7400000, guid: 2b59fbcd923b6b94b90a62e7d2488d9d, type: 2}
+  - id: LoiHuaNam
+    clip: {fileID: -623603649343465320, guid: 2ce340af6a39be74db08513531d810a4, type: 3}
+  - id: LoiHuaHung
+    clip: {fileID: -623603649343465320, guid: f8e0db7c16ff7584bb15ce7a1eaa7837, type: 3}
+  - id: HungArmWalk
+    clip: {fileID: -623603649343465320, guid: 9fd11bf4f2ff87d4aa91ca30986b7957, type: 3}
+  - id: HungStartleGrab
+    clip: {fileID: -623603649343465320, guid: 4679f252616c07d43bd320d4be155792, type: 3}
+  - id: HungStartle
+    clip: {fileID: -623603649343465320, guid: 453036600e3048c4697031754262d3a8, type: 3}
+  - id: HungThayBang
+    clip: {fileID: -623603649343465320, guid: 22172c49c84271d46b26ccd9aa50e466, type: 3}
+  - id: LanhThayBang
+    clip: {fileID: -623603649343465320, guid: e3279e3d84a2f31458edd78b486258d0, type: 3}
+  - id: HungDoiCa
+    clip: {fileID: -623603649343465320, guid: 2708699ee2951ca47807dca71cbdec2f, type: 3}
+  - id: NamDoiCa
+    clip: {fileID: -623603649343465320, guid: 81aaf58266cf8524ab70584bd37fb587, type: 3}
+  - id: NamTraoThuoc
+    clip: {fileID: -623603649343465320, guid: 08378269e13eaab48818ef9f20f04924, type: 3}
+  - id: LanhNhanThuoc
+    clip: {fileID: -623603649343465320, guid: 2103ee3cfc55b87469e553f44195fae7, type: 3}
+  - id: SauNgoiNghi
+    clip: {fileID: -623603649343465320, guid: b7bc7b6d191ebdf4eb340e2971560d01, type: 3}
+  - id: TiNapCot
+    clip: {fileID: -623603649343465320, guid: 144d8761178ab544ba3cec73a7aeca3d, type: 3}
+  - id: TiCuoi
+    clip: {fileID: -623603649343465320, guid: aac00926674d2034bb1bc546014e0a16, type: 3}
+  - id: NamVoCoc
+    clip: {fileID: -623603649343465320, guid: dbf8d8e90d16b9b4fb0aa6cfaec16ca6, type: 3}
+  - id: BayGiuCoc
+    clip: {fileID: -623603649343465320, guid: 6a8d073b8a194db4a92b403e6e9f1425, type: 3}
+  - id: HungHutChan
+    clip: {fileID: -623603649343465320, guid: 036e46df531246a429f4289678bdb2bd, type: 3}
+  - id: NamDoHung
+    clip: {fileID: -623603649343465320, guid: c8366eef278e2b14281bf865fe1d46b2, type: 3}
   assistSpeed: 1.25
   bandageSeconds: 24
   shiftSeconds: 12
   carryOffset: {x: 0, y: 0.87, z: 0.36}
   medicinePacket: {fileID: 0}
+  namFingerReference: {fileID: 9000000, guid: 794717c306d135343803072263688cf8, type: 3}

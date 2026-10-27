@@ -1,0 +1,22 @@
+camera=Main Camera • Map 2 third person driver=True renders=True gate=True
+1600x900 mouseDown (380.00, 377.00) wanted=False actual=None menu=True blocked=True inputReady=False selected=-1 held=False
+1600x900 mouseUp (380.00, 377.00) wanted=False actual=None menu=True blocked=True inputReady=False selected=-1 held=False
+1600x900 mouseDown (1040.00, 360.00) wanted=False actual=None menu=True blocked=True inputReady=False selected=-1 held=False
+1600x900 mouseUp (1040.00, 360.00) wanted=False actual=None menu=True blocked=True inputReady=False selected=-1 held=False
+1600x900 mouseDown (750.00, 780.00) wanted=False actual=None menu=True blocked=True inputReady=False selected=-1 held=False
+1600x900 mouseUp (750.00, 780.00) wanted=False actual=None menu=True blocked=True inputReady=False selected=-1 held=False
+1200x675 mouseDown (290.00, 290.00) wanted=False actual=None menu=False blocked=True inputReady=True selected=-1 held=False
+1200x675 mouseUp (290.00, 290.00) wanted=False actual=None menu=False blocked=True inputReady=True selected=3 held=False
+1200x675 mouseDown (825.00, 660.00) wanted=False actual=None menu=False blocked=True inputReady=True selected=3 held=False
+1200x675 mouseUp (825.00, 660.00) wanted=False actual=None menu=False blocked=True inputReady=True selected=3 held=False
+1600x900 mouseDown (290.00, 290.00) wanted=False actual=None menu=False blocked=True inputReady=True selected=3 held=False
+1600x900 mouseUp (290.00, 290.00) wanted=False actual=None menu=False blocked=True inputReady=True selected=3 held=False
+1600x900 mouseDown (825.00, 660.00) wanted=False actual=None menu=False blocked=True inputReady=True selected=3 held=False
+1600x900 mouseUp (825.00, 660.00) wanted=False actual=None menu=False blocked=True inputReady=True selected=3 held=False
+1920x1080 mouseDown (290.00, 290.00) wanted=False actual=None menu=False blocked=True inputReady=True selected=3 held=False
+1920x1080 mouseUp (290.00, 290.00) wanted=False actual=None menu=False blocked=True inputReady=True selected=3 held=False
+1920x1080 mouseDown (825.00, 660.00) wanted=False actual=None menu=False blocked=True inputReady=True selected=3 held=False
+1920x1080 mouseUp (825.00, 660.00) wanted=False actual=None menu=False blocked=True inputReady=True selected=3 held=False
+1920x1080 mouseDown (1400.00, 123.00) wanted=False actual=None menu=False blocked=True inputReady=True selected=3 held=False
+1920x1080 mouseUp (1400.00, 123.00) wanted=True actual=None menu=False blocked=False inputReady=True selected=3 held=False
+physicalDynamicFrames=145 stolen=False

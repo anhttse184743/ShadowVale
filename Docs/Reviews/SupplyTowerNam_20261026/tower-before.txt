@@ -1,0 +1,37 @@
+root=(82.00, 12.53, 48.55) collider=Center: (82.00, 13.43, 48.55), Extents: (0.40, 0.90, 0.40) actor=(82.00, 12.53, 48.55)
+alert=False side=-1 bone=Head point=(82.05, 14.25, 48.60) hit=SpreadingTree guard= all=SpreadingTree@12.05 | ROOF / C3_LOD1_194@33.59 | Operation guard 3_2@34.79
+alert=False side=-1 bone=Chest point=(82.03, 13.81, 48.57) hit=SpreadingTree guard= all=SpreadingTree@11.96 | Operation guard 3_2@34.65
+alert=False side=-1 bone=LeftUpperArm point=(82.24, 14.08, 48.47) hit=SpreadingTree guard= all=SpreadingTree@11.94 | Operation guard 3_2@34.66
+alert=False side=-1 bone=RightUpperArm point=(81.85, 14.10, 48.74) hit=SpreadingTree guard= all=SpreadingTree@12.05 | Operation guard 3_2@34.70 | ROOF / C3_LOD1_194@36.03
+alert=False side=-1 bone=LeftLowerArm point=(82.20, 13.83, 48.44) hit=SpreadingTree guard= all=SpreadingTree@11.93 | Operation guard 3_2@34.66
+alert=False side=-1 bone=RightLowerArm point=(81.64, 13.96, 48.71) hit=SpreadingTree guard= all=SpreadingTree@6.72 | Operation guard 3_2@34.68 | ROOF / C3_LOD1_194@36.22
+alert=False side=0 bone=Head point=(82.05, 14.25, 48.60) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@36.30 | ROOF / C3_LOD1_194@37.21
+alert=False side=0 bone=Chest point=(82.03, 13.81, 48.57) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@36.16
+alert=False side=0 bone=LeftUpperArm point=(82.24, 14.08, 48.47) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@36.18
+alert=False side=0 bone=RightUpperArm point=(81.85, 14.10, 48.74) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@36.21 | ROOF / C3_LOD1_194@37.57
+alert=False side=0 bone=LeftLowerArm point=(82.20, 13.83, 48.44) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@36.17
+alert=False side=0 bone=RightLowerArm point=(81.64, 13.96, 48.71) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@36.19 | ROOF / C3_LOD1_194@37.75
+alert=False side=1 bone=Head point=(82.05, 14.25, 48.60) hit=BroadleafTall_A guard= all=BroadleafTall_A@5.45 | Operation guard 3_2@37.86 | ROOF / C3_LOD1_194@38.79
+alert=False side=1 bone=Chest point=(82.03, 13.81, 48.57) hit=BroadleafTall_A guard= all=BroadleafTall_A@5.47 | Operation guard 3_2@37.72
+alert=False side=1 bone=LeftUpperArm point=(82.24, 14.08, 48.47) hit=BroadleafTall_A guard= all=BroadleafTall_A@5.44 | Operation guard 3_2@37.73
+alert=False side=1 bone=RightUpperArm point=(81.85, 14.10, 48.74) hit=BroadleafTall_A guard= all=BroadleafTall_A@5.47 | Operation guard 3_2@37.76 | ROOF / C3_LOD1_194@39.15
+alert=False side=1 bone=LeftLowerArm point=(82.20, 13.83, 48.44) hit=BroadleafTall_A guard= all=BroadleafTall_A@5.46 | Operation guard 3_2@37.73
+alert=False side=1 bone=RightLowerArm point=(81.64, 13.96, 48.71) hit=BroadleafTall_A guard= all=BroadleafTall_A@5.52 | Operation guard 3_2@37.75 | ROOF / C3_LOD1_194@39.32
+alert=True side=-1 bone=Head point=(81.99, 14.22, 48.57) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.76 | ROOF / C3_LOD1_194@35.64
+alert=True side=-1 bone=Chest point=(82.05, 13.79, 48.57) hit=SpreadingTree guard= all=SpreadingTree@11.95 | Operation guard 3_2@34.66
+alert=True side=-1 bone=LeftUpperArm point=(82.03, 14.13, 48.33) hit=SpreadingTree guard= all=SpreadingTree@6.73 | Operation guard 3_2@34.69
+alert=True side=-1 bone=RightUpperArm point=(82.08, 14.13, 48.82) hit=SpreadingTree guard= all=SpreadingTree@11.90 | ROOF / C3_LOD1_194@33.60 | Operation guard 3_2@34.81
+alert=True side=-1 bone=LeftLowerArm point=(81.83, 13.98, 48.33) hit=SpreadingTree guard= all=SpreadingTree@6.65 | Operation guard 3_2@34.75
+alert=True side=-1 bone=RightLowerArm point=(81.85, 14.01, 48.81) hit=SpreadingTree guard= all=SpreadingTree@11.97 | Operation guard 3_2@34.67
+alert=True side=0 bone=Head point=(81.99, 14.22, 48.57) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@36.27 | ROOF / C3_LOD1_194@37.17
+alert=True side=0 bone=Chest point=(82.05, 13.79, 48.57) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@36.17
+alert=True side=0 bone=LeftUpperArm point=(82.03, 14.13, 48.33) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@36.20
+alert=True side=0 bone=RightUpperArm point=(82.08, 14.13, 48.82) hit=Operation guard 3_2 guard=Operation guard 3_2 all=ROOF / C3_LOD1_194@35.06 | Operation guard 3_2@36.31
+alert=True side=0 bone=LeftLowerArm point=(81.83, 13.98, 48.33) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@36.26
+alert=True side=0 bone=RightLowerArm point=(81.85, 14.01, 48.81) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@36.17
+alert=True side=1 bone=Head point=(81.99, 14.22, 48.57) hit=BroadleafTall_A guard= all=BroadleafTall_A@5.46 | Operation guard 3_2@37.82 | ROOF / C3_LOD1_194@38.75
+alert=True side=1 bone=Chest point=(82.05, 13.79, 48.57) hit=BroadleafTall_A guard= all=BroadleafTall_A@5.47 | Operation guard 3_2@37.72
+alert=True side=1 bone=LeftUpperArm point=(82.03, 14.13, 48.33) hit=BroadleafTall_A guard= all=BroadleafTall_A@5.50 | Operation guard 3_2@37.75
+alert=True side=1 bone=RightUpperArm point=(82.08, 14.13, 48.82) hit=BroadleafTall_A guard= all=BroadleafTall_A@5.42 | Operation guard 3_2@37.86
+alert=True side=1 bone=LeftLowerArm point=(81.83, 13.98, 48.33) hit=BroadleafTall_A guard= all=BroadleafTall_A@5.56 | Operation guard 3_2@37.81
+alert=True side=1 bone=RightLowerArm point=(81.85, 14.01, 48.81) hit=BroadleafTall_A guard= all=BroadleafTall_A@5.46 | Operation guard 3_2@37.73

@@ -1,0 +1,4 @@
+before=(0.00, 81.62, 0.15) forward=(0.00, -0.01, 1.00)
+after=(0.49, 81.65, -2.10) forward=(0.00, -0.01, 1.00)
+health=100->0
+damage=200 lethal=True magazine=4
