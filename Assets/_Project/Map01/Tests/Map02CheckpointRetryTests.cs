@@ -78,7 +78,7 @@ namespace ShadowVale.Map01.Tests
             var nam=m.Player.position;var spots=new System.Collections.Generic.List<Vector3>();
             for(int i=0;i<16&&spots.Count<4;i++){var p=nam+Quaternion.Euler(0,i*22.5f,0)*Vector3.forward*16;if(UnityEngine.AI.NavMesh.SamplePosition(p,out var hit,3,UnityEngine.AI.NavMesh.AllAreas))spots.Add(hit.position);}
             Assert.GreaterOrEqual(spots.Count,4);
-            for(int i=0;i<3;i++)spawn.Invoke(c,new object[]{"test_ambush_"+i,Map02ChapterDirector.ScoutAmbushGroup,spots[i],100f,true,false});
+            spawn.Invoke(c,new object[]{"test_ambush_0",Map02ChapterDirector.ScoutAmbushGroup,spots[0],100f,true,false});   // one at a time, as the ambush comes
             spawn.Invoke(c,new object[]{"test_patrol_0","scout_patrol",spots[3],100f,false,false});
             var plans=new System.Collections.Generic.List<PlanAppliedEvent>();System.Action<PlanAppliedEvent> onPlan=plans.Add;EventBus.Subscribe(onPlan);
             try{until=Time.time+8;while(Time.time<until)yield return null;}

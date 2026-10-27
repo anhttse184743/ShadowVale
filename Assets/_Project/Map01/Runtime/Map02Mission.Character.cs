@@ -44,7 +44,8 @@ namespace ShadowVale.Map01
             // Night 3's waves are squads like Map 1's: Map 2's baked tactical graph (Resources/TacticalGraphs/Map 2) and the
             // squad coordinator, which plans each wave with the session's solver.
             TacticalGraphHost.Attach(gameObject,~0,null);
-            SquadCoordinator.Attach(gameObject,CoordinationSettings.ForScene(gameObject.scene.name));
+            // Day 2's bridge ambush comes one soldier at a time (Tài's pacing, kept): a squad of one is planned too.
+            SquadCoordinator.Attach(gameObject,CoordinationSettings.ForScene(gameObject.scene.name)).Settings.MinGroupAgents=1;
             Stamina=arrival?.CharacterBag!=null?arrival.CharacterStamina:CharacterSettings.stamina;
             Exploration=new MapExploration(Rect.MinMaxRect(-Map02Navigation.HalfSize,-Map02Navigation.HalfSize,Map02Navigation.HalfSize,Map02Navigation.HalfSize));
             Bag=gameObject.AddComponent<Map01Inventory>();
