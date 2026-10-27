@@ -25,7 +25,6 @@ namespace ShadowVale.Map01.Editor
         public static void PlayAntenna()=>BeginAfter("D2_05");
         [MenuItem("ShadowVale/Map 2/Chạy thử Đêm 2",priority=21)]
         public static void PlayNightTwo()=>Begin(3);
-<<<<<<< HEAD
         [MenuItem("ShadowVale/Map 2/Xem diễn xuất/Nhận lệnh Ngày 2",priority=30)]
         public static void PreviewDayTwoScene()=>BeginPerformancePreview("D2_01",2);
         [MenuItem("ShadowVale/Map 2/Xem diễn xuất/Kết Đêm 2",priority=31)]
@@ -35,10 +34,8 @@ namespace ShadowVale.Map01.Editor
         static bool CanPreviewPerformance()=>CanBegin();
         static void BeginPerformancePreview(string id,int phase)
         {Begin(phase);if(SessionState.GetInt(Key+".phase",0)==phase)SessionState.SetString(Key+".performance",id);}
-=======
         [MenuItem("ShadowVale/Map 2/Checkpoint kiểm tra đường sơ tán · N2_04",priority=22)]
         public static void PlayEvacuationChoices()=>BeginAfter("N2_03");
->>>>>>> Tai
         // Day 3 / Night 3: every task up to the named one is done; Nam starts by the next one.
         [MenuItem("ShadowVale/Map 2/Chạy thử Ngày 3",priority=22)]
         public static void PlayDayThree()=>BeginAfter("N2_05");

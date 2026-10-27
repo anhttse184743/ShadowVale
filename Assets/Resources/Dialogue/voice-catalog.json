@@ -6512,7 +6512,6 @@
       "voiceRevision": "20261025"
     },
     {
-<<<<<<< HEAD
       "id": "m1_rescue_hung_defiance",
       "speaker": "Hùng",
       "text": "Đồng đội của tao... sẽ giết hết... chúng mày.",
@@ -6530,7 +6529,8 @@
       "userApproved": false,
       "status": "Requested weak last words, existing approved Hung A voice; pending listening review",
       "performance": "Quieter, slower, breath-separated clauses, declining intensity; spoken after the entire collapse"
-=======
+    },
+    {
       "id": "m2v3_scoutescort_warning_01",
       "conversation": "m2v3_scoutescort_warning",
       "speaker": "Anh Thành",
@@ -6798,7 +6798,6 @@
       "peak": 0.44171142578125,
       "rms": 0.06878235191106796,
       "sha256": "58cea60ffad2e1f9c0f0c8649c855e7a73f1fc8944e30fd5521f6d1ccbb70b9d"
->>>>>>> Tai
     }
   ]
 }

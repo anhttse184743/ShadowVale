@@ -22,12 +22,8 @@ namespace ShadowVale.Map01
         public void SetVisible(bool visible){if(visual!=null)visual.gameObject.SetActive(visible);}
         public void SetSitting(bool sitting){if(animator!=null&&animator.runtimeAnimatorController!=null&&animator.parameters.Any(p=>p.name=="Sitting"))animator.SetBool("Sitting",sitting);}
         public bool Supporting {get;private set;}
-<<<<<<< HEAD
-        bool assisted,seekingSupport;Vector3 goal;bool travelling;AnimationClip dayIdle,dayWalk;float dayPoseClock,dayWalkSpeed,walkWeight;
-=======
         public bool PairedEscort {get;set;}
-        bool assisted,seekingSupport;Vector3 goal;bool travelling;AnimationClip dayIdle,dayWalk;float dayPoseClock;
->>>>>>> Tai
+        bool assisted,seekingSupport;Vector3 goal;bool travelling;AnimationClip dayIdle,dayWalk;float dayPoseClock,dayWalkSpeed,walkWeight;
         AnimationClip seatedRest;
         public void SetSeatedRest(AnimationClip clip){seatedRest=clip;if(clip==null)ReleasePerformance();}
         /// <param name="walkSpeed">Ground speed (m/s) at which the walk plants its feet at 1x; Hùng's falls back to his Map 1 limp.</param>

@@ -67,7 +67,9 @@ namespace ShadowVale.Map01.Tests
             yield return null;ScreenCapture.CaptureScreenshot("Logs/Map02Chapter/SharedHud/skills.png");yield return null;
             m.SetCharacterPanel(3);yield return null;ScreenCapture.CaptureScreenshot("Logs/Map02Chapter/SharedHud/map.png");yield return null;
             m.SetCharacterPanel(0);preview.Invoke(null,new object[]{m,3});yield return null;
-            m.Chapter.HoldBinoculars(true);yield return WaitGameSeconds(6);Assert.IsFalse(m.CharacterCrosshairVisible);ScreenCapture.CaptureScreenshot("Logs/Map02Chapter/SharedHud/night-binoculars.png");yield return null;
+            // This fixture checks HUD ownership; patrol detection has its own integration coverage.
+            foreach(var enemy in m.Chapter.Enemies)enemy.enabled=false;
+            m.Chapter.HoldBinoculars(true);Assert.IsTrue(m.Chapter.Binoculars);yield return WaitGameSeconds(6);Assert.IsTrue(m.Chapter.Binoculars);Assert.IsFalse(m.CharacterCrosshairVisible);ScreenCapture.CaptureScreenshot("Logs/Map02Chapter/SharedHud/night-binoculars.png");yield return null;
             m.Chapter.HoldBinoculars(false);yield return new ExitPlayMode();
         }
         static int FindCell(Map01Inventory bag,string id)=>Enumerable.Range(0,Map01Inventory.BagSize).First(i=>bag.Cell(i)?.id==id);

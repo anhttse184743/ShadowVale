@@ -154,10 +154,15 @@ namespace ShadowVale.Map01
                     var source=materials[i];if(source==null)continue;
                     if(!antennaArtMaterials.TryGetValue(source.name,out var material))
                     {
-                        bool aluminium=source.name.Contains("Aluminium"),steel=source.name.Contains("Steel"),brass=source.name.Contains("Brass");
-                        material=DayTwoMaterial(source.name,source.color);
-                        material.SetFloat("_Metallic",aluminium||steel||brass?.75f:0);
-                        material.SetFloat("_Smoothness",aluminium?.55f:steel||brass?.35f:.12f);
+                        bool aluminium=source.name.Contains("Aluminium"),steel=source.name.Contains("Steel"),brass=source.name.Contains("Brass"),wood=source.name.Contains("Ladder_Wood"),endgrain=source.name.Contains("Endgrain"),rope=source.name.Contains("Rope");
+                        // Explicit opaque URP colours: FBX material conversion washed out the
+                        // timber and the thin silver rods against the bright village sky.
+                        var color=wood?new Color(.25f,.13f,.055f):endgrain?new Color(.13f,.065f,.023f):rope?new Color(.30f,.22f,.11f):aluminium?new Color(.23f,.27f,.30f):steel?new Color(.105f,.125f,.14f):brass?new Color(.35f,.23f,.07f):new Color(.035f,.04f,.033f);
+                        material=DayTwoMaterial(source.name,color);material.SetColor("_BaseColor",color);
+                        material.SetFloat("_Metallic",aluminium?.35f:steel||brass?.25f:0);
+                        material.SetFloat("_Smoothness",aluminium?.22f:steel||brass?.18f:.08f);
+                        material.SetFloat("_Surface",0);material.SetFloat("_ZWrite",1);material.renderQueue=2000;
+                        if(wood){var grain=Resources.Load<Texture2D>("Story/Antenna/LadderWoodGrain");if(grain!=null)material.SetTexture("_BaseMap",grain);}
                         antennaArtMaterials.Add(source.name,material);
                     }
                     materials[i]=material;

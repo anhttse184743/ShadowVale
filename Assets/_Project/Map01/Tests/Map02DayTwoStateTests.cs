@@ -141,7 +141,13 @@ namespace ShadowVale.Map01.Tests
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
             Map02Mission m=null;float deadline=Time.realtimeSinceStartup+100;
             while(Time.realtimeSinceStartup<deadline){m=Object.FindFirstObjectByType<Map02Mission>();if(m?.Ready==true&&m.Chapter!=null)break;Object.FindFirstObjectByType<Map02Arrival>()?.Skip();yield return null;}
-            Assert.NotNull(m?.Chapter);var c=m.Chapter;c.enabled=false;
+            Assert.NotNull(m?.Chapter);
+            VerifyAntennaClimb(m);
+            yield return new ExitPlayMode();
+        }
+        static void VerifyAntennaClimb(Map02Mission m)
+        {
+            var c=m.Chapter;c.enabled=false;
             object Call(string name,params object[] args)=>typeof(Map02ChapterDirector).GetMethod(name,BindingFlags.NonPublic|BindingFlags.Instance).Invoke(c,args);
             GameObject Prop(string name)=>(GameObject)typeof(Map02ChapterDirector).GetField(name,BindingFlags.NonPublic|BindingFlags.Instance).GetValue(c);
             void Step(float dt,bool up=false,bool down=false,bool right=false,bool tie=false)=>Call("StepAntennaTraversal",dt,up,down,false,right,tie,false);
@@ -179,22 +185,21 @@ namespace ShadowVale.Map01.Tests
                 Assert.Less(Vector3.Distance(mounted,Prop("antennaMast").transform.position),.01f);
             }
             finally{c.Cancel();c.enabled=true;}
-            yield return new ExitPlayMode();
         }
         static void WriteAntennaPose(Map02Mission mission,Animator animator)
         {
             var lines=new System.Collections.Generic.List<string>();
             foreach(var bone in new[]{HumanBodyBones.Hips,HumanBodyBones.LeftUpperLeg,HumanBodyBones.LeftLowerLeg,HumanBodyBones.LeftFoot,HumanBodyBones.RightFoot,HumanBodyBones.LeftHand,HumanBodyBones.RightHand,HumanBodyBones.Chest})
                 lines.Add(bone+" "+mission.Player.InverseTransformPoint(animator.GetBoneTransform(bone).position).ToString("F3"));
-            File.WriteAllLines("SourceArt/Map02Antenna/pose-check.txt",lines);
+            Directory.CreateDirectory("Logs/Map02Chapter/AntennaMechanics");File.WriteAllLines("Logs/Map02Chapter/AntennaMechanics/pose-check.txt",lines);
         }
         static void CaptureAntennaReview(Map02Mission mission,string name,Vector3 offset)
         {
-            Directory.CreateDirectory("SourceArt/Map02Antenna");
+            Directory.CreateDirectory("Logs/Map02Chapter/AntennaMechanics");
             var go=new GameObject("Antenna review camera");var camera=go.AddComponent<Camera>();
             camera.transform.position=mission.Player.position+offset;camera.transform.LookAt(mission.Player.position+Vector3.up*1.1f);camera.fieldOfView=48;camera.farClipPlane=150;
             var target=new RenderTexture(1200,1000,24);var previous=RenderTexture.active;
-            try{camera.targetTexture=target;camera.Render();RenderTexture.active=target;var png=new Texture2D(1200,1000,TextureFormat.RGB24,false);png.ReadPixels(new Rect(0,0,1200,1000),0,0);png.Apply();File.WriteAllBytes("SourceArt/Map02Antenna/unity-"+name+".png",png.EncodeToPNG());Object.DestroyImmediate(png);}
+            try{camera.targetTexture=target;camera.Render();RenderTexture.active=target;var png=new Texture2D(1200,1000,TextureFormat.RGB24,false);png.ReadPixels(new Rect(0,0,1200,1000),0,0);png.Apply();File.WriteAllBytes("Logs/Map02Chapter/AntennaMechanics/unity-"+name+".png",png.EncodeToPNG());Object.DestroyImmediate(png);}
             finally{RenderTexture.active=previous;camera.targetTexture=null;Object.DestroyImmediate(target);Object.DestroyImmediate(go);}
         }
         static Map02ChapterState Through(string id){var s=new Map02ChapterState();foreach(var t in Map02ChapterDefinition.Load().tasks){Assert.IsTrue(s.Complete(t.id),t.id);if(t.id==id)break;}return s;}
@@ -213,12 +218,29 @@ namespace ShadowVale.Map01.Tests
         {
             if(!File.Exists(Request)||EditorApplication.isCompiling||EditorApplication.isUpdating||EditorApplication.isPlayingOrWillChangePlaymode||SessionState.GetBool(Key,false))return;
             var request=File.ReadAllText(Request).Trim();bool followup=request=="followup";
-            SessionState.SetString(Key+".report",request=="performance-focus"?"Logs/Map02Chapter/phase4-focus-results.xml":request=="performance"?"Logs/Map02Chapter/phase4-results.xml":(request=="night2"||request=="night2-focus")?"Logs/Map02Chapter/night2-phase3-results.xml":(request=="report-patrol"||request=="report-only")?"Logs/Map02Chapter/report-patrol-results.xml":(request=="day2-route"||request=="day2-geometry")?"Logs/Map02Chapter/day2-phase2-results.xml":request=="bridge"?"Logs/Map02Chapter/bridge-child-results.xml":request=="movement"?"Logs/Map02Chapter/free-movement-results.xml":request=="cast"?"Logs/Map02Chapter/cast-results.xml":request=="enemy"?"Logs/Map02Chapter/enemy-animation-results.xml":request=="preview"?"Logs/Map02Chapter/route-preview-results.xml":(request=="hud"||request=="hud-focus")?"Logs/Map02Chapter/shared-hud-results.xml":Report);
+            SessionState.SetString(Key+".report",request=="antenna"?"Logs/Map02Chapter/AntennaMechanics/results.xml":(request=="checkpoint-regression"||request=="checkpoint-live")?"Logs/Map02Chapter/checkpoint-regression-results.xml":request=="performance-focus"?"Logs/Map02Chapter/phase4-focus-results.xml":request=="performance"?"Logs/Map02Chapter/phase4-results.xml":(request=="night2"||request=="night2-focus")?"Logs/Map02Chapter/night2-phase3-results.xml":(request=="report-patrol"||request=="report-only")?"Logs/Map02Chapter/report-patrol-results.xml":(request=="day2-route"||request=="day2-geometry")?"Logs/Map02Chapter/day2-phase2-results.xml":request=="bridge"?"Logs/Map02Chapter/bridge-child-results.xml":request=="movement"?"Logs/Map02Chapter/free-movement-results.xml":request=="cast"?"Logs/Map02Chapter/cast-results.xml":request=="enemy"?"Logs/Map02Chapter/enemy-animation-results.xml":request=="preview"?"Logs/Map02Chapter/route-preview-results.xml":(request=="hud"||request=="hud-focus")?"Logs/Map02Chapter/shared-hud-results.xml":Report);
             File.Delete(Request);Directory.CreateDirectory("Logs/Map02Chapter");SessionState.SetBool(Key,true);Register();
-            var names=request=="antenna"?new[]{"ShadowVale.Map01.Tests.Map02DayTwoStateTests.AntennaStaysMountedAfterClimbCompletionAndReload"}:request=="performance-focus"?new[]{"ShadowVale.Map01.Tests.Map02PerformanceTests"}:request=="performance"?new[]{"ShadowVale.Map01.Tests.Map02PerformanceTests","ShadowVale.Map01.Tests.Map02DayTwoRouteTests","ShadowVale.Map01.Tests.Map02NightTwoRouteTests","ShadowVale.Map01.Tests.Map02ChapterMechanicsTests","ShadowVale.Map01.Tests.Map02ReportAndNightPatrolTests"}:request=="night2-focus"?new[]{"ShadowVale.Map01.Tests.Map02NightTwoRouteTests"}:request=="night2"?new[]{"ShadowVale.Map01.Tests.Map02NightTwoRouteTests","ShadowVale.Map01.Tests.Map02DayTwoStateTests","ShadowVale.Map01.Tests.Map02ReportAndNightPatrolTests","ShadowVale.Map01.Tests.Map02RoutePreviewTests","ShadowVale.Map01.Tests.BandageWeaponTests"}:request=="report-only"?new[]{"ShadowVale.Map01.Tests.Map02ReportAndNightPatrolTests"}:request=="report-patrol"?new[]{"ShadowVale.Map01.Tests.Map02ReportAndNightPatrolTests","ShadowVale.Map01.Tests.Map02DayTwoStateTests","ShadowVale.Map01.Tests.Map02DayTwoRouteTests","ShadowVale.Map01.Tests.Map02CastTests"}:request=="day2-geometry"?new[]{"ShadowVale.Map01.Tests.Map02DayTwoRouteTests","ShadowVale.Map01.Tests.Map02BridgeCollisionTests"}:request=="day2-route"?new[]{"ShadowVale.Map01.Tests.Map02DayTwoRouteTests","ShadowVale.Map01.Tests.Map02DayTwoStateTests","ShadowVale.Map01.Tests.Map02ChapterMechanicsTests","ShadowVale.Map01.Tests.Map02FreeMovementTests","ShadowVale.Map01.Tests.Map02BridgeCollisionTests"}:request=="bridge"?new[]{"ShadowVale.Map01.Tests.Map02BridgeCollisionTests","ShadowVale.Map01.Tests.Map02CastTests"}:request=="movement"?new[]{"ShadowVale.Map01.Tests.Map02FreeMovementTests","ShadowVale.Map01.Tests.Map02DayTwoStateTests","ShadowVale.Map01.Tests.AimToggleIntegrationTests"}:request=="cast"?new[]{"ShadowVale.Map01.Tests.Map02CastTests","ShadowVale.Map01.Tests.Map02DayTwoStateTests"}:request=="enemy"?new[]{"ShadowVale.Map01.Tests.Map02EnemyAnimationTests"}:request=="hud-focus"?new[]{"ShadowVale.Map01.Tests.Map02CharacterHudTests","ShadowVale.Map01.Tests.ForestHudTests.ItemsUseTheirOwnKeysWithNoShortcutBar","ShadowVale.Map01.Tests.MinimapTests"}:request=="hud"?new[]{"ShadowVale.Map01.Tests.Map02CharacterHudTests","ShadowVale.Map01.Tests.Map02DayTwoStateTests","ShadowVale.Map01.Tests.Map02RuntimeTests","ShadowVale.Map01.Tests.Map02RoutePreviewTests","ShadowVale.Map01.Tests.M16IntegrationTests","ShadowVale.Map01.Tests.MinimapTests","ShadowVale.Map01.Tests.ForestHudTests"}:request=="preview"?new[]{"ShadowVale.Map01.Tests.Map02RoutePreviewTests"}:followup?new[]{"ShadowVale.Map01.Tests.Map02DayTwoStateTests","ShadowVale.Map01.Tests.Map02RuntimeTests","ShadowVale.Map01.Tests.Map02ClarityTests.FocusIsStableSelectableAndCannotAbandonCarriedCargo"}:new[]{
+            var names=request=="checkpoint-live"?new[]{"ShadowVale.Map01.Tests.Map02RoutePreviewTests","ShadowVale.Map01.Tests.Map02EvacuationChoiceTests","ShadowVale.Map01.Tests.Map02DayTwoStateTests.WireRequiresPickupAndDeliveryAndCannotBeDuplicated","ShadowVale.Map01.Tests.Map02DayTwoStateTests.OldVersionThreeWireSavesKeepCompletedTasksAndPendingWork"}:request=="checkpoint-regression"?new[]{"ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionVoiceCatalogKeepsRecordingsFromBothBranches","ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionCheckpointsKeepTheNextTaskPending","ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionCheckpointMenusRemainAvailable","ShadowVale.Map01.Tests.Map02EvacuationChoiceTests","ShadowVale.Map01.Tests.Map02DayTwoStateTests.WireRequiresPickupAndDeliveryAndCannotBeDuplicated","ShadowVale.Map01.Tests.Map02DayTwoStateTests.OldVersionThreeWireSavesKeepCompletedTasksAndPendingWork"}:request=="antenna"?new[]{"ShadowVale.Map01.Tests.Map02DayTwoStateTests.AntennaStaysMountedAfterClimbCompletionAndReload"}:request=="performance-focus"?new[]{"ShadowVale.Map01.Tests.Map02PerformanceTests"}:request=="performance"?new[]{"ShadowVale.Map01.Tests.Map02PerformanceTests","ShadowVale.Map01.Tests.Map02DayTwoRouteTests","ShadowVale.Map01.Tests.Map02NightTwoRouteTests","ShadowVale.Map01.Tests.Map02ChapterMechanicsTests","ShadowVale.Map01.Tests.Map02ReportAndNightPatrolTests"}:request=="night2-focus"?new[]{"ShadowVale.Map01.Tests.Map02NightTwoRouteTests"}:request=="night2"?new[]{"ShadowVale.Map01.Tests.Map02NightTwoRouteTests","ShadowVale.Map01.Tests.Map02DayTwoStateTests","ShadowVale.Map01.Tests.Map02ReportAndNightPatrolTests","ShadowVale.Map01.Tests.Map02RoutePreviewTests","ShadowVale.Map01.Tests.BandageWeaponTests"}:request=="report-only"?new[]{"ShadowVale.Map01.Tests.Map02ReportAndNightPatrolTests"}:request=="report-patrol"?new[]{"ShadowVale.Map01.Tests.Map02ReportAndNightPatrolTests","ShadowVale.Map01.Tests.Map02DayTwoStateTests","ShadowVale.Map01.Tests.Map02DayTwoRouteTests","ShadowVale.Map01.Tests.Map02CastTests"}:request=="day2-geometry"?new[]{"ShadowVale.Map01.Tests.Map02DayTwoRouteTests","ShadowVale.Map01.Tests.Map02BridgeCollisionTests"}:request=="day2-route"?new[]{"ShadowVale.Map01.Tests.Map02DayTwoRouteTests","ShadowVale.Map01.Tests.Map02DayTwoStateTests","ShadowVale.Map01.Tests.Map02ChapterMechanicsTests","ShadowVale.Map01.Tests.Map02FreeMovementTests","ShadowVale.Map01.Tests.Map02BridgeCollisionTests"}:request=="bridge"?new[]{"ShadowVale.Map01.Tests.Map02BridgeCollisionTests","ShadowVale.Map01.Tests.Map02CastTests"}:request=="movement"?new[]{"ShadowVale.Map01.Tests.Map02FreeMovementTests","ShadowVale.Map01.Tests.Map02DayTwoStateTests","ShadowVale.Map01.Tests.AimToggleIntegrationTests"}:request=="cast"?new[]{"ShadowVale.Map01.Tests.Map02CastTests","ShadowVale.Map01.Tests.Map02DayTwoStateTests"}:request=="enemy"?new[]{"ShadowVale.Map01.Tests.Map02EnemyAnimationTests"}:request=="hud-focus"?new[]{"ShadowVale.Map01.Tests.Map02CharacterHudTests","ShadowVale.Map01.Tests.ForestHudTests.ItemsUseTheirOwnKeysWithNoShortcutBar","ShadowVale.Map01.Tests.MinimapTests"}:request=="hud"?new[]{"ShadowVale.Map01.Tests.Map02CharacterHudTests","ShadowVale.Map01.Tests.Map02DayTwoStateTests","ShadowVale.Map01.Tests.Map02RuntimeTests","ShadowVale.Map01.Tests.Map02RoutePreviewTests","ShadowVale.Map01.Tests.M16IntegrationTests","ShadowVale.Map01.Tests.MinimapTests","ShadowVale.Map01.Tests.ForestHudTests"}:request=="preview"?new[]{"ShadowVale.Map01.Tests.Map02RoutePreviewTests"}:followup?new[]{"ShadowVale.Map01.Tests.Map02DayTwoStateTests","ShadowVale.Map01.Tests.Map02RuntimeTests","ShadowVale.Map01.Tests.Map02ClarityTests.FocusIsStableSelectableAndCannotAbandonCarriedCargo"}:new[]{
                 "ShadowVale.Map01.Tests.Map02DayTwoStateTests",
                 "ShadowVale.Map01.Tests.Map02ChapterTests",
                 "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests"};
+            if(request=="mechanics-audit")
+            {
+                SessionState.SetString(Key+".report","Logs/Map02Chapter/mechanics-audit-results.xml");
+                names=new[]{
+                    "ShadowVale.Map01.Tests.Map02ChapterTests",
+                    "ShadowVale.Map01.Tests.Map02EndingTests",
+                    "ShadowVale.Map01.Tests.Map02ProgressTests",
+                    "ShadowVale.Map01.Tests.Map02EvacuationChoiceTests",
+                    "ShadowVale.Map01.Tests.Map02RoutePreviewTests",
+                    "ShadowVale.Map01.Tests.Map02CharacterHudTests",
+                    "ShadowVale.Map01.Tests.Map02BoatPatchingTests",
+                    "ShadowVale.Map01.Tests.Map02PerformanceTests",
+                    "ShadowVale.Map01.Tests.Map02FreeMovementTests",
+                    "ShadowVale.Map01.Tests.Map02DayTwoRouteTests",
+                    "ShadowVale.Map01.Tests.Map02NightTwoRouteTests",
+                    "ShadowVale.Map01.Tests.Map02DayTwoStateTests.AntennaStaysMountedAfterClimbCompletionAndReload"};
+            }
             runner.Execute(new ExecutionSettings(new Filter{testMode=UnityEditor.TestTools.TestRunner.Api.TestMode.EditMode,testNames=names}));
         }
         sealed class Results:ICallbacks

@@ -38,8 +38,9 @@ namespace ShadowVale.Map01.Tests
                 Place(m,Marker("D2_04").transform.position);Assert.IsTrue(m.Interact(Marker("D2_04")));Assert.NotNull(c.Companion);
                 Assert.Less(Vector3.Distance(Marker("D2_04").transform.position,c.Sites["command"].position),.1f);
                 var saved=Map02Mission.Parse(JsonUtility.ToJson(m.Capture()));m.Restore(saved);Assert.NotNull(c.Companion,"Save/load must resume following.");
-                Assert.IsFalse(m.CharacterGearLocked);Assert.IsTrue(m.CharacterCanSprint);
-                // This test drives the actual destination check, without waiting for a 100m escort.
+                Assert.IsTrue(m.CharacterGearLocked);Assert.IsTrue(c.ScoutEscortActive);Assert.IsTrue(m.CharacterCanHeal);
+                // Exercise arrival after the bridge has stopped the remaining ambush waves.
+                c.State.scoutAmbushPassedBridge=true;
                 Place(m,c.Sites["command"].position);c.Actor("Tâm").StopAt(c.Sites["command"].position+Vector3.right);
                 Call(c,"Update");Assert.AreEqual("D2_04",c.CurrentScene?.id);Call(c,"EndScene");Assert.IsTrue(c.State.Done("D2_04"));
                 Place(m,Marker("D2_05").transform.position);Assert.IsTrue(m.Interact(Marker("D2_05")));Assert.IsFalse(c.State.Done("D2_05"));

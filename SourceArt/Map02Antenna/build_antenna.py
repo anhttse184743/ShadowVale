@@ -24,6 +24,22 @@ dark=material('Coax_Rubber',(.025,.03,.026),0,.8)
 rope=material('Lashing_Rope',(.42,.32,.17),0,.95)
 brass=material('Connector_Brass',(.53,.36,.12),.7,.35)
 
+# Fine, high contrast wood fibres are exported as a real texture for Unity.
+grain=bpy.data.images.new('LadderWoodGrain',width=256,height=1024,alpha=False)
+pixels=[]
+for y in range(1024):
+    for x in range(256):
+        u=x/256;v=y/1024
+        wave=u+math.sin(v*16)*.003+math.sin(v*39+u*8)*.0015
+        fibre=.75+.12*math.sin(wave*math.tau*71)+.06*math.sin(wave*math.tau*129+v*2)
+        growth=math.sin(wave*math.tau*13+math.sin(v*7)*.4)
+        fibre=max(.36,min(1,fibre-(max(0,growth)**12)*.20))
+        pixels.extend((fibre,fibre*.93,fibre*.80,1))
+grain.pixels=pixels;grain.filepath_raw=str(OUT/'LadderWoodGrain.png');grain.file_format='PNG';grain.save()
+tex=wood.node_tree.nodes.new('ShaderNodeTexImage');tex.image=grain
+mix=wood.node_tree.nodes.new('ShaderNodeMixRGB');mix.blend_type='MULTIPLY';mix.inputs[0].default_value=1;mix.inputs[2].default_value=(.30,.19,.085,1)
+wood.node_tree.links.new(tex.outputs['Color'],mix.inputs[1]);wood.node_tree.links.new(mix.outputs['Color'],wood.node_tree.nodes.get('Principled BSDF').inputs['Base Color'])
+
 def xyz(p): return (p[0],-p[2],p[1])
 def finish(o,name,mat):
     o.name=name; o.data.materials.append(mat); return o
@@ -95,9 +111,9 @@ rod('Tubular mast',(0,0,0),(0,1.45,0),.024,metal,20)
 box('Boom',(0,1.35,0),(.048,.045,1.9),metal,.004)
 for i in range(10):
     z=-.84+i*.18; half=.68-i*.037
-    rod('Yagi element %02d'%i,(-half,1.38,z),(half,1.38,z),.009,metal)
+    rod('Yagi element %02d'%i,(-half,1.38,z),(half,1.38,z),.014,metal)
     box('Insulated element saddle',(0,1.365,z),(.08,.045,.06),dark,.006)
-    for x in (-half,half):rod('Element weather cap',(x-.012,1.38,z),(x+.012,1.38,z),.011,dark)
+    for x in (-half,half):rod('Element weather cap',(x-.014,1.38,z),(x+.014,1.38,z),.016,dark)
     rod('Element clamp screw',(0,1.39,z),(0,1.413,z),.013,steel,6)
 box('Mast mounting saddle',(0,1.30,0),(.15,.13,.11),steel,.008)
 for y in (.48,.76):
