@@ -49,11 +49,16 @@ namespace ShadowVale.Map01.Tests.Replay
         /// camp C2, greedy, seeds 500+, 10 each (Docs/Experiments/calibration/*-v2.json): same_route 9 s → 50 %;
         /// same_bush 8 s → 10 %, 8.5 s → 40 %, 9 s → 90 %; stone_lure 7 s → 70 %, 7.5 s → 40 %, 8 s → 80 %.
         /// (v1, 03/10: 13.5 / 14 / 12.)
+        /// Re-calibrated 28/10/2026 on the final build (exp-v2: hit chance, regeneration, reinforcement range 30,
+        /// commander changes), greedy, seeds 500+, 10 each, coarse then fine (shadowvale-solver
+        /// experiments/results/exp-v2/calibration): same_route 11 s → 10 %, 11.5 s → 50 %, 12 s → 60 %;
+        /// same_bush 6 s → 30 %, 6.25 s → 40 %, 6.5 s → 60 %; stone_lure 6 s → 30 %, 6.5 s → 60 %, 7.5 s → 60 %.
+        /// Rule fixed beforehand: closest to 50 %, the lower knob on a tie.
         public static float DefaultKnob(string bot) => bot switch
         {
-            "same_route" => 9f,
-            "same_bush" => 8.5f,
-            "stone_lure" => 7.5f,
+            "same_route" => 11.5f,
+            "same_bush" => 6.25f,
+            "stone_lure" => 6.5f,
             _ => 0f,
         };
 
