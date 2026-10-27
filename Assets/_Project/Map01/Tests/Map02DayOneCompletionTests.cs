@@ -69,7 +69,7 @@ namespace ShadowVale.Map01.Tests
                     if (step % 40 == 0) yield return null;
                 }
                 Assert.True(director.State.Done("N1_01"), "The automatic supper must complete the objective.");
-                Assert.That(elapsed - approach, Is.InRange(90f, 100f), "The staged supper keeps its approximately 90-second pacing.");
+                Assert.That(elapsed - approach, Is.InRange(70f, 72f), "The supper runs the approved Blender timeline (70 s after both sit).");
                 Assert.GreaterOrEqual(elapsed - lastStarted, DialogueVoice.Length(lines.Last().id) + 3f, "The last spoken line is followed by at least three seconds of hold.");
                 Assert.True(heardCrickets, "The final hold must actually play the cricket ambience.");
                 var finalCrickets = (AudioSource)typeof(Map02ChapterDirector).GetField("mealCrickets", Private).GetValue(director);
@@ -207,7 +207,7 @@ namespace ShadowVale.Map01.Tests
                 foreach (int yaw in new[] { 0, 90, 180, 270 })
                 {
                     actor.transform.rotation = Quaternion.Euler(0, yaw, 0);
-                    foreach (var pose in new[] { ("InjuredIdle", .35f), ("InjuredWalk", .3f), ("InjuredWalk", .7f) })
+                    foreach (var pose in new[] { ("InjuredIdle", .35f), ("InjuredWalk", .3f), ("InjuredWalk", .7f), ("HungArmWalk", .3f), ("HungArmWalk", .7f) })
                     {
                         actor.SamplePerformance(art.Find(pose.Item1), pose.Item2, true);
                         actor.GroundPerformance(actor.transform.position.y);

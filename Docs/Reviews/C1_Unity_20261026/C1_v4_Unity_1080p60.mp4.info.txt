@@ -1,0 +1,1 @@
+Unity camera capture after LateUpdate contacts. 1920x1080; 690 encoded frames / 60 fps; 230 distinct rendered samples. Natural scene time retained with repeated frames when recording is slow. No audio or GUI overlay. Not an FPS benchmark.

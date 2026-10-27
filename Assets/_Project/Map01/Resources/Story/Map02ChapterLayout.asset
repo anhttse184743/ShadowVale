@@ -103,6 +103,25 @@ MonoBehaviour:
   nightSunIntensity: 0.08
   nightSkyExposure: 0.08
   patrolSweepSeconds: 15
+  nightTwoHatch: {x: -3.96654, y: 0.8, z: -51.858}
+  nightTwoPatrolCenter: {x: 36.247412, y: 0.8, z: -18.801694}
+  nightTwoPatrolRowDirection: {x: -0.4606423, y: 0, z: -0.8875859}
+  nightTwoRiverEntry: {x: -3.971, y: 0.8, z: -23.858}
+  nightTwoRiverExit: {x: -28, y: 1, z: -26}
+  nightTwoBankHalfWidth: 3
+  nightTwoBankRoute:
+  - {x: 4.582, y: 0.8, z: -0.753}
+  - {x: 0.305, y: 0.8, z: -5.483}
+  - {x: -1.833, y: 0.8, z: -11.669}
+  - {x: -3.971, y: 0.8, z: -17.128}
+  - {x: -3.971, y: 0.8, z: -21.858}
+  - {x: -3.9695, y: 0.8, z: -31.858}
+  - {x: -3.968, y: 0.8, z: -41.858}
+  - {x: -3.96654, y: 0.8, z: -51.858}
+  nightTwoEvacuationRoute:
+  - {x: -29.324, y: 1, z: -30.592}
+  - {x: -36.655, y: 1, z: -44.419}
+  - {x: -36.044, y: 1, z: -64.069}
   coverFireSeconds: 75
   civilianArt: {fileID: 0}
   tankArt: {fileID: 5587284310667264704, guid: 4396b00d0f623f442af762fc6fd61a2b, type: 3}
@@ -122,6 +141,13 @@ MonoBehaviour:
   medkitArt: {fileID: 5019380679771558921, guid: 0d2b35192e56a4e43989571f3a0ae89d, type: 3}
   grenadeArt: {fileID: 8944137499766871718, guid: e23d487084fad2d4c821980e378369a6, type: 3}
   strawCartArt: {fileID: 8974337617010150994, guid: 76462e0fb74f0084998cce3bc6b2db0e, type: 3}
-  tankTracksClip: {fileID: 0}
+  tankTracksClip: {fileID: 8300000, guid: c9cede260dc54b2c9701cd7100065e8e, type: 3}
   tinnitusClip: {fileID: 0}
-  artilleryClip: {fileID: 0}
+  artilleryClip: {fileID: 8300000, guid: 3a4f76312f644b0e9be64e3523059d37, type: 3}
+  nightEvacuationStart: {x: -4, y: 1, z: -42}
+  nightEvacuationFieldBush: {x: 25, y: 1, z: -56.5}
+  nightEvacuationRiver: {x: -8, y: 1, z: -57}
+  nightEvacuationVillage: {x: -53, y: 1, z: -39}
+  nightEvacuationPatrolStart: {x: 15.861885, y: 1, z: -70.561386}
+  nightEvacuationPatrolEnd: {x: 34.138115, y: 1, z: -62.438614}
+  nightEvacuationBushArt: {fileID: 1120759363065600250, guid: bb11d4410e8bf774c8b1d6f87a7f02cf, type: 3}

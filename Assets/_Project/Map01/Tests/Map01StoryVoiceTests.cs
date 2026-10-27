@@ -25,7 +25,7 @@ namespace ShadowVale.Map01.Tests
             foreach(var e in rows){
                 var voice=DialogueVoice.Find(e.id);Assert.NotNull(voice,e.id);Assert.NotNull(voice.clip,e.id);
                 Assert.AreEqual(e.caption,voice.caption);Assert.AreEqual(e.radio,voice.radio);Assert.AreEqual(e.resource,voice.resource);
-                Assert.That(voice.clip.length,Is.EqualTo(e.duration).Within(.035f),e.id);
+                Assert.That(voice.clip.length,Is.EqualTo(CurrentVoiceRevision.For(e.id).duration).Within(.035f),e.id);
                 Assert.AreEqual(1,voice.clip.channels,e.id);
                 var clean=Resources.Load<AudioClip>(e.cleanResource);Assert.NotNull(clean,e.id+" clean master");
                 if(e.radio)Assert.AreNotSame(clean,voice.clip,"Remote speech uses only the processed clip.");

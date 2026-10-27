@@ -10,6 +10,7 @@ namespace ShadowVale.Map01
     /// <summary>Rescue rules and escort progress, independent of later quest stages.</summary>
     public sealed class Map01Rescue : MonoBehaviour
     {
+        public const int SnapshotRevision=7;
         public static readonly string[] SquadNames={"patrol_0","patrol_1","patrol_2","rbl_patrol_3"};
         public enum Phase { Captive, Alarm, Failed, Untying, Rising, Escorting, EnteringShelter, Delivered }
         [Serializable] public sealed class Snapshot {
@@ -59,6 +60,7 @@ namespace ShadowVale.Map01
         private bool whispered;
         public bool IntroSeen{get;private set;}
         public void MarkIntroSeen(){IntroSeen=true;}
+        public void CompleteApproachIntro(){calmUntil=Time.time+1;nextChatter=Time.time+5;}
         private Coroutine release;
         private bool protectedRelease,releaseInvulnerability;
         private static readonly string[] Chatter={
@@ -329,17 +331,19 @@ namespace ShadowVale.Map01
             if(supplies!=null&&!supplies.used){foreach(var item in supplies.items)inventory.Add(item.item_id,item.count);supplies.MarkLooted();}
             mission.Say("Hùng: Về được rồi... Cảm ơn cậu, Nam. Tôi còn chuyện phải báo với chỉ huy.",9);return true;
         }
-        public void Retry(){if(!Failed&&mission.PlayerHealth>0)return;Saves.RestartRescue(quest.Stage==Map01Quest.EscortStage);}
+        public void Retry(){if(mission.Cinematic||(!Failed&&mission.PlayerHealth>0))return;Saves.RestartRescue(quest.Stage==Map01Quest.EscortStage);}
         public void ResetSquad(){foreach(var guard in squad)if(guard!=null)guard.ReturnToPost();}
         public void RestoreHealth(float value)=>HungHealth=value<0?HungMaxHealth:Mathf.Clamp(value,0,HungMaxHealth);
-        public Snapshot Capture()=>new Snapshot{revision=4,introSeen=IntroSeen,phase=(int)CurrentPhase,waveMask=WaveMask,helpWaveMask=HelpWaveMask,safe=SafeReached,reward=RewardDelivered,escortDistance=EscortDistance,combatAlarm=CombatAlarm};
+        public Snapshot Capture()=>new Snapshot{revision=SnapshotRevision,introSeen=IntroSeen,phase=(int)CurrentPhase,waveMask=WaveMask,helpWaveMask=HelpWaveMask,safe=SafeReached,reward=RewardDelivered,escortDistance=EscortDistance,combatAlarm=CombatAlarm};
         public void Restore(Snapshot saved,Map01EnemyController.Snapshot[] enemies)
         {
             if(saved==null||saved.revision<=0){
                 CurrentPhase=quest.Stage==Map01Quest.RescueStage?Phase.Captive:quest.Stage==Map01Quest.EscortStage?Phase.Escorting:Phase.Delivered;RewardDelivered=quest.Stage>Map01Quest.EscortStage;
                 if(CurrentPhase==Phase.Escorting){EscortDistance=PathLength(Path(CaptivePost,Layout.shelterDoor.position));float distance=RemainingHomeDistance();for(int i=0;i<3;i++)if(distance<=EscortDistance*Layout.waveThresholds[i])WaveMask|=1<<i;}
             }else{CurrentPhase=(Phase)saved.phase;WaveMask=saved.waveMask;SafeReached=saved.safe;RewardDelivered=saved.reward;EscortDistance=saved.escortDistance;}
-            IntroSeen=saved!=null&&saved.revision>=3?saved.introSeen:CurrentPhase!=Phase.Captive||Remaining<4||CombatAlarm;
+            // Older saves lack the enemy-first interrogation and pan back to Nam.
+            // Replay it once on a calm, untouched hostage encounter; never interrupt combat/escort.
+            IntroSeen=saved!=null&&saved.revision>=SnapshotRevision?saved.introSeen:CurrentPhase!=Phase.Captive||Remaining<4||CombatAlarm;
             HelpWaveMask=saved!=null&&saved.revision>=4?saved.helpWaveMask:WaveMask;
             nextHomePathCheck=0;nextHitLine=0;
             CombatAlarm=saved!=null&&saved.combatAlarm&&CurrentPhase==Phase.Captive;nextRally=0;

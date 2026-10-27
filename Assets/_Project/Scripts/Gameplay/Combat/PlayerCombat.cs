@@ -74,6 +74,7 @@ namespace ShadowVale.Gameplay.Combat
         /// magazine, so a broken gun keeps its rounds and mimes no shot. Left unset, every gun fires.
         /// </summary>
         public System.Func<bool> GunUsable { get; set; }
+        public System.Func<WeaponKind,bool> EquipAllowed { get; set; }
 
         /// <summary>
         /// Asked for rounds when the magazine reloads; returns how many the reserve could give.
@@ -781,6 +782,7 @@ namespace ShadowVale.Gameplay.Combat
         /// </summary>
         public bool Equip(WeaponKind kind)
         {
+            if(EquipAllowed!=null&&!EquipAllowed(kind))return false;
             _weapons.TryGetValue(kind, out Weapon next);
             if (next == null)
             {
@@ -881,6 +883,14 @@ namespace ShadowVale.Gameplay.Combat
             // The muzzle is where a gunshot is heard from; an empty hand has none, so fall back
             // to the character. Raised before the trace so a listener cannot miss a kill's shot.
             Transform sound = _equipped != null && _equipped.Muzzle != null ? _equipped.Muzzle : transform;
+            // Mosin's attack event starts its bolt cycle and closes the PU scope.
+            // Freeze the ray the player actually aimed before that camera transition;
+            // effects still resolve after this frame's animated muzzle is positioned.
+            Ray? scopedRay = null;
+            if(_equippedKind==WeaponKind.Sniper && cameraRig!=null && cameraRig.IsWeaponScope) {
+                var scopeCamera=Camera.main;
+                if(scopeCamera!=null)scopedRay=new Ray(scopeCamera.transform.position,scopeCamera.transform.forward);
+            }
             Attacked?.Invoke(_equippedKind, sound.position);
 
             _upperBodyHoldUntil = Time.time + cooldown + attackLayerTail;
@@ -893,7 +903,7 @@ namespace ShadowVale.Gameplay.Combat
             {
                 _faceCameraHoldUntil = Time.time + cooldown + faceCameraTail;
                 _fireHoldUntil = _upperBodyHoldUntil;
-                _pendingGunfire.Add(new PendingGunShot(_equipped,CurrentStance(),_aiming));
+                _pendingGunfire.Add(new PendingGunShot(_equipped,CurrentStance(),_aiming,scopedRay));
             }
             else
             {
@@ -903,8 +913,8 @@ namespace ShadowVale.Gameplay.Combat
 
         private readonly struct PendingGunShot
         {
-            public readonly Weapon Gun;public readonly ShooterStance Stance;public readonly bool Aiming;
-            public PendingGunShot(Weapon gun,ShooterStance stance,bool aiming){Gun=gun;Stance=stance;Aiming=aiming;}
+            public readonly Weapon Gun;public readonly ShooterStance Stance;public readonly bool Aiming;public readonly Ray? ScopedRay;
+            public PendingGunShot(Weapon gun,ShooterStance stance,bool aiming,Ray? scopedRay){Gun=gun;Stance=stance;Aiming=aiming;ScopedRay=scopedRay;}
         }
         private readonly System.Collections.Generic.List<PendingGunShot> _pendingGunfire=new();
 
@@ -913,7 +923,7 @@ namespace ShadowVale.Gameplay.Combat
             if(!isActiveAndEnabled){_pendingGunfire.Clear();return;}
             while(isActiveAndEnabled && _pendingGunfire.Count>0) {
                 var shot=_pendingGunfire[0];_pendingGunfire.RemoveAt(0);
-                if(shot.Gun!=null)FireShot(shot.Gun,shot.Stance,shot.Aiming);
+                if(shot.Gun!=null)FireShotAlongRay(shot.Gun,shot.Stance,shot.Aiming,shot.ScopedRay);
             }
             _pendingGunfire.Clear();
         }
@@ -925,6 +935,9 @@ namespace ShadowVale.Gameplay.Combat
             => FireShot(gun,CurrentStance(),_aiming);
 
         private void FireShot(Weapon gun,ShooterStance stance,bool aiming)
+            => FireShotAlongRay(gun,stance,aiming,null);
+
+        private void FireShotAlongRay(Weapon gun,ShooterStance stance,bool aiming,Ray? scopedRay)
         {
             Camera cam = Camera.main;
             if (cam == null)
@@ -932,8 +945,8 @@ namespace ShadowVale.Gameplay.Combat
                 return;
             }
 
-            Vector3 origin = cam.transform.position;
-            Vector3 direction = cam.transform.forward;
+            Vector3 origin = scopedRay?.origin ?? cam.transform.position;
+            Vector3 direction = scopedRay?.direction ?? cam.transform.forward;
 
             // How steady the shooter is decides the cone, and how long they have held the
             // trigger widens it. The weapon's own HipSpread is no longer consulted: one flat

@@ -57,6 +57,20 @@ namespace ShadowVale.Map01
             }
             return false;
         }
+        public int ClearAccess(Vector3 center,Vector3 approach,float radius,float pathHalfWidth)
+        {
+            var kept=new System.Collections.Generic.List<Vector4>();var scales=new System.Collections.Generic.List<float>();
+            var segment=Vector3.ProjectOnPlane(approach-center,Vector3.up);float length=segment.sqrMagnitude;
+            for(int i=0;i<plants.Length;i++)
+            {
+                var p=plants[i];var world=transform.TransformPoint(new Vector3(p.x,p.y,p.z));var delta=Vector3.ProjectOnPlane(world-center,Vector3.up);
+                float t=length>.001f?Mathf.Clamp01(Vector3.Dot(delta,segment)/length):0;
+                if(delta.sqrMagnitude<radius*radius||(delta-segment*t).sqrMagnitude<pathHalfWidth*pathHalfWidth)continue;
+                kept.Add(p);scales.Add(i<sizes.Length?sizes[i]:1);
+            }
+            int removed=plants.Length-kept.Count;if(removed==0)return 0;
+            plants=kept.ToArray();sizes=scales.ToArray();Rebuild();return removed;
+        }
         void Render(ScriptableRenderContext context,Camera camera)
         {
             if(!isActiveAndEnabled||material==null||detailedMesh==null||!SystemInfo.supportsInstancing)return;

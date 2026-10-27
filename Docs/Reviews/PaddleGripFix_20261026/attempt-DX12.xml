@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-26 16:14:34Z" end-time="2026-10-26 16:14:43Z" duration="8.5031452">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="820" result="Failed" site="Child" start-time="2026-10-26 16:14:34Z" end-time="2026-10-26 16:14:43Z" duration="8.503145" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1763" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/Capstone/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="597" result="Failed" site="Child" start-time="2026-10-26 16:14:35Z" end-time="2026-10-26 16:14:43Z" duration="8.003373" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="25616" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1764" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="597" result="Failed" site="Child" start-time="2026-10-26 16:14:35Z" end-time="2026-10-26 16:14:43Z" duration="7.974159" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1765" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="597" result="Failed" site="Child" start-time="2026-10-26 16:14:35Z" end-time="2026-10-26 16:14:43Z" duration="7.948635" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="SetUpFixture" id="1671" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="597" result="Failed" site="Child" start-time="2026-10-26 16:14:35Z" end-time="2026-10-26 16:14:43Z" duration="7.921139" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1089" name="CommanderRowerTests" fullname="ShadowVale.Map01.Tests.CommanderRowerTests" classname="ShadowVale.Map01.Tests.CommanderRowerTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-26 16:11:23Z" end-time="2026-10-26 16:13:50Z" duration="146.479305" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1090" name="CommanderRowsAndHungSupportsArmAcrossBothMaps" fullname="ShadowVale.Map01.Tests.CommanderRowerTests.CommanderRowsAndHungSupportsArmAcrossBothMaps" methodname="CommanderRowsAndHungSupportsArmAcrossBothMaps" classname="ShadowVale.Map01.Tests.CommanderRowerTests" runstate="Runnable" seed="331929873" result="Passed" start-time="2026-10-26 16:10:21Z" end-time="2026-10-26 16:13:50Z" duration="208.685820" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                </properties>
+                <output><![CDATA[Main Object Name 'Commander paddle readable source' does not match filename 'Commander_Paddle_Readable'
+Main Object Name 'Commander paddle readable source' does not match filename 'Commander_Paddle_Readable'
+Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1121" name="ExtractionTransitionRegressionTests" fullname="ShadowVale.Map01.Tests.ExtractionTransitionRegressionTests" classname="ShadowVale.Map01.Tests.ExtractionTransitionRegressionTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 16:14:35Z" end-time="2026-10-26 16:14:43Z" duration="7.820902" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1122" name="CompleteCheckpointWithExistingGripChannelsReachesMap2Gameplay" fullname="ShadowVale.Map01.Tests.ExtractionTransitionRegressionTests.CompleteCheckpointWithExistingGripChannelsReachesMap2Gameplay" methodname="CompleteCheckpointWithExistingGripChannelsReachesMap2Gameplay" classname="ShadowVale.Map01.Tests.ExtractionTransitionRegressionTests" runstate="Runnable" seed="71331700" result="Failed" label="Error" start-time="2026-10-26 16:13:50Z" end-time="2026-10-26 16:14:43Z" duration="53.118464" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="420000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                  <stack-trace><![CDATA[  at ShadowVale.Map01.Tests.ExtractionTransitionRegressionTests+<Run>d__1.MoveNext () [0x001a4] in G:\game\Capstone\ShadowVale\Assets\_Project\Map01\Tests\ExtractionTransitionRegressionTests.cs:23 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44 ]]></stack-trace>
+                </failure>
+                <output><![CDATA[Saving results to: C:/Users/dangk/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

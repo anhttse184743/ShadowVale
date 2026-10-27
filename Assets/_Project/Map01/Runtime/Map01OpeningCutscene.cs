@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ShadowVale.Gameplay.Combat;
@@ -163,7 +163,9 @@ namespace ShadowVale.Map01
         private void Update()
         {
             commanderClips?.Tick(Time.deltaTime);
-            GroundCommander();
+            // After extraction takes the actor, his seat belongs to the boat.
+            // Grounding against the shelter floor would lift him off the bench every frame.
+            if (commanderClips != null) GroundCommander();
             soldierClips?.Tick(Time.deltaTime);
             if (!ownsInput) return;
             skipHeld = Keyboard.current != null && Keyboard.current.escapeKey.isPressed

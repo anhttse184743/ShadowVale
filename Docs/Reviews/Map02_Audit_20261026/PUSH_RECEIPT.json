@@ -1,0 +1,21 @@
+{
+  "verified_at_utc": "2026-10-26T08:01:38.304631+00:00",
+  "remote": "https://github.com/anhttse184743/ShadowVale.git",
+  "integration_commit": "be7ea87020f4678440c588742a9f375d02b68e07",
+  "remote_heads_at_integration_push": {
+    "refs/heads/dev": "be7ea87020f4678440c588742a9f375d02b68e07",
+    "refs/heads/thinh": "be7ea87020f4678440c588742a9f375d02b68e07"
+  },
+  "local_branch": "thinh",
+  "local_dev": "be7ea87020f4678440c588742a9f375d02b68e07",
+  "method": "Atomic normal fast-forward push of thinh to thinh and dev; no force push",
+  "tests": {
+    "main_integration": "83/83 passed, Unity exit 0",
+    "catalog": "8/8 passed, Unity exit 0",
+    "distinct_main_cases": 87
+  },
+  "testCraftingKit": false,
+  "voices": "dev casting retained; Claude Map 1 proposal archived outside Resources; existing local promise echo edit retained",
+  "excluded": "Unrelated old demos, local backups, M16 reports, regenerated historical C1 evidence; preserved on disk",
+  "note": "Receipt for the code integration commit. A subsequent documentation-only commit records this receipt on both branches."
+}

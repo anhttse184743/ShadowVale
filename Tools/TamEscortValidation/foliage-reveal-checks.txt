@@ -1,0 +1,12 @@
+PASS fade starts gradually instead of popping fully transparent
+PASS inside bush reaches 28 percent of original opacity
+PASS only this renderer uses transparent blend and no depth write
+PASS shared source material and unrelated crate stay unchanged
+PASS foliage collider remains enabled
+PASS indexed tone and tint are preserved during fade
+PASS leaving bush restores opaque original materials
+PASS original indexed property block restored exactly
+PASS renderer-level property block restored exactly
+PASS both hedge LODs fade together without an opaque LOD pop
+PASS initially inactive night quest bush fades after activation
+PASS disable restores faded foliage immediately

@@ -22,10 +22,9 @@ namespace ShadowVale.Map01.Tests
             try
             {
                 Load(m,"D2_07");Place(m,c.Sites["command"].position);yield return null;
-                Assert.Greater(Vector3.Distance(c.NightPatrolPosition,c.Sites["bridge"].position),28,"Night patrol belongs in the left field beyond the observation point.");
-                Assert.Greater(c.NightPatrolPosition.x,c.Sites["bridge"].position.x+15);
-                Assert.Greater(Vector3.Distance(c.NightPatrolPosition,c.Sites["scout"].position),20,"Do not move the Day 2 scout site to relocate the night patrol.");
-                AssertApproachIsClear(c);
+                Assert.Less(Vector3.ProjectOnPlane(c.NightPatrolPosition-c.Layout.nightTwoPatrolCenter,Vector3.up).magnitude,.5f,"Patrol belongs in the yellow area of the latest marked map.");
+                Assert.AreEqual(new Vector3(29,.77f,-16.66f).x,c.Sites["scout"].position.x,.1f,"The Day 2 scout site stays separate from the night hatch.");
+                AssertBankApproach(c);
                 foreach(var e in c.Enemies)e.enabled=false;
                 yield return new WaitForEndOfFrame();
                 Assert.AreEqual(3,c.Enemies.Count(e=>e.group==Map02ChapterDirector.NightPatrolGroup));
@@ -41,14 +40,23 @@ namespace ShadowVale.Map01.Tests
                 Assert.Less(Vector3.Distance(c.NightPatrolLight.transform.position,Patrol(c,0).GetComponent<Map02PatrolFlashlight>().Emitter.position),.05f,"The light must begin at the lens.");
                 Assert.Less(Vector3.Angle(c.NightPatrolLight.transform.forward,Patrol(c,0).GetComponent<Map02PatrolFlashlight>().Emitter.forward),.1f);
                 var guard=Patrol(c,0);var agent=guard.GetComponent<NavMeshAgent>();agent.isStopped=true;
-                guard.transform.rotation=Quaternion.identity;Place(m,guard.transform.position+Vector3.forward*2);
+                var lightForward=Vector3.ProjectOnPlane(c.NightPatrolLight.transform.forward,Vector3.up).normalized;
+                guard.transform.rotation=Quaternion.LookRotation(lightForward);Place(m,guard.transform.position+lightForward*8);
                 var health=m.Player.GetComponent<ShadowVale.Gameplay.Combat.Health>();float hp=health.Current;
-                var wall=GameObject.CreatePrimitive(PrimitiveType.Cube);wall.transform.position=guard.transform.position+Vector3.forward+Vector3.up;wall.transform.localScale=new Vector3(4,4,.2f);Physics.SyncTransforms();
+                var wall=GameObject.CreatePrimitive(PrimitiveType.Cube);wall.transform.position=guard.transform.position+lightForward*1.5f+Vector3.up;wall.transform.rotation=Quaternion.LookRotation(lightForward);wall.transform.localScale=new Vector3(4,4,.2f);Physics.SyncTransforms();
                 CallEnemy(guard,"Update");Assert.IsFalse(guard.Alerted,"A wall must block front detection.");Assert.AreEqual(hp,health.Current);
-                Object.DestroyImmediate(wall);guard.transform.rotation=Quaternion.identity;Physics.SyncTransforms();CallEnemy(guard,"Update");
-                Assert.IsTrue(guard.Alerted,"A guard must attack Nam standing openly in front, even before N2_02.");Assert.Less(health.Current,hp);
+                Object.DestroyImmediate(wall);Physics.SyncTransforms();Assert.IsTrue(c.NightGuardIlluminates(guard),"Detection follows the current flashlight cone.");
+                var randomState=Random.state;
+                try
+                {
+                    Random.InitState(20261027);
+                    for(int attempt=0;attempt<20&&health.Current==hp;attempt++)
+                    {typeof(Map02ChapterEnemy).GetField("shot",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(guard,0f);CallEnemy(guard,"Update");}
+                }
+                finally{Random.state=randomState;}
+                Assert.IsTrue(guard.Alerted,"The flashlight must expose a standing player before N2_02.");Assert.Less(health.Current,hp);
                 yield return new WaitForEndOfFrame();Assert.IsTrue(guard.GetComponent<Map02PatrolFlashlight>().Emitter.gameObject.activeInHierarchy);
-                hp=health.Current;wall=GameObject.CreatePrimitive(PrimitiveType.Cube);wall.transform.position=guard.transform.position+Vector3.forward+Vector3.up;wall.transform.localScale=new Vector3(4,4,.2f);Physics.SyncTransforms();
+                hp=health.Current;wall=GameObject.CreatePrimitive(PrimitiveType.Cube);wall.transform.position=guard.transform.position+lightForward*1.5f+Vector3.up;wall.transform.rotation=Quaternion.LookRotation(lightForward);wall.transform.localScale=new Vector3(4,4,.2f);Physics.SyncTransforms();
                 typeof(Map02ChapterEnemy).GetField("shot",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(guard,0f);CallEnemy(guard,"Update");Assert.AreEqual(hp,health.Current,"An alerted guard must never shoot through cover.");Object.DestroyImmediate(wall);
                 Place(m,c.Sites["command"].position);m.Restore(Map02Mission.Parse(JsonUtility.ToJson(m.Capture())));yield return null;
                 Assert.AreEqual(3,Object.FindObjectsByType<Map02PatrolFlashlight>(FindObjectsSortMode.None).Length,"Loading must replace old torch instances.");
@@ -58,12 +66,15 @@ namespace ShadowVale.Map01.Tests
         }
         static Map02ChapterEnemy Patrol(Map02ChapterDirector c,int i)=>c.Enemies.Single(e=>e.id==Map02ChapterDirector.NightPatrolGroup+"_"+i);
         static void CallEnemy(Map02ChapterEnemy enemy,string method)=>typeof(Map02ChapterEnemy).GetMethod(method,BindingFlags.Instance|BindingFlags.NonPublic).Invoke(enemy,null);
-        static void AssertApproachIsClear(Map02ChapterDirector c)
+        static void AssertBankApproach(Map02ChapterDirector c)
         {
-            var path=new NavMeshPath();Assert.IsTrue(NavMesh.CalculatePath(c.Sites["command"].position,c.Sites["bridge"].position,NavMesh.AllAreas,path));Assert.AreEqual(NavMeshPathStatus.PathComplete,path.status);
-            foreach(var e in c.Enemies.Where(e=>e.group==Map02ChapterDirector.NightPatrolGroup))
-                for(int i=1;i<path.corners.Length;i++)for(float t=0;t<=1;t+=.05f)
-                    Assert.Greater(Vector3.Distance(Vector3.Lerp(path.corners[i-1],path.corners[i],t),e.transform.position),c.NightPatrolLight.range+1,"The approach must remain outside both close sight and flashlight detection.");
+            var path=new NavMeshPath();Assert.IsTrue(NavMesh.CalculatePath(c.Sites["command"].position,c.NightObservationSpawn,NavMesh.AllAreas,path));Assert.AreEqual(NavMeshPathStatus.PathComplete,path.status);
+            Assert.IsTrue(c.NightBankPositionAllowed(c.NightDoorStand),"Dry ground at the hatch stays walkable; the mission gate controls entry.");
+            foreach(var p in c.NightBankRoute)Assert.IsTrue(c.Enemies.Any(e=>e.group==Map02ChapterDirector.NightPatrolGroup&&Vector3.Distance(e.transform.position,p)<40),"Bank route must be under patrol pressure.");
+            var guards=c.Enemies.Where(e=>e.group==Map02ChapterDirector.NightPatrolGroup).OrderBy(e=>e.id).ToArray();
+            Assert.AreEqual(10,Vector3.ProjectOnPlane(guards[1].transform.position-guards[0].transform.position,Vector3.up).magnitude,.1f);
+            Assert.AreEqual(10,Vector3.ProjectOnPlane(guards[2].transform.position-guards[1].transform.position,Vector3.up).magnitude,.1f);
+            Assert.Less(Mathf.Abs(Vector3.Cross(guards[1].transform.position-guards[0].transform.position,guards[2].transform.position-guards[0].transform.position).y), .1f);
         }
         static void CapturePatrol(Map02ChapterEnemy unit)
         {
@@ -103,20 +114,27 @@ namespace ShadowVale.Map01.Tests
 
                 Place(m,c.NightDoorStand);Call(c,"Update");Assert.IsFalse(c.State.Done("N2_03"),"Arriving at the store alone cannot inspect the door.");
                 var camera=Object.FindObjectsByType<ShadowVale.Gameplay.Player.ThirdPersonCamera>(FindObjectsSortMode.None).First(r=>r.GetComponent<Camera>().enabled);camera.enabled=false;
-                camera.transform.rotation=Quaternion.LookRotation(Vector3.back);Assert.IsFalse(m.Interact(Marker("N2_03")));
-                camera.transform.rotation=Quaternion.LookRotation(Vector3.forward);Assert.IsTrue(m.Interact(Marker("N2_03")));Assert.IsTrue(c.State.Done("N2_03"));Assert.IsTrue(c.State.night2ChainCuePlayed);
+                Assert.IsTrue(c.NightBankMovementRestricted);Assert.IsTrue(c.NightBankPositionAllowed(c.Sites["command"].position),"Only the river is blocked, not village roads.");
+                Assert.IsFalse(m.Interact(Marker("N2_03")),"Surface arrival cannot inspect underground supplies.");
+                var store=c.UndergroundStore;Assert.IsTrue(store.TryDoorInteraction());Assert.IsFalse(c.State.Done("N2_03"));yield return WaitGameSeconds(1.3f);
+                Place(m,store.TopStand);m.Player.GetComponent<CharacterController>().Move(Vector3.down*.12f);Assert.IsTrue(store.TryEnterLadder());
+                for(int i=0;i<90&&store.IsClimbing;i++)store.StepTraversal(.1f,true,false);
+                Assert.IsTrue(store.Inside);Place(m,store.InspectionPoint);c.UpdateMarkers();Assert.IsTrue(m.Interact(Marker("N2_03")));Assert.IsTrue(c.State.Done("N2_03"));Assert.IsTrue(c.State.night2ChainCuePlayed);Assert.IsFalse(c.NightBankMovementRestricted);
                 CaptureDoor(c);
-                Assert.AreEqual(4,c.NightTwoRoute.Length);Survey(c);
-                Place(m,c.Sites["command"].position);WalkEvacuationRoute(m);
-                Place(m,c.Sites["dock"].position);Call(c,"TickNightTwoRoute",0f);Assert.IsFalse(c.State.Done("N2_04"));Assert.AreEqual(0,c.NightTwoRouteProgress);
-                Place(m,c.NightTwoRoute[1]);Call(c,"TickNightTwoRoute",0f);Assert.AreEqual(0,c.NightTwoRouteProgress,"Visiting out of order must not advance.");
-                for(int i=0;i<3;i++)
-                {
-                    Place(m,c.NightTwoRoute[i]);Call(c,"TickNightTwoRoute",0f);Assert.AreEqual(i+1,c.NightTwoRouteProgress);
-                    Assert.Less(Vector3.Distance(Marker("N2_04").transform.position,c.NightTwoRoute[i+1]),.05f);
-                    m.Restore(Map02Mission.Parse(JsonUtility.ToJson(m.Capture())));yield return null;Assert.AreEqual(i+1,c.NightTwoRouteProgress);
-                }
-                Place(m,c.NightTwoRoute[3]);Call(c,"TickNightTwoRoute",0f);Assert.IsFalse(c.State.Done("N2_04"));Assert.IsTrue(m.Interact(Marker("N2_04")));Assert.IsTrue(c.State.Done("N2_04"));Assert.AreEqual(4,c.NightTwoRouteProgress);
+                Place(m,store.BottomStand);m.Player.GetComponent<CharacterController>().Move(Vector3.down*.12f);Assert.IsTrue(store.TryEnterLadder(true));for(int i=0;i<90&&store.IsClimbing;i++)store.StepTraversal(.1f,false,true);Assert.IsFalse(store.Inside);
+                Place(m,c.EvacuationChoicePoint(0));Call(c,"TickNightTwoRoute",0f);
+                Assert.IsTrue(c.EvacuationMenuVisible);
+                Assert.IsTrue(c.SelectEvacuationChoice(3),"Village can be the first and only inspected route.");
+                Assert.Less(Vector3.Distance(Marker("N2_04").transform.position,c.EvacuationChoicePoint(3)),.05f);
+                Assert.AreEqual(5,c.Enemies.Count(e=>e.group==Map02ChapterDirector.EvacuationPatrolGroup));
+                Place(m,c.EvacuationChoicePoint(3));Assert.IsFalse(c.State.Done("N2_04"),"Arrival alone does not report.");
+                Assert.IsTrue(m.Interact(Marker("N2_04")));
+                Call(c,"TickEvacuationModal",30f);Assert.IsFalse(c.State.Done("N2_04"),"Wait for commander's response.");
+                float reportDeadline=Time.realtimeSinceStartup+30;
+                while(!c.State.Done("N2_04")&&Time.realtimeSinceStartup<reportDeadline)
+                {Call(c,"TickEvacuationModal",.1f);yield return WaitGameSeconds(.1f);}
+                Assert.IsTrue(c.State.Done("N2_04"),"The report completes after both real voice recordings finish.");
+                Assert.AreEqual(0,c.State.night2RejectedRoutes);
                 // No warning or kill is required for any of these inspections.
                 Assert.AreEqual(0,c.State.patrolWarnings);Assert.AreEqual(3,c.Enemies.Count(e=>e.group==Map02ChapterDirector.NightPatrolGroup&&!e.Dead));
                 Place(m,Marker("N2_05").transform.position);Call(c,"TickNightRadio",20f,90f,false,90f);Assert.IsTrue(m.Interact(Marker("N2_05")));Assert.AreEqual("N2_05",c.CurrentScene?.id);Call(c,"EndScene");Assert.AreEqual(4,c.State.phase);

@@ -402,6 +402,7 @@ namespace ShadowVale.Map01
         private void Cancel(bool restoreActors)
         {
             bool wasPlaying = Playing;
+            if(wasPlaying&&mission!=null)mission.GetComponent<DialogueVoice>()?.Stop();
             StopAllCoroutines(); hungPose?.Dispose(); gunmanPose?.Dispose(); blockerPose?.Dispose(); hungPose = gunmanPose = blockerPose = null;
             foreach (var mount in weaponMounts) if (mount.Key != null) mount.Key.SetLocalPositionAndRotation(mount.Value.position, mount.Value.rotation);
             weaponMounts.Clear();

@@ -47,7 +47,7 @@ namespace ShadowVale.Map01
         public bool Ready { get; private set; }
         public bool Paused { get; private set; }
         public bool Cinematic => !Ready || dialogue?.Active == true || (Chapter?.Busy==true||Chapter?.Transitioning==true) || World.story.IsCinematic;
-        public bool InputBlocked => !Ready || Paused || Panel != 0 || dialogue?.Active == true || Chapter?.LocksInput==true || World.story.failed || World.story.IsCinematic;
+        public bool InputBlocked => !Ready || ForestMenu.Visible || ShadowVale.Core.Services.InputFocus.OverlayOpen || Paused || Panel != 0 || dialogue?.Active == true || Chapter?.LocksInput==true || World.story.failed || World.story.IsCinematic;
         public int Panel { get; private set; } // 1 inventory, 2 journal, 3 map
         public readonly Dictionary<string,int> Inventory = new Dictionary<string,int>();
         public int Stones { get; private set; }
@@ -143,6 +143,8 @@ namespace ShadowVale.Map01
             InstallMapSafety();
             arrival?.ReleasePassengerAnimation();
             Chapter=gameObject.AddComponent<Map02ChapterDirector>();Chapter.Initialize(this,questLayout);RefreshChapter();
+            if(GetComponent<Map01FoliageReveal>()==null)gameObject.AddComponent<Map01FoliageReveal>();
+            if(GetComponent<Map02SightCover>()==null)gameObject.AddComponent<Map02SightCover>();
             InitializeCharacter();
             StartCoroutine(PrepareHudChart());
             if (pending != null) { var data=pending; pending=null; Restore(data); }
@@ -180,7 +182,7 @@ namespace ShadowVale.Map01
             if(kb.mKey.wasPressedThisFrame){TogglePanel(3);return;}
             if(Panel!=0)return;
             if(Chapter?.HasNearbyPost==true){nearest=null;if(worldEReady)Chapter.TryInteractNearbyPost();return;}
-            if(worldEReady&&kb.eKey.wasPressedThisFrame){if(nearest!=null)Interact(nearest);else TryCharacterInteraction();}
+            if(worldEReady&&kb.eKey.wasPressedThisFrame){if(Chapter?.UndergroundStore?.TryLootInteraction()==true||Chapter?.UndergroundStore?.TryDoorInteraction()==true)return;if(nearest!=null)Interact(nearest);else TryCharacterInteraction();}
         }
         Map02ObjectiveObject NearestObjective()
         {
@@ -234,12 +236,14 @@ namespace ShadowVale.Map01
             return advanced;
         }
         public void CancelConversation(){voice?.Stop();dialogue?.Cancel();lines=null;}
+        bool PointerUiOpen=>Paused||Panel!=0||ForestMenu.Visible||Chapter?.DayActivityActive==true||Chapter?.Patching==true||ShadowVale.Core.Services.InputFocus.OverlayOpen;
+        void UpdatePointerMode(){bool open=PointerUiOpen;Cursor.lockState=open?CursorLockMode.None:CursorLockMode.Locked;Cursor.visible=open;}
         public void SetPaused(bool value)
         {
-            Paused=value;Time.timeScale=value?0:1;Cursor.visible=value||Panel!=0;Cursor.lockState=Cursor.visible?CursorLockMode.None:CursorLockMode.Locked;
+            Paused=value;Time.timeScale=value?0:1;UpdatePointerMode();
         }
-        void TogglePanel(int panel){Panel=Panel==panel?0:panel;player.RestoreMotion(false);Cursor.visible=Panel!=0;Cursor.lockState=Cursor.visible?CursorLockMode.None:CursorLockMode.Locked;}
-        public bool CloseGameplayPanel(){if(Panel==0)return false;Panel=0;Cursor.visible=false;Cursor.lockState=CursorLockMode.Locked;return true;}
+        void TogglePanel(int panel){Panel=Panel==panel?0:panel;player.RestoreMotion(false);UpdatePointerMode();}
+        public bool CloseGameplayPanel(){if(Panel==0)return false;Panel=0;UpdatePointerMode();return true;}
         void Notify()
         {
             foreach(var target in targets)if(target!=null&&(target.work==Map02Work.MedicinePickup||target.work==Map02Work.CratePickup))
@@ -330,7 +334,7 @@ namespace ShadowVale.Map01
             // Old v3 saves may already be at the store/dock. Rebuild only the route baseline,
             // preserving the saved inventory, weapon and health rather than inventing supplies.
             var data=Capture();data.checkpoint=data.patrolCheckpoint=null;
-            data.chapter.ResetPatrolRoute();data.position=Chapter.Sites["bridge"].position;
+            data.chapter.ResetPatrolRoute();data.position=Chapter.NightObservationSpawn;
             patrolCheckpoint=JsonUtility.ToJson(data);
         }
         public bool RetryPatrol()
@@ -390,7 +394,7 @@ namespace ShadowVale.Map01
                 if(Chapter?.Busy!=true)DrawGameplayHud();
             }
             if(Panel==0)Chapter?.DrawOverlay();
-            if(World.story.failed){GUI.Box(new Rect(420,290,760,240),GUIContent.none);GUI.Label(new Rect(455,320,690,95),World.story.failureCause,body);if(GUI.Button(new Rect(650,440,300,55),"Thử lại checkpoint"))Retry();}
+            if(World.story.failed&&Chapter?.NightPatrolFailureActive!=true){GUI.Box(new Rect(420,290,760,240),GUIContent.none);GUI.Label(new Rect(455,320,690,95),World.story.failureCause,body);if(GUI.Button(new Rect(650,440,300,55),"Thử lại checkpoint"))Retry();}
             if(Panel==0&&CharacterHud==null&&Chapter?.Busy!=true&&Chapter?.Transitioning!=true&&Time.unscaledTime<messageUntil)GUI.Label(new Rect(400,250,800,90),message,body);
             GUI.matrix=matrix;GUI.color=color;GUI.depth=depth;
         }

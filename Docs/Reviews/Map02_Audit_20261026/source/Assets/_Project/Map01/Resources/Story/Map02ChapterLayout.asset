@@ -1,0 +1,127 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2318a6bb1dc2ca4aa293962e67c852b, type: 3}
+  m_Name: Map02ChapterLayout
+  m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map02ChapterLayout
+  actors:
+  - role: "Anh Th\xE0nh"
+    prefab: {fileID: 7832698061118072078, guid: 5b2abf7e6f14f3d41b5a1d88cffbafab, type: 3}
+  - role: "Anh L\u1EF1c"
+    prefab: {fileID: 2737592800967087114, guid: b6e1ae955e1b8ba4294dd7a7fff9d165, type: 3}
+  - role: "T\xE2m"
+    prefab: {fileID: 1592088549058560199, guid: 4b474e014de278c42b5b5a9a3a6526d4, type: 3}
+  - role: "Ch\xFA B\u1EA3y"
+    prefab: {fileID: 2314452259327122441, guid: 3b63b62191cce4b48be90e47f0c67f4d, type: 3}
+  - role: "\xD4ng S\xE1u"
+    prefab: {fileID: 4555953771642930173, guid: f95f828c6b1569d49b5e915ebd11efeb, type: 3}
+  - role: "Ch\u1ECB L\xE0nh"
+    prefab: {fileID: 5919166819237297731, guid: b5366c22bc8cad54d876648671db5910, type: 3}
+  - role: "B\xE9 T\xED"
+    prefab: {fileID: 8497960597794566686, guid: e969c10c69e15824faa1da209f85cad9, type: 3}
+  - role: "H\xF9ng"
+    prefab: {fileID: 3074639621431819192, guid: da8f6cf4b6ab9dd499d9a80674d831e9, type: 3}
+  enemyArt: {fileID: 7461267688925482901, guid: 2bb747894f951aa439d2d8dfd28cb5c3, type: 3}
+  sites:
+  - id: command
+    position: {x: -79.29, y: 1.1, z: 10.91}
+  - id: gate
+    position: {x: -79.29, y: 1.03, z: 19.91}
+  - id: family
+    position: {x: -48.46, y: 1.03, z: -30.49}
+  - id: store
+    position: {x: -49.15, y: 1.03, z: 8.39}
+  - id: arrival
+    position: {x: -39.36, y: 1.03, z: 46.67}
+  - id: dock
+    position: {x: -27.75, y: 0.83, z: -86.19}
+  - id: southStore
+    position: {x: -32.75, y: 0.83, z: -86.19}
+  - id: ditch
+    position: {x: -32.75, y: 0.83, z: -86.19}
+  - id: radio
+    position: {x: -74.29, y: 1.08, z: 10.91}
+  - id: rest
+    position: {x: -79.29, y: 1.03, z: 6.91}
+  - id: bamboo
+    position: {x: -65.29, y: 1.03, z: 10.91}
+  - id: scout
+    position: {x: 29, y: 0.77, z: -16.66}
+  - id: bridge
+    position: {x: 29, y: 0.73, z: -4.66}
+  - id: child
+    position: {x: -77.17, y: 1.09, z: -29.35}
+  - id: lane1
+    position: {x: -79.3, y: 1.1, z: 32}
+  - id: lane2
+    position: {x: -79.3, y: 1.1, z: 14}
+  - id: lane3
+    position: {x: -78.2, y: 1.1, z: -4}
+  - id: cover
+    position: {x: -83.2, y: 1.1, z: -4}
+  - id: fallen
+    position: {x: -27.75, y: 0.87, z: -78.19}
+  - id: family0
+    position: {x: -48.46, y: 1.03, z: -30.49}
+  - id: family1
+    position: {x: -63.48, y: 1.18, z: -32.6}
+  - id: family2
+    position: {x: -77.17, y: 1.09, z: -29.35}
+  - id: tankBreach
+    position: {x: -78.2, y: 1.1, z: 4}
+  - id: tankDock
+    position: {x: -43, y: 1.1, z: -71.4}
+  - id: tankHide
+    position: {x: -49.9, y: 1.1, z: -61.6}
+  - id: tamCover
+    position: {x: -33.75, y: 0.9, z: -78.2}
+  - id: boatDock
+    position: {x: -12.7, y: 0.2, z: -87.8}
+  - id: boatDock2
+    position: {x: -12.7, y: 0.2, z: -91.3}
+  - id: boatMid
+    position: {x: -11.2, y: 0.2, z: -89.8}
+  - id: boatFar
+    position: {x: -6.2, y: 0.2, z: -92.3}
+  - id: boatFar2
+    position: {x: -8.2, y: 0.2, z: -85.3}
+  - id: dayOneFamily
+    position: {x: -50.7, y: 1.03, z: -35.7}
+  - id: nightOneRest
+    position: {x: -47.7, y: 1.03, z: -35.7}
+  supplyCrateRounds: 30
+  dayOneSunIntensity: 0.82
+  dayOneOilLampIntensity: 0.65
+  nightSunIntensity: 0.08
+  nightSkyExposure: 0.08
+  patrolSweepSeconds: 15
+  coverFireSeconds: 75
+  civilianArt: {fileID: 0}
+  tankArt: {fileID: 5587284310667264704, guid: 4396b00d0f623f442af762fc6fd61a2b, type: 3}
+  coveredHungArt: {fileID: 0}
+  namMournClip: {fileID: 0}
+  hungPlantRetreatClip: {fileID: 0}
+  radioPropArt: {fileID: 0}
+  explosivesArt: {fileID: 8220773862437002748, guid: 44f6a4a2ba3d07c4ea84bbfedf777ed2, type: 3}
+  soupBowlArt: {fileID: 0}
+  militiaArt: {fileID: 0}
+  namProneClip: {fileID: 0}
+  namLieBackClip: {fileID: 0}
+  namSitRadioClip: {fileID: 0}
+  hungFallClip: {fileID: -623603649343465320, guid: 3751eb93ed29b2941b8fea8a977f2077, type: 3}
+  grenadeCrateArt: {fileID: 6065015199601875537, guid: d0f2bc4dc2a426444b87fcd9b5d44273, type: 3}
+  ammoCanArt: {fileID: 2958864210250216784, guid: 9039fabf5f7725c42b726d1ec309df6f, type: 3}
+  medkitArt: {fileID: 5019380679771558921, guid: 0d2b35192e56a4e43989571f3a0ae89d, type: 3}
+  grenadeArt: {fileID: 8944137499766871718, guid: e23d487084fad2d4c821980e378369a6, type: 3}
+  strawCartArt: {fileID: 8974337617010150994, guid: 76462e0fb74f0084998cce3bc6b2db0e, type: 3}
+  tankTracksClip: {fileID: 8300000, guid: c9cede260dc54b2c9701cd7100065e8e, type: 3}
+  tinnitusClip: {fileID: 0}
+  artilleryClip: {fileID: 8300000, guid: 3a4f76312f644b0e9be64e3523059d37, type: 3}

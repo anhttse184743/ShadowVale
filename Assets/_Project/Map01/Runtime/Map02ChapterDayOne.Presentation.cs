@@ -20,13 +20,12 @@ namespace ShadowVale.Map01
         void BuildFamilyFurniture(Material wood,Material cloth)
         {
             elderChair=Group("Ông Sáu resting chair",DayFamily+new Vector3(1.1f,0,-.8f));Stool(elderChair,Vector3.zero,wood);
-            Part(elderChair,"Chair back",new Vector3(0,.8f,-.22f),new Vector3(.46f,.55f,.055f),wood);
-            foreach(float z in new[]{-.2f,.2f})Part(mealRoot,"Rice bowl",new Vector3(.12f,.49f,z),new Vector3(.12f,.055f,.12f),cloth,PrimitiveType.Sphere);
+            Part(elderChair,"Chair back",new Vector3(0,.8f,-.22f),new Vector3(.46f,.55f,.055f),wood);   // the supper's own bowls come from its track
         }
         void ArrangeDayFamily()
         {
             if(elderChair==null)return;
-            bool rest=State.phase<=1&&!State.Done("N3_02");roles["Ông Sáu"].SetSeatedRest(rest?DayClip("RestNam"):null);   // seated, hands on his lap; MealNam reaches for a bowl
+            bool rest=State.phase<=1&&!State.Done("N3_02");roles["Ông Sáu"].SetSeatedRest(rest?DayClip("SauNgoiNghi")??DayClip("RestNam"):null);   // seated, hands on his lap; MealNam reaches for a bowl
             if(rest){roles["Chị Lành"].StopAt(DayFamily+new Vector3(-1.7f,0,.6f));roles["Chị Lành"].transform.rotation=Quaternion.Euler(0,110,0);roles["Ông Sáu"].StopAt(elderChair.position);roles["Ông Sáu"].transform.rotation=Quaternion.LookRotation(new Vector3(-1.1f,0,-.3f));elderChair.rotation=roles["Ông Sáu"].transform.rotation;roles["Bé Tí"].StopAt(DayFamily+new Vector3(2.2f,0,1.1f));roles["Bé Tí"].transform.rotation=Quaternion.Euler(0,225,0);}
             foreach(var person in Family)roles[person].SetVisible(State.phase!=1);
             elderChair.gameObject.SetActive(State.phase!=1);   // his chair goes in with him; it would stand behind the supper tray
@@ -69,6 +68,15 @@ namespace ShadowVale.Map01
         Vector3 slingBarrel,slingSide,slingCentre;
         void UpdateWorkWeapon()
         {
+            if(doingWork&&workTask?.kind=="antenna")
+            {
+                // Climbing uses both hands. Hide the gameplay gun and any work sling.
+                if(slungWorkRifle!=null)slungWorkRifle.SetActive(false);
+                foreach(var weapon in Mission.Player.GetComponentsInChildren<Weapon>(true))
+                    foreach(var renderer in weapon.GetComponentsInChildren<Renderer>(true))
+                    {if(!workWeaponRenderers.ContainsKey(renderer))workWeaponRenderers.Add(renderer,renderer.forceRenderingOff);renderer.forceRenderingOff=true;}
+                return;
+            }
             bool occupied=State.carry=="D1_04"||LeadingWounded||DayActivityActive;   // Tâm's and Night 3's rescue escorts keep the rifle in hand
             if(!occupied){ReleaseWorkWeapon();return;}
             if(slungWorkRifle==null)

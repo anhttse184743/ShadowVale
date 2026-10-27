@@ -170,7 +170,7 @@ namespace ShadowVale.Map01
         // Runs after the animator, so the arms are posed on top of the walk.
         void HoldCargo()
         {
-            bool show=!string.IsNullOrEmpty(State.carry)&&State.carry!="D1_04"&&sceneTask==null;   // Day 1's crate is carried by the Day 1 pose
+            bool show=!string.IsNullOrEmpty(State.carry)&&State.carry!="D1_04"&&State.carry!="D2_05"&&sceneTask==null;   // Day 1's crate is carried by the Day 1 pose
             string kind=show?CargoKind():heldKind;
             if(HeldCargo!=null&&(!show||heldKind!=kind))HeldCargo.SetActive(false);
             if(!show)

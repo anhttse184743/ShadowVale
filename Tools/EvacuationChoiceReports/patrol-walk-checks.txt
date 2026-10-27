@@ -1,0 +1,42 @@
+PASS patrol midpoint is ten metres from the field objective
+PASS route has minus-ten and plus-ten metre endpoints
+PASS road mask contains centre line at -10 m
+PASS road mask contains centre line at -9 m
+PASS road mask contains centre line at -8 m
+PASS road mask contains centre line at -7 m
+PASS road mask contains centre line at -6 m
+PASS road mask contains centre line at -5 m
+PASS road mask contains centre line at -4 m
+PASS road mask contains centre line at -3 m
+PASS road mask contains centre line at -2 m
+PASS road mask contains centre line at -1 m
+PASS road mask contains centre line at 0 m
+PASS road mask contains centre line at 1 m
+PASS road mask contains centre line at 2 m
+PASS road mask contains centre line at 3 m
+PASS road mask contains centre line at 4 m
+PASS road mask contains centre line at 5 m
+PASS road mask contains centre line at 6 m
+PASS road mask contains centre line at 7 m
+PASS road mask contains centre line at 8 m
+PASS road mask contains centre line at 9 m
+PASS road mask contains centre line at 10 m
+PASS five guards waiting at middle formation
+PASS patrol waits until Nam reaches the objective
+PASS leader initially at zero, not either endpoint
+PASS reaching field objective triggers departure from zero
+PASS native agent reached endpoint 1 at 9.67 m
+PASS all five stop to scan at endpoint 1
+PASS checkpoint preserves endpoint scan state
+PASS scan lasts three gameplay seconds before reversing: 3.017
+PASS five real agents resume after reversing
+PASS native agent reached endpoint 2 at -9.66 m
+PASS all five stop to scan at endpoint 2
+PASS checkpoint preserves endpoint scan state
+PASS scan lasts three gameplay seconds before reversing: 3.000
+PASS five real agents resume after reversing
+PASS native agent reached endpoint 3 at 9.66 m
+PASS all five stop to scan at endpoint 3
+PASS checkpoint preserves endpoint scan state
+PASS scan lasts three gameplay seconds before reversing: 3.000
+PASS five real agents resume after reversing

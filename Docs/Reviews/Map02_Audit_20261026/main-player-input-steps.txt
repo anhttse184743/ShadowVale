@@ -1,0 +1,20 @@
+Fresh landing; all task progress comes from keyboard interactions and normal movement. No teleport, Complete, EndScene or Restore-prefix.
+2026-10-26T07:44:57.3215041Z Natural arrival complete
+2026-10-26T07:45:18.6308258Z D1_01 E · scene=D1_01 activity=None
+2026-10-26T07:45:31.7274152Z D1_02 E · scene= activity=None
+2026-10-26T07:46:18.6515013Z D1_03 E · scene=D1_03 activity=None
+2026-10-26T07:46:40.5606483Z D1_04 E · scene= activity=None
+2026-10-26T07:46:58.7213437Z D1_04 E · scene= activity=None
+2026-10-26T07:47:16.8482987Z D1_04 E · scene= activity=None
+2026-10-26T07:47:26.9032346Z D1_04 E · scene= activity=Packing
+2026-10-26T07:47:47.9304963Z D1_05 E · scene=D1_05 activity=None
+2026-10-26T07:48:18.9258835Z D1_06 E · scene=D1_06 activity=None
+2026-10-26T07:48:34.0295417Z N1_01 E · scene=N1_01 activity=None
+2026-10-26T07:48:49.3031016Z N1_02 E · scene= activity=None
+2026-10-26T07:49:12.5524416Z N1_02 E · scene=N1_02 activity=None
+2026-10-26T07:49:14.0271743Z N1_02 complete
+2026-10-26T07:49:14.4988806Z N1_03 E · scene= activity=None
+2026-10-26T07:49:21.9929119Z N1_03 E · scene=N1_03 activity=None
+2026-10-26T07:49:23.9085516Z N1_03 complete
+2026-10-26T07:49:39.4635539Z N1_04 E · scene=N1_04 activity=None
+2026-10-26T07:49:46.2022504Z PASS: all ten objectives completed through real movement and key inputs

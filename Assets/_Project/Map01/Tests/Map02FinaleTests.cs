@@ -29,7 +29,9 @@ namespace ShadowVale.Map01.Tests
             foreach(var t in Map02ChapterDefinition.Load().tasks){s.Complete(t.id);if(t.id==id)break;}
             snapshot.chapter=s;mission.Restore(snapshot);
         }
-        static void Frame(float dt=.1f){Call("TickScene",dt);Call("TickTank",dt,false);Call("TickEffects");}
+        // The scene clock is synthetic; real audio cannot advance in this tight loop.
+        // Keep authored line durations/gates, and release only the audio completion wait.
+        static void Frame(float dt=.1f){DialogueVoice.StopAll();Call("TickScene",dt);Call("TickTank",dt,false);Call("TickEffects");}
         static void Until(string scene,float time){while(chapter.CurrentScene?.id==scene&&Clock<time)Frame();}
         static void Place(Vector3 p){var cc=mission.Player.GetComponent<CharacterController>();cc.enabled=false;mission.Player.position=p;cc.enabled=true;Physics.SyncTransforms();}
         // Without bound art there is nothing to see either way; with art, it must match the story.
@@ -116,7 +118,7 @@ namespace ShadowVale.Map01.Tests
                 Assert.Less(Vector3.ProjectOnPlane(chapter.Tank.transform.position-chapter.Sites["tankBreach"].position,Vector3.up).magnitude,1,"It stands at the breach when it fires.");
                 Assert.Greater(chapter.EffectRed,0,"Red, blurred view after the hit.");Assert.Less(chapter.ListenerCutoff,2000,"Sound sinks.");Assert.Greater(rig.ShakeAmplitude,0);
                 Call("EndScene");Call("TickEffects");Assert.Greater(chapter.EffectRed,0,"Still hurt while crawling to cover.");
-                Load("N3_CRAWL");Call("TickEffects");Assert.AreEqual(0,chapter.EffectRed);Assert.AreEqual(22000,chapter.ListenerCutoff);
+                Load("N3_CRAWL");Call("TickEffects");Assert.Less(chapter.EffectRed,.1f,"In cover: only the faint pulse of the bleeding shoulder.");Assert.AreEqual(22000,chapter.ListenerCutoff);
                 // The farewell: Hùng beside Nam, between him and the tank; the radio changes hands before Hùng goes.
                 Load("N3_06");Place(chapter.Sites["ditch"].position+Vector3.forward*2);Call("Update");Assert.AreEqual("N3_07",chapter.CurrentScene?.id);
                 var nam=mission.Player.position;var hung=chapter.Actor("Hùng").transform.position;

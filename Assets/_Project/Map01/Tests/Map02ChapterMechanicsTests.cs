@@ -96,6 +96,18 @@ namespace ShadowVale.Map01.Tests
             finally{c.Cancel();c.enabled=true;}
             yield return new ExitPlayMode();
         }
+        /// <summary>A fallen soldier lying on his own (a squad falls together at its cover), so one pickup is his alone.
+        /// Static, not a closure: lambdas over the test's locals do not survive the domain reload of EnterPlayMode.</summary>
+        static Map02ChapterEnemy LoneBody(System.Collections.Generic.List<Map02ChapterEnemy> all)
+        {
+            foreach(var e in all)
+            {
+                if(e==null||!e.Dead||e.Looted)continue;bool alone=true;
+                foreach(var o in all)if(o!=null&&o!=e&&o.Dead&&!o.Looted&&Vector3.Distance(o.transform.position,e.transform.position)<2.5f){alone=false;break;}
+                if(alone)return e;
+            }
+            return null;
+        }
         [UnityTest,Timeout(240000)]public IEnumerator LaneHoldsFollowEvacuationAndTheFallenDropRounds()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
@@ -129,7 +141,7 @@ namespace ShadowVale.Map01.Tests
                 Kill("N3_05A_b");until=Time.time+3;while(Time.time<until&&!c.State.Done("N3_05A"))yield return null;
                 Assert.IsTrue(c.State.Done("N3_05A"));Assert.AreEqual(70,c.State.evacuation);
                 // The fallen give their rounds once; a load does not give them again.
-                hp.CinematicInvulnerable=true;var body=c.Enemies.First(e=>e!=null&&e.Dead&&!e.Looted);int before=m.Inventory.TryGetValue(m.RifleAmmo,out int had)?had:0;
+                hp.CinematicInvulnerable=true;var body=LoneBody(c.Enemies);int before=m.Inventory.TryGetValue(m.RifleAmmo,out int had)?had:0;
                 Place(body.transform.position);yield return null;yield return null;
                 int after=m.Inventory[m.RifleAmmo];Assert.That(after-before,Is.InRange(5,8));Assert.IsTrue(body.Looted);
                 var saved=m.Capture();m.Restore(saved);hp.CinematicInvulnerable=true;var again=c.Enemies.First(e=>e.id==body.id);Assert.IsTrue(again.Looted);

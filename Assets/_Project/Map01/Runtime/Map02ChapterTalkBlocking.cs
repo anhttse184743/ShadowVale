@@ -85,7 +85,8 @@ namespace ShadowVale.Map01
         {
             eye=focus=default;if(!talkStaged||lines==null)return false;
             // Someone still walking up: a wide two-shot from the open side, Nam and him coming in, before the over-the-shoulders.
-            var coming=entrances.FirstOrDefault(e=>Flat(e.actor.transform.position,e.to)>1.2f&&(e.actor.Travelling||!spoken));
+            // (only while the line waits for him: once he speaks, the shot is his)
+            var coming=spoken?null:entrances.FirstOrDefault(e=>Flat(e.actor.transform.position,e.to)>1.2f&&e.actor.transform==Speaker(lineIndex));
             if(coming!=null)
             {
                 var nam=Mission.Player.position;var who=coming.actor.transform.position;var mid=Vector3.Lerp(nam,who,.5f);

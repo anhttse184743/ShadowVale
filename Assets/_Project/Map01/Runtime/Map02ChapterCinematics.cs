@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 namespace ShadowVale.Map01
@@ -8,7 +8,7 @@ namespace ShadowVale.Map01
         Vector3[] sacrificePath=Array.Empty<Vector3>();float sacrificeTravel;
         GameObject memorialArt;
         Map01CinematicPose hungActionPose;
-        void ReleaseSceneAction(){hungActionPose?.Dispose();hungActionPose=null;ClearFinale();}
+        void ReleaseSceneAction(){ReleasePerformance();hungActionPose?.Dispose();hungActionPose=null;ClearFinale();}
         public Vector3 ChargePoint
         {
             get

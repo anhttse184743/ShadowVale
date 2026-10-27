@@ -1,0 +1,738 @@
+PASS actual saved river banks loaded
+PASS new hatch exactly thirty metres farther down the bank
+PASS new hatch lies among actual serialized young rice plants
+PASS dry bank remains walkable before observation
+PASS observation does not create a road barrier
+hatch=(-3.967, 0.809, -51.858)
+observation=(1.693, 1.125, -2.398)
+PASS actual bridge observation spawn admitted
+PASS bridge connects to bank entry on actual NavMesh
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+PASS bridge to bank native path stays open
+bank 0=(4.582, 1.076, -0.753)
+PASS bank waypoint on actual NavMesh 0
+PASS bank waypoint dry and within corridor 0
+bank 1=(0.305, 1.125, -5.483)
+PASS bank waypoint on actual NavMesh 1
+PASS bank waypoint dry and within corridor 1
+PASS complete native path to bank waypoint 1
+PASS continuous dry centerline 1/0.000
+PASS continuous dry centerline 1/0.025
+PASS continuous dry centerline 1/0.050
+PASS continuous dry centerline 1/0.075
+PASS continuous dry centerline 1/0.100
+PASS continuous dry centerline 1/0.125
+PASS continuous dry centerline 1/0.150
+PASS continuous dry centerline 1/0.175
+PASS continuous dry centerline 1/0.200
+PASS continuous dry centerline 1/0.225
+PASS continuous dry centerline 1/0.250
+PASS continuous dry centerline 1/0.275
+PASS continuous dry centerline 1/0.300
+PASS continuous dry centerline 1/0.325
+PASS continuous dry centerline 1/0.350
+PASS continuous dry centerline 1/0.375
+PASS continuous dry centerline 1/0.400
+PASS continuous dry centerline 1/0.425
+PASS continuous dry centerline 1/0.450
+PASS continuous dry centerline 1/0.475
+PASS continuous dry centerline 1/0.500
+PASS continuous dry centerline 1/0.525
+PASS continuous dry centerline 1/0.550
+PASS continuous dry centerline 1/0.575
+PASS continuous dry centerline 1/0.600
+PASS continuous dry centerline 1/0.625
+PASS continuous dry centerline 1/0.650
+PASS continuous dry centerline 1/0.675
+PASS continuous dry centerline 1/0.700
+PASS continuous dry centerline 1/0.725
+PASS continuous dry centerline 1/0.750
+PASS continuous dry centerline 1/0.775
+PASS continuous dry centerline 1/0.800
+PASS continuous dry centerline 1/0.825
+PASS continuous dry centerline 1/0.850
+PASS continuous dry centerline 1/0.875
+PASS continuous dry centerline 1/0.900
+PASS continuous dry centerline 1/0.925
+PASS continuous dry centerline 1/0.950
+PASS continuous dry centerline 1/0.975
+PASS continuous dry centerline 1/1.000
+PASS native path remains within allowed corridor 1/1/0.000
+PASS native path remains within allowed corridor 1/1/0.025
+PASS native path remains within allowed corridor 1/1/0.050
+PASS native path remains within allowed corridor 1/1/0.075
+PASS native path remains within allowed corridor 1/1/0.100
+PASS native path remains within allowed corridor 1/1/0.125
+PASS native path remains within allowed corridor 1/1/0.150
+PASS native path remains within allowed corridor 1/1/0.175
+PASS native path remains within allowed corridor 1/1/0.200
+PASS native path remains within allowed corridor 1/1/0.225
+PASS native path remains within allowed corridor 1/1/0.250
+PASS native path remains within allowed corridor 1/1/0.275
+PASS native path remains within allowed corridor 1/1/0.300
+PASS native path remains within allowed corridor 1/1/0.325
+PASS native path remains within allowed corridor 1/1/0.350
+PASS native path remains within allowed corridor 1/1/0.375
+PASS native path remains within allowed corridor 1/1/0.400
+PASS native path remains within allowed corridor 1/1/0.425
+PASS native path remains within allowed corridor 1/1/0.450
+PASS native path remains within allowed corridor 1/1/0.475
+PASS native path remains within allowed corridor 1/1/0.500
+PASS native path remains within allowed corridor 1/1/0.525
+PASS native path remains within allowed corridor 1/1/0.550
+PASS native path remains within allowed corridor 1/1/0.575
+PASS native path remains within allowed corridor 1/1/0.600
+PASS native path remains within allowed corridor 1/1/0.625
+PASS native path remains within allowed corridor 1/1/0.650
+PASS native path remains within allowed corridor 1/1/0.675
+PASS native path remains within allowed corridor 1/1/0.700
+PASS native path remains within allowed corridor 1/1/0.725
+PASS native path remains within allowed corridor 1/1/0.750
+PASS native path remains within allowed corridor 1/1/0.775
+PASS native path remains within allowed corridor 1/1/0.800
+PASS native path remains within allowed corridor 1/1/0.825
+PASS native path remains within allowed corridor 1/1/0.850
+PASS native path remains within allowed corridor 1/1/0.875
+PASS native path remains within allowed corridor 1/1/0.900
+PASS native path remains within allowed corridor 1/1/0.925
+PASS native path remains within allowed corridor 1/1/0.950
+PASS native path remains within allowed corridor 1/1/0.975
+PASS native path remains within allowed corridor 1/1/1.000
+bank 2=(-1.833, 1.015, -11.669)
+PASS bank waypoint on actual NavMesh 2
+PASS bank waypoint dry and within corridor 2
+PASS complete native path to bank waypoint 2
+PASS continuous dry centerline 2/0.000
+PASS continuous dry centerline 2/0.025
+PASS continuous dry centerline 2/0.050
+PASS continuous dry centerline 2/0.075
+PASS continuous dry centerline 2/0.100
+PASS continuous dry centerline 2/0.125
+PASS continuous dry centerline 2/0.150
+PASS continuous dry centerline 2/0.175
+PASS continuous dry centerline 2/0.200
+PASS continuous dry centerline 2/0.225
+PASS continuous dry centerline 2/0.250
+PASS continuous dry centerline 2/0.275
+PASS continuous dry centerline 2/0.300
+PASS continuous dry centerline 2/0.325
+PASS continuous dry centerline 2/0.350
+PASS continuous dry centerline 2/0.375
+PASS continuous dry centerline 2/0.400
+PASS continuous dry centerline 2/0.425
+PASS continuous dry centerline 2/0.450
+PASS continuous dry centerline 2/0.475
+PASS continuous dry centerline 2/0.500
+PASS continuous dry centerline 2/0.525
+PASS continuous dry centerline 2/0.550
+PASS continuous dry centerline 2/0.575
+PASS continuous dry centerline 2/0.600
+PASS continuous dry centerline 2/0.625
+PASS continuous dry centerline 2/0.650
+PASS continuous dry centerline 2/0.675
+PASS continuous dry centerline 2/0.700
+PASS continuous dry centerline 2/0.725
+PASS continuous dry centerline 2/0.750
+PASS continuous dry centerline 2/0.775
+PASS continuous dry centerline 2/0.800
+PASS continuous dry centerline 2/0.825
+PASS continuous dry centerline 2/0.850
+PASS continuous dry centerline 2/0.875
+PASS continuous dry centerline 2/0.900
+PASS continuous dry centerline 2/0.925
+PASS continuous dry centerline 2/0.950
+PASS continuous dry centerline 2/0.975
+PASS continuous dry centerline 2/1.000
+PASS native path remains within allowed corridor 2/1/0.000
+PASS native path remains within allowed corridor 2/1/0.025
+PASS native path remains within allowed corridor 2/1/0.050
+PASS native path remains within allowed corridor 2/1/0.075
+PASS native path remains within allowed corridor 2/1/0.100
+PASS native path remains within allowed corridor 2/1/0.125
+PASS native path remains within allowed corridor 2/1/0.150
+PASS native path remains within allowed corridor 2/1/0.175
+PASS native path remains within allowed corridor 2/1/0.200
+PASS native path remains within allowed corridor 2/1/0.225
+PASS native path remains within allowed corridor 2/1/0.250
+PASS native path remains within allowed corridor 2/1/0.275
+PASS native path remains within allowed corridor 2/1/0.300
+PASS native path remains within allowed corridor 2/1/0.325
+PASS native path remains within allowed corridor 2/1/0.350
+PASS native path remains within allowed corridor 2/1/0.375
+PASS native path remains within allowed corridor 2/1/0.400
+PASS native path remains within allowed corridor 2/1/0.425
+PASS native path remains within allowed corridor 2/1/0.450
+PASS native path remains within allowed corridor 2/1/0.475
+PASS native path remains within allowed corridor 2/1/0.500
+PASS native path remains within allowed corridor 2/1/0.525
+PASS native path remains within allowed corridor 2/1/0.550
+PASS native path remains within allowed corridor 2/1/0.575
+PASS native path remains within allowed corridor 2/1/0.600
+PASS native path remains within allowed corridor 2/1/0.625
+PASS native path remains within allowed corridor 2/1/0.650
+PASS native path remains within allowed corridor 2/1/0.675
+PASS native path remains within allowed corridor 2/1/0.700
+PASS native path remains within allowed corridor 2/1/0.725
+PASS native path remains within allowed corridor 2/1/0.750
+PASS native path remains within allowed corridor 2/1/0.775
+PASS native path remains within allowed corridor 2/1/0.800
+PASS native path remains within allowed corridor 2/1/0.825
+PASS native path remains within allowed corridor 2/1/0.850
+PASS native path remains within allowed corridor 2/1/0.875
+PASS native path remains within allowed corridor 2/1/0.900
+PASS native path remains within allowed corridor 2/1/0.925
+PASS native path remains within allowed corridor 2/1/0.950
+PASS native path remains within allowed corridor 2/1/0.975
+PASS native path remains within allowed corridor 2/1/1.000
+bank 3=(-3.971, 0.947, -17.128)
+PASS bank waypoint on actual NavMesh 3
+PASS bank waypoint dry and within corridor 3
+PASS complete native path to bank waypoint 3
+PASS continuous dry centerline 3/0.000
+PASS continuous dry centerline 3/0.025
+PASS continuous dry centerline 3/0.050
+PASS continuous dry centerline 3/0.075
+PASS continuous dry centerline 3/0.100
+PASS continuous dry centerline 3/0.125
+PASS continuous dry centerline 3/0.150
+PASS continuous dry centerline 3/0.175
+PASS continuous dry centerline 3/0.200
+PASS continuous dry centerline 3/0.225
+PASS continuous dry centerline 3/0.250
+PASS continuous dry centerline 3/0.275
+PASS continuous dry centerline 3/0.300
+PASS continuous dry centerline 3/0.325
+PASS continuous dry centerline 3/0.350
+PASS continuous dry centerline 3/0.375
+PASS continuous dry centerline 3/0.400
+PASS continuous dry centerline 3/0.425
+PASS continuous dry centerline 3/0.450
+PASS continuous dry centerline 3/0.475
+PASS continuous dry centerline 3/0.500
+PASS continuous dry centerline 3/0.525
+PASS continuous dry centerline 3/0.550
+PASS continuous dry centerline 3/0.575
+PASS continuous dry centerline 3/0.600
+PASS continuous dry centerline 3/0.625
+PASS continuous dry centerline 3/0.650
+PASS continuous dry centerline 3/0.675
+PASS continuous dry centerline 3/0.700
+PASS continuous dry centerline 3/0.725
+PASS continuous dry centerline 3/0.750
+PASS continuous dry centerline 3/0.775
+PASS continuous dry centerline 3/0.800
+PASS continuous dry centerline 3/0.825
+PASS continuous dry centerline 3/0.850
+PASS continuous dry centerline 3/0.875
+PASS continuous dry centerline 3/0.900
+PASS continuous dry centerline 3/0.925
+PASS continuous dry centerline 3/0.950
+PASS continuous dry centerline 3/0.975
+PASS continuous dry centerline 3/1.000
+PASS native path remains within allowed corridor 3/1/0.000
+PASS native path remains within allowed corridor 3/1/0.025
+PASS native path remains within allowed corridor 3/1/0.050
+PASS native path remains within allowed corridor 3/1/0.075
+PASS native path remains within allowed corridor 3/1/0.100
+PASS native path remains within allowed corridor 3/1/0.125
+PASS native path remains within allowed corridor 3/1/0.150
+PASS native path remains within allowed corridor 3/1/0.175
+PASS native path remains within allowed corridor 3/1/0.200
+PASS native path remains within allowed corridor 3/1/0.225
+PASS native path remains within allowed corridor 3/1/0.250
+PASS native path remains within allowed corridor 3/1/0.275
+PASS native path remains within allowed corridor 3/1/0.300
+PASS native path remains within allowed corridor 3/1/0.325
+PASS native path remains within allowed corridor 3/1/0.350
+PASS native path remains within allowed corridor 3/1/0.375
+PASS native path remains within allowed corridor 3/1/0.400
+PASS native path remains within allowed corridor 3/1/0.425
+PASS native path remains within allowed corridor 3/1/0.450
+PASS native path remains within allowed corridor 3/1/0.475
+PASS native path remains within allowed corridor 3/1/0.500
+PASS native path remains within allowed corridor 3/1/0.525
+PASS native path remains within allowed corridor 3/1/0.550
+PASS native path remains within allowed corridor 3/1/0.575
+PASS native path remains within allowed corridor 3/1/0.600
+PASS native path remains within allowed corridor 3/1/0.625
+PASS native path remains within allowed corridor 3/1/0.650
+PASS native path remains within allowed corridor 3/1/0.675
+PASS native path remains within allowed corridor 3/1/0.700
+PASS native path remains within allowed corridor 3/1/0.725
+PASS native path remains within allowed corridor 3/1/0.750
+PASS native path remains within allowed corridor 3/1/0.775
+PASS native path remains within allowed corridor 3/1/0.800
+PASS native path remains within allowed corridor 3/1/0.825
+PASS native path remains within allowed corridor 3/1/0.850
+PASS native path remains within allowed corridor 3/1/0.875
+PASS native path remains within allowed corridor 3/1/0.900
+PASS native path remains within allowed corridor 3/1/0.925
+PASS native path remains within allowed corridor 3/1/0.950
+PASS native path remains within allowed corridor 3/1/0.975
+PASS native path remains within allowed corridor 3/1/1.000
+bank 4=(-3.971, 0.863, -21.858)
+PASS bank waypoint on actual NavMesh 4
+PASS bank waypoint dry and within corridor 4
+PASS complete native path to bank waypoint 4
+PASS continuous dry centerline 4/0.000
+PASS continuous dry centerline 4/0.025
+PASS continuous dry centerline 4/0.050
+PASS continuous dry centerline 4/0.075
+PASS continuous dry centerline 4/0.100
+PASS continuous dry centerline 4/0.125
+PASS continuous dry centerline 4/0.150
+PASS continuous dry centerline 4/0.175
+PASS continuous dry centerline 4/0.200
+PASS continuous dry centerline 4/0.225
+PASS continuous dry centerline 4/0.250
+PASS continuous dry centerline 4/0.275
+PASS continuous dry centerline 4/0.300
+PASS continuous dry centerline 4/0.325
+PASS continuous dry centerline 4/0.350
+PASS continuous dry centerline 4/0.375
+PASS continuous dry centerline 4/0.400
+PASS continuous dry centerline 4/0.425
+PASS continuous dry centerline 4/0.450
+PASS continuous dry centerline 4/0.475
+PASS continuous dry centerline 4/0.500
+PASS continuous dry centerline 4/0.525
+PASS continuous dry centerline 4/0.550
+PASS continuous dry centerline 4/0.575
+PASS continuous dry centerline 4/0.600
+PASS continuous dry centerline 4/0.625
+PASS continuous dry centerline 4/0.650
+PASS continuous dry centerline 4/0.675
+PASS continuous dry centerline 4/0.700
+PASS continuous dry centerline 4/0.725
+PASS continuous dry centerline 4/0.750
+PASS continuous dry centerline 4/0.775
+PASS continuous dry centerline 4/0.800
+PASS continuous dry centerline 4/0.825
+PASS continuous dry centerline 4/0.850
+PASS continuous dry centerline 4/0.875
+PASS continuous dry centerline 4/0.900
+PASS continuous dry centerline 4/0.925
+PASS continuous dry centerline 4/0.950
+PASS continuous dry centerline 4/0.975
+PASS continuous dry centerline 4/1.000
+PASS native path remains within allowed corridor 4/1/0.000
+PASS native path remains within allowed corridor 4/1/0.025
+PASS native path remains within allowed corridor 4/1/0.050
+PASS native path remains within allowed corridor 4/1/0.075
+PASS native path remains within allowed corridor 4/1/0.100
+PASS native path remains within allowed corridor 4/1/0.125
+PASS native path remains within allowed corridor 4/1/0.150
+PASS native path remains within allowed corridor 4/1/0.175
+PASS native path remains within allowed corridor 4/1/0.200
+PASS native path remains within allowed corridor 4/1/0.225
+PASS native path remains within allowed corridor 4/1/0.250
+PASS native path remains within allowed corridor 4/1/0.275
+PASS native path remains within allowed corridor 4/1/0.300
+PASS native path remains within allowed corridor 4/1/0.325
+PASS native path remains within allowed corridor 4/1/0.350
+PASS native path remains within allowed corridor 4/1/0.375
+PASS native path remains within allowed corridor 4/1/0.400
+PASS native path remains within allowed corridor 4/1/0.425
+PASS native path remains within allowed corridor 4/1/0.450
+PASS native path remains within allowed corridor 4/1/0.475
+PASS native path remains within allowed corridor 4/1/0.500
+PASS native path remains within allowed corridor 4/1/0.525
+PASS native path remains within allowed corridor 4/1/0.550
+PASS native path remains within allowed corridor 4/1/0.575
+PASS native path remains within allowed corridor 4/1/0.600
+PASS native path remains within allowed corridor 4/1/0.625
+PASS native path remains within allowed corridor 4/1/0.650
+PASS native path remains within allowed corridor 4/1/0.675
+PASS native path remains within allowed corridor 4/1/0.700
+PASS native path remains within allowed corridor 4/1/0.725
+PASS native path remains within allowed corridor 4/1/0.750
+PASS native path remains within allowed corridor 4/1/0.775
+PASS native path remains within allowed corridor 4/1/0.800
+PASS native path remains within allowed corridor 4/1/0.825
+PASS native path remains within allowed corridor 4/1/0.850
+PASS native path remains within allowed corridor 4/1/0.875
+PASS native path remains within allowed corridor 4/1/0.900
+PASS native path remains within allowed corridor 4/1/0.925
+PASS native path remains within allowed corridor 4/1/0.950
+PASS native path remains within allowed corridor 4/1/0.975
+PASS native path remains within allowed corridor 4/1/1.000
+bank 5=(-3.970, 1.125, -31.858)
+PASS bank waypoint on actual NavMesh 5
+PASS bank waypoint dry and within corridor 5
+PASS complete native path to bank waypoint 5
+PASS continuous dry centerline 5/0.000
+PASS continuous dry centerline 5/0.025
+PASS continuous dry centerline 5/0.050
+PASS continuous dry centerline 5/0.075
+PASS continuous dry centerline 5/0.100
+PASS continuous dry centerline 5/0.125
+PASS continuous dry centerline 5/0.150
+PASS continuous dry centerline 5/0.175
+PASS continuous dry centerline 5/0.200
+PASS continuous dry centerline 5/0.225
+PASS continuous dry centerline 5/0.250
+PASS continuous dry centerline 5/0.275
+PASS continuous dry centerline 5/0.300
+PASS continuous dry centerline 5/0.325
+PASS continuous dry centerline 5/0.350
+PASS continuous dry centerline 5/0.375
+PASS continuous dry centerline 5/0.400
+PASS continuous dry centerline 5/0.425
+PASS continuous dry centerline 5/0.450
+PASS continuous dry centerline 5/0.475
+PASS continuous dry centerline 5/0.500
+PASS continuous dry centerline 5/0.525
+PASS continuous dry centerline 5/0.550
+PASS continuous dry centerline 5/0.575
+PASS continuous dry centerline 5/0.600
+PASS continuous dry centerline 5/0.625
+PASS continuous dry centerline 5/0.650
+PASS continuous dry centerline 5/0.675
+PASS continuous dry centerline 5/0.700
+PASS continuous dry centerline 5/0.725
+PASS continuous dry centerline 5/0.750
+PASS continuous dry centerline 5/0.775
+PASS continuous dry centerline 5/0.800
+PASS continuous dry centerline 5/0.825
+PASS continuous dry centerline 5/0.850
+PASS continuous dry centerline 5/0.875
+PASS continuous dry centerline 5/0.900
+PASS continuous dry centerline 5/0.925
+PASS continuous dry centerline 5/0.950
+PASS continuous dry centerline 5/0.975
+PASS continuous dry centerline 5/1.000
+PASS native path remains within allowed corridor 5/1/0.000
+PASS native path remains within allowed corridor 5/1/0.025
+PASS native path remains within allowed corridor 5/1/0.050
+PASS native path remains within allowed corridor 5/1/0.075
+PASS native path remains within allowed corridor 5/1/0.100
+PASS native path remains within allowed corridor 5/1/0.125
+PASS native path remains within allowed corridor 5/1/0.150
+PASS native path remains within allowed corridor 5/1/0.175
+PASS native path remains within allowed corridor 5/1/0.200
+PASS native path remains within allowed corridor 5/1/0.225
+PASS native path remains within allowed corridor 5/1/0.250
+PASS native path remains within allowed corridor 5/1/0.275
+PASS native path remains within allowed corridor 5/1/0.300
+PASS native path remains within allowed corridor 5/1/0.325
+PASS native path remains within allowed corridor 5/1/0.350
+PASS native path remains within allowed corridor 5/1/0.375
+PASS native path remains within allowed corridor 5/1/0.400
+PASS native path remains within allowed corridor 5/1/0.425
+PASS native path remains within allowed corridor 5/1/0.450
+PASS native path remains within allowed corridor 5/1/0.475
+PASS native path remains within allowed corridor 5/1/0.500
+PASS native path remains within allowed corridor 5/1/0.525
+PASS native path remains within allowed corridor 5/1/0.550
+PASS native path remains within allowed corridor 5/1/0.575
+PASS native path remains within allowed corridor 5/1/0.600
+PASS native path remains within allowed corridor 5/1/0.625
+PASS native path remains within allowed corridor 5/1/0.650
+PASS native path remains within allowed corridor 5/1/0.675
+PASS native path remains within allowed corridor 5/1/0.700
+PASS native path remains within allowed corridor 5/1/0.725
+PASS native path remains within allowed corridor 5/1/0.750
+PASS native path remains within allowed corridor 5/1/0.775
+PASS native path remains within allowed corridor 5/1/0.800
+PASS native path remains within allowed corridor 5/1/0.825
+PASS native path remains within allowed corridor 5/1/0.850
+PASS native path remains within allowed corridor 5/1/0.875
+PASS native path remains within allowed corridor 5/1/0.900
+PASS native path remains within allowed corridor 5/1/0.925
+PASS native path remains within allowed corridor 5/1/0.950
+PASS native path remains within allowed corridor 5/1/0.975
+PASS native path remains within allowed corridor 5/1/1.000
+bank 6=(-3.968, 0.857, -41.858)
+PASS bank waypoint on actual NavMesh 6
+PASS bank waypoint dry and within corridor 6
+PASS complete native path to bank waypoint 6
+PASS continuous dry centerline 6/0.000
+PASS continuous dry centerline 6/0.025
+PASS continuous dry centerline 6/0.050
+PASS continuous dry centerline 6/0.075
+PASS continuous dry centerline 6/0.100
+PASS continuous dry centerline 6/0.125
+PASS continuous dry centerline 6/0.150
+PASS continuous dry centerline 6/0.175
+PASS continuous dry centerline 6/0.200
+PASS continuous dry centerline 6/0.225
+PASS continuous dry centerline 6/0.250
+PASS continuous dry centerline 6/0.275
+PASS continuous dry centerline 6/0.300
+PASS continuous dry centerline 6/0.325
+PASS continuous dry centerline 6/0.350
+PASS continuous dry centerline 6/0.375
+PASS continuous dry centerline 6/0.400
+PASS continuous dry centerline 6/0.425
+PASS continuous dry centerline 6/0.450
+PASS continuous dry centerline 6/0.475
+PASS continuous dry centerline 6/0.500
+PASS continuous dry centerline 6/0.525
+PASS continuous dry centerline 6/0.550
+PASS continuous dry centerline 6/0.575
+PASS continuous dry centerline 6/0.600
+PASS continuous dry centerline 6/0.625
+PASS continuous dry centerline 6/0.650
+PASS continuous dry centerline 6/0.675
+PASS continuous dry centerline 6/0.700
+PASS continuous dry centerline 6/0.725
+PASS continuous dry centerline 6/0.750
+PASS continuous dry centerline 6/0.775
+PASS continuous dry centerline 6/0.800
+PASS continuous dry centerline 6/0.825
+PASS continuous dry centerline 6/0.850
+PASS continuous dry centerline 6/0.875
+PASS continuous dry centerline 6/0.900
+PASS continuous dry centerline 6/0.925
+PASS continuous dry centerline 6/0.950
+PASS continuous dry centerline 6/0.975
+PASS continuous dry centerline 6/1.000
+PASS native path remains within allowed corridor 6/1/0.000
+PASS native path remains within allowed corridor 6/1/0.025
+PASS native path remains within allowed corridor 6/1/0.050
+PASS native path remains within allowed corridor 6/1/0.075
+PASS native path remains within allowed corridor 6/1/0.100
+PASS native path remains within allowed corridor 6/1/0.125
+PASS native path remains within allowed corridor 6/1/0.150
+PASS native path remains within allowed corridor 6/1/0.175
+PASS native path remains within allowed corridor 6/1/0.200
+PASS native path remains within allowed corridor 6/1/0.225
+PASS native path remains within allowed corridor 6/1/0.250
+PASS native path remains within allowed corridor 6/1/0.275
+PASS native path remains within allowed corridor 6/1/0.300
+PASS native path remains within allowed corridor 6/1/0.325
+PASS native path remains within allowed corridor 6/1/0.350
+PASS native path remains within allowed corridor 6/1/0.375
+PASS native path remains within allowed corridor 6/1/0.400
+PASS native path remains within allowed corridor 6/1/0.425
+PASS native path remains within allowed corridor 6/1/0.450
+PASS native path remains within allowed corridor 6/1/0.475
+PASS native path remains within allowed corridor 6/1/0.500
+PASS native path remains within allowed corridor 6/1/0.525
+PASS native path remains within allowed corridor 6/1/0.550
+PASS native path remains within allowed corridor 6/1/0.575
+PASS native path remains within allowed corridor 6/1/0.600
+PASS native path remains within allowed corridor 6/1/0.625
+PASS native path remains within allowed corridor 6/1/0.650
+PASS native path remains within allowed corridor 6/1/0.675
+PASS native path remains within allowed corridor 6/1/0.700
+PASS native path remains within allowed corridor 6/1/0.725
+PASS native path remains within allowed corridor 6/1/0.750
+PASS native path remains within allowed corridor 6/1/0.775
+PASS native path remains within allowed corridor 6/1/0.800
+PASS native path remains within allowed corridor 6/1/0.825
+PASS native path remains within allowed corridor 6/1/0.850
+PASS native path remains within allowed corridor 6/1/0.875
+PASS native path remains within allowed corridor 6/1/0.900
+PASS native path remains within allowed corridor 6/1/0.925
+PASS native path remains within allowed corridor 6/1/0.950
+PASS native path remains within allowed corridor 6/1/0.975
+PASS native path remains within allowed corridor 6/1/1.000
+bank 7=(-3.967, 0.809, -51.858)
+PASS bank waypoint on actual NavMesh 7
+PASS bank waypoint dry and within corridor 7
+PASS complete native path to bank waypoint 7
+PASS continuous dry centerline 7/0.000
+PASS continuous dry centerline 7/0.025
+PASS continuous dry centerline 7/0.050
+PASS continuous dry centerline 7/0.075
+PASS continuous dry centerline 7/0.100
+PASS continuous dry centerline 7/0.125
+PASS continuous dry centerline 7/0.150
+PASS continuous dry centerline 7/0.175
+PASS continuous dry centerline 7/0.200
+PASS continuous dry centerline 7/0.225
+PASS continuous dry centerline 7/0.250
+PASS continuous dry centerline 7/0.275
+PASS continuous dry centerline 7/0.300
+PASS continuous dry centerline 7/0.325
+PASS continuous dry centerline 7/0.350
+PASS continuous dry centerline 7/0.375
+PASS continuous dry centerline 7/0.400
+PASS continuous dry centerline 7/0.425
+PASS continuous dry centerline 7/0.450
+PASS continuous dry centerline 7/0.475
+PASS continuous dry centerline 7/0.500
+PASS continuous dry centerline 7/0.525
+PASS continuous dry centerline 7/0.550
+PASS continuous dry centerline 7/0.575
+PASS continuous dry centerline 7/0.600
+PASS continuous dry centerline 7/0.625
+PASS continuous dry centerline 7/0.650
+PASS continuous dry centerline 7/0.675
+PASS continuous dry centerline 7/0.700
+PASS continuous dry centerline 7/0.725
+PASS continuous dry centerline 7/0.750
+PASS continuous dry centerline 7/0.775
+PASS continuous dry centerline 7/0.800
+PASS continuous dry centerline 7/0.825
+PASS continuous dry centerline 7/0.850
+PASS continuous dry centerline 7/0.875
+PASS continuous dry centerline 7/0.900
+PASS continuous dry centerline 7/0.925
+PASS continuous dry centerline 7/0.950
+PASS continuous dry centerline 7/0.975
+PASS continuous dry centerline 7/1.000
+PASS native path remains within allowed corridor 7/1/0.000
+PASS native path remains within allowed corridor 7/1/0.025
+PASS native path remains within allowed corridor 7/1/0.050
+PASS native path remains within allowed corridor 7/1/0.075
+PASS native path remains within allowed corridor 7/1/0.100
+PASS native path remains within allowed corridor 7/1/0.125
+PASS native path remains within allowed corridor 7/1/0.150
+PASS native path remains within allowed corridor 7/1/0.175
+PASS native path remains within allowed corridor 7/1/0.200
+PASS native path remains within allowed corridor 7/1/0.225
+PASS native path remains within allowed corridor 7/1/0.250
+PASS native path remains within allowed corridor 7/1/0.275
+PASS native path remains within allowed corridor 7/1/0.300
+PASS native path remains within allowed corridor 7/1/0.325
+PASS native path remains within allowed corridor 7/1/0.350
+PASS native path remains within allowed corridor 7/1/0.375
+PASS native path remains within allowed corridor 7/1/0.400
+PASS native path remains within allowed corridor 7/1/0.425
+PASS native path remains within allowed corridor 7/1/0.450
+PASS native path remains within allowed corridor 7/1/0.475
+PASS native path remains within allowed corridor 7/1/0.500
+PASS native path remains within allowed corridor 7/1/0.525
+PASS native path remains within allowed corridor 7/1/0.550
+PASS native path remains within allowed corridor 7/1/0.575
+PASS native path remains within allowed corridor 7/1/0.600
+PASS native path remains within allowed corridor 7/1/0.625
+PASS native path remains within allowed corridor 7/1/0.650
+PASS native path remains within allowed corridor 7/1/0.675
+PASS native path remains within allowed corridor 7/1/0.700
+PASS native path remains within allowed corridor 7/1/0.725
+PASS native path remains within allowed corridor 7/1/0.750
+PASS native path remains within allowed corridor 7/1/0.775
+PASS native path remains within allowed corridor 7/1/0.800
+PASS native path remains within allowed corridor 7/1/0.825
+PASS native path remains within allowed corridor 7/1/0.850
+PASS native path remains within allowed corridor 7/1/0.875
+PASS native path remains within allowed corridor 7/1/0.900
+PASS native path remains within allowed corridor 7/1/0.925
+PASS native path remains within allowed corridor 7/1/0.950
+PASS native path remains within allowed corridor 7/1/0.975
+PASS native path remains within allowed corridor 7/1/1.000
+PASS hatch interaction stand is accessible
+PASS actual river shortcut blocked
+PASS outer dry field stays walkable
+PASS west village roads stay walkable
+PASS jump retains gravity but cannot cross river bounds
+PASS guard post valid 0
+guard 0=(36.247, 0.816, -18.802)
+guard shoreline distance=40
+PASS straight row about forty metres from curved river bank
+first guard road-edge distance=20
+PASS first guard twenty metres from actual road edge
+PASS guard scan sector faces river 0
+PASS guard post valid 1
+guard 1=(31.641, 1.089, -27.678)
+PASS straight row spacing ten metres per guard
+guard shoreline distance=41.25067
+PASS straight row about forty metres from curved river bank
+PASS guard scan sector faces river 1
+PASS guard post valid 2
+guard 2=(27.035, 1.125, -36.553)
+PASS straight row spacing ten metres per guard
+PASS straight row spacing ten metres per guard
+guard shoreline distance=40
+PASS straight row about forty metres from curved river bank
+PASS guard scan sector faces river 2
+PASS river corridor waypoint actually crossed by a guard sweep (4.58, 1.08, -0.75)
+PASS river corridor waypoint actually crossed by a guard sweep (0.31, 1.13, -5.48)
+PASS river corridor waypoint actually crossed by a guard sweep (-1.83, 1.01, -11.67)
+PASS river corridor waypoint actually crossed by a guard sweep (-3.97, 0.95, -17.13)
+PASS river corridor waypoint actually crossed by a guard sweep (-3.97, 0.86, -21.86)
+PASS river corridor waypoint actually crossed by a guard sweep (-3.97, 1.13, -31.86)
+PASS river corridor waypoint actually crossed by a guard sweep (-3.97, 0.86, -41.86)
+PASS river corridor waypoint actually crossed by a guard sweep (-3.97, 0.81, -51.86)
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS common dark interval clears whole bank corridor
+PASS only completed hatch inspection opens river crossing
+PASS movement constraint completely releases after inspection
+PASS crossing unlock persists through save/load
+PASS river probe runs with active map safety, not a cinematic exemption
+PASS crossing creates no visible road, raised floor or artificial collider
+PASS cross-river guidance closed before actual inspection
+PASS unfinished bank mission still blocks water
+PASS inspection unlocks natural river rather than one narrow crossing
+PASS unlocked ford links both native bank NavMeshes
+PASS guidance takes short ford instead of returning to bridge: 24.12568
+PASS natural starting bank has terrain at z=-25
+PASS actual Nam capsule crosses natural river at z=-25 without recovery/teleport
+PASS crossing uses real submerged river bed at z=-25, feet=-0.7206941
+PASS natural starting bank has terrain at z=-40
+PASS actual Nam capsule crosses natural river at z=-40 without recovery/teleport
+PASS crossing uses real submerged river bed at z=-40, feet=-0.7200002
+PASS natural starting bank has terrain at z=-60
+PASS actual Nam capsule crosses natural river at z=-60 without recovery/teleport
+PASS crossing uses real submerged river bed at z=-60, feet=-0.7207643
+PASS natural river bed sampled for load regression
+PASS loading while standing in unlocked river does not recover to shore
+PASS falling below real river bed still triggers recovery
+PASS missing terrain in water still triggers recovery
+PASS west-bank exit connects to evacuation inspection route
+PASS retrying pre-hatch checkpoint restores river lock
+PASS other chapters unrestricted

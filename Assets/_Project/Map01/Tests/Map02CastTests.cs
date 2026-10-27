@@ -58,6 +58,30 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(chapter.Actor("Anh Thành").visual.gameObject.activeInHierarchy);Assert.IsTrue(chapter.Actor("Tâm").visual.gameObject.activeInHierarchy);
             yield return new ExitPlayMode();
         }
+        [UnityTest,Timeout(240000)] public IEnumerator InjuredScoutIsVisibleAboveGroundAndRescueContinuesAfterLoad()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");SetPreviewResolution(1920,1080);yield return new EnterPlayMode();
+            Map02Mission m=null;float limit=Time.realtimeSinceStartup+100;
+            while(Time.realtimeSinceStartup<limit){m=Object.FindFirstObjectByType<Map02Mission>();if(m?.Ready==true&&m.Chapter!=null)break;Object.FindFirstObjectByType<Map02Arrival>()?.Skip();yield return null;}
+            Assert.NotNull(m?.Chapter);var c=m.Chapter;
+            var snapshot=m.Capture();var state=new Map02ChapterState();foreach(var task in Map02ChapterDefinition.Load().tasks){if(task.id=="D2_03")break;state.Complete(task.id);}snapshot.chapter=state;m.Restore(snapshot);yield return WaitGameSeconds(.5f);
+            var scout=c.Actor("Tâm");var shown=scout.GetComponentsInChildren<Renderer>().Where(r=>r.enabled&&r.gameObject.activeInHierarchy).ToArray();Assert.Greater(shown.Length,0);
+            var bounds=shown[0].bounds;foreach(var renderer in shown)bounds.Encapsulate(renderer.bounds);
+            Directory.CreateDirectory("Logs/Map02ScoutVisibility");File.WriteAllText("Logs/Map02ScoutVisibility/bounds.txt",$"actor={scout.transform.position} visual={scout.visual.position} scale={scout.Animator.transform.lossyScale} bounds={bounds}");
+            foreach(var old in Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Where(t=>string.IsNullOrEmpty(t.chapterId)&&t.work==Map02Work.ScoutAid))Assert.True(old.GetComponentsInChildren<Renderer>(true).All(r=>!r.enabled),"Prototype cube must not masquerade as the injured scout.");
+            Place(m,scout.transform.position+Vector3.left*2.8f);
+            var rig=Object.FindObjectsByType<ShadowVale.Gameplay.Player.ThirdPersonCamera>(FindObjectsSortMode.None).First(x=>x.isActiveAndEnabled&&x.GetComponent<Camera>().isActiveAndEnabled);rig.SetCinematicView(scout.transform.position+new Vector3(0,2.1f,-4),Quaternion.LookRotation(new Vector3(0,-1.65f,4)),55,1);
+            yield return WaitGameSeconds(.3f);ScreenCapture.CaptureScreenshot("Logs/Map02ScoutVisibility/player-view.png");yield return null;rig.ClearCinematicView();
+            Assert.Greater(bounds.size.y,.3f);Assert.Less(bounds.size.y,1.3f);Assert.Less(Vector3.Distance(bounds.center,scout.transform.position),1.6f);
+            foreach(var rice in Object.FindObjectsByType<VillageRiceInstances>(FindObjectsSortMode.None))foreach(var plant in rice.plants){var world=rice.transform.TransformPoint(new Vector3(plant.x,plant.y,plant.z));Assert.GreaterOrEqual(Vector3.ProjectOnPlane(world-scout.transform.position,Vector3.up).magnitude,3.15f,"Rice must leave the injured scout readable.");}
+            Assert.Greater(bounds.min.y,scout.transform.position.y-.12f,"Resting scout must not be buried under the ground.");
+            var mark=Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId=="D2_03");Assert.Less(Vector3.Distance(mark.transform.position,scout.transform.position),1);
+            Place(m,mark.transform.position+Vector3.back*1.8f);Assert.True(m.Interact(mark));Assert.AreEqual("D2_03",c.CurrentScene.id);
+            typeof(Map02ChapterDirector).GetMethod("EndScene",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(c,null);Assert.True(c.State.Done("D2_03"));
+            var saved=Map02Mission.Parse(JsonUtility.ToJson(m.Capture()));m.Restore(saved);yield return null;
+            var escort=Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId=="D2_04");Place(m,scout.transform.position+Vector3.back*1.8f);Assert.True(m.Interact(escort));Assert.AreSame(scout,c.Companion);Assert.False(scout.GetComponent<Map02ScoutInjuredVisual>().Injured);
+            yield return new ExitPlayMode();
+        }
         static void Place(Map02Mission m,Vector3 at){var cc=m.Player.GetComponent<CharacterController>();cc.enabled=false;m.Player.position=at;cc.enabled=true;Physics.SyncTransforms();}
         [UnityTest,Timeout(240000)] public IEnumerator ConversationFacesPartnerAtExactSpacingFromEveryApproach()
         {

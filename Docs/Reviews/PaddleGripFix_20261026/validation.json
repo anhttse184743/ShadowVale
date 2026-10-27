@@ -1,0 +1,30 @@
+{
+  "latestSuccessfulCases": [
+    {
+      "test": "ExistingGripNamesAndOtherShapeFramesSurviveRepeatedSetup",
+      "result": "Passed",
+      "sourceReport": "attempt-DX11.xml"
+    },
+    {
+      "test": "CommanderRowsAndHungSupportsArmAcrossBothMaps",
+      "result": "Passed",
+      "sourceReport": "attempt-DX12.xml"
+    },
+    {
+      "test": "CompleteCheckpointWithExistingGripChannelsReachesMap2Gameplay",
+      "result": "Passed",
+      "sourceReport": "checkpoint-final.xml"
+    }
+  ],
+  "renderLogChecks": {
+    "Unity-DX12.log": {
+      "duplicateGrip": 0,
+      "invalidBatch": 0
+    },
+    "Unity-checkpoint-final.log": {
+      "duplicateGrip": 0,
+      "invalidBatch": 0
+    }
+  },
+  "pipelineStatus": "device=Direct3D12\ngpuResidentDrawer=InstancedDrawing\narrival=Gameplay\nsourceReady=True\nexisting grip channels rebuilt without duplicate name; gameplay controls returned\n"
+}

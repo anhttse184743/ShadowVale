@@ -1,0 +1,1142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="26" result="Failed(Child)" total="26" passed="17" failed="9" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-26 05:49:40Z" end-time="2026-10-26 05:49:46Z" duration="6,8547979">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="798" result="Failed" site="Child" start-time="2026-10-26 05:49:40Z" end-time="2026-10-26 05:49:46Z" duration="6.854798" total="26" passed="17" failed="9" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1731" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/Admin/.codex/worktrees/map1-boot-investigation-20261023/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="575" result="Failed" site="Child" start-time="2026-10-26 05:49:41Z" end-time="2026-10-26 05:49:46Z" duration="5.750923" total="26" passed="17" failed="9" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="216560" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1732" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="575" result="Failed" site="Child" start-time="2026-10-26 05:49:41Z" end-time="2026-10-26 05:49:46Z" duration="5.588155" total="26" passed="17" failed="9" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1733" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="575" result="Failed" site="Child" start-time="2026-10-26 05:49:41Z" end-time="2026-10-26 05:49:46Z" duration="5.553711" total="26" passed="17" failed="9" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="SetUpFixture" id="1642" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="575" result="Failed" site="Child" start-time="2026-10-26 05:49:41Z" end-time="2026-10-26 05:49:46Z" duration="5.527615" total="26" passed="17" failed="9" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1331" name="Map02ChapterMechanicsTests" fullname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests" classname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests" runstate="Runnable" testcasecount="5" result="Failed" site="Child" start-time="2026-10-26 05:46:54Z" end-time="2026-10-26 05:46:55Z" duration="0.808716" total="5" passed="4" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1335" name="CoverFireTakesSixtyToNinetySecondsWhateverNamHits" fullname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.CoverFireTakesSixtyToNinetySecondsWhateverNamHits" methodname="CoverFireTakesSixtyToNinetySecondsWhateverNamHits" classname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests" runstate="Runnable" seed="1438785231" result="Passed" start-time="2026-10-26 05:45:56Z" end-time="2026-10-26 05:46:14Z" duration="17.295113" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+              </test-case>
+              <test-case id="1334" name="LaneHoldsFollowEvacuationAndTheFallenDropRounds" fullname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.LaneHoldsFollowEvacuationAndTheFallenDropRounds" methodname="LaneHoldsFollowEvacuationAndTheFallenDropRounds" classname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests" runstate="Runnable" seed="362877833" result="Passed" start-time="2026-10-26 05:46:14Z" end-time="2026-10-26 05:46:24Z" duration="10.114134" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+              <test-case id="1332" name="RepairAndAntennaRequireActualInputAndCoverFireLocksOnlyMovement" fullname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.RepairAndAntennaRequireActualInputAndCoverFireLocksOnlyMovement" methodname="RepairAndAntennaRequireActualInputAndCoverFireLocksOnlyMovement" classname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests" runstate="Runnable" seed="1012217486" result="Failed" start-time="2026-10-26 05:46:24Z" end-time="2026-10-26 05:46:30Z" duration="6.466941" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: 4.0d +/- 0.0099999997764825821d
+  But was:  0.0d
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.Map02ChapterMechanicsTests+<RepairAndAntennaRequireActualInputAndCoverFireLocksOnlyMovement>d__0.MoveNext () [0x0069b] in C:\Users\Admin\.codex\worktrees\map1-boot-investigation-20261023\ShadowVale\Assets\_Project\Map01\Tests\Map02ChapterMechanicsTests.cs:42
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1336" name="TankAndBoatsAreWhereTheNightThreeStoryPutsThem" fullname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.TankAndBoatsAreWhereTheNightThreeStoryPutsThem" methodname="TankAndBoatsAreWhereTheNightThreeStoryPutsThem" classname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests" runstate="Runnable" seed="1493701862" result="Passed" start-time="2026-10-26 05:46:30Z" end-time="2026-10-26 05:46:46Z" duration="16.370272" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <output><![CDATA[Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+]]></output>
+              </test-case>
+              <test-case id="1333" name="WoundBankAndSacrificeRunWithoutPressingEAndRadioCallsKeepControl" fullname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.WoundBankAndSacrificeRunWithoutPressingEAndRadioCallsKeepControl" methodname="WoundBankAndSacrificeRunWithoutPressingEAndRadioCallsKeepControl" classname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests" runstate="Runnable" seed="1152730308" result="Passed" start-time="2026-10-26 05:46:47Z" end-time="2026-10-26 05:46:55Z" duration="8.009795" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1399" name="Map02DayTwoRouteTests" fullname="ShadowVale.Map01.Tests.Map02DayTwoRouteTests" classname="ShadowVale.Map01.Tests.Map02DayTwoRouteTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 05:47:02Z" end-time="2026-10-26 05:47:02Z" duration="0.731302" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1400" name="DayTwoRoutesRescueWireAndAntennaArePlayable" fullname="ShadowVale.Map01.Tests.Map02DayTwoRouteTests.DayTwoRoutesRescueWireAndAntennaArePlayable" methodname="DayTwoRoutesRescueWireAndAntennaArePlayable" classname="ShadowVale.Map01.Tests.Map02DayTwoRouteTests" runstate="Runnable" seed="530426931" result="Failed" label="Error" start-time="2026-10-26 05:46:55Z" end-time="2026-10-26 05:47:02Z" duration="7.897499" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                  <stack-trace><![CDATA[  at ShadowVale.Map01.Tests.Map02DayTwoRouteTests.Survey (ShadowVale.Map01.Map02ChapterDirector c) [0x0000b] in C:\Users\Admin\.codex\worktrees\map1-boot-investigation-20261023\ShadowVale\Assets\_Project\Map01\Tests\Map02DayTwoRouteTests.cs:69 
+  at ShadowVale.Map01.Tests.Map02DayTwoRouteTests+<DayTwoRoutesRescueWireAndAntennaArePlayable>d__0.MoveNext () [0x00107] in C:\Users\Admin\.codex\worktrees\map1-boot-investigation-20261023\ShadowVale\Assets\_Project\Map01\Tests\Map02DayTwoRouteTests.cs:25 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44 ]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1401" name="Map02DayTwoStateTests" fullname="ShadowVale.Map01.Tests.Map02DayTwoStateTests" classname="ShadowVale.Map01.Tests.Map02DayTwoStateTests" runstate="Runnable" testcasecount="5" result="Failed" site="Child" start-time="2026-10-26 05:47:09Z" end-time="2026-10-26 05:47:10Z" duration="1.051740" total="5" passed="4" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1405" name="InvalidNewStateIsRejectedWithoutChangingVersionThree" fullname="ShadowVale.Map01.Tests.Map02DayTwoStateTests.InvalidNewStateIsRejectedWithoutChangingVersionThree" methodname="InvalidNewStateIsRejectedWithoutChangingVersionThree" classname="ShadowVale.Map01.Tests.Map02DayTwoStateTests" runstate="Runnable" seed="2001901295" result="Passed" start-time="2026-10-26 05:47:02Z" end-time="2026-10-26 05:47:02Z" duration="0.004671" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1406" name="LiveWireEscortAndPatrolSaveLoadKeepTheirContracts" fullname="ShadowVale.Map01.Tests.Map02DayTwoStateTests.LiveWireEscortAndPatrolSaveLoadKeepTheirContracts" methodname="LiveWireEscortAndPatrolSaveLoadKeepTheirContracts" classname="ShadowVale.Map01.Tests.Map02DayTwoStateTests" runstate="Runnable" seed="1976129267" result="Failed" label="Error" start-time="2026-10-26 05:47:02Z" end-time="2026-10-26 05:47:10Z" duration="7.795171" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.Collections.Generic.KeyNotFoundException : The given key 'nightPatrol' was not present in the dictionary.]]></message>
+                  <stack-trace><![CDATA[  at System.Collections.Generic.Dictionary`2[TKey,TValue].get_Item (TKey key) [0x0001e] in <d49d4cb128564ee1b54a84338c98d353>:0 
+  at ShadowVale.Map01.Tests.Map02DayTwoStateTests+<LiveWireEscortAndPatrolSaveLoadKeepTheirContracts>d__4.MoveNext () [0x00bf2] in C:\Users\Admin\.codex\worktrees\map1-boot-investigation-20261023\ShadowVale\Assets\_Project\Map01\Tests\Map02DayTwoStateTests.cs:106 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44 ]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1403" name="OldVersionThreeWireSavesKeepCompletedTasksAndPendingWork" fullname="ShadowVale.Map01.Tests.Map02DayTwoStateTests.OldVersionThreeWireSavesKeepCompletedTasksAndPendingWork" methodname="OldVersionThreeWireSavesKeepCompletedTasksAndPendingWork" classname="ShadowVale.Map01.Tests.Map02DayTwoStateTests" runstate="Runnable" seed="1172400034" result="Passed" start-time="2026-10-26 05:47:10Z" end-time="2026-10-26 05:47:10Z" duration="0.002163" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1404" name="PatrolResetRewindsOnlyNightRouteAndKeepsChapterResources" fullname="ShadowVale.Map01.Tests.Map02DayTwoStateTests.PatrolResetRewindsOnlyNightRouteAndKeepsChapterResources" methodname="PatrolResetRewindsOnlyNightRouteAndKeepsChapterResources" classname="ShadowVale.Map01.Tests.Map02DayTwoStateTests" runstate="Runnable" seed="761783991" result="Passed" start-time="2026-10-26 05:47:10Z" end-time="2026-10-26 05:47:10Z" duration="0.001131" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1402" name="WireRequiresPickupAndDeliveryAndCannotBeDuplicated" fullname="ShadowVale.Map01.Tests.Map02DayTwoStateTests.WireRequiresPickupAndDeliveryAndCannotBeDuplicated" methodname="WireRequiresPickupAndDeliveryAndCannotBeDuplicated" classname="ShadowVale.Map01.Tests.Map02DayTwoStateTests" runstate="Runnable" seed="1514774571" result="Passed" start-time="2026-10-26 05:47:10Z" end-time="2026-10-26 05:47:10Z" duration="0.000546" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1413" name="Map02FinaleTests" fullname="ShadowVale.Map01.Tests.Map02FinaleTests" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Runnable" testcasecount="8" result="Failed" site="Child" start-time="2026-10-26 05:48:52Z" end-time="2026-10-26 05:48:53Z" duration="0.678069" total="8" passed="5" failed="3" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1421" name="CastAndPropsCapture" fullname="ShadowVale.Map01.Tests.Map02FinaleTests.CastAndPropsCapture" methodname="CastAndPropsCapture" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Explicit" seed="1822869419" result="Passed" start-time="2026-10-26 05:47:10Z" end-time="2026-10-26 05:47:21Z" duration="11.224270" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="_SKIPREASON" value="Manual art review; writes Logs/Map02Models/*.png, asserts only that the cast has models." />
+                </properties>
+              </test-case>
+              <test-case id="1417" name="DayThreeCrateAndNightThreeOpeningsAreDressed" fullname="ShadowVale.Map01.Tests.Map02FinaleTests.DayThreeCrateAndNightThreeOpeningsAreDressed" methodname="DayThreeCrateAndNightThreeOpeningsAreDressed" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Runnable" seed="1702628145" result="Failed" start-time="2026-10-26 05:47:22Z" end-time="2026-10-26 05:47:29Z" duration="7.203903" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: False
+  But was:  True
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.Map02FinaleTests+<DressingInPlayMode>d__25.MoveNext () [0x004bc] in C:\Users\Admin\.codex\worktrees\map1-boot-investigation-20261023\ShadowVale\Assets\_Project\Map01\Tests\Map02FinaleTests.cs:162
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+]]></output>
+              </test-case>
+              <test-case id="1420" name="NightThreePerformanceProbe" fullname="ShadowVale.Map01.Tests.Map02FinaleTests.NightThreePerformanceProbe" methodname="NightThreePerformanceProbe" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Explicit" seed="2045590722" result="Passed" start-time="2026-10-26 05:47:29Z" end-time="2026-10-26 05:48:18Z" duration="49.245555" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="_SKIPREASON" value="Manual performance probe; writes Logs/GD8/perf.txt, asserts nothing." />
+                </properties>
+                <output><![CDATA[Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+]]></output>
+              </test-case>
+              <test-case id="1414" name="SacrificeAndCounterAttackFollowTheScriptClock" fullname="ShadowVale.Map01.Tests.Map02FinaleTests.SacrificeAndCounterAttackFollowTheScriptClock" methodname="SacrificeAndCounterAttackFollowTheScriptClock" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Runnable" seed="2137921626" result="Failed" start-time="2026-10-26 05:48:18Z" end-time="2026-10-26 05:48:25Z" duration="7.085359" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  String lengths are both 17. Strings differ at index 16.
+  Expected: "m2v3_sacrifice_03"
+  But was:  "m2v3_sacrifice_02"
+  ---------------------------^
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.Map02FinaleTests+<SacrificeInPlayMode>d__17.MoveNext () [0x001d3] in C:\Users\Admin\.codex\worktrees\map1-boot-investigation-20261023\ShadowVale\Assets\_Project\Map01\Tests\Map02FinaleTests.cs:68
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1415" name="SkippingTheSacrificeAtAnyMomentLandsOnTheSameDawn" fullname="ShadowVale.Map01.Tests.Map02FinaleTests.SkippingTheSacrificeAtAnyMomentLandsOnTheSameDawn" methodname="SkippingTheSacrificeAtAnyMomentLandsOnTheSameDawn" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Runnable" seed="906109336" result="Passed" start-time="2026-10-26 05:48:25Z" end-time="2026-10-26 05:48:32Z" duration="6.801408" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+              <test-case id="1416" name="TankShotAndFarewellAreStagedWithoutCloseUps" fullname="ShadowVale.Map01.Tests.Map02FinaleTests.TankShotAndFarewellAreStagedWithoutCloseUps" methodname="TankShotAndFarewellAreStagedWithoutCloseUps" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Runnable" seed="1355657922" result="Failed" start-time="2026-10-26 05:48:32Z" end-time="2026-10-26 05:48:39Z" duration="7.030998" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  String lengths are both 16. Strings differ at index 15.
+  Expected: "m2v3_farewell_09"
+  But was:  "m2v3_farewell_01"
+  --------------------------^
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.Map02FinaleTests+<WoundInPlayMode>d__21.MoveNext () [0x00315] in C:\Users\Admin\.codex\worktrees\map1-boot-investigation-20261023\ShadowVale\Assets\_Project\Map01\Tests\Map02FinaleTests.cs:123
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+Ran out of virtual channels. Audio clip "gun" will not be played.
+]]></output>
+              </test-case>
+              <test-case id="1419" name="TelemetryStagesKeepTheirOrderThroughTheChapter" fullname="ShadowVale.Map01.Tests.Map02FinaleTests.TelemetryStagesKeepTheirOrderThroughTheChapter" methodname="TelemetryStagesKeepTheirOrderThroughTheChapter" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Runnable" seed="1640165661" result="Passed" start-time="2026-10-26 05:48:39Z" end-time="2026-10-26 05:48:46Z" duration="6.928841" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+              <test-case id="1418" name="TheTankRollsItsTracksAndWheelsWhenItDrives" fullname="ShadowVale.Map01.Tests.Map02FinaleTests.TheTankRollsItsTracksAndWheelsWhenItDrives" methodname="TheTankRollsItsTracksAndWheelsWhenItDrives" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Runnable" seed="885214608" result="Passed" start-time="2026-10-26 05:48:46Z" end-time="2026-10-26 05:48:53Z" duration="6.736459" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1431" name="Map02NightTwoRouteTests" fullname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests" classname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-26 05:49:07Z" end-time="2026-10-26 05:49:07Z" duration="0.723063" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1434" name="NightCanBeCompletedWithoutCombatUsingRealDoorAndOrderedRoute" fullname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests.NightCanBeCompletedWithoutCombatUsingRealDoorAndOrderedRoute" methodname="NightCanBeCompletedWithoutCombatUsingRealDoorAndOrderedRoute" classname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests" runstate="Runnable" seed="1388635031" result="Failed" start-time="2026-10-26 05:48:53Z" end-time="2026-10-26 05:49:00Z" duration="6.975215" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: 3
+  But was:  0
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.Map02NightTwoRouteTests+<NightCanBeCompletedWithoutCombatUsingRealDoorAndOrderedRoute>d__6.MoveNext () [0x00130] in C:\Users\Admin\.codex\worktrees\map1-boot-investigation-20261023\ShadowVale\Assets\_Project\Map01\Tests\Map02NightTwoRouteTests.cs:90
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1432" name="PatrolCarriesApprovedTorchAndFiresOnlyThroughClearSight" fullname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests.PatrolCarriesApprovedTorchAndFiresOnlyThroughClearSight" methodname="PatrolCarriesApprovedTorchAndFiresOnlyThroughClearSight" classname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests" runstate="Runnable" seed="184461143" result="Failed" label="Error" start-time="2026-10-26 05:49:00Z" end-time="2026-10-26 05:49:07Z" duration="7.839396" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.Collections.Generic.KeyNotFoundException : The given key 'nightPatrol' was not present in the dictionary.]]></message>
+                  <stack-trace><![CDATA[  at System.Collections.Generic.Dictionary`2[TKey,TValue].get_Item (TKey key) [0x0001e] in <d49d4cb128564ee1b54a84338c98d353>:0 
+  at ShadowVale.Map01.Map02ChapterDirector.get_NightPatrolPosition () [0x00000] in C:\Users\Admin\.codex\worktrees\map1-boot-investigation-20261023\ShadowVale\Assets\_Project\Map01\Runtime\Map02ChapterNightPatrol.cs:20 
+  at ShadowVale.Map01.Tests.Map02NightTwoRouteTests+<PatrolCarriesApprovedTorchAndFiresOnlyThroughClearSight>d__0.MoveNext () [0x0017a] in C:\Users\Admin\.codex\worktrees\map1-boot-investigation-20261023\ShadowVale\Assets\_Project\Map01\Tests\Map02NightTwoRouteTests.cs:25 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44 ]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1433" name="VersionThreeDefaultsKeepCompletedTasksAndResetTheWholeNightRoute" fullname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests.VersionThreeDefaultsKeepCompletedTasksAndResetTheWholeNightRoute" methodname="VersionThreeDefaultsKeepCompletedTasksAndResetTheWholeNightRoute" classname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests" runstate="Runnable" seed="855277930" result="Passed" start-time="2026-10-26 05:49:07Z" end-time="2026-10-26 05:49:07Z" duration="0.009706" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1435" name="Map02PerformanceTests" fullname="ShadowVale.Map01.Tests.Map02PerformanceTests" classname="ShadowVale.Map01.Tests.Map02PerformanceTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 05:49:15Z" end-time="2026-10-26 05:49:16Z" duration="0.865559" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1436" name="DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel" fullname="ShadowVale.Map01.Tests.Map02PerformanceTests.DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel" methodname="DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel" classname="ShadowVale.Map01.Tests.Map02PerformanceTests" runstate="Runnable" seed="1058826263" result="Failed" label="Error" start-time="2026-10-26 05:49:07Z" end-time="2026-10-26 05:49:16Z" duration="8.114547" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                  <stack-trace><![CDATA[  at ShadowVale.Map01.Tests.Map02PerformanceTests+<DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel>d__0.MoveNext () [0x0016e] in C:\Users\Admin\.codex\worktrees\map1-boot-investigation-20261023\ShadowVale\Assets\_Project\Map01\Tests\Map02PerformanceTests.cs:25 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44 ]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1462" name="Map02SuppliesAndCastTests" fullname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests" classname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-26 05:49:41Z" end-time="2026-10-26 05:49:46Z" duration="5.465921" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1465" name="DayThreeScenesAndTestRunsStartWhereTheyShould" fullname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.DayThreeScenesAndTestRunsStartWhereTheyShould" methodname="DayThreeScenesAndTestRunsStartWhereTheyShould" classname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests" runstate="Runnable" seed="1036857564" result="Passed" start-time="2026-10-26 05:49:16Z" end-time="2026-10-26 05:49:27Z" duration="11.302502" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+                <output><![CDATA[Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+]]></output>
+              </test-case>
+              <test-case id="1463" name="SuppliesGoFromTheStoreCartToWhereTheStoryTakesThem" fullname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.SuppliesGoFromTheStoreCartToWhereTheStoryTakesThem" methodname="SuppliesGoFromTheStoreCartToWhereTheStoryTakesThem" classname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests" runstate="Runnable" seed="1285608066" result="Passed" start-time="2026-10-26 05:49:27Z" end-time="2026-10-26 05:49:35Z" duration="7.672942" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+              </test-case>
+              <test-case id="1464" name="TheCastStandsAsTallAsNamWithTheirFeetOnTheGround" fullname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.TheCastStandsAsTallAsNamWithTheirFeetOnTheGround" methodname="TheCastStandsAsTallAsNamWithTheirFeetOnTheGround" classname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests" runstate="Runnable" seed="1115266921" result="Passed" start-time="2026-10-26 05:49:35Z" end-time="2026-10-26 05:49:46Z" duration="11.728055" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: Logs/Map02Chapter/latest-full-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

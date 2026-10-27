@@ -1,0 +1,16 @@
+{
+  "roomInterior": [
+    8,
+    5,
+    4
+  ],
+  "surfaceToFloor": 7,
+  "hatch": [
+    2,
+    3
+  ],
+  "shelves": 3,
+  "lamps": 2,
+  "triangles": 43272,
+  "blenderVersion": "5.2.1 LTS"
+}

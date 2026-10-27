@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="6" result="Passed" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-25 14:15:45Z" end-time="2026-10-25 14:15:46Z" duration="0.4161779">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="788" result="Passed" start-time="2026-10-25 14:15:45Z" end-time="2026-10-25 14:15:46Z" duration="0.416178" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1717" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/Capstone/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="565" result="Passed" start-time="2026-10-25 14:15:45Z" end-time="2026-10-25 14:15:46Z" duration="0.338234" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="4244" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1718" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="565" result="Passed" start-time="2026-10-25 14:15:45Z" end-time="2026-10-25 14:15:46Z" duration="0.330166" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1719" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="565" result="Passed" start-time="2026-10-25 14:15:45Z" end-time="2026-10-25 14:15:46Z" duration="0.323625" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1628" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="565" result="Passed" start-time="2026-10-25 14:15:45Z" end-time="2026-10-25 14:15:46Z" duration="0.314994" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1065" name="C3DialogueVoiceTests" fullname="ShadowVale.Map01.Tests.C3DialogueVoiceTests" classname="ShadowVale.Map01.Tests.C3DialogueVoiceTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-25 14:15:45Z" end-time="2026-10-25 14:15:46Z" duration="0.111144" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1066" name="EveryApprovedRetakeHasExactCaptionChannelAndImportedAudio" fullname="ShadowVale.Map01.Tests.C3DialogueVoiceTests.EveryApprovedRetakeHasExactCaptionChannelAndImportedAudio" methodname="EveryApprovedRetakeHasExactCaptionChannelAndImportedAudio" classname="ShadowVale.Map01.Tests.C3DialogueVoiceTests" runstate="Runnable" seed="1373631251" result="Passed" start-time="2026-10-25 14:15:45Z" end-time="2026-10-25 14:15:45Z" duration="0.092504" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1067" name="SourceAndRuntimeCatalogStayIdenticalAfterPrepare" fullname="ShadowVale.Map01.Tests.C3DialogueVoiceTests.SourceAndRuntimeCatalogStayIdenticalAfterPrepare" methodname="SourceAndRuntimeCatalogStayIdenticalAfterPrepare" classname="ShadowVale.Map01.Tests.C3DialogueVoiceTests" runstate="Runnable" seed="276742145" result="Passed" start-time="2026-10-25 14:15:45Z" end-time="2026-10-25 14:15:45Z" duration="0.003745" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1091" name="DialogueVoiceTests" fullname="ShadowVale.Map01.Tests.DialogueVoiceTests" classname="ShadowVale.Map01.Tests.DialogueVoiceTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-10-25 14:15:46Z" end-time="2026-10-25 14:15:46Z" duration="0.094086" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1094" name="EveryStoryLineHasVietnameseAudioAndOnlyRadioIsFiltered" fullname="ShadowVale.Map01.Tests.DialogueVoiceTests.EveryStoryLineHasVietnameseAudioAndOnlyRadioIsFiltered" methodname="EveryStoryLineHasVietnameseAudioAndOnlyRadioIsFiltered" classname="ShadowVale.Map01.Tests.DialogueVoiceTests" runstate="Runnable" seed="797922208" result="Passed" start-time="2026-10-25 14:15:46Z" end-time="2026-10-25 14:15:46Z" duration="0.087851" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1171" name="FullGameAudioTests" fullname="ShadowVale.Map01.Tests.FullGameAudioTests" classname="ShadowVale.Map01.Tests.FullGameAudioTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-10-25 14:15:46Z" end-time="2026-10-25 14:15:46Z" duration="0.017360" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1173" name="EnemyVoicesUseOnlyOriginalRunwayRecordings" fullname="ShadowVale.Map01.Tests.FullGameAudioTests.EnemyVoicesUseOnlyOriginalRunwayRecordings" methodname="EnemyVoicesUseOnlyOriginalRunwayRecordings" classname="ShadowVale.Map01.Tests.FullGameAudioTests" runstate="Runnable" seed="1845625270" result="Passed" start-time="2026-10-25 14:15:46Z" end-time="2026-10-25 14:15:46Z" duration="0.003627" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1174" name="EntireCurrentMapTwoScriptHasExactVoicesIncludingFinale" fullname="ShadowVale.Map01.Tests.FullGameAudioTests.EntireCurrentMapTwoScriptHasExactVoicesIncludingFinale" methodname="EntireCurrentMapTwoScriptHasExactVoicesIncludingFinale" classname="ShadowVale.Map01.Tests.FullGameAudioTests" runstate="Runnable" seed="907036693" result="Passed" start-time="2026-10-25 14:15:46Z" end-time="2026-10-25 14:15:46Z" duration="0.002813" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1172" name="EveryCatalogCueHasAnImportedAudibleClipWithCorrectDuration" fullname="ShadowVale.Map01.Tests.FullGameAudioTests.EveryCatalogCueHasAnImportedAudibleClipWithCorrectDuration" methodname="EveryCatalogCueHasAnImportedAudibleClipWithCorrectDuration" classname="ShadowVale.Map01.Tests.FullGameAudioTests" runstate="Runnable" seed="894075379" result="Passed" start-time="2026-10-25 14:15:46Z" end-time="2026-10-25 14:15:46Z" duration="0.006818" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/dangk/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

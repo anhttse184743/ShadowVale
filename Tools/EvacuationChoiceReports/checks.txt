@@ -1,0 +1,129 @@
+PASS setup D1_01
+PASS setup D1_02
+PASS setup D1_03
+PASS setup D1_04
+PASS setup D1_05
+PASS setup D1_06
+PASS setup N1_01
+PASS setup N1_02
+PASS setup N1_03
+PASS setup N1_04
+PASS setup D2_01
+PASS setup D2_02
+PASS setup D2_03
+PASS setup D2_04
+PASS setup D2_05
+PASS setup D2_06
+PASS setup D2_07
+PASS setup N2_01
+PASS setup N2_02
+PASS setup N2_03
+PASS village first completes without visiting either rejected route
+PASS setup D1_01
+PASS setup D1_02
+PASS setup D1_03
+PASS setup D1_04
+PASS setup D1_05
+PASS setup D1_06
+PASS setup N1_01
+PASS setup N1_02
+PASS setup N1_03
+PASS setup N1_04
+PASS setup D2_01
+PASS setup D2_02
+PASS setup D2_03
+PASS setup D2_04
+PASS setup D2_05
+PASS setup D2_06
+PASS setup D2_07
+PASS setup N2_01
+PASS setup N2_02
+PASS setup N2_03
+PASS field report requires observation
+PASS field is rejected and cannot complete mission
+PASS river is rejected without ending mission
+PASS both rejected then village succeeds
+PASS setup D1_01
+PASS setup D1_02
+PASS setup D1_03
+PASS setup D1_04
+PASS setup D1_05
+PASS setup D1_06
+PASS setup N1_01
+PASS setup N1_02
+PASS setup N1_03
+PASS setup N1_04
+PASS setup D2_01
+PASS setup D2_02
+PASS setup D2_03
+PASS setup D2_04
+PASS setup D2_05
+PASS setup D2_06
+PASS setup D2_07
+PASS setup N2_01
+PASS setup N2_02
+PASS setup N2_03
+PASS river can be first without field observation
+PASS save roundtrip retains selection observation rejection and patrol phase
+PASS old patrol retry clears new route state consistently
+PASS flashlight range boundary 10 metres
+PASS flashlight half angle is 30 degrees, full cone 60
+PASS setup D1_01
+PASS setup D1_02
+PASS setup D1_03
+PASS setup D1_04
+PASS setup D1_05
+PASS setup D1_06
+PASS setup N1_01
+PASS setup N1_02
+PASS setup N1_03
+PASS setup N1_04
+PASS setup D2_01
+PASS setup D2_02
+PASS setup D2_03
+PASS setup D2_04
+PASS setup D2_05
+PASS setup D2_06
+PASS setup D2_07
+PASS setup N2_01
+PASS setup N2_02
+PASS setup N2_03
+PASS all choice and five formation points are on actual Map 2 NavMesh with complete patrol paths
+POINT 0 (-4.000, 0.859, -42.000)
+POINT 1 (25.000, 0.825, -56.500)
+POINT 2 (-8.000, 1.109, -57.000)
+POINT 3 (-53.000, 1.025, -39.000)
+PASS five distinct real NPCs spawn for field route
+PASS refresh does not duplicate patrol
+PASS guard on native NavMesh night2_evacuation_patrol_0
+PASS guard on native NavMesh night2_evacuation_patrol_1
+PASS guard on native NavMesh night2_evacuation_patrol_2
+PASS guard on native NavMesh night2_evacuation_patrol_3
+PASS guard on native NavMesh night2_evacuation_patrol_4
+PASS binocular observation below one second cannot report
+PASS one second of continuous binocular view from bush detects patrol
+PASS lowering binocular resets incomplete observation
+PASS prone cannot accumulate binocular observation
+PASS crouching can complete binocular observation
+PASS observing outside bush cannot qualify
+PASS opaque screen blocks binocular observation
+PASS real player collider detected in unobstructed cone
+PASS visible tree mesh blocks sight even without a physics collider
+PASS standing behind a colliderless tree cannot trigger detection
+PASS stepping out from tree cover restores actual line of sight
+PASS tree behind Nam does not block sight before Nam
+PASS open gap inside a tree bounding box remains visible, no oversized invisible cover
+PASS solid cover blocks flashlight detection
+PASS lying prone avoids patrol light detection
+PASS field NPC marches toward its formation endpoint
+PASS formation stops when all five arrive
+PASS five real spotlights use specified range and cone
+PASS all five stay stationary while scanning
+PASS exactly one guard scans while marching
+PASS walking sweep faces the side containing Nam's observation bush
+PASS walking phase cannot detect player before scanning starts
+PASS detection regression uses real hand-held flashlight emitter
+PASS desired scan heading cannot detect while visible flashlight still points away
+PASS spotlight position and direction exactly match visible emitter
+PASS visible beam starts capture cutscene and blocks input/save instead of failing immediately
+PASS field patrol and lights hide after mission completion

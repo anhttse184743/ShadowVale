@@ -24,15 +24,27 @@ namespace ShadowVale.Map01
         public void SetVisible(bool visible){if(visual!=null)visual.gameObject.SetActive(visible);}
         public void SetSitting(bool sitting){if(animator!=null&&animator.runtimeAnimatorController!=null&&animator.parameters.Any(p=>p.name=="Sitting"))animator.SetBool("Sitting",sitting);}
         public bool Supporting {get;private set;}
-        bool assisted,seekingSupport;Vector3 goal;bool travelling;AnimationClip dayIdle,dayWalk;float dayPoseClock;
+        public bool PairedEscort {get;set;}
+        bool assisted,seekingSupport;Vector3 goal;bool travelling;AnimationClip dayIdle,dayWalk;float dayPoseClock,dayWalkSpeed,walkWeight;
         AnimationClip seatedRest;
         public void SetSeatedRest(AnimationClip clip){seatedRest=clip;if(clip==null)ReleasePerformance();}
-        public void SetLocomotion(AnimationClip rest,AnimationClip walking){dayIdle=rest;dayWalk=walking;if(rest==null){pose?.Dispose();pose=null;}}
+        /// <param name="walkSpeed">Ground speed (m/s) at which the walk plants its feet at 1x; Hùng's falls back to his Map 1 limp.</param>
+        public void SetLocomotion(AnimationClip rest,AnimationClip walking,float walkSpeed=0){dayIdle=rest;dayWalk=walking;dayWalkSpeed=walkSpeed;if(rest==null){pose?.Dispose();pose=null;}}
         public void SamplePerformance(AnimationClip clip,float time,bool loop=true){if(animator==null||clip==null)return;pose??=new Map01CinematicPose(animator,null,true);pose.Sample(clip,time,loop);}
         public void BlendPerformance(AnimationClip first,AnimationClip second,float clock,float weight){if(animator==null)return;pose??=new Map01CinematicPose(animator,null,true);pose.SampleBlend(first,clock,second,clock,weight);}
         public void GroundPerformance(float floor){pose?.Ground(floor);}
         public void ReleasePerformance(){pose?.Dispose();pose=null;}
-        void DayLocomotion(bool moving){var rest=seatedRest!=null?seatedRest:dayIdle;if(rest==null)return;dayPoseClock+=Time.deltaTime*(moving&&role=="Hùng"?pace/Map01HungVisual.LimpSpeed:1);SamplePerformance(moving&&dayWalk!=null?dayWalk:rest,dayPoseClock,true);pose?.Ground(transform.position.y);}
+        // Stepping off and stopping cross-fade over 0.2 s instead of snapping between the rest and the walk.
+        void DayLocomotion(bool moving)
+        {
+            var rest=seatedRest!=null?seatedRest:dayIdle;if(rest==null)return;
+            dayPoseClock+=Time.deltaTime*(moving&&role=="Hùng"?pace/(dayWalkSpeed>0?dayWalkSpeed:Map01HungVisual.LimpSpeed):1);
+            walkWeight=Mathf.MoveTowards(walkWeight,moving&&dayWalk!=null&&seatedRest==null?1:0,Time.deltaTime*5);
+            if(walkWeight<=0||dayWalk==null)SamplePerformance(rest,dayPoseClock,true);
+            else if(walkWeight>=1)SamplePerformance(dayWalk,dayPoseClock,true);
+            else{pose??=new Map01CinematicPose(animator,null,true);pose.SampleBlend(rest,dayPoseClock,dayWalk,dayPoseClock,walkWeight,true);}
+            pose?.Ground(transform.position.y);
+        }
         public void PrimeLocomotion()=>DayLocomotion(false);
         public void Bind(Transform existing)
         {
@@ -55,6 +67,7 @@ namespace ShadowVale.Map01
         }
         void LateUpdate()
         {
+            if(PairedEscort)return;
             if(dayIdle!=null||visual==null||!visual.gameObject.activeInHierarchy)return;
             // NavMesh sockets can sit a little above the rendered village floor.
             // Correct only the visual, keeping navigation and saved actor coordinates unchanged.
@@ -102,6 +115,7 @@ namespace ShadowVale.Map01
         public void SetDead(bool dead){if(dead){travelling=false;follow=null;}if(visual!=null)visual.gameObject.SetActive(!dead);gameObject.name="Actor slot — "+role+(dead?" (đã hy sinh)":"");}
         void Update()
         {
+            if(PairedEscort)return;
             mission??=FindFirstObjectByType<Map02Mission>();var m=mission;if(ConversationHeld||m==null||m.Paused||ForestMenu.Visible||(m.InputBlocked&&!SceneDriven))return;
             if(follow==null&&!travelling){DayLocomotion(false);return;}
             if(!travelling&&m.Chapter!=null&&m.Chapter.State.phase<=1&&Vector3.Distance(transform.position,follow.position)>7){DayLocomotion(false);return;} // Day 1 / Night 1: never pull an escort through walls or teleport to Nam. Later escorts keep following.

@@ -1,0 +1,393 @@
+{
+  "baseline": "cf9d9090a3cc565adef914f1f7de6a5d1ae928ce",
+  "runs": [
+    {
+      "file": "main-catalog.xml",
+      "sha256": "eebd51b0ed8b5892f3dc98a0ad592a59a53d040d0635dd1d7f8f69bb54a46718",
+      "total": 8,
+      "passed": 8,
+      "failed": 0,
+      "skipped": 0,
+      "unity_exit": 0,
+      "cases": [
+        {
+          "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.CurrentOperationDialogueUsesMatchingCharacterRecordings",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.EveryStoryLineHasVietnameseAudioAndOnlyRadioIsFiltered",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.NewRescueRecordingsMatchTheUpdatedCaptions",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map01StoryVoiceTests.AllApprovedLinesHaveExactVoicesAndCleanMasters",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map01StoryVoiceTests.BriefingSpeaksBothCharactersAndAutomaticallyAdvancesThenWaitsForAcceptance",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ChapterTests.EverySpokenChapterCueKeepsItsExactRecordingAcrossAllSevenPhases",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneAudioTests.EverySoundIsACreditedRecording",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests.AllDayOneAndNightOneSpokenCuesHaveExactDedicatedRecordings",
+          "result": "Passed"
+        }
+      ]
+    },
+    {
+      "file": "main-integrated-final.xml",
+      "sha256": "29db9eaaac4cf830ee09c562e40fc02f475540ebf4969df965283fb75a7d4e99",
+      "total": 83,
+      "passed": 83,
+      "failed": 0,
+      "skipped": 0,
+      "unity_exit": 0,
+      "cases": [
+        {
+          "name": "ShadowVale.Map01.Tests.C3DialogueVoiceTests.EveryApprovedRetakeHasExactCaptionChannelAndImportedAudio",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.C3DialogueVoiceTests.GateCheckInPlaysBothTransmittedVoicesOnce",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.C3DialogueVoiceTests.MosinOrderFinishesBeforeLocalNamAcknowledgement",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.C3DialogueVoiceTests.SourceAndRuntimeCatalogStayIdenticalAfterPrepare",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.ClosingCommanderBriefingDoesNotQueueSpeechOrAcceptOrder",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.CurrentOperationDialogueUsesMatchingCharacterRecordings",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.EveryStoryLineHasVietnameseAudioAndOnlyRadioIsFiltered",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.ExtractionRadioFinishesAllThreeLinesInOrder",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.LegacyBriefingUsesAlignedVoiceAssets",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.NewGameWaitsForCommanderAndDoesNotRepeatAcceptedBriefing",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.NewRescueRecordingsMatchTheUpdatedCaptions",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.PauseAndNewSpeakerDoNotOverlap",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.PendingReplacementLinesCannotAutoPlayTheirOldRecordings",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.RadioCueDoesNotReplayOrSelectDryVoice",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.RadioReplyWaitsForOrderAndSkipStopsSpeech",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ApprovedC1Tests.ApprovedMeshesAndDirectTracksMatchTheBlenderSource",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ApprovedC1Tests.DetachedBackpackRetainsWorldSizeAndSitsNearTheGameplayTorso",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ApprovedC1Tests.SupportingKneeFitsSolidLandingWithoutMovingTheApprovedHandsOrAnkle",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ArrivalMisstepTests.HungMissesTheLastStairAndNamHelpsHimUp",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ArrivalMisstepTests.RecordMisstepContactReview",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ArrivalMisstepTests.SkippingWhileThePackIsDownRestoresTheWornPack",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.CoverFireTakesSixtyToNinetySecondsWhateverNamHits",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.LaneHoldsFollowEvacuationAndTheFallenDropRounds",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.RepairAndAntennaRequireActualInputAndCoverFireLocksOnlyMovement",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.TankAndBoatsAreWhereTheNightThreeStoryPutsThem",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.WoundBankAndSacrificeRunWithoutPressingEAndRadioCallsKeepControl",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneAudioTests.AmbienceFollowsThePhaseAndSceneSoundStopsWithTheScene",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneAudioTests.EverySoundIsACreditedRecording",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneCompletionTests.RadioClearsTheActualShirtAndFollowsTheSignaller",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneCompletionTests.SupperCricketsWaitForTheVoiceAndStopOnCancelOrLoad",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneCompletionTests.SupperFinishesItsTimelineAndLoadingKeepsItComplete",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneIntegrationTests.ActualChapterRequiresPackingDockAndPostSafetyWithoutTouchingLaterDays",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOnePlayableFlowTests.LandingToDayTwoThroughPlayerInput",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.ApprovedAcknowledgementsReuseExactCaptionOnly",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.CorruptSavedGeometryIsRejected",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.DayOneTasksKeepThreeIndependentBranches",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(\"D1_03\",\"D1_04\",\"D1_05\")",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(\"D1_03\",\"D1_05\",\"D1_04\")",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(\"D1_04\",\"D1_03\",\"D1_05\")",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(\"D1_04\",\"D1_05\",\"D1_03\")",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(\"D1_05\",\"D1_03\",\"D1_04\")",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(\"D1_05\",\"D1_04\",\"D1_03\")",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryWetTemplateHasSolution(0)",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryWetTemplateHasSolution(1)",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.EveryWetTemplateHasSolution(2)",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.InvalidCrateMoveLeavesPreviousPosition",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.LampNeedsShieldAndGateNeedsBothSteps",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.NamAcknowledgesOnceAfterTheCompleteInstructionBlock",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.PostsContainOnlySpecifiedFaultCounts",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.SaveAndResetKeepPuzzleIdentity",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.StakeHitsAndRepairUnitsAreDifferent",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneTests.TwoQuestPacketsAreIdempotent",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayOneVisualTests.CaptureWorkAndPorchStaging",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoRouteTests.DayTwoRoutesRescueWireAndAntennaArePlayable",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.InvalidNewStateIsRejectedWithoutChangingVersionThree",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.LiveWireEscortAndPatrolSaveLoadKeepTheirContracts",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.OldVersionThreeWireSavesKeepCompletedTasksAndPendingWork",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.PatrolResetRewindsOnlyNightRouteAndKeepsChapterResources",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02DayTwoStateTests.WireRequiresPickupAndDeliveryAndCannotBeDuplicated",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.DayThreeCrateAndNightThreeOpeningsAreDressed",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.SacrificeAndCounterAttackFollowTheScriptClock",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.SkippingTheSacrificeAtAnyMomentLandsOnTheSameDawn",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.TankShotAndFarewellAreStagedWithoutCloseUps",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.TelemetryStagesKeepTheirOrderThroughTheChapter",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02FinaleTests.TheTankRollsItsTracksAndWheelsWhenItDrives",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02GroupBTests.ShiftChangeIsSeenFromInsideTheHouse",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02NightTwoRouteTests.NightCanBeCompletedWithoutCombatUsingRealDoorAndOrderedRoute",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02NightTwoRouteTests.PatrolCarriesApprovedTorchAndFiresOnlyThroughClearSight",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02NightTwoRouteTests.VersionThreeDefaultsKeepCompletedTasksAndResetTheWholeNightRoute",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02PerformanceTests.DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02PresentationTests.ActualFamilyCargoAndPostPresentation",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02PresentationTests.CargoMaskPreservesForwardFeetAndChangesHandContact",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02PresentationTests.CarryFramesAreForwardAndHungUsesTheMapOneAsset",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02PresentationTests.LiveWalkingMealApproachAndDockControls",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02RoutePreviewTests.PreviewStartsAtTheSelectedRouteAndCreatesItsOwnRetryPoint",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.DayThreeScenesAndTestRunsStartWhereTheyShould",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.SuppliesGoFromTheStoreCartToWhereTheStoryTakesThem",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.TheCastStandsAsTallAsNamWithTheirFeetOnTheGround",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.RescueDefianceTests.EnemyFirstPanThenNamAndDefiantLastWordsBeforeDeath",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.RescueDefianceTests.NativeInterrogationCancelAndSkipRestoreWeaponAtEveryStage",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.RescueDefianceTests.SkipAfterFirstBurstStillCommitsFailureAndCancelDoesNot",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.RescuePresentationTests.CaptiveShotIsVisibleAndReturnsNamToStealth",
+          "result": "Passed"
+        },
+        {
+          "name": "ShadowVale.Map01.Tests.RescuePresentationTests.CommanderRemainsSeatedOnBoatAfterShelterHandoff",
+          "result": "Passed"
+        }
+      ]
+    }
+  ],
+  "distinct_latest_passed": 87,
+  "note": "Two completed main-project cohorts; excludes aborted runners, earlier-worktree-only explicit captures and FPS claims."
+}

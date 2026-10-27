@@ -91,6 +91,7 @@ namespace ShadowVale.Gameplay.Combat
         /// <summary>Shapes a bullet's damage by where it struck before it is taken (a commander's body armour and
         /// headshots); null = as fired. Grenades, knives and falls are not bullets and are not shaped.</summary>
         public System.Func<float, Vector3, float> BulletDamageModifier { get; set; }
+        public bool AllowsLethalBulletOverride { get; set; } = true;
 
         public void TakeBulletDamage(float amount, Vector3 hitPoint, GameObject source, Vector3 direction)
             => ResolveBulletDamage(amount, hitPoint, source, direction, null, false);
@@ -105,7 +106,7 @@ namespace ShadowVale.Gameplay.Combat
             if (BulletDamageModifier != null) amount = BulletDamageModifier(amount, hitPoint);
             // Only the firing weapon's enemy policy may guarantee a kill. Ordinary
             // bullets retain armour; protected actors were rejected above.
-            if (lethalEnemyHit) amount = Mathf.Max(amount, _current);
+            if (lethalEnemyHit && AllowsLethalBulletOverride) amount = Mathf.Max(amount, _current);
             if (amount <= 0f) return;
             ApplyDamage(amount, hitPoint, source, true, weapon);
             BloodImpact.Play(hitPoint, direction);

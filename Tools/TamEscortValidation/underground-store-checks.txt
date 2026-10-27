@@ -1,0 +1,63 @@
+PASS actual Nam humanoid rig attached to traversal probe
+PASS fixture progression D1_01
+PASS fixture progression D1_02
+PASS fixture progression D1_03
+PASS fixture progression D1_04
+PASS fixture progression D1_05
+PASS fixture progression D1_06
+PASS fixture progression N1_01
+PASS fixture progression N1_02
+PASS fixture progression N1_03
+PASS fixture progression N1_04
+PASS fixture progression D2_01
+PASS fixture progression D2_02
+PASS fixture progression D2_03
+PASS fixture progression D2_04
+PASS fixture progression D2_05
+PASS fixture progression D2_06
+PASS fixture progression D2_07
+PASS fixture progression N2_01
+PASS fixture progression N2_02
+PASS actual Blender prefab available through Resources
+PASS rice cleared from aperture without clearing surrounding field
+PASS exactly two ceiling oil lights
+PASS exactly three Blender shelf units
+lid mesh=Center: (-3.93, 1.04, -51.86), Extents: (1.03, 0.15, 1.49) collider=Center: (-3.97, 0.95, -51.86), Extents: (1.00, 0.06, 1.50)
+PASS single wooden lid collider aligns with imported mesh
+PASS runtime terrain has independent aperture mesh
+PASS actual soil removed only under 2 x 3 m mouth
+PASS soil outside mouth remains intact
+PASS terrain UVs and soil colours preserved
+PASS closed hatch rejects Ctrl entry
+PASS surface interaction cannot finish warehouse inspection
+PASS hatch locked before observation radio report
+PASS E opens one wooden hatch after mission gate
+PASS Ctrl waits until hatch has physically opened
+PASS open mouth blocks dropping/jumping without Ctrl
+PASS Ctrl outside fixed entry spot cannot start ladder
+PASS Ctrl at marked spot takes exclusive ladder control
+PASS permanent fall guard remains active during controlled traversal
+PASS saving blocked halfway down ladder
+PASS actual Nam climb pose does not accumulate rotation when stationary
+PASS actual Nam hand reaches ladder rung rather than empty space
+PASS no automatic descent without S
+PASS S descends seven metres and releases control on floor
+PASS landing is exactly seven metres below surface
+PASS opening/descending alone does not complete inspection
+PASS map safety does not pull authorized underground player to surface
+PASS inspection requires reaching actual shelves inside room
+PASS complete mission snapshot parser accepts underground save
+PASS interior/hatch states survive serialized save round-trip
+PASS loading inside restores authorized underground position
+PASS real Space at position against ladder attaches before player jump
+PASS Space consumed by ladder does not trigger jump
+PASS real W input climbs back to marked surface exit
+PASS E closes hatch after exiting
+PASS fall prevention stays active with hatch closed
+PASS inspection task can unlock onward evacuation route
+PASS completed store inspection releases river-bank movement bounds
+PASS patrol retry closes hatch and restores mission bounds
+PASS Unity framebuffer captured from actual imported Blender model
+PASS destroying store restores original terrain asset reference
+PASS destroying store restores crop instances
+PASS destroying store restores normal Space jump interaction

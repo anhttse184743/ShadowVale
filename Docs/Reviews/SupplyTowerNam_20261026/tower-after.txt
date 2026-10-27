@@ -1,0 +1,37 @@
+root=(82.00, 12.53, 48.55) collider=Center: (82.00, 13.43, 48.55), Extents: (0.40, 0.90, 0.40) actor=(82.00, 12.53, 48.55)
+alert=False side=-1 bone=Head point=(82.06, 14.25, 48.60) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@35.05 | ROOF / C3_LOD1_194@36.16
+alert=False side=-1 bone=Chest point=(82.04, 13.81, 48.57) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.90
+alert=False side=-1 bone=LeftUpperArm point=(82.24, 14.08, 48.46) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.92
+alert=False side=-1 bone=RightUpperArm point=(81.86, 14.10, 48.74) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.95
+alert=False side=-1 bone=LeftLowerArm point=(82.21, 13.83, 48.44) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.92
+alert=False side=-1 bone=RightLowerArm point=(81.64, 13.96, 48.71) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.94
+alert=False side=0 bone=Head point=(82.06, 14.25, 48.60) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@35.01 | ROOF / C3_LOD1_194@36.03
+alert=False side=0 bone=Chest point=(82.04, 13.81, 48.57) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.87
+alert=False side=0 bone=LeftUpperArm point=(82.24, 14.08, 48.46) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.89
+alert=False side=0 bone=RightUpperArm point=(81.86, 14.10, 48.74) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.92 | ROOF / C3_LOD1_194@36.40
+alert=False side=0 bone=LeftLowerArm point=(82.21, 13.83, 48.44) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.89
+alert=False side=0 bone=RightLowerArm point=(81.64, 13.96, 48.71) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.91 | ROOF / C3_LOD1_194@36.57
+alert=False side=1 bone=Head point=(82.06, 14.25, 48.60) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@35.04 | ROOF / C3_LOD1_194@35.98
+alert=False side=1 bone=Chest point=(82.04, 13.81, 48.57) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.90
+alert=False side=1 bone=LeftUpperArm point=(82.24, 14.08, 48.46) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.92
+alert=False side=1 bone=RightUpperArm point=(81.86, 14.10, 48.74) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.95 | ROOF / C3_LOD1_194@36.34
+alert=False side=1 bone=LeftLowerArm point=(82.21, 13.83, 48.44) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.92
+alert=False side=1 bone=RightLowerArm point=(81.64, 13.96, 48.71) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.93 | ROOF / C3_LOD1_194@36.52
+alert=True side=-1 bone=Head point=(81.99, 14.22, 48.57) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@35.01 | ROOF / C3_LOD1_194@36.09
+alert=True side=-1 bone=Chest point=(82.05, 13.79, 48.57) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.91
+alert=True side=-1 bone=LeftUpperArm point=(82.03, 14.13, 48.33) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.94
+alert=True side=-1 bone=RightUpperArm point=(82.08, 14.13, 48.82) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@35.05
+alert=True side=-1 bone=LeftLowerArm point=(81.83, 13.98, 48.33) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.99
+alert=True side=-1 bone=RightLowerArm point=(81.85, 14.01, 48.81) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.91
+alert=True side=0 bone=Head point=(81.99, 14.22, 48.57) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.98 | ROOF / C3_LOD1_194@35.97
+alert=True side=0 bone=Chest point=(82.05, 13.79, 48.57) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.88
+alert=True side=0 bone=LeftUpperArm point=(82.03, 14.13, 48.33) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.91
+alert=True side=0 bone=RightUpperArm point=(82.08, 14.13, 48.82) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@35.02
+alert=True side=0 bone=LeftLowerArm point=(81.83, 13.98, 48.33) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.97
+alert=True side=0 bone=RightLowerArm point=(81.85, 14.01, 48.81) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.88
+alert=True side=1 bone=Head point=(81.99, 14.22, 48.57) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@35.01 | ROOF / C3_LOD1_194@35.93
+alert=True side=1 bone=Chest point=(82.05, 13.79, 48.57) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.91
+alert=True side=1 bone=LeftUpperArm point=(82.03, 14.13, 48.33) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.94
+alert=True side=1 bone=RightUpperArm point=(82.08, 14.13, 48.82) hit=Operation guard 3_2 guard=Operation guard 3_2 all=ROOF / C3_LOD1_194@33.81 | Operation guard 3_2@35.06
+alert=True side=1 bone=LeftLowerArm point=(81.83, 13.98, 48.33) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@35.00
+alert=True side=1 bone=RightLowerArm point=(81.85, 14.01, 48.81) hit=Operation guard 3_2 guard=Operation guard 3_2 all=Operation guard 3_2@34.92

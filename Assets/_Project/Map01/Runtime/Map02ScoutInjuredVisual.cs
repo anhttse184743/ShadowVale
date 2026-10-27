@@ -3,6 +3,7 @@ using UnityEngine;
 namespace ShadowVale.Map01
 {
     /// <summary>The approved resting pose, shown only while the scout awaits rescue.</summary>
+    [DefaultExecutionOrder(80)]
     public sealed class Map02ScoutInjuredVisual : MonoBehaviour
     {
         GameObject resting;
@@ -12,6 +13,22 @@ namespace ShadowVale.Map01
         bool injured;
         public bool Injured => injured;
 
+        void LateUpdate(){if(injured)GroundRestingPose();}
+        void GroundRestingPose()
+        {
+            if(resting==null)return;
+            float floor=transform.position.y;
+            var hits=Physics.RaycastAll(transform.position+Vector3.up*.7f,Vector3.down,1.6f,~0,QueryTriggerInteraction.Ignore);
+            float closest=float.PositiveInfinity;
+            foreach(var hit in hits)
+            {
+                if(hit.normal.y<.55f||hit.transform.IsChildOf(transform)||hit.collider is CharacterController||hit.collider.GetComponentInParent<ShadowVale.Gameplay.Combat.Health>()!=null)continue;
+                if(hit.distance<closest){closest=hit.distance;floor=hit.point.y;}
+            }
+            float bottom=float.PositiveInfinity;
+            foreach(var renderer in resting.GetComponentsInChildren<Renderer>())if(renderer.enabled)bottom=Mathf.Min(bottom,renderer.bounds.min.y);
+            if(float.IsFinite(bottom))resting.transform.position+=Vector3.up*(floor+.015f-bottom);
+        }
         public void SetInjured(bool value, Animator source)
         {
             if (value == injured || source == null) return;
@@ -40,6 +57,7 @@ namespace ShadowVale.Map01
             }
             resting.SetActive(value);
             injured = value;
+            if(value)GroundRestingPose();
         }
     }
 }

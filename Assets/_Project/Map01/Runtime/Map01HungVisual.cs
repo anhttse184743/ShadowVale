@@ -167,7 +167,10 @@ namespace ShadowVale.Map01
         public void RestoreCheckpointPose()
         {
             corpsePose?.Dispose();corpsePose=null;boundDead=false;captivePresentation=false;
-            down=rescue!=null&&rescue.HungDown;RestoreContactCulling();RestoreAfterCinematic();
+            down=rescue!=null&&rescue.HungDown;RestoreContactCulling();
+            var extraction=mission!=null?mission.GetComponentInChildren<Map01Extraction>():null;
+            if(extraction!=null&&extraction.RestoreSeatedPassenger()){if(rope!=null)rope.SetActive(false);return;}
+            RestoreAfterCinematic();
         }
         private bool Wounded => !down && Stage == Map01Quest.EscortStage;
 
