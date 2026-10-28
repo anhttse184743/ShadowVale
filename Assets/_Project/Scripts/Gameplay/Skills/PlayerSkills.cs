@@ -1,4 +1,7 @@
 using System;
+using System.Linq;
+using ShadowVale.Content;
+using ShadowVale.Data.Content;
 using UnityEngine;
 
 namespace ShadowVale.Gameplay.Skills
@@ -101,7 +104,49 @@ namespace ShadowVale.Gameplay.Skills
         {
             var asset = Resources.Load<TextAsset>("Skills/SkillBalance");
             if (asset == null) throw new InvalidOperationException("Missing Skills/SkillBalance content.");
-            Configure(JsonUtility.FromJson<SkillBalance>(asset.text));
+            Configure(Published(JsonUtility.FromJson<SkillBalance>(asset.text)));
+        }
+
+        /// <summary>
+        /// SkillBalance.json tuned with the published version's skills (xp_curve and the per-level effects),
+        /// kept as it is when there is none or the published values break <see cref="SkillBalance.IsValid"/>.
+        /// </summary>
+        public static SkillBalance Published(SkillBalance local)
+        {
+            if (local == null || !ContentService.TryGetPublished(out var published)) return local;
+            var tuned = Apply(local, published);
+            if (tuned.IsValid()) return tuned;
+            Debug.LogWarning("[Content] published skills ignored: they break the skill balance rules");
+            return local;
+        }
+
+        public static SkillBalance Apply(SkillBalance local, ContentBundle published)
+        {
+            var tuned = JsonUtility.FromJson<SkillBalance>(JsonUtility.ToJson(local));
+            foreach (var skill in published.Skills)
+            {
+                int[] curve = skill.XpCurve.Count > 0 ? skill.XpCurve.Select(x => Mathf.RoundToInt(x)).ToArray() : null;
+                float[] Effect(string name, float[] current) =>
+                    skill.Effects.TryGetValue(name, out var values) && values.Count > 0 ? values.ToArray() : current;
+                switch (skill.Type)
+                {
+                    case "shooting":
+                        tuned.shootingThresholds = curve ?? tuned.shootingThresholds;
+                        tuned.recoilMultipliers = Effect("recoil_multipliers", tuned.recoilMultipliers);
+                        tuned.reloadMultipliers = Effect("reload_multipliers", tuned.reloadMultipliers);
+                        break;
+                    case "stealth":
+                        tuned.stealthThresholds = curve ?? tuned.stealthThresholds;
+                        tuned.takedownMultipliers = Effect("takedown_multipliers", tuned.takedownMultipliers);
+                        break;
+                    case "engineering":
+                        tuned.engineeringThresholds = curve ?? tuned.engineeringThresholds;
+                        tuned.repairBonusFractions = Effect("repair_bonus_fractions", tuned.repairBonusFractions);
+                        tuned.fieldRepairCaps = Effect("field_repair_caps", tuned.fieldRepairCaps);
+                        break;
+                }
+            }
+            return tuned;
         }
 
         /// <summary>Content adapter entry point; validates the whole input before switching it.</summary>

@@ -86,6 +86,18 @@ namespace ShadowVale.Map01
         public int reinforce_count = D.ReinforceCount;
         public float reinforce_radius = D.ReinforceRadius;
 
+        public static ForestBossProfile From(ShadowVale.Data.Content.BossProfile p) => new ForestBossProfile
+        {
+            health_multiplier = p.HealthMultiplier, damage_multiplier = p.DamageMultiplier, vision_multiplier = p.VisionMultiplier,
+            relocate_interval_seconds = p.RelocateIntervalSeconds, relocate_damage_fraction = p.RelocateDamageFraction,
+            relocate_min_distance = p.RelocateMinDistance, relocate_max_distance = p.RelocateMaxDistance,
+            relocate_min_player_distance = p.RelocateMinPlayerDistance,
+            grenade_camp_seconds = p.GrenadeCampSeconds, grenade_camp_radius = p.GrenadeCampRadius,
+            grenade_cooldown_seconds = p.GrenadeCooldownSeconds, grenade_range = p.GrenadeRange, grenade_radius = p.GrenadeRadius,
+            grenade_damage = p.GrenadeDamage, grenade_fuse_seconds = p.GrenadeFuseSeconds, grenade_noise_radius = p.GrenadeNoiseRadius,
+            reinforce_hp_threshold = p.ReinforceHpThreshold, reinforce_count = p.ReinforceCount, reinforce_radius = p.ReinforceRadius,
+        };
+
         public ShadowVale.Data.Content.BossProfile ToProfile() => new ShadowVale.Data.Content.BossProfile
         {
             HealthMultiplier = health_multiplier, DamageMultiplier = damage_multiplier, VisionMultiplier = vision_multiplier,

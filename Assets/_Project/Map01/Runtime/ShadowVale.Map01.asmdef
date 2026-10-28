@@ -6,6 +6,7 @@
     "Unity.AI.Navigation",
     "ShadowVale.AI",
     "ShadowVale.Core",
+    "ShadowVale.Content",
     "ShadowVale.Data",
     "ShadowVale.Gameplay",
     "ShadowVale.UI",

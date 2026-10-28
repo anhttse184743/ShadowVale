@@ -25,6 +25,18 @@ namespace ShadowVale.Content
         /// <summary>Published content version (manifest.versionId) for telemetry; null for the bundle shipped with the game.</summary>
         public string ContentVersionId => Bundle?.ContentVersionId;
 
+        /// <summary>
+        /// The bundle of a published version (from the backend or its cache), else false. Maps tune their
+        /// hand-authored data with it; with only the shipped bundle they keep their own files.
+        /// </summary>
+        public static bool TryGetPublished(out ContentBundle bundle)
+        {
+            bundle = null;
+            if (!Core.Services.ServiceLocator.TryResolve<ContentService>(out var content) || content.ContentVersionId == null) return false;
+            bundle = content.Bundle;
+            return true;
+        }
+
         private ContentBundle _staged;
         private string _stagedSource;
 

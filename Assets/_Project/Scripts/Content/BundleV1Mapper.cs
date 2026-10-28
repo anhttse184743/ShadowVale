@@ -119,6 +119,17 @@ namespace ShadowVale.Content
                         SquadId = g.Key.SquadTag, ArchetypeId = g.Key.EnemyTypeCode, Count = g.Count()
                     }).ToList(),
                 }).ToList(),
+                Skills = v1.Skills.Select(s => new SkillDefinition
+                {
+                    Id = s.Code,
+                    Type = s.SkillType,
+                    MaxLevel = s.MaxLevel,
+                    XpCurve = s.XpCurve?.ToObject<List<float>>() ?? new List<float>(),
+                    // Only per-level number lists are effects the game reads
+                    Effects = (s.Effects ?? new JObject()).Properties()
+                        .Where(p => p.Value is JArray a && a.All(v => v.Type == JTokenType.Integer || v.Type == JTokenType.Float))
+                        .ToDictionary(p => p.Name, p => p.Value.ToObject<List<float>>()),
+                }).ToList(),
                 AiSettings = ai,
             };
         }

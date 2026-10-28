@@ -92,5 +92,10 @@ Hợp đồng đầy đủ: `backend/shadowvale_be/docs/game-integration.md` tro
   là bản copy của schema backend). `BundleV1Mapper` chuyển sang model runtime `ContentBundle`.
 - **AI settings:** bundle web không có `ai_settings`, nên các tham số coordination nằm ở
   `StreamingAssets/Content/ai_settings.json` cho tới khi backend giao solver theo phiên (`POST /api/game/sessions`).
+- **Gameplay đọc bản đã publish:** khi có version publish (từ backend hoặc cache), `PublishedContent` phủ thông số
+  lên dữ liệu riêng của map theo id: vũ khí, item, địch, boss và công thức trong `Map01Content.json` (Map 1, Tutorial,
+  Map 2); loot table, container và máu địch trong `Map01Loot.json`; skill curve trong `SkillBalance.json`. Những gì
+  web chưa có cột (`field_seconds`, `field_max_batch`, salvage, repair, chỉ số người chơi) giữ nguyên. Chỉ có bundle
+  đóng gói sẵn thì map dùng file của mình như cũ. Tuning địch của Map 2 (`Map02ChapterEnemy.Brain.cs`) vẫn ở code.
 - **Telemetry:** vẫn gửi theo hợp đồng cũ ở trên cho tới khi chuyển sang `PUT /api/game/sessions/{id}`; backend trả 404
   cho đường cũ nên session nằm lại trong hàng đợi, không bị mất.

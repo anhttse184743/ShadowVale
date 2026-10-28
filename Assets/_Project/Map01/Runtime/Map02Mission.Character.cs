@@ -40,7 +40,7 @@ namespace ShadowVale.Map01
             var data=Resources.Load<CharacterHudData>("Hud/CharacterHudData");
             if(data==null||data.balance==null||data.content==null)throw new InvalidOperationException("Missing shared character HUD data.");
             CharacterSettings=JsonUtility.FromJson<ForestSettings>(data.balance.text);
-            CharacterContent=JsonUtility.FromJson<ForestBundle>(data.content.text);
+            CharacterContent=PublishedContent.Apply(JsonUtility.FromJson<ForestBundle>(data.content.text));
             // Night 3's waves are squads like Map 1's: Map 2's baked tactical graph (Resources/TacticalGraphs/Map 2) and the
             // squad coordinator, which plans each wave with the session's solver.
             TacticalGraphHost.Attach(gameObject,~0,null);

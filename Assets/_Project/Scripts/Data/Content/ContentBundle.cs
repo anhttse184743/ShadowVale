@@ -23,6 +23,7 @@ namespace ShadowVale.Data.Content
         public List<CraftRecipe> CraftRecipes { get; set; } = new();
         public List<QuestDefinition> Quests { get; set; } = new();
         public List<MapDefinition> Maps { get; set; } = new();
+        public List<SkillDefinition> Skills { get; set; } = new();
         public AiSettings AiSettings { get; set; } = new();
     }
 

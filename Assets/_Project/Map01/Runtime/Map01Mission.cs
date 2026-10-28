@@ -121,7 +121,7 @@ namespace ShadowVale.Map01
             try
             {
                 Settings = JsonUtility.FromJson<ForestSettings>(balanceJson.text);
-                Bundle = JsonUtility.FromJson<ForestBundle>(contentBundle.text);
+                Bundle = PublishedContent.Apply(JsonUtility.FromJson<ForestBundle>(contentBundle.text));
             }
             catch (ArgumentException exception)
             {
