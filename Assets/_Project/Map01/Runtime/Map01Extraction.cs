@@ -207,6 +207,7 @@ namespace ShadowVale.Map01
                 rope.gameObject.SetActive(false);
             foreach (var bench in FindObjectsByType<Transform>(FindObjectsSortMode.None).Where(t => t.name == "Boat bench" && Mathf.Abs(t.position.z - 87) < 3))
                 bench.SetParent(boat, true);
+            foreach(var movingRenderer in boat.GetComponentsInChildren<MeshRenderer>())Map01MovingPropRendering.Prepare(movingRenderer);
             namActor = mission.player.GetComponentInChildren<Animator>();
             var hungVisual = mission.hung.GetComponentInChildren<Map01HungVisual>();
             if (hungVisual != null) {hungVisual.enabled = false;hungVisual.transform.localPosition=Vector3.zero;}
@@ -346,7 +347,7 @@ namespace ShadowVale.Map01
             }
             if (mission == null || CurrentPhase == Phase.Dormant) return;
             if (mission.Paused || Map01SaveSystem.IsRestoring) return;
-            float dt=Time.unscaledDeltaTime;
+            float dt=Mathf.Min(Time.unscaledDeltaTime,.05f);
             namPose?.Tick(dt); hungPose?.Tick(dt); commanderPose?.Tick(dt);
             if (CurrentPhase == Phase.Extraction) {
                 if (mission.Stopped) return;
@@ -358,7 +359,7 @@ namespace ShadowVale.Map01
             UpdateRowing();
             bool held = Keyboard.current != null && Keyboard.current.escapeKey.isPressed;
             if (!held) skipReleased=true;
-            skipHeld = held && skipReleased ? skipHeld+dt : 0;
+            skipHeld = held && skipReleased ? skipHeld+Time.unscaledDeltaTime : 0;
             if(skipHeld>=1) { Skip(); return; }
             switch(CurrentPhase) {
                 case Phase.Radio:
@@ -415,7 +416,7 @@ namespace ShadowVale.Map01
             if(Prepared) {
                 ApplyInjuredPassenger();
                 if(applyHandContacts && CurrentPhase>=Phase.Radio && CurrentPhase<Phase.Departing) {
-                    if(CurrentPhase==Phase.Boarding||CurrentPhase==Phase.Seating||CurrentPhase==Phase.Approach){namBoatCarry?.Stow();if(CurrentPhase==Phase.Seating)ArrivalRestHands(namActor,clock);}
+                    if(CurrentPhase==Phase.Boarding||CurrentPhase==Phase.Seating||CurrentPhase==Phase.Approach){namBoatCarry?.Draw();HoldSeatedRifle(namActor,.14f);}
                     if(!oarHeld)ArrivalRestHands(commanderActor,clock);
                 }
             }
@@ -543,7 +544,7 @@ namespace ShadowVale.Map01
             if(CurrentPhase==Phase.Departing) {
                 commanderPose.Play(clock>16?rowStop:rowLoop);
                 float stroke=Mathf.Floor(clock/2.4f);
-                if(stroke!=lastStroke && clock<16) {lastStroke=stroke;motor.PlayOneShot(paddleAudio,.65f);}
+                if(stroke!=lastStroke && clock<16) {lastStroke=stroke;motor.PlayOneShot(paddleAudio,speech!=null&&speech.HasSpeech?.045f:.18f);}
             }
         }
         private void SpawnPursuitIfNeeded()
@@ -601,33 +602,95 @@ namespace ShadowVale.Map01
         }
         private IEnumerable<Transform> LivingShoreTargets() => mission.Enemies.Where(e=>e.Alive && !e.IsBoss).Select(e=>e.transform)
             .Concat(pursuit.Where(p=>p!=null && !p.GetComponent<Health>().IsDead).Select(p=>p.transform));
+        readonly Dictionary<Map01Rifle,(Quaternion basis,Vector3 grip)> rifleGeometry=new();
+        readonly Dictionary<Animator,Quaternion> supportWristFrames=new();
+        (Quaternion basis,Vector3 grip) RifleGeometry(Map01Rifle rifle){
+            if(rifleGeometry.TryGetValue(rifle,out var frame))return frame;
+            var gun=rifle.weapon.transform;
+            var handle=gun.GetComponentsInChildren<Renderer>().FirstOrDefault(r=>r.name.StartsWith("bl_grip_low"));
+            var magazine=gun.GetComponentsInChildren<Renderer>().FirstOrDefault(r=>r.name.StartsWith("bm_magazine_low"));
+            var grip=handle!=null?handle.bounds.center:gun.position;
+            var barrel=(rifle.weapon.Muzzle.position-grip).normalized;
+            var down=magazine!=null?Vector3.ProjectOnPlane(magazine.bounds.center-grip,barrel).normalized:-gun.up;
+            frame=(Quaternion.LookRotation(gun.InverseTransformDirection(barrel),gun.InverseTransformDirection(-down)),gun.InverseTransformPoint(grip));
+            rifleGeometry[rifle]=frame;return frame;
+        }
+        Quaternion AimGun(Map01Rifle rifle,Vector3 direction)=>Quaternion.LookRotation(direction,boat.up)*Quaternion.Inverse(RifleGeometry(rifle).basis);
+        Vector3 GripWrist(Map01Rifle rifle,Transform hand,Vector3 grip,Quaternion handRotation,Quaternion gunRotation)=>
+            grip-handRotation*Vector3.Scale(rifle.weapon.transform.localPosition,hand.lossyScale)-gunRotation*Vector3.Scale(RifleGeometry(rifle).grip,rifle.weapon.transform.lossyScale);
+        sealed class HeldGunPose { public Vector3 grip;public Quaternion rotation; }
+        readonly Dictionary<Animator,HeldGunPose> heldGunPoses=new();
+        readonly Dictionary<Transform,Vector3> armPoles=new();
+        readonly Dictionary<Transform,Quaternion> armFrames=new();
+        readonly Dictionary<Transform,Quaternion> heldFingers=new();
+        readonly float[] coverYaw=new float[2];
+        void DriveHeldGun(Animator actor,Map01Rifle rifle,Vector3 grip,Quaternion rotation){
+            if(!heldGunPoses.TryGetValue(actor,out var state)){
+                state=new HeldGunPose{grip=actor.transform.InverseTransformPoint(rifle.weapon.transform.TransformPoint(RifleGeometry(rifle).grip)),rotation=Quaternion.Inverse(actor.transform.rotation)*rifle.weapon.transform.rotation};heldGunPoses[actor]=state;
+                foreach(var handBone in new[]{HumanBodyBones.LeftHand,HumanBodyBones.RightHand})foreach(var finger in actor.GetBoneTransform(handBone).GetComponentsInChildren<Transform>())
+                    if(new[]{"Thumb","Index","Middle","Ring","Pinky"}.Any(n=>finger.name.Contains(n)))heldFingers[finger]=finger.localRotation;
+            }
+            float dt=Mathf.Min(Time.unscaledDeltaTime,.05f);
+            state.grip=Vector3.MoveTowards(state.grip,actor.transform.InverseTransformPoint(grip),1.5f*dt);
+            state.rotation=Quaternion.RotateTowards(state.rotation,Quaternion.Inverse(actor.transform.rotation)*rotation,480*dt);
+            var worldRotation=actor.transform.rotation*state.rotation;var hand=actor.GetBoneTransform(HumanBodyBones.RightHand);
+            var handRotation=worldRotation*Quaternion.Inverse(rifle.weapon.transform.localRotation);
+            var wrist=GripWrist(rifle,hand,actor.transform.TransformPoint(state.grip),handRotation,worldRotation);
+            SolveCoverArm(actor,HumanBodyBones.RightUpperArm,HumanBodyBones.RightLowerArm,HumanBodyBones.RightHand,wrist,handRotation,1,1);
+            SupportRifle(actor,rifle,1);
+            foreach(var finger in heldFingers)if(finger.Key!=null)finger.Key.localRotation=finger.Value;
+        }
+        void TurnCoverChest(Animator actor,int index,float yaw){
+            coverYaw[index]=Mathf.MoveTowards(coverYaw[index],yaw,180*Mathf.Min(Time.unscaledDeltaTime,.05f));
+            var chest=actor.GetBoneTransform(HumanBodyBones.Chest);chest.rotation=Quaternion.AngleAxis(coverYaw[index],boat.up)*chest.rotation;
+        }
+        Quaternion ArmFrame(Transform bone,Transform child,Vector3 normal){
+            if(!armFrames.TryGetValue(bone,out var basis))armFrames[bone]=basis=Quaternion.LookRotation(bone.InverseTransformDirection(child.position-bone.position),bone.InverseTransformDirection(normal));return basis;
+        }
+        void SolveHeldArm(Animator actor,Transform upper,Transform lower,Transform hand,Vector3 target,Quaternion wrist,float side,float weight){
+            var origin=upper.position;float a=Vector3.Distance(origin,lower.position),b=Vector3.Distance(lower.position,hand.position);
+            var axis=(target-origin).normalized;float d=Mathf.Clamp(Vector3.Distance(origin,target),Mathf.Abs(a-b)+.001f,(a+b)*.97f);target=origin+axis*d;
+            var authored=Vector3.ProjectOnPlane(lower.position-origin,axis);
+            var candidate=Vector3.ProjectOnPlane(actor.transform.right*side*.6f-boat.up*.7f,axis);
+            Vector3 bend;
+            if(armPoles.TryGetValue(upper,out var previous))bend=Vector3.ProjectOnPlane(actor.transform.TransformDirection(previous),axis);else bend=authored;
+            if(bend.sqrMagnitude<.0001f)bend=candidate;if(bend.sqrMagnitude<.0001f)bend=Vector3.ProjectOnPlane(actor.transform.forward,axis);bend.Normalize();
+            if(candidate.sqrMagnitude>.01f){candidate.Normalize();if(Vector3.Dot(candidate,bend)<0)candidate=-candidate;bend=Vector3.Slerp(bend,candidate,1-Mathf.Exp(-12*Mathf.Min(Time.unscaledDeltaTime,.05f))).normalized;}
+            armPoles[upper]=actor.transform.InverseTransformDirection(bend);
+            var originalNormal=Vector3.Cross(lower.position-origin,hand.position-lower.position);if(originalNormal.sqrMagnitude<.0001f)originalNormal=Vector3.Cross(bend,axis);originalNormal.Normalize();
+            var upperFrame=ArmFrame(upper,lower,originalNormal);var lowerFrame=ArmFrame(lower,hand,originalNormal);
+            float along=(a*a+d*d-b*b)/(2*d);var elbow=origin+axis*along+bend*Mathf.Sqrt(Mathf.Max(0,a*a-along*along));var normal=Vector3.Cross(bend,axis).normalized;
+            upper.rotation=Quaternion.Slerp(upper.rotation,Quaternion.LookRotation(elbow-origin,normal)*Quaternion.Inverse(upperFrame),weight);
+            lower.rotation=Quaternion.Slerp(lower.rotation,Quaternion.LookRotation(target-lower.position,normal)*Quaternion.Inverse(lowerFrame),weight);
+            hand.rotation=Quaternion.Slerp(hand.rotation,wrist,weight);
+        }
         private void CoverDeparture()
         {
             for(int i=0;i<1;i++) {
                 var actor=namActor;var pose=i==0?namPose:commanderPose;
-                if(Time.unscaledTime<coverReloadUntil[i] || pendingCoverShot[i]>0)continue;
+                if(clock<coverReloadUntil[i] || pendingCoverShot[i]>0)continue;
                 if(coverReloadUntil[i]>0) {
-                    coverReloadUntil[i]=0;coverAcquiredAt[i]=Time.unscaledTime;
-                    nextCoverShot[i]=Time.unscaledTime+.4f;pose.Play(seatedReady);
+                    coverReloadUntil[i]=0;coverAcquiredAt[i]=clock;
+                    nextCoverShot[i]=clock+.4f;pose.Play(seatedReady);
                 }
                 var origin=actor.GetBoneTransform(HumanBodyBones.RightUpperArm).position;
                 var target=coverTargets[i];
-                if(target==null || target.GetComponent<Health>().IsDead || !SafeShot(actor,origin,target.position+Vector3.up*1.3f)) {
+                if(target==null || target.GetComponent<Health>().IsDead || Vector3.Distance(target.position,boat.position)>65 || (clock>aimUntil[i]&&!SafeShot(actor,origin,target.position+Vector3.up*1.3f))) {
                     target=LivingShoreTargets().Where(t=>Vector3.Distance(t.position,boat.position)<65)
                         .OrderBy(t=>Vector3.Distance(t.position,origin)+(t==coverTargets[1-i]?20:0))
                         .FirstOrDefault(t=>SafeShot(actor,origin,t.position+Vector3.up*1.3f));
-                    coverTargets[i]=target;coverAcquiredAt[i]=Time.unscaledTime;nextCoverShot[i]=Time.unscaledTime+.4f;
+                    coverTargets[i]=target;coverAcquiredAt[i]=clock;nextCoverShot[i]=clock+.4f;
                     if(target!=null)pose.Play(seatedReady);
                 }
                 if(target==null) {pose.Play(travel);continue;}
-                lastTargets[i]=target.position;aimUntil[i]=Time.unscaledTime+1;
-                if(Time.unscaledTime<nextCoverShot[i])continue;
+                lastTargets[i]=target.position;if(SafeShot(actor,origin,target.position+Vector3.up*1.3f))aimUntil[i]=clock+.6f;
+                if(clock<nextCoverShot[i])continue;
                 if(coverRounds[i]>0 && coverRounds[i]%12==0) {
-                    pose.Play(seatedReload,true);coverReloadUntil[i]=Time.unscaledTime+seatedReload.length;
+                    pose.Play(seatedReload,true);coverReloadUntil[i]=clock+seatedReload.length;
                     coverRounds[i]++;continue;
                 }
-                pose.Play(seatedFire,true);pendingCoverShot[i]=Time.unscaledTime+.06f;
-                nextCoverShot[i]=Time.unscaledTime+(++coverRounds[i]%3==0?2.2f:.48f);
+                pose.Play(seatedFire,true);pendingCoverShot[i]=clock+.06f;
+                nextCoverShot[i]=clock+(++coverRounds[i]%3==0?2.2f:.48f);
             }
         }
         private void AimAndFireCover(int index)
@@ -635,14 +698,14 @@ namespace ShadowVale.Map01
             var target=coverTargets[index];
             if(target==null || target.GetComponent<Health>().IsDead) {
                 pendingCoverShot[index]=0;
-                var watcher=index==0?namActor:commanderActor;
-                namBoatCarry?.Stow();ArrivalRestHands(watcher,clock);
+                var watcher=index==0?namActor:commanderActor;TurnCoverChest(watcher,index,0);
+                namBoatCarry?.Draw();if(index==0)namPose?.FreeArms(false);HoldSeatedRifle(watcher,.14f);
                 var head=watcher.GetBoneTransform(HumanBodyBones.Head);
-                head.rotation=Quaternion.AngleAxis(Mathf.Sin(Time.unscaledTime*.7f+index)*8,boat.up)*head.rotation;
+                head.rotation=Quaternion.AngleAxis(Mathf.Sin(clock*.7f+index)*8,boat.up)*head.rotation;
                 return;
             }
-            namBoatCarry?.Draw();
-            if(Time.unscaledTime<coverReloadUntil[index])return;
+            namBoatCarry?.Draw();if(index==0)namPose?.FreeArms(false);
+            if(clock<coverReloadUntil[index]){heldGunPoses.Remove(namActor);return;}
             var actor=index==0?namActor:commanderActor;var gun=actor.GetComponent<Map01Rifle>();
             if(gun==null)return;
             var chest=actor.GetBoneTransform(HumanBodyBones.Chest);var end=target.position+Vector3.up*1.3f;
@@ -650,17 +713,14 @@ namespace ShadowVale.Map01
             // rather than tipping the entire torso (and lowering the muzzle into the jetty).
             Vector3 direction=(end-actor.GetBoneTransform(HumanBodyBones.RightUpperArm).position).normalized;
             float yaw=Mathf.Clamp(Vector3.SignedAngle(actor.transform.forward,Vector3.ProjectOnPlane(direction,boat.up),boat.up),-45,45);
-            float aimWeight=Mathf.SmoothStep(0,1,(Time.unscaledTime-coverAcquiredAt[index])/.35f);
-            chest.rotation=Quaternion.AngleAxis(yaw*aimWeight,boat.up)*chest.rotation;
-            float recoil=Mathf.Exp(-Mathf.Max(0,Time.unscaledTime-lastCoverShot[index])*22);
+            float aimWeight=Mathf.SmoothStep(0,1,(clock-coverAcquiredAt[index])/.35f);
+            TurnCoverChest(actor,index,yaw*aimWeight);
+            float recoil=Mathf.Exp(-Mathf.Max(0,clock-lastCoverShot[index])*22);
             var shoulder=actor.GetBoneTransform(HumanBodyBones.RightUpperArm);
             Vector3 trigger=shoulder.position+direction*(.10f-.025f*recoil)-actor.transform.right*.20f-boat.up*.10f;
-            Quaternion rifleRotation=Quaternion.LookRotation(direction,boat.up)*Quaternion.Euler(0,0,-90);
-            Quaternion handRotation=rifleRotation*Quaternion.Inverse(gun.weapon.transform.localRotation);
-            Vector3 wrist=trigger-handRotation*Vector3.Scale(gun.weapon.transform.localPosition,actor.GetBoneTransform(HumanBodyBones.RightHand).lossyScale);
-            SolveCoverArm(actor,HumanBodyBones.RightUpperArm,HumanBodyBones.RightLowerArm,HumanBodyBones.RightHand,wrist,handRotation,1,aimWeight);
-            SupportRifle(actor,gun,aimWeight);
-            if(pendingCoverShot[index]<=0 || Time.unscaledTime<pendingCoverShot[index])return;
+            Quaternion rifleRotation=AimGun(gun,(end-trigger).normalized);
+            DriveHeldGun(actor,gun,trigger,rifleRotation);
+            if(pendingCoverShot[index]<=0 || clock<pendingCoverShot[index])return;
             pendingCoverShot[index]=0;
             var origin=gun.weapon.Muzzle.position;
             if(!SafeShot(actor,origin,end))return;
@@ -668,7 +728,7 @@ namespace ShadowVale.Map01
             if(rifleAudio!=null)motor.PlayOneShot(rifleAudio,.32f);
             var flash=new GameObject("Cinematic muzzle flash");flash.transform.position=origin;
             var light=flash.AddComponent<Light>();light.color=new Color(1,.7f,.25f);light.range=.65f;light.intensity=.7f;Destroy(flash,.035f);
-            lastCoverShot[index]=Time.unscaledTime;
+            lastCoverShot[index]=clock;
             if(index==0)NamCoverShots++;else CommanderCoverShots++;
             var health=target.GetComponent<Health>();var enemy=target.GetComponent<Map01EnemyController>();
             if(enemy!=null)enemy.ReceiveExtractionHit(health.Max*.38f,end);
@@ -686,13 +746,17 @@ namespace ShadowVale.Map01
             Quaternion neutral=lower.rotation;
             Vector3 localFingers=tip!=null?hand.InverseTransformDirection(tip.position-hand.position).normalized:Vector3.right;
             // Fingers wrap across the barrel; the forearm supplies a stable roll reference.
-            Quaternion wrist=Quaternion.FromToRotation(neutral*localFingers,gun.weapon.transform.up)*neutral;
+            if(!supportWristFrames.TryGetValue(actor,out var gripRotation)){
+                var initial=Quaternion.FromToRotation(neutral*localFingers,gun.weapon.transform.up)*neutral;
+                supportWristFrames[actor]=gripRotation=Quaternion.Inverse(gun.weapon.transform.rotation)*initial;
+            }
+            Quaternion wrist=actor==namActor?gun.weapon.transform.rotation*gripRotation:Quaternion.FromToRotation(neutral*localFingers,gun.weapon.transform.up)*neutral;
             var upper=actor.GetBoneTransform(HumanBodyBones.LeftUpperArm);
             float reach=(Vector3.Distance(upper.position,lower.position)+Vector3.Distance(lower.position,hand.position))*.96f;
             Vector3 palmOffset=wrist*Vector3.Scale(localPalm,hand.lossyScale);
             // The new commander has shorter arms than Hung. Move the rifle through its holding hand,
             // rather than stretching the support arm or leaving its palm floating off the foregrip.
-            for(int i=0;i<4 && weight>0;i++) {
+            for(int i=0;i<4 && weight>0&&actor!=namActor;i++) {
                 Vector3 desired=gun.support.position-palmOffset;
                 Vector3 delta=desired-upper.position;
                 if(delta.magnitude<=reach)break;
@@ -706,16 +770,14 @@ namespace ShadowVale.Map01
         }
         public void HoldSeatedRifle(Animator actor,float lowering)
         {
-            var gun=actor.GetComponent<Map01Rifle>();
-            if(gun==null || !gun.weapon.gameObject.activeInHierarchy)return;
-            var shoulder=actor.GetBoneTransform(HumanBodyBones.RightUpperArm);
-            var hand=actor.GetBoneTransform(HumanBodyBones.RightHand);
+            var gun=actor.GetComponent<Map01Rifle>();if(gun==null||!gun.weapon.gameObject.activeInHierarchy)return;
+            var shoulder=actor.GetBoneTransform(HumanBodyBones.RightUpperArm);var hand=actor.GetBoneTransform(HumanBodyBones.RightHand);
             Vector3 direction=(actor.transform.forward-boat.up*.18f).normalized;
-            Quaternion rotation=Quaternion.LookRotation(direction,boat.up)*Quaternion.Euler(0,0,-90)*Quaternion.Inverse(gun.weapon.transform.localRotation);
             Vector3 trigger=shoulder.position+direction*.08f-actor.transform.right*.20f-boat.up*lowering;
+            if(actor==namActor&&enabled){DriveHeldGun(actor,gun,trigger,AimGun(gun,direction));return;}
+            Quaternion rotation=Quaternion.LookRotation(direction,boat.up)*Quaternion.Euler(0,0,-90)*Quaternion.Inverse(gun.weapon.transform.localRotation);
             Vector3 wrist=trigger-rotation*Vector3.Scale(gun.weapon.transform.localPosition,hand.lossyScale);
-            SolveCoverArm(actor,HumanBodyBones.RightUpperArm,HumanBodyBones.RightLowerArm,HumanBodyBones.RightHand,wrist,rotation,1,1);
-            SupportRifle(actor,gun,1);
+            SolveCoverArm(actor,HumanBodyBones.RightUpperArm,HumanBodyBones.RightLowerArm,HumanBodyBones.RightHand,wrist,rotation,1,1);SupportRifle(actor,gun,1);
         }
         private void RetreatTrace(Vector3 from,Vector3 to)
         {
@@ -729,10 +791,14 @@ namespace ShadowVale.Map01
         private void SolveCoverArm(Animator actor,HumanBodyBones upperId,HumanBodyBones lowerId,HumanBodyBones handId,Vector3 target,Quaternion wrist,float side,float weight)
         {
             var upper=actor.GetBoneTransform(upperId);var lower=actor.GetBoneTransform(lowerId);var hand=actor.GetBoneTransform(handId);
+            if(actor==namActor&&enabled){SolveHeldArm(actor,upper,lower,hand,target,wrist,side,weight);return;}
             var origin=upper.position;float a=Vector3.Distance(origin,lower.position),b=Vector3.Distance(lower.position,hand.position);
             var axis=(target-origin).normalized;float d=Mathf.Clamp(Vector3.Distance(origin,target),Mathf.Abs(a-b)+.001f,(a+b)*.97f);
             target=origin+axis*d;
-            var bend=Vector3.ProjectOnPlane(actor.transform.right*side*.6f-boat.up*.7f,axis).normalized;
+            var bend=Vector3.ProjectOnPlane(actor.transform.right*side*.6f-boat.up*.7f,axis);
+            if(bend.sqrMagnitude<.0001f)bend=Vector3.ProjectOnPlane(actor.transform.right*side*.6f-boat.up*.7f,axis);
+            if(bend.sqrMagnitude<.0001f)bend=Vector3.ProjectOnPlane(actor.transform.forward,axis);
+            bend.Normalize();
             float along=(a*a+d*d-b*b)/(2*d);
             var elbow=origin+axis*along+bend*Mathf.Sqrt(Mathf.Max(0,a*a-along*along));
             upper.rotation=Quaternion.Slerp(upper.rotation,Quaternion.FromToRotation(lower.position-origin,elbow-origin)*upper.rotation,weight);
@@ -789,7 +855,7 @@ namespace ShadowVale.Map01
             urgentRun=gameplayRifleRun??namActor.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Nam_Rifle_Run");
             if(urgentRun==null)Debug.LogError("Assign the gameplay Nam_Rifle_Run clip to extraction; a generic run is not suitable.");
             urgentJump=Resources.Load<AnimationClip>("Cutscenes/Nam_Urgent_Board_Jump");
-            EnsureRifle(namActor);namBoatCarry=Map01BoatCarry.For(namActor);namBoatCarry.Stow();
+            EnsureRifle(namActor);namBoatCarry=Map01BoatCarry.For(namActor);namBoatCarry.Draw();
             var walk=urgentRun??board;
             namPose=new PosePlayer(namActor);
             namPose.Play(walk);
@@ -812,7 +878,7 @@ namespace ShadowVale.Map01
             commander.localRotation=Quaternion.identity;
             foreach(var weapon in namActor.GetComponentsInChildren<Weapon>(true)) weapon.gameObject.SetActive(weapon.IsGun);
             if(!seatedRifles.Any(p=>p.actor==namActor)) EnsureRifle(namActor);
-            namPose.Play(travel);namBoatCarry??=Map01BoatCarry.For(namActor);namBoatCarry.Stow(); hungPose.Play(travel); commanderPose.Play(rowLoop);
+            namPose.Play(travel);namBoatCarry??=Map01BoatCarry.For(namActor);namBoatCarry.Draw(); hungPose.Play(travel); commanderPose.Play(rowLoop);
             HidePassengerGuns();
             oarHeld=true;SpawnPursuitIfNeeded();
             speech=DialogueVoice.For(gameObject);speech.Play("m1_depart_order");
@@ -905,6 +971,10 @@ namespace ShadowVale.Map01
             private AnimationClipPlayable playable;
             private AnimationClipPlayable previous;
             private AnimationMixerPlayable mixer;
+            private AnimationLayerMixerPlayable freeArmMixer;
+            private AnimationClipPlayable freeArmClip;
+            private AnimationClip freeArmSource;
+            private AvatarMask freeArmMask;
             private float blend;
             private AnimationClip selected;
             private readonly Animator actor;
@@ -921,6 +991,21 @@ namespace ShadowVale.Map01
                 output=AnimationPlayableOutput.Create(graph,"Authored pose",target);
                 mixer=AnimationMixerPlayable.Create(graph,2);output.SetSourcePlayable(mixer);graph.Play();
             }
+            // Only arms/fingers come from the existing unarmed walk. Boarding's feet/root and C1 stay authored.
+            public void FreeArms(bool enabled=true) {
+                if(freeArmSource!=null){freeArmMixer.SetInputWeight(1,enabled?1:0);return;}
+                if(!enabled)return;
+                freeArmSource=Resources.Load<AnimationClip>("Cutscenes/Map02/Nam_Boat_Free_Arms");
+                if(freeArmSource==null){Debug.LogError("Boat free-arm clip is missing.");return;}
+                freeArmMixer=AnimationLayerMixerPlayable.Create(graph,2);
+                graph.Connect(mixer,0,freeArmMixer,0);freeArmMixer.SetInputWeight(0,1);
+                freeArmClip=AnimationClipPlayable.Create(graph,freeArmSource);freeArmClip.SetApplyFootIK(false);freeArmClip.SetSpeed(0);
+                graph.Connect(freeArmClip,0,freeArmMixer,1);freeArmMixer.SetInputWeight(1,1);
+                freeArmMask=new AvatarMask();for(int i=0;i<(int)AvatarMaskBodyPart.LastBodyPart;i++)freeArmMask.SetHumanoidBodyPartActive((AvatarMaskBodyPart)i,false);
+                foreach(var part in new[]{AvatarMaskBodyPart.LeftArm,AvatarMaskBodyPart.RightArm,AvatarMaskBodyPart.LeftFingers,AvatarMaskBodyPart.RightFingers})freeArmMask.SetHumanoidBodyPartActive(part,true);
+                freeArmMixer.SetLayerMaskFromAvatarMask(1,freeArmMask);output.SetSourcePlayable(freeArmMixer);
+            }
+            void SampleFreeArms(){if(freeArmClip.IsValid()&&playable.IsValid()&&selected!=null)freeArmClip.SetTime(playable.GetTime()/Mathf.Max(.01f,selected.length)*freeArmSource.length);}
             public void Play(AnimationClip clip,bool restart=false) {
                 if(clip==null) return;
                 if(variants!=null) clip=variants.FirstOrDefault(c=>c.name==clip.name.Replace("Nam_","Hung_"))??clip;
@@ -935,11 +1020,11 @@ namespace ShadowVale.Map01
                 if(!playable.IsValid()) return;
                 blend=Mathf.Min(1,blend+dt/.18f);mixer.SetInputWeight(0,1-blend);mixer.SetInputWeight(1,blend);
                 if(!selected.isLooping && playable.GetTime()+dt*playable.GetSpeed()>=selected.length) { playable.SetTime(selected.length); playable.SetSpeed(0); }
-                graph.Evaluate(dt);
+                graph.Evaluate(dt);if(freeArmClip.IsValid()){SampleFreeArms();graph.Evaluate(0);}
             }
             public void Rate(float rate) {if(playable.IsValid())playable.SetSpeed(rate);}
             public double Time => playable.IsValid()?playable.GetTime():0;
-            public void Sample() { if(graph.IsValid()) graph.Evaluate(0); }
+            public void Sample() { if(graph.IsValid()){SampleFreeArms();graph.Evaluate(0);} }
             public void Settle(bool end=false) {
                 blend=1;mixer.SetInputWeight(0,0);mixer.SetInputWeight(1,1);
                 if(playable.IsValid()) {playable.SetTime(end?selected.length:0);playable.SetSpeed(0);}
@@ -947,6 +1032,7 @@ namespace ShadowVale.Map01
             }
             public void Dispose() {
                 if(graph.IsValid()) graph.Destroy();
+                if(freeArmMask!=null)UnityEngine.Object.Destroy(freeArmMask);
                 if(actor!=null) { actor.runtimeAnimatorController=controller;actor.applyRootMotion=rootMotion; actor.cullingMode=culling; }
             }
         }

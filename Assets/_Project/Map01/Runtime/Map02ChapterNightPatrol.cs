@@ -13,8 +13,8 @@ namespace ShadowVale.Map01
         public bool NightPatrolStopped=>State.phase!=3||State.night2ReachedStore||State.Done("N2_03")||State.Done("N2_05");
         public bool NightObservationRulesActive=>State.phase==3&&!State.Done("N2_05");
         public const float NightPatrolWarningSeconds=1.5f;
-        public const string NightPatrolWarningText="I think something moved. Keep a close watch.";
-        public const string NightPatrolFireOrderText="There's a little rat out there. Squad, open fire on that position!";
+        public const string NightPatrolWarningText="Có người ở mé rừng! Bên kia!";
+        public const string NightPatrolFireOrderText="Tản ra! Chặn đường hắn!";
         public const float NightPatrolCameraTravelSeconds=3;
         public bool NightPatrolScriptedApproach=>State.phase==3&&State.Done("N2_02")&&!NightPatrolStopped;
         public bool NightPatrolFailureActive=>nightFailureClock>=0;
@@ -50,7 +50,7 @@ namespace ShadowVale.Map01
             if(nightWarningAudio==null||!nightWarningAudio.isPlaying)return;
             var style=new GUIStyle(GUI.skin.label){fontSize=24,wordWrap=true,alignment=TextAnchor.MiddleCenter,normal={textColor=Color.white}};
             GUI.Box(new Rect(250,705,1100,95),GUIContent.none);
-            GUI.Label(new Rect(270,715,1060,75),"Enemy patrol: "+nightPatrolCaption,style);
+            GUI.Label(new Rect(270,715,1060,75),"Lính tuần tra: "+nightPatrolCaption,style);
         }
         void DrawNightPatrolSuspicion()
         {

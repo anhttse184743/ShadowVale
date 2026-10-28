@@ -1,0 +1,1 @@
+Moored wooden sampan active=True enabled=True hidden=False gpu=False visible=True bounds=Center: (-11.23, 0.29, -86.88), Extents: (0.98, 0.20, 3.05) scene=Map 2 shader=Universal Render Pipeline/Lit

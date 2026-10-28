@@ -34,9 +34,9 @@ def measure(path):
     return dict(duration=len(audio)/sr,sampleRate=sr,channels=1,peak=peak,rms=rms,sha256=hashlib.sha256(path.read_bytes()).hexdigest())
 
 for index,line in enumerate(lines):
-    ident=line['id'];voice='Adam' if line['speaker']=='Nam' else 'Minh Đức'
-    tempo,pitch=(1,1) if voice=='Adam' else (.92,.94)
-    raw=HERE/(ident+'_raw.wav');clean=HERE/(ident+'_clean.wav');radio=HERE/(ident+'_radio.wav')
+    ident=line['id'];voice='Minh Quân' if line['speaker']=='Nam' else 'Minh Đức'
+    tempo,pitch=(1.12,1) if voice=='Minh Quân' else (.92,.94)
+    cache=ident+('_NamC' if line['speaker']=='Nam' else '');raw=HERE/(cache+'_raw.wav');clean=HERE/(cache+'_clean.wav');radio=HERE/(cache+'_radio.wav')
     reuse=None
     if line['text'].casefold().strip('.!')=='rõ':
         original='m2v3_attack_03' if '!' in line['text'] else 'm1_v2_rescue_approach_03'
@@ -63,8 +63,8 @@ for index,line in enumerate(lines):
     caption=line['speaker']+' (bộ đàm): '+line['text']
     record=dict(line,caption=caption,match=caption,resource='Dialogue/VI/'+ident+'_radio',language='vi',voice=voice,
                 provider='VieNeu offline',model='v3 Turbo',tempo=tempo,pitch=pitch,cost=0,
-                castingApproved=voice=='Minh Đức',userApproved=False,status='integrated_existing_cast_pending_line_listening',
-                voiceRevision='EvacuationChoices_20261027',reusedRecording=reuse,
+                castingApproved=voice in {'Minh Quân','Minh Đức'},userApproved=False,status='integrated_existing_cast_pending_line_listening',
+                voiceRevision='Nam_C_20261026' if line['speaker']=='Nam' else 'EvacuationChoices_20261027',reusedRecording=reuse,
                 source='https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo',license='Apache-2.0 (model and bundled presets)',**stats)
     records.append(record)
     (HERE/'rendered.json').write_text(json.dumps(records,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

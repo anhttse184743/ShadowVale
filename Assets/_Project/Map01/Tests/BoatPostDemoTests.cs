@@ -42,9 +42,9 @@ namespace ShadowVale.Map01.Tests {
       if((a.CurrentPhase==Map02Arrival.Phase.Approaching&&clock<6)||a.CurrentPhase==Map02Arrival.Phase.Mooring||(a.CurrentPhase==Map02Arrival.Phase.Disembarking&&clock<14)){hud.caption="ĐẦU MAP 2 · Nam đeo súng, chỉ huy chèo, Hùng giữ tay bị thương";Photo();}
      }else if(ex!=null){
       float clock=(float)typeof(Map01Extraction).GetField("clock",F).GetValue(ex);
-      if(ex.CurrentPhase==Map01Extraction.Phase.Seating){var carry=ex.NamAnimator.GetComponent<Map01BoatCarry>();Assert.NotNull(carry);Assert.True(carry.Slung);boarding=true;}
-      if(ex.CurrentPhase>=Map01Extraction.Phase.Approach&&ex.CurrentPhase<=Map01Extraction.Phase.Seating){hud.caption="CUỐI MAP 1 · Nam lên thuyền với súng đeo vai";Photo();}
-      if(ex.CurrentPhase==Map01Extraction.Phase.Departing&&clock<6){hud.caption="RỜI BẾN · chỉ rút súng khi có mục tiêu để bắn yểm trợ";Photo();}
+      if(ex.CurrentPhase==Map01Extraction.Phase.Seating){var carry=ex.NamAnimator.GetComponent<Map01BoatCarry>();Assert.NotNull(carry);Assert.False(carry.Slung);Assert.AreSame(ex.NamAnimator.GetBoneTransform(HumanBodyBones.RightHand),carry.Gun.parent);boarding=true;}
+      if(ex.CurrentPhase>=Map01Extraction.Phase.Approach&&ex.CurrentPhase<=Map01Extraction.Phase.Seating){hud.caption="CUỐI MAP 1 · Nam cầm một súng khi lên thuyền";Photo();}
+      if(ex.CurrentPhase==Map01Extraction.Phase.Departing&&clock<6){hud.caption="RỜI BẾN · Nam cầm súng, bắn yểm trợ khi có địch";Photo();}
      }
      yield return null;
     }
