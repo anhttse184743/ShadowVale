@@ -51,7 +51,7 @@ namespace ShadowVale.Map01 {
   void LateUpdate(){if(mode!=Mode.Inactive)Present();}
   void Present(){
    if(gun==null)return;bool slung=mode==Mode.Slung;OwnGuns();strap.enabled=slung;
-   if(!slung){gun.SetParent(hand,false);gun.SetLocalPositionAndRotation(localPosition,localRotation);gun.localScale=localScale;return;}
+   if(!slung){if(gun.parent!=hand){gun.SetParent(hand,false);gun.SetLocalPositionAndRotation(localPosition,localRotation);gun.localScale=localScale;}return;}
    var body=visualActor!=null?visualActor:actor;var torso=body.GetBoneTransform(HumanBodyBones.Chest);
    var r=body.GetBoneTransform(HumanBodyBones.RightShoulder)??body.GetBoneTransform(HumanBodyBones.RightUpperArm);var l=body.GetBoneTransform(HumanBodyBones.LeftShoulder)??body.GetBoneTransform(HumanBodyBones.LeftUpperArm);
    var up=(body.GetBoneTransform(HumanBodyBones.Neck).position-body.GetBoneTransform(HumanBodyBones.Spine).position).normalized;

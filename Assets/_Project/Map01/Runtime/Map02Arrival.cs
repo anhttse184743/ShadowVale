@@ -217,7 +217,7 @@ namespace ShadowVale.Map01
                         var sub=subMeshes[i];var bounds=sub.bounds;bounds.center-=center;sub.bounds=bounds;
                         copy.SetSubMesh(i,sub,UnityEngine.Rendering.MeshUpdateFlags.DontRecalculateBounds);
                     }
-                    var visual=new GameObject(mesh.name);
+                    var visual=new GameObject(mesh.name);visual.SetActive(false);
                     // Independent of the old scene object's active/culling state.
                     visual.transform.SetParent(mesh.transform.parent,false);
                     visual.transform.localPosition=mesh.transform.localPosition+mesh.transform.localRotation*Vector3.Scale(mesh.transform.localScale,center);
@@ -241,7 +241,7 @@ namespace ShadowVale.Map01
             }
             if(destinationScene)for(int i=0;i<boatRenderers.Count;i++) {
                 var previous=boatRenderers[i];
-                var visual=new GameObject(previous.name);visual.layer=previous.gameObject.layer;
+                var visual=new GameObject(previous.name);visual.SetActive(false);visual.layer=previous.gameObject.layer;
                 visual.transform.SetParent(previous.transform.parent,false);
                 visual.transform.SetLocalPositionAndRotation(previous.transform.localPosition,previous.transform.localRotation);
                 visual.transform.localScale=previous.transform.localScale;
@@ -256,6 +256,7 @@ namespace ShadowVale.Map01
             }
         }
         static void SetBoatProperties(MeshRenderer renderer) {
+            Map01MovingPropRendering.Prepare(renderer);
             // A per-renderer property block opts this prop out of GPU Resident
             // Drawer using the public API. Never copy stale source overrides.
             var properties=new MaterialPropertyBlock();
