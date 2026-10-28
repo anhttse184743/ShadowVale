@@ -1,0 +1,10 @@
+0.00s m2v3_evac_field_01 Nam Báo cáo, lối này có địch không thể sơ tán được
+3.04s m2v3_evac_field_03 Nam rõ
+4.16s m2v3_evac_river_01 Nam Báo cáo thủ trưởng, lối này khá an toàn, tuy nhiên phải lội qua sông ạ
+8.06s m2v3_evac_river_03 Nam rõ!
+9.17s m2v3_evac_village_01 Nam Báo cáo thủ trưởng, lối này không có địch đi tuần, rất an toàn, người dân có thể sơ tán ạ
+13.91s m2v3_day3report_01 Nam Vật tư đã chuyển xuống bến. Hai thuyền đã vá xong, các nhà cũng biết đường sơ tán rồi.
+18.73s m2v3_day3report_02 Anh Thành Được. Tối nay cứ theo phân công. Có động thì báo ngay.
+23.59s m2v3_day1report_03 Nam Rõ.
+24.70s m1_ops_enemy_spotted Lính địch Có người ở mé rừng! Bên kia!
+27.06s m1_ops_enemy_order Sĩ quan địch Tản ra! Chặn đường hắn!

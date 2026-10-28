@@ -1,0 +1,6 @@
+complete=True
+shots=6
+maxBarrelError=0.02797646
+maxShotError=0.01978234
+aimedSamples=116
+frames=782

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="4" result="Failed(Child)" total="4" passed="2" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-28 08:06:59Z" end-time="2026-10-28 08:07:45Z" duration="46.3250095">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="879" result="Failed" site="Child" start-time="2026-10-28 08:06:59Z" end-time="2026-10-28 08:07:45Z" duration="46.325010" total="4" passed="2" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1839" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/Capstone/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="656" result="Failed" site="Child" start-time="2026-10-28 08:06:59Z" end-time="2026-10-28 08:07:45Z" duration="45.959705" total="4" passed="2" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="16444" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1840" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="656" result="Failed" site="Child" start-time="2026-10-28 08:06:59Z" end-time="2026-10-28 08:07:45Z" duration="45.930721" total="4" passed="2" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1841" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="656" result="Failed" site="Child" start-time="2026-10-28 08:06:59Z" end-time="2026-10-28 08:07:45Z" duration="45.907006" total="4" passed="2" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="SetUpFixture" id="1747" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="656" result="Failed" site="Child" start-time="2026-10-28 08:06:59Z" end-time="2026-10-28 08:07:45Z" duration="45.879480" total="4" passed="2" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1025" name="BoatAudioRegressionTests" fullname="ShadowVale.Map01.Tests.BoatAudioRegressionTests" classname="ShadowVale.Map01.Tests.BoatAudioRegressionTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-28 08:03:51Z" end-time="2026-10-28 08:05:54Z" duration="123.432408" total="2" passed="0" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1027" name="MosinStaysSingleAcrossNaturalBoatAndReplacementBody" fullname="ShadowVale.Map01.Tests.BoatAudioRegressionTests.MosinStaysSingleAcrossNaturalBoatAndReplacementBody" methodname="MosinStaysSingleAcrossNaturalBoatAndReplacementBody" classname="ShadowVale.Map01.Tests.BoatAudioRegressionTests" runstate="Runnable" seed="907349474" result="Failed" start-time="2026-10-28 07:59:49Z" end-time="2026-10-28 08:03:20Z" duration="211.642132" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="480000" />
+                </properties>
+                <failure>
+                  <message><![CDATA[Unhandled log message: '[Exception] AssertionException:   Held throughout Map 1; slung only from Map 2 arrival
+  Expected: False
+  But was:  True
+'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                  <stack-trace><![CDATA[NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) (at <f577cd9686154d6ab10efd7e65e64366>:0)
+NUnit.Framework.Assert.AreEqual (System.Object expected, System.Object actual, System.String message, System.Object[] args) (at <f577cd9686154d6ab10efd7e65e64366>:0)
+ShadowVale.Map01.Tests.BoatAudioRegressionTests+<>c__DisplayClass4_1.<Run>b__2 () (at Assets/_Project/Map01/Tests/BoatAudioRegressionTests.cs:52)
+ShadowVale.Map01.Tests.ExtractionCapturePump.LateUpdate () (at Assets/_Project/Map01/Tests/ExtractionTests.cs:19)
+
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[AssertionException:   Held throughout Map 1; slung only from Map 2 arrival
+  Expected: False
+  But was:  True
+
+NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) (at <f577cd9686154d6ab10efd7e65e64366>:0)
+NUnit.Framework.Assert.AreEqual (System.Object expected, System.Object actual, System.String message, System.Object[] args) (at <f577cd9686154d6ab10efd7e65e64366>:0)
+ShadowVale.Map01.Tests.BoatAudioRegressionTests+<>c__DisplayClass4_1.<Run>b__2 () (at Assets/_Project/Map01/Tests/BoatAudioRegressionTests.cs:52)
+ShadowVale.Map01.Tests.ExtractionCapturePump.LateUpdate () (at Assets/_Project/Map01/Tests/ExtractionTests.cs:19)
+
+Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+AssertionException:   Held throughout Map 1; slung only from Map 2 arrival
+  Expected: True
+  But was:  False
+
+NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) (at <f577cd9686154d6ab10efd7e65e64366>:0)
+NUnit.Framework.Assert.AreEqual (System.Object expected, System.Object actual, System.String message, System.Object[] args) (at <f577cd9686154d6ab10efd7e65e64366>:0)
+ShadowVale.Map01.Tests.BoatAudioRegressionTests+<>c__DisplayClass4_1.<Run>b__2 () (at Assets/_Project/Map01/Tests/BoatAudioRegressionTests.cs:52)
+ShadowVale.Map01.Tests.ExtractionCapturePump.LateUpdate () (at Assets/_Project/Map01/Tests/ExtractionTests.cs:19)
+
+Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+              <test-case id="1026" name="RifleStaysSingleAcrossNaturalBoatAndReplacementBody" fullname="ShadowVale.Map01.Tests.BoatAudioRegressionTests.RifleStaysSingleAcrossNaturalBoatAndReplacementBody" methodname="RifleStaysSingleAcrossNaturalBoatAndReplacementBody" classname="ShadowVale.Map01.Tests.BoatAudioRegressionTests" runstate="Runnable" seed="1476102279" result="Failed" start-time="2026-10-28 08:03:20Z" end-time="2026-10-28 08:05:54Z" duration="153.754849" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="480000" />
+                </properties>
+                <failure>
+                  <message><![CDATA[Unhandled log message: '[Exception] AssertionException:   Held throughout Map 1; slung only from Map 2 arrival
+  Expected: False
+  But was:  True
+'. Use UnityEngine.TestTools.LogAssert.Expect]]></message>
+                  <stack-trace><![CDATA[NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) (at <f577cd9686154d6ab10efd7e65e64366>:0)
+NUnit.Framework.Assert.AreEqual (System.Object expected, System.Object actual, System.String message, System.Object[] args) (at <f577cd9686154d6ab10efd7e65e64366>:0)
+ShadowVale.Map01.Tests.BoatAudioRegressionTests+<>c__DisplayClass4_1.<Run>b__2 () (at Assets/_Project/Map01/Tests/BoatAudioRegressionTests.cs:52)
+ShadowVale.Map01.Tests.ExtractionCapturePump.LateUpdate () (at Assets/_Project/Map01/Tests/ExtractionTests.cs:19)
+
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[AssertionException:   Held throughout Map 1; slung only from Map 2 arrival
+  Expected: False
+  But was:  True
+
+NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) (at <f577cd9686154d6ab10efd7e65e64366>:0)
+NUnit.Framework.Assert.AreEqual (System.Object expected, System.Object actual, System.String message, System.Object[] args) (at <f577cd9686154d6ab10efd7e65e64366>:0)
+ShadowVale.Map01.Tests.BoatAudioRegressionTests+<>c__DisplayClass4_1.<Run>b__2 () (at Assets/_Project/Map01/Tests/BoatAudioRegressionTests.cs:52)
+ShadowVale.Map01.Tests.ExtractionCapturePump.LateUpdate () (at Assets/_Project/Map01/Tests/ExtractionTests.cs:19)
+
+Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+AssertionException:   Held throughout Map 1; slung only from Map 2 arrival
+  Expected: True
+  But was:  False
+
+NUnit.Framework.Assert.That[TActual] (TActual actual, NUnit.Framework.Constraints.IResolveConstraint expression, System.String message, System.Object[] args) (at <f577cd9686154d6ab10efd7e65e64366>:0)
+NUnit.Framework.Assert.AreEqual (System.Object expected, System.Object actual, System.String message, System.Object[] args) (at <f577cd9686154d6ab10efd7e65e64366>:0)
+ShadowVale.Map01.Tests.BoatAudioRegressionTests+<>c__DisplayClass4_1.<Run>b__2 () (at Assets/_Project/Map01/Tests/BoatAudioRegressionTests.cs:52)
+ShadowVale.Map01.Tests.ExtractionCapturePump.LateUpdate () (at Assets/_Project/Map01/Tests/ExtractionTests.cs:19)
+
+Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1122" name="ExtractionTests" fullname="ShadowVale.Map01.Tests.ExtractionTests" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-28 08:06:10Z" end-time="2026-10-28 08:06:43Z" duration="32.941540" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1125" name="SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot" fullname="ShadowVale.Map01.Tests.ExtractionTests.SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot" methodname="SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" seed="693014276" result="Passed" start-time="2026-10-28 08:05:54Z" end-time="2026-10-28 08:06:43Z" duration="48.961898" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1319" name="Map02ArrivalMisstepTests" fullname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests" classname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-28 08:07:00Z" end-time="2026-10-28 08:07:45Z" duration="45.696096" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1321" name="SkippingWhileThePackIsDownRestoresTheWornPack" fullname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests.SkippingWhileThePackIsDownRestoresTheWornPack" methodname="SkippingWhileThePackIsDownRestoresTheWornPack" classname="ShadowVale.Map01.Tests.Map02ArrivalMisstepTests" runstate="Runnable" seed="1991812284" result="Passed" start-time="2026-10-28 08:06:43Z" end-time="2026-10-28 08:07:45Z" duration="62.022763" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Saving results to: Logs/Map02Chapter/latest-full-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

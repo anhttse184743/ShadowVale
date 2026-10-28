@@ -216,8 +216,8 @@ namespace ShadowVale.Map01
         {
             bool pause=Mission.Paused||Mission.Panel!=0||ForestMenu.Visible||Time.timeScale<=0;
             if(pause==nightAudioPaused)return;nightAudioPaused=pause;
-            if(pause){if(chainSound!=null)chainSound.Pause();if(nightHiss!=null)nightHiss.Pause();performanceSound?.Pause();nightTheme?.Pause();}
-            else{if(chainSound!=null)chainSound.UnPause();if(nightHiss!=null)nightHiss.UnPause();performanceSound?.UnPause();nightTheme?.UnPause();}
+            if(pause){if(chainSound!=null)chainSound.Pause();if(nightHiss!=null)nightHiss.Pause();performanceSound?.Pause();nightTheme?.Pause();nightWarningAudio?.Pause();}
+            else{if(chainSound!=null)chainSound.UnPause();if(nightHiss!=null)nightHiss.UnPause();performanceSound?.UnPause();nightTheme?.UnPause();nightWarningAudio?.UnPause();}
         }
         void DrawLiveNightRadio(GUIStyle label,GUIStyle title)
         {

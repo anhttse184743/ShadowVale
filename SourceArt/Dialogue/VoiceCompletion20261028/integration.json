@@ -1,0 +1,102 @@
+{
+  "date": "2026-10-28",
+  "cost": 0,
+  "updatedAudio": [
+    {
+      "id": "m2v3_evac_field_01",
+      "voice": "Minh Quân",
+      "resource": "Dialogue/VI/m2v3_evac_field_01_radio",
+      "reused": null,
+      "sha256": "c9164b5c454e92875e1704a0878698781fbea6dddf7dd05f7ffad159ea01086a"
+    },
+    {
+      "id": "m2v3_evac_field_03",
+      "voice": "Minh Quân",
+      "resource": "Dialogue/VI/m2v3_evac_field_03_radio",
+      "reused": "m2v3_day1report_03",
+      "sha256": "14dc32fd2f005130833658a6c4f537d26fda8e4443ed2f50e2289deae360732c"
+    },
+    {
+      "id": "m2v3_evac_river_01",
+      "voice": "Minh Quân",
+      "resource": "Dialogue/VI/m2v3_evac_river_01_radio",
+      "reused": null,
+      "sha256": "fdfc10d85ff5f36cb258754a863c26e65fe3d2dbab207a265aba2386305f86ef"
+    },
+    {
+      "id": "m2v3_evac_river_03",
+      "voice": "Minh Quân",
+      "resource": "Dialogue/VI/m2v3_evac_river_03_radio",
+      "reused": "m2v3_attack_03",
+      "sha256": "1decff1955d640bc0b8d1900546ec1d57e6b2106862d4eeed7a8aa5c62336654"
+    },
+    {
+      "id": "m2v3_evac_village_01",
+      "voice": "Minh Quân",
+      "resource": "Dialogue/VI/m2v3_evac_village_01_radio",
+      "reused": null,
+      "sha256": "89c579c37eb7e508bb93fa0c267293a13d04b799639638866a71589ae9314887"
+    },
+    {
+      "id": "m2v3_day3report_01",
+      "voice": "Minh Quân",
+      "resource": "Dialogue/VI/m2v3_day3report_01_clean",
+      "reused": null,
+      "sha256": "8e37c2b62bac39340d7823826965b9fcc49416eda379efd5a72ad669e4bc2069"
+    },
+    {
+      "id": "m2v3_day3report_02",
+      "voice": "Minh Đức",
+      "resource": "Dialogue/VI/m2v3_day3report_02_clean",
+      "reused": null,
+      "sha256": "2af5d2290ca618517f049b234087494be1e39f33674557a97706a46ba3236a26"
+    }
+  ],
+  "newConversation": [
+    {
+      "id": "m2v3_day3report_01",
+      "conversation": "m2v3_day3report",
+      "speaker": "Nam",
+      "text": "Vật tư đã chuyển xuống bến. Hai thuyền đã vá xong, các nhà cũng biết đường sơ tán rồi.",
+      "radio": false
+    },
+    {
+      "id": "m2v3_day3report_02",
+      "conversation": "m2v3_day3report",
+      "speaker": "Anh Thành",
+      "text": "Được. Tối nay cứ theo phân công. Có động thì báo ngay.",
+      "radio": false
+    },
+    {
+      "id": "m2v3_day3report_03",
+      "conversation": "m2v3_day3report",
+      "speaker": "Nam",
+      "text": "Rõ.",
+      "radio": false,
+      "recording": "m2v3_day1report_03"
+    }
+  ],
+  "enemy": [
+    {
+      "resource": "OperationsAudio/night2_patrol_warning",
+      "sourceId": "m1_ops_enemy_spotted",
+      "text": "Có người ở mé rừng! Bên kia!",
+      "sha256": "8bd545945e47c2aac7fd591607c0622f06ef157b1b54b23ea1a8f0a00ed5cd06",
+      "provider": "Runway original, exact file reused",
+      "cost": 0
+    },
+    {
+      "resource": "OperationsAudio/night2_patrol_fire_order",
+      "sourceId": "m1_ops_enemy_order",
+      "text": "Tản ra! Chặn đường hắn!",
+      "sha256": "b6d25b750b03df8c68762a1d812ec28c93455697581b17e7bd5ff45e689e8c75",
+      "provider": "Runway original, exact file reused",
+      "cost": 0
+    }
+  ],
+  "unchangedAudio": 263,
+  "userPerformanceApproval": false,
+  "model": "VieNeu v3 Turbo ONNX, cached offline",
+  "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+  "license": "Apache-2.0, existing project model reference"
+}

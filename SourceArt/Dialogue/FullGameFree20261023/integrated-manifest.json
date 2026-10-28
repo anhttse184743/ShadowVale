@@ -1,6 +1,6 @@
 {
-  "cues": 261,
-  "date": "2026-10-26",
+  "cues": 272,
+  "date": "2026-10-28",
   "lines": [
     {
       "id": "m1_story_09",
@@ -30,7 +30,7 @@
       "originalCaption": "Lính địch: Tên này mang hàng tiếp tế. Ta nghi nó là lính thông tin của bọn nó. Phải giữ lại tra hỏi.",
       "restorationNote": "User requested original enemy voices; no synthesis or paid call performed",
       "peak": 0.63433837890625,
-      "rms": 0.1049880906923614
+      "rms": 0.10498809069395065
     },
     {
       "id": "m1_story_10",
@@ -55,7 +55,7 @@
       "userApproved": true,
       "approvalDate": "2026-10-25",
       "peak": 0.627777099609375,
-      "rms": 0.1050000640365527
+      "rms": 0.10500006377696991
     },
     {
       "id": "m1_story_11",
@@ -80,7 +80,7 @@
       "userApproved": true,
       "approvalDate": "2026-10-25",
       "peak": 0.596954345703125,
-      "rms": 0.10500005723445967
+      "rms": 0.10500005632638931
     },
     {
       "id": "m1_story_12",
@@ -105,7 +105,7 @@
       "userApproved": true,
       "approvalDate": "2026-10-25",
       "peak": 0.60308837890625,
-      "rms": 0.10499460044884087
+      "rms": 0.10499460250139236
     },
     {
       "id": "m1_story_15",
@@ -132,7 +132,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.867095947265625,
-      "rms": 0.1033583347231394
+      "rms": 0.10335833579301834
     },
     {
       "id": "m1_story_16",
@@ -157,8 +157,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.879974365234375,
-      "rms": 0.10693628537567687
+      "rms": 0.10693628340959549
     },
     {
       "id": "m1_depart_order",
@@ -182,8 +184,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.5125732421875,
-      "rms": 0.10223328762354605
+      "rms": 0.10223328322172165
     },
     {
       "id": "m1_scout_silent",
@@ -208,8 +212,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.811676025390625,
-      "rms": 0.11000003290240909
+      "rms": 0.11000003665685654
     },
     {
       "id": "m1_jetty_observation",
@@ -234,8 +240,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.69024658203125,
-      "rms": 0.11000005110937147
+      "rms": 0.11000005155801773
     },
     {
       "id": "m1_rescue_alarm",
@@ -260,7 +268,7 @@
       "userApproved": true,
       "approvalDate": "2026-10-25",
       "peak": 0.639312744140625,
-      "rms": 0.10500011031062055
+      "rms": 0.10500010848045349
     },
     {
       "id": "m1_rescue_execute_order",
@@ -285,7 +293,7 @@
       "userApproved": true,
       "approvalDate": "2026-10-25",
       "peak": 0.618743896484375,
-      "rms": 0.10499738451302398
+      "rms": 0.10499738156795502
     },
     {
       "id": "m1_rescue_interrogate",
@@ -310,7 +318,7 @@
       "userApproved": true,
       "approvalDate": "2026-10-25",
       "peak": 0.53424072265625,
-      "rms": 0.10499931651392544
+      "rms": 0.10499931126832962
     },
     {
       "id": "m1_rescue_shelter",
@@ -335,8 +343,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.593597412109375,
-      "rms": 0.10999994769688475
+      "rms": 0.10999994724988937
     },
     {
       "id": "m1_story_rescue_order_01",
@@ -354,7 +364,7 @@
       "sampleRate": 48000,
       "channels": 1,
       "peak": 0.620941162109375,
-      "rms": 0.10104272413933241,
+      "rms": 0.1010427176952362,
       "cleanSha256": "f2f32f1f22b0ced9b425546ebc5a3f6360e304c72f6958c3ae45509be8935f8b",
       "sha256": "a539b243eeac420ec71194c8094c1c3e80a2624a7cf81589cf962fe2b57dd81d",
       "language": "vi",
@@ -386,7 +396,7 @@
       "sampleRate": 48000,
       "channels": 1,
       "peak": 0.787017822265625,
-      "rms": 0.11000005581811444,
+      "rms": 0.11000005155801773,
       "cleanSha256": "16b93f04e587f243688dcd0fc45f1c6374f58be85b1037c06c47f0501b9d2fd7",
       "sha256": "2230d5749b78f696b3df0c4b0599f617e4b8afbad7171913ef73cd429dc5672b",
       "language": "vi",
@@ -421,7 +431,7 @@
       "sampleRate": 48000,
       "channels": 1,
       "peak": 0.535858154296875,
-      "rms": 0.10151392003056055,
+      "rms": 0.10151391476392746,
       "cleanSha256": "16dc7181b7672db35ee95edd5dea998fb95cd58f137e8bfad82f2c075516d66d",
       "sha256": "82da5d51e22cbecb37a69bbc487d72af415ff970cc107c32dc97abdcf83bfafc",
       "language": "vi",
@@ -453,7 +463,7 @@
       "sampleRate": 48000,
       "channels": 1,
       "peak": 0.57415771484375,
-      "rms": 0.11000004423877967,
+      "rms": 0.11000003665685654,
       "cleanSha256": "cc91bb0798091cadde947aea49a144a4bef6623cbd076b140ae8d9112b66b1ef",
       "sha256": "57cf72745907b6c4f142cf2f4c6973ee88240f157b810d0498cd994bfe797f25",
       "language": "vi",
@@ -486,7 +496,7 @@
       "sampleRate": 48000,
       "channels": 1,
       "peak": 0.5523681640625,
-      "rms": 0.1026558237831181,
+      "rms": 0.1026558205485344,
       "cleanSha256": "c5279fe52733cf4cbee22b02e277aac497326ce5254f7a500f56b28b89819fd8",
       "sha256": "698114f12b4723587eecaaba6fae947ded5363b4d381dce2db0572eb3a699115",
       "language": "vi",
@@ -524,7 +534,7 @@
       "status": "Nam C casting approved; generated performance pending individual listening review",
       "sha256": "84f463e4d662728b942f32a97b0efdcf14d3c6ddc58bd9837b70c8be25090a68",
       "peak": 0.74432373046875,
-      "rms": 0.11000005103972195,
+      "rms": 0.11000005155801773,
       "pronunciationReview": "not_yet_auditioned_by_user",
       "cleanSha256": "2a36f28dea268bed437dedebb411b8bca4caacc04ac92400e6383e6d88d6302f",
       "userApproved": false,
@@ -558,7 +568,7 @@
       "status": "integrated_approved_cast_pending_line_review",
       "sha256": "1d31869e07d748f40df1a1659e68e0c677770bbe3da772b909d2038c1aa3d3cc",
       "peak": 0.8533935546875,
-      "rms": 0.1029679343237091,
+      "rms": 0.10296793282032013,
       "pronunciationReview": "not_yet_auditioned_by_user",
       "cleanSha256": "8ce7c64b5bb802842ed523621e5d84eb7a4872b1e320257f85e7702c516061ac",
       "userApproved": false,
@@ -592,7 +602,7 @@
       "status": "integrated_approved_cast_pending_line_review",
       "sha256": "c0e9b23e1edcf90cc58ce5a519575c601d205f2609fc48d5d42afb597a8a5386",
       "peak": 0.738739013671875,
-      "rms": 0.1043254209968249,
+      "rms": 0.10432542115449905,
       "pronunciationReview": "not_yet_auditioned_by_user",
       "cleanSha256": "5239fe0b6f52b57ff73d3636c942ba4091ec7daf931eaee363fd1b4fe9f95edc",
       "userApproved": false,
@@ -625,7 +635,7 @@
       "status": "integrated_approved_cast_pending_line_review",
       "sha256": "4773999e7019484c69cd22f20379ae096fd36dd14507d48269952788c1db8c5e",
       "peak": 0.874969482421875,
-      "rms": 0.10325601608987994,
+      "rms": 0.10325601696968079,
       "pronunciationReview": "not_yet_auditioned_by_user",
       "cleanSha256": "9dc54349bfd4734c254dcdbea617803ea888f3e2eafa326b0651edc5e0dd5404",
       "userApproved": false,
@@ -659,7 +669,7 @@
       "status": "Nam C casting approved; generated performance pending individual listening review",
       "sha256": "19320426c32619fae01b6b1349979cd6471ec0fedaf98f8f86ed08ee07b99e3a",
       "peak": 0.424530029296875,
-      "rms": 0.11000004497985119,
+      "rms": 0.11000004410743713,
       "pronunciationReview": "not_yet_auditioned_by_user",
       "cleanSha256": "5d52bc5b1fabd0e220e1e1449aa3f7bd8854dd4bda52006fe810fd9693ffe45d",
       "userApproved": false,
@@ -693,7 +703,7 @@
       "status": "integrated_approved_cast_pending_line_review",
       "sha256": "ad55861c4e020541206ef897a66d8d7ac74e56b5bd64ebe1d3ae03404c65faf7",
       "peak": 0.5772705078125,
-      "rms": 0.10113495234858863,
+      "rms": 0.10113494843244553,
       "pronunciationReview": "not_yet_auditioned_by_user",
       "cleanSha256": "825ff1748706e80ad2d06cf32121c63db61bf2519fcc28556ba16de6dcf2c895",
       "userApproved": false,
@@ -726,7 +736,7 @@
       "status": "integrated_approved_cast_pending_line_review",
       "sha256": "86b3514490edca72ff74468fa6554c9520abff438f52fd5912abb14b41569980",
       "peak": 0.7557373046875,
-      "rms": 0.10319844429769821,
+      "rms": 0.10319844633340836,
       "pronunciationReview": "not_yet_auditioned_by_user",
       "cleanSha256": "31ecdf1be91b65f70465729ea698987ff142738d16e473e702025903078192aa",
       "userApproved": false,
@@ -759,7 +769,7 @@
       "status": "integrated_approved_cast_pending_line_review",
       "sha256": "043ad9b9b481391c11b783d3ab86d5b00772d7d82a8bbcaad3dea4dc30c538c9",
       "peak": 0.748748779296875,
-      "rms": 0.10484456910954086,
+      "rms": 0.10484457015991211,
       "pronunciationReview": "not_yet_auditioned_by_user",
       "cleanSha256": "d3f4c519175937c07d75bbb980ba403ec1860c9ee8768699f254206433ca422e",
       "userApproved": false,
@@ -800,7 +810,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.6143798828125,
-      "rms": 0.1100000056999784
+      "rms": 0.11000000685453415
     },
     {
       "id": "m1_v2_rescue_approach_02",
@@ -831,7 +841,7 @@
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
       "peak": 0.39874267578125,
-      "rms": 0.0635699777859311
+      "rms": 0.06356997787952423
     },
     {
       "id": "m1_v2_rescue_approach_03",
@@ -868,7 +878,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.810791015625,
-      "rms": 0.11000007576268313
+      "rms": 0.11000007390975952
     },
     {
       "id": "m1_v2_rescue_return_01",
@@ -900,7 +910,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.568267822265625,
-      "rms": 0.11000005991766497
+      "rms": 0.11000006645917892
     },
     {
       "id": "m1_v2_rescue_return_02",
@@ -931,7 +941,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.652587890625,
-      "rms": 0.10294229688391571
+      "rms": 0.10294229537248611
     },
     {
       "id": "m1_v2_rescue_return_03",
@@ -962,7 +972,7 @@
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
       "peak": 0.6324462890625,
-      "rms": 0.10179117936631837
+      "rms": 0.10179117321968079
     },
     {
       "id": "m1_v2_supply_report_01",
@@ -994,7 +1004,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.516387939453125,
-      "rms": 0.1100000121381739
+      "rms": 0.11000000685453415
     },
     {
       "id": "m1_v2_supply_report_02",
@@ -1025,7 +1035,7 @@
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
       "peak": 0.477294921875,
-      "rms": 0.06867840369625199
+      "rms": 0.06867840141057968
     },
     {
       "id": "m1_v2_supply_report_03",
@@ -1057,7 +1067,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.563629150390625,
-      "rms": 0.11000001370785684
+      "rms": 0.11000000685453415
     },
     {
       "id": "m1_v2_radio_report_01",
@@ -1089,7 +1099,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.7838134765625,
-      "rms": 0.10999998466722435
+      "rms": 0.10999998450279236
     },
     {
       "id": "m1_v2_radio_report_02",
@@ -1120,7 +1130,7 @@
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
       "peak": 0.5225830078125,
-      "rms": 0.07032506090669033
+      "rms": 0.07032506167888641
     },
     {
       "id": "m1_v2_radio_report_03",
@@ -1152,7 +1162,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.78009033203125,
-      "rms": 0.11000004677809859
+      "rms": 0.11000004410743713
     },
     {
       "id": "m1_v2_commander_confirm_01",
@@ -1184,7 +1194,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.724151611328125,
-      "rms": 0.11000002326553578
+      "rms": 0.11000002175569534
     },
     {
       "id": "m1_v2_commander_confirm_02",
@@ -1215,7 +1225,7 @@
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
       "peak": 0.41241455078125,
-      "rms": 0.06737158240796634
+      "rms": 0.06737158447504044
     },
     {
       "id": "m1_v2_extraction_01",
@@ -1247,7 +1257,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.65875244140625,
-      "rms": 0.11000004855738886
+      "rms": 0.11000004410743713
     },
     {
       "id": "m1_v2_extraction_02",
@@ -1278,7 +1288,7 @@
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
       "peak": 0.482879638671875,
-      "rms": 0.0703601371963256
+      "rms": 0.07036013901233673
     },
     {
       "id": "m1_v2_extraction_03",
@@ -1310,7 +1320,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.69488525390625,
-      "rms": 0.11000003352588057
+      "rms": 0.11000002920627594
     },
     {
       "id": "m1_ops_supply_order_01",
@@ -1343,7 +1353,7 @@
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
       "peak": 0.680145263671875,
-      "rms": 0.10179553842549756
+      "rms": 0.10179553180932999
     },
     {
       "id": "m1_ops_supply_order_02",
@@ -1377,7 +1387,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.76397705078125,
-      "rms": 0.10364317338860728
+      "rms": 0.10364317148923874
     },
     {
       "id": "m1_ops_supply_order_03",
@@ -1410,7 +1420,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.574371337890625,
-      "rms": 0.11000009565414112
+      "rms": 0.11000009626150131
     },
     {
       "id": "m1_ops_supply_report_01",
@@ -1443,7 +1453,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.51043701171875,
-      "rms": 0.11000001452472866
+      "rms": 0.11000001430511475
     },
     {
       "id": "m1_ops_supply_report_02",
@@ -1475,7 +1485,7 @@
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
       "peak": 0.4141845703125,
-      "rms": 0.058606639688196224
+      "rms": 0.05860663577914238
     },
     {
       "id": "m1_ops_handoff_01",
@@ -1508,7 +1518,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.68768310546875,
-      "rms": 0.11000008513651913
+      "rms": 0.11000008881092072
     },
     {
       "id": "m1_ops_handoff_02",
@@ -1542,7 +1552,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.763916015625,
-      "rms": 0.10302581747896783
+      "rms": 0.10302582383155823
     },
     {
       "id": "m1_ops_handoff_03",
@@ -1574,7 +1584,7 @@
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
       "peak": 0.57305908203125,
-      "rms": 0.10119968158572994
+      "rms": 0.1011996790766716
     },
     {
       "id": "m1_ops_handoff_04",
@@ -1607,7 +1617,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.656829833984375,
-      "rms": 0.11000003634612024
+      "rms": 0.11000003665685654
     },
     {
       "id": "m1_ops_radio_report_01",
@@ -1640,7 +1650,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.879974365234375,
-      "rms": 0.1097825741574228
+      "rms": 0.10978257656097412
     },
     {
       "id": "m1_ops_radio_report_02",
@@ -1672,7 +1682,7 @@
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
       "peak": 0.50958251953125,
-      "rms": 0.06848539306494743
+      "rms": 0.06848539412021637
     },
     {
       "id": "m1_ops_commander_report_01",
@@ -1705,7 +1715,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.66265869140625,
-      "rms": 0.11000002490340888
+      "rms": 0.11000002175569534
     },
     {
       "id": "m1_ops_commander_report_02",
@@ -1737,7 +1747,7 @@
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
       "peak": 0.460540771484375,
-      "rms": 0.06449536288843526
+      "rms": 0.06449536234140396
     },
     {
       "id": "m1_ops_commander_early_01",
@@ -1770,7 +1780,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.758636474609375,
-      "rms": 0.11000000258994491
+      "rms": 0.10999999940395355
     },
     {
       "id": "m1_ops_retreat_01",
@@ -1803,7 +1813,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.814300537109375,
-      "rms": 0.11000009032535332
+      "rms": 0.11000008136034012
     },
     {
       "id": "m1_ops_retreat_02",
@@ -1835,7 +1845,7 @@
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
       "peak": 0.5101318359375,
-      "rms": 0.07409593245042911
+      "rms": 0.07409592717885971
     },
     {
       "id": "m1_ops_retreat_03",
@@ -1868,7 +1878,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.48590087890625,
-      "rms": 0.11000012014631126
+      "rms": 0.1100001260638237
     },
     {
       "id": "m1_ops_radio_alarm",
@@ -1899,7 +1909,7 @@
       "userApproved": true,
       "approvalDate": "2026-10-25",
       "peak": 0.627349853515625,
-      "rms": 0.10499756427100881
+      "rms": 0.10499756038188934
     },
     {
       "id": "m1_ops_enemy_spotted",
@@ -1930,7 +1940,7 @@
       "userApproved": true,
       "approvalDate": "2026-10-25",
       "peak": 0.556488037109375,
-      "rms": 0.1050001503670053
+      "rms": 0.10500014573335648
     },
     {
       "id": "m1_ops_enemy_order",
@@ -1961,7 +1971,7 @@
       "userApproved": true,
       "approvalDate": "2026-10-25",
       "peak": 0.574676513671875,
-      "rms": 0.10500012303142231
+      "rms": 0.10500012338161469
     },
     {
       "id": "m1_supply_debrief_nam_report",
@@ -1991,7 +2001,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.69085693359375,
-      "rms": 0.1100000707305813
+      "rms": 0.11000006645917892
     },
     {
       "id": "m1_supply_debrief_commander_question",
@@ -2019,7 +2029,7 @@
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
       "peak": 0.502685546875,
-      "rms": 0.10371041162485627
+      "rms": 0.10371041297912598
     },
     {
       "id": "m1_c3_gate_checkin_call",
@@ -2048,7 +2058,7 @@
       "status": "original_Runway_enemy_reconfirmed_by_user",
       "restorationNote": "User requested original enemy voices; no synthesis or paid call performed",
       "peak": 0.4219970703125,
-      "rms": 0.09998424518259713
+      "rms": 0.09998423606157303
     },
     {
       "id": "m1_c3_gate_checkin_reply",
@@ -2077,7 +2087,7 @@
       "status": "original_Runway_enemy_reconfirmed_by_user",
       "restorationNote": "User requested original enemy voices; no synthesis or paid call performed",
       "peak": 0.432342529296875,
-      "rms": 0.09758811262984535
+      "rms": 0.09758811444044113
     },
     {
       "id": "m1_c3_gate_no_answer",
@@ -2106,7 +2116,7 @@
       "status": "original_Runway_enemy_reconfirmed_by_user",
       "restorationNote": "User requested original enemy voices; no synthesis or paid call performed",
       "peak": 0.35406494140625,
-      "rms": 0.10092326610198962
+      "rms": 0.10092326253652573
     },
     {
       "id": "m1_c3_gate_alarm",
@@ -2135,7 +2145,7 @@
       "status": "original_Runway_enemy_reconfirmed_by_user",
       "restorationNote": "User requested original enemy voices; no synthesis or paid call performed",
       "peak": 0.47662353515625,
-      "rms": 0.09796246615862296
+      "rms": 0.09796246141195297
     },
     {
       "id": "m1_c3_enemy_call",
@@ -2164,7 +2174,7 @@
       "status": "original_Runway_enemy_reconfirmed_by_user",
       "restorationNote": "User requested original enemy voices; no synthesis or paid call performed",
       "peak": 0.598724365234375,
-      "rms": 0.10498832429706069
+      "rms": 0.10498832166194916
     },
     {
       "id": "m1_c3_mosin_order",
@@ -2192,7 +2202,7 @@
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
       "peak": 0.438690185546875,
-      "rms": 0.06536628946071253
+      "rms": 0.06536629050970078
     },
     {
       "id": "m1_c3_mallet_removed",
@@ -2222,7 +2232,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.61480712890625,
-      "rms": 0.10999999426637035
+      "rms": 0.10999999195337296
     },
     {
       "id": "m1_c3_phone_cut",
@@ -2252,7 +2262,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.5450439453125,
-      "rms": 0.1100000947198577
+      "rms": 0.11000009626150131
     },
     {
       "id": "m2v3_contact_02",
@@ -2290,7 +2300,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.810791015625,
-      "rms": 0.11000007576268313
+      "rms": 0.11000007390975952
     },
     {
       "id": "m2v3_contact_04",
@@ -2328,7 +2338,7 @@
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
       "peak": 0.810791015625,
-      "rms": 0.11000007576268313
+      "rms": 0.11000007390975952
     },
     {
       "id": "m2v3_contact_01",
@@ -2352,8 +2362,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.520843505859375,
-      "rms": 0.1023400849733729
+      "rms": 0.10234007984399796
     },
     {
       "id": "m2v3_contact_03",
@@ -2377,8 +2389,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.553680419921875,
-      "rms": 0.10201293695077426
+      "rms": 0.10201293975114822
     },
     {
       "id": "m2v3_password_01",
@@ -2399,8 +2413,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.85223388671875,
-      "rms": 0.10377402399939153
+      "rms": 0.10377402603626251
     },
     {
       "id": "m2v3_password_02",
@@ -2425,8 +2441,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.7083740234375,
-      "rms": 0.11000004582999325
+      "rms": 0.11000004410743713
     },
     {
       "id": "m2v3_contact_08",
@@ -2450,8 +2468,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.6080322265625,
-      "rms": 0.10140834927677939
+      "rms": 0.10140834748744965
     },
     {
       "id": "m2v3_contact_09",
@@ -2476,8 +2496,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.810791015625,
-      "rms": 0.11000007576268313
+      "rms": 0.11000007390975952
     },
     {
       "id": "m2v3_contact_05",
@@ -2498,8 +2520,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.822845458984375,
-      "rms": 0.10302208512305998
+      "rms": 0.10302208364009857
     },
     {
       "id": "m2v3_contact_06",
@@ -2524,8 +2548,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.60101318359375,
-      "rms": 0.11000002336962404
+      "rms": 0.11000002175569534
     },
     {
       "id": "m2v3_contact_07",
@@ -2546,8 +2572,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.645782470703125,
-      "rms": 0.10356295742636186
+      "rms": 0.10356295853853226
     },
     {
       "id": "m2v3_bandage_01",
@@ -2568,8 +2596,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.634979248046875,
-      "rms": 0.10969720098228537
+      "rms": 0.10969720035791397
     },
     {
       "id": "m2v3_bandage_02",
@@ -2596,7 +2626,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.655670166015625,
-      "rms": 0.10309835124388797
+      "rms": 0.10309835523366928
     },
     {
       "id": "m2v3_bandage_03",
@@ -2617,8 +2647,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.5972900390625,
-      "rms": 0.11183417055438104
+      "rms": 0.11183416843414307
     },
     {
       "id": "m2v3_medicine_01",
@@ -2645,7 +2677,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.86285400390625,
-      "rms": 0.09405500804784012
+      "rms": 0.09405500441789627
     },
     {
       "id": "m2v3_medicine_02",
@@ -2670,8 +2702,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.6456298828125,
-      "rms": 0.11000006262162039
+      "rms": 0.11000005900859833
     },
     {
       "id": "m2v3_repair_01",
@@ -2692,8 +2726,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.75152587890625,
-      "rms": 0.09561247165357005
+      "rms": 0.09561247378587723
     },
     {
       "id": "m2v3_repair_02",
@@ -2718,8 +2754,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.625274658203125,
-      "rms": 0.1100000568950257
+      "rms": 0.11000005155801773
     },
     {
       "id": "m2v3_repair_03",
@@ -2740,8 +2778,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.809539794921875,
-      "rms": 0.09993250061492905
+      "rms": 0.09993249922990799
     },
     {
       "id": "m2v3_day1report_01",
@@ -2766,8 +2806,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.678924560546875,
-      "rms": 0.11000019092554078
+      "rms": 0.11000019311904907
     },
     {
       "id": "m2v3_day1report_02",
@@ -2791,8 +2833,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.536041259765625,
-      "rms": 0.10175123575553412
+      "rms": 0.10175123810768127
     },
     {
       "id": "m2v3_day1report_03",
@@ -2817,8 +2861,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.810791015625,
-      "rms": 0.11000007576268313
+      "rms": 0.11000007390975952
     },
     {
       "id": "m2v3_day1report_04",
@@ -2845,7 +2891,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.8248291015625,
-      "rms": 0.1028216871209067
+      "rms": 0.10282168537378311
     },
     {
       "id": "m2v3_day1report_05",
@@ -2870,8 +2916,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "quiet",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.46002197265625,
-      "rms": 0.09500002916025875
+      "rms": 0.09500002861022949
     },
     {
       "id": "m2v3_day1report_06",
@@ -2898,7 +2946,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.695220947265625,
-      "rms": 0.10377561344785304
+      "rms": 0.10377561300992966
     },
     {
       "id": "m2v3_promise_01",
@@ -2925,7 +2973,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.66021728515625,
-      "rms": 0.10305910048059609
+      "rms": 0.10305909812450409
     },
     {
       "id": "m2v3_promise_02",
@@ -2950,8 +2998,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "quiet",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.584716796875,
-      "rms": 0.09500004174093102
+      "rms": 0.09500003606081009
     },
     {
       "id": "m2v3_promise_03",
@@ -2978,7 +3028,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.791412353515625,
-      "rms": 0.1040104376225493
+      "rms": 0.1040104329586029
     },
     {
       "id": "m2v3_promise_04",
@@ -3003,8 +3053,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "quiet",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.590545654296875,
-      "rms": 0.09500001693254458
+      "rms": 0.0950000137090683
     },
     {
       "id": "m2v3_promise_05",
@@ -3031,7 +3083,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.731292724609375,
-      "rms": 0.10315437869130306
+      "rms": 0.10315437614917755
     },
     {
       "id": "m2v3_promise_06",
@@ -3052,8 +3104,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.51611328125,
-      "rms": 0.10976979654757686
+      "rms": 0.1097697913646698
     },
     {
       "id": "m2v3_promise_07",
@@ -3078,8 +3132,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "quiet",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.539093017578125,
-      "rms": 0.09500005788535007
+      "rms": 0.09500005096197128
     },
     {
       "id": "m2v3_promise_08",
@@ -3106,7 +3162,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.7308349609375,
-      "rms": 0.10143791658102248
+      "rms": 0.10143791139125824
     },
     {
       "id": "m2v3_promise_09",
@@ -3131,8 +3187,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "quiet",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.578826904296875,
-      "rms": 0.09500003618959989
+      "rms": 0.09500003606081009
     },
     {
       "id": "m2v3_promise_10",
@@ -3159,7 +3217,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.685394287109375,
-      "rms": 0.1038589899381635
+      "rms": 0.10385899245738983
     },
     {
       "id": "m2v3_promise_11",
@@ -3184,8 +3242,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "quiet",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.489013671875,
-      "rms": 0.09500003608379425
+      "rms": 0.09500003606081009
     },
     {
       "id": "m2v3_promise_12",
@@ -3212,7 +3272,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.58172607421875,
-      "rms": 0.10508254688638488
+      "rms": 0.10508254170417786
     },
     {
       "id": "m2v3_duck_01",
@@ -3237,8 +3297,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "quiet",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.484100341796875,
-      "rms": 0.0950000078199365
+      "rms": 0.0950000062584877
     },
     {
       "id": "m2v3_duck_02",
@@ -3265,7 +3327,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.6304931640625,
-      "rms": 0.09682244736359387
+      "rms": 0.09682244807481766
     },
     {
       "id": "m2v3_nightwatch_01",
@@ -3290,8 +3352,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.68304443359375,
-      "rms": 0.11000005161025687
+      "rms": 0.11000005155801773
     },
     {
       "id": "m2v3_nightwatch_02",
@@ -3318,7 +3382,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.774993896484375,
-      "rms": 0.10282497144517388
+      "rms": 0.10282497107982635
     },
     {
       "id": "m2v3_nightwatch_03",
@@ -3343,8 +3407,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.52435302734375,
-      "rms": 0.11000007000050292
+      "rms": 0.11000006645917892
     },
     {
       "id": "m2v3_nightwatch_04",
@@ -3371,7 +3437,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.84521484375,
-      "rms": 0.10248196863141913
+      "rms": 0.10248196870088577
     },
     {
       "id": "m2v3_postbamboo_01",
@@ -3396,8 +3462,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.633819580078125,
-      "rms": 0.11000008101355524
+      "rms": 0.11000007390975952
     },
     {
       "id": "m2v3_postbamboo_02",
@@ -3418,8 +3486,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.741851806640625,
-      "rms": 0.10812873757607985
+      "rms": 0.10812873393297195
     },
     {
       "id": "m2v3_postbamboo_03",
@@ -3444,8 +3514,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.810791015625,
-      "rms": 0.11000007576268313
+      "rms": 0.11000007390975952
     },
     {
       "id": "m2v3_repair_done_01",
@@ -3466,8 +3538,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.78875732421875,
-      "rms": 0.09820458274483894
+      "rms": 0.0982045829296112
     },
     {
       "id": "m2v3_repair_done_02",
@@ -3492,8 +3566,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.542694091796875,
-      "rms": 0.10999998044322953
+      "rms": 0.10999997705221176
     },
     {
       "id": "m2_arrival_sight",
@@ -3520,7 +3596,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.678466796875,
-      "rms": 0.10343041436083537
+      "rms": 0.10343041270971298
     },
     {
       "id": "m2_moor_order",
@@ -3544,8 +3620,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.552764892578125,
-      "rms": 0.10279870384069392
+      "rms": 0.1027987003326416
     },
     {
       "id": "m2_ashore_order",
@@ -3569,8 +3647,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.584442138671875,
-      "rms": 0.10158173916164916
+      "rms": 0.10158174484968185
     },
     {
       "id": "m2v3_scoutorder_01",
@@ -3594,8 +3674,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.50469970703125,
-      "rms": 0.10108087037255922
+      "rms": 0.10108087211847305
     },
     {
       "id": "m2v3_scoutorder_02",
@@ -3620,8 +3702,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.810791015625,
-      "rms": 0.11000007576268313
+      "rms": 0.11000007390975952
     },
     {
       "id": "m2v3_scoutorder_03",
@@ -3648,7 +3732,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.67938232421875,
-      "rms": 0.10299033613584294
+      "rms": 0.10299033671617508
     },
     {
       "id": "m2v3_scoutorder_04",
@@ -3673,8 +3757,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.560943603515625,
-      "rms": 0.11000010024259867
+      "rms": 0.11000010371208191
     },
     {
       "id": "m2v3_scoutorder_05",
@@ -3701,7 +3787,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.59088134765625,
-      "rms": 0.10354333582490571
+      "rms": 0.10354333370923996
     },
     {
       "id": "m2v3_scoutorder_06",
@@ -3725,8 +3811,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.613250732421875,
-      "rms": 0.101098578900398
+      "rms": 0.10109857469797134
     },
     {
       "id": "m2v3_scoutfound_01",
@@ -3747,8 +3835,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.87457275390625,
-      "rms": 0.10552942771801448
+      "rms": 0.10552942752838135
     },
     {
       "id": "m2v3_scoutfound_02",
@@ -3773,8 +3863,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.63104248046875,
-      "rms": 0.11000006293259691
+      "rms": 0.11000006645917892
     },
     {
       "id": "m2v3_scoutfound_03",
@@ -3795,8 +3887,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.655364990234375,
-      "rms": 0.10626093361792613
+      "rms": 0.10626093298196793
     },
     {
       "id": "m2v3_scoutreturn_01",
@@ -3817,8 +3911,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.82470703125,
-      "rms": 0.10466081995651541
+      "rms": 0.10466081649065018
     },
     {
       "id": "m2v3_scoutreturn_02",
@@ -3842,8 +3938,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.585723876953125,
-      "rms": 0.10202410061160419
+      "rms": 0.10202410072088242
     },
     {
       "id": "m2v3_scoutreturn_03",
@@ -3870,7 +3968,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.796905517578125,
-      "rms": 0.10302645615931375
+      "rms": 0.10302645713090897
     },
     {
       "id": "m2v3_antenna_01",
@@ -3897,7 +3995,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.807281494140625,
-      "rms": 0.10350542926442717
+      "rms": 0.10350543260574341
     },
     {
       "id": "m2v3_antenna_02",
@@ -3924,7 +4022,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.81072998046875,
-      "rms": 0.10311445468042514
+      "rms": 0.10311445593833923
     },
     {
       "id": "m2v3_antenna_03",
@@ -3948,8 +4046,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.40667724609375,
-      "rms": 0.06376724387037101
+      "rms": 0.06376723945140839
     },
     {
       "id": "m2v3_artillery_01",
@@ -3973,8 +4073,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.670379638671875,
-      "rms": 0.10221430247320511
+      "rms": 0.10221430659294128
     },
     {
       "id": "m2v3_artillery_02",
@@ -3999,8 +4101,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.810791015625,
-      "rms": 0.11000007576268313
+      "rms": 0.11000007390975952
     },
     {
       "id": "m2v3_lights_01",
@@ -4025,8 +4129,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.71319580078125,
-      "rms": 0.11000005063279883
+      "rms": 0.11000004410743713
     },
     {
       "id": "m2v3_lights_02",
@@ -4053,7 +4159,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.602874755859375,
-      "rms": 0.07203415462321733
+      "rms": 0.07203415781259537
     },
     {
       "id": "m2v3_lights_03",
@@ -4080,7 +4186,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.477294921875,
-      "rms": 0.06495954439186719
+      "rms": 0.06495954841375351
     },
     {
       "id": "m2v3_lights_04",
@@ -4105,8 +4211,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.656341552734375,
-      "rms": 0.11000000964283599
+      "rms": 0.11000000685453415
     },
     {
       "id": "m2v3_lights_05",
@@ -4133,7 +4241,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.5164794921875,
-      "rms": 0.06638844782445506
+      "rms": 0.06638845056295395
     },
     {
       "id": "m2v3_lights_06",
@@ -4160,7 +4268,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.308685302734375,
-      "rms": 0.05364874572288372
+      "rms": 0.05364874377846718
     },
     {
       "id": "m2v3_reconcile_01",
@@ -4185,8 +4293,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.819427490234375,
-      "rms": 0.11000007316676136
+      "rms": 0.11000007390975952
     },
     {
       "id": "m2v3_reconcile_02",
@@ -4213,7 +4323,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.80767822265625,
-      "rms": 0.10304067372424323
+      "rms": 0.1030406728386879
     },
     {
       "id": "m2v3_reconcile_03",
@@ -4240,7 +4350,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.787628173828125,
-      "rms": 0.10323216368985796
+      "rms": 0.10323216021060944
     },
     {
       "id": "m2v3_reconcile_04",
@@ -4265,8 +4375,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.525665283203125,
-      "rms": 0.11000004440685415
+      "rms": 0.11000004410743713
     },
     {
       "id": "m2v3_reconcile_05",
@@ -4293,7 +4405,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.593292236328125,
-      "rms": 0.1038186269650275
+      "rms": 0.1038186326622963
     },
     {
       "id": "m2v3_reconcile_06",
@@ -4320,7 +4432,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.899993896484375,
-      "rms": 0.0992746712717619
+      "rms": 0.0992746651172638
     },
     {
       "id": "m2v3_reconcile_07",
@@ -4345,8 +4457,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.41864013671875,
-      "rms": 0.1100000409121001
+      "rms": 0.11000003665685654
     },
     {
       "id": "m2v3_reconcile_08",
@@ -4373,7 +4487,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.835296630859375,
-      "rms": 0.1045416115518129
+      "rms": 0.1045416072010994
     },
     {
       "id": "m2v3_reconcile_09",
@@ -4398,8 +4512,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.709625244140625,
-      "rms": 0.11000004512076271
+      "rms": 0.11000004410743713
     },
     {
       "id": "m2v3_demolition_01",
@@ -4420,8 +4536,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.8173828125,
-      "rms": 0.10446117857492274
+      "rms": 0.1044611781835556
     },
     {
       "id": "m2v3_demolition_02",
@@ -4448,7 +4566,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.878875732421875,
-      "rms": 0.10393350732951251
+      "rms": 0.10393350571393967
     },
     {
       "id": "m2v3_demolition_03",
@@ -4469,8 +4587,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.60308837890625,
-      "rms": 0.10380127515078086
+      "rms": 0.10380127280950546
     },
     {
       "id": "m2v3_boats_01",
@@ -4491,8 +4611,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.779754638671875,
-      "rms": 0.09562029894753545
+      "rms": 0.095620296895504
     },
     {
       "id": "m2v3_families_01",
@@ -4519,7 +4641,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.767303466796875,
-      "rms": 0.1034640874839212
+      "rms": 0.10346408933401108
     },
     {
       "id": "m2v3_families_02",
@@ -4546,7 +4668,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.79833984375,
-      "rms": 0.0952177683943111
+      "rms": 0.09521777182817459
     },
     {
       "id": "m2v3_families_03",
@@ -4573,7 +4695,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.7237548828125,
-      "rms": 0.10330274031913167
+      "rms": 0.1033027395606041
     },
     {
       "id": "m2v3_supper_01",
@@ -4600,7 +4722,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.64544677734375,
-      "rms": 0.1045818802025262
+      "rms": 0.10458187758922577
     },
     {
       "id": "m2v3_supper_02",
@@ -4621,8 +4743,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.831146240234375,
-      "rms": 0.10970250436956173
+      "rms": 0.10970250517129898
     },
     {
       "id": "m2v3_supper_03",
@@ -4649,7 +4773,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.7559814453125,
-      "rms": 0.10278165361861391
+      "rms": 0.10278165340423584
     },
     {
       "id": "m2v3_supper_04",
@@ -4670,8 +4794,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.584930419921875,
-      "rms": 0.10966902927850301
+      "rms": 0.1096690371632576
     },
     {
       "id": "m2v3_supper_05",
@@ -4698,7 +4824,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.62896728515625,
-      "rms": 0.10317603748033746
+      "rms": 0.10317603498697281
     },
     {
       "id": "m2v3_lastorder_01",
@@ -4722,8 +4848,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.631866455078125,
-      "rms": 0.10203402831992005
+      "rms": 0.10203402489423752
     },
     {
       "id": "m2v3_lastorder_03",
@@ -4747,8 +4875,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.530242919921875,
-      "rms": 0.10127619909266942
+      "rms": 0.10127619653940201
     },
     {
       "id": "m2v3_lastorder_04",
@@ -4773,8 +4903,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.810791015625,
-      "rms": 0.11000007576268313
+      "rms": 0.11000007390975952
     },
     {
       "id": "m2v3_lastorder_05",
@@ -4801,7 +4933,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.71612548828125,
-      "rms": 0.1025791797186249
+      "rms": 0.10257918387651443
     },
     {
       "id": "m2v3_lastorder_06",
@@ -4826,8 +4958,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.668548583984375,
-      "rms": 0.11000000595084929
+      "rms": 0.11000000685453415
     },
     {
       "id": "m2v3_lastorder_07",
@@ -4854,7 +4988,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.62371826171875,
-      "rms": 0.10527294980514375
+      "rms": 0.10527294874191284
     },
     {
       "id": "m2v3_attack_01",
@@ -4881,7 +5015,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.82275390625,
-      "rms": 0.10340769857601328
+      "rms": 0.10340769588947296
     },
     {
       "id": "m2v3_attack_02",
@@ -4905,8 +5039,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.681610107421875,
-      "rms": 0.10130347829170622
+      "rms": 0.10130347311496735
     },
     {
       "id": "m2v3_attack_03",
@@ -4931,8 +5067,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.736541748046875,
-      "rms": 0.10999999521872522
+      "rms": 0.10999999195337296
     },
     {
       "id": "m2v3_fire_01",
@@ -4953,8 +5091,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.549468994140625,
-      "rms": 0.10979689745697782
+      "rms": 0.10979689657688141
     },
     {
       "id": "m2v3_fire_02",
@@ -4981,7 +5121,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.578521728515625,
-      "rms": 0.09934327173046636
+      "rms": 0.09934327006340027
     },
     {
       "id": "m2v3_child_01",
@@ -5002,8 +5142,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.48211669921875,
-      "rms": 0.10420722883208543
+      "rms": 0.10420722514390945
     },
     {
       "id": "m2v3_child_02",
@@ -5028,8 +5170,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.582794189453125,
-      "rms": 0.11000003450691054
+      "rms": 0.11000003665685654
     },
     {
       "id": "m2v3_boatsafe_02",
@@ -5050,8 +5194,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.6148681640625,
-      "rms": 0.09725514434394607
+      "rms": 0.09725514054298401
     },
     {
       "id": "m2v3_boatsafe_01",
@@ -5078,7 +5224,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.5245361328125,
-      "rms": 0.06826331834611926
+      "rms": 0.06826332211494446
     },
     {
       "id": "m2v3_wound_01",
@@ -5099,8 +5245,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.402923583984375,
-      "rms": 0.059115438096371695
+      "rms": 0.059115439653396606
     },
     {
       "id": "m2v3_wound_02",
@@ -5124,8 +5272,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.4122314453125,
-      "rms": 0.0619091147051958
+      "rms": 0.061909113079309464
     },
     {
       "id": "m2v3_wound_04",
@@ -5146,8 +5296,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.829742431640625,
-      "rms": 0.10209610748677124
+      "rms": 0.10209610313177109
     },
     {
       "id": "m2v3_wound_05",
@@ -5174,7 +5326,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.7178955078125,
-      "rms": 0.058987958572624684
+      "rms": 0.05898795649409294
     },
     {
       "id": "m2v3_ammo_01",
@@ -5201,7 +5353,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.739501953125,
-      "rms": 0.07031770554200828
+      "rms": 0.07031770050525665
     },
     {
       "id": "m2v3_alive_01",
@@ -5226,8 +5378,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "quiet",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.711212158203125,
-      "rms": 0.09500008668655543
+      "rms": 0.09500008821487427
     },
     {
       "id": "m2v3_alive_02",
@@ -5254,7 +5408,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.5606689453125,
-      "rms": 0.07037026335017821
+      "rms": 0.07037026435136795
     },
     {
       "id": "m2v3_coordinates_01",
@@ -5281,7 +5435,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.6131591796875,
-      "rms": 0.06989315485483973
+      "rms": 0.06989315897226334
     },
     {
       "id": "m2v3_coordinates_02",
@@ -5305,8 +5459,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.519500732421875,
-      "rms": 0.07180958468792843
+      "rms": 0.07180958241224289
     },
     {
       "id": "m2v3_coordinates_03",
@@ -5331,8 +5487,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.810791015625,
-      "rms": 0.11000007576268313
+      "rms": 0.11000007390975952
     },
     {
       "id": "m2v3_coordinates_04",
@@ -5356,8 +5514,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.427398681640625,
-      "rms": 0.0718570681937932
+      "rms": 0.07185706496238708
     },
     {
       "id": "m2v3_coordinates_05",
@@ -5384,7 +5544,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.866729736328125,
-      "rms": 0.07089043614822634
+      "rms": 0.07089043408632278
     },
     {
       "id": "m2v3_coordinates_06",
@@ -5408,8 +5568,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.371368408203125,
-      "rms": 0.06560225388332871
+      "rms": 0.06560225039720535
     },
     {
       "id": "m2v3_farewell_01",
@@ -5430,8 +5592,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.899993896484375,
-      "rms": 0.10013498792346455
+      "rms": 0.10013498365879059
     },
     {
       "id": "m2v3_farewell_02",
@@ -5458,7 +5622,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.899993896484375,
-      "rms": 0.08374716694994697
+      "rms": 0.08374717086553574
     },
     {
       "id": "m2v3_farewell_03",
@@ -5483,8 +5647,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "quiet",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.604949951171875,
-      "rms": 0.09500007837057042
+      "rms": 0.09500008076429367
     },
     {
       "id": "m2v3_farewell_04",
@@ -5511,7 +5677,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.706390380859375,
-      "rms": 0.1032732731281928
+      "rms": 0.10327327251434326
     },
     {
       "id": "m2v3_farewell_05",
@@ -5536,8 +5702,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "quiet",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.534454345703125,
-      "rms": 0.09500001411214862
+      "rms": 0.0950000137090683
     },
     {
       "id": "m2v3_farewell_06",
@@ -5564,7 +5732,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.77459716796875,
-      "rms": 0.10421377273806064
+      "rms": 0.10421377420425415
     },
     {
       "id": "m2v3_farewell_07",
@@ -5589,8 +5757,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "quiet",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.491668701171875,
-      "rms": 0.09500007848993622
+      "rms": 0.09500008076429367
     },
     {
       "id": "m2v3_farewell_08",
@@ -5617,7 +5787,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.646759033203125,
-      "rms": 0.10296984473272941
+      "rms": 0.10296984016895294
     },
     {
       "id": "m2v3_farewell_09",
@@ -5644,7 +5814,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.817413330078125,
-      "rms": 0.10245809729269761
+      "rms": 0.10245809704065323
     },
     {
       "id": "m2v3_farewell_10",
@@ -5669,8 +5839,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "quiet",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.521697998046875,
-      "rms": 0.09500007330040298
+      "rms": 0.09500006586313248
     },
     {
       "id": "m2v3_farewell_11",
@@ -5697,7 +5869,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.899993896484375,
-      "rms": 0.09427699029824732
+      "rms": 0.09427698701620102
     },
     {
       "id": "m2v3_sacrifice_01",
@@ -5722,8 +5894,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.65789794921875,
-      "rms": 0.11000008621144247
+      "rms": 0.11000008136034012
     },
     {
       "id": "m2v3_sacrifice_02",
@@ -5750,7 +5924,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.63543701171875,
-      "rms": 0.1030361512866581
+      "rms": 0.10303615033626556
     },
     {
       "id": "m2v3_sacrifice_03",
@@ -5774,8 +5948,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.586822509765625,
-      "rms": 0.06792388169802442
+      "rms": 0.0679238811135292
     },
     {
       "id": "m2v3_sacrifice_04",
@@ -5799,8 +5975,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.5267333984375,
-      "rms": 0.101376237475679
+      "rms": 0.1013762354850769
     },
     {
       "id": "m2v3_dawn_01",
@@ -5825,8 +6003,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "quiet",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.46429443359375,
-      "rms": 0.09500007126031126
+      "rms": 0.09500006586313248
     },
     {
       "id": "m2v3_dawn_02",
@@ -5850,8 +6030,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.408111572265625,
-      "rms": 0.10304530794731004
+      "rms": 0.10304530709981918
     },
     {
       "id": "m2v3_dawn_03",
@@ -5876,8 +6058,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "quiet",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.539794921875,
-      "rms": 0.09500001476892421
+      "rms": 0.0950000137090683
     },
     {
       "id": "m2v3_dawn_04",
@@ -5901,8 +6085,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.683563232421875,
-      "rms": 0.10239815394841974
+      "rms": 0.10239815711975098
     },
     {
       "id": "m2v3_dawn_05",
@@ -5927,8 +6113,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "quiet",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.36395263671875,
-      "rms": 0.09500002115018388
+      "rms": 0.0950000137090683
     },
     {
       "id": "m2_contact_01",
@@ -5952,8 +6140,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.522186279296875,
-      "rms": 0.10191700425899416
+      "rms": 0.10191700607538223
     },
     {
       "id": "m2_contact_02",
@@ -5974,8 +6164,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.810516357421875,
-      "rms": 0.10444568885719176
+      "rms": 0.104445680975914
     },
     {
       "id": "m2_contact_03",
@@ -6000,8 +6192,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.541839599609375,
-      "rms": 0.11000008440895864
+      "rms": 0.11000008136034012
     },
     {
       "id": "m2_contact_04",
@@ -6022,8 +6216,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.6729736328125,
-      "rms": 0.10381328071027814
+      "rms": 0.1038132831454277
     },
     {
       "id": "m2_family_medicine_01",
@@ -6044,8 +6240,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.625640869140625,
-      "rms": 0.10968930614526763
+      "rms": 0.10968930274248123
     },
     {
       "id": "m2_family_medicine_02",
@@ -6070,8 +6268,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.53363037109375,
-      "rms": 0.11000000728876783
+      "rms": 0.11000000685453415
     },
     {
       "id": "m2_family_medicine_03",
@@ -6092,8 +6292,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.7298583984375,
-      "rms": 0.10967266149152226
+      "rms": 0.1096726581454277
     },
     {
       "id": "m2_family_medicine_04",
@@ -6118,8 +6320,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.76214599609375,
-      "rms": 0.11000005106190054
+      "rms": 0.11000005155801773
     },
     {
       "id": "m2_scout_order_01",
@@ -6140,8 +6344,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.762939453125,
-      "rms": 0.10364078861566062
+      "rms": 0.10364078730344772
     },
     {
       "id": "m2_scout_order_02",
@@ -6166,8 +6372,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.48529052734375,
-      "rms": 0.11000003123998785
+      "rms": 0.11000002920627594
     },
     {
       "id": "m2_scout_order_03",
@@ -6188,8 +6396,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.820068359375,
-      "rms": 0.10427633718050144
+      "rms": 0.10427633672952652
     },
     {
       "id": "m2_scout_found_01",
@@ -6210,8 +6420,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.661712646484375,
-      "rms": 0.1058469298864821
+      "rms": 0.10584692656993866
     },
     {
       "id": "m2_scout_found_02",
@@ -6236,8 +6448,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.535491943359375,
-      "rms": 0.110000062295146
+      "rms": 0.11000005900859833
     },
     {
       "id": "m2_scout_found_03",
@@ -6258,8 +6472,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.714691162109375,
-      "rms": 0.10605883538942522
+      "rms": 0.10605883598327637
     },
     {
       "id": "m2_prepare_01",
@@ -6280,8 +6496,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.811248779296875,
-      "rms": 0.10640038309904264
+      "rms": 0.10640037804841995
     },
     {
       "id": "m2_prepare_02",
@@ -6306,8 +6524,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.730560302734375,
-      "rms": 0.11000002545712889
+      "rms": 0.11000002175569534
     },
     {
       "id": "m2_prepare_03",
@@ -6334,7 +6554,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.663299560546875,
-      "rms": 0.10258347097635465
+      "rms": 0.10258346796035767
     },
     {
       "id": "m2_encirclement_01",
@@ -6355,8 +6575,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.598541259765625,
-      "rms": 0.07773502933446506
+      "rms": 0.07773502916097641
     },
     {
       "id": "m2_encirclement_02",
@@ -6377,8 +6599,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.880096435546875,
-      "rms": 0.10556807448785252
+      "rms": 0.10556807368993759
     },
     {
       "id": "m2_encirclement_03",
@@ -6402,8 +6626,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.39739990234375,
-      "rms": 0.06610087083309797
+      "rms": 0.06610087305307388
     },
     {
       "id": "m2_hold_lane_01",
@@ -6428,8 +6654,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.694549560546875,
-      "rms": 0.11000002396848586
+      "rms": 0.11000002175569534
     },
     {
       "id": "m2_hold_lane_02",
@@ -6453,8 +6681,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.578582763671875,
-      "rms": 0.10110888544040245
+      "rms": 0.10110888630151749
     },
     {
       "id": "m2_hold_lane_03",
@@ -6479,8 +6709,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.735870361328125,
-      "rms": 0.1100000088042935
+      "rms": 0.11000000685453415
     },
     {
       "id": "m2_family_rescue_01",
@@ -6501,8 +6733,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.5238037109375,
-      "rms": 0.10970951818338506
+      "rms": 0.10970951616764069
     },
     {
       "id": "m2_family_rescue_02",
@@ -6527,8 +6761,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.584259033203125,
-      "rms": 0.11000003776215102
+      "rms": 0.11000003665685654
     },
     {
       "id": "m2_family_rescue_03",
@@ -6555,7 +6791,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.593475341796875,
-      "rms": 0.07259230902778788
+      "rms": 0.07259230315685272
     },
     {
       "id": "m2_breakout_01",
@@ -6576,8 +6812,10 @@
       "cost": 0,
       "license": "Apache-2.0 (model and bundled presets)",
       "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.781402587890625,
-      "rms": 0.10209331044794709
+      "rms": 0.10209330916404724
     },
     {
       "id": "m2_breakout_02",
@@ -6602,8 +6840,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.555755615234375,
-      "rms": 0.11000003800517137
+      "rms": 0.11000003665685654
     },
     {
       "id": "m2_breakout_03",
@@ -6630,7 +6870,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.67864990234375,
-      "rms": 0.10333964924807558
+      "rms": 0.10333964973688126
     },
     {
       "id": "m2_departure_01",
@@ -6655,8 +6895,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.487823486328125,
-      "rms": 0.11000005716107368
+      "rms": 0.11000005155801773
     },
     {
       "id": "m2_departure_02",
@@ -6683,7 +6925,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.838287353515625,
-      "rms": 0.10304233572228762
+      "rms": 0.10304233431816101
     },
     {
       "id": "m2_departure_03",
@@ -6708,8 +6950,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.6229248046875,
-      "rms": 0.11000006337659235
+      "rms": 0.11000006645917892
     },
     {
       "id": "m2_departure_04",
@@ -6733,8 +6977,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.5194091796875,
-      "rms": 0.10108709653077678
+      "rms": 0.10108709335327148
     },
     {
       "id": "free_literal_689a1d6bb4c6",
@@ -6758,8 +7004,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.542205810546875,
-      "rms": 0.10172989581042087
+      "rms": 0.10172989964485168
     },
     {
       "id": "free_literal_266135ffce2b",
@@ -6783,8 +7031,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.57061767578125,
-      "rms": 0.10312513235501047
+      "rms": 0.10312513262033463
     },
     {
       "id": "free_literal_8fcfcdda95f4",
@@ -6808,8 +7058,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.5479736328125,
-      "rms": 0.10237703303638304
+      "rms": 0.1023770347237587
     },
     {
       "id": "free_literal_7be0a5941d33",
@@ -6834,8 +7086,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.711456298828125,
-      "rms": 0.1100000219372615
+      "rms": 0.11000002175569534
     },
     {
       "id": "free_literal_53c4c39060a3",
@@ -6859,8 +7113,10 @@
       "castingApproved": true,
       "castingApproval": "Commander B approved by user 2026-10-25",
       "voiceRevision": "CommanderB_20261025",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.60943603515625,
-      "rms": 0.10115368378882075
+      "rms": 0.10115367919206619
     },
     {
       "id": "free_literal_689edd27ba1b",
@@ -6885,8 +7141,10 @@
       "castingApproved": true,
       "castingApproval": "User selected Nam C — Minh Quân on 2026-10-26",
       "performance": "mission",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.587615966796875,
-      "rms": 0.1100000326476697
+      "rms": 0.11000003665685654
     },
     {
       "id": "free_literal_75d2ff10e751",
@@ -6913,7 +7171,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.83355712890625,
-      "rms": 0.10260970801481453
+      "rms": 0.10260970890522003
     },
     {
       "id": "free_literal_3fdef854373d",
@@ -6940,7 +7198,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.824462890625,
-      "rms": 0.10176246016430573
+      "rms": 0.10176245868206024
     },
     {
       "id": "free_literal_7366ec68ae7c",
@@ -6967,7 +7225,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.779144287109375,
-      "rms": 0.10363769351376814
+      "rms": 0.1036376878619194
     },
     {
       "id": "m2v3_echo_promise",
@@ -6977,9 +7235,11 @@
       "language": "vi-VN",
       "radio": false,
       "duration": 4.65,
-      "sha256": "a251547742bd6fb95fd1f9cbdce03b49a99beb7d45964edc613a9b0406c6b76b",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.707916259765625,
-      "rms": 0.10459808856947866
+      "rms": 0.10459808260202408,
+      "sha256": "a251547742bd6fb95fd1f9cbdce03b49a99beb7d45964edc613a9b0406c6b76b"
     },
     {
       "id": "m2v3_promise_05b",
@@ -7006,7 +7266,7 @@
       "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
       "voiceRevision": "20261025",
       "peak": 0.787139892578125,
-      "rms": 0.10517654276497246
+      "rms": 0.10517653077840805
     },
     {
       "id": "m1_rescue_hung_defiance",
@@ -7026,8 +7286,336 @@
       "userApproved": false,
       "status": "Requested weak last words, existing approved Hung A voice; pending listening review",
       "performance": "Quieter, slower, breath-separated clauses, declining intensity; spoken after the entire collapse",
+      "sampleRate": 48000,
+      "channels": 1,
       "peak": 0.44927978515625,
-      "rms": 0.04717470513416762
+      "rms": 0.04717470332980156
+    },
+    {
+      "id": "m2v3_scoutescort_warning_01",
+      "conversation": "m2v3_scoutescort_warning",
+      "speaker": "Anh Thành",
+      "text": "Đồng chí đưa thương binh về cẩn thận, địch đã phát hiện và bố trí lực lượng đánh chặn",
+      "radio": true,
+      "caption": "Anh Thành (bộ đàm): Đồng chí đưa thương binh về cẩn thận, địch đã phát hiện và bố trí lực lượng đánh chặn",
+      "match": "Anh Thành (bộ đàm): Đồng chí đưa thương binh về cẩn thận, địch đã phát hiện và bố trí lực lượng đánh chặn",
+      "resource": "Dialogue/VI/m2v3_scoutescort_warning_01_radio",
+      "language": "vi",
+      "voice": "Minh Đức",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "tempo": 0.92,
+      "pitch": 0.94,
+      "cost": 0,
+      "castingApproved": true,
+      "userApproved": false,
+      "status": "integrated_existing_cast_pending_line_listening",
+      "voiceRevision": "ScoutEscort_20261026",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "license": "Apache-2.0 (model and bundled presets)",
+      "duration": 5.652166666666667,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.4010009765625,
+      "rms": 0.06586901843547821,
+      "sha256": "183919f9876da793ee2bd2bac142b91a7fbeb371173b413f02ed821a32b19f8b"
+    },
+    {
+      "id": "m2v3_evac_field_01",
+      "conversation": "m2v3_evac_field",
+      "speaker": "Nam",
+      "text": "Báo cáo, lối này có địch không thể sơ tán được",
+      "radio": true,
+      "caption": "Nam (bộ đàm): Báo cáo, lối này có địch không thể sơ tán được",
+      "match": "Nam (bộ đàm): Báo cáo, lối này có địch không thể sơ tán được",
+      "resource": "Dialogue/VI/m2v3_evac_field_01_radio",
+      "language": "vi",
+      "voice": "Minh Quân",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "tempo": 1,
+      "pitch": 1,
+      "cost": 0,
+      "castingApproved": true,
+      "userApproved": false,
+      "status": "approved cast; synchronized offline; individual performance not user-reviewed",
+      "voiceRevision": "Nam_C_20261026",
+      "reusedRecording": null,
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "license": "Apache-2.0 (model and bundled presets)",
+      "duration": 2.4435,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.815704345703125,
+      "rms": 0.08323246985673904,
+      "sha256": "c9164b5c454e92875e1704a0878698781fbea6dddf7dd05f7ffad159ea01086a",
+      "integrationRevision": "VoiceCompletion_20261028"
+    },
+    {
+      "id": "m2v3_evac_field_02",
+      "conversation": "m2v3_evac_field",
+      "speaker": "Anh Thành",
+      "text": "Cậu hãy mau chóng rời khỏi đó, rút lui an toàn và tìm con đường khác",
+      "radio": true,
+      "caption": "Anh Thành (bộ đàm): Cậu hãy mau chóng rời khỏi đó, rút lui an toàn và tìm con đường khác",
+      "match": "Anh Thành (bộ đàm): Cậu hãy mau chóng rời khỏi đó, rút lui an toàn và tìm con đường khác",
+      "resource": "Dialogue/VI/m2v3_evac_field_02_radio",
+      "language": "vi",
+      "voice": "Minh Đức",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "tempo": 0.92,
+      "pitch": 0.94,
+      "cost": 0,
+      "castingApproved": true,
+      "userApproved": false,
+      "status": "integrated_existing_cast_pending_line_listening",
+      "voiceRevision": "EvacuationChoices_20261027",
+      "reusedRecording": null,
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "license": "Apache-2.0 (model and bundled presets)",
+      "duration": 4.956520833333333,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.48480224609375,
+      "rms": 0.06456730514764786,
+      "sha256": "51bca985699216c1aa08e2e9bbdb21e6a7ce6c78608ccc09f076812556c72da6"
+    },
+    {
+      "id": "m2v3_evac_field_03",
+      "conversation": "m2v3_evac_field",
+      "speaker": "Nam",
+      "text": "rõ",
+      "radio": true,
+      "caption": "Nam (bộ đàm): rõ",
+      "match": "Nam (bộ đàm): rõ",
+      "resource": "Dialogue/VI/m2v3_evac_field_03_radio",
+      "language": "vi",
+      "voice": "Minh Quân",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "tempo": 1,
+      "pitch": 1,
+      "cost": 0,
+      "castingApproved": true,
+      "userApproved": false,
+      "status": "approved cast; synchronized offline; individual performance not user-reviewed",
+      "voiceRevision": "Nam_C_20261026",
+      "reusedRecording": "m2v3_day1report_03",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "license": "Apache-2.0 (model and bundled presets)",
+      "duration": 0.5162083333333334,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.63873291015625,
+      "rms": 0.09565851837396622,
+      "sha256": "14dc32fd2f005130833658a6c4f537d26fda8e4443ed2f50e2289deae360732c",
+      "integrationRevision": "VoiceCompletion_20261028"
+    },
+    {
+      "id": "m2v3_evac_river_01",
+      "conversation": "m2v3_evac_river",
+      "speaker": "Nam",
+      "text": "Báo cáo thủ trưởng, lối này khá an toàn, tuy nhiên phải lội qua sông ạ",
+      "radio": true,
+      "caption": "Nam (bộ đàm): Báo cáo thủ trưởng, lối này khá an toàn, tuy nhiên phải lội qua sông ạ",
+      "match": "Nam (bộ đàm): Báo cáo thủ trưởng, lối này khá an toàn, tuy nhiên phải lội qua sông ạ",
+      "resource": "Dialogue/VI/m2v3_evac_river_01_radio",
+      "language": "vi",
+      "voice": "Minh Quân",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "tempo": 1,
+      "pitch": 1,
+      "cost": 0,
+      "castingApproved": true,
+      "userApproved": false,
+      "status": "approved cast; synchronized offline; individual performance not user-reviewed",
+      "voiceRevision": "Nam_C_20261026",
+      "reusedRecording": null,
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "license": "Apache-2.0 (model and bundled presets)",
+      "duration": 3.2990208333333335,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.633514404296875,
+      "rms": 0.08345284312963486,
+      "sha256": "fdfc10d85ff5f36cb258754a863c26e65fe3d2dbab207a265aba2386305f86ef",
+      "integrationRevision": "VoiceCompletion_20261028"
+    },
+    {
+      "id": "m2v3_evac_river_02",
+      "conversation": "m2v3_evac_river",
+      "speaker": "Anh Thành",
+      "text": "Không được, phải ưu tiên đường an toàn để sơ tán mọi người",
+      "radio": true,
+      "caption": "Anh Thành (bộ đàm): Không được, phải ưu tiên đường an toàn để sơ tán mọi người",
+      "match": "Anh Thành (bộ đàm): Không được, phải ưu tiên đường an toàn để sơ tán mọi người",
+      "resource": "Dialogue/VI/m2v3_evac_river_02_radio",
+      "language": "vi",
+      "voice": "Minh Đức",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "tempo": 0.92,
+      "pitch": 0.94,
+      "cost": 0,
+      "castingApproved": true,
+      "userApproved": false,
+      "status": "integrated_existing_cast_pending_line_listening",
+      "voiceRevision": "EvacuationChoices_20261027",
+      "reusedRecording": null,
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "license": "Apache-2.0 (model and bundled presets)",
+      "duration": 4.0869583333333335,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.496490478515625,
+      "rms": 0.0698753222823143,
+      "sha256": "5ca4d60f0acba221aaf89d0cc243de3fa8ff48133d7dc1fdfdfdfa823b0b3b0a"
+    },
+    {
+      "id": "m2v3_evac_river_03",
+      "conversation": "m2v3_evac_river",
+      "speaker": "Nam",
+      "text": "rõ!",
+      "radio": true,
+      "caption": "Nam (bộ đàm): rõ!",
+      "match": "Nam (bộ đàm): rõ!",
+      "resource": "Dialogue/VI/m2v3_evac_river_03_radio",
+      "language": "vi",
+      "voice": "Minh Quân",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "tempo": 1,
+      "pitch": 1,
+      "cost": 0,
+      "castingApproved": true,
+      "userApproved": false,
+      "status": "approved cast; synchronized offline; individual performance not user-reviewed",
+      "voiceRevision": "Nam_C_20261026",
+      "reusedRecording": "m2v3_attack_03",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "license": "Apache-2.0 (model and bundled presets)",
+      "duration": 0.5077083333333333,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.632568359375,
+      "rms": 0.09953751415014267,
+      "sha256": "1decff1955d640bc0b8d1900546ec1d57e6b2106862d4eeed7a8aa5c62336654",
+      "integrationRevision": "VoiceCompletion_20261028"
+    },
+    {
+      "id": "m2v3_evac_village_01",
+      "conversation": "m2v3_evac_village",
+      "speaker": "Nam",
+      "text": "Báo cáo thủ trưởng, lối này không có địch đi tuần, rất an toàn, người dân có thể sơ tán ạ",
+      "radio": true,
+      "caption": "Nam (bộ đàm): Báo cáo thủ trưởng, lối này không có địch đi tuần, rất an toàn, người dân có thể sơ tán ạ",
+      "match": "Nam (bộ đàm): Báo cáo thủ trưởng, lối này không có địch đi tuần, rất an toàn, người dân có thể sơ tán ạ",
+      "resource": "Dialogue/VI/m2v3_evac_village_01_radio",
+      "language": "vi",
+      "voice": "Minh Quân",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "tempo": 1,
+      "pitch": 1,
+      "cost": 0,
+      "castingApproved": true,
+      "userApproved": false,
+      "status": "approved cast; synchronized offline; individual performance not user-reviewed",
+      "voiceRevision": "Nam_C_20261026",
+      "reusedRecording": null,
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "license": "Apache-2.0 (model and bundled presets)",
+      "duration": 4.140770833333334,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.67236328125,
+      "rms": 0.08101623505353928,
+      "sha256": "89c579c37eb7e508bb93fa0c267293a13d04b799639638866a71589ae9314887",
+      "integrationRevision": "VoiceCompletion_20261028"
+    },
+    {
+      "id": "m2v3_evac_village_02",
+      "conversation": "m2v3_evac_village",
+      "speaker": "Anh Thành",
+      "text": "Làm tốt lắm, giờ cậu hãy quay trở về căn cứ để chuẩn bị sơ tán người dân",
+      "radio": true,
+      "caption": "Anh Thành (bộ đàm): Làm tốt lắm, giờ cậu hãy quay trở về căn cứ để chuẩn bị sơ tán người dân",
+      "match": "Anh Thành (bộ đàm): Làm tốt lắm, giờ cậu hãy quay trở về căn cứ để chuẩn bị sơ tán người dân",
+      "resource": "Dialogue/VI/m2v3_evac_village_02_radio",
+      "language": "vi",
+      "voice": "Minh Đức",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "tempo": 0.92,
+      "pitch": 0.94,
+      "cost": 0,
+      "castingApproved": true,
+      "userApproved": false,
+      "status": "integrated_existing_cast_pending_line_listening",
+      "voiceRevision": "EvacuationChoices_20261027",
+      "reusedRecording": null,
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "license": "Apache-2.0 (model and bundled presets)",
+      "duration": 5.304354166666666,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.44171142578125,
+      "rms": 0.06878235191106796,
+      "sha256": "58cea60ffad2e1f9c0f0c8649c855e7a73f1fc8944e30fd5521f6d1ccbb70b9d"
+    },
+    {
+      "id": "m2v3_day3report_01",
+      "speaker": "Nam",
+      "text": "Vật tư đã chuyển xuống bến. Hai thuyền đã vá xong, các nhà cũng biết đường sơ tán rồi.",
+      "caption": "Nam: Vật tư đã chuyển xuống bến. Hai thuyền đã vá xong, các nhà cũng biết đường sơ tán rồi.",
+      "match": "Nam: Vật tư đã chuyển xuống bến. Hai thuyền đã vá xong, các nhà cũng biết đường sơ tán rồi.",
+      "radio": false,
+      "language": "vi",
+      "resource": "Dialogue/VI/m2v3_day3report_01_clean",
+      "voice": "Minh Quân",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "castingApproved": true,
+      "userApproved": false,
+      "status": "approved cast; synchronized offline; individual performance not user-reviewed",
+      "voiceRevision": "Nam_C_20261026",
+      "integrationRevision": "VoiceCompletion_20261028",
+      "reusedRecording": null,
+      "cost": 0,
+      "duration": 4.218770833333333,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.699127197265625,
+      "rms": 0.11000003665685654,
+      "sha256": "8e37c2b62bac39340d7823826965b9fcc49416eda379efd5a72ad669e4bc2069"
+    },
+    {
+      "id": "m2v3_day3report_02",
+      "speaker": "Anh Thành",
+      "text": "Được. Tối nay cứ theo phân công. Có động thì báo ngay.",
+      "caption": "Anh Thành: Được. Tối nay cứ theo phân công. Có động thì báo ngay.",
+      "match": "Anh Thành: Được. Tối nay cứ theo phân công. Có động thì báo ngay.",
+      "radio": false,
+      "language": "vi",
+      "resource": "Dialogue/VI/m2v3_day3report_02_clean",
+      "voice": "Minh Đức",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "castingApproved": true,
+      "userApproved": false,
+      "status": "approved cast; synchronized offline; individual performance not user-reviewed",
+      "voiceRevision": "Commander_B_20261025",
+      "integrationRevision": "VoiceCompletion_20261028",
+      "reusedRecording": null,
+      "cost": 0,
+      "duration": 4.260875,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.6756591796875,
+      "rms": 0.11000002920627594,
+      "sha256": "2af5d2290ca618517f049b234087494be1e39f33674557a97706a46ba3236a26"
     }
   ]
 }

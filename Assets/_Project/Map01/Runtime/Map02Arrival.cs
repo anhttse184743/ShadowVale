@@ -114,6 +114,7 @@ namespace ShadowVale.Map01
                 Passengers[i].localRotation=Quaternion.Euler(0,i==1?0:270,0);
             }
             player.enabled=combat.enabled=false;
+            Map01BoatCarry.For(actors[0]).Stow();
             var footsteps=Passengers[0].GetComponent<PlayerFootsteps>();if(footsteps!=null)footsteps.enabled=false;health.CinematicInvulnerable=true;
             var cc=Passengers[0].GetComponent<CharacterController>();if(cc!=null)cc.enabled=false;
             foreach(var actor in Passengers.SelectMany(p=>p.GetComponentsInChildren<MonoBehaviour>(true))) {
@@ -178,6 +179,7 @@ namespace ShadowVale.Map01
                 PrepareBindFeet(i);
                 PrepareShoeContacts(i);
                 poses[i].Dispose();poses[i]=new Map01Extraction.PosePlayer(actors[i],i==2?source.hungClips:null);
+                if(i==0)poses[i].FreeArms();
                 poses[i].Play(i==1?Resources.Load<AnimationClip>("Cutscenes/Map02/Hung_Arrival_Row_Loop"):i==2?source.InjuredTravel:Resources.Load<AnimationClip>("Cutscenes/Map02/Nam_Arrival_Travel"));
                 if(i==0)Map01BoatCarry.For(actors[i]).Stow();
             }
@@ -215,7 +217,7 @@ namespace ShadowVale.Map01
                         var sub=subMeshes[i];var bounds=sub.bounds;bounds.center-=center;sub.bounds=bounds;
                         copy.SetSubMesh(i,sub,UnityEngine.Rendering.MeshUpdateFlags.DontRecalculateBounds);
                     }
-                    var visual=new GameObject(mesh.name);
+                    var visual=new GameObject(mesh.name);visual.SetActive(false);
                     // Independent of the old scene object's active/culling state.
                     visual.transform.SetParent(mesh.transform.parent,false);
                     visual.transform.localPosition=mesh.transform.localPosition+mesh.transform.localRotation*Vector3.Scale(mesh.transform.localScale,center);
@@ -239,7 +241,7 @@ namespace ShadowVale.Map01
             }
             if(destinationScene)for(int i=0;i<boatRenderers.Count;i++) {
                 var previous=boatRenderers[i];
-                var visual=new GameObject(previous.name);visual.layer=previous.gameObject.layer;
+                var visual=new GameObject(previous.name);visual.SetActive(false);visual.layer=previous.gameObject.layer;
                 visual.transform.SetParent(previous.transform.parent,false);
                 visual.transform.SetLocalPositionAndRotation(previous.transform.localPosition,previous.transform.localRotation);
                 visual.transform.localScale=previous.transform.localScale;
@@ -254,6 +256,7 @@ namespace ShadowVale.Map01
             }
         }
         static void SetBoatProperties(MeshRenderer renderer) {
+            Map01MovingPropRendering.Prepare(renderer);
             // A per-renderer property block opts this prop out of GPU Resident
             // Drawer using the public API. Never copy stale source overrides.
             var properties=new MaterialPropertyBlock();
@@ -301,7 +304,7 @@ namespace ShadowVale.Map01
             if(CurrentPhase==Phase.Approaching) {
                 ApplyArrival(Mathf.Clamp01(clock/ApproachDuration));
                 int stroke=Mathf.FloorToInt(clock/2.4f);
-                if(stroke!=lastStroke && rowingAudio!=null){lastStroke=stroke;rowingAudio.PlayOneShot(source.paddleAudio,.35f);}
+                if(stroke!=lastStroke && rowingAudio!=null){lastStroke=stroke;rowingAudio.PlayOneShot(source.paddleAudio,speech!=null&&speech.HasSpeech?.045f:.12f);}
                 if(clock>=ApproachDuration){CurrentPhase=Phase.Mooring;clock=0;speech.Play("m2_moor_order");poses[1].Play(stow??source.rowStop);paddleStart=paddle.localPosition;paddleStartRotation=paddle.localRotation;}
             } else if(CurrentPhase==Phase.Mooring) {
                 transform.SetPositionAndRotation(Docked,DockRotation);
@@ -624,7 +627,7 @@ namespace ShadowVale.Map01
         }
         void Finish() {
             if(CurrentPhase==Phase.Gameplay)return;
-            speech?.Stop();source.SetPaddleGrip(0,0);EndMisstep();Map01BoatCarry.For(actors[0]).Restore();
+            speech?.Stop();source.SetPaddleGrip(0,0);EndMisstep();
             transform.SetPositionAndRotation(Docked,DockRotation);
             for(int i=0;i<3;i++) {
                 poses[i]?.Dispose();
@@ -647,7 +650,7 @@ namespace ShadowVale.Map01
             sceneMission=FindFirstObjectByType<Map02Mission>();
             var footsteps=Passengers[0].GetComponent<PlayerFootsteps>();if(footsteps!=null)footsteps.enabled=true;
             var cc=Passengers[0].GetComponent<CharacterController>();if(cc!=null){cc.enabled=true;cc.Move(Vector3.down*.08f);}
-            player.enabled=combat.enabled=true;player.RestoreMotion(false);combat.RestoreAfterCinematic();GroundSkin(actors[0],SpawnPoints[0].y);
+            Map01BoatCarry.For(actors[0]).Restore();player.enabled=combat.enabled=true;player.RestoreMotion(false);combat.RestoreAfterCinematic();GroundSkin(actors[0],SpawnPoints[0].y);
             rig.SetTarget(Passengers[0]);rig.ClearCinematicView();rig.ClearRecoil();
             Cursor.lockState=CursorLockMode.Locked;Cursor.visible=false;ForestMenu.SuppressKeysAfterCutscene();fade=0;
             Debug.Log("Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.");

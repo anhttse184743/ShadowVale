@@ -1,0 +1,8 @@
+Map 2 mission session clip=m2v3_promise_05 gain=0.88 spatial=0
+Map 2 mission session clip=radio_off gain=0.08 spatial=0
+Xích sắt rất xa — cue riêng clip=night2_chain gain=0.65 spatial=0.85
+Ambience — d1_bamboo_loop clip=d1_bamboo_loop gain=0.03 spatial=0
+Ambience — d1_children_loop clip=d1_children_loop gain=0.025 spatial=1
+Ambience — d1_oars_loop clip=d1_oars_loop gain=0.01625 spatial=1
+Ambience — n1_frogs_loop clip=n1_frogs_loop gain=0 spatial=0
+Ambience — n1_fire_loop clip=n1_fire_loop gain=0 spatial=1

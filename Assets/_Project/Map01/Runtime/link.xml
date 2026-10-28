@@ -1,0 +1,5 @@
+<linker>
+  <assembly fullname="Unity.RenderPipelines.GPUDriven.Runtime">
+    <type fullname="UnityEngine.Rendering.DisallowGPUDrivenRendering" preserve="all" />
+  </assembly>
+</linker>
