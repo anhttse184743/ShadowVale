@@ -1,0 +1,1 @@
+PASS: both models have valid Humanoid avatars, color textures, normalized height, and role references.

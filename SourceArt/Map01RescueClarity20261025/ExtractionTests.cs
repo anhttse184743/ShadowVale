@@ -1,0 +1,360 @@
+using System.Collections;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using NUnit.Framework;
+using ShadowVale.Gameplay.Combat;
+using UnityEditor.SceneManagement;
+using UnityEngine;
+using UnityEngine.TestTools;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
+
+namespace ShadowVale.Map01.Tests
+{
+    [DefaultExecutionOrder(10000)]
+    public sealed class ExtractionCapturePump : MonoBehaviour
+    {
+        public System.Action draw;
+        private void LateUpdate() {var action=draw;draw=null;action?.Invoke();}
+    }
+    public sealed class ExtractionTests : ForestSceneTestBase
+    {
+        [UnityTest]
+        public IEnumerator NaturalBoardingDepartsBeforeCompletion()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();yield return null;
+            IsolateSaves();
+            var mission=Object.FindFirstObjectByType<Map01Mission>();
+            var quest=mission.GetComponent<Map01Quest>();
+            quest.RestoreStage(Map01Quest.ExtractionStage);
+            var extraction=mission.GetComponentInChildren<Map01Extraction>();
+            extraction.autoContinueToMap2=false;
+            extraction.autoContinueToMap2=false;
+            Assert.IsTrue(extraction.Prepared);
+            // Multiple manual camera renders must skin from the latest procedural contacts.
+            foreach(var mesh in Object.FindObjectsByType<SkinnedMeshRenderer>(FindObjectsSortMode.None))
+                mesh.forceMatrixRecalculationPerRender=true;
+            var takes=new[]{extraction.radio,extraction.seatedReady,extraction.seatedFire,extraction.seatedReload,
+                extraction.lowerWeapon,extraction.board,extraction.sit,extraction.travel}.Concat(extraction.hungClips);
+            foreach(var take in takes) {Assert.IsTrue(take.humanMotion,take.name);Assert.AreEqual(30,take.frameRate,take.name);}
+            Assert.That(extraction.radio.length,Is.EqualTo(7).Within(.04f));
+            Assert.That(extraction.board.length,Is.EqualTo(6).Within(.04f));
+            Assert.AreEqual(4,mission.Enemies.Count(e=>e.name.StartsWith("Extraction guard ")));
+            Assert.AreEqual(1,Object.FindObjectsByType<Animator>(FindObjectsSortMode.None).Count(a=>a.name==Map01OpeningCutscene.CommanderVisualName));
+            yield return WaitGameSeconds(.2f);
+            var hung=mission.hung.GetComponentInChildren<Animator>();
+            Debug.Log("Extraction scale Nam="+mission.player.GetComponentInChildren<Animator>().transform.lossyScale+" Hung="+hung.transform.lossyScale);
+            mission.gameCamera.transform.SetPositionAndRotation(new Vector3(6,3,83),Quaternion.LookRotation(new Vector3(1,.6f,87)-new Vector3(6,3,83)));
+            Capture(mission,"seated-allies");
+            var previousPosition=mission.gameCamera.transform.position;var previousRotation=mission.gameCamera.transform.rotation;
+            mission.gameCamera.transform.SetPositionAndRotation(new Vector3(.1f,1.8f,83.5f),Quaternion.LookRotation(new Vector3(1.55f,.8f,85.4f)-new Vector3(.1f,1.8f,83.5f)));
+            Capture(mission,"waiting-hands-close");
+            var gripLog=new System.Collections.Generic.List<string>();
+            foreach(var a in new[]{hung,Object.FindObjectsByType<Animator>(FindObjectsSortMode.None).First(a=>a.name==Map01OpeningCutscene.CommanderVisualName)}) {
+                var g=a.GetComponent<Map01Rifle>();var h=a.GetBoneTransform(HumanBodyBones.LeftHand);
+                var tip=h.Cast<Transform>().First(t=>t.name.EndsWith("_end"));
+                Assert.Less(Vector3.Distance(Vector3.Lerp(h.position,tip.position,.45f),g.support.position),.025f,a.name+" palm must reach rifle support");
+                gripLog.Add("PALM_ERROR="+Vector3.Distance(Vector3.Lerp(h.position,tip.position,.45f),g.support.position));
+                gripLog.Add(a.name+" hand="+h.position+" support="+g.support.position+" children="+string.Join(",",h.Cast<Transform>().Select(t=>t.name+":"+t.position)));
+                foreach(var r in g.GetComponentsInChildren<Renderer>().Where(r=>r.name.Contains("mag") || r.name.Contains("grip")))gripLog.Add(r.name+" gunlocal="+g.weapon.transform.InverseTransformPoint(r.bounds.center));
+            }
+            File.WriteAllLines("Logs/Extraction/grip-metrics.txt",gripLog);
+            mission.gameCamera.transform.SetPositionAndRotation(previousPosition,previousRotation);
+            Assert.That(hung.GetBoneTransform(HumanBodyBones.Hips).position.y,Is.InRange(.28f,.43f),"Hung must actually sit at bench height.");
+            foreach(var enemy in mission.Enemies) enemy.GetComponent<Health>().TakeDamage(99999,enemy.transform.position,null);
+            var cc=mission.player.GetComponent<CharacterController>();cc.enabled=false;
+            mission.StartCoroutine(RecordVideo(mission,extraction));
+            mission.player.position=extraction.approach+Vector3.left*.25f;cc.enabled=true;
+            yield return WaitGameSeconds(.3f);
+            var lowerPos=mission.gameCamera.transform.position;var lowerRot=mission.gameCamera.transform.rotation;
+            mission.gameCamera.transform.SetPositionAndRotation(new Vector3(.1f,1.8f,83.5f),Quaternion.LookRotation(new Vector3(1.55f,.8f,85.4f)-new Vector3(.1f,1.8f,83.5f)));
+            Capture(mission,"lowering-hands");
+            mission.gameCamera.transform.SetPositionAndRotation(lowerPos,lowerRot);
+            Assert.AreEqual("Nam_Rifle_Run",extraction.BoardingRunClip.name);
+            Assert.IsTrue(mission.Cinematic);
+            Assert.AreEqual(Map01Quest.BoardingStage,quest.Stage);
+            Assert.IsFalse(mission.GetComponent<Map01SaveSystem>().SaveSlot(0,out var saveError,true),saveError);
+            yield return WaitGameSeconds(.8f);
+            Capture(mission,"boarding-start");
+            yield return WaitGameSeconds(1.1f);
+            Capture(mission,"boarding-shelf");
+            yield return WaitGameSeconds(1.8f);
+            Capture(mission,"seating");
+            Assert.AreNotEqual(Map01Quest.CompleteStage,quest.Stage);
+            yield return WaitGameSeconds(4);
+            Capture(mission,"departure");
+            var diagnostic=new System.Collections.Generic.List<string>();
+            foreach(var actor in new[]{mission.player.GetComponentInChildren<Animator>(),Object.FindObjectsByType<Animator>(FindObjectsSortMode.None).First(a=>a.name==Map01OpeningCutscene.CommanderVisualName)}) {
+                var origin=actor.GetBoneTransform(HumanBodyBones.Chest).position;
+                diagnostic.Add(actor.name+" forward="+actor.transform.forward+" chest="+origin);
+                foreach(var enemy in Object.FindObjectsByType<Map01EnemyController>(FindObjectsSortMode.None).Where(e=>e.Alive)) {
+                    var end=enemy.transform.position+Vector3.up*1.3f;
+                    bool safe=(bool)typeof(Map01Extraction).GetMethod("SafeShot",BindingFlags.NonPublic|BindingFlags.Instance).Invoke(extraction,new object[]{actor,origin,end});
+                    diagnostic.Add(enemy.name+" pos="+end+" safe="+safe+" hits="+string.Join(",",Physics.RaycastAll(origin,(end-origin).normalized,Vector3.Distance(origin,end),mission.ObstructionMask,QueryTriggerInteraction.Ignore).OrderBy(h=>h.distance).Select(h=>h.transform.name+":"+h.distance)));
+                }
+            }
+            File.WriteAllLines("Logs/Extraction/cover-diagnostics.txt",diagnostic);
+
+            var cameraPosition=mission.gameCamera.transform.position;var cameraRotation=mission.gameCamera.transform.rotation;
+            var rower=mission.hung.position;mission.gameCamera.transform.SetPositionAndRotation(rower+new Vector3(3,1.6f,-1),Quaternion.LookRotation(rower+Vector3.up*.7f-(rower+new Vector3(3,1.6f,-1))));
+            Capture(mission,"rowing-close");mission.gameCamera.transform.SetPositionAndRotation(cameraPosition,cameraRotation);
+            File.WriteAllLines("Logs/Extraction/paddle-diagnostics.txt",Object.FindObjectsByType<MeshRenderer>(FindObjectsSortMode.None).Where(r=>r.name.StartsWith("Oar ")).Select(r=>r.name+" active="+r.gameObject.activeInHierarchy+" enabled="+r.enabled+" hidden="+r.forceRenderingOff+" position="+r.transform.position+" bounds="+r.bounds));
+            Assert.AreEqual(Map01Extraction.Phase.Departing,extraction.CurrentPhase);
+            yield return WaitGameSeconds(19);
+            Assert.IsTrue(extraction.HasDeparted);
+            // The bank was cleared above. A pursuer behind the jetty may be visible only to
+            // the higher-seated commander; do not demand that Nam shoot through solid decking.
+            // SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot separately requires
+            // BOTH actors to fire when its living targets have a clear line.
+            Assert.Greater(extraction.NamCoverShots+extraction.CommanderCoverShots,0,"A party member with a safe line must cover departure.");
+            Assert.Greater(extraction.CoverKills,0,"Cover fire must actually kill a living enemy.");
+            File.WriteAllText("Logs/Extraction/cover-results.txt",$"Nam shots={extraction.NamCoverShots}, Commander shots={extraction.CommanderCoverShots}, Kills={extraction.CoverKills}");
+            Assert.AreEqual(Map01Quest.CompleteStage,quest.Stage);
+            Assert.IsNotNull(ForestSaveSlots.Read(ForestSaveSlots.AutoSlot));
+            Assert.AreEqual(mission.player.parent,mission.hung.parent);
+            Assert.Greater(Vector3.Distance(mission.player.position,extraction.approach),8);
+            Assert.AreEqual("Map 1",UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            Capture(mission,"complete");
+            ScreenCapture.CaptureScreenshot("Logs/Extraction/completion-ui.png");yield return WaitGameSeconds(1);
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
+        public IEnumerator RadioSkipAndExtractionCheckpointAreIdempotent()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();yield return null;IsolateSaves();
+            var mission=Object.FindFirstObjectByType<Map01Mission>();
+            var quest=mission.GetComponent<Map01Quest>();
+            foreach(var enemy in mission.Enemies)enemy.enabled=false;
+            quest.RestoreStoryStage(Map01Quest.BossStage,new Map01Story.Snapshot{rescueAccepted=true,supplies=true,suppliesDelivered=true,supplyReported=true,radioDisabled=true,commanderAreaReached=true,commanderConfirmed=true,commanderReported=true});
+            var boss=mission.Enemies.First(e=>e.IsBoss);
+            boss.GetComponent<Health>().TakeDamage(99999,boss.transform.position,null);
+            mission.GetComponent<Map01EndingCutscene>().Skip();
+            Assert.AreEqual(Map01Quest.ReportBossStage,quest.Stage);
+            quest.CompleteBossDefeat(true);quest.CompleteBossDefeat(false);
+            Assert.AreEqual(Map01Quest.ReportBossStage,quest.Stage,"Neither natural nor skipped completion may bypass the report.");
+            Assert.IsNull(mission.GetComponentInChildren<Map01Extraction>(),"Departure order must wait for the actual radio report.");
+            Assert.IsTrue(mission.GetComponent<Map01Story>().TryInteract());
+            Assert.AreEqual("m1_ops_retreat_01",mission.GetComponent<DialogueVoice>().CurrentId);
+            yield return WaitGameSeconds(1.1f);mission.GetComponent<Map01StoryDialogue>().Close(true);
+            var extraction=mission.GetComponentInChildren<Map01Extraction>();
+            extraction.autoContinueToMap2=false;
+            extraction.Skip();extraction.Skip();
+            Assert.AreEqual(Map01Quest.ExtractionStage,quest.Stage);
+            Assert.IsFalse(mission.Cinematic);
+            var guard=mission.Enemies.First(e=>e.name=="Extraction guard 0");
+            guard.GetComponent<Health>().TakeDamage(99999,guard.transform.position,null);
+            yield return null;
+            Assert.IsTrue(mission.GetComponent<Map01SaveSystem>().SaveSlot(0,out var saveError,true),saveError);
+            ForestSaveSlots.Entry saved=ForestSaveSlots.Read(0);
+            Assert.IsTrue(saved.checkpoint.Contains("Extraction guard 0"));
+            Map01SaveSystem.BeginGame(0);
+            yield return WaitGameSeconds(.7f);
+            mission=Object.FindFirstObjectByType<Map01Mission>();quest=mission.GetComponent<Map01Quest>();
+            Assert.AreEqual(Map01Quest.ExtractionStage,quest.Stage);
+            Assert.AreEqual(4,mission.Enemies.Count(e=>e.name.StartsWith("Extraction guard ")));
+            Assert.IsFalse(mission.Enemies.First(e=>e.name=="Extraction guard 0").Alive);
+            extraction=mission.GetComponentInChildren<Map01Extraction>();
+            Assert.IsTrue(mission.Enemies.Any(e=>e.Alive),"This scenario boards while blockers remain alive.");
+            var cc=mission.player.GetComponent<CharacterController>();cc.enabled=false;mission.player.position=extraction.approach;cc.enabled=true;
+            yield return WaitGameSeconds(.3f);
+            yield return HoldEscape();
+            Assert.IsTrue(extraction.HasDeparted,"Holding Escape must complete boarding without a direct Skip call.");
+            extraction.Skip();
+            Assert.AreEqual(Map01Quest.CompleteStage,quest.Stage);
+            Assert.IsTrue(extraction.HasDeparted);
+            quest.RestoreStage(Map01Quest.CompleteStage);
+            Assert.AreEqual(Map01Quest.CompleteStage,quest.Stage);
+            yield return new ExitPlayMode();
+        }
+        [UnityTest]
+        public IEnumerator SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();yield return null;IsolateSaves();
+            var mission=Object.FindFirstObjectByType<Map01Mission>();
+            mission.GetComponent<Map01Quest>().RestoreStage(Map01Quest.ExtractionStage);
+            var extraction=mission.GetComponentInChildren<Map01Extraction>();
+            extraction.autoContinueToMap2=false;
+            var guards=mission.Enemies.Where(e=>e.name=="Extraction guard 0" || e.name=="Extraction guard 1").ToArray();
+            foreach(var enemy in mission.Enemies.Except(guards))enemy.GetComponent<Health>().TakeDamage(99999,enemy.transform.position,null);
+            for(int i=0;i<guards.Length;i++) {
+                Assert.IsTrue(UnityEngine.AI.NavMesh.SamplePosition(new Vector3(-4,2,90+i*2),out var hit,5,UnityEngine.AI.NavMesh.AllAreas));
+                guards[i].GetComponent<UnityEngine.AI.NavMeshAgent>().Warp(hit.position);
+            }
+            int ammo=mission.ModernCombat.RoundsInMagazine;
+            mission.player.GetComponent<CharacterController>().enabled=false;mission.player.position=extraction.approach;mission.player.GetComponent<CharacterController>().enabled=true;
+            yield return WaitGameSeconds(29);
+            Assert.IsTrue(extraction.HasDeparted);
+            foreach(var guard in guards) {
+                Assert.IsFalse(guard.Alive,guard.name+" must be killed by covering fire.");
+                Assert.IsNull(guard.GetComponent<ForestPoint>(),"Cinematic kills must not generate loot.");
+            }
+            Assert.Greater(extraction.NamCoverShots,0);Assert.Greater(extraction.CommanderCoverShots,0);
+            Assert.AreEqual(ammo,mission.ModernCombat.RoundsInMagazine);
+            Capture(mission,"live-guards-defeated");
+            File.WriteAllText("Logs/Extraction/live-cover-results.txt",$"Nam={extraction.NamCoverShots} Commander={extraction.CommanderCoverShots} Kills={extraction.CoverKills} Ammo={ammo}");
+            yield return new ExitPlayMode();
+        }
+
+        private static IEnumerator RecordVideo(Map01Mission mission,Map01Extraction sequence)
+        {
+            string folder="Logs/Extraction/RevisionFrames";Directory.CreateDirectory(folder);
+            var capturePump=mission.gameObject.AddComponent<ExtractionCapturePump>();
+            int frame=0;float next=Time.unscaledTime;
+            while(!sequence.HasDeparted) {
+                if(Time.unscaledTime>=next) {
+                    next+=.1f;
+                    bool rendered=false;
+                    capturePump.draw=()=> {
+                    var camera=mission.gameCamera;var previous=camera.targetTexture;var active=RenderTexture.active;
+                    var target=RenderTexture.GetTemporary(960,540,24);var texture=new Texture2D(960,540,TextureFormat.RGB24,false);
+                    try {
+                        // EditMode coroutines can capture between Update and LateUpdate; finish the procedural contacts first.
+                        var extraction=mission.GetComponentInChildren<Map01Extraction>();
+            if(extraction!=null)extraction.autoContinueToMap2=false;
+                        if(extraction!=null)extraction.SendMessage("LateUpdate",SendMessageOptions.DontRequireReceiver);
+                        camera.targetTexture=target;camera.Render();RenderTexture.active=target;
+                        texture.ReadPixels(new Rect(0,0,960,540),0,0);texture.Apply();
+                        File.WriteAllBytes(folder+"/frame-"+(frame++).ToString("D05")+".jpg",texture.EncodeToJPG(85));
+                        if(sequence.CurrentPhase==Map01Extraction.Phase.Departing) {
+                            string closeFolder="Logs/Extraction/RowingCloseFrames";Directory.CreateDirectory(closeFolder);
+                            var position=camera.transform.position;var rotation=camera.transform.rotation;
+                            var root=mission.hung.parent;var focus=mission.hung.position+root.up*.72f;
+                            camera.transform.SetPositionAndRotation(focus+root.right*2.7f+root.up*.65f-root.forward*.6f,Quaternion.LookRotation(-root.right*2.7f-root.up*.65f+root.forward*.6f));
+                            camera.Render();texture.ReadPixels(new Rect(0,0,960,540),0,0);texture.Apply();
+                            File.WriteAllBytes(closeFolder+"/frame-"+frame.ToString("D05")+".jpg",texture.EncodeToJPG(85));
+                            var combatFolder="Logs/Extraction/CoverFireFrames";Directory.CreateDirectory(combatFolder);
+                            var combatFocus=mission.player.position+root.forward*.8f+root.up*.9f;
+                            var combatCamera=combatFocus+root.right*3.8f+root.up*1.5f-root.forward*1.3f;
+                            camera.transform.SetPositionAndRotation(combatCamera,Quaternion.LookRotation(combatFocus-combatCamera));
+                            camera.Render();texture.ReadPixels(new Rect(0,0,960,540),0,0);texture.Apply();
+                            File.WriteAllBytes(combatFolder+"/frame-"+frame.ToString("D05")+".jpg",texture.EncodeToJPG(85));
+                            File.AppendAllText("Logs/Extraction/cover-frame-events.txt",frame+" Nam="+sequence.NamCoverShots+" Commander="+sequence.CommanderCoverShots+" Kills="+sequence.CoverKills+"\n");
+                            camera.transform.SetPositionAndRotation(position,rotation);
+                        }
+                    } finally {camera.targetTexture=previous;RenderTexture.active=active;RenderTexture.ReleaseTemporary(target);Object.Destroy(texture);rendered=true;}
+                    };
+                    yield return new WaitUntil(()=>rendered);
+                }
+                yield return null;
+            }
+        }
+
+        [UnityTest]
+        public IEnumerator RiflesAndAimSurviveRadioHandoff()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();yield return null;IsolateSaves();
+            var mission=Object.FindFirstObjectByType<Map01Mission>();
+            foreach(var enemy in mission.Enemies) {
+                var rifles=enemy.GetComponentsInChildren<Weapon>(true).Where(w=>w.IsGun).ToArray();
+                Assert.AreEqual(1,rifles.Length,enemy.name);Assert.IsTrue(rifles[0].gameObject.activeInHierarchy,enemy.name);
+            }
+            var actor=mission.player.GetComponentInChildren<Animator>();
+            int ammo=mission.ModernCombat.RoundsInMagazine;
+            var routing=RouteInputToGame();var mouse=InputSystem.AddDevice<Mouse>();
+            var state=new MouseState();state=state.WithButton(MouseButton.Right);
+            InputSystem.QueueStateEvent(mouse,state);InputSystem.Update();
+            var sequence=Map01Extraction.Get(mission);sequence.Begin(true);
+            yield return WaitGameSeconds(.4f);sequence.Skip();yield return WaitGameSeconds(.2f);
+            Assert.IsTrue(mission.ModernCombat.IsAiming);
+            Assert.IsTrue(actor.GetBool(PlayerCombat.AnimatorParams.Aiming));
+            Assert.AreEqual((int)mission.ModernCombat.EquippedKind,actor.GetInteger(PlayerCombat.AnimatorParams.Weapon));
+            Assert.AreEqual(ammo,mission.ModernCombat.RoundsInMagazine);
+            InputSystem.RemoveDevice(mouse);RestoreInputRouting(routing);
+            yield return new ExitPlayMode();
+        }
+
+        [UnityTest]
+        public IEnumerator GroundedMatchingActorsAndBoardingWithAllEnemiesAlive()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();yield return null;IsolateSaves();
+            var mission=Object.FindFirstObjectByType<Map01Mission>();var quest=mission.GetComponent<Map01Quest>();
+            quest.RestoreStage(Map01Quest.BriefingStage);
+            mission.ModernPlayer.enabled=false;mission.ModernCombat.enabled=false;
+            mission.player.GetComponent<CharacterController>().enabled=false;
+            mission.hung.GetComponent<UnityEngine.AI.NavMeshAgent>().enabled=false;
+            var points=new[]{mission.player.position,mission.Interactables.First(p=>p.kind==ForestPointKind.Supplies).transform.position,new Vector3(20,4,32)};
+            int index=0;
+            foreach(var point in points) {
+                var namPosition=point+Vector3.right*2;
+                if(Physics.Raycast(namPosition+Vector3.up*3,Vector3.down,out var nHit,8,mission.ObstructionMask,QueryTriggerInteraction.Ignore))namPosition.y=nHit.point.y;
+                var hungPosition=namPosition+Vector3.right*1.5f;
+                if(Physics.Raycast(hungPosition+Vector3.up*3,Vector3.down,out var hHit,8,mission.ObstructionMask,QueryTriggerInteraction.Ignore))hungPosition.y=hHit.point.y;
+                mission.player.SetPositionAndRotation(namPosition,Quaternion.identity);mission.hung.SetPositionAndRotation(hungPosition,Quaternion.identity);
+                yield return WaitGameSeconds(.5f);
+                var nam=mission.player.GetComponentInChildren<Animator>();var hung=mission.hung.GetComponentInChildren<Animator>();
+                float namSole=Sole(nam),hungSole=Sole(hung);
+                float namHeight=nam.GetBoneTransform(HumanBodyBones.Head).position.y-namSole;
+                float hungHeight=hung.GetBoneTransform(HumanBodyBones.Head).position.y-hungSole;
+                var focus=(namPosition+hungPosition)/2+Vector3.up;
+                mission.gameCamera.transform.SetPositionAndRotation(focus+new Vector3(1,1,4),Quaternion.LookRotation(-new Vector3(1,1,4)));
+                Capture(mission,"standing-"+index);
+                File.WriteAllText("Logs/Extraction/standing-"+index+"-metrics.txt","Nam="+namHeight+" Hung="+hungHeight+" hung sole="+hungSole+" surface="+hungPosition.y);
+                Assert.That(Mathf.Abs(hungHeight/namHeight-1),Is.LessThanOrEqualTo(.02f),"Matching standing stature");
+                Assert.That(Mathf.Abs(hungSole-hungPosition.y),Is.LessThanOrEqualTo(.02f),"Boot sole contact");
+                index++;
+            }
+            quest.RestoreStage(Map01Quest.ExtractionStage);
+            var extraction=mission.GetComponentInChildren<Map01Extraction>();
+            extraction.autoContinueToMap2=false;
+            Assert.AreEqual(4,mission.Enemies.Count(e=>e.name.StartsWith("Extraction guard ")&&e.Alive));
+            mission.player.position=extraction.approach;yield return WaitGameSeconds(.3f);
+            Assert.IsTrue(mission.Cinematic);extraction.Skip();Assert.IsTrue(extraction.HasDeparted);
+            yield return new ExitPlayMode();
+        }
+        private static float Sole(Animator actor)
+        {
+            float y=float.PositiveInfinity;
+            foreach(var renderer in actor.GetComponentsInChildren<SkinnedMeshRenderer>()) {
+                // BakeMesh leaves the renderer's scale out of the vertices' frame but not out of their size: place them
+                // without scaling again, or Hùng (modelled smaller, scaled 1.08 to Nam's height) measures short.
+                var mesh=new Mesh();renderer.BakeMesh(mesh);
+                var frame=Matrix4x4.TRS(renderer.transform.position,renderer.transform.rotation,Vector3.one);
+                foreach(var vertex in mesh.vertices)y=Mathf.Min(y,frame.MultiplyPoint3x4(vertex).y);
+                Object.Destroy(mesh);
+            }
+            return y;
+        }
+
+        private static void IsolateSaves()
+        {
+            UnityEditor.ShaderUtil.allowAsyncCompilation=false;
+            string isolatedRoot="Logs/Extraction/TestSaves/"+System.Guid.NewGuid().ToString("N"); Directory.CreateDirectory(isolatedRoot);
+            typeof(ForestSaveSlots).GetField("storageRoot",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,Path.GetFullPath(isolatedRoot));
+        }
+        private static IEnumerator HoldEscape()
+        {
+            var routing=RouteInputToGame();var keyboard=InputSystem.AddDevice<Keyboard>();
+            try {
+                InputSystem.QueueStateEvent(keyboard,new KeyboardState());InputSystem.Update();
+                yield return WaitGameSeconds(.1f);
+                InputSystem.QueueStateEvent(keyboard,new KeyboardState(Key.Escape));InputSystem.Update();
+                yield return WaitGameSeconds(1.2f);
+                InputSystem.QueueStateEvent(keyboard,new KeyboardState());InputSystem.Update();
+            } finally {InputSystem.RemoveDevice(keyboard);RestoreInputRouting(routing);}
+        }
+        private static void Capture(Map01Mission mission,string name)
+        {
+            Directory.CreateDirectory("Logs/Extraction");
+            var camera=mission.gameCamera;var previous=camera.targetTexture;var active=RenderTexture.active;
+            var target=RenderTexture.GetTemporary(1280,720,24);var image=new Texture2D(1280,720,TextureFormat.RGB24,false);
+            try {
+                // EditMode coroutines can capture between Update and LateUpdate; finish the procedural contacts first.
+                        var extraction=mission.GetComponentInChildren<Map01Extraction>();
+            if(extraction!=null)extraction.autoContinueToMap2=false;
+                        if(extraction!=null)extraction.SendMessage("LateUpdate",SendMessageOptions.DontRequireReceiver);
+                        camera.targetTexture=target;camera.Render();RenderTexture.active=target;
+                image.ReadPixels(new Rect(0,0,1280,720),0,0);image.Apply();
+                File.WriteAllBytes("Logs/Extraction/"+name+".png",image.EncodeToPNG());
+                var actors=mission.player.GetComponentsInChildren<Animator>().Concat(mission.hung.GetComponentsInChildren<Animator>());
+                File.WriteAllLines("Logs/Extraction/"+name+"-bones.txt",actors.SelectMany(a=>new[]{HumanBodyBones.Hips,HumanBodyBones.LeftFoot,HumanBodyBones.RightFoot}.Select(b=>a.name+" "+b+" "+a.GetBoneTransform(b).position)));
+            } finally {camera.targetTexture=previous;RenderTexture.active=active;RenderTexture.ReleaseTemporary(target);Object.DestroyImmediate(image);}
+        }
+    }
+}

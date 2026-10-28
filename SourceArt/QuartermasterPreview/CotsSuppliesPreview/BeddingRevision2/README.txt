@@ -1,0 +1,1 @@
+PREVIEW ONLY. Five dark army-green canvas cots. Square camouflage military bedding at head (+Y) only; no foot blanket or separate pillow. Head rail-to-wall clearance 0.030m. Rations/ammunition retained unchanged in source blend. No Unity assets modified.

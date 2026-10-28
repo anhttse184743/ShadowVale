@@ -1,0 +1,1 @@
+^ShadowVale\.Map01\.Tests\.MosinBalanceTests\.;^ShadowVale\.Map01\.Tests\.AiIntegrationTests\.WithQieaTheCampIsPlannedByThePythonSidecar$;^ShadowVale\.Tests\.EditMode\.Coordination\.RemoteSolverClientTests\.ALiveSidecarSolvesWithTheRequestedVariant$

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-16 14:59:16Z" end-time="2026-10-16 15:00:06Z" duration="49,7178002">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="313" result="Passed" start-time="2026-10-16 14:59:16Z" end-time="2026-10-16 15:00:06Z" duration="49.717800" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1305" name="ShadowVale.Map01.Tests.dll" fullname="D:/DO_AN_GAME/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="235" result="Passed" start-time="2026-10-16 14:59:17Z" end-time="2026-10-16 15:00:06Z" duration="48.965129" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="202460" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1306" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="235" result="Passed" start-time="2026-10-16 14:59:17Z" end-time="2026-10-16 15:00:06Z" duration="48.921536" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1307" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="235" result="Passed" start-time="2026-10-16 14:59:17Z" end-time="2026-10-16 15:00:06Z" duration="48.875411" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1308" name="Tests" fullname="ShadowVale.Map01.Tests" runstate="Runnable" testcasecount="235" result="Passed" start-time="2026-10-16 14:59:17Z" end-time="2026-10-16 15:00:06Z" duration="48.824424" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1111" name="Map01OperationsTests" fullname="ShadowVale.Map01.Tests.Map01OperationsTests" classname="ShadowVale.Map01.Tests.Map01OperationsTests" runstate="Runnable" testcasecount="16" result="Passed" start-time="2026-10-16 14:57:50Z" end-time="2026-10-16 14:58:31Z" duration="40.466756" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1128" name="RadioFailureCallsOnlyOneSavedSquadAndSuccessDoesNotExtract" fullname="ShadowVale.Map01.Tests.Map01OperationsTests.RadioFailureCallsOnlyOneSavedSquadAndSuccessDoesNotExtract" methodname="RadioFailureCallsOnlyOneSavedSquadAndSuccessDoesNotExtract" classname="ShadowVale.Map01.Tests.Map01OperationsTests" runstate="Runnable" seed="1161155489" result="Passed" start-time="2026-10-16 14:57:04Z" end-time="2026-10-16 14:58:31Z" duration="87.088078" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1222" name="RescueMotionTests" fullname="ShadowVale.Map01.Tests.RescueMotionTests" classname="ShadowVale.Map01.Tests.RescueMotionTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-16 14:59:17Z" end-time="2026-10-16 15:00:06Z" duration="48.744446" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1223" name="UntieAndRiseKeepTheRenderedSkinOnTheJetty" fullname="ShadowVale.Map01.Tests.RescueMotionTests.UntieAndRiseKeepTheRenderedSkinOnTheJetty" methodname="UntieAndRiseKeepTheRenderedSkinOnTheJetty" classname="ShadowVale.Map01.Tests.RescueMotionTests" runstate="Runnable" seed="1157849670" result="Passed" start-time="2026-10-16 14:58:31Z" end-time="2026-10-16 15:00:06Z" duration="94.951354" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/Admin/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

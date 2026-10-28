@@ -1,0 +1,6 @@
+EquipmentShelf visual bounds=Center: (-57.54, 1.06, -59.10), Extents: (0.29, 0.94, 0.83) gap=n/a
+EquipmentShelf Row 2 visual bounds=Center: (-57.54, 1.06, -61.05), Extents: (0.29, 0.94, 0.83) gap=0.300
+EquipmentShelf Row 3 visual bounds=Center: (-57.54, 1.06, -63.00), Extents: (0.29, 0.94, 0.83) gap=0.300
+EquipmentShelf Row 4 visual bounds=Center: (-57.54, 1.06, -64.95), Extents: (0.29, 0.94, 0.82) gap=0.300
+EquipmentShelf Row 5 visual bounds=Center: (-57.54, 1.06, -66.90), Extents: (0.29, 0.94, 0.82) gap=0.300
+PASS five visible cabinets, no overlaps, wall margins=1.075 / 1.075

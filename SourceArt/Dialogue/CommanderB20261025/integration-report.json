@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-25",
+  "cost": 0,
+  "updatedCommanderCues": 49,
+  "casting": {
+    "Chỉ huy": 27,
+    "Anh Thành": 22
+  },
+  "originalRunwayEnemies": 15,
+  "enemyFilesChanged": false,
+  "openingSubtitleStarts": [
+    0.0,
+    4.076083333333333,
+    10.50175
+  ],
+  "tests": "Passed",
+  "testCount": 12,
+  "testCases": [
+    {
+      "name": "ShadowVale.Map01.Tests.C3DialogueVoiceTests.EveryApprovedRetakeHasExactCaptionChannelAndImportedAudio",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3DialogueVoiceTests.SourceAndRuntimeCatalogStayIdenticalAfterPrepare",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.EveryStoryLineHasVietnameseAudioAndOnlyRadioIsFiltered",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.LegacyBriefingUsesAlignedVoiceAssets",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.FullGameAudioTests.ApprovedCommanderRecordingsCompletePlayback",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.FullGameAudioTests.CastingDistinguishesYoungNamMiddleAgedHungWomanLanhAndElderSau",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.FullGameAudioTests.EnemyVoicesUseOnlyOriginalRunwayRecordings",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.FullGameAudioTests.EntireCurrentMapTwoScriptHasExactVoicesIncludingFinale",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.FullGameAudioTests.EveryCatalogCueHasAnImportedAudibleClipWithCorrectDuration",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01StoryVoiceSupplementTests.EightSupplementLinesHaveMatchingCleanAudioAndExistingCharacterVoices",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01StoryVoiceTests.AllApprovedLinesHaveExactVoicesAndCleanMasters",
+      "result": "Passed"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests.AllDayOneAndNightOneSpokenCuesHaveExactDedicatedRecordings",
+      "result": "Passed"
+    }
+  ],
+  "protectedClipReferences": 215,
+  "unchangedText": true
+}

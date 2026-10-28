@@ -1,0 +1,5 @@
+PASS bank coverage: 96494 samples at 0.5 m along / 0.125 m across
+PASS water edge buried under bank, minimum height clearance 0.555 m
+Water vertices: 19649; maximum rendered width: 21.21 m
+PASS water level preserved at -0.25 m; terrain and colliders unchanged
+PASS both URP shaders compiled and rendered at three river locations

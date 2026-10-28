@@ -1,0 +1,16 @@
+[
+  {
+    "side": "Left",
+    "original_vertices": 7726,
+    "refined_vertices": 30838,
+    "triangles": 61676,
+    "bones": 58
+  },
+  {
+    "side": "Right",
+    "original_vertices": 7724,
+    "refined_vertices": 30759,
+    "triangles": 61504,
+    "bones": 58
+  }
+]

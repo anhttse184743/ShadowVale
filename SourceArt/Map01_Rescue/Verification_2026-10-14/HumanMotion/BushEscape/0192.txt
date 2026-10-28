@@ -1,0 +1,8 @@
+Escape
+Nam actor (0.00, 0.00, 0.00)
+Enemy actor (0.00, 0.00, 0.00)
+Left torso contact 0.9444207
+Head penetration 0
+Right contact 0.9017487
+Embracing contact 0.911894
+Defender embracing-arm contact 0.8257664

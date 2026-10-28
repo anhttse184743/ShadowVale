@@ -1,0 +1,188 @@
+{
+  "cost": 0,
+  "totalCues": 271,
+  "updatedCues": 70,
+  "casting": {
+    "Hùng": 67,
+    "Ông Sáu": 3
+  },
+  "enemyCuesUnchanged": 26,
+  "changedFiles": [
+    "Assets\\Resources\\Dialogue\\VI\\m1_story_15.wav",
+    "Assets\\Resources\\Dialogue\\VI\\m1_rescue_freed_clean.wav",
+    "Assets\\Resources\\Dialogue\\VI\\m1_rescue_whisper_hint.wav",
+    "Assets\\Resources\\Dialogue\\VI\\m1_rescue_delivered_clean.wav",
+    "Assets\\Resources\\Dialogue\\VI\\m1_depart_bank_reply.wav",
+    "Assets\\Resources\\Dialogue\\VI\\m1_board_invite_current.wav",
+    "Assets\\Resources\\Dialogue\\VI\\m1_v2_rescue_return_02_clean.wav",
+    "Assets\\Resources\\Dialogue\\VI\\m1_ops_supply_order_02_clean.wav",
+    "Assets\\Resources\\Dialogue\\VI\\m1_ops_handoff_02_clean.wav",
+    "Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_bandage_02.wav",
+    "Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_medicine_01.wav",
+    "Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_day1report_04.wav",
+    "Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_day1report_06.wav",
+    "Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_01.wav",
+    "Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_03.wav",
+    "Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_05.wav",
+    "Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_08.wav",
+    "Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_10.wav",
+    "Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_12.wav",
+    "Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_duck_02.wav",
+    "Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_nightwatch_02.wav",
+    "Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_nightwatch_04.wav",
+    "Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2_arrival_sight.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_scoutorder_03.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_scoutorder_05.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_scoutreturn_03.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_antenna_01.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_antenna_02.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_lights_02.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_lights_03.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_lights_05.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_lights_06.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_reconcile_02.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_reconcile_03.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_reconcile_05.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_reconcile_06.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_reconcile_08.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_demolition_02.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_families_01.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_families_02.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_families_03.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_supper_01.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_supper_03.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_supper_05.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_lastorder_05.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_lastorder_07.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_attack_01.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_fire_02.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_boatsafe_01.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_wound_05.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_ammo_01.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_alive_02.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_coordinates_01.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_coordinates_05.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_farewell_02.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_farewell_04.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_farewell_06.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_farewell_08.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_farewell_09.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_farewell_11.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_sacrifice_02.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_prepare_03.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_family_rescue_03.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_breakout_03.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2_departure_02.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\free_literal_75d2ff10e751.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\free_literal_3fdef854373d.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\free_literal_7366ec68ae7c.wav",
+    "Assets\\Resources\\Dialogue\\FullGameFree20261023\\m2v3_sacrifice_02.wav",
+    "Assets\\Resources\\Dialogue\\Map02DayOneFree\\m2v3_promise_05b.wav",
+    "Assets\\Resources\\Map02DayOne\\hung_invitation.wav",
+    "Assets/Resources/Dialogue/voice-catalog.json",
+    "SourceArt/Dialogue/voice-catalog.json",
+    "Assets/_Project/Map01/Tests/FullGameAudioTests.cs",
+    "Assets/_Project/Map01/Tests/Map01StoryVoiceSupplementTests.cs"
+  ],
+  "unityTests": "Passed",
+  "unityTestCount": 15,
+  "unityTestCases": [
+    {
+      "name": "ShadowVale.Map01.Tests.C3DialogueVoiceTests.EveryApprovedRetakeHasExactCaptionChannelAndImportedAudio",
+      "result": "Passed",
+      "duration": "0.509578",
+      "evidence": "Unity_Verified.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3DialogueVoiceTests.SourceAndRuntimeCatalogStayIdenticalAfterPrepare",
+      "result": "Passed",
+      "duration": "0.035327",
+      "evidence": "Unity_Arrival_Retest.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.CurrentOperationDialogueUsesMatchingCharacterRecordings",
+      "result": "Passed",
+      "duration": "0.310835",
+      "evidence": "Unity_Verified.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.EveryStoryLineHasVietnameseAudioAndOnlyRadioIsFiltered",
+      "result": "Passed",
+      "duration": "10.831251",
+      "evidence": "Unity_Arrival_Retest.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.LegacyBriefingUsesAlignedVoiceAssets",
+      "result": "Passed",
+      "duration": "0.814704",
+      "evidence": "Unity_Verified.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.DialogueVoiceTests.PauseAndNewSpeakerDoNotOverlap",
+      "result": "Passed",
+      "duration": "12.833284",
+      "evidence": "Unity_Verified.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.FullGameAudioTests.AircraftProgressSurvivesSaveRoundTripAndDefaultsOffForOldSaves",
+      "result": "Passed",
+      "duration": "0.002182",
+      "evidence": "Unity_Verified.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.FullGameAudioTests.CastingDistinguishesYoungNamMiddleAgedHungWomanLanhAndElderSau",
+      "result": "Passed",
+      "duration": "0.005244",
+      "evidence": "Unity_Arrival_Retest.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.FullGameAudioTests.DayOneEnvironmentAndFlashbackAssetsExist",
+      "result": "Passed",
+      "duration": "0.440462",
+      "evidence": "Unity_Verified.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.FullGameAudioTests.EntireCurrentMapTwoScriptHasExactVoicesIncludingFinale",
+      "result": "Passed",
+      "duration": "0.033934",
+      "evidence": "Unity_Arrival_Retest.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.FullGameAudioTests.EveryCatalogCueCompletesPlaybackAndPauseStopsTheClock",
+      "result": "Passed",
+      "duration": "250.527918",
+      "evidence": "Unity_Verified.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.FullGameAudioTests.EveryCatalogCueHasAnImportedAudibleClipWithCorrectDuration",
+      "result": "Passed",
+      "duration": "0.053666",
+      "evidence": "Unity_Verified.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01StoryVoiceSupplementTests.EightSupplementLinesHaveMatchingCleanAudioAndExistingCharacterVoices",
+      "result": "Passed",
+      "duration": "0.228160",
+      "evidence": "Unity_Verified.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01StoryVoiceTests.AllApprovedLinesHaveExactVoicesAndCleanMasters",
+      "result": "Passed",
+      "duration": "0.559029",
+      "evidence": "Unity_Verified.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02DayOneVoiceCoverageTests.AllDayOneAndNightOneSpokenCuesHaveExactDedicatedRecordings",
+      "result": "Passed",
+      "duration": "0.004498",
+      "evidence": "Unity_Arrival_Retest.xml"
+    }
+  ],
+  "unchangedOtherAudioCues": 201,
+  "arrivalSpeakerCorrections": [
+    "m2_moor_order",
+    "m2_ashore_order"
+  ],
+  "storyScriptsUnchanged": true,
+  "sourceRuntimeCatalogIdentical": true
+}

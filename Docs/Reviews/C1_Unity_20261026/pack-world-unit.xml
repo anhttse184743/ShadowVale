@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-26 04:47:25Z" end-time="2026-10-26 04:47:25Z" duration="0,4671006">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="776" result="Passed" start-time="2026-10-26 04:47:25Z" end-time="2026-10-26 04:47:25Z" duration="0.467101" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1701" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/Admin/.codex/worktrees/map1-boot-investigation-20261023/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="553" result="Passed" start-time="2026-10-26 04:47:25Z" end-time="2026-10-26 04:47:25Z" duration="0.451406" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="16528" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1702" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="553" result="Passed" start-time="2026-10-26 04:47:25Z" end-time="2026-10-26 04:47:25Z" duration="0.444094" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1703" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="553" result="Passed" start-time="2026-10-26 04:47:25Z" end-time="2026-10-26 04:47:25Z" duration="0.437405" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1612" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="553" result="Passed" start-time="2026-10-26 04:47:25Z" end-time="2026-10-26 04:47:25Z" duration="0.429640" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1290" name="Map02ApprovedC1Tests" fullname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests" classname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-26 04:47:25Z" end-time="2026-10-26 04:47:25Z" duration="0.415632" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1293" name="ApprovedMeshesAndDirectTracksMatchTheBlenderSource" fullname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests.ApprovedMeshesAndDirectTracksMatchTheBlenderSource" methodname="ApprovedMeshesAndDirectTracksMatchTheBlenderSource" classname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests" runstate="Runnable" seed="1918132117" result="Passed" start-time="2026-10-26 04:47:25Z" end-time="2026-10-26 04:47:25Z" duration="0.061279" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1291" name="DetachedBackpackRetainsWorldSizeAndSitsNearTheGameplayTorso" fullname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests.DetachedBackpackRetainsWorldSizeAndSitsNearTheGameplayTorso" methodname="DetachedBackpackRetainsWorldSizeAndSitsNearTheGameplayTorso" classname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests" runstate="Runnable" seed="1138777692" result="Passed" start-time="2026-10-26 04:47:25Z" end-time="2026-10-26 04:47:25Z" duration="0.337301" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1292" name="SupportingKneeFitsSolidLandingWithoutMovingTheApprovedHandsOrAnkle" fullname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests.SupportingKneeFitsSolidLandingWithoutMovingTheApprovedHandsOrAnkle" methodname="SupportingKneeFitsSolidLandingWithoutMovingTheApprovedHandsOrAnkle" classname="ShadowVale.Map01.Tests.Map02ApprovedC1Tests" runstate="Runnable" seed="7123064" result="Passed" start-time="2026-10-26 04:47:25Z" end-time="2026-10-26 04:47:25Z" duration="0.005259" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: Logs/Map02Chapter/latest-full-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

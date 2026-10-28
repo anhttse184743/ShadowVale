@@ -1,0 +1,21 @@
+{
+  "preview_only": true,
+  "meeting_long_axis": "X - horizontal",
+  "table_length_m": 3.3,
+  "bench_count": 2,
+  "bench_lengths_m": [
+    3.3,
+    3.3
+  ],
+  "craft_chairs": 2,
+  "workbench_wall_gap_m": 0.03,
+  "head_reference": "Player.fbx Head weighted vertices >0.5; includes original head equipment",
+  "head_reference_width_m": 0.3025084286928177,
+  "helmet_scale_factor": 0.6328628215330914,
+  "helmet_brim_width_m": [
+    -3.4,
+    0.8,
+    0.65
+  ],
+  "location": "Doorway on field-cot side, conceptual context; exact Unity alignment pending approval"
+}

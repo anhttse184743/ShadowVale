@@ -1,0 +1,2 @@
+ShadowVale.Map01.Tests.Map01OperationsTests.RadioFailureCallsOnlyOneSavedSquadAndSuccessDoesNotExtract
+ShadowVale.Map01.Tests.RescueMotionTests.UntieAndRiseKeepTheRenderedSkinOnTheJetty

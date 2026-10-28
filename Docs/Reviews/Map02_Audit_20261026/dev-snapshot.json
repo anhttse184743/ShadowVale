@@ -1,0 +1,675 @@
+{
+  "commit": "3fd2b9a092268c93ead39f8614d0217e2f202aae",
+  "files": [
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02ArrivalC1Import.cs",
+      "lines": 69,
+      "sha256": "645f47cb0abed0425df1540ca367df650ffdccff81338c2db54ae9c2f5dc60a4"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02ArrivalPreview.cs",
+      "lines": 45,
+      "sha256": "35fd1f306be979469fc65c843163812fc883a535057e25443cdd4fb15d7d432a"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02ArrivalSetup.cs",
+      "lines": 70,
+      "sha256": "f4d1c3969427625c82370303873b455db590798dfb45023500e77ccd35f712f7"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02ArrivalSurvey.cs",
+      "lines": 28,
+      "sha256": "7d8d295c3e7d92acb63e142932ca6c2b3a03c25f782808682d51190bc00c7fc1"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02BotanicalLayout.cs",
+      "lines": 93,
+      "sha256": "36c8189d96470f026affea19cf8cc5805f01fdc9d087eb42473d060ba7f5fbb5"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02BridgeRailSetup.cs",
+      "lines": 35,
+      "sha256": "73fc97a175d8a18d568de7f08b177779fe0f18fa4222eac70ff270ba2b16f366"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02CharacterSetup.cs",
+      "lines": 124,
+      "sha256": "7d522f3e2c32a989e189a748910d4409adadbe347276f78a72ca4c066ed088b7"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02ClearingGrass.cs",
+      "lines": 55,
+      "sha256": "ad34b09b039089259c73bbb60cc69eb684ebde91ba33cbae8405eeaca825f03a"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02ClusterLayout.cs",
+      "lines": 127,
+      "sha256": "635b71b33354491d4d5162e676f4945cf44b0d9d3ad3315a1fd5d352b88cfa34"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02ConversationValidation.cs",
+      "lines": 22,
+      "sha256": "5d721c39ecb6474db7d60953639c8550eca0cbb6d9eda753d09750c1bdc8f81d"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02DayOneBuilder.cs",
+      "lines": 106,
+      "sha256": "00077f8bafe607cd95414b0ae5dec6ff1e46f1a98fa650acd15ca37ac3387bc4"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02FieldTrees.cs",
+      "lines": 41,
+      "sha256": "7529ba8011206fcd904cd0e7caa1a22e51a83d4167b55fb9cc8d47eb50f9003d"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02FlashlightAsset.cs",
+      "lines": 38,
+      "sha256": "786f7744832c5347e6b76a3c61703e8d2e2553dae3f1142e6225c901aa839707"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02FlashlightPreview.cs",
+      "lines": 112,
+      "sha256": "769dbbc2ddc1f1674584c9b0c9d5e603c739c51a5556c9fa1333b17089cdad44"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02GroundMeadow.cs",
+      "lines": 122,
+      "sha256": "2250e3721939196dc2ae8de9784d0f42e982ec12356c432e0d5dc1598b21d819"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02JoinedSoil.cs",
+      "lines": 101,
+      "sha256": "5e4feaa42fdc866f8dca66f754626d17606376215ec2150d557583a6cab7eeb9"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02MeadowPolish.cs",
+      "lines": 50,
+      "sha256": "fb96b250ad832a0c20af0b8bf998a7d5a123e5255b546fe99be3bfc976ad03b2"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02ModelSetup.cs",
+      "lines": 171,
+      "sha256": "942f336cf9d61af4150a52a713100493f0af8d05ed226806cace8fd06dd7f134"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02NaturalLayout.cs",
+      "lines": 173,
+      "sha256": "69ae47677477eb1985f292649c80370494a46323e9a8e05877d8b2ff5709ed67"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02ObjectLayout.cs",
+      "lines": 103,
+      "sha256": "ae4d59322c3173ab4261617ba8508b2f979aa85aa9d9c8326ae4aad2a50c5afc"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02PhysicalRiver.cs",
+      "lines": 61,
+      "sha256": "e1e0a0e821f89571491604d4f35c5745092b9f60f5924643dd89fd0465ef4081"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02PlayerPlayValidation.cs",
+      "lines": 55,
+      "sha256": "24e142122e61e2b6bf5cde2e2342217d24ab2eb6443ccb984fc00da2b30fafb2"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02PlayerSetup.cs",
+      "lines": 64,
+      "sha256": "784b2814ff62761af0f8a54ad24f934b2ac91984d6c0efdfa6b9782a4888f4e7"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02PresentationRepair.cs",
+      "lines": 24,
+      "sha256": "7b8cb3aaec843fd2914a28f0aedd03e363c44c702f93497687c19335be752665"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02ReferenceLayout.cs",
+      "lines": 122,
+      "sha256": "a87a275697996850f7da1798be4e8513e2940cd7813e29595f40fd0e53dee8d8"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02RiverPlayCheck.cs",
+      "lines": 42,
+      "sha256": "8a8530c02afa25ec9224f92d405148ad19f5fc66ac647068b07410b510313589"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02RoadsideLayout.cs",
+      "lines": 136,
+      "sha256": "dda649ebcb0b4247e211c5877ff3bc48015ee718d39e8318d73f8018cffa1d04"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02RoutePreview.cs",
+      "lines": 129,
+      "sha256": "13f6cc754ec49aeccddedb105e37c155605de86ad68780c8cde50a3937bd721b"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02ScoutPoseValidation.cs",
+      "lines": 47,
+      "sha256": "ac4b95163fc82cdcb38374899c30d1ad01e43b87fb23374ed39e1af4e1d2f9ea"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02Surroundings.cs",
+      "lines": 225,
+      "sha256": "2b6022f5ee1bcb392b7bc8933e09ac25dc1d588b52bc4ddd8c7df31f15bfd913"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02TestAudit.cs",
+      "lines": 31,
+      "sha256": "f6ee556d75defbae02e1b8cabdd1fdf2c7aef25b2ffc834ac0eb45abdb9eaba6"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02VegetationGrounding.cs",
+      "lines": 255,
+      "sha256": "14231aac2e21625ee216c4e36d633dd89f4c67a7d309554ae04b61c37181ed31"
+    },
+    {
+      "path": "Assets/_Project/Map01/Editor/Map02VillageBuilder.cs",
+      "lines": 152,
+      "sha256": "183226dc4ad26970d4ff94ef6081ab2f854b6707fbf14a91613589c185f98816"
+    },
+    {
+      "path": "Assets/_Project/Map01/Resources/Story/Map02Chapter.json",
+      "lines": 1590,
+      "sha256": "4d702d1e6f3856a3ebdcacde8d5df2e5ceb3e34ca9499e676733d7a9ecd8a037"
+    },
+    {
+      "path": "Assets/_Project/Map01/Resources/Story/Map02ChapterLayout.asset",
+      "lines": 127,
+      "sha256": "aa61665ef9f98429d0619515c19912bb3263ee9a2a991fecc8f1e6012ed41d42"
+    },
+    {
+      "path": "Assets/_Project/Map01/Resources/Story/Map02DayOneArt.asset",
+      "lines": 50,
+      "sha256": "81b07ea4415562fbc2546ec3736a390f9d152cd049402a88ae14c6ec7f587e4c"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/ForestSaveSlots.cs",
+      "lines": 87,
+      "sha256": "44ae020d151937c348b4f95a9a97f2cb60822c6501ff45832f8468af4a30a1b2"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map01CinematicPose.cs",
+      "lines": 97,
+      "sha256": "a4effa509a5bc4ecf0821211b0e72d7d205837e5bbc1bf5388567ab31d09b657"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02Arrival.ApprovedC1.cs",
+      "lines": 59,
+      "sha256": "eb81b41cb95a8549c725f218b1c92635c8b61f742a3bcdf81f93fb5dd22a53b8"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02Arrival.Misstep.cs",
+      "lines": 325,
+      "sha256": "61c660eede9f6c5d52c63f3af4badf303594703d364c2dcda8811db97751d3ad"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02Arrival.cs",
+      "lines": 692,
+      "sha256": "3ce6c29ba7e166f788ffaac3f61c74eeb82ba8015369ab3014216d7e72d56124"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ArrivalC1Data.cs",
+      "lines": 13,
+      "sha256": "c2cc3ea5eac08a83029b2e512d9d6193d34f17d59d10d02d3e776c7b2cfa5ae6"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02BridgeRails.cs",
+      "lines": 36,
+      "sha256": "63536b2f9a55fe0265ed93034b6d269e76237982d06262b356d0ed949e8925a6"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterActor.cs",
+      "lines": 120,
+      "sha256": "5d0cabc47d4ef07e90e34dbf9405419697c50ea2b2a997fd3763a02dadc12cf0"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterCinematics.cs",
+      "lines": 54,
+      "sha256": "d9ca12a292e2126d686a69487b08fb898caa239f6b08a383f13eccf580d56b70"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterConversationBlocking.cs",
+      "lines": 71,
+      "sha256": "cfe0631e09a08ee2eb528757ef37fa3dfb75c2ca05b5d1a13099563337774772"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterCover.cs",
+      "lines": 112,
+      "sha256": "6e42d706e3c64a8804931ee9118f95f064c08d601af636a5ddb4874cd7de7227"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Gui.cs",
+      "lines": 137,
+      "sha256": "ccd9b8f719dae3b586811d02971104063e6cfad2abb4d258f0588fa8859907ef"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Lighting.cs",
+      "lines": 64,
+      "sha256": "0239c8e388b0086fff40ec9b32a80db969a528e94fc115aaae85f691f01a6c22"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Performance.cs",
+      "lines": 261,
+      "sha256": "c282517a8bf7bf04bf141c294e7b497fe11a69f6c32dffdbd951180400720d63"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Presentation.cs",
+      "lines": 123,
+      "sha256": "e80a322e5169c6fb1d8a2daa3a9e9317fdd5ced113fbe78dc14a0474c47f1603"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.Props.cs",
+      "lines": 89,
+      "sha256": "36fd3c445cd53fa28020bfc183dd560d0c22e4b94305304bfaf863334024ad73"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayOne.cs",
+      "lines": 201,
+      "sha256": "3428bf25adcb25520a89e0639254f7f2466ae514214c9ff14a4c1e7e1bcdfb25"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDayTwo.cs",
+      "lines": 220,
+      "sha256": "b9987ebdbf91be2f3be9c2a151e21c7f924e0c88cad334941043460020825edc"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDirector.cs",
+      "lines": 642,
+      "sha256": "c31927bc7e3fbb7fef8728186a1bedda89aaa00b8637ba447d291ea144848b2b"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterDressing.cs",
+      "lines": 281,
+      "sha256": "2796dedf9615b831d2da6d720310c78ddf6cd1a208c89305e123da6d48873093"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterEnemy.cs",
+      "lines": 106,
+      "sha256": "1fb115ad629386222e106e3a4d1837cd05db27d8d42569efd9067fe841d74513"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterFinale.cs",
+      "lines": 224,
+      "sha256": "9f3ab1bdda6159f6a796adb32cc5ed40db4f241bb188b0bb51dc26421d88c35a"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterGuidance.cs",
+      "lines": 95,
+      "sha256": "649f24a77a253eee8e080684cdec266f9571dd1aedc0c8b01cd224314e454a9d"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterLanes.cs",
+      "lines": 78,
+      "sha256": "4476f9e429a9ff55d49b51225d0491321fa35970a7584756d23c0e5dcb6224dc"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterLayout.cs",
+      "lines": 37,
+      "sha256": "0a687211ce8984c0928a226f7cb485b017fbcaee4fda25deb74b9a1d9de94622"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterNightPatrol.cs",
+      "lines": 155,
+      "sha256": "26e74d0d747139226e068dba458dbd649ecec40b90f77836102e642409edf185"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterNightRoute.cs",
+      "lines": 139,
+      "sha256": "3eb34b596e39bbe5b6eaaca19a634eca6493827b4d8c0f8eab2731e6fffc52ae"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterPatching.cs",
+      "lines": 151,
+      "sha256": "b213a19ad84f57ad25b712dcd1c1b4372c6d0f5a3fb3da383f1da7ee4ffcee49"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterPerformance.cs",
+      "lines": 210,
+      "sha256": "7e45a27c52420960b123439228275c762592fe08c44a56c765bfde9589ef2fca"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterSoundscape.cs",
+      "lines": 69,
+      "sha256": "8bb24b8f5d73d4d4a625b0b43b9fe01a5600df4953702c0b5dd7a5d3037b9034"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterStaging.cs",
+      "lines": 105,
+      "sha256": "8d9bbd31d5519efa2a485012aa970d1382e429bf444c7be3b757a4fe86a71023"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterState.cs",
+      "lines": 144,
+      "sha256": "bfaa10f14840ec4ae67d12500fd5afe868a245a29d3e20f72f73938c60d82c5a"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterTank.cs",
+      "lines": 189,
+      "sha256": "52388452cec3326981327cc1a1c143bd2df05519858057041d0fa17484ab1246"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ChapterTankParts.cs",
+      "lines": 99,
+      "sha256": "e61d9b76b2479580c1aec08877bc9b26e4a106cc9a4b49f6d0aaf010d7ec4c19"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ConversationSession.cs",
+      "lines": 81,
+      "sha256": "b09a7bee3c8d6ff9387e31ebebe5fd86410ca89fe24f59a6762cbb322bf1e032"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02DayOneArt.cs",
+      "lines": 17,
+      "sha256": "233d3d7ca3c7d348fd21bf95f73338ebf881cef385f1e27e82137d5ac486a29f"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02DayOneState.cs",
+      "lines": 86,
+      "sha256": "af477a38433f5ba5978a8ac76a9c0382b5796be98c1f250c650a200c958a93b1"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02DialogueCatalog.cs",
+      "lines": 43,
+      "sha256": "6da62baae7cea3e6cdccaa9416535fdeea8a3ebcb513e77e2a45a785f4e8b319"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02Exploration.cs",
+      "lines": 42,
+      "sha256": "693ec7dabc86502aede697f851fa442f48fe24dde8d003a04593ea7f4b8e9b82"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02Mission.Character.cs",
+      "lines": 179,
+      "sha256": "f4778f2a028ecedd0b3c634374963b3eb82c5e00e7ca6b327d164b0226826365"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02Mission.CharacterMap.cs",
+      "lines": 82,
+      "sha256": "41998eb889643e444cc52d4965838cdf3161f8804e213a27841938f52c243987"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02Mission.Hud.cs",
+      "lines": 152,
+      "sha256": "6f0c5ec1aeb58ceb58e79f276166929883dd2e23f8f0c7d3e62f91b485fe6487"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02Mission.Inventory.cs",
+      "lines": 47,
+      "sha256": "2ef94c0d24110e9fe7eef030265a6b07f00ee1f98e3f48edecaed2bc2553c31b"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02Mission.Navigation.cs",
+      "lines": 37,
+      "sha256": "1525f36d9563a85e0fb133378034dca78f05a3110734dd3718b4d86f958ee399"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02Mission.Safety.cs",
+      "lines": 60,
+      "sha256": "e016ef1c07a0e938238c867c557ec80e9582e8077f12342e13dfa7c30542c57d"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02Mission.ScreenEffects.cs",
+      "lines": 33,
+      "sha256": "ec1ab04f0aff26321824ac918ecfa54d8f2c98a2cef81f4772d6bfa7a416385b"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02Mission.Skills.cs",
+      "lines": 108,
+      "sha256": "f69a28b045770004ed785dd5a0cee69694efbd8f455bdb2dfe548373d915a23b"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02Mission.cs",
+      "lines": 414,
+      "sha256": "6ea29c500a2130dec1596baf28f72a307707014cf744580a867597be0557bc04"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02Navigation.cs",
+      "lines": 13,
+      "sha256": "e790e9fc5e9ca9c7e42ce79f95530b202665ccf3c9ca3c12634ea67979e8ac52"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ObjectiveObject.cs",
+      "lines": 26,
+      "sha256": "fdc92ef1e6f5a7e8cf9c3a33d27eef9210eff925698b3c1e314187c680e55555"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02PatrolFlashlight.cs",
+      "lines": 66,
+      "sha256": "e8473f2005ef008dff7993da09b1085078dd195be3cbf8ba0c6e9fcdf911d812"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02Progress.cs",
+      "lines": 46,
+      "sha256": "3a6a16e17de6e459814f722c992a494beb32923e75fae7ea91f42679936f2a29"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02QuestLayout.cs",
+      "lines": 12,
+      "sha256": "1a64af0312cf36826eaf05ab2b339c83b266beb438a366a0a69bb09f842cb10d"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02ScoutInjuredVisual.cs",
+      "lines": 64,
+      "sha256": "1c7a8a538f271ea85e9a2bce7de92df31f6bc189abba20a2e3f6f13f7a37505f"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02UpperBodyPose.cs",
+      "lines": 24,
+      "sha256": "d873892a599b707c4fdf1f3ee1c8062e0810d2b1c044252f08d98f66ca4128af"
+    },
+    {
+      "path": "Assets/_Project/Map01/Runtime/Map02WorldState.cs",
+      "lines": 84,
+      "sha256": "16d70da142fda68925ac09e7525d37be33c0a919ee4fd08b2e25d3f88f0c81b8"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02ApprovedC1Tests.cs",
+      "lines": 74,
+      "sha256": "5ab3e51a79067bd24ec0614d1e588aff48b277ed4c760201f4e217d56c3fcf6c"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02ArrivalMisstepFilm.cs",
+      "lines": 52,
+      "sha256": "444fed8e72d56d5389000faefdb2b059bfaedc243e3602c1cbb2448d52db02d6"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02ArrivalMisstepTests.cs",
+      "lines": 149,
+      "sha256": "d118921d77aedc76c8d434440c045e5edb98cdbb946e0849e4a5dd4dbfe57b85"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02ArrivalMovieTests.cs",
+      "lines": 40,
+      "sha256": "40ffb52dc8897553c506889985a5466dfd2fb759bc64e9ba27157de44cf8fdc1"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02ArrivalTests.cs",
+      "lines": 399,
+      "sha256": "5b36bc677dd94fa36048b13eec05d57a04dcc17a1933e98511a64657eb772027"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02BoatPatchingTests.cs",
+      "lines": 65,
+      "sha256": "20b18e496e4d1027b02c0069aafd6aa36590cb2ae55d6d83ce89c9e5acbc51b9"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02BoundaryGuidanceTests.cs",
+      "lines": 58,
+      "sha256": "9619a1717b47241720f972dc4dfbc5adb77598fefad37fe0db2139ebbe3ebc2f"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02BridgeCollisionTests.cs",
+      "lines": 74,
+      "sha256": "0f861d8a62427ebe57b550ca1194e35b57ca234f378959fbb303fe6a347760bd"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02CastTests.cs",
+      "lines": 124,
+      "sha256": "64c1978b9cad090e564e5874fd7783e3644131f6b5b20f70e7c0bfb673dffde6"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02ChapterMechanicsTests.cs",
+      "lines": 236,
+      "sha256": "fc04819da8f5906d80426438a62bc7d40d99cce2100401d387574715fe3f3535"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02ChapterTests.cs",
+      "lines": 121,
+      "sha256": "6a91807c785b67b457eb8853df0d8d727e9b01207ec7b8c672acccfdff25d9bf"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02CharacterHudTests.cs",
+      "lines": 76,
+      "sha256": "88bab55e19e602020cfbe250409de7476d50a773172650922b460b81fa61f81f"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02ClarityTests.cs",
+      "lines": 143,
+      "sha256": "c577bf1f106527f20b1df5168437bd78c59ee74ded95d447199d9e171e35e53d"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02ConversationTests.cs",
+      "lines": 103,
+      "sha256": "1baf030665e758eb7cbd4d2064f4012875a3af64df82dfa27d8e8a31a661114f"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02DayOneCompletionTests.cs",
+      "lines": 333,
+      "sha256": "fe31c7068b3116f5b6d01d6fc3ebf0f103a338b195c90721af63d6184b1d8180"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02DayOneIntegrationTests.cs",
+      "lines": 43,
+      "sha256": "4219541cae9e350456283e5727da76cc6745942f35df19ddc18c3edb76994c5f"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02DayOnePlayableFlowTests.cs",
+      "lines": 82,
+      "sha256": "8743e860a46b140317d7cf2a031ff3e92a2810910c6818d46c8f43363a1ba00b"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02DayOneTests.cs",
+      "lines": 34,
+      "sha256": "514f35121550e1f3ae4a6ab018c6120afdfff5b7ceb906273eb3af371b477c64"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02DayOneVisualTests.cs",
+      "lines": 39,
+      "sha256": "aef6861dbb867b56c9855a6dffc25b1cf729d1b68aeaddd71d415735f465314f"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02DayOneVoiceCoverageTests.cs",
+      "lines": 23,
+      "sha256": "16b40a03d36389e00682422f0f209e5e0a3d4b638c488e9b763034a04f052655"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02DayTwoRouteTests.cs",
+      "lines": 115,
+      "sha256": "c982d0ef14d090cafefb1d118237327509049d3466aa2036360a19467000f97e"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02DayTwoStateTests.cs",
+      "lines": 171,
+      "sha256": "b99ee90368eb2accd750eff918e895cc66834cbf03fd3701daf037c8ba3c9bca"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02EndingTests.cs",
+      "lines": 34,
+      "sha256": "a19a3a8fd5e51da5bbbea401352587cc615cf02e729337fad0bf0e54416991fb"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02EnemyAnimationTests.cs",
+      "lines": 76,
+      "sha256": "097ea21134a3e1c6da779bc3d53141761b3554b694f3615a17fffc9e6d884bde"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02FinaleTests.cs",
+      "lines": 280,
+      "sha256": "cfa62ca11e1376cbe5c8b201568d947367b374fc12da1a4919c6c44b1be83f4a"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02FlowMovieTests.cs",
+      "lines": 230,
+      "sha256": "6ba6dcece315bb3248dda05a20c20973f833b4f7f002b3ceb6e354512112b321"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02FootstepSyncTests.cs",
+      "lines": 98,
+      "sha256": "1350a5bf2c70c7a540c5fa51f40fadc7e4c6d24c24854b78752b063a9cc79d2f"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02FreeMovementTests.cs",
+      "lines": 95,
+      "sha256": "cb94c94e9d9ccbee69d930e6e9f2a4f398cf94e2d01cb41891ceff7e5f0f7036"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02M16SaveCompatibilityTests.cs",
+      "lines": 89,
+      "sha256": "01e1b66bf1bb53aa0825b043227172ae6f2b776fcf52c1dabc6b57808ab8bcc4"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02NightTwoRouteTests.cs",
+      "lines": 146,
+      "sha256": "b60d19dd9f90878d8cbc5ced66db4b7d8b2317b9bd36442833cbe2106c2b0cd9"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02PerformanceTests.cs",
+      "lines": 56,
+      "sha256": "5a999e447ec8eb01affb53346e1a6628fc9e3dbe6c5e083a55bed91b94848adc"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02PresentationTests.cs",
+      "lines": 139,
+      "sha256": "e68717b1397f98bf6ded67739c026f9337b927898aaec0e8354ba8f3a05566b4"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02ProgressTests.cs",
+      "lines": 17,
+      "sha256": "483f57bc66e5bdaff838bd807d9590edd6421c69b178d00e4d82d4728f6b7c9e"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02ReportAndNightPatrolTests.cs",
+      "lines": 81,
+      "sha256": "128eb12cd9e46bc3384ad9e7d2651364b491da4330c40b7262d9e6972f030046"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02RoutePreviewTests.cs",
+      "lines": 47,
+      "sha256": "70e0e60e8d968e8a1075317d6929d875fcaf1fd3cdc71dc8978761cf194936a8"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02RuntimeTests.cs",
+      "lines": 68,
+      "sha256": "7a82dc6ac3accbb61f88fcf2b8003d5b759bf3ca65baf24e19ccff64cd6eefcf"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02SkillsTests.cs",
+      "lines": 102,
+      "sha256": "8aee70789bd96f9014c309829591044a85d814901fec812721f96801ad7fe9c5"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02StartSaveExportTests.cs",
+      "lines": 40,
+      "sha256": "61e990c40c214313ea980823eaf858f8210c3ad08cdd68272031869cea713e08"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02SuppliesAndCastTests.cs",
+      "lines": 155,
+      "sha256": "d201aa29ab6efc8b6b15f635218220a79c3d052f52ac3ddcde47eb0b25836f16"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02WeaponHoldCaptureTests.cs",
+      "lines": 119,
+      "sha256": "3e8b1513f718d117e6b680f4cfcdadefb47fdd401e2f22900cf4f3d5db140406"
+    },
+    {
+      "path": "Assets/_Project/Map01/Tests/Map02WorldStateTests.cs",
+      "lines": 64,
+      "sha256": "af18cf6ca23b51cd59622d7e9a48722836eb54b781f5d1e27885ffb22a327116"
+    },
+    {
+      "path": "Docs/Handoff/Map02_Ngay1Dem1_KeHoachSua_2026-10-23.md",
+      "lines": 462,
+      "sha256": "4c3747ee0341073935dd24a3aaf90981fce83062692057d5144d901363fca7e9"
+    }
+  ]
+}

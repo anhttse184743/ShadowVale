@@ -1,0 +1,3 @@
+PASS 50 sensors use the same RiverWaterTrigger as Map 2
+PASS 3609 wet channel samples covered, including both banks and sensor joins
+Exact RiverWater sampling rejects dry banks and feet above the water (bridges).

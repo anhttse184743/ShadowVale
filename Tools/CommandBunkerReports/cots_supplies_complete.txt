@@ -1,0 +1,1 @@
+PASS approved Blender cots and ration stores installed; five cots face wall with 3 cm clearance; collision probes passed; Map 1 saved.

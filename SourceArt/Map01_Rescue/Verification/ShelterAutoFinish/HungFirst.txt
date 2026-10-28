@@ -1,0 +1,1 @@
+Elapsed 13.535; Nam path 18.272; inside marker 18.257; Hung path 15.625; supplies +1; controls restored.

@@ -1,0 +1,204 @@
+using UnityEngine;
+
+namespace ShadowVale.Map01
+{
+    /// <summary>The stealth/scouting layer of the HUD: how aware each nearby guard is, the
+    /// binocular view with its logging progress, and the panel when a scouting run is lost.</summary>
+    public sealed partial class Map01Hud
+    {
+        private Map01Scouting scouting;
+        private Texture2D binocularMask, eyeFill, eyeOutline;
+        private GUIStyle heardStyle, hudGuideCentre;
+        private GUIStyle hudSmallCentre;
+        private static readonly Color Warning = new Color(.9f, .22f, .12f);
+
+        /// <summary>Drawn before the other HUD plates, so they stay readable over the mask.</summary>
+        private void DrawScouting(float width, float height, float scale)
+        {
+            if (scouting == null) scouting = GetComponent<Map01Scouting>(); // Added by Map01Quest.Awake.
+            if (mission.Stopped || mission.InventoryOpen || mission.MapOpen) return;
+            if (scouting == null) { DrawAwareness(width, height, scale); return; }
+            if (scouting.Binoculars) DrawBinoculars(width, height);
+            DrawAwareness(width, height, scale);
+            DrawCampWarning(width);
+            if (quest.Stage == Map01Quest.ScoutStage && !scouting.Binoculars)
+                GUI.Label(new Rect(width / 2 - 330, height - 70, 660, 30), "Giữ [F] ống nhòm  ·  [C] đi khom, nấp bụi  ·  [4] chọn/đổi đồ ném · Giữ/thả chuột trái để ném", hudKey);
+        }
+
+        /// <summary>
+        /// Near a camp with guards still in it: a warning under the compass, from
+        /// <see cref="Map01Scouting.WarnRadius"/> out; within about half of that it turns red,
+        /// throbs and says what to do.
+        /// </summary>
+        private void DrawCampWarning(float width)
+        {
+            if (scouting.NearCamp(out float distance) == null) return;
+            if (hudSmallCentre == null) hudSmallCentre = new GUIStyle(hudSmall) { alignment = TextAnchor.MiddleCenter };
+            if (hudGuideCentre == null) hudGuideCentre = new GUIStyle(hudGuide) { alignment = TextAnchor.MiddleCenter };
+            bool close = distance < scouting.WarnRadius * .55f;
+            var plate = new Rect(width / 2 - 280, 100, 560, close ? 64 : 40);
+            HudFill(plate, new Color(.22f, .04f, .02f, close ? .78f : .55f));
+            float pulse = close ? .55f + .45f * Mathf.Abs(Mathf.Sin(Time.unscaledTime * 5)) : 1f;
+            var edge = close ? Warning : new Color(1f, .72f, .25f);
+            HudBorder(plate, new Color(edge.r, edge.g, edge.b, pulse));
+            var old = GUI.color;
+            if (close) GUI.color = new Color(1f, .55f, .45f);
+            GUI.Label(new Rect(plate.x, plate.y + 6, plate.width, 28), $"CẢNH BÁO: GẦN DOANH TRẠI ĐỊCH  ·  {distance:0} m", hudGuideCentre);
+            GUI.color = old;
+            if (close) GUI.Label(new Rect(plate.x, plate.y + 34, plate.width, 26), "Khom người [C], nấp sau bụi — đừng để lính nhìn thấy", hudSmallCentre);
+        }
+
+        /// <summary>Over everything else: the run is lost, and how to start it over.</summary>
+        private void DrawScoutFailure(float width)
+        {
+            if (scouting == null || !scouting.FailedRun) return;
+            if (hudSmallCentre == null) hudSmallCentre = new GUIStyle(hudSmall) { alignment = TextAnchor.MiddleCenter };
+            var panel = new Rect(width / 2 - 340, 290, 680, 230);
+            HudPanel(panel);
+            HudBorder(new Rect(panel.x + 4, panel.y + 4, panel.width - 8, panel.height - 8), Warning, 2);
+            var old = GUI.color;
+            GUI.color = Warning;
+            GUI.Label(new Rect(panel.x + 20, panel.y + 22, panel.width - 40, 60), "BẠN ĐÃ BỊ PHÁT HIỆN", hudCenter);
+            GUI.color = old;
+            GUI.Label(new Rect(panel.x + 20, panel.y + 82, panel.width - 40, 30), "Nhiệm vụ trinh sát thất bại", hudKey);
+            GUI.Label(new Rect(panel.x + 30, panel.y + 116, panel.width - 60, 50), scouting.FailReason, hudSmallCentre);
+            GUI.Label(new Rect(panel.x + 20, panel.y + 176, panel.width - 40, 30), "Enter Làm lại từ lúc Hùng giao nhiệm vụ  ·  F9 Tải bản lưu  ·  Esc Menu", hudSmallCentre);
+        }
+
+        /// <summary>
+        /// Over each guard who has noticed something: a question mark while he has only heard
+        /// Nam (a footstep, a stone) and goes to check — Nam is not spotted — and an eye once he
+        /// has seen him, filling from the bottom, yellow to red, as his suspicion builds; solid
+        /// red and throbbing once he has spotted Nam.
+        /// </summary>
+        private void DrawAwareness(float width, float height, float scale)
+        {
+            if (eyeFill == null) { eyeFill = MakeEye(false); eyeOutline = MakeEye(true); }
+            foreach (var enemy in mission.Enemies)
+            {
+                if (!enemy.Alive || (!enemy.Alerted && enemy.Suspicion < .02f)) continue;
+                if (Vector3.Distance(mission.player.position, enemy.transform.position) > 40) continue;
+                var screen = mission.gameCamera.WorldToScreenPoint(enemy.transform.position + Vector3.up * 2.6f);
+                if (screen.z <= 0) continue;
+                var p = new Vector2(screen.x / scale, (Screen.height - screen.y) / scale);
+                if (p.x < 0 || p.x > width || p.y < 0 || p.y > height) continue;
+                if (!Saw(enemy)) { DrawHeard(p); continue; }
+                float level = enemy.Engaged ? 1f : enemy.Suspicion;
+                float size = enemy.Engaged ? 50 * (1 + .12f * Mathf.Abs(Mathf.Sin(Time.unscaledTime * 7))) : 44;
+                var eye = new Rect(p.x - size / 2, p.y - size / 4, size, size / 2);
+                var old = GUI.color;
+                GUI.color = new Color(0, 0, 0, .6f);
+                GUI.DrawTexture(new Rect(eye.x - 2, eye.y - 2, eye.width + 4, eye.height + 4), eyeFill);
+                GUI.color = enemy.Engaged ? Warning : Color.Lerp(new Color(1f, .8f, .3f), Warning, level * level);
+                GUI.DrawTextureWithTexCoords(new Rect(eye.x, eye.yMax - eye.height * level, eye.width, eye.height * level), eyeFill, new Rect(0, 0, 1, level));
+                GUI.color = new Color(1f, .95f, .82f);
+                GUI.DrawTexture(eye, eyeOutline);
+                GUI.color = old;
+            }
+        }
+
+        /// <summary>Has seen Nam — spotting him, or still suspicious from a glimpse — rather than
+        /// only heard him. Suspicion only grows while Nam is in sight.</summary>
+        public static bool Saw(Map01EnemyController enemy) => enemy.Engaged || enemy.Suspicion >= .02f;
+
+        /// <summary>Heard, not seen: an amber question mark.</summary>
+        private void DrawHeard(Vector2 p)
+        {
+            if (heardStyle == null) heardStyle = new GUIStyle(hudHeading) { fontSize = 40, alignment = TextAnchor.MiddleCenter, wordWrap = false };
+            var r = new Rect(p.x - 22, p.y - 26, 44, 52);
+            var old = GUI.color;
+            GUI.color = new Color(0, 0, 0, .75f);
+            GUI.Label(new Rect(r.x + 2, r.y + 2, r.width, r.height), "?", heardStyle);
+            GUI.color = new Color(1f, .82f, .32f);
+            GUI.Label(r, "?", heardStyle);
+            GUI.color = old;
+        }
+
+        /// <summary>A 2:1 almond eye: the solid shape, or its outline with iris and pupil.</summary>
+        private static Texture2D MakeEye(bool outline)
+        {
+            const int w = 96, h = 48;
+            var texture = new Texture2D(w, h, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
+            var pixels = new Color[w * h];
+            for (int y = 0; y < h; y++)
+                for (int x = 0; x < w; x++)
+                {
+                    float px = x + .5f - w / 2f, py = y + .5f - h / 2f;
+                    // Distance inside the lid edge, in pixels (positive = inside the eye).
+                    float lid = 21f * (1 - px * px / (46f * 46f)) - Mathf.Abs(py);
+                    float r = Mathf.Sqrt(px * px + py * py);
+                    float a;
+                    if (!outline) a = Mathf.Clamp01(lid + .5f);
+                    else
+                    {
+                        float edge = Mathf.Clamp01(lid + .5f) * Mathf.Clamp01(4.5f - lid);
+                        float iris = Mathf.Clamp01(r - 10.5f) * Mathf.Clamp01(14.5f - r);
+                        float pupil = Mathf.Clamp01(7f - r);
+                        a = Mathf.Max(edge, Mathf.Max(iris, pupil)) * Mathf.Clamp01(lid + .5f);
+                    }
+                    pixels[y * w + x] = new Color(1, 1, 1, a);
+                }
+            texture.SetPixels(pixels); texture.Apply();
+            return texture;
+        }
+
+        private void DrawBinoculars(float width, float height)
+        {
+            if (binocularMask == null) binocularMask = MakeBinocularMask();
+            // The mask is 2:1; fill whatever the screen shape leaves around it.
+            float maskWidth = height * 2, x = (width - maskWidth) / 2;
+            GUI.DrawTexture(new Rect(x, 0, maskWidth, height), binocularMask);
+            if (x > 0) { HudFill(new Rect(0, 0, x, height), Color.black); HudFill(new Rect(width - x, 0, x, height), Color.black); }
+
+            var plate = new Rect(width / 2 - 250, height - 150, 500, 64);
+            var operation=GetComponent<Map01Story>();
+            if(operation?.Layout!=null){
+                plate=new Rect(width/2-285,height-178,570,90);HudPanel(plate);
+                if(quest!=null&&quest.Stage==Map01Quest.BossStage&&!operation.Progress.commanderReported){
+                    GUI.Label(new Rect(plate.x+16,plate.y+5,plate.width-32,26),$"QUAN SÁT DOANH TRẠI  {operation.ObservationProgress*100:0}%",hudGuide);
+                    GUI.Label(new Rect(plate.x+16,plate.y+32,plate.width-32,36),operation.ObservationHint??"Đứng xa ít nhất 18 m, hướng ống nhòm về doanh trại.",hudSmall);
+                    var progress=new Rect(plate.x+18,plate.y+72,plate.width-36,10);HudFill(progress,new Color(0,0,0,.6f));HudFill(new Rect(progress.x,progress.y,progress.width*operation.ObservationProgress,progress.height),HudGold);
+                }else GUI.Label(new Rect(plate.x+16,plate.y+15,plate.width-32,60),"ỐNG NHÒM · Quan sát lính, vật che và đường tiếp cận.\nThả [F] để trở lại góc nhìn thường.",hudSmall);
+                return;
+            }
+            HudPanel(plate);
+            if (scouting.Sighted != null)
+            {
+                GUI.Label(new Rect(plate.x + 16, plate.y + 6, plate.width - 32, 26), $"GHI CHÉP VỊ TRÍ DOANH TRẠI  {scouting.RecordProgress * 100:0}%", hudGuide);
+                var bar = new Rect(plate.x + 18, plate.y + 38, plate.width - 36, 12);
+                HudFill(bar, new Color(0, 0, 0, .6f));
+                HudFill(new Rect(bar.x, bar.y, bar.width * scouting.RecordProgress, bar.height), HudGold);
+            }
+            else if (!scouting.InScanRange)
+            {
+                // Too far from every camp still to log: say so plainly, the binoculars scan nothing.
+                var old = GUI.color;
+                GUI.color = new Color(1f, .55f, .35f);
+                GUI.Label(new Rect(plate.x + 16, plate.y + 4, plate.width - 32, 28), "CHƯA TỚI PHẠM VI QUÉT", hudGuide);
+                GUI.color = old;
+                GUI.Label(new Rect(plate.x + 16, plate.y + 32, plate.width - 32, 28),
+                    $"Còn ngoài {scouting.ScanRange:0} m — tiến sâu vào khu vực nghi ngờ.", hudSmall);
+            }
+            else GUI.Label(new Rect(plate.x + 16, plate.y + 8, plate.width - 32, 50),
+                "Đã trong phạm vi quét — hướng ống nhòm vào doanh trại, không để cây hay nhà che khuất.", hudSmall);
+        }
+
+        /// <summary>Black with two soft-edged round lenses, 2:1.</summary>
+        private static Texture2D MakeBinocularMask()
+        {
+            const int w = 512, h = 256;
+            var texture = new Texture2D(w, h, TextureFormat.RGBA32, false) { wrapMode = TextureWrapMode.Clamp };
+            var pixels = new Color[w * h];
+            for (int y = 0; y < h; y++)
+                for (int x = 0; x < w; x++)
+                {
+                    // Lens centres at a third and two thirds across, radius 0.46 of the height.
+                    float px = (x + .5f) / h, py = (y + .5f) / h;
+                    float d = Mathf.Min(new Vector2(px - .72f, py - .5f).magnitude, new Vector2(px - 1.28f, py - .5f).magnitude) / .46f;
+                    pixels[y * w + x] = new Color(0, 0, 0, Mathf.SmoothStep(0, .94f, (d - .9f) / .12f));
+                }
+            texture.SetPixels(pixels); texture.Apply();
+            return texture;
+        }
+    }
+}

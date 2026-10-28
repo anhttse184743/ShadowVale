@@ -1,0 +1,16 @@
+{
+  "status": "APPROVED_AND_APPLIED",
+  "bench_metres": [
+    2.8,
+    1.08,
+    0.948
+  ],
+  "board_metres": [
+    2.63,
+    0.22,
+    1.62
+  ],
+  "chairs": 6,
+  "chair_front_axis_blender": "+Y",
+  "unity_modified": true
+}

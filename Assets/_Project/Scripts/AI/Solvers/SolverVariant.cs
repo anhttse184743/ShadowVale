@@ -40,7 +40,11 @@ namespace ShadowVale.AI.Solvers
             }
         }
 
-        /// <summary>Variants that run inside the game process (no sidecar needed).</summary>
+        /// <summary>
+        /// Variants that run inside the game process (no sidecar needed). Only greedy: it is the
+        /// classical baseline and the mandatory fallback. Every research solver lives in the Python
+        /// sidecar so there is exactly one implementation of each algorithm to compare.
+        /// </summary>
         public static bool IsInProcess(this SolverVariant v) => v == SolverVariant.Greedy;
 
         public static bool IsQuantumInspired(this SolverVariant v) =>

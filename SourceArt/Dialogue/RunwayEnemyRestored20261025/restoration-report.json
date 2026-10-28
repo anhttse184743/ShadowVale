@@ -1,0 +1,220 @@
+{
+  "date": "2026-10-25",
+  "newCost": 0,
+  "restored": [
+    {
+      "id": "m1_story_09",
+      "caption": "Lính địch: Bắt được nó ở cầu gỗ. Trói chặt vào, chờ lệnh tra hỏi.",
+      "voice": "Martin",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_story_09_clean.wav",
+      "sha256": "a432d6cddb001de8c7d824c8058fce793d13bc24b54aaded5e1d3f32f4b41672",
+      "duration": 3.6,
+      "start": 0
+    },
+    {
+      "id": "m1_story_10",
+      "caption": "Lính địch: Trói chặt vào! Sáng mai giải nó về đồn chỉ huy khai thác.",
+      "voice": "Martin",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_story_10.wav",
+      "sha256": "f39c75fb693d226fdd3147900cd32159e8e6addfe8a0465f0d50abec44684a5d",
+      "duration": 2.88,
+      "start": 4.3
+    },
+    {
+      "id": "m1_story_11",
+      "caption": "Lính địch: Canh cho kỹ — đồng bọn nó thế nào cũng mò tới cứu.",
+      "voice": "Martin",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_story_11.wav",
+      "sha256": "984800254dc1e21d6154b2a8cb05077501f08171e6d9f9767b38b08ac4ccad41",
+      "duration": 2.96,
+      "start": 7.88
+    },
+    {
+      "id": "m1_story_12",
+      "caption": "Lính địch: Để xổng tù binh ở cái bến này thì cả tổ ăn đòn.",
+      "voice": "Martin",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_story_12.wav",
+      "sha256": "41ced4a4b7c008458fa1ef8492194ea20fa27810814d2c121d8e1fed92534fb3",
+      "duration": 2.8,
+      "start": 11.54
+    },
+    {
+      "id": "m1_rescue_alarm",
+      "caption": "Lính: Có kẻ đột nhập! Xử lý tên tù binh ngay!",
+      "voice": "Martin",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_rescue_alarm.wav",
+      "sha256": "159dda2e04866f0047f9ce311b3409fa8185168672240018d96dc5f91da13db0",
+      "duration": 2.48,
+      "start": 15.04
+    },
+    {
+      "id": "m1_rescue_execute_order",
+      "caption": "Giám sát: Rõ! Không để hắn cứu được tù binh!",
+      "voice": "Martin",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_rescue_execute_order.wav",
+      "sha256": "37011a03c8ac6b16c9c3091bdb6b6c03fe2ed17515632b666c4f11334e0ce5eb",
+      "duration": 1.92,
+      "start": 18.22
+    },
+    {
+      "id": "m1_rescue_interrogate",
+      "caption": "Giám sát: Nói! Đơn vị của mày ở đâu?",
+      "voice": "Martin",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_rescue_interrogate.wav",
+      "sha256": "838a5da78bd366d0a0a6c1eae608e852600919562d189855abedc60c5977976b",
+      "duration": 1.52,
+      "start": 20.84
+    },
+    {
+      "id": "m1_ops_radio_alarm",
+      "caption": "Lính phản ứng: Báo động ở trạm đài! Tới kiểm tra ngay!",
+      "voice": "Martin",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_ops_radio_alarm_clean.wav",
+      "sha256": "3d00572713d6139750b2a75a7fc8771c4bb697155e685c3b3e47f41aa8846dde",
+      "duration": 2.16,
+      "start": 23.06
+    },
+    {
+      "id": "m1_ops_enemy_spotted",
+      "caption": "Lính địch: Có người ở mé rừng! Bên kia!",
+      "voice": "Martin",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_ops_enemy_spotted_clean.wav",
+      "sha256": "8bd545945e47c2aac7fd591607c0622f06ef157b1b54b23ea1a8f0a00ed5cd06",
+      "duration": 1.76,
+      "start": 25.92
+    },
+    {
+      "id": "m1_ops_enemy_order",
+      "caption": "Sĩ quan địch: Tản ra! Chặn đường hắn!",
+      "voice": "Martin",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_ops_enemy_order_clean.wav",
+      "sha256": "b6d25b750b03df8c68762a1d812ec28c93455697581b17e7bd5ff45e689e8c75",
+      "duration": 1.52,
+      "start": 28.38
+    },
+    {
+      "id": "m1_c3_gate_checkin_call",
+      "caption": "Lính gác cổng (bộ đàm): Tổ một, tổ hai — báo cáo.",
+      "voice": "Martin",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_c3_gate_checkin_call_radio.wav",
+      "sha256": "bb207cc815fbc0cb1453473608eb5c14811d3036d3364454ff8c0cfcc4daa2f2",
+      "duration": 1.68,
+      "start": 30.6
+    },
+    {
+      "id": "m1_c3_gate_checkin_reply",
+      "caption": "Lính tuần tra (bộ đàm): Bình thường.",
+      "voice": "Martin",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_c3_gate_checkin_reply_radio.wav",
+      "sha256": "2d2a5fc65f60a4aefd68c75ac6db4d057366d0fce4c71075d8686757837abed1",
+      "duration": 0.72,
+      "start": 32.98
+    },
+    {
+      "id": "m1_c3_gate_no_answer",
+      "caption": "Lính gác cổng (bộ đàm): Tổ hai, trả lời!",
+      "voice": "Martin",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_c3_gate_no_answer_radio.wav",
+      "sha256": "7c1061b3b92111405d7cfa88ecc133aa850bff0e4fab9890e592a20033c775be",
+      "duration": 1.2,
+      "start": 34.4
+    },
+    {
+      "id": "m1_c3_gate_alarm",
+      "caption": "Lính gác cổng (bộ đàm): Mất liên lạc! Cả trại cảnh giác!",
+      "voice": "Martin",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_c3_gate_alarm_radio.wav",
+      "sha256": "cf4ac20482117241b2a1877cb06eaa1e34c85aa21989bc39a051af435efce7e4",
+      "duration": 1.76,
+      "start": 36.3
+    },
+    {
+      "id": "m1_c3_enemy_call",
+      "caption": "Chỉ huy địch: Lính đâu! Ra hết đây!",
+      "voice": "Martin",
+      "file": "G:\\game\\Capstone\\ShadowVale\\Assets\\Resources\\Dialogue\\VI\\m1_c3_enemy_call_clean.wav",
+      "sha256": "feedc1a732f4796fb33c0004ca6c552904b882b2adb9996a052ca1e8995d9bad",
+      "duration": 1.68,
+      "start": 38.76
+    }
+  ],
+  "remainingWithoutOriginal": [
+    {
+      "id": "free_literal_ef752cb64fe1",
+      "caption": "Địch: Có người! Đứng lại!",
+      "status": "No original Runway file found in pre-recast catalog; existing file untouched"
+    },
+    {
+      "id": "free_literal_151d63f2ad0f",
+      "caption": "Địch: Đừng để hắn chạy thoát!",
+      "status": "No original Runway file found in pre-recast catalog; existing file untouched"
+    },
+    {
+      "id": "free_literal_e80279667570",
+      "caption": "Địch: Mày chạy đi đâu?",
+      "status": "No original Runway file found in pre-recast catalog; existing file untouched"
+    },
+    {
+      "id": "free_literal_08c9599b968e",
+      "caption": "Địch: Kéo nó về cầu! Trói lại!",
+      "status": "No original Runway file found in pre-recast catalog; existing file untouched"
+    },
+    {
+      "id": "free_boss_push",
+      "caption": "Chỉ huy địch: Nó đang thay đạn — xông lên!",
+      "status": "No original Runway file found in pre-recast catalog; existing file untouched"
+    },
+    {
+      "id": "free_boss_cover_fire",
+      "caption": "Chỉ huy địch: Yểm trợ tao!",
+      "status": "No original Runway file found in pre-recast catalog; existing file untouched"
+    },
+    {
+      "id": "free_boss_pincer",
+      "caption": "Chỉ huy địch: Vòng sườn! Chặn đường lui của nó!",
+      "status": "No original Runway file found in pre-recast catalog; existing file untouched"
+    },
+    {
+      "id": "free_boss_grenade",
+      "caption": "Chỉ huy địch: Lựu đạn!",
+      "status": "No original Runway file found in pre-recast catalog; existing file untouched"
+    },
+    {
+      "id": "free_boss_hurt",
+      "caption": "Chỉ huy địch: Tao trúng đạn — giữ chân nó!",
+      "status": "No original Runway file found in pre-recast catalog; existing file untouched"
+    },
+    {
+      "id": "free_boss_suppressed",
+      "caption": "Chỉ huy địch: Đạn dày quá — đổi chỗ!",
+      "status": "No original Runway file found in pre-recast catalog; existing file untouched"
+    },
+    {
+      "id": "free_boss_aimed",
+      "caption": "Chỉ huy địch: Nó đang ngắm tao — đổi chỗ!",
+      "status": "No original Runway file found in pre-recast catalog; existing file untouched"
+    }
+  ],
+  "alliedCuesUnchanged": 245,
+  "totalReviewDuration": 41.140000000000015,
+  "activeRecordedCues": 260,
+  "subtitleOnlyEnemyCues": [
+    "free_boss_aimed",
+    "free_boss_cover_fire",
+    "free_boss_grenade",
+    "free_boss_hurt",
+    "free_boss_pincer",
+    "free_boss_push",
+    "free_boss_suppressed",
+    "free_literal_08c9599b968e",
+    "free_literal_151d63f2ad0f",
+    "free_literal_e80279667570",
+    "free_literal_ef752cb64fe1"
+  ],
+  "remainingEnemyPolicy": "Only 15 original Runway Martin recordings; 11 later enemy lines retain subtitles with no audio recording assigned",
+  "unityTests": {
+    "result": "Passed",
+    "passed": 6,
+    "total": 6
+  }
+}

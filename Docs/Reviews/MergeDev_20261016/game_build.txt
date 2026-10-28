@@ -1,0 +1,2 @@
+Succeeded errors=0 size=854492457 path=D:\DO_AN_GAME\ShadowVale\SourceArt\MergeDev_20261016_Build\ShadowVale.exe
+Scenes: Assets/_Project/Scenes/00_Boot.unity; Assets/_Project/Scenes/01_MainMenu.unity; Assets/_Project/Scenes/Maps/Map 1.unity; Assets/_Project/Scenes/Maps/Map 2.unity

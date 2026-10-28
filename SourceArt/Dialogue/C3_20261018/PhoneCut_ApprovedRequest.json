@@ -1,0 +1,13 @@
+{
+  "maximumCredits": 1,
+  "userApproval": "duyệt",
+  "request": {
+    "text": "Đường dây đã ngắt.",
+    "voice": "Brodie",
+    "model": "eleven_v3",
+    "speed": 1,
+    "languageCode": "vi",
+    "name": "ShadowVale m1_c3_phone_cut approved replacement 20261018",
+    "rationale": "Người dùng vừa duyệt câu thay thế Đường dây đã ngắt, một lần duy nhất, tối đa 1 credit còn lại trong trần 15."
+  }
+}

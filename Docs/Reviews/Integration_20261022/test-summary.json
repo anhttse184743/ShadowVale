@@ -1,0 +1,699 @@
+{
+  "latestDistinctTests": 109,
+  "passed": 109,
+  "failed": 0,
+  "runs": [
+    {
+      "file": "merged-tests.xml",
+      "total": "109",
+      "passed": "106",
+      "failed": "3",
+      "skipped": "0",
+      "result": "Failed(Child)",
+      "duration": "6,8339776"
+    },
+    {
+      "file": "merge-rerun.xml",
+      "total": "3",
+      "passed": "2",
+      "failed": "1",
+      "skipped": "0",
+      "result": "Failed(Child)",
+      "duration": "15,3692316"
+    },
+    {
+      "file": "guide-rerun.xml",
+      "total": "1",
+      "passed": "0",
+      "failed": "1",
+      "skipped": "0",
+      "result": "Failed(Child)",
+      "duration": "16,1734072"
+    },
+    {
+      "file": "guide-final.xml",
+      "total": "1",
+      "passed": "1",
+      "failed": "0",
+      "skipped": "0",
+      "result": "Passed",
+      "duration": "15,9327562"
+    }
+  ],
+  "cases": [
+    {
+      "name": "ShadowVale.Map01.Tests.AimToggleIntegrationTests.AKK54AndMosinAimOnlyWhileHeldAndClearWhenGameplayIsInterrupted",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.ACutLineMeansNoRunners",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.ASilentPatrolAtTheCheckInPutsTheCampOnGuard",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.NestASeesTheTowerPlatformBeyondTheMosinsReport",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.NobodyChasesNamPastTheLeash",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.TheGarrisonHoldsItsPostsAndTheCommanderIsHomeFromTheStart",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.TheKiengWakesTheSleepersWhenTheCampIsAlarmed",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.TheKnifeFromBehindWoundsTheCommanderAndNeverKillsHim",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.TheSaveKeepsThePostAsItWas",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.C3MissionTests.WithoutTheStrikerOneSleeperAnswersAndTheLineBringsRunners",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.EndingCutsceneTests.ClearedPointThreeCanReportWithEWhileBesideAWorkbench",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.ForestFlowTests.BaseCrateGivesItsKitOnceAndTheShelfOpensTheStoreOnceHungIsHome",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.ForestFlowTests.GuardDamageFollowsMap01Balance",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.ForestFlowTests.ObjectiveGuideFollowsEachQuestStep",
+      "result": "Passed",
+      "run": "guide-final.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.K54IntegrationTests.CaptureK54InTheRealMapLighting",
+      "result": "Passed",
+      "run": "merge-rerun.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.K54IntegrationTests.K54FiresOneRoundDealsConfiguredDamageAndSurvivesCrouchAndStoryInterruptions",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.K54IntegrationTests.K54HasItsOwnMagazineAndReloadUsesOnlyPistolReserve",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.K54IntegrationTests.SwitchingAndThrowingCancelK54ReloadAndKeepBothAmmunitionPools",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.K54NormalRestorationTests.ActualShotUsesNormalReportAudioAndStillWakesWithinTenMetres",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.K54NormalRestorationTests.HeldLootAndIconsUseTheOriginalApprovedPistol",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.K54NormalRestorationTests.OrdinaryK54ProfileRestoresSixteenMetresWithoutChangingBalance",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.LootRollerTests.AGuardsPackIsAFewRoundsNotAMagazine",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.LootRollerTests.ATierTheTableLacksFallsToTheNearestLowerOne",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.LootRollerTests.EveryTableGivesItsTierFiveAndOnlyItsOwnItemsInRange",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.LootRollerTests.GunsCarryDurabilityInTheContentBundleAndSkillsCapFieldRepairs",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.LootRollerTests.SavedDataFromBeforeGunsWoreReadsAsNew",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.LootRollerTests.TheSameSeedRollsTheSameAndOtherSeedsVary",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.LootRollerTests.TheShippedDataPassesTheDatabaseConstraints",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.LootRollerTests.TheThreeRoundsShareGunpowderAndAMosinRoundCostsMost",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.LootRollerTests.TiersFollowTheConsumableFocusedFiftyTwoThirtyEightEightTwoProfile",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.LootRollerTests.WithinATierAnEntryComesUpByItsWeightAndTwiceAsOftenWhenBoosted",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.M16BalanceTests.ActualM16NeedsFourHitsForAGuardAndCannotReachPastEightyMetres",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.M16BalanceTests.CaptureCurrentRuntimeC3AndResourceLayoutForTheProposal",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.M16BalanceTests.RuntimePrefabAndContentAgreeAndDoNotInheritAkDamage",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.M16BalanceTests.SustainedM16FireBloomsEarlierKicksMoreAndRecoversForATap",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.M16IntegrationTests.BackpackCaliberMatchesRifleAndKeepsK54(\"rifle_m16\",\"ammo_556\")",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.M16IntegrationTests.BackpackCaliberMatchesRifleAndKeepsK54(\"rifle_standard\",\"ammo_rifle\")",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.M16IntegrationTests.EveryShuffledGroupHasSevenM16AndThreeAK",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.M16IntegrationTests.LootEquipCaliberReloadAndSaveRoundTrip",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.M16IntegrationTests.M16HasAmmoIconAndSharesAkFoundConditionLimits",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.M16MergeCompatibilityTests.CloningAnM16ThenSelectingAkRestoresOneCorrectModelAndItsBaseline",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.M16MergeCompatibilityTests.PrimaryChangesPreserveK54MosinAndTheReinforcedGarrisonsSavedRifles",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02ChapterTests.DayOneAllowsFreeOrderButDoesNotOpenNightBeforeReport",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02ChapterTests.EntireChapterHasSevenPhasesAndExactlyOneSacrifice",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02ChapterTests.EveryTaskHasValidDependenciesUniqueIdentityAndNoOrphanedDialogue",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02ChapterTests.InvalidAndOutOfOrderSavesAreRejected",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02ChapterTests.LiveMapHasReachableObjectivesAndSkipSaveRestorePreserveChapter",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02ChapterTests.SaveRoundTripKeepsCargoCountsNightWarningAmmoAndEnding",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02CharacterHudTests.SharedBagSkillsWeaponsAndDiscoverySurviveMapTwoSaveLoad",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02RuntimeTests.M16ChapterStockUsesMatchingAmmoAndSurvivesSaveLoad",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02RuntimeTests.ObjectCargoFlowSharesPauseMenuAndRestoresExactInventory",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map02SkillsTests.MapTwoAwardsCombatSkillsAndRestoresCareerAcrossFailure",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinBalanceTests.HeadAndTorsoShotsKillAt35_80_120_199MetresIncludingHeavyAndCommanderHealth",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinBalanceTests.LethalityDoesNotLeakIntoNonEnemiesOrAReconfiguredPistol",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinBalanceTests.MaxRangeCoverAndCinematicProtectionStillApplyAndScopeShowsTheActualTarget",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinBalanceTests.ProfilePrefabAndPrecisionSupportARealTwoHundredMetreHeadShot",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinIntegrationTests.ExportedMechanicalPartsMoveAndFollowTheCarryingHands",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinIntegrationTests.MosinInsertsIndividuallyKeepsAKInTheBagAndSavesThreeIndependentMagazines",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinIntegrationTests.PUScopeHasReal35MagnificationAndBoltCycleReturnsToScopeWithoutASecondCamera",
+      "result": "Passed",
+      "run": "merge-rerun.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinStealthTests.ActualSightStillFindsNamAndHiddenSniperDamageKeepsThePreviousContact",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinStealthTests.C3ReservesAndRunnersReceiveOnlyRecordedInformation",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinStealthTests.CaptureActualTowerShotFromNestAWithoutInventingNamPosition",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinStealthTests.CloseShotIsHeardByEveryListenerAndRemembersTheShotRatherThanNamMoving",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinStealthTests.DistantMosinKillAtRadioTriggersBodySearchAndResponseWithoutKnowingNam",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinStealthTests.HitEvidenceSurvivesWeaponSwitchAndOtherDamageIsNotMisclassifiedAsMosin",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinStealthTests.LethalMosinDamageToASleepingReserveCreditsExactlyOneKillAndLootWithoutSight",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinStealthTests.QueuedMosinKeepsItsIdentityWhenSwitchedBeforeTheFinalShotPass",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinStealthTests.RealMosinShotsAt35_50_70MetresNeverInventSightOrSquadContact",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinStealthTests.RepeatedDistantMissesDoNotCreateDamageOrContact",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinStealthTests.SaveFileReloadKeepsAnUnknownSniperAttackUnknown",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.MosinStealthTests.TheCommanderAlsoGetsNoContactFromAnUnseenDistantMosinHit",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.NamMotionRefreshTests.ActualJumpUsesPhysicsAndWaitsForLandingAfterTheNominalFlight",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.NamMotionRefreshTests.ApprovedAssetHasAllFortySevenClipsAndExistingSkeleton",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.NamMotionRefreshTests.ExportedJumpHasNoSecondBallisticArcAndPropsKeepTheirSize",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.NamMotionRefreshTests.JumpControllerExitsOnActualGroundedAndPreservesStoryStates",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.NamMotionRefreshTests.KnifeDrawAttackHolsterAndPistolReloadUseV3WithoutChangingAmmo",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.NamMotionRefreshTests.SlopeJumpWeaponSwapsAndPausePreserveTheAirbornePhase",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.NamMotionRefreshTests.ThrowCancelReleaseAndCrouchUseApprovedPropsAndReleaseOnce",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.SupplyCombatFlowTests.ActualGuardBurstsLimitGroupFireKeepReloadAndRespectBossCadence",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.SupplyCombatFlowTests.ConsumablesAreGuaranteedBeforeC3AndTheStoreFitsAUsefulFortyPointKit",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.SupplyCombatFlowTests.FieldSuppliesCanBeCollectedBeforeTheBossAndPersistWithoutRefills",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.SupplyCombatFlowTests.StoreShowsTheBottomSmokeOfferAndCanIssueAffordableConsumables",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.SupplyCombatFlowTests.SupplyDeliveryGivesReadyThrowablesOnceWithoutLosingThemToAFullBag",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.SupplyCombatFlowTests.ThreeRoundBurstsRestForRecoveryAndThirtyRoundsRequireAReload",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.GrenadeUsesItsOwnModelReleasesOnceAndKeepsHandsBusyThroughRecovery",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.HolsteringAnAKInterruptsItsMagazineGestureAndDoesNotFinishAHiddenReload",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.SmokeIsACanisterInTheHandAndAimingCancelsTheReloadWithoutSpendingAmmo",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AFullMagazineClimbsAndPullsRight",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AGapShorterThanTheResetKeepsTheBurstGoing",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AThreeRoundBurstStaysUnderOneDegree",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AZeroConeShootsDeadStraight",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AimingHelpsMostWhenSettledAndNotAtAllWhenRunning",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.BloomIsFullByTheFifteenthRound",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.BloomWidensTheConeOnTopOfTheStance",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.EveryTapIsShotZero",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ResetClearsTheBurstOutright",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ScatterGroupsTowardTheCentre",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ScatterStaysInsideTheCone",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ScatterSurvivesShootingStraightUp",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ShortBurstsAddNoBloom",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.SprintPenaltyRequiresActualRunningAndClearsOnStopping",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.StancesRankFromSteadyToHopeless",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.StationarySprintToggleDoesNotChangeAccuracy(False)",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.StationarySprintToggleDoesNotChangeAccuracy(True)",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheClimbIsDeterministic",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheClimbNeverEases",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheConeClosesBetweenBursts",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheFourthRoundStartsTheBloom",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    },
+    {
+      "name": "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheOpeningOfABurstRisesStraight",
+      "result": "Passed",
+      "run": "merged-tests.xml",
+      "message": null
+    }
+  ]
+}

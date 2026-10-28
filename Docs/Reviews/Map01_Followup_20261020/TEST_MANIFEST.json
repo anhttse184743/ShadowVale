@@ -1,0 +1,731 @@
+{
+  "dev_preflight": {
+    "runs": [
+      {
+        "file": "dev-latest.xml",
+        "sha256": "ac97a21822835512752ab37cc69e63bcce0ced8ffd66f0a54dd4dc6bb293555a",
+        "result": "Failed(Child)",
+        "total": "18",
+        "passed": "17",
+        "failed": "1",
+        "skipped": "0"
+      },
+      {
+        "file": "dev-balance-fixed.xml",
+        "sha256": "28917438203c03f72bcfe07b7e843987c0f7507856641d4f585640ea1d83b5a9",
+        "result": "Passed",
+        "total": "1",
+        "passed": "1",
+        "failed": "0",
+        "skipped": "0"
+      }
+    ],
+    "counts": {
+      "Passed": 18
+    },
+    "unique": 18,
+    "cases": {
+      "ShadowVale.Map01.Tests.ForestFlowTests.GuardDamageFollowsMap01Balance": {
+        "result": "Passed",
+        "source": "dev-balance-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.AGuardsPackIsAFewRoundsNotAMagazine": {
+        "result": "Passed",
+        "source": "dev-latest.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.ATierTheTableLacksFallsToTheNearestLowerOne": {
+        "result": "Passed",
+        "source": "dev-latest.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.EveryTableGivesItsTierFiveAndOnlyItsOwnItemsInRange": {
+        "result": "Passed",
+        "source": "dev-latest.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.GunsCarryDurabilityInTheContentBundleAndSkillsCapFieldRepairs": {
+        "result": "Passed",
+        "source": "dev-latest.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.SavedDataFromBeforeGunsWoreReadsAsNew": {
+        "result": "Passed",
+        "source": "dev-latest.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.TheSameSeedRollsTheSameAndOtherSeedsVary": {
+        "result": "Passed",
+        "source": "dev-latest.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.TheShippedDataPassesTheDatabaseConstraints": {
+        "result": "Passed",
+        "source": "dev-latest.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.TheThreeRoundsShareGunpowderAndAMosinRoundCostsMost": {
+        "result": "Passed",
+        "source": "dev-latest.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.TiersComeUpSixtyTwentySixElevenThree": {
+        "result": "Passed",
+        "source": "dev-latest.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.WithinATierAnEntryComesUpByItsWeightAndTwiceAsOftenWhenBoosted": {
+        "result": "Passed",
+        "source": "dev-latest.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.M16IntegrationTests.BackpackCaliberMatchesRifleAndKeepsK54(\"rifle_m16\",\"ammo_556\")": {
+        "result": "Passed",
+        "source": "dev-latest.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.M16IntegrationTests.BackpackCaliberMatchesRifleAndKeepsK54(\"rifle_standard\",\"ammo_rifle\")": {
+        "result": "Passed",
+        "source": "dev-latest.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.M16IntegrationTests.EveryShuffledGroupHasSevenM16AndThreeAK": {
+        "result": "Passed",
+        "source": "dev-latest.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.M16IntegrationTests.LootEquipCaliberReloadAndSaveRoundTrip": {
+        "result": "Passed",
+        "source": "dev-latest.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.M16IntegrationTests.M16HasAmmoIconAndSharesAkFoundConditionLimits": {
+        "result": "Passed",
+        "source": "dev-latest.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.ReloadMagazineTests.MagazineLeavesTheRifleRidesTheHandAndGoesBack(False)": {
+        "result": "Passed",
+        "source": "dev-latest.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.ReloadMagazineTests.MagazineLeavesTheRifleRidesTheHandAndGoesBack(True)": {
+        "result": "Passed",
+        "source": "dev-latest.xml",
+        "failure": ""
+      }
+    }
+  },
+  "merged": {
+    "runs": [
+      {
+        "file": "merged-weapons-fixed.xml",
+        "sha256": "619c72a16e459eb1b373238922c39521784451df8d5198a3d9fe17a2eab4d8dc",
+        "result": "Passed",
+        "total": "10",
+        "passed": "10",
+        "failed": "0",
+        "skipped": "0"
+      },
+      {
+        "file": "merged-regression.xml",
+        "sha256": "d7024d9b146a8196d645c7f4765bd1eacbae7f8dcb5fc6426c82578858dc02b0",
+        "result": "Passed",
+        "total": "92",
+        "passed": "92",
+        "failed": "0",
+        "skipped": "0"
+      },
+      {
+        "file": "fresh-weapons-before.xml",
+        "sha256": "3237d3649c52ca2527b53a9d848f51ede4d8c10802e093fed007a5ff47c98c22",
+        "result": "Failed(Child)",
+        "total": "22",
+        "passed": "21",
+        "failed": "1",
+        "skipped": "0"
+      },
+      {
+        "file": "map02-m16-fixed.xml",
+        "sha256": "cd28fc4b527865d8f99ec57a04d8c2ece38a74a41646ffb256539bd834a6ac24",
+        "result": "Passed",
+        "total": "13",
+        "passed": "13",
+        "failed": "0",
+        "skipped": "0"
+      }
+    ],
+    "counts": {
+      "Passed": 113
+    },
+    "unique": 113,
+    "cases": {
+      "ShadowVale.Map01.Tests.BodyDiscoveryFollowupTests.ANewWalkingPostCancelsThePreviousPatrolPause": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.BodyDiscoveryFollowupTests.AnOrdinaryGuardCallsOnlyNearbySquadMatesToSearchWithoutKnowingNam": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.BodyDiscoveryFollowupTests.C3CheckInWalkingReview": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.BodyDiscoveryFollowupTests.C3WaryOrdersDoNotWarpMenOrMoveTheTowerSentry": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.BodyDiscoveryFollowupTests.OlderBalanceWithoutWaryScaleKeepsTheOriginalDefault": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.BodyDiscoveryFollowupTests.UnrecordedCharacterCallsRemainReadableAndRecordedCallsStayAudioOnly": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.BodyDiscoveryFollowupTests.WaryDetectionUsesConfiguredScaleAndFallsBackForOldBalanceFiles": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.C3BedAnimationTests.ActualSaveFileReloadKeepsKnifeCorpseSleepingAndAwakeStates": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.C3BedAnimationTests.FootstepsStayQuietAndExistingLoudNoiseRulePlaysWakeBeforeCombat": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.C3BedAnimationTests.KnifeExecutionIsSilentFreeOfAmmoCostAndLeavesDiscoverableSavedCorpse": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.C3BedAnimationTests.SleepersAreVisibleOnMeasuredBedsAndOutsidePerceptionAndCoordination": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.C3MissionTests.ACutLineMeansNoRunners": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.C3MissionTests.ASilentPatrolAtTheCheckInPutsTheCampOnGuard": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.C3MissionTests.NestASeesTheTowerPlatformBeyondTheMosinsReport": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.C3MissionTests.NobodyChasesNamPastTheLeash": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.C3MissionTests.TheGarrisonHoldsItsPostsAndTheCommanderIsHomeFromTheStart": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.C3MissionTests.TheKiengWakesTheSleepersWhenTheCampIsAlarmed": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.C3MissionTests.TheKnifeFromBehindWoundsTheCommanderAndNeverKillsHim": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.C3MissionTests.TheSaveKeepsThePostAsItWas": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.C3MissionTests.WithoutTheStrikerOneSleeperAnswersAndTheLineBringsRunners": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.ForestFlowTests.GuardDamageFollowsMap01Balance": {
+        "result": "Passed",
+        "source": "merged-weapons-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.ForestHudTests.ObjectiveGuidePreviewScreenshots": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.ForestSaveSlotsTests.ASaveFromTheOldMapLayoutIsRefused": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.ForestSaveSlotsTests.BatchModeCannotReachPlayerSlotsAfterFixtureCleanup": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.ForestSaveSlotsTests.MetadataAndCheckpointSurviveSerialization": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.ForestSaveSlotsTests.RejectsIncompleteOrUnsupportedEnvelope(\"{\\\"version\\\":99}\")": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.ForestSaveSlotsTests.RejectsIncompleteOrUnsupportedEnvelope(\"{}\")": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.ForestSaveSlotsTests.RejectsNegativePlaytime": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.ForestSaveSlotsTests.RejectsOutOfRangeSlot(-1)": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.ForestSaveSlotsTests.RejectsOutOfRangeSlot(5)": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.HungVisualTests.ModelAnimatesAndRescueNavigationSurvives": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.K54IntegrationTests.K54HasItsOwnMagazineAndReloadUsesOnlyPistolReserve": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.AGuardsPackIsAFewRoundsNotAMagazine": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.ATierTheTableLacksFallsToTheNearestLowerOne": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.EveryTableGivesItsTierFiveAndOnlyItsOwnItemsInRange": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.GunsCarryDurabilityInTheContentBundleAndSkillsCapFieldRepairs": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.SavedDataFromBeforeGunsWoreReadsAsNew": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.TheSameSeedRollsTheSameAndOtherSeedsVary": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.TheShippedDataPassesTheDatabaseConstraints": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.TheThreeRoundsShareGunpowderAndAMosinRoundCostsMost": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.TiersComeUpSixtyTwentySixElevenThree": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.LootRollerTests.WithinATierAnEntryComesUpByItsWeightAndTwiceAsOftenWhenBoosted": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.M16IntegrationTests.BackpackCaliberMatchesRifleAndKeepsK54(\"rifle_m16\",\"ammo_556\")": {
+        "result": "Passed",
+        "source": "merged-weapons-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.M16IntegrationTests.BackpackCaliberMatchesRifleAndKeepsK54(\"rifle_standard\",\"ammo_rifle\")": {
+        "result": "Passed",
+        "source": "merged-weapons-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.M16IntegrationTests.EveryShuffledGroupHasSevenM16AndThreeAK": {
+        "result": "Passed",
+        "source": "merged-weapons-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.M16IntegrationTests.LootEquipCaliberReloadAndSaveRoundTrip": {
+        "result": "Passed",
+        "source": "merged-weapons-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.M16IntegrationTests.M16HasAmmoIconAndSharesAkFoundConditionLimits": {
+        "result": "Passed",
+        "source": "merged-weapons-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.M16MergeCompatibilityTests.CloningAnM16ThenSelectingAkRestoresOneCorrectModelAndItsBaseline": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.M16MergeCompatibilityTests.PrimaryChangesPreserveK54MosinAndTheReinforcedGarrisonsSavedRifles": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.AllOperationDialogueHasExactCaptionAndCorrectAudioChannel": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.CircuitMigratesOldBoardWithoutAcceptingItAsSolved": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.CircuitRoutesToDummyLoadAndRejectsBrokenSource": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.EveryRadioCellCanRotateAndAllChangesSurviveRestore": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.FailedLockCanRetryWithoutLosingCodeOrNotebook": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.LockExplainsFeedbackInPlainLanguage(241,214,\"1 số đúng vị trí.\",\"2 số đúng nhưng sai vị trí.\")": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.LockExplainsFeedbackInPlainLanguage(241,241,\"Đúng cả 3 số\",\"Khóa đã mở.\")": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.LockExplainsFeedbackInPlainLanguage(241,355,\"Không có số nào đúng.\",\"Cả 3 số đều không thuộc mã.\")": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(111,122,1,0)": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(112,121,1,2)": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(123,450,0,0)": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(241,214,1,2)": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(555,555,3,0)": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.OfficerNeedsDistantBinocularsAndRestoresCombatBeforeDiscovery": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.OnlyOriginalSupplyKeeperDropsKeyEvenWhenClonedForExtraction": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.PowerSabotageNeedsThreeAccurateNewPullsAndCanTimeout": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.RadioClockAndRoundGateCannotBeSkipped": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.RadioFailureCallsOnlyOneSavedSquadAndSuccessDoesNotExtract": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.RandomRadioRoundsAreSolvableVariedAndRestoreExactly": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.SupplyCodesVaryButRemainStableForSavedSeed": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map01OperationsTests.SupplyRequiresKeyPuzzleReportAndPhysicalHandoff": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map02M16SaveCompatibilityTests.SavedM16KeepsItsModelAndCaliberWithoutTheArrivalObject": {
+        "result": "Passed",
+        "source": "map02-m16-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map02ProgressTests.BothRescueOrdersNeedActualEvacuation(0,1)": {
+        "result": "Passed",
+        "source": "map02-m16-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map02ProgressTests.BothRescueOrdersNeedActualEvacuation(1,0)": {
+        "result": "Passed",
+        "source": "map02-m16-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map02ProgressTests.CivilianMovementIsRequiredInAdditionToFiniteWaves": {
+        "result": "Passed",
+        "source": "map02-m16-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map02ProgressTests.FailureBlocksProgressButCannotUndoCompletion": {
+        "result": "Passed",
+        "source": "map02-m16-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map02ProgressTests.PreparationIsFreeOrderButSiegeCannotStartEarly": {
+        "result": "Passed",
+        "source": "map02-m16-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map02ProgressTests.ReportsAndDutiesCannotBeSkippedOrCommittedTwice": {
+        "result": "Passed",
+        "source": "map02-m16-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map02ProgressTests.SaveRoundTripKeepsPreparationAndGroups": {
+        "result": "Passed",
+        "source": "map02-m16-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map02RuntimeTests.ObjectCargoFlowSharesPauseMenuAndRestoresExactInventory": {
+        "result": "Passed",
+        "source": "map02-m16-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map02WorldStateTests.CargoCannotBeDeliveredBeforePickupOrCollectedTwice": {
+        "result": "Passed",
+        "source": "map02-m16-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map02WorldStateTests.PreparationStockDoesNotRefillPlayerAmmunitionOrSkipPhysicalDelivery": {
+        "result": "Passed",
+        "source": "map02-m16-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map02WorldStateTests.ReachingPropMeansThePlayerIsActuallyWithinItsRadius": {
+        "result": "Passed",
+        "source": "map02-m16-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.Map02WorldStateTests.SaveRoundTripKeepsCargoAndRejectsDuplicatePickup": {
+        "result": "Passed",
+        "source": "map02-m16-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.MosinIntegrationTests.ExportedMechanicalPartsMoveAndFollowTheCarryingHands": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.MosinIntegrationTests.MosinInsertsIndividuallyKeepsAKInTheBagAndSavesThreeIndependentMagazines": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.MosinIntegrationTests.PUScopeHasReal35MagnificationAndBoltCycleReturnsToScopeWithoutASecondCamera": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.MosinReloadTimingTests.EachInsertionConsumesOneRoundAndCancellationKeepsOnlyInsertedRounds": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.MosinReloadTimingTests.ExhaustedReserveCannotDuplicateRoundsAndOrdinaryAKStillLoadsAtomically": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.MosinReloadTimingTests.FullReloadRemainsFiveSecondsAndPartialReloadSkipsUnusedInsertionGestures": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.MosinStealthTests.ActualSightStillFindsNamAndHiddenSniperDamageKeepsThePreviousContact": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.MosinStealthTests.C3ReservesAndRunnersReceiveOnlyRecordedInformation": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.MosinStealthTests.CloseShotIsHeardByEveryListenerAndRemembersTheShotRatherThanNamMoving": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.MosinStealthTests.DistantMosinKillAtRadioTriggersBodySearchAndResponseWithoutKnowingNam": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.MosinStealthTests.HitEvidenceSurvivesWeaponSwitchAndOtherDamageIsNotMisclassifiedAsMosin": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.MosinStealthTests.LethalMosinDamageToASleepingReserveCreditsExactlyOneKillAndLootWithoutSight": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.MosinStealthTests.QueuedMosinKeepsItsIdentityWhenSwitchedBeforeTheFinalShotPass": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.MosinStealthTests.RealMosinShotsAt35_50_70MetresNeverInventSightOrSquadContact": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.MosinStealthTests.RepeatedDistantMissesDoNotCreateDamageOrContact": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.MosinStealthTests.SaveFileReloadKeepsAnUnknownSniperAttackUnknown": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.MosinStealthTests.TheCommanderAlsoGetsNoContactFromAnUnseenDistantMosinHit": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.QuickRescueTests.FarStoneAndAwayDetectionRallyEnemiesWithoutKillingHungAndSaveKeepsAlarm": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.QuickRescueTests.HintMatchesRearDistanceWeaponAndCooldownThenSingleNeckKillRestoresGameplay": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.ReloadMagazineTests.MagazineLeavesTheRifleRidesTheHandAndGoesBack(False)": {
+        "result": "Passed",
+        "source": "merged-weapons-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.ReloadMagazineTests.MagazineLeavesTheRifleRidesTheHandAndGoesBack(True)": {
+        "result": "Passed",
+        "source": "merged-weapons-fixed.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.StoneSiteTests.RepairedStoneSiteIsWalkableAndKeepsItsSaveIdentity": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.StoneSiteTests.SavedSitesKeepToThePlacementRulesOnTheMapAsItIs": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.StoneThrowTests.AGuardWhoHearsAStoneGoesToLookThenBackToHisPost": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.StoneThrowTests.AStoneOnTheWarehouseRoofIsInvestigatedFromReachableGround": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.StoneThrowTests.AimingShowsTheArcAndTheRingsOfTheGuardsWhoWouldHear": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.StoneThrowTests.KnifeFromBehindTakesDownAnUnawareGuardSilently": {
+        "result": "Passed",
+        "source": "merged-regression.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.GrenadeUsesItsOwnModelReleasesOnceAndKeepsHandsBusyThroughRecovery": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.HolsteringAnAKInterruptsItsMagazineGestureAndDoesNotFinishAHiddenReload": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      },
+      "ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.SmokeIsACanisterInTheHandAndAimingCancelsTheReloadWithoutSpendingAmmo": {
+        "result": "Passed",
+        "source": "fresh-weapons-before.xml",
+        "failure": ""
+      }
+    }
+  }
+}

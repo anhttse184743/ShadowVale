@@ -1,0 +1,2402 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ee0b1c2a6e782e4c91ad98dd650273a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ShadowVale.AI::ShadowVale.AI.Tactical.TacticalGraphAsset
+  sceneName: Map 1
+  spacing: 10.349999
+  nodes:
+  - position: {x: 61, y: 8.281443, z: 61.2}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 010000000200000003000000060000004b010000be010000c6010000ce010000d6010000d7010000
+  - position: {x: 75, y: 8.279999, z: 61.2}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 00000000020000000400000005000000070000004b0100005a0100005b010000d6010000
+  - position: {x: 65.6, y: 8.279999, z: 55}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: 00000000010000000300000004000000050000004b010000bf010000c1010000c3010000c6010000cc010000cd010000ce010000d1010000d3010000d6010000d7010000
+  - position: {x: 57.32, y: 8.279999, z: 47.08}
+    cover: 1
+    coverFacing: 315
+    chokepoint: 0
+    neighbors: 00000000020000004a010000b4010000bf010000c1010000c3010000c5010000c6010000ce010000d1010000
+  - position: {x: 74.4, y: 8.494824, z: 48}
+    cover: 1
+    coverFacing: 45.000004
+    chokepoint: 0
+    neighbors: 01000000020000004a0100004b01000096010000bc010000bf010000c1010000c7010000cd010000ce010000
+  - position: {x: 80.21999, y: 8.279999, z: 54.02}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: 01000000020000004b0100005a0100005b01000096010000bc010000bf010000c7010000cd010000cf010000d2010000d6010000
+  - position: {x: 62.6, y: 8.279999, z: 70.6}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: 00000000070000004b010000be010000d6010000
+  - position: {x: 73.6, y: 8.279999, z: 70.6}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: 01000000060000004b0100005b010000d2010000d6010000
+  - position: {x: -106.185, y: 10.210799, z: -96.264984}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 090000001c000000
+  - position: {x: -106.185, y: 10.527222, z: -85.914986}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 080000000a0000001c0000001d0000001e000000ac010000
+  - position: {x: -106.15051, y: 9.5795355, z: -75.56499}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 090000000b0000001d0000001e0000001f000000ac010000
+  - position: {x: -106.185, y: 8.035284, z: -65.21499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0a0000000c0000001e0000001f00000020000000ac010000
+  - position: {x: -104.68311, y: 6.7915215, z: -54.86499}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 0b0000000d0000001f0000002000000021000000
+  - position: {x: -106.185, y: 5.851576, z: -44.51499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0c0000000e000000200000002100000022000000
+  - position: {x: -105.967735, y: 5.3475757, z: -37.977795}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 0d0000000f0000002100000022000000
+  - position: {x: -106.185, y: 4.776587, z: -23.814995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0e00000010000000220000002300000024000000
+  - position: {x: -106.185, y: 5.0916953, z: -13.464995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0f00000011000000230000002400000025000000
+  - position: {x: -106.185, y: 6.225085, z: -3.114996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1000000012000000240000002500000026000000
+  - position: {x: -106.185, y: 8.040931, z: 7.2350035}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1100000013000000250000002600000027000000
+  - position: {x: -106.185, y: 10.168638, z: 17.585003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1200000014000000260000002700000028000000
+  - position: {x: -103.17555, y: 13.313481, z: 28.947657}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 1300000015000000270000002800000029000000
+  - position: {x: -106.185, y: 14.539041, z: 38.285}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1400000016000000290000002a00000089010000
+  - position: {x: -105.592125, y: 15.727548, z: 47.766937}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: 1500000017000000290000002a0000002b00000089010000
+  - position: {x: -106.185, y: 15.613611, z: 58.984997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 16000000180000002a0000002b0000002c00000089010000
+  - position: {x: -105.80492, y: 14.513096, z: 71.34444}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 17000000190000002c0000002d000000
+  - position: {x: -106.17353, y: 12.9893465, z: 79.761284}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 180000001a0000002c0000002d0000002e000000
+  - position: {x: -106.185, y: 10.712638, z: 90.034996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 190000001b0000002d0000002e0000002f000000
+  - position: {x: -105.20109, y: 8.510722, z: 99.44}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1a0000002e0000002f000000
+  - position: {x: -95.835, y: 11.042712, z: -96.264984}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 08000000090000001d0000003000000031000000
+  - position: {x: -94.55778, y: 11.512862, z: -83.31237}
+    cover: 1
+    coverFacing: 45.000004
+    chokepoint: 0
+    neighbors: 090000000a0000001c0000001e000000300000003100000032000000ac010000
+  - position: {x: -95.835, y: 10.410717, z: -75.56499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 090000000a0000000b0000001d0000001f0000003100000032000000ac010000
+  - position: {x: -95.835, y: 8.455427, z: -65.21499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0a0000000b0000000c0000001e00000020000000320000003300000034000000ac010000
+  - position: {x: -95.835, y: 6.888589, z: -54.86499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0b0000000c0000000d0000001f00000021000000330000003400000035000000
+  - position: {x: -96.72181, y: 5.59055, z: -43.047813}
+    cover: 1
+    coverFacing: 315
+    chokepoint: 0
+    neighbors: 0c0000000d0000000e00000020000000220000003500000036000000
+  - position: {x: -96.49195, y: 4.923625, z: -35.684265}
+    cover: 1
+    coverFacing: 45.000004
+    chokepoint: 0
+    neighbors: 0d0000000e0000000f00000021000000230000003500000036000000
+  - position: {x: -95.835, y: 4.4617977, z: -23.814995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0f000000100000002200000024000000360000003700000038000000
+  - position: {x: -95.835, y: 5.1511006, z: -13.464995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0f00000010000000110000002300000025000000370000003800000039000000
+  - position: {x: -95.835, y: 6.89661, z: -3.114996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 100000001100000012000000240000002600000038000000390000003a000000
+  - position: {x: -95.835, y: 9.239529, z: 7.2350035}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1100000012000000130000002500000027000000390000003a0000003b000000
+  - position: {x: -95.835, y: 11.690562, z: 17.585003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 12000000130000001400000026000000280000003a0000003b0000003c000000
+  - position: {x: -93.90634, y: 13.863228, z: 25.64159}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: 130000001400000027000000290000003b0000003c0000003d00000097010000
+  - position: {x: -94.93584, y: 16.611897, z: 39.982925}
+    cover: 1
+    coverFacing: 45.000004
+    chokepoint: 0
+    neighbors: 140000001500000016000000280000002a0000003c0000003d0000003e0000008901000097010000
+  - position: {x: -95.835, y: 17.420832, z: 48.635}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 150000001600000017000000290000002b0000003d0000003e0000003f00000089010000
+  - position: {x: -96.662445, y: 17.275993, z: 58.984997}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 16000000170000002a0000002c0000003f0000004000000089010000
+  - position: {x: -95.835, y: 16.311335, z: 69.335}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1700000018000000190000002b0000002d0000003f00000040000000a6010000
+  - position: {x: -95.835, y: 14.485209, z: 79.685}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 18000000190000001a0000002c0000002e0000004000000041000000a5010000a6010000
+  - position: {x: -96.25768, y: 11.782508, z: 89.7984}
+    cover: 1
+    coverFacing: 45.000004
+    chokepoint: 0
+    neighbors: 190000001a0000001b0000002d0000002f0000004100000042000000a6010000
+  - position: {x: -95.77974, y: 9.971071, z: 96.103806}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1a0000001b0000002e0000004100000042000000
+  - position: {x: -86.533676, y: 11.452337, z: -94.89195}
+    cover: 1
+    coverFacing: 315
+    chokepoint: 0
+    neighbors: 1c0000001d000000310000004300000044000000
+  - position: {x: -85.485, y: 11.963392, z: -85.914986}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1c0000001d0000001e00000030000000320000004300000044000000
+  - position: {x: -85.485, y: 7.1780524, z: -75.56499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1d0000001e0000001f0000003100000033000000440000004500000046000000
+  - position: {x: -84.82209, y: 4.4581966, z: -63.290394}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1f0000002000000032000000340000004600000047000000
+  - position: {x: -84.35771, y: 4.5684123, z: -55.5668}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: 1f000000200000003300000035000000460000004700000048000000
+  - position: {x: -85.485, y: 5.1909137, z: -44.51499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2000000021000000220000003400000036000000470000004800000049000000
+  - position: {x: -85.485, y: 4.3659286, z: -34.164993}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 210000002200000023000000350000003700000048000000490000004a00000091010000
+  - position: {x: -85.485, y: 4.078373, z: -23.814995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 23000000240000003600000038000000490000004a0000004b0000008801000091010000
+  - position: {x: -85.485, y: 5.045334, z: -13.464995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 23000000240000002500000037000000390000004a0000004b00000087010000880100009101000098010000
+  - position: {x: -85.485, y: 7.1455207, z: -3.114996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 240000002500000026000000380000003a0000004b0000004c0000004d000000
+  - position: {x: -85.485, y: 9.649085, z: 7.2350035}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 250000002600000027000000390000003b0000004d0000004e000000
+  - position: {x: -85.485, y: 12.139832, z: 17.585003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2600000027000000280000003a0000003c0000004e000000
+  - position: {x: -85.485, y: 14.475048, z: 27.935001}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2700000028000000290000003b0000003d0000004f00000097010000
+  - position: {x: -85.485, y: 16.169294, z: 38.285}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 28000000290000002a0000003c0000003e0000004f000000500000005100000097010000
+  - position: {x: -84.52735, y: 16.946346, z: 47.85776}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: 290000002a0000003d0000003f00000050000000510000005200000097010000
+  - position: {x: -85.517746, y: 17.086784, z: 58.853313}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2a0000002b0000002c0000003e00000040000000510000005200000053000000
+  - position: {x: -87.26983, y: 16.354692, z: 69.17351}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 2b0000002c0000002d0000003f0000005300000054000000a5010000a6010000
+  - position: {x: -85.485, y: 11.845151, z: 90.034996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2d0000002e0000002f000000420000005500000056000000a5010000a6010000
+  - position: {x: -84.844574, y: 10.024367, z: 96.350075}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 2e0000002f000000410000005500000056000000
+  - position: {x: -75.135, y: 10.912397, z: -96.264984}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 3000000031000000440000005700000058000000
+  - position: {x: -75.135, y: 8.345737, z: -85.914986}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 30000000310000003200000043000000450000005700000058000000
+  - position: {x: -75.135, y: 4.2726507, z: -75.56499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 32000000440000004600000058000000590000005a000000
+  - position: {x: -75.135, y: 4.24, z: -65.21499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 3200000033000000340000004500000047000000590000005a0000005b000000
+  - position: {x: -75.135, y: 4.24, z: -54.86499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 33000000340000003500000046000000480000005a0000005b0000005c000000
+  - position: {x: -75.722115, y: 4.279999, z: -45.38212}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: 34000000350000003600000047000000490000005b0000005c000000
+  - position: {x: -75.65541, y: 3.7089329, z: -34.164993}
+    cover: 1
+    coverFacing: 45.000004
+    chokepoint: 0
+    neighbors: 350000003600000037000000480000004a0000005c0000005d0000005e0000008c01000091010000
+  - position: {x: -75.93486, y: 3.6421201, z: -23.814995}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 360000003700000038000000490000004b0000005d0000005e00000087010000880100008c010000910100009501000098010000
+  - position: {x: -75.135, y: 4.6433544, z: -13.464995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 3700000038000000390000004a0000004c0000005e0000005f000000600000008701000088010000910100009501000098010000
+  - position: {x: -73.475845, y: 5.954137, z: -3.022475}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 390000004b0000004d0000005f0000006000000061000000870100008801000098010000
+  - position: {x: -77.2643, y: 6.497726, z: 5.2854857}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: 390000003a0000004c0000004e0000006000000061000000
+  - position: {x: -75.135, y: 6.040759, z: 17.585003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 3a0000003b0000004d0000004f000000610000006200000063000000
+  - position: {x: -74.216095, y: 11.5311775, z: 28.672775}
+    cover: 1
+    coverFacing: 45.000004
+    chokepoint: 0
+    neighbors: 3c0000003d0000004e000000500000006300000064000000
+  - position: {x: -73.570175, y: 13.832951, z: 38.232246}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 3d0000003e0000004f00000051000000630000006400000065000000
+  - position: {x: -75.135, y: 15.161897, z: 48.635}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 3d0000003e0000003f0000005000000052000000640000006500000066000000
+  - position: {x: -75.135, y: 15.248132, z: 58.984997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 3e0000003f0000005100000053000000650000006600000067000000
+  - position: {x: -75.135, y: 14.609539, z: 69.335}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 3f0000004000000052000000540000006700000068000000a5010000
+  - position: {x: -75.23453, y: 13.536298, z: 77.89565}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 4000000053000000550000006700000068000000a5010000a6010000
+  - position: {x: -75.135, y: 11.065198, z: 90.034996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4100000042000000540000005600000068000000690000006a000000a5010000
+  - position: {x: -75.991425, y: 8.821147, z: 99.44}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 410000004200000055000000690000006a000000
+  - position: {x: -64.785, y: 9.95455, z: -96.264984}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4300000044000000580000006b0000006c000000
+  - position: {x: -64.785, y: 6.164747, z: -85.914986}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 43000000440000004500000057000000590000006b0000006c0000006d000000
+  - position: {x: -64.785, y: 1.9975739, z: -75.56499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4500000046000000580000006c0000006d0000006e000000990100009a0100009b0100009c010000
+  - position: {x: -64.785, y: 4.24, z: -65.21499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4500000046000000470000005b0000006d0000006e0000006f000000
+  - position: {x: -64.785, y: 4.247946, z: -54.86499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4600000047000000480000005a0000005c0000006e0000006f00000070000000
+  - position: {x: -64.785, y: 4.2565746, z: -44.51499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4700000048000000490000005b0000005d0000006f0000007000000071000000
+  - position: {x: -64.785, y: 3.4854012, z: -34.164993}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 490000004a0000005c0000005e0000007000000071000000720000008c01000095010000
+  - position: {x: -64.785, y: 3.631833, z: -23.814995}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: 490000004a0000004b0000005d0000005f00000071000000720000007300000087010000880100008c010000910100009501000098010000
+  - position: {x: -63.855354, y: 4.418674, z: -13.529226}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 4b0000004c0000005e0000006000000072000000730000007400000087010000880100009501000098010000
+  - position: {x: -64.785, y: 5.191421, z: -3.114996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4b0000004c0000004d0000005f000000610000007300000074000000750000008701000098010000
+  - position: {x: -64.785, y: 5.0576344, z: 7.2350035}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4c0000004d0000004e00000060000000620000007500000076000000
+  - position: {x: -64.785, y: 5.051572, z: 17.585003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4e0000006100000063000000750000007600000077000000
+  - position: {x: -64.785, y: 6.872906, z: 27.935001}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4e0000004f000000500000006200000064000000760000007700000078000000
+  - position: {x: -64.785, y: 11.378622, z: 38.285}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4f00000050000000510000006300000065000000770000007800000079000000
+  - position: {x: -64.785, y: 12.328142, z: 48.635}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 500000005100000052000000640000006600000078000000790000007a000000
+  - position: {x: -64.01925, y: 12.355254, z: 57.588894}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: 51000000520000006500000067000000790000007a0000007b000000
+  - position: {x: -65.02447, y: 12.288703, z: 69.190384}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: 52000000530000005400000066000000680000007a0000007b0000007c000000
+  - position: {x: -64.785, y: 11.070032, z: 79.685}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 53000000540000005500000067000000690000007b0000007c0000007d000000
+  - position: {x: -64.785, y: 9.295586, z: 90.034996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 5500000056000000680000006a0000007c0000007d000000b0010000
+  - position: {x: -66.57134, y: 8.310218, z: 97.272446}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 5500000056000000690000007d000000
+  - position: {x: -54.435005, y: 8.498826, z: -96.264984}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 57000000580000006c0000007e0000007f000000
+  - position: {x: -54.435005, y: 6.7598596, z: -85.914986}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 5700000058000000590000006b0000006d0000007e0000007f000000
+  - position: {x: -54.435005, y: 4.278663, z: -75.56499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 58000000590000005a0000006c0000006e0000007f0000008000000081000000
+  - position: {x: -54.435005, y: 4.2602806, z: -65.21499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 590000005a0000005b0000006d0000006f000000800000008100000082000000
+  - position: {x: -54.435005, y: 4.246739, z: -54.86499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 5a0000005b0000005c0000006e00000070000000810000008200000083000000
+  - position: {x: -54.435005, y: 4.2327604, z: -44.51499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 5b0000005c0000005d0000006f000000710000008300000084000000
+  - position: {x: -54.435005, y: 3.6096764, z: -34.164993}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 5c0000005d0000005e00000070000000720000008300000084000000850000008c01000095010000
+  - position: {x: -54.435005, y: 3.926229, z: -23.814995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 5d0000005e0000005f00000071000000730000008400000085000000860000008c01000095010000
+  - position: {x: -54.435005, y: 4.3875, z: -13.464995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 5e0000005f00000060000000720000007400000085000000860000008700000095010000
+  - position: {x: -55.169388, y: 4.8466234, z: -5.6911225}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 5f0000006000000073000000750000008600000087000000
+  - position: {x: -54.435005, y: 5.0813313, z: 7.2350035}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 6000000061000000620000007400000076000000870000008800000089000000
+  - position: {x: -54.435005, y: 5.0699925, z: 17.585003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 610000006200000063000000750000007700000088000000890000008a000000
+  - position: {x: -54.435005, y: 6.424705, z: 27.935001}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 6200000063000000640000007600000078000000890000008a0000008b000000
+  - position: {x: -54.435005, y: 8.453736, z: 38.285}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 63000000640000006500000077000000790000008a0000008b000000
+  - position: {x: -54.435005, y: 9.291677, z: 48.635}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 640000006500000066000000780000007a0000008b0000008c0000008d000000
+  - position: {x: -54.435005, y: 9.665723, z: 58.984997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 650000006600000067000000790000007b0000008d0000008e000000
+  - position: {x: -56.26131, y: 9.97737, z: 68.88537}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 6600000067000000680000007a0000007c0000008e000000
+  - position: {x: -54.435005, y: 8.433901, z: 79.685}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 6700000068000000690000007b0000007d0000008e0000008f00000090000000
+  - position: {x: -54.435005, y: 7.0313687, z: 90.034996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 68000000690000006a0000007c0000008f00000090000000b0010000
+  - position: {x: -44.085007, y: 6.74146, z: -96.264984}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 6b0000006c0000007f0000009100000092000000
+  - position: {x: -44.085007, y: 6.8280077, z: -85.914986}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 6b0000006c0000006d0000007e00000080000000910000009200000093000000
+  - position: {x: -44.343975, y: 4.983754, z: -72.50886}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 6d0000006e0000007f000000810000009300000094000000
+  - position: {x: -44.085007, y: 4.5320344, z: -65.21499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 6d0000006e0000006f00000080000000820000009300000094000000
+  - position: {x: -43.703907, y: 4.4373484, z: -56.267303}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 6e0000006f0000008100000083000000940000009500000096000000
+  - position: {x: -44.085007, y: 3.956328, z: -44.51499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 6f000000700000007100000082000000840000009500000096000000
+  - position: {x: -44.085007, y: 3.6850643, z: -34.164993}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 7000000071000000720000008300000085000000960000009700000098000000
+  - position: {x: -44.085007, y: 4.025237, z: -23.814995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 7100000072000000730000008400000086000000970000009800000099000000
+  - position: {x: -44.085007, y: 4.3112555, z: -13.464995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 720000007300000074000000850000008700000098000000990000009a000000a7010000
+  - position: {x: -44.085007, y: 4.4110436, z: -3.114996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 7300000074000000750000008600000088000000990000009a0000009b000000
+  - position: {x: -44.085007, y: 4.878434, z: 7.2350035}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 750000007600000087000000890000009a0000009b0000009c000000
+  - position: {x: -44.085007, y: 5.288203, z: 17.585003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 750000007600000077000000880000008a0000009b0000009c0000009d000000
+  - position: {x: -44.085007, y: 5.6975775, z: 27.935001}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 760000007700000078000000890000008b0000009c0000009d0000009e000000
+  - position: {x: -44.085007, y: 5.9803734, z: 38.285}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 7700000078000000790000008a0000008c0000009d0000009e0000009f000000
+  - position: {x: -43.157116, y: 6.2908573, z: 48.811325}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 790000008b0000008d0000009e0000009f000000a0000000
+  - position: {x: -44.085007, y: 6.9253945, z: 58.984997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 790000007a0000008c0000008e0000009f000000a0000000a1000000
+  - position: {x: -45.441654, y: 7.1075406, z: 69.335}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: 7a0000007b0000007c0000008d0000008f000000a1000000
+  - position: {x: -44.085007, y: 6.018978, z: 79.685}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 7c0000007d0000008e00000090000000a2000000a3000000
+  - position: {x: -45.462032, y: 5.201145, z: 90.06174}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 7c0000007d0000008f000000a3000000a4000000b0010000
+  - position: {x: -33.73501, y: 5.361303, z: -96.264984}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 7e0000007f00000092000000a5000000a6000000
+  - position: {x: -33.35168, y: 5.513323, z: -86.66872}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: 7e0000007f0000009100000093000000a5000000a6000000a7000000
+  - position: {x: -33.73501, y: 5.699317, z: -75.56499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 7f00000080000000810000009200000094000000a6000000a7000000a8000000
+  - position: {x: -33.73501, y: 5.3480787, z: -65.21499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 8000000081000000820000009300000095000000a7000000a8000000
+  - position: {x: -32.252068, y: 4.3311725, z: -53.769768}
+    cover: 1
+    coverFacing: 45.000004
+    chokepoint: 0
+    neighbors: 82000000830000009400000096000000a8000000a9000000
+  - position: {x: -33.73501, y: 3.7334998, z: -44.51499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 8200000083000000840000009500000097000000a9000000
+  - position: {x: -33.268944, y: 3.719967, z: -31.998802}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 84000000850000009600000098000000aa000000ab000000
+  - position: {x: -33.73501, y: 3.9302986, z: -23.814995}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: 8400000085000000860000009700000099000000aa000000ab000000ac000000a7010000
+  - position: {x: -33.73501, y: 3.9473207, z: -13.464995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 850000008600000087000000980000009a000000ac000000ad000000a7010000
+  - position: {x: -33.73501, y: 3.7754443, z: -3.114996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 860000008700000088000000990000009b000000ac000000ad000000ae000000a7010000
+  - position: {x: -33.73501, y: 3.8838618, z: 7.2350035}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 8700000088000000890000009a0000009c000000ad000000ae000000af000000a8010000a9010000
+  - position: {x: -33.73501, y: 4.258605, z: 17.585003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 88000000890000008a0000009b0000009d000000ae000000af000000b0000000a8010000
+  - position: {x: -33.73501, y: 4.3062267, z: 27.935001}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 890000008a0000008b0000009c0000009e000000af000000b0000000b1000000
+  - position: {x: -33.73501, y: 4.189238, z: 38.285}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 8a0000008b0000008c0000009d0000009f000000b0000000b1000000b2000000
+  - position: {x: -33.73501, y: 4.363278, z: 48.635}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 8b0000008c0000008d0000009e000000a0000000b1000000b2000000b3000000
+  - position: {x: -32.354733, y: 4.395766, z: 58.68575}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 8c0000008d0000009f000000a1000000b2000000b3000000b4000000
+  - position: {x: -33.09778, y: 4.46967, z: 68.01467}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: 8d0000008e000000a0000000a2000000b3000000b4000000
+  - position: {x: -33.73501, y: 4.046249, z: 79.685}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 8f000000a1000000a3000000b4000000b5000000
+  - position: {x: -33.73501, y: 3.444442, z: 90.034996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 8f00000090000000a2000000a4000000b5000000b6000000
+  - position: {x: -35.264694, y: 3.3058548, z: 99.44}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 90000000a3000000b5000000b6000000
+  - position: {x: -22.617933, y: 4.4185677, z: -95.88763}
+    cover: 1
+    coverFacing: 45.000004
+    chokepoint: 0
+    neighbors: 9100000092000000a6000000b7000000b8000000
+  - position: {x: -23.38501, y: 4.6266313, z: -85.914986}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 910000009200000093000000a5000000a7000000b7000000b8000000b9000000
+  - position: {x: -23.727041, y: 4.8431954, z: -76.74462}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 920000009300000094000000a6000000a8000000b8000000b9000000
+  - position: {x: -23.38501, y: 2.3269863, z: -65.21499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: 930000009400000095000000a7000000b9000000ba000000
+  - position: {x: -23.38501, y: 3.3618288, z: -44.51499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 9500000096000000aa000000
+  - position: {x: -22.656582, y: 3.361013, z: -31.582066}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 9700000098000000a9000000ab000000bb000000
+  - position: {x: -20.304672, y: 3.4680245, z: -23.479082}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 9700000098000000aa000000ac000000bb000000bc000000a7010000
+  - position: {x: -23.38501, y: 3.3243327, z: -13.464995}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 1
+    neighbors: 98000000990000009a000000ab000000ad000000bb000000bc000000bd000000a7010000
+  - position: {x: -23.38501, y: 2.7863119, z: -3.114996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 990000009a0000009b000000ac000000ae000000bc000000bd000000be000000a7010000a9010000
+  - position: {x: -23.385046, y: 2.9076383, z: 7.0763936}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 9a0000009b0000009c000000ad000000af000000bd000000be000000bf000000a8010000a9010000
+  - position: {x: -24.433039, y: 3.4912758, z: 18.986425}
+    cover: 1
+    coverFacing: 315
+    chokepoint: 0
+    neighbors: 9b0000009c0000009d000000ae000000b0000000bf000000a8010000a9010000
+  - position: {x: -23.38501, y: 3.4891438, z: 27.935001}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 9c0000009d0000009e000000af000000b1000000bf000000c0000000a8010000
+  - position: {x: -23.38501, y: 3.2788844, z: 38.285}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 9d0000009e0000009f000000b0000000b2000000c1000000c2000000
+  - position: {x: -23.38501, y: 3.1629171, z: 48.635}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 9e0000009f000000a0000000b1000000b3000000c2000000c3000000
+  - position: {x: -23.38501, y: 3.263145, z: 58.984997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 9f000000a0000000a1000000b2000000b4000000c2000000c3000000c4000000
+  - position: {x: -23.38501, y: 3.0735676, z: 69.335}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: a0000000a1000000a2000000b3000000c3000000c4000000c5000000
+  - position: {x: -23.412346, y: 2.6990113, z: 90.07688}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: a2000000a3000000a4000000b6000000c5000000c6000000c7000000
+  - position: {x: -23.385014, y: 2.8799996, z: 99.44}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: a3000000a4000000b5000000c6000000c7000000
+  - position: {x: -13.03501, y: 3.6924996, z: -96.264984}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: a5000000a6000000b8000000c8000000
+  - position: {x: -12.717289, y: 3.534215, z: -86.420204}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: a5000000a6000000a7000000b7000000b9000000c8000000
+  - position: {x: -16.567844, y: 4.19329, z: -76.35974}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: a6000000a7000000a8000000b8000000
+  - position: {x: -13.03501, y: 1.4400005, z: -65.21499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: a8000000c9000000
+  - position: {x: -13.03501, y: -1.0790771, z: -23.814995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: aa000000ab000000ac000000bc000000
+  - position: {x: -13.171502, y: 1.329375, z: -11.220256}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: ab000000ac000000ad000000bb000000bd000000
+  - position: {x: -13.03501, y: 1.3763351, z: -3.114996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: ac000000ad000000ae000000bc000000be000000cd000000a9010000
+  - position: {x: -13.03501, y: 2.0967152, z: 7.2350035}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: ad000000ae000000bd000000bf000000cd000000ce000000a8010000a9010000
+  - position: {x: -13.03501, y: 3.169632, z: 17.585003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: ae000000af000000b0000000be000000c0000000ce000000cf000000a8010000a9010000
+  - position: {x: -10.921763, y: 3.4366252, z: 26.831867}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: b0000000bf000000c1000000ce000000cf000000d0000000
+  - position: {x: -10.168311, y: 3.314798, z: 37.34136}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: b1000000c0000000c2000000cf000000d0000000d1000000
+  - position: {x: -13.03501, y: 2.9655316, z: 48.635}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: b1000000b2000000b3000000c1000000c3000000d0000000d1000000d2000000da010000
+  - position: {x: -13.03501, y: 2.4284403, z: 58.984997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: b2000000b3000000b4000000c2000000c4000000d1000000d2000000d3000000
+  - position: {x: -13.03501, y: 1.9892435, z: 69.335}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: b3000000b4000000c3000000c5000000d2000000d3000000d4000000db010000
+  - position: {x: -13.03501, y: 1.4521745, z: 79.685}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: b4000000b5000000c4000000c6000000d3000000d4000000d5000000
+  - position: {x: -13.03501, y: 1.3500687, z: 90.034996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: b5000000b6000000c5000000c7000000d4000000
+  - position: {x: -16.321547, y: 2.7192018, z: 99.44}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: b5000000b6000000c6000000
+  - position: {x: -2.685011, y: -1.3842182, z: -96.264984}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: b7000000b8000000
+  - position: {x: -2.685011, y: 1.4400005, z: -65.21499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: ba000000d7000000d8000000d9000000
+  - position: {x: -2.685011, y: -1.2985246, z: -54.86499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: cb000000d8000000d9000000da000000
+  - position: {x: -2.685011, y: -1.0680325, z: -44.51499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: ca000000cc000000d9000000da000000db000000
+  - position: {x: -2.685011, y: -1.3069031, z: -34.164993}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: cb000000da000000db000000dc000000
+  - position: {x: -2.7574306, y: 1.4483026, z: -1.1360325}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: bd000000be000000de000000
+  - position: {x: -2.685011, y: 0.36141902, z: 17.585003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: be000000bf000000c0000000cf000000
+  - position: {x: -2.685011, y: 2.5082397, z: 27.935001}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: bf000000c0000000c1000000ce000000d0000000
+  - position: {x: -4.636575, y: 3.4521163, z: 39.978264}
+    cover: 1
+    coverFacing: 315
+    chokepoint: 0
+    neighbors: c0000000c1000000c2000000cf000000d1000000
+  - position: {x: -2.685011, y: 2.8876307, z: 48.635}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: c1000000c2000000c3000000d0000000d2000000
+  - position: {x: -2.685011, y: 1.6148086, z: 58.984997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: c2000000c3000000c4000000d1000000
+  - position: {x: -2.685011, y: 1.2073818, z: 69.335}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: c3000000c4000000c5000000d4000000
+  - position: {x: -2.685011, y: -1.5881144, z: 79.685}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: c4000000c5000000c6000000d3000000
+  - position: {x: -3.040001, y: 2.8000002, z: 89.88}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: c5000000
+  - position: {x: 7.6649885, y: -0.019946218, z: -85.914986}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: d7000000e2000000e3000000e40000008e010000
+  - position: {x: 7.6649885, y: 2.0618758, z: -75.56499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: c9000000d6000000d8000000e3000000e4000000e50000008e010000
+  - position: {x: 7.6649885, y: 1.4116621, z: -65.21499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: c9000000ca000000d7000000d9000000e4000000e5000000e6000000
+  - position: {x: 7.6649885, y: 2.3539226, z: -54.86499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: c9000000ca000000cb000000d8000000da000000e5000000e6000000e7000000
+  - position: {x: 7.6649885, y: 2.4022932, z: -44.51499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: ca000000cb000000cc000000d9000000db000000e6000000e7000000e8000000
+  - position: {x: 4.787081, y: 2.754476, z: -35.103798}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: cb000000cc000000da000000dc000000e8000000
+  - position: {x: 7.6649885, y: 3.3268695, z: -23.814995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: cc000000db000000dd000000e8000000e9000000b2010000
+  - position: {x: 8.92054, y: 3.6280997, z: -12.854279}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: dc000000de000000e9000000ea000000b2010000
+  - position: {x: 7.6649885, y: 1.312256, z: -3.114996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: cd000000dd000000ea000000eb000000
+  - position: {x: 7.6246395, y: 1.4248116, z: 63.84}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: f0000000db010000
+  - position: {x: 8.303391, y: 0.23794091, z: 90.157814}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: e1000000f2000000f3000000f4000000
+  - position: {x: 8.957418, y: 2.4800005, z: 99.44}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: e0000000f3000000f4000000
+  - position: {x: 18.014988, y: 2.6614513, z: -96.264984}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: d6000000e3000000f5000000850100008e010000
+  - position: {x: 18.014988, y: 2.5896118, z: -85.914986}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: d6000000d7000000e2000000e4000000f5000000f6000000850100008e010000
+  - position: {x: 18.014988, y: 2.498714, z: -75.56499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: d6000000d7000000d8000000e3000000e5000000f6000000f7000000850100008e010000
+  - position: {x: 18.014988, y: 2.245825, z: -65.21499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: d7000000d8000000d9000000e4000000e6000000f6000000f7000000
+  - position: {x: 18.014988, y: 2.0026512, z: -54.86499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: d8000000d9000000da000000e5000000e7000000f7000000f8000000f90000009201000093010000
+  - position: {x: 18.014988, y: 2.244373, z: -44.51499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: d9000000da000000e6000000e8000000f8000000f9000000fa0000009201000093010000
+  - position: {x: 18.014988, y: 2.841361, z: -34.164993}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: da000000db000000dc000000e7000000e9000000f9000000fa000000fb000000
+  - position: {x: 18.014988, y: 3.5971286, z: -23.814995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: dc000000dd000000e8000000fa000000fb000000fc000000b2010000dc010000
+  - position: {x: 18.014988, y: 2.7465205, z: -3.114996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: dd000000de000000eb000000fc000000fd000000fe000000b2010000dc010000
+  - position: {x: 18.83105, y: 3.6580706, z: 6.1745057}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 1
+    neighbors: de000000ea000000ec000000fd000000fe000000ff000000
+  - position: {x: 18.014988, y: 4.6963935, z: 17.585003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: eb000000ed000000fe000000ff000000
+  - position: {x: 20.113031, y: 4.533798, z: 28.033264}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: ec000000ee00000000010000
+  - position: {x: 22.16, y: 4.4399996, z: 40.48}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: ed000000ef000000000100000101000002010000
+  - position: {x: 22.638514, y: 4.216132, z: 49.291325}
+    cover: 1
+    coverFacing: 45.000004
+    chokepoint: 0
+    neighbors: ee000000f00000000201000003010000
+  - position: {x: 19.030378, y: 1.7722334, z: 59.461784}
+    cover: 1
+    coverFacing: 45.000004
+    chokepoint: 1
+    neighbors: df000000ef000000f1000000020100000301000004010000
+  - position: {x: 18.014988, y: 1.4925547, z: 69.335}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: f0000000f2000000030100000401000005010000
+  - position: {x: 17.405611, y: 2.2764711, z: 82.136055}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: e0000000f1000000f30000000501000006010000
+  - position: {x: 18.50432, y: 2.2754965, z: 89.11445}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: e0000000e1000000f2000000f4000000050100000601000007010000
+  - position: {x: 18.01499, y: 2.6000001, z: 99.44}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: e0000000e1000000f30000000601000007010000
+  - position: {x: 28.364986, y: 3.0796292, z: -96.264984}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: e2000000e3000000080100000901000085010000
+  - position: {x: 28.364986, y: 2.848432, z: -75.56499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: e3000000e4000000e5000000f7000000090100000a010000850100008e010000d9010000
+  - position: {x: 28.364986, y: 2.4181406, z: -65.21499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: e4000000e5000000e6000000f6000000f80000000a0100000b010000
+  - position: {x: 28.364986, y: 2.200421, z: -52.264}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: e6000000e7000000f7000000f90000000b0100000c0100009201000093010000
+  - position: {x: 28.364986, y: 2.5764384, z: -45.269005}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: e6000000e7000000e8000000f8000000fa0000000b0100000c0100000d0100009201000093010000
+  - position: {x: 28.364986, y: 3.5411894, z: -34.164993}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: e7000000e8000000e9000000f9000000fb0000000c0100000d0100000e01000092010000
+  - position: {x: 27.462345, y: 4.3246455, z: -24.511288}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: e8000000e9000000fa000000fc0000000d0100000e010000b2010000
+  - position: {x: 28.364986, y: 5.584657, z: -13.464995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: e9000000ea000000fb000000fd0000000e0100000f01000010010000b2010000
+  - position: {x: 28.364986, y: 6.0381937, z: -3.114996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: ea000000eb000000fc000000fe0000000f0100001001000011010000b2010000
+  - position: {x: 28.364986, y: 5.907922, z: 7.2350035}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: ea000000eb000000ec000000fd000000ff0000001001000011010000
+  - position: {x: 31.119999, y: 7.16, z: 14.559999}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: eb000000ec000000fe000000110100001201000013010000
+  - position: {x: 28.48278, y: 5.2590413, z: 30.39621}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: ed000000ee000000010100001301000014010000
+  - position: {x: 33.816883, y: 6.1444464, z: 37.009407}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: ee00000000010000130100001401000015010000
+  - position: {x: 28.280447, y: 4.7744803, z: 51.636208}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: ee000000ef000000f0000000030100001501000016010000
+  - position: {x: 28.847782, y: 4.199218, z: 58.601315}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: ef000000f0000000f10000000201000004010000150100001601000017010000
+  - position: {x: 28.364986, y: 3.223443, z: 69.335}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: f0000000f100000003010000050100001601000017010000
+  - position: {x: 28.364986, y: 2.9759414, z: 79.685}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: f1000000f2000000f30000000401000006010000170100001801000019010000
+  - position: {x: 29.15596, y: 2.8100648, z: 89.57949}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: f2000000f3000000f4000000050100000701000018010000190100001a010000
+  - position: {x: 29.494436, y: 3.0257955, z: 99.44}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: f3000000f400000006010000190100001a010000
+  - position: {x: 38.714985, y: 3.3522704, z: -96.264984}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: f5000000090100001b0100001c010000
+  - position: {x: 38.714985, y: 3.1328409, z: -85.914986}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: f5000000f6000000080100001b0100001c0100001d01000085010000d9010000
+  - position: {x: 38.714985, y: 2.7028413, z: -65.21499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: f6000000f70000000b0100001d0100001e0100001f010000d9010000
+  - position: {x: 38.714985, y: 2.770006, z: -54.86499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: f7000000f8000000f90000000a0100000c0100001e0100001f010000200100009201000093010000
+  - position: {x: 38.714985, y: 3.608523, z: -44.51499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: f8000000f9000000fa0000000b0100000d0100001f01000020010000210100009201000093010000
+  - position: {x: 38.714985, y: 4.815422, z: -34.164993}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: f9000000fa000000fb0000000c0100000e010000200100002101000022010000
+  - position: {x: 36.835445, y: 5.957796, z: -22.694841}
+    cover: 1
+    coverFacing: 315
+    chokepoint: 0
+    neighbors: fa000000fb000000fc0000000d0100000f0100002201000023010000
+  - position: {x: 38.569775, y: 7.4911447, z: -11.767833}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: fc000000fd0000000e010000100100002301000024010000
+  - position: {x: 38.714985, y: 7.9670463, z: -3.114996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: fc000000fd000000fe0000000f010000110100002301000024010000
+  - position: {x: 38.714985, y: 7.958902, z: 7.2350035}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: fd000000fe000000ff0000001001000012010000240100002501000026010000
+  - position: {x: 42.66585, y: 8.878153, z: 17.097393}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: ff0000001101000013010000250100002601000027010000
+  - position: {x: 39.665802, y: 7.795598, z: 26.355923}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 1
+    neighbors: ff000000000100000101000012010000140100002601000027010000
+  - position: {x: 38.714985, y: 7.3628435, z: 38.285}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 000100000101000013010000150100002701000028010000
+  - position: {x: 38.714985, y: 6.998178, z: 48.635}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 01010000020100000301000014010000160100002801000029010000
+  - position: {x: 38.669403, y: 6.233665, z: 58.215908}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 020100000301000004010000150100001701000028010000290100002a010000
+  - position: {x: 38.714985, y: 5.107725, z: 69.335}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0301000004010000050100001601000018010000290100002a0100002b010000c8010000
+  - position: {x: 39.897285, y: 4.1736465, z: 81.210236}
+    cover: 1
+    coverFacing: 45.000004
+    chokepoint: 0
+    neighbors: 050100000601000017010000190100002b0100002c010000a3010000c8010000
+  - position: {x: 38.714985, y: 3.703015, z: 90.034996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 050100000601000007010000180100001a0100002b0100002c010000a2010000a3010000
+  - position: {x: 40.070282, y: 3.7726629, z: 99.44}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0601000007010000190100002c010000a2010000a3010000
+  - position: {x: 49.064983, y: 3.6521971, z: -96.264984}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 08010000090100001c0100002d0100002e010000
+  - position: {x: 49.064983, y: 3.3149378, z: -85.914986}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 08010000090100001b0100001d0100002d0100002e0100002f01000094010000d9010000
+  - position: {x: 49.064983, y: 3.1805108, z: -75.56499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 090100000a0100001c0100001e0100002e0100002f0100003001000094010000a0010000d9010000
+  - position: {x: 49.05657, y: 3.0131912, z: -64.93885}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0a0100000b0100001d0100001f0100002f010000300100003101000086010000a0010000
+  - position: {x: 49.064983, y: 3.4370015, z: -54.86499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0a0100000b0100000c0100001e01000020010000300100003101000032010000
+  - position: {x: 49.064983, y: 4.6911554, z: -44.51499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0b0100000c0100000d0100001f010000210100003101000032010000
+  - position: {x: 49.064983, y: 6.231549, z: -34.164993}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0c0100000d0100002001000022010000320100003301000034010000
+  - position: {x: 48.547966, y: 7.24786, z: -25.980658}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 0d0100000e010000210100002301000034010000
+  - position: {x: 49.064983, y: 7.2393546, z: -13.464995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0e0100000f010000100100002201000024010000340100003501000036010000d8010000
+  - position: {x: 49.064983, y: 8.983074, z: -3.114996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0f010000100100001101000023010000250100003601000037010000d8010000
+  - position: {x: 50.382767, y: 11.301514, z: 7.992038}
+    cover: 1
+    coverFacing: 45.000004
+    chokepoint: 0
+    neighbors: 110100001201000024010000260100003601000037010000b1010000
+  - position: {x: 49.064983, y: 10.886385, z: 17.585003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: 11010000120100001301000025010000270100003701000038010000b1010000
+  - position: {x: 49.512688, y: 10.734919, z: 28.360394}
+    cover: 1
+    coverFacing: 45.000004
+    chokepoint: 0
+    neighbors: 120100001301000014010000260100003801000039010000
+  - position: {x: 49.14, y: 8.292688, z: 48.635}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 1
+    neighbors: 1401000015010000160100002901000039010000
+  - position: {x: 49.14, y: 8.290687, z: 58.984997}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 150100001601000017010000280100002a010000c8010000
+  - position: {x: 49.14, y: 8.288861, z: 69.335}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 1601000017010000290100002b0100003a010000b3010000bb010000c0010000c8010000
+  - position: {x: 49.064983, y: 5.8564677, z: 79.685}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1701000018010000190100002a0100002c0100003a0100003b0100009d010000a2010000a3010000b3010000bb010000c0010000c8010000
+  - position: {x: 49.064983, y: 5.001366, z: 90.034996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 18010000190100001a0100002b0100003a0100003b0100003c0100009d010000a3010000
+  - position: {x: 56.75479, y: 3.8813982, z: -94.52094}
+    cover: 1
+    coverFacing: 315
+    chokepoint: 0
+    neighbors: 1b0100001c0100002e0100003d0100003e01000094010000
+  - position: {x: 59.804554, y: 3.568728, z: -86.02238}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 1b0100001c0100001d0100002d0100002f0100003d0100003e010000940100009e010000a0010000
+  - position: {x: 59.41498, y: 3.344221, z: -75.56499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1c0100001d0100001e0100002e010000300100003e0100003f0100004001000086010000940100009e010000a0010000
+  - position: {x: 59.41498, y: 3.4218357, z: -65.21499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1d0100001e0100001f0100002f010000310100003f010000400100004101000086010000940100009e010000
+  - position: {x: 59.41498, y: 4.099371, z: -54.86499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1e0100001f01000020010000300100003201000040010000410100004201000086010000
+  - position: {x: 59.41498, y: 5.577713, z: -44.51499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 1f01000020010000210100003101000033010000410100004201000043010000
+  - position: {x: 62.37465, y: 7.4520755, z: -35.59187}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: 210100003201000034010000420100004301000044010000
+  - position: {x: 59.41498, y: 6.143211, z: -23.814995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2101000022010000230100003301000035010000430100004401000045010000d0010000d8010000
+  - position: {x: 60.892937, y: 6.16796, z: -13.685342}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2301000034010000360100004401000046010000d0010000
+  - position: {x: 59.41498, y: 6.103852, z: -3.114996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 23010000240100002501000035010000370100004501000046010000cb010000d0010000d8010000
+  - position: {x: 59.41498, y: 13.316741, z: 7.2350035}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2401000025010000260100003601000047010000b1010000
+  - position: {x: 59.41498, y: 14.088993, z: 27.935001}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: 26010000270100003901000048010000490100004a010000b1010000
+  - position: {x: 59.41498, y: 9.138141, z: 38.285}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: 2701000028010000380100004a010000bf010000
+  - position: {x: 59.41498, y: 7.508332, z: 79.685}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2a0100002b0100002c0100003b0100004c0100009d010000ab010000b3010000b5010000bb010000bd010000c0010000c8010000
+  - position: {x: 59.855103, y: 6.3379774, z: 89.85952}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: 2b0100002c0100003a0100003c0100004c0100009d010000a2010000a3010000aa010000ab010000
+  - position: {x: 60.261833, y: 5.557789, z: 99.17735}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2c0100003b0100009d010000a2010000a3010000aa010000
+  - position: {x: 69.736145, y: 4.08, z: -96.28421}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2d0100002e0100003e0100004d0100004e010000
+  - position: {x: 69.68985, y: 3.7187133, z: -86.126854}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 2d0100002e0100002f0100003d0100003f0100004d0100004e0100004f010000940100009e010000
+  - position: {x: 70.9895, y: 3.5943036, z: -74.366196}
+    cover: 1
+    coverFacing: 45.000004
+    chokepoint: 0
+    neighbors: 2f010000300100003e010000400100004e0100004f0100005001000086010000940100009e010000a0010000af010000
+  - position: {x: 69.764984, y: 3.8189757, z: -65.21499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2f01000030010000310100003f010000410100004f0100005001000051010000860100009e010000a0010000af010000
+  - position: {x: 69.764984, y: 4.809168, z: -54.86499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 300100003101000032010000400100004201000050010000510100005201000086010000
+  - position: {x: 69.764984, y: 6.5337315, z: -44.51499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 3101000032010000330100004101000043010000510100005201000053010000
+  - position: {x: 69.764984, y: 8.451377, z: -34.164993}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 3201000033010000340100004201000044010000520100005301000054010000
+  - position: {x: 69.764984, y: 6.119743, z: -23.814995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 33010000340100003501000043010000450100005301000054010000cb010000
+  - position: {x: 69.764984, y: 6.0454817, z: -13.464995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 3401000036010000440100004601000054010000cb010000d8010000
+  - position: {x: 69.764984, y: 6.1026497, z: -3.114996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 350100003601000045010000cb010000d8010000
+  - position: {x: 71.3506, y: 18.322226, z: 8.559999}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 37010000480100005601000057010000b1010000
+  - position: {x: 69.764984, y: 18.505138, z: 17.585003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 3801000047010000490100005701000058010000b1010000
+  - position: {x: 69.764984, y: 16.068518, z: 27.935001}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 38010000480100004a01000058010000b1010000
+  - position: {x: 69.764984, y: 8.950324, z: 38.285}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: 030000000400000038010000390100004901000059010000bc010000bf010000c1010000c3010000ce010000d4010000
+  - position: {x: 69.764984, y: 8.28944, z: 58.984997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 000000000100000002000000040000000500000006000000070000005b010000cc010000cd010000ce010000d1010000d2010000d3010000d6010000d7010000
+  - position: {x: 69.764984, y: 8.788761, z: 79.685}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 3a0100003b0100005c0100005d010000aa010000ab010000b3010000b5010000b9010000ba010000bd010000c0010000c9010000
+  - position: {x: 80.11498, y: 3.9629078, z: -96.264984}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 3d0100003e0100004e0100005f01000060010000
+  - position: {x: 78.84746, y: 3.7574704, z: -85.88793}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 3d0100003e0100003f0100004d0100004f01000060010000af010000
+  - position: {x: 80.11498, y: 3.774791, z: -75.56499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 3e0100003f010000400100004e010000500100006001000061010000af010000
+  - position: {x: 80.32453, y: 4.288064, z: -64.26888}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: 3f01000040010000410100004f010000510100006101000062010000af010000
+  - position: {x: 80.11498, y: 5.5224223, z: -54.86499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4001000041010000420100005001000052010000610100006201000063010000
+  - position: {x: 80.11498, y: 7.711476, z: -44.51499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4101000042010000430100005101000053010000620100006301000064010000
+  - position: {x: 80.11498, y: 10.316196, z: -34.164993}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4201000043010000440100005201000054010000630100006401000090010000
+  - position: {x: 80.11498, y: 10.636631, z: -23.814995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 43010000440100004501000053010000640100008f01000090010000
+  - position: {x: 85.24073, y: 21.476929, z: 0.95142096}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 560100006501000066010000
+  - position: {x: 81.31857, y: 21.418524, z: 5.7039514}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: 470100005501000057010000650100006601000067010000
+  - position: {x: 80.89471, y: 21.582, z: 18.148628}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 470100004801000056010000580100006601000067010000680100009f010000
+  - position: {x: 80.11498, y: 15.574212, z: 27.935001}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 48010000490100005701000059010000680100009f010000
+  - position: {x: 80.11498, y: 8.701545, z: 38.285}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4a01000058010000690100006a010000bf010000ca010000
+  - position: {x: 81.68, y: 12.519999, z: 48.8}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 0100000005000000cd010000d2010000
+  - position: {x: 80.174995, y: 8.439999, z: 69.335}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 0100000005000000070000004b010000d2010000d6010000
+  - position: {x: 80.11498, y: 9.8011265, z: 79.685}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4c0100005d0100006c0100006d0100006e010000ab010000ad010000ae010000b5010000b7010000b9010000ba010000bd010000c4010000c9010000
+  - position: {x: 79.1303, y: 6.858495, z: 91.82857}
+    cover: 1
+    coverFacing: 315
+    chokepoint: 0
+    neighbors: 4c0100005c0100005e0100006e0100006f010000aa010000ab010000ae010000
+  - position: {x: 80.81102, y: 5.9127874, z: 97.477974}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 5d0100006e0100006f010000aa010000ab010000ae010000
+  - position: {x: 90.46498, y: 3.7492988, z: -96.264984}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4d010000600100007001000071010000
+  - position: {x: 90.46498, y: 3.7733622, z: -85.914986}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4d0100004e0100004f0100005f010000700100007101000072010000a4010000
+  - position: {x: 90.46498, y: 4.4552345, z: -65.21499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4f010000500100005101000062010000720100007301000074010000a4010000af010000
+  - position: {x: 90.693375, y: 6.159752, z: -54.008915}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 50010000510100005201000061010000630100007401000075010000
+  - position: {x: 90.46498, y: 8.483857, z: -44.51499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 5101000052010000530100006201000064010000740100007501000076010000
+  - position: {x: 90.47563, y: 11.367463, z: -34.225704}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 520100005301000054010000630100007501000076010000770100008f01000090010000
+  - position: {x: 90.46498, y: 21.344017, z: -3.114996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 55010000560100006601000078010000790100007a0100008d010000
+  - position: {x: 90.46498, y: 23.255022, z: 7.2350035}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 5501000056010000570100006501000067010000790100007a0100007b0100009f010000
+  - position: {x: 90.46498, y: 22.215157, z: 17.585003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 560100005701000066010000680100007b0100009f010000
+  - position: {x: 90.46498, y: 15.076158, z: 27.935001}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 570100005801000067010000690100007c0100007d0100009f010000
+  - position: {x: 90.46498, y: 8.80567, z: 38.285}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 59010000680100006a0100007d0100008b010000b8010000ca010000
+  - position: {x: 90.46498, y: 8.789327, z: 48.635}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 59010000690100006b0100007e0100008a0100008b010000b6010000b8010000c2010000ca010000
+  - position: {x: 90.46498, y: 8.952909, z: 58.984997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 6a0100006c0100007f010000800100008a010000b6010000b7010000b8010000c2010000c4010000
+  - position: {x: 90.46498, y: 9.220637, z: 69.335}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 5c0100006b0100006d0100008001000081010000b6010000b7010000ba010000c2010000c4010000c9010000
+  - position: {x: 90.46498, y: 10.326818, z: 79.685}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 5c0100006c0100006e0100008101000082010000ad010000ae010000b7010000ba010000c4010000c9010000
+  - position: {x: 90.46498, y: 7.3241053, z: 90.034996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 5c0100005d0100005e0100006d0100006f010000810100008201000083010000ad010000ae010000
+  - position: {x: 88.17668, y: 6.1025753, z: 95.95258}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 5d0100005e0100006e0100008201000083010000ad010000ae010000
+  - position: {x: 100.81498, y: 3.4278824, z: -96.264984}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 5f0100006001000071010000
+  - position: {x: 100.81498, y: 3.7031894, z: -85.914986}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 5f010000600100007001000072010000a4010000
+  - position: {x: 100.81498, y: 3.876251, z: -75.56499}
+    cover: 1
+    coverFacing: 315
+    chokepoint: 0
+    neighbors: 60010000610100007101000073010000a4010000
+  - position: {x: 101.8307, y: 4.4752617, z: -64.908424}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 610100007201000074010000a4010000
+  - position: {x: 100.81498, y: 5.9387913, z: -54.86499}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 6101000062010000630100007301000075010000
+  - position: {x: 100.28363, y: 8.420278, z: -44.41538}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 6201000063010000640100007401000076010000
+  - position: {x: 100.81498, y: 11.301318, z: -34.164993}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 630100006401000075010000770100008f010000
+  - position: {x: 100.81498, y: 14.612655, z: -23.814995}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 6401000076010000780100008d0100008f01000090010000
+  - position: {x: 100.75451, y: 18.196758, z: -13.795161}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 6501000077010000790100008d0100008f010000
+  - position: {x: 100.81498, y: 21.489878, z: -3.114996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 6501000066010000780100007a0100008d010000
+  - position: {x: 103.13835, y: 23.015995, z: 5.27008}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: 6501000066010000790100007b010000
+  - position: {x: 100.81498, y: 22.564789, z: 17.585003}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 66010000670100007a0100007c0100009f010000
+  - position: {x: 103.095375, y: 17.276451, z: 25.673712}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 680100007b0100007d010000
+  - position: {x: 101.59277, y: 16.173674, z: 36.073154}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 68010000690100007c0100007e0100008b010000
+  - position: {x: 100.81498, y: 17.732708, z: 48.635}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 6a0100007d0100007f0100008a0100008b010000
+  - position: {x: 100.81498, y: 16.245481, z: 58.984997}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 6b0100007e010000800100008a0100008b010000
+  - position: {x: 101.378555, y: 14.570082, z: 66.93198}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 6b0100006c0100007f010000810100008a010000
+  - position: {x: 99.341484, y: 10.729074, z: 78.96777}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: 6c0100006d0100006e0100008001000082010000ad010000ae010000b7010000
+  - position: {x: 100.81498, y: 7.3866234, z: 90.034996}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 6d0100006e0100006f0100008101000083010000ad010000ae010000
+  - position: {x: 100.696205, y: 5.9858403, z: 96.28464}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: 6e0100006f01000082010000ad010000
+  - position: {x: -65, y: 0.19999981, z: -58.58}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 990100009a0100009b0100009c010000a1010000
+  - position: {x: 24.662256, y: 2.8563907, z: -83.10947}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: e2000000e3000000e4000000f5000000f6000000090100008e010000
+  - position: {x: 63.936474, y: 3.547671, z: -66.74241}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 1e0100002f01000030010000310100003f0100004001000041010000940100009e010000a0010000
+  - position: {x: -70.53302, y: 4.073192, z: -17.173218}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 380000004a0000004b0000004c0000005e0000005f00000060000000880100008c010000910100009501000098010000
+  - position: {x: -74.58661, y: 4.154909, z: -17.173218}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 37000000380000004a0000004b0000004c0000005e0000005f000000870100008c010000910100009501000098010000
+  - position: {x: -100.60322, y: 16.958714, z: 52.422054}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 150000001600000017000000290000002a0000002b000000
+  - position: {x: 99.49265, y: 15.175926, z: 51.664696}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 6a0100006b0100007e0100007f01000080010000b6010000b8010000
+  - position: {x: 99.49265, y: 14.877555, z: 46.16368}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 690100006a0100007d0100007e0100007f010000b8010000
+  - position: {x: -66.88576, y: 3.3999994, z: -29.05376}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 490000004a0000005d0000005e000000710000007200000087010000880100009101000095010000
+  - position: {x: 95.94259, y: 17.471886, z: -16.27259}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: 650100007701000078010000790100008f01000090010000
+  - position: {x: 16.17488, y: 2.4755552, z: -82.07048}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: d6000000d7000000e2000000e3000000e4000000f600000085010000
+  - position: {x: 94.32777, y: 14.164825, z: -25.638771}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 54010000640100007601000077010000780100008d010000
+  - position: {x: 87.46819, y: 13.584987, z: -26.245361}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 530100005401000064010000770100008d010000
+  - position: {x: -79.83851, y: 3.7238815, z: -27.291471}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 360000003700000038000000490000004a0000004b0000005e00000087010000880100008c010000
+  - position: {x: 30.970478, y: 2.5200005, z: -48.4766}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: e6000000e7000000f8000000f9000000fa0000000b0100000c010000
+  - position: {x: 25.71743, y: 2.1919923, z: -49.41289}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: e6000000e7000000f8000000f90000000b0100000c010000
+  - position: {x: 56.681435, y: 3.3301663, z: -79.27209}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 1c0100001d0100002d0100002e0100002f010000300100003e0100003f010000860100009e010000a0010000d9010000
+  - position: {x: -61.674618, y: 3.8904426, z: -20.86758}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4a0000004b0000005d0000005e0000005f00000071000000720000007300000087010000880100008c01000098010000
+  - position: {x: 85.36, y: 8.279999, z: 45.602863}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 0400000005000000bc010000bf010000c7010000cd010000d4010000
+  - position: {x: -88.59294, y: 15.743042, z: 33.88704}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 28000000290000003c0000003d0000003e000000
+  - position: {x: -70.90372, y: 4.8237534, z: -11.42325}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 380000004a0000004b0000004c0000005e0000005f00000060000000870100008801000095010000
+  - position: {x: -60.27, y: 0.19999981, z: -68.2}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 59000000840100009a0100009b0100009c010000a1010000
+  - position: {x: -69.73, y: 0.19999981, z: -68.2}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 5900000084010000990100009b0100009c010000a1010000
+  - position: {x: -58, y: 0.19999981, z: -63}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 5900000084010000990100009a0100009c010000a1010000
+  - position: {x: -72, y: 0.21100885, z: -63}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 5900000084010000990100009a0100009b010000a1010000
+  - position: {x: 55.872433, y: 5.78693, z: 91.478546}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 2b0100002c0100003a0100003b0100003c010000a2010000a3010000
+  - position: {x: 64.54974, y: 3.4630916, z: -72.364525}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 2e0100002f010000300100003e0100003f010000400100008601000094010000a0010000
+  - position: {x: 86.11959, y: 20.392658, z: 20.738907}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 57010000580100006601000067010000680100007b010000
+  - position: {x: 59.36, y: 3.3599987, z: -70.56}
+    cover: 1
+    coverFacing: 315
+    chokepoint: 0
+    neighbors: 1d0100001e0100002e0100002f0100003f0100004001000086010000940100009e010000
+  - position: {x: -59.2, y: 0.19999981, z: -58.91}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 84010000990100009a0100009b0100009c010000
+  - position: {x: 50.337147, y: 4.944287, z: 94.79713}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: 190100001a0100002b0100003b0100003c0100009d010000
+  - position: {x: 46.705544, y: 4.5312996, z: 94.116196}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 18010000190100001a0100002b0100002c0100003b0100003c0100009d010000
+  - position: {x: 97.01663, y: 3.9569669, z: -73.0891}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 6001000061010000710100007201000073010000
+  - position: {x: -81.19821, y: 14.105625, z: 79.61268}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 2d0000004000000041000000530000005400000055000000
+  - position: {x: -86.85156, y: 14.554087, z: 79.61268}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 2c0000002d0000002e000000400000004100000054000000
+  - position: {x: -29.912373, y: 3.7499852, z: -13.610263}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 8600000098000000990000009a000000ab000000ac000000ad000000
+  - position: {x: -20.8512, y: 3.1102796, z: 13.662671}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 9b0000009c000000ae000000af000000b0000000be000000bf000000
+  - position: {x: -19.618048, y: 2.2620652, z: 5.4002666}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 9b000000ad000000ae000000af000000bd000000be000000bf000000
+  - position: {x: 71.435425, y: 6.650586, z: 92.189995}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 3b0100003c0100004c0100005d0100005e010000
+  - position: {x: 71.435425, y: 7.569611, z: 86.80822}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 3a0100003b0100004c0100005c0100005d0100005e010000b5010000b9010000ba010000bd010000c0010000
+  - position: {x: -101.2413, y: 9.910888, z: -75.10737}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 090000000a0000000b0000001d0000001e0000001f000000
+  - position: {x: 93.28614, y: 8.630416, z: 85.321846}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 5c0100006d0100006e0100006f010000810100008201000083010000ae010000b7010000c9010000
+  - position: {x: 88.744194, y: 8.573882, z: 85.321846}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 5c0100005d0100005e0100006d0100006e0100006f0100008101000082010000ad010000b7010000ba010000c9010000
+  - position: {x: 80.60692, y: 3.867876, z: -71.45003}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: 3f010000400100004e0100004f0100005001000061010000
+  - position: {x: -51.15663, y: 5.686658, z: 96.10839}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 690000007d00000090000000
+  - position: {x: 61.856552, y: 15.558489, z: 15.443938}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 25010000260100003701000038010000470100004801000049010000
+  - position: {x: 21.098022, y: 4.4342856, z: -16.243929}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: dc000000dd000000e9000000ea000000fb000000fc000000fd000000
+  - position: {x: 59, y: 8.290994, z: 74.36}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 2a0100002b0100003a0100004c010000b5010000bb010000bd010000c0010000c8010000
+  - position: {x: 54.890625, y: 8.279999, z: 43.36}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 03000000c1010000c3010000c5010000c6010000ce010000d7010000
+  - position: {x: 71, y: 8.291117, z: 74.36}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 3a0100004c0100005c010000ab010000b3010000b9010000ba010000bd010000c0010000c9010000
+  - position: {x: 86.86, y: 8.28576, z: 55.933334}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 6a0100006b0100006c0100008a010000b8010000c2010000c4010000ca010000
+  - position: {x: 86.86, y: 8.286449, z: 72.46667}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 5c0100006b0100006c0100006d01000081010000ad010000ae010000b9010000ba010000c2010000c4010000c9010000
+  - position: {x: 86.86, y: 8.284582, z: 49.733334}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 690100006a0100006b0100008a0100008b010000b6010000c2010000
+  - position: {x: 75, y: 8.291118, z: 74.36}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 4c0100005c010000ab010000b5010000b7010000ba010000bd010000c0010000c4010000c9010000
+  - position: {x: 79, y: 8.291118, z: 74.36}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 4c0100005c0100006c0100006d010000ab010000ae010000b5010000b7010000b9010000bd010000c2010000c4010000c9010000
+  - position: {x: 55, y: 8.290993, z: 74.36}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 2a0100002b0100003a010000b3010000bd010000c0010000c8010000
+  - position: {x: 81.109375, y: 8.280151, z: 43.36}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 04000000050000004a01000096010000bf010000c7010000d4010000
+  - position: {x: 67, y: 8.291118, z: 74.36}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 3a0100004c0100005c010000ab010000b3010000b5010000b9010000ba010000bb010000c0010000
+  - position: {x: 50.86, y: 8.279999, z: 64.200005}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 0000000006000000c6010000d7010000
+  - position: {x: 71.328125, y: 8.279999, z: 43.36}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 1
+    neighbors: 02000000030000000400000005000000390100004a0100005901000096010000bc010000c1010000c3010000c7010000ca010000ce010000d4010000
+  - position: {x: 63, y: 8.289721, z: 74.36}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 2a0100002b0100003a0100004c010000ab010000b3010000b5010000b9010000bb010000bd010000c8010000
+  - position: {x: 64.671875, y: 8.279999, z: 43.36}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 0200000003000000040000004a010000b4010000bf010000c3010000c5010000c7010000ce010000d4010000
+  - position: {x: 86.86, y: 8.289586, z: 62.133335}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 6a0100006b0100006c010000b6010000b7010000b8010000ba010000c4010000c9010000
+  - position: {x: 58.803123, y: 8.279999, z: 43.36}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 02000000030000004a010000b4010000bf010000c1010000c5010000c6010000ce010000d7010000
+  - position: {x: 86.86, y: 8.288407, z: 68.333336}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 5c0100006b0100006c0100006d010000b6010000b7010000b9010000ba010000c2010000c9010000
+  - position: {x: 50.978127, y: 8.279999, z: 43.36}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 03000000b4010000c1010000c3010000c6010000ce010000d7010000
+  - position: {x: 50.86, y: 8.279999, z: 53.86667}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 000000000200000003000000b4010000be010000c3010000c5010000cc010000ce010000d1010000d7010000
+  - position: {x: 77.19688, y: 8.279999, z: 43.36}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 040000000500000096010000bc010000bf010000c1010000ce010000d4010000
+  - position: {x: 51, y: 8.291015, z: 74.36}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 1701000018010000290100002a0100002b0100003a010000b3010000bb010000c0010000
+  - position: {x: 83, y: 8.289501, z: 74.36}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 4c0100005c0100006c0100006d010000ad010000ae010000b5010000b7010000b9010000ba010000c2010000c4010000
+  - position: {x: 85.02187, y: 8.279999, z: 41.64}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 59010000690100006a010000b6010000bf010000
+  - position: {x: 65.35241, y: 6.039999, z: -11.085028}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: 36010000440100004501000046010000d8010000
+  - position: {x: 56.02, y: 8.6, z: 63.92}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 020000004b010000c6010000d1010000d7010000
+  - position: {x: 79.97999, y: 8.6, z: 59.68}
+    cover: 1
+    coverFacing: 89.99999
+    chokepoint: 0
+    neighbors: 0200000004000000050000004b0100005a01000096010000cf010000
+  - position: {x: 62.5, y: 8.608015, z: 48.225006}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 000000000200000003000000040000004a0100004b010000b4010000bf010000c1010000c3010000c5010000c6010000c7010000d1010000d4010000
+  - position: {x: 79.1, y: 8.6, z: 64.755}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 05000000cd010000
+  - position: {x: 65.29492, y: 6.199999, z: -14.869641}
+    cover: 1
+    coverFacing: 224.99998
+    chokepoint: 0
+    neighbors: 340100003501000036010000d8010000
+  - position: {x: 55.84, y: 8.6, z: 60.239998}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 02000000030000004b010000c6010000cc010000ce010000d7010000
+  - position: {x: 82.745, y: 8.279999, z: 62}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 05000000070000004b0100005a0100005b010000d6010000
+  - position: {x: 68, y: 8.6, z: 67.323}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 020000004b010000d5010000
+  - position: {x: 77.3, y: 8.6, z: 51.427006}
+    cover: 1
+    coverFacing: 0
+    chokepoint: 0
+    neighbors: 4a01000096010000bc010000bf010000c1010000c7010000ce010000
+  - position: {x: 65.4, y: 8.6, z: 63.845}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: d3010000
+  - position: {x: 73.345, y: 8.279999, z: 66}
+    cover: 1
+    coverFacing: 270
+    chokepoint: 0
+    neighbors: 0000000001000000020000000500000006000000070000004b0100005b010000d2010000
+  - position: {x: 59.5, y: 8.614243, z: 54.075}
+    cover: 1
+    coverFacing: 180
+    chokepoint: 0
+    neighbors: 00000000020000004b010000b4010000be010000c3010000c5010000c6010000cc010000d1010000
+  - position: {x: 59.373394, y: 6.042217, z: -10.2285385}
+    cover: 1
+    coverFacing: 135
+    chokepoint: 0
+    neighbors: 230100002401000034010000360100004501000046010000cb010000d0010000
+  - position: {x: 43.194, y: 3.124568, z: -79.368}
+    cover: 1
+    coverFacing: 315
+    chokepoint: 0
+    neighbors: f6000000090100000a0100001c0100001d01000094010000
+  - position: {x: -7.9797606, y: 2.389402, z: 55.919483}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: c2000000db010000
+  - position: {x: -4.964078, y: 1.4036275, z: 63.84}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: c4000000df000000da010000
+  - position: {x: 17.056765, y: 3.1627667, z: -14.913625}
+    cover: 0
+    coverFacing: 0
+    chokepoint: 1
+    neighbors: e9000000ea000000

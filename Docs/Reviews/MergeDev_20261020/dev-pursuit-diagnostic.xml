@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="1" result="Passed" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-20 07:11:50Z" end-time="2026-10-20 07:12:03Z" duration="13,0176257">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="553" result="Passed" start-time="2026-10-20 07:11:50Z" end-time="2026-10-20 07:12:03Z" duration="13.017626" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1435" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/Admin/.codex/worktrees/dev-preflight-20261020/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="342" result="Passed" start-time="2026-10-20 07:11:50Z" end-time="2026-10-20 07:12:03Z" duration="12.841862" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="202780" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1436" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="342" result="Passed" start-time="2026-10-20 07:11:50Z" end-time="2026-10-20 07:12:03Z" duration="12.819266" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1437" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="342" result="Passed" start-time="2026-10-20 07:11:50Z" end-time="2026-10-20 07:12:03Z" duration="12.799965" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1360" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="342" result="Passed" start-time="2026-10-20 07:11:50Z" end-time="2026-10-20 07:12:03Z" duration="12.782402" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1244" name="MergeDevGripDiagnosticsTests" fullname="ShadowVale.Map01.Tests.MergeDevGripDiagnosticsTests" classname="ShadowVale.Map01.Tests.MergeDevGripDiagnosticsTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-20 07:11:50Z" end-time="2026-10-20 07:12:03Z" duration="12.740770" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1246" name="MeasurePursuitNavigationAfterAllGuardsFall" fullname="ShadowVale.Map01.Tests.MergeDevGripDiagnosticsTests.MeasurePursuitNavigationAfterAllGuardsFall" methodname="MeasurePursuitNavigationAfterAllGuardsFall" classname="ShadowVale.Map01.Tests.MergeDevGripDiagnosticsTests" runstate="Runnable" seed="1862490932" result="Passed" start-time="2026-10-20 07:11:31Z" end-time="2026-10-20 07:12:03Z" duration="32.219297" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/Admin/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

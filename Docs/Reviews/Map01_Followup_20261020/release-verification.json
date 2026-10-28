@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-21T08:10:34.1145609+07:00",
+  "thinhParent": "bcce17d2d36c8255784161e31ac2eeda368d742d",
+  "devParent": "fbff9a6d013a75c425d38201df64710e165e1752",
+  "testCraftingKit": false,
+  "unmergedEntries": 0,
+  "mergedUniqueTests": 113,
+  "mergedPassed": 113,
+  "devUniquePassed": 18,
+  "protectedFiles": [
+    {
+      "path": "Assets/_Project/Scenes/Maps/Map 1.unity",
+      "sha256": "c40fdff33d192fce45253b742a01802c901c012f052e4a0389be310a70295246",
+      "matchesBefore": true
+    },
+    {
+      "path": "Assets/_Project/Art/Characters/Animations/Controllers/AC_Enemy.controller",
+      "sha256": "1101a5d4e894b09b88d0c96523367150bc5eafc1940747fd1b3fc796f83093aa",
+      "matchesBefore": true
+    },
+    {
+      "path": "C:/Users/Admin/AppData/LocalLow/DefaultCompany/ShadowVale/shadowvale-slot-0.json",
+      "sha256": "8377a1533838ecd34c83f3e2c8e0356097e1b95d79320ac2ee66ee4f010ad716",
+      "matchesBefore": true
+    },
+    {
+      "path": "C:/Users/Admin/AppData/LocalLow/DefaultCompany/ShadowVale/shadowvale-slot-1.json",
+      "sha256": "23ea39864ec972a0fa6b8a12c198ef663eb625afd6d5058405b48d42a472bfc9",
+      "matchesBefore": true
+    },
+    {
+      "path": "C:/Users/Admin/AppData/LocalLow/DefaultCompany/ShadowVale/shadowvale-slot-4.json",
+      "sha256": "91016faab619a9db55bce9fd72b487053b858baabfe6d899e35b957870eaef7f",
+      "matchesBefore": true
+    }
+  ],
+  "asyncShaderCompilationRestoredTo": 1,
+  "assetsTrackedGuidDuplicates": 0
+}

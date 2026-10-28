@@ -1,0 +1,9 @@
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/Benchmark/Map 1.unity
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/IntegratedNavMesh 1.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/IntegratedNavMesh 2.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/IntegratedNavMesh 3.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/IntegratedNavMesh.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/Meshes/C1_LOD0_9_DynamicDoors.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/Meshes/C1_LOD0_10_DynamicDoors.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/Meshes/C1_LOD0_11_DynamicDoors.asset
+Assets/_Project/Art/Environment/Map1_ArtRefresh_v1/MergeReview/Meshes/C1_LOD0_12_DynamicDoors.asset

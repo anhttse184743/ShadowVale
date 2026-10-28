@@ -1,0 +1,34 @@
+using System;
+using UnityEngine;
+
+namespace ShadowVale.Telemetry
+{
+    /// <summary>
+    /// What identifies a session — and all it says about the player: nothing. A random id per
+    /// session (not per install, so sessions cannot be linked to one person), the content and build
+    /// versions, the map and the solver variant. No user name, machine name, IP or hardware id.
+    /// </summary>
+    public sealed class SessionContext
+    {
+        public string SessionId { get; set; } = Guid.NewGuid().ToString();
+        public string MapId { get; set; }
+        public string ContentVersion { get; set; } = "unknown";
+        public string BuildVersion { get; set; } = "unknown";
+        public string Platform { get; set; } = "unknown";
+        /// <summary>The variant the session was set up with; the one actually used comes from the plans.</summary>
+        public string ConfiguredVariant { get; set; } = "greedy";
+        public DateTime StartedAtUtc { get; set; } = DateTime.UtcNow;
+
+        public static string PlatformName()
+        {
+            if (Application.isEditor) return "editor";
+            switch (Application.platform)
+            {
+                case RuntimePlatform.WindowsPlayer: return "windows";
+                case RuntimePlatform.OSXPlayer: return "macos";
+                case RuntimePlatform.LinuxPlayer: return "linux";
+                default: return Application.platform.ToString().ToLowerInvariant();
+            }
+        }
+    }
+}

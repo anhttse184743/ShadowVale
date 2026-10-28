@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a59e382d23002554287259c7906f2e2f, type: 3}
+  m_Name: BedAnimationKnife
+  m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map01BedAnimationData
+  pairPrefab: {fileID: 4825855809363177727, guid: 003a2770b872c364da62aaf05b738f3b, type: 3}
+  sleeperPrefab: {fileID: 4823353520353743049, guid: 73434f324c866c3499c5a52b56419dc1, type: 3}
+  execution: {fileID: -623603649343465320, guid: 3610bbff01805a6458fe19d19fc20764, type: 3}
+  sleep: {fileID: -623603649343465320, guid: 085daa015d7260c45a5c56121b5be15e, type: 3}
+  wake: {fileID: -623603649343465320, guid: 502d291ae0d8df74fbbd410c64bf3630, type: 3}
+  namPath: Nam_DatCho
+  enemyPath: Dich_Rig
+  pistolPath: 
+  holsterPath: 
+  sourceHash: 31a0087e64de55bd6e6971362d9e515e6a77831439dc6699bbe13db6ddc5c0c7
+  executionIsKnife: 1
+  executionPropPath: Nam_Dao_KaBar
+  executionPropVisibleFrame: 175
+  frames: 400
+  fps: 60
+  shotFrame: 239
+  wakePickupFrame: 92
+  approach: {x: -0.7625009, y: 0, z: -0.72422194}
+  exit: {x: -0.7387101, y: 0, z: -0.738693}
+  wakeExit: {x: -0.9077621, y: 0, z: -0.23281786}
+  approachRotation: {x: 0, y: 0.9953445, z: 0, w: 0.09638129}
+  exitRotation: {x: 0, y: 0.9953445, z: 0, w: 0.09638129}
+  sleepingBounds:
+    m_Center: {x: -0.010166734, y: 0.88376355, z: 0.15550303}
+    m_Extent: {x: 0.4222356, y: 0.32249224, z: 0.90856445}

@@ -1,0 +1,7 @@
+Grass instances audited (both LODs): 95669 in 119 batches; grounded=95669; removed wet roots=0
+Rice instances audited separately, preserved: 56645
+Canal grass patches conformed: 143; connected tufts per original mesh: 300; retained=32253; removed underwater tufts=10647; verified individual blade roots=64506
+Woody trees / bamboo / shrubs / coconut / banana audited: 359; vertical corrections: 270
+PASS navigation route (-60.00, 1.00, 0.00)
+PASS navigation route (35.00, 1.00, -10.00)
+PASS navigation route (30.00, 1.00, 60.00)

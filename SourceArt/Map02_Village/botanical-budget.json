@@ -1,0 +1,34 @@
+{
+  "Rice_Ripe_LOD0": {
+    "vertices": 420,
+    "triangles": 210
+  },
+  "Rice_Ripe_LOD1": {
+    "vertices": 200,
+    "triangles": 100
+  },
+  "Rice_Young_LOD0": {
+    "vertices": 420,
+    "triangles": 210
+  },
+  "Rice_Young_LOD1": {
+    "vertices": 200,
+    "triangles": 100
+  },
+  "Banyan_LOD0": {
+    "vertices": 52436,
+    "triangles": 26218
+  },
+  "Banyan_LOD1": {
+    "vertices": 16120,
+    "triangles": 8060
+  },
+  "Flamboyant_LOD0": {
+    "vertices": 222880,
+    "triangles": 111440
+  },
+  "Flamboyant_LOD1": {
+    "vertices": 64112,
+    "triangles": 32056
+  }
+}

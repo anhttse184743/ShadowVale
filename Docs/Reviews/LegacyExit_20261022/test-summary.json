@@ -1,0 +1,57 @@
+{
+  "distinctTests": 5,
+  "passed": 4,
+  "failed": 1,
+  "preExistingFailures": 1,
+  "newFailures": 0,
+  "baselineCommit": "b78dcaab0dd827135ac7e19d3dc701c9984effce",
+  "baselineResult": "baseline.xml",
+  "runs": [
+    {
+      "file": "tests.xml",
+      "passed": 3,
+      "skipped": 0,
+      "total": 4,
+      "failed": 1
+    },
+    {
+      "file": "boarding.xml",
+      "passed": 1,
+      "skipped": 0,
+      "total": 1,
+      "failed": 0
+    }
+  ],
+  "cases": [
+    {
+      "name": "ShadowVale.Map01.Tests.EndingCutsceneTests.ClearedPointThreeCanReportWithEWhileBesideAWorkbench",
+      "preExisting": false,
+      "result": "Passed",
+      "run": "tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.ExtractionTests.GroundedMatchingActorsAndBoardingWithAllEnemiesAlive",
+      "preExisting": true,
+      "result": "Failed",
+      "run": "tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.ForestFlowTests.BaseCrateGivesItsKitOnceAndTheShelfOpensTheStoreOnceHungIsHome",
+      "preExisting": false,
+      "result": "Passed",
+      "run": "tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.Map01OperationsTests.SupplyRequiresKeyPuzzleReportAndPhysicalHandoff",
+      "preExisting": false,
+      "result": "Passed",
+      "run": "tests.xml"
+    },
+    {
+      "name": "ShadowVale.Map01.Tests.ExtractionTests.NaturalBoardingDepartsBeforeCompletion",
+      "preExisting": false,
+      "result": "Passed",
+      "run": "boarding.xml"
+    }
+  ]
+}

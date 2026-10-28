@@ -1,0 +1,170 @@
+{
+  "source": "Original local procedural authoring; no paid provider",
+  "units": "meters",
+  "props_blend": "SourceArt/Map01Operations/Map01Operations.blend",
+  "character_rigs_changed": false,
+  "files": [
+    {
+      "path": "Assets/_Project/Art/Characters/Animations/Map01Operations/Nam_RadioPanel.fbx",
+      "sha256": "86765e9342f8aef7c1725b7010a0ec048b2d6bf65cc4b4f05ec7da769931a72b"
+    },
+    {
+      "path": "Assets/_Project/Art/Characters/Animations/Map01Operations/Nam_SupplyCollect.fbx",
+      "sha256": "c9bf58f82316282a10cc832eb6201d9db029a68f5c9985c8962146b82a3aa05d"
+    },
+    {
+      "path": "Assets/_Project/Art/Characters/Animations/Map01Operations/Nam_SupplyCollect_ArmSource.fbx",
+      "sha256": "c9bf58f82316282a10cc832eb6201d9db029a68f5c9985c8962146b82a3aa05d"
+    },
+    {
+      "path": "Assets/_Project/Art/Characters/Animations/Map01Operations/Nam_SupplyHandoff.fbx",
+      "sha256": "7454bf212f8a2f006d93d57092aeb434e413078b95628a5cc79d94685a0287b3"
+    },
+    {
+      "path": "Assets/_Project/Art/Characters/Animations/Map01Operations/SupplyHands.mask",
+      "sha256": "47c163b29557a0a27736f1e39c91c1ac4d21f5f3051217535357ff0013810bb5"
+    },
+    {
+      "path": "Assets/_Project/Art/Environment/Map01Operations/OperationsNavigation.asset",
+      "sha256": "e8a3a63bfbcad892d386965ac7c1c2b8cfa68287723953c2edb3994ecb0a1f60"
+    },
+    {
+      "path": "Assets/_Project/Art/Environment/Map01Operations/RadioWorkbench.fbx",
+      "sha256": "f03ddc2a4bdda551e441615f3139b76185b4faf5cd22978b8949bc8864daa3cd"
+    },
+    {
+      "path": "Assets/_Project/Art/Environment/Map01Operations/SupplyBag.fbx",
+      "sha256": "5cc2f068f4d023ea618d53bad350d409deb54bec97224d8fa1f5c61b76a26021"
+    },
+    {
+      "path": "Assets/_Project/Art/Environment/Map01Operations/SupplyChest.fbx",
+      "sha256": "71dccbcc9c94789920b5cf14ba45c950120890809a2332b92d659c64adbd0e0d"
+    },
+    {
+      "path": "Assets/_Project/Art/Environment/Map01Operations/SV_Brass.mat",
+      "sha256": "09b96c48575722aaa7186be3527f355abd3a63e43175e41e073e606ecdabefad"
+    },
+    {
+      "path": "Assets/_Project/Art/Environment/Map01Operations/SV_Cloth.mat",
+      "sha256": "141c62b8ac29462249206dc4f8da3dab42f9143210edd9fa37cfc1fbcb14d4fd"
+    },
+    {
+      "path": "Assets/_Project/Art/Environment/Map01Operations/SV_Edge.mat",
+      "sha256": "3200b30b743b50a7a075a4fcb1fae8bde1e6ffd01e8ee59d800afac7b557b349"
+    },
+    {
+      "path": "Assets/_Project/Art/Environment/Map01Operations/SV_Iron.mat",
+      "sha256": "fbd6cc6af18ff44d380bea0aa2c1cd1faf19623014361567ae15a85469d4f95a"
+    },
+    {
+      "path": "Assets/_Project/Art/Environment/Map01Operations/SV_RedCloth.mat",
+      "sha256": "19c6ff0ded153cbd236adaf293149ba38afe533f81805ef53992ebff6f7e3dd7"
+    },
+    {
+      "path": "Assets/_Project/Art/Environment/Map01Operations/SV_Strap.mat",
+      "sha256": "393085f5ac61732e1a3e27116385a7daa211b160c37bcf8b4df5c241c9cf6bf7"
+    },
+    {
+      "path": "Assets/_Project/Art/Environment/Map01Operations/SV_Wood.mat",
+      "sha256": "e1f9ac85f3e88fad37f8157b57b9cebf7f91a3a38e988eb1bd0194eea017e07c"
+    },
+    {
+      "path": "Assets/_Project/Art/Environment/Map01Operations/SV_WoodEdge.mat",
+      "sha256": "94a6b4cc7bb7e180860d9e6f438aba5ccb1a0ef2c5847afd379f8fa14131325a"
+    },
+    {
+      "path": "Assets/_Project/Art/Environment/Map01Operations/Warehouse.fbx",
+      "sha256": "126657a2b1d88708e80e30faf204ce784f468f5308da378dd8fe340cce6cdd56"
+    },
+    {
+      "path": "Assets/_Project/Art/Environment/Map01Operations/WarehouseKey.fbx",
+      "sha256": "b87598b0d849e1dee578f3f6f36778dc3766b425f8a1b7b3038bbda7346c4c20"
+    },
+    {
+      "path": "Assets/Resources/OperationsAnimation/Nam_RadioPanel.anim",
+      "sha256": "241beba8019738d59e7b5f048b024ce7645627bfaae8063e1d1958c174af23f4"
+    },
+    {
+      "path": "Assets/Resources/OperationsAnimation/Nam_SupplyCollect.anim",
+      "sha256": "5d04f6ac27b3012a686b4f5d8b64824edaf8b202a5384776e52a7098af2ec2f4"
+    },
+    {
+      "path": "Assets/Resources/OperationsAnimation/Nam_SupplyCollectAvatar.asset",
+      "sha256": "b0e5f1ec5fec7a9f4a3d205283b049db098603d9025c6a32b012e3e74e211f6d"
+    },
+    {
+      "path": "Assets/Resources/OperationsAnimation/Nam_SupplyHandoff.anim",
+      "sha256": "10bac1de281d5aaa14bd5738c4e4c5f99494e899b16395b2a7327a073a3b4361"
+    },
+    {
+      "path": "Assets/Resources/OperationsAudio/bag_cloth.wav",
+      "sha256": "cf411748553ff080adcf4a6e096b10248ea4cedd5105587b9741ae70a5fc20ea"
+    },
+    {
+      "path": "Assets/Resources/OperationsAudio/chest_open.wav",
+      "sha256": "3b5f7c5800c93c80f841ccbc0b5c54667a232cf37b23754d26abe273686a927a"
+    },
+    {
+      "path": "Assets/Resources/OperationsAudio/door_open.wav",
+      "sha256": "229376fadcba71ff2c70aa22635fa9c9b8cc823efd8821aa3738cfe23b1df21c"
+    },
+    {
+      "path": "Assets/Resources/OperationsAudio/lock_turn.wav",
+      "sha256": "24a7882cf05f3ffe182bb24d8b24709d2211f1e752320d6da728ae4fd5e509cf"
+    },
+    {
+      "path": "Assets/Resources/OperationsAudio/radio_alarm.wav",
+      "sha256": "649ad6f27a4424fb1f3a6d246b5e84aca0f64eacf41efcfa7b99282c20e495cc"
+    },
+    {
+      "path": "Assets/Resources/OperationsAudio/radio_off.wav",
+      "sha256": "3ef507ac2acfffc31d91d17fd94cb83ddba5ab0d1c7b3571d61c3d80f72b78cf"
+    },
+    {
+      "path": "Assets/Resources/OperationsUI/cargo.png",
+      "sha256": "47a4e7bb006bf9b860bd59e14d0cfacef24f04cf5b4c953df2902a8087a14e0e"
+    },
+    {
+      "path": "Assets/Resources/OperationsUI/key.png",
+      "sha256": "66dfe4eaaec195ba476c54429c6377004215479d894d1ada1ad0eb33150f84dc"
+    },
+    {
+      "path": "SourceArt/Map01Operations/author_supply_animation.py",
+      "sha256": "fcd55d7abfb7983ceee705629b0bb4d996fed0ddde3742d6c32b6029e972da68"
+    },
+    {
+      "path": "SourceArt/Map01Operations/build_props.py",
+      "sha256": "424e8d80fa142caefdccb5a81106a9248f7bf5c9c76bf30a666c17276eaca5b7"
+    },
+    {
+      "path": "SourceArt/Map01Operations/build_radio_bench.py",
+      "sha256": "dca6f98e1046ea7c625644788c342242bf941566be9f32c32f32bc9f15dad609"
+    },
+    {
+      "path": "SourceArt/Map01Operations/build_ui_audio.py",
+      "sha256": "a8e30279d1cfc7651e7876b814a9daac17ee0813dda5a4de89a714da2de46a9e"
+    },
+    {
+      "path": "SourceArt/Map01Operations/Map01Operations.blend",
+      "sha256": "caaf6949ac0a643c1ea65bbe70ec9c9e79a01942cf901047cd0e57fce266aa0f"
+    },
+    {
+      "path": "SourceArt/Map01Operations/Nam_RadioPanel.blend",
+      "sha256": "02eccf64c504b32d63f8429c21726e0e15927b9975adec705f515f56885851c4"
+    },
+    {
+      "path": "SourceArt/Map01Operations/Nam_SupplyCollect_Wrist.blend",
+      "sha256": "fdd81f541b806e1ff65fcc0bcf9428df20484a328e8128e039c6bffd270be275"
+    },
+    {
+      "path": "SourceArt/Map01Operations/Nam_SupplyInteractions.blend",
+      "sha256": "7b68541357874cdbc23e6a8fa4013a12265aa6c7a0ce4429b947464b9dfd94e9"
+    },
+    {
+      "path": "SourceArt/Map01Operations/RadioWorkbench.blend",
+      "sha256": "ae6176360919e45ba04672a09e9a254bcdbf3a6086a1912fff2af2000f28639b"
+    }
+  ],
+  "grip": "Authored finger curves imported with SupplyHands.mask; upper handle arc at 0.43 m.",
+  "labels": "No text attached to warehouse or chest; contextual interaction HUD retained."
+}

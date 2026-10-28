@@ -1,0 +1,72 @@
+[
+  {
+    "clip": "Nam_Boat_Stand",
+    "bones": 28,
+    "fps": 30,
+    "frames": 91,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Nam_Jetty_StepUp",
+    "bones": 28,
+    "fps": 30,
+    "frames": 103,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Nam_Walk_Ashore",
+    "bones": 28,
+    "fps": 30,
+    "frames": 37,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Nam_Oar_Stow",
+    "bones": 28,
+    "fps": 30,
+    "frames": 121,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Nam_Standing_Guard",
+    "bones": 28,
+    "fps": 30,
+    "frames": 91,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Hung_Boat_Stand",
+    "bones": 28,
+    "fps": 30,
+    "frames": 91,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Hung_Jetty_StepUp",
+    "bones": 28,
+    "fps": 30,
+    "frames": 103,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Hung_Walk_Ashore",
+    "bones": 28,
+    "fps": 30,
+    "frames": 37,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Hung_Oar_Stow",
+    "bones": 28,
+    "fps": 30,
+    "frames": 121,
+    "rest_preserved": true
+  },
+  {
+    "clip": "Hung_Standing_Guard",
+    "bones": 28,
+    "fps": 30,
+    "frames": 91,
+    "rest_preserved": true
+  }
+]

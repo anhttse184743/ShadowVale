@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-26 06:52:06Z" end-time="2026-10-26 06:52:09Z" duration="3,2483852">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="798" result="Failed" site="Child" start-time="2026-10-26 06:52:06Z" end-time="2026-10-26 06:52:09Z" duration="3.248385" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1731" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/Admin/.codex/worktrees/map1-boot-investigation-20261023/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="575" result="Failed" site="Child" start-time="2026-10-26 06:52:08Z" end-time="2026-10-26 06:52:09Z" duration="1.748852" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="212460" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1732" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="575" result="Failed" site="Child" start-time="2026-10-26 06:52:08Z" end-time="2026-10-26 06:52:09Z" duration="1.213363" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1733" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="575" result="Failed" site="Child" start-time="2026-10-26 06:52:08Z" end-time="2026-10-26 06:52:09Z" duration="1.049278" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="SetUpFixture" id="1642" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="575" result="Failed" site="Child" start-time="2026-10-26 06:52:08Z" end-time="2026-10-26 06:52:09Z" duration="1.029959" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1399" name="Map02DayTwoRouteTests" fullname="ShadowVale.Map01.Tests.Map02DayTwoRouteTests" classname="ShadowVale.Map01.Tests.Map02DayTwoRouteTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-26 06:52:01Z" end-time="2026-10-26 06:52:02Z" duration="0.995787" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1400" name="DayTwoRoutesRescueWireAndAntennaArePlayable" fullname="ShadowVale.Map01.Tests.Map02DayTwoRouteTests.DayTwoRoutesRescueWireAndAntennaArePlayable" methodname="DayTwoRoutesRescueWireAndAntennaArePlayable" classname="ShadowVale.Map01.Tests.Map02DayTwoRouteTests" runstate="Runnable" seed="608669125" result="Passed" start-time="2026-10-26 06:51:53Z" end-time="2026-10-26 06:52:02Z" duration="9.179679" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1435" name="Map02PerformanceTests" fullname="ShadowVale.Map01.Tests.Map02PerformanceTests" classname="ShadowVale.Map01.Tests.Map02PerformanceTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-10-26 06:52:08Z" end-time="2026-10-26 06:52:09Z" duration="0.996848" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1436" name="DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel" fullname="ShadowVale.Map01.Tests.Map02PerformanceTests.DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel" methodname="DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel" classname="ShadowVale.Map01.Tests.Map02PerformanceTests" runstate="Runnable" seed="164359885" result="Failed" label="Error" start-time="2026-10-26 06:52:02Z" end-time="2026-10-26 06:52:09Z" duration="6.968155" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[System.Reflection.TargetInvocationException : Exception has been thrown by the target of an invocation.
+  ----> System.NullReferenceException : Object reference not set to an instance of an object]]></message>
+                  <stack-trace><![CDATA[  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x00083] in <d49d4cb128564ee1b54a84338c98d353>:0 
+  at System.Reflection.MethodBase.Invoke (System.Object obj, System.Object[] parameters) [0x00000] in <d49d4cb128564ee1b54a84338c98d353>:0 
+  at ShadowVale.Map01.Tests.Map02PerformanceTests.Call (ShadowVale.Map01.Map02ChapterDirector c, System.String method, System.Object[] args) [0x00000] in C:\Users\Admin\.codex\worktrees\map1-boot-investigation-20261023\ShadowVale\Assets\_Project\Map01\Tests\Map02PerformanceTests.cs:52 
+  at ShadowVale.Map01.Tests.Map02PerformanceTests+<DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel>d__0.MoveNext () [0x0089b] in C:\Users\Admin\.codex\worktrees\map1-boot-investigation-20261023\ShadowVale\Assets\_Project\Map01\Tests\Map02PerformanceTests.cs:38 
+  at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44 
+--NullReferenceException
+  at ShadowVale.Map01.Map02ChapterDirector.EndScene () [0x00081] in C:\Users\Admin\.codex\worktrees\map1-boot-investigation-20261023\ShadowVale\Assets\_Project\Map01\Runtime\Map02ChapterDirector.cs:399 
+  at (wrapper managed-to-native) System.Reflection.RuntimeMethodInfo.InternalInvoke(System.Reflection.RuntimeMethodInfo,object,object[],System.Exception&)
+  at System.Reflection.RuntimeMethodInfo.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <d49d4cb128564ee1b54a84338c98d353>:0 ]]></stack-trace>
+                </failure>
+                <output><![CDATA[Saving results to: Logs/Map02Chapter/latest-full-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

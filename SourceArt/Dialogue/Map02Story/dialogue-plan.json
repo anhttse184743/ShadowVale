@@ -1,0 +1,310 @@
+{
+  "source_document": "ShadowVale_Map2_KichBan_va_HeThongHoiThoai.docx",
+  "source_sha256": "430b787b71a2d9c112b1b2028a846a10a6de49cd2858eb4081472866707e3604",
+  "paid_generation_started": false,
+  "approved_budget": null,
+  "entries": [
+    {
+      "id": "m2_contact_01",
+      "conversation": "m2_contact",
+      "speaker": "Chỉ huy",
+      "text": "Chúng tôi vừa rút khỏi khu rừng. Chỉ huy địch đã bị hạ, nhưng chúng đang tăng quân tìm kiếm.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_contact_02",
+      "conversation": "m2_contact",
+      "speaker": "Phụ trách địa phương",
+      "text": "Các anh nghỉ ở đây trước. Tôi cho người kiểm tra đường. Trong làng vẫn sinh hoạt như thường.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "pending_sample_approval"
+    },
+    {
+      "id": "m2_contact_03",
+      "conversation": "m2_contact",
+      "speaker": "Nam",
+      "text": "Nếu có việc cần người, cứ giao cho tôi.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_contact_04",
+      "conversation": "m2_contact",
+      "speaker": "Phụ trách địa phương",
+      "text": "Có thuốc cần đưa xuống cuối xóm. Xong việc, tới gặp tôi nhận tin đường đi.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "pending_sample_approval"
+    },
+    {
+      "id": "m2_family_medicine_01",
+      "conversation": "m2_family_medicine",
+      "speaker": "Người chăm cha",
+      "text": "Thuốc tôi nhận được rồi. Nhưng nếu phải đi, tôi không đưa cha xuống bến một mình được.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "pending_sample_approval"
+    },
+    {
+      "id": "m2_family_medicine_02",
+      "conversation": "m2_family_medicine",
+      "speaker": "Nam",
+      "text": "Nhà mình ở đây mấy người?",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_family_medicine_03",
+      "conversation": "m2_family_medicine",
+      "speaker": "Người chăm cha",
+      "text": "Chỉ còn hai cha con.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "pending_sample_approval"
+    },
+    {
+      "id": "m2_family_medicine_04",
+      "conversation": "m2_family_medicine",
+      "speaker": "Nam",
+      "text": "Tôi sẽ báo người phụ trách. Có lệnh chuyển đi, sẽ có người tới giúp.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_scout_order_01",
+      "conversation": "m2_scout_order",
+      "speaker": "Phụ trách địa phương",
+      "text": "Người kiểm tra đường phía cầu chưa về. Cậu ra tìm, tránh để lính tuần tra thấy.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "pending_sample_approval"
+    },
+    {
+      "id": "m2_scout_order_02",
+      "conversation": "m2_scout_order",
+      "speaker": "Nam",
+      "text": "Nếu gặp được, tôi đưa anh ấy về theo đường ruộng.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_scout_order_03",
+      "conversation": "m2_scout_order",
+      "speaker": "Phụ trách địa phương",
+      "text": "Đúng. Đừng dẫn địch vào làng.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "pending_sample_approval"
+    },
+    {
+      "id": "m2_scout_found_01",
+      "conversation": "m2_scout_found",
+      "speaker": "Người trinh sát",
+      "text": "Chúng đang rà các bến. Chúng chưa biết chỗ đóng quân của ta.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "pending_sample_approval"
+    },
+    {
+      "id": "m2_scout_found_02",
+      "conversation": "m2_scout_found",
+      "speaker": "Nam",
+      "text": "Đi được không? Tôi đưa anh về trước.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_scout_found_03",
+      "conversation": "m2_scout_found",
+      "speaker": "Người trinh sát",
+      "text": "Đừng đi qua cầu. Có một tổ đang chờ phía đó.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "pending_sample_approval"
+    },
+    {
+      "id": "m2_prepare_01",
+      "conversation": "m2_prepare",
+      "speaker": "Phụ trách địa phương",
+      "text": "Đưa người yếu đi trước. Chuyển vật tư từng chuyến nhỏ, tránh tụ đông ở bến.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "pending_sample_approval"
+    },
+    {
+      "id": "m2_prepare_02",
+      "conversation": "m2_prepare",
+      "speaker": "Nam",
+      "text": "Tôi kiểm tra bến nam rồi chuyển đạn xuống. Hùng lo điểm tập kết được không?",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_prepare_03",
+      "conversation": "m2_prepare",
+      "speaker": "Hùng",
+      "text": "Được. Tôi ở cùng người bị thương. Ai xuống bến chậm, tôi đưa đi sau.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_encirclement_01",
+      "conversation": "m2_encirclement",
+      "speaker": "Trinh sát địa phương",
+      "text": "Có quân đang tiến về hai đầu cầu. Chúng không đi tuần nữa.",
+      "radio": true,
+      "status": "script_provided_not_recorded",
+      "voice": "pending_sample_approval"
+    },
+    {
+      "id": "m2_encirclement_02",
+      "conversation": "m2_encirclement",
+      "speaker": "Phụ trách địa phương",
+      "text": "Cho dân vào chỗ trú. Các tổ giữ đường xuống bến.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "pending_sample_approval"
+    },
+    {
+      "id": "m2_encirclement_03",
+      "conversation": "m2_encirclement",
+      "speaker": "Chỉ huy",
+      "text": "Nam, quay về điểm tập kết. Chúng đang khép vòng.",
+      "radio": true,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_hold_lane_01",
+      "conversation": "m2_hold_lane",
+      "speaker": "Nam",
+      "text": "Chúng đang tìm tôi. Tôi có thể đi khỏi làng để kéo chúng theo.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_hold_lane_02",
+      "conversation": "m2_hold_lane",
+      "speaker": "Chỉ huy",
+      "text": "Chúng đã khóa các đường. Cậu ra một mình không mở được đường cho dân. Về giữ ngõ cùng anh em.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_hold_lane_03",
+      "conversation": "m2_hold_lane",
+      "speaker": "Nam",
+      "text": "Rõ. Tôi giữ ngõ này. Báo tôi khi nhóm cuối đi qua.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_family_rescue_01",
+      "conversation": "m2_family_rescue",
+      "speaker": "Người chăm cha",
+      "text": "Tôi không đưa cha ra được…",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "pending_sample_approval"
+    },
+    {
+      "id": "m2_family_rescue_02",
+      "conversation": "m2_family_rescue",
+      "speaker": "Nam",
+      "text": "Tôi giữ bên này. Cùng nâng ông dậy.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_family_rescue_03",
+      "conversation": "m2_family_rescue",
+      "speaker": "Hùng",
+      "text": "Đưa ông ra đầu ngõ. Tôi đợi ở đó.",
+      "radio": true,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_breakout_01",
+      "conversation": "m2_breakout",
+      "speaker": "Phụ trách địa phương",
+      "text": "Tập trung mở bến nam. Tôi giữ hướng cầu giữa cho các nhóm rút.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "pending_sample_approval"
+    },
+    {
+      "id": "m2_breakout_02",
+      "conversation": "m2_breakout",
+      "speaker": "Nam",
+      "text": "Tôi xử lý tổ súng bên bờ ruộng. Đường thông sẽ báo ngay.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_breakout_03",
+      "conversation": "m2_breakout",
+      "speaker": "Hùng",
+      "text": "Tôi đưa dân xuống từng nhóm. Nam, nhớ quay về bến.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_departure_01",
+      "conversation": "m2_departure",
+      "speaker": "Nam",
+      "text": "Ông cụ đi được rồi chứ?",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_departure_02",
+      "conversation": "m2_departure",
+      "speaker": "Hùng",
+      "text": "Đang ở thuyền trước. Có người chăm ông rồi.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_departure_03",
+      "conversation": "m2_departure",
+      "speaker": "Nam",
+      "text": "Còn bên phía làng?",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    },
+    {
+      "id": "m2_departure_04",
+      "conversation": "m2_departure",
+      "speaker": "Chỉ huy",
+      "text": "Người cuối đã rút. Giữ thuyền theo đoàn.",
+      "radio": false,
+      "status": "script_provided_not_recorded",
+      "voice": "existing_map1"
+    }
+  ],
+  "missing_exact_lines": [
+    "m2_boat_route: tài liệu chỉ mô tả nội dung; chưa có lời thoại chính xác.",
+    "Bàn giao kết quả nhiệm vụ 2 và báo cáo sau cứu trinh sát: cần duyệt lời nối nếu dùng hội thoại riêng.",
+    "Xác nhận thuốc/đạn hữu hạn: thông số và câu tương tác cần duyệt."
+  ]
+}

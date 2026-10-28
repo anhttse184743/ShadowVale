@@ -1,0 +1,4 @@
+PASS approach (0.70, 0.00, 0.00) -> same 1.8 m mark.
+PASS approach (-0.60, 0.00, 0.00) -> same 1.8 m mark.
+PASS approach (0.00, 0.00, -0.25) -> same 1.8 m mark.
+PASS radio dialogue preserves player position.

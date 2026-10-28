@@ -1,0 +1,102 @@
+{
+  "result": "PASS",
+  "scope": "Blender FBX round trip and numeric mesh/skin checks only; not Unity animation approval",
+  "characters": [
+    {
+      "file": "Villager_01_farmer.fbx",
+      "sha256": "b1b19a40e31849f2a433e6332dda07e1820eeef311a0875e206f00eac03d1d49",
+      "bones": 62,
+      "triangles": 22844,
+      "unweighted_vertices": 0,
+      "non_normalized_weights": 0
+    },
+    {
+      "file": "Villager_02_boat_worker.fbx",
+      "sha256": "9680e22ff8f6289e76c2a1e759c8b7f7b1e3be7a75553b14e8d5a02bf771aee9",
+      "bones": 62,
+      "triangles": 20268,
+      "unweighted_vertices": 0,
+      "non_normalized_weights": 0
+    },
+    {
+      "file": "Villager_03_storage_worker.fbx",
+      "sha256": "bb4844e578439793c9dae9d509c09902b6c3bfb30fd921873556f81aafeeb367",
+      "bones": 62,
+      "triangles": 23460,
+      "unweighted_vertices": 0,
+      "non_normalized_weights": 0
+    },
+    {
+      "file": "Villager_04_field_worker.fbx",
+      "sha256": "c3fdddea4df019152dbca332aa2fd5686590920d2922f5e7f55d55b8fe23a10c",
+      "bones": 62,
+      "triangles": 22500,
+      "unweighted_vertices": 0,
+      "non_normalized_weights": 0
+    },
+    {
+      "file": "Villager_05_woman_caregiver.fbx",
+      "sha256": "949ca229ca2251f54656142272613ccc68ad5b92bfb6b2f15af180597aca4a8d",
+      "bones": 62,
+      "triangles": 23184,
+      "unweighted_vertices": 0,
+      "non_normalized_weights": 0
+    },
+    {
+      "file": "Villager_06_woman_farmer.fbx",
+      "sha256": "630f013d952789f4c198610e43884215b394d12fd9c30c403da91087539ce91d",
+      "bones": 62,
+      "triangles": 23340,
+      "unweighted_vertices": 0,
+      "non_normalized_weights": 0
+    },
+    {
+      "file": "Villager_07_woman_storage.fbx",
+      "sha256": "61e78514e864e208cb0d739d55c456bdf8b152893d35b93e380a7418b4051dad",
+      "bones": 62,
+      "triangles": 23652,
+      "unweighted_vertices": 0,
+      "non_normalized_weights": 0
+    },
+    {
+      "file": "Villager_08_woman_field.fbx",
+      "sha256": "3108d73f46609e3e934400cbed940e9b450e7bdc3fe4e37da913c3e098f326fa",
+      "bones": 62,
+      "triangles": 22708,
+      "unweighted_vertices": 0,
+      "non_normalized_weights": 0
+    },
+    {
+      "file": "Villager_09_elder_father.fbx",
+      "sha256": "cfccc842c54ef40c7c1aaae76faee972afa27e6f50cea266895238903cb1649a",
+      "bones": 62,
+      "triangles": 22120,
+      "unweighted_vertices": 0,
+      "non_normalized_weights": 0
+    },
+    {
+      "file": "Villager_10_elder_woman.fbx",
+      "sha256": "47360119dac5158342daa1990277f4731906f23acdd7562d617189ae23187003",
+      "bones": 62,
+      "triangles": 23020,
+      "unweighted_vertices": 0,
+      "non_normalized_weights": 0
+    },
+    {
+      "file": "Villager_11_young_worker.fbx",
+      "sha256": "7d9ed8896943bceb2f04f7d883a4f130dc3838c7a37089880c9536517ea7f7d0",
+      "bones": 62,
+      "triangles": 19520,
+      "unweighted_vertices": 0,
+      "non_normalized_weights": 0
+    },
+    {
+      "file": "Villager_12_woman_boat_worker.fbx",
+      "sha256": "c715b75b6ba6c0f347a27bd40370f6c92495a90277a8349d72ee96d05456d8b4",
+      "bones": 62,
+      "triangles": 23396,
+      "unweighted_vertices": 0,
+      "non_normalized_weights": 0
+    }
+  ]
+}

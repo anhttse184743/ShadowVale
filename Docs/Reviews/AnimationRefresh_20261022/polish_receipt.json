@@ -1,0 +1,3491 @@
+{
+  "demo": "D:\\DO_AN_GAME\\ShadowVale\\SourceArt\\AnimationRefresh_20261022\\Nam_AnimationRefresh_2026-10-22_v3.blend",
+  "source": "D:\\DO_AN_GAME\\chuyen_dong\\Nam_K54_BodyClearance_2026-10-18_v12.blend",
+  "source_sha256": "55192bd490b5a4a7c6e9cbe7e077e709f4ddbfc718531ea5bd9d669a21223133",
+  "bone_count": 62,
+  "timeline": [
+    {
+      "label": "01 K54 / cam thap mot tay",
+      "start": 1,
+      "end": 80,
+      "frames": 80,
+      "seconds": 1.3333333333333333,
+      "prop": "Pistol"
+    },
+    {
+      "label": "02 K54 / nang va ghep tay trai",
+      "start": 81,
+      "end": 102,
+      "frames": 22,
+      "seconds": 0.36666666666666664,
+      "prop": "Pistol"
+    },
+    {
+      "label": "03 K54 / ngam hai tay",
+      "start": 103,
+      "end": 174,
+      "frames": 72,
+      "seconds": 1.2,
+      "prop": "Pistol"
+    },
+    {
+      "label": "04 K54 / ban va tra tam",
+      "start": 175,
+      "end": 234,
+      "frames": 60,
+      "seconds": 1.0,
+      "prop": "Pistol"
+    },
+    {
+      "label": "05 K54 / thay bang 1.8 giay",
+      "start": 235,
+      "end": 342,
+      "frames": 108,
+      "seconds": 1.8,
+      "prop": "Pistol"
+    },
+    {
+      "label": "06 K54 / ha ve mot tay",
+      "start": 343,
+      "end": 364,
+      "frames": 22,
+      "seconds": 0.36666666666666664,
+      "prop": "Pistol"
+    },
+    {
+      "label": "07 DAO / cam va cho",
+      "start": 365,
+      "end": 464,
+      "frames": 100,
+      "seconds": 1.6666666666666667,
+      "prop": "Knife"
+    },
+    {
+      "label": "08 DAO / chuan bi don va thu tay",
+      "start": 465,
+      "end": 536,
+      "frames": 72,
+      "seconds": 1.2,
+      "prop": "Knife"
+    },
+    {
+      "label": "09 Pistol / di",
+      "start": 537,
+      "end": 656,
+      "frames": 120,
+      "seconds": 2.0,
+      "prop": "Pistol"
+    },
+    {
+      "label": "09 Pistol / chay",
+      "start": 657,
+      "end": 740,
+      "frames": 84,
+      "seconds": 1.4,
+      "prop": "Pistol"
+    },
+    {
+      "label": "09 Pistol / khom",
+      "start": 741,
+      "end": 840,
+      "frames": 100,
+      "seconds": 1.6666666666666667,
+      "prop": "Pistol"
+    },
+    {
+      "label": "10 Knife / di",
+      "start": 841,
+      "end": 960,
+      "frames": 120,
+      "seconds": 2.0,
+      "prop": "Knife"
+    },
+    {
+      "label": "10 Knife / chay",
+      "start": 961,
+      "end": 1044,
+      "frames": 84,
+      "seconds": 1.4,
+      "prop": "Knife"
+    },
+    {
+      "label": "10 Knife / khom",
+      "start": 1045,
+      "end": 1144,
+      "frames": 100,
+      "seconds": 1.6666666666666667,
+      "prop": "Knife"
+    },
+    {
+      "label": "11 LUU DAN / cam va chuan bi",
+      "start": 1145,
+      "end": 1216,
+      "frames": 72,
+      "seconds": 1.2,
+      "prop": "F1"
+    },
+    {
+      "label": "12 LUU DAN / lay da",
+      "start": 1217,
+      "end": 1248,
+      "frames": 32,
+      "seconds": 0.5333333333333333,
+      "prop": "F1"
+    },
+    {
+      "label": "13 LUU DAN / giu ngam",
+      "start": 1249,
+      "end": 1308,
+      "frames": 60,
+      "seconds": 1.0,
+      "prop": "F1"
+    },
+    {
+      "label": "14 LUU DAN / tha o 0.18s va thu tay",
+      "start": 1309,
+      "end": 1374,
+      "frames": 66,
+      "seconds": 1.1,
+      "prop": "F1"
+    },
+    {
+      "label": "11 DA / cam va chuan bi",
+      "start": 1375,
+      "end": 1422,
+      "frames": 48,
+      "seconds": 0.8,
+      "prop": "Stone"
+    },
+    {
+      "label": "12 DA / lay da",
+      "start": 1423,
+      "end": 1454,
+      "frames": 32,
+      "seconds": 0.5333333333333333,
+      "prop": "Stone"
+    },
+    {
+      "label": "13 DA / giu ngam",
+      "start": 1455,
+      "end": 1514,
+      "frames": 60,
+      "seconds": 1.0,
+      "prop": "Stone"
+    },
+    {
+      "label": "14 DA / tha o 0.18s va thu tay",
+      "start": 1515,
+      "end": 1580,
+      "frames": 66,
+      "seconds": 1.1,
+      "prop": "Stone"
+    },
+    {
+      "label": "11 BOM KHOI / cam va chuan bi",
+      "start": 1581,
+      "end": 1652,
+      "frames": 72,
+      "seconds": 1.2,
+      "prop": "Smoke"
+    },
+    {
+      "label": "12 BOM KHOI / lay da",
+      "start": 1653,
+      "end": 1684,
+      "frames": 32,
+      "seconds": 0.5333333333333333,
+      "prop": "Smoke"
+    },
+    {
+      "label": "13 BOM KHOI / giu ngam",
+      "start": 1685,
+      "end": 1744,
+      "frames": 60,
+      "seconds": 1.0,
+      "prop": "Smoke"
+    },
+    {
+      "label": "14 BOM KHOI / tha o 0.18s va thu tay",
+      "start": 1745,
+      "end": 1810,
+      "frames": 66,
+      "seconds": 1.1,
+      "prop": "Smoke"
+    },
+    {
+      "label": "15 NHAY / tay khong",
+      "start": 1811,
+      "end": 1892,
+      "frames": 82,
+      "seconds": 1.3666666666666667,
+      "prop": ""
+    },
+    {
+      "label": "15 NHAY / Pistol",
+      "start": 1893,
+      "end": 1974,
+      "frames": 82,
+      "seconds": 1.3666666666666667,
+      "prop": "Pistol"
+    },
+    {
+      "label": "15 NHAY / Knife",
+      "start": 1975,
+      "end": 2056,
+      "frames": 82,
+      "seconds": 1.3666666666666667,
+      "prop": "Knife"
+    },
+    {
+      "label": "16 K54 / di khi ngam",
+      "start": 2057,
+      "end": 2176,
+      "frames": 120,
+      "seconds": 2.0,
+      "prop": "Pistol"
+    },
+    {
+      "label": "17 DAO / rut dao",
+      "start": 2177,
+      "end": 2236,
+      "frames": 60,
+      "seconds": 1.0,
+      "prop": "Knife"
+    },
+    {
+      "label": "18 DAO / cat dao",
+      "start": 2237,
+      "end": 2296,
+      "frames": 60,
+      "seconds": 1.0,
+      "prop": "Knife"
+    },
+    {
+      "label": "19 LUU DAN / chuan bi khom",
+      "start": 2297,
+      "end": 2368,
+      "frames": 72,
+      "seconds": 1.2,
+      "prop": "F1"
+    },
+    {
+      "label": "19 LUU DAN / lay da khom",
+      "start": 2369,
+      "end": 2400,
+      "frames": 32,
+      "seconds": 0.5333333333333333,
+      "prop": "F1"
+    },
+    {
+      "label": "19 LUU DAN / ngam khom",
+      "start": 2401,
+      "end": 2460,
+      "frames": 60,
+      "seconds": 1.0,
+      "prop": "F1"
+    },
+    {
+      "label": "19 LUU DAN / nem khom",
+      "start": 2461,
+      "end": 2526,
+      "frames": 66,
+      "seconds": 1.1,
+      "prop": "F1"
+    },
+    {
+      "label": "20 NHAY / LUU DAN",
+      "start": 2527,
+      "end": 2608,
+      "frames": 82,
+      "seconds": 1.3666666666666667,
+      "prop": "F1"
+    },
+    {
+      "label": "19 DA / chuan bi khom",
+      "start": 2609,
+      "end": 2656,
+      "frames": 48,
+      "seconds": 0.8,
+      "prop": "Stone"
+    },
+    {
+      "label": "19 DA / lay da khom",
+      "start": 2657,
+      "end": 2688,
+      "frames": 32,
+      "seconds": 0.5333333333333333,
+      "prop": "Stone"
+    },
+    {
+      "label": "19 DA / ngam khom",
+      "start": 2689,
+      "end": 2748,
+      "frames": 60,
+      "seconds": 1.0,
+      "prop": "Stone"
+    },
+    {
+      "label": "19 DA / nem khom",
+      "start": 2749,
+      "end": 2814,
+      "frames": 66,
+      "seconds": 1.1,
+      "prop": "Stone"
+    },
+    {
+      "label": "20 NHAY / DA",
+      "start": 2815,
+      "end": 2896,
+      "frames": 82,
+      "seconds": 1.3666666666666667,
+      "prop": "Stone"
+    },
+    {
+      "label": "19 BOM KHOI / chuan bi khom",
+      "start": 2897,
+      "end": 2968,
+      "frames": 72,
+      "seconds": 1.2,
+      "prop": "Smoke"
+    },
+    {
+      "label": "19 BOM KHOI / lay da khom",
+      "start": 2969,
+      "end": 3000,
+      "frames": 32,
+      "seconds": 0.5333333333333333,
+      "prop": "Smoke"
+    },
+    {
+      "label": "19 BOM KHOI / ngam khom",
+      "start": 3001,
+      "end": 3060,
+      "frames": 60,
+      "seconds": 1.0,
+      "prop": "Smoke"
+    },
+    {
+      "label": "19 BOM KHOI / nem khom",
+      "start": 3061,
+      "end": 3126,
+      "frames": 66,
+      "seconds": 1.1,
+      "prop": "Smoke"
+    },
+    {
+      "label": "20 NHAY / BOM KHOI",
+      "start": 3127,
+      "end": 3208,
+      "frames": 82,
+      "seconds": 1.3666666666666667,
+      "prop": "Smoke"
+    }
+  ],
+  "fps": 60,
+  "frames": 3208,
+  "prop_dimensions": {
+    "F1": [
+      0.12195897102355957,
+      0.0694524496793747,
+      0.06721566617488861
+    ],
+    "Smoke": [
+      0.0925000011920929,
+      0.06300000846385956,
+      0.14198806881904602
+    ],
+    "Stone": [
+      0.1,
+      0.1,
+      0.1
+    ]
+  },
+  "jump_flight_seconds": 0.7483314773547882,
+  "ground_offset": 0.050106488168239594,
+  "status": "polish_review_ready_not_unity_integrated",
+  "metrics": [
+    {
+      "label": "01 K54 / cam thap mot tay",
+      "frames": 80,
+      "Left": {
+        "wrist_max_deg": 21.98743249495052,
+        "elbow_twist_max_deg": 5.516475771719456
+      },
+      "Right": {
+        "wrist_max_deg": 10.368511466703557,
+        "elbow_twist_max_deg": 5.238917811170808
+      }
+    },
+    {
+      "label": "02 K54 / nang va ghep tay trai",
+      "frames": 22,
+      "Left": {
+        "wrist_max_deg": 25.52687238134427,
+        "elbow_twist_max_deg": 6.011324491985107
+      },
+      "Right": {
+        "wrist_max_deg": 34.76012359194802,
+        "elbow_twist_max_deg": 7.448395477637803
+      }
+    },
+    {
+      "label": "03 K54 / ngam hai tay",
+      "frames": 72,
+      "Left": {
+        "wrist_max_deg": 6.531198492869089,
+        "elbow_twist_max_deg": 3.1262185634694504
+      },
+      "Right": {
+        "wrist_max_deg": 24.071231003167615,
+        "elbow_twist_max_deg": 4.747248758226021
+      }
+    },
+    {
+      "label": "04 K54 / ban va tra tam",
+      "frames": 60,
+      "Left": {
+        "wrist_max_deg": 8.776082743792704,
+        "elbow_twist_max_deg": 3.6892815498269727
+      },
+      "Right": {
+        "wrist_max_deg": 14.78150949605349,
+        "elbow_twist_max_deg": 5.364607604425885
+      }
+    },
+    {
+      "label": "05 K54 / thay bang 1.8 giay",
+      "frames": 108,
+      "Left": {
+        "wrist_max_deg": 57.38622487807163,
+        "elbow_twist_max_deg": 7.295515387345546
+      },
+      "Right": {
+        "wrist_max_deg": 49.53169516275914,
+        "elbow_twist_max_deg": 8.449269586432479
+      }
+    },
+    {
+      "label": "06 K54 / ha ve mot tay",
+      "frames": 22,
+      "Left": {
+        "wrist_max_deg": 27.105955768390565,
+        "elbow_twist_max_deg": 6.856304229940889
+      },
+      "Right": {
+        "wrist_max_deg": 35.17804579178818,
+        "elbow_twist_max_deg": 7.5369523304743495
+      }
+    },
+    {
+      "label": "07 DAO / cam va cho",
+      "frames": 100,
+      "Left": {
+        "wrist_max_deg": 19.267782648592966,
+        "elbow_twist_max_deg": 4.445411348752344
+      },
+      "Right": {
+        "wrist_max_deg": 28.46053596006042,
+        "elbow_twist_max_deg": 4.9600806937006325
+      }
+    },
+    {
+      "label": "08 DAO / chuan bi don va thu tay",
+      "frames": 72,
+      "Left": {
+        "wrist_max_deg": 38.15805391157016,
+        "elbow_twist_max_deg": 10.333409873233563
+      },
+      "Right": {
+        "wrist_max_deg": 37.6415754971013,
+        "elbow_twist_max_deg": 11.510805252880289
+      }
+    },
+    {
+      "label": "09 Pistol / di",
+      "frames": 120,
+      "Left": {
+        "wrist_max_deg": 32.05061145386606,
+        "elbow_twist_max_deg": 2.380443490365849
+      },
+      "Right": {
+        "wrist_max_deg": 86.68509313421754,
+        "elbow_twist_max_deg": 8.437438398703875
+      }
+    },
+    {
+      "label": "09 Pistol / chay",
+      "frames": 84,
+      "Left": {
+        "wrist_max_deg": 36.69410190072089,
+        "elbow_twist_max_deg": 6.000122169110739
+      },
+      "Right": {
+        "wrist_max_deg": 50.626413977266694,
+        "elbow_twist_max_deg": 5.167438474523834
+      }
+    },
+    {
+      "label": "09 Pistol / khom",
+      "frames": 100,
+      "Left": {
+        "wrist_max_deg": 53.46950070985201,
+        "elbow_twist_max_deg": 5.763906961204128
+      },
+      "Right": {
+        "wrist_max_deg": 94.95542769072748,
+        "elbow_twist_max_deg": 8.412817246869565
+      }
+    },
+    {
+      "label": "10 Knife / di",
+      "frames": 120,
+      "Left": {
+        "wrist_max_deg": 100.8214741876904,
+        "elbow_twist_max_deg": 2.380443490365849
+      },
+      "Right": {
+        "wrist_max_deg": 108.59695470864375,
+        "elbow_twist_max_deg": 10.883073647524157
+      }
+    },
+    {
+      "label": "10 Knife / chay",
+      "frames": 84,
+      "Left": {
+        "wrist_max_deg": 121.73224859584617,
+        "elbow_twist_max_deg": 6.000122169110739
+      },
+      "Right": {
+        "wrist_max_deg": 99.24884362186248,
+        "elbow_twist_max_deg": 7.834892371777897
+      }
+    },
+    {
+      "label": "10 Knife / khom",
+      "frames": 100,
+      "Left": {
+        "wrist_max_deg": 90.33533747196911,
+        "elbow_twist_max_deg": 5.763906961204128
+      },
+      "Right": {
+        "wrist_max_deg": 73.27510269897553,
+        "elbow_twist_max_deg": 11.430084150818715
+      }
+    },
+    {
+      "label": "11 LUU DAN / cam va chuan bi",
+      "frames": 72,
+      "Left": {
+        "wrist_max_deg": 75.7841317094447,
+        "elbow_twist_max_deg": 6.17868576494476
+      },
+      "Right": {
+        "wrist_max_deg": 51.04330823363676,
+        "elbow_twist_max_deg": 3.4291198289720057
+      }
+    },
+    {
+      "label": "12 LUU DAN / lay da",
+      "frames": 32,
+      "Left": {
+        "wrist_max_deg": 21.934659038328416,
+        "elbow_twist_max_deg": 5.500130076892276
+      },
+      "Right": {
+        "wrist_max_deg": 28.85677743192766,
+        "elbow_twist_max_deg": 10.480301535993476
+      }
+    },
+    {
+      "label": "13 LUU DAN / giu ngam",
+      "frames": 60,
+      "Left": {
+        "wrist_max_deg": 17.26839332568618,
+        "elbow_twist_max_deg": 3.102603209211793
+      },
+      "Right": {
+        "wrist_max_deg": 29.006437121926396,
+        "elbow_twist_max_deg": 10.536653336522193
+      }
+    },
+    {
+      "label": "14 LUU DAN / tha o 0.18s va thu tay",
+      "frames": 66,
+      "Left": {
+        "wrist_max_deg": 20.643983804080495,
+        "elbow_twist_max_deg": 3.8108712035457017
+      },
+      "Right": {
+        "wrist_max_deg": 32.11859574176978,
+        "elbow_twist_max_deg": 10.855949295765015
+      }
+    },
+    {
+      "label": "11 DA / cam va chuan bi",
+      "frames": 48,
+      "Left": {
+        "wrist_max_deg": 21.934659038328416,
+        "elbow_twist_max_deg": 5.500130076892276
+      },
+      "Right": {
+        "wrist_max_deg": 51.04330823363676,
+        "elbow_twist_max_deg": 3.4291198289720057
+      }
+    },
+    {
+      "label": "12 DA / lay da",
+      "frames": 32,
+      "Left": {
+        "wrist_max_deg": 21.934659038328416,
+        "elbow_twist_max_deg": 5.500130076892276
+      },
+      "Right": {
+        "wrist_max_deg": 28.85677743192766,
+        "elbow_twist_max_deg": 10.480301535993476
+      }
+    },
+    {
+      "label": "13 DA / giu ngam",
+      "frames": 60,
+      "Left": {
+        "wrist_max_deg": 17.26839332568618,
+        "elbow_twist_max_deg": 3.102603209211793
+      },
+      "Right": {
+        "wrist_max_deg": 29.006437121926396,
+        "elbow_twist_max_deg": 10.536653336522193
+      }
+    },
+    {
+      "label": "14 DA / tha o 0.18s va thu tay",
+      "frames": 66,
+      "Left": {
+        "wrist_max_deg": 20.643983804080495,
+        "elbow_twist_max_deg": 3.8108712035457017
+      },
+      "Right": {
+        "wrist_max_deg": 32.11859574176978,
+        "elbow_twist_max_deg": 10.855949295765015
+      }
+    },
+    {
+      "label": "11 BOM KHOI / cam va chuan bi",
+      "frames": 72,
+      "Left": {
+        "wrist_max_deg": 75.7841317094447,
+        "elbow_twist_max_deg": 6.17868576494476
+      },
+      "Right": {
+        "wrist_max_deg": 51.04330823363676,
+        "elbow_twist_max_deg": 3.4291198289720057
+      }
+    },
+    {
+      "label": "12 BOM KHOI / lay da",
+      "frames": 32,
+      "Left": {
+        "wrist_max_deg": 21.934659038328416,
+        "elbow_twist_max_deg": 5.500130076892276
+      },
+      "Right": {
+        "wrist_max_deg": 28.85677743192766,
+        "elbow_twist_max_deg": 10.480301535993476
+      }
+    },
+    {
+      "label": "13 BOM KHOI / giu ngam",
+      "frames": 60,
+      "Left": {
+        "wrist_max_deg": 17.26839332568618,
+        "elbow_twist_max_deg": 3.102603209211793
+      },
+      "Right": {
+        "wrist_max_deg": 29.006437121926396,
+        "elbow_twist_max_deg": 10.536653336522193
+      }
+    },
+    {
+      "label": "14 BOM KHOI / tha o 0.18s va thu tay",
+      "frames": 66,
+      "Left": {
+        "wrist_max_deg": 20.643983804080495,
+        "elbow_twist_max_deg": 3.8108712035457017
+      },
+      "Right": {
+        "wrist_max_deg": 32.11859574176978,
+        "elbow_twist_max_deg": 10.855949295765015
+      }
+    },
+    {
+      "label": "15 NHAY / tay khong",
+      "frames": 82,
+      "Left": {
+        "wrist_max_deg": 31.974420693674567,
+        "elbow_twist_max_deg": 6.957333722782494
+      },
+      "Right": {
+        "wrist_max_deg": 29.472085268592014,
+        "elbow_twist_max_deg": 4.380520938087443
+      }
+    },
+    {
+      "label": "15 NHAY / Pistol",
+      "frames": 82,
+      "Left": {
+        "wrist_max_deg": 7.706195935786383,
+        "elbow_twist_max_deg": 3.072831857064955
+      },
+      "Right": {
+        "wrist_max_deg": 23.339263535479443,
+        "elbow_twist_max_deg": 4.671108395941388
+      }
+    },
+    {
+      "label": "15 NHAY / Knife",
+      "frames": 82,
+      "Left": {
+        "wrist_max_deg": 31.974420693674567,
+        "elbow_twist_max_deg": 6.957333722782494
+      },
+      "Right": {
+        "wrist_max_deg": 9.493408847221307,
+        "elbow_twist_max_deg": 5.204644924050115
+      }
+    }
+  ],
+  "key_compaction": {
+    "before": 1408312,
+    "after": 419734
+  },
+  "jump_pistol_support_max_error_m": 0.11404698868384394,
+  "demo_sha256": "77727ffeab59bf989dfd9fdd568fbe859ce35541ae6df2a92e6341a32c59ac2c",
+  "metrics_after_repair": [
+    {
+      "label": "01 K54 / cam thap mot tay",
+      "Left": {
+        "wrist_max_deg": 21.63057389383757,
+        "elbow_twist_max_deg": 6.29658063644456E-06
+      },
+      "Right": {
+        "wrist_max_deg": 4.800201880284778,
+        "elbow_twist_max_deg": 5.656250408492269E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "02 K54 / nang va ghep tay trai",
+      "Left": {
+        "wrist_max_deg": 21.555081520488713,
+        "elbow_twist_max_deg": 4.482311908304837E-06
+      },
+      "Right": {
+        "wrist_max_deg": 23.128029690113046,
+        "elbow_twist_max_deg": 4.8024767522747425E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "03 K54 / ngam hai tay",
+      "Left": {
+        "wrist_max_deg": 6.629097728676998,
+        "elbow_twist_max_deg": 3.5218162963701616E-06
+      },
+      "Right": {
+        "wrist_max_deg": 12.82130667596236,
+        "elbow_twist_max_deg": 4.162146524322452E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "04 K54 / ban va tra tam",
+      "Left": {
+        "wrist_max_deg": 8.74630738787968,
+        "elbow_twist_max_deg": 3.948703124478925E-06
+      },
+      "Right": {
+        "wrist_max_deg": 10.542827285832391,
+        "elbow_twist_max_deg": 4.482311652509452E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "05 K54 / thay bang 1.8 giay",
+      "Left": {
+        "wrist_max_deg": 51.38848208862711,
+        "elbow_twist_max_deg": 6.8835500144359685E-06
+      },
+      "Right": {
+        "wrist_max_deg": 28.36197974543172,
+        "elbow_twist_max_deg": 8.097508469973036E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "06 K54 / ha ve mot tay",
+      "Left": {
+        "wrist_max_deg": 27.10129245673474,
+        "elbow_twist_max_deg": 5.336085280305269E-06
+      },
+      "Right": {
+        "wrist_max_deg": 22.217976992647838,
+        "elbow_twist_max_deg": 4.482311112496973E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "07 DAO / cam va cho",
+      "Left": {
+        "wrist_max_deg": 10.94198951734346,
+        "elbow_twist_max_deg": 5.015918986828183E-06
+      },
+      "Right": {
+        "wrist_max_deg": 16.87950113736587,
+        "elbow_twist_max_deg": 5.229363580383506E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "08 DAO / chuan bi don va thu tay",
+      "Left": {
+        "wrist_max_deg": 31.56072638093065,
+        "elbow_twist_max_deg": 8.537736448488431E-06
+      },
+      "Right": {
+        "wrist_max_deg": 28.666085380490074,
+        "elbow_twist_max_deg": 1.0031840332658248E-05
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "09 Pistol / di",
+      "Left": {
+        "wrist_max_deg": 19.162512358010144,
+        "elbow_twist_max_deg": 4.909197883762317E-06
+      },
+      "Right": {
+        "wrist_max_deg": 28.047758600212575,
+        "elbow_twist_max_deg": 9.444869846220172E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "09 Pistol / chay",
+      "Left": {
+        "wrist_max_deg": 30.252195324645022,
+        "elbow_twist_max_deg": 1.0031840332658248E-05
+      },
+      "Right": {
+        "wrist_max_deg": 25.9366461655046,
+        "elbow_twist_max_deg": 7.630601970731732E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "09 Pistol / khom",
+      "Left": {
+        "wrist_max_deg": 30.08207238789293,
+        "elbow_twist_max_deg": 4.589033892443695E-06
+      },
+      "Right": {
+        "wrist_max_deg": 31.067422798315647,
+        "elbow_twist_max_deg": 6.963591289377291E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "10 Knife / di",
+      "Left": {
+        "wrist_max_deg": 32.00016026156176,
+        "elbow_twist_max_deg": 4.749115333879672E-06
+      },
+      "Right": {
+        "wrist_max_deg": 32.000050978535036,
+        "elbow_twist_max_deg": 1.077889291423162E-05
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "10 Knife / chay",
+      "Left": {
+        "wrist_max_deg": 32.00013635589966,
+        "elbow_twist_max_deg": 6.403302336366323E-06
+      },
+      "Right": {
+        "wrist_max_deg": 32.00004414834587,
+        "elbow_twist_max_deg": 8.751178825150419E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "10 Knife / khom",
+      "Left": {
+        "wrist_max_deg": 32.00009878985923,
+        "elbow_twist_max_deg": 7.363797692505614E-06
+      },
+      "Right": {
+        "wrist_max_deg": 20.749773189040237,
+        "elbow_twist_max_deg": 1.259315979496023E-05
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "11 LUU DAN / cam va chuan bi",
+      "Left": {
+        "wrist_max_deg": 32.00010220495381,
+        "elbow_twist_max_deg": 4.8024767522747425E-06
+      },
+      "Right": {
+        "wrist_max_deg": 31.999986091737924,
+        "elbow_twist_max_deg": 2.1344341121221078E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "12 LUU DAN / lay da",
+      "Left": {
+        "wrist_max_deg": 21.59096221174608,
+        "elbow_twist_max_deg": 4.8024767522747425E-06
+      },
+      "Right": {
+        "wrist_max_deg": 4.8955299767569995,
+        "elbow_twist_max_deg": 8.537736448488431E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "13 LUU DAN / giu ngam",
+      "Left": {
+        "wrist_max_deg": 14.70056492419967,
+        "elbow_twist_max_deg": 3.308372868104925E-06
+      },
+      "Right": {
+        "wrist_max_deg": 8.69680388432272,
+        "elbow_twist_max_deg": 8.324293048644904E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "14 LUU DAN / tha o 0.18s va thu tay",
+      "Left": {
+        "wrist_max_deg": 16.10225805321698,
+        "elbow_twist_max_deg": 5.629569301390802E-06
+      },
+      "Right": {
+        "wrist_max_deg": 26.034667917830745,
+        "elbow_twist_max_deg": 5.9764158777397824E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "11 DA / cam va chuan bi",
+      "Left": {
+        "wrist_max_deg": 21.59096221174608,
+        "elbow_twist_max_deg": 1.0672170560610539E-06
+      },
+      "Right": {
+        "wrist_max_deg": 31.999986091737924,
+        "elbow_twist_max_deg": 2.1344341121221078E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "12 DA / lay da",
+      "Left": {
+        "wrist_max_deg": 21.59096221174608,
+        "elbow_twist_max_deg": 4.8024767522747425E-06
+      },
+      "Right": {
+        "wrist_max_deg": 4.8955299767569995,
+        "elbow_twist_max_deg": 8.537736448488431E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "13 DA / giu ngam",
+      "Left": {
+        "wrist_max_deg": 14.70056492419967,
+        "elbow_twist_max_deg": 3.308372868104925E-06
+      },
+      "Right": {
+        "wrist_max_deg": 8.69680388432272,
+        "elbow_twist_max_deg": 8.324293048644904E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "14 DA / tha o 0.18s va thu tay",
+      "Left": {
+        "wrist_max_deg": 16.10225805321698,
+        "elbow_twist_max_deg": 5.629569301390802E-06
+      },
+      "Right": {
+        "wrist_max_deg": 26.034667917830745,
+        "elbow_twist_max_deg": 5.9764158777397824E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "11 BOM KHOI / cam va chuan bi",
+      "Left": {
+        "wrist_max_deg": 32.00010220495381,
+        "elbow_twist_max_deg": 4.8024767522747425E-06
+      },
+      "Right": {
+        "wrist_max_deg": 31.999986091737924,
+        "elbow_twist_max_deg": 2.1344341121221078E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "12 BOM KHOI / lay da",
+      "Left": {
+        "wrist_max_deg": 21.59096221174608,
+        "elbow_twist_max_deg": 4.8024767522747425E-06
+      },
+      "Right": {
+        "wrist_max_deg": 4.8955299767569995,
+        "elbow_twist_max_deg": 8.537736448488431E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "13 BOM KHOI / giu ngam",
+      "Left": {
+        "wrist_max_deg": 14.70056492419967,
+        "elbow_twist_max_deg": 3.308372868104925E-06
+      },
+      "Right": {
+        "wrist_max_deg": 8.69680388432272,
+        "elbow_twist_max_deg": 8.324293048644904E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "14 BOM KHOI / tha o 0.18s va thu tay",
+      "Left": {
+        "wrist_max_deg": 16.10225805321698,
+        "elbow_twist_max_deg": 5.629569301390802E-06
+      },
+      "Right": {
+        "wrist_max_deg": 26.034667917830745,
+        "elbow_twist_max_deg": 5.9764158777397824E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "15 NHAY / tay khong",
+      "Left": {
+        "wrist_max_deg": 31.96045295682189,
+        "elbow_twist_max_deg": 1.008520118261913E-05
+      },
+      "Right": {
+        "wrist_max_deg": 20.538412985174194,
+        "elbow_twist_max_deg": 4.8024767522747425E-06
+      },
+      "support_max_m": 0
+    },
+    {
+      "label": "15 NHAY / Pistol",
+      "Left": {
+        "wrist_max_deg": 33.57116524236722,
+        "elbow_twist_max_deg": 5.656250408492269E-06
+      },
+      "Right": {
+        "wrist_max_deg": 31.8332645891925,
+        "elbow_twist_max_deg": 5.229363580383506E-06
+      },
+      "support_max_m": 0.002897947827901392
+    },
+    {
+      "label": "15 NHAY / Knife",
+      "Left": {
+        "wrist_max_deg": 31.96045295682189,
+        "elbow_twist_max_deg": 1.008520118261913E-05
+      },
+      "Right": {
+        "wrist_max_deg": 1.6164052482185376,
+        "elbow_twist_max_deg": 6.403302336366323E-06
+      },
+      "support_max_m": 0
+    }
+  ],
+  "prop_grip_update": "Closed per-prop finger poses; body long axis across the knuckles; ring separation remains polish work.",
+  "ground_corrections": [
+    {
+      "label": "07 DAO / cam va cho",
+      "max_correction_m": 0.013522964902222157
+    },
+    {
+      "label": "08 DAO / chuan bi don va thu tay",
+      "max_correction_m": 0.04051870107650757
+    },
+    {
+      "label": "09 Pistol / di",
+      "max_correction_m": 0.05197521299123764
+    },
+    {
+      "label": "09 Pistol / chay",
+      "max_correction_m": 0.040291089564561844
+    },
+    {
+      "label": "09 Pistol / khom",
+      "max_correction_m": 0.057068996131420135
+    },
+    {
+      "label": "10 Knife / di",
+      "max_correction_m": 0.05197521299123764
+    },
+    {
+      "label": "10 Knife / chay",
+      "max_correction_m": 0.040291089564561844
+    },
+    {
+      "label": "10 Knife / khom",
+      "max_correction_m": 0.057068996131420135
+    },
+    {
+      "label": "12 LUU DAN / lay da",
+      "max_correction_m": 0.0058424146845936775
+    },
+    {
+      "label": "14 LUU DAN / tha o 0.18s va thu tay",
+      "max_correction_m": 0.012698334641754627
+    },
+    {
+      "label": "12 DA / lay da",
+      "max_correction_m": 0.0058424146845936775
+    },
+    {
+      "label": "14 DA / tha o 0.18s va thu tay",
+      "max_correction_m": 0.012698334641754627
+    },
+    {
+      "label": "12 BOM KHOI / lay da",
+      "max_correction_m": 0.0058424146845936775
+    },
+    {
+      "label": "14 BOM KHOI / tha o 0.18s va thu tay",
+      "max_correction_m": 0.012698334641754627
+    },
+    {
+      "label": "15 NHAY / tay khong",
+      "max_correction_m": 0.017715685069561005
+    },
+    {
+      "label": "15 NHAY / Pistol",
+      "max_correction_m": 0.017715685069561005
+    },
+    {
+      "label": "15 NHAY / Knife",
+      "max_correction_m": 0.017715685069561005
+    }
+  ],
+  "prop_top_orientation": "F1 and smoke tops face away from the lower knuckles; verified by review stills.",
+  "preview_range_disabled": true,
+  "v1_sha256": "fd63762187f96e474cf0f0b4ef6e68993a24254550a09c67c717660f65e525e5",
+  "blocking_approved": true,
+  "pinch_template": {
+    "thumb_index_pad_separation_m": 0.014732210457850992,
+    "thumb_angles": [
+      -5,
+      5,
+      2.5
+    ],
+    "thumb_spread_quat": [
+      0.9659258127212524,
+      -0.0,
+      -0.0,
+      -0.2588191032409668
+    ],
+    "index_pad_hand_local": [
+      -0.05928243696689606,
+      0.132603257894516,
+      -0.02466471865773201
+    ]
+  },
+  "pinch_metrics": [
+    {
+      "label": "11 LUU DAN / cam va chuan bi",
+      "index_pad_to_ring_target_max_m": 0.0016959321968949698
+    },
+    {
+      "label": "11 BOM KHOI / cam va chuan bi",
+      "index_pad_to_ring_target_max_m": 0.001696184079012032
+    },
+    {
+      "label": "19 LUU DAN / chuan bi khom",
+      "index_pad_to_ring_target_max_m": 0.015457090234801312
+    },
+    {
+      "label": "19 BOM KHOI / chuan bi khom",
+      "index_pad_to_ring_target_max_m": 0.017431335302013726
+    }
+  ],
+  "changes": [
+    "reload smoothing and left wrist <=36 degree solve",
+    "left-hand pinch and independently animated ring pull",
+    "F1 lever release arc",
+    "complete-phase locomotion loops",
+    "aim-walking pistol",
+    "knife draw/holster",
+    "crouched throw phases for all three props",
+    "jump with all three throwable props"
+  ],
+  "final_contact_pass": {
+    "frames": 564,
+    "changes": [
+      "pin follows index pad without squared easing lag",
+      "wind-up begins from actual prepared hands",
+      "left retreat delayed 3 frames",
+      "K54 slide recoil and return",
+      "aim/knife idle seams"
+    ]
+  },
+  "crouch_contact_final": [
+    {
+      "label": "19 LUU DAN / chuan bi khom",
+      "index_pad_to_ring_target_max_m": 0.0017509992897920532,
+      "correction_m": [
+        -0.002203032374382019,
+        -0.00038623809814453125,
+        0.014961421489715576
+      ]
+    },
+    {
+      "label": "19 BOM KHOI / chuan bi khom",
+      "index_pad_to_ring_target_max_m": 0.00196896177599052,
+      "correction_m": [
+        -0.0015042126178741455,
+        -0.0004818439483642578,
+        0.01660740375518799
+      ]
+    }
+  ],
+  "clearance_pass": {
+    "takes": [
+      {
+        "label": "09 Pistol / di",
+        "max_authored_hand_shift_m": 0.037259291374234095
+      },
+      {
+        "label": "09 Pistol / chay",
+        "max_authored_hand_shift_m": 0.0713899605493752
+      },
+      {
+        "label": "09 Pistol / khom",
+        "max_authored_hand_shift_m": 0.0721030076971277
+      },
+      {
+        "label": "10 Knife / di",
+        "max_authored_hand_shift_m": 0.03209755939609986
+      },
+      {
+        "label": "10 Knife / chay",
+        "max_authored_hand_shift_m": 0.10618126123508446
+      },
+      {
+        "label": "10 Knife / khom",
+        "max_authored_hand_shift_m": 0.06483522676557993
+      },
+      {
+        "label": "11 LUU DAN / cam va chuan bi",
+        "max_authored_hand_shift_m": 0.18402442644252737
+      },
+      {
+        "label": "12 LUU DAN / lay da",
+        "max_authored_hand_shift_m": 0.2438689105071383
+      },
+      {
+        "label": "12 DA / lay da",
+        "max_authored_hand_shift_m": 0.2438689105071383
+      },
+      {
+        "label": "11 BOM KHOI / cam va chuan bi",
+        "max_authored_hand_shift_m": 0.18402442644252737
+      },
+      {
+        "label": "12 BOM KHOI / lay da",
+        "max_authored_hand_shift_m": 0.2438689105071383
+      },
+      {
+        "label": "15 NHAY / tay khong",
+        "max_authored_hand_shift_m": 0.06068860854063079
+      },
+      {
+        "label": "19 LUU DAN / chuan bi khom",
+        "max_authored_hand_shift_m": 0.18402442644252737
+      },
+      {
+        "label": "19 LUU DAN / lay da khom",
+        "max_authored_hand_shift_m": 0.2438689105071383
+      },
+      {
+        "label": "19 LUU DAN / ngam khom",
+        "max_authored_hand_shift_m": 0
+      },
+      {
+        "label": "19 LUU DAN / nem khom",
+        "max_authored_hand_shift_m": 0.11983738755361568
+      },
+      {
+        "label": "19 DA / chuan bi khom",
+        "max_authored_hand_shift_m": 0
+      },
+      {
+        "label": "19 DA / lay da khom",
+        "max_authored_hand_shift_m": 0.2438689105071383
+      },
+      {
+        "label": "19 DA / ngam khom",
+        "max_authored_hand_shift_m": 0
+      },
+      {
+        "label": "19 DA / nem khom",
+        "max_authored_hand_shift_m": 0.11983738755361568
+      },
+      {
+        "label": "19 BOM KHOI / chuan bi khom",
+        "max_authored_hand_shift_m": 0.18402442644252737
+      },
+      {
+        "label": "19 BOM KHOI / lay da khom",
+        "max_authored_hand_shift_m": 0.2438689105071383
+      },
+      {
+        "label": "19 BOM KHOI / ngam khom",
+        "max_authored_hand_shift_m": 0
+      },
+      {
+        "label": "19 BOM KHOI / nem khom",
+        "max_authored_hand_shift_m": 0.11983738755361568
+      }
+    ],
+    "crouch_feet": [
+      {
+        "side": "Left",
+        "sole_z_m": 3.0106541260011E-08,
+        "ankle_error_m": 0.0011594268996425897
+      },
+      {
+        "side": "Right",
+        "sole_z_m": 4.462271618876912E-08,
+        "ankle_error_m": 0.0003954770157187571
+      }
+    ],
+    "modified_frames": 1596,
+    "audit_input_sha256": "d1cfbef13605fd8a4b9f5335a0c5e5d290a7e1be367482038d0a5fbc8abe2aca"
+  },
+  "jump_phase_polish": {
+    "frames": 492,
+    "air_frames": 45,
+    "air_seconds": 0.7483314773547882,
+    "note": "Shallow compression blended into donor flight; remove donor root height before applying demo ballistic arc. Runtime physics remains untouched."
+  },
+  "spacing_pass": {
+    "frames": 224,
+    "takes": [
+      "02 K54 / nang va ghep tay trai",
+      "05 K54 / thay bang 1.8 giay",
+      "06 K54 / ha ve mot tay",
+      "08 DAO / chuan bi don va thu tay"
+    ],
+    "method": "Gaussian weighted quaternion/metric hand paths only in flagged short transitions; exact durations and endpoints retained."
+  },
+  "crouch_foot_refine": [
+    {
+      "side": "Left",
+      "sole_min_z_m": 5.978181150112505E-08,
+      "thigh_change_deg": 2.251402172382511
+    },
+    {
+      "side": "Right",
+      "sole_min_z_m": -7.495427212234063E-08,
+      "thigh_change_deg": 1.3056415661015952
+    }
+  ],
+  "v3_repair": {
+    "modified_frames": 1382,
+    "outside_scalar_max_error": 0,
+    "takes": [
+      "02 K54 / nang va ghep tay trai",
+      "05 K54 / thay bang 1.8 giay",
+      "06 K54 / ha ve mot tay",
+      "08 DAO / chuan bi don va thu tay",
+      "15 NHAY / tay khong",
+      "15 NHAY / Pistol",
+      "15 NHAY / Knife",
+      "19 LUU DAN / chuan bi khom",
+      "19 LUU DAN / lay da khom",
+      "19 LUU DAN / ngam khom",
+      "19 LUU DAN / nem khom",
+      "20 NHAY / LUU DAN",
+      "19 DA / chuan bi khom",
+      "19 DA / lay da khom",
+      "19 DA / ngam khom",
+      "19 DA / nem khom",
+      "20 NHAY / DA",
+      "19 BOM KHOI / chuan bi khom",
+      "19 BOM KHOI / lay da khom",
+      "19 BOM KHOI / ngam khom",
+      "19 BOM KHOI / nem khom",
+      "20 NHAY / BOM KHOI"
+    ],
+    "failed_v2_script_fixed": [
+      "preserve sparse-curve guard samples",
+      "write location separately from quaternion",
+      "compare evaluated samples with numeric tolerance"
+    ],
+    "jump": "local limb rotation spacing cleanup; original physical flight root retained",
+    "source_v2_sha256": "d90440d0b554b5b3838006d145d7557464e26be92738dd15e1b9b4a9f716f9ff"
+  },
+  "v3_refine": {
+    "restored_clean_crouch_frames": 468,
+    "corrected_frames": 716,
+    "ground_corrections": [
+      {
+        "f": 1811,
+        "correction_m": -0.0069674355909228325
+      },
+      {
+        "f": 1812,
+        "correction_m": -0.012340196408331394
+      },
+      {
+        "f": 1813,
+        "correction_m": -0.01273728534579277
+      },
+      {
+        "f": 1814,
+        "correction_m": -0.005701872985810041
+      },
+      {
+        "f": 1815,
+        "correction_m": 0.006212108768522739
+      },
+      {
+        "f": 1816,
+        "correction_m": 0.015360847115516663
+      },
+      {
+        "f": 1817,
+        "correction_m": 0.0172395259141922
+      },
+      {
+        "f": 1818,
+        "correction_m": 0.015348647721111774
+      },
+      {
+        "f": 1819,
+        "correction_m": 0.01982041820883751
+      },
+      {
+        "f": 1820,
+        "correction_m": 0
+      },
+      {
+        "f": 1821,
+        "correction_m": 0
+      },
+      {
+        "f": 1822,
+        "correction_m": 0
+      },
+      {
+        "f": 1823,
+        "correction_m": 0
+      },
+      {
+        "f": 1824,
+        "correction_m": 0
+      },
+      {
+        "f": 1825,
+        "correction_m": 0
+      },
+      {
+        "f": 1826,
+        "correction_m": 0
+      },
+      {
+        "f": 1827,
+        "correction_m": 0
+      },
+      {
+        "f": 1828,
+        "correction_m": 0
+      },
+      {
+        "f": 1829,
+        "correction_m": 0
+      },
+      {
+        "f": 1830,
+        "correction_m": 0
+      },
+      {
+        "f": 1831,
+        "correction_m": 0
+      },
+      {
+        "f": 1832,
+        "correction_m": 0
+      },
+      {
+        "f": 1833,
+        "correction_m": 0
+      },
+      {
+        "f": 1834,
+        "correction_m": 0
+      },
+      {
+        "f": 1835,
+        "correction_m": 0
+      },
+      {
+        "f": 1836,
+        "correction_m": 0
+      },
+      {
+        "f": 1837,
+        "correction_m": 0
+      },
+      {
+        "f": 1838,
+        "correction_m": 0
+      },
+      {
+        "f": 1839,
+        "correction_m": 0
+      },
+      {
+        "f": 1840,
+        "correction_m": 0
+      },
+      {
+        "f": 1841,
+        "correction_m": 0
+      },
+      {
+        "f": 1842,
+        "correction_m": 0
+      },
+      {
+        "f": 1843,
+        "correction_m": 0
+      },
+      {
+        "f": 1844,
+        "correction_m": 0
+      },
+      {
+        "f": 1845,
+        "correction_m": 0
+      },
+      {
+        "f": 1846,
+        "correction_m": 0
+      },
+      {
+        "f": 1847,
+        "correction_m": 0
+      },
+      {
+        "f": 1848,
+        "correction_m": 0
+      },
+      {
+        "f": 1849,
+        "correction_m": 0
+      },
+      {
+        "f": 1850,
+        "correction_m": 0
+      },
+      {
+        "f": 1851,
+        "correction_m": 0
+      },
+      {
+        "f": 1852,
+        "correction_m": 0
+      },
+      {
+        "f": 1853,
+        "correction_m": 0
+      },
+      {
+        "f": 1854,
+        "correction_m": 0
+      },
+      {
+        "f": 1855,
+        "correction_m": 0
+      },
+      {
+        "f": 1856,
+        "correction_m": 0
+      },
+      {
+        "f": 1857,
+        "correction_m": 0
+      },
+      {
+        "f": 1858,
+        "correction_m": 0
+      },
+      {
+        "f": 1859,
+        "correction_m": 0
+      },
+      {
+        "f": 1860,
+        "correction_m": 0
+      },
+      {
+        "f": 1861,
+        "correction_m": 0
+      },
+      {
+        "f": 1862,
+        "correction_m": 0
+      },
+      {
+        "f": 1863,
+        "correction_m": 0
+      },
+      {
+        "f": 1864,
+        "correction_m": 0
+      },
+      {
+        "f": 1865,
+        "correction_m": 0.013101259246468544
+      },
+      {
+        "f": 1866,
+        "correction_m": -0.0018099314766004682
+      },
+      {
+        "f": 1867,
+        "correction_m": -0.01276261918246746
+      },
+      {
+        "f": 1868,
+        "correction_m": -0.017587915062904358
+      },
+      {
+        "f": 1869,
+        "correction_m": -0.01256284024566412
+      },
+      {
+        "f": 1870,
+        "correction_m": -0.014900506474077702
+      },
+      {
+        "f": 1871,
+        "correction_m": -0.004977789241820574
+      },
+      {
+        "f": 1872,
+        "correction_m": 0.012968526221811771
+      },
+      {
+        "f": 1873,
+        "correction_m": 0.024038774892687798
+      },
+      {
+        "f": 1874,
+        "correction_m": 0.02941640466451645
+      },
+      {
+        "f": 1875,
+        "correction_m": 0.032194945961236954
+      },
+      {
+        "f": 1876,
+        "correction_m": 0.03326832875609398
+      },
+      {
+        "f": 1877,
+        "correction_m": 0.030057160183787346
+      },
+      {
+        "f": 1878,
+        "correction_m": 0.02306676097214222
+      },
+      {
+        "f": 1879,
+        "correction_m": 0.01343107782304287
+      },
+      {
+        "f": 1880,
+        "correction_m": 0.002378597855567932
+      },
+      {
+        "f": 1881,
+        "correction_m": -0.007773335091769695
+      },
+      {
+        "f": 1882,
+        "correction_m": -0.013540155254304409
+      },
+      {
+        "f": 1883,
+        "correction_m": -0.014164845459163189
+      },
+      {
+        "f": 1884,
+        "correction_m": -0.011616057716310024
+      },
+      {
+        "f": 1885,
+        "correction_m": -0.007877510040998459
+      },
+      {
+        "f": 1886,
+        "correction_m": -0.00435710558667779
+      },
+      {
+        "f": 1887,
+        "correction_m": -0.0019512851722538471
+      },
+      {
+        "f": 1888,
+        "correction_m": -0.0006463890895247459
+      },
+      {
+        "f": 1889,
+        "correction_m": -4.5794709876645356E-05
+      },
+      {
+        "f": 1890,
+        "correction_m": 0.00011365411046426743
+      },
+      {
+        "f": 1891,
+        "correction_m": 0.00010390514944447204
+      },
+      {
+        "f": 1892,
+        "correction_m": 5.294737275107764E-05
+      },
+      {
+        "f": 1893,
+        "correction_m": -0.0069674355909228325
+      },
+      {
+        "f": 1894,
+        "correction_m": -0.012340196408331394
+      },
+      {
+        "f": 1895,
+        "correction_m": -0.01273728534579277
+      },
+      {
+        "f": 1896,
+        "correction_m": -0.005701872985810041
+      },
+      {
+        "f": 1897,
+        "correction_m": 0.006212108768522739
+      },
+      {
+        "f": 1898,
+        "correction_m": 0.015360847115516663
+      },
+      {
+        "f": 1899,
+        "correction_m": 0.0172395259141922
+      },
+      {
+        "f": 1900,
+        "correction_m": 0.015348647721111774
+      },
+      {
+        "f": 1901,
+        "correction_m": 0.01982041820883751
+      },
+      {
+        "f": 1902,
+        "correction_m": 0
+      },
+      {
+        "f": 1903,
+        "correction_m": 0
+      },
+      {
+        "f": 1904,
+        "correction_m": 0
+      },
+      {
+        "f": 1905,
+        "correction_m": 0
+      },
+      {
+        "f": 1906,
+        "correction_m": 0
+      },
+      {
+        "f": 1907,
+        "correction_m": 0
+      },
+      {
+        "f": 1908,
+        "correction_m": 0
+      },
+      {
+        "f": 1909,
+        "correction_m": 0
+      },
+      {
+        "f": 1910,
+        "correction_m": 0
+      },
+      {
+        "f": 1911,
+        "correction_m": 0
+      },
+      {
+        "f": 1912,
+        "correction_m": 0
+      },
+      {
+        "f": 1913,
+        "correction_m": 0
+      },
+      {
+        "f": 1914,
+        "correction_m": 0
+      },
+      {
+        "f": 1915,
+        "correction_m": 0
+      },
+      {
+        "f": 1916,
+        "correction_m": 0
+      },
+      {
+        "f": 1917,
+        "correction_m": 0
+      },
+      {
+        "f": 1918,
+        "correction_m": 0
+      },
+      {
+        "f": 1919,
+        "correction_m": 0
+      },
+      {
+        "f": 1920,
+        "correction_m": 0
+      },
+      {
+        "f": 1921,
+        "correction_m": 0
+      },
+      {
+        "f": 1922,
+        "correction_m": 0
+      },
+      {
+        "f": 1923,
+        "correction_m": 0
+      },
+      {
+        "f": 1924,
+        "correction_m": 0
+      },
+      {
+        "f": 1925,
+        "correction_m": 0
+      },
+      {
+        "f": 1926,
+        "correction_m": 0
+      },
+      {
+        "f": 1927,
+        "correction_m": 0
+      },
+      {
+        "f": 1928,
+        "correction_m": 0
+      },
+      {
+        "f": 1929,
+        "correction_m": 0
+      },
+      {
+        "f": 1930,
+        "correction_m": 0
+      },
+      {
+        "f": 1931,
+        "correction_m": 0
+      },
+      {
+        "f": 1932,
+        "correction_m": 0
+      },
+      {
+        "f": 1933,
+        "correction_m": 0
+      },
+      {
+        "f": 1934,
+        "correction_m": 0
+      },
+      {
+        "f": 1935,
+        "correction_m": 0
+      },
+      {
+        "f": 1936,
+        "correction_m": 0
+      },
+      {
+        "f": 1937,
+        "correction_m": 0
+      },
+      {
+        "f": 1938,
+        "correction_m": 0
+      },
+      {
+        "f": 1939,
+        "correction_m": 0
+      },
+      {
+        "f": 1940,
+        "correction_m": 0
+      },
+      {
+        "f": 1941,
+        "correction_m": 0
+      },
+      {
+        "f": 1942,
+        "correction_m": 0
+      },
+      {
+        "f": 1943,
+        "correction_m": 0
+      },
+      {
+        "f": 1944,
+        "correction_m": 0
+      },
+      {
+        "f": 1945,
+        "correction_m": 0
+      },
+      {
+        "f": 1946,
+        "correction_m": 0
+      },
+      {
+        "f": 1947,
+        "correction_m": 0.013101259246468544
+      },
+      {
+        "f": 1948,
+        "correction_m": -0.0018099314766004682
+      },
+      {
+        "f": 1949,
+        "correction_m": -0.01276261918246746
+      },
+      {
+        "f": 1950,
+        "correction_m": -0.017587915062904358
+      },
+      {
+        "f": 1951,
+        "correction_m": -0.01256284024566412
+      },
+      {
+        "f": 1952,
+        "correction_m": -0.014900506474077702
+      },
+      {
+        "f": 1953,
+        "correction_m": -0.004977789241820574
+      },
+      {
+        "f": 1954,
+        "correction_m": 0.012968526221811771
+      },
+      {
+        "f": 1955,
+        "correction_m": 0.024038774892687798
+      },
+      {
+        "f": 1956,
+        "correction_m": 0.02941640466451645
+      },
+      {
+        "f": 1957,
+        "correction_m": 0.032194945961236954
+      },
+      {
+        "f": 1958,
+        "correction_m": 0.03326832875609398
+      },
+      {
+        "f": 1959,
+        "correction_m": 0.030057160183787346
+      },
+      {
+        "f": 1960,
+        "correction_m": 0.02306676097214222
+      },
+      {
+        "f": 1961,
+        "correction_m": 0.01343107782304287
+      },
+      {
+        "f": 1962,
+        "correction_m": 0.002378597855567932
+      },
+      {
+        "f": 1963,
+        "correction_m": -0.007773335091769695
+      },
+      {
+        "f": 1964,
+        "correction_m": -0.013540155254304409
+      },
+      {
+        "f": 1965,
+        "correction_m": -0.014164845459163189
+      },
+      {
+        "f": 1966,
+        "correction_m": -0.011616057716310024
+      },
+      {
+        "f": 1967,
+        "correction_m": -0.007877510040998459
+      },
+      {
+        "f": 1968,
+        "correction_m": -0.00435710558667779
+      },
+      {
+        "f": 1969,
+        "correction_m": -0.0019512851722538471
+      },
+      {
+        "f": 1970,
+        "correction_m": -0.0006463890895247459
+      },
+      {
+        "f": 1971,
+        "correction_m": -4.5794709876645356E-05
+      },
+      {
+        "f": 1972,
+        "correction_m": 0.00011365411046426743
+      },
+      {
+        "f": 1973,
+        "correction_m": 0.00010390514944447204
+      },
+      {
+        "f": 1974,
+        "correction_m": 5.294737275107764E-05
+      },
+      {
+        "f": 1975,
+        "correction_m": -0.0069674355909228325
+      },
+      {
+        "f": 1976,
+        "correction_m": -0.012340196408331394
+      },
+      {
+        "f": 1977,
+        "correction_m": -0.01273728534579277
+      },
+      {
+        "f": 1978,
+        "correction_m": -0.005701872985810041
+      },
+      {
+        "f": 1979,
+        "correction_m": 0.006212108768522739
+      },
+      {
+        "f": 1980,
+        "correction_m": 0.015360847115516663
+      },
+      {
+        "f": 1981,
+        "correction_m": 0.0172395259141922
+      },
+      {
+        "f": 1982,
+        "correction_m": 0.015348647721111774
+      },
+      {
+        "f": 1983,
+        "correction_m": 0.01982041820883751
+      },
+      {
+        "f": 1984,
+        "correction_m": 0
+      },
+      {
+        "f": 1985,
+        "correction_m": 0
+      },
+      {
+        "f": 1986,
+        "correction_m": 0
+      },
+      {
+        "f": 1987,
+        "correction_m": 0
+      },
+      {
+        "f": 1988,
+        "correction_m": 0
+      },
+      {
+        "f": 1989,
+        "correction_m": 0
+      },
+      {
+        "f": 1990,
+        "correction_m": 0
+      },
+      {
+        "f": 1991,
+        "correction_m": 0
+      },
+      {
+        "f": 1992,
+        "correction_m": 0
+      },
+      {
+        "f": 1993,
+        "correction_m": 0
+      },
+      {
+        "f": 1994,
+        "correction_m": 0
+      },
+      {
+        "f": 1995,
+        "correction_m": 0
+      },
+      {
+        "f": 1996,
+        "correction_m": 0
+      },
+      {
+        "f": 1997,
+        "correction_m": 0
+      },
+      {
+        "f": 1998,
+        "correction_m": 0
+      },
+      {
+        "f": 1999,
+        "correction_m": 0
+      },
+      {
+        "f": 2000,
+        "correction_m": 0
+      },
+      {
+        "f": 2001,
+        "correction_m": 0
+      },
+      {
+        "f": 2002,
+        "correction_m": 0
+      },
+      {
+        "f": 2003,
+        "correction_m": 0
+      },
+      {
+        "f": 2004,
+        "correction_m": 0
+      },
+      {
+        "f": 2005,
+        "correction_m": 0
+      },
+      {
+        "f": 2006,
+        "correction_m": 0
+      },
+      {
+        "f": 2007,
+        "correction_m": 0
+      },
+      {
+        "f": 2008,
+        "correction_m": 0
+      },
+      {
+        "f": 2009,
+        "correction_m": 0
+      },
+      {
+        "f": 2010,
+        "correction_m": 0
+      },
+      {
+        "f": 2011,
+        "correction_m": 0
+      },
+      {
+        "f": 2012,
+        "correction_m": 0
+      },
+      {
+        "f": 2013,
+        "correction_m": 0
+      },
+      {
+        "f": 2014,
+        "correction_m": 0
+      },
+      {
+        "f": 2015,
+        "correction_m": 0
+      },
+      {
+        "f": 2016,
+        "correction_m": 0
+      },
+      {
+        "f": 2017,
+        "correction_m": 0
+      },
+      {
+        "f": 2018,
+        "correction_m": 0
+      },
+      {
+        "f": 2019,
+        "correction_m": 0
+      },
+      {
+        "f": 2020,
+        "correction_m": 0
+      },
+      {
+        "f": 2021,
+        "correction_m": 0
+      },
+      {
+        "f": 2022,
+        "correction_m": 0
+      },
+      {
+        "f": 2023,
+        "correction_m": 0
+      },
+      {
+        "f": 2024,
+        "correction_m": 0
+      },
+      {
+        "f": 2025,
+        "correction_m": 0
+      },
+      {
+        "f": 2026,
+        "correction_m": 0
+      },
+      {
+        "f": 2027,
+        "correction_m": 0
+      },
+      {
+        "f": 2028,
+        "correction_m": 0
+      },
+      {
+        "f": 2029,
+        "correction_m": 0.013101259246468544
+      },
+      {
+        "f": 2030,
+        "correction_m": -0.0018099314766004682
+      },
+      {
+        "f": 2031,
+        "correction_m": -0.01276261918246746
+      },
+      {
+        "f": 2032,
+        "correction_m": -0.017587915062904358
+      },
+      {
+        "f": 2033,
+        "correction_m": -0.01256284024566412
+      },
+      {
+        "f": 2034,
+        "correction_m": -0.014900506474077702
+      },
+      {
+        "f": 2035,
+        "correction_m": -0.004977789241820574
+      },
+      {
+        "f": 2036,
+        "correction_m": 0.012968526221811771
+      },
+      {
+        "f": 2037,
+        "correction_m": 0.024038774892687798
+      },
+      {
+        "f": 2038,
+        "correction_m": 0.02941640466451645
+      },
+      {
+        "f": 2039,
+        "correction_m": 0.032194945961236954
+      },
+      {
+        "f": 2040,
+        "correction_m": 0.03326832875609398
+      },
+      {
+        "f": 2041,
+        "correction_m": 0.030057160183787346
+      },
+      {
+        "f": 2042,
+        "correction_m": 0.02306676097214222
+      },
+      {
+        "f": 2043,
+        "correction_m": 0.01343107782304287
+      },
+      {
+        "f": 2044,
+        "correction_m": 0.002378597855567932
+      },
+      {
+        "f": 2045,
+        "correction_m": -0.007773335091769695
+      },
+      {
+        "f": 2046,
+        "correction_m": -0.013540155254304409
+      },
+      {
+        "f": 2047,
+        "correction_m": -0.014164845459163189
+      },
+      {
+        "f": 2048,
+        "correction_m": -0.011616057716310024
+      },
+      {
+        "f": 2049,
+        "correction_m": -0.007877510040998459
+      },
+      {
+        "f": 2050,
+        "correction_m": -0.00435710558667779
+      },
+      {
+        "f": 2051,
+        "correction_m": -0.0019512851722538471
+      },
+      {
+        "f": 2052,
+        "correction_m": -0.0006463890895247459
+      },
+      {
+        "f": 2053,
+        "correction_m": -4.5794709876645356E-05
+      },
+      {
+        "f": 2054,
+        "correction_m": 0.00011365411046426743
+      },
+      {
+        "f": 2055,
+        "correction_m": 0.00010390514944447204
+      },
+      {
+        "f": 2056,
+        "correction_m": 5.294737275107764E-05
+      },
+      {
+        "f": 2527,
+        "correction_m": -0.0069674355909228325
+      },
+      {
+        "f": 2528,
+        "correction_m": -0.012340196408331394
+      },
+      {
+        "f": 2529,
+        "correction_m": -0.01273728534579277
+      },
+      {
+        "f": 2530,
+        "correction_m": -0.005701872985810041
+      },
+      {
+        "f": 2531,
+        "correction_m": 0.006212108768522739
+      },
+      {
+        "f": 2532,
+        "correction_m": 0.015360847115516663
+      },
+      {
+        "f": 2533,
+        "correction_m": 0.0172395259141922
+      },
+      {
+        "f": 2534,
+        "correction_m": 0.015348647721111774
+      },
+      {
+        "f": 2535,
+        "correction_m": 0.01982041820883751
+      },
+      {
+        "f": 2536,
+        "correction_m": 0
+      },
+      {
+        "f": 2537,
+        "correction_m": 0
+      },
+      {
+        "f": 2538,
+        "correction_m": 0
+      },
+      {
+        "f": 2539,
+        "correction_m": 0
+      },
+      {
+        "f": 2540,
+        "correction_m": 0
+      },
+      {
+        "f": 2541,
+        "correction_m": 0
+      },
+      {
+        "f": 2542,
+        "correction_m": 0
+      },
+      {
+        "f": 2543,
+        "correction_m": 0
+      },
+      {
+        "f": 2544,
+        "correction_m": 0
+      },
+      {
+        "f": 2545,
+        "correction_m": 0
+      },
+      {
+        "f": 2546,
+        "correction_m": 0
+      },
+      {
+        "f": 2547,
+        "correction_m": 0
+      },
+      {
+        "f": 2548,
+        "correction_m": 0
+      },
+      {
+        "f": 2549,
+        "correction_m": 0
+      },
+      {
+        "f": 2550,
+        "correction_m": 0
+      },
+      {
+        "f": 2551,
+        "correction_m": 0
+      },
+      {
+        "f": 2552,
+        "correction_m": 0
+      },
+      {
+        "f": 2553,
+        "correction_m": 0
+      },
+      {
+        "f": 2554,
+        "correction_m": 0
+      },
+      {
+        "f": 2555,
+        "correction_m": 0
+      },
+      {
+        "f": 2556,
+        "correction_m": 0
+      },
+      {
+        "f": 2557,
+        "correction_m": 0
+      },
+      {
+        "f": 2558,
+        "correction_m": 0
+      },
+      {
+        "f": 2559,
+        "correction_m": 0
+      },
+      {
+        "f": 2560,
+        "correction_m": 0
+      },
+      {
+        "f": 2561,
+        "correction_m": 0
+      },
+      {
+        "f": 2562,
+        "correction_m": 0
+      },
+      {
+        "f": 2563,
+        "correction_m": 0
+      },
+      {
+        "f": 2564,
+        "correction_m": 0
+      },
+      {
+        "f": 2565,
+        "correction_m": 0
+      },
+      {
+        "f": 2566,
+        "correction_m": 0
+      },
+      {
+        "f": 2567,
+        "correction_m": 0
+      },
+      {
+        "f": 2568,
+        "correction_m": 0
+      },
+      {
+        "f": 2569,
+        "correction_m": 0
+      },
+      {
+        "f": 2570,
+        "correction_m": 0
+      },
+      {
+        "f": 2571,
+        "correction_m": 0
+      },
+      {
+        "f": 2572,
+        "correction_m": 0
+      },
+      {
+        "f": 2573,
+        "correction_m": 0
+      },
+      {
+        "f": 2574,
+        "correction_m": 0
+      },
+      {
+        "f": 2575,
+        "correction_m": 0
+      },
+      {
+        "f": 2576,
+        "correction_m": 0
+      },
+      {
+        "f": 2577,
+        "correction_m": 0
+      },
+      {
+        "f": 2578,
+        "correction_m": 0
+      },
+      {
+        "f": 2579,
+        "correction_m": 0
+      },
+      {
+        "f": 2580,
+        "correction_m": 0
+      },
+      {
+        "f": 2581,
+        "correction_m": 0.013101259246468544
+      },
+      {
+        "f": 2582,
+        "correction_m": -0.0018099314766004682
+      },
+      {
+        "f": 2583,
+        "correction_m": -0.01276261918246746
+      },
+      {
+        "f": 2584,
+        "correction_m": -0.017587915062904358
+      },
+      {
+        "f": 2585,
+        "correction_m": -0.01256284024566412
+      },
+      {
+        "f": 2586,
+        "correction_m": -0.014900506474077702
+      },
+      {
+        "f": 2587,
+        "correction_m": -0.004977789241820574
+      },
+      {
+        "f": 2588,
+        "correction_m": 0.012968526221811771
+      },
+      {
+        "f": 2589,
+        "correction_m": 0.024038774892687798
+      },
+      {
+        "f": 2590,
+        "correction_m": 0.02941640466451645
+      },
+      {
+        "f": 2591,
+        "correction_m": 0.032194945961236954
+      },
+      {
+        "f": 2592,
+        "correction_m": 0.03326832875609398
+      },
+      {
+        "f": 2593,
+        "correction_m": 0.030057160183787346
+      },
+      {
+        "f": 2594,
+        "correction_m": 0.02306676097214222
+      },
+      {
+        "f": 2595,
+        "correction_m": 0.01343107782304287
+      },
+      {
+        "f": 2596,
+        "correction_m": 0.002378597855567932
+      },
+      {
+        "f": 2597,
+        "correction_m": -0.007773335091769695
+      },
+      {
+        "f": 2598,
+        "correction_m": -0.013540155254304409
+      },
+      {
+        "f": 2599,
+        "correction_m": -0.014164845459163189
+      },
+      {
+        "f": 2600,
+        "correction_m": -0.011616057716310024
+      },
+      {
+        "f": 2601,
+        "correction_m": -0.007877510040998459
+      },
+      {
+        "f": 2602,
+        "correction_m": -0.00435710558667779
+      },
+      {
+        "f": 2603,
+        "correction_m": -0.0019512851722538471
+      },
+      {
+        "f": 2604,
+        "correction_m": -0.0006463890895247459
+      },
+      {
+        "f": 2605,
+        "correction_m": -4.5794709876645356E-05
+      },
+      {
+        "f": 2606,
+        "correction_m": 0.00011365411046426743
+      },
+      {
+        "f": 2607,
+        "correction_m": 0.00010390514944447204
+      },
+      {
+        "f": 2608,
+        "correction_m": 5.294737275107764E-05
+      },
+      {
+        "f": 2815,
+        "correction_m": -0.0069674355909228325
+      },
+      {
+        "f": 2816,
+        "correction_m": -0.012340196408331394
+      },
+      {
+        "f": 2817,
+        "correction_m": -0.01273728534579277
+      },
+      {
+        "f": 2818,
+        "correction_m": -0.005701872985810041
+      },
+      {
+        "f": 2819,
+        "correction_m": 0.006212108768522739
+      },
+      {
+        "f": 2820,
+        "correction_m": 0.015360847115516663
+      },
+      {
+        "f": 2821,
+        "correction_m": 0.0172395259141922
+      },
+      {
+        "f": 2822,
+        "correction_m": 0.015348647721111774
+      },
+      {
+        "f": 2823,
+        "correction_m": 0.01982041820883751
+      },
+      {
+        "f": 2824,
+        "correction_m": 0
+      },
+      {
+        "f": 2825,
+        "correction_m": 0
+      },
+      {
+        "f": 2826,
+        "correction_m": 0
+      },
+      {
+        "f": 2827,
+        "correction_m": 0
+      },
+      {
+        "f": 2828,
+        "correction_m": 0
+      },
+      {
+        "f": 2829,
+        "correction_m": 0
+      },
+      {
+        "f": 2830,
+        "correction_m": 0
+      },
+      {
+        "f": 2831,
+        "correction_m": 0
+      },
+      {
+        "f": 2832,
+        "correction_m": 0
+      },
+      {
+        "f": 2833,
+        "correction_m": 0
+      },
+      {
+        "f": 2834,
+        "correction_m": 0
+      },
+      {
+        "f": 2835,
+        "correction_m": 0
+      },
+      {
+        "f": 2836,
+        "correction_m": 0
+      },
+      {
+        "f": 2837,
+        "correction_m": 0
+      },
+      {
+        "f": 2838,
+        "correction_m": 0
+      },
+      {
+        "f": 2839,
+        "correction_m": 0
+      },
+      {
+        "f": 2840,
+        "correction_m": 0
+      },
+      {
+        "f": 2841,
+        "correction_m": 0
+      },
+      {
+        "f": 2842,
+        "correction_m": 0
+      },
+      {
+        "f": 2843,
+        "correction_m": 0
+      },
+      {
+        "f": 2844,
+        "correction_m": 0
+      },
+      {
+        "f": 2845,
+        "correction_m": 0
+      },
+      {
+        "f": 2846,
+        "correction_m": 0
+      },
+      {
+        "f": 2847,
+        "correction_m": 0
+      },
+      {
+        "f": 2848,
+        "correction_m": 0
+      },
+      {
+        "f": 2849,
+        "correction_m": 0
+      },
+      {
+        "f": 2850,
+        "correction_m": 0
+      },
+      {
+        "f": 2851,
+        "correction_m": 0
+      },
+      {
+        "f": 2852,
+        "correction_m": 0
+      },
+      {
+        "f": 2853,
+        "correction_m": 0
+      },
+      {
+        "f": 2854,
+        "correction_m": 0
+      },
+      {
+        "f": 2855,
+        "correction_m": 0
+      },
+      {
+        "f": 2856,
+        "correction_m": 0
+      },
+      {
+        "f": 2857,
+        "correction_m": 0
+      },
+      {
+        "f": 2858,
+        "correction_m": 0
+      },
+      {
+        "f": 2859,
+        "correction_m": 0
+      },
+      {
+        "f": 2860,
+        "correction_m": 0
+      },
+      {
+        "f": 2861,
+        "correction_m": 0
+      },
+      {
+        "f": 2862,
+        "correction_m": 0
+      },
+      {
+        "f": 2863,
+        "correction_m": 0
+      },
+      {
+        "f": 2864,
+        "correction_m": 0
+      },
+      {
+        "f": 2865,
+        "correction_m": 0
+      },
+      {
+        "f": 2866,
+        "correction_m": 0
+      },
+      {
+        "f": 2867,
+        "correction_m": 0
+      },
+      {
+        "f": 2868,
+        "correction_m": 0
+      },
+      {
+        "f": 2869,
+        "correction_m": 0.013101259246468544
+      },
+      {
+        "f": 2870,
+        "correction_m": -0.0018099314766004682
+      },
+      {
+        "f": 2871,
+        "correction_m": -0.01276261918246746
+      },
+      {
+        "f": 2872,
+        "correction_m": -0.017587915062904358
+      },
+      {
+        "f": 2873,
+        "correction_m": -0.01256284024566412
+      },
+      {
+        "f": 2874,
+        "correction_m": -0.014900506474077702
+      },
+      {
+        "f": 2875,
+        "correction_m": -0.004977789241820574
+      },
+      {
+        "f": 2876,
+        "correction_m": 0.012968526221811771
+      },
+      {
+        "f": 2877,
+        "correction_m": 0.024038774892687798
+      },
+      {
+        "f": 2878,
+        "correction_m": 0.02941640466451645
+      },
+      {
+        "f": 2879,
+        "correction_m": 0.032194945961236954
+      },
+      {
+        "f": 2880,
+        "correction_m": 0.03326832875609398
+      },
+      {
+        "f": 2881,
+        "correction_m": 0.030057160183787346
+      },
+      {
+        "f": 2882,
+        "correction_m": 0.02306676097214222
+      },
+      {
+        "f": 2883,
+        "correction_m": 0.01343107782304287
+      },
+      {
+        "f": 2884,
+        "correction_m": 0.002378597855567932
+      },
+      {
+        "f": 2885,
+        "correction_m": -0.007773335091769695
+      },
+      {
+        "f": 2886,
+        "correction_m": -0.013540155254304409
+      },
+      {
+        "f": 2887,
+        "correction_m": -0.014164845459163189
+      },
+      {
+        "f": 2888,
+        "correction_m": -0.011616057716310024
+      },
+      {
+        "f": 2889,
+        "correction_m": -0.007877510040998459
+      },
+      {
+        "f": 2890,
+        "correction_m": -0.00435710558667779
+      },
+      {
+        "f": 2891,
+        "correction_m": -0.0019512851722538471
+      },
+      {
+        "f": 2892,
+        "correction_m": -0.0006463890895247459
+      },
+      {
+        "f": 2893,
+        "correction_m": -4.5794709876645356E-05
+      },
+      {
+        "f": 2894,
+        "correction_m": 0.00011365411046426743
+      },
+      {
+        "f": 2895,
+        "correction_m": 0.00010390514944447204
+      },
+      {
+        "f": 2896,
+        "correction_m": 5.294737275107764E-05
+      },
+      {
+        "f": 3127,
+        "correction_m": -0.0069674355909228325
+      },
+      {
+        "f": 3128,
+        "correction_m": -0.012340196408331394
+      },
+      {
+        "f": 3129,
+        "correction_m": -0.01273728534579277
+      },
+      {
+        "f": 3130,
+        "correction_m": -0.005701872985810041
+      },
+      {
+        "f": 3131,
+        "correction_m": 0.006212108768522739
+      },
+      {
+        "f": 3132,
+        "correction_m": 0.015360847115516663
+      },
+      {
+        "f": 3133,
+        "correction_m": 0.0172395259141922
+      },
+      {
+        "f": 3134,
+        "correction_m": 0.015348647721111774
+      },
+      {
+        "f": 3135,
+        "correction_m": 0.01982041820883751
+      },
+      {
+        "f": 3136,
+        "correction_m": 0
+      },
+      {
+        "f": 3137,
+        "correction_m": 0
+      },
+      {
+        "f": 3138,
+        "correction_m": 0
+      },
+      {
+        "f": 3139,
+        "correction_m": 0
+      },
+      {
+        "f": 3140,
+        "correction_m": 0
+      },
+      {
+        "f": 3141,
+        "correction_m": 0
+      },
+      {
+        "f": 3142,
+        "correction_m": 0
+      },
+      {
+        "f": 3143,
+        "correction_m": 0
+      },
+      {
+        "f": 3144,
+        "correction_m": 0
+      },
+      {
+        "f": 3145,
+        "correction_m": 0
+      },
+      {
+        "f": 3146,
+        "correction_m": 0
+      },
+      {
+        "f": 3147,
+        "correction_m": 0
+      },
+      {
+        "f": 3148,
+        "correction_m": 0
+      },
+      {
+        "f": 3149,
+        "correction_m": 0
+      },
+      {
+        "f": 3150,
+        "correction_m": 0
+      },
+      {
+        "f": 3151,
+        "correction_m": 0
+      },
+      {
+        "f": 3152,
+        "correction_m": 0
+      },
+      {
+        "f": 3153,
+        "correction_m": 0
+      },
+      {
+        "f": 3154,
+        "correction_m": 0
+      },
+      {
+        "f": 3155,
+        "correction_m": 0
+      },
+      {
+        "f": 3156,
+        "correction_m": 0
+      },
+      {
+        "f": 3157,
+        "correction_m": 0
+      },
+      {
+        "f": 3158,
+        "correction_m": 0
+      },
+      {
+        "f": 3159,
+        "correction_m": 0
+      },
+      {
+        "f": 3160,
+        "correction_m": 0
+      },
+      {
+        "f": 3161,
+        "correction_m": 0
+      },
+      {
+        "f": 3162,
+        "correction_m": 0
+      },
+      {
+        "f": 3163,
+        "correction_m": 0
+      },
+      {
+        "f": 3164,
+        "correction_m": 0
+      },
+      {
+        "f": 3165,
+        "correction_m": 0
+      },
+      {
+        "f": 3166,
+        "correction_m": 0
+      },
+      {
+        "f": 3167,
+        "correction_m": 0
+      },
+      {
+        "f": 3168,
+        "correction_m": 0
+      },
+      {
+        "f": 3169,
+        "correction_m": 0
+      },
+      {
+        "f": 3170,
+        "correction_m": 0
+      },
+      {
+        "f": 3171,
+        "correction_m": 0
+      },
+      {
+        "f": 3172,
+        "correction_m": 0
+      },
+      {
+        "f": 3173,
+        "correction_m": 0
+      },
+      {
+        "f": 3174,
+        "correction_m": 0
+      },
+      {
+        "f": 3175,
+        "correction_m": 0
+      },
+      {
+        "f": 3176,
+        "correction_m": 0
+      },
+      {
+        "f": 3177,
+        "correction_m": 0
+      },
+      {
+        "f": 3178,
+        "correction_m": 0
+      },
+      {
+        "f": 3179,
+        "correction_m": 0
+      },
+      {
+        "f": 3180,
+        "correction_m": 0
+      },
+      {
+        "f": 3181,
+        "correction_m": 0.013101259246468544
+      },
+      {
+        "f": 3182,
+        "correction_m": -0.0018099314766004682
+      },
+      {
+        "f": 3183,
+        "correction_m": -0.01276261918246746
+      },
+      {
+        "f": 3184,
+        "correction_m": -0.017587915062904358
+      },
+      {
+        "f": 3185,
+        "correction_m": -0.01256284024566412
+      },
+      {
+        "f": 3186,
+        "correction_m": -0.014900506474077702
+      },
+      {
+        "f": 3187,
+        "correction_m": -0.004977789241820574
+      },
+      {
+        "f": 3188,
+        "correction_m": 0.012968526221811771
+      },
+      {
+        "f": 3189,
+        "correction_m": 0.024038774892687798
+      },
+      {
+        "f": 3190,
+        "correction_m": 0.02941640466451645
+      },
+      {
+        "f": 3191,
+        "correction_m": 0.032194945961236954
+      },
+      {
+        "f": 3192,
+        "correction_m": 0.03326832875609398
+      },
+      {
+        "f": 3193,
+        "correction_m": 0.030057160183787346
+      },
+      {
+        "f": 3194,
+        "correction_m": 0.02306676097214222
+      },
+      {
+        "f": 3195,
+        "correction_m": 0.01343107782304287
+      },
+      {
+        "f": 3196,
+        "correction_m": 0.002378597855567932
+      },
+      {
+        "f": 3197,
+        "correction_m": -0.007773335091769695
+      },
+      {
+        "f": 3198,
+        "correction_m": -0.013540155254304409
+      },
+      {
+        "f": 3199,
+        "correction_m": -0.014164845459163189
+      },
+      {
+        "f": 3200,
+        "correction_m": -0.011616057716310024
+      },
+      {
+        "f": 3201,
+        "correction_m": -0.007877510040998459
+      },
+      {
+        "f": 3202,
+        "correction_m": -0.00435710558667779
+      },
+      {
+        "f": 3203,
+        "correction_m": -0.0019512851722538471
+      },
+      {
+        "f": 3204,
+        "correction_m": -0.0006463890895247459
+      },
+      {
+        "f": 3205,
+        "correction_m": -4.5794709876645356E-05
+      },
+      {
+        "f": 3206,
+        "correction_m": 0.00011365411046426743
+      },
+      {
+        "f": 3207,
+        "correction_m": 0.00010390514944447204
+      },
+      {
+        "f": 3208,
+        "correction_m": 5.294737275107764E-05
+      }
+    ],
+    "notes": [
+      "F1 left hand retreat continuous across prep/wind boundary",
+      "retain original clean Smoke and Stone crouch arm solutions",
+      "ground jump anticipation and landing after local rotation edits",
+      "left pistol support fixed to the approved grip during aim-walk and jump"
+    ]
+  },
+  "tail_clearance": {
+    "takes": [
+      "09 Pistol / di",
+      "09 Pistol / chay",
+      "09 Pistol / khom",
+      "10 Knife / di",
+      "10 Knife / chay",
+      "10 Knife / khom",
+      "12 LUU DAN / lay da",
+      "12 DA / lay da",
+      "12 BOM KHOI / lay da",
+      "15 NHAY / Pistol",
+      "16 K54 / di khi ngam"
+    ],
+    "unchanged_frame_channels_equal": true,
+    "unchanged_frame_channels_sha256": "c315f8379339aa98cf2a5dddfdb2fcaff99d4332929fcf3be560bd1a3dd38db2",
+    "source_audit_sha256": "7e28c49bde0daaf019c1e77f9f6dcc0abe0187c2986b043b8d536688240a68af",
+    "max_scalar_error": 0
+  },
+  "pistol_jump_support": {
+    "frames": 82,
+    "max_target_error_m": 0.0016958045490460408,
+    "maximum_shared_grip_shift_m": 0.03330936022645271,
+    "reach_margin": 0.983
+  },
+  "sole_final": {
+    "takes": [
+      {
+        "label": "09 Pistol / di",
+        "max_lift_m": 0.003445859532803297
+      },
+      {
+        "label": "09 Pistol / chay",
+        "max_lift_m": 0.0022666992153972387
+      },
+      {
+        "label": "09 Pistol / khom",
+        "max_lift_m": 0.0022231258917599916
+      },
+      {
+        "label": "10 Knife / di",
+        "max_lift_m": 0.003445859532803297
+      },
+      {
+        "label": "10 Knife / chay",
+        "max_lift_m": 0.0022666992153972387
+      },
+      {
+        "label": "10 Knife / khom",
+        "max_lift_m": 0.0022231258917599916
+      },
+      {
+        "label": "12 LUU DAN / lay da",
+        "max_lift_m": 0.005850577261298895
+      },
+      {
+        "label": "12 DA / lay da",
+        "max_lift_m": 0.005850577261298895
+      },
+      {
+        "label": "12 BOM KHOI / lay da",
+        "max_lift_m": 0.005850577261298895
+      },
+      {
+        "label": "16 K54 / di khi ngam",
+        "max_lift_m": 0.003445859532803297
+      }
+    ],
+    "frames": 824
+  }
+}

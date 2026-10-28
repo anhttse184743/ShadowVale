@@ -1,0 +1,10 @@
+[
+  {
+    "clip": "Nam_RadioPanel",
+    "fps": 30,
+    "duration": 6.8,
+    "bones": 62,
+    "rest_preserved": true,
+    "max_wrist_delta_degrees": 18
+  }
+]

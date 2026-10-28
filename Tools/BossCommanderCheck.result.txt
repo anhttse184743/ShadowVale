@@ -1,0 +1,4 @@
+PASS
+Boss=Chỉ huy địch
+Mesh source=Assets/_Project/Art/Characters/Enemies/chỉ huy mỹ.fbx
+Avatar=Assets/_Project/Art/Characters/Enemies/chỉ huy mỹ.fbx

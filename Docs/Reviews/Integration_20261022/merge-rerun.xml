@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-22 09:43:14Z" end-time="2026-10-22 09:43:30Z" duration="15,3692316">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="688" result="Failed" site="Child" start-time="2026-10-22 09:43:14Z" end-time="2026-10-22 09:43:30Z" duration="15.369232" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1601" name="ShadowVale.Map01.Tests.dll" fullname="D:/DO_AN_GAME/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="476" result="Failed" site="Child" start-time="2026-10-22 09:43:15Z" end-time="2026-10-22 09:43:30Z" duration="14.845020" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="211228" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1602" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="476" result="Failed" site="Child" start-time="2026-10-22 09:43:15Z" end-time="2026-10-22 09:43:30Z" duration="14.785494" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1603" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="476" result="Failed" site="Child" start-time="2026-10-22 09:43:15Z" end-time="2026-10-22 09:43:30Z" duration="14.738540" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="SetUpFixture" id="1512" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="476" result="Failed" site="Child" start-time="2026-10-22 09:43:15Z" end-time="2026-10-22 09:43:30Z" duration="14.685941" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1117" name="ForestFlowTests" fullname="ShadowVale.Map01.Tests.ForestFlowTests" classname="ShadowVale.Map01.Tests.ForestFlowTests" runstate="Runnable" testcasecount="16" result="Failed" site="Child" start-time="2026-10-22 09:42:12Z" end-time="2026-10-22 09:42:25Z" duration="13.645081" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1129" name="ObjectiveGuideFollowsEachQuestStep" fullname="ShadowVale.Map01.Tests.ForestFlowTests.ObjectiveGuideFollowsEachQuestStep" methodname="ObjectiveGuideFollowsEachQuestStep" classname="ShadowVale.Map01.Tests.ForestFlowTests" runstate="Runnable" seed="1703850700" result="Failed" start-time="2026-10-22 09:41:53Z" end-time="2026-10-22 09:42:25Z" duration="32.367806" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.ForestFlowTests+<ObjectiveGuideFollowsEachQuestStep>d__19.MoveNext () [0x008f8] in D:\DO_AN_GAME\ShadowVale\Assets\_Project\Map01\Tests\ForestFlowTests.cs:608
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1169" name="K54IntegrationTests" fullname="ShadowVale.Map01.Tests.K54IntegrationTests" classname="ShadowVale.Map01.Tests.K54IntegrationTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-10-22 09:42:45Z" end-time="2026-10-22 09:42:55Z" duration="10.010300" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1173" name="CaptureK54InTheRealMapLighting" fullname="ShadowVale.Map01.Tests.K54IntegrationTests.CaptureK54InTheRealMapLighting" methodname="CaptureK54InTheRealMapLighting" classname="ShadowVale.Map01.Tests.K54IntegrationTests" runstate="Runnable" seed="1481962529" result="Passed" start-time="2026-10-22 09:42:25Z" end-time="2026-10-22 09:42:55Z" duration="29.256167" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1377" name="MosinIntegrationTests" fullname="ShadowVale.Map01.Tests.MosinIntegrationTests" classname="ShadowVale.Map01.Tests.MosinIntegrationTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-22 09:43:15Z" end-time="2026-10-22 09:43:30Z" duration="14.459515" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1380" name="PUScopeHasReal35MagnificationAndBoltCycleReturnsToScopeWithoutASecondCamera" fullname="ShadowVale.Map01.Tests.MosinIntegrationTests.PUScopeHasReal35MagnificationAndBoltCycleReturnsToScopeWithoutASecondCamera" methodname="PUScopeHasReal35MagnificationAndBoltCycleReturnsToScopeWithoutASecondCamera" classname="ShadowVale.Map01.Tests.MosinIntegrationTests" runstate="Runnable" seed="901399105" result="Passed" start-time="2026-10-22 09:42:55Z" end-time="2026-10-22 09:43:30Z" duration="34.989174" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/Admin/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,1 @@
+motion=pistol_carry frame=57,21985 root=(-67.50, 12.22, -66.50) hand=(-67.44, 13.34, -66.73) foot=(-67.63, 12.36, -66.67) modelLocal=(0.00, 0.00, 0.00) grounded=True

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Failed(Child)" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-20 07:52:49Z" end-time="2026-10-20 07:52:52Z" duration="3,8049802">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="614" result="Failed" site="Child" start-time="2026-10-20 07:52:49Z" end-time="2026-10-20 07:52:52Z" duration="3.804980" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1504" name="ShadowVale.Map01.Tests.dll" fullname="C:/Users/Admin/.codex/worktrees/merge-dev-thinh-20261020/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="402" result="Failed" site="Child" start-time="2026-10-20 07:52:49Z" end-time="2026-10-20 07:52:52Z" duration="3.644113" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="213016" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1505" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="402" result="Failed" site="Child" start-time="2026-10-20 07:52:49Z" end-time="2026-10-20 07:52:52Z" duration="3.621708" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1506" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="402" result="Failed" site="Child" start-time="2026-10-20 07:52:49Z" end-time="2026-10-20 07:52:52Z" duration="3.603157" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="SetUpFixture" id="1425" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="402" result="Failed" site="Child" start-time="2026-10-20 07:52:49Z" end-time="2026-10-20 07:52:52Z" duration="3.586927" total="2" passed="1" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1144" name="ForestSaveSlotsTests" fullname="ShadowVale.Map01.Tests.ForestSaveSlotsTests" classname="ShadowVale.Map01.Tests.ForestSaveSlotsTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-10-20 07:52:32Z" end-time="2026-10-20 07:52:32Z" duration="0.026489" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1145" name="BatchModeCannotReachPlayerSlotsAfterFixtureCleanup" fullname="ShadowVale.Map01.Tests.ForestSaveSlotsTests.BatchModeCannotReachPlayerSlotsAfterFixtureCleanup" methodname="BatchModeCannotReachPlayerSlotsAfterFixtureCleanup" classname="ShadowVale.Map01.Tests.ForestSaveSlotsTests" runstate="Runnable" seed="1079002681" result="Passed" start-time="2026-10-20 07:52:32Z" end-time="2026-10-20 07:52:32Z" duration="0.015066" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1308" name="MosinStealthTests" fullname="ShadowVale.Map01.Tests.MosinStealthTests" classname="ShadowVale.Map01.Tests.MosinStealthTests" runstate="Runnable" testcasecount="12" result="Failed" site="Child" start-time="2026-10-20 07:52:49Z" end-time="2026-10-20 07:52:52Z" duration="3.543834" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1309" name="QueuedMosinKeepsItsIdentityWhenSwitchedBeforeTheFinalShotPass" fullname="ShadowVale.Map01.Tests.MosinStealthTests.QueuedMosinKeepsItsIdentityWhenSwitchedBeforeTheFinalShotPass" methodname="QueuedMosinKeepsItsIdentityWhenSwitchedBeforeTheFinalShotPass" classname="ShadowVale.Map01.Tests.MosinStealthTests" runstate="Runnable" seed="807791973" result="Failed" start-time="2026-10-20 07:52:32Z" end-time="2026-10-20 07:52:52Z" duration="20.207918" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Damage must identify the weapon that fired, even though Nam now holds AK.
+  Expected: Sniper
+  But was:  Rifle
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.MosinStealthTests.VerifyQueuedSwitchIdentity () [0x00123] in C:\Users\Admin\.codex\worktrees\merge-dev-thinh-20261020\ShadowVale\Assets\_Project\Map01\Tests\MosinStealthTests.cs:146
+at ShadowVale.Map01.Tests.MosinStealthTests+<QueuedMosinKeepsItsIdentityWhenSwitchedBeforeTheFinalShotPass>d__32.MoveNext () [0x0011f] in C:\Users\Admin\.codex\worktrees\merge-dev-thinh-20261020\ShadowVale\Assets\_Project\Map01\Tests\MosinStealthTests.cs:129
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Saving results to: C:/Users/Admin/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -1,0 +1,1 @@
+PASS assets and previews: rifle_standard, knife, stone, ammo_pistol, ammo_rifle, ammo_sniper, blast_charge, cloth, fuse_module, grenade_f1, gun_oil, gunpowder, herb, medkit_small, pistol_k54, repair_kit, rifle_mosin, river_documents, scope_lens, scrap_metal, smoke_bomb, smoke_module, supplies, weapon_parts, m1_supply_key, m1_supply_cargo, rifle_m16, ammo_556

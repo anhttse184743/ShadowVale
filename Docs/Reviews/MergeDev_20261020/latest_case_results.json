@@ -1,0 +1,807 @@
+{
+  "unique": 200,
+  "passed": 200,
+  "failed": {},
+  "cases": {
+    "ShadowVale.Map01.Tests.ReloadMagazineTests.MagazineLeavesTheRifleRidesTheHandAndGoesBack": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.AGrenadeGoesToAPlayerWhoCampsBehindCover": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.AReloadIsTheMensCueToPush": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.ARifleAimedAtHimMakesHimDuckAndMoveOnlyIfItStaysOnHim": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.ARifleOnHimSendsHimBehindTheCoverAtOnce": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.CallingReinforcementsHeFallsBackTowardsThem": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.FromCoverHeFightsInBursts": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.GrenadeDamageFallsOffToAThirdAtTheEdge": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.HeDoesNotTurnHisBackAndRunAndPrefersCoverBehindHisMen": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.HeFightsFromCoverMostOfTheTimeWithSteadyFire": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.HeMovesToCoverWithinReachNeverOntoThePlayerNorBackToWhereHeIs": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.HeRelocatesAfterStayingTooLongAndAtOnceWhenHurtThere": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.HisGrenadeDrivesThePlayerTowardsHisMen": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.HoppingBetweenHidesNearbyStillDrawsAGrenade": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.LingeringInAnAreaCountsNotStandingOnOneSpot": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.NewFallbackAndShieldingNeverOverrideTheMapBoundary": {
+      "result": "Passed",
+      "run": "main-smoke.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.NoCoverInReachMeansNoMove": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.NoGrenadeForAPlayerWhoKeepsMovingOrStandsInTheOpen": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.NoGrenadeOutOfRangeOrAtHisOwnFeet": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.OutOfAFightHeDoesNothing": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.ReinforcementsAreCalledOnceBelowHalfHealth": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.TheCommanderWearsAStarOverHisHead": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.TheFallbackBundlesBossCarriesItsProfileAndBadProfilesAreRejected": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.TheStopIsCountedFromHisArrivalAndVaries": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.UnderHisCommandASquadIsPlannedAsAPincer": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.BossTests.WhereThePlayerHidOnceTheGrenadeComesSooner": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.CommanderGuardTests.ACommanderFiringOnTheMoveLosesLessAimThanAGuard": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.CommanderGuardTests.AWoundedGuardLeftAloneForHalfAMinuteRecovers": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.CommanderGuardTests.TheMenHeCallsGatherInFrontOfHim": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.CommanderGuardTests.TheWayToHimNeverOutweighsTheRestOfThePlan": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.AI.CommanderGuardTests.UnderHisCommandTheSquadAlsoWatchesTheWayToHim": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Data.ContentBundleParseTests.ContentService_ThrowsWithIdOnMissingKey": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Data.ContentBundleParseTests.FallbackBundle_IdsAreUniqueAndReferencesResolve": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Data.ContentBundleParseTests.FallbackBundle_LoadsAndValidates": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Data.ContentBundleParseTests.FallbackBundle_SnakeCaseKeysMapOntoPascalCase": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Data.ContentBundleParseTests.Validator_RejectsDuplicateIdsAndDanglingReferences": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Data.ContentBundleParseTests.Validator_RejectsMalformedJson": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Data.ContentBundleParseTests.Validator_RejectsWrongSchemaVersion": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.MagazineTests.ANullSupplierFillsOutright": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.MagazineTests.AShortReserveGivesAPartialMagazine": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.MagazineTests.ASupplierCannotOverfillTheMagazine": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.MagazineTests.CancellingLeavesTheWeaponAbleToFire": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.MagazineTests.CannotFireWhileReloading": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.MagazineTests.InvalidReloadModifierCannotStartAReload": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.MagazineTests.RefillIsClampedToTheMagazine": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.MagazineTests.RefillRestoresACheckpointAndClearsAnyReload": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.MagazineTests.ReloadCompletesOnlyAfterTheFullDuration": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.MagazineTests.ReloadDrawsOnlyWhatIsMissing": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.MagazineTests.ReloadingFromEmptyTakesTheSameTimeAsToppingUp": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.MagazineTests.ReloadIsRefusedWhenFullOrWithNothingToLoad": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.MagazineTests.ReloadModifierUsesOneDurationWithoutChangingBaseOrActiveReload": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.MagazineTests.ReloadProgressRunsFromZeroToOne": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.MagazineTests.SpendsExactlyCapacityRoundsBeforeRunningDry": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.MagazineTests.StartsLoaded": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.MagazineTests.TickingWithoutAReloadDoesNothing": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests.AimSettlesAfterTheFirstShotsAndTheCommanderShootsBetter": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests.AMissFliesPastHimNeverThroughAndRollsTheSameEachRun": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests.CloseAndSettledHeUsuallyHitsFarHeOftenMisses": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests.MovingCrouchingOrInCoverHeIsHarderToHit": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests.OffItIsTheOldSureHit": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.ShotAccuracyTests.TheCommanderHitsAStillTargetByHisOwnCurve": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AFullMagazineClimbsAndPullsRight": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AGapShorterThanTheResetKeepsTheBurstGoing": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AimingHelpsMostWhenSettledAndNotAtAllWhenRunning": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AThreeRoundBurstStaysUnderOneDegree": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.AZeroConeShootsDeadStraight": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.BloomIsFullByTheFifteenthRound": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.BloomWidensTheConeOnTopOfTheStance": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.EveryTapIsShotZero": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ResetClearsTheBurstOutright": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ScatterGroupsTowardTheCentre": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ScatterStaysInsideTheCone": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ScatterSurvivesShootingStraightUp": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.ShortBurstsAddNoBloom": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.SprintPenaltyRequiresActualRunningAndClearsOnStopping": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.StancesRankFromSteadyToHopeless": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.StationarySprintToggleDoesNotChangeAccuracy(False)": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.StationarySprintToggleDoesNotChangeAccuracy(True)": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheClimbIsDeterministic": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheClimbNeverEases": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheConeClosesBetweenBursts": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheFourthRoundStartsTheBloom": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Tests.EditMode.Gameplay.WeaponSpreadStateTests.TheOpeningOfABurstRisesStraight": {
+      "result": "Passed",
+      "run": "candidate-pure-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.BodyDiscoveryTests.ABodyInSightIsFoundAfterASecondOnceAndChecked": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.BodyDiscoveryTests.AtC3DroppingTheRunnerKeepsTheKiengSilent": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.BodyDiscoveryTests.AtC3TheFinderRunsToStrikeTheKieng": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.BodyDiscoveryTests.AtC3WithoutTheStrikerTheCampOnlyStandsOnGuard": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.BodyDiscoveryTests.AtTheJettyTheSquadSearchesAndHungIsNotExecuted": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.BodyDiscoveryTests.AWallSmokeOrTheBushPullHidesTheBody": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.BodyDiscoveryTests.PointOneSearchesAndASilencedRadioCallsNoOne": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.BodyDiscoveryTests.PointTwoRadiosForTheResponseWhileItsRadioWorks": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.BodyDiscoveryTests.TheSaveKeepsFoundBodiesWaryGuardsAndTheKiengRunner": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.BossIntegrationTests.TheCommanderFightsFromC3CoverThrowsGrenadesAndCallsThePost": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3BedAnimationTests.ActualEKeyStartsKnifeAndPauseStopsTheImpactClock": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3BedAnimationTests.ActualSaveFileReloadKeepsKnifeCorpseSleepingAndAwakeStates": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3BedAnimationTests.ApprovedDataKeepsClipTimingAndSeparateGameplayRigs": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3BedAnimationTests.FootstepsStayQuietAndExistingLoudNoiseRulePlaysWakeBeforeCombat": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3BedAnimationTests.GuardKilledAfterLeavingTheBedKeepsHisNormalCombatCorpse": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3BedAnimationTests.ImportedBonesMatchTheApprovedBlenderAtTenKeyPoses": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3BedAnimationTests.KnifeExecutionIsSilentFreeOfAmmoCostAndLeavesDiscoverableSavedCorpse": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3BedAnimationTests.KnifeVisibilityFollowsTheApprovedDrawAndAllBedsAcceptTheirApproach": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3BedAnimationTests.MissingKnifeRejectsAndEmptyPistolCanExecuteButCancellationRestoresControls": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3BedAnimationTests.SaveRestoreKeepsSleepingAndAwakeReservesDistinct": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3BedAnimationTests.SleepersAreVisibleOnMeasuredBedsAndOutsidePerceptionAndCoordination": {
+      "result": "Passed",
+      "run": "main-smoke.xml"
+    },
+    "ShadowVale.Map01.Tests.C3DialogueVoiceTests.EveryApprovedRetakeHasExactCaptionChannelAndImportedAudio": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3DialogueVoiceTests.GateCheckInPlaysBothTransmittedVoicesOnce": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3DialogueVoiceTests.MosinOrderFinishesBeforeLocalNamAcknowledgement": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3DialogueVoiceTests.SourceAndRuntimeCatalogStayIdenticalAfterPrepare": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.ACutLineMeansNoRunners": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.ASilentPatrolAtTheCheckInPutsTheCampOnGuard": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.NestASeesTheTowerPlatformBeyondTheMosinsReport": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.NobodyChasesNamPastTheLeash": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.TheGarrisonHoldsItsPostsAndTheCommanderIsHomeFromTheStart": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.TheKiengWakesTheSleepersWhenTheCampIsAlarmed": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.TheKnifeFromBehindWoundsTheCommanderAndNeverKillsHim": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.TheSaveKeepsThePostAsItWas": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.C3MissionTests.WithoutTheStrikerOneSleeperAnswersAndTheLineBringsRunners": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.DialogueVoiceTests.ClosingCommanderBriefingDoesNotQueueSpeechOrAcceptOrder": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.DialogueVoiceTests.CurrentOperationDialogueUsesMatchingCharacterRecordings": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.DialogueVoiceTests.EveryStoryLineHasVietnameseAudioAndOnlyRadioIsFiltered": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.DialogueVoiceTests.ExtractionRadioFinishesAllThreeLinesInOrder": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.DialogueVoiceTests.LegacyBriefingUsesAlignedVoiceAssets": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.DialogueVoiceTests.NewGameWaitsForCommanderAndDoesNotRepeatAcceptedBriefing": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.DialogueVoiceTests.NewRescueRecordingsMatchTheUpdatedCaptions": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.DialogueVoiceTests.PauseAndNewSpeakerDoNotOverlap": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.DialogueVoiceTests.PendingReplacementLinesCannotAutoPlayTheirOldRecordings": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.DialogueVoiceTests.RadioCueDoesNotReplayOrSelectDryVoice": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.DialogueVoiceTests.RadioReplyWaitsForOrderAndSkipStopsSpeech": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.ForestFlowTests.GuardDamageFollowsMap01Balance": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.AllOperationDialogueHasExactCaptionAndCorrectAudioChannel": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.CircuitMigratesOldBoardWithoutAcceptingItAsSolved": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.CircuitRoutesToDummyLoadAndRejectsBrokenSource": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.EveryRadioCellCanRotateAndAllChangesSurviveRestore": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.FailedLockCanRetryWithoutLosingCodeOrNotebook": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.LockExplainsFeedbackInPlainLanguage(241,214,\"1 số đúng vị trí.\",\"2 số đúng nhưng sai vị trí.\")": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.LockExplainsFeedbackInPlainLanguage(241,355,\"Không có số nào đúng.\",\"Cả 3 số đều không thuộc mã.\")": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.LockExplainsFeedbackInPlainLanguage(241,241,\"Đúng cả 3 số\",\"Khóa đã mở.\")": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(112,121,1,2)": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(111,122,1,0)": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(241,214,1,2)": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(555,555,3,0)": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.LockScoresRepeatedDigitsWithoutDoubleCounting(123,450,0,0)": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.OfficerNeedsDistantBinocularsAndRestoresCombatBeforeDiscovery": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.OnlyOriginalSupplyKeeperDropsKeyEvenWhenClonedForExtraction": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.PowerSabotageNeedsThreeAccurateNewPullsAndCanTimeout": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.RadioClockAndRoundGateCannotBeSkipped": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.RadioFailureCallsOnlyOneSavedSquadAndSuccessDoesNotExtract": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.RandomRadioRoundsAreSolvableVariedAndRestoreExactly": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.SupplyCodesVaryButRemainStableForSavedSeed": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.Map01OperationsTests.SupplyRequiresKeyPuzzleReportAndPhysicalHandoff": {
+      "result": "Passed",
+      "run": "candidate-final-fixes.xml"
+    },
+    "ShadowVale.Map01.Tests.Map02ArrivalTests.CompletedCheckpointTransfersVisibleBoatAndKeepsRowersHandsFree": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.Map02ArrivalTests.FullGameViewDepartureKeepsBoatVisibleAfterSceneLoad": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.Map02ArrivalTests.FullNaturalDepartureKeepsBoatVisibleAfterSceneLoad": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.Map02ArrivalTests.NaturalArrivalPreservesPartyAndEquipment": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.Map02ArrivalTests.ShoreAndStairClipsContainLegMovement": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.Map02ArrivalTests.SkippedArrivalUsesSameDrySpawn": {
+      "result": "Passed",
+      "run": "main-smoke.xml"
+    },
+    "ShadowVale.Map01.Tests.Map02ArrivalTests.StairContactsGatherBothFeetAndKeepSupportPlanted": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinIntegrationTests.ExportedMechanicalPartsMoveAndFollowTheCarryingHands": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinIntegrationTests.MosinInsertsIndividuallyKeepsAKInTheBagAndSavesThreeIndependentMagazines": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinIntegrationTests.PUScopeHasReal35MagnificationAndBoltCycleReturnsToScopeWithoutASecondCamera": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinReloadTimingTests.EachInsertionConsumesOneRoundAndCancellationKeepsOnlyInsertedRounds": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinReloadTimingTests.ExhaustedReserveCannotDuplicateRoundsAndOrdinaryAKStillLoadsAtomically": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinReloadTimingTests.FullReloadRemainsFiveSecondsAndPartialReloadSkipsUnusedInsertionGestures": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.ActualSightStillFindsNamAndHiddenSniperDamageKeepsThePreviousContact": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.C3ReservesAndRunnersReceiveOnlyRecordedInformation": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.CloseShotIsHeardByEveryListenerAndRemembersTheShotRatherThanNamMoving": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.DistantMosinKillAtRadioTriggersBodySearchAndResponseWithoutKnowingNam": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.HitEvidenceSurvivesWeaponSwitchAndOtherDamageIsNotMisclassifiedAsMosin": {
+      "result": "Passed",
+      "run": "candidate-final-fixes.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.LethalMosinDamageToASleepingReserveCreditsExactlyOneKillAndLootWithoutSight": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.RealMosinShotsAt35_50_70MetresNeverInventSightOrSquadContact": {
+      "result": "Passed",
+      "run": "candidate-final-fixes.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.RepeatedDistantMissesDoNotCreateDamageOrContact": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.SaveFileReloadKeepsAnUnknownSniperAttackUnknown": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.TheCommanderAlsoGetsNoContactFromAnUnseenDistantMosinHit": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.OpeningCutsceneTests.AssetsUseExistingIdleAndHumanoidClips": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.OpeningCutsceneTests.CommanderConversationIsUnarmedUntilCancelAndRestoresLoadout": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.OpeningCutsceneTests.GameplayCameraStaysAboveRiverWhenWading": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.OpeningCutsceneTests.SeparateEPressesStartAndAcceptRescueOrder": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.StoneMouseInputTests.RapidGunToThrowableSwitchClearsAimFireAndReloadPoses": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.StoneMouseInputTests.SlotFourAndMouseThrowWithoutFiringOrLosingCancelledStones": {
+      "result": "Passed",
+      "run": "candidate-gameplay.xml"
+    },
+    "ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.GrenadeUsesItsOwnModelReleasesOnceAndKeepsHandsBusyThroughRecovery": {
+      "result": "Passed",
+      "run": "candidate-final-fixes.xml"
+    },
+    "ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.HolsteringAnAKInterruptsItsMagazineGestureAndDoesNotFinishAHiddenReload": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.WeaponAnimationIntegrationTests.SmokeIsACanisterInTheHandAndAimingCancelsTheReloadWithoutSpendingAmmo": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.AimToggleIntegrationTests.AKK54AndMosinToggleOnPressAndClearWhenGameplayIsInterrupted": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.ExtractionTests.NaturalBoardingDepartsBeforeCompletion": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.ExtractionTests.SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.K54IntegrationTests.K54FiresOneRoundDealsConfiguredDamageAndSurvivesCrouchAndStoryInterruptions": {
+      "result": "Passed",
+      "run": "candidate-final-fixes.xml"
+    },
+    "ShadowVale.Map01.Tests.K54IntegrationTests.K54HasItsOwnMagazineAndReloadUsesOnlyPistolReserve": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.K54IntegrationTests.SwitchingAndThrowingCancelK54ReloadAndKeepBothAmmunitionPools": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.K54NormalRestorationTests.ActualShotUsesNormalReportAudioAndStillWakesWithinTenMetres": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.K54NormalRestorationTests.HeldLootAndIconsUseTheOriginalApprovedPistol": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.K54NormalRestorationTests.OrdinaryK54ProfileRestoresSixteenMetresWithoutChangingBalance": {
+      "result": "Passed",
+      "run": "candidate-gameplay-r2.xml"
+    },
+    "ShadowVale.Map01.Tests.ForestSaveSlotsTests.BatchModeCannotReachPlayerSlotsAfterFixtureCleanup": {
+      "result": "Passed",
+      "run": "main-smoke.xml"
+    },
+    "ShadowVale.Map01.Tests.MosinStealthTests.QueuedMosinKeepsItsIdentityWhenSwitchedBeforeTheFinalShotPass": {
+      "result": "Passed",
+      "run": "main-smoke.xml"
+    },
+    "ShadowVale.Map01.Tests.ForestSaveSlotsTests.ASaveFromTheOldMapLayoutIsRefused": {
+      "result": "Passed",
+      "run": "candidate-final-fixes.xml"
+    },
+    "ShadowVale.Map01.Tests.ForestSaveSlotsTests.MetadataAndCheckpointSurviveSerialization": {
+      "result": "Passed",
+      "run": "candidate-final-fixes.xml"
+    },
+    "ShadowVale.Map01.Tests.ForestSaveSlotsTests.RejectsIncompleteOrUnsupportedEnvelope(\"{}\")": {
+      "result": "Passed",
+      "run": "candidate-final-fixes.xml"
+    },
+    "ShadowVale.Map01.Tests.ForestSaveSlotsTests.RejectsIncompleteOrUnsupportedEnvelope(\"{\\\"version\\\":99}\")": {
+      "result": "Passed",
+      "run": "candidate-final-fixes.xml"
+    },
+    "ShadowVale.Map01.Tests.ForestSaveSlotsTests.RejectsNegativePlaytime": {
+      "result": "Passed",
+      "run": "candidate-final-fixes.xml"
+    },
+    "ShadowVale.Map01.Tests.ForestSaveSlotsTests.RejectsOutOfRangeSlot(-1)": {
+      "result": "Passed",
+      "run": "candidate-final-fixes.xml"
+    },
+    "ShadowVale.Map01.Tests.ForestSaveSlotsTests.RejectsOutOfRangeSlot(5)": {
+      "result": "Passed",
+      "run": "candidate-final-fixes.xml"
+    }
+  }
+}

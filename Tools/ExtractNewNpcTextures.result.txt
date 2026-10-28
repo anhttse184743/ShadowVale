@@ -1,0 +1,7 @@
+PASS: Anh Tâm | materials=1 | textures=4
+PASS: Bé Tí | materials=1 | textures=4
+PASS: Chỉ huy Thành | materials=1 | textures=4
+PASS: Chị Lành | materials=1 | textures=4
+PASS: Du kích Lực | materials=1 | textures=4
+PASS: Ông 6 | materials=1 | textures=4
+PASS: Ông 7 chèo thuyền | materials=1 | textures=4

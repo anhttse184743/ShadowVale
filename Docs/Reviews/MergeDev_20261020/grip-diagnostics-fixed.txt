@@ -1,0 +1,10 @@
+hung support=(1.25341, 0.70465, 85.43176) upper=(1.70711, 0.92276, 85.15430) elbow=(1.48442, 0.75498, 85.20836) wrist=(1.25341, 0.70465, 85.37046) tip=(1.25341, 0.70465, 85.50666)
+palmError=7,659139E-06 armReach=0,5706748 shoulderToGrip=0,5748009
+actorScale=(1.08, 1.08, 1.08) handScale=(1.08, 1.08, 1.08) gunPos=(-0.01, 0.06, -0.01) gunRot=(311.76, 287.59, 355.86)
+afterExplicitSolve=7,974781E-06
+rightPalmToActualHandle=1,788139E-07
+Chỉ huy mình support=(1.39149, 1.10690, 88.59748) upper=(1.70653, 1.27519, 88.34267) elbow=(1.53854, 1.14175, 88.39573) wrist=(1.39149, 1.10690, 88.51243) tip=(1.39149, 1.10690, 88.70144)
+palmError=6,743496E-07 armReach=0,411938 shoulderToGrip=0,4387473
+actorScale=(1.01, 1.01, 1.01) handScale=(1.01, 1.01, 1.01) gunPos=(-0.01, 0.08, -0.01) gunRot=(311.76, 287.59, 355.86)
+afterExplicitSolve=5,587598E-06
+rightPalmToActualHandle=8,183872E-06
