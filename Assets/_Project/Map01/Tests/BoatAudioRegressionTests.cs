@@ -13,7 +13,7 @@ using Object=UnityEngine.Object;
 namespace ShadowVale.Map01.Tests {
  public sealed class BoatAudioRegressionTests:ForestSceneTestBase {
   const BindingFlags F=BindingFlags.NonPublic|BindingFlags.Instance;
-  const string Folder="Logs/BoatSingleWeapon_20261028";
+  const string Folder="Logs/BoatHeldClose_20261028";
   [UnityTest,Timeout(480000)]public IEnumerator RifleStaysSingleAcrossNaturalBoatAndReplacementBody(){EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");SetPreviewResolution(1280,720);yield return new EnterPlayMode();yield return Run(false);yield return new ExitPlayMode();}
   [UnityTest,Timeout(480000)]public IEnumerator MosinStaysSingleAcrossNaturalBoatAndReplacementBody(){EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");SetPreviewResolution(1280,720);yield return new EnterPlayMode();yield return Run(true);yield return new ExitPlayMode();}
   IEnumerator Run(bool mosin){
@@ -32,7 +32,9 @@ namespace ShadowVale.Map01.Tests {
     string stage=arrival!=null?"Map2-"+arrival.CurrentPhase:ex!=null?"Map1-"+ex.CurrentPhase:"loading";
     if(body!=null){var pump=body.GetComponent<ExtractionCapturePump>()??body.gameObject.AddComponent<ExtractionCapturePump>();var capturedBody=body;var capturedArrival=arrival;var capturedStage=stage;
      pump.draw=()=>{
-      if(!capturedBody.Slung)return;
+      // Ownership can change in Update after this coroutine queued its LateUpdate sample.
+      capturedArrival=Object.FindFirstObjectByType<Map02Arrival>();
+      capturedStage=capturedArrival!=null?"Map2-"+capturedArrival.CurrentPhase:ex!=null?"Map1-"+ex.CurrentPhase:"loading";
       samples++;
       var playerRoot=capturedBody.GetComponentInParent<PlayerCombat>().transform;
       var visibleWeapons=playerRoot.GetComponentsInChildren<Weapon>(true).Where(w=>w.IsGun&&w.gameObject.activeInHierarchy&&w.GetComponentsInChildren<Renderer>(true).Any(r=>r.enabled&&!r.forceRenderingOff&&r.gameObject.activeInHierarchy)).ToArray();
@@ -47,11 +49,18 @@ namespace ShadowVale.Map01.Tests {
       }
       if(count!=1)errors.Add(capturedStage+" guns="+count);
       Assert.Greater(capturedBody.Gun.GetComponentsInChildren<MeshRenderer>().Length,0,"Sling must have real meshes");
+      if(capturedArrival?.CurrentPhase==Map02Arrival.Phase.Gameplay)return;
       bool c1=capturedArrival!=null&&capturedArrival.MisstepActor(0)!=capturedBody.GetComponent<Animator>();
       var visibleActor=c1?capturedArrival.MisstepActor(0):capturedBody.GetComponent<Animator>();
-      Assert.AreSame(visibleActor.GetBoneTransform(HumanBodyBones.Chest),capturedBody.Gun.parent,"Sling follows the visible chest, not the hand socket");
+      bool expectSlung=capturedArrival!=null;
+      Assert.AreEqual(expectSlung,capturedBody.Slung,"Held throughout Map 1; slung only from Map 2 arrival");
+      Assert.AreSame(visibleActor.GetBoneTransform(expectSlung?HumanBodyBones.Chest:HumanBodyBones.RightHand),capturedBody.Gun.parent,"The single gun must use the correct hand/shoulder socket");
+      if(!expectSlung&&(capturedStage=="Map1-Boarding"||capturedStage=="Map1-Seating")){
+       var support=capturedBody.GetComponent<Map01Rifle>().support;
+       if(Vector3.Distance(visibleActor.GetBoneTransform(HumanBodyBones.LeftHand).position,support.position)>.22f)errors.Add(capturedStage+" supporting hand missed the foregrip");
+      }
       var chest=visibleActor.GetBoneTransform(HumanBodyBones.Chest);
-      if(!c1&&(capturedStage=="Map1-Boarding"||capturedStage=="Map2-Disembarking")){
+      if(!c1&&capturedStage=="Map2-Disembarking"){
        var left=visibleActor.GetBoneTransform(HumanBodyBones.LeftHand).position;var right=visibleActor.GetBoneTransform(HumanBodyBones.RightHand).position;
        // A single raised hand can balance a step; a sustained two-handed grip in front of the chest is the armed pose.
        bool held=left.y>chest.position.y-.20f&&right.y>chest.position.y-.20f&&Vector3.Distance(left,right)<.40f&&Vector3.Dot((left+right)*.5f-chest.position,visibleActor.transform.forward)>.10f;
@@ -59,7 +68,7 @@ namespace ShadowVale.Map01.Tests {
       }else heldPoseFor=0;
       if(c1){c1Samples++;var torso=capturedArrival.MisstepActor(0).GetBoneTransform(HumanBodyBones.Chest);var renderers=capturedBody.Gun.GetComponentsInChildren<Renderer>();var bounds=renderers[0].bounds;foreach(var r in renderers)bounds.Encapsulate(r.bounds);if(Vector3.Distance(bounds.center,torso.position)>1)errors.Add("C1 rifle not following visible chest");}
       float t=c1?capturedArrival.MisstepClock:capturedArrival!=null?(float)typeof(Map02Arrival).GetField("clock",F).GetValue(capturedArrival):ex!=null?(float)typeof(Map01Extraction).GetField("clock",F).GetValue(ex):0;
-      string key=capturedStage+(c1?"-C1":"")+((c1||capturedStage=="Map1-Boarding"||capturedStage=="Map2-Disembarking")?"-"+Mathf.FloorToInt(t/1.5f).ToString("D2"):"");if(seen.Add(key)){rows.Add(key+" guns="+count+" root="+capturedBody.transform.position);
+      string key=capturedStage+(c1?"-C1":"")+((c1||capturedStage=="Map1-Boarding"||capturedStage=="Map2-Disembarking")?"-"+Mathf.FloorToInt(t/1.5f).ToString("D2"):"");if(seen.Add(key)){rows.Add(key+" guns="+count+" mode="+(capturedBody.Slung?"slung":"held")+" root="+capturedBody.transform.position);
        File.WriteAllLines(Folder+"/"+(mosin?"Mosin-":"AK-")+key+"-meshes.txt",playerRoot.GetComponentsInChildren<Renderer>(true).Select(r=>r.name+" active="+r.gameObject.activeInHierarchy+" enabled="+r.enabled+" forceOff="+r.forceRenderingOff+" weapon="+r.GetComponentInParent<Weapon>()?.name));ScreenCapture.CaptureScreenshot(Folder+"/"+(mosin?"Mosin-":"AK-")+key+".png");}
      };
     }yield return null;

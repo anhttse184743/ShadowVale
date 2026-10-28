@@ -57,8 +57,8 @@ namespace ShadowVale.Map01 {
    var up=(body.GetBoneTransform(HumanBodyBones.Neck).position-body.GetBoneTransform(HumanBodyBones.Spine).position).normalized;
    var right=(r.position-l.position).normalized;var front=Vector3.Cross(right,up).normalized;up=Vector3.Cross(front,right).normalized;
    gun.SetParent(torso,true);var scale=torso.lossyScale;gun.localScale=new Vector3(worldScale.x/scale.x,worldScale.y/scale.y,worldScale.z/scale.z);
-   gun.rotation=Quaternion.LookRotation((up-right*.30f-front*.08f).normalized,right)*Quaternion.Inverse(Quaternion.LookRotation(barrel,flat));
-   var anchor=torso.position+right*.20f-front*.32f-up*.12f;gun.position+=anchor-gun.TransformPoint(centre);
+   gun.rotation=Quaternion.LookRotation((up-right*.16f-front*.04f).normalized,right)*Quaternion.Inverse(Quaternion.LookRotation(barrel,flat));
+   var anchor=torso.position+right*.18f-front*.20f-up*.035f;gun.position+=anchor-gun.TransformPoint(centre);
    strap.SetPosition(0,anchor-up*.30f);strap.SetPosition(1,torso.position+right*.20f+up*.20f-front*.02f);strap.SetPosition(2,anchor+up*.30f);
   }
   public void Restore(){

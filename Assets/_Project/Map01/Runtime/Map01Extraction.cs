@@ -415,7 +415,7 @@ namespace ShadowVale.Map01
             if(Prepared) {
                 ApplyInjuredPassenger();
                 if(applyHandContacts && CurrentPhase>=Phase.Radio && CurrentPhase<Phase.Departing) {
-                    if(CurrentPhase==Phase.Boarding||CurrentPhase==Phase.Seating||CurrentPhase==Phase.Approach){namBoatCarry?.Stow();if(CurrentPhase==Phase.Seating)ArrivalRestHands(namActor,clock);}
+                    if(CurrentPhase==Phase.Boarding||CurrentPhase==Phase.Seating||CurrentPhase==Phase.Approach){namBoatCarry?.Draw();if(CurrentPhase==Phase.Seating)HoldSeatedRifle(namActor,.14f);else SupportRifle(namActor,namActor.GetComponent<Map01Rifle>(),1);}
                     if(!oarHeld)ArrivalRestHands(commanderActor,clock);
                 }
             }
@@ -636,7 +636,7 @@ namespace ShadowVale.Map01
             if(target==null || target.GetComponent<Health>().IsDead) {
                 pendingCoverShot[index]=0;
                 var watcher=index==0?namActor:commanderActor;
-                namBoatCarry?.Stow();if(index==0)namPose?.FreeArms();ArrivalRestHands(watcher,clock);
+                namBoatCarry?.Draw();if(index==0)namPose?.FreeArms(false);HoldSeatedRifle(watcher,.14f);
                 var head=watcher.GetBoneTransform(HumanBodyBones.Head);
                 head.rotation=Quaternion.AngleAxis(Mathf.Sin(Time.unscaledTime*.7f+index)*8,boat.up)*head.rotation;
                 return;
@@ -789,10 +789,10 @@ namespace ShadowVale.Map01
             urgentRun=gameplayRifleRun??namActor.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Nam_Rifle_Run");
             if(urgentRun==null)Debug.LogError("Assign the gameplay Nam_Rifle_Run clip to extraction; a generic run is not suitable.");
             urgentJump=Resources.Load<AnimationClip>("Cutscenes/Nam_Urgent_Board_Jump");
-            EnsureRifle(namActor);namBoatCarry=Map01BoatCarry.For(namActor);namBoatCarry.Stow();
+            EnsureRifle(namActor);namBoatCarry=Map01BoatCarry.For(namActor);namBoatCarry.Draw();
             var walk=urgentRun??board;
             namPose=new PosePlayer(namActor);
-            namPose.FreeArms();namPose.Play(walk);
+            namPose.Play(walk);
             hungPose.Play(travel); commanderPose.Play(travel);
             speech=DialogueVoice.For(gameObject);
             speech.Play("m1_board_invite_current");
@@ -812,7 +812,7 @@ namespace ShadowVale.Map01
             commander.localRotation=Quaternion.identity;
             foreach(var weapon in namActor.GetComponentsInChildren<Weapon>(true)) weapon.gameObject.SetActive(weapon.IsGun);
             if(!seatedRifles.Any(p=>p.actor==namActor)) EnsureRifle(namActor);
-            namPose.Play(travel);namBoatCarry??=Map01BoatCarry.For(namActor);namBoatCarry.Stow(); hungPose.Play(travel); commanderPose.Play(rowLoop);
+            namPose.Play(travel);namBoatCarry??=Map01BoatCarry.For(namActor);namBoatCarry.Draw(); hungPose.Play(travel); commanderPose.Play(rowLoop);
             HidePassengerGuns();
             oarHeld=true;SpawnPursuitIfNeeded();
             speech=DialogueVoice.For(gameObject);speech.Play("m1_depart_order");

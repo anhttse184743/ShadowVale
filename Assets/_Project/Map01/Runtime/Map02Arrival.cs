@@ -114,6 +114,7 @@ namespace ShadowVale.Map01
                 Passengers[i].localRotation=Quaternion.Euler(0,i==1?0:270,0);
             }
             player.enabled=combat.enabled=false;
+            Map01BoatCarry.For(actors[0]).Stow();
             var footsteps=Passengers[0].GetComponent<PlayerFootsteps>();if(footsteps!=null)footsteps.enabled=false;health.CinematicInvulnerable=true;
             var cc=Passengers[0].GetComponent<CharacterController>();if(cc!=null)cc.enabled=false;
             foreach(var actor in Passengers.SelectMany(p=>p.GetComponentsInChildren<MonoBehaviour>(true))) {
