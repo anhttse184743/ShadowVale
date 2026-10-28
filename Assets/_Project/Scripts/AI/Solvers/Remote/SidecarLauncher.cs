@@ -19,14 +19,24 @@ namespace ShadowVale.AI.Solvers.Remote
     /// </summary>
     public static class SidecarLauncher
     {
-        private static readonly HttpClient Http = new HttpClient { Timeout = TimeSpan.FromMilliseconds(400) };
+        /// <summary>
+        /// The one HTTP client for the loopback sidecar, shared with <see cref="RemoteSolverClient"/> so
+        /// that /health opens the connection the solves then reuse. No proxy: a loopback call never needs
+        /// one, and looking for one is part of what the first request of a session pays. No client-wide
+        /// timeout: every call sets its own.
+        /// </summary>
+        internal static readonly HttpClient Http = new HttpClient(new HttpClientHandler { UseProxy = false })
+            { Timeout = Timeout.InfiniteTimeSpan };
+        private const int HealthTimeoutMs = 400;
         private static Process _process;
 
         public static async Task<bool> IsHealthyAsync(string baseUrl, CancellationToken ct = default)
         {
             try
             {
-                using var response = await Http.GetAsync(Endpoints.SolverHealth(baseUrl), ct).ConfigureAwait(false);
+                using var deadline = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                deadline.CancelAfter(HealthTimeoutMs);
+                using var response = await Http.GetAsync(Endpoints.SolverHealth(baseUrl), deadline.Token).ConfigureAwait(false);
                 return response.IsSuccessStatusCode;
             }
             catch (Exception) { return false; }

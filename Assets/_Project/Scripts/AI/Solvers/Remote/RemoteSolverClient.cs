@@ -25,8 +25,9 @@ namespace ShadowVale.AI.Solvers.Remote
         /// <summary>Loopback HTTP + JSON on top of the solver's own budget.</summary>
         public const int NetworkMarginMs = 40;
         private const double OfflineBackoffSeconds = 10;
+        private const int WarmUpTimeoutMs = 2000;
 
-        private static readonly HttpClient Http = new HttpClient { Timeout = Timeout.InfiniteTimeSpan };
+        private static HttpClient Http => SidecarLauncher.Http;
         private static long _offlineUntilTicks;
 
         private readonly string _baseUrl;
@@ -86,6 +87,33 @@ namespace ShadowVale.AI.Solvers.Remote
             plan.HitLatencyBudget = hitBudget;
             plan.SolveLatencyMs = clock.Elapsed.TotalMilliseconds;
             return plan;
+        }
+
+        /// <summary>
+        /// One throwaway greedy solve once the sidecar answers /health, so that the first real re-plan of a
+        /// session does not also pay for the first JSON (de)serialisation of a request and a plan and for
+        /// the connection (~45 ms in the editor: enough to push a ~105 ms tabu round trip past the margin).
+        /// Never marks the sidecar offline and never throws.
+        /// </summary>
+        public static async Task WarmUpAsync(string baseUrl, CancellationToken ct = default)
+        {
+            try
+            {
+                var request = new QuboRequest { InstanceId = "warm-up", AgentCount = 1, NodeCount = 2, QMatrix = new double[4], Variant = "greedy" };
+                request.AgentNodes.Add(0);
+                using var deadline = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                deadline.CancelAfter(WarmUpTimeoutMs);
+                using var content = new StringContent(ContentJson.Serialize(request), Encoding.UTF8, "application/json");
+                using var response = await Http.PostAsync(Endpoints.SolverSolve(baseUrl), content, deadline.Token).ConfigureAwait(false);
+                string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                if (!response.IsSuccessStatusCode || ContentJson.Deserialize<CoordinationPlan>(body)?.AgentToTarget == null)
+                    UnityEngine.Debug.LogWarning($"[Sidecar] warm-up solve got HTTP {(int)response.StatusCode}; the first plan may be slow.");
+            }
+            catch (OperationCanceledException) when (ct.IsCancellationRequested) { /* The session ended first. */ }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogWarning("[Sidecar] warm-up solve failed (" + e.GetType().Name + "); the first plan may be slow.");
+            }
         }
 
         /// <summary>

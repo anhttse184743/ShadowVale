@@ -141,27 +141,38 @@ namespace ShadowVale.AI.Coordination
             EventBus.Publish(new SolverChangedEvent(_solver.VariantId, null));
         }
 
-        /// <summary>A remote variant: make sure the sidecar is up (starting it if allowed), report the result.</summary>
+        /// <summary>
+        /// A remote variant: make sure the sidecar is up (starting it if allowed), warm the connection with
+        /// one throwaway solve, then report the result.
+        /// </summary>
         private void CheckSidecar(ISquadSolver solver)
         {
             if (!(solver is RemoteSolverClient)) return;
             var profile = SolverProfileConfig.Current;
             string url = SolverEndpoint.BaseUrl;
             RemoteSolverClient.ResetBackoff();
-            var check = SidecarLauncher.EnsureRunningAsync(profile, url);
-            check.ContinueWith(t =>
-            {
-                _sidecarOnline = t.Status == TaskStatus.RanToCompletion && t.Result;
-                if (!_sidecarOnline) RemoteSolverClient.MarkOffline();
-            });
-            _sidecarCheck = check; _sidecarUrl = url;
+            Volatile.Write(ref _sidecarState, Unknown);
+            _sidecarCheck = CheckAndWarmAsync(profile, url); _sidecarUrl = url;
         }
 
+        private async Task<bool> CheckAndWarmAsync(SolverProfileConfig profile, string url)
+        {
+            bool online;
+            try { online = await SidecarLauncher.EnsureRunningAsync(profile, url).ConfigureAwait(false); }
+            catch (Exception) { online = false; }
+            if (online) await RemoteSolverClient.WarmUpAsync(url).ConfigureAwait(false);
+            else RemoteSolverClient.MarkOffline();
+            Volatile.Write(ref _sidecarState, online ? Online : Offline);
+            return online;
+        }
+
+        private const int Unknown = -1, Offline = 0, Online = 1;
+        /// <summary>Pending check; cleared once its result has been published on the main thread.</summary>
         private Task<bool> _sidecarCheck;
-        private bool _sidecarOnline;
+        private int _sidecarState = Unknown;
         private string _sidecarUrl;
-        /// <summary>Null until checked; whether the sidecar answered /health.</summary>
-        public bool? SidecarOnline => _sidecarCheck == null || !_sidecarCheck.IsCompleted ? (bool?)null : _sidecarOnline;
+        /// <summary>Null until checked; whether the sidecar answered /health (and took its warm-up solve).</summary>
+        public bool? SidecarOnline => Volatile.Read(ref _sidecarState) switch { Online => true, Offline => false, _ => (bool?)null };
 
         /// <summary>Re-plan the group containing <paramref name="squadId"/> on the next frame.</summary>
         public void RequestReplan(string squadId) { if (!string.IsNullOrEmpty(squadId)) _forceSquads.Add(squadId); }
@@ -218,7 +229,7 @@ namespace ShadowVale.AI.Coordination
         {
             if (_sidecarCheck != null && _sidecarCheck.IsCompleted)
             {
-                EventBus.Publish(new SidecarStatusEvent(_sidecarOnline, _sidecarUrl)); // Main thread.
+                EventBus.Publish(new SidecarStatusEvent(_sidecarCheck.Result, _sidecarUrl)); // Main thread.
                 _sidecarCheck = null;
             }
             if (!PlanningEnabled || !ServiceLocator.TryResolve<IWorldQuery>(out var graph)) return;
