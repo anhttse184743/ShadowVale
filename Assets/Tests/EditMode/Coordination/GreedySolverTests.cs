@@ -90,9 +90,9 @@ namespace ShadowVale.Tests.EditMode.Coordination
             Assert.IsInstanceOf<ShadowVale.AI.Solvers.Remote.RemoteSolverClient>(s);
             Assert.AreEqual("sqa", s.VariantId);
             Assert.IsNull(reason);
-            var unknown = SolverFactory.Create("tabu", 120, out var why);
+            var unknown = SolverFactory.Create("no-such-solver", 120, out var why);
             Assert.AreEqual("greedy", unknown.VariantId);
-            StringAssert.Contains("tabu", why);
+            StringAssert.Contains("no-such-solver", why);
 
             var g = SolverFactory.Create("greedy", 90, out var none);
             Assert.IsNull(none);
