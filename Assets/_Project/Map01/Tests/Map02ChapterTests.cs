@@ -52,7 +52,8 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(supper.Any(l=>l.id=="m2v3_lastorder_01")&&supper.Last().id=="m2v3_lastorder_07");
             Assert.IsFalse(supper.Any(l=>l.speaker=="Hùng"&&l.radio));
             Assert.IsFalse(d.Lines("demolition").Single(l=>l.id=="m2v3_demolition_02").radio,"Hùng looks at the bundle himself.");
-            var report=d.Find("D3_06");Assert.AreEqual("family",report.site);Assert.IsTrue(string.IsNullOrEmpty(report.scene));
+            var report=d.Find("D3_06");Assert.AreEqual("family",report.site);Assert.AreEqual("day3report",report.scene);
+            var reply=d.Lines(report.scene);Assert.AreEqual(3,reply.Length);Assert.AreEqual("Rõ.",reply.Last().text);Assert.AreEqual(1,reply.Count(e=>e.text=="Rõ."));
             Assert.Greater(d.Find("D3_05").seconds,45);
             // The artillery is Rạch Tre from the first call to the last order; Anh Thành answers for it on the radio.
             Assert.IsFalse(d.entries.Any(e=>e.speaker=="Đơn vị pháo"||e.text.Contains("Đơn vị bạn")));

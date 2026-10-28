@@ -389,7 +389,7 @@
         "D3_05"
       ],
       "count": 1,
-      "scene": "",
+      "scene": "day3report",
       "seconds": 3,
       "purpose": "Báo cáo việc chuẩn bị đã xong rồi nhận ca trực đêm."
     },
@@ -1648,6 +1648,28 @@
       "speaker": "Anh Thành",
       "text": "Làm tốt lắm, giờ cậu hãy quay trở về căn cứ để chuẩn bị sơ tán người dân",
       "radio": true
+    },
+    {
+      "id": "m2v3_day3report_01",
+      "conversation": "m2v3_day3report",
+      "speaker": "Nam",
+      "text": "Vật tư đã chuyển xuống bến. Hai thuyền đã vá xong, các nhà cũng biết đường sơ tán rồi.",
+      "radio": false
+    },
+    {
+      "id": "m2v3_day3report_02",
+      "conversation": "m2v3_day3report",
+      "speaker": "Anh Thành",
+      "text": "Được. Tối nay cứ theo phân công. Có động thì báo ngay.",
+      "radio": false
+    },
+    {
+      "id": "m2v3_day3report_03",
+      "conversation": "m2v3_day3report",
+      "speaker": "Nam",
+      "text": "Rõ.",
+      "radio": false,
+      "recording": "m2v3_day1report_03"
     }
   ]
 }

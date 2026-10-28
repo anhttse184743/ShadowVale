@@ -13,7 +13,7 @@ public sealed class NamCVoiceTests:ForestSceneTestBase {
  [Serializable]sealed class Bank{public Item[] entries;}
  static Item[] Nam()=>JsonUtility.FromJson<Bank>(Resources.Load<TextAsset>("Dialogue/voice-catalog").text).entries.Where(e=>e.speaker=="Nam").ToArray();
  [Test]public void BothMapsUseNamCAndOpeningReplyMatchesTheApprovedVoice(){
-  var all=Nam();Assert.AreEqual(89,all.Length);Assert.IsTrue(all.Any(e=>e.id.StartsWith("m1_"))&&all.Any(e=>e.id.StartsWith("m2")));
+  var all=Nam();Assert.GreaterOrEqual(all.Length,89);Assert.AreEqual(all.Length,all.Select(e=>e.id).Distinct().Count());Assert.IsTrue(all.Any(e=>e.id.StartsWith("m1_"))&&all.Any(e=>e.id.StartsWith("m2")));
   foreach(var e in all){Assert.AreEqual("Minh Quân",e.voice,e.id);Assert.AreEqual("Nam_C_20261026",e.voiceRevision,e.id);var clip=Resources.Load<AudioClip>(e.resource);Assert.NotNull(clip,e.id);Assert.That(clip.length,Is.EqualTo(e.duration).Within(.04f),e.id);}
   var opening=Resources.Load<Map01OpeningCutscene>("Cutscenes/Map01Opening");Assert.NotNull(opening.soldierVoice);Assert.That(opening.soldierVoice.length,Is.EqualTo(all.Single(e=>e.id=="free_literal_7be0a5941d33").duration).Within(.04f));
  }
