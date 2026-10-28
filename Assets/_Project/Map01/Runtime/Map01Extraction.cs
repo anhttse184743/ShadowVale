@@ -543,7 +543,7 @@ namespace ShadowVale.Map01
             if(CurrentPhase==Phase.Departing) {
                 commanderPose.Play(clock>16?rowStop:rowLoop);
                 float stroke=Mathf.Floor(clock/2.4f);
-                if(stroke!=lastStroke && clock<16) {lastStroke=stroke;motor.PlayOneShot(paddleAudio,.65f);}
+                if(stroke!=lastStroke && clock<16) {lastStroke=stroke;motor.PlayOneShot(paddleAudio,speech!=null&&speech.HasSpeech?.045f:.18f);}
             }
         }
         private void SpawnPursuitIfNeeded()

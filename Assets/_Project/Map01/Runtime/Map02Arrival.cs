@@ -301,7 +301,7 @@ namespace ShadowVale.Map01
             if(CurrentPhase==Phase.Approaching) {
                 ApplyArrival(Mathf.Clamp01(clock/ApproachDuration));
                 int stroke=Mathf.FloorToInt(clock/2.4f);
-                if(stroke!=lastStroke && rowingAudio!=null){lastStroke=stroke;rowingAudio.PlayOneShot(source.paddleAudio,.35f);}
+                if(stroke!=lastStroke && rowingAudio!=null){lastStroke=stroke;rowingAudio.PlayOneShot(source.paddleAudio,speech!=null&&speech.HasSpeech?.045f:.12f);}
                 if(clock>=ApproachDuration){CurrentPhase=Phase.Mooring;clock=0;speech.Play("m2_moor_order");poses[1].Play(stow??source.rowStop);paddleStart=paddle.localPosition;paddleStartRotation=paddle.localRotation;}
             } else if(CurrentPhase==Phase.Mooring) {
                 transform.SetPositionAndRotation(Docked,DockRotation);
@@ -624,7 +624,7 @@ namespace ShadowVale.Map01
         }
         void Finish() {
             if(CurrentPhase==Phase.Gameplay)return;
-            speech?.Stop();source.SetPaddleGrip(0,0);EndMisstep();Map01BoatCarry.For(actors[0]).Restore();
+            speech?.Stop();source.SetPaddleGrip(0,0);EndMisstep();
             transform.SetPositionAndRotation(Docked,DockRotation);
             for(int i=0;i<3;i++) {
                 poses[i]?.Dispose();
@@ -647,7 +647,7 @@ namespace ShadowVale.Map01
             sceneMission=FindFirstObjectByType<Map02Mission>();
             var footsteps=Passengers[0].GetComponent<PlayerFootsteps>();if(footsteps!=null)footsteps.enabled=true;
             var cc=Passengers[0].GetComponent<CharacterController>();if(cc!=null){cc.enabled=true;cc.Move(Vector3.down*.08f);}
-            player.enabled=combat.enabled=true;player.RestoreMotion(false);combat.RestoreAfterCinematic();GroundSkin(actors[0],SpawnPoints[0].y);
+            Map01BoatCarry.For(actors[0]).Restore();player.enabled=combat.enabled=true;player.RestoreMotion(false);combat.RestoreAfterCinematic();GroundSkin(actors[0],SpawnPoints[0].y);
             rig.SetTarget(Passengers[0]);rig.ClearCinematicView();rig.ClearRecoil();
             Cursor.lockState=CursorLockMode.Locked;Cursor.visible=false;ForestMenu.SuppressKeysAfterCutscene();fade=0;
             Debug.Log("Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.");

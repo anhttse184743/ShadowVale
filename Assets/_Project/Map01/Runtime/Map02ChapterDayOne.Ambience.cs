@@ -25,13 +25,14 @@ namespace ShadowVale.Map01
         {
             if(paused!=ambiencePaused){foreach(var layer in ambience.Values){if(paused)layer.source.Pause();else layer.source.UnPause();}ambiencePaused=paused;}
             if(paused||!ready)return;
+            float duck=DialogueVoice.AnySpeech?.25f:1;
             bool day=State.phase==0,night=State.phase==1;var dock=sites.TryGetValue("dock",out var d)?d.position:DayFamily;
-            Fade(Layer("d1_bamboo_loop"),day?.5f:0,dt);Fade(Layer("d1_children_loop",DayFamily+Vector3.forward*4,4,30),day?.55f:0,dt);Fade(Layer("d1_oars_loop",dock,3,24),day?.6f:0,dt);
-            Fade(Layer("n1_frogs_loop"),night?.55f:0,dt);Fade(Layer("n1_fire_loop",porchDoor-porchOut*2.6f+Vector3.up*.4f,1.5f,14),night?.4f:0,dt);
+            Fade(Layer("d1_bamboo_loop"),day?.12f*duck:0,dt);Fade(Layer("d1_children_loop",DayFamily+Vector3.forward*4,4,30),day?.10f*duck:0,dt);Fade(Layer("d1_oars_loop",dock,3,18),day?.065f*duck:0,dt);
+            Fade(Layer("n1_frogs_loop"),night?.10f*duck:0,dt);Fade(Layer("n1_fire_loop",porchDoor-porchOut*2.6f+Vector3.up*.4f,1.5f,14),night?.07f*duck:0,dt);
             if(!day)return;
-            dayAmbienceClock+=dt;roosterIn-=dt;
+            State.villageDaySeconds+=dt;dayAmbienceClock=State.villageDaySeconds;roosterIn-=dt;
             if(roosterIn<=0){roosterIn=Random.Range(45f,110f);var crow=Resources.Load<AudioClip>("Map02DayOne/d1_rooster");if(crow!=null)Layer("d1_bamboo_loop").source.PlayOneShot(crow,Random.Range(.4f,.6f));}   // scaled by the bed's own volume: far off
-            if(!planeFlown&&dayAmbienceClock>=PlaneAt){planeFlown=true;var plane=Layer("d1_plane_far",null,3,30,false);plane.source.volume=.35f;plane.source.Play();}
+            if(!planeFlown&&!State.villagePlanePlayed&&dayAmbienceClock>=PlaneAt){planeFlown=State.villagePlanePlayed=true;var plane=Layer("d1_plane_far",null,3,30,false);plane.source.volume=.035f*duck;plane.source.Play();}
         }
         static void Fade(AmbienceLayer layer,float target,float dt){layer.source.volume=Mathf.MoveTowards(layer.source.volume,target,dt/3);}   // phase changes cross over ~2 s
         public float AmbienceVolume(string clip)=>ambience.TryGetValue(clip,out var layer)?layer.source.volume:0;
@@ -42,9 +43,9 @@ namespace ShadowVale.Map01
         void TickSupperSound()
         {
             if(sceneTask?.id!="N1_01"||!mealBegan)return;float t=MealTime;
-            if(supperMusic==null){var host=new GameObject("Hùng's theme — Lời hứa");host.transform.SetParent(transform,false);supperMusic=host.AddComponent<AudioSource>();supperMusic.playOnAwake=false;supperMusic.spatialBlend=0;}
+            if(supperMusic==null){var host=new GameObject("Hùng's theme — Lời hứa");host.transform.SetParent(transform,false);supperMusic=host.AddComponent<AudioSource>();supperMusic.playOnAwake=false;supperMusic.spatialBlend=0;supperMusic.volume=.12f;}
             if(!supperLaughed&&t>=SupperLaughAt){supperLaughed=true;var laugh=Resources.Load<AudioClip>("Map02DayOne/hung_laugh");if(laugh!=null)supperMusic.PlayOneShot(laugh,.45f);}
-            if(t>=SupperMusicAt&&supperMusic.clip==null){supperMusic.clip=Resources.Load<AudioClip>("Map02DayOne/hung_theme");supperMusic.volume=.3f;if(supperMusic.clip!=null){supperMusic.time=Mathf.Min(t-SupperMusicAt,supperMusic.clip.length-.01f);supperMusic.Play();}}
+            if(t>=SupperMusicAt&&supperMusic.clip==null){supperMusic.clip=Resources.Load<AudioClip>("Map02DayOne/hung_theme");supperMusic.volume=.08f;if(supperMusic.clip!=null){supperMusic.time=Mathf.Min(t-SupperMusicAt,supperMusic.clip.length-.01f);supperMusic.Play();}}
         }
         void StopSupperSound(){if(supperMusic!=null){supperMusic.Stop();supperMusic.clip=null;}supperLaughed=false;}
         void PauseSupperSound(bool paused){if(supperMusic==null)return;if(paused)supperMusic.Pause();else supperMusic.UnPause();}
@@ -55,7 +56,7 @@ namespace ShadowVale.Map01
         {
             if(sceneTask?.id!="D1_03"||line.speaker!="Ông Sáu"||sceneCoughed)return false;sceneCoughed=true;
             var cough=Resources.Load<AudioClip>("Map02DayOne/cough");if(cough==null)return false;
-            AudioSource.PlayClipAtPoint(cough,porchDoor-porchOut*2.5f+Vector3.up*1.2f,.9f);return true;   // from inside the house
+            AudioSource.PlayClipAtPoint(cough,porchDoor-porchOut*2.5f+Vector3.up*1.2f,.35f);return true;   // from inside the house
         }
         void TickPendingVoice(){if(pendingVoice!=null&&lineClock>=0){voice.Play(pendingVoice);pendingVoice=null;}}
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -24,6 +24,7 @@ namespace ShadowVale.Map01 {
         public Action<Line> LineStarted;
         public string CurrentId {get;private set;}
         public string CurrentCaption {get;private set;}
+        public static bool AnySpeech=>active!=null&&active.HasSpeech;
         public bool HasSpeech=>pending.Count>0 || source!=null && (source.isPlaying || paused);
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         static void Reset(){catalog=null;active=null;}

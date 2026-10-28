@@ -13,13 +13,9 @@ namespace ShadowVale.Map01
         void StartApprovedVisual(int index)
         {
             if(approvedC1==null||c1Visuals[index]!=null)return;
-            foreach(var renderer in Passengers[index].GetComponentsInChildren<SkinnedMeshRenderer>(true)){c1Hidden[index][renderer]=renderer.enabled;renderer.enabled=false;}
-            // The equipped Mosin can coexist with Map01Rifle's AK prop during transfer. Hide every gun's
-            // renderer, preserving each flag, rather than assuming the first rifle is the equipped one.
-            if(index==0)foreach(var weapon in Passengers[index].GetComponentsInChildren<ShadowVale.Gameplay.Combat.Weapon>(true))
-                if(weapon.IsGun)foreach(var renderer in weapon.GetComponentsInChildren<Renderer>(true))
-                    if(!c1Hidden[index].ContainsKey(renderer)){c1Hidden[index][renderer]=renderer.enabled;renderer.enabled=false;}
+            foreach(var renderer in Passengers[index].GetComponentsInChildren<SkinnedMeshRenderer>(true)){if(renderer.GetComponentInParent<ShadowVale.Gameplay.Combat.Weapon>()!=null)continue;c1Hidden[index][renderer]=renderer.enabled;renderer.enabled=false;}
             var go=Instantiate(index==0?approvedC1.nam:approvedC1.hung,Passengers[index],false);c1Visuals[index]=go;c1VisualActors[index]=go.GetComponentInChildren<Animator>();c1VisualActors[index].enabled=false;
+            if(index==0)Map01BoatCarry.For(actors[0]).UseVisualActor(c1VisualActors[0]);
         }
         void SampleApprovedVisuals()
         {
@@ -41,6 +37,7 @@ namespace ShadowVale.Map01
         }
         void RestoreApprovedVisual(int index)
         {
+            if(index==0&&actors!=null&&actors[0]!=null)actors[0].GetComponent<Map01BoatCarry>()?.UseVisualActor(null);
             if(c1Visuals[index]!=null){c1Visuals[index].SetActive(false);Destroy(c1Visuals[index]);}c1Visuals[index]=null;c1VisualActors[index]=null;
             foreach(var pair in c1Hidden[index])if(pair.Key!=null)pair.Key.enabled=pair.Value;c1Hidden[index].Clear();
         }

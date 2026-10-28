@@ -252,10 +252,9 @@ namespace ShadowVale.Map01
             knee.rotation=Quaternion.FromToRotation(foot.position-knee.position,origin+axis*d-knee.position)*knee.rotation;
         }
         float RevealStart=>Misstep?(c1Start>=0?c1Start+c1Nam.length-.5f:float.MaxValue):7;
-        GameObject c1Rifle;
-        /// <summary>Nam's hands are free for the pack and for Hùng: his rifle goes on his back (out of the shot) as he turns.</summary>
-        void SlingRifle(){var gun=actors[0].GetComponent<Map01Rifle>();if(gun!=null&&gun.weapon.gameObject.activeSelf){c1Rifle=gun.weapon.gameObject;c1Rifle.SetActive(false);actors[0].GetComponent<Map01BoatCarry>()?.Suspend();}}
-        void EndMisstep(){EndPack();RestoreApprovedVisual(0);RestoreApprovedVisual(2);if(c1Rifle!=null)c1Rifle.SetActive(true);c1Rifle=null;}
+        // One sling follows Nam's current body through the model swap.
+        void SlingRifle()=>Map01BoatCarry.For(actors[0]).Stow();
+        void EndMisstep(){EndPack();RestoreApprovedVisual(0);RestoreApprovedVisual(2);}
         // ---- the pack: Nam's own (baked from his skinned pack), on his back, in his hand, on the ground and back on ------
         void TickPack(float n)
         {
