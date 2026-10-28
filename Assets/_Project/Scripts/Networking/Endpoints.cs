@@ -16,10 +16,6 @@ namespace ShadowVale.Networking
         public static string Sessions(string apiBase) => Join(apiBase, GamePrefix + "/sessions");
         public static string Session(string apiBase, string sessionId) => Join(apiBase, GamePrefix + "/sessions/" + sessionId);
 
-        // Old contract, still used by TelemetryUploader until it sends the backend's SessionUpload to Session().
-        // The web backend answers 404 here, which keeps every session queued on disk instead of rejected.
-        public static string TelemetrySessions(string apiBase) => Join(apiBase, "/api/v1/telemetry/sessions");
-
         public static string SolverHealth(string solverBase) => Join(solverBase, "/health");
         public static string SolverVariants(string solverBase) => Join(solverBase, "/variants");
         public static string SolverSolve(string solverBase) => Join(solverBase, "/solve");

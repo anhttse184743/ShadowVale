@@ -146,6 +146,8 @@ namespace ShadowVale.Map01
             if(GetComponent<Map01FoliageReveal>()==null)gameObject.AddComponent<Map01FoliageReveal>();
             if(GetComponent<Map02SightCover>()==null)gameObject.AddComponent<Map02SightCover>();
             InitializeCharacter();
+            // Map 2's session: the squads' plans, enemy states, noise and shots reach the web backend like Map 1's
+            ShadowVale.Telemetry.TelemetryService.Attach(gameObject,"map02");
             StartCoroutine(PrepareHudChart());
             if (pending != null) { var data=pending; pending=null; Restore(data); }
             if (string.IsNullOrEmpty(checkpoint)) StoreCheckpoint();

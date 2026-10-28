@@ -1168,7 +1168,7 @@ namespace ShadowVale.Map01
             ReportDetection(Map01DetectionCause.Sight, _player.position);
             if (_health.IsDead) // Killed outright — by a gun, say: loud, and nothing left to react.
             {
-                string weapon = _mission != null && _mission.ModernCombat != null ? _mission.ModernCombat.EquippedKind.ToString().ToLowerInvariant() : "";
+                string weapon = _mission != null && _mission.ModernCombat != null ? _mission.WeaponCode(_mission.ModernCombat.EquippedKind.ToString().ToLowerInvariant()) : "";
                 EventBus.Publish(new EnemyKilledEvent(LegacyId, "weapon", weapon, transform.position));
                 return;
             }

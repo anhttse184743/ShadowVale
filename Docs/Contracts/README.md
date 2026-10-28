@@ -97,5 +97,10 @@ Hợp đồng đầy đủ: `backend/shadowvale_be/docs/game-integration.md` tro
   Map 2); loot table, container và máu địch trong `Map01Loot.json`; skill curve trong `SkillBalance.json`. Những gì
   web chưa có cột (`field_seconds`, `field_max_batch`, salvage, repair, chỉ số người chơi) giữ nguyên. Chỉ có bundle
   đóng gói sẵn thì map dùng file của mình như cũ. Tuning địch của Map 2 (`Map02ChapterEnemy.Brain.cs`) vẫn ở code.
-- **Telemetry:** vẫn gửi theo hợp đồng cũ ở trên cho tới khi chuyển sang `PUT /api/game/sessions/{id}`; backend trả 404
-  cho đường cũ nên session nằm lại trong hàng đợi, không bị mất.
+- **Telemetry (từ 29/10/2026):** khi vào màn, `TelemetryService` gọi `POST /api/game/sessions` và áp solver BE giao
+  (variant, QUBO weights, latency budget), trừ khi `SVL_SOLVER_VARIANT` đã ghim solver. Khi kết thúc, session được
+  chuyển sang `SessionUpload` (`SessionUploadMapper`) rồi nằm trong `telemetry/pending/` cho tới khi
+  `PUT /api/game/sessions/{id}` thành công. File research vẫn giữ định dạng chi tiết ở trên. `installId` là GUID ngẫu nhiên
+  trong `telemetry/install_id`. Vào màn lúc offline thì không gửi bù `POST`: session vẫn lên dashboard, nhưng nằm ngoài
+  so sánh AI. File còn trong hàng đợi từ định dạng cũ bị chuyển sang `rejected/` mà không gửi. Replay harness đặt
+  `SVL_SESSION_SOURCE=replay` cùng `SVL_SOLVER_VARIANT=<code>`. Map 1, Tutorial và Map 2 (`map02`) đều gửi.

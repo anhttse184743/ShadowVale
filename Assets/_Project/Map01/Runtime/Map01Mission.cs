@@ -174,7 +174,8 @@ namespace ShadowVale.Map01
             if (GetComponent<Map01GrenadeWarning>() == null) gameObject.AddComponent<Map01GrenadeWarning>();
             // Anonymous session telemetry: listens to the shared events, ends when this map unloads.
             // A sandbox copy (Test Map 1 AI) reports apart, so test sessions never mix with Map 1's numbers.
-            TelemetryService.Attach(gameObject, gameObject.scene.name == TutorialDirector.SceneName ? "map00_tutorial" : gameObject.scene.name == Map01SaveSystem.MainScene ? MapId : MapId + "_test");
+            var telemetry = TelemetryService.Attach(gameObject, gameObject.scene.name == TutorialDirector.SceneName ? "map00_tutorial" : gameObject.scene.name == Map01SaveSystem.MainScene ? MapId : MapId + "_test");
+            if (telemetry != null) telemetry.WeaponCode = WeaponCode;
             IsInitialized = true;
         }
 
@@ -358,9 +359,25 @@ namespace ShadowVale.Map01
                 footsteps.Stepped-=NotifyFootstep;footsteps.SurfaceProbe=null;
             }
         }
+        /// <summary>
+        /// The content item code of a weapon kind (rifle, pistol, sniper, knife), as the web's weapon stats count it;
+        /// the rifle is whichever long gun is in the primary slot (AK or M16). Item codes pass through.
+        /// </summary>
+        public string WeaponCode(string kind)
+        {
+            switch (kind)
+            {
+                case "rifle": return inventory != null && inventory.SlotItem(Map01Inventory.Slot.Primary) == Map01M16.Id ? Map01M16.Id : "rifle_standard";
+                case "pistol": return "pistol_k54";
+                case "sniper": return "rifle_mosin";
+                case "knife": return "knife";
+                default: return kind;
+            }
+        }
+
         private void OnPlayerAttacked(WeaponKind kind, Vector3 position)
         {
-            EventBus.Publish(new PlayerAttackEvent(kind.ToString().ToLowerInvariant(), position));
+            EventBus.Publish(new PlayerAttackEvent(WeaponCode(kind.ToString().ToLowerInvariant()), position));
             if (kind != WeaponKind.Rifle && kind != WeaponKind.Pistol && kind != WeaponKind.Sniper) return;
             var profile = kind == WeaponKind.Pistol ? Bundle.weapons.FirstOrDefault(w => w.id == "pistol_k54") : kind==WeaponKind.Sniper ? Bundle.weapons.FirstOrDefault(w=>w.id=="rifle_mosin") : Weapon;
             float loud = profile != null ? profile.noise_radius : Weapon.noise_radius;

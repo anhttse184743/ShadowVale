@@ -21,15 +21,18 @@ namespace ShadowVale.Telemetry
         /// <summary>Sessions sent this process (debug display, tests).</summary>
         public static int SentCount;
 
-        /// <summary>Writes the batch to disk: research export plus upload queue. Returns the JSON.</summary>
-        public static string Store(TelemetrySessionDto session, TelemetryConfig config)
+        /// <summary>
+        /// Writes the batch to disk: the research export (the game's own detailed format) and the upload queue
+        /// (<paramref name="uploadJson"/>, the backend's SessionUpload). Returns the research JSON.
+        /// </summary>
+        public static string Store(TelemetrySessionDto session, TelemetryConfig config, string uploadJson = null)
         {
             string json = ContentJson.Serialize(session);
             try
             {
                 if (!string.IsNullOrEmpty(config.ResearchDirectory)) new ResearchExporter(config.ResearchDirectory).Append(json);
                 if (!string.IsNullOrEmpty(config.RootDirectory))
-                    new DiskQueue(config.RootDirectory, config.MaxQueuedSessions).Enqueue(session.SessionId, json);
+                    new DiskQueue(config.RootDirectory, config.MaxQueuedSessions).Enqueue(session.SessionId, uploadJson ?? json);
             }
             catch (Exception e) { Debug.LogWarning("[Telemetry] could not store session: " + e.Message); }
             return json;
@@ -45,7 +48,7 @@ namespace ShadowVale.Telemetry
             if (!force && DateTime.UtcNow.Ticks < Interlocked.Read(ref _nextAttemptTicks)) return null;
             if (Interlocked.CompareExchange(ref _flushing, 1, 0) != 0) return null;
             var queue = new DiskQueue(config.RootDirectory, config.MaxQueuedSessions);
-            var uploader = new TelemetryUploader(config.ApiBaseUrl);
+            var uploader = new TelemetryUploader(config.ApiBaseUrl, gameKey: config.GameKey);
             return Task.Run(async () =>
             {
                 try

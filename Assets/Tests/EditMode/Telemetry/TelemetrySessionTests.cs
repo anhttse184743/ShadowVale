@@ -86,6 +86,54 @@ namespace ShadowVale.Tests.EditMode.Telemetry
             finally { session.Unsubscribe(); }
         }
 
+        /// <summary>The same session as the web backend's SessionUpload (PUT /api/game/sessions/{id}).</summary>
+        [Test]
+        public void ASessionBecomesTheBackendsSessionUpload()
+        {
+            var dto = Scenario(out var session);
+            session.Context.InstallId = "11111111-1111-4111-8111-111111111111";
+            session.Context.ContentVersionId = "22222222-2222-4222-8222-222222222222";
+            var upload = SessionUploadMapper.ToUpload(dto, session, w => w == "rifle" ? "rifle_standard" : w);
+
+            Assert.AreEqual("11111111-1111-4111-8111-111111111111", (string)upload["installId"]);
+            Assert.AreEqual("human", (string)upload["source"]);
+            Assert.AreEqual("22222222-2222-4222-8222-222222222222", (string)upload["contentVersionId"]);
+            Assert.AreEqual("map01", (string)upload["mapCode"]);
+            Assert.AreEqual("Died", (string)upload["outcome"], "The map said failed and the player died.");
+            Assert.AreEqual(DateTimeOffset.Parse("2026-09-30T08:00:25Z"), DateTimeOffset.Parse((string)upload["endedAt"]));
+
+            var stats = (JObject)upload["stats"];
+            Assert.AreEqual(2, (int)stats["shotsByWeapon"]["rifle_standard"], "Every shot counts, not just the sampled events.");
+            Assert.AreEqual(1, (int)stats["killsByWeapon"]["rifle_standard"]);
+            Assert.AreEqual(1, (int)stats["takedowns"]);
+            Assert.AreEqual(1, (int)stats["weaponKills"]);
+            Assert.AreEqual(2, (int)stats["timesDetected"]);
+            var encounters = (JArray)stats["encounters"];
+            Assert.AreEqual("PlayerEscaped", (string)encounters[0]["outcome"]);
+            Assert.AreEqual("PlayerCaptured", (string)encounters[1]["outcome"]);
+            Assert.AreEqual(DateTimeOffset.Parse("2026-09-30T08:00:01Z"), DateTimeOffset.Parse((string)encounters[0]["startedAt"]));
+            Assert.AreEqual(JTokenType.Null, encounters[1]["coordinationScore"].Type, "No plan in that fight.");
+
+            var events = (JArray)upload["events"];
+            Assert.AreEqual(dto.Events.Count, events.Count);
+            Assert.AreEqual(events.Count, events.Select(e => (string)e["clientEventId"]).Distinct().Count());
+            var death = events.Single(e => (string)e["eventType"] == "player_death");
+            Assert.AreEqual(40, (double)death["posX"], 1e-9);
+            Assert.AreEqual(61, (double)death["posY"], 1e-9, "posY is world z.");
+            Assert.AreEqual(JTokenType.Integer, events.Single(e => (string)e["eventType"] == "objective_completed")["payload"]["index"].Type,
+                "The funnel reads payload.index as an integer.");
+
+            var plan = (JObject)((JArray)upload["coordinationResults"]).Single();
+            Assert.AreEqual("sqa", (string)plan["variant"], "The variant asked for, though greedy answered.");
+            Assert.IsTrue((bool)plan["usedFallback"]);
+            Assert.IsFalse((bool)plan["withinBudget"]);
+            Assert.AreEqual(2, (int)plan["numAgents"]);
+            Assert.AreEqual(24, (int)plan["numNodes"]);
+            Assert.AreEqual("RouteCoverage", (string)plan["taskType"]);
+            Assert.AreEqual(7, (int)plan["assignment"]["guard_c1_1"]);
+            Assert.AreEqual(DateTimeOffset.Parse("2026-09-30T08:00:01.1Z"), DateTimeOffset.Parse((string)plan["triggeredAt"]));
+        }
+
         [Test]
         public void ASessionBecomesEncountersMetricsAndSampledEvents()
         {

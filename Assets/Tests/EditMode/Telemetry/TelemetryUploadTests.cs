@@ -18,6 +18,8 @@ namespace ShadowVale.Tests.EditMode.Telemetry
     /// </summary>
     public class TelemetryUploadTests
     {
+        private const string Key = "test-game-key-test-game-key-0123456789";
+        private static string Upload(string id) => "{\"installId\":\"" + id + "\"}";
         private string _root;
 
         [SetUp]
@@ -83,9 +85,9 @@ namespace ShadowVale.Tests.EditMode.Telemetry
         public void NoBackendLeavesEverythingQueuedWithoutWaiting()
         {
             var q = new DiskQueue(_root);
-            q.Enqueue("a", "{}");
+            q.Enqueue("a", Upload("a"));
             var clock = Stopwatch.StartNew();
-            var r = new TelemetryUploader("http://127.0.0.1:9", TimeSpan.FromSeconds(3)).FlushAsync(q).Result;
+            var r = new TelemetryUploader("http://127.0.0.1:9", TimeSpan.FromSeconds(3), Key).FlushAsync(q).Result;
             Assert.AreEqual(0, r.Sent);
             Assert.AreEqual(1, r.Waiting);
             Assert.Less(clock.ElapsedMilliseconds, 3500, "Bounded by the upload timeout, off the main thread in the game.");
@@ -98,10 +100,10 @@ namespace ShadowVale.Tests.EditMode.Telemetry
             var seen = new ConcurrentQueue<(string key, string body, string path)>();
             using var server = new FakeBackend(statuses, seen);
             var q = new DiskQueue(_root);
-            q.Enqueue("first", "{\"session_id\":\"first\"}");
-            q.Enqueue("second", "{\"session_id\":\"second\"}");
+            q.Enqueue("first", Upload("first"));
+            q.Enqueue("second", Upload("second"));
             File.SetLastWriteTimeUtc(Path.Combine(q.PendingDirectory, "first.json"), DateTime.UtcNow.AddMinutes(-1));
-            var uploader = new TelemetryUploader(server.Url);
+            var uploader = new TelemetryUploader(server.Url, gameKey: Key);
 
             var r1 = uploader.FlushAsync(q).Result;
             Assert.AreEqual(0, r1.Sent);
@@ -114,11 +116,11 @@ namespace ShadowVale.Tests.EditMode.Telemetry
 
             var requests = seen.ToArray();
             Assert.AreEqual(3, requests.Length);
-            Assert.AreEqual("first", requests[0].key, "Idempotency-Key is the session id.");
-            Assert.AreEqual("first", requests[1].key, "The failed one is retried first.");
-            Assert.AreEqual("second", requests[2].key);
-            StringAssert.Contains("\"session_id\":\"first\"", requests[1].body);
-            Assert.AreEqual("/api/v1/telemetry/sessions", requests[0].path);
+            Assert.AreEqual("PUT " + Key, requests[0].key, "PUT with the game key.");
+            Assert.AreEqual("/api/game/sessions/first", requests[0].path, "The session id is in the path.");
+            Assert.AreEqual("/api/game/sessions/first", requests[1].path, "The failed one is retried first.");
+            Assert.AreEqual("/api/game/sessions/second", requests[2].path);
+            StringAssert.Contains("\"installId\":\"first\"", requests[1].body);
         }
 
         [Test]
@@ -127,14 +129,29 @@ namespace ShadowVale.Tests.EditMode.Telemetry
             var statuses = new ConcurrentQueue<int>(new[] { 422, 201 });
             using var server = new FakeBackend(statuses, new ConcurrentQueue<(string, string, string)>());
             var q = new DiskQueue(_root);
-            q.Enqueue("bad", "{}");
+            q.Enqueue("bad", Upload("bad"));
             File.SetLastWriteTimeUtc(Path.Combine(q.PendingDirectory, "bad.json"), DateTime.UtcNow.AddMinutes(-1));
-            q.Enqueue("good", "{}");
-            var r = new TelemetryUploader(server.Url).FlushAsync(q).Result;
+            q.Enqueue("good", Upload("good"));
+            var r = new TelemetryUploader(server.Url, gameKey: Key).FlushAsync(q).Result;
             Assert.AreEqual(1, r.Rejected);
             Assert.AreEqual(1, r.Sent);
             Assert.IsEmpty(q.Pending());
             Assert.IsTrue(File.Exists(Path.Combine(q.RejectedDirectory, "bad.json")));
+        }
+
+        [Test]
+        public void ASessionQueuedBeforeTheBackendContractIsSetAsideUnsentAndWithoutAKeyNothingGoes()
+        {
+            var seen = new ConcurrentQueue<(string, string, string)>();
+            using var server = new FakeBackend(new ConcurrentQueue<int>(), seen);
+            var q = new DiskQueue(_root);
+            q.Enqueue("old", "{\"session_id\":\"old\",\"schema_version\":1}");
+            var noKey = new TelemetryUploader(server.Url).FlushAsync(q).Result;
+            Assert.AreEqual(1, noKey.Rejected, "The old format can never be accepted.");
+            q.Enqueue("new", Upload("new"));
+            var waiting = new TelemetryUploader(server.Url).FlushAsync(q).Result;
+            Assert.AreEqual(1, waiting.Waiting, "No game key: the session waits for a configured build.");
+            Assert.IsEmpty(seen, "Neither was sent.");
         }
 
         [Test]
@@ -144,14 +161,15 @@ namespace ShadowVale.Tests.EditMode.Telemetry
             using var server = new FakeBackend(statuses, new ConcurrentQueue<(string, string, string)>());
             var config = new TelemetryConfig
             {
-                ApiBaseUrl = server.Url, RootDirectory = Path.Combine(_root, "telemetry"), ResearchDirectory = Path.Combine(_root, "research"),
+                ApiBaseUrl = server.Url, GameKey = Key, RootDirectory = Path.Combine(_root, "telemetry"), ResearchDirectory = Path.Combine(_root, "research"),
             };
             var dto = new ShadowVale.Data.Telemetry.TelemetrySessionDto { SessionId = "abc", MapId = "map01" };
-            TelemetryPipeline.Store(dto, config);
+            TelemetryPipeline.Store(dto, config, Upload("abc"));
             string research = Path.Combine(config.ResearchDirectory, ResearchExporter.FileName);
             Assert.AreEqual(1, File.ReadAllLines(research).Length);
             StringAssert.Contains("\"session_id\":\"abc\"", File.ReadAllText(research));
             Assert.AreEqual(1, new DiskQueue(config.RootDirectory).Pending().Count);
+            StringAssert.Contains("installId", File.ReadAllText(new DiskQueue(config.RootDirectory).Pending()[0]), "The queue holds the backend's upload.");
 
             var flush = TelemetryPipeline.TryFlush(config, force: true);
             Assert.IsNotNull(flush);
@@ -166,9 +184,9 @@ namespace ShadowVale.Tests.EditMode.Telemetry
         {
             var config = new TelemetryConfig
             {
-                ApiBaseUrl = "http://127.0.0.1:9", RootDirectory = Path.Combine(_root, "telemetry"), ResearchDirectory = null,
+                ApiBaseUrl = "http://127.0.0.1:9", GameKey = Key, RootDirectory = Path.Combine(_root, "telemetry"), ResearchDirectory = null,
             };
-            TelemetryPipeline.Store(new ShadowVale.Data.Telemetry.TelemetrySessionDto { SessionId = "x" }, config);
+            TelemetryPipeline.Store(new ShadowVale.Data.Telemetry.TelemetrySessionDto { SessionId = "x" }, config, Upload("x"));
             var first = TelemetryPipeline.TryFlush(config, force: true);
             Assert.IsTrue(first.Wait(15000));
             Assert.AreEqual(1, first.Result.Waiting);
@@ -177,7 +195,7 @@ namespace ShadowVale.Tests.EditMode.Telemetry
                 "Uploads off: never attempted.");
         }
 
-        /// <summary>Answers each POST with the next status from the queue (201 when it runs out).</summary>
+        /// <summary>Answers each request with the next status from the queue (201 when it runs out).</summary>
         private sealed class FakeBackend : IDisposable
         {
             private readonly HttpListener _listener = new HttpListener();
@@ -199,7 +217,7 @@ namespace ShadowVale.Tests.EditMode.Telemetry
                             var ctx = _listener.GetContext();
                             string body;
                             using (var reader = new StreamReader(ctx.Request.InputStream)) body = reader.ReadToEnd();
-                            seen.Enqueue((ctx.Request.Headers["Idempotency-Key"], body, ctx.Request.Url.AbsolutePath));
+                            seen.Enqueue((ctx.Request.HttpMethod + " " + ctx.Request.Headers["X-Game-Key"], body, ctx.Request.Url.AbsolutePath));
                             ctx.Response.StatusCode = statuses.TryDequeue(out int s) ? s : 201;
                             ctx.Response.Close();
                         }

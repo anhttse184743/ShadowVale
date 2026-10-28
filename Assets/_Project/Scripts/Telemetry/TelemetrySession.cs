@@ -33,13 +33,36 @@ namespace ShadowVale.Telemetry
 
         private readonly Func<double> _clock;
         private readonly double _t0;
-        private readonly Dictionary<string, (string trigger, string variant)> _replans = new Dictionary<string, (string, string)>();
+        private readonly Dictionary<string, (string trigger, string variant, int nodes, double t)> _replans = new Dictionary<string, (string, string, int, double)>();
+
+        /// <summary>One row per applied plan, for the backend's coordination_results (AI comparison, scalability).</summary>
+        public List<PlanRecord> Plans { get; } = new List<PlanRecord>();
+
+        public sealed class PlanRecord
+        {
+            public string Id = Guid.NewGuid().ToString();
+            public string Variant, Group;
+            /// <summary>RouteCoverage | CoverAssignment | Flanking: the role most agents got (block | cover | flank).</summary>
+            public string TaskType;
+            public bool UsedFallback, WithinBudget;
+            public int Agents, Nodes;
+            public double Objective, LatencyMs, CoordinationScore;
+            /// <summary>Seconds since session start, when the solve was asked for.</summary>
+            public double T;
+            public Dictionary<string, int> Assignment = new Dictionary<string, int>();
+        }
         private readonly HashSet<string> _requestedVariants = new HashSet<string>();
         private readonly List<Action> _unsubscribe = new List<Action>();
         private string _missionResult;
         private TelemetrySessionDto _result;
         private double _nextPositionAt;
         private int _deaths, _kills, _takedowns, _attacks, _objectives;
+
+        /// <summary>Every shot and gun kill by weapon, before the event list's rate limit and cap (backend stats).</summary>
+        public Dictionary<string, int> ShotsByWeapon { get; } = new Dictionary<string, int>();
+        public Dictionary<string, int> KillsByWeapon { get; } = new Dictionary<string, int>();
+        public int Takedowns => _takedowns;
+        public int WeaponKills => _kills - _takedowns;
 
         /// <param name="clock">Game seconds (paused time does not count).</param>
         public TelemetrySession(SessionContext context, TelemetryConfig config, Func<double> clock)
@@ -120,6 +143,7 @@ namespace ShadowVale.Telemetry
         {
             _kills++;
             if (e.Method == "takedown") _takedowns++;
+            else if (!string.IsNullOrEmpty(e.WeaponId)) KillsByWeapon[e.WeaponId] = KillsByWeapon.TryGetValue(e.WeaponId, out int k) ? k + 1 : 1;
             Encounters.OnEnemyKilled(e.VictimId, Now);
             Add("enemy_killed", ("victim", e.VictimId), ("method", e.Method), ("weapon", e.WeaponId ?? ""),
                 ("x", R(e.Position.x)), ("z", R(e.Position.z)));
@@ -128,6 +152,7 @@ namespace ShadowVale.Telemetry
         private void OnPlayerAttack(PlayerAttackEvent e)
         {
             _attacks++;
+            if (!string.IsNullOrEmpty(e.Weapon)) ShotsByWeapon[e.Weapon] = ShotsByWeapon.TryGetValue(e.Weapon, out int n) ? n + 1 : 1;
             Events.Add("shot_fired", Now, Payload(("weapon", e.Weapon), ("x", R(e.Position.x)), ("z", R(e.Position.z))),
                 0.25, "shot_" + e.Weapon);
         }
@@ -158,7 +183,7 @@ namespace ShadowVale.Telemetry
 
         private void OnReplanStarted(ReplanStartedEvent e)
         {
-            if (!string.IsNullOrEmpty(e.InstanceId)) _replans[e.InstanceId] = (e.Trigger, e.Variant);
+            if (!string.IsNullOrEmpty(e.InstanceId)) _replans[e.InstanceId] = (e.Trigger, e.Variant, e.Nodes, Now);
         }
 
         private void OnPlanApplied(PlanAppliedEvent e)
@@ -174,6 +199,15 @@ namespace ShadowVale.Telemetry
             Encounters.OnPlan(variant, e.CoordinationScore, fellBack);
             if (e.Assignments != null)
                 Diversity.Add(e.Assignments.Select(a => (a.AgentId, a.Position)).ToList());
+            if (e.Assignments != null && e.Assignments.Length > 0 && started.nodes > 0)
+                Plans.Add(new PlanRecord
+                {
+                    Variant = variant, Group = e.Group, UsedFallback = fellBack, WithinBudget = !e.HitLatencyBudget,
+                    Agents = e.Assignments.Length, Nodes = started.nodes, Objective = e.Objective, LatencyMs = e.LatencyMs,
+                    CoordinationScore = e.CoordinationScore, T = started.variant != null ? started.t : Now,
+                    Assignment = e.Assignments.GroupBy(a => a.AgentId ?? "").ToDictionary(g => g.Key, g => g.First().Node),
+                    TaskType = TaskOf(e.Assignments),
+                });
 
             Add("coordination_replan", ("group", e.Group), ("trigger", started.trigger ?? ""), ("variant", variant ?? ""),
                 ("agents", e.Assignments?.Length ?? 0), ("latency_ms", R(e.LatencyMs)), ("energy", R(e.Energy)),
@@ -252,6 +286,12 @@ namespace ShadowVale.Telemetry
         }
 
         // ---- Helpers ---------------------------------------------------------------------------
+
+        private static string TaskOf(AgentAssignment[] assignments)
+        {
+            var role = assignments.GroupBy(a => a.Role ?? "").OrderByDescending(g => g.Count()).ThenBy(g => g.Key, StringComparer.Ordinal).First().Key;
+            return role == "cover" ? "CoverAssignment" : role == "flank" ? "Flanking" : "RouteCoverage";
+        }
 
         private void Add(string type, params (string key, object value)[] fields) => Events.Add(type, Now, Payload(fields));
 
