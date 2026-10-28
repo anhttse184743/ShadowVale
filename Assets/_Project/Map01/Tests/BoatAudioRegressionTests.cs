@@ -13,7 +13,7 @@ using Object=UnityEngine.Object;
 namespace ShadowVale.Map01.Tests {
  public sealed class BoatAudioRegressionTests:ForestSceneTestBase {
   const BindingFlags F=BindingFlags.NonPublic|BindingFlags.Instance;
-  const string Folder="Logs/BoatAudioFix_20261028";
+  const string Folder="Logs/BoatSingleWeapon_20261028";
   [UnityTest,Timeout(480000)]public IEnumerator RifleStaysSingleAcrossNaturalBoatAndReplacementBody(){EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");SetPreviewResolution(1280,720);yield return new EnterPlayMode();yield return Run(false);yield return new ExitPlayMode();}
   [UnityTest,Timeout(480000)]public IEnumerator MosinStaysSingleAcrossNaturalBoatAndReplacementBody(){EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");SetPreviewResolution(1280,720);yield return new EnterPlayMode();yield return Run(true);yield return new ExitPlayMode();}
   IEnumerator Run(bool mosin){
@@ -24,7 +24,7 @@ namespace ShadowVale.Map01.Tests {
    foreach(var e in m.Enemies)e.GetComponent<Health>().TakeDamage(99999,e.transform.position,null);
    while(!ex.Prepared){Assert.Less(Time.realtimeSinceStartup,deadline);yield return null;}
    var cc=m.player.GetComponent<CharacterController>();cc.enabled=false;m.player.position=ex.approach;cc.enabled=true;
-   var rows=new List<string>();var seen=new HashSet<string>();int samples=0,c1Samples=0;bool gameplay=false;var errors=new List<string>();
+   var rows=new List<string>();var seen=new HashSet<string>();int samples=0,c1Samples=0;bool gameplay=false;float heldPoseFor=0;var errors=new List<string>();
    Directory.CreateDirectory(Folder);deadline=Time.realtimeSinceStartup+340;
    while(Time.realtimeSinceStartup<deadline){
     var arrival=Object.FindFirstObjectByType<Map02Arrival>();var body=arrival!=null?arrival.Passengers?.FirstOrDefault()?.GetComponentInChildren<Map01BoatCarry>():ex!=null?ex.NamAnimator?.GetComponent<Map01BoatCarry>():null;
@@ -33,11 +33,34 @@ namespace ShadowVale.Map01.Tests {
     if(body!=null){var pump=body.GetComponent<ExtractionCapturePump>()??body.gameObject.AddComponent<ExtractionCapturePump>();var capturedBody=body;var capturedArrival=arrival;var capturedStage=stage;
      pump.draw=()=>{
       if(!capturedBody.Slung)return;
-      samples++;int count=capturedBody.VisibleGunCount;if(count!=1)errors.Add(capturedStage+" guns="+count);
+      samples++;
+      var playerRoot=capturedBody.GetComponentInParent<PlayerCombat>().transform;
+      var visibleWeapons=playerRoot.GetComponentsInChildren<Weapon>(true).Where(w=>w.IsGun&&w.gameObject.activeInHierarchy&&w.GetComponentsInChildren<Renderer>(true).Any(r=>r.enabled&&!r.forceRenderingOff&&r.gameObject.activeInHierarchy)).ToArray();
+      int count=visibleWeapons.Length;
+      Assert.AreSame(capturedBody.OriginalGun,capturedBody.Gun,"Use the actual gun, never an extra sling mesh");
+      Assert.False(playerRoot.GetComponentsInChildren<Transform>(true).Any(t=>t.name=="Boat rifle — single render-only sling"));
+      var rifleMeshes=capturedBody.Gun.GetComponentsInChildren<MeshFilter>(true).Select(f=>f.sharedMesh).ToHashSet();
+      foreach(var mesh in playerRoot.GetComponentsInChildren<MeshFilter>(true)){
+       var renderer=mesh.GetComponent<Renderer>();
+       if(rifleMeshes.Contains(mesh.sharedMesh)&&renderer!=null&&renderer.enabled&&!renderer.forceRenderingOff&&renderer.gameObject.activeInHierarchy)
+        Assert.True(mesh.transform.IsChildOf(capturedBody.Gun),"Unmanaged duplicate rifle mesh: "+mesh.name);
+      }
+      if(count!=1)errors.Add(capturedStage+" guns="+count);
       Assert.Greater(capturedBody.Gun.GetComponentsInChildren<MeshRenderer>().Length,0,"Sling must have real meshes");
       bool c1=capturedArrival!=null&&capturedArrival.MisstepActor(0)!=capturedBody.GetComponent<Animator>();
+      var visibleActor=c1?capturedArrival.MisstepActor(0):capturedBody.GetComponent<Animator>();
+      Assert.AreSame(visibleActor.GetBoneTransform(HumanBodyBones.Chest),capturedBody.Gun.parent,"Sling follows the visible chest, not the hand socket");
+      var chest=visibleActor.GetBoneTransform(HumanBodyBones.Chest);
+      if(!c1&&(capturedStage=="Map1-Boarding"||capturedStage=="Map2-Disembarking")){
+       var left=visibleActor.GetBoneTransform(HumanBodyBones.LeftHand).position;var right=visibleActor.GetBoneTransform(HumanBodyBones.RightHand).position;
+       // A single raised hand can balance a step; a sustained two-handed grip in front of the chest is the armed pose.
+       bool held=left.y>chest.position.y-.20f&&right.y>chest.position.y-.20f&&Vector3.Distance(left,right)<.40f&&Vector3.Dot((left+right)*.5f-chest.position,visibleActor.transform.forward)>.10f;
+       heldPoseFor=held?heldPoseFor+Time.deltaTime:0;if(heldPoseFor>.35f)errors.Add(capturedStage+" sustained empty rifle grip for "+heldPoseFor);
+      }else heldPoseFor=0;
       if(c1){c1Samples++;var torso=capturedArrival.MisstepActor(0).GetBoneTransform(HumanBodyBones.Chest);var renderers=capturedBody.Gun.GetComponentsInChildren<Renderer>();var bounds=renderers[0].bounds;foreach(var r in renderers)bounds.Encapsulate(r.bounds);if(Vector3.Distance(bounds.center,torso.position)>1)errors.Add("C1 rifle not following visible chest");}
-      string key=capturedStage+(c1?"-C1":"");if(seen.Add(key)){rows.Add(key+" guns="+count+" root="+capturedBody.transform.position);ScreenCapture.CaptureScreenshot(Folder+"/"+(mosin?"Mosin-":"AK-")+key+".png");}
+      float t=c1?capturedArrival.MisstepClock:capturedArrival!=null?(float)typeof(Map02Arrival).GetField("clock",F).GetValue(capturedArrival):ex!=null?(float)typeof(Map01Extraction).GetField("clock",F).GetValue(ex):0;
+      string key=capturedStage+(c1?"-C1":"")+((c1||capturedStage=="Map1-Boarding"||capturedStage=="Map2-Disembarking")?"-"+Mathf.FloorToInt(t/1.5f).ToString("D2"):"");if(seen.Add(key)){rows.Add(key+" guns="+count+" root="+capturedBody.transform.position);
+       File.WriteAllLines(Folder+"/"+(mosin?"Mosin-":"AK-")+key+"-meshes.txt",playerRoot.GetComponentsInChildren<Renderer>(true).Select(r=>r.name+" active="+r.gameObject.activeInHierarchy+" enabled="+r.enabled+" forceOff="+r.forceRenderingOff+" weapon="+r.GetComponentInParent<Weapon>()?.name));ScreenCapture.CaptureScreenshot(Folder+"/"+(mosin?"Mosin-":"AK-")+key+".png");}
      };
     }yield return null;
    }

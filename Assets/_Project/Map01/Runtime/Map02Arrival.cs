@@ -178,6 +178,7 @@ namespace ShadowVale.Map01
                 PrepareBindFeet(i);
                 PrepareShoeContacts(i);
                 poses[i].Dispose();poses[i]=new Map01Extraction.PosePlayer(actors[i],i==2?source.hungClips:null);
+                if(i==0)poses[i].FreeArms();
                 poses[i].Play(i==1?Resources.Load<AnimationClip>("Cutscenes/Map02/Hung_Arrival_Row_Loop"):i==2?source.InjuredTravel:Resources.Load<AnimationClip>("Cutscenes/Map02/Nam_Arrival_Travel"));
                 if(i==0)Map01BoatCarry.For(actors[i]).Stow();
             }

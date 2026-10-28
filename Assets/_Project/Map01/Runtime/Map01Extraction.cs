@@ -636,12 +636,12 @@ namespace ShadowVale.Map01
             if(target==null || target.GetComponent<Health>().IsDead) {
                 pendingCoverShot[index]=0;
                 var watcher=index==0?namActor:commanderActor;
-                namBoatCarry?.Stow();ArrivalRestHands(watcher,clock);
+                namBoatCarry?.Stow();if(index==0)namPose?.FreeArms();ArrivalRestHands(watcher,clock);
                 var head=watcher.GetBoneTransform(HumanBodyBones.Head);
                 head.rotation=Quaternion.AngleAxis(Mathf.Sin(Time.unscaledTime*.7f+index)*8,boat.up)*head.rotation;
                 return;
             }
-            namBoatCarry?.Draw();
+            namBoatCarry?.Draw();if(index==0)namPose?.FreeArms(false);
             if(Time.unscaledTime<coverReloadUntil[index])return;
             var actor=index==0?namActor:commanderActor;var gun=actor.GetComponent<Map01Rifle>();
             if(gun==null)return;
@@ -792,7 +792,7 @@ namespace ShadowVale.Map01
             EnsureRifle(namActor);namBoatCarry=Map01BoatCarry.For(namActor);namBoatCarry.Stow();
             var walk=urgentRun??board;
             namPose=new PosePlayer(namActor);
-            namPose.Play(walk);
+            namPose.FreeArms();namPose.Play(walk);
             hungPose.Play(travel); commanderPose.Play(travel);
             speech=DialogueVoice.For(gameObject);
             speech.Play("m1_board_invite_current");
@@ -905,6 +905,10 @@ namespace ShadowVale.Map01
             private AnimationClipPlayable playable;
             private AnimationClipPlayable previous;
             private AnimationMixerPlayable mixer;
+            private AnimationLayerMixerPlayable freeArmMixer;
+            private AnimationClipPlayable freeArmClip;
+            private AnimationClip freeArmSource;
+            private AvatarMask freeArmMask;
             private float blend;
             private AnimationClip selected;
             private readonly Animator actor;
@@ -921,6 +925,21 @@ namespace ShadowVale.Map01
                 output=AnimationPlayableOutput.Create(graph,"Authored pose",target);
                 mixer=AnimationMixerPlayable.Create(graph,2);output.SetSourcePlayable(mixer);graph.Play();
             }
+            // Only arms/fingers come from the existing unarmed walk. Boarding's feet/root and C1 stay authored.
+            public void FreeArms(bool enabled=true) {
+                if(freeArmSource!=null){freeArmMixer.SetInputWeight(1,enabled?1:0);return;}
+                if(!enabled)return;
+                freeArmSource=Resources.Load<AnimationClip>("Cutscenes/Map02/Nam_Boat_Free_Arms");
+                if(freeArmSource==null){Debug.LogError("Boat free-arm clip is missing.");return;}
+                freeArmMixer=AnimationLayerMixerPlayable.Create(graph,2);
+                graph.Connect(mixer,0,freeArmMixer,0);freeArmMixer.SetInputWeight(0,1);
+                freeArmClip=AnimationClipPlayable.Create(graph,freeArmSource);freeArmClip.SetApplyFootIK(false);freeArmClip.SetSpeed(0);
+                graph.Connect(freeArmClip,0,freeArmMixer,1);freeArmMixer.SetInputWeight(1,1);
+                freeArmMask=new AvatarMask();for(int i=0;i<(int)AvatarMaskBodyPart.LastBodyPart;i++)freeArmMask.SetHumanoidBodyPartActive((AvatarMaskBodyPart)i,false);
+                foreach(var part in new[]{AvatarMaskBodyPart.LeftArm,AvatarMaskBodyPart.RightArm,AvatarMaskBodyPart.LeftFingers,AvatarMaskBodyPart.RightFingers})freeArmMask.SetHumanoidBodyPartActive(part,true);
+                freeArmMixer.SetLayerMaskFromAvatarMask(1,freeArmMask);output.SetSourcePlayable(freeArmMixer);
+            }
+            void SampleFreeArms(){if(freeArmClip.IsValid()&&playable.IsValid()&&selected!=null)freeArmClip.SetTime(playable.GetTime()/Mathf.Max(.01f,selected.length)*freeArmSource.length);}
             public void Play(AnimationClip clip,bool restart=false) {
                 if(clip==null) return;
                 if(variants!=null) clip=variants.FirstOrDefault(c=>c.name==clip.name.Replace("Nam_","Hung_"))??clip;
@@ -935,11 +954,11 @@ namespace ShadowVale.Map01
                 if(!playable.IsValid()) return;
                 blend=Mathf.Min(1,blend+dt/.18f);mixer.SetInputWeight(0,1-blend);mixer.SetInputWeight(1,blend);
                 if(!selected.isLooping && playable.GetTime()+dt*playable.GetSpeed()>=selected.length) { playable.SetTime(selected.length); playable.SetSpeed(0); }
-                graph.Evaluate(dt);
+                graph.Evaluate(dt);if(freeArmClip.IsValid()){SampleFreeArms();graph.Evaluate(0);}
             }
             public void Rate(float rate) {if(playable.IsValid())playable.SetSpeed(rate);}
             public double Time => playable.IsValid()?playable.GetTime():0;
-            public void Sample() { if(graph.IsValid()) graph.Evaluate(0); }
+            public void Sample() { if(graph.IsValid()){SampleFreeArms();graph.Evaluate(0);} }
             public void Settle(bool end=false) {
                 blend=1;mixer.SetInputWeight(0,0);mixer.SetInputWeight(1,1);
                 if(playable.IsValid()) {playable.SetTime(end?selected.length:0);playable.SetSpeed(0);}
@@ -947,6 +966,7 @@ namespace ShadowVale.Map01
             }
             public void Dispose() {
                 if(graph.IsValid()) graph.Destroy();
+                if(freeArmMask!=null)UnityEngine.Object.Destroy(freeArmMask);
                 if(actor!=null) { actor.runtimeAnimatorController=controller;actor.applyRootMotion=rootMotion; actor.cullingMode=culling; }
             }
         }

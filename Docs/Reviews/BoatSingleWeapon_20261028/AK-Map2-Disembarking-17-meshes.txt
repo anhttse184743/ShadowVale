@@ -1,0 +1,103 @@
+defaultMaterial active=False enabled=True forceOff=False weapon=
+defaultMaterial active=False enabled=True forceOff=False weapon=
+defaultMaterial active=False enabled=True forceOff=False weapon=
+Muzzle flash active=False enabled=False forceOff=True weapon=
+Magazine_SourceReference active=False enabled=True forceOff=True weapon=
+model active=False enabled=True forceOff=True weapon=
+slide active=False enabled=True forceOff=True weapon=
+magazine active=False enabled=True forceOff=True weapon=
+Cartridge active=False enabled=True forceOff=True weapon=
+bolt active=False enabled=True forceOff=True weapon=
+model.001 active=False enabled=True forceOff=True weapon=
+Muzzle flash active=False enabled=False forceOff=True weapon=
+Nam_Dao_KaBar active=False enabled=True forceOff=False weapon=
+lever active=False enabled=True forceOff=False weapon=
+model.020 active=False enabled=True forceOff=False weapon=
+ring.001 active=False enabled=True forceOff=False weapon=
+DEMO_Stone_10cm active=False enabled=True forceOff=False weapon=
+model.018 active=False enabled=True forceOff=False weapon=
+ring active=False enabled=True forceOff=False weapon=
+bl_grip_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+bm_trigger_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+bm_triggerBase_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+bm_triggerBaseButton1_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+bm_triggerBaseButton2_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+bm_triggerBaseButton3_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+bm_triggerBaseButton4_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+bm_triggerBasePart_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+l_belt_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+l_beltHolder_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+l_button1_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+l_button2_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+l_stockBase_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+l_stockMetal_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+l_stockScrew_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+l_stockWood_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+ls2_button1_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+ls2_button2_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+ls2_button3_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+m_base_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+m_button1_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+m_button2_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+m_button3_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+m_safetyswitch_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_barrel_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_barrelAim_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_barrelAimCylinder_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_barrelEnd_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_barrelHolder_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_baseNumber1_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_baseNumber2_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_button1_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_button2_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_button3_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_buttons_high_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_Connector_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_connectorPart1_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_connectorPart2_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_flap_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_lowerCylinder_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_numberBase_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_numberBaseCircle_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_numberSwitch_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_numberSwitchButton_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_upperCylinderHole_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_woodholder_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_woodholderLeft_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_woodholderLowerRight_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_woodholderUpperRight_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+r_woodLower_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+rs2_button1_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+rs2_button2_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+u_dustcover_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+u_dustcoverHolder_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+ul_dustcoverScroll_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+ur_number_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+ur_numberBase2_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+ur_numberHolder1_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+ur_numberHolder2_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+ur_woodUpper_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+bm_magazine_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+bm_magazineBottom_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+bm_magazinePart1_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+bm_magazinePart2_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+bm_magazinePart3_low_Material #44_0 active=True enabled=True forceOff=False weapon=W_AK47(Clone)
+Muzzle flash active=True enabled=False forceOff=False weapon=W_AK47(Clone)
+Mesh_0.001 active=True enabled=True forceOff=False weapon=
+Nam_BaloRanRi active=True enabled=True forceOff=False weapon=
+Nam_Gear active=True enabled=True forceOff=False weapon=
+Player_LeftHand active=True enabled=True forceOff=False weapon=
+Player_RightHand active=True enabled=True forceOff=False weapon=
+Boat rifle canvas strap active=True enabled=True forceOff=False weapon=
+FX_ShotTracer(Clone) active=True enabled=False forceOff=False weapon=
+FX_ShotTracer(Clone) active=True enabled=False forceOff=False weapon=
+FX_ShotTracer(Clone) active=True enabled=False forceOff=False weapon=
+FX_ShotTracer(Clone) active=True enabled=False forceOff=False weapon=
+FX_ShotTracer(Clone) active=True enabled=False forceOff=False weapon=
+FX_ShotTracer(Clone) active=True enabled=False forceOff=False weapon=
+FX_ShotTracer(Clone) active=True enabled=False forceOff=False weapon=
+FX_ShotTracer(Clone) active=True enabled=False forceOff=False weapon=
+FX_ShotTracer(Clone) active=True enabled=False forceOff=False weapon=
+FX_ShotTracer(Clone) active=True enabled=False forceOff=False weapon=
+FX_ShotTracer(Clone) active=True enabled=False forceOff=False weapon=
+FX_ShotTracer(Clone) active=True enabled=False forceOff=False weapon=
