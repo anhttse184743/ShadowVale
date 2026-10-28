@@ -62,10 +62,10 @@ nhưng không gộp hai mục tiêu khác nghĩa vào cùng chỉ số nghiên c
 Chưa xác minh backend/dashboard bên ngoài repo đã cập nhật cách phân nhóm. Bảng này ghi nhận
 hành vi client hiện tại, không xác nhận việc triển khai phía server.
 
-## Content bundle: `enemy_archetypes[].boss` (thêm ở M8)
+## Content bundle: `enemy_types[].fsm_params.boss` (thêm ở M8)
 
-Archetype có `is_boss: true` được phép kèm một object `boss` (định nghĩa `boss_profile` trong
-`Assets/StreamingAssets/Content/content.schema.json`). Object này chứa các tham số hành vi boss (A04):
+Từ 29/10/2026 bundle theo schema 1.0 của web backend, nên object `boss` nằm trong `fsm_params` của
+loại địch có `is_boss: true` (trước đây là `enemy_archetypes[].boss`). Object này chứa các tham số hành vi boss (A04):
 
 | Nhóm | Trường |
 |---|---|
@@ -76,4 +76,21 @@ Archetype có `is_boss: true` được phép kèm một object `boss` (định n
 
 - Mọi trường đều tuỳ chọn. Trường nào thiếu thì client dùng giá trị mặc định đã chỉnh cho Map 1 (`BossProfile.cs`).
 - Nếu `boss` nằm trên archetype không phải boss, hoặc tỉ lệ nằm ngoài khoảng [0,1], `SchemaValidator` sẽ từ chối bundle.
-- Web editor và schema phía backend cần thêm định nghĩa `boss_profile` này.
+- Schema phía backend để `fsm_params` là object tự do; web editor sửa được trực tiếp.
+
+## Kết nối web backend (content, từ 29/10/2026)
+
+Hợp đồng đầy đủ: `backend/shadowvale_be/docs/game-integration.md` trong repo ShadowVale_web.
+
+- **Cấu hình:** `SVL_API_BASE_URL` và `SVL_GAME_KEY`, hoặc `Assets/StreamingAssets/Config/backend.json`
+  (gitignored, mẫu ở `backend.example.json`). Mặc định là `http://localhost:5079`. Không có key thì game chơi offline.
+- **Nguồn bundle:** `GameBootstrap` tự tạo trước scene đầu tiên. Nó gọi `GET /api/game/content/manifest`, rồi
+  `GET /api/game/content/bundle` (kèm `If-None-Match`), kiểm SHA-256 của bytes theo manifest, chờ tối đa 3 s.
+  Không được thì dùng cache (`persistentDataPath/content/`), rồi `StreamingAssets/Content/fallback_bundle.json`.
+- **Khoá theo phiên:** bundle tải xong muộn chỉ được dùng từ lần load scene tiếp theo.
+- **Định dạng:** `fallback_bundle.json` và bundle tải về đều là schema 1.0 phẳng của web (`content.schema.json`
+  là bản copy của schema backend). `BundleV1Mapper` chuyển sang model runtime `ContentBundle`.
+- **AI settings:** bundle web không có `ai_settings`, nên các tham số coordination nằm ở
+  `StreamingAssets/Content/ai_settings.json` cho tới khi backend giao solver theo phiên (`POST /api/game/sessions`).
+- **Telemetry:** vẫn gửi theo hợp đồng cũ ở trên cho tới khi chuyển sang `PUT /api/game/sessions/{id}`; backend trả 404
+  cho đường cũ nên session nằm lại trong hàng đợi, không bị mất.

@@ -14,13 +14,14 @@ namespace ShadowVale.Tests.EditMode.Data
         {
             var provider = new FallbackBundleProvider();
             Assert.IsTrue(provider.TryLoad(out var bundle, out var error), error);
-            Assert.AreEqual("1.0.0", bundle.BundleVersion);
-            Assert.AreEqual(1, bundle.SchemaVersion);
+            Assert.AreEqual("1", bundle.BundleVersion, "version_no of the web bundle it was imported as");
+            Assert.AreEqual(SchemaValidator.SupportedSchemaVersion, bundle.SchemaVersion);
+            Assert.IsNull(bundle.ContentVersionId, "A shipped bundle is no published version: telemetry sends null.");
             Assert.GreaterOrEqual(bundle.Weapons.Count, 5, "proposal promises 5–6 weapon classes");
             Assert.GreaterOrEqual(bundle.EnemyArchetypes.Count, 3);
             Assert.GreaterOrEqual(bundle.Maps.Count, 1);
-            Assert.AreEqual("qiea", bundle.AiSettings.DefaultSolverVariant,
-                "The game plays with the best solver of exp-v1 (O5); greedy is the fallback.");
+            Assert.AreEqual("tabu", bundle.AiSettings.DefaultSolverVariant,
+                "ai_settings.json: the best solver of exp-v2 (O5); greedy is the fallback.");
             Assert.AreEqual(120, bundle.AiSettings.LatencyBudgetMs);
         }
 
@@ -28,11 +29,11 @@ namespace ShadowVale.Tests.EditMode.Data
         public void FallbackBundle_SnakeCaseKeysMapOntoPascalCase()
         {
             var json = File.ReadAllText(FallbackBundleProvider.AbsolutePath);
-            StringAssert.Contains("\"bundle_version\"", json);
-            StringAssert.Contains("\"enemy_archetypes\"", json);
-            StringAssert.Contains("\"durability_per_shot\"", json);
+            StringAssert.Contains("\"schema_version\": \"1.0\"", json, "The web backend's flat schema 1.0.");
+            StringAssert.Contains("\"enemy_types\"", json);
+            StringAssert.Contains("\"durability_per_use\"", json);
 
-            var b = ContentJson.Deserialize<ContentBundle>(json);
+            Assert.IsTrue(FallbackBundleProvider.TryParse(json, out var b, out var error), error);
             var rifle = b.Weapons.First(w => w.Id == "rifle_standard");
             Assert.Greater(rifle.DurabilityPerShot, 0);
             Assert.AreEqual("ammo_rifle", rifle.AmmoType);
@@ -45,7 +46,7 @@ namespace ShadowVale.Tests.EditMode.Data
             var svc = new ContentService();
             svc.Apply(b, "test");
             foreach (var e in b.EnemyArchetypes) Assert.NotNull(svc.GetWeapon(e.WeaponId), e.Id);
-            foreach (var w in b.Weapons) Assert.NotNull(svc.GetItem(w.AmmoType), w.Id);
+            foreach (var w in b.Weapons.Where(w => w.Class != "melee")) Assert.NotNull(svc.GetItem(w.AmmoType), w.Id);
             Assert.AreEqual(b.Weapons.Count, b.Weapons.Select(w => w.Id).Distinct().Count());
         }
 
@@ -66,6 +67,14 @@ namespace ShadowVale.Tests.EditMode.Data
             Assert.IsFalse(ok);
             Assert.IsNull(bundle);
             StringAssert.Contains("schema_version 2 unsupported", error);
+        }
+
+        [Test]
+        public void Validator_RejectsAWebBundleOfAnotherSchema()
+        {
+            Assert.IsFalse(FallbackBundleProvider.TryParse("{\"version_no\":1,\"schema_version\":\"2.0\"}", out var bundle, out var error));
+            Assert.IsNull(bundle);
+            StringAssert.Contains("schema_version 2.0 unsupported", error);
         }
 
         [Test]

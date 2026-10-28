@@ -66,3 +66,7 @@ Assets/_Project/**/GeneratedContent/
 
 # Python libraries installed beside the intro shot scripts (pip install --target .deps); reinstall, do not commit
 .deps/
+
+# Backend address and game key of a local build (see backend.example.json)
+Assets/StreamingAssets/Config/backend.json
+Assets/StreamingAssets/Config/backend.json.meta

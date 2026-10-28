@@ -13,6 +13,8 @@ namespace ShadowVale.Data.Content
         public int SchemaVersion { get; set; }
         public string PublishedAt { get; set; }
         public string Checksum { get; set; }
+        /// <summary>Id of the published content version (<c>manifest.versionId</c>) sent with telemetry; null for a bundle shipped with the game.</summary>
+        public string ContentVersionId { get; set; }
 
         public List<ItemDefinition> Items { get; set; } = new();
         public List<WeaponDefinition> Weapons { get; set; } = new();

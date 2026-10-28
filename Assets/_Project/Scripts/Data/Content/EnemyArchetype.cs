@@ -10,6 +10,8 @@ namespace ShadowVale.Data.Content
         /// <summary>Full cone angle in degrees.</summary>
         public float VisionAngle { get; set; }
         public float HearingRange { get; set; }
+        /// <summary>Hit chance 0..1 at close range.</summary>
+        public float Accuracy { get; set; }
         public string WeaponId { get; set; }
         public float AlertDecaySeconds { get; set; }
         /// <summary>HP fraction (0..1) below which the FSM enters Retreat.</summary>
