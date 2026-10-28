@@ -113,11 +113,21 @@ namespace ShadowVale.Map01.Tests
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
             yield return new EnterPlayMode();
-            yield return SidecarPlanInPlayMode();
+            yield return SidecarPlanInPlayMode("qiea");
             yield return new ExitPlayMode();
         }
 
-        private static IEnumerator SidecarPlanInPlayMode()
+        /// <summary>Tabu is the bundle's default since exp-v2: it must plan in Python within the budget too.</summary>
+        [UnityTest]
+        public IEnumerator WithTabuTheCampIsPlannedByThePythonSidecar()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");
+            yield return new EnterPlayMode();
+            yield return SidecarPlanInPlayMode("tabu");
+            yield return new ExitPlayMode();
+        }
+
+        private static IEnumerator SidecarPlanInPlayMode(string variant)
         {
             string url = System.Environment.GetEnvironmentVariable("SVL_TEST_SIDECAR_URL") ?? "http://127.0.0.1:8011";
             var health = ShadowVale.AI.Solvers.Remote.SidecarLauncher.IsHealthyAsync(url);
@@ -133,7 +143,7 @@ namespace ShadowVale.Map01.Tests
                 yield return null;
                 var mission = Object.FindFirstObjectByType<Map01Mission>();
                 ServiceLocator.TryResolve<SquadCoordinator>(out var coordinator);
-                coordinator.SetVariant("qiea");
+                coordinator.SetVariant(variant);
                 for (float until = Time.realtimeSinceStartup + 5f; coordinator.SidecarOnline == null && Time.realtimeSinceStartup < until;) yield return null;
                 Assert.AreEqual(true, coordinator.SidecarOnline, "The coordinator found the sidecar.");
 
@@ -142,7 +152,7 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsNotEmpty(plans, "A plan came back.");
                 var plan = plans[0];
                 Assert.IsNull(plan.FallbackReason, plan.FallbackReason);
-                Assert.AreEqual("qiea", plan.Variant, "Solved in Python, not by the local fallback.");
+                Assert.AreEqual(variant, plan.Variant, "Solved in Python, not by the local fallback.");
                 Assert.AreEqual(plan.Assignments.Length, plan.Assignments.Select(a => a.Node).Distinct().Count());
                 Assert.Less(plan.LatencyMs, 120 + ShadowVale.AI.Solvers.Remote.RemoteSolverClient.NetworkMarginMs, "Within budget.");
             }

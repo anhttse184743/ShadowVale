@@ -210,7 +210,7 @@
       "type": "object", "additionalProperties": false,
       "required": ["default_solver_variant", "latency_budget_ms", "replan_cooldown_ms"],
       "properties": {
-        "default_solver_variant": { "type": "string", "enum": ["greedy", "ga", "sa", "sqa", "qiea", "qaoa"] },
+        "default_solver_variant": { "type": "string", "enum": ["greedy", "ls", "tabu", "ga", "sa", "sqa", "qiea", "qaoa"] },
         "latency_budget_ms": { "type": "integer", "minimum": 1 },
         "replan_cooldown_ms": { "type": "integer", "minimum": 0 },
         "weight_coverage": { "type": "number", "minimum": 0, "default": 1.0 },

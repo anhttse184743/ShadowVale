@@ -23,7 +23,7 @@ namespace ShadowVale.Debugging
     {
         private const int WindowId = 0x5A1D;
         private static readonly string[] Tabs = { "Nhật ký", "Lính" };
-        private static readonly string[] Variants = { "greedy", "ga", "sa", "sqa", "qiea", "qaoa" };
+        private static readonly string[] Variants = { "greedy", "ls", "tabu", "ga", "sa", "sqa", "qiea", "qaoa" };
 
         public static bool Visible { get; private set; }
 
