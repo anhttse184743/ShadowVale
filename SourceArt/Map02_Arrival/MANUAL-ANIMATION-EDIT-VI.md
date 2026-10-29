@@ -29,7 +29,7 @@ Trong Unity chạy **ShadowVale → Cutscene → Prepare Map 2 arrival clips**. 
 
 ## Chỉnh chuyển động trong Unity
 
-`Assets/_Project/Map01/Runtime/Map02Arrival.cs` điều khiển đoạn này:
+`Assets/_Project/Map02/Runtime/Map02Arrival.cs` điều khiển đoạn này:
 
 - `Route`, `Docked`, `DockRotation`: đường kênh và tư thế cập bến.
 - `BuildLandingSteps`: kích thước bậc gỗ; các bậc đứng yên khi thuyền đến.
