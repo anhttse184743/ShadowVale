@@ -4,6 +4,10 @@ using UnityEngine.AI;
 
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// Night 2's route: wading the river at the allowed crossing (only the real water blocks movement), the
+    /// route stakes, the radio call and the distant chains, and the live route HUD.
+    /// </summary>
     public sealed partial class Map02ChapterDirector
     {
         static readonly string[] NightRouteIds={"ditchApproach","villageLane","southBank","dockStairs"};

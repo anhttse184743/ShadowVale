@@ -6,6 +6,10 @@ using UnityEngine.InputSystem;
 
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// Night 2's evacuation check: choosing one of three routes (field, river, village), the patrol on each,
+    /// watching it from cover, and the report back to the commander.
+    /// </summary>
     public sealed partial class Map02ChapterDirector
     {
         public const string EvacuationPatrolGroup="night2_evacuation_patrol";

@@ -2,6 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// Night 1's supper on the porch ("Lời hứa", approved 2026-10-24): the Blender scene played as authored, with
+    /// Nam and Hùng seated side by side, the tray props and the camera shots.
+    /// </summary>
     public sealed partial class Map02ChapterDirector
     {
         // "Lời hứa" (approved 2026-10-24): the Blender scene played as it was made (chuyen_dong/blender_scripts/loihua_timeline.py,

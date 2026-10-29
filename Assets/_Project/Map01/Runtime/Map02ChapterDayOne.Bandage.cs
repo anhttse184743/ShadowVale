@@ -1,6 +1,10 @@
 using UnityEngine;
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// Day 1's bandage: Chị Lành dresses Hùng's upper arm by the stool. The dressing is measured to the sleeve it
+    /// wraps and her hands keep contact with it while it is tied.
+    /// </summary>
     public sealed partial class Map02ChapterDirector
     {
         static readonly Vector3 BandageStool=new Vector3(-.001f,0,-.026f),BandageLanh=new Vector3(.52f,0,.12f);

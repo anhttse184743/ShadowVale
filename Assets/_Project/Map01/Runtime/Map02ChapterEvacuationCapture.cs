@@ -6,6 +6,10 @@ using UnityEngine.AI;
 
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// Night 2's failure when Nam is caught on an evacuation route: the enemy subduing and tying him (the wrist
+    /// ropes), then the failure screen.
+    /// </summary>
     public sealed partial class Map02ChapterDirector
     {
         public const float EvacuationCaptureCameraSeconds=3,EvacuationCapturePinSeconds=2,EvacuationCaptureTieSeconds=3;

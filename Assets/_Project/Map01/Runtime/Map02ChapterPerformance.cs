@@ -5,6 +5,10 @@ using ShadowVale.Gameplay.Combat;
 
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// The acted close-ups on the chapter's lines: posed actors (legs folded, hips placed, grounded), the radio
+    /// and antenna gestures, each shot's camera, and their audio.
+    /// </summary>
     public sealed partial class Map02ChapterDirector
     {
         sealed class PerformanceActor:IDisposable

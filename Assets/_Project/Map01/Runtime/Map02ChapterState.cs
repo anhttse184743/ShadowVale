@@ -5,6 +5,10 @@ using UnityEngine;
 
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// One task of the chapter as Map02ChapterDefinition lists it: id, title, kind, site and scene, the phase it
+    /// belongs to, and how many times or how long it takes.
+    /// </summary>
     [Serializable] public sealed class Map02ChapterTask
     {
         public string id,title,kind,site,scene,purpose;

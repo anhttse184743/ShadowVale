@@ -4,6 +4,10 @@ using UnityEngine;
 using ShadowVale.Gameplay.Combat;
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// How Day 1 and Night 1 look: the family's furniture and places, the bamboo post's keeper and guards, and
+    /// the work tool Nam holds instead of his weapon.
+    /// </summary>
     public sealed partial class Map02ChapterDirector
     {
         Transform elderChair;

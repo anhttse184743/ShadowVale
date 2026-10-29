@@ -5,6 +5,10 @@ using ShadowVale.Gameplay.Combat;
 
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// Escorting the wounded scout Tâm: the warning, the walk with Nam, the bridge crossing, and where the ambush
+    /// may appear.
+    /// </summary>
     public sealed partial class Map02ChapterDirector
     {
         public const float ScoutAuthoredSpeed=2.5f;

@@ -4,6 +4,10 @@ using UnityEngine;
 
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// Map 2's gameplay HUD: the plates, the weapon icon, the minimap (one snapshot of the village) with Nam's
+    /// arrow, the tracked objectives and their pins.
+    /// </summary>
     public sealed partial class Map02Mission
     {
         Texture2D hudChart, hudMiniChart, hudArrow, hudPanel, hudCombatIcons, hudDisc, hudHealth, hudGoal;

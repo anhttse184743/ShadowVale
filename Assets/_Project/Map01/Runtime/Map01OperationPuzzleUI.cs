@@ -6,6 +6,10 @@ using UnityEngine.InputSystem;
 
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// The operation puzzles at the radio set: the lock, cutting the power in rhythm and wiring the circuit, each
+    /// against the clock. A failed circuit sets off the alarm; the others can be retried.
+    /// </summary>
     public sealed class Map01OperationPuzzleUI : MonoBehaviour
     {
         public bool Active=>session!=null;

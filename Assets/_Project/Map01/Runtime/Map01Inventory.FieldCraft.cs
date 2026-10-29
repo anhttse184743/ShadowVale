@@ -6,6 +6,10 @@ using UnityEngine.InputSystem;
 
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// Field crafting from the bag (Tab → Chế tạo dã chiến) with the permanent toolkit: the batch limit, why a
+    /// craft is refused, the timed job, and its cancelling on a cinematic, death or closing the bag.
+    /// </summary>
     public sealed partial class Map01Inventory
     {
         public const string RecoveredAmmo = "ammo_recovered", AkLoadingPack = "ak_loading_pack";

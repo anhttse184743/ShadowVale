@@ -12,6 +12,10 @@ using UnityEngine.SceneManagement;
 
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// Map 2's arrival by sampan: loading the village while the boat comes in, docking, and the party stepping
+    /// ashore and up the landing steps, their feet planted on the hull, the bank and each stair tread.
+    /// </summary>
     [DefaultExecutionOrder(90)]
     public sealed partial class Map02Arrival : MonoBehaviour
     {

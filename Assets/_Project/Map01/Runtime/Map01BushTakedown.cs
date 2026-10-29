@@ -6,6 +6,11 @@ using UnityEngine.AI;
 using UnityEngine.InputSystem;
 
 namespace ShadowVale.Map01 {
+    /// <summary>
+    /// Nam's bush pull on a guard: from cover he drags the guard into the bushes, the struggle is timed (left
+    /// click while the needle is in the bright zone), then comes the finish or the guard's escape. The arm and
+    /// palm contacts of the held pair are solved every frame (Map01EnemyController.Takedown is the guard's side).
+    /// </summary>
     [DefaultExecutionOrder(110)]
     public sealed class Map01BushTakedown : MonoBehaviour {
         public enum Phase { None, Pull, Struggle, Finish, Escape }

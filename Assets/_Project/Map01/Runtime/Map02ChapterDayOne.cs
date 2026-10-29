@@ -5,6 +5,11 @@ using UnityEngine.AI;
 using UnityEngine.InputSystem;
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// Day 1 and Night 1: routing the day's interactions, the post repairs, packing and carrying the crates, the
+    /// dock boards, the duck on the way to the bamboo post, checkpoints between finished units, and the day's
+    /// lines and instructions.
+    /// </summary>
     public sealed partial class Map02ChapterDirector
     {
         Vector3 DayFamily=>sites["dayOneFamily"].position;

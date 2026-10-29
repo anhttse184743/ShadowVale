@@ -6,6 +6,10 @@ using UnityEngine.InputSystem;
 
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// Day 2: the approach routes and the antenna. Nam climbs the coconut tree (W/S), turns for a steady signal
+    /// (A/D) and ties the antenna (Space), his legs solved against the trunk; Esc backs out safely.
+    /// </summary>
     public sealed partial class Map02ChapterDirector
     {
         GameObject dayTwoRoute,scoutTracks,wireCoil,carriedWire,antennaMast,antennaLadder,installedCable;

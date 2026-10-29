@@ -5,6 +5,10 @@ using UnityEngine.AI;
 
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// Night 2's patrol: its suspicion and shouted lines, the observation checkpoint at the bridge, what hides
+    /// Nam from it, and the failure when he is shot.
+    /// </summary>
     public sealed partial class Map02ChapterDirector
     {
         public const string NightPatrolGroup="night2_patrol";

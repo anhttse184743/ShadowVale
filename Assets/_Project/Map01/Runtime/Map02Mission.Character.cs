@@ -10,6 +10,10 @@ using UnityEngine.InputSystem;
 
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// Nam as a character in Map 2: the bag shared with Map 1, weapons and the spare rifle when a gun breaks,
+    /// items on the ground, interactions, noise, the character panel, and their save and restore.
+    /// </summary>
     public sealed partial class Map02Mission
     {
         public Map01Inventory Bag {get;private set;}
