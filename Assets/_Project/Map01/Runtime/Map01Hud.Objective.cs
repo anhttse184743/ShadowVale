@@ -57,16 +57,18 @@ namespace ShadowVale.Map01
             GUI.color = new Color(previousColor.r, previousColor.g, previousColor.b, previousColor.a * reveal);
             // Sized to the text: the longer objectives wrap to three lines and used to be cut off.
             var mapTwo=mission.MapTwo;
-            string text = mapTwo!=null?mapTwo.Chapter.TrackedTask?.title??mapTwo.ObjectiveText:objectives?.ObjectiveText ?? "";
+            string text = mapTwo!=null?mapTwo.TrackedTaskTitle??mapTwo.ObjectiveText:objectives?.ObjectiveText ?? "";
             float textHeight = objectiveBody.CalcHeight(new GUIContent(text), 292);
-            bool guiding = (mapTwo!=null?mapTwo.TrackedObjective!=null:guide!=null&&guide.HasTarget) && !mission.Stopped;
+            var objectiveAt = Vector3.zero;
+            bool guiding = (mapTwo!=null?mapTwo.TrackedObjective(out _,out objectiveAt,out _):guide!=null&&guide.HasTarget) && !mission.Stopped;
             // Point 3 (Map01C3Mission): the optional objectives once the order is given, and the camp's state nearby.
             var c3 = GetComponent<Map01C3Mission>();
             var optional = c3 != null && quest != null && quest.Stage == Map01Quest.BossStage ? c3.OptionalObjectives().ToList() : null;
             string c3Status = c3 != null ? c3.StatusLine() : null;
             float c3Height = (optional != null ? optional.Count * 22 + 8 : 0) + (c3Status != null ? 28 : 0);
-            string notes = mapTwo!=null?mapTwo.Chapter.Instruction:ObjectiveNotes();
-            if(mapTwo?.Chapter.Companion!=null){var person=mapTwo.Chapter.Companion;float distance=Vector3.Distance(mapTwo.Player.position,person.transform.position);notes+="\n"+person.role+" · "+distance.ToString("0")+" m · Đang theo sau";}
+            string notes = mapTwo!=null?mapTwo.Instruction:ObjectiveNotes();
+            string role=null;var person=mapTwo?.Companion(out role);
+            if(person!=null){float distance=Vector3.Distance(mapTwo.Player.position,person.position);notes+="\n"+role+" · "+distance.ToString("0")+" m · Đang theo sau";}
             float notesHeight = string.IsNullOrEmpty(notes) ? 0 : objectiveSmall.CalcHeight(new GUIContent(notes), 292) + 18;
             float escortHeight = ShowObjectiveEscortHealth ? 45 : 0;
             float height = Mathf.Max(152, 258 + textHeight + (guiding ? 32 : 0) + c3Height + notesHeight + escortHeight + 14 - 186);
@@ -80,7 +82,7 @@ namespace ShadowVale.Map01
                 float y = 258 + textHeight + 6;
                 HudDiamond(new Vector2(58, y + 12), 7);
                 string label=mapTwo!=null?"Mục tiêu đã ghim":guide.Label;
-                float distance=mapTwo!=null?Vector3.Distance(mapTwo.Player.position,mapTwo.TrackedObjective.transform.position):guide.Distance;
+                float distance=mapTwo!=null?Vector3.Distance(mapTwo.Player.position,objectiveAt):guide.Distance;
                 ShadowLabel(new Rect(72, y, 276, 26), $"{label}  ·  {distance:0} m", objectiveGuide);
             }
             float c3y = 258 + textHeight + (guiding ? 32 : 0) + 6;

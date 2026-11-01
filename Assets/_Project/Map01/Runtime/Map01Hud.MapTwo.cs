@@ -17,7 +17,7 @@ namespace ShadowVale.Map01
                 if(m.Panel==1)
                 {
                     DrawInventory(width);
-                    if(m.Chapter.State.phase<=1)GUI.Label(new Rect(28,height-75,width-56,60),m.Chapter.ReservedMedicine,hudSmall);
+                    if(m.Phase<=1)GUI.Label(new Rect(28,height-75,width-56,60),m.ReservedMedicine,hudSmall);
                     if(inventory.NearWorkbench()&&GUI.Button(new Rect(28,100,250,50),"CHẾ TẠO / SỬA SÚNG",hudKey))mission.SetBenchOpen(true);
                     DrawHudFeedback(width,height);return;
                 }
@@ -34,29 +34,27 @@ namespace ShadowVale.Map01
                     else
                     {
                         var plate=new Rect(width/2-440,70,880,height-140);HudPanel(plate);
-                        GUI.Label(new Rect(plate.x+24,plate.y+16,800,50),"NHIỆM VỤ · "+Map02ChapterState.PhaseName(m.Chapter.State.phase),hudHeading);
+                        GUI.Label(new Rect(plate.x+24,plate.y+16,800,50),"NHIỆM VỤ · "+m.PhaseName,hudHeading);
                         m.DrawCharacterObjectives(new Rect(plate.x+24,plate.y+85,plate.width-48,plate.height-130));
                     }
                     return;
                 }
-                if(m.Chapter.Binoculars)DrawMapTwoBinoculars(width,height);
+                if(m.BinocularsUp)DrawMapTwoBinoculars(width,height);
                 DrawCombatHud(width,height);DrawPickups(width);DrawStoneAim(width,height);
                 var map=new Rect(40,30,221,221);m.DrawCharacterMap(map,true,hudSmall);
                 HudFill(new Rect(map.center.x-95,map.yMax+9,190,27),new Color(.02f,.03f,.02f,.5f));
                 GUI.Label(new Rect(map.center.x-95,map.yMax+9,190,27),"M  MỞ BẢN ĐỒ",hudKey);
-                if(mapTwoObjective!=m.Chapter.TrackedTask?.id){mapTwoObjective=m.Chapter.TrackedTask?.id;ObjectiveShown=true;objectiveSecondsLeft=5;}
+                if(mapTwoObjective!=m.TrackedTaskId){mapTwoObjective=m.TrackedTaskId;ObjectiveShown=true;objectiveSecondsLeft=5;}
                 DrawObjective();
-                GUI.Label(new Rect(28,305,Mathf.Min(700,width-60),45),Map02ChapterState.PhaseName(m.Chapter.State.phase),hudSmall);
-                var goal=m.TrackedObjective;
-                if(goal!=null)
+                GUI.Label(new Rect(28,305,Mathf.Min(700,width-60),45),m.PhaseName,hudSmall);
+                if(m.TrackedObjective(out var point,out _,out var prompt))
                 {
-                    var point=goal.standPoint!=null?goal.standPoint.position:goal.transform.position;
                     var forward=Vector3.ProjectOnPlane(m.GameCamera.transform.forward,Vector3.up);
                     var toward=Vector3.ProjectOnPlane(m.CharacterSteerPoint-m.Player.position,Vector3.up);
                     var pivot=new Vector2(width/2-210,56);var prior=GUI.matrix;
-                    GUI.matrix=Map02Navigation.RotateUi(prior,pivot,Vector3.SignedAngle(forward,toward,Vector3.up));
+                    GUI.matrix=RotateUi(prior,pivot,Vector3.SignedAngle(forward,toward,Vector3.up));
                     GUI.DrawTexture(new Rect(pivot.x-18,pivot.y-18,36,36),compassArrow);GUI.matrix=prior;
-                    ShadowLabel(new Rect(pivot.x+30,35,460,60),goal.prompt+" · "+Vector3.Distance(m.Player.position,point).ToString("0")+" m",hudSmall);
+                    ShadowLabel(new Rect(pivot.x+30,35,460,60),prompt+" · "+Vector3.Distance(m.Player.position,point).ToString("0")+" m",hudSmall);
                     var at=m.GameCamera.WorldToViewportPoint(point+Vector3.up*1.6f);
                     if(at.z>0&&at.x>.12f&&at.x<.88f&&at.y>.18f&&at.y<.8f)m.DrawCharacterPin(new Vector2(at.x*width,(1-at.y)*height));
                 }

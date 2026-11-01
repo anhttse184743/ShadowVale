@@ -5,7 +5,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $auditOutput = 'D:\DO_AN_GAME\ShadowVale\Docs\Reviews\Map02_Audit_20261026'
-$auditArguments = @('-batchmode', '-projectPath', ('"' + $auditProject + '"'), '-runTests', '-testPlatform', 'EditMode', '-assemblyNames', 'ShadowVale.Map01.Tests', '-testFilter', $auditFilter, '-testResults', ('"' + $auditOutput + '\' + $auditName + '.xml"'), '-logFile', ('"' + $auditOutput + '\' + $auditName + '.log"'))
+$auditArguments = @('-batchmode', '-projectPath', ('"' + $auditProject + '"'), '-runTests', '-testPlatform', 'EditMode', '-assemblyNames', 'ShadowVale.Map02.Tests', '-testFilter', $auditFilter, '-testResults', ('"' + $auditOutput + '\' + $auditName + '.xml"'), '-logFile', ('"' + $auditOutput + '\' + $auditName + '.log"'))
 $auditProcess = Start-Process -FilePath 'C:\Program Files\Unity\Hub\Editor\6000.3.24f1\Editor\Unity.exe' -ArgumentList $auditArguments -WindowStyle Hidden -PassThru
 Write-Output ('Audit Unity PID: ' + $auditProcess.Id)
 $auditProcess.WaitForExit()

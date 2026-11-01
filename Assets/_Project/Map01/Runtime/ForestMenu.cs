@@ -19,7 +19,8 @@ namespace ShadowVale.Map01
         private TutorialDirector tutorial;
         private bool choosingTutorial;
         private NewGameIntro intro;
-        private Map02Mission map2;
+        private Component map2Owner;
+        private IMapTwoHost map2 => MapTwoBridge.Host(map2Owner);
         private bool HasGameplay => mission != null || map2 != null;
         private bool GameplayPaused => mission != null ? mission.Paused : map2 != null && map2.Paused;
         private void PauseGameplay(bool value) { if(mission!=null)mission.SetPaused(value);else map2?.SetPaused(value); }
@@ -58,7 +59,7 @@ namespace ShadowVale.Map01
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static void EnsureCreated()
         {
-            if (FindFirstObjectByType<Map02Exploration>() != null && FindFirstObjectByType<Map02Mission>() == null) return;
+            if (MapTwoBridge.ExplorationOpen?.Invoke() == true && MapTwoBridge.FindMission?.Invoke() == null) return;
             if (instance != null) return;
             var existing = FindFirstObjectByType<ForestMenu>();
             if (existing != null) { existing.OnEnable(); return; }
@@ -91,8 +92,8 @@ namespace ShadowVale.Map01
         {
             intro?.Cancel();
             CancelInvoke(nameof(GoToTitle)); // A Boot timer must not redirect a scene explicitly loaded afterwards.
-            map2=FindFirstObjectByType<Map02Mission>();
-            exploringMap2 = FindFirstObjectByType<Map02Exploration>() != null && map2 == null;
+            map2Owner=MapTwoBridge.FindMission?.Invoke();
+            exploringMap2 = MapTwoBridge.ExplorationOpen?.Invoke() == true && map2 == null;
             if (exploringMap2) {
                 visible = false; Time.timeScale = 1; return;
             }
@@ -173,7 +174,7 @@ namespace ShadowVale.Map01
         private void OpenSlots(bool save) { browser = true; saving = save; message = null; Refresh(); selected = save ? 1 : Mathf.Max(0, latest); }
         private void StartGame(int slot)
         {
-            try { loading = true;var entry=slot>=0?ForestSaveSlots.Read(slot):null;if(entry?.sceneName=="Map 2")Map02Mission.BeginGame(entry);else Map01SaveSystem.BeginGame(slot); }
+            try { loading = true;var entry=slot>=0?ForestSaveSlots.Read(slot):null;if(entry?.sceneName=="Map 2")MapTwoBridge.BeginGame(entry);else Map01SaveSystem.BeginGame(slot); }
             catch (Exception e) { loading = false; message = "Không thể mở bản lưu: " + e.Message; }
         }
         // The map owns the real-time briefing; loading an existing save never requests it.

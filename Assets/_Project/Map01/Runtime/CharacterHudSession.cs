@@ -10,11 +10,13 @@ namespace ShadowVale.Map01
     public sealed class CharacterHudSession
     {
         public readonly Map01Mission MapOne;
-        public readonly Map02Mission MapTwo;
-        CharacterHudSession(GameObject owner){MapOne=owner.GetComponent<Map01Mission>();MapTwo=owner.GetComponent<Map02Mission>();}
+        readonly Component mapTwo;
+        /// <summary>Map 2's mission (through <see cref="IMapTwoHost"/>), null in Map 1 and once it is destroyed.</summary>
+        public IMapTwoHost MapTwo=>MapTwoBridge.Host(mapTwo);
+        CharacterHudSession(GameObject owner){MapOne=owner.GetComponent<Map01Mission>();mapTwo=MapTwoBridge.MissionOn(owner);}
         public static CharacterHudSession For(GameObject owner)=>new CharacterHudSession(owner);
         public bool IsInitialized=>MapOne!=null?MapOne.IsInitialized:MapTwo?.Ready==true;
-        public bool Stopped=>MapOne!=null?MapOne.Stopped:MapTwo==null||MapTwo.Paused||MapTwo.Cinematic||MapTwo.World.story.failed||ModernHealth.IsDead;
+        public bool Stopped=>MapOne!=null?MapOne.Stopped:MapTwo==null||MapTwo.Paused||MapTwo.Cinematic||MapTwo.Failed||ModernHealth.IsDead;
         public bool Cinematic=>MapOne!=null?MapOne.Cinematic:MapTwo==null||MapTwo.Cinematic;
         public bool InventoryOpen=>MapOne!=null?MapOne.InventoryOpen:MapTwo.Panel==1;
         public bool MapOpen=>MapOne!=null?MapOne.MapOpen:MapTwo.Panel==3;
@@ -22,9 +24,9 @@ namespace ShadowVale.Map01
         public Transform player=>MapOne!=null?MapOne.player:MapTwo!=null?MapTwo.Player:null;
         public Camera gameCamera=>MapOne!=null?MapOne.gameCamera:MapTwo!=null?MapTwo.GameCamera:null;
         public Health ModernHealth=>MapOne!=null?MapOne.ModernHealth:player?.GetComponent<Health>();
-        public IBinoculars Binoculars=>MapOne!=null?MapOne.Binoculars:MapTwo!=null?MapTwo.Chapter:null;
+        public IBinoculars Binoculars=>MapOne!=null?MapOne.Binoculars:MapTwo!=null?MapTwo.Binoculars:null;
         public bool CameraInputEnabled=>MapOne!=null?MapOne.CameraInputEnabled:MapTwo!=null&&!MapTwo.InputBlocked;
-        public T GetComponent<T>() where T:Component=>MapOne!=null?MapOne.GetComponent<T>():MapTwo!=null?MapTwo.GetComponent<T>():null;
+        public T GetComponent<T>() where T:Component=>MapOne!=null?MapOne.GetComponent<T>():MapTwo!=null?MapTwo.gameObject.GetComponent<T>():null;
         public PlayerCombat ModernCombat=>MapOne!=null?MapOne.ModernCombat:player?.GetComponent<PlayerCombat>();
         public PlayerSkills Skills=>MapOne!=null?MapOne.Skills:player?.GetComponent<PlayerSkills>();
         public ForestSettings Settings=>MapOne!=null?MapOne.Settings:MapTwo?.CharacterSettings;
@@ -35,8 +37,8 @@ namespace ShadowVale.Map01
         public bool Hidden=>MapOne!=null?MapOne.Hidden:player!=null&&Map01Smoke.Blocks(player.position+Vector3.up,player.position+Vector3.up);
         public string Dialogue=>MapOne!=null?MapOne.Dialogue:MapTwo.HudMessage;
         public float DialogueUntil=>MapOne!=null?MapOne.DialogueUntil:Time.time+(MapTwo.HudMessageVisible?1:0);
-        public Vector2 mapMin=>MapOne!=null?MapOne.mapMin:Vector2.one*-Map02Navigation.HalfSize;
-        public Vector2 mapMax=>MapOne!=null?MapOne.mapMax:Vector2.one*Map02Navigation.HalfSize;
+        public Vector2 mapMin=>MapOne!=null?MapOne.mapMin:Vector2.one*-MapTwoBridge.MapHalfSize;
+        public Vector2 mapMax=>MapOne!=null?MapOne.mapMax:Vector2.one*MapTwoBridge.MapHalfSize;
         public Map01EnemyController[] Enemies=>MapOne!=null?MapOne.Enemies:System.Array.Empty<Map01EnemyController>();
         public List<ForestPoint> Interactables=>MapOne!=null?MapOne.Interactables:MapTwo.CharacterWorkpoints;
         public void Say(string text,float seconds=4){if(MapOne!=null)MapOne.Say(text,seconds);else MapTwo?.Say(text);}

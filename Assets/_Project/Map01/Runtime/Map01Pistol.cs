@@ -91,7 +91,7 @@ namespace ShadowVale.Map01
             clock+=Time.deltaTime;
             bool levelled=combat.IsAiming||Time.time-shotAt<.6f;
             aim=Mathf.MoveTowards(aim,levelled?1:0,Time.deltaTime/.35f);
-            bool assisted=mission.MapTwo?.Chapter?.ScoutEscortActive==true;
+            bool assisted=mission.MapTwo?.ScoutEscortActive==true;
             if(combat.IsReloading&&assisted)SourceFrame=aim>=.5f?153+Mathf.Repeat(clock*60,99):1+Mathf.Repeat(clock*60,79);
             else if(combat.IsReloading)SourceFrame=Mathf.Lerp(301,492,combat.ReloadProgress);
             else if(wasReloading)SourceFrame=492;

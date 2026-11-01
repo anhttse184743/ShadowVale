@@ -26,17 +26,18 @@ namespace ShadowVale.Map01.Tests
             Assert.IsNotNull(m.Player,"Preview lost its player in scene "+UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
             var bag=m.Bag;
             Assert.NotNull(bag);var combat=m.Player.GetComponent<PlayerCombat>();Assert.NotNull(combat);
+            int previewRepairKits=bag.Count("repair_kit"),previewPistolRounds=bag.Count("ammo_pistol");
             bag.Receive("cloth",8);bag.Receive("herb",4);bag.Receive("repair_kit",2);bag.Receive("pistol_k54",1);bag.Receive("ammo_pistol",12);
 
             Assert.IsTrue(bag.Split(FindCell(bag,"cloth")));Assert.IsTrue(bag.Move(FindCell(bag,"cloth"),23));var layout=bag.CaptureLayout();
             bag.Wear(Map01Inventory.Slot.Primary,bag.MaxCondition(bag.SlotItem(Map01Inventory.Slot.Primary))*.7f);
             float worn=bag.Condition(Map01Inventory.Slot.Primary);Assert.IsTrue(bag.FieldRepair(Map01Inventory.Gun.InSlot(Map01Inventory.Slot.Primary)),bag.FieldRepairRefusal(Map01Inventory.Gun.InSlot(Map01Inventory.Slot.Primary)));
-            Assert.AreEqual(1,bag.Count("repair_kit"));Assert.Greater(bag.Condition(Map01Inventory.Slot.Primary),worn);
+            Assert.AreEqual(previewRepairKits+1,bag.Count("repair_kit"),"One field repair consumes one kit, including when preview already supplied kits.");Assert.Greater(bag.Condition(Map01Inventory.Slot.Primary),worn);
             Assert.IsTrue(bag.Draw(Map01Inventory.Slot.Pistol));combat.RestoreMagazine(3);
             var snapshot=Map02Mission.Parse(JsonUtility.ToJson(m.Capture()));snapshot.stamina=7.5f;
             var far=m.Chapter.Sites["dock"].position;m.Exploration.Reveal(far,14);snapshot.exploration=m.Exploration.Capture();
             float condition=bag.Condition(Map01Inventory.Slot.Primary);m.Restore(snapshot);
-            Assert.AreEqual(WeaponKind.Pistol,combat.EquippedKind);Assert.AreEqual(3,combat.RoundsInMagazine);Assert.AreEqual(12,bag.Count("ammo_pistol"));
+            Assert.AreEqual(WeaponKind.Pistol,combat.EquippedKind);Assert.AreEqual(3,combat.RoundsInMagazine);Assert.AreEqual(previewPistolRounds+12,bag.Count("ammo_pistol"));
             Assert.AreEqual(7.5f,m.Stamina);Assert.AreEqual(condition,bag.Condition(Map01Inventory.Slot.Primary));Assert.AreEqual(layout.ids[23],bag.Cell(23)?.id);
             Assert.IsTrue(m.IsExplored(far));Assert.IsFalse(m.IsExplored(new Vector3(105,0,105)));
             int before=bag.Count("cloth");Assert.IsTrue(bag.Drop(FindCell(bag,"cloth"),1));Assert.AreEqual(before-1,bag.Count("cloth"));
