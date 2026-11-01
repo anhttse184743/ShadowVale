@@ -3,6 +3,10 @@ using ShadowVale.Gameplay.Combat;
 
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// The combat HUD: the four-slot hotbar (Map01Inventory.Bag: 1 long gun, 2 pistol, 3 knife, 4 stones), the
+    /// weapon icons and labels, and the broken-gun warning.
+    /// </summary>
     public sealed partial class Map01Hud
     {
         private Texture2D combatIcons, healthDroplet;

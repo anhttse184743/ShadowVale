@@ -1,6 +1,5 @@
 using System;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ShadowVale.Networking;
@@ -18,50 +17,38 @@ namespace ShadowVale.Telemetry
     }
 
     /// <summary>
-    /// Sends queued sessions to <c>POST /api/v1/telemetry/sessions</c>. Off the main thread, never
-    /// throws, never blocks gameplay. Each session goes with an <c>Idempotency-Key</c> header equal to
-    /// its id, so a retry after a lost response does not store it twice.
-    /// Only 400/413/422 reject a batch; any other failure, 404 included (endpoint not deployed yet),
-    /// leaves it queued.
+    /// Sends queued sessions to the web backend: <c>PUT /api/game/sessions/{id}</c> with the game key, the
+    /// body being the session's <c>SessionUpload</c> (<see cref="SessionUploadMapper"/>). Off the main thread,
+    /// never throws, never blocks gameplay. The backend stores events and plan rows by their ids, so a retry
+    /// after a lost response stores nothing twice. 400/413/422 set a batch aside; anything else (offline,
+    /// no key, 401, 404, 429, 5xx) leaves it queued. A file still in the pre-backend format (snake_case,
+    /// no installId) can never be accepted and is set aside without being sent.
     /// </summary>
     public sealed class TelemetryUploader
     {
-        private static readonly HttpClient Http = new HttpClient { Timeout = Timeout.InfiniteTimeSpan };
-
-        private readonly string _url;
+        private readonly BackendClient _client;
         private readonly TimeSpan _timeout;
 
-        public TelemetryUploader(string apiBaseUrl, TimeSpan? timeout = null)
+        public TelemetryUploader(string apiBaseUrl, TimeSpan? timeout = null, string gameKey = null)
         {
-            _url = Endpoints.TelemetrySessions(apiBaseUrl);
+            _client = new BackendClient(apiBaseUrl, gameKey);
             _timeout = timeout ?? TimeSpan.FromSeconds(10);
         }
 
         public async Task<UploadOutcome> SendAsync(string sessionId, string json, CancellationToken ct = default)
         {
-            using var deadline = CancellationTokenSource.CreateLinkedTokenSource(ct);
-            deadline.CancelAfter(_timeout);
-            try
-            {
-                using var request = new HttpRequestMessage(HttpMethod.Post, _url)
-                {
-                    Content = new StringContent(json, Encoding.UTF8, "application/json"),
-                };
-                request.Headers.TryAddWithoutValidation("Idempotency-Key", sessionId);
-                using var response = await Http.SendAsync(request, deadline.Token).ConfigureAwait(false);
-                return Classify((int)response.StatusCode);
-            }
-            catch (OperationCanceledException) { return UploadOutcome.RetryLater; }
-            catch (HttpRequestException) { return UploadOutcome.RetryLater; }
-            catch (Exception) { return UploadOutcome.RetryLater; } // Socket/IO errors surface as several types across runtimes.
+            if (!json.Contains("\"installId\"")) return UploadOutcome.Rejected;
+            var response = await _client.SendJsonAsync(HttpMethod.Put, Endpoints.Session(_client.ApiBaseUrl, sessionId), json, _timeout, ct)
+                .ConfigureAwait(false);
+            return response.Status == 0 ? UploadOutcome.RetryLater : Classify(response.Status);
         }
 
-        public static UploadOutcome Classify(int status)
+        public static UploadOutcome Classify(int status) => BackendClient.Classify(status) switch
         {
-            if (status >= 200 && status < 300 || status == 409) return UploadOutcome.Sent;
-            if (status == 400 || status == 413 || status == 422) return UploadOutcome.Rejected;
-            return UploadOutcome.RetryLater;
-        }
+            BackendOutcome.Ok => UploadOutcome.Sent,
+            BackendOutcome.Rejected => UploadOutcome.Rejected,
+            _ => UploadOutcome.RetryLater,
+        };
 
         /// <summary>
         /// Sends every queued session, oldest first, and stops at the first one that has to wait (the

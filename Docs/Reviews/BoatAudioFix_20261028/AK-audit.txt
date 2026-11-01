@@ -1,0 +1,12 @@
+Map1-Approach guns=1 root=(-0.68, 1.48, 87.00)
+Map1-Boarding guns=1 root=(-0.55, 1.42, 87.00)
+Map1-Seating guns=1 root=(1.00, 0.14, 87.00)
+Map1-Departing guns=1 root=(1.55, -0.10, 87.04)
+Map1-Complete guns=1 root=(-1.60, -0.12, 96.50)
+Map2-Loading guns=1 root=(-1.60, -0.12, 96.50)
+Map2-Approaching guns=1 root=(-10.15, 0.11, -93.00)
+Map2-Mooring guns=1 root=(-11.35, 0.11, -84.59)
+Map2-Disembarking guns=1 root=(-11.35, 0.11, -84.59)
+Map2-Disembarking-C1 guns=1 root=(-13.25, 1.25, -86.33)
+samples=3399
+replacementBodySamples=621

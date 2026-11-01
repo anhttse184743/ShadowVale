@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="6" result="Failed(Child)" total="6" passed="4" failed="2" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-28 05:46:55Z" end-time="2026-10-28 05:47:16Z" duration="20.40319">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="879" result="Failed" site="Child" start-time="2026-10-28 05:46:55Z" end-time="2026-10-28 05:47:16Z" duration="20.403190" total="6" passed="4" failed="2" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1839" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/Capstone/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="656" result="Failed" site="Child" start-time="2026-10-28 05:47:09Z" end-time="2026-10-28 05:47:16Z" duration="6.331420" total="6" passed="4" failed="2" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="25576" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+      <test-suite type="TestSuite" id="1840" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="656" result="Failed" site="Child" start-time="2026-10-28 05:47:10Z" end-time="2026-10-28 05:47:16Z" duration="5.562098" total="6" passed="4" failed="2" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1841" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="656" result="Failed" site="Child" start-time="2026-10-28 05:47:12Z" end-time="2026-10-28 05:47:16Z" duration="3.295977" total="6" passed="4" failed="2" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="SetUpFixture" id="1747" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="656" result="Failed" site="Child" start-time="2026-10-28 05:47:13Z" end-time="2026-10-28 05:47:16Z" duration="3.229267" total="6" passed="4" failed="2" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1025" name="BoatAudioRegressionTests" fullname="ShadowVale.Map01.Tests.BoatAudioRegressionTests" classname="ShadowVale.Map01.Tests.BoatAudioRegressionTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-10-28 05:42:17Z" end-time="2026-10-28 05:45:19Z" duration="181.540972" total="3" passed="1" failed="2" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1027" name="MosinStaysSingleAcrossNaturalBoatAndReplacementBody" fullname="ShadowVale.Map01.Tests.BoatAudioRegressionTests.MosinStaysSingleAcrossNaturalBoatAndReplacementBody" methodname="MosinStaysSingleAcrossNaturalBoatAndReplacementBody" classname="ShadowVale.Map01.Tests.BoatAudioRegressionTests" runstate="Runnable" seed="253490694" result="Failed" start-time="2026-10-28 05:38:16Z" end-time="2026-10-28 05:40:59Z" duration="162.360632" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="480000" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: less than 162.328491f
+  But was:  162.328842f
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.BoatAudioRegressionTests+<Run>d__4.MoveNext () [0x000a6] in G:\game\Capstone\ShadowVale\Assets\_Project\Map01\Tests\BoatAudioRegressionTests.cs:22
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1028" name="QuietSingleWaterBedDucksUnderDialogueAndPauses" fullname="ShadowVale.Map01.Tests.BoatAudioRegressionTests.QuietSingleWaterBedDucksUnderDialogueAndPauses" methodname="QuietSingleWaterBedDucksUnderDialogueAndPauses" classname="ShadowVale.Map01.Tests.BoatAudioRegressionTests" runstate="Runnable" seed="1453929702" result="Passed" start-time="2026-10-28 05:40:59Z" end-time="2026-10-28 05:42:23Z" duration="84.166784" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+              <test-case id="1026" name="RifleStaysSingleAcrossNaturalBoatAndReplacementBody" fullname="ShadowVale.Map01.Tests.BoatAudioRegressionTests.RifleStaysSingleAcrossNaturalBoatAndReplacementBody" methodname="RifleStaysSingleAcrossNaturalBoatAndReplacementBody" classname="ShadowVale.Map01.Tests.BoatAudioRegressionTests" runstate="Runnable" seed="1937103642" result="Failed" start-time="2026-10-28 05:42:23Z" end-time="2026-10-28 05:45:19Z" duration="175.931367" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="480000" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected: less than 175.922211f
+  But was:  175.922302f
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.BoatAudioRegressionTests+<Run>d__4.MoveNext () [0x000a6] in G:\game\Capstone\ShadowVale\Assets\_Project\Map01\Tests\BoatAudioRegressionTests.cs:22
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1122" name="ExtractionTests" fullname="ShadowVale.Map01.Tests.ExtractionTests" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-28 05:46:04Z" end-time="2026-10-28 05:46:41Z" duration="36.930834" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1125" name="SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot" fullname="ShadowVale.Map01.Tests.ExtractionTests.SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot" methodname="SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" seed="238991147" result="Passed" start-time="2026-10-28 05:45:19Z" end-time="2026-10-28 05:46:41Z" duration="81.719879" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1398" name="Map02DayOneAudioTests" fullname="ShadowVale.Map01.Tests.Map02DayOneAudioTests" classname="ShadowVale.Map01.Tests.Map02DayOneAudioTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-28 05:47:13Z" end-time="2026-10-28 05:47:16Z" duration="3.125087" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1400" name="AmbienceFollowsThePhaseAndSceneSoundStopsWithTheScene" fullname="ShadowVale.Map01.Tests.Map02DayOneAudioTests.AmbienceFollowsThePhaseAndSceneSoundStopsWithTheScene" methodname="AmbienceFollowsThePhaseAndSceneSoundStopsWithTheScene" classname="ShadowVale.Map01.Tests.Map02DayOneAudioTests" runstate="Runnable" seed="838843445" result="Passed" start-time="2026-10-28 05:46:41Z" end-time="2026-10-28 05:47:15Z" duration="34.544097" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+              <test-case id="1399" name="EverySoundIsACreditedRecording" fullname="ShadowVale.Map01.Tests.Map02DayOneAudioTests.EverySoundIsACreditedRecording" methodname="EverySoundIsACreditedRecording" classname="ShadowVale.Map01.Tests.Map02DayOneAudioTests" runstate="Runnable" seed="852166466" result="Passed" start-time="2026-10-28 05:47:15Z" end-time="2026-10-28 05:47:16Z" duration="0.497901" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: Logs/Map02Chapter/latest-full-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

@@ -91,13 +91,16 @@ namespace ShadowVale.Map01
 
         public const string ResourcePath = "Loot/Map01Loot";
         private static Map01Loot cached;
-        /// <summary>The data, read once.</summary>
+        private static string cachedVersion;
+        /// <summary>The data, read once per content version (tuned by the published one, PublishedContent).</summary>
         public static Map01Loot Load()
         {
-            if (cached != null) return cached;
+            var version = ShadowVale.Content.ContentService.TryGetPublished(out var published) ? published.ContentVersionId : null;
+            if (cached != null && cachedVersion == version) return cached;
             var asset = Resources.Load<TextAsset>(ResourcePath);
             if (asset == null) throw new InvalidOperationException("Missing " + ResourcePath + ".json");
-            return cached = Parse(asset.text);
+            cachedVersion = version;
+            return cached = PublishedContent.Apply(Parse(asset.text));
         }
         public static Map01Loot Parse(string json)
         {

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="2" result="Passed" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-28 10:44:43Z" end-time="2026-10-28 10:45:05Z" duration="21.8849316">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="881" result="Passed" start-time="2026-10-28 10:44:43Z" end-time="2026-10-28 10:45:05Z" duration="21.884932" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1842" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/Capstone/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="658" result="Passed" start-time="2026-10-28 10:44:43Z" end-time="2026-10-28 10:45:05Z" duration="21.451653" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="19068" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1843" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="658" result="Passed" start-time="2026-10-28 10:44:43Z" end-time="2026-10-28 10:45:05Z" duration="21.425562" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1844" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="658" result="Passed" start-time="2026-10-28 10:44:43Z" end-time="2026-10-28 10:45:05Z" duration="21.402240" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1750" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="658" result="Passed" start-time="2026-10-28 10:44:43Z" end-time="2026-10-28 10:45:05Z" duration="21.378430" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1029" name="BoatMotionHullTests" fullname="ShadowVale.Map01.Tests.BoatMotionHullTests" classname="ShadowVale.Map01.Tests.BoatMotionHullTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-28 10:43:19Z" end-time="2026-10-28 10:43:19Z" duration="0.060768" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1030" name="RecordedReviewHasNoLargeWristFlips" fullname="ShadowVale.Map01.Tests.BoatMotionHullTests.RecordedReviewHasNoLargeWristFlips" methodname="RecordedReviewHasNoLargeWristFlips" classname="ShadowVale.Map01.Tests.BoatMotionHullTests" runstate="Runnable" seed="753305" result="Passed" start-time="2026-10-28 10:43:19Z" end-time="2026-10-28 10:43:19Z" duration="0.039210" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1125" name="ExtractionTests" fullname="ShadowVale.Map01.Tests.ExtractionTests" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-28 10:44:43Z" end-time="2026-10-28 10:45:05Z" duration="21.291744" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1127" name="RadioSkipAndExtractionCheckpointAreIdempotent" fullname="ShadowVale.Map01.Tests.ExtractionTests.RadioSkipAndExtractionCheckpointAreIdempotent" methodname="RadioSkipAndExtractionCheckpointAreIdempotent" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" seed="1309631401" result="Passed" start-time="2026-10-28 10:43:19Z" end-time="2026-10-28 10:45:05Z" duration="105.534378" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/dangk/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

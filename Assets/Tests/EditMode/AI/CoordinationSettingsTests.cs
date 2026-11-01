@@ -44,7 +44,7 @@ namespace ShadowVale.Tests.EditMode.AI
             Assert.AreEqual(d.GroupMergeRange, s.GroupMergeRange);
             Assert.AreEqual(d.SquadAlertRange, s.SquadAlertRange);
             Assert.AreEqual(d.ReinforcementRange, s.ReinforcementRange);
-            Assert.AreEqual("qiea", s.Variant, "The best solver of exp-v1 (O5), run by the sidecar; greedy is the fallback.");
+            Assert.AreEqual("tabu", s.Variant, "The best solver of exp-v2 (O5), run by the sidecar; greedy is the fallback.");
         }
 
         [Test]

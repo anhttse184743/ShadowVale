@@ -34,10 +34,12 @@ namespace ShadowVale.Content
 
             foreach (var w in b.Weapons)
             {
-                if (!items.Contains(w.AmmoType)) errors.Add($"weapons[{w.Id}].ammo_type '{w.AmmoType}' is not an item");
                 if (w.Damage <= 0) errors.Add($"weapons[{w.Id}].damage must be > 0");
-                if (w.MagazineSize <= 0) errors.Add($"weapons[{w.Id}].magazine_size must be > 0");
                 if (w.DurabilityMax <= 0) errors.Add($"weapons[{w.Id}].durability_max must be > 0");
+                // Melee weapons (the knife) have no ammo and no magazine
+                if (w.Class == "melee") continue;
+                if (!items.Contains(w.AmmoType)) errors.Add($"weapons[{w.Id}].ammo_type '{w.AmmoType}' is not an item");
+                if (w.MagazineSize <= 0) errors.Add($"weapons[{w.Id}].magazine_size must be > 0");
             }
 
             foreach (var e in b.EnemyArchetypes)
@@ -60,7 +62,8 @@ namespace ShadowVale.Content
 
             foreach (var t in b.LootTables)
             {
-                if (t.Rolls <= 0) errors.Add($"loot_tables[{t.Id}].rolls must be > 0");
+                // 0 rolls: a one-off cache that only gives its guaranteed (tier 5) entries
+                if (t.Rolls < 0 || t.RollsMin < 0 || t.RollsMin > t.Rolls) errors.Add($"loot_tables[{t.Id}].rolls must be ≥ 0 and ≥ rolls_min");
                 if (t.Entries.Count == 0) errors.Add($"loot_tables[{t.Id}] has no entries");
                 foreach (var en in t.Entries)
                 {

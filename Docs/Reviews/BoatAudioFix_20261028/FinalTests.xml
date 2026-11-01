@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="5" result="Passed" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-28 05:57:20Z" end-time="2026-10-28 05:57:30Z" duration="10.5243902">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="879" result="Passed" start-time="2026-10-28 05:57:20Z" end-time="2026-10-28 05:57:30Z" duration="10.524390" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1839" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/Capstone/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="656" result="Passed" start-time="2026-10-28 05:57:25Z" end-time="2026-10-28 05:57:30Z" duration="5.051978" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="22944" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+      <test-suite type="TestSuite" id="1840" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="656" result="Passed" start-time="2026-10-28 05:57:26Z" end-time="2026-10-28 05:57:30Z" duration="4.582761" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1841" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="656" result="Passed" start-time="2026-10-28 05:57:27Z" end-time="2026-10-28 05:57:30Z" duration="2.858444" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1747" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="656" result="Passed" start-time="2026-10-28 05:57:28Z" end-time="2026-10-28 05:57:30Z" duration="2.734308" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1025" name="BoatAudioRegressionTests" fullname="ShadowVale.Map01.Tests.BoatAudioRegressionTests" classname="ShadowVale.Map01.Tests.BoatAudioRegressionTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-28 05:54:37Z" end-time="2026-10-28 05:56:55Z" duration="137.721457" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1027" name="MosinStaysSingleAcrossNaturalBoatAndReplacementBody" fullname="ShadowVale.Map01.Tests.BoatAudioRegressionTests.MosinStaysSingleAcrossNaturalBoatAndReplacementBody" methodname="MosinStaysSingleAcrossNaturalBoatAndReplacementBody" classname="ShadowVale.Map01.Tests.BoatAudioRegressionTests" runstate="Runnable" seed="266133356" result="Passed" start-time="2026-10-28 05:48:58Z" end-time="2026-10-28 05:52:50Z" duration="232.025704" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="480000" />
+                </properties>
+                <output><![CDATA[Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+              <test-case id="1028" name="QuietSingleWaterBedDucksUnderDialogueAndPauses" fullname="ShadowVale.Map01.Tests.BoatAudioRegressionTests.QuietSingleWaterBedDucksUnderDialogueAndPauses" methodname="QuietSingleWaterBedDucksUnderDialogueAndPauses" classname="ShadowVale.Map01.Tests.BoatAudioRegressionTests" runstate="Runnable" seed="1666687615" result="Passed" start-time="2026-10-28 05:52:50Z" end-time="2026-10-28 05:53:27Z" duration="37.177289" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+              <test-case id="1026" name="RifleStaysSingleAcrossNaturalBoatAndReplacementBody" fullname="ShadowVale.Map01.Tests.BoatAudioRegressionTests.RifleStaysSingleAcrossNaturalBoatAndReplacementBody" methodname="RifleStaysSingleAcrossNaturalBoatAndReplacementBody" classname="ShadowVale.Map01.Tests.BoatAudioRegressionTests" runstate="Runnable" seed="1336875593" result="Passed" start-time="2026-10-28 05:53:27Z" end-time="2026-10-28 05:56:55Z" duration="207.438781" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="480000" />
+                </properties>
+                <output><![CDATA[Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1398" name="Map02DayOneAudioTests" fullname="ShadowVale.Map01.Tests.Map02DayOneAudioTests" classname="ShadowVale.Map01.Tests.Map02DayOneAudioTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-10-28 05:57:28Z" end-time="2026-10-28 05:57:30Z" duration="2.619277" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1400" name="AmbienceFollowsThePhaseAndSceneSoundStopsWithTheScene" fullname="ShadowVale.Map01.Tests.Map02DayOneAudioTests.AmbienceFollowsThePhaseAndSceneSoundStopsWithTheScene" methodname="AmbienceFollowsThePhaseAndSceneSoundStopsWithTheScene" classname="ShadowVale.Map01.Tests.Map02DayOneAudioTests" runstate="Runnable" seed="1308417726" result="Passed" start-time="2026-10-28 05:56:55Z" end-time="2026-10-28 05:57:30Z" duration="35.151548" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+              <test-case id="1399" name="EverySoundIsACreditedRecording" fullname="ShadowVale.Map01.Tests.Map02DayOneAudioTests.EverySoundIsACreditedRecording" methodname="EverySoundIsACreditedRecording" classname="ShadowVale.Map01.Tests.Map02DayOneAudioTests" runstate="Runnable" seed="391024998" result="Passed" start-time="2026-10-28 05:57:30Z" end-time="2026-10-28 05:57:30Z" duration="0.338170" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: Logs/Map02Chapter/latest-full-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

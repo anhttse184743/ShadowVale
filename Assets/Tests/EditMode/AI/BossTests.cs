@@ -546,7 +546,8 @@ namespace ShadowVale.Tests.EditMode.AI
         public void TheFallbackBundlesBossCarriesItsProfileAndBadProfilesAreRejected()
         {
             Assert.IsTrue(new FallbackBundleProvider().TryLoad(out var bundle, out var error), error);
-            var boss = bundle.EnemyArchetypes.Single(e => e.IsBoss);
+            // fsm_params.boss of the web bundle; m1_commander is a boss too
+            var boss = bundle.EnemyArchetypes.Single(e => e.Id == "boss_commander");
             Assert.IsNotNull(boss.Boss);
             Assert.AreEqual(.5f, boss.Boss.ReinforceHpThreshold, 1e-6);
             Assert.AreEqual(3, boss.Boss.ReinforceCount);

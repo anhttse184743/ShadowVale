@@ -1,6 +1,9 @@
 using System;
 using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ShadowVale.Data.Content;
+using ShadowVale.Data.Content.V1;
 using UnityEngine;
 
 namespace ShadowVale.Content
@@ -38,14 +41,33 @@ namespace ShadowVale.Content
             }
         }
 
-        /// <summary>Parse + validate a bundle from JSON text. Shared by tests and the fetcher/cache.</summary>
-        public static bool TryParse(string json, out ContentBundle bundle, out string error)
+        /// <summary>
+        /// Parse + validate a bundle from JSON text. Shared by tests and the fetcher/cache. A web backend
+        /// bundle (<c>"schema_version": "1.0"</c>) is mapped onto the runtime model with the coordination
+        /// knobs of <see cref="AiSettingsFile"/>; the older game-side format (<c>"schema_version": 1</c>)
+        /// is still read as it is.
+        /// </summary>
+        public static bool TryParse(string json, out ContentBundle bundle, out string error, string contentVersionId = null, string checksum = null)
         {
             bundle = null;
             error = null;
             try
             {
-                bundle = ContentJson.Deserialize<ContentBundle>(json);
+                // Dates stay text, as in the model
+                var root = JsonConvert.DeserializeObject<JObject>(json, new JsonSerializerSettings { DateParseHandling = DateParseHandling.None });
+                if (root["schema_version"]?.Type == JTokenType.String)
+                {
+                    var v1 = root.ToObject<BundleV1>(JsonSerializer.Create(ContentJson.Settings));
+                    var problems = BundleV1Mapper.Check(v1);
+                    if (problems.Count > 0)
+                    {
+                        error = $"bundle failed validation ({problems.Count} error(s)): {string.Join("; ", problems)}";
+                        return false;
+                    }
+                    bundle = BundleV1Mapper.Map(v1, AiSettingsFile.Load(), contentVersionId, checksum);
+                }
+                else
+                    bundle = root.ToObject<ContentBundle>(JsonSerializer.Create(ContentJson.Settings));
             }
             catch (Exception e)
             {

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Passed" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-10-28 10:28:40Z" end-time="2026-10-28 10:29:18Z" duration="38.2331164">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="880" result="Passed" start-time="2026-10-28 10:28:40Z" end-time="2026-10-28 10:29:18Z" duration="38.233116" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1841" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/Capstone/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="657" result="Passed" start-time="2026-10-28 10:28:41Z" end-time="2026-10-28 10:29:18Z" duration="37.478884" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="25164" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1842" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="657" result="Passed" start-time="2026-10-28 10:28:41Z" end-time="2026-10-28 10:29:18Z" duration="37.426201" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1843" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="657" result="Passed" start-time="2026-10-28 10:28:41Z" end-time="2026-10-28 10:29:18Z" duration="37.383285" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="SetUpFixture" id="1749" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="657" result="Passed" start-time="2026-10-28 10:28:41Z" end-time="2026-10-28 10:29:18Z" duration="37.339340" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1025" name="BoatAudioRegressionTests" fullname="ShadowVale.Map01.Tests.BoatAudioRegressionTests" classname="ShadowVale.Map01.Tests.BoatAudioRegressionTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-10-28 10:21:49Z" end-time="2026-10-28 10:23:59Z" duration="130.366024" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1026" name="RifleStaysSingleAcrossNaturalBoatAndReplacementBody" fullname="ShadowVale.Map01.Tests.BoatAudioRegressionTests.RifleStaysSingleAcrossNaturalBoatAndReplacementBody" methodname="RifleStaysSingleAcrossNaturalBoatAndReplacementBody" classname="ShadowVale.Map01.Tests.BoatAudioRegressionTests" runstate="Runnable" seed="1051687600" result="Passed" start-time="2026-10-28 10:20:11Z" end-time="2026-10-28 10:23:59Z" duration="228.207927" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="480000" />
+                </properties>
+                <output><![CDATA[Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1029" name="BoatMotionHullTests" fullname="ShadowVale.Map01.Tests.BoatMotionHullTests" classname="ShadowVale.Map01.Tests.BoatMotionHullTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-10-28 10:24:24Z" end-time="2026-10-28 10:27:59Z" duration="214.828295" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1030" name="NaturalLiveCoverAndArrivalMotionReview" fullname="ShadowVale.Map01.Tests.BoatMotionHullTests.NaturalLiveCoverAndArrivalMotionReview" methodname="NaturalLiveCoverAndArrivalMotionReview" classname="ShadowVale.Map01.Tests.BoatMotionHullTests" runstate="Runnable" seed="345680538" result="Passed" start-time="2026-10-28 10:23:59Z" end-time="2026-10-28 10:27:59Z" duration="239.998355" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="1200000" />
+                </properties>
+                <output><![CDATA[Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1124" name="ExtractionTests" fullname="ShadowVale.Map01.Tests.ExtractionTests" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-10-28 10:28:41Z" end-time="2026-10-28 10:29:18Z" duration="37.121699" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1127" name="SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot" fullname="ShadowVale.Map01.Tests.ExtractionTests.SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot" methodname="SeatedCoverKillsExistingGuardsWithoutSpendingAmmoOrAddingLoot" classname="ShadowVale.Map01.Tests.ExtractionTests" runstate="Runnable" seed="443637572" result="Passed" start-time="2026-10-28 10:27:59Z" end-time="2026-10-28 10:29:18Z" duration="78.688306" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/dangk/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

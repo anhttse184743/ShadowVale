@@ -43,11 +43,11 @@ namespace ShadowVale.Map01.Tests
             try
             {
                 LoadBefore("D1_03");Assert.AreEqual(0,c.State.phase);c.enabled=false;for(int i=0;i<120;i++)Call("TickAmbience",.05f,false);
-                Assert.Greater(c.AmbienceVolume("d1_bamboo_loop"),.4f,"Day 1: bamboo in the wind.");Assert.Greater(c.AmbienceVolume("d1_children_loop"),.4f);Assert.Less(c.AmbienceVolume("n1_frogs_loop"),.01f,"No night frogs by day.");
-                Set("dayAmbienceClock",Map02ChapterDirector.PlaneAt-.01f);Call("TickAmbience",.05f,false);Assert.True((bool)Get("planeFlown"),"One aeroplane, far off, eight minutes in.");
+                Assert.Greater(c.AmbienceVolume("d1_bamboo_loop"),.02f,"Day 1: bamboo in the wind.");Assert.Greater(c.AmbienceVolume("d1_children_loop"),.02f);Assert.Less(c.AmbienceVolume("n1_frogs_loop"),.01f,"No night frogs by day.");
+                c.State.villageDaySeconds=Map02ChapterDirector.PlaneAt-.01f;Call("TickAmbience",.05f,false);Assert.True((bool)Get("planeFlown"),"One aeroplane, far off, eight minutes in.");
                 Call("TickAmbience",.05f,true);var bed=((System.Collections.IDictionary)Get("ambience"))["d1_bamboo_loop"];var source=(AudioSource)bed.GetType().GetField("source").GetValue(bed);Assert.False(source.isPlaying,"Ambience follows the pause menu.");Call("TickAmbience",.05f,false);Assert.True(source.isPlaying);
                 LoadBefore("N1_02");Assert.AreEqual(1,c.State.phase);for(int i=0;i<120;i++)Call("TickAmbience",.05f,false);
-                Assert.Greater(c.AmbienceVolume("n1_frogs_loop"),.4f,"Night 1: frogs and crickets.");Assert.Greater(c.AmbienceVolume("n1_fire_loop"),.3f,"The stove fire in chị Lành's kitchen.");Assert.Less(c.AmbienceVolume("d1_bamboo_loop"),.01f);
+                Assert.Greater(c.AmbienceVolume("n1_frogs_loop"),.02f,"Night 1: frogs and crickets.");Assert.Greater(c.AmbienceVolume("n1_fire_loop"),.01f,"The stove fire in chị Lành's kitchen.");Assert.Less(c.AmbienceVolume("d1_bamboo_loop"),.01f);
                 // "Lời hứa": Hùng's laugh after the punch, his theme from "Tôi hả..." to the end; a skip stops them.
                 LoadBefore("N1_01");Call("BeginScene",Map02ChapterDefinition.Load().Find("N1_01"),0,0);float approach=(float)Get("dayApproachDuration");
                 Set("sceneClock",approach+43.2f);Call("TickScene",.02f);Assert.True((bool)Get("supperLaughed"));

@@ -94,7 +94,9 @@ namespace ShadowVale.Map01.Tests
                     Assert.Less(Mathf.Abs(frame.hungKnee.y-(bank+.035f)),.02f,"His supporting knee joint stays 3.5 cm above the boards for the visible knee volume.");
                     Assert.Less(Mathf.Abs(frame.hungHand.y-bank),.14f,"His left hand is on the boards.");
                     Assert.IsTrue(frame.hasPack,"Nam has the pack off his shoulder.");Assert.IsFalse(frame.worn);
-                    Assert.IsFalse(frame.rifleVisible,"All gun renderers must be hidden while Nam's hands are free for the pack and Hùng.");
+                    Assert.IsTrue(frame.rifleVisible,"One actual rifle remains slung while Nam helps Hùng.");
+                    var carry=arrival.Passengers[0].GetComponentInChildren<Map01BoatCarry>();
+                    Assert.AreSame(arrival.MisstepActor(0).GetBoneTransform(HumanBodyBones.Chest),carry.Gun.parent,"Gun is on the visible torso, never in Nam's hands.");
                 }
                 if(name=="c1-kneel")
                 {

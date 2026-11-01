@@ -1,0 +1,4 @@
+{
+  "api_base_url": "http://localhost:5079",
+  "game_key": "<one of the backend's Game:ApiKeys, at least 32 characters>"
+}

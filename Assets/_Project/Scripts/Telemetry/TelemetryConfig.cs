@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using ShadowVale.Networking;
 using UnityEngine;
 
 namespace ShadowVale.Telemetry
@@ -12,12 +13,14 @@ namespace ShadowVale.Telemetry
     /// </summary>
     public sealed class TelemetryConfig
     {
-        public const string DefaultApiBaseUrl = "http://localhost:5000";
+        public const string DefaultApiBaseUrl = BackendConfig.DefaultApiBaseUrl;
 
         public bool Enabled { get; set; } = true;
         /// <summary>False: sessions are still queued and exported, just never sent (offline research runs).</summary>
         public bool UploadEnabled { get; set; } = true;
         public string ApiBaseUrl { get; set; } = DefaultApiBaseUrl;
+        /// <summary>The backend's X-Game-Key; without one sessions wait in the queue.</summary>
+        public string GameKey { get; set; }
         /// <summary>Holds <c>pending/</c>, <c>rejected/</c>; research exports go to its sibling <c>research/</c>.</summary>
         public string RootDirectory { get; set; }
         public string ResearchDirectory { get; set; }
@@ -36,7 +39,8 @@ namespace ShadowVale.Telemetry
             return new TelemetryConfig
             {
                 Enabled = flag != null ? flag != "0" : !Application.isBatchMode,
-                ApiBaseUrl = Env("SVL_API_BASE_URL") ?? DefaultApiBaseUrl,
+                ApiBaseUrl = BackendConfig.ApiBaseUrl,
+                GameKey = BackendConfig.GameKey,
                 RootDirectory = root,
                 ResearchDirectory = Path.Combine(Application.persistentDataPath, "research"),
             };

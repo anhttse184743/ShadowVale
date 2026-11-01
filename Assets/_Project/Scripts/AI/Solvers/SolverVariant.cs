@@ -11,6 +11,9 @@ namespace ShadowVale.AI.Solvers
         Sqa,
         Qiea,
         Qaoa,
+        /// <summary>Greedy + local search and tabu search (exp-v2, sidecar): the classical baselines added after the review.</summary>
+        Ls,
+        Tabu,
     }
 
     public static class SolverVariantIds
@@ -23,6 +26,8 @@ namespace ShadowVale.AI.Solvers
             SolverVariant.Sqa => "sqa",
             SolverVariant.Qiea => "qiea",
             SolverVariant.Qaoa => "qaoa",
+            SolverVariant.Ls => "ls",
+            SolverVariant.Tabu => "tabu",
             _ => throw new ArgumentOutOfRangeException(nameof(v)),
         };
 
@@ -36,6 +41,8 @@ namespace ShadowVale.AI.Solvers
                 case "sqa": v = SolverVariant.Sqa; return true;
                 case "qiea": v = SolverVariant.Qiea; return true;
                 case "qaoa": v = SolverVariant.Qaoa; return true;
+                case "ls": v = SolverVariant.Ls; return true;
+                case "tabu": v = SolverVariant.Tabu; return true;
                 default: v = SolverVariant.Greedy; return false;
             }
         }

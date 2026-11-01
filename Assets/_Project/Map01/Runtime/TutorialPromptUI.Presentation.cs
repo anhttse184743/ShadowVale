@@ -2,6 +2,10 @@ using UnityEngine;
 
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// Restyles the tutorial's existing hint UI in code (surfaces, shadowed text, buttons, the progress bar), so
+    /// the scene's and prefabs' references stay intact.
+    /// </summary>
     public sealed partial class TutorialPromptUI
     {
         private UnityEngine.UI.Text controlMode, controlCaption;

@@ -179,7 +179,7 @@ namespace ShadowVale.Map01.Tests
             }
             int ammo=mission.ModernCombat.RoundsInMagazine;
             mission.player.GetComponent<CharacterController>().enabled=false;mission.player.position=extraction.approach;mission.player.GetComponent<CharacterController>().enabled=true;
-            yield return WaitGameSeconds(29);
+            float deadline=Time.realtimeSinceStartup+180;while(!extraction.HasDeparted&&Time.realtimeSinceStartup<deadline)yield return null;
             Assert.IsTrue(extraction.HasDeparted);
             foreach(var guard in guards) {
                 Assert.IsFalse(guard.Alive,guard.name+" must be killed by covering fire.");

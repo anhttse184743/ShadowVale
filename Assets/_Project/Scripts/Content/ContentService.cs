@@ -22,6 +22,41 @@ namespace ShadowVale.Content
         public bool IsLoaded => Bundle != null;
         public string Version => Bundle?.BundleVersion ?? "unloaded";
         public AiSettings Ai => Bundle?.AiSettings;
+        /// <summary>Published content version (manifest.versionId) for telemetry; null for the bundle shipped with the game.</summary>
+        public string ContentVersionId => Bundle?.ContentVersionId;
+
+        /// <summary>
+        /// The bundle of a published version (from the backend or its cache), else false. Maps tune their
+        /// hand-authored data with it; with only the shipped bundle they keep their own files.
+        /// </summary>
+        public static bool TryGetPublished(out ContentBundle bundle)
+        {
+            bundle = null;
+            if (!Core.Services.ServiceLocator.TryResolve<ContentService>(out var content) || content.ContentVersionId == null) return false;
+            bundle = content.Bundle;
+            return true;
+        }
+
+        private ContentBundle _staged;
+        private string _stagedSource;
+
+        /// <summary>
+        /// A newer bundle that arrived while playing. It waits until <see cref="ApplyStaged"/> (the next
+        /// scene load), so one session never mixes two content versions.
+        /// </summary>
+        public void Stage(ContentBundle bundle, string sourceName)
+        {
+            _staged = bundle;
+            _stagedSource = sourceName;
+        }
+
+        public bool ApplyStaged()
+        {
+            if (_staged == null) return false;
+            Apply(_staged, _stagedSource);
+            _staged = null;
+            return true;
+        }
 
         /// <summary>Try each source in order; the first that loads wins.</summary>
         public bool Load(IEnumerable<IBundleSource> sources, out string log)

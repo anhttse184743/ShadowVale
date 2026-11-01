@@ -51,6 +51,10 @@ namespace ShadowVale.Tests.EditMode.AI
             var noise = new NoiseSystem();
             ServiceLocator.Register(noise);
             TacticalGraphHost.Attach(host, ~0, null);
+            // Planned in process, like Map 1's tests (SolverForTests): this test is about reuse, not the
+            // sidecar, which the bundle's remote solver would otherwise still be starting at first contact.
+            string pinned = Environment.GetEnvironmentVariable(SquadCoordinator.VariantEnvironment);
+            Environment.SetEnvironmentVariable(SquadCoordinator.VariantEnvironment, "greedy");
             SquadCoordinator.Attach(host, CoordinationSettings.ForScene("Map 2"));
             GameObject player = null;
             var plans = new List<PlanAppliedEvent>();
@@ -125,6 +129,7 @@ namespace ShadowVale.Tests.EditMode.AI
                 EventBus.Unsubscribe(onPlan); EventBus.Unsubscribe(onContact);
                 ServiceLocator.Unregister<NoiseSystem>();
                 ServiceLocator.Unregister<IPlayerObservable>();
+                Environment.SetEnvironmentVariable(SquadCoordinator.VariantEnvironment, pinned);
             }
         }
 
