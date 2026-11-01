@@ -78,7 +78,7 @@ namespace ShadowVale.Map01
                 GUI.DrawTexture(badge, grenadeBadge);
                 var dartAt = at + toward * 44;
                 var canvas = GUI.matrix;
-                GUI.matrix = Map02Navigation.RotateUi(canvas, dartAt, angle);
+                GUI.matrix = RotateUi(canvas, dartAt, angle);
                 GUI.DrawTexture(new Rect(dartAt.x - 15, dartAt.y - 15, 30, 30), grenadeDart);
                 GUI.matrix = canvas;
                 GUI.color = old;

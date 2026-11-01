@@ -206,8 +206,8 @@ namespace ShadowVale.Map01
                 if (d <= HearingRadius) hears++;
                 if (d <= WoundRadius) inBlast++;
             }
-            if(mission.MapTwo!=null)foreach(var guard in mission.MapTwo.Chapter.Enemies)
-            {if(guard==null||guard.Dead||!guard.gameObject.activeInHierarchy)continue;float d=Vector3.Distance(guard.transform.position,Landing);if(d<=HearingRadius)hears++;if(d<=WoundRadius)inBlast++;}
+            if(mission.MapTwo!=null)foreach(var guard in mission.MapTwo.Enemies)
+            {if(MapTwoBridge.Gone(guard)||guard.Dead||!guard.gameObject.activeInHierarchy)continue;float d=Vector3.Distance(guard.transform.position,Landing);if(d<=HearingRadius)hears++;if(d<=WoundRadius)inBlast++;}
             WouldHear = hears;
             WouldHit = Item == "grenade_f1" ? inBlast : 0;
         }

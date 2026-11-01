@@ -7,7 +7,7 @@ using UnityEngine.AI;
 
 namespace ShadowVale.Map01
 {
-    public sealed partial class Map02ChapterEnemy : MonoBehaviour
+    public sealed partial class Map02ChapterEnemy : MonoBehaviour, IMapTwoGuard
     {
         public string id,group;
         public Health HitPoints {get;private set;}

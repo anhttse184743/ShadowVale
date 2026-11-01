@@ -293,6 +293,9 @@ namespace ShadowVale.Map01
         }
         public static Matrix4x4 RotateAbout(Matrix4x4 current, Vector2 pivot, float degrees) =>
             current * Matrix4x4.TRS(pivot, Quaternion.Euler(0, 0, degrees), Vector3.one) * Matrix4x4.TRS(-pivot, Quaternion.identity, Vector3.one);
+        /// <summary>Map 2's rotation about a GUI point (Map02Navigation.RotateUi forwards here), kept as its own
+        /// formula so Map 2's arrows and lamp beams stay exactly where they were.</summary>
+        public static Matrix4x4 RotateUi(Matrix4x4 canvas,Vector2 pivot,float degrees)=>canvas*Matrix4x4.Translate(new Vector3(pivot.x,pivot.y,0))*Matrix4x4.Rotate(Quaternion.Euler(0,0,degrees))*Matrix4x4.Translate(new Vector3(-pivot.x,-pivot.y,0));
         private static void HudDiamond(Vector2 center, float radius)
         {
             var previous = RotateGui(center, 45);

@@ -17,7 +17,7 @@ namespace ShadowVale.Map01
     /// ashore and up the landing steps, their feet planted on the hull, the bank and each stair tread.
     /// </summary>
     [DefaultExecutionOrder(90)]
-    public sealed partial class Map02Arrival : MonoBehaviour
+    public sealed partial class Map02Arrival : MonoBehaviour, IMapTwoArrival
     {
         public enum Phase { Loading, Approaching, Mooring, Disembarking, Gameplay }
         public Phase CurrentPhase {get;private set;}

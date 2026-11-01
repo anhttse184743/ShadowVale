@@ -65,9 +65,9 @@ namespace ShadowVale.Map01
                 Tint(rings[shown], Vector3.Distance(at, Landing) <= HearingRadius ? RingHears : RingIdle);
                 shown++;
             }
-            if(mission.MapTwo!=null&&Item=="stone")foreach(var guard in mission.MapTwo.Chapter.Enemies)
+            if(mission.MapTwo!=null&&Item=="stone")foreach(var guard in mission.MapTwo.Enemies)
             {
-                if(shown>=MaxRings)break;if(guard==null||guard.Dead||!guard.gameObject.activeInHierarchy)continue;
+                if(shown>=MaxRings)break;if(MapTwoBridge.Gone(guard)||guard.Dead||!guard.gameObject.activeInHierarchy)continue;
                 var at=guard.transform.position;if(Vector3.Distance(at,mission.player.position)>ringsWithin)continue;
                 if(Map01Smoke.Blocks(eye,at+Vector3.up*1.2f))continue;
                 if(Physics.Linecast(eye,at+Vector3.up*1.2f,out var hit,mission.ObstructionMask,QueryTriggerInteraction.Ignore)&&hit.transform!=guard.transform&&!hit.transform.IsChildOf(guard.transform))continue;

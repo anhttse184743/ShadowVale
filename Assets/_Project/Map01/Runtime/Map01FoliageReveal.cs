@@ -16,7 +16,7 @@ namespace ShadowVale.Map01 {
         readonly HashSet<Renderer> registered=new();
         MaterialPropertyBlock properties;
         Map01Mission mission;
-        Map02Mission map2;
+        Component map2;
         [Range(.15f,1f)] public float minimumOpacity=.62f;
         [Range(.1f,1.5f)] public float revealRadius=.85f;
         public Transform ExtraFocus{get;set;}
@@ -24,7 +24,7 @@ namespace ShadowVale.Map01 {
         void Awake(){properties=new MaterialPropertyBlock();}
         void Start() {
             mission=GetComponent<Map01Mission>();
-            map2=GetComponent<Map02Mission>();
+            map2=MapTwoBridge.MissionOn(gameObject);
             if(map2==null&&(mission==null||gameObject.scene.name!="Map 1")){enabled=false;return;}
             if(map2!=null){minimumOpacity=.28f;revealRadius=.15f;}
             foreach(var lod in FindObjectsByType<LODGroup>(map2!=null?FindObjectsInactive.Include:FindObjectsInactive.Exclude,FindObjectsSortMode.None)) {
@@ -76,7 +76,7 @@ namespace ShadowVale.Map01 {
                 foreach(var plant in list)if(plant.renderers.Any(r=>r!=null&&r.gameObject.activeInHierarchy)&&Vector3.Distance(plant.bounds.ClosestPoint(position+Vector3.up*.7f),position+Vector3.up*.7f)<revealRadius)near.Add(plant);
         }
         void LateUpdate() {
-            var focus=map2!=null?map2.Player:mission!=null?mission.player:null;
+            var focus=map2!=null?MapTwoBridge.Host(map2).Player:mission!=null?mission.player:null;
             if(focus==null)return;
             near.Clear();
             if(map2!=null||mission.TryGetHideSpot(focus.position,out _))Query(focus.position);

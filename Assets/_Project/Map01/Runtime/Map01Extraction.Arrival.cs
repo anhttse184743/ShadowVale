@@ -23,13 +23,13 @@ namespace ShadowVale.Map01
             transitionStarted=true;
             namPose?.Dispose();hungPose?.Dispose();commanderPose?.Dispose();
             namPose=hungPose=commanderPose=null;
-            var arrival=boat.gameObject.AddComponent<Map02Arrival>();
+            var arrival=MapTwoBridge.AddArrival(boat.gameObject);
             arrival.TakeParty(this,mission);
             transform.SetParent(boat,true);enabled=false;
             boat.SetParent(null,true);DontDestroyOnLoad(boat.gameObject);
             mission.gameCamera.transform.SetParent(boat,true);
             mission.ReleaseForNextMap();
-            arrival.StartCoroutine(arrival.LoadVillage());
+            ((MonoBehaviour)arrival).StartCoroutine(arrival.LoadVillage());
         }
         public void ArrivalRestHands(Animator actor,float time,float leftWeight=1,float rightWeight=1) {
             var hips=actor.GetBoneTransform(HumanBodyBones.Hips);
