@@ -1,0 +1,20 @@
+{
+  "name": "ShadowVale.Map02",
+  "rootNamespace": "ShadowVale.Map01",
+  "references": [
+    "ShadowVale.Map01",
+    "Unity.InputSystem",
+    "Unity.AI.Navigation",
+    "ShadowVale.AI",
+    "ShadowVale.Core",
+    "ShadowVale.Content",
+    "ShadowVale.Data",
+    "ShadowVale.Gameplay",
+    "ShadowVale.UI",
+    "ShadowVale.Telemetry",
+    "UnityEngine.UI",
+    "Unity.RenderPipelines.Core.Runtime",
+    "Unity.RenderPipelines.Universal.Runtime"
+  ],
+  "autoReferenced": true
+}
