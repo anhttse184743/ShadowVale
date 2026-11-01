@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "roles": [
+    {
+      "speaker": "Nam",
+      "voice": "Minh Quân",
+      "provider": "VieNeu offline",
+      "aliases": []
+    },
+    {
+      "speaker": "Hùng",
+      "voice": "Anh Khôi",
+      "provider": "VieNeu offline",
+      "aliases": []
+    },
+    {
+      "speaker": "Anh Thành",
+      "voice": "Minh Đức",
+      "provider": "VieNeu offline",
+      "aliases": [
+        "Chỉ huy"
+      ]
+    },
+    {
+      "speaker": "Anh Lực",
+      "voice": "Đức Trí",
+      "provider": "VieNeu offline",
+      "aliases": [
+        "Phụ trách địa phương"
+      ]
+    },
+    {
+      "speaker": "Chú Bảy",
+      "voice": "Đức Trí",
+      "provider": "VieNeu offline",
+      "aliases": []
+    },
+    {
+      "speaker": "Ông Sáu",
+      "voice": "Thiền Tâm Đức",
+      "provider": "VieNeu offline",
+      "aliases": []
+    },
+    {
+      "speaker": "Chị Lành",
+      "voice": "Thục Đoan",
+      "provider": "VieNeu offline",
+      "aliases": [
+        "Người chăm cha"
+      ]
+    },
+    {
+      "speaker": "Bé Tí",
+      "voice": "Mỹ Duyên",
+      "provider": "VieNeu offline",
+      "aliases": []
+    },
+    {
+      "speaker": "Tâm",
+      "voice": "Mạnh Dũng",
+      "provider": "VieNeu offline",
+      "aliases": [
+        "Người trinh sát",
+        "Trinh sát địa phương"
+      ]
+    },
+    {
+      "speaker": "Tổ gác",
+      "voice": "Phạm Tuyên",
+      "provider": "VieNeu offline",
+      "aliases": []
+    },
+    {
+      "speaker": "Địch",
+      "voice": "Martin",
+      "provider": "Runway",
+      "aliases": [
+        "Lính địch",
+        "Lính",
+        "Giám sát",
+        "Lính phản ứng",
+        "Sĩ quan địch",
+        "Lính gác cổng",
+        "Lính tuần tra",
+        "Chỉ huy địch"
+      ]
+    }
+  ]
+}

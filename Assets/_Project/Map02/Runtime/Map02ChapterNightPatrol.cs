@@ -47,7 +47,10 @@ namespace ShadowVale.Map01
         {
             if(nightWarningAudio==null){nightWarningAudio=gameObject.AddComponent<AudioSource>();nightWarningAudio.playOnAwake=false;nightWarningAudio.spatialBlend=0;nightWarningAudio.volume=.9f;}
             nightWarningAudio.Stop();nightWarningAudio.priority=16;nightPatrolCaption=caption;
-            nightWarningAudio.clip=Resources.Load<AudioClip>("OperationsAudio/"+resource);nightWarningAudio.Play();
+            // Resolve the enemy's recording through the shared cast instead of a second unvalidated copy.
+            string id=resource=="night2_patrol_warning"?"m1_ops_enemy_spotted":resource=="night2_patrol_fire_order"?"m1_ops_enemy_order":null;
+            nightWarningAudio.clip=id!=null?DialogueVoice.Find(id)?.clip:null;
+            if(nightWarningAudio.clip!=null)nightWarningAudio.Play();
         }
         void DrawNightPatrolSuspicionDialogue()
         {

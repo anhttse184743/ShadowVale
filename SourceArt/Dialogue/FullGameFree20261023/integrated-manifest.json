@@ -1,5 +1,5 @@
 {
-  "cues": 272,
+  "cues": 273,
   "date": "2026-10-28",
   "lines": [
     {
@@ -7232,14 +7232,35 @@
       "caption": "Hùng: Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay…",
       "match": "Hùng: Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay…",
       "resource": "Dialogue/Map02DayOneFree/m2v3_echo_promise",
-      "language": "vi-VN",
+      "language": "vi",
       "radio": false,
       "duration": 4.65,
+      "speaker": "Hùng",
+      "text": "Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay…",
+      "voice": "Anh Khôi",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "voiceRevision": "20261025",
+      "castingApproved": true,
+      "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
+      "sha256": "34711811c8847a31550573564182207ac9fbd5d8de8118487444f757f6974167",
       "sampleRate": 48000,
       "channels": 1,
-      "peak": 0.707916259765625,
-      "rms": 0.10459808260202408,
-      "sha256": "a251547742bd6fb95fd1f9cbdce03b49a99beb7d45964edc613a9b0406c6b76b"
+      "cost": 0,
+      "userApproved": false,
+      "status": "derived_existing_approved_cast_pending_line_review",
+      "integrationRevision": "HungEcho_20261101",
+      "derivedFrom": {
+        "id": "m2v3_sacrifice_02",
+        "resource": "Dialogue/FullGameFree20261023/m2v3_sacrifice_02",
+        "sha256": "d8d172e80b856b1349cdf07ae282cd0f104feabb7501b6613eced6cd9588e5e6",
+        "fullTake": true
+      },
+      "processing": "Full Anh Khoi take; 0.12 s source fade; 0.19/0.38 s echoes at 0.32/0.16; 6 kHz lowpass; 0.6 s tail fade; -3 dBFS peak",
+      "peak": 0.7079457843841379,
+      "rms": 0.09990213535435949
     },
     {
       "id": "m2v3_promise_05b",
@@ -7616,6 +7637,35 @@
       "peak": 0.6756591796875,
       "rms": 0.11000002920627594,
       "sha256": "2af5d2290ca618517f049b234087494be1e39f33674557a97706a46ba3236a26"
+    },
+    {
+      "id": "m2v3_scoutbridge_01",
+      "conversation": "m2v3_scoutbridge",
+      "speaker": "Anh Thành",
+      "text": "Đồng chí cẩn thận, xung quanh địch đang đi tuần",
+      "radio": true,
+      "caption": "Anh Thành (bộ đàm): Đồng chí cẩn thận, xung quanh địch đang đi tuần",
+      "match": "Anh Thành (bộ đàm): Đồng chí cẩn thận, xung quanh địch đang đi tuần",
+      "resource": "Dialogue/VI/m2v3_scoutbridge_01_radio",
+      "language": "vi",
+      "voice": "Minh Đức",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "tempo": 0.92,
+      "pitch": 0.94,
+      "cost": 0,
+      "castingApproved": true,
+      "userApproved": false,
+      "status": "integrated_existing_cast_pending_line_listening",
+      "voiceRevision": "ScoutEscort_20261028",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "license": "Apache-2.0 (model and bundled presets)",
+      "duration": 3.2173958333333332,
+      "sampleRate": 48000,
+      "channels": 1,
+      "peak": 0.469818115234375,
+      "rms": 0.061701947999943274,
+      "sha256": "fa7f4545dcebcd7883bd23cc4c78f289dda2955c0a903b55b11864f0c40b4e1a"
     }
   ]
 }

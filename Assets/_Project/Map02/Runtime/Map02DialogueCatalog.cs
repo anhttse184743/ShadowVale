@@ -37,6 +37,7 @@ namespace ShadowVale.Map01
             if (line == null) return false;
             var recording = DialogueVoice.Find(line.RecordingId);
             return recording != null && recording.clip != null &&
+                DialogueCasting.SameCharacter(line.speaker, recording.speaker) &&
                 recording.radio == line.radio && recording.caption == line.Caption;
         }
     }

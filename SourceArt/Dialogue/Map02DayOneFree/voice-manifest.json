@@ -878,19 +878,34 @@
       "speaker": "Hùng",
       "text": "Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay…",
       "radio": false,
-      "voice": "Minh Quân",
+      "voice": "Anh Khôi",
       "file": "Assets/Resources/Dialogue/Map02DayOneFree/m2v3_echo_promise.wav",
-      "sha256": "a251547742bd6fb95fd1f9cbdce03b49a99beb7d45964edc613a9b0406c6b76b",
+      "sha256": "34711811c8847a31550573564182207ac9fbd5d8de8118487444f757f6974167",
       "derivedFrom": {
-        "id": "m2v3_promise_05",
-        "sha256": "5bb3618dea22637fbb4337485e6f38f7b580c3ff88a0acf384c716923cb59a03",
-        "seconds": "0.00-3.45 (third pause, after \"rau đay\")"
+        "id": "m2v3_sacrifice_02",
+        "resource": "Dialogue/FullGameFree20261023/m2v3_sacrifice_02",
+        "sha256": "d8d172e80b856b1349cdf07ae282cd0f104feabb7501b6613eced6cd9588e5e6",
+        "fullTake": true
       },
-      "processing": "SourceArt/Audio/Map02_DayOne_20261025/build_audio.py: crop, 0.12 s fade, echoes at 0.19 s (x0.32) and 0.38 s (x0.16), one-pole lowpass 6 kHz, 0.6 s fade, peak -3 dBFS",
-      "status": "derived_20261025_awaiting_listen",
+      "processing": "Full Anh Khoi take; 0.12 s source fade; 0.19/0.38 s echoes at 0.32/0.16; 6 kHz lowpass; 0.6 s tail fade; -3 dBFS peak",
+      "status": "derived_existing_approved_cast_pending_line_review",
       "duration": 4.65,
       "resource": "Dialogue/Map02DayOneFree/m2v3_echo_promise",
-      "caption": "Hùng: Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay…"
+      "caption": "Hùng: Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay…",
+      "match": "Hùng: Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay…",
+      "language": "vi",
+      "provider": "VieNeu offline",
+      "model": "v3 Turbo",
+      "license": "Apache-2.0 (model and bundled presets)",
+      "source": "https://huggingface.co/pnnbao-ump/VieNeu-TTS-v3-Turbo",
+      "voiceRevision": "20261025",
+      "castingApproved": true,
+      "castingApproval": "User chose Hùng A / ông Sáu A on 2026-10-24",
+      "sampleRate": 48000,
+      "channels": 1,
+      "cost": 0,
+      "userApproved": false,
+      "integrationRevision": "HungEcho_20261101"
     }
   ]
 }
