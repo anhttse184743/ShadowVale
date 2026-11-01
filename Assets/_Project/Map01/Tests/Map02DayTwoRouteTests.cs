@@ -13,7 +13,9 @@ namespace ShadowVale.Map01.Tests
 {
     public sealed class Map02DayTwoRouteTests:ForestSceneTestBase
     {
-        [UnityTest,Timeout(240000)] public IEnumerator DayTwoRoutesRescueWireAndAntennaArePlayable()
+        [UnityTest,Timeout(240000)] public IEnumerator DayTwoRoutesRescueWireAndAntennaArePlayable()=>VerifyDayTwo(true);
+        [UnityTest,Timeout(240000)] public IEnumerator RescueFeedbackHandoverAmmoAndAntennaCarrySurviveReload()=>VerifyDayTwo(false);
+        IEnumerator VerifyDayTwo(bool verifyRoutes)
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
             Map02Mission m=null;float until=Time.realtimeSinceStartup+100;
@@ -22,12 +24,23 @@ namespace ShadowVale.Map01.Tests
             try
             {
                 Load(m,"D2_01");
+                Assert.Less(Vector3.Distance(Marker("D2_02").transform.position,c.ScoutApproachPoint),.01f);
+                Place(m,c.ScoutApproachPoint);Call(c,"Update");
+                Assert.IsTrue(c.State.Done("D2_02"));
+                Assert.IsTrue(c.HasBark("m2v3_scoutbridge_01"));Assert.IsTrue(c.HasBark("m2v3_scoutbridge_02"));
+                foreach(var line in Map02ChapterDefinition.Load().Lines("scoutbridge"))Assert.IsTrue(Map02DialogueCatalog.HasApprovedRecording(line),line.id);
+                var bridgeSave=Map02Mission.Parse(JsonUtility.ToJson(m.Capture()));m.Restore(bridgeSave);Call(c,"Update");
+                Assert.IsFalse(c.HasBark("m2v3_scoutbridge_01"),"Loading a completed bridge checkpoint must not replay the call.");
+                Load(m,"D2_01");
                 Survey(c);
                 Assert.Greater(c.DayTwoOpenPath.Length,2,"Open field approach must be complete.");Assert.Greater(c.DayTwoCoveredPath.Length,2,"Bamboo approach must be complete.");
                 AssertDistinctRoutes(c);
                 AssertRoute(c.DayTwoOpenPath);AssertRoute(c.DayTwoCoveredPath);
-                WalkRoute(m,c.DayTwoOpenPath,"open");WalkRoute(m,c.DayTwoCoveredPath,"covered");
-                WalkRoute(m,c.DayTwoOpenPath.Reverse().ToArray(),"open return");WalkRoute(m,c.DayTwoCoveredPath.Reverse().ToArray(),"covered return");
+                if(verifyRoutes)
+                {
+                    WalkRoute(m,c.DayTwoOpenPath,"open");WalkRoute(m,c.DayTwoCoveredPath,"covered");
+                    WalkRoute(m,c.DayTwoOpenPath.Reverse().ToArray(),"open return");WalkRoute(m,c.DayTwoCoveredPath.Reverse().ToArray(),"covered return");
+                }
                 Place(m,c.Sites["command"].position);
                 Call(c,"EnsureGroup","scout_patrol",3,false);
                 Assert.AreEqual(3,c.Enemies.Count(e=>e.group=="scout_patrol"));
@@ -36,17 +49,34 @@ namespace ShadowVale.Map01.Tests
                 var patrolSave=JsonUtility.ToJson(m.Capture());CheckRescueWithPatrol(m,patrolSave,true);CheckRescueWithPatrol(m,patrolSave,false);
                 Assert.IsTrue(c.State.Done("D2_03"));Assert.IsFalse(c.State.combatGroups.Contains("D2_03"));
                 Place(m,Marker("D2_04").transform.position);Assert.IsTrue(m.Interact(Marker("D2_04")));Assert.NotNull(c.Companion);
+                Assert.IsTrue(c.State.scoutExtraMagazineIssued);
+                var pistol=m.Player.GetComponent<ShadowVale.Gameplay.Combat.PlayerCombat>();
+                int rounds=m.Bag.Count("ammo_pistol")+pistol.MagazineRounds(ShadowVale.Gameplay.Combat.WeaponKind.Pistol);
+                Assert.GreaterOrEqual(rounds,40,"The rescue kit includes one additional eight-round K54 magazine.");
                 Assert.Less(Vector3.Distance(Marker("D2_04").transform.position,c.Sites["command"].position),.1f);
                 var saved=Map02Mission.Parse(JsonUtility.ToJson(m.Capture()));m.Restore(saved);Assert.NotNull(c.Companion,"Save/load must resume following.");
+                Call(c,"TickScoutEscort");Assert.AreEqual(rounds,m.Bag.Count("ammo_pistol")+pistol.MagazineRounds(ShadowVale.Gameplay.Combat.WeaponKind.Pistol),"Reload must not duplicate rescue ammunition.");
                 Assert.IsTrue(m.CharacterGearLocked);Assert.IsTrue(c.ScoutEscortActive);Assert.IsTrue(m.CharacterCanHeal);
-                // Exercise arrival after the bridge has stopped the remaining ambush waves.
-                c.State.scoutAmbushPassedBridge=true;
+                // Older saves can miss the bridge flag. Reaching the commander still hands Tâm over.
+                c.State.scoutAmbushPassedBridge=false;c.State.scoutAmbushSpawned=0;
                 Place(m,c.Sites["command"].position);c.Actor("Tâm").StopAt(c.Sites["command"].position+Vector3.right);
                 Call(c,"Update");Assert.AreEqual("D2_04",c.CurrentScene?.id);Call(c,"EndScene");Assert.IsTrue(c.State.Done("D2_04"));
+                Assert.IsFalse(c.ScoutEscortActive);Assert.IsFalse(c.Actor("Tâm").PairedEscort);
+                Assert.AreEqual(1,Object.FindObjectsByType<Map02ChapterActor>(FindObjectsSortMode.None).Count(a=>a.role=="Tâm"));
+                Assert.AreEqual(1,c.Actor("Tâm").GetComponentsInChildren<SkinnedMeshRenderer>().Count(r=>r.enabled&&r.gameObject.activeInHierarchy),"Only the recovered Tâm model is visible.");
                 Place(m,Marker("D2_05").transform.position);Assert.IsTrue(m.Interact(Marker("D2_05")));Assert.IsFalse(c.State.Done("D2_05"));
+                c.enabled=true;yield return null;yield return null;c.enabled=false;
+                Call(c,"Update");Call(c,"LateUpdate");Assert.IsTrue(c.CarryingAntenna);Assert.IsTrue(pistol.HandsOccupied);
+                Assert.IsTrue(m.Player.GetComponentsInChildren<ShadowVale.Gameplay.Combat.Weapon>(true).SelectMany(w=>w.GetComponentsInChildren<Renderer>(true)).All(r=>r.forceRenderingOff),"Antenna carrying must hide every gameplay gun.");
+                var nam=m.Player.GetComponentInChildren<Animator>();
+                foreach(var bone in new[]{HumanBodyBones.LeftHand,HumanBodyBones.RightHand})
+                    Assert.Greater(Vector3.Dot(nam.GetBoneTransform(bone).position-m.Player.position,m.Player.forward),.2f,"Both hands must hold the antenna in front of Nam.");
+                CaptureAntenna(m,"day2-antenna-carry");
                 saved=Map02Mission.Parse(JsonUtility.ToJson(m.Capture()));m.Restore(saved);Assert.AreEqual(1,c.State.wireStage);
                 Assert.AreEqual("D2_05",c.State.carry);Place(m,Marker("D2_05").transform.position);Assert.IsTrue(m.Interact(Marker("D2_05")));Assert.IsTrue(c.State.Done("D2_05"));
-                StartAntenna(m);Assert.IsFalse(c.MaySave);var foot=m.Player.position;
+                Assert.IsTrue(c.CarryingAntenna,"Both hands stay on the antenna until installation starts.");
+                CheckLadderWidth(c);
+                StartAntenna(m);Assert.IsFalse(c.CarryingAntenna);Assert.IsFalse(c.MaySave);var foot=m.Player.position;
                 Step(c,1,true);Assert.Greater(m.Player.position.y,foot.y+.9f);var stopped=m.Player.position;Step(c,.5f);Assert.Less(Vector3.Distance(stopped,m.Player.position),.001f,"Releasing W must stop climbing.");
                 Step(c,.1f,cancel:true);for(int i=0;i<20&&c.Busy;i++)Step(c,.1f);Assert.IsFalse(c.Busy);Assert.IsFalse(c.State.Done("D2_06"));Assert.Less(Vector3.Distance(m.Player.position,foot),.01f);
                 StartAntenna(m);for(int i=0;i<50;i++)Step(c,.1f,true);
@@ -98,12 +128,24 @@ namespace ShadowVale.Map01.Tests
             }
             finally{Object.DestroyImmediate(probe);}
         }
-        static void CaptureAntenna(Map02Mission m)
+        static void CheckLadderWidth(Map02ChapterDirector c)
         {
-            Call(m.Chapter,"SampleAntennaTraversal");
-            var go=new GameObject("Antenna QA camera");var camera=go.AddComponent<Camera>();camera.transform.position=m.Player.position+new Vector3(5,2,-7);camera.transform.LookAt(m.Player.position+Vector3.up);camera.fieldOfView=55;camera.farClipPlane=180;
+            var source=Object.Instantiate(Resources.Load<GameObject>("Story/Antenna/FieldLadder"));
+            try
+            {
+                float Width(GameObject go){var bounds=go.GetComponentsInChildren<Renderer>().First().bounds;foreach(var renderer in go.GetComponentsInChildren<Renderer>())bounds.Encapsulate(renderer.bounds);return bounds.size.x;}
+                var ladder=c.AntennaBase.Find("Thang lên cây dừa");
+                Assert.AreEqual(Width(source)-.15f,Width(ladder.gameObject),.001f);
+                Assert.AreEqual(.3f,ladder.localPosition.z,.001f);
+            }
+            finally{Object.DestroyImmediate(source);}
+        }
+        static void CaptureAntenna(Map02Mission m,string name="day2-antenna")
+        {
+            if(m.Chapter.AntennaClimbHeight>0)Call(m.Chapter,"SampleAntennaTraversal");
+            var go=new GameObject("Antenna QA camera");var camera=go.AddComponent<Camera>();camera.transform.position=m.Player.position+(m.Chapter.CarryingAntenna?m.Player.forward*3-m.Player.right*2+Vector3.up*1.6f:new Vector3(5,2,-7));camera.transform.LookAt(m.Player.position+Vector3.up);camera.fieldOfView=55;camera.farClipPlane=180;
             var rt=new RenderTexture(1000,800,24);var previous=RenderTexture.active;
-            try{camera.targetTexture=rt;camera.Render();RenderTexture.active=rt;var image=new Texture2D(rt.width,rt.height,TextureFormat.RGB24,false);image.ReadPixels(new Rect(0,0,rt.width,rt.height),0,0);image.Apply();File.WriteAllBytes("Logs/Map02Chapter/day2-antenna.png",image.EncodeToPNG());Object.DestroyImmediate(image);}
+            try{camera.targetTexture=rt;camera.Render();RenderTexture.active=rt;var image=new Texture2D(rt.width,rt.height,TextureFormat.RGB24,false);image.ReadPixels(new Rect(0,0,rt.width,rt.height),0,0);image.Apply();File.WriteAllBytes("Logs/Map02Chapter/"+name+".png",image.EncodeToPNG());Object.DestroyImmediate(image);}
             finally{RenderTexture.active=previous;camera.targetTexture=null;Object.DestroyImmediate(rt);Object.DestroyImmediate(go);}
         }
         static void StartAntenna(Map02Mission m){var c=m.Chapter;Place(m,Marker("D2_06").transform.position);Assert.IsTrue(m.Interact(Marker("D2_06")));if(c.ConversationActive)Call(c,"EndScene");Assert.IsTrue(c.Busy);}

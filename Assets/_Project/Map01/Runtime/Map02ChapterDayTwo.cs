@@ -21,6 +21,10 @@ namespace ShadowVale.Map01
         public Transform AntennaBase=>antennaBase;
         public float AntennaClimbHeight=>climbHeight;
         public bool AntennaTied=>antennaTied;
+        public bool CarryingAntenna=>sceneTask==null&&!(doingWork&&workTask?.kind=="antenna")&&
+            (State.carry=="D2_05"||State.Done("D2_05")&&!State.Done("D2_06")&&!antennaTied);
+        const float LadderInset=.30f;
+        float ladderWidthScale=1;
         public string AntennaInstruction=>antennaAborting?"Đang xuống điểm bám an toàn để hủy thao tác.":antennaTied?"Đã cột ăng-ten. Giữ S xuống đất để Hùng nối máy.":climbHeight<Layout.antennaHeight-.05f?"Giữ W leo thang lên cây dừa · thả W để dừng · giữ S xuống · Esc hủy":"A/D xoay hướng · tín hiệu ổn định 2 giây rồi giữ Space cột dây · S xuống · Esc hủy";
 
         Material DayTwoMaterial(string name,Color color)
@@ -112,7 +116,7 @@ namespace ShadowVale.Map01
             var station=sites["radio"].position+Vector3.right*3.5f;
             if(NavMesh.SamplePosition(station,out var baseFloor,3,NavMesh.AllAreas))station=baseFloor.position;
             var baseObject=new GameObject("Cây dựng ăng-ten — điểm bám");baseObject.transform.SetParent(root.transform,false);baseObject.transform.position=station;antennaBase=baseObject.transform;
-            if(palm!=null){var tree=Instantiate(palm.gameObject,antennaBase);tree.name="Dừa cạnh trạm";tree.transform.localPosition=new Vector3(-.3f,0,1.05f);}
+            if(palm!=null){var tree=Instantiate(palm.gameObject,antennaBase);tree.name="Dừa cạnh trạm";tree.transform.localPosition=new Vector3(0,0,1.05f);}
             else RoutePart("Thân cột ăng-ten",PrimitiveType.Cylinder,antennaBase,Vector3.forward*.8f+Vector3.up*3,new Vector3(.4f,3,.4f),wood,true);
             var ladderArt=Resources.Load<GameObject>("Story/Antenna/FieldLadder");
             antennaLadder=ladderArt!=null?Instantiate(ladderArt,antennaBase):new GameObject("Thang lên cây dừa");
@@ -123,6 +127,12 @@ namespace ShadowVale.Map01
             foreach(float x in new[]{-.4f,.4f})RoutePart("Thanh dọc thang",PrimitiveType.Cube,antennaLadder.transform,new Vector3(x,height*.5f,.35f),new Vector3(.075f,height,.09f),wood);
             for(float h=.3f;h<=height;h+=.3f)RoutePart("Bậc thang",PrimitiveType.Cube,antennaLadder.transform,new Vector3(0,h,.35f),new Vector3(.85f,.065f,.12f),wood);
             }
+            // Measure the imported model so the reduction stays exactly 15 cm if its art changes.
+            var ladderBounds=new Bounds();bool hasBounds=false;
+            foreach(var renderer in antennaLadder.GetComponentsInChildren<Renderer>())
+            {if(hasBounds)ladderBounds.Encapsulate(renderer.bounds);else{ladderBounds=renderer.bounds;hasBounds=true;}}
+            if(hasBounds&&ladderBounds.size.x>.15f){ladderWidthScale=(ladderBounds.size.x-.15f)/ladderBounds.size.x;var scale=antennaLadder.transform.localScale;scale.x*=ladderWidthScale;antennaLadder.transform.localScale=scale;}
+            antennaLadder.transform.localPosition=Vector3.forward*LadderInset;
             var metal=DayTwoMaterial("Nhôm ăng-ten",new Color(.47f,.5f,.53f));
             antennaMast=BuildAntenna("Ăng-ten gắn trên cây dừa",antennaBase,metal);
             antennaMast.transform.localPosition=new Vector3(0,Layout.antennaHeight,.8f);
@@ -132,6 +142,7 @@ namespace ShadowVale.Map01
             var cable=installedCable.AddComponent<LineRenderer>();cable.useWorldSpace=false;cable.widthMultiplier=.018f;cable.sharedMaterial=DayTwoMaterial("Dây nối máy",new Color(.08f,.07f,.05f));cable.positionCount=4;
             cable.SetPositions(new[]{new Vector3(0,Layout.antennaHeight+1,.8f),new Vector3(.2f,Layout.antennaHeight,.85f),new Vector3(.2f,.2f,.85f),antennaBase.InverseTransformPoint(sites["radio"].position+Vector3.up*.5f)});
             carriedWire=BuildAntennaBundle("Cuộn dây và ăng-ten Nam đang mang",Mission.Player);carriedWire.transform.localPosition=new Vector3(-.3f,1,-.2f);
+            carriedWire.transform.Find("Ăng-ten mang theo").localPosition=new Vector3(0,-.4f,0);
         }
         GameObject BuildAntenna(string name,Transform parent,Material metal)
         {
@@ -193,7 +204,7 @@ namespace ShadowVale.Map01
             foreach(var approach in dayTwoApproaches)approach.SetActive(State.phase==2);
             if(scoutTracks!=null)scoutTracks.SetActive(State.phase==2&&!State.Done("D2_04"));
             wireCoil.SetActive(State.Available(Map02ChapterDefinition.Load().Find("D2_05"))&&State.wireStage==0);
-            carriedWire.SetActive(State.wireStage==1&&State.carry=="D2_05"||State.Done("D2_05")&&!State.Done("D2_06")&&!antennaTied&&!(doingWork&&workTask?.kind=="antenna"));
+            carriedWire.SetActive(CarryingAntenna);
             antennaLadder.SetActive(State.Done("D2_05"));
             bool mounted=State.Done("D2_06")||antennaTied||doingWork&&workTask?.kind=="antenna";
             antennaMast.SetActive(mounted);installedCable.SetActive(State.Done("D2_06")||mounted&&antennaTied);
@@ -205,7 +216,7 @@ namespace ShadowVale.Map01
             if(actor!=null){antennaIdle=actor.runtimeAnimatorController?.animationClips.FirstOrDefault(c=>c.name.Contains("Idle"));antennaPose=new Map01CinematicPose(actor,skinGrounding:false);}
             climbHeight=tieClock=signalHold=0;signal=.15f;antennaTied=antennaAborting=false;
             RefreshDayTwoProps();
-            antennaFoot=antennaBase.position;MoveAntennaPlayer(antennaFoot);
+            antennaFoot=antennaBase.position+antennaBase.forward*LadderInset;MoveAntennaPlayer(antennaFoot);
             Mission.Player.rotation=Quaternion.LookRotation(antennaBase.forward);
             UpdateWorkWeapon();
         }
@@ -254,7 +265,7 @@ namespace ShadowVale.Map01
                 {
                     var shoulder=animator.GetBoneTransform(left?HumanBodyBones.LeftUpperArm:HumanBodyBones.RightUpperArm);
                     float handHeight=shoulder.position.y-Mission.Player.position.y+.12f+Mathf.Max(0,-cycle)*.18f;
-                    var hand=Mission.Player.position+antennaBase.right*(side*.28f)+antennaBase.forward*.35f+Vector3.up*handHeight;
+                    var hand=Mission.Player.position+antennaBase.right*(side*.28f*ladderWidthScale)+antennaBase.forward*.35f+Vector3.up*handHeight;
                     Map01ArmContact.Reach(animator,left,hand,shoulder.position+antennaBase.right*(side*.22f)+antennaBase.forward*.15f-Vector3.up*.15f,1);
                 }
             }

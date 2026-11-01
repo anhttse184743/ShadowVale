@@ -241,13 +241,18 @@ namespace ShadowVale.Map01.Tests
                     "ShadowVale.Map01.Tests.Map02NightTwoRouteTests",
                     "ShadowVale.Map01.Tests.Map02DayTwoStateTests.AntennaStaysMountedAfterClimbCompletionAndReload"};
             }
+            if(request=="rescue-feedback")
+            {
+                SessionState.SetString(Key+".report","Logs/Map02Chapter/rescue-feedback-results.xml");
+                names=new[]{"ShadowVale.Map01.Tests.Map02DayTwoRouteTests.RescueFeedbackHandoverAmmoAndAntennaCarrySurviveReload","ShadowVale.Map01.Tests.BandageWeaponTests"};
+            }
             runner.Execute(new ExecutionSettings(new Filter{testMode=UnityEditor.TestTools.TestRunner.Api.TestMode.EditMode,testNames=names}));
         }
         sealed class Results:ICallbacks
         {
             public void RunStarted(ITestAdaptor tests){}
-            public void TestStarted(ITestAdaptor test){}
-            public void TestFinished(ITestResultAdaptor result){}
+            public void TestStarted(ITestAdaptor test){File.WriteAllText("Logs/Map02Chapter/current-test.txt",test.FullName);}
+            public void TestFinished(ITestResultAdaptor result){File.AppendAllText("Logs/Map02Chapter/current-test.txt","\n"+result.ResultState+"\n"+result.Message);}
             public void RunFinished(ITestResultAdaptor result){if(!SessionState.GetBool(Key,false))return;TestRunnerApi.SaveResultToFile(result,Path.GetFullPath(SessionState.GetString(Key+".report",Report)));SessionState.SetBool(Key,false);}
         }
     }

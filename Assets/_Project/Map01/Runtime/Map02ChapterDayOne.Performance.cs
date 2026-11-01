@@ -233,14 +233,28 @@ namespace ShadowVale.Map01
         {
             if(!ready||Mission.Paused||ForestMenu.Visible)return;
             if(sceneTask!=null)return;DuckLateUpdate();
-            bool carry=State.carry=="D1_04";bool hammer=dayActivity==DayActivity.Dock&&DockHammering;
+            bool carry=State.carry=="D1_04"||CarryingAntenna;bool hammer=dayActivity==DayActivity.Dock&&DockHammering;
             if(carry)
             {
                 dayNamPose?.Dispose();dayNamPose=null;
                 cargoPose??=new Map02UpperBodyPose(dayNamAnimator,DayClip("Carry"));
                 cargoPose.Sample(player.IsMoving?ordinaryWalk:dayNamAnimator.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned"),Time.time);
                 player.SetFaceCameraYaw(false);
-                int i=State.Count("D1_04");if(i<physicalCrates.Count){var crate=physicalCrates[i];crate.gameObject.SetActive(true);var l=dayNamAnimator.GetBoneTransform(HumanBodyBones.LeftHand);var r=dayNamAnimator.GetBoneTransform(HumanBodyBones.RightHand);HoldCrate(crate,i,(l.position+r.position)*.5f);}
+                if(CarryingAntenna)
+                {
+                    var body=Mission.Player;
+                    var chest=dayNamAnimator.GetBoneTransform(HumanBodyBones.Chest);
+                    var centre=chest.position-Vector3.up*.08f+body.forward*.38f;
+                    foreach(bool left in new[]{true,false})
+                    {
+                        float side=left?-1:1;
+                        var shoulder=dayNamAnimator.GetBoneTransform(left?HumanBodyBones.LeftUpperArm:HumanBodyBones.RightUpperArm);
+                        Map01ArmContact.Reach(dayNamAnimator,left,centre+body.right*(side*.19f),shoulder.position+body.right*(side*.25f)-Vector3.up*.3f,1);
+                    }
+                    var l=dayNamAnimator.GetBoneTransform(HumanBodyBones.LeftHand);var r=dayNamAnimator.GetBoneTransform(HumanBodyBones.RightHand);
+                    carriedWire.transform.SetPositionAndRotation((l.position+r.position)*.5f,body.rotation*Quaternion.Euler(0,0,90));
+                }
+                else{int i=State.Count("D1_04");if(i<physicalCrates.Count){var crate=physicalCrates[i];crate.gameObject.SetActive(true);var l=dayNamAnimator.GetBoneTransform(HumanBodyBones.LeftHand);var r=dayNamAnimator.GetBoneTransform(HumanBodyBones.RightHand);HoldCrate(crate,i,(l.position+r.position)*.5f);}}
             }
             else if(hammer&&StakeMocap)SampleStake(Time.deltaTime);
             else if(hammer)

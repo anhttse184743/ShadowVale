@@ -1648,6 +1648,21 @@
       "speaker": "Anh Thành",
       "text": "Làm tốt lắm, giờ cậu hãy quay trở về căn cứ để chuẩn bị sơ tán người dân",
       "radio": true
+    },
+    {
+      "id": "m2v3_scoutbridge_01",
+      "conversation": "m2v3_scoutbridge",
+      "speaker": "Anh Thành",
+      "text": "Đồng chí cẩn thận, xung quanh địch đang đi tuần",
+      "radio": true
+    },
+    {
+      "id": "m2v3_scoutbridge_02",
+      "conversation": "m2v3_scoutbridge",
+      "speaker": "Nam",
+      "text": "rõ!",
+      "radio": true,
+      "recording": "m2v3_evac_river_03"
     }
   ]
 }

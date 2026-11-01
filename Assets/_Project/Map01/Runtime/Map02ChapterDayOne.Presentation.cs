@@ -68,7 +68,7 @@ namespace ShadowVale.Map01
         Vector3 slingBarrel,slingSide,slingCentre;
         void UpdateWorkWeapon()
         {
-            if(doingWork&&workTask?.kind=="antenna")
+            if(CarryingAntenna||doingWork&&workTask?.kind=="antenna")
             {
                 // Climbing uses both hands. Hide the gameplay gun and any work sling.
                 if(slungWorkRifle!=null)slungWorkRifle.SetActive(false);

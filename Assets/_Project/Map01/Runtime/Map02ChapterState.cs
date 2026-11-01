@@ -27,6 +27,7 @@ namespace ShadowVale.Map01
         public Map02DayOneState dayOne=new Map02DayOneState();
         public int version=3,phase,evacuation,patrolWarnings,storedRounds;
         public bool scoutPistolIssued,scoutWarningHeard;
+        public bool scoutExtraMagazineIssued;
         public int scoutAmbushSpawned,scoutAmbushPlanVersion;
         public bool scoutAmbushPassedBridge;
         public bool scoutRescueOriginSet,scoutAmbushStarted;

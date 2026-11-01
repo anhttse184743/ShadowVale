@@ -10,6 +10,18 @@ namespace ShadowVale.Map01
         public const float ScoutAuthoredSpeed=2.5f;
         public float ScoutEscortSpeed=>1.8f;
         public const string ScoutAmbushGroup="D2_04_ambush";
+        public Vector3 ScoutApproachPoint
+        {
+            get
+            {
+                if(!PrepareScoutBridge())return sites["bridge"].position;
+                var deck=scoutBridgeDecks.OrderBy(c=>Vector3.Distance(c.bounds.center,sites["bridge"].position)).First();
+                var a=deck.transform.TransformPoint(deck.center-Vector3.right*deck.size.x*.5f);
+                var b=deck.transform.TransformPoint(deck.center+Vector3.right*deck.size.x*.5f);
+                var home=Vector3.Distance(a,sites["command"].position)<Vector3.Distance(b,sites["command"].position)?a:b;
+                return home+Vector3.ProjectOnPlane(home-deck.bounds.center,Vector3.up).normalized;
+            }
+        }
         public bool ScoutEscortActive=>State.activeTask=="D2_04"&&escort!=null&&escort.role=="Tâm"&&sceneTask==null;
         public int ScoutAmbushRemaining=>(State.scoutAmbushPassedBridge?State.scoutAmbushSpawned:5)-Enemies.Count(e=>e!=null&&e.group==ScoutAmbushGroup&&e.Dead);
         Map02ScoutEscortVisual scoutVisual;float scoutSpawnAt;
@@ -44,10 +56,14 @@ namespace ShadowVale.Map01
                     if(combat.MagazineRounds(WeaponKind.Pistol)==0){int rounds=Mathf.Min(8,Mission.Bag.Count("ammo_pistol"));Mission.Bag.Spend("ammo_pistol",rounds);combat.RestoreMagazine(WeaponKind.Pistol,rounds);}
                     State.scoutPistolIssued=true;
                 }
+                // Add one K54 magazine once, including saves that already received the original kit.
+                if(!State.scoutExtraMagazineIssued){Mission.Bag.Receive("ammo_pistol",8);State.scoutExtraMagazineIssued=true;}
                 scoutEquipmentReady=true;
             }
             if(combat.EquippedKind!=WeaponKind.Pistol)combat.Equip(WeaponKind.Pistol);
             if(Mission.InputBlocked||Time.time<scoutSpawnAt)return;
+            // Reaching command finishes the escort even if a distant ambusher has lost the pair.
+            if(Vector3.Distance(Mission.Player.position,sites["command"].position)<3)return;
             if(QueueScoutWarning())Mission.StoreCheckpoint();
             if(!PrepareScoutBridge())return;
             if(UpdateScoutBridgeCrossing(Mission.Player.position)||UpdateScoutBridgeCrossing(escort.transform.position))Mission.StoreCheckpoint();
