@@ -132,9 +132,9 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual(snapshotRifle(m),m.Bag.SlotItem(Map01Inventory.Slot.Primary),"Preview must seed an actual owned primary, not just a weapon visual.");
                 Assert.AreEqual(phase==3,m.Chapter.State.Done("D2_07"));Assert.IsFalse(m.Chapter.State.Done(phase==2?"D2_01":"N2_01"));
                 var site=phase==2?m.Chapter.Sites["command"].position:m.Chapter.NightObservationSpawn;
-                Assert.Less(Vector3.Distance(m.Player.position,site),8);Assert.AreEqual(90,m.Inventory[m.RifleAmmo]);
+                Assert.Less(Vector3.Distance(m.Player.position,site),8);Assert.AreEqual(495,m.Inventory[m.RifleAmmo],"Preview provides the tuning loadout's 495 reserve rounds.");
                 var snapshot=Map02Mission.Parse(JsonUtility.ToJson(m.Capture()));m.Restore(snapshot);
-                Assert.AreEqual(phase,m.Chapter.State.phase);Assert.AreEqual(90,m.Chapter.State.storedRounds);
+                Assert.AreEqual(phase,m.Chapter.State.phase);Assert.AreEqual(90,m.Chapter.State.storedRounds,"Chapter stock is separate from the preview's carried ammunition.");
                 Assert.IsTrue(m.Retry());Assert.AreEqual(phase,m.Chapter.State.phase);
                 if(phase==2)
                 {

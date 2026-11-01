@@ -13,7 +13,7 @@ namespace ShadowVale.Map01.Tests
 {
     public sealed class Map02ChapterMechanicsTests:ForestSceneTestBase
     {
-        [UnityTest,Timeout(240000)]public IEnumerator RepairAndAntennaRequireActualInputAndCoverFireLocksOnlyMovement()
+        [UnityTest,Timeout(240000)]public IEnumerator RepairAndAntennaRequireActualInputAndCoverFireSlowsMovement()
         {
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
             Map02Mission m=null;float deadline=Time.realtimeSinceStartup+100;
@@ -33,7 +33,18 @@ namespace ShadowVale.Map01.Tests
                 Load("D1_02");var repair=Mark("D1_05");Move(repair);Assert.IsTrue(m.Interact(repair));Assert.IsFalse(m.CanSave());end.Invoke(c,null);
                 var dayTick=typeof(Map02ChapterDirector).GetMethod("TickDay",BindingFlags.NonPublic|BindingFlags.Instance);
                 Set("dayClock",0f);Set("daySpaceReleased",true);Key(UnityEngine.InputSystem.Key.Space);dayTick.Invoke(c,new object[]{0f});Assert.AreEqual(0,c.State.Count("D1_05"));Key();dayTick.Invoke(c,new object[]{0f});
-                for(int i=0;i<6;i++){Set("dayClock",Map02DayOneState.SweepSeconds(c.State.dayOne.stakeHits/3)*.5f);Set("dayAttemptCycle",-1);Set("daySpaceReleased",true);Key(UnityEngine.InputSystem.Key.Space);Assert.True(keyboard.spaceKey.wasPressedThisFrame,"Fresh Space must reach the active keyboard");dayTick.Invoke(c,new object[]{0f});Assert.AreEqual(i+1,c.State.dayOne.stakeHits,"activity="+c.DayActivityName+" needle="+typeof(Map02ChapterDirector).GetField("dayClock",BindingFlags.NonPublic|BindingFlags.Instance).GetValue(c));Key();dayTick.Invoke(c,new object[]{0f});}
+                var sampleStake=typeof(Map02ChapterDirector).GetMethod("SampleStake",BindingFlags.NonPublic|BindingFlags.Instance);
+                sampleStake.Invoke(c,new object[]{.8f}); // Recover from the deliberately missed strike above.
+                for(int i=0;i<6;i++)
+                {
+                    Set("dayClock",Map02DayOneState.SweepSeconds(c.State.dayOne.stakeHits/3)*.5f);Set("dayAttemptCycle",-1);Set("daySpaceReleased",true);
+                    Key(UnityEngine.InputSystem.Key.Space);Assert.True(keyboard.spaceKey.wasPressedThisFrame,"Fresh Space must reach the active keyboard");dayTick.Invoke(c,new object[]{0f});
+                    // The hit is committed at mallet contact, not on the initial key press.
+                    Assert.AreEqual(i,c.State.dayOne.stakeHits);
+                    sampleStake.Invoke(c,new object[]{.11f});dayTick.Invoke(c,new object[]{0f});Assert.AreEqual(i,c.State.dayOne.stakeHits);
+                    sampleStake.Invoke(c,new object[]{.02f});dayTick.Invoke(c,new object[]{0f});Assert.AreEqual(i+1,c.State.dayOne.stakeHits);
+                    sampleStake.Invoke(c,new object[]{.8f});Key();dayTick.Invoke(c,new object[]{0f});
+                }
                 Assert.AreEqual(2,c.State.Count("D1_05"));Assert.False(c.State.Done("D1_05"));
                 for(int i=0;i<3;i++)Assert.True(c.State.dayOne.LayBoard(i,i,false,out _));typeof(Map02ChapterDirector).GetMethod("SyncRepairCount",BindingFlags.NonPublic|BindingFlags.Instance).Invoke(c,null);typeof(Map02ChapterDirector).GetMethod("CompleteDock",BindingFlags.NonPublic|BindingFlags.Instance).Invoke(c,null);end.Invoke(c,null);Assert.IsTrue(c.State.Done("D1_05"));
                 Load("D2_05");var antenna=Mark("D2_06");Move(antenna);Assert.IsTrue(m.Interact(antenna));end.Invoke(c,null);
@@ -46,7 +57,9 @@ namespace ShadowVale.Map01.Tests
                 Load("N3_07");var cover=Mark("N3_08");Move(cover);Assert.IsTrue(m.Interact(cover));
                 Assert.IsTrue(c.HasBark("m2v3_sacrifice_01"),"\"Đi đi! Tôi che cho!\" opens the cover fire without taking control away.");Assert.IsFalse(c.Busy);
                 var controller=m.Player.GetComponent<ShadowVale.Gameplay.Player.PlayerController>();var combat=m.Player.GetComponent<ShadowVale.Gameplay.Combat.PlayerCombat>();var hp=m.Player.GetComponent<ShadowVale.Gameplay.Combat.Health>();
-                Assert.IsTrue(c.CoverFireActive);var approach=new UnityEngine.AI.NavMeshPath();Assert.IsTrue(UnityEngine.AI.NavMesh.CalculatePath(c.Actor("Hùng").transform.position,c.ChargePoint,UnityEngine.AI.NavMesh.AllAreas,approach));Assert.AreEqual(UnityEngine.AI.NavMeshPathStatus.PathComplete,approach.status);Assert.IsFalse(controller.InputAllowed());Assert.IsTrue(combat.InputAllowed());Assert.IsTrue(hp.CinematicInvulnerable);
+                Assert.IsTrue(c.CoverFireActive);var approach=new UnityEngine.AI.NavMeshPath();Assert.IsTrue(UnityEngine.AI.NavMesh.CalculatePath(c.Actor("Hùng").transform.position,c.ChargePoint,UnityEngine.AI.NavMesh.AllAreas,approach));Assert.AreEqual(UnityEngine.AI.NavMeshPathStatus.PathComplete,approach.status);
+                typeof(Map02ChapterDirector).GetMethod("Update",BindingFlags.NonPublic|BindingFlags.Instance).Invoke(c,null);
+                Assert.IsTrue(controller.InputAllowed(),"Cover fire keeps Nam mobile at CoverPace.");Assert.AreEqual(Map02ChapterDirector.CoverPace,controller.SurfaceSpeedMultiplier,.001f);Assert.IsFalse(controller.SprintAllowed());Assert.IsTrue(combat.InputAllowed());Assert.IsTrue(hp.CinematicInvulnerable);
                 var before=hp.Current;hp.TakeDamage(100000,m.Player.position,null);Assert.AreEqual(before,hp.Current);
                 var saved=m.Capture();m.Restore(saved);Assert.IsTrue(c.CoverFireActive&&hp.CinematicInvulnerable,"Load during cover fire must preserve the no-failure rule.");
                 c.enabled=true; // Hùng's crawl is paced by the director.

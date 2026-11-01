@@ -1,5 +1,14 @@
 # Hợp đồng dữ liệu giữa game và backend
 
+## Solver sidecar fixture
+
+`Assets/Tests/EditMode/AI/Fixtures/solver_contract.json` được xuất bằng công cụ chính thức
+`python -m svl_solver.tools.export_contract <output.json>` của `shadowvale-solver`, revision
+`ae6a3798ed15e17ccbf9096e24c25daba5dea5a2` trên `dev`. Khởi động worker trước khi xuất để mẫu
+QIEA có thống kê thực, không phải response fallback do cold start. Game có `ls` và `tabu`, nên
+sidecar dùng để chạy game/test cũng cần hỗ trợ các variant đó; bản `main` cũ không có chúng.
+Fixture giữ schema và response thực từ sidecar, không tự thêm id để bỏ qua kiểm tra hợp đồng.
+
 ## Telemetry session — `POST /api/v1/telemetry/sessions`
 
 Mẫu đầy đủ: [`telemetry_session.sample.json`](telemetry_session.sample.json). File này được sinh ra từ test

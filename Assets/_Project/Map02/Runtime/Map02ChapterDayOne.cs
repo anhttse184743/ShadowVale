@@ -101,7 +101,7 @@ namespace ShadowVale.Map01
                 TickStakeCommit();
                 if(dayCloseRequested&&!StrikeRecovering){CloseDay();return true;}
                 if(kb?.escapeKey.wasPressedThisFrame==true){RequestCloseDay();return true;}
-                dayClock+=Time.deltaTime;
+                dayClock+=dt;
                 TickDayKeyboard(kb);if(!DayActivityActive)return true;
                 if(kb?.spaceKey.isPressed!=true)daySpaceReleased=true;
                 if(dayActivity==DayActivity.Dock&&Day.stakeHits<6&&kb?.spaceKey.wasPressedThisFrame==true&&daySpaceReleased)

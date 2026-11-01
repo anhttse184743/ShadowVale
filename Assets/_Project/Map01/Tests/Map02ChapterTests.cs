@@ -116,7 +116,12 @@ namespace ShadowVale.Map01.Tests
                 snapshot=m.Capture();snapshot.chapter=Through(id);m.Restore(snapshot);yield return WaitGameSeconds(2f);
                 Assert.AreEqual(snapshot.chapter.phase,c.State.phase);Assert.AreEqual(snapshot.chapter.hungDead,c.State.hungDead);Assert.AreEqual(snapshot.magazine,m.Player.GetComponent<ShadowVale.Gameplay.Combat.PlayerCombat>().RoundsInMagazine);
                 if(c.State.phase==1||c.State.phase==3||c.State.phase==5)
-                {Assert.IsTrue(RenderSettings.skybox.HasProperty("_Exposure"));Assert.Less(RenderSettings.skybox.GetFloat("_Exposure"),c.State.phase==1?.25f:.15f);}
+                {
+                    Assert.IsTrue(RenderSettings.skybox.HasProperty("_Exposure"));
+                    // Night 3 reaches first light during the farewell and sacrifice, before phase 6.
+                    float exposure=c.State.phase==1?.22f:id=="N3_07"?.3145f:id=="N3_09"?.683f:.08f;
+                    Assert.That(RenderSettings.skybox.GetFloat("_Exposure"),Is.EqualTo(exposure).Within(.03f),id);
+                }
                 foreach(var fx in c.GetComponentsInChildren<ParticleSystemRenderer>(true))
                 {Assert.NotNull(fx.sharedMaterial,fx.name);Assert.IsTrue(fx.sharedMaterial.shader.isSupported,fx.name);Assert.IsTrue(fx.sharedMaterial.shader.name.StartsWith("Universal Render Pipeline/Particles/"),fx.name);}
                 ScreenCapture.CaptureScreenshot("Logs/Map02Chapter/"+id+".png");yield return null;

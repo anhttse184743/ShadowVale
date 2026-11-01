@@ -50,13 +50,18 @@
  "variants": [
   "brute",
   "exact",
+  "exact_set",
   "ga",
   "greedy",
+  "ls",
+  "pbil",
   "qaoa",
   "qiea",
   "qpu",
   "sa",
-  "sqa"
+  "sa1h",
+  "sqa",
+  "tabu"
  ],
  "sample_request": {
   "instance_id": "contract-sample",
@@ -237,14 +242,14 @@
    2
   ],
   "objective_value": 3.374362852530844,
-  "solve_latency_ms": 39.787,
+  "solve_latency_ms": 96.347,
   "solver_variant_id": "qiea",
   "hit_latency_budget": false,
   "feasible_raw": true,
   "energy": -3.374362852530844,
   "fallback_reason": null,
   "instance_id": "contract-sample",
-  "samples_evaluated": 640,
-  "raw_feasible_samples": 12
+  "samples_evaluated": 1299,
+  "raw_feasible_samples": 68
  }
 }

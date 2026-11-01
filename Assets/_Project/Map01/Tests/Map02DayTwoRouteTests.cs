@@ -111,6 +111,8 @@ namespace ShadowVale.Map01.Tests
         internal static void WalkRoute(Map02Mission m,Vector3[] points,string name)
         {
             var probe=new GameObject("Day 2 route collision probe");probe.layer=m.Player.gameObject.layer;var original=m.Player.GetComponent<CharacterController>();var body=probe.AddComponent<CharacterController>();body.height=original.height;body.radius=original.radius;body.center=original.center;body.stepOffset=original.stepOffset;
+            // This capsule represents Nam; the real Nam may still be parked at the bridge entrance.
+            Physics.IgnoreCollision(body,original);
             probe.transform.position=points[0]+Vector3.up*.1f;Physics.SyncTransforms();
             try
             {
