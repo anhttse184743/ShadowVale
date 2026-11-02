@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using ShadowVale.Gameplay.Combat;
 using ShadowVale.Gameplay.Player;
@@ -45,6 +45,11 @@ namespace ShadowVale.Map01
         private float introReturnAt,finalBurstAt=-1,lastRoundAt=-10,dyingReleaseAt=-1;
         private int executionRounds;
         private bool introImpact,introRightImpact;
+        private int bodyHits;
+        private Vector3 storyFlightControl,scoutReturnControl;
+        public float ShoulderContactError { get; private set; }
+        public float FaceContactError { get; private set; } = -1;
+        public int BodyHits => bodyHits;
         private float introRightImpactAt;
         private float leftContactError=-1,rightContactError=-1;
         private float leftLean,rightLean;
@@ -98,8 +103,22 @@ namespace ShadowVale.Map01
         private (Transform bone,Vector3 position,Quaternion rotation)[] introLowerBody;
         private readonly System.Collections.Generic.List<GameObject> introHiddenWeapons=new();
         private Vector3 introCaptiveView,introCaptiveFocus;
-        const float IntroPanAt=.65f,IntroCutIn=1.3f,IntroWalkAt=2f,IntroStrikeAt=3.35f,IntroHitAt=3.95f,IntroRightStrikeAt=4.65f,IntroRightHitAt=5.25f,IntroWalkBackAt=6.05f;
-        float IntroCutOut=>introReturnAt>0?introReturnAt+.85f:float.PositiveInfinity;
+        private Vector3[] scoutViews=Array.Empty<Vector3>(),scoutFocus=Array.Empty<Vector3>(),scoutControls=Array.Empty<Vector3>();
+        private (Renderer renderer,bool enabled)[] scoutPlants=Array.Empty<(Renderer,bool)>();
+        private (Map01EnemyController guard,Map01CinematicPose pose,AnimationClip idle)[] scoutPoses=Array.Empty<(Map01EnemyController,Map01CinematicPose,AnimationClip)>();
+        const float ScoutLegSeconds=2.4f;
+        float ScoutSeconds=>scoutViews.Length*ScoutLegSeconds;
+        public int ScoutedGuardCount=>scoutViews.Length;
+        const float IntroPanAt=.2f;
+        float IntroCutIn=>ScoutSeconds+3.5f;
+        float IntroWalkAt=>ScoutSeconds+3.6f;
+        float IntroStrikeAt=>ScoutSeconds+4.95f;
+        float IntroHitAt=>ScoutSeconds+5.35f;
+        float IntroRightStrikeAt=>ScoutSeconds+5.67f;
+        float IntroRightHitAt=>ScoutSeconds+6.07f;
+        float IntroWalkBackAt=>ScoutSeconds+8.15f;
+        const float PunchPeriod=.72f, IntroReturnSeconds=2.8f;
+        float IntroCutOut=>introReturnAt>0?introReturnAt+IntroReturnSeconds:float.PositiveInfinity;
         public bool IntroShowsCaptive=>CurrentMode==Mode.Intro&&Elapsed>=IntroCutIn&&Elapsed<IntroCutOut;
 
         public bool ControlsEnemy(Map01EnemyController guard) => (CurrentMode == Mode.Execution || CurrentMode==Mode.Intro) && guard == enemy;
@@ -242,6 +261,10 @@ namespace ShadowVale.Map01
         public void CancelForRestore(){if(IsPlaying)Cleanup(true);}
         private void Cleanup(bool restoring=false)
         {
+            foreach(var sentry in scoutPoses)sentry.pose.Dispose();
+            scoutPoses=Array.Empty<(Map01EnemyController,Map01CinematicPose,AnimationClip)>();
+            foreach(var plant in scoutPlants)if(plant.renderer!=null)plant.renderer.enabled=plant.enabled;
+            scoutPlants=Array.Empty<(Renderer,bool)>();
             var mode=CurrentMode;CurrentMode=Mode.None;
             namPose?.Dispose();hungPose?.Dispose();namPose=hungPose=null;
             tensionSource?.Stop();contactSource?.Stop();
@@ -303,11 +326,7 @@ namespace ShadowVale.Map01
                 var subtitle=new GUIStyle(GUI.skin.label){alignment=TextAnchor.MiddleCenter,wordWrap=true,fontSize=Mathf.RoundToInt(Screen.height*.031f)};
                 GUI.color=Color.white;GUI.Label(new Rect(Screen.width*.12f,Screen.height*.91f,Screen.width*.76f,Screen.height*.08f),storyVoice.CurrentCaption,subtitle);GUI.color=color;
             }
-            if(CurrentMode==Mode.Intro){
-                // The pan carries the look; a brief blink hides only the distant edit.
-                float alpha=Mathf.Max(1-Mathf.Abs(Elapsed-IntroCutIn)/.12f,1-Mathf.Abs(Elapsed-IntroCutOut)/.12f);
-                if(alpha>0){GUI.color=new Color(0,0,0,Mathf.Clamp01(alpha));GUI.DrawTexture(new Rect(0,0,Screen.width,Screen.height),Texture2D.whiteTexture);GUI.color=color;}
-            }
+
         }
 
         private void OnDisable(){if(IsPlaying)Cleanup();}

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using ShadowVale.Gameplay.Combat;
 using ShadowVale.Gameplay.Player;
@@ -74,7 +74,7 @@ namespace ShadowVale.Map01
             // at the stance anchor; re-aiming the root at Hung would turn the
             // whole arc away from the calibrated contact point.
             float stance=Mathf.SmoothStep(0,1,(Elapsed-IntroStrikeAt+.25f)/.25f)*(1-Mathf.SmoothStep(0,1,(Elapsed-IntroWalkBackAt)/.25f));
-            var fightingFacing=Elapsed<IntroRightStrikeAt?leftFacing:Quaternion.Slerp(leftFacing,rightFacing,Mathf.SmoothStep(0,1,(Elapsed-IntroRightStrikeAt)/.4f));
+            var fightingFacing=Quaternion.LookRotation(Vector3.ProjectOnPlane(mission.hung.position-enemy.transform.position,Vector3.up).normalized);
             enemy.transform.rotation=Quaternion.Slerp(enemy.transform.rotation,fightingFacing,stance);
             var actor=enemy.GetComponentInChildren<Animator>();
             var held=executionAim??interrogationIdle;
@@ -89,39 +89,79 @@ namespace ShadowVale.Map01
                 float weight=Mathf.Min(Mathf.SmoothStep(0,1,(Elapsed-IntroWalkAt)/.16f),1-Mathf.SmoothStep(0,1,(Elapsed-IntroStrikeAt+.16f)/.16f));
                 interrogatorPose.SampleBlend(interrogationIdle,0,interrogationWalk,phase,weight);sling=1;
             }else if(Elapsed<IntroWalkBackAt){
-                bool left=Elapsed<IntroRightStrikeAt;
-                var clip=left?interrogationLeftPunch:interrogationPunch;
-                float begin=left?IntroStrikeAt:IntroRightStrikeAt;
-                float planned=left?IntroHitAt:IntroRightHitAt;
-                float actual=left?introImpactAt:introRightImpactAt;bool impacted=left?introImpact:introRightImpact;
-                float age=Elapsed-begin-(impacted?Mathf.Max(0,actual-planned):0);
-                float time=age<.45f?age*.4f/.45f:age<.6f?.4f+(age-.45f)*2:age<.68f?.7f+(age-.6f)*2.5f:.9f+(age-.68f)*(.8f/.52f);
-                float nativeTime=Mathf.Clamp01(time/1.7f)*clip.length;
-                float enter=Mathf.SmoothStep(0,1,age/.13f);
-                float end=left?IntroRightStrikeAt:IntroWalkBackAt;
-                float exit=Mathf.SmoothStep(0,1,(Elapsed-end+.18f)/.18f);
-                if(exit>0)interrogatorPose.SampleBlend(clip,nativeTime,interrogationIdle,0,exit);
-                else interrogatorPose.SampleBlend(interrogationIdle,0,clip,nativeTime,enter);
-                LeanPunch(actor,(left?leftLean:rightLean)*enter*(1-exit));sling=1;
-                // Measure the rendered, grounded fist, matching stance calibration.
+                float age=Elapsed-IntroStrikeAt;
+                float cycle=Mathf.Repeat(age,PunchPeriod);
+                float enter=Mathf.SmoothStep(0,1,age/.22f);
+                float exit=1-Mathf.SmoothStep(0,1,(Elapsed-IntroWalkBackAt+.22f)/.22f);
+                float weight=enter*exit;
+                bool face=Mathf.FloorToInt(age/PunchPeriod)%2==1;
+                // Anticipation, fast extension, a brief impact, then recovery.
+                float thrust=cycle<.20f?0:cycle<.40f?1-Mathf.Pow(1-(cycle-.20f)/.20f,3):cycle<.44f?1:1-Mathf.SmoothStep(0,1,(cycle-.44f)/.28f);
+                float nativeTime=interrogationPunch.length*((.30f+.40f*thrust)/1.7f);
+                interrogatorPose.Sample(interrogationPunch,nativeTime);
+                float high=face?Mathf.Sin(Mathf.PI*cycle/PunchPeriod):0;
+                RestoreInterrogationStanding();BendInterrogatorKnees(actor,.30f*weight);LeanPunch(actor,35f*weight);
+                var spine=actor.GetBoneTransform(HumanBodyBones.Spine);
+                float wind=cycle<.20f?-8*Mathf.Sin(Mathf.PI*cycle/.40f):10*thrust;
+                if(spine!=null)spine.rotation=Quaternion.AngleAxis(wind*weight,Vector3.up)*spine.rotation;
                 interrogatorPose.Ground(enemy.transform.position.y);
-                if(impacted&&Elapsed-actual<.13f){
-                    float error=Vector3.Distance(PunchKnuckle(actor,left),left?leftBodyTarget:rightBodyTarget);
-                    if(left&&(leftContactError<0||error<leftContactError)){leftContactError=error;LeftBodyDelta=PunchKnuckle(actor,true)-leftBodyTarget;}
-                    else if(!left&&(rightContactError<0||error<rightContactError)){rightContactError=error;RightBodyDelta=PunchKnuckle(actor,false)-rightBodyTarget;}
-                    InterrogationContactError=Mathf.Max(leftContactError,rightContactError);
+                // One arm holds the near shoulder; the other has a short thrust
+                // and a slower recovery. Contact follows the moving captive.
+                var victim=captiveVisual.actor;
+                var shoulderA=victim.GetBoneTransform(HumanBodyBones.RightUpperArm).position;
+                var shoulderB=victim.GetBoneTransform(HumanBodyBones.LeftUpperArm).position;
+                var holdingOrigin=actor.GetBoneTransform(HumanBodyBones.LeftUpperArm).position;
+                var shoulder=Vector3.Distance(holdingOrigin,shoulderA)<Vector3.Distance(holdingOrigin,shoulderB)?shoulderA:shoulderB;
+                var belly=Vector3.Lerp(victim.GetBoneTransform(HumanBodyBones.Hips).position,victim.GetBoneTransform(HumanBodyBones.Chest).position,.38f)+Vector3.up*.15f;
+                var toward=(enemy.transform.position-mission.hung.position).normalized;
+                var hit=belly+toward*.22f; // Clothing and belly surface, outside the skeleton centreline.
+                if(face)hit=victim.GetBoneTransform(HumanBodyBones.Head).position+toward*.14f-Vector3.up*.055f;
+                var hand=actor.GetBoneTransform(HumanBodyBones.RightHand);
+                var fistOffset=PunchKnuckle(actor)-hand.position;
+                var chamber=actor.GetBoneTransform(HumanBodyBones.Chest).position+enemy.transform.right*.24f+enemy.transform.forward*(cycle<.20f?.04f:.12f)-Vector3.up*(face?.025f:.20f);
+                for(int pass=0;pass<3;pass++){
+                    fistOffset=PunchKnuckle(actor)-hand.position;
+                    Map01ArmContact.Reach(actor,false,Vector3.Lerp(chamber,hit-fistOffset,thrust),actor.GetBoneTransform(HumanBodyBones.RightUpperArm).position+enemy.transform.right*.30f-Vector3.up*.25f,weight);
                 }
-            }else if(Elapsed<7.3f){
+                var hold=shoulder+toward*.04f+Vector3.up*.025f;
+                Map01ArmContact.Reach(actor,true,hold,actor.GetBoneTransform(HumanBodyBones.LeftUpperArm).position-enemy.transform.right*.30f,weight);
+                if(weight>.95f)ShoulderContactError=Vector3.Distance(actor.GetBoneTransform(HumanBodyBones.LeftHand).position,hold);
+                if(weight>.95f&&thrust>.75f){
+                    float error=Vector3.Distance(PunchKnuckle(actor),hit);
+                    if(face)FaceContactError=FaceContactError<0?error:Mathf.Min(FaceContactError,error);else rightContactError=rightContactError<0?error:Mathf.Min(rightContactError,error);
+                    leftContactError=ShoulderContactError;InterrogationContactError=error;
+                }
+                sling=1;
+            }else if(Elapsed<ScoutSeconds+9.4f){
                 float phase=Vector3.Distance(interrogatorStart,interrogatorClose)*walkOut/1.4f;
-                float weight=Mathf.Min(Mathf.SmoothStep(0,1,(Elapsed-IntroWalkBackAt)/.15f),1-Mathf.SmoothStep(0,1,(Elapsed-7.15f)/.15f));
+                float weight=Mathf.Min(Mathf.SmoothStep(0,1,(Elapsed-IntroWalkBackAt)/.15f),1-Mathf.SmoothStep(0,1,(Elapsed-ScoutSeconds-9.25f)/.15f));
                 interrogatorPose.SampleBlend(interrogationIdle,0,interrogationWalk,Mathf.Max(0,interrogationWalk.length-Mathf.Repeat(phase,interrogationWalk.length)),weight);sling=1;
-            }else if(Elapsed<9.1f){
-                float age=Elapsed-7.3f;
+            }else if(Elapsed<ScoutSeconds+11.2f){
+                float age=Elapsed-ScoutSeconds-9.4f;
                 sling=1-Mathf.SmoothStep(0,1,(age-.15f)/1.45f);
                 interrogatorPose.SampleBlend(held,0,interrogationIdle,age,Mathf.SmoothStep(0,1,(sling-.45f)/.55f));RestoreInterrogationStanding();
             }else interrogatorPose.Sample(held,0);
             if(sling<.001f)actor.GetComponent<Map01EnemyGrip>()?.Apply();
             interrogationSling?.Sample(sling);
+        }
+        void BendInterrogatorKnees(Animator actor,float depth){
+            var hips=actor.GetBoneTransform(HumanBodyBones.Hips);
+            var feet=new[]{actor.GetBoneTransform(HumanBodyBones.LeftFoot).position,actor.GetBoneTransform(HumanBodyBones.RightFoot).position};
+            var rotations=new[]{actor.GetBoneTransform(HumanBodyBones.LeftFoot).rotation,actor.GetBoneTransform(HumanBodyBones.RightFoot).rotation};
+            hips.position-=Vector3.up*depth;
+            for(int i=0;i<2;i++){
+                var upper=actor.GetBoneTransform(i==0?HumanBodyBones.LeftUpperLeg:HumanBodyBones.RightUpperLeg);
+                var lower=actor.GetBoneTransform(i==0?HumanBodyBones.LeftLowerLeg:HumanBodyBones.RightLowerLeg);
+                var foot=actor.GetBoneTransform(i==0?HumanBodyBones.LeftFoot:HumanBodyBones.RightFoot);
+                float a=Vector3.Distance(upper.position,lower.position),b=Vector3.Distance(lower.position,foot.position);
+                var origin=upper.position;var delta=feet[i]-origin;float d=Mathf.Clamp(delta.magnitude,Mathf.Abs(a-b)+.005f,a+b-.001f);
+                var axis=delta.normalized;var bend=Vector3.ProjectOnPlane(enemy.transform.forward,axis).normalized;
+                float along=(a*a+d*d-b*b)/(2*d);
+                var knee=origin+axis*along+bend*Mathf.Sqrt(Mathf.Max(0,a*a-along*along));
+                upper.rotation=Quaternion.FromToRotation(lower.position-origin,knee-origin)*upper.rotation;
+                lower.rotation=Quaternion.FromToRotation(foot.position-lower.position,feet[i]-lower.position)*lower.rotation;
+                foot.rotation=rotations[i];
+            }
         }
         void PlayContactThud(){
             if(contactSource==null){contactSource=gameObject.AddComponent<AudioSource>();contactSource.playOnAwake=false;contactSource.spatialBlend=0;contactSource.volume=.26f;}
