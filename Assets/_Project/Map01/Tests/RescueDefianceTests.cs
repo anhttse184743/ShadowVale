@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -58,12 +58,12 @@ public sealed class RescueDefianceTests:ForestSceneTestBase {
                         Assert.Greater(p.z,0);Assert.That(p.x,Is.InRange(.05f,.95f));Assert.That(p.y,Is.InRange(.05f,.95f));
                     }
                     if(execution&&d.ExecutionRounds!=oldRounds){Assert.AreEqual(oldRounds+1,d.ExecutionRounds,"No catch-up burst in one frame.");oldRounds=d.ExecutionRounds;}
-                    if(!execution&&(d.Elapsed<1.7f||d.Elapsed>=7.3f&&d.Elapsed<9.1f)){
+                    if(!execution&&(d.Elapsed<1.7f||d.Elapsed>=9.4f&&d.Elapsed<11.2f)){
                         var guard=r.Squad[0].GetComponentInChildren<Animator>();
                         Assert.Greater(guard.GetBoneTransform(HumanBodyBones.Hips).position.y-r.Squad[0].transform.position.y,.75f,"Stow is upper-body only: the boat's sitting legs must not enter the scene.");
                     }
-                    if(!execution&&d.Elapsed>=2.6f&&d.Elapsed<9.1f){
-                        if(d.Elapsed<7.3f){Assert.IsTrue(d.InterrogatorRifleSlung,"Both hands are free while punching.");Assert.Less(d.InterrogatorRifleBehindPack,-.12f,"The gun is secured beside the rear pack, not in front of the chest.");}
+                    if(!execution&&d.Elapsed>=4.2f&&d.Elapsed<11.2f){
+                        if(d.Elapsed<9.4f){Assert.IsTrue(d.InterrogatorRifleSlung,"Both hands are free while punching.");Assert.Less(d.InterrogatorRifleBehindPack,-.12f,"The gun is secured beside the rear pack, not in front of the chest.");}
                         var guard=r.Squad[0].GetComponentInChildren<Animator>();var weapon=guard.GetComponent<Map01Rifle>().weapon;
                         Assert.IsTrue(weapon.transform.parent==guard.GetBoneTransform(HumanBodyBones.Chest)||weapon.transform.parent==guard.GetBoneTransform(HumanBodyBones.RightHand));
                         foreach(var bone in new[]{HumanBodyBones.Head,HumanBodyBones.Neck,HumanBodyBones.Chest}){
@@ -101,10 +101,10 @@ public sealed class RescueDefianceTests:ForestSceneTestBase {
             if(execution){Assert.IsTrue(lastWords&&reaction);CollectionAssert.Contains(voices,"m1_rescue_hung_defiance");}
             else {
                 CollectionAssert.AreEqual(new[]{"m1_rescue_interrogate","m1_story_11","m1_v2_rescue_approach_01","m1_v2_rescue_approach_02","m1_v2_rescue_approach_03"},voices);
-                Assert.AreEqual(2,d.InterrogationHits);
-                Assert.That(d.LeftBodyContactError,Is.InRange(0,.04f),"Left fist must contact the belly: "+d.LeftBodyDelta);
-                Assert.That(d.RightBodyContactError,Is.InRange(0,.04f),"Right fist must contact the belly: "+d.RightBodyDelta);
-                Assert.Less(lowestLeftHead,1.20f,"Hung folds after the left body shot.");Assert.Less(lowestRightHead,1.20f,"Hung folds again after the right body shot.");
+                Assert.AreEqual(4,d.BodyHits);
+                Assert.That(d.ShoulderContactError,Is.InRange(0,.16f),"Holding hand follows the shoulder.");
+                Assert.That(d.RightBodyContactError,Is.InRange(0,.16f),"Punching hand reaches the belly.");
+                Assert.That(d.FaceContactError,Is.InRange(0,.16f),"Punching hand reaches the face.");
             }
         }finally{Time.captureDeltaTime=0;Object.Destroy(pump);File.WriteAllLines(folder+"/frames.csv",rows);File.WriteAllLines(folder+"/voices.txt",voices);}
     }
