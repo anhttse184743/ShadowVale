@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace ShadowVale.Map01
 {
+    /// <summary>
+    /// The bag's tabs and the skills page: each skill's level, its popout with the numbers of every tier, and a
+    /// preview of what the next tier changes.
+    /// </summary>
     public sealed partial class Map01Hud
     {
         private bool skillsTab;

@@ -13,7 +13,7 @@ namespace ShadowVale.Map01
         Mount patrolMount; bool hasPatrol;
         public static void ResetPatrolCalibration() { patrolMounts.Clear(); }
         Animator actor;Map01Rifle rifle;Map01EnemyController owner;Mount mount;Vector3 grip;
-        Map02ChapterEnemy chapterOwner;
+        IMapTwoGuard chapterOwner;
         bool standalone;
         public bool Calibrated{get;private set;}
         public float PalmError{get;private set;}
@@ -36,9 +36,9 @@ namespace ShadowVale.Map01
             var result=actor.GetComponent<Map01EnemyGrip>()??actor.gameObject.AddComponent<Map01EnemyGrip>();
             result.owner=guard;result.actor=actor;result.rifle=Map01Rifle.Attach(actor);result.Calibrate();return result;
         }
-        public static Map01EnemyGrip Bind(Map02ChapterEnemy guard)
+        public static Map01EnemyGrip Bind(IMapTwoGuard guard)
         {
-            var actor=guard.GetComponentInChildren<Animator>();if(actor==null||!actor.isHuman)return null;
+            var actor=guard.gameObject.GetComponentInChildren<Animator>();if(actor==null||!actor.isHuman)return null;
             var result=actor.GetComponent<Map01EnemyGrip>()??actor.gameObject.AddComponent<Map01EnemyGrip>();
             result.chapterOwner=guard;result.actor=actor;result.rifle=Map01Rifle.Attach(actor);result.Calibrate();return result;
         }
@@ -87,7 +87,7 @@ namespace ShadowVale.Map01
         void LateUpdate()
         {
             if(standalone){if(Calibrated&&rifle!=null&&rifle.weapon!=null&&rifle.weapon.gameObject.activeInHierarchy)Apply();return;}
-            if(chapterOwner!=null)
+            if(!MapTwoBridge.Gone(chapterOwner))
             {
                 if(Calibrated&&!chapterOwner.Dead&&rifle!=null&&rifle.weapon!=null&&rifle.weapon.gameObject.activeInHierarchy)
                     Apply(!chapterOwner.Alerted&&actor.GetCurrentAnimatorStateInfo(0).IsName("Locomotion"));

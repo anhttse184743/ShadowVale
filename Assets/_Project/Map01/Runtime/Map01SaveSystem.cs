@@ -12,7 +12,7 @@ namespace ShadowVale.Map01
     /// in the underground shelter, jetty B, camps C1–C3). Older saves hold positions on the old
     /// Map 1's terrain, which no longer exists, so they are refused rather than loaded.</summary>
     [DefaultExecutionOrder(100)]
-    public sealed class Map01SaveSystem : MonoBehaviour
+    public sealed partial class Map01SaveSystem : MonoBehaviour
     {
         /// <summary>The first checkpoint version on the current map layout.</summary>
         public const int LayoutVersion = 7;
@@ -70,18 +70,6 @@ namespace ShadowVale.Map01
         private bool syncingSkills;
         private string operationStart;
         public bool HasOperationCheckpoint=>!string.IsNullOrEmpty(operationStart);
-        public void MarkOperationCheckpoint()
-        {
-            if(IsRestoring||mission.Cinematic||mission.PlayerHealth<=0||GetComponent<Map01Story>().Operating||Map01NamActions.For(mission).Busy)return;
-            operationStart=JsonUtility.ToJson(Capture(false));
-            SaveSlot(ForestSaveSlots.AutoSlot,out _,true);
-        }
-        public bool RestartOperation()
-        {
-            if(!HasOperationCheckpoint)return false;
-            var data=PrepareRetry(JsonUtility.FromJson<CheckpointData>(operationStart));data.operationStart=operationStart;
-            RestartInteractionCheckpoint(JsonUtility.ToJson(data));return true;
-        }
         private string SavePath => Path.Combine(Path.GetDirectoryName(ForestSaveSlots.PathFor(0)), "shadowvale-map01-checkpoint.json");
 
         /// <summary>The real map. Any other scene running this mission (the "Test Map 1 AI" copy) is a
@@ -107,55 +95,6 @@ namespace ShadowVale.Map01
             else SyncSkillMission();
         }
         private void LateUpdate() { if (mission.IsInitialized && skillCampaign != null) SyncSkillMission(); }
-
-        private static string RunId(CheckpointData data, string json)
-        {
-            if (!string.IsNullOrEmpty(data?.skillRunId)) return data.skillRunId;
-            // Stable migration for the same pre-feature save, without rewriting the user's old slot.
-            using var hash = System.Security.Cryptography.SHA256.Create();
-            return BitConverter.ToString(hash.ComputeHash(System.Text.Encoding.UTF8.GetBytes(json))).Replace("-", "").ToLowerInvariant();
-        }
-        private void EnsureSkillCampaign()
-        {
-            if (skillCampaign != null && !string.IsNullOrEmpty(skillCampaign.RunId)) return;
-            skillCampaign = mission.player.GetComponent<SkillCampaignPersistence>();
-            if (skillCampaign == null) skillCampaign = mission.player.gameObject.AddComponent<SkillCampaignPersistence>();
-            if (pendingCheckpoint == null) skillCampaign.Initialize(Guid.NewGuid().ToString("N"));
-            else skillCampaign.Initialize(RunId(JsonUtility.FromJson<CheckpointData>(pendingCheckpoint), pendingCheckpoint));
-        }
-        private static string SkillMissionId(int stage) => stage switch
-        {
-            Map01Quest.RescueStage => "rescue", Map01Quest.EscortStage => "escort", Map01Quest.ScoutStage => "scouting",
-            Map01Quest.CampsStage => "camps", Map01Quest.BossStage => "boss",
-            Map01Quest.ExtractionStage or Map01Quest.BoardingStage => "extraction", _ => null
-        };
-        public void SyncSkillMission()
-        {
-            if (syncingSkills || IsRestoring || !mission.IsInitialized) return;
-            EnsureSkillCampaign();
-            syncingSkills = true;
-            try
-            {
-                if (mission.PlayerHealth <= 0 || (mission.ModernHealth != null && mission.ModernHealth.IsDead)
-                    || GetComponent<Map01Rescue>().HungDown || GetComponent<Map01Rescue>().CurrentPhase == Map01Rescue.Phase.Alarm
-                    || GetComponent<Map01Scouting>().FailedRun)
-                { mission.Skills.FailMission(); return; }
-                string id = SkillMissionId(quest.Stage);
-                if (mission.Skills.MissionId == id)
-                {
-                    if (missionStart == null) missionStart = JsonUtility.ToJson(Capture(false));
-                    return;
-                }
-                mission.Skills.CompleteMission();
-                missionStart = null;
-                if (id != null)
-                {
-                    mission.Skills.BeginMission(id);
-                }
-                missionStart = JsonUtility.ToJson(Capture(false));
-            }
-            finally { syncingSkills = false; }
-        }
 
         private CheckpointData PrepareRetry(CheckpointData data)
         {
@@ -246,86 +185,6 @@ namespace ShadowVale.Map01
             }
             if (mission.Cinematic || GetComponent<Map01Rescue>().NonSaveable || GetComponent<Map01Story>().Operating || Map01NamActions.For(mission).Busy) return true;
             return SaveSlot(ForestSaveSlots.AutoSlot, out error, true);
-        }
-
-        /// <summary>Hùng has just given the scouting order: remember this moment, for a failed run to
-        /// start over from (<see cref="RestartScouting"/>).</summary>
-        public void MarkScoutingStart()
-        {
-            scoutStart = null; // Not nested into itself.
-            scoutStart = JsonUtility.ToJson(Capture());
-        }
-
-        public bool HasScoutStart => !string.IsNullOrEmpty(scoutStart);
-        public void EnsureRescueCheckpoint()
-        {
-            if(string.IsNullOrEmpty(rescueStart)&&!mission.Cinematic&&!IsRestoring)MarkRescueCheckpoint(false);
-        }
-        public void EnsureEscortCheckpoint()
-        {
-            if(string.IsNullOrEmpty(escortStart)&&!mission.Cinematic&&!IsRestoring)MarkRescueCheckpoint(true);
-        }
-        public void MarkRescueCheckpoint(bool escort)
-        {
-            var data=Capture(false);
-            if(!escort){data.player=GetComponent<Map01Rescue>().RetryPoint;data.alarmed=false;}
-            string checkpoint=JsonUtility.ToJson(data);
-            if(escort)escortStart=checkpoint;else rescueStart=checkpoint;
-        }
-        public bool RestartRescue(bool escort)
-        {
-            string checkpoint=escort?escortStart:rescueStart;
-            if(string.IsNullOrEmpty(checkpoint)){mission.Say("Chưa có checkpoint nhiệm vụ. Hãy tải bản lưu hoặc chơi lại.",5);return false;}
-            var data=PrepareRetry(JsonUtility.FromJson<CheckpointData>(checkpoint));
-            if(!escort&&GetComponent<Map01Rescue>().IntroSeen&&data.rescue!=null){
-                data.rescue.introSeen=true;
-                data.rescue.revision=Map01Rescue.SnapshotRevision;
-            }
-            // Keep the non-recursive retry snapshots across repeated retries.
-            data.rescueStart=rescueStart;data.escortStart=escortStart;
-            pendingCheckpoint=JsonUtility.ToJson(data);pendingSeconds=mission.PlaySeconds;
-            pendingMessage=escort?"Làm lại đoạn hộ tống Hùng về căn cứ.":"Làm lại: lén tiếp cận, hạ lính giám sát bằng dao rồi cứu Hùng.";
-            Time.timeScale=1;SceneManager.LoadScene("Map 1");return true;
-        }
-        // Kept in memory before an interaction, never written while it is running.
-        public string CaptureInteractionCheckpoint()=>JsonUtility.ToJson(Capture());
-        public void RestartInteractionCheckpoint(string checkpoint){
-            if(string.IsNullOrEmpty(checkpoint))return;
-            pendingCheckpoint=checkpoint;pendingSeconds=mission.PlaySeconds;pendingMessage="Đã trở về trước lúc phục kích.";
-            Time.timeScale=1;SceneManager.LoadScene("Map 1");
-        }
-
-        /// <summary>
-        /// No recorded moment of the order (a save from before it was kept): make one as if Hùng
-        /// had just given it — Nam beside him, no camp logged, every one of
-        /// <paramref name="campGuards"/> fresh at his post; everything else as it is now.
-        /// </summary>
-        public void MarkFreshScoutingStart(IEnumerable<Map01EnemyController> campGuards)
-        {
-            scoutStart = null;
-            var data = Capture();
-            Vector3 beside = mission.hung.position + mission.hung.forward * 2f;
-            if (NavMesh.SamplePosition(beside, out var hit, 3f, NavMesh.AllAreas)) beside = hit.position;
-            data.player = beside;
-            var toHung = mission.hung.position - beside;
-            data.playerYaw = Mathf.Atan2(toHung.x, toHung.z) * Mathf.Rad2Deg;
-            data.scoutedCamps = 0;
-            data.alarmed = false;
-            var fresh = campGuards.ToDictionary(g => g.SaveId, g => g.CaptureAtPost());
-            for (int i = 0; i < data.enemies.Length; i++)
-                if (fresh.TryGetValue(data.enemies[i].id, out var atPost)) data.enemies[i] = atPost;
-            scoutStart = JsonUtility.ToJson(data);
-        }
-
-        /// <summary>Back to the moment Hùng gave the scouting order — Map 1 reloads there, with
-        /// <paramref name="message"/> on screen. False if that moment was never recorded.</summary>
-        public bool RestartScouting(string message)
-        {
-            if (string.IsNullOrEmpty(scoutStart)) return false;
-            pendingCheckpoint = JsonUtility.ToJson(PrepareRetry(JsonUtility.FromJson<CheckpointData>(scoutStart))); pendingSeconds = mission.PlaySeconds; pendingMessage = message;
-            Time.timeScale = 1;
-            Map01Mission.ReloadScene(gameObject.scene); // Map 1, or the sandbox copy it is running in.
-            return true;
         }
 
         public bool SaveSlot(int slot, out string error, bool automatic = false)
@@ -440,140 +299,6 @@ namespace ShadowVale.Map01
             }
             Time.timeScale = 1;
             SceneManager.LoadScene(sceneName);
-        }
-
-        /// <summary>[F9] — called by Map01PlayerInteraction, which owns the key bindings.</summary>
-        public void Load()
-        {
-            try
-            {
-                FlushCurrentSkillRun();
-                if (IsSandbox)
-                {
-                    if (!File.Exists(SandboxPath(0))) { mission.Say("Map thử chưa có bản lưu nhanh [F5]."); return; }
-                    pendingCheckpoint = File.ReadAllText(SandboxPath(0)); pendingSeconds = 0; pendingMessage = null;
-                    Time.timeScale = 1; Map01Mission.ReloadScene(gameObject.scene);
-                    return;
-                }
-                if (ForestSaveSlots.Exists(0)) { BeginGame(0); return; }
-                if (!File.Exists(SavePath)) { mission.Say("Chưa có bản lưu nhanh."); return; }
-                string json = File.ReadAllText(SavePath);
-                pendingCheckpoint = JsonUtility.ToJson(NormalizeFailedAttempt(JsonUtility.FromJson<CheckpointData>(json), json)); pendingSeconds = 0; pendingMessage = null;
-                Time.timeScale = 1; SceneManager.LoadScene("Map 1");
-            }
-            catch (Exception e) { mission.Say("Không thể tải: " + e.Message); }
-        }
-
-        private static void FlushCurrentSkillRun()
-        {
-            var active = FindFirstObjectByType<Map01SaveSystem>();
-            if (active == null || active.mission == null || !active.mission.IsInitialized || IsRestoring) return;
-            active.SyncSkillMission();
-            if (!active.skillCampaign.TryFlush(out var error)) throw new IOException(error);
-        }
-
-        private void Restore()
-        {
-            GetComponent<DialogueVoice>()?.Stop();
-            GetComponent<Map01StoryDialogue>()?.Close(false);
-            GetComponent<Map01RescueCinematic>()?.CancelForRestore();
-            try
-            {
-                var data = JsonUtility.FromJson<CheckpointData>(pendingCheckpoint);
-                mission.SetPlaySeconds(pendingSeconds);
-                if (data == null || data.version < 4 || data.items == null || data.used == null) throw new IOException();
-                if (data.version < LayoutVersion) { mission.Say(OldLayoutMessage, 8); return; }
-                var controller = mission.player.GetComponent<CharacterController>();
-                if (controller != null) { controller.enabled = false; mission.player.position = data.player; controller.enabled = true; }
-                else mission.player.position = data.player;
-                mission.hung.GetComponent<NavMeshAgent>()?.Warp(data.hung);
-                quest.RestoreStoryStage(data.stage, data.story);
-                // Before anything rolls loot: the run's seed and the packs already rolled come first (Map01Logistics).
-                Map01Logistics.For(mission).Restore(data.logistics);
-                GetComponent<Map01CampChests>()?.Reroll();
-                var c3 = GetComponent<Map01C3Mission>();
-                c3?.RerollCache();
-                c3?.Restore(data.c3);   // before the guards' snapshots: a woken sleeper is back on the field to receive his
-                inventory.RestoreFromSave(data.items, data.stones, data.crafting, data.craftRemaining);
-                if (data.bag != null) inventory.RestoreLayout(data.bag);
-                Map01Drops.For(mission).Restore(data.dropped);
-                inventory.RestoreFieldToolkit(data.bag?.fieldKitVersion ?? 0);
-                Map01Smoke.ClearAll();
-                Map01Blast.ClearAll();
-                EnsureSkillCampaign();
-                skillCampaign.Initialize(RunId(data, pendingCheckpoint));
-                skillCampaign.Restore(data.skills, data.skillMission);
-                GetComponent<Map01Minimap>()?.RestoreExploration(data.exploration);
-                missionStart = data.missionStart;
-                GetComponent<Map01Story>().AfterInventoryRestore();
-                GetComponent<Map01Story>().RestoreOperationActors(data.enemies);
-                operationStart=data.operationStart;
-                mission.Alarmed = data.alarmed;
-                mission.RestoreHealthFromSave(Mathf.Clamp(data.hp, 1, mission.Settings.playerHP));
-                mission.SetStamina(data.stamina);
-                mission.Crouched = data.crouched;
-                mission.player.rotation = Quaternion.Euler(0, data.playerYaw, 0);
-                mission.hung.rotation = Quaternion.Euler(0, data.hungYaw, 0);
-                GetComponent<Map01Rescue>().Restore(data.rescue, data.enemies);
-                rescueStart=data.rescueStart;escortStart=data.escortStart;
-                RestoreGameplay(data);
-                GetComponent<Map01Rescue>().RestoreHealth(data.hungHealth);
-                // Loading an escort resumes its pose; only the live rescue plays the rise from captivity.
-                mission.hung.GetComponentInChildren<Map01HungVisual>()?.RestoreCheckpointPose();
-                GetComponent<Map01Scouting>().RestoreFound(data.scoutedCamps);
-                foreach (var point in mission.Points) point.used = data.used.Contains(point.id);
-                // Starting a scouting run over keeps the moment it started from; any other load
-                // takes whatever moment the save carries (none, outside scouting).
-                if (pendingMessage == null) scoutStart = string.IsNullOrEmpty(data.scoutStart) ? null : data.scoutStart;
-                if (pendingMessage != null) mission.Say(pendingMessage, 14);
-                else mission.Say("Đã khôi phục tiến trình và trạng thái giao chiến.");
-            }
-            catch (Exception) { mission.Say("Checkpoint không hợp lệ. Bắt đầu lại Map 1."); }
-            finally { pendingCheckpoint = null; pendingMessage = null; }
-        }
-
-        private void RestoreGameplay(CheckpointData data)
-        {
-            if (mission.ModernPlayer != null) mission.ModernPlayer.RestoreMotion(mission.Crouched);
-            if (mission.ModernCombat != null)
-            {
-                if (Enum.IsDefined(typeof(ShadowVale.Gameplay.Combat.WeaponKind), data.equippedWeapon))
-                {
-                    var equipped=(ShadowVale.Gameplay.Combat.WeaponKind)data.equippedWeapon;
-                    if(equipped==ShadowVale.Gameplay.Combat.WeaponKind.Rifle && inventory.SlotItem(Map01Inventory.Slot.Primary)=="rifle_mosin")
-                        equipped=ShadowVale.Gameplay.Combat.WeaponKind.Sniper;
-                    else if(equipped==ShadowVale.Gameplay.Combat.WeaponKind.Rifle && (inventory.SlotItem(Map01Inventory.Slot.Primary)!="rifle_standard" && inventory.SlotItem(Map01Inventory.Slot.Primary)!=Map01M16.Id))
-                        equipped=ShadowVale.Gameplay.Combat.WeaponKind.Knife;
-                    if(equipped==ShadowVale.Gameplay.Combat.WeaponKind.Pistol && inventory.SlotItem(Map01Inventory.Slot.Pistol)!="pistol_k54")
-                        equipped=ShadowVale.Gameplay.Combat.WeaponKind.Knife;
-                    if(equipped==ShadowVale.Gameplay.Combat.WeaponKind.Sniper && inventory.SlotItem(Map01Inventory.Slot.Primary)!="rifle_mosin")
-                        equipped=ShadowVale.Gameplay.Combat.WeaponKind.Knife;
-                    mission.ModernCombat.Equip(equipped);
-                }
-                inventory.ApplyPrimaryRifle(false);
-                mission.ModernCombat.RestoreAttackCooldown(data.attackRemaining);
-                // Saves written before magazines existed carry -1; leave the weapon loaded
-                // rather than handing the player an empty rifle out of an old checkpoint.
-                if (data.roundsInMagazine >= 0) mission.ModernCombat.RestoreMagazine(ShadowVale.Gameplay.Combat.WeaponKind.Rifle, data.roundsInMagazine);
-                mission.ModernCombat.RestoreMagazine(ShadowVale.Gameplay.Combat.WeaponKind.Pistol, data.pistolRoundsInMagazine);
-                mission.ModernCombat.RestoreMagazine(ShadowVale.Gameplay.Combat.WeaponKind.Sniper, data.mosinRoundsInMagazine);
-            }
-            foreach (var enemy in mission.Enemies)
-            {
-                if (enemy == null) continue;
-                var saved = data.enemies?.FirstOrDefault(e => e.id == enemy.SaveId);
-                // The previous runtime boss inherited an arbitrary camp parent. Import its
-                // existing snapshot into the stable third-outpost actor, never duplicate him.
-                if (saved == null && enemy.IsBoss && data.story == null)
-                    saved = data.enemies?.FirstOrDefault(e => e.id != null && e.id.EndsWith("/Chỉ huy địch", StringComparison.Ordinal));
-                if (saved != null) enemy.RestoreSnapshot(saved);
-                else {
-                    enemy.RefreshRifleLoadout();
-                    if (enemy.IsBoss && GetComponent<Map01Story>().Progress.commanderKilled) {
-                        var state = enemy.Capture(); state.hp = 0; enemy.RestoreSnapshot(state);
-                    }
-                }
-            }
         }
 
         private void OnDisable() { Time.timeScale = 1; }

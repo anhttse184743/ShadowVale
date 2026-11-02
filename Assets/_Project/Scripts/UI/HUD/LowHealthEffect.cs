@@ -6,6 +6,10 @@ using UnityEngine.Rendering.Universal;
 
 namespace ShadowVale.UI.HUD
 {
+    /// <summary>
+    /// The low-health screen: the picture loses colour as health drops (75% desaturated at 15% HP, monochrome at
+    /// death), framed by a generated blood-red border.
+    /// </summary>
     [DisallowMultipleComponent]
     public sealed class LowHealthEffect : MonoBehaviour
     {
