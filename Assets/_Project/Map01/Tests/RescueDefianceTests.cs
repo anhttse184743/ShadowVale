@@ -37,8 +37,8 @@ public sealed class RescueDefianceTests:ForestSceneTestBase {
         var folder="Logs/InterrogationBodyCombo/"+name;Directory.CreateDirectory(folder);
         var pump=m.gameObject.AddComponent<ExtractionCapturePump>();
         var rows=new List<string>{"time,voice,rounds,contact,headY,leftContact,rightContact,hits"};var voices=new List<string>();string previous=null;int oldRounds=0;
-        int frame=0,captured=0;float nextCapture=Time.time;bool contactCaptured=false,rightCaptured=false;float lowestLeftHead=99,lowestRightHead=99;bool lastWords=false,reaction=false;float start=Time.time,deadline=Time.realtimeSinceStartup+420;
-        var original=m.gameCamera.transform.position;
+        int frame=0,captured=0,capturedWrists=0;float nextCapture=Time.time;bool contactCaptured=false,rightCaptured=false;float lowestLeftHead=99,lowestRightHead=99;bool lastWords=false,reaction=false;float start=Time.time,deadline=Time.realtimeSinceStartup+420;
+        var original=m.gameCamera.transform.position;Vector3? interrogationAnchor=null;
         try {
             Time.captureDeltaTime=0;
             while(d.IsPlaying&&Time.realtimeSinceStartup<deadline){
@@ -48,6 +48,27 @@ public sealed class RescueDefianceTests:ForestSceneTestBase {
                     var v=m.GetComponentsInChildren<DialogueVoice>().FirstOrDefault(x=>!string.IsNullOrEmpty(x.CurrentId));
                     if(v?.CurrentId!=null&&v.CurrentId!=previous){previous=v.CurrentId;voices.Add(previous);}
                     Assert.IsTrue(h.RopeVisible);
+                    if(!execution&&d.BodyHits>0){
+                        Assert.IsTrue(d.InterrogatorRifleSlung,"Keep the rifle slung until the entire intro ends, including Nam radio dialogue.");
+                        if(!interrogationAnchor.HasValue)interrogationAnchor=r.Squad[0].transform.position;
+                        Assert.Less(Vector3.Distance(interrogationAnchor.Value,r.Squad[0].transform.position),.025f,"The interrogator must not walk back during the cutscene.");
+                    }
+                    if(!execution){
+                        Assert.Less(h.BoundWristSideOffset,.035f,"Bound wrists must stay centred behind the pelvis.");
+                        Assert.That(h.BoundWristSpan,Is.InRange(.065f,.13f),"Wrists must remain paired inside the rope coils.");
+                        Assert.Less(h.BoundWristReachError,.045f,"Each hand reaches its binding without stretching the arm.");
+                        if(d.BodyHits>capturedWrists){
+                            capturedWrists=d.BodyHits;
+                            var camera=m.gameCamera;var oldPosition=camera.transform.position;var oldRotation=camera.transform.rotation;float oldFov=camera.fieldOfView;
+                            var hips=h.actor.GetBoneTransform(HumanBodyBones.Hips);
+                            var across=Vector3.ProjectOnPlane(h.actor.GetBoneTransform(HumanBodyBones.RightUpperLeg).position-h.actor.GetBoneTransform(HumanBodyBones.LeftUpperLeg).position,Vector3.up).normalized;
+                            var forward=Vector3.Cross(across,Vector3.up).normalized;
+                            var target=(h.actor.GetBoneTransform(HumanBodyBones.LeftHand).position+h.actor.GetBoneTransform(HumanBodyBones.RightHand).position)*.5f;
+                            var lens=hips.position-forward*1.5f+across*.35f+Vector3.up*.35f;
+                            try{camera.transform.SetPositionAndRotation(lens,Quaternion.LookRotation(target-lens));camera.fieldOfView=38;CaptureFrame(camera,folder+"/wrists-"+capturedWrists+".png");}
+                            finally{camera.transform.SetPositionAndRotation(oldPosition,oldRotation);camera.fieldOfView=oldFov;}
+                        }
+                    }
                     if(!execution&&v?.CurrentId?.StartsWith("m1_v2_rescue_approach_")==true){
                         Assert.IsFalse(d.IntroShowsCaptive);Assert.Less(Vector3.Distance(original,m.gameCamera.transform.position),.04f,"Nam speaks only back in his view.");
                     }
@@ -101,7 +122,7 @@ public sealed class RescueDefianceTests:ForestSceneTestBase {
             if(execution){Assert.IsTrue(lastWords&&reaction);CollectionAssert.Contains(voices,"m1_rescue_hung_defiance");}
             else {
                 CollectionAssert.AreEqual(new[]{"m1_rescue_interrogate","m1_story_11","m1_v2_rescue_approach_01","m1_v2_rescue_approach_02","m1_v2_rescue_approach_03"},voices);
-                Assert.AreEqual(4,d.BodyHits);
+                Assert.Greater(d.BodyHits,4,"Interrogation continues past the first combination until gameplay returns.");
                 Assert.That(d.ShoulderContactError,Is.InRange(0,.16f),"Holding hand follows the shoulder.");
                 Assert.That(d.RightBodyContactError,Is.InRange(0,.16f),"Punching hand reaches the belly.");
                 Assert.That(d.FaceContactError,Is.InRange(0,.16f),"Punching hand reaches the face.");

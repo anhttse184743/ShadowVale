@@ -147,7 +147,7 @@ namespace ShadowVale.Map01
                 // The hostile exchange belongs to the captive shot. Nam's radio
                 // report starts only after the lens has returned to him.
                 if(storyBeat==0&&Elapsed>=IntroWalkAt){Voice().Play("m1_rescue_interrogate");storyBeat=1;}
-                int due=Elapsed<IntroHitAt?0:Mathf.Min(4,1+Mathf.FloorToInt((Elapsed-IntroHitAt)/PunchPeriod));
+                int due=Elapsed<IntroHitAt?0:1+Mathf.FloorToInt((Elapsed-IntroHitAt)/PunchPeriod);
                 if(due>bodyHits){
                     bodyHits=due;introImpact=true;introImpactAt=Elapsed;
                     introRightImpact=bodyHits>=2;introRightImpactAt=Elapsed;
@@ -246,7 +246,9 @@ namespace ShadowVale.Map01
                     chest.rotation=Quaternion.AngleAxis(breath,mission.hung.right)*chest.rotation;
                 }
             }
-            captivePose.Ground(mission.hung.position.y);interrogatorPose.Ground(enemy.transform.position.y);captiveVisual.SampleCaptiveContacts();
+            captivePose.Ground(mission.hung.position.y);interrogatorPose.Ground(enemy.transform.position.y);
+            if(CurrentMode==Mode.Intro)captiveVisual.StabilizeBoundHands();
+            captiveVisual.SampleCaptiveContacts();
             if(CurrentMode==Mode.Intro&&interrogationSling!=null)interrogationSling.Sample(interrogationSling.Weight,false);
             // A single continuous lens: depart from Nam, travel to the captive,
             // and hold the same composition through the execution and last words.

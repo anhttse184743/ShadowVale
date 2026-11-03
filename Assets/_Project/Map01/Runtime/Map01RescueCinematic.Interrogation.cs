@@ -67,13 +67,12 @@ namespace ShadowVale.Map01
         }
         void RenderInterrogation(){
             float walkIn=Mathf.SmoothStep(0,1,(Elapsed-IntroWalkAt)/1.35f);
-            float walkOut=Mathf.SmoothStep(0,1,(Elapsed-IntroWalkBackAt)/1.25f);
-            enemy.transform.position=Vector3.Lerp(interrogatorStart,interrogatorClose,walkIn*(1-walkOut));
+            enemy.transform.position=Vector3.Lerp(interrogatorStart,interrogatorClose,walkIn);
             enemy.FaceImmediate(mission.hung.position);
             // The mocap punch crosses the torso. Lock its authored heading
             // at the stance anchor; re-aiming the root at Hung would turn the
             // whole arc away from the calibrated contact point.
-            float stance=Mathf.SmoothStep(0,1,(Elapsed-IntroStrikeAt+.25f)/.25f)*(1-Mathf.SmoothStep(0,1,(Elapsed-IntroWalkBackAt)/.25f));
+            float stance=Mathf.SmoothStep(0,1,(Elapsed-IntroStrikeAt+.25f)/.25f);
             var fightingFacing=Quaternion.LookRotation(Vector3.ProjectOnPlane(mission.hung.position-enemy.transform.position,Vector3.up).normalized);
             enemy.transform.rotation=Quaternion.Slerp(enemy.transform.rotation,fightingFacing,stance);
             var actor=enemy.GetComponentInChildren<Animator>();
@@ -88,12 +87,11 @@ namespace ShadowVale.Map01
                 float phase=Vector3.Distance(interrogatorStart,interrogatorClose)*walkIn/1.4f;
                 float weight=Mathf.Min(Mathf.SmoothStep(0,1,(Elapsed-IntroWalkAt)/.16f),1-Mathf.SmoothStep(0,1,(Elapsed-IntroStrikeAt+.16f)/.16f));
                 interrogatorPose.SampleBlend(interrogationIdle,0,interrogationWalk,phase,weight);sling=1;
-            }else if(Elapsed<IntroWalkBackAt){
+            }else {
                 float age=Elapsed-IntroStrikeAt;
                 float cycle=Mathf.Repeat(age,PunchPeriod);
                 float enter=Mathf.SmoothStep(0,1,age/.22f);
-                float exit=1-Mathf.SmoothStep(0,1,(Elapsed-IntroWalkBackAt+.22f)/.22f);
-                float weight=enter*exit;
+                float weight=enter;
                 bool face=Mathf.FloorToInt(age/PunchPeriod)%2==1;
                 // Anticipation, fast extension, a brief impact, then recovery.
                 float thrust=cycle<.20f?0:cycle<.40f?1-Mathf.Pow(1-(cycle-.20f)/.20f,3):cycle<.44f?1:1-Mathf.SmoothStep(0,1,(cycle-.44f)/.28f);
@@ -132,15 +130,7 @@ namespace ShadowVale.Map01
                     leftContactError=ShoulderContactError;InterrogationContactError=error;
                 }
                 sling=1;
-            }else if(Elapsed<ScoutSeconds+9.4f){
-                float phase=Vector3.Distance(interrogatorStart,interrogatorClose)*walkOut/1.4f;
-                float weight=Mathf.Min(Mathf.SmoothStep(0,1,(Elapsed-IntroWalkBackAt)/.15f),1-Mathf.SmoothStep(0,1,(Elapsed-ScoutSeconds-9.25f)/.15f));
-                interrogatorPose.SampleBlend(interrogationIdle,0,interrogationWalk,Mathf.Max(0,interrogationWalk.length-Mathf.Repeat(phase,interrogationWalk.length)),weight);sling=1;
-            }else if(Elapsed<ScoutSeconds+11.2f){
-                float age=Elapsed-ScoutSeconds-9.4f;
-                sling=1-Mathf.SmoothStep(0,1,(age-.15f)/1.45f);
-                interrogatorPose.SampleBlend(held,0,interrogationIdle,age,Mathf.SmoothStep(0,1,(sling-.45f)/.55f));RestoreInterrogationStanding();
-            }else interrogatorPose.Sample(held,0);
+            }
             if(sling<.001f)actor.GetComponent<Map01EnemyGrip>()?.Apply();
             interrogationSling?.Sample(sling);
         }
