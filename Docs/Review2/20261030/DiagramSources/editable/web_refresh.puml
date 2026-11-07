@@ -1,0 +1,29 @@
+@startuml
+hide footbox
+skinparam backgroundColor white
+skinparam sequenceParticipantBackgroundColor #FCE8E0
+autonumber
+participant "axiosClient / refreshSession" as P0 <<boundary>>
+participant "AuthController" as P1 <<controller>>
+participant "AuthService" as P2 <<service>>
+participant "RefreshTokenRepository" as P3 <<repository>>
+participant "RefreshToken / User" as P4 <<entity>>
+note over P0,P2: Acquire the shared session lock before renewal.
+P0 -> P1: Request session renewal
+P1 -> P2: Check the refresh credential
+P2 -> P3: Find the stored token
+P3 --> P2: Return stored session data
+P2 -> P4: Read token validity
+alt stored token was already revoked
+P2 -> P3: Revoke account sessions
+P2 --> P1: Report an invalid session
+P1 --> P0: Require a new login
+else unrevoked, unexpired token and active account
+P2 -> P4: Rotate the session token
+note over P2,P4: Reject missing, expired or inactive-account credentials; use TokenService for renewal.
+P2 -> P3: Save the new session
+P2 --> P1: Return the renewed token pair
+P1 --> P0: Accept renewed credentials
+note over P0,P2: Replace both credentials and retry the original action once.
+end
+@enduml

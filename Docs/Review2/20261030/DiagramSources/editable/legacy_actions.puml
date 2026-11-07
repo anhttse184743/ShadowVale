@@ -1,0 +1,18 @@
+@startuml
+hide footbox
+skinparam backgroundColor white
+skinparam sequenceParticipantBackgroundColor #FCE8E0
+autonumber
+participant "Unity session" as P0 <<boundary>>
+participant "DiskQueue" as P1 <<file store>>
+participant "TelemetryUploader" as P2 <<service>>
+participant "Backend routing" as P3 <<boundary>>
+P0 -> P1: Store the completed session batch
+P2 -> P1: Read pending batches oldest first
+P1 --> P2: Return the next saved batch
+P2 -> P3: Send the legacy session batch
+note over P2,P3: Current client and server contracts differ. No compatible server action accepts this legacy request.
+P3 --> P2: Reject the incompatible request
+P2 -> P1: Keep the batch for a later retry
+note over P0,P2: Gameplay continues. A bounded queue prunes oldest overflow; it is not unlimited retention.
+@enduml

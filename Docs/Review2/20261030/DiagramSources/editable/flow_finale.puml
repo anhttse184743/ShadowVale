@@ -1,0 +1,20 @@
+@startuml
+skinparam backgroundColor white
+|Player|
+start
+|Player|
+:Finish Day 3 preparation;
+|ShadowVale game|
+:Begin the night attack;
+|Player|
+:Open evacuation routes and defend required positions;
+|ShadowVale game|
+:Move civilians and continue allied story events;
+|Player|
+:Complete the final defence and reach Dawn;
+|ShadowVale game|
+:Finish the chapter and retain labeled coordination evidence;
+|Analyst|
+:Run the fixed replay fixture and inspect comparable solver evidence;
+stop
+@enduml

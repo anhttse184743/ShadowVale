@@ -1,0 +1,48 @@
+@startuml
+skinparam classBackgroundColor #FCE8E0
+hide methods
+class "Map01SaveSystem" as M1 {
+  SaveSlot / BeginGame / Load
+  Owns Map 1 checkpoint payloads
+}
+class "ForestSaveSlots" as F {
+  Read / Write / Parse / Latest
+  Shared five-slot file envelope
+}
+class "Map02Mission" as M2 {
+  Capture / Restore / SaveSlot
+  Owns Map 2 snapshot serialization
+}
+class "Map 1 CheckpointData" as D1 {
+  Mission / player / enemy state
+  Map01SaveSystem nested payload
+}
+class "ForestSaveSlots.Entry" as E {
+  sceneName / savedAt / checkpoint
+  version / thumbnail / playSeconds
+}
+class "Map02ChapterDirector" as CD {
+  Capture / Restore
+  Owns live chapter integration
+}
+class "SaveGameV1" as SH {
+  Separate shared Data DTO
+  Needs an explicit campaign adapter
+}
+class "Map02ChapterState" as CS {
+  phase / completion / dayOne
+  Actors / enemies / activity progress
+}
+class "Map02Mission.Snapshot" as SN {
+  chapter / world / player / bag
+  Map 2 checkpoint wrapper
+}
+M1 --> F
+M2 --> F
+M1 --> D1
+F --> E
+M2 --> CD
+M2 --> SN
+CD --> CS
+SN --> CS
+@enduml

@@ -1,0 +1,17 @@
+@startuml
+skinparam stateBackgroundColor #FCE8E0
+state "Draft" as D
+state "InReview" as I
+state "Rejected" as R
+state "Approved" as A
+state "Archived" as X
+state "Published" as P
+D --> I: submit [validated]
+I --> A: approve revision
+I --> R: reject with note
+R --> D: first content-resource edit
+A --> P: publish version
+P --> X: new release goes live
+X --> P: rollback [was live]
+D --> X: archive draft
+@enduml

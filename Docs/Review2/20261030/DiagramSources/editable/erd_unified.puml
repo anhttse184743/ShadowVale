@@ -1,0 +1,151 @@
+@startuml
+left to right direction
+skinparam linetype ortho
+skinparam entityBackgroundColor #FCE8E0
+hide circle
+entity "users" as E0 {
+  id : uuid <<PK>>
+}
+entity "refresh_tokens" as E1 {
+  id : uuid <<PK>>
+  user_id : uuid <<FK>>
+}
+entity "content_versions" as E2 {
+  id : uuid <<PK>>
+  authored_by_id : uuid <<FK>>
+  reviewed_by_id : uuid <<FK>>
+  published_by_id : uuid <<FK>>
+  parent_version_id : uuid <<FK>>
+}
+entity "content_publication_history" as E3 {
+  id : uuid <<PK>>
+  content_version_id : uuid <<FK>>
+  previous_version_id : uuid <<FK>>
+  actor_id : uuid <<FK>>
+}
+entity "items" as E4 {
+  id : uuid <<PK>>
+  content_version_id : uuid <<FK>>
+}
+entity "weapons" as E5 {
+  id : uuid <<PK>>
+  item_id : uuid <<FK>>
+  ammo_item_id : uuid <<FK>>
+}
+entity "consumables" as E6 {
+  id : uuid <<PK>>
+  item_id : uuid <<FK>>
+}
+entity "skills" as E7 {
+  id : uuid <<PK>>
+  content_version_id : uuid <<FK>>
+}
+entity "loot_tables" as E8 {
+  id : uuid <<PK>>
+  content_version_id : uuid <<FK>>
+}
+entity "loot_table_entries" as E9 {
+  id : uuid <<PK>>
+  loot_table_id : uuid <<FK>>
+  item_id : uuid <<FK>>
+}
+entity "enemy_types" as E10 {
+  id : uuid <<PK>>
+  weapon_id : uuid <<FK>>
+  loot_table_id : uuid <<FK>>
+  content_version_id : uuid <<FK>>
+}
+entity "maps" as E11 {
+  id : uuid <<PK>>
+  content_version_id : uuid <<FK>>
+}
+entity "map_loot_tables" as E12 {
+  id : uuid <<PK>>
+  map_id : uuid <<FK>>
+  loot_table_id : uuid <<FK>>
+}
+entity "enemy_placements" as E13 {
+  id : uuid <<PK>>
+  map_id : uuid <<FK>>
+  enemy_type_id : uuid <<FK>>
+}
+entity "crafting_recipes" as E14 {
+  id : uuid <<PK>>
+  output_item_id : uuid <<FK>>
+  required_skill_id : uuid <<FK>>
+  content_version_id : uuid <<FK>>
+}
+entity "crafting_recipe_ingredients" as E15 {
+  id : uuid <<PK>>
+  recipe_id : uuid <<FK>>
+  item_id : uuid <<FK>>
+}
+entity "quests" as E16 {
+  id : uuid <<PK>>
+  content_version_id : uuid <<FK>>
+}
+entity "quest_rewards" as E17 {
+  id : uuid <<PK>>
+  quest_id : uuid <<FK>>
+  item_id : uuid <<FK>>
+}
+entity "players" as E18 {
+  id : uuid <<PK>>
+}
+entity "solver_configurations" as E19 {
+  id : uuid <<PK>>
+}
+entity "game_sessions" as E20 {
+  id : uuid <<PK>>
+  player_id : uuid <<FK>>
+  content_version_id : uuid <<FK>>
+  solver_configuration_id : uuid <<FK>>
+}
+entity "telemetry_events" as E21 {
+  id : bigint <<PK>>
+  session_id : uuid <<FK>>
+}
+entity "coordination_results" as E22 {
+  id : uuid <<PK>>
+  session_id : uuid <<FK>>
+  solver_configuration_id : uuid <<FK>>
+}
+E0 ||--o{ E1 : R01 user_id
+E0 ||--o{ E2 : R02 authored_by_id
+E0 |o--o{ E2 : R03 reviewed_by_id
+E0 |o--o{ E2 : R04 published_by_id
+E2 |o--o{ E2 : R05 parent_version_id
+E2 ||--o{ E3 : R06 content_version_id
+E2 |o--o{ E3 : R07 previous_version_id
+E0 |o--o{ E3 : R08 actor_id
+E4 ||--o| E5 : R09 item_id
+E4 |o--o{ E5 : R10 ammo_item_id
+E4 ||--o| E6 : R11 item_id
+E8 ||--o{ E9 : R12 loot_table_id
+E4 ||--o{ E9 : R13 item_id
+E5 |o--o{ E10 : R14 weapon_id
+E8 |o--o{ E10 : R15 loot_table_id
+E11 ||--o{ E13 : R16 map_id
+E10 ||--o{ E13 : R17 enemy_type_id
+E11 ||--o{ E12 : R18 map_id
+E8 ||--o{ E12 : R19 loot_table_id
+E4 ||--o{ E14 : R20 output_item_id
+E7 |o--o{ E14 : R21 required_skill_id
+E14 ||--o{ E15 : R22 recipe_id
+E4 ||--o{ E15 : R23 item_id
+E16 ||--o{ E17 : R24 quest_id
+E4 ||--o{ E17 : R25 item_id
+E18 |o--o{ E20 : R26 player_id
+E2 |o--o{ E20 : R27 content_version_id
+E19 |o--o{ E20 : R28 solver_configuration_id
+E20 ||--o{ E21 : R29 session_id
+E20 ||--o{ E22 : R30 session_id
+E19 ||--o{ E22 : R31 solver_configuration_id
+E2 ||--o{ E4 : R32 content_version_id
+E2 ||--o{ E7 : R33 content_version_id
+E2 ||--o{ E8 : R34 content_version_id
+E2 ||--o{ E10 : R35 content_version_id
+E2 ||--o{ E11 : R36 content_version_id
+E2 ||--o{ E14 : R37 content_version_id
+E2 ||--o{ E16 : R38 content_version_id
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+state "Day 1" as D1
+state "Night 1" as N1
+state "Day 2" as D2
+state "Night 2" as N2
+state "Day 3" as D3
+state "Night 3" as N3
+state "Dawn" as Dawn
+state "Finished" as End
+[*] --> D1
+D1 --> N1: phase tasks done
+N1 --> D2: watch complete
+D2 --> N2: phase tasks done
+N2 --> D3: watch complete
+D3 --> N3: preparation done
+N3 --> Dawn: final beats complete
+Dawn --> End: closing task done
+@enduml

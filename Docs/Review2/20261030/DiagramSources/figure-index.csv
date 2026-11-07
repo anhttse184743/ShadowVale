@@ -1,0 +1,44 @@
+﻿figure,caption,image,editable,image_sha256
+1,Figure 1. Implemented game solver platform and local-file architecture,figures/figure-01.png,editable/architecture_current.mmd,c08165ab972b65fa617af1ce179605e35e043034ccb96385b00f728fb4d41f84
+2,Figure 2. Unity package overview with representative dependencies,figures/figure-02.png,editable/package_unity.mmd,67d62716b8b1c91aa8f15027992e185a0923c854d7a240c5d720d78ac22e16a4
+3,Figure 3. React and ASP.NET Core package responsibilities,figures/figure-03.png,editable/package_web.mmd,ace5aadb0ef9d0522a42f2ec130228e65b19ce14bdab5608716d865fb7fb2137
+4,Figure 4. Python solver packages and representative dependencies,figures/figure-04.png,editable/package_solver.mmd,b5a89f7b0a9570f59504f6ad68d62484e62164fea565950fcef97fac2eef3dc6
+5,Figure 5. Unified logical ERD of the complete shadowvale schema,figures/figure-05.png,editable/erd_unified.puml,a1edd94a2a358b70bdf1a424af40616f1a51c53077b34f99fb76533255e107b9
+6,Figure 6. Game Startup and Content Loading class relationships,figures/figure-06.png,editable/class_startup_current.puml,010a6154d737bd6e422284295b86e7dace1a3726e98746f043d230a774bee0bf
+7,Figure 7. Verified download cache fallback and next-scene content activation,figures/figure-07.png,editable/startup_current.puml,9eac33a6a5d7deaa554cc913ffab398e5a885240b27b1d6f0bbc21c80d542508
+8,Figure 8. Player Combat and Stealth class relationships,figures/figure-08.png,editable/class_combat.puml,a96783a41361651c6e800384a5fc0660794645a4ffdd9392b896d799c3d23b1d
+9,Figure 9. Combat checks an eligible hit before damage and feedback,figures/figure-09.png,editable/seq_combat.puml,0c86723bfde9b6c3d7a667522b494c560e6e849272cf550622fe243e126adcdc
+10,Figure 10. Inventory Crafting and Skills class relationships,figures/figure-10.png,editable/class_inventory.puml,4e14e9eee55f88872c686c8a683a1207d706a026610c3f077b7f90cc7a070fc5
+11,Figure 11. Crafting reserves inputs once and saves settled output state,figures/figure-11.png,editable/seq_crafting.puml,5bcc7452b07c6183062f71861726daeda7e5407ef129f3446d5f3091449945f6
+12,Figure 12. Map 2 Missions Activities and Dialogue class relationships,figures/figure-12.png,editable/class_chapter.puml,4a35595f02a07b43b546c190f62959f344a40b2fe000a97acbe0f2e047994e48
+13,Figure 13. Interaction validates state before mutation and checkpointing,figures/figure-13.png,editable/seq_chapter.puml,8f806a35a4f79c7073d9a2d582aa2fe211db28654da3636ee6ffb97601780b8e
+14,Figure 14. Chapter phase lifecycle guarded by required task completion,figures/figure-14.png,editable/state_chapter_current.puml,2b197c187dadc1101e364e996c20c9694991f1765309ec02ab990501ccff4462
+15,Figure 15. Day 1 chores may be reordered and Night 1 patrol is sequential,figures/figure-15.png,editable/chapter_flow.puml,5bfe9b31fef37d696d81b8a27f557dd670af2d3fb21b1eb23d48526fb73b99f4
+16,Figure 16. Successful Day 1 Night 1 workflow with actor responsibilities,figures/figure-16.png,editable/flow_campaign.puml,47a8bf078aac460d319dceea8593f168f8491bec57382c2f6823814db54f0294
+17,Figure 17. WF01 campaign rescue operations extraction and arrival,figures/figure-17.png,editable/flow_map1.puml,31d268d2cda150a627e581877290b20ec3b4ab1ff0742fe0b7c84eae15fef590
+18,Figure 18. WF03 reconnaissance patrol and guarded phase advancement,figures/figure-18.png,editable/flow_day2.puml,22ea522e010601ad81545b16ceeb60b669532a1856a7e8bf486d508f9f089eb2
+19,Figure 19. WF04 coordinated defence evacuation sacrifice and Dawn,figures/figure-19.png,editable/flow_finale.puml,c52de812075a4a19e99246e96b4266f193536dec14c2f1385a38e5659c46553c
+20,Figure 20. Save Load and Scene Handover class relationships,figures/figure-20.png,editable/class_save.puml,d2811b8117beca4ff9dd07282a38e936696e930a4af5890473b900c92f9afe12
+21,Figure 21. Stable-state save followed by scene and checkpoint restoration,figures/figure-21.png,editable/seq_save.puml,d1b04485fa89543edab544e7ac754070bc92cbed0eba0001c2be008618dd070f
+22,Figure 22. Enemy AI and Squad Coordination class relationships,figures/figure-22.png,editable/class_ai.puml,2bb114738658c63a0d4438a9b04e5f81ac9aedc653bf604fbdafa3bd6585d6d2
+23,Figure 23. Asynchronous replan with fallback and stale-result rejection,figures/figure-23.png,editable/seq_ai_actions.puml,cca484acf8edab7d6126f19c7a4ae2218a07880da540dcb296bc74c7804386cc
+24,Figure 24. Enemy tactical states selected by transition priority,figures/figure-24.png,editable/state_enemy.puml,1f5bbc097731505884f1b194ec9a9dab8be430f0c00ad526fc398c16c85727d5
+25,Figure 25. Live solver choices offline references and exp-v2 timing limits,figures/figure-25.png,editable/solver_registry_current.puml,2175fe76ec5821882dac71a39816bca66c3396c54d748150353e651bd16c9211
+26,Figure 26. Web Authentication and Administration class relationships,figures/figure-26.png,editable/class_auth.puml,cf8452d66f6f8008f2080c22b68a7a693b8e9ed8be3dabd7afb616179f442b5d
+27,Figure 27. Boundary controller service repository and entity login sequence,figures/figure-27.png,editable/web_login.puml,2ed92d3d8c05d7ba4834e7e715a12f70e63aee2cb647497c3126d129dba1a96a
+28,Figure 28. Refresh rotation and replay rejection through separate web layers,figures/figure-28.png,editable/web_refresh.puml,9899d5753364fdbabeb6778be93790e2a9f112556d7259d1de023206f2ee8c67
+29,Figure 29. Admin access changes and transactional session revocation,figures/figure-29.png,editable/web_admin.puml,07a09f90ceb1c4340136b2f2d8809735861b53bdec1efce95ccf3bd2adb7d7e4
+30,Figure 30. Derived refresh-token lifecycle and irreversible revocation,figures/figure-30.png,editable/state_refresh.puml,035618ba9514cedbcca8fdd476b5785f69a9c76df8382b835741ab2dcaea5ac3
+31,Figure 31. User account activation and session revocation,figures/figure-31.png,editable/state_account_current.puml,9bfa27c9e9f6562c7bd7328e086a605dacd6175c2d6a0df3add4438a6b566a1d
+32,Figure 32. Content Authoring Review and Publication class relationships,figures/figure-32.png,editable/class_platform.puml,8e69c1fcc5ff61862578797c44a50f6f30b5d895a579a6f855dc4157bee64e86
+33,Figure 33. Draft validation and submission with revision checks,figures/figure-33.png,editable/web_validate.puml,7111d3af902ae7a91068fa21ce2a692c06cb6fb70a9affd0e3a2f441b9a5332f
+34,Figure 34. Admin publication and the advisory-locked transaction,figures/figure-34.png,editable/web_publish.puml,a062627c1ebd264449b4d2240e13baa8549ad8c76bcf7c673f8d9b29fea2d9b5
+35,Figure 35. ContentVersion lifecycle guards and controlled rollback,figures/figure-35.png,editable/state_content.puml,2d4b70495ad3a4ed9d2bad36591584908e7f894f032d2b0d1fbf99edd38d4af7
+36,Figure 36. Successful author review and publication activity with actors,figures/figure-36.png,editable/flow_publication.puml,7035e896effcfc1c6345929c693b90eff08551d83cbe10ed4a3bfd10ac1501ab
+37,Figure 37. Telemetry and Analytics class relationships,figures/figure-37.png,editable/class_telemetry.puml,6649f6042bd170b92161850327e572a80bc095de4e9a245485ca1b84bc013576
+38,Figure 38. Unity session mapping queued final upload and retry classification,figures/figure-38.png,editable/telemetry_current.puml,6b6a1ea1ae17d83f364c062e78c7dc899ebece5054e202cc5457f3cd1c3293c1
+39,Figure 39. Server registration and stable solver assignment,figures/figure-39.png,editable/web_session_start.puml,2c109740fb7182e34f3615e0a868df9d1989201f35cb1ed7310c8c54590c16b3
+40,Figure 40. Final upload with ownership validation and entry deduplication,figures/figure-40.png,editable/web_session_upload.puml,8a06961c73c744158951d84ae8e592fe3cca863de2925dc0b185ba738b3823eb
+41,Figure 41. Analytics boundary controller service repository and source entities,figures/figure-41.png,editable/web_analytics.puml,376677b9ff0191c3f7ea75cd81e3972dfcada0fcb942dc5b2f2abc295e933bc9
+42,Figure 42. GameSession registration terminal outcomes and idempotent retry,figures/figure-42.png,editable/state_session.puml,bf9614ea2ea098b89ea74009b30efdc55968ebc183700654a59e375a16408f70
+43,Figure 43. Server ingestion and analyst comparison as separate actor workflows,figures/figure-43.png,editable/flow_telemetry.puml,f7076e31390733dc8e1d3bd676bf23c5f38e1d7f91907863dd92d196c02b6a02

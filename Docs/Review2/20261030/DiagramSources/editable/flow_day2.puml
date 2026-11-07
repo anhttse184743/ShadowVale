@@ -1,0 +1,20 @@
+@startuml
+skinparam backgroundColor white
+|Player|
+start
+|Player|
+:Begin Day 2 from the completed first watch;
+|Player|
+:Find and assist the wounded scout;
+|ShadowVale game|
+:Reveal reconnaissance information and remaining day objectives;
+|Player|
+:Finish required assistance and report;
+|ShadowVale game|
+:Begin Night 2 after the day requirements are satisfied;
+|Player|
+:Complete the patrol route and return to change watch;
+|ShadowVale game|
+:Begin Day 3 with completed tasks preserved;
+stop
+@enduml

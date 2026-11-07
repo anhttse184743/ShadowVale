@@ -1,0 +1,43 @@
+@startuml
+class PlayerCombat {
+ Equip(kind)
+ TryReload()
+ SetHandsOccupied(occupied)
+ RestoreAfterCinematic()
+}
+class Magazine {
+ Rounds
+ Capacity
+}
+class Weapon {
+ Kind
+ Damage
+ Range
+ Muzzle
+ DamageAgainst(target)
+ Configure(...)
+ PlayMuzzleFlash()
+}
+class Health {
+ Current
+ Normalized
+ TakeBulletDamage(...)
+ TakeDamage(...)
+ RestoreHealth(value)
+}
+class PlayerStealthAdapter {
+ Position
+ Stance
+ Visibility
+}
+class EnemyBrain {
+ State
+ Memory
+ Context
+ Tick(...)
+}
+PlayerCombat --> Magazine : owns state
+PlayerCombat ..> Weapon : uses
+Weapon --> Health : valid hit damage
+PlayerStealthAdapter ..> EnemyBrain : observed state
+@enduml

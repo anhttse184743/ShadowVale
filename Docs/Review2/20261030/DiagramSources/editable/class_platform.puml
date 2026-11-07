@@ -1,0 +1,33 @@
+@startuml
+skinparam classBackgroundColor #FCE8E0
+hide methods
+class "ContentVersionsController" as C {
+  Validate / Submit / Approve / Publish
+  Role policy and ServiceResult mapping
+}
+class "ContentVersionService" as S {
+  ValidateAsync / SubmitAsync
+  ApproveAsync / PublishAsync
+}
+class "ContentBundleBuilder" as B {
+  Build(snapshot)
+  ContentRows(version)
+}
+class "ContentBundleValidator" as V {
+  Validate(bundle)
+  Schema / references / cycles / Safe Camp
+}
+class "ContentVersionRepository" as R {
+  GetByIdAsync / GetSnapshotAsync
+  PublishAsync / RollbackAsync
+}
+class "ContentVersion" as E {
+  Status / Revision / BundleChecksum
+  Author / reviewer / publisher metadata
+}
+C --> S : calls
+S --> B : Build
+S --> V : Validate
+S --> R : repository
+R --> E : EF
+@enduml

@@ -1,0 +1,13 @@
+flowchart TB
+  U["Unity Windows client<br/>Gameplay, chapters, UI and local save"]
+  S["Local solver sidecar<br/>Python svl_solver / FastAPI"]
+  F["Client storage and bundled assets<br/>Save snapshots and telemetry queue: read/write<br/>Bundled content and voice assets: read-only<br/>Research JSONL export: write"]
+  B["ShadowVale.API / BLL / DAL<br/>ASP.NET Core .NET 10"]
+  W["React web client<br/>Designer / Analyst / Admin"]
+  D["PostgreSQL / Supabase<br/>EF Core / Npgsql<br/>23 mapped tables"]
+  U -->|Request a tactical plan| S
+  S -->|Return a plan| U
+  U <-->|Read and write local data| F
+  U -.->|Contract adapter still required| B
+  W -->|Submit web actions| B
+  B -->|Commit and query data| D

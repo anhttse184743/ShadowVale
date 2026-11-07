@@ -1,0 +1,146 @@
+erDiagram
+  users {
+    uuid id PK
+  }
+  refresh_tokens {
+    uuid id PK
+    uuid user_id FK
+  }
+  content_versions {
+    uuid id PK
+    uuid authored_by_id FK
+    uuid reviewed_by_id FK
+    uuid published_by_id FK
+    uuid parent_version_id FK
+  }
+  content_publication_history {
+    uuid id PK
+    uuid content_version_id FK
+    uuid previous_version_id FK
+    uuid actor_id FK
+  }
+  items {
+    uuid id PK
+    uuid content_version_id FK
+  }
+  weapons {
+    uuid id PK
+    uuid item_id FK
+    uuid ammo_item_id FK
+  }
+  consumables {
+    uuid id PK
+    uuid item_id FK
+  }
+  skills {
+    uuid id PK
+    uuid content_version_id FK
+  }
+  loot_tables {
+    uuid id PK
+    uuid content_version_id FK
+  }
+  loot_table_entries {
+    uuid id PK
+    uuid loot_table_id FK
+    uuid item_id FK
+  }
+  enemy_types {
+    uuid id PK
+    uuid weapon_id FK
+    uuid loot_table_id FK
+    uuid content_version_id FK
+  }
+  maps {
+    uuid id PK
+    uuid content_version_id FK
+  }
+  map_loot_tables {
+    uuid id PK
+    uuid map_id FK
+    uuid loot_table_id FK
+  }
+  enemy_placements {
+    uuid id PK
+    uuid map_id FK
+    uuid enemy_type_id FK
+  }
+  crafting_recipes {
+    uuid id PK
+    uuid output_item_id FK
+    uuid required_skill_id FK
+    uuid content_version_id FK
+  }
+  crafting_recipe_ingredients {
+    uuid id PK
+    uuid recipe_id FK
+    uuid item_id FK
+  }
+  quests {
+    uuid id PK
+    uuid content_version_id FK
+  }
+  quest_rewards {
+    uuid id PK
+    uuid quest_id FK
+    uuid item_id FK
+  }
+  players {
+    uuid id PK
+  }
+  solver_configurations {
+    uuid id PK
+  }
+  game_sessions {
+    uuid id PK
+    uuid player_id FK
+    uuid content_version_id FK
+    uuid solver_configuration_id FK
+  }
+  telemetry_events {
+    bigint id PK
+    uuid session_id FK
+  }
+  coordination_results {
+    uuid id PK
+    uuid session_id FK
+    uuid solver_configuration_id FK
+  }
+  users ||--o{ refresh_tokens : "R01 user_id"
+  users ||--o{ content_versions : "R02 authored_by_id"
+  users |o--o{ content_versions : "R03 reviewed_by_id"
+  users |o--o{ content_versions : "R04 published_by_id"
+  content_versions |o--o{ content_versions : "R05 parent_version_id"
+  content_versions ||--o{ content_publication_history : "R06 content_version_id"
+  content_versions |o--o{ content_publication_history : "R07 previous_version_id"
+  users |o--o{ content_publication_history : "R08 actor_id"
+  items ||--o| weapons : "R09 item_id"
+  items |o--o{ weapons : "R10 ammo_item_id"
+  items ||--o| consumables : "R11 item_id"
+  loot_tables ||--o{ loot_table_entries : "R12 loot_table_id"
+  items ||--o{ loot_table_entries : "R13 item_id"
+  weapons |o--o{ enemy_types : "R14 weapon_id"
+  loot_tables |o--o{ enemy_types : "R15 loot_table_id"
+  maps ||--o{ enemy_placements : "R16 map_id"
+  enemy_types ||--o{ enemy_placements : "R17 enemy_type_id"
+  maps ||--o{ map_loot_tables : "R18 map_id"
+  loot_tables ||--o{ map_loot_tables : "R19 loot_table_id"
+  items ||--o{ crafting_recipes : "R20 output_item_id"
+  skills |o--o{ crafting_recipes : "R21 required_skill_id"
+  crafting_recipes ||--o{ crafting_recipe_ingredients : "R22 recipe_id"
+  items ||--o{ crafting_recipe_ingredients : "R23 item_id"
+  quests ||--o{ quest_rewards : "R24 quest_id"
+  items ||--o{ quest_rewards : "R25 item_id"
+  players |o--o{ game_sessions : "R26 player_id"
+  content_versions |o--o{ game_sessions : "R27 content_version_id"
+  solver_configurations |o--o{ game_sessions : "R28 solver_configuration_id"
+  game_sessions ||--o{ telemetry_events : "R29 session_id"
+  game_sessions ||--o{ coordination_results : "R30 session_id"
+  solver_configurations ||--o{ coordination_results : "R31 solver_configuration_id"
+  content_versions ||--o{ items : "R32 content_version_id"
+  content_versions ||--o{ skills : "R33 content_version_id"
+  content_versions ||--o{ loot_tables : "R34 content_version_id"
+  content_versions ||--o{ enemy_types : "R35 content_version_id"
+  content_versions ||--o{ maps : "R36 content_version_id"
+  content_versions ||--o{ crafting_recipes : "R37 content_version_id"
+  content_versions ||--o{ quests : "R38 content_version_id"

@@ -1,0 +1,14 @@
+@startuml
+actor Player
+participant PlayerCombat
+participant "Weapon and hit query" as Weapon
+participant Health
+participant EventBus
+Player -> PlayerCombat : Fire while gameplay owns control
+PlayerCombat -> PlayerCombat : Check ammo cooldown and busy state
+PlayerCombat -> Weapon : Consume round and resolve eligible hit
+Weapon -> Health : Apply valid bullet damage
+Health -> Health : Resolve protection and death
+PlayerCombat -> EventBus : Publish attack and noise events
+PlayerCombat --> Player : Update ammo recoil and feedback
+@enduml

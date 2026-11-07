@@ -1,0 +1,28 @@
+@startuml
+hide footbox
+skinparam backgroundColor white
+skinparam sequenceParticipantBackgroundColor #FCE8E0
+autonumber
+participant "UsersPage / usersApi" as P0 <<boundary>>
+participant "UsersController" as P1 <<controller>>
+participant "UserService" as P2 <<service>>
+participant "UserRepository / RefreshTokenRepository" as P3 <<repository>>
+participant "User / RefreshToken" as P4 <<entity>>
+note over P0,P4: Actor: Admin. Authorize account management first.
+P0 -> P1: Submit account changes
+P1 -> P2: Check account changes
+P2 -> P3: Load target account
+P3 --> P2: Account found or missing
+P2 -> P4: Read account access
+alt self-demotion, self-deactivation or duplicate email
+P2 --> P1: Reject the update
+P1 --> P0: Display the conflict
+else valid update changes account access
+P2 -> P4: Apply account changes
+P2 -> P3: Save and revoke sessions
+note over P2,P4: Save access changes and revoke sessions together. Metadata-only updates do not revoke sessions.
+P3 --> P2: Confirm the commit
+P2 --> P1: Return account details
+P1 --> P0: Display updated account
+end
+@enduml

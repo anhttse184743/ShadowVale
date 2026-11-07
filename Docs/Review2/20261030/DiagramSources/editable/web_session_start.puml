@@ -1,0 +1,27 @@
+@startuml
+hide footbox
+skinparam backgroundColor white
+skinparam sequenceParticipantBackgroundColor #FCE8E0
+autonumber
+participant "Game HTTP caller" as P0 <<boundary>>
+participant "GameController" as P1 <<controller>>
+participant "GameSessionService" as P2 <<service>>
+participant "GameSessionRepository" as P3 <<repository>>
+participant "Player / GameSession" as P4 <<entity>>
+note over P0,P4: Unity and replay callers use this implemented registration contract; live E2E evidence is tracked separately.
+P0 -> P1: Register a play session
+P1 -> P2: Validate registration
+note over P2,P4: Validate source and identity; determine the human/replay solver assignment.
+P2 -> P3: Start the transaction
+P2 -> P3: Resolve player and lock session
+P3 --> P2: Return session state
+alt session does not exist
+P2 -> P4: Create ongoing session
+P2 -> P3: Insert if absent and lock
+else same session already exists
+note over P2,P4: Keep the existing assignment; reject conflicting session identity.
+end
+P3 --> P2: Confirm registration
+P2 --> P1: Return the assigned solver
+P1 --> P0: Use the assigned solver
+@enduml

@@ -1,0 +1,20 @@
+@startuml
+start
+:D1_01 Contact Luc and exchange the password;
+:D1_02 Escort Hung and complete the bandage scene;
+fork
+:D1_03 Deliver the reserved medicine;
+fork again
+:D1_04 Carry three crates and arrange the store;
+fork again
+:D1_05 Repair two stakes and three planks;
+end fork
+note right: All three chores are required; any order is allowed.
+:D1_06 Report to Thanh and begin Night 1;
+:N1_01 Eat with the family and hear the promise;
+:N1_02 Inspect and repair the bamboo post;
+:N1_03 Inspect the village gate and hand over medicine;
+:N1_04 Change watch and complete the silent rest scene;
+:Advance to Day 2 with a stable checkpoint;
+stop
+@enduml

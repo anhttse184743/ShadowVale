@@ -1,0 +1,18 @@
+@startuml
+skinparam stateBackgroundColor #FCE8E0
+state "Patrol" as P
+state "Investigate" as I
+state "SpotPlayer" as S
+state "Engage" as E
+state "TakeCover" as T
+state "Retreat" as R
+P --> I: alerted by sound / returning
+I --> P: no alert / return complete
+P --> S: sees player; not engaged
+S --> E: contact / engaged
+E --> I: lost target, suppression over
+E --> T: assignment not reached; cover window
+T --> E: 
+E --> R: retreat flag
+R --> E: hold over
+@enduml

@@ -1,0 +1,8 @@
+@startuml
+skinparam stateBackgroundColor #FCE8E0
+state "Usable: unrevoked + unexpired" as V
+state "Revoked: RevokedAt set" as R
+state "Expired: ExpiresAt <= now" as E
+V --> R: rotate / revoke
+V --> E: time reaches ExpiresAt
+@enduml

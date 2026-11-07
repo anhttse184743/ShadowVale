@@ -1,0 +1,33 @@
+@startuml
+skinparam classBackgroundColor #FCE8E0
+hide methods
+class "Map02ChapterDirector" as D {
+  Interact / Capture / Restore
+  Controls activities, actors and speech
+}
+class "Map02ChapterState" as S {
+  Available / Track / Complete
+  Validate / Migrate
+}
+class "Map02ChapterDefinition" as F {
+  Load / Find / Lines
+  Task prerequisites and dialogue catalog
+}
+class "Map02DayOneState" as O {
+  PlaceCrate / Strike / LayBoard
+  GiveMedicine / saved puzzle choices
+}
+class "DialogueVoice" as V {
+  Play / PlayOnce / Preload
+  One active spoken stream
+}
+class "Map02ChapterActor" as A {
+  role / transform / follower
+  Scene pose and character staging
+}
+D --> S : owns
+D --> F
+S --> F : reads
+S --> O : owns
+D --> V
+@enduml

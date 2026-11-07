@@ -1,0 +1,20 @@
+@startuml
+skinparam backgroundColor white
+|Player|
+start
+|Player|
+:Start or resume the campaign;
+|Player|
+:Find Hùng and bring him back to camp;
+|ShadowVale game|
+:Present the supply, radio and commander objectives;
+|Player|
+:Complete and report the three operations;
+|ShadowVale game|
+:Retain settled inventory and mission progress;
+|Player|
+:Reach the boat, board and provide covering fire;
+|ShadowVale game|
+:Complete extraction and begin Map 2 arrival;
+stop
+@enduml

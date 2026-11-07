@@ -1,0 +1,17 @@
+@startuml
+actor Player
+boundary "Save UI and mission" as UI
+participant "Map-owned state capture" as State
+participant ForestSaveSlots
+participant "Scene restore" as Restore
+Player -> UI : Save the selected slot
+UI -> State : Check stable state and capture payload
+State --> UI : Return validated checkpoint and metadata
+UI -> ForestSaveSlots : Write temp and atomically replace slot
+ForestSaveSlots --> Player : Return saved or precise error
+Player -> UI : Load a selected slot
+UI -> ForestSaveSlots : Read and validate the envelope
+ForestSaveSlots -> Restore : Load target scene and checkpoint
+Restore -> State : Validate and restore actors props and input
+Restore --> Player : Continue without duplicate rewards
+@enduml

@@ -1,0 +1,28 @@
+@startuml
+hide footbox
+skinparam backgroundColor white
+skinparam sequenceParticipantBackgroundColor #FCE8E0
+autonumber
+participant "First scene" as P0 <<boundary>>
+participant "GameBootstrap" as P1 <<control>>
+participant "BundleFetcher / BackendClient" as P2 <<service>>
+participant "BundleCache / shipped data" as P3 <<file store>>
+participant "Mapper / ContentService" as P4 <<service>>
+P0 -> P1: Create singleton before scene load
+P1 -> P2: Start configured content retrieval
+note over P1,P4: Startup waits at most 3 s for retrieval; loading and request timeouts are separate.
+alt verified download is ready
+P2 -> P4: Map and validate downloaded data
+P2 -> P3: Store verified bundle and metadata
+P1 -> P4: Apply the downloaded version
+else offline, unavailable, invalid or still loading
+P1 -> P3: Try valid cache, then shipped fallback
+P3 -> P4: Parse, validate and apply available data
+end
+P1 --> P0: Continue with content ready
+alt a late valid download completes
+P1 -> P4: Stage its version
+P0 -> P1: Load the next scene
+P1 -> P4: Apply staged content before new session
+end
+@enduml

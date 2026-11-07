@@ -1,0 +1,11 @@
+flowchart TB
+Map01[Map01 assembly and Map 2 adapters] --> Gameplay
+Map01 --> UI
+Gameplay --> AI
+Gameplay --> Persistence
+AI --> ContentNetworking[Content and Networking]
+AI --> CoreData[Core and Data]
+Telemetry --> CoreData
+Bootstrap --> ContentNetworking
+Bootstrap --> CoreData
+UI --> CoreData

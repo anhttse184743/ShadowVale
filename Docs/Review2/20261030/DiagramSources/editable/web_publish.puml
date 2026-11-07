@@ -1,0 +1,31 @@
+@startuml
+hide footbox
+skinparam backgroundColor white
+skinparam sequenceParticipantBackgroundColor #FCE8E0
+autonumber
+participant "ReleasesPage / contentApi" as P0 <<boundary>>
+participant "ContentVersionsController" as P1 <<controller>>
+participant "ContentVersionService" as P2 <<service>>
+participant "ContentVersionRepository" as P3 <<repository>>
+participant "ContentVersion / ContentPublicationHistory" as P4 <<entity>>
+note over P0,P4: Actor: Admin. A separate approval must precede publication.
+P0 -> P1: Request publication
+P1 -> P2: Check publication guards
+P2 -> P3: Load version and snapshot
+P3 --> P2: Return version snapshot
+P2 -> P4: Read approval state
+note over P2,P4: Require approval and current revision; recheck the validated snapshot.
+alt all publication guards pass
+P2 -> P3: Start publication
+critical one advisory-locked database transaction
+P3 -> P4: Activate release and add history
+note over P3,P4: Archive the old release, activate the selected version and write history in one transaction.
+end
+P3 --> P2: Confirm publication
+P2 --> P1: Return version details
+P1 --> P0: Display the active release
+else wrong state or stale revision
+P2 --> P1: Report version conflict
+P1 --> P0: Display the conflict
+end
+@enduml

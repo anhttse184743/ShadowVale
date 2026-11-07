@@ -1,0 +1,31 @@
+@startuml
+hide footbox
+skinparam backgroundColor white
+skinparam sequenceParticipantBackgroundColor #FCE8E0
+autonumber
+participant "ContentManagementPage / contentApi" as P0 <<boundary>>
+participant "ContentVersionsController" as P1 <<controller>>
+participant "ContentVersionService" as P2 <<service>>
+participant "ContentVersionRepository" as P3 <<repository>>
+participant "ContentVersion" as P4 <<entity>>
+P0 -> P1: Request draft validation
+P1 -> P2: Check draft conditions
+P2 -> P3: Load version and snapshot
+P3 --> P2: Return the snapshot
+note over P2,P4: Require Draft and current revision; validate and hash the snapshot.
+P2 -> P4: Record validation results
+P2 -> P3: Save the new revision
+P2 --> P1: Return validation results
+P1 --> P0: Display validation results
+alt isValid and user submits the same revision
+P0 -> P1: Submit the draft
+P1 -> P2: Check submission guards
+note over P2,P4: Recheck the validated snapshot and current revision before submission.
+P2 -> P4: Mark as awaiting review
+P2 -> P3: Save the new revision
+P2 --> P1: Return version details
+P1 --> P0: Display review status
+else validation failed or revision changed
+note over P0,P4: Show the validation or conflict explanation and keep the draft unchanged.
+end
+@enduml

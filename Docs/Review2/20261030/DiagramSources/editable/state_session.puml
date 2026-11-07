@@ -1,0 +1,11 @@
+@startuml
+skinparam stateBackgroundColor #FCE8E0
+state "No persisted session" as N
+state "InProgress" as I
+state "Completed / Died / Quit / Crashed" as F
+state "Same terminal outcome retained" as D
+N --> I: register session
+I --> F: submit valid final results
+N --> F: submit results after offline play
+F --> D: repeat upload [same outcome/time]
+@enduml

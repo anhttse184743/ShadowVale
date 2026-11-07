@@ -1,0 +1,14 @@
+@startuml
+actor Player
+boundary "Inventory UI" as UI
+participant Map01Inventory
+participant "Craft queue" as Queue
+participant Checkpoint
+Player -> UI : Select recipe and quantity
+UI -> Map01Inventory : TryCraft(recipeId, times)
+Map01Inventory -> Map01Inventory : Check materials capacity and location
+Map01Inventory -> Queue : Consume inputs once and enqueue
+Queue -> Map01Inventory : Grant output once after craft duration
+Map01Inventory -> Checkpoint : Persist settled bag and queue state
+Map01Inventory --> UI : Return actionable result
+@enduml

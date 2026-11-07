@@ -1,0 +1,18 @@
+@startuml
+skinparam backgroundColor white
+|Designer|
+start
+|Designer|
+:Create or clone a Draft and edit its content;
+|Designer|
+:Validate content and submit the current revision;
+|Admin|
+:Review and approve the submitted revision;
+|Admin|
+:Publish the approved version;
+|Game Client|
+:Start with the published configuration;
+|Game Client|
+:Use a verified release or the last valid offline configuration;
+stop
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+hide footbox
+skinparam backgroundColor white
+skinparam sequenceParticipantBackgroundColor #FCE8E0
+autonumber
+participant "ApiAnalyticsPage / analyticsApi" as P0 <<boundary>>
+participant "AnalyticsController" as P1 <<controller>>
+participant "AnalyticsService" as P2 <<service>>
+participant "AnalyticsRepository" as P3 <<repository>>
+participant "GameSession / CoordinationResult" as P4 <<entity>>
+P0 -> P1: Request an AI comparison
+P1 -> P2: Check comparison filters
+alt explicit human/replay source and valid filters
+P2 -> P3: Load encounter metrics
+P3 -> P4: Read encounter data
+P3 --> P2: Return encounter metrics
+P2 -> P3: Load coordination metrics
+P3 -> P4: Read coordination data
+P3 --> P2: Return solve metrics
+note over P2,P4: Merge encounter and solve metrics by content version and comparison group.
+P2 --> P1: Return comparison results
+P1 --> P0: Display the comparison
+else missing source or invalid filter
+P2 --> P1: Reject invalid filters
+P1 --> P0: Display filter errors
+end
+@enduml

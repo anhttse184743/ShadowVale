@@ -1,0 +1,38 @@
+@startuml
+skinparam classBackgroundColor #FCE8E0
+hide methods
+class "GameController" as GC {
+  StartSession / UploadSession
+  Game-key authorization
+}
+class "GameSessionService" as GS {
+  StartAsync / UploadAsync
+  Validation and deduplication
+}
+class "GameSessionRepository" as GR {
+  InTransactionAsync / LockAsync
+  SaveChangesAsync
+}
+class "AnalyticsController" as AC {
+  AiComparison / Heatmap
+  Export
+}
+class "AnalyticsService" as AS {
+  GetAiComparisonAsync
+  PrepareExportAsync
+}
+class "AnalyticsRepository" as AR {
+  GetEncounterMetricsAsync
+  GetReplanMetricsAsync
+}
+class "Persisted entities (reference)" as E {
+  Player / GameSession / TelemetryEvent / CoordinationResult / SolverConfiguration
+  Upload repositories write accepted rows; analytics repositories read SQL projections.
+}
+GC --> GS
+GS --> GR
+AC --> AS
+AS --> AR
+GR --> E
+AR --> E
+@enduml

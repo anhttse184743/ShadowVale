@@ -1,0 +1,58 @@
+@startuml
+skinparam classBackgroundColor #FCE8E0
+hide methods
+class "GameBootstrap" as boot {
+  Awake / Update / sceneLoaded
+  Backend → cache → shipped fallback
+  Stage late download for next scene
+}
+class "BundleFetcher" as fetch {
+  FetchAsync / Accept
+  Manifest, ETag, SHA-256 checks
+  Validates before cache replacement
+}
+class "BackendClient" as http {
+  FromConfig / SendAsync
+  Game-key HTTP transport
+  Bounded request timeout
+}
+class "ContentService" as service {
+  Apply / Stage / ApplyStaged
+  Version/source and indexed data
+  TryGetPublished for map adapters
+}
+class "BundleCache" as cache {
+  TryLoad / Save / Current
+  Atomic bundle + metadata files
+  Reject corrupted cache
+}
+class "BundleV1Mapper" as mapper {
+  Backend schema 1.0 → runtime DTOs
+  Items, skills, recipes and enemies
+  Preserves code-based identities
+}
+class "PublishedContent" as map {
+  Apply to map-owned data
+  Tune known IDs and supported fields
+  Retain unrepresented local rules
+}
+class "FallbackBundleProvider" as fallback {
+  Read shipped schema 1.0
+  Validate mapped runtime data
+  Attach local AI settings
+}
+class "BackendConfig" as config {
+  Environment or local backend.json
+  API origin + game key
+  No web-user credentials
+}
+boot --> fetch
+fetch --> http
+boot --> service
+fetch --> cache
+fetch --> mapper
+service --> map
+service --> cache
+fallback --> mapper
+config --> http
+@enduml

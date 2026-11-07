@@ -1,0 +1,28 @@
+@startuml
+hide footbox
+skinparam backgroundColor white
+skinparam sequenceParticipantBackgroundColor #FCE8E0
+autonumber
+participant "InternalLoginPage / AuthContext" as P0 <<boundary>>
+participant "AuthController" as P1 <<controller>>
+participant "AuthService" as P2 <<service>>
+participant "UserRepository / RefreshTokenRepository" as P3 <<repository>>
+participant "User / RefreshToken" as P4 <<entity>>
+P0 -> P1: Submit login details
+P1 -> P2: Check credentials
+P2 -> P3: Find the account
+P3 --> P2: Account found or missing
+P2 -> P4: Read account credentials and status
+note over P2,P4: Verify the password in AuthService via IPasswordHasher.
+alt unknown user, wrong password or inactive account
+P2 --> P1: Report login failure
+P1 --> P0: Display login or account error
+else valid credentials and active account
+note over P2,P4: Create the signed access token and hashed refresh credential via TokenService.
+P2 -> P4: Update login and create session
+P2 -> P3: Save account and session
+P3 --> P2: Confirm saved session
+P2 --> P1: Return user and token pair
+P1 --> P0: Open the user workspace
+end
+@enduml

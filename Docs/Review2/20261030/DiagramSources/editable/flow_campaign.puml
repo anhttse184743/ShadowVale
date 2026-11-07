@@ -1,0 +1,22 @@
+@startuml
+skinparam backgroundColor white
+|Player|
+start
+|Player|
+:Arrive, contact the village and bring Hùng to care;
+|ShadowVale game|
+:Complete the bandaging scene and open village work;
+|Player|
+:Deliver medicine, store three crates and repair the jetty in any order;
+|Player|
+:Report completion and share the family meal;
+|ShadowVale game|
+:Begin the first night watch;
+|Player|
+:Inspect and make both posts safe; hand over the reserved medicine;
+|Player|
+:Return to rest and change watch;
+|ShadowVale game|
+:Finish Night 1 and begin Day 2 with saved progress;
+stop
+@enduml

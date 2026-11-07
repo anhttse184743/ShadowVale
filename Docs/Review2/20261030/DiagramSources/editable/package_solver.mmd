@@ -1,0 +1,9 @@
+flowchart LR
+api --> instances
+instances --> model
+api --> solvers
+solvers --> qubo
+qubo --> model
+bench --> instances
+bench --> model
+bench --> solvers

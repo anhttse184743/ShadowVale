@@ -1,0 +1,295 @@
+{
+  "tables": [
+    "users",
+    "refresh_tokens",
+    "content_versions",
+    "content_publication_history",
+    "items",
+    "weapons",
+    "consumables",
+    "skills",
+    "loot_tables",
+    "loot_table_entries",
+    "enemy_types",
+    "maps",
+    "map_loot_tables",
+    "enemy_placements",
+    "crafting_recipes",
+    "crafting_recipe_ingredients",
+    "quests",
+    "quest_rewards",
+    "players",
+    "solver_configurations",
+    "game_sessions",
+    "telemetry_events",
+    "coordination_results"
+  ],
+  "relationships": [
+    {
+      "parent": "users",
+      "child": "refresh_tokens",
+      "fk": "user_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "users",
+      "child": "content_versions",
+      "fk": "authored_by_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "users",
+      "child": "content_versions",
+      "fk": "reviewed_by_id",
+      "optional": true,
+      "unique": false
+    },
+    {
+      "parent": "users",
+      "child": "content_versions",
+      "fk": "published_by_id",
+      "optional": true,
+      "unique": false
+    },
+    {
+      "parent": "content_versions",
+      "child": "content_versions",
+      "fk": "parent_version_id",
+      "optional": true,
+      "unique": false
+    },
+    {
+      "parent": "content_versions",
+      "child": "content_publication_history",
+      "fk": "content_version_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "content_versions",
+      "child": "content_publication_history",
+      "fk": "previous_version_id",
+      "optional": true,
+      "unique": false
+    },
+    {
+      "parent": "users",
+      "child": "content_publication_history",
+      "fk": "actor_id",
+      "optional": true,
+      "unique": false
+    },
+    {
+      "parent": "items",
+      "child": "weapons",
+      "fk": "item_id",
+      "optional": false,
+      "unique": true
+    },
+    {
+      "parent": "items",
+      "child": "weapons",
+      "fk": "ammo_item_id",
+      "optional": true,
+      "unique": false
+    },
+    {
+      "parent": "items",
+      "child": "consumables",
+      "fk": "item_id",
+      "optional": false,
+      "unique": true
+    },
+    {
+      "parent": "loot_tables",
+      "child": "loot_table_entries",
+      "fk": "loot_table_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "items",
+      "child": "loot_table_entries",
+      "fk": "item_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "weapons",
+      "child": "enemy_types",
+      "fk": "weapon_id",
+      "optional": true,
+      "unique": false
+    },
+    {
+      "parent": "loot_tables",
+      "child": "enemy_types",
+      "fk": "loot_table_id",
+      "optional": true,
+      "unique": false
+    },
+    {
+      "parent": "maps",
+      "child": "enemy_placements",
+      "fk": "map_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "enemy_types",
+      "child": "enemy_placements",
+      "fk": "enemy_type_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "maps",
+      "child": "map_loot_tables",
+      "fk": "map_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "loot_tables",
+      "child": "map_loot_tables",
+      "fk": "loot_table_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "items",
+      "child": "crafting_recipes",
+      "fk": "output_item_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "skills",
+      "child": "crafting_recipes",
+      "fk": "required_skill_id",
+      "optional": true,
+      "unique": false
+    },
+    {
+      "parent": "crafting_recipes",
+      "child": "crafting_recipe_ingredients",
+      "fk": "recipe_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "items",
+      "child": "crafting_recipe_ingredients",
+      "fk": "item_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "quests",
+      "child": "quest_rewards",
+      "fk": "quest_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "items",
+      "child": "quest_rewards",
+      "fk": "item_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "players",
+      "child": "game_sessions",
+      "fk": "player_id",
+      "optional": true,
+      "unique": false
+    },
+    {
+      "parent": "content_versions",
+      "child": "game_sessions",
+      "fk": "content_version_id",
+      "optional": true,
+      "unique": false
+    },
+    {
+      "parent": "solver_configurations",
+      "child": "game_sessions",
+      "fk": "solver_configuration_id",
+      "optional": true,
+      "unique": false
+    },
+    {
+      "parent": "game_sessions",
+      "child": "telemetry_events",
+      "fk": "session_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "game_sessions",
+      "child": "coordination_results",
+      "fk": "session_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "solver_configurations",
+      "child": "coordination_results",
+      "fk": "solver_configuration_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "content_versions",
+      "child": "items",
+      "fk": "content_version_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "content_versions",
+      "child": "skills",
+      "fk": "content_version_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "content_versions",
+      "child": "loot_tables",
+      "fk": "content_version_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "content_versions",
+      "child": "enemy_types",
+      "fk": "content_version_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "content_versions",
+      "child": "maps",
+      "fk": "content_version_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "content_versions",
+      "child": "crafting_recipes",
+      "fk": "content_version_id",
+      "optional": false,
+      "unique": false
+    },
+    {
+      "parent": "content_versions",
+      "child": "quests",
+      "fk": "content_version_id",
+      "optional": false,
+      "unique": false
+    }
+  ]
+}

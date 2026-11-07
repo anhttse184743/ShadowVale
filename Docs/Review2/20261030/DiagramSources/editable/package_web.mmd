@@ -1,0 +1,9 @@
+flowchart TB
+ReactUI[React feature UI] --> Services[Frontend services]
+Services --> API
+API --> BLL
+BLL --> DAL
+DAL --> PostgreSQL
+API --> Contracts
+API --> OpenAPI
+OpenAPI --> Services

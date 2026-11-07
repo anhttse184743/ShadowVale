@@ -1,0 +1,27 @@
+@startuml
+skinparam classBackgroundColor #FCE8E0
+hide methods
+class "Unity solver choices" as unity {
+  greedy / ga / sa / sqa / qiea
+  qaoa / ls / tabu
+  Only greedy is in-process
+}
+class "Python registry" as python {
+  Live and benchmark: greedy, ga, sa, sqa, qiea
+  Additional baselines: ls, tabu, sa1h, pbil
+  Reference: brute, exact, exact_set; simulated qaoa
+}
+class "Benchmark and replay" as bench {
+  Fixed seed/build/content/budget
+  Instance-level statistics and human/replay split
+  QAOA mixer study is offline
+}
+class "exp-v2 evidence" as results {
+  3,447 game instances for exact_set timing
+  94.3% ≤120 ms; max 718.3 ms
+  Not a universal real-time replacement
+}
+unity --> python
+python --> results
+bench --> results
+@enduml

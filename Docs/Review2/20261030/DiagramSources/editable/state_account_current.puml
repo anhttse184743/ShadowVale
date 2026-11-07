@@ -1,0 +1,7 @@
+@startuml
+state "Active account" as Active
+state "Inactive account" as Inactive
+[*] --> Active
+Active --> Inactive: deactivate
+Inactive --> Active: reactivate
+@enduml

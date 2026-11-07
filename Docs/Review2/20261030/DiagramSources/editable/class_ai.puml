@@ -1,0 +1,49 @@
+@startuml
+skinparam classBackgroundColor #FCE8E0
+hide methods
+class "EnemyBrain" as B {
+  Tick / state / memory
+  Publishes contact events
+}
+class "SquadCoordinator" as C {
+  RequestReplan / UseSolver
+  Captures and applies fresh plans
+}
+class "ISquadSolver" as S {
+  VariantId / LatencyBudgetMs
+  SolveAsync(request, ct)
+}
+class "QuboBuilder" as Q {
+  Build assignment objective
+  One-hot / conflict penalties
+}
+class "QuboRequest" as R {
+  AgentCount / NodeCount
+  QMatrix / Offset
+}
+class "RemoteSolverClient" as RS {
+  Implements ISquadSolver
+  Backoff / network margin / fallback
+}
+class "Enemy tactics" as T {
+  Receive valid target assignment
+  Use body / cover / movement adapters
+}
+class "CoordinationPlan" as P {
+  AgentToTarget / actual solver
+  Latency / objective / fallback reason
+}
+class "GreedySolver" as G {
+  Implements ISquadSolver
+  Feasible local fallback
+}
+B --> C
+C --> S
+C --> Q
+Q --> R
+RS --> S
+RS --> G
+C --> R : input
+RS --> P
+C --> T
+@enduml

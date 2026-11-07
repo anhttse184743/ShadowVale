@@ -1,0 +1,16 @@
+@startuml
+actor Player
+participant ChapterDirector
+participant ChapterState
+participant DayOneState
+participant "Voice and props" as Props
+Player -> ChapterDirector : Interact at an available objective
+ChapterDirector -> ChapterState : Check phase prerequisites and range
+ChapterDirector -> ChapterDirector : Capture input weapon cursor and camera ownership
+ChapterDirector -> DayOneState : Apply the legal activity action
+DayOneState --> ChapterDirector : Return progress or rejection cause
+ChapterDirector -> Props : Update physical state and dialogue
+ChapterDirector -> ChapterState : Complete only after the final condition
+ChapterDirector -> ChapterDirector : Checkpoint and restore control
+ChapterDirector --> Player : Show the next actionable objective
+@enduml

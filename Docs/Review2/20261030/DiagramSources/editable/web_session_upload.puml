@@ -1,0 +1,28 @@
+@startuml
+hide footbox
+skinparam backgroundColor white
+skinparam sequenceParticipantBackgroundColor #FCE8E0
+autonumber
+participant "Game HTTP caller" as P0 <<boundary>>
+participant "GameController" as P1 <<controller>>
+participant "GameSessionService" as P2 <<service>>
+participant "GameSessionRepository" as P3 <<repository>>
+participant "GameSession / TelemetryEvent / CoordinationResult" as P4 <<entity>>
+P0 -> P1: Submit session results
+P1 -> P2: Validate final results
+note over P2,P4: Authorize and validate the batch before starting the transaction.
+P2 -> P3: Start the transaction
+P2 -> P3: Ensure player and session exist
+P2 -> P3: Lock and read known events
+P3 --> P2: Return stored identities
+alt same identity and consistent final outcome
+P2 -> P4: Prepare new session data
+P2 -> P3: Save accepted data
+P3 --> P2: Confirm the commit
+P2 --> P1: Return ingestion counts
+P1 --> P0: Record the upload result
+else ownership or final outcome conflicts
+P2 --> P1: Reject the update
+P1 --> P0: Display the conflict
+end
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+skinparam backgroundColor white
+|Game Client|
+start
+|Game Client|
+:Start a labeled human or replay session;
+|Platform|
+:Register the session and its eligible solver configuration;
+|Game Client|
+:Finish play and submit anonymized final evidence;
+|Platform|
+:Retain the terminal session and unique event/result identities;
+|Analyst|
+:Choose content version, source and time filters;
+|Analyst|
+:Inspect heatmap, funnel, weapons, playstyle and AI comparison;
+stop
+@enduml

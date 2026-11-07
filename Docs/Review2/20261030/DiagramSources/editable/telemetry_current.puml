@@ -1,0 +1,26 @@
+@startuml
+hide footbox
+skinparam backgroundColor white
+skinparam sequenceParticipantBackgroundColor #FCE8E0
+autonumber
+participant "Unity session" as P0 <<boundary>>
+participant "SessionUploadMapper" as P1 <<service>>
+participant "DiskQueue" as P2 <<file store>>
+participant "Uploader / BackendClient" as P3 <<service>>
+participant "GameController" as P4 <<controller>>
+P0 -> P4: Register installation and play session
+P4 --> P0: Return solver assignment when available
+P0 -> P0: Collect events and actual coordination plans
+P0 -> P1: Finish and map final evidence once
+P1 --> P0: Return stable final payload identities
+P0 -> P2: Store final payload before sending
+P3 -> P2: Read oldest pending payload
+P2 --> P3: Return stable queued bytes
+alt legacy file has no installation identity
+P3 -> P2: Move it to rejected without sending
+else current final payload
+P3 -> P4: Submit final session evidence
+P4 --> P3: Return accepted duplicate or rejected counts
+note over P2,P4: Success clears the queued file; invalid data is set aside; network/auth/server failures stay queued.
+end
+@enduml

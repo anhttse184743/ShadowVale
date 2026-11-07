@@ -1,0 +1,436 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="4320" height="2520" viewBox="0 0 4320 2520">
+<rect width="100%" height="100%" fill="white"/>
+<polyline points="2480,185 2520,180 2520,340 2480,345" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="2480,185 2520,180 2520,340 2480,345" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="760,185 800,180 800,220 880,220 920,225" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="760,185 800,180 800,220 880,220 920,225" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2480,245 2520,240 2600,240 2600,220 2640,225" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="2480,245 2520,240 2600,240 2600,220 2640,225" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2480,275 2520,280 2600,280 2600,260 2640,265" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="2480,275 2520,280 2600,280 2600,260 2640,265" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2130,780 2130,820 2130,1020 2130,1055" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="2130,780 2130,820 2130,1020 2130,1055" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1270,2005 1270,1960 1270,1850 1270,1810" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="1270,2005 1270,1960 1270,1850 1270,1810" fill="none" stroke="#80652F" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2480,1610 2520,1610 2520,1650 2600,1650 2640,1650" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="2480,1610 2520,1610 2520,1650 2600,1650 2640,1650" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3340,1610 3380,1610 3380,1690 3460,1690 3500,1690" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="3340,1610 3380,1610 3380,1690 3460,1690 3500,1690" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2640,2085 2600,2080 2600,2120 2520,2120 2480,2125" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="2640,2085 2600,2080 2600,2120 2520,2120 2480,2125" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1620,2085 1660,2080 1660,2160 1740,2160 1780,2165" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="1620,2085 1660,2080 1660,2160 1740,2160 1780,2165" fill="none" stroke="#80652F" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1780,660 1740,660 1740,700 1660,700 1620,700" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="1780,660 1740,660 1740,700 1660,700 1620,700" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="760,660 800,660 800,740 880,740 920,740" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="760,660 800,660 800,740 880,740 920,740" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3500,660 3460,660 3460,780 3380,780 3340,780" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="3500,660 3460,660 3460,780 3380,780 3340,780" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2990,900 2990,940 2990,1020 2990,1055" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="2990,900 2990,940 2990,1020 2990,1055" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2130,465 2130,500 2130,540 2130,580" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="2130,465 2130,500 2130,540 2130,580" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="760,215 800,220 800,370 1740,370 1740,220 1780,225" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="760,215 800,220 800,370 1740,370 1740,220 1780,225" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="760,245 800,240 790,240 790,380 1750,380 1750,260 1740,260 1780,265" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="760,245 800,240 790,240 790,380 1750,380 1750,260 1740,260 1780,265" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="760,275 800,280 890,280 890,390 1730,390 1730,300 1740,300 1780,305" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="760,275 800,280 890,280 890,390 1730,390 1730,300 1740,300 1780,305" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2180,780 2180,820 2510,820 2510,1490 2130,1490 2130,1530" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="2180,780 2180,820 2510,820 2510,1490 2130,1490 2130,1530" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2080,780 2080,820 1750,820 1750,1480 2180,1480 2180,1490 2180,1530" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="2080,780 2080,820 1750,820 1750,1480 2180,1480 2180,1490 2180,1530" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3340,2085 3380,2080 3470,2080 3470,1650 3460,1650 3500,1650" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="3340,2085 3380,2080 3470,2080 3470,1650 3460,1650 3500,1650" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="920,690 880,690 890,690 890,1180 800,1180 760,1175" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="920,690 880,690 890,690 890,1180 800,1180 760,1175" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="920,1135 880,1140 790,1140 790,1650 800,1650 760,1650" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="920,1135 880,1140 790,1140 790,1650 800,1650 760,1650" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3500,185 3460,180 3380,180 3380,700 3340,700" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="3500,185 3460,180 3380,180 3380,700 3340,700" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2480,305 2520,300 2600,300 2600,740 2640,740" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="2480,305 2520,300 2600,300 2600,740 2640,740" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3340,720 3380,720 3370,720 3370,1180 3460,1180 3500,1175" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="3340,720 3380,720 3370,720 3370,1180 3460,1180 3500,1175" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3500,690 3460,690 3470,690 3470,1220 3380,1220 3340,1215" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="3500,690 3460,690 3470,690 3470,1220 3380,1220 3340,1215" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1780,275 1740,280 1650,280 1650,780 1660,780 1620,780" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="1780,275 1740,280 1650,280 1650,780 1660,780 1620,780" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="760,275 800,280 800,270 890,270 890,70 2610,70 2610,300 2600,300 2640,305" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="760,275 800,280 800,270 890,270 890,70 2610,70 2610,300 2600,300 2640,305" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1780,690 1740,690 1750,690 1750,810 1660,810 1660,1690 1620,1690" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="1780,690 1740,690 1750,690 1750,810 1660,810 1660,1690 1620,1690" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1620,2115 1660,2120 1750,2120 1750,1840 2600,1840 2600,1690 2640,1690" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="1620,2115 1660,2120 1750,2120 1750,1840 2600,1840 2600,1690 2640,1690" fill="none" stroke="#80652F" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1780,720 1740,720 1740,800 1650,800 1650,1020 800,1020 800,1220 760,1215" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="1780,720 1740,720 1740,800 1650,800 1650,1020 800,1020 800,1220 760,1215" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1780,305 1740,300 1690,300 1690,550 810,550 810,700 800,700 760,700" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="1780,305 1740,300 1690,300 1690,550 810,550 810,700 800,700 760,700" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1780,335 1740,340 1700,340 1700,1180 1660,1180 1620,1175" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="1780,335 1740,340 1700,340 1700,1180 1660,1180 1620,1175" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1780,750 1740,750 1710,750 1710,1500 810,1500 810,1690 800,1690 760,1690" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="1780,750 1740,750 1710,750 1710,1500 810,1500 810,1690 800,1690 760,1690" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2480,335 2520,340 2520,1600 2510,1600 2510,1730 2600,1730 2640,1730" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="2480,335 2520,340 2520,1600 2510,1600 2510,1730 2600,1730 2640,1730" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1780,365 1740,360 1720,360 1720,2070 1650,2070 1650,2120 1660,2120 1620,2125" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="1780,365 1740,360 1720,360 1720,2070 1650,2070 1650,2120 1660,2120 1620,2125" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2480,365 2520,360 2590,360 2590,870 2610,870 2610,2120 2600,2120 2640,2125" fill="none" stroke="white" stroke-width="10" stroke-linejoin="round"/>
+<polyline points="2480,365 2520,360 2590,360 2590,870 2610,870 2610,2120 2600,2120 2640,2125" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<rect x="60" y="105" width="700" height="200" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="60" y="105" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="75" y="141.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">users</text>
+<text x="75" y="198.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="75" y="238.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">username / email UQ</text>
+<text x="75" y="278.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">role / is_active</text>
+<rect x="920" y="105" width="700" height="240" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="920" y="105" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="935" y="141.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">refresh_tokens</text>
+<text x="935" y="198.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="935" y="238.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  user_id  [R01]</text>
+<text x="935" y="278.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">token_hash UQ</text>
+<text x="935" y="318.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">expires_at / revoked_at</text>
+<rect x="1780" y="105" width="700" height="360" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="1780" y="105" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="1795" y="141.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">content_versions</text>
+<text x="1795" y="198.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="1795" y="238.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  authored_by_id  [R02]</text>
+<text x="1795" y="278.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  reviewed_by_id ?  [R03]</text>
+<text x="1795" y="318.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  published_by_id ?  [R04]</text>
+<text x="1795" y="358.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  parent_version_id ?  [R05]</text>
+<text x="1795" y="398.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">version_no UQ / status</text>
+<text x="1795" y="438.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">revision / label</text>
+<rect x="2640" y="105" width="700" height="280" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="2640" y="105" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="2655" y="141.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">content_publication_history</text>
+<text x="2655" y="198.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="2655" y="238.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  content_version_id  [R06]</text>
+<text x="2655" y="278.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  previous_version_id ?  [R07]</text>
+<text x="2655" y="318.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  actor_id ?  [R08]</text>
+<text x="2655" y="358.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">action / reason</text>
+<rect x="3500" y="105" width="700" height="160" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="3500" y="105" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="3515" y="141.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">players</text>
+<text x="3515" y="198.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="3515" y="238.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">install_id UQ</text>
+<rect x="60" y="580" width="700" height="200" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="60" y="580" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="75" y="616.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">skills</text>
+<text x="75" y="673.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="75" y="713.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  content_version_id  [R33]</text>
+<text x="75" y="753.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">code / type / max_level</text>
+<rect x="920" y="580" width="700" height="280" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="920" y="580" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="935" y="616.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">crafting_recipes</text>
+<text x="935" y="673.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="935" y="713.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  output_item_id  [R20]</text>
+<text x="935" y="753.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  required_skill_id ?  [R21]</text>
+<text x="935" y="793.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  content_version_id  [R37]</text>
+<text x="935" y="833.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">code / craft_time_seconds</text>
+<rect x="1780" y="580" width="700" height="200" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="1780" y="580" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="1795" y="616.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">items</text>
+<text x="1795" y="673.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="1795" y="713.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  content_version_id  [R32]</text>
+<text x="1795" y="753.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">code / type / max_stack</text>
+<rect x="2640" y="580" width="700" height="320" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="2640" y="580" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="2655" y="616.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">game_sessions</text>
+<text x="2655" y="673.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="2655" y="713.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  player_id ?  [R26]</text>
+<text x="2655" y="753.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  content_version_id ?  [R27]</text>
+<text x="2655" y="793.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  solver_configuration_id ?  [R28]</text>
+<text x="2655" y="833.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">source / outcome / map_code</text>
+<text x="2655" y="873.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">started_at / ended_at / stats</text>
+<rect x="3500" y="580" width="700" height="200" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="3500" y="580" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="3515" y="616.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">solver_configurations</text>
+<text x="3515" y="673.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="3515" y="713.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">code UQ / algorithm / family</text>
+<text x="3515" y="753.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">time_budget_ms / params</text>
+<rect x="60" y="1055" width="700" height="240" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="60" y="1055" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="75" y="1091.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">crafting_recipe_ingredients</text>
+<text x="75" y="1148.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="75" y="1188.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  recipe_id  [R22]</text>
+<text x="75" y="1228.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  item_id  [R23]</text>
+<text x="75" y="1268.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">quantity</text>
+<rect x="920" y="1055" width="700" height="240" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="920" y="1055" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="935" y="1091.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">quests</text>
+<text x="935" y="1148.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="935" y="1188.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  content_version_id  [R38]</text>
+<text x="935" y="1228.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">code / objectives / prerequisites</text>
+<text x="935" y="1268.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">reward_xp</text>
+<rect x="1780" y="1055" width="700" height="240" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="1780" y="1055" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="1795" y="1091.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">consumables</text>
+<text x="1795" y="1148.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="1795" y="1188.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  item_id  [R11]</text>
+<text x="1795" y="1228.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">heal_hp / restore_stamina</text>
+<text x="1795" y="1268.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">use_time_seconds</text>
+<rect x="2640" y="1055" width="700" height="280" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="2640" y="1055" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="2655" y="1091.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">coordination_results</text>
+<text x="2655" y="1148.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="2655" y="1188.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  session_id  [R30]</text>
+<text x="2655" y="1228.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  solver_configuration_id  [R31]</text>
+<text x="2655" y="1268.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">solve_latency_ms / used_fallback</text>
+<text x="2655" y="1308.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">objective_value / assignment</text>
+<rect x="3500" y="1055" width="700" height="240" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="3500" y="1055" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="3515" y="1091.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">telemetry_events</text>
+<text x="3515" y="1148.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : bigint</text>
+<text x="3515" y="1188.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  session_id  [R29]</text>
+<text x="3515" y="1228.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">client_event_id / event_type</text>
+<text x="3515" y="1268.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">occurred_at</text>
+<rect x="60" y="1530" width="700" height="240" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="60" y="1530" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="75" y="1566.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">quest_rewards</text>
+<text x="75" y="1623.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="75" y="1663.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  quest_id  [R24]</text>
+<text x="75" y="1703.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  item_id  [R25]</text>
+<text x="75" y="1743.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">quantity</text>
+<rect x="920" y="1530" width="700" height="280" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="920" y="1530" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="935" y="1566.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">loot_table_entries</text>
+<text x="935" y="1623.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="935" y="1663.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  loot_table_id  [R12]</text>
+<text x="935" y="1703.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  item_id  [R13]</text>
+<text x="935" y="1743.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">tier / weight</text>
+<text x="935" y="1783.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">min_quantity / max_quantity</text>
+<rect x="1780" y="1530" width="700" height="280" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="1780" y="1530" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="1795" y="1566.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">weapons</text>
+<text x="1795" y="1623.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="1795" y="1663.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  item_id  [R09]</text>
+<text x="1795" y="1703.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  ammo_item_id ?  [R10]</text>
+<text x="1795" y="1743.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">class / damage / fire_rate</text>
+<text x="1795" y="1783.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">effective_range / is_suppressed</text>
+<rect x="2640" y="1530" width="700" height="280" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="2640" y="1530" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="2655" y="1566.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">enemy_types</text>
+<text x="2655" y="1623.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="2655" y="1663.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  weapon_id ?  [R14]</text>
+<text x="2655" y="1703.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  loot_table_id ?  [R15]</text>
+<text x="2655" y="1743.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  content_version_id  [R35]</text>
+<text x="2655" y="1783.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">code / max_hp / vision_range</text>
+<rect x="3500" y="1530" width="700" height="280" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="3500" y="1530" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="3515" y="1566.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">enemy_placements</text>
+<text x="3515" y="1623.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="3515" y="1663.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  map_id  [R16]</text>
+<text x="3515" y="1703.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  enemy_type_id  [R17]</text>
+<text x="3515" y="1743.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">pos_x / pos_y / facing_degrees</text>
+<text x="3515" y="1783.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">squad_tag / patrol_route</text>
+<rect x="920" y="2005" width="700" height="200" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="920" y="2005" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="935" y="2041.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">loot_tables</text>
+<text x="935" y="2098.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="935" y="2138.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  content_version_id  [R34]</text>
+<text x="935" y="2178.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">code / rolls_min / rolls_max</text>
+<rect x="1780" y="2005" width="700" height="240" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="1780" y="2005" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="1795" y="2041.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">map_loot_tables</text>
+<text x="1795" y="2098.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="1795" y="2138.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  map_id  [R18]</text>
+<text x="1795" y="2178.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  loot_table_id  [R19]</text>
+<text x="1795" y="2218.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">container_tag</text>
+<rect x="2640" y="2005" width="700" height="200" fill="white" stroke="#252525" stroke-width="3"/>
+<rect x="2640" y="2005" width="700" height="60" fill="#FCE8E0" stroke="#252525" stroke-width="3"/>
+<text x="2655" y="2041.54" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">maps</text>
+<text x="2655" y="2098.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">PK  id : uuid</text>
+<text x="2655" y="2138.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">FK  content_version_id  [R36]</text>
+<text x="2655" y="2178.54" font-family="Calibri,Arial,sans-serif" font-size="34" fill="#252525">code / scene_key / is_safe_camp</text>
+<polyline points="2490.418917705493,171.60424866436549 2493.3957513356345,195.4189177054935" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2509.76833630141" cy="181.27895796232374" r="7" fill="white" stroke="#376484" stroke-width="3"/>
+<polyline points="2480.4961389383566,332.8445960102576 2502.8223911644145,342.1472011044482 2483.472972568498,356.6592650513856" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2481.9845557534272,344.7519305308216 2502.8223911644145,342.1472011044482" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2512.745169931551" cy="340.9068537585561" r="7" fill="white" stroke="#376484" stroke-width="3"/>
+<polyline points="770.4189177054935,171.60424866436549 773.3957513356346,195.4189177054935" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="782.3262522260575,170.11583184929498 785.3030858561985,193.930500890423" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="916.5270274315021,236.6592650513856 897.1776088355856,222.14720110444821 919.5038610616432,212.8445960102576" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="918.0154442465727,224.7519305308216 897.1776088355856,222.14720110444821" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="887.254830068449" cy="220.9068537585561" r="7" fill="white" stroke="#745548" stroke-width="3"/>
+<polyline points="2490.418917705493,231.60424866436549 2493.3957513356345,255.4189177054935" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2502.3262522260575,230.11583184929498 2505.303085856199,253.930500890423" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2636.527027431502,236.6592650513856 2617.1776088355855,222.14720110444821 2639.5038610616434,212.8445960102576" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2638.0154442465728,224.7519305308216 2617.1776088355855,222.14720110444821" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2607.254830068449" cy="220.9068537585561" r="7" fill="white" stroke="#376484" stroke-width="3"/>
+<polyline points="2493.3957513356345,264.5810822945065 2490.418917705493,288.3957513356345" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2509.76833630141" cy="278.7210420376762" r="7" fill="white" stroke="#376484" stroke-width="3"/>
+<polyline points="2636.527027431502,276.6592650513856 2617.1776088355855,262.1472011044482 2639.5038610616434,252.8445960102576" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2638.0154442465728,264.7519305308216 2617.1776088355855,262.1472011044482" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2607.254830068449" cy="260.9068537585561" r="7" fill="white" stroke="#376484" stroke-width="3"/>
+<polyline points="2142.0,792.0 2118.0,792.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2142.0,804.0 2118.0,804.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2118.0,1043.0 2142.0,1043.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2130.0" cy="1025.0" r="7" fill="white" stroke="#466A50" stroke-width="3"/>
+<polyline points="1258.0,1993.0 1282.0,1993.0" fill="none" stroke="#80652F" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1258.0,1981.0 1282.0,1981.0" fill="none" stroke="#80652F" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1282.0,1812.0 1270.0,1833.0 1258.0,1812.0" fill="none" stroke="#80652F" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1270.0,1812.0 1270.0,1833.0" fill="none" stroke="#80652F" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="1270.0" cy="1843.0" r="7" fill="white" stroke="#80652F" stroke-width="3"/>
+<polyline points="2492.0,1598.0 2492.0,1622.0" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2510.0" cy="1610.0" r="7" fill="white" stroke="#626262" stroke-width="3"/>
+<polyline points="2638.0,1662.0 2617.0,1650.0 2638.0,1638.0" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2638.0,1650.0 2617.0,1650.0" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2607.0" cy="1650.0" r="7" fill="white" stroke="#626262" stroke-width="3"/>
+<polyline points="3352.0,1598.0 3352.0,1622.0" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3364.0,1598.0 3364.0,1622.0" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3498.0,1702.0 3477.0,1690.0 3498.0,1678.0" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3498.0,1690.0 3477.0,1690.0" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="3467.0" cy="1690.0" r="7" fill="white" stroke="#626262" stroke-width="3"/>
+<polyline points="2626.6042486643655,2095.418917705493 2629.581082294507,2071.6042486643655" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2614.696914143801,2093.930500890423 2617.6737477739425,2070.1158318492953" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2480.4961389383566,2112.8445960102576 2502.8223911644145,2122.1472011044484 2483.472972568498,2136.6592650513853" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2481.9845557534272,2124.7519305308215 2502.8223911644145,2122.1472011044484" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2512.745169931551" cy="2120.9068537585563" r="7" fill="white" stroke="#626262" stroke-width="3"/>
+<polyline points="1630.4189177054936,2071.6042486643655 1633.3957513356345,2095.418917705493" fill="none" stroke="#80652F" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1642.3262522260577,2070.1158318492953 1645.3030858561985,2093.930500890423" fill="none" stroke="#80652F" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1776.5270274315023,2176.6592650513853 1757.1776088355857,2162.1472011044484 1779.5038610616432,2152.8445960102576" fill="none" stroke="#80652F" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1778.0154442465728,2164.7519305308215 1757.1776088355857,2162.1472011044484" fill="none" stroke="#80652F" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="1747.2548300684489" cy="2160.9068537585563" r="7" fill="white" stroke="#80652F" stroke-width="3"/>
+<polyline points="1768.0,672.0 1768.0,648.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1756.0,672.0 1756.0,648.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1622.0,688.0 1643.0,700.0 1622.0,712.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1622.0,700.0 1643.0,700.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="1653.0" cy="700.0" r="7" fill="white" stroke="#466A50" stroke-width="3"/>
+<polyline points="772.0,648.0 772.0,672.0" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="790.0" cy="660.0" r="7" fill="white" stroke="#626262" stroke-width="3"/>
+<polyline points="918.0,752.0 897.0,740.0 918.0,728.0" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="918.0,740.0 897.0,740.0" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="887.0" cy="740.0" r="7" fill="white" stroke="#626262" stroke-width="3"/>
+<polyline points="3488.0,672.0 3488.0,648.0" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="3470.0" cy="660.0" r="7" fill="white" stroke="#6A547D" stroke-width="3"/>
+<polyline points="3342.0,768.0 3363.0,780.0 3342.0,792.0" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3342.0,780.0 3363.0,780.0" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="3373.0" cy="780.0" r="7" fill="white" stroke="#6A547D" stroke-width="3"/>
+<polyline points="3002.0,912.0 2978.0,912.0" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3002.0,924.0 2978.0,924.0" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2978.0,1053.0 2990.0,1032.0 3002.0,1053.0" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2990.0,1053.0 2990.0,1032.0" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2990.0" cy="1022.0" r="7" fill="white" stroke="#6A547D" stroke-width="3"/>
+<polyline points="2142.0,477.0 2118.0,477.0" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2142.0,489.0 2118.0,489.0" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2118.0,578.0 2130.0,557.0 2142.0,578.0" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2130.0,578.0 2130.0,557.0" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2130.0" cy="547.0" r="7" fill="white" stroke="#376484" stroke-width="3"/>
+<polyline points="773.3957513356346,204.5810822945065 770.4189177054935,228.39575133563451" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="785.3030858561985,206.069499109577 782.3262522260575,229.88416815070502" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1776.5270274315023,236.6592650513856 1757.1776088355857,222.14720110444821 1779.5038610616432,212.8445960102576" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1778.0154442465728,224.7519305308216 1757.1776088355857,222.14720110444821" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="1747.2548300684489" cy="220.9068537585561" r="7" fill="white" stroke="#745548" stroke-width="3"/>
+<polyline points="770.4189177054935,231.60424866436549 773.3957513356346,255.4189177054935" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="789.76833630141" cy="241.27895796232374" r="7" fill="white" stroke="#745548" stroke-width="3"/>
+<polyline points="1776.5270274315023,276.6592650513856 1757.1776088355857,262.1472011044482 1779.5038610616432,252.8445960102576" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1778.0154442465728,264.7519305308216 1757.1776088355857,262.1472011044482" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="1747.2548300684489" cy="260.9068537585561" r="7" fill="white" stroke="#745548" stroke-width="3"/>
+<polyline points="773.3957513356346,264.5810822945065 770.4189177054935,288.3957513356345" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="789.76833630141" cy="278.7210420376762" r="7" fill="white" stroke="#745548" stroke-width="3"/>
+<polyline points="1776.5270274315023,316.6592650513856 1757.1776088355857,302.1472011044482 1779.5038610616432,292.8445960102576" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1778.0154442465728,304.7519305308216 1757.1776088355857,302.1472011044482" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="1747.2548300684489" cy="300.9068537585561" r="7" fill="white" stroke="#745548" stroke-width="3"/>
+<polyline points="2192.0,792.0 2168.0,792.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2192.0,804.0 2168.0,804.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2118.0,1518.0 2142.0,1518.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2130.0" cy="1500.0" r="7" fill="white" stroke="#466A50" stroke-width="3"/>
+<polyline points="2092.0,792.0 2068.0,792.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2080.0" cy="810.0" r="7" fill="white" stroke="#466A50" stroke-width="3"/>
+<polyline points="2168.0,1528.0 2180.0,1507.0 2192.0,1528.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2180.0,1528.0 2180.0,1507.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2180.0" cy="1497.0" r="7" fill="white" stroke="#466A50" stroke-width="3"/>
+<polyline points="3350.418917705493,2071.6042486643655 3353.3957513356345,2095.418917705493" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3362.3262522260575,2070.1158318492953 3365.303085856199,2093.930500890423" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3498.0,1662.0 3477.0,1650.0 3498.0,1638.0" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3498.0,1650.0 3477.0,1650.0" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="3467.0" cy="1650.0" r="7" fill="white" stroke="#626262" stroke-width="3"/>
+<polyline points="908.0,702.0 908.0,678.0" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="896.0,702.0 896.0,678.0" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="763.4729725684979,1163.3407349486145 782.8223911644144,1177.8527988955518 760.4961389383568,1187.1554039897426" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="761.9845557534273,1175.2480694691785 782.8223911644144,1177.8527988955518" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="792.745169931551" cy="1179.093146241444" r="7" fill="white" stroke="#626262" stroke-width="3"/>
+<polyline points="909.5810822945065,1148.3957513356345 906.6042486643654,1124.5810822945064" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="897.6737477739425,1149.8841681507051 894.6969141438015,1126.069499109577" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="762.0,1638.0 783.0,1650.0 762.0,1662.0" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="762.0,1650.0 783.0,1650.0" fill="none" stroke="#626262" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="793.0" cy="1650.0" r="7" fill="white" stroke="#626262" stroke-width="3"/>
+<polyline points="3486.6042486643655,195.4189177054935 3489.581082294507,171.60424866436549" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="3470.23166369859" cy="181.27895796232374" r="7" fill="white" stroke="#6A547D" stroke-width="3"/>
+<polyline points="3342.0,688.0 3363.0,700.0 3342.0,712.0" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3342.0,700.0 3363.0,700.0" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="3373.0" cy="700.0" r="7" fill="white" stroke="#6A547D" stroke-width="3"/>
+<polyline points="2490.418917705493,291.6042486643655 2493.3957513356345,315.4189177054935" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2509.76833630141" cy="301.2789579623238" r="7" fill="white" stroke="#376484" stroke-width="3"/>
+<polyline points="2638.0,752.0 2617.0,740.0 2638.0,728.0" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2638.0,740.0 2617.0,740.0" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2607.0" cy="740.0" r="7" fill="white" stroke="#376484" stroke-width="3"/>
+<polyline points="3352.0,708.0 3352.0,732.0" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3364.0,708.0 3364.0,732.0" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3499.5038610616434,1187.1554039897426 3477.1776088355855,1177.8527988955518 3496.527027431502,1163.3407349486145" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3498.0154442465728,1175.2480694691785 3477.1776088355855,1177.8527988955518" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="3467.254830068449" cy="1179.093146241444" r="7" fill="white" stroke="#6A547D" stroke-width="3"/>
+<polyline points="3488.0,702.0 3488.0,678.0" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3476.0,702.0 3476.0,678.0" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3343.472972568498,1203.3407349486145 3362.8223911644145,1217.8527988955518 3340.4961389383566,1227.1554039897426" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="3341.9845557534272,1215.2480694691785 3362.8223911644145,1217.8527988955518" fill="none" stroke="#6A547D" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="3372.745169931551" cy="1219.093146241444" r="7" fill="white" stroke="#6A547D" stroke-width="3"/>
+<polyline points="1769.5810822945064,288.3957513356345 1766.6042486643655,264.5810822945065" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1757.6737477739423,289.884168150705 1754.6969141438015,266.069499109577" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1622.0,768.0 1643.0,780.0 1622.0,792.0" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1622.0,780.0 1643.0,780.0" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="1653.0" cy="780.0" r="7" fill="white" stroke="#376484" stroke-width="3"/>
+<polyline points="773.3957513356346,264.5810822945065 770.4189177054935,288.3957513356345" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="789.76833630141" cy="278.7210420376762" r="7" fill="white" stroke="#745548" stroke-width="3"/>
+<polyline points="2636.527027431502,316.6592650513856 2617.1776088355855,302.1472011044482 2639.5038610616434,292.8445960102576" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2638.0154442465728,304.7519305308216 2617.1776088355855,302.1472011044482" fill="none" stroke="#745548" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2607.254830068449" cy="300.9068537585561" r="7" fill="white" stroke="#745548" stroke-width="3"/>
+<polyline points="1768.0,702.0 1768.0,678.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1756.0,702.0 1756.0,678.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1622.0,1678.0 1643.0,1690.0 1622.0,1702.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1622.0,1690.0 1643.0,1690.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="1653.0" cy="1690.0" r="7" fill="white" stroke="#466A50" stroke-width="3"/>
+<polyline points="1633.3957513356345,2104.581082294507 1630.4189177054936,2128.3957513356345" fill="none" stroke="#80652F" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="1649.76833630141" cy="2118.7210420376764" r="7" fill="white" stroke="#80652F" stroke-width="3"/>
+<polyline points="2638.0,1702.0 2617.0,1690.0 2638.0,1678.0" fill="none" stroke="#80652F" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2638.0,1690.0 2617.0,1690.0" fill="none" stroke="#80652F" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2607.0" cy="1690.0" r="7" fill="white" stroke="#80652F" stroke-width="3"/>
+<polyline points="1768.0,732.0 1768.0,708.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1756.0,732.0 1756.0,708.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="763.4729725684979,1203.3407349486145 782.8223911644144,1217.8527988955518 760.4961389383568,1227.1554039897426" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="761.9845557534273,1215.2480694691785 782.8223911644144,1217.8527988955518" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="792.745169931551" cy="1219.093146241444" r="7" fill="white" stroke="#466A50" stroke-width="3"/>
+<polyline points="1766.6042486643655,315.4189177054935 1769.5810822945064,291.6042486643655" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1754.6969141438015,313.930500890423 1757.6737477739423,290.115831849295" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="762.0,688.0 783.0,700.0 762.0,712.0" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="762.0,700.0 783.0,700.0" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="793.0" cy="700.0" r="7" fill="white" stroke="#376484" stroke-width="3"/>
+<polyline points="1769.5810822945064,348.3957513356345 1766.6042486643655,324.5810822945065" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1757.6737477739423,349.884168150705 1754.6969141438015,326.069499109577" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1623.4729725684977,1163.3407349486145 1642.8223911644143,1177.8527988955518 1620.4961389383568,1187.1554039897426" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1621.9845557534272,1175.2480694691785 1642.8223911644143,1177.8527988955518" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="1652.7451699315511" cy="1179.093146241444" r="7" fill="white" stroke="#376484" stroke-width="3"/>
+<polyline points="1768.0,762.0 1768.0,738.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1756.0,762.0 1756.0,738.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="762.0,1678.0 783.0,1690.0 762.0,1702.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="762.0,1690.0 783.0,1690.0" fill="none" stroke="#466A50" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="793.0" cy="1690.0" r="7" fill="white" stroke="#466A50" stroke-width="3"/>
+<polyline points="2493.3957513356345,324.5810822945065 2490.418917705493,348.3957513356345" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2505.303085856199,326.069499109577 2502.3262522260575,349.884168150705" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2638.0,1742.0 2617.0,1730.0 2638.0,1718.0" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2638.0,1730.0 2617.0,1730.0" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2607.0" cy="1730.0" r="7" fill="white" stroke="#376484" stroke-width="3"/>
+<polyline points="1766.6042486643655,375.4189177054935 1769.5810822945064,351.6042486643655" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1754.6969141438015,373.930500890423 1757.6737477739423,350.115831849295" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1620.4961389383568,2112.8445960102576 1642.8223911644143,2122.1472011044484 1623.4729725684977,2136.6592650513853" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="1621.9845557534272,2124.7519305308215 1642.8223911644143,2122.1472011044484" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="1652.7451699315511" cy="2120.9068537585563" r="7" fill="white" stroke="#376484" stroke-width="3"/>
+<polyline points="2490.418917705493,351.6042486643655 2493.3957513356345,375.4189177054935" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2502.3262522260575,350.115831849295 2505.303085856199,373.930500890423" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2636.527027431502,2136.6592650513853 2617.1776088355855,2122.1472011044484 2639.5038610616434,2112.8445960102576" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<polyline points="2638.0154442465728,2124.7519305308215 2617.1776088355855,2122.1472011044484" fill="none" stroke="#376484" stroke-width="3" stroke-linejoin="round"/>
+<circle cx="2607.254830068449" cy="2120.9068537585563" r="7" fill="white" stroke="#376484" stroke-width="3"/>
+<text x="60" y="39.540000000000006" font-family="Calibri,Arial,sans-serif" font-size="34" font-weight="bold" fill="#252525">shadowvale  |  Unified logical ERD  |  23 tables and 38 foreign-key relationships</text>
+<text x="60" y="2398.49" font-family="Calibri,Arial,sans-serif" font-size="29" fill="#252525">PK = primary key    FK = foreign key    UQ = unique    ? = nullable FK    R01-R38 = relationship identifiers</text>
+<text x="60" y="2438.49" font-family="Calibri,Arial,sans-serif" font-size="29" fill="#252525">Crow foot = many; circle = zero/optional; bar = one. Each table appears once. All FK links are drawn.</text>
+<text x="60" y="2478.49" font-family="Calibri,Arial,sans-serif" font-size="29" fill="#252525">Descriptive fields are selected; all PK/FK columns are shown. Inherited audit timestamps are omitted. JSON fields remain columns.</text>
+</svg>

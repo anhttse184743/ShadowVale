@@ -1,0 +1,18 @@
+@startuml
+hide footbox
+autonumber
+participant SquadCoordinator as C
+participant QuboBuilder as B
+participant ISquadSolver as S
+participant "Remote sidecar" as R
+participant "Enemy tactics" as T
+C -> B: Capture tactical instance and build QUBO
+B --> C: Return matrix and assignment constraints
+C -> S: Request a tactical plan asynchronously
+S -> R: Submit the optimization problem
+R --> S: Return assignment or failure
+S -> S: Use greedy fallback when unavailable or infeasible
+S --> C: Return actual solver and result metadata
+C -> C: Reject stale member or target snapshots
+C -> T: Apply valid target assignments
+@enduml

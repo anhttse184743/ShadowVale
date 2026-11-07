@@ -1,0 +1,36 @@
+@startuml
+class Map01Inventory {
+ Count(id)
+ Receive(id, amount)
+ Spend(id, amount)
+ TryCraft(recipeId, times)
+ CaptureItems()
+}
+class CraftJob {
+ recipe : ForestRecipe
+ until : float
+ Seconds : float
+}
+class ForestRecipe {
+ id
+ inputs
+ output
+ craft_seconds
+}
+class ForestInventory {
+ Metadata
+ Stack display types
+}
+class PlayerSkills {
+ Award(kind, amount)
+ Capture()
+ Restore(...)
+ RecordFullRepair(transactionId)
+}
+class Map02Mission
+Map01Inventory "1" --> "0..*" CraftJob : queue
+CraftJob --> ForestRecipe : recipe
+Map01Inventory ..> ForestInventory : presentation metadata
+Map02Mission --> PlayerSkills : integrates
+Map02Mission --> Map01Inventory : campaign state
+@enduml

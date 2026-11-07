@@ -1,0 +1,47 @@
+@startuml
+skinparam classBackgroundColor #FCE8E0
+hide methods
+class "AuthController" as AC {
+  Login / Refresh / Logout
+  Me / ChangePassword
+}
+class "AuthService" as AS {
+  LoginAsync / RefreshAsync
+  Session validity / logout
+}
+class "TokenService" as TS {
+  CreateAccessToken
+  CreateRefreshToken
+}
+class "UsersController" as UC {
+  Create / Update
+  ResetPassword
+}
+class "UserService" as US {
+  UpdateAsync
+  ResetPasswordAsync
+}
+class "Repositories" as R {
+  UserRepository
+  RefreshTokenRepository
+}
+class "User" as U {
+  Role / IsActive
+  PasswordHash / LastLoginAt
+}
+class "RefreshToken" as T {
+  TokenHash / RevokedAt
+  ExpiresAt / UserId
+}
+class "React boundaries" as B {
+  InternalLoginPage / UsersPage
+  AuthContext / axiosClient
+}
+AC --> AS
+AS --> TS
+UC --> US
+US --> R
+AS --> R
+R --> U
+R --> T
+@enduml

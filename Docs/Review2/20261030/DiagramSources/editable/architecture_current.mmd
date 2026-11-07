@@ -1,0 +1,10 @@
+flowchart LR
+Unity[Unity Windows client] -->|solve request| Solver[Local Python FastAPI sidecar]
+Solver -->|plan and actual solver| Unity
+Unity -->|local I/O| Files[Slots cache install ID queue research]
+Unity -->|content retrieval and session evidence| API[ASP.NET Core API BLL DAL]
+Web[React Designer Analyst Admin] -->|authorized actions| API
+API -->|transaction| DB[PostgreSQL shadowvale 23 tables]
+
+%% Hosting: React/API on Render; PostgreSQL on Supabase
+%% GitHub Actions is a development CI/CD service, outside runtime gameplay.
