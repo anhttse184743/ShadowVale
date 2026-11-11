@@ -76,6 +76,24 @@ namespace ShadowVale.Map01
                 allySpot[role]=hit.position;ally.GoTo(hit.position,AllyRun);return;
             }
         }
+        // The new commander has a different chest depth than the legacy role model.
+        // Keep the old model's attachment untouched, but position the new model's
+        // idle rifle close to his back. Combat restores the authored hand mount.
+        void SetCommanderRifleCarry(Map02ChapterActor ally,bool slung)
+        {
+            if(ally==null||ally.role!="Anh Thành"||ally.visual==null)return;
+            var animator=ally.visual.GetComponentInChildren<Animator>();
+            var source=Resources.Load<GameObject>("Characters/AlliedCommanderVisual");
+            var sourceAnimator=source!=null?source.GetComponentInChildren<Animator>():null;
+            bool newCommander=animator!=null&&sourceAnimator!=null&&animator.avatar==sourceAnimator.avatar;
+            // Preserve the old role's original phase-based carry behaviour.
+            ally.SetQuietRifle(slung&&(newCommander||State.phase<=1));
+            if(!slung||!newCommander)return;
+            var rifle=animator.GetComponent<Map01Rifle>();
+            if(rifle?.weapon!=null&&rifle.weapon.transform.parent==animator.GetBoneTransform(HumanBodyBones.Chest))
+                rifle.weapon.transform.localPosition=new Vector3(.20f,0,-.12f);
+        }
+
         /// <summary>On the guards' controller (rifle pose, run, recoil) while the fight lasts; his own controller after it.</summary>
         void CombatPose(string role,Map02ChapterActor ally,bool on)
         {
@@ -85,13 +103,16 @@ namespace ShadowVale.Map01
             {
                 var rifleman=Map01ActorAssets.Load()?.enemyController;if(rifleman==null||!animator.isHuman)return;
                 allyOwnController[role]=animator.runtimeAnimatorController;ally.SetLocomotion(null,null);
+                // Thành carries the rifle on his back between fights; place it in his hand before calibrating combat grip.
+                SetCommanderRifleCarry(ally,false);
                 animator.runtimeAnimatorController=rifleman;animator.applyRootMotion=false;animator.Rebind();animator.Update(0);
                 Map01EnemyGrip.BindStandalone(animator);ArmAlly(role,ally);
             }
             else if(!on&&armed)
             {
-                var grip=animator.GetComponent<Map01EnemyGrip>();if(grip!=null)Destroy(grip);
+                var grip=animator.GetComponent<Map01EnemyGrip>();if(grip!=null){grip.enabled=false;Destroy(grip);}
                 animator.runtimeAnimatorController=allyOwnController[role];allyOwnController.Remove(role);animator.Rebind();
+                SetCommanderRifleCarry(ally,true);
                 allyHome.Remove(role);allySpot.Remove(role);allyMoveAt.Remove(role);
             }
             if(on&&animator.runtimeAnimatorController!=null)animator.SetBool("Engaged",true);   // the shouldered rifle, not the patrol carry
