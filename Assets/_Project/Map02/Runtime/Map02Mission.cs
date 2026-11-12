@@ -160,7 +160,7 @@ namespace ShadowVale.Map01
                 () => Chapter.Sites.TryGetValue("southStore",out var site)?site.position:(Vector3?)null,
                 () => logisticsCredit, delta => logisticsCredit+=delta);
             // Map 2's session: the squads' plans, enemy states, noise and shots reach the web backend like Map 1's
-            ShadowVale.Telemetry.TelemetryService.Attach(gameObject,"map02");
+            InstallTelemetry();
             StartCoroutine(PrepareHudChart());
             if (pending != null) { var data=pending; pending=null; Restore(data); }
             if (string.IsNullOrEmpty(checkpoint)) StoreCheckpoint();
@@ -168,6 +168,7 @@ namespace ShadowVale.Map01
         }
         void Update()
         {
+            TickTelemetry();
             if(Ready){SyncSkills();CollectLogisticsRewards(true);}
             TickCharacterEffects();
             if (!Ready || Paused || ForestMenu.Visible) return;
