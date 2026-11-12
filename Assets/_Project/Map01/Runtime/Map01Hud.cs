@@ -247,7 +247,8 @@ namespace ShadowVale.Map01
             if (!mission.BenchOpen) DrawObjective(); // The bench screen covers the screen; nothing peeks out at its edge.
             if (guiding) DrawCompass(width);
             if (!mission.InventoryOpen && !mission.MapOpen) DrawCombatHud(width, height);
-            if (mission.BenchOpen) DrawBench(width, height); // Map01Hud.Craft.cs
+            if (mission.BenchOpen && trade != null && trade.Open) DrawTrade(width, height, trade);
+            else if (mission.BenchOpen) DrawBench(width, height); // Map01Hud.Craft.cs
             else if (!mission.MapOpen && mission.InventoryOpen) DrawInventory(width);
             DrawHudFeedback(width, height);
             if (!mission.InventoryOpen && !mission.MapOpen) DrawPickups(width);
@@ -344,7 +345,9 @@ namespace ShadowVale.Map01
             }
             var nearby = interaction?.Nearby;
             var storyPrompt = GetComponent<Map01Story>()?.Prompt;
-            if (nearby != null && !nearby.used && nearby.kind == ForestPointKind.Workbench && !mission.Stopped && !mission.InventoryOpen)
+            if (GetComponent<CampTrader>() is CampTrader trader && trader.Near && !mission.Stopped && !mission.InventoryOpen)
+                GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), "[E] " + CampTrader.Prompt, hudBody);
+            else if (nearby != null && !nearby.used && nearby.kind == ForestPointKind.Workbench && !mission.Stopped && !mission.InventoryOpen)
                 GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), "[E] " + nearby.label, hudBody);
             else if (!string.IsNullOrEmpty(storyPrompt) && !mission.Stopped && !mission.InventoryOpen)
                 GUI.Label(new Rect(x + 18, height - 338, areaWidth - 36, 43), storyPrompt, hudBody);

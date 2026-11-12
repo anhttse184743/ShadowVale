@@ -56,12 +56,25 @@ namespace ShadowVale.Map01
             /// <summary>The dry-pack count that adds a dressing when Nam carries fewer than two.</summary>
             public int medkitPity;
         }
+        [Serializable] public sealed class CreditEntry { public string id; public int points; }
         [Serializable] public sealed class Logistics
         {
-            /// <summary>Share of a weapon's base value it is worth handed in at 0% condition (100% gives all of it).</summary>
-            public float turnInFloor;
-            /// <summary>Credit the command sends when each operation is done: supplies, radio, commander, Hùng home.</summary>
+            /// <summary>Share of base value at 0% and 100% condition, respectively.</summary>
+            public float turnInFloor, turnInCeiling;
+            /// <summary>Map 1 awards in story order: Hùng home, supplies, radio, commander.</summary>
             public int[] operationCredit;
+            public CreditEntry[] mapTwoRewards, materialTrade;
+
+            public int MaterialCredit(string id) =>
+                materialTrade?.FirstOrDefault(entry => entry.id == id)?.points ?? 0;
+
+            public int ClaimMapTwoRewards(Func<string, bool> completed, ISet<string> claimed)
+            {
+                int total = 0;
+                foreach (var reward in mapTwoRewards ?? Array.Empty<CreditEntry>())
+                    if (completed(reward.id) && claimed.Add(reward.id)) total += reward.points;
+                return total;
+            }
         }
         [Serializable] public sealed class Yield { public string item; public int min, max; }
         [Serializable] public sealed class Item

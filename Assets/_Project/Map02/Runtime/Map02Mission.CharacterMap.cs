@@ -8,7 +8,7 @@ namespace ShadowVale.Map01
         readonly System.Collections.Generic.List<Map02ChapterEnemy> seenEnemies=new System.Collections.Generic.List<Map02ChapterEnemy>();
         float senseAt;
         public Vector3 CharacterSteerPoint=>route.Length>1?route[1]:TrackedObjective!=null?Point(TrackedObjective):Player.position+Player.forward;
-        public string InteractionPrompt=>nearest!=null?nearest.prompt:groundItems.FirstOrDefault(g=>g!=null&&Vector3.Distance(Player.position,g.transform.position)<3) is Map02GroundItem item?"Nhặt "+ForestInventory.Name(item.id)+" ×"+item.count:Bag!=null&&Bag.NearWorkbench()&&!CharacterGearLocked?"Mở bàn chế tạo / sửa súng":null;
+        public string InteractionPrompt=>trader!=null&&trader.Near?CampTrader.Prompt:nearest!=null?nearest.prompt:groundItems.FirstOrDefault(g=>g!=null&&Vector3.Distance(Player.position,g.transform.position)<3) is Map02GroundItem item?"Nhặt "+ForestInventory.Name(item.id)+" ×"+item.count:Bag!=null&&Bag.NearWorkbench()&&!CharacterGearLocked?"Mở bàn chế tạo / sửa súng":null;
         public void DrawCharacterObjectives(Rect area)=>DrawObjectiveChoices(area);
         public void DrawCharacterPin(Vector2 at)=>DrawObjectivePin(at,16);
         void RefreshExplorationTexture()
