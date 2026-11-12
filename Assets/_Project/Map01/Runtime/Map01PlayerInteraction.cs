@@ -42,8 +42,18 @@ namespace ShadowVale.Map01
             if (stoneThrow == null) stoneThrow = gameObject.AddComponent<Map01StoneThrow>();
         }
 
+        private CampTrader trader;
+        private bool tradePanel;
+
         private void Start()
         {
+            var logistics = Map01Logistics.For(mission);
+            trader = CampTrader.Install(gameObject, inventory, false,
+                () => quest != null && quest.Stage == Map01Quest.BossStage,
+                () => tradePanel && mission.BenchOpen,
+                () => mission.player,
+                () => mission.Interactables.Find(p => p != null && p.id == "supplies")?.transform.position,
+                () => logistics.Credit, logistics.ChangeTradeCredit);
             if (mission.IsInitialized && mission.hung != null) companion = mission.hung.GetComponent<NavMeshAgent>();
             scouting = GetComponents<MonoBehaviour>().OfType<IBinoculars>().FirstOrDefault(); // Added by Map01Quest.Awake, so only certain from Start.
             stoneSites = GetComponent<Map01StoneSites>(); // Added by Map01Mission.Awake; none on a map without stone data.
@@ -53,6 +63,7 @@ namespace ShadowVale.Map01
         private void Update()
         {
             if (!mission.IsInitialized || mission.Cinematic) return;
+            if (!mission.BenchOpen) tradePanel = false;
             // Hùng's journey is world simulation; it must not depend on a keyboard being available.
             if(!mission.Stopped && quest != null && quest.ShouldEscortHungHome()) UpdateCompanion();
             var kb = Keyboard.current;
@@ -159,6 +170,14 @@ namespace ShadowVale.Map01
             // The displayed report prompt owns E, even beside an outpost/base workbench.
             // Otherwise a cleared point 3 can open crafting instead of the required retreat call.
             if (story != null && story.RadioReport && story.TryInteract()) return;
+            if (trader != null && trader.Near)
+            {
+                mission.SetBenchOpen(true);
+                inventory.SuppressFire = true;
+                tradePanel = true;
+                hud.OpenTrade(trader);
+                return;
+            }
             if (GetComponent<Map01C3BedTakedown>()?.TryBeginNearest() == true) return;
             if (Nearby != null && Nearby.kind == ForestPointKind.Workbench) { Interact(Nearby); return; }
             if (story?.TryInteract() == true) return;

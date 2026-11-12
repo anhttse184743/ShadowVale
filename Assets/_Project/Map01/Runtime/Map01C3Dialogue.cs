@@ -8,7 +8,7 @@
         public const string NoAnswer = "Lính gác cổng (bộ đàm): Tổ hai, trả lời!";
         public const string Alarm = "Lính gác cổng (bộ đàm): Mất liên lạc! Cả trại cảnh giác!";
         public const string EnemyCall = "Chỉ huy địch: Lính đâu! Ra hết đây!";
-        public const string MosinInstruction = "Trinh sát để lại một khẩu Mosin, năm viên, ở vai đồi phía Đông Nam điểm ba. Từ đó nhìn được chòi canh.";
+        public const string MosinInstruction = "Trước khi tới điểm ba, ghé quân nhu ở căn cứ A. Dùng điểm hậu cần đổi Mosin và năm viên. Vai đồi phía Đông Nam nhìn được chòi canh.";
         public const string MosinOrder = "Chỉ huy (bộ đàm): " + MosinInstruction;
         public const string MalletRemoved = "Nam: Xong. Chúng không gõ kẻng được nữa.";
         public const string PhoneCut = "Nam: Đường dây đã ngắt.";

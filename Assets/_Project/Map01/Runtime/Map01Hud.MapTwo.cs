@@ -13,6 +13,7 @@ namespace ShadowVale.Map01
             GUI.matrix=Matrix4x4.Scale(new Vector3(scale,scale,1));GUI.color=Color.white;GUI.depth=-10;
             try
             {
+                if(m.Panel==5 && trade != null){DrawTrade(width,height,trade);return;}
                 if(m.Panel==4){DrawBench(width,height);return;}
                 if(m.Panel==1)
                 {
