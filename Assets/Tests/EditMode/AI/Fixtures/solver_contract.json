@@ -50,13 +50,18 @@
  "variants": [
   "brute",
   "exact",
+  "exact_set",
   "ga",
   "greedy",
+  "ls",
+  "pbil",
   "qaoa",
   "qiea",
   "qpu",
   "sa",
-  "sqa"
+  "sa1h",
+  "sqa",
+  "tabu"
  ],
  "sample_request": {
   "instance_id": "contract-sample",
