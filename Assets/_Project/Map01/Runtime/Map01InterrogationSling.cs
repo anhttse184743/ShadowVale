@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using UnityEngine;
 namespace ShadowVale.Map01 {
@@ -70,6 +70,11 @@ namespace ShadowVale.Map01 {
             Map01ArmContact.Reach(actor,false,bestPoint,bestPole,1);hand.localRotation=bestWrist;
             endHand=chest.InverseTransformPoint(hand.position);endElbow=chest.InverseTransformPoint(bestPole);endWrist=bestWrist;
             gun.SetLocalPositionAndRotation(localPosition,localRotation);
+            // Place the mesh itself beside the rear pack; the wrist search only
+            // establishes the handoff pose, never the final hanging clearance.
+            gun.rotation=desiredGun;
+            var compactCentre=chest.position+bodyRight*.28f-bodyForward*.23f+Vector3.up*.02f;
+            gun.position+=compactCentre-gun.TransformPoint(centre);
             slungPosition=chest.InverseTransformPoint(gun.position);slungRotation=Quaternion.Inverse(chest.rotation)*gun.rotation;
             var host=new GameObject("Interrogator canvas sling");host.transform.SetParent(root,false);
             strap=host.AddComponent<LineRenderer>();strap.useWorldSpace=true;strap.positionCount=4;strap.widthMultiplier=.026f;strap.numCapVertices=2;

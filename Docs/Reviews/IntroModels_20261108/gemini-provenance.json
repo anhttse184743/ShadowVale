@@ -1,0 +1,15 @@
+{
+  "date": "2026-11-08",
+  "service": "Gemini web / Gemini Omni shown in UI",
+  "chat": "https://gemini.google.com/app/dbc89c4d38a48599",
+  "requestedClips": 2,
+  "paidPurchase": false,
+  "referenceMapping": {
+    "Nam": "NAM_reference.png (user image 1)",
+    "Hung": "HUNG_reference.png (user image 2)"
+  },
+  "firstClip": "01_character_gemini.mp4",
+  "secondClip": "02_tutorial_gemini.mp4",
+  "visibleWatermarkRemoval": "Localized delogo applied to both selected new clips; visually verified",
+  "unusedAlternative": "02_tutorial_candidateB.mp4"
+}

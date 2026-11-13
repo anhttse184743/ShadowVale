@@ -183,7 +183,9 @@ namespace ShadowVale.Map01
         }
         public int CharacterNoise(Vector3 point,float radius,NoiseKind kind)
         {
-            int count=0;foreach(var enemy in Chapter.Enemies)if(enemy!=null&&!enemy.Dead&&enemy.gameObject.activeInHierarchy&&Vector3.Distance(enemy.transform.position,point)<radius){enemy.Hear(point,kind!=NoiseKind.Stone);count++;}return count;
+            int count=0;foreach(var enemy in Chapter.Enemies)if(enemy!=null&&!enemy.Dead&&enemy.gameObject.activeInHierarchy&&Vector3.Distance(enemy.transform.position,point)<radius){enemy.Hear(point,kind!=NoiseKind.Stone);count++;}
+            // Telemetry (noise_emitted) and the AI debug views; Map 2's guards hear through Hear above, not the bus
+            ShadowVale.Core.Events.EventBus.Publish(new NoiseEvent(point,radius,kind,count));return count;
         }
         public (int killed,int wounded) CharacterExplosion(Vector3 point)
         {
@@ -210,6 +212,7 @@ namespace ShadowVale.Map01
         void DestroyCharacter()
         {
             if(combat!=null)combat.Attacked-=CharacterAttack;
+            RemoveTelemetry();
             foreach(var item in groundItems)if(item!=null)Destroy(item.gameObject);
             foreach(var texture in new[]{explorationFog,characterMapRim,characterMapDisk,characterAlly,characterEnemy})if(texture!=null)Destroy(texture);
             if(CharacterTrail!=null)Destroy(CharacterTrail);

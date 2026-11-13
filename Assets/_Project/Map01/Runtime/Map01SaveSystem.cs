@@ -46,6 +46,7 @@ namespace ShadowVale.Map01
             public Map01Story.Snapshot story;
             public string rescueStart, escortStart, operationStart;
             public Map01Inventory.Layout bag;      // Where each stack sits, the slots and the throwable picked; null in older saves.
+            public Map01StorageChest.SavedStack[] storage;
             public Map01Drops.Pile[] dropped;     // What Nam put on the ground and has not picked up again.
             public Map01Logistics.State logistics; // The run's loot seed, rolled guard packs, the base store's points; seed 0 in older saves.
             public Map01C3Mission.State c3;        // The C3 command post: kẻng, telephone line, check-ins, who has been called; null in older saves.
@@ -237,6 +238,7 @@ namespace ShadowVale.Map01
                 used = mission.Points.Where(p => p.used).Select(p => p.id).ToArray(),
                 items = inventory.CaptureItems(),
                 bag = inventory.CaptureLayout(),
+                storage = mission.StorageChest?.Capture(),
                 dropped = Map01Drops.For(mission).Capture(),
                 logistics = Map01Logistics.For(mission).Capture(),
                 c3 = GetComponent<Map01C3Mission>()?.Capture(),

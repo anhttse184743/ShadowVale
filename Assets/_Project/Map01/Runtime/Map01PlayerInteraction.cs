@@ -42,8 +42,18 @@ namespace ShadowVale.Map01
             if (stoneThrow == null) stoneThrow = gameObject.AddComponent<Map01StoneThrow>();
         }
 
+        private CampTrader trader;
+        private bool tradePanel;
+
         private void Start()
         {
+            var logistics = Map01Logistics.For(mission);
+            trader = CampTrader.Install(gameObject, inventory, false,
+                () => quest != null && quest.Stage == Map01Quest.BossStage,
+                () => tradePanel && mission.BenchOpen,
+                () => mission.player,
+                () => mission.Interactables.Find(p => p != null && p.id == "supplies")?.transform.position,
+                () => logistics.Credit, logistics.ChangeTradeCredit);
             if (mission.IsInitialized && mission.hung != null) companion = mission.hung.GetComponent<NavMeshAgent>();
             scouting = GetComponents<MonoBehaviour>().OfType<IBinoculars>().FirstOrDefault(); // Added by Map01Quest.Awake, so only certain from Start.
             stoneSites = GetComponent<Map01StoneSites>(); // Added by Map01Mission.Awake; none on a map without stone data.
@@ -52,7 +62,9 @@ namespace ShadowVale.Map01
 
         private void Update()
         {
+            if (mission.StorageOpen && mission.Stopped) mission.CloseGameplayPanel();
             if (!mission.IsInitialized || mission.Cinematic) return;
+            if (!mission.BenchOpen) tradePanel = false;
             // Hùng's journey is world simulation; it must not depend on a keyboard being available.
             if(!mission.Stopped && quest != null && quest.ShouldEscortHungHome()) UpdateCompanion();
             var kb = Keyboard.current;
@@ -64,8 +76,10 @@ namespace ShadowVale.Map01
             if (mission.Stopped) return;
             if (kb.tabKey.wasPressedThisFrame)
             {
+                bool wasStorageOpen = mission.StorageOpen;
                 // From the bench screen, Tab goes over to the bag; otherwise it opens or shuts the bag.
                 mission.SetInventoryOpen(mission.BenchOpen || !mission.InventoryOpen); inventory.SuppressFire = true;
+                if (wasStorageOpen) return;
             }
             if (kb.mKey.wasPressedThisFrame)
             {
@@ -76,8 +90,7 @@ namespace ShadowVale.Map01
             if (kb.hKey.wasPressedThisFrame) inventory.UseItem("medkit_small");
             if (mission.InventoryOpen || mission.MapOpen)
             {
-                // [E] shuts the bench screen it opened.
-                if (mission.BenchOpen && kb.eKey.wasPressedThisFrame) mission.CloseGameplayPanel();
+                if ((mission.BenchOpen || mission.StorageOpen) && kb.eKey.wasPressedThisFrame) mission.CloseGameplayPanel();
                 // Same gate as below: this used to call UpdateCompanion unconditionally, so opening
                 // the bag or map pulled Hùng to Nam at any stage — wounded, or at his post at base.
                 return;
@@ -136,6 +149,9 @@ namespace ShadowVale.Map01
             {
                 if (point.used || !point.isActiveAndEnabled) continue;   // a hidden point (the C3 Mosin cache before its order)
                 float distance = Vector3.Distance(at, point.transform.position);
+                if (point.kind == ForestPointKind.StorageChest &&
+                    (distance > point.radius || Vector3.Dot(at - point.transform.position, point.transform.forward) < .1f))
+                    continue;
                 if (distance < best) { best = distance; nearest = point; }
             }
             return nearest;
@@ -159,6 +175,14 @@ namespace ShadowVale.Map01
             // The displayed report prompt owns E, even beside an outpost/base workbench.
             // Otherwise a cleared point 3 can open crafting instead of the required retreat call.
             if (story != null && story.RadioReport && story.TryInteract()) return;
+            if (trader != null && trader.Near)
+            {
+                mission.SetBenchOpen(true);
+                inventory.SuppressFire = true;
+                tradePanel = true;
+                hud.OpenTrade(trader);
+                return;
+            }
             if (GetComponent<Map01C3BedTakedown>()?.TryBeginNearest() == true) return;
             if (Nearby != null && Nearby.kind == ForestPointKind.Workbench) { Interact(Nearby); return; }
             if (story?.TryInteract() == true) return;
@@ -202,6 +226,11 @@ namespace ShadowVale.Map01
         {
             switch (point.kind)
             {
+                case ForestPointKind.StorageChest:
+                    hud?.ResetStorageHud();
+                    mission.OpenStorage(point.GetComponent<Map01StorageChest>());
+                    inventory.SuppressFire = true;
+                    break;
                 case ForestPointKind.Supplies:
                     // The base store (Map01Logistics): opens once Hùng is home; what it issues is paid in logistics points.
                     point.used = false;

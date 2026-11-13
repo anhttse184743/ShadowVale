@@ -29,6 +29,42 @@ namespace ShadowVale.Map01
         private Map01CinematicPose corpsePose;
         public void BeginCaptivePresentation(){captivePresentation=true;talkUntil=0;if(rope==null&&ropeMaterial!=null)rope=TieRope();if(rope!=null)rope.SetActive(true);}
         public void SampleCaptiveContacts(){if(rope==null&&ropeMaterial!=null)rope=TieRope();if(rope!=null){rope.SetActive(true);BindWrists();}}
+        private bool boundWristRestReady;
+        private Quaternion leftBoundWristRest,rightBoundWristRest;
+        public float BoundWristSideOffset { get; private set; }
+        public float BoundWristSpan { get; private set; }
+        public float BoundWristReachError { get; private set; }
+        /// <summary>Keep the paired wrists behind the pelvis after a cinematic recoil.</summary>
+        public void StabilizeBoundHands(){
+            if(actor==null||!actor.isHuman)return;
+            var hips=actor.GetBoneTransform(HumanBodyBones.Hips);
+            var left=actor.GetBoneTransform(HumanBodyBones.LeftHand);
+            var right=actor.GetBoneTransform(HumanBodyBones.RightHand);
+            var leftLeg=actor.GetBoneTransform(HumanBodyBones.LeftUpperLeg);
+            var rightLeg=actor.GetBoneTransform(HumanBodyBones.RightUpperLeg);
+            if(hips==null||left==null||right==null||leftLeg==null||rightLeg==null)return;
+            if(!boundWristRestReady){
+                leftBoundWristRest=left.localRotation;rightBoundWristRest=right.localRotation;
+                if(actor.avatar!=null)foreach(var bone in actor.avatar.humanDescription.skeleton){
+                    if(bone.name==left.name)leftBoundWristRest=bone.rotation;
+                    if(bone.name==right.name)rightBoundWristRest=bone.rotation;
+                }
+                boundWristRestReady=true;
+            }
+            // Pelvis orientation stays independent of the chest's punch reaction.
+            var across=Vector3.ProjectOnPlane(rightLeg.position-leftLeg.position,Vector3.up).normalized;
+            if(across.sqrMagnitude<.01f)across=transform.right;
+            var forward=Vector3.Cross(across,Vector3.up).normalized;
+            var centre=hips.position-forward*.24f+Vector3.up*.06f;
+            var leftTarget=centre-across*.045f+Vector3.up*.012f;
+            var rightTarget=centre+across*.045f-Vector3.up*.012f;
+            Map01ArmContact.Reach(actor,true,leftTarget,hips.position-across*.36f-forward*.10f+Vector3.up*.22f,1);
+            Map01ArmContact.Reach(actor,false,rightTarget,hips.position+across*.36f-forward*.10f+Vector3.up*.22f,1);
+            left.localRotation=leftBoundWristRest;right.localRotation=rightBoundWristRest;
+            BoundWristSideOffset=Mathf.Abs(Vector3.Dot((left.position+right.position)*.5f-centre,across));
+            BoundWristSpan=Vector3.Distance(left.position,right.position);
+            BoundWristReachError=Mathf.Max(Vector3.Distance(left.position,leftTarget),Vector3.Distance(right.position,rightTarget));
+        }
         public void EndCaptivePresentation(bool executed){
             captivePresentation=false;boundDead=executed;
             if(executed){down=true;corpsePose?.Dispose();corpsePose=new Map01CinematicPose(actor);corpsePose.Sample(Map01CinematicPose.Clip("Hung_Bound_Execution"),3);corpsePose.Ground(mission.hung.position.y);SampleCaptiveContacts();}
