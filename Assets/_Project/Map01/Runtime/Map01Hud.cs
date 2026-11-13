@@ -178,11 +178,11 @@ namespace ShadowVale.Map01
             if (!itemIcons.TryGetValue(id, out var icon)) itemIcons[id] = icon = Resources.Load<Texture2D>("Hud/ItemIcons/" + id);
             return icon;
         }
-        private void HudIcon(Rect r, string id, bool dim = false)
+        private void HudIcon(Rect r, string id, bool dim = false, bool showAmmoLabel = true)
         {
             if (id == Map01Inventory.RecoveredAmmo || id == Map01Inventory.AkLoadingPack)
             {
-                HudIcon(r, id == Map01Inventory.RecoveredAmmo ? "scrap_metal" : "ammo_rifle", dim);
+                HudIcon(r, id == Map01Inventory.RecoveredAmmo ? "scrap_metal" : "ammo_rifle", dim, showAmmoLabel);
                 if (r.width < 44) return;
                 var tag = new Rect(r.x + 2, r.yMax - 20, r.width - 4, 18);
                 HudFill(tag, new Color(.05f, .07f, .03f, .95f));
@@ -191,7 +191,7 @@ namespace ShadowVale.Map01
             }
             if(id==Map01Story.KeyItem||id==Map01Story.CargoItem){var texture=id==Map01Story.KeyItem?Map01OperationHints.KeyIcon:Map01OperationHints.CargoIcon;if(texture!=null){GUI.DrawTexture(r,texture,ScaleMode.ScaleToFit);return;}}
             if (ItemIcon(id) is Texture2D preview) { var tint = GUI.color; if (dim) GUI.color = new Color(.55f,.55f,.55f,.75f); GUI.DrawTexture(r,preview,ScaleMode.ScaleToFit); GUI.color=tint;
-                if (id == Map01M16.Ammo || id == "ammo_rifle")
+                if (showAmmoLabel && (id == Map01M16.Ammo || id == "ammo_rifle"))
                     GUI.Label(new Rect(r.x+2,r.y+2,r.width-4,18),id == Map01M16.Ammo ? "5,56×45" : "7,62×39",new GUIStyle(hudSmall){fontSize=12,wordWrap=false});
                 return; }
             if ((id == "rifle_standard" || id == "knife") && hudWeapons != null) {
@@ -244,6 +244,13 @@ namespace ShadowVale.Map01
             DrawStoneMarkers(width, height); // Map01Hud.Stone.cs — dots in the world, under the plates too.
             bool guiding = guide.HasTarget && !mission.Stopped && !mission.InventoryOpen && !mission.MapOpen;
             if (guiding) DrawTargetMarker(width, height, scale); // First, so every HUD plate sits on top of it.
+            if (mission.MapOne.StorageOpen)
+            {
+                var chest = mission.MapOne.StorageChest;
+                if (chest != null && chest.LidIsOpen) DrawStorage(chest, width, height);
+                GUI.matrix = matrix; GUI.color = color; GUI.depth = depth;
+                return;
+            }
             if (!mission.BenchOpen) DrawObjective(); // The bench screen covers the screen; nothing peeks out at its edge.
             if (guiding) DrawCompass(width);
             if (!mission.InventoryOpen && !mission.MapOpen) DrawCombatHud(width, height);
