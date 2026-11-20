@@ -53,6 +53,7 @@ namespace ShadowVale.Map01.Tests
             Assert.AreEqual(pending,loaded.TrackedTask.id);Assert.AreEqual(90,loaded.storedRounds);
             if(pending=="D2_06")Assert.AreEqual(2,loaded.wireStage,"The antenna checkpoint starts after wire delivery.");
         }
+        [TestCase("PlayStart","ShadowVale/Map 2/Checkpoint bắt đầu Map 2 · Ngày 1")]
         [TestCase("PlayScoutRescue","ShadowVale/Map 2/Checkpoint cứu Tâm · M2_D2_04")]
         [TestCase("PlayAntenna","ShadowVale/Map 2/Checkpoint lắp ăng-ten · M2_D2_06")]
         [TestCase("PlayEvacuationChoices","ShadowVale/Map 2/Checkpoint kiểm tra đường sơ tán · N2_04")]
@@ -144,6 +145,34 @@ namespace ShadowVale.Map01.Tests
                     typeof(Map02ChapterDirector).GetMethod("EndScene",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(m.Chapter,null);
                 }
             }
+            yield return new ExitPlayMode();
+        }
+        [UnityTest,Timeout(180000)] public IEnumerator StartCheckpointRestoresDayOneAndRetriesBeforeTheFirstTask()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
+            Map02Mission m=null;float deadline=Time.realtimeSinceStartup+100;
+            while(Time.realtimeSinceStartup<deadline){m=Object.FindFirstObjectByType<Map02Mission>();if(m?.Ready==true&&m.Chapter!=null)break;Object.FindFirstObjectByType<Map02Arrival>()?.Skip();yield return null;}
+            Assert.NotNull(m?.Chapter);
+            var type=Type.GetType("ShadowVale.Map01.Editor.Map02RoutePreview, ShadowVale.Map01.Editor",true);
+            // Also reset a later route, so stale chapter progress cannot leak into the start.
+            type.GetMethod("ApplyToMission").Invoke(null,new object[]{m,2});
+            type.GetMethod("ApplyStart").Invoke(null,new object[]{m});
+            Assert.AreEqual(0,m.Chapter.State.phase);Assert.IsEmpty(m.Chapter.State.completed);
+            Assert.IsFalse(m.Chapter.State.dayOne.arrivalSeen);Assert.IsFalse(m.Chapter.State.gearStored);
+            Assert.IsTrue(m.HasCheckpoint);Assert.IsFalse(m.Paused||ForestMenu.Visible);
+            var start=m.Player.position;
+            Assert.Less(Vector3.Distance(start,m.Chapter.Sites["arrival"].position),5);
+            Assert.Less(Vector3.Distance(start,m.Chapter.Actor("Hùng").transform.position),4);
+            Assert.Less(Vector3.Distance(start,m.Chapter.Actor("Anh Thành").transform.position),4);
+            var saved=Map02Mission.Parse(JsonUtility.ToJson(m.Capture()));
+            m.Restore(saved);Assert.IsTrue(m.Retry());
+            Assert.AreEqual(0,m.Chapter.State.phase);Assert.IsEmpty(m.Chapter.State.completed);
+            Assert.IsFalse(m.Chapter.State.dayOne.arrivalSeen);
+            Assert.Less(Vector3.Distance(start,m.Player.position),.1f);
+            // The opening bank conversation must still run after restoring the checkpoint.
+            deadline=Time.realtimeSinceStartup+10;
+            while(!m.Chapter.Busy&&Time.realtimeSinceStartup<deadline)yield return null;
+            Assert.IsTrue(m.Chapter.Busy);Assert.AreEqual("D1_01",m.Chapter.CurrentScene.id);
             yield return new ExitPlayMode();
         }
         static string snapshotRifle(Map02Mission m)=>m.Capture().rifleItemId;
