@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -53,12 +53,12 @@ namespace ShadowVale.Map01.Tests
                 Set("sceneClock",start+2.4f);Call("LateUpdate");lh=lanh.Animator.GetBoneTransform(HumanBodyBones.RightHand).position;
                 Assert.True(packet.gameObject.activeSelf);Assert.Less(Vector3.Distance(lh,packet.position),.2f,"Her hands are on the packet he holds out.");
                 Set("sceneClock",start+3.6f);Call("LateUpdate");Assert.AreEqual(1,c.State.dayOne.medicineMask&1,"Given once she has it.");Assert.NotNull(c.CurrentScene,"The scene holds until the packet is hers.");c.Cancel();
-                // D1_05: Nam at the stake with the two-handed mallet, chú Bảy holding the stake; a press lands a blow.
+                // D1_05: Nam at the stake with the two-handed mallet, chú Bảy observing beside the spare boards; a press lands a blow.
                 LoadBefore("D1_05");var dock=Map02ChapterDefinition.Load().Find("D1_05");var kind=typeof(Map02ChapterDirector).GetNestedType("DayActivity",BindingFlags.NonPublic);
-                typeof(Map02ChapterDirector).GetMethod("OpenDay",Private).Invoke(c,new object[]{System.Enum.Parse(kind,"Dock"),dock});Call("DayLateUpdate");
+                typeof(Map02ChapterDirector).GetMethod("OpenDay",Private).Invoke(c,new object[]{System.Enum.Parse(kind,"Dock"),dock});Call("FinishDayHelp");Call("DayLateUpdate");
                 var stake=((System.Collections.Generic.List<Transform>)Get("physicalStakes"))[0];var bay=c.Actor("Chú Bảy").Animator;
-                Assert.AreEqual(.95f,Vector3.Distance(Flat(m.Player.position),Flat(stake.position)),.1f,"Nam stands at the stake.");
-                Assert.Less(Vector3.Distance(bay.GetBoneTransform(HumanBodyBones.LeftHand).position,stake.position+Vector3.up*(1.08f-.62f)),.2f,"Chú Bảy's hands are on the stake.");
+                Assert.AreEqual(.76f,Vector3.Distance(Flat(m.Player.position),Flat(stake.position)),.1f,"Nam stands at the stake.");
+                Assert.Greater(Vector3.Distance(Flat(bay.GetBoneTransform(HumanBodyBones.Head).position),Flat(stake.position)),1.6f,"Chú Bảy observes outside the hammer workspace.");
                 Call("StrikeStake",true);Set("strikeClock",.12f-Time.deltaTime);Call("DayLateUpdate");   // the late update adds this frame's time
                 var mallet=(Transform)Get("twoHandMallet");var head=mallet.position+mallet.up*.6f;
                 Assert.Less(Vector3.Distance(Flat(head),Flat(stake.position)),.3f,"The blow lands on the stake.");Assert.Less(Mathf.Abs(head.y-(stake.position.y+1.08f)),.3f);

@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using ShadowVale.Gameplay.Combat;
 using UnityEngine;
 using UnityEngine.AI;
@@ -66,10 +66,12 @@ namespace ShadowVale.Map01
         }
         void OpenDay(DayActivity activity,Map02ChapterTask task)
         {
-            postHelp=false;dayInputReady=false;dayCloseRequested=false;packingMouseControl=false;ResetStakeStrike();dayActivity=activity;workTask=task;dayClock=0;packingCursor=new Vector2Int(2,0);dockSlot=System.Array.FindIndex(Day.boards,p=>p.x<0);if(dockSlot<0)dockSlot=0;dockOffset=.24f;dayFeedback="";selectedCrate=selectedBoard=-1;selectionRotated=false;daySpaceReleased=false;dayAttemptCycle=-1;
+            dayHelpVisible=false;dayInputReady=false;dayCloseRequested=false;packingMouseControl=false;ResetStakeStrike();dayActivity=activity;workTask=task;dayClock=0;packingCursor=new Vector2Int(2,0);dockSlot=System.Array.FindIndex(Day.boards,p=>p.x<0);if(dockSlot<0)dockSlot=0;dockOffset=.24f;dayFeedback="";selectedCrate=selectedBoard=-1;selectionRotated=false;daySpaceReleased=false;dayAttemptCycle=-1;
             if(activity==DayActivity.Packing){selectedCrate=System.Array.FindIndex(Day.crates,p=>p.x<0);if(selectedCrate>=0)selectionRotated=Day.crates[selectedCrate].rotated;}   // the first crate still to store is in hand
             dayWeapon=combat.EquippedKind;combat.Equip(WeaponKind.Unarmed);combat.SetHandsOccupied(true);player.RestoreMotion(false);
             dayCursorVisible=Cursor.visible;dayCursorLock=Cursor.lockState;Cursor.lockState=CursorLockMode.None;Cursor.visible=true;
+            if(activity==DayActivity.Dock)StageDockObserver();
+            OpenDayHelp();
         }
         void RequestCloseDay()
         {
@@ -79,7 +81,7 @@ namespace ShadowVale.Map01
         void CloseDay(bool checkpoint=true)
         {
             if(!DayActivityActive)return;
-            dayActivity=DayActivity.None;ResetStakeStrike();dayCloseRequested=false;EndWorkView();dayReturnInput=DayInputHeld;dayReturnUntil=Time.unscaledTime+.12f;Cursor.visible=dayCursorVisible;Cursor.lockState=dayCursorLock;
+            dayHelpVisible=false;dayActivity=DayActivity.None;ResetStakeStrike();dayCloseRequested=false;EndWorkView();ReleaseStake();ReleaseDockObserver();dayReturnInput=DayInputHeld;dayReturnUntil=Time.unscaledTime+.12f;Cursor.visible=dayCursorVisible;Cursor.lockState=dayCursorLock;
             combat.Equip(dayWeapon);combat.SetHandsOccupied(false);combat.RestoreAfterCinematic();player.RestoreMotion(false);ForestMenu.SuppressKeysAfterCutscene();
             SyncDayProps();if(checkpoint)Mission.StoreCheckpoint();
         }
@@ -97,6 +99,7 @@ namespace ShadowVale.Map01
             {
                 Cursor.visible=true;Cursor.lockState=CursorLockMode.None;
                 var kb=Keyboard.current;
+                if(TickDayHelp(kb))return true;
                 if(!dayInputReady){if(!DayInputHeld){dayInputReady=true;dayClock=0;}return true;}
                 TickStakeCommit();
                 if(dayCloseRequested&&!StrikeRecovering){CloseDay();return true;}
