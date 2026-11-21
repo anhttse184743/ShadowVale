@@ -56,10 +56,11 @@ public sealed class Map02CursorOwnershipTests:ForestSceneTestBase {
    Assert.True(ForestSaveSlots.Exists(1));var entry=ForestSaveSlots.Read(1);Assert.AreEqual("Map 2",entry.sceneName);Assert.True(Map02Mission.Parse(entry.checkpoint).chapter.Done("D1_02"));StringAssert.Contains("Đã lưu",(string)typeof(ForestMenu).GetField("message",F).GetValue(menu));
    ScreenCapture.CaptureScreenshot(folder+"/saved-slot.png");yield return null;
    yield return Escape();yield return Escape();Assert.False(ForestMenu.Visible);Assert.False(m.Paused);yield return WaitGameSeconds(.2f);
-   Call("OpenDay",Enum.Parse(typeof(Map02ChapterDirector).GetNestedType("DayActivity",BindingFlags.NonPublic),"Dock"),Map02ChapterDefinition.Load().Find("D1_05"));c.State.dayOne.stakeHits=6;Call("SyncDayProps");
+   c.State.dayOne.stakeHits=6;Call("SyncDayProps");Call("OpenDay",Enum.Parse(typeof(Map02ChapterDirector).GetNestedType("DayActivity",BindingFlags.NonPublic),"Dock"),Map02ChapterDefinition.Load().Find("D1_05"));
    for(int i=0;i<3;i++){
     int width=new[]{1200,1600,1920}[i],height=new[]{675,900,1080}[i];SetPreviewResolution(width,height);float sizeUntil=Time.realtimeSinceStartup+10;int stable=0;while(stable<3){Assert.Less(Time.realtimeSinceStartup,sizeUntil,"GameView resize did not settle");yield return new WaitForSecondsRealtime(.2f);if(Screen.width==width&&Screen.height==height)stable++;else{stable=0;SetPreviewResolution(width,height);}}
     float readyUntil=Time.realtimeSinceStartup+10;while(!(bool)typeof(Map02ChapterDirector).GetField("dayInputReady",F).GetValue(c)){Assert.Less(Time.realtimeSinceStartup,readyUntil,"Opening input was not released");yield return null;}for(int f=0;f<4;f++)yield return null;
+    if((bool)typeof(Map02ChapterDirector).GetField("dayHelpVisible",F).GetValue(c)){yield return Escape();yield return WaitGameSeconds(.2f);}
     Assert.AreEqual(width,Screen.width);Assert.AreEqual(height,Screen.height);float yaw=(float)typeof(ThirdPersonCamera).GetField("_yaw",F).GetValue(camera);
     yield return Click(new Vector2(290,290));Assert.AreEqual(c.State.dayOne.boardOrder[0],(int)typeof(Map02ChapterDirector).GetField("selectedBoard",F).GetValue(c));Assert.AreEqual(yaw,(float)typeof(ThirdPersonCamera).GetField("_yaw",F).GetValue(camera),.01f,"Mouse UI input must not rotate Nam's camera");
     yield return Click(new Vector2(825,660));Assert.Less(Mathf.Abs((float)typeof(Map02ChapterDirector).GetField("dockOffset",F).GetValue(c)),.07f);
