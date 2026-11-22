@@ -22,7 +22,7 @@ MonoBehaviour:
   - id: InjuredIdle
     clip: {fileID: 7400000, guid: f5d5e8ca04ea2ec4e8ded8a7eec28df8, type: 2}
   - id: InjuredWalk
-    clip: {fileID: -623603649343465320, guid: 60dab59bb6584c540b1ff07a7c571599, type: 3}
+    clip: {fileID: -623603649343465320, guid: 7f7e8ffd29729a646bbef8cd9e4d8b18, type: 3}
   - id: Assist
     clip: {fileID: 7400000, guid: ae18c93bb070c8f4ebfd9a2de1359296, type: 2}
   - id: AssistWalk

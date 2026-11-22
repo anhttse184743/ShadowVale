@@ -4,6 +4,7 @@ namespace ShadowVale.Map01
 {
     public sealed partial class Map02Arrival
     {
+        bool c1PackSuppressed;
         // C1 (doc: "Hùng bước lên, hụt chân. Nam đặt ba lô xuống trước rồi mới đỡ", 2026-10-25), made on Mixamo mocap in
         // chuyen_dong/blender_scripts/map2_c1_hutchan_mixamo.py. Nam, up first, steps aside at the top of the stairs and turns
         // to watch Hùng come up; on the last stair Hùng's toe catches the riser and he goes down on his right knee and left
@@ -40,6 +41,7 @@ namespace ShadowVale.Map01
         float ExitLength=>Misstep?2*PassengerDelay+StandDuration+LaneDuration+C1StairCycle/StairX.Length*StairDuration+Mathf.Max(c1Hung.length+C1HungWalk,c1Nam.length+C1NamWalk)+.8f:ExitDuration;
         void LoadMisstep()
         {
+            c1PackSuppressed=false;
             approvedC1=Resources.Load<Map02ArrivalC1Data>("Map02ArrivalC1/Approved");
             if(approvedC1!=null){c1Hung=approvedC1.hungMotion;c1Nam=approvedC1.namMotion;c1Track=JsonUtility.FromJson<C1Track>(approvedC1.pack.text);var t=JsonUtility.FromJson<C1TravelData>(approvedC1.travel.text);c1HungTravel=t.hung;c1NamTravel=t.nam;return;}
             var art=Resources.Load<Map02DayOneArt>("Story/Map02DayOneArt");c1Hung=art?.Find("HungHutChan");c1Nam=art?.Find("NamDoHung");
@@ -258,6 +260,7 @@ namespace ShadowVale.Map01
         // ---- the pack: Nam's own (baked from his skinned pack), on his back, in his hand, on the ground and back on ------
         void TickPack(float n)
         {
+            if(c1PackSuppressed||c1Track?.pack==null||c1Track.pack.Length==0)return;
             var f=c1Track.pack[Mathf.Clamp(Mathf.RoundToInt(n*c1Track.fps),0,c1Track.pack.Length-1)];
             if(f.mode=="worn"&&c1Pack==null&&approvedC1==null)return;
             if(c1Pack==null&&!BakePack())return;
@@ -284,6 +287,9 @@ namespace ShadowVale.Map01
         bool BakePack()
         {
             c1WornPack=Passengers[0].GetComponentsInChildren<SkinnedMeshRenderer>(true).FirstOrDefault(r=>r.name=="Nam_BaloRanRi");
+            // A replacement character may retain the old pack renderer disabled for rollback.
+            // The C1 visual hides renderers temporarily, so use their saved state if available.
+            if(!PackWasVisible(c1WornPack)){c1WornPack=null;c1PackSuppressed=true;return false;}
             var originalChest=actors[0].GetBoneTransform(HumanBodyBones.UpperChest)??actors[0].GetBoneTransform(HumanBodyBones.Chest);
             var visual=MisstepActor(0);c1Chest=visual.GetBoneTransform(HumanBodyBones.UpperChest)??visual.GetBoneTransform(HumanBodyBones.Chest);
             if(c1WornPack==null||c1Chest==null||originalChest==null){c1Track=null;return false;}
@@ -297,6 +303,11 @@ namespace ShadowVale.Map01
             var originalBasis=C1ChestBasis(actors[0]);c1PackInChest=Quaternion.Inverse(originalBasis)*(centre-originalChest.position);c1PackRotInChest=Quaternion.Inverse(originalBasis)*c1Pack.rotation;
             c1PackRot0=c1Pack.rotation;c1Blender0=C1Rotation(c1Track.pack[0].rot);
             c1WornPack.enabled=false;return true;
+        }
+        bool PackWasVisible(SkinnedMeshRenderer pack)
+        {
+            if(pack==null)return false;
+            return c1Hidden[0].TryGetValue(pack,out bool wasVisible)?wasVisible:pack.enabled;
         }
         // Snapshot in world units directly from skin weights/bind poses. This avoids the imported
         // renderer's 100x local scale and 0.01 parent introducing a different pivot/size in BakeMesh.

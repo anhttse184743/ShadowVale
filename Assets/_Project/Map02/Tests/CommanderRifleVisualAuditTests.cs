@@ -19,10 +19,20 @@ public sealed class CommanderRifleVisualAuditTests:ForestSceneTestBase {
    if(stage==5){var snap=m.Capture();var state=new Map02ChapterState();foreach(var task in Map02ChapterDefinition.Load().tasks){if(task.id=="N3_04")break;state.Complete(task.id);}snap.chapter=state;m.Restore(snap);}
    yield return WaitGameSeconds(2);
    var role=m.Chapter.Actor("Anh Thành");var a=role.visual.GetComponentInChildren<Animator>();var gun=a.GetComponent<Map01Rifle>();Assert.NotNull(gun?.weapon);var tr=gun.weapon.transform;
+   if(stage==5){
+    float until=Time.realtimeSinceStartup+12f;
+    while(!m.Chapter.AllyInCombatPose("Anh Thành")&&Time.realtimeSinceStartup<until)yield return null;
+    yield return null;
+   }
    var hand=a.GetBoneTransform(HumanBodyBones.RightHand);var chest=a.GetBoneTransform(HumanBodyBones.Chest);
    if(stage==5){Assert.IsTrue(m.Chapter.AllyInCombatPose("Anh Thành"));Assert.AreEqual(hand,tr.parent,"Commander draws rifle before the fight");var grip=a.GetComponent<Map01EnemyGrip>();Assert.IsTrue(grip!=null&&grip.Calibrated,"Combat grip must be calibrated");Assert.Less(grip.PalmError,.08f,"Supporting hand must remain near the foregrip");}
    else {Assert.AreEqual(chest,tr.parent,"Commander carries rifle on his back outside combat");
-    Assert.That(tr.localPosition.x,Is.EqualTo(.20f).Within(.001f));Assert.That(tr.localPosition.z,Is.EqualTo(-.12f).Within(.001f));}
+    var stock=tr.GetComponentsInChildren<Renderer>().FirstOrDefault(x=>x.name.Contains("l_stockMetal")||x.name.Contains("l_stockBase"));
+    Assert.NotNull(stock,"Sling audit needs the actual AK stock.");
+    var muzzle=gun.weapon.Muzzle.position;
+    Assert.Greater(muzzle.y,stock.bounds.center.y,"Slung rifle points up behind the right shoulder.");
+    var midpoint=(muzzle+stock.bounds.center)*.5f;
+    Assert.Less(Vector3.Dot(midpoint-chest.position,a.transform.forward),0f,"Slung rifle remains behind the chest.");}
    var sb=new StringBuilder();
    void P(string name,Vector3 v){sb.AppendLine(name+"="+v.ToString("F5")+" actorLocal="+a.transform.InverseTransformPoint(v).ToString("F5"));}
    sb.AppendLine("phase="+m.Chapter.State.phase+" gunParent="+tr.parent.name+" localPosition="+tr.localPosition.ToString("F5")+" localEuler="+tr.localEulerAngles.ToString("F4")+" localScale="+tr.localScale.ToString("F5"));
@@ -36,10 +46,21 @@ public sealed class CommanderRifleVisualAuditTests:ForestSceneTestBase {
     try{c.Render();c.Render();RenderTexture.active=rt;var img=new Texture2D(1920,1080,TextureFormat.RGB24,false);img.ReadPixels(new Rect(0,0,1920,1080),0,0);img.Apply();File.WriteAllBytes("Logs/CommanderRifleAudit/stage"+stage+"_"+k+".png",img.EncodeToPNG());Object.Destroy(img);}finally{RenderTexture.active=old;c.targetTexture=null;rt.Release();Object.Destroy(rt);Object.Destroy(g);}
    }
   }
-  // Restoring a quiet checkpoint after combat must put the rifle back on his back.
-  preview.Invoke(null,new object[]{m,2});yield return WaitGameSeconds(1);
+  // The live Night 3 exit should holster before the director settles the carry pose.
+  m.Chapter.State.hungDead=true;
   var after=m.Chapter.Actor("Anh Thành").visual.GetComponentInChildren<Animator>();
-  Assert.AreEqual(after.GetBoneTransform(HumanBodyBones.Chest),after.GetComponent<Map01Rifle>().weapon.transform.parent);
+  var returnBy=Time.realtimeSinceStartup+12f;
+  bool sawHolster=false;
+  while(Time.realtimeSinceStartup<returnBy){
+   var draw=after.GetComponent<Map02CommanderDraw>();
+   sawHolster|=draw!=null&&draw.Running;
+   if(sawHolster&&!draw.Running&&after.GetComponent<Map01Rifle>().weapon.transform.parent==after.GetBoneTransform(HumanBodyBones.Chest))break;
+   yield return null;
+  }
+  Assert.IsTrue(sawHolster,"Night 3 must actually play the holster clip.");
+  Assert.IsFalse(after.GetComponent<Map02CommanderDraw>().Running,"The holster clip must finish.");
+  Assert.AreSame(after.GetBoneTransform(HumanBodyBones.Chest),after.GetComponent<Map01Rifle>().weapon.transform.parent,
+   "The rifle returns to the back when the holster clip finishes.");
   yield return new ExitPlayMode();
  }
 }

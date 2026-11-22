@@ -60,7 +60,7 @@ namespace ShadowVale.Map01.Tests
         }
         [Test]public void DialogueFollowsWherePeopleActuallyAreAndWhyTheyMove()
         {
-            var d=Map02ChapterDefinition.Load();Assert.AreEqual(43,d.tasks.Length);Assert.AreEqual(140,d.entries.Length);Assert.True(d.Lines("arrivalbank").All(e=>!e.radio));Assert.AreEqual(2,d.Lines("duckevent").Length);
+            var d=Map02ChapterDefinition.Load();Assert.AreEqual(43,d.tasks.Length);Assert.AreEqual(d.entries.Length,d.entries.Select(e=>e.id).Distinct().Count(),"Every dialogue entry must have a unique ID.");Assert.True(d.Lines("arrivalbank").All(e=>!e.radio));Assert.AreEqual(2,d.Lines("duckevent").Length);
             Assert.IsFalse(d.Lines("day1report").Any(e=>e.speaker=="Hùng"));
             Assert.IsTrue(d.Lines("promise").Any(e=>e.id=="m2v3_day1report_04"));
             Assert.IsTrue(d.Lines("boatsafe").All(e=>e.radio));

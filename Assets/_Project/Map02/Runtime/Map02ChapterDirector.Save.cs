@@ -55,7 +55,7 @@ namespace ShadowVale.Map01
             }
             handsBusy=!string.IsNullOrEmpty(State.carry);combat.SetHandsOccupied(handsBusy);
             player.SurfaceSpeedMultiplier=State.wounded?WoundedPace:1;
-            player.SprintAllowed=()=>Mission.CharacterCanSprint;
+            player.SprintAllowed=CanSprintDuringChapter;
             detectionClock=0;scannedAt=-99;patrolLoadGrace=2;
             if(State.phase==1&&State.Done("N1_03")&&!State.Done("N1_04"))roles["Hùng"].GoTo(sites["nightOneRest"].position,1.25f);
             ArrangeDayFamily();UpdateMarkers();SyncDayProps();TickLight(10f);

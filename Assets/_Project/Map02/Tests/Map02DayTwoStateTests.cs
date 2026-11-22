@@ -89,7 +89,7 @@ namespace ShadowVale.Map01.Tests
                 c.State.night2RouteVisited.Add("dockApproach");c.State.night2ChainCuePlayed=true;m.StoreCheckpoint();
                 snapshot=RoundTrip();m.Restore(snapshot);Assert.AreEqual(1,c.State.patrolWarnings);Assert.AreEqual(7,c.State.patrolScanSeconds);
                 Assert.AreEqual(baseline,m.Capture().patrolCheckpoint);Assert.IsTrue(m.RetryPatrol());
-                Assert.Less(Vector3.Distance(m.Player.position,c.Sites["bridge"].position),.1f);
+                Assert.Less(Vector3.Distance(m.Player.position,c.NightObservationSpawn),.1f,"Retry must return to the authored observation point.");
                 Assert.IsFalse(c.State.Done("N2_03"));Assert.IsFalse(c.State.Done("N2_04"));Assert.AreEqual(0,c.State.patrolWarnings);
                 Assert.AreEqual(0,c.State.patrolScanSeconds);Assert.IsFalse(c.State.night2ChainCuePlayed);Assert.IsEmpty(c.State.night2RouteVisited);
                 Assert.AreEqual(23,m.Inventory[m.RifleAmmo]);Assert.AreEqual(6,ammo.RoundsInMagazine);Assert.AreEqual(61,m.Player.GetComponent<Health>().Current);
@@ -101,37 +101,91 @@ namespace ShadowVale.Map01.Tests
                 snapshot=m.Capture();var corrupt=Map02Mission.Parse(snapshot.patrolCheckpoint);corrupt.chapter.patrolWarnings=1;
                 snapshot.patrolCheckpoint=JsonUtility.ToJson(corrupt);Assert.Throws<InvalidDataException>(()=>Map02Mission.Parse(JsonUtility.ToJson(snapshot)));
 
-                // Use unobstructed physics in the air to isolate the actual cone/detection/retry code
-                // from authored trees. Only elapsed scan time is controlled; the player collider is real.
-                Load("N2_02");var scoutSite=c.Sites["nightPatrol"];var storeSite=c.Sites["store"];
-                var originalScout=scoutSite.position;var originalStore=storeSite.position;
-                var tick=typeof(Map02ChapterDirector).GetMethod("TickPatrol",BindingFlags.Instance|BindingFlags.NonPublic);
-                void Set(string name,object value)=>typeof(Map02ChapterDirector).GetField(name,BindingFlags.Instance|BindingFlags.NonPublic).SetValue(c,value);
-                float period=Mathf.Max(6,c.Layout.patrolSweepSeconds);
+                // Set up an isolated line of sight using the actual guard, flashlight and player collider.
+                Load("N2_02");
+                var scoutSite = c.Sites["nightPatrol"];
+                var originalScout = scoutSite.position;
+                var tick = typeof(Map02ChapterDirector).GetMethod("TickPatrol", BindingFlags.Instance | BindingFlags.NonPublic);
+                var finishFailure = typeof(Map02ChapterDirector).GetMethod("TickNightPatrolFailure", BindingFlags.Instance | BindingFlags.NonPublic);
+                var grace = typeof(Map02ChapterDirector).GetField("patrolLoadGrace", BindingFlags.Instance | BindingFlags.NonPublic);
+                var period = Mathf.Max(10f, c.Layout.patrolSweepSeconds);
+                void ScanQuarter()
+                {
+                    c.State.patrolScanSeconds = period * .25f;
+                    tick.Invoke(c, new object[] { 0f });
+                }
+
                 try
                 {
-                    var exposed=c.Sites["bridge"].position+Vector3.up*100;Place(m,exposed);
-                    scoutSite.position=exposed-Vector3.forward*10;storeSite.position=exposed+Vector3.up;Physics.SyncTransforms();
-                    Set("patrolLoadGrace",0f);
-                    var wall=GameObject.CreatePrimitive(PrimitiveType.Cube);wall.transform.position=exposed-Vector3.forward*5+Vector3.up;wall.transform.localScale=new Vector3(8,6,.6f);Physics.SyncTransforms();
-                    for(int i=0;i<25;i++){c.State.patrolScanSeconds=period*.5f;tick.Invoke(c,new object[]{.1f});}
-                    Assert.AreEqual(0,c.State.patrolWarnings,"Opaque cover must block the actual searchlight detection ray.");Object.DestroyImmediate(wall);Physics.SyncTransforms();
-                    for(int i=0;i<25&&c.State.patrolWarnings==0;i++){c.State.patrolScanSeconds=period*.5f;tick.Invoke(c,new object[]{.1f});}
-                    Assert.AreEqual(1,c.State.patrolWarnings,"First real unobstructed exposure must warn, without retrying.");
-                    Assert.Greater(c.State.patrolFocusSeconds,2.9f);float heldScan=c.State.patrolScanSeconds;tick.Invoke(c,new object[]{.5f});Assert.AreEqual(heldScan,c.State.patrolScanSeconds,.001f,"The first warning must pause the sweep to inspect the last sighting.");
-                    Assert.Greater(Vector3.Distance(m.Player.position,c.Sites["bridge"].position),50);
-                    c.State.Complete("N2_03");c.State.Complete("N2_04");m.StoreCheckpoint();m.Restore(RoundTrip());
-                    Assert.Greater(c.State.patrolFocusSeconds,2,"Save/load must preserve the inspection hold.");
-                    tick.Invoke(c,new object[]{.1f});Assert.AreEqual(1,c.State.patrolWarnings,"Loading one warning must not trigger an immediate second detection.");
-                    // Restore deliberately recovers out-of-world saves. Re-enter this synthetic
-                    // unobstructed detection fixture before testing the second exposure.
-                    Place(m,exposed);Physics.SyncTransforms();
-                    Set("patrolLoadGrace",0f);Set("scannedAt",Time.time-period-1);
-                    for(int i=0;i<25&&c.State.Done("N2_04");i++){c.State.patrolScanSeconds=period*.5f;tick.Invoke(c,new object[]{.1f});}
-                    Assert.AreEqual(0,c.State.patrolWarnings);Assert.IsFalse(c.State.Done("N2_03"));Assert.IsFalse(c.State.Done("N2_04"));
-                    Assert.Less(Vector3.Distance(m.Player.position,c.Sites["bridge"].position),.1f,"Second exposure must use the bridge baseline, not the latest store/dock checkpoint.");
+                    var guards = c.Enemies.Where(e => e.group == Map02ChapterDirector.NightPatrolGroup).OrderBy(e => e.id).ToArray();
+                    Assert.AreEqual(3, guards.Length);
+                    scoutSite.position = c.Sites["bridge"].position + Vector3.up * 100f;
+                    for (int i = 0; i < guards.Length; i++)
+                        guards[i].transform.position = scoutSite.position + Vector3.right * (i * 100f);
+                    Physics.SyncTransforms();
+                    grace.SetValue(c, 0f);
+                    ScanQuarter();
+                    var lamp = c.NightPatrolLights[0];
+                    Assert.IsTrue(lamp.isActiveAndEnabled);
+                    var from = lamp.transform.position;
+                    var ray = lamp.transform.forward;
+                    var target = from + ray * 10f;
+                    Place(m, target - Vector3.up);
+                    Physics.SyncTransforms();
+
+                    var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    wall.transform.SetPositionAndRotation(from + ray * 5f, Quaternion.LookRotation(ray));
+                    wall.transform.localScale = new Vector3(8f, 6f, .6f);
+                    Physics.SyncTransforms();
+                    try
+                    {
+                        ScanQuarter();
+                        Assert.AreEqual(0, c.State.patrolWarnings, "Opaque cover must block the actual flashlight ray.");
+                    }
+                    finally { Object.DestroyImmediate(wall); Physics.SyncTransforms(); }
+
+                    var cloud = Map01Smoke.Spawn(from + ray * 5f, 3f, 15f, visible: false);
+                    try
+                    {
+                        Assert.IsTrue(Map01Smoke.Blocks(from, target), "Smoke must intersect the flashlight ray.");
+                        ScanQuarter();
+                        Assert.AreEqual(0, c.State.patrolWarnings, "Smoke must hide Nam from the flashlight.");
+                    }
+                    finally { Object.DestroyImmediate(cloud.gameObject); Physics.SyncTransforms(); }
+
+                    ScanQuarter();
+                    Assert.AreEqual(1, c.State.patrolWarnings, "Without cover, the actual cone must warn.");
+                    Assert.AreEqual(Map02ChapterDirector.NightPatrolWarningSeconds, c.State.patrolFocusSeconds, .001f);
+                    var heldScan = c.State.patrolScanSeconds;
+                    tick.Invoke(c, new object[] { .1f });
+                    Assert.AreEqual(heldScan, c.State.patrolScanSeconds, .001f, "A warning must hold the sweep.");
+                    Assert.IsFalse(c.NightPatrolFailureActive);
+
+                    scoutSite.position = originalScout;
+                    c.State.Complete("N2_03");
+                    c.State.Complete("N2_04");
+                    m.StoreCheckpoint();
+                    m.Restore(RoundTrip());
+                    Assert.IsTrue(c.State.Done("N2_04"));
+                    Assert.AreEqual(1, c.State.patrolWarnings, "Load must preserve the first warning.");
+                    Assert.IsFalse(c.NightPatrolFailureActive, "Load must not start a failure sequence.");
+                    Assert.IsTrue(m.RetryPatrol(), "Retry must recover the original observation checkpoint.");
+                    Assert.AreEqual(0, c.State.patrolWarnings);
+                    Assert.IsFalse(c.State.Done("N2_03"));
+                    Assert.IsFalse(c.State.Done("N2_04"));
+                    Assert.Less(Vector3.Distance(m.Player.position, c.NightObservationSpawn), .1f);
+
+                    // A warning is followed by the live failure sequence if Nam remains upright.
+                    c.State.patrolWarnings = 1;
+                    c.State.patrolFocusSeconds = .1f;
+                    tick.Invoke(c, new object[] { .2f });
+                    Assert.IsTrue(c.NightPatrolFailureActive);
+                    finishFailure.Invoke(c, new object[] { Map02ChapterDirector.NightPatrolCameraTravelSeconds + 6.6f });
+                    Assert.IsFalse(c.NightPatrolFailureActive);
+                    Assert.AreEqual(0, c.State.patrolWarnings);
+                    Assert.Less(Vector3.Distance(m.Player.position, c.NightObservationSpawn), .1f);
                 }
-                finally{scoutSite.position=originalScout;storeSite.position=originalStore;}
+                finally { scoutSite.position = originalScout; }
             }
             finally{c.Cancel();c.enabled=true;}
             yield return new ExitPlayMode();

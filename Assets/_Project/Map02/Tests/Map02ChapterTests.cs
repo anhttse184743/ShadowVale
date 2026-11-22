@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.IO;
 using System.Linq;
@@ -115,8 +115,18 @@ namespace ShadowVale.Map01.Tests
             {
                 snapshot=m.Capture();snapshot.chapter=Through(id);m.Restore(snapshot);yield return WaitGameSeconds(2f);
                 Assert.AreEqual(snapshot.chapter.phase,c.State.phase);Assert.AreEqual(snapshot.chapter.hungDead,c.State.hungDead);Assert.AreEqual(snapshot.magazine,m.Player.GetComponent<ShadowVale.Gameplay.Combat.PlayerCombat>().RoundsInMagazine);
-                if(c.State.phase==1||c.State.phase==3||c.State.phase==5)
-                {Assert.IsTrue(RenderSettings.skybox.HasProperty("_Exposure"));Assert.Less(RenderSettings.skybox.GetFloat("_Exposure"),c.State.phase==1?.25f:.15f);}
+                if (c.State.phase == 1 || c.State.phase == 3 || c.State.phase == 5)
+                {
+                    Assert.IsTrue(RenderSettings.skybox.HasProperty("_Exposure"));
+                    float exposure = RenderSettings.skybox.GetFloat("_Exposure");
+                    // The end of Night 3 deliberately brightens from the farewell to the counterattack.
+                    if (id == "N3_07")
+                        Assert.That(exposure, Is.InRange(.25f, .40f), "First light after the farewell.");
+                    else if (id == "N3_09")
+                        Assert.That(exposure, Is.InRange(.55f, .79f), "The counterattack gives way to dawn.");
+                    else
+                        Assert.Less(exposure, c.State.phase == 1 ? .25f : .15f, id);
+                }
                 foreach(var fx in c.GetComponentsInChildren<ParticleSystemRenderer>(true))
                 {Assert.NotNull(fx.sharedMaterial,fx.name);Assert.IsTrue(fx.sharedMaterial.shader.isSupported,fx.name);Assert.IsTrue(fx.sharedMaterial.shader.name.StartsWith("Universal Render Pipeline/Particles/"),fx.name);}
                 ScreenCapture.CaptureScreenshot("Logs/Map02Chapter/"+id+".png");yield return null;

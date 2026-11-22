@@ -60,10 +60,18 @@ namespace ShadowVale.Map01
             chests = GetComponent<Map01CampChests>();     // Likewise.
         }
 
+        private bool proneTried;
+
         private void Update()
         {
             if (mission.StorageOpen && mission.Stopped) mission.CloseGameplayPanel();
             if (!mission.IsInitialized || mission.Cinematic) return;
+            // Install prone/crawl when Map 1's player becomes available, as in Map 2.
+            if (!proneTried && mission.player != null && gameObject.scene.name == Map01SaveSystem.MainScene)
+            {
+                proneTried = true;
+                NamProneMotion.Install(CharacterHudSession.For(gameObject));
+            }
             if (!mission.BenchOpen) tradePanel = false;
             // Hùng's journey is world simulation; it must not depend on a keyboard being available.
             if(!mission.Stopped && quest != null && quest.ShouldEscortHungHome()) UpdateCompanion();

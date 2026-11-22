@@ -395,10 +395,12 @@ namespace ShadowVale.Map01
         }
         static void GroundSkin(Animator actor,float floor) {
             float sole=float.PositiveInfinity;
+            var replacement=actor.transform.Find("Nam_AoBaBa_Visual");
             foreach(var skin in actor.GetComponentsInChildren<SkinnedMeshRenderer>()) {
-                var mesh=new Mesh();skin.BakeMesh(mesh);
+                if(replacement!=null&&!skin.transform.IsChildOf(replacement))continue;
+                var mesh=new Mesh();if(replacement!=null)skin.BakeMesh(mesh,true);else skin.BakeMesh(mesh);
                 foreach(var vertex in mesh.vertices)sole=Mathf.Min(sole,skin.transform.TransformPoint(vertex).y);
-                Destroy(mesh);
+                if(Application.isPlaying)Destroy(mesh);else DestroyImmediate(mesh);
             }
             if(!float.IsInfinity(sole))actor.transform.position+=Vector3.up*(floor-sole);
         }

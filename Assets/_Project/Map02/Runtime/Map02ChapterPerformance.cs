@@ -40,8 +40,9 @@ namespace ShadowVale.Map01
             public void Ground(float floor)
             {
                 float lowest=float.PositiveInfinity;
+                var replacement=actor.transform.Find("Nam_AoBaBa_Visual");
                 foreach(var skin in actor.GetComponentsInChildren<SkinnedMeshRenderer>())
-                {if(!skin.enabled)continue;skin.BakeMesh(groundMesh);groundMesh.GetVertices(groundVertices);foreach(var v in groundVertices)lowest=Mathf.Min(lowest,skin.transform.TransformPoint(v).y);}
+                {if(!skin.enabled||replacement!=null&&!skin.transform.IsChildOf(replacement))continue;skin.BakeMesh(groundMesh,replacement!=null);groundMesh.GetVertices(groundVertices);foreach(var v in groundVertices)lowest=Mathf.Min(lowest,skin.transform.TransformPoint(v).y);}
                 if(!float.IsPositiveInfinity(lowest))actor.transform.position+=Vector3.up*Mathf.Clamp(floor-lowest,-1,1);
             }
             public void Dispose()

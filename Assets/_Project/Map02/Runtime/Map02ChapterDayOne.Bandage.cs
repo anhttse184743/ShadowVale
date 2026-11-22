@@ -7,7 +7,7 @@ namespace ShadowVale.Map01
     /// </summary>
     public sealed partial class Map02ChapterDirector
     {
-        static readonly Vector3 BandageStool=new Vector3(-.001f,0,-.026f),BandageLanh=new Vector3(.52f,0,.12f);
+        static readonly Vector3 BandageStool=new Vector3(-.001f,0,-.026f),BandageLanh=new Vector3(.56f,0,.12f);
         const float BandageRollIn=3.3f,BandageRollOut=19.9f,WrapStart=5f,WrapEnd=18.6f;
         Transform bandageSleeve;Vector3 bandageAt;Quaternion bandageFacing;
         float dressingRadius=.057f;bool dressingMeasured;
@@ -69,6 +69,40 @@ namespace ShadowVale.Map01
                 if(angle>25)hand.rotation=Quaternion.Slerp(hand.rotation,Quaternion.FromToRotation(direction,along)*hand.rotation,weight*(angle-25)/angle);
             }
         }
+        static Vector3 DressingReachDeficit(Animator actor, bool left, Vector3 target)
+        {
+            var shoulder = actor.GetBoneTransform(left ? HumanBodyBones.LeftUpperArm : HumanBodyBones.RightUpperArm);
+            var elbow = actor.GetBoneTransform(left ? HumanBodyBones.LeftLowerArm : HumanBodyBones.RightLowerArm);
+            var wrist = actor.GetBoneTransform(left ? HumanBodyBones.LeftHand : HumanBodyBones.RightHand);
+            var wristTarget = target - (DressingPalm(actor, left) - wrist.position);
+            var reach = Vector3.Distance(shoulder.position, elbow.position) + Vector3.Distance(elbow.position, wrist.position);
+            var delta = wristTarget - shoulder.position;
+            return delta.normalized * Mathf.Max(0f, delta.magnitude - reach * .93f);
+        }
+
+        static void LeanIntoDressing(Animator actor, Vector3 rightTarget, Vector3 leftTarget, float contact)
+        {
+            if (contact <= 0) return;
+            var spine = actor.GetBoneTransform(HumanBodyBones.Spine);
+            if (spine == null) return;
+
+            var left = actor.GetBoneTransform(HumanBodyBones.LeftUpperArm);
+            var right = actor.GetBoneTransform(HumanBodyBones.RightUpperArm);
+            var shoulders = (left.position + right.position) * .5f;
+            var torso = shoulders - spine.position;
+            var correction = DressingReachDeficit(actor, false, rightTarget) + DressingReachDeficit(actor, true, leftTarget);
+            if (correction.sqrMagnitude < .0001f || torso.sqrMagnitude < .0001f) return;
+
+            // Lean from the spine before reaching, keeping the authored lower-body pose and foot placement.
+            var neck = actor.GetBoneTransform(HumanBodyBones.Neck);
+            var authoredNeck = neck != null ? neck.rotation : Quaternion.identity;
+            var lean = Quaternion.FromToRotation(torso, torso + correction);
+            spine.rotation = Quaternion.RotateTowards(Quaternion.identity, lean, 24f * contact) * spine.rotation;
+            // Counter the extra torso bend at the neck so the face keeps its authored direction toward the wound.
+            if (neck != null)
+                neck.rotation = Quaternion.RotateTowards(neck.rotation, authoredNeck, 18f * contact);
+        }
+
         void MeasureDressingRadius()
         {
             if(dressingMeasured)return;dressingMeasured=true;
@@ -121,8 +155,11 @@ namespace ShadowVale.Map01
                 var centre=Vector3.Lerp(a,b,wrapped);
                 Vector3 Point(float angle)=>centre+rotation*new Vector3(Mathf.Cos(angle)*(radius+.014f),0,Mathf.Sin(angle)*(radius+.014f));
                 var axis=(b-a).normalized;
-                DressingContact(hands,false,Point(rightAngle)+axis*.025f,contact);
-                DressingContact(hands,true,Point(leftAngle)-axis*.025f,contact);
+                var rightTarget = Point(rightAngle) + axis * .025f;
+                var leftTarget = Point(leftAngle) - axis * .025f;
+                LeanIntoDressing(hands, rightTarget, leftTarget, contact);
+                DressingContact(hands, false, rightTarget, contact);
+                DressingContact(hands, true, leftTarget, contact);
                 if(bandageRoll!=null)
                 {
                     bool held=t>=BandageRollIn&&t<=BandageRollOut;bandageRoll.gameObject.SetActive(held);
