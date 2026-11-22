@@ -25,13 +25,13 @@ namespace ShadowVale.Map01
         {
             if (chest == null) return;
             BagStyles();
-            storageCount ??= new GUIStyle(bagCount) { fontSize = 11 };
+            storageCount ??= new GUIStyle(bagCount) { fontSize = 13 };
             var ev = Event.current;
             var cursor = ev.mousePosition;
             if (storageDragging && (ev.type == EventType.Ignore || ev.type == EventType.MouseLeaveWindow))
                 storageDragging = false;
 
-            const float chestWidth = Map01StorageChest.Columns * StorageStep + 36, bagWidth = 382, gap = 16, panelHeight = 701;
+            const float chestWidth = Map01StorageChest.Columns * StorageStep + 36, bagWidth = Map01Inventory.BagColumns * StorageStep + 36, gap = 16, panelHeight = 701;
             float left = (width - chestWidth - bagWidth - gap) / 2;
             float top = (height - panelHeight) / 2;
             var chestPanel = new Rect(left, top, chestWidth, panelHeight);
@@ -41,11 +41,11 @@ namespace ShadowVale.Map01
             HudPanel(bagPanel);
             GUI.Label(new Rect(chestPanel.x + 18, top + 15, chestWidth - 110, 50), Map01StorageChest.DisplayName.ToUpperInvariant(), bagTitle);
             GUI.Label(new Rect(chestPanel.xMax - 83, top + 29, 65, 28), $"{chest.Occupied}/{Map01StorageChest.Capacity} ô", bagHint);
-            GUI.Label(new Rect(bagPanel.x + 16, top + 15, 350, 50), "TÚI ĐỒ", bagTitle);
+            GUI.Label(new Rect(bagPanel.x + 16, top + 15, bagWidth - 32, 50), "TÚI ĐỒ", bagTitle);
             HudFill(new Rect(chestPanel.x + 18, top + 73, chestWidth - 36, 1), HudGold);
             HudFill(new Rect(bagPanel.x + 16, top + 73, bagWidth - 32, 1), HudGold);
             GUI.Label(new Rect(chestPanel.x + 18, top + 83, chestWidth - 36, 25), "Kéo thả giữa rương và túi · Chuột phải để chuyển nhanh", bagHint);
-            GUI.Label(new Rect(bagPanel.x + 16, top + 83, 345, 25), $"{Map01Inventory.BagSize - inventory.FreeCells}/{Map01Inventory.BagSize} ô", bagHint);
+            GUI.Label(new Rect(bagPanel.x + 16, top + 83, bagWidth - 32, 25), $"{Map01Inventory.BagSize - inventory.FreeCells}/{Map01Inventory.BagSize} ô", bagHint);
 
             int hotChest = -1, hotBag = -1;
             for (int i = 0; i < Map01StorageChest.Capacity; i++)
@@ -60,11 +60,10 @@ namespace ShadowVale.Map01
                 GUI.Label(new Rect(chestPanel.x + 18, top + 644, chestWidth - 36, 30),
                     $"{chest.OverflowCount} chồng từ bản lưu cũ sẽ hiện khi có ô trống.", bagHint);
 
-            const int bagStep = 43;
             for (int i = 0; i < Map01Inventory.BagSize; i++)
             {
-                var rect = new Rect(bagPanel.x + 20 + i % Map01Inventory.BagColumns * bagStep,
-                    top + 116 + i / Map01Inventory.BagColumns * bagStep, 39, 39);
+                var rect = new Rect(bagPanel.x + 20 + i % Map01Inventory.BagColumns * StorageStep,
+                    top + 116 + i / Map01Inventory.BagColumns * StorageStep, StorageCellSize, StorageCellSize);
                 bool hot = rect.Contains(cursor);
                 if (hot) hotBag = i;
                 DrawStorageCell(rect, inventory.Cell(i), false, i, hot);
@@ -76,19 +75,20 @@ namespace ShadowVale.Map01
             var details = hovered ?? selected;
             if (details != null)
             {
-                GUI.Label(new Rect(bagPanel.x + 17, top + 355, 348, 33), ForestInventory.Name(details.id), bagName);
+                float info = top + 116 + Map01Inventory.BagRows * StorageStep + 14, textWidth = bagWidth - 34;
+                GUI.Label(new Rect(bagPanel.x + 17, info, textWidth, 33), ForestInventory.Name(details.id), bagName);
                 string count = Map01Inventory.HasCondition(details.id)
                     ? $"Độ bền {Percent(inventory.Fraction(details.id, details.condition))}"
                     : $"Số lượng {details.count}";
-                GUI.Label(new Rect(bagPanel.x + 17, top + 391, 348, 26), count, bagLine);
-                GUI.Label(new Rect(bagPanel.x + 17, top + 422, 348, 90), ForestInventory.Description(details.id), bagLine);
+                GUI.Label(new Rect(bagPanel.x + 17, info + 36, textWidth, 26), count, bagLine);
+                GUI.Label(new Rect(bagPanel.x + 17, info + 66, textWidth, 72), ForestInventory.Description(details.id), bagLine);
             }
             if (storageMessage != null)
-                GUI.Label(new Rect(bagPanel.x + 17, bagPanel.yMax - 108, 348, 66), storageMessage, bagWarn);
-            GUI.Label(new Rect(bagPanel.x + 17, bagPanel.yMax - 41, 348, 26), "E / Tab / Esc  Đóng rương", bagHint);
+                GUI.Label(new Rect(bagPanel.x + 17, bagPanel.yMax - 100, bagWidth - 34, 56), storageMessage, bagWarn);
+            GUI.Label(new Rect(bagPanel.x + 17, bagPanel.yMax - 41, bagWidth - 34, 26), "E / Tab / Esc  Đóng rương", bagHint);
 
             if (storageDragging && storageSelection != null && (cursor - storagePress).sqrMagnitude >= 25)
-                HudIcon(new Rect(cursor.x + 6, cursor.y + 6, 35, 35), storageSelection.id, showAmmoLabel: false);
+                HudIcon(new Rect(cursor.x + 6, cursor.y + 6, 52, 52), storageSelection.id, showAmmoLabel: false);
         }
 
         private void DrawStorageCell(Rect rect, Cell cell, bool inChest, int index, bool hot)
