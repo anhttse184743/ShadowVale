@@ -37,8 +37,7 @@ namespace ShadowVale.Content
                 ContentVersionId = contentVersionId,
                 Items = v1.Items.Select(i => new ItemDefinition
                 {
-                    Id = i.Code, DisplayName = i.Name, Category = i.ItemType, StackMax = i.MaxStack, Weight = i.Weight,
-                    BaseValue = i.BaseValue, Rarity = i.Rarity, Stats = i.Stats
+                    Id = i.Code, DisplayName = i.Name, Category = i.ItemType, StackMax = i.MaxStack, Weight = i.Weight
                 }).ToList(),
                 Weapons = v1.Weapons.Select(w => new WeaponDefinition
                 {
@@ -107,7 +106,6 @@ namespace ShadowVale.Content
                     Id = m.Code,
                     DisplayName = m.Name,
                     SceneName = m.SceneKey,
-                    GameRules = m.Layout?["game_rules"] as JObject,
                     NavGraphNodes = m.NavGraph?["nodes"]?.ToObject<List<NavGraphNode>>(Serializer) ?? new List<NavGraphNode>(),
                     EscapeRoutes = m.NavGraph?["escape_routes"]?.ToObject<List<int>>() ?? new List<int>(),
                     PlayerStartNode = m.Layout?.Value<int?>("player_start_node") ?? 0,

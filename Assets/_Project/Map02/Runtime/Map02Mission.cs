@@ -352,7 +352,7 @@ namespace ShadowVale.Map01
             player.RestoreMotion(false);health.RestoreHealth(data.health);
             if(combat!=null)
             {
-                Map01RifleVisual.ApplyPlayer(combat, data.rifleItemId == Map01M16.Id ? Map01M16.Id : "rifle_standard");
+                Map01RifleVisual.Apply(combat.WeaponFor(WeaponKind.Rifle), data.rifleItemId == Map01M16.Id ? Map01M16.Id : "rifle_standard");
                 combat.Equip((WeaponKind)data.equipped);
                 if(data.hasCharacterState){combat.RestoreMagazine(WeaponKind.Rifle,data.rifleMagazine);combat.RestoreMagazine(WeaponKind.Pistol,data.pistolMagazine);combat.RestoreMagazine(WeaponKind.Sniper,data.sniperMagazine);}
                 combat.RestoreMagazine(data.magazine);combat.RestoreAttackCooldown(data.attackCooldown);

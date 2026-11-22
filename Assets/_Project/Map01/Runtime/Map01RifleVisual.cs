@@ -1,7 +1,4 @@
 using UnityEngine;
-using System.Linq;
-using ShadowVale.Content;
-using ShadowVale.Data.Content;
 using ShadowVale.Gameplay.Combat;
 namespace ShadowVale.Map01
 {
@@ -19,22 +16,9 @@ namespace ShadowVale.Map01
         {
             if (weapon == null) return;
             var visual = weapon.GetComponent<Map01RifleVisual>() ?? weapon.gameObject.AddComponent<Map01RifleVisual>();
-            visual.Set(weapon, id, null);
+            visual.Set(weapon, id);
         }
-
-        public static void ApplyPlayer(PlayerCombat combat, string id)
-        {
-            var weapon = combat?.WeaponFor(WeaponKind.Rifle);
-            if (weapon == null) return;
-            WeaponDefinition profile = null;
-            if (ContentService.TryGetPublished(out var bundle))
-                profile = bundle.Weapons.FirstOrDefault(w => w.Id == id);
-            var visual = weapon.GetComponent<Map01RifleVisual>() ?? weapon.gameObject.AddComponent<Map01RifleVisual>();
-            visual.Set(weapon, id, profile);
-            combat.ApplyPublishedRifleHandling(profile?.MagazineSize ?? 0, profile?.ReloadSeconds ?? 0f);
-        }
-
-        void Set(Weapon weapon, string id, WeaponDefinition profile)
+        void Set(Weapon weapon, string id)
         {
             if (original == null) { original = weapon.GetComponentsInChildren<Renderer>(true); akDamage = weapon.Damage; akCooldown = weapon.Cooldown; akRange = weapon.Range; akMuzzle = weapon.Muzzle; }
             bool m16 = id == Map01M16.Id;
@@ -50,13 +34,9 @@ namespace ShadowVale.Map01
             foreach (var r in original) if (r != null) r.enabled = !m16;
             if (model != null) model.SetActive(m16);
             weapon.SetReloadModel(m16 ? model.transform : null);
-            if (ItemId != id || profile != null)
-            {
-                float cooldown = m16 ? Map01M16.ShotSeconds : akCooldown;
-                if (profile != null && profile.FireRate > 0f) cooldown = 1f / profile.FireRate;
-                weapon.ConfigureRifle(profile?.Damage ?? (m16 ? Map01M16.Damage : akDamage),
-                    cooldown, m16 ? m16Muzzle : akMuzzle, !m16, profile?.Range ?? (m16 ? Map01M16.Range : akRange), m16);
-            }
+            if (ItemId != id) weapon.ConfigureRifle(m16 ? Map01M16.Damage : akDamage,
+                m16 ? Map01M16.ShotSeconds : akCooldown, m16 ? m16Muzzle : akMuzzle, !m16,
+                m16 ? Map01M16.Range : akRange, m16);
             ItemId = id;
         }
     }

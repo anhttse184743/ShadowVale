@@ -44,7 +44,7 @@ namespace ShadowVale.Gameplay.Combat
             float shotRange = -1f, bool m16Handling = false)
         {
             damage = shotDamage; cooldown = shotCooldown; muzzle = barrel; UsesOriginalMagazine = originalMagazine;
-            if (shotRange >= 0f) range = shotRange;
+            if (shotRange > 0f) range = shotRange;
             usesM16Handling = m16Handling;
             if (flash != null) { Destroy(flash.gameObject); flash = null; }
         }

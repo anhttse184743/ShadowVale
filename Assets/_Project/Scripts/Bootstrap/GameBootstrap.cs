@@ -9,23 +9,27 @@ using UnityEngine.SceneManagement;
 
 namespace ShadowVale.Bootstrap
 {
-    /// <summary>Loads offline content immediately and checks published content at the title screen.</summary>
+    /// <summary>
+    /// Entry point of the game. Created before the first scene loads, whichever scene that is, and kept
+    /// across scene loads. Loads the content bundle: the web backend's published one (waiting at most
+    /// <see cref="BootWaitSeconds"/>), else the cached one, else the one shipped in StreamingAssets, so
+    /// losing the backend never blocks play. A bundle that arrives later is staged and used from the
+    /// next scene load, never in the middle of a session.
+    /// The solver is not chosen here: SquadCoordinator keeps its own order (SVL_SOLVER_VARIANT, then
+    /// ai_settings), and the backend's per-session assignment comes with the telemetry session.
+    /// </summary>
     [DefaultExecutionOrder(-1000)]
     public sealed class GameBootstrap : MonoBehaviour
     {
-        public const string MenuScene = "01_MainMenu";
+        public const float BootWaitSeconds = 3f;
+
         [SerializeField] private SolverProfileConfig solverProfile;
 
         public static GameBootstrap Instance { get; private set; }
         public ContentService Content { get; private set; }
-        public string MenuContentMessage { get; private set; }
-        public bool MenuCanRetry { get; private set; }
-        public bool MenuPlayBlocked => _fetch != null || MenuCanRetry || !Content.IsLoaded;
 
         private BundleCache _cache;
-        private BackendClient _client;
         private Task<BundleFetcher.Result> _fetch;
-        private bool _checkedThisLaunch;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void CreateBeforeFirstScene()
@@ -41,89 +45,71 @@ namespace ShadowVale.Bootstrap
 
             Content = new ContentService();
             _cache = new BundleCache();
-            _client = BackendClient.FromConfig();
-            if (!Content.Load(new IBundleSource[] { _cache, new FallbackBundleProvider() }, out var log))
-                Debug.LogError($"[Bootstrap] no offline bundle could be loaded: {log}");
+            var client = BackendClient.FromConfig();
+            // Command-line test runs stay offline unless they point at a backend on purpose
+            var online = client.HasKey && !(Application.isBatchMode && Environment.GetEnvironmentVariable("SVL_API_BASE_URL") == null);
+            if (online)
+            {
+                var fetcher = new BundleFetcher(client, _cache.Current?.Checksum);
+                _fetch = Task.Run(() => fetcher.FetchAsync());
+                // Only the first start without a cache waits long; a dead backend refuses at once
+                _fetch.Wait(TimeSpan.FromSeconds(BootWaitSeconds));
+            }
+
+            if (_fetch != null && _fetch.IsCompleted && TakeDownload(out var fresh))
+                Content.Apply(fresh, "backend");
+            else if (!Content.Load(new IBundleSource[] { _cache, new FallbackBundleProvider() }, out var log))
+            {
+                Debug.LogError($"[Bootstrap] no content bundle could be loaded: {log}");
+                enabled = false;
+                return;
+            }
+            Debug.Log($"[Bootstrap] content v{Content.Version} from {Content.SourceName} (version id {Content.ContentVersionId ?? "none"}), api = {client.ApiBaseUrl}" +
+                      (online ? "" : " (offline: no game key)"));
+
             ServiceLocator.Register(Content);
             if (solverProfile != null) ServiceLocator.Register(solverProfile);
             SceneManager.sceneLoaded += OnSceneLoaded;
-            if (SceneManager.GetActiveScene().name == MenuScene) CheckMenuContent();
-        }
-
-        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-        {
-            if (mode != LoadSceneMode.Single) return;
-            Content.ApplyStaged();
-            if (scene.name == MenuScene && !_checkedThisLaunch) CheckMenuContent();
-        }
-
-        public void CheckMenuContent()
-        {
-            if (_fetch != null || SceneManager.GetActiveScene().name != MenuScene) return;
-            _checkedThisLaunch = true;
-            MenuCanRetry = false;
-            if (!_client.HasKey || Application.internetReachability == NetworkReachability.NotReachable ||
-                (Application.isBatchMode && Environment.GetEnvironmentVariable("SVL_API_BASE_URL") == null))
-            {
-                MenuContentMessage = "Chế độ ngoại tuyến";
-                return;
-            }
-
-            // Only advertise a cache checksum when that exact bundle was successfully loaded.
-            var fetcher = new BundleFetcher(_client, Content.Bundle?.Checksum);
-            MenuContentMessage = "Đang kiểm tra bản cập nhật...";
-            _fetch = Task.Run(() => fetcher.FetchAsync());
         }
 
         private void Update()
         {
+            // A download that missed the boot wait: keep it for the next scene
             if (_fetch == null || !_fetch.IsCompleted) return;
-            var request = _fetch;
-            _fetch = null;
-            if (request.IsFaulted || request.IsCanceled)
+            if (TakeDownload(out var bundle))
             {
-                RefreshFailed(request.Exception?.GetBaseException().Message);
-                return;
-            }
-
-            var result = request.Result;
-            switch (result.Status)
-            {
-                case BundleFetcher.Status.UpToDate:
-                    MenuContentMessage = $"Đã có bản mới nhất · #{result.Manifest.VersionNo}";
-                    break;
-                case BundleFetcher.Status.Downloaded:
-                    try
-                    {
-                        if (!BundleFetcher.Accept(result, _cache, out var bundle, out var error))
-                        {
-                            RefreshFailed(error);
-                            return;
-                        }
-                        if (SceneManager.GetActiveScene().name == MenuScene) Content.Apply(bundle, "backend");
-                        else Content.Stage(bundle, "backend");
-                        MenuContentMessage = $"Đã cập nhật bản mới nhất · #{result.Manifest.VersionNo}";
-                    }
-                    catch (Exception e) { RefreshFailed(e.Message); }
-                    break;
-                case BundleFetcher.Status.NotPublished:
-                    MenuContentMessage = "Máy chủ chưa có bản phát hành. Đang dùng dữ liệu trên máy.";
-                    break;
-                case BundleFetcher.Status.Unavailable:
-                    MenuCanRetry = !Content.IsLoaded;
-                    MenuContentMessage = "Không kết nối được máy chủ. Đang dùng dữ liệu trên máy.";
-                    break;
-                default:
-                    RefreshFailed(result.Error);
-                    break;
+                Content.Stage(bundle, "backend");
+                Debug.Log($"[Bootstrap] content v{bundle.BundleVersion} downloaded, used from the next scene");
             }
         }
 
-        private void RefreshFailed(string error)
+        private bool TakeDownload(out Data.Content.ContentBundle bundle)
         {
-            MenuCanRetry = Application.internetReachability != NetworkReachability.NotReachable || !Content.IsLoaded;
-            MenuContentMessage = MenuCanRetry ? "Chưa cập nhật được nội dung. Vui lòng thử lại." : "Chế độ ngoại tuyến";
-            Debug.LogWarning($"[Bootstrap] content refresh: {error}");
+            bundle = null;
+            var task = _fetch;
+            _fetch = null;
+            if (task.IsFaulted)
+            {
+                Debug.LogWarning($"[Bootstrap] content fetch failed: {task.Exception?.GetBaseException().Message}");
+                return false;
+            }
+            var result = task.Result;
+            if (result.Status == BundleFetcher.Status.UpToDate)
+                return false;
+            if (result.Status == BundleFetcher.Status.Unavailable)
+            {
+                Debug.Log($"[Bootstrap] backend content unavailable: {result.Error}");
+                return false;
+            }
+            if (BundleFetcher.Accept(result, _cache, out bundle, out var error)) return true;
+            Debug.LogWarning($"[Bootstrap] downloaded bundle rejected: {error}");
+            return false;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (mode == LoadSceneMode.Single && Content.ApplyStaged())
+                Debug.Log($"[Bootstrap] content v{Content.Version} from {Content.SourceName} for {scene.name}");
         }
 
         private void OnDestroy()

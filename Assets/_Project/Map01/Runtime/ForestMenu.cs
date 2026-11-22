@@ -1,5 +1,4 @@
 using System;
-using ShadowVale.Bootstrap;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
@@ -23,8 +22,6 @@ namespace ShadowVale.Map01
         private Component map2Owner;
         private IMapTwoHost map2 => MapTwoBridge.Host(map2Owner);
         private bool HasGameplay => mission != null || map2 != null;
-        private bool TitleContentBlocked => SceneManager.GetActiveScene().name == GameBootstrap.MenuScene &&
-            GameBootstrap.Instance != null && GameBootstrap.Instance.MenuPlayBlocked;
         private bool GameplayPaused => mission != null ? mission.Paused : map2 != null && map2.Paused;
         private void PauseGameplay(bool value) { if(mission!=null)mission.SetPaused(value);else map2?.SetPaused(value); }
         private bool ClosePanel() => mission != null ? mission.CloseGameplayPanel() : map2 != null && map2.CloseGameplayPanel();
@@ -179,7 +176,6 @@ namespace ShadowVale.Map01
         private void OpenSlots(bool save) { browser = true; saving = save; message = null; Refresh(); selected = save ? 1 : Mathf.Max(0, latest); }
         private void StartGame(int slot)
         {
-            if (TitleContentBlocked) return;
             try { loading = true;var entry=slot>=0?ForestSaveSlots.Read(slot):null;if(entry?.sceneName=="Map 2")MapTwoBridge.BeginGame(entry);else Map01SaveSystem.BeginGame(slot); }
             catch (Exception e) { loading = false; message = "Không thể mở bản lưu: " + e.Message; }
         }
@@ -194,7 +190,6 @@ namespace ShadowVale.Map01
         }
         private void MainAction(int index)
         {
-            if (TitleContentBlocked && (choosingTutorial || index < SettingsIndex)) return;
             if (choosingTutorial) {
                 if (index == 0) PlayTutorialIntro();
                 if (index == 1) { Map01OpeningCutscene.RequestNewGame(); StartGame(-1); }
@@ -368,13 +363,6 @@ namespace ShadowVale.Map01
             else Fill(new Rect(0, 0, 1600, 900), Ink);
             GUI.enabled = question == null;
             if (browser) DrawBrowser(); else if (settings) DrawSettings(); else DrawMain();
-            if (!settings && SceneManager.GetActiveScene().name == GameBootstrap.MenuScene && GameBootstrap.Instance is GameBootstrap sync &&
-                !string.IsNullOrEmpty(sync.MenuContentMessage))
-            {
-                Fill(new Rect(825, 48, 700, 100), Ink);
-                GUI.Label(new Rect(850, 66, 650, 44), sync.MenuContentMessage, small);
-                if (sync.MenuCanRetry && Button(new Rect(850, 155, 270, 54), "THỬ LẠI")) sync.CheckMenuContent();
-            }
             GUI.enabled = true;
             if (question != null) {
                 Fill(new Rect(0, 0, 1600, 900), new Color(0, 0, 0, .7f));
@@ -410,15 +398,7 @@ namespace ShadowVale.Map01
             // The column ends above the save summary plate (y 737) however many rows there are.
             float step = labels.Length <= 3 ? 115 : labels.Length == 5 ? 96 : 80, tall = labels.Length <= 3 ? 102 : step - 10;
             for (int i = 0; i < labels.Length; i++)
-            {
-                bool blocked = (TitleContentBlocked && (choosingTutorial || i < SettingsIndex)) ||
-                    (!HasGameplay && !choosingTutorial && i == 0 && latest < 0);
-                if (Button(new Rect(115, 244 + step * i, 535, tall), labels[i], selected == i, !blocked, true))
-                {
-                    selected = i;
-                    MainAction(i);
-                }
-            }
+                if (Button(new Rect(115, 244 + step * i, 535, tall), labels[i], selected == i, !(!HasGameplay && !choosingTutorial && i == 0 && latest < 0), true)) { selected = i; MainAction(i); }
             string summary = latest >= 0 && entries[latest] != null ? "Điểm lưu: " + entries[latest].location + "\nThời gian chơi: " + ForestSaveSlots.Duration(entries[latest].playSeconds) : "Chưa có bản lưu";
             Plate(new Rect(115, 737, 535, 72));
             GUI.Label(new Rect(143, 752, 480, 54), message ?? (tutorial != null ? "Hướng dẫn chỉ có checkpoint trong phiên chơi." : choosingTutorial ? "Học điều khiển cùng Hùng trước khi vào Map 1." : summary), small);

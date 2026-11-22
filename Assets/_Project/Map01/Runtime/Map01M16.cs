@@ -47,7 +47,7 @@ namespace ShadowVale.Map01
                 combat.RestoreMagazine(WeaponKind.Rifle, 0);
                 if (rounds > 0) Receive(before == Map01M16.Id ? Map01M16.Ammo : "ammo_rifle", rounds);
             }
-            Map01RifleVisual.ApplyPlayer(combat, after);
+            Map01RifleVisual.Apply(gun, after);
         }
     }
 }

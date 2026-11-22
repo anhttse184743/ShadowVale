@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
 
 namespace ShadowVale.Data.Content
 {
@@ -36,8 +35,5 @@ namespace ShadowVale.Data.Content
         public string Category { get; set; }
         public int StackMax { get; set; } = 1;
         public float Weight { get; set; }
-        public int BaseValue { get; set; }
-        public string Rarity { get; set; }
-        public JObject Stats { get; set; }
     }
 }
