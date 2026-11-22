@@ -61,7 +61,7 @@ namespace ShadowVale.Map01
             trader.anchor = anchor;
             trader.readCredit = readCredit;
             trader.changeCredit = changeCredit;
-            trader.Stock = mapTwo ? Map2Stock : Map1Stock;
+            trader.Stock = PublishedContent.TradeStock(mapTwo, mapTwo ? Map2Stock : Map1Stock);
             return trader;
         }
 

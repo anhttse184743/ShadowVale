@@ -11,6 +11,26 @@ namespace ShadowVale.Gameplay.Combat
     {
         public Weapon WeaponFor(WeaponKind kind) => _weapons.TryGetValue(kind, out var value) ? value : null;
         public int MagazineRounds(WeaponKind kind) => _magazines.TryGetValue(kind, out var value) ? value.Rounds : 0;
+
+        public void ApplyPublishedRifleHandling(int capacity, float reloadSeconds)
+        {
+            if (!_magazines.TryGetValue(WeaponKind.Rifle, out var magazine)) return;
+            var handling = tuning.OrDefault();
+            if (capacity > 0) handling.magazineCapacity = capacity;
+            if (reloadSeconds > 0f) handling.reloadSeconds = reloadSeconds;
+            var previous = _tunings[WeaponKind.Rifle];
+            if (previous.magazineCapacity == handling.magazineCapacity && previous.reloadSeconds == handling.reloadSeconds) return;
+            var replacement = handling.Create();
+            replacement.Refill(magazine.Rounds);
+            _magazines[WeaponKind.Rifle] = replacement;
+            _tunings[WeaponKind.Rifle] = handling;
+            if (_equippedKind == WeaponKind.Rifle)
+            {
+                CancelReload();
+                _magazine = replacement;
+                _activeTuning = handling;
+            }
+        }
         public void RestoreMagazine(WeaponKind kind, int rounds)
         {
             if (_magazines.TryGetValue(kind, out var value)) value.Refill(rounds);
