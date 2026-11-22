@@ -8,7 +8,7 @@ namespace ShadowVale.Map01
         // crates with their goods and true sizes, a ghost of the held crate (green, or red with the reason) before it is
         // put down, lifting a placed crate, cards for the three crates, and "Cất xong" lit only when all three are good.
         // The goods match Day 3 (Map02ChapterDressing): ammunition and medicine to the south pit, grenades to the bank.
-        static readonly string[] CrateGoods={"Đạn 7,62","Thuốc","Lựu đạn"},CrateKind={"hòm lớn","hòm vuông","hòm dài"};
+        static readonly string[] CrateGoods={"Đạn AK","Thuốc","Lựu đạn"},CrateKind={"hòm lớn","hòm vuông","hòm dài"};
         static readonly Color[] CrateWood={new Color(.46f,.35f,.19f),new Color(.57f,.48f,.31f),new Color(.35f,.33f,.2f)};
         static readonly float[] CrateHeight={.34f,.32f,.24f};
         const float CellMetres=.3f;   // one floor cell of the store, in the village

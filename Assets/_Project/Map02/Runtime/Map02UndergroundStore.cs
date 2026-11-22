@@ -37,7 +37,6 @@ namespace ShadowVale.Map01
         readonly Transform[] lootCrates=new Transform[3];
         static readonly string[] LootIds={"ammo_rifle","ammo_pistol","medkit_small"};
         static readonly int[] LootAmounts={30,21,2};
-        static readonly string[] LootNames={"viên đạn AK","viên đạn K54","băng cứu thương"};
         public (string id,int count) LootContents(int box)
         {
             int kind=Owner.State.StoreLootKind(box);return (LootIds[kind],LootAmounts[kind]);
@@ -82,7 +81,7 @@ namespace ShadowVale.Map01
             if(box<0||bag==null||!Owner.State.TryClaimStoreLoot(box))return false;
             int kind=Owner.State.StoreLootKind(box);var contents=LootContents(box);
             bag.Receive(contents.id,contents.count);
-            Owner.Mission.RequireInteractionRelease();Owner.Mission.Say($"Đã lấy {contents.count} {LootNames[kind]} từ hộp vật tư.");Owner.Mission.StoreCheckpoint();return true;
+            Owner.Mission.RequireInteractionRelease();Owner.Mission.Say($"Đã lấy {contents.count} {ForestInventory.InlineName(LootIds[kind])} từ hộp vật tư.");Owner.Mission.StoreCheckpoint();return true;
         }
         void DrawLootGuide()
         {

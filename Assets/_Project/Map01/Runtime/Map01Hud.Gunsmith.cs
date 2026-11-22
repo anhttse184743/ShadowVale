@@ -187,7 +187,7 @@ namespace ShadowVale.Map01
             if (BenchButton(new Rect(card.xMax - 170, card.y + 46, 152, 48), armed ? "BẤM LẦN NỮA" : "RÃ", benchVerdict, salvageWhy == null, armed))
             {
                 if (armed) { inventory.Salvage(gun); Disarm(); benchGun = 0; }
-                else { Arm(key); mission.Say($"Rã {ForestInventory.Name(gid).ToLowerInvariant()}? Súng mất hẳn. Bấm RÃ lần nữa để xác nhận.", 3); }
+                else { Arm(key); mission.Say($"Rã {ForestInventory.InlineName(gid)}? Súng mất hẳn. Bấm RÃ lần nữa để xác nhận.", 3); }
             }
 
             DrawRepairSupplies(ox, oy);
@@ -311,7 +311,7 @@ namespace ShadowVale.Map01
             GUI.Label(new Rect(box.x + 130, box.y + 26, box.width - 150, 34), "RÃ LẤY LINH KIỆN?", hudHeading);
             GUI.Label(new Rect(box.x + 130, box.y + 62, box.width - 150, 80),
                 $"{ForestInventory.Name(id)} · độ bền {Percent(inventory.FractionOf(salvageAsk))}. Súng mất hẳn, đổi lấy: " +
-                string.Join(", ", yields.Select(y => y.count + " " + ForestInventory.Name(y.item).ToLowerInvariant())) + ".", bagLine);
+                string.Join(", ", yields.Select(y => y.count + " " + ForestInventory.InlineName(y.item))) + ".", bagLine);
             var yes = new Rect(box.x + 130, box.yMax - 56, 150, 38); var no = new Rect(box.x + 296, box.yMax - 56, 150, 38);
             HudFill(yes, new Color(.2f, .06f, .04f, .9f)); HudBorder(yes, new Color(.85f, .42f, .3f), 2); GUI.Label(yes, "RÃ", new GUIStyle(bagButton) { normal = { textColor = new Color(.95f, .6f, .48f) } });
             HudPanel(no); GUI.Label(no, "HỦY", bagButton);

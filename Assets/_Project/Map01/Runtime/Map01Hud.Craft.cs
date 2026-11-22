@@ -250,7 +250,7 @@ namespace ShadowVale.Map01
             string reason = !inventory.NearWorkbench() ? "Đến bàn chế tạo ở căn cứ A để chế tạo"
                 : inventory.IsFieldCrafting ? "Hoàn tất hoặc hủy chế dã chiến trước"
                 : most < q ? "Thiếu " + string.Join(", ", recipe.inputs.Where(i => inventory.Count(i.item_id) < i.count * q)
-                    .Select(i => (i.count * q - inventory.Count(i.item_id)) + " " + ForestInventory.Name(i.item_id).ToLowerInvariant()))
+                    .Select(i => (i.count * q - inventory.Count(i.item_id)) + " " + ForestInventory.InlineName(i.item_id)))
                 : null;
             bool ready = reason == null;
             var craft = R(840, 756, 340, 70);

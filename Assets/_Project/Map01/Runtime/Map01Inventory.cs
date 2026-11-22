@@ -129,7 +129,7 @@ namespace ShadowVale.Map01
             if (rest > 0 && mission != null)
             {
                 mission.Drop(id, rest, condition);
-                mission.Say($"Túi đã đầy — {rest} {ForestInventory.Name(id).ToLowerInvariant()} để lại dưới chân.", 4);
+                mission.Say($"Túi đã đầy — {rest} {ForestInventory.InlineName(id)} để lại dưới chân.", 4);
             }
         }
         public event System.Action<string, int> Received;
@@ -210,7 +210,7 @@ namespace ShadowVale.Map01
             if (!mission.IsInitialized || mission.Stopped || ForestMenu.Visible || Time.time < nextQuickUse) return false;
             if (!ForestInventory.QuickUsable(id)) { mission.Say("Vật phẩm này không dùng trực tiếp.", 3); return false; }
             if (ForestInventory.IsWeapon(id)) return EquipItem(id);
-            if (Count(id) <= 0) { mission.Say("Đã hết " + ForestInventory.Name(id).ToLowerInvariant() + ".", 3); return false; }
+            if (Count(id) <= 0) { mission.Say("Đã hết " + ForestInventory.InlineName(id) + ".", 3); return false; }
             if (id == "medkit_small")
             {
                 if (mission.PlayerHealth >= mission.Settings.playerHP) { mission.Say("Máu đã đầy, chưa cần dùng băng cứu thương.", 3); return false; }
@@ -244,7 +244,7 @@ namespace ShadowVale.Map01
         /// <summary>How many times over the bag holds what <paramref name="recipe"/> needs.</summary>
         public int CanMake(ForestRecipe recipe) => recipe.inputs.Length == 0 ? 0 : recipe.inputs.Min(i => i.count > 0 ? Count(i.item_id) / i.count : int.MaxValue);
         /// <summary>"2 vải + 1 thảo dược".</summary>
-        public static string Inputs(ForestRecipe recipe, int times = 1) => string.Join(" + ", recipe.inputs.Select(i => i.count * times + " " + ForestInventory.Name(i.item_id).ToLowerInvariant()));
+        public static string Inputs(ForestRecipe recipe, int times = 1) => string.Join(" + ", recipe.inputs.Select(i => i.count * times + " " + ForestInventory.InlineName(i.item_id)));
 
         /// <summary>[B] at the bench: a field dressing, the first thing anyone needs.</summary>
         public void TryCraft() => TryCraft("craft_medkit_small");
@@ -271,7 +271,7 @@ namespace ShadowVale.Map01
             batchMade[done.output_item_id] = (batchMade.TryGetValue(done.output_item_id, out int made) ? made : 0) + done.output_count;
             if (queue.Count > 0) { queue[0].until = Time.time + queue[0].Seconds; return; }
             // The whole batch is done: one line for it, not one per item.
-            string list = string.Join(", ", batchMade.Select(p => p.Value + " " + ForestInventory.Name(p.Key).ToLowerInvariant()));
+            string list = string.Join(", ", batchMade.Select(p => p.Value + " " + ForestInventory.InlineName(p.Key)));
             bool dressing = batchMade.ContainsKey("medkit_small");
             batchMade.Clear();
             mission.Say("Chế tạo xong: " + list + "." + (dressing ? " Nhấn H để dùng băng cứu thương." : ""));

@@ -137,7 +137,7 @@ namespace ShadowVale.Map01
             int amount = done.recipe.output_count * done.times, before = Count(done.recipe.output_item_id);
             Receive(done.recipe.output_item_id, amount);
             bool overflow = Count(done.recipe.output_item_id) - before < amount;
-            mission.Say("Chế tạo xong: " + amount + " " + ForestInventory.Name(done.recipe.output_item_id).ToLowerInvariant()
+            mission.Say("Chế tạo xong: " + amount + " " + ForestInventory.InlineName(done.recipe.output_item_id)
                 + "." + (overflow ? " Túi đầy: phần còn lại ở dưới chân." : ""), 4);
         }
 

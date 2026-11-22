@@ -143,7 +143,7 @@ namespace ShadowVale.Map01
             SetConditionOf(gun, after);
             bool full = after >= max - .001f;
             if (full) Skills?.RecordFullRepair(before, max, max, true, System.Guid.NewGuid().ToString("N"));
-            mission?.Say($"Đã sửa {ForestInventory.Name(id).ToLowerInvariant()}: {before / max * 100:0}% → {after / max * 100:0}%." +
+            mission?.Say($"Đã sửa {ForestInventory.InlineName(id)}: {before / max * 100:0}% → {after / max * 100:0}%." +
                 (full ? " Đầy độ bền — kỹ năng Kỹ thuật tăng." : $" Sửa dã chiến tối đa {FieldCap * 100:0}%."), 4);
             if (mission != null) Map01NamActions.For(mission.MapOne)?.Play(Map01NamActions.OpenChest, Loot.repair.fieldSeconds, true);
             return true;
@@ -187,7 +187,7 @@ namespace ShadowVale.Map01
             if (oil > 0) Spend("gun_oil", oil);
             SetConditionOf(gun, max);
             Skills?.RecordFullRepair(before, max, max, true, System.Guid.NewGuid().ToString("N"));
-            mission?.Say($"Sửa xong {ForestInventory.Name(id).ToLowerInvariant()}: {before / max * 100:0}% → 100% ({parts} linh kiện{(oil > 0 ? ", 1 dầu súng" : "")}).", 4);
+            mission?.Say($"Sửa xong {ForestInventory.InlineName(id)}: {before / max * 100:0}% → 100% ({parts} linh kiện{(oil > 0 ? ", 1 dầu súng" : "")}).", 4);
             return true;
         }
 
@@ -227,8 +227,8 @@ namespace ShadowVale.Map01
             var yields = SalvageYield(gun);
             if (!RemoveGun(gun)) return false;
             foreach (var y in yields) Receive(y.item, y.count);
-            mission?.Say($"Đã rã {ForestInventory.Name(id).ToLowerInvariant()}: " +
-                string.Join(", ", yields.Select(y => y.count + " " + ForestInventory.Name(y.item).ToLowerInvariant())) + ".", 4);
+            mission?.Say($"Đã rã {ForestInventory.InlineName(id)}: " +
+                string.Join(", ", yields.Select(y => y.count + " " + ForestInventory.InlineName(y.item))) + ".", 4);
             if (mission != null) Map01NamActions.For(mission.MapOne)?.Play(Map01NamActions.OpenChest, Loot.repair.salvageSeconds, true);
             return true;
         }

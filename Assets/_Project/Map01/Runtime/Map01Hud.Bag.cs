@@ -117,7 +117,7 @@ namespace ShadowVale.Map01
             GUI.Label(new Rect(plate.xMax - 178, plate.y + 34, 160, 24), "Kéo súng vào ô để đổi", bagHint);
             HudFill(new Rect(plate.x + 22, plate.y + 72, plate.width - 44, 1), HudGold);
             SlotCardDraw(width, Slot.Primary, "1", "SÚNG CHÍNH", "AK · M16 · Mosin", ev, modal);
-            SlotCardDraw(width, Slot.Pistol, "2", "SÚNG NGẮN", "Nhận: súng lục · đạn 7,62×25", ev, modal);
+            SlotCardDraw(width, Slot.Pistol, "2", "SÚNG NGẮN", "Nhận: K-54 · đạn K-54", ev, modal);
             SlotCardDraw(width, Slot.Knife, "3", "DAO", null, ev, modal);
             DrawThrowCard(width, ev, modal);
             var bin = BinRect(width);
@@ -206,7 +206,7 @@ namespace ShadowVale.Map01
                 GUI.Label(new Rect(box.x, box.yMax - 20, box.width - 4, 18), inventory.Count(t).ToString(), bagCount);
                 if (!modal && !menuOpen && ev.type == EventType.MouseDown && ev.button == 0 && box.Contains(ev.mousePosition))
                 {
-                    if (inventory.Count(t) > 0) inventory.SelectThrowable(t); else mission.Say("Chưa có " + ForestInventory.Name(t).ToLowerInvariant() + ".", 2);
+                    if (inventory.Count(t) > 0) inventory.SelectThrowable(t); else mission.Say("Chưa có " + ForestInventory.InlineName(t) + ".", 2);
                     ev.Use();
                 }
             }
@@ -475,7 +475,7 @@ namespace ShadowVale.Map01
             if (ev.type == EventType.MouseDown && yes.Contains(ev.mousePosition))
             {
                 bool ok = askCell >= 0 ? inventory.Drop(askCell, askAmount) : inventory.DropSlot(askSlot.Value);
-                if (ok) mission.Say("Đã vứt " + (askCell >= 0 ? askAmount + " " : "") + ForestInventory.Name(id).ToLowerInvariant() + " xuống đất — [E] để nhặt lại.", 3);
+                if (ok) mission.Say("Đã vứt " + (askCell >= 0 ? askAmount + " " : "") + ForestInventory.InlineName(id) + " xuống đất — [E] để nhặt lại.", 3);
                 askDrop = false; bagPick = -1; slotPick = null; ev.Use();
             }
             else if (ev.type == EventType.MouseDown && no.Contains(ev.mousePosition)) { askDrop = false; ev.Use(); }

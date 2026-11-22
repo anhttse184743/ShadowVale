@@ -40,16 +40,23 @@ namespace ShadowVale.Map01
         }
         public static bool IsWeapon(string id) => id == "rifle_standard" || id == "rifle_m16" || id == "knife" || id == "pistol_k54" || id == "rifle_mosin";
         public static bool QuickUsable(string id) => id == "medkit_small" || id == "stone" || id == "smoke_bomb" || id == "grenade_f1" || IsWeapon(id);
+        /// <summary>The name inside a sentence: "đạn AK", "súng lục K-54", but "AK47" and "M16" keep their capitals.</summary>
+        public static string InlineName(string id)
+        {
+            string name = Name(id);
+            if (name.Length < 2 || !char.IsUpper(name[0]) || !char.IsLower(name[1])) return name;
+            return char.ToLowerInvariant(name[0]) + name.Substring(1);
+        }
         public static string Name(string id)
         {
             switch (id) {
                 case "rifle_standard": return "AK47";
                 case "rifle_m16": return "M16";
-                case "ammo_556": return "Đạn 5,56×45 mm";
+                case "ammo_556": return "Đạn M16";
                 case "knife": return "Dao";
                 case "m1_supply_key": return "Chìa khóa kho — Điểm 1";
                 case "m1_supply_cargo": return "Túi thuốc của Hùng";
-                case "ammo_rifle": return "Đạn súng trường";
+                case "ammo_rifle": return "Đạn AK";
                 case "ammo_recovered": return "Vật tư đạn thu hồi";
                 case "ak_loading_pack": return "Gói tiếp liệu AK";
                 case "ammo_smg": return "Đạn tiểu liên";
@@ -102,7 +109,7 @@ namespace ShadowVale.Map01
                 case "pistol_k54": return "K-54 (TT-33 bản Trung Quốc), đạn 7,62×25, băng 8 viên. Phím 2 để cầm; giữ chuột phải để ngắm, chuột trái bắn, R thay băng. Có độ bền như mọi khẩu súng.";
                 case "rifle_mosin": return "Mosin M91/30, ống ngắm PU 3,5×, tầm bắn 200 m, đạn 7,62×54R, 5 viên. Trúng đầu hoặc thân địch: một viên hạ gục. Đứng yên hoặc khom để bắn chính xác. Kéo vào ô 1 để thay AK; giữ chuột phải để ngắm PU, R nạp từng viên. Có độ bền; rã ra cả kính ngắm.";
                 case "ammo_rifle": return "Đạn 7,62×39 cho AK. Nhấn R để nạp. Dã chiến: 2 vật tư đạn thu hồi + 1 gói tiếp liệu AK → 10 viên (8 giây). Ở bàn: ráp gói trong 5 giây hoặc dùng 2 thuốc súng + 1 kim loại vụn.";
-                case "gunpowder": return "Hộp thiếc thuốc súng đen. Chế đạn ở bàn: đạn K-54 (1), đạn súng trường (2) và đạn Mosin (3) — mỗi hộp chỉ dùng được một lần, nên phải chọn khẩu nào cần đạn hơn.";
+                case "gunpowder": return "Hộp thiếc thuốc súng đen. Chế đạn ở bàn: đạn K-54 (1), đạn AK (2) và đạn Mosin (3) — mỗi hộp chỉ dùng được một lần, nên phải chọn khẩu nào cần đạn hơn.";
                 case "ammo_pistol": return "Đạn 7,62×25 cho K-54. Nhấn R để nạp. Chế ở bàn: 1 thuốc súng + 1 kim loại vụn ra 8 viên.";
                 case "ammo_sniper": return "Đạn 7,62×54R cho Mosin, nạp từng viên bằng phím R. Hiếm: chế ở bàn 3 thuốc súng + 1 kim loại vụn ra 5 viên.";
                 case "smoke_module": return "Ống tạo khói đã chuẩn bị sẵn. Cùng 1 vải làm 1 bom khói: Tab → Chế dã chiến (6 giây) hoặc tại bàn (4 giây).";
@@ -111,7 +118,7 @@ namespace ShadowVale.Map01
                 case "scope_lens": return "Thấu kính dự phòng cho ống ngắm. Rã Mosin sẽ có; hiếm trong hòm trại C3 và đồ của chỉ huy. Chưa dùng vào việc gì ở bản này.";
                 case "smoke_bomb": return "Đồ ném: mây khói bán kính 4 m trong 15 giây, lính không nhìn xuyên qua. Chế từ 1 ống tạo khói + 1 vải. Chọn trong túi, giữ chuột trái ngắm, thả để ném.";
                 case "grenade_f1": return $"Lựu đạn F1: nổ ngay khi chạm đất, chết trong {Map01StoneThrow.KillRadius:0} m, bị thương tới {Map01StoneThrow.WoundRadius:0} m, tiếng nổ vang 40 m — cả Nam cũng không tránh được. Chọn trong túi, giữ chuột trái ngắm, thả để ném.";
-                default: return id != null && id.StartsWith("ammo_") ? "Đạn cho " + Name(id).Substring(4).ToLowerInvariant() + ". Không dùng trực tiếp từ túi đồ." : "Vật phẩm trong túi đồ.";
+                default: return id != null && id.StartsWith("ammo_") ? "Đạn cho " + Name(id).Substring(4) + ". Không dùng trực tiếp từ túi đồ." : "Vật phẩm trong túi đồ.";
             }
         }
         /// <summary>Where a bench material is found, for the bench's "Lấy ở" line when it runs short.</summary>

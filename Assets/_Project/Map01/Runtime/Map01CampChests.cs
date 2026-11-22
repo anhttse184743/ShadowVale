@@ -212,7 +212,7 @@ namespace ShadowVale.Map01
 
         /// <summary>The chest's contents, as a list: "1 súng lục K-54, 16 đạn K-54".</summary>
         public string Listing(ForestPoint point) =>
-            string.Join(", ", point.items.Select(i => i.count + " " + ForestInventory.Name(i.item_id).ToLowerInvariant() + Map01Drops.ConditionTag(mission, i.item_id, i.condition)));
+            string.Join(", ", point.items.Select(i => i.count + " " + ForestInventory.InlineName(i.item_id) + Map01Drops.ConditionTag(mission, i.item_id, i.condition)));
 
         /// <summary>The run's seed was restored from a save: chests not yet emptied hold what this run rolls.</summary>
         public void Reroll()

@@ -220,7 +220,7 @@ namespace ShadowVale.Map01.Tests
             Assert.IsFalse(chests.LockShown(chest));
             Assert.AreEqual(chest.items.Length, chests.ContentsShown(chest), "Every item lies on the tray.");
             StringAssert.Contains("Trong hòm: ", mission.Dialogue);   // C1 no longer holds the K-54: Nam starts with it
-            StringAssert.Contains("đạn k-54", mission.Dialogue);
+            StringAssert.Contains("đạn K-54", mission.Dialogue);
             var inChest = Contents(chest);
             CollectionAssert.AreEqual(before, Holding(), "Opening shows; it does not take.");
             yield return WaitGameSeconds(.9f);

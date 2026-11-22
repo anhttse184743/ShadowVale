@@ -122,7 +122,7 @@ namespace ShadowVale.Map01.Tests
             yield return WaitGameSeconds(5.3f);
             Assert.AreEqual(rounds + 20, inventory.Count("ammo_rifle"));
             Assert.IsFalse(inventory.IsCrafting);
-            StringAssert.Contains("Chế tạo xong: 20 đạn súng trường", mission.Dialogue, "One line for the whole lot.");
+            StringAssert.Contains("Chế tạo xong: 20 đạn AK", mission.Dialogue, "One line for the whole lot.");
             Assert.IsTrue(hud.PickupFeed.Any(p => p.id == "ammo_rifle"), "The rounds show in the pickup feed.");
 
             // K-54 rounds: 1 gunpowder + 1 scrap make 8. Without gunpowder, nothing.

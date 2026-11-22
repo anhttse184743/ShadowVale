@@ -147,7 +147,7 @@ namespace ShadowVale.Map01
             if (why != null) { mission.Say(why, 3); return false; }
             Credit -= offer.price;
             inventory.Receive(offer.item, offer.count);
-            mission.Say($"Kho cấp: {offer.count} {ForestInventory.Name(offer.item).ToLowerInvariant()} (−{offer.price} điểm, còn {Credit}).", 3);
+            mission.Say($"Kho cấp: {offer.count} {ForestInventory.InlineName(offer.item)} (−{offer.price} điểm, còn {Credit}).", 3);
             Changed?.Invoke();
             return true;
         }
@@ -161,7 +161,7 @@ namespace ShadowVale.Map01
             int worth = inventory.TurnInValue(gun);
             if (!inventory.RemoveGun(gun)) return false;
             Credit += worth; HandedIn++;
-            mission.Say($"Đã nộp {ForestInventory.Name(id).ToLowerInvariant()}: +{worth} điểm hậu cần (còn {Credit}).", 3);
+            mission.Say($"Đã nộp {ForestInventory.InlineName(id)}: +{worth} điểm hậu cần (còn {Credit}).", 3);
             Changed?.Invoke();
             return true;
         }

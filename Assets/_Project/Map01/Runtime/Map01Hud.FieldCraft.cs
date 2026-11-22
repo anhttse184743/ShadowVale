@@ -54,7 +54,7 @@ namespace ShadowVale.Map01
             fieldQuantity = Mathf.Clamp(fieldQuantity, 1, max);
             GUI.Label(new Rect(panel.x + 25, 506, panel.width - 50, 34), FieldRecipeName(picked).ToUpperInvariant(), benchHead);
             GUI.Label(new Rect(panel.x + 25, 547, panel.width - 50, 72),
-                $"Nhận: {picked.output_count * fieldQuantity} {ForestInventory.Name(picked.output_item_id).ToLowerInvariant()}\n{(inventory.IsFieldCrafting ? "Đã giữ riêng" : "Cần")}: {Map01Inventory.Inputs(picked, fieldQuantity)}", benchText);
+                $"Nhận: {picked.output_count * fieldQuantity} {ForestInventory.InlineName(picked.output_item_id)}\n{(inventory.IsFieldCrafting ? "Đã giữ riêng" : "Cần")}: {Map01Inventory.Inputs(picked, fieldQuantity)}", benchText);
             string detail = picked.id == Map01Inventory.RecoverM16Recipe
                 ? inventory.IsFieldCrafting
                     ? $"Đã giữ riêng {10 * fieldQuantity} đạn M16 dự trữ cho lượt này. Hủy để nhận lại; đạn trong băng được giữ nguyên."

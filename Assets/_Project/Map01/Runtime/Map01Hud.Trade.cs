@@ -58,7 +58,7 @@ namespace ShadowVale.Map01
                 {
                     var offer = trader.Stock[row];
                     id = offer.Gun; points = offer.Price;
-                    detail = $"100% độ bền · Kèm {offer.Rounds} viên {ForestInventory.Name(offer.Ammo).ToLowerInvariant()}";
+                    detail = $"100% độ bền · Kèm {offer.Rounds} viên {ForestInventory.InlineName(offer.Ammo)}";
                     enabled = trader.Credit >= points;
                     action = enabled ? $"ĐỔI · {points} ĐIỂM" : $"CẦN {points} ĐIỂM";
                 }
