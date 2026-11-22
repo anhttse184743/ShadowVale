@@ -10,13 +10,13 @@ namespace ShadowVale.Map01 {
   }
   static Transform SceneMiddle(Animator body,bool left){var hand=body.GetBoneTransform(left?HumanBodyBones.LeftHand:HumanBodyBones.RightHand);return SceneFinger(body,left?HumanBodyBones.LeftMiddleProximal:HumanBodyBones.RightMiddleProximal)??(hand.childCount>0?hand.GetChild(0):null);}
   static Vector3 ScenePalm(Animator body,bool left){var hand=body.GetBoneTransform(left?HumanBodyBones.LeftHand:HumanBodyBones.RightHand);var finger=SceneMiddle(body,left);return hand.position+(finger.position-hand.position).normalized*.05f;}
-  void SceneFingers(Animator body,bool left,bool pinch=false,float weight=1){
-   string key=body.GetInstanceID()+":"+left+":"+pinch;
+  void SceneFingers(Animator body,bool left,bool pinch=false,float weight=1,bool closed=false){
+   string key=body.GetInstanceID()+":"+left+":"+pinch+":"+closed;
    if(!sceneFingerPoses.TryGetValue(key,out var fingers)){
     var nodes=body.GetComponentsInChildren<Transform>(true);var pos=new Vector3[nodes.Length];var rot=new Quaternion[nodes.Length];for(int i=0;i<nodes.Length;i++){pos[i]=nodes[i].localPosition;rot[i]=nodes[i].localRotation;}
     var handler=new HumanPoseHandler(body==dayNamAnimator&&dayArt.namFingerReference!=null?dayArt.namFingerReference:body.avatar,body.transform);var pose=new HumanPose();fingers=new Dictionary<Transform,Quaternion>();
     try{handler.GetHumanPose(ref pose);string side=left?"Left":"Right";
-     for(int i=0;i<HumanTrait.MuscleName.Length;i++){var n=HumanTrait.MuscleName[i];if(!n.StartsWith(side))continue;bool digit=n.Contains("Thumb")||n.Contains("Index")||n.Contains("Middle")||n.Contains("Ring")||n.Contains("Little");if(!digit)continue;pose.muscles[i]=n.Contains("Spread")?0:pinch?(n.Contains("Thumb")?-.12f:n.Contains("Index")?-.22f:n.Contains("Middle")?-.32f:-.45f):.18f;}
+     for(int i=0;i<HumanTrait.MuscleName.Length;i++){var n=HumanTrait.MuscleName[i];if(!n.StartsWith(side))continue;bool digit=n.Contains("Thumb")||n.Contains("Index")||n.Contains("Middle")||n.Contains("Ring")||n.Contains("Little");if(!digit)continue;pose.muscles[i]=n.Contains("Spread")?0:closed?(n.Contains("Thumb")?-.2f:-.65f):pinch?(n.Contains("Thumb")?-.12f:n.Contains("Index")?-.22f:n.Contains("Middle")?-.32f:-.45f):.18f;}
      handler.SetHumanPose(ref pose);int first=(int)(left?HumanBodyBones.LeftThumbProximal:HumanBodyBones.RightThumbProximal),last=(int)(left?HumanBodyBones.LeftLittleDistal:HumanBodyBones.RightLittleDistal);
      for(int i=first;i<=last;i++){var bone=SceneFinger(body,(HumanBodyBones)i);if(bone!=null)fingers[bone]=bone.localRotation;}
     }finally{handler.Dispose();for(int i=0;i<nodes.Length;i++)nodes[i].SetLocalPositionAndRotation(pos[i],rot[i]);}

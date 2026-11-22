@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 namespace ShadowVale.Map01
@@ -232,7 +232,7 @@ namespace ShadowVale.Map01
         void DayLateUpdate()
         {
             if(!ready||Mission.Paused||ForestMenu.Visible)return;
-            if(sceneTask!=null)return;DuckLateUpdate();
+            if(sceneTask!=null)return;DuckLateUpdate();TickDockObserver();
             bool carry=State.carry=="D1_04"||CarryingAntenna;bool hammer=dayActivity==DayActivity.Dock&&DockHammering;
             if(carry)
             {
