@@ -21,7 +21,7 @@ namespace ShadowVale.Content
         // Render's free tier sleeps: the first request can take tens of seconds
         public static readonly TimeSpan BundleTimeout = TimeSpan.FromSeconds(60);
 
-        public enum Status { Downloaded, UpToDate, Unavailable }
+        public enum Status { Downloaded, UpToDate, Unavailable, NotPublished, RefreshFailed }
 
         public sealed class Result
         {
@@ -47,19 +47,23 @@ namespace ShadowVale.Content
 
             var manifestResponse = await _client.GetAsync(Endpoints.ContentManifest(_client.ApiBaseUrl), ManifestTimeout, ct: ct).ConfigureAwait(false);
             if (manifestResponse.Outcome != BackendOutcome.Ok)
-                return Unavailable(manifestResponse.Status == 404 ? "nothing is published yet" : "manifest: " + manifestResponse.Error);
+                return new Result
+                {
+                    Status = manifestResponse.Status == 404 ? Status.NotPublished :
+                        manifestResponse.Status == 0 ? Status.Unavailable : Status.RefreshFailed,
+                    Error = "manifest: " + manifestResponse.Error
+                };
             var manifest = ContentManifest.Parse(manifestResponse.Text);
-            if (manifest == null) return Unavailable("manifest unreadable");
+            if (manifest == null) return RefreshFailed("manifest unreadable");
             if (manifest.Checksum == _cachedChecksum) return new Result { Status = Status.UpToDate, Manifest = manifest };
 
-            var bundleResponse = await _client.GetAsync(Endpoints.PublishedBundle(_client.ApiBaseUrl), BundleTimeout, _cachedChecksum, ct).ConfigureAwait(false);
-            if (bundleResponse.Outcome == BackendOutcome.NotModified) return new Result { Status = Status.UpToDate, Manifest = manifest };
-            if (bundleResponse.Outcome != BackendOutcome.Ok || bundleResponse.Body == null) return Unavailable("bundle: " + bundleResponse.Error);
+            var bundleResponse = await _client.GetAsync(Endpoints.PublishedBundle(_client.ApiBaseUrl), BundleTimeout, ct: ct).ConfigureAwait(false);
+            if (bundleResponse.Outcome != BackendOutcome.Ok || bundleResponse.Body == null) return RefreshFailed("bundle: " + bundleResponse.Error);
 
             var checksum = BundleCache.Sha256(bundleResponse.Body);
             // A publish between the two calls: the next fetch picks the new version up
             if (checksum != manifest.Checksum || (bundleResponse.ETag != null && bundleResponse.ETag.ToLowerInvariant() != checksum))
-                return Unavailable("bundle does not match the manifest checksum");
+                return RefreshFailed("bundle does not match the manifest checksum");
             return new Result { Status = Status.Downloaded, Manifest = manifest, Bytes = bundleResponse.Body };
         }
 
@@ -81,5 +85,6 @@ namespace ShadowVale.Content
         }
 
         private static Result Unavailable(string error) => new Result { Status = Status.Unavailable, Error = error };
+        private static Result RefreshFailed(string error) => new Result { Status = Status.RefreshFailed, Error = error };
     }
 }

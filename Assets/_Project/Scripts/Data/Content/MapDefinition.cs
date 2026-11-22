@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace ShadowVale.Data.Content
 {
@@ -13,6 +14,8 @@ namespace ShadowVale.Data.Content
         public string Id { get; set; }
         public string DisplayName { get; set; }
         public string SceneName { get; set; }
+        /// <summary>Versioned trade, loot and crafting rules from maps.layout.game_rules.</summary>
+        public JObject GameRules { get; set; }
         public List<SpawnGroup> SpawnGroups { get; set; } = new();
         public List<LootPlacement> LootPlacements { get; set; } = new();
         public List<NavGraphNode> NavGraphNodes { get; set; } = new();

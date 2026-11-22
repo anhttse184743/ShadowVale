@@ -7,6 +7,7 @@
     "ShadowVale.AI",
     "ShadowVale.Core",
     "ShadowVale.Content",
+    "ShadowVale.Bootstrap",
     "ShadowVale.Data",
     "ShadowVale.Gameplay",
     "ShadowVale.UI",
