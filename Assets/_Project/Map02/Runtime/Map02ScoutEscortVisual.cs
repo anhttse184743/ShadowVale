@@ -103,14 +103,26 @@ namespace ShadowVale.Map01
         public void Release()
         {
             if(!bound)return;
+            bound=false; // The director and OnDisable can both release this escort.
             if(combat!=null)combat.Attacked-=Shot;
             if(cameraRig!=null&&cameraRig.IgnoredCompanion==companionRoot)cameraRig.IgnoredCompanion=previousIgnoredCompanion;
-            nam.transform.localPosition=namBase;tam.transform.localPosition=tamBase;
-            for(int i=0;i<namBones.Length;i++)namOriginalPose[i].Apply(namBones[i]);
-            for(int i=0;i<tamBones.Length;i++)tamOriginalPose[i].Apply(tamBones[i]);
-            if(nam.isActiveAndEnabled)nam.Update(0);if(tam.isActiveAndEnabled)tam.Update(0);
-            bound=false;
-            if(groundMesh!=null){if(Application.isPlaying)Destroy(groundMesh);else DestroyImmediate(groundMesh);groundMesh=null;}
+            try
+            {
+                RestoreActor(nam,namBase,namBones,namOriginalPose);
+                RestoreActor(tam,tamBase,tamBones,tamOriginalPose);
+            }
+            finally
+            {
+                if(groundMesh!=null){if(Application.isPlaying)Destroy(groundMesh);else DestroyImmediate(groundMesh);groundMesh=null;}
+            }
+        }
+        static void RestoreActor(Animator actor,Vector3 root,Transform[] bones,Map01PistolAnimationData.Pose[] poses)
+        {
+            // Scene unload can destroy one actor or part of its rig before the director.
+            if(actor==null)return;
+            actor.transform.localPosition=root;
+            for(int i=0;i<bones.Length;i++)if(bones[i]!=null)poses[i].Apply(bones[i]);
+            if(actor.isActiveAndEnabled)actor.Update(0);
         }
         void Shot(WeaponKind kind,Vector3 point){if(kind==WeaponKind.Pistol)lastShot=Time.time;}
         public static float ReloadLowering(float progress)

@@ -2657,6 +2657,7 @@ GameObject:
   - component: {fileID: 4453975508673679039}
   - component: {fileID: 7733266172810824063}
   - component: {fileID: 6270576372714494235}
+  - component: {fileID: 3657525202697145501}
   m_Layer: 6
   m_Name: Model
   m_TagString: Untagged
@@ -2764,7 +2765,7 @@ MonoBehaviour:
   takes:
   - state: ReloadEmpty_Rifle
     leaves: 0.18181819
-    putAway: 0.2929293
+    putAway: 0.3333333
     fresh: 0.34343433
     seated: 0.5151515
     inHandPosition: {x: 0.035219442, y: 0.088211454, z: -0.0630051}
@@ -2772,7 +2773,7 @@ MonoBehaviour:
     seatEase: 0.02020202
   - state: Reload_Rifle
     leaves: 0.23376623
-    putAway: 0.37662336
+    putAway: 0.42857143
     fresh: 0.44155845
     seated: 0.66233766
     inHandPosition: {x: 0.03521946, y: 0.08821219, z: -0.063005805}
@@ -2780,12 +2781,24 @@ MonoBehaviour:
     seatEase: 0.025974026
   - state: ReloadCrouch_Rifle
     leaves: 0.15048544
-    putAway: 0.29126215
+    putAway: 0.31067958
     fresh: 0.31553397
     seated: 0.38349515
     inHandPosition: {x: 0.026819915, y: 0.089375585, z: -0.059523176}
     inHandRotation: {x: -0.2350301, y: -0.34220192, z: -0.51007324, w: 0.7533162}
     seatEase: 0.009708738
+--- !u!114 &3657525202697145501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6141088195619451110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1b7344fef1945149a6633ebe2ebe7f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.T005fApprovedPose
 --- !u!1 &6520780965061521309
 GameObject:
   m_ObjectHideFlags: 0

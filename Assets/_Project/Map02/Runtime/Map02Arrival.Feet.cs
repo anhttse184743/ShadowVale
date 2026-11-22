@@ -33,8 +33,10 @@ namespace ShadowVale.Map01
         }
         void PrepareBindFeet(int index) {
             var actor=actors[index];
+            var replacement=actor.transform.Find("Nam_AoBaBa_Visual");
             Matrix4x4 Bind(Transform bone) {
                 foreach(var skin in actor.GetComponentsInChildren<SkinnedMeshRenderer>()) {
+                    if(replacement!=null&&!skin.transform.IsChildOf(replacement))continue;
                     int j=Array.IndexOf(skin.bones,bone);
                     if(j>=0 && j<skin.sharedMesh.bindposes.Length)
                         return skin.transform.localToWorldMatrix*skin.sharedMesh.bindposes[j].inverse;
@@ -53,10 +55,12 @@ namespace ShadowVale.Map01
         void PrepareShoeContacts(int index) {
             var feet=new[]{actors[index].GetBoneTransform(HumanBodyBones.LeftFoot),actors[index].GetBoneTransform(HumanBodyBones.RightFoot)};
             var toes=new[]{actors[index].GetBoneTransform(HumanBodyBones.LeftToes),actors[index].GetBoneTransform(HumanBodyBones.RightToes)};
+            var replacement=actors[index].transform.Find("Nam_AoBaBa_Visual");
             shoeContacts[index]=new List<(Transform,Vector3)>();
             var soles=new[]{float.PositiveInfinity,float.PositiveInfinity};
             foreach(var skin in actors[index].GetComponentsInChildren<SkinnedMeshRenderer>()) {
-                var mesh=new Mesh();skin.BakeMesh(mesh);
+                if(replacement!=null&&!skin.transform.IsChildOf(replacement))continue;
+                var mesh=new Mesh();if(replacement!=null)skin.BakeMesh(mesh,true);else skin.BakeMesh(mesh);
                 foreach(var vertex in mesh.vertices){
                     var point=skin.transform.TransformPoint(vertex);
                     float left=Vector3.ProjectOnPlane(point-feet[0].position,Vector3.up).sqrMagnitude;
@@ -67,7 +71,7 @@ namespace ShadowVale.Map01
                     var bone=toes[side]!=null && (point-toes[side].position).sqrMagnitude<(point-feet[side].position).sqrMagnitude?toes[side]:feet[side];
                     shoeContacts[index].Add((bone,bone.InverseTransformPoint(point)));
                 }
-                Destroy(mesh);
+                if(Application.isPlaying)Destroy(mesh);else DestroyImmediate(mesh);
             }
             for(int side=0;side<2;side++)ankleOffsets[index,side]=float.IsInfinity(soles[side])?.10f:Mathf.Clamp(feet[side].position.y-soles[side],.03f,.24f);
             if(shoeContacts[index].Count==0)for(int side=0;side<2;side++)shoeContacts[index].Add((feet[side],feet[side].InverseTransformPoint(feet[side].position-Vector3.up*ankleOffsets[index,side])));

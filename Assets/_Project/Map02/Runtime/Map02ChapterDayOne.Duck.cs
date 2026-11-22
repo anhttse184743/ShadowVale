@@ -16,8 +16,8 @@ namespace ShadowVale.Map01
         {
             PlayDaySound("duck",.9f,Mission.Player.position+Mission.Player.right*2.6f+Vector3.up*.4f);duckHung=escort;duckClock=0;duckSpoken=0;   // out of the bush on their right
             var nam=Mission.Player;duckNamForward=Vector3.ProjectOnPlane(nam.forward,Vector3.up).normalized;
-            // Where the take has him: a step behind Nam and 0.40 m to his right, facing the way Nam faces.
-            duckSpot=nam.position-duckNamForward*.62f+Vector3.Cross(Vector3.up,duckNamForward)*.40f;
+            // Keep the lateral clearance and let Hùng step within the updated rig's arm reach.
+            duckSpot=nam.position-duckNamForward*.45f+Vector3.Cross(Vector3.up,duckNamForward)*.40f;
             duckFrom=duckHung.transform.position;duckFromRotation=duckHung.transform.rotation;
             duckGrab=DayClip("HungStartleGrab")!=null&&Vector3.Distance(Vector3.ProjectOnPlane(duckFrom-duckSpot,Vector3.up),Vector3.zero)<1.6f;   // farther back he only jolts
             duckHung.ConversationHeld=true;player.RestoreMotion(false);

@@ -1,6 +1,7 @@
 using System.Linq;
 using ShadowVale.Gameplay.Combat;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 namespace ShadowVale.Map01
 {
@@ -29,6 +30,7 @@ namespace ShadowVale.Map01
             surveyCamera.nearClipPlane=.1f;surveyCamera.farClipPlane=260;
             surveyCamera.clearFlags=CameraClearFlags.SolidColor;surveyCamera.backgroundColor=new Color(.15f,.23f,.17f);
             surveyCamera.useOcclusionCulling=false;
+            surveyCamera.GetUniversalAdditionalCameraData().renderShadows = false;
             var rt=RenderTexture.GetTemporary(768,768,24);
             var previous=RenderTexture.active;
             var sun=FindObjectsByType<Light>(FindObjectsSortMode.None).FirstOrDefault(l=>l.type==LightType.Directional);float sunBefore=sun!=null?sun.intensity:0;var ambient=RenderSettings.ambientLight;

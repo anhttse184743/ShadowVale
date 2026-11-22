@@ -1,0 +1,40 @@
+{
+    "folder": "Docs/Reviews/T031_VaoGame/truoc/20261120_215017_506",
+    "entries": [
+        {
+            "path": "Assets/_Project/Art/Characters/Animations/Controllers/AC_Player.controller",
+            "copy": "Docs/Reviews/T031_VaoGame/truoc/20261120_215017_506/00.bak",
+            "existed": true
+        },
+        {
+            "path": "Assets/_Project/Art/Characters/Animations/Controllers/AC_Player.controller.meta",
+            "copy": "Docs/Reviews/T031_VaoGame/truoc/20261120_215017_506/01.bak",
+            "existed": true
+        },
+        {
+            "path": "Assets/_Project/Art/Characters/Animations/T031_Approved.meta",
+            "copy": "Docs/Reviews/T031_VaoGame/truoc/20261120_215017_506/02.bak",
+            "existed": false
+        },
+        {
+            "path": "Assets/_Project/Art/Characters/Animations/T031_Approved/T031_Phanh_NhunGoi.fbx",
+            "copy": "Docs/Reviews/T031_VaoGame/truoc/20261120_215017_506/03.bak",
+            "existed": false
+        },
+        {
+            "path": "Assets/_Project/Art/Characters/Animations/T031_Approved/T031_Phanh_NhunGoi.fbx.meta",
+            "copy": "Docs/Reviews/T031_VaoGame/truoc/20261120_215017_506/04.bak",
+            "existed": false
+        },
+        {
+            "path": "Assets/_Project/Art/Characters/Animations/T031_Approved/Nam_Rifle_Phanh_T031_Approved.anim",
+            "copy": "Docs/Reviews/T031_VaoGame/truoc/20261120_215017_506/05.bak",
+            "existed": false
+        },
+        {
+            "path": "Assets/_Project/Art/Characters/Animations/T031_Approved/Nam_Rifle_Phanh_T031_Approved.anim.meta",
+            "copy": "Docs/Reviews/T031_VaoGame/truoc/20261120_215017_506/06.bak",
+            "existed": false
+        }
+    ]
+}

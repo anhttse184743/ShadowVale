@@ -109,6 +109,11 @@ namespace ShadowVale.Gameplay.Combat
             // rifle: the stance layer only comes up to aim, fire, reload or take a hit.
             bool carried = _rifleBody && _equippedKind == WeaponKind.Rifle && !_aiming && !_firingHeld && !attacking
                 && (_magazine == null || !_magazine.IsReloading);
+            // T007 approved: crouch-aim clips already own the arms.
+            // Prone also sets IsSneaking; keep its separate pose and preserve combat actions.
+            carried |= _controller != null && _controller.IsSneaking && !_controller.IsProne && _aiming
+                && _equippedKind == WeaponKind.Rifle && !_firingHeld && !attacking
+                && (_magazine == null || !_magazine.IsReloading);
             // The cheap tests first: this runs every frame, the animator is only asked with the knife out.
             if(_equippedKind==WeaponKind.Knife&&!attacking&&HasKnifeCarry) {
                 var state=animator.GetCurrentAnimatorStateInfo(0);

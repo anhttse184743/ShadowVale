@@ -30,13 +30,13 @@ namespace ShadowVale.Map01.Tests
 
             Assert.IsTrue(bag.Split(FindCell(bag,"cloth")));Assert.IsTrue(bag.Move(FindCell(bag,"cloth"),23));var layout=bag.CaptureLayout();
             bag.Wear(Map01Inventory.Slot.Primary,bag.MaxCondition(bag.SlotItem(Map01Inventory.Slot.Primary))*.7f);
-            float worn=bag.Condition(Map01Inventory.Slot.Primary);Assert.IsTrue(bag.FieldRepair(Map01Inventory.Gun.InSlot(Map01Inventory.Slot.Primary)),bag.FieldRepairRefusal(Map01Inventory.Gun.InSlot(Map01Inventory.Slot.Primary)));
-            Assert.AreEqual(1,bag.Count("repair_kit"));Assert.Greater(bag.Condition(Map01Inventory.Slot.Primary),worn);
-            Assert.IsTrue(bag.Draw(Map01Inventory.Slot.Pistol));combat.RestoreMagazine(3);
+            int repairKits=bag.Count("repair_kit");float worn=bag.Condition(Map01Inventory.Slot.Primary);Assert.IsTrue(bag.FieldRepair(Map01Inventory.Gun.InSlot(Map01Inventory.Slot.Primary)),bag.FieldRepairRefusal(Map01Inventory.Gun.InSlot(Map01Inventory.Slot.Primary)));
+            Assert.AreEqual(repairKits-1,bag.Count("repair_kit"),"Field repair consumes exactly one kit.");Assert.Greater(bag.Condition(Map01Inventory.Slot.Primary),worn);
+            Assert.IsTrue(bag.Draw(Map01Inventory.Slot.Pistol));combat.RestoreMagazine(3);int pistolReserve=bag.Count("ammo_pistol");
             var snapshot=Map02Mission.Parse(JsonUtility.ToJson(m.Capture()));snapshot.stamina=7.5f;
             var far=m.Chapter.Sites["dock"].position;m.Exploration.Reveal(far,14);snapshot.exploration=m.Exploration.Capture();
             float condition=bag.Condition(Map01Inventory.Slot.Primary);m.Restore(snapshot);
-            Assert.AreEqual(WeaponKind.Pistol,combat.EquippedKind);Assert.AreEqual(3,combat.RoundsInMagazine);Assert.AreEqual(12,bag.Count("ammo_pistol"));
+            Assert.AreEqual(WeaponKind.Pistol,combat.EquippedKind);Assert.AreEqual(3,combat.RoundsInMagazine);Assert.AreEqual(pistolReserve,bag.Count("ammo_pistol"));
             Assert.AreEqual(7.5f,m.Stamina);Assert.AreEqual(condition,bag.Condition(Map01Inventory.Slot.Primary));Assert.AreEqual(layout.ids[23],bag.Cell(23)?.id);
             Assert.IsTrue(m.IsExplored(far));Assert.IsFalse(m.IsExplored(new Vector3(105,0,105)));
             int before=bag.Count("cloth");Assert.IsTrue(bag.Drop(FindCell(bag,"cloth"),1));Assert.AreEqual(before-1,bag.Count("cloth"));
@@ -51,10 +51,10 @@ namespace ShadowVale.Map01.Tests
             var craft=Map02Mission.Parse(JsonUtility.ToJson(m.Capture()));m.Restore(craft);Assert.IsTrue(bag.IsCrafting);Assert.AreEqual(craft.crafting,bag.CraftingId);
             Directory.CreateDirectory("Logs/Map02Chapter/SharedHud");
             Place(m,m.Chapter.Sites["command"].position+Vector3.back*4);m.SetCharacterPanel(0);bag.Draw(Map01Inventory.Slot.Primary);
-            bag.Receive("stone",2);bag.SelectThrowable("stone");var throwing=m.GetComponent<Map01StoneThrow>();
+            bag.Receive("stone",2);int stonesBefore=bag.Stones;bag.SelectThrowable("stone");var throwing=m.GetComponent<Map01StoneThrow>();
             var guardHost=new GameObject("Shared HUD hearing test");guardHost.transform.position=m.Chapter.Sites["command"].position;
             var guard=guardHost.AddComponent<Map02ChapterEnemy>();guard.Initialize(m.Chapter,"hud_hearing","hud_test",100,false);guard.enabled=false;m.Chapter.Enemies.Add(guard);
-            Assert.IsTrue(throwing.ThrowAt(guardHost.transform.position));Assert.AreEqual(1,bag.Stones);Assert.Greater(throwing.WouldHear,0);
+            Assert.IsTrue(throwing.ThrowAt(guardHost.transform.position));Assert.AreEqual(stonesBefore-1,bag.Stones);Assert.Greater(throwing.WouldHear,0);
             m.Chapter.Enemies.Remove(guard);Object.Destroy(guardHost);bag.Draw(Map01Inventory.Slot.Primary);
             Assert.NotNull(m.CharacterLowHealth);
             m.Player.GetComponent<Health>().RestoreHealth(10);yield return WaitGameSeconds(.8f);

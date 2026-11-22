@@ -159,7 +159,12 @@ namespace ShadowVale.Map01.Tests
             Assert.AreEqual("01_MainMenu", UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
             ScreenCapture.CaptureScreenshot("Temp/tutorial-menu.png");
             for (int i = 0; i < 8; i++) yield return null;
-            action.Invoke(menu, new object[] { 0 }); yield return WaitForTutorial();
+            action.Invoke(menu, new object[] { 0 });
+            var intro = menu.GetComponent<NewGameIntro>();
+            Assert.IsTrue(intro != null && intro.Active, "New game starts the introduction.");
+            // Video decoding and natural completion are verified in NewGameIntroTests.
+            intro.Skip();
+            yield return WaitForTutorial();
             Assert.IsNotNull(Object.FindFirstObjectByType<TutorialDirector>());
             Assert.IsNull(Object.FindFirstObjectByType<Map01SaveSystem>());
             yield return new ExitPlayMode();

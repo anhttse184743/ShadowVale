@@ -66,7 +66,7 @@ namespace ShadowVale.Map01
             if(visual!=null){var model=Instantiate(visual,transform);model.name="Art — replaceable enemy";model.transform.localPosition=Vector3.zero;actor=model.GetComponentInChildren<Animator>();this.model=model.transform;}
             if(actor!=null)
             {
-                actor.runtimeAnimatorController=Map01ActorAssets.Load().enemyController;
+                actor.runtimeAnimatorController=visual!=null&&visual.name=="EnemyCommanderVisual"?Map01EnemyCommanderRig.Controller(Map01ActorAssets.Load().enemyController):Map01ActorAssets.Load().enemyController; // T032: the commander holds his rifle like Nam
                 actor.enabled=true;actor.applyRootMotion=false;actor.cullingMode=AnimatorCullingMode.AlwaysAnimate;
                 actor.Rebind();actor.Update(0);
                 Map01EnemyGrip.Bind(this);

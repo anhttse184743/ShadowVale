@@ -14,6 +14,7 @@ namespace ShadowVale.Bootstrap
     public sealed class GameBootstrap : MonoBehaviour
     {
         public const string MenuScene = "01_MainMenu";
+        private const float MenuCheckIntervalSeconds = 60f;
         [SerializeField] private SolverProfileConfig solverProfile;
 
         public static GameBootstrap Instance { get; private set; }
@@ -25,7 +26,8 @@ namespace ShadowVale.Bootstrap
         private BundleCache _cache;
         private BackendClient _client;
         private Task<BundleFetcher.Result> _fetch;
-        private bool _checkedThisLaunch;
+        private float _nextMenuCheck;
+        private bool _onlineEnabled;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void CreateBeforeFirstScene()
@@ -42,6 +44,8 @@ namespace ShadowVale.Bootstrap
             Content = new ContentService();
             _cache = new BundleCache();
             _client = BackendClient.FromConfig();
+            _onlineEnabled = _client.HasKey &&
+                (!Application.isBatchMode || Environment.GetEnvironmentVariable("SVL_API_BASE_URL") != null);
             if (!Content.Load(new IBundleSource[] { _cache, new FallbackBundleProvider() }, out var log))
                 Debug.LogError($"[Bootstrap] no offline bundle could be loaded: {log}");
             ServiceLocator.Register(Content);
@@ -54,16 +58,15 @@ namespace ShadowVale.Bootstrap
         {
             if (mode != LoadSceneMode.Single) return;
             Content.ApplyStaged();
-            if (scene.name == MenuScene && !_checkedThisLaunch) CheckMenuContent();
+            if (scene.name == MenuScene) CheckMenuContent();
         }
 
         public void CheckMenuContent()
         {
             if (_fetch != null || SceneManager.GetActiveScene().name != MenuScene) return;
-            _checkedThisLaunch = true;
+            _nextMenuCheck = Time.realtimeSinceStartup + MenuCheckIntervalSeconds;
             MenuCanRetry = false;
-            if (!_client.HasKey || Application.internetReachability == NetworkReachability.NotReachable ||
-                (Application.isBatchMode && Environment.GetEnvironmentVariable("SVL_API_BASE_URL") == null))
+            if (!_onlineEnabled || Application.internetReachability == NetworkReachability.NotReachable)
             {
                 MenuContentMessage = "Chế độ ngoại tuyến";
                 return;
@@ -77,9 +80,18 @@ namespace ShadowVale.Bootstrap
 
         private void Update()
         {
-            if (_fetch == null || !_fetch.IsCompleted) return;
+            if (_fetch == null)
+            {
+                if (_onlineEnabled && !MenuCanRetry && Time.realtimeSinceStartup >= _nextMenuCheck &&
+                    SceneManager.GetActiveScene().name == MenuScene &&
+                    Application.internetReachability != NetworkReachability.NotReachable)
+                    CheckMenuContent();
+                return;
+            }
+            if (!_fetch.IsCompleted) return;
             var request = _fetch;
             _fetch = null;
+            _nextMenuCheck = Time.realtimeSinceStartup + MenuCheckIntervalSeconds;
             if (request.IsFaulted || request.IsCanceled)
             {
                 RefreshFailed(request.Exception?.GetBaseException().Message);

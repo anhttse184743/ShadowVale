@@ -52,9 +52,13 @@ namespace ShadowVale.Map01
         public Map01SkinContact(Animator actor,Transform skinRoot)
         {
             var saved=Resources.Load<Map01SkinContactData>("Rescue/SkinContactData");
+            // The approved replacement appearance keeps the old skin renderers disabled for rollback.
+            // They must not contribute their old boots/body to the new character's floor contact.
+            var replacementVisual=actor.transform.Find("Nam_AoBaBa_Visual");
             foreach(var renderer in (skinRoot!=null?skinRoot:actor.transform).GetComponentsInChildren<SkinnedMeshRenderer>())
             {
                 if(skinRoot!=null&&(!renderer.enabled||!renderer.gameObject.activeInHierarchy))continue;
+                if(skinRoot==null&&replacementVisual!=null&&!renderer.transform.IsChildOf(replacementVisual))continue;
                 var mesh=renderer.sharedMesh;if(mesh==null)continue;
                 Map01SkinContactData.Vertex[] cached=null;
                 if(saved!=null)foreach(var profile in saved.skins)if(profile.mesh==mesh){cached=profile.vertices;break;}
