@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -45,6 +46,8 @@ namespace ShadowVale.Map01.Tests
             var arrival=Object.FindFirstObjectByType<Map02Arrival>();Assert.NotNull(arrival);
             while(arrival.CurrentPhase==Map02Arrival.Phase.Loading&&Time.realtimeSinceStartup<until)yield return null;
             Directory.CreateDirectory(Folder);var log=new List<string>();
+            bool hasWornPack=arrival.Passengers[0].GetComponentsInChildren<SkinnedMeshRenderer>()
+                .Any(r=>r.name=="Nam_BaloRanRi" && r.enabled && !r.forceRenderingOff);
             while(!arrival.MisstepPlayed&&arrival.IsPlaying&&Time.realtimeSinceStartup<until)yield return null;
             Assert.IsTrue(arrival.MisstepPlayed,"C1 plays on the natural landing.");
             Assert.IsTrue(arrival.UsesApprovedMisstep,"The v4 content must be used, not the optional old Humanoid fallback.");
@@ -79,7 +82,12 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsTrue(frame.framed,"Both Nam and Hùng stay inside the landing camera as they get up and walk on.");
                 log.Add($"{name} t={c:F2} bank={bank:F3} hungHips={P(frame.hungHips)} hungRKnee={P(frame.hungKnee)} hungLHand={P(frame.hungHand)} namHips={P(frame.namHips)} namRHand={P(frame.namHand)} namLHand={P(frame.namLeftHand)} pack={(frame.hasPack?P(frame.pack):"worn")} worn={frame.worn} packBounds={P(arrival.MisstepPackBounds.center)}/{P(arrival.MisstepPackBounds.size)} hungShoulder={P(frame.hungShoulder)} armReach={frame.armReach:F3} floorTarget={P(frame.floorTarget)} floorReach={Vector3.Distance(frame.hungShoulder,frame.floorTarget):F3} rifle={frame.rifleVisible}");
                 File.WriteAllLines(Folder+(skipWhileDown?"/c1-skip.txt":"/c1-misstep.txt"),log);
-                if(name=="c1-trip"||name=="c1-on")
+                if(!hasWornPack)
+                {
+                    Assert.IsFalse(frame.worn,"Nam's current outfit must stay without the old pack.");
+                    Assert.IsFalse(frame.hasPack,"The cinematic must not recreate a hidden gameplay prop.");
+                }
+                if(hasWornPack&&(name=="c1-trip"||name=="c1-on"))
                 {
                     Assert.IsTrue(frame.worn,"The approved cast visibly wears the pack before removal and after pickup.");
                     var current=arrival.MisstepActor(0);var chest=current.GetBoneTransform(HumanBodyBones.UpperChest)??current.GetBoneTransform(HumanBodyBones.Chest);
@@ -93,16 +101,19 @@ namespace ShadowVale.Map01.Tests
                 {
                     Assert.Less(Mathf.Abs(frame.hungKnee.y-(bank+.035f)),.02f,"His supporting knee joint stays 3.5 cm above the boards for the visible knee volume.");
                     Assert.Less(Mathf.Abs(frame.hungHand.y-bank),.14f,"His left hand is on the boards.");
-                    Assert.IsTrue(frame.hasPack,"Nam has the pack off his shoulder.");Assert.IsFalse(frame.worn);
+                    if(hasWornPack){Assert.IsTrue(frame.hasPack,"Nam has the pack off his shoulder.");Assert.IsFalse(frame.worn);}
                     Assert.IsTrue(frame.rifleVisible,"One actual rifle remains slung while Nam helps Hùng.");
                     var carry=arrival.Passengers[0].GetComponentInChildren<Map01BoatCarry>();
                     Assert.AreSame(arrival.MisstepActor(0).GetBoneTransform(HumanBodyBones.Chest),carry.Gun.parent,"Gun is on the visible torso, never in Nam's hands.");
                 }
                 if(name=="c1-kneel")
                 {
-                    Assert.IsTrue(frame.hasPack,"The pack remains on the ground while Nam helps him.");
-                    Assert.Less(frame.pack.y-bank,.35f,"The pack is set down on the ground first.");
-                    Assert.Less(Mathf.Abs(arrival.MisstepPackBounds.min.y-bank),.015f,"The actual backpack mesh rests on the boards, not just its pivot.");
+                    if(hasWornPack)
+                    {
+                        Assert.IsTrue(frame.hasPack,"The pack remains on the ground while Nam helps him.");
+                        Assert.Less(frame.pack.y-bank,.35f,"The pack is set down on the ground first.");
+                        Assert.Less(Mathf.Abs(arrival.MisstepPackBounds.min.y-bank),.015f,"The actual backpack mesh rests on the boards, not just its pivot.");
+                    }
                     Assert.Less(frame.namHips.y-bank,.75f,"Nam is down on one knee beside him.");
                     Assert.Less(Vector3.Distance(frame.namHand,frame.helpArm),Vector3.Distance(frame.namHand,frame.hurtArm),"The approved supporting gesture addresses Hùng's left arm, away from his injured right arm. Exact authored hand placement is checked against Blender in Map02ApprovedC1Tests.");
                     if(skipWhileDown)
@@ -110,7 +121,7 @@ namespace ShadowVale.Map01.Tests
                         LogAssert.Expect(LogType.Log,"Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.");
                         arrival.Skip();yield return null;
                         Assert.IsNull(arrival.MisstepPack,"Skipping removes the temporary carried pack.");
-                        Assert.IsTrue(arrival.WornPack.enabled,"Skipping restores the original backpack renderer.");
+                        Assert.AreEqual(hasWornPack,arrival.WornPackVisible,"Skipping restores the outfit's original pack visibility.");
                         Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);
                         Assert.AreEqual(1,arrival.Passengers[0].GetComponentsInChildren<Animator>(true).Length,"Skipping must remove the temporary C1 cast.");
                         yield break;
@@ -119,7 +130,7 @@ namespace ShadowVale.Map01.Tests
                 if(name=="c1-up")Assert.Greater(frame.hungHips.y-bank,.55f,"Getting up together.");
             }
             while(arrival.MisstepClock<8.2f&&arrival.IsPlaying&&Time.realtimeSinceStartup<until)yield return null;
-            Assert.IsNull(arrival.MisstepPack,"The pack is back on his back.");Assert.IsTrue(arrival.WornPackVisible,"The approved C1 cast must visibly wear the pack before handing back to the gameplay mesh.");
+            Assert.IsNull(arrival.MisstepPack,"The pack is back on his back.");Assert.AreEqual(hasWornPack,arrival.WornPackVisible,"The handoff retains the original outfit's pack visibility.");
             LogAssert.Expect(LogType.Log,"Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.");
             while(arrival.IsPlaying&&Time.realtimeSinceStartup<until)yield return null;
             File.WriteAllLines(Folder+"/c1-misstep.txt",log);

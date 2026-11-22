@@ -258,6 +258,7 @@ namespace ShadowVale.Map01.Tests
         [UnityTest, Timeout(240000)]
         public IEnumerator HammerHandsStayOnHandleAndCycleReturnsToReadyPose()
         {
+            Directory.CreateDirectory(Evidence);
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");
             SetPreviewResolution(1280,720);
             yield return new EnterPlayMode();

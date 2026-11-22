@@ -14,7 +14,8 @@ namespace ShadowVale.Map01
         public static void ResetPatrolCalibration() { patrolMounts.Clear(); }
         Animator actor;Map01Rifle rifle;Map01EnemyController owner;Mount mount;Vector3 grip;
         IMapTwoGuard chapterOwner;
-        bool standalone;
+        bool standalone, useVisibleSupportPalm;
+        MeshFilter supportWood;
         public bool Calibrated{get;private set;}
         public float PalmError{get;private set;}
         public float WristBend{get;private set;}
@@ -24,11 +25,11 @@ namespace ShadowVale.Map01
             result.actor=actor;result.rifle=Map01Rifle.Attach(actor);result.Calibrate();return result;
         }
         /// <summary>The engaged grip for someone who is not a guard (Night 3's comrades on Map 2, on the guards' controller).</summary>
-        public static Map01EnemyGrip BindStandalone(Animator actor)
+        public static Map01EnemyGrip BindStandalone(Animator actor, bool useVisibleSupportPalm = false)
         {
             if(actor==null||!actor.isHuman)return null;
             var result=actor.GetComponent<Map01EnemyGrip>();if(result==null)result=actor.gameObject.AddComponent<Map01EnemyGrip>();
-            result.standalone=true;result.actor=actor;result.rifle=Map01Rifle.Attach(actor);result.Calibrate();return result;
+            result.standalone=true;result.useVisibleSupportPalm=useVisibleSupportPalm;result.actor=actor;result.rifle=Map01Rifle.Attach(actor);result.Calibrate();return result;
         }
         public static Map01EnemyGrip Bind(Map01EnemyController guard)
         {
@@ -50,6 +51,9 @@ namespace ShadowVale.Map01
         void Calibrate()
         {
             if(Calibrated||rifle==null||rifle.weapon==null)return;
+            if (useVisibleSupportPalm)
+                supportWood = rifle.weapon.GetComponentsInChildren<MeshFilter>()
+                    .FirstOrDefault(filter => filter.name == "r_woodLower_low" && filter.sharedMesh != null);
             var handle=rifle.weapon.GetComponentsInChildren<Renderer>().FirstOrDefault(r=>r.name.StartsWith("bl_grip_low"));
             grip=handle!=null?rifle.weapon.transform.InverseTransformPoint(handle.bounds.center):Vector3.zero;
             if(!mounts.TryGetValue(actor.avatar,out mount)){
@@ -64,6 +68,9 @@ namespace ShadowVale.Map01
                 mounts[actor.avatar]=mount;
             }
             var patrol=actor.runtimeAnimatorController!=null?actor.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name.StartsWith("Enemy_Patrol_Walk")):null;
+            if (actor.runtimeAnimatorController is AnimatorOverrideController commander &&
+                commander.name == "EnemyCommander_NamRifle")
+                patrol = commander.animationClips.FirstOrDefault(c => c.name == "Nam_Rifle_Walk_F") ?? patrol;
             if(patrol!=null)
             {
                 if(!patrolMounts.TryGetValue(actor.avatar,out patrolMount))
@@ -107,11 +114,41 @@ namespace ShadowVale.Map01
             var elbow=actor.GetBoneTransform(HumanBodyBones.Chest).position-actor.transform.right*(patrol?.27f:.4f)-actor.transform.up*(patrol?.26f:.3f);
             // Recalculate the palm offset as the forearm rotates, so the visible palm
             // reaches the foregrip rather than only placing the wrist at that point.
-            var support=patrol?gun.TransformPoint(new Vector3(-.025f,.01f,.32f)):rifle.support.position;
-            for(int i=0;i<3;i++)Map01ArmContact.Reach(actor,true,support-left.TransformVector(mount.leftPalm),elbow,1);
-            PalmError=Vector3.Distance(left.TransformPoint(mount.leftPalm),support);
+            var support = patrol ? gun.TransformPoint(new Vector3(-.025f, .01f, .32f)) : rifle.support.position;
+            if (supportWood != null && !patrol)
+                support = UnderForegrip(support);
+            var leftPalm = mount.leftPalm;
+            if (useVisibleSupportPalm)
+            {
+                // The commander's hand has finger roots instead of the legacy end marker.
+                var middle = actor.GetBoneTransform(HumanBodyBones.LeftMiddleProximal);
+                if (middle != null)
+                    leftPalm = left.InverseTransformPoint(Vector3.Lerp(left.position, middle.position, .55f));
+            }
+            for (int i = 0; i < 3; i++)
+                Map01ArmContact.Reach(actor, true, support - left.TransformVector(leftPalm), elbow, 1);
+            PalmError = Vector3.Distance(left.TransformPoint(leftPalm), support);
             WristBend=Quaternion.Angle(mount.leftWrist,left.localRotation);
             mount=aimMount;
+        }
+
+        Vector3 UnderForegrip(Vector3 fallback)
+        {
+            var wood = supportWood.transform;
+            var bounds = supportWood.sharedMesh.bounds;
+            var middle = wood.TransformPoint(bounds.center);
+            var barrel = rifle.weapon.Muzzle.position - middle;
+            var down = Vector3.ProjectOnPlane(Vector3.down, barrel).normalized;
+            if (down.sqrMagnitude < .001f) return fallback;
+
+            var localDown = wood.InverseTransformVector(down);
+            float thickness = float.PositiveInfinity;
+            for (int axis = 0; axis < 3; axis++)
+            {
+                float rate = Mathf.Abs(localDown[axis]);
+                if (rate > .0001f) thickness = Mathf.Min(thickness, bounds.extents[axis] / rate);
+            }
+            return float.IsInfinity(thickness) ? fallback : middle + down * (thickness + .01f);
         }
     }
 }

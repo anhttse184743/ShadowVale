@@ -206,7 +206,7 @@ namespace ShadowVale.Map01
                 replacement.transform.localPosition = previous.transform.localPosition;
                 replacement.transform.localRotation = previous.transform.localRotation;
                 var actor = replacement.GetComponent<Animator>();
-                actor.runtimeAnimatorController = previous.runtimeAnimatorController;
+                actor.runtimeAnimatorController = Map01EnemyCommanderRig.Controller(previous.runtimeAnimatorController); // T032: Nam's rifle hold
                 actor.applyRootMotion = false;
                 // As the guard model he replaces: animated off-screen too (his rifle, his fall), not culled.
                 actor.cullingMode = previous.cullingMode;

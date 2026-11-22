@@ -80,7 +80,16 @@ namespace ShadowVale.Map01.Tests
         }
         [Test]public void CarryFramesAreForwardAndHungUsesTheMapOneAsset()
         {
-            var art=Resources.Load<Map02DayOneArt>("Story/Map02DayOneArt");StringAssert.Contains("Hung_DiKhapKhieng",AssetDatabase.GetAssetPath(art.Find("InjuredWalk")));
+            var art = Resources.Load<Map02DayOneArt>("Story/Map02DayOneArt");
+            var mapOneHung = Resources.Load<Map01HungVisual>("Characters/HungVisual");
+            Assert.NotNull(mapOneHung?.actor, "The Map 1 Hùng prefab must provide its character rig.");
+            var model = PrefabUtility.GetCorrespondingObjectFromOriginalSource(mapOneHung.actor);
+            var injuredWalk = art.Find("InjuredWalk");
+            Assert.NotNull(injuredWalk);
+            Assert.IsTrue(injuredWalk.humanMotion);
+            Assert.NotNull(model, "Hùng's active rig must trace back to the imported model.");
+            Assert.AreEqual(AssetDatabase.GetAssetPath(model), AssetDatabase.GetAssetPath(injuredWalk),
+                "Day One's injured walk must come from the current Map 1 Hùng asset.");
             // The approved Night 1 motion capture (2026-10-24): humanoid, each on its own actor's game avatar; only the walk loops.
             foreach(var (id,file,loop) in new[]{("LoiHuaNam","LoiHua_Nam",false),("LoiHuaHung","LoiHua_Hung",false),("HungArmWalk","Hung_DiOmTay",true),("HungStartleGrab","Hung_GiatMinh_ChopVai",false),("HungStartle","Hung_GiatMinh",false)})
             {var clip=art.Find(id);Assert.NotNull(clip,id);StringAssert.Contains("Mocap/"+file+".fbx",AssetDatabase.GetAssetPath(clip));Assert.True(clip.humanMotion,id);Assert.AreEqual(loop,clip.isLooping,id);}

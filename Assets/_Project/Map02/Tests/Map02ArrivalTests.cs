@@ -253,7 +253,7 @@ var lines=new System.Collections.Generic.List<string>();var mission=Object.FindF
 var remaining=typeof(Map02Arrival).GetField("groundHandoffRemaining",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(arrival);
 lines.Add($"missionReady={mission?.Ready} chapter={mission?.Chapter!=null} scene={mission?.Chapter?.CurrentScene?.id} remaining={remaining} speed={arrival.Passengers[0].GetComponent<ShadowVale.Gameplay.Player.PlayerController>().PlanarSpeed} controllerVelocity={arrival.Passengers[0].GetComponent<CharacterController>().velocity}");
 for(int i=0;i<3;i++){
-float sole=float.PositiveInfinity;foreach(var skin in arrival.Passengers[i].GetComponentsInChildren<SkinnedMeshRenderer>()){var mesh=new Mesh();skin.BakeMesh(mesh);foreach(var v in mesh.vertices)sole=Mathf.Min(sole,skin.transform.TransformPoint(v).y);Object.Destroy(mesh);}
+float sole=RenderedSoleHeight(arrival.Passengers[i]);
 var animator=arrival.Passengers[i].GetComponentInChildren<Animator>();
 lines.Add($"actor={i} sole={sole:F5} spawn={arrival.SpawnPoints[i]} root={arrival.Passengers[i].position} visual={animator.transform.position} hips={animator.GetBoneTransform(HumanBodyBones.Hips).position} slot={arrival.Passengers[i].parent?.position}");}
 Directory.CreateDirectory("Logs/Map02/Checkpoint");File.WriteAllLines("Logs/Map02/Checkpoint/sole-contacts.txt",lines);
@@ -264,14 +264,28 @@ Assert.Less(Vector3.ProjectOnPlane(arrival.Passengers[i].position-arrival.SpawnP
 Assert.Greater(arrival.Passengers[i].position.y,.5f);
 // Animator roots differ between Nam and Hung. Check actual shoe soles rather
 // than assuming every actor's transform origin is at the ground surface.
-float sole=float.PositiveInfinity;
-foreach(var skin in arrival.Passengers[i].GetComponentsInChildren<SkinnedMeshRenderer>()){
-var mesh=new Mesh();skin.BakeMesh(mesh);
-foreach(var v in mesh.vertices)sole=Mathf.Min(sole,skin.transform.TransformPoint(v).y);
-Object.Destroy(mesh);
-}
+float sole=RenderedSoleHeight(arrival.Passengers[i]);
 Assert.Less(Mathf.Abs(sole-arrival.SpawnPoints[i].y),.02f,"Shoe soles must be grounded after arrival, actor "+i);
 }
+}
+static float RenderedSoleHeight(Transform passenger)
+{
+    var actor = passenger.GetComponentInChildren<Animator>();
+    var replacement = actor.transform.Find("Nam_AoBaBa_Visual");
+    var body = replacement != null ? replacement : actor.transform;
+    var lowest = float.PositiveInfinity;
+    var mesh = new Mesh();
+    try
+    {
+        foreach (var skin in body.GetComponentsInChildren<SkinnedMeshRenderer>().Where(r => r.enabled && !r.forceRenderingOff))
+        {
+            skin.BakeMesh(mesh, replacement != null);
+            foreach (var vertex in mesh.vertices)
+                lowest = Mathf.Min(lowest, skin.transform.TransformPoint(vertex).y);
+        }
+        return lowest;
+    }
+    finally { Object.Destroy(mesh); }
 }
 static void VerifyGameplayRifle(Transform root) {
 var combat=root.GetComponent<PlayerCombat>();var flags=BindingFlags.Instance|BindingFlags.NonPublic;

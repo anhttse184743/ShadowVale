@@ -23,6 +23,8 @@ namespace ShadowVale.Map01
         readonly Dictionary<string,Light> allyFlash=new Dictionary<string,Light>();
         readonly Dictionary<string,RuntimeAnimatorController> allyOwnController=new Dictionary<string,RuntimeAnimatorController>();
         readonly Dictionary<string,Vector3> allyHome=new Dictionary<string,Vector3>(),allySpot=new Dictionary<string,Vector3>();
+        static readonly int CommanderAimState = Animator.StringToHash("Aim");
+        bool commanderDrawn; // G009: anh Thành has drawn his rifle for the current fight
         bool AlliesFighting=>State.phase==5&&State.Done("N3_00")&&!State.Done("N3_09")&&!State.finished&&!State.hungDead;
         public int AllyShotsFired {get;private set;}
         public int AllyHits {get;private set;}
@@ -39,8 +41,16 @@ namespace ShadowVale.Map01
             foreach(var role in AllyRoles)
             {
                 if(!roles.TryGetValue(role,out var ally)||ally==null||ally.visual==null||!ally.visual.gameObject.activeInHierarchy)continue;
+                // The draw animation must hand off the weapon before the actor moves or fires.
+                if(!AllyInCombatPose(role))continue;
                 ShiftAlly(role,ally);
                 if(ally.Travelling)continue;   // no shooting on the run
+                if (role == "Anh Thành")
+                {
+                    var animator = ally.Animator;
+                    if (animator == null || animator.IsInTransition(0) ||
+                        animator.GetCurrentAnimatorStateInfo(0).shortNameHash != CommanderAimState) continue;
+                }
                 if(allyNextShot.TryGetValue(role,out var next)&&Time.time<next)continue;
                 allyNextShot[role]=Time.time+Random.Range(1.4f,2.2f);
                 var eye=ally.transform.position+Vector3.up*1.45f;Map02ChapterEnemy target=null;float best=AllyRange;
@@ -68,11 +78,15 @@ namespace ShadowVale.Map01
             if(scheduled&&Time.time<due)return;
             allyMoveAt[role]=Time.time+Random.Range(7f,12f);
             if(!scheduled)return;   // first sight of the fight: hold a moment before moving
+            if (!NavMesh.SamplePosition(at, out var start, .8f, NavMesh.AllAreas)) return;
+            var path = new NavMeshPath();
             for(int i=0;i<8;i++)
             {
                 var p=home+Quaternion.Euler(0,Random.Range(0f,360f),0)*Vector3.forward*Random.Range(.8f,AllyDrift);
                 if(!NavMesh.SamplePosition(p,out var hit,.6f,NavMesh.AllAreas)||Flat(hit.position,at)<.7f||Flat(hit.position,Mission.Player.position)<1.4f)continue;
                 if(TankLoose&&HiddenScore(hit.position)<TankThreats.Length)continue;   // with the tank in the lanes, only behind walls
+                if (!NavMesh.CalculatePath(start.position, hit.position, NavMesh.AllAreas, path) ||
+                    path.status != NavMeshPathStatus.PathComplete) continue;
                 allySpot[role]=hit.position;ally.GoTo(hit.position,AllyRun);return;
             }
         }
@@ -91,7 +105,7 @@ namespace ShadowVale.Map01
             if(!slung||!newCommander)return;
             var rifle=animator.GetComponent<Map01Rifle>();
             if(rifle?.weapon!=null&&rifle.weapon.transform.parent==animator.GetBoneTransform(HumanBodyBones.Chest))
-                rifle.weapon.transform.localPosition=new Vector3(.20f,0,-.12f);
+                Map02CommanderDraw.Sling(animator,rifle.weapon.transform);   // G009: muzzle up behind the shoulder, where the draw clip reaches
         }
 
         /// <summary>On the guards' controller (rifle pose, run, recoil) while the fight lasts; his own controller after it.</summary>
@@ -101,17 +115,21 @@ namespace ShadowVale.Map01
             bool armed=allyOwnController.ContainsKey(role);
             if(on&&!armed)
             {
+                // G009 (approved 22/11): anh Thành draws the AK over his shoulder first; the combat switch follows when the clip ends.
+                if(role=="Anh Thành"&&!commanderDrawn){var draw=animator.GetComponent<Map02CommanderDraw>();if(draw!=null&&draw.Running)return;ally.SetLocomotion(null,null);if(Map02CommanderDraw.Begin(animator,true,()=>commanderDrawn=true))return;}
                 var rifleman=Map01ActorAssets.Load()?.enemyController;if(rifleman==null||!animator.isHuman)return;
                 allyOwnController[role]=animator.runtimeAnimatorController;ally.SetLocomotion(null,null);
                 // Thành carries the rifle on his back between fights; place it in his hand before calibrating combat grip.
                 SetCommanderRifleCarry(ally,false);
                 animator.runtimeAnimatorController=rifleman;animator.applyRootMotion=false;animator.Rebind();animator.Update(0);
-                Map01EnemyGrip.BindStandalone(animator);ArmAlly(role,ally);
+                Map01EnemyGrip.BindStandalone(animator, useVisibleSupportPalm: role == "Anh Thành");ArmAlly(role,ally);
             }
             else if(!on&&armed)
             {
                 var grip=animator.GetComponent<Map01EnemyGrip>();if(grip!=null){grip.enabled=false;Destroy(grip);}
                 animator.runtimeAnimatorController=allyOwnController[role];allyOwnController.Remove(role);animator.Rebind();
+                // G009: anh Thành slings the AK back over his shoulder (clip), then the usual carry offset applies.
+                if(role=="Anh Thành"&&commanderDrawn){commanderDrawn=false;if(Map02CommanderDraw.Begin(animator,false,()=>SetCommanderRifleCarry(ally,true))){allyHome.Remove(role);allySpot.Remove(role);allyMoveAt.Remove(role);return;}}
                 SetCommanderRifleCarry(ally,true);
                 allyHome.Remove(role);allySpot.Remove(role);allyMoveAt.Remove(role);
             }

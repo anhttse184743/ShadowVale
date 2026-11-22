@@ -24,6 +24,8 @@ namespace ShadowVale.Map01.Tests
                 Place(m,Marker("D2_04").transform.position);Assert.IsTrue(m.Interact(Marker("D2_04")));yield return WaitGameSeconds(.8f);
                 Assert.Less(Vector3.Distance(anchor,commander.transform.position),.01f,"Thành must stay at the report position while Nam escorts Tâm.");
                 Assert.Less(Vector3.Distance(Marker("D2_04").transform.position,anchor),.1f);
+                // This fixture covers the report at the command post, after the separate field ambush.
+                c.State.scoutAmbushPassedBridge=true;
                 Place(m,anchor);c.Actor("Tâm").StopAt(anchor+Vector3.right*1.4f);Call(c,"Update");Assert.AreEqual("D2_04",c.CurrentScene?.id);Call(c,"LateUpdate");Call(c,"EndScene");
                 Assert.IsTrue(c.State.Done("D2_04"));yield return WaitGameSeconds(.4f);
                 AssertScoutAndCommander(c,anchor);
@@ -32,27 +34,44 @@ namespace ShadowVale.Map01.Tests
 
                 Load(m,"D2_07");yield return WaitGameSeconds(.3f);
                 Assert.AreEqual(3,c.State.phase);Assert.AreEqual(3,c.Enemies.Count(e=>e.group==Map02ChapterDirector.NightPatrolGroup));
-                AssertNightRoster(c);Assert.IsTrue(c.NightPatrolLight.enabled);Assert.IsTrue(c.Instruction.Contains("NAM"));
-                c.State.patrolScanSeconds=c.Layout.patrolSweepSeconds*.125f;Call(c,"TickPatrol",0f);var left=c.NightPatrolLight.transform.forward;
-                c.State.patrolScanSeconds=c.Layout.patrolSweepSeconds*.625f;Call(c,"TickPatrol",0f);var right=c.NightPatrolLight.transform.forward;
-                Assert.Greater(Vector3.Angle(left,right),60,"The rendered flashlight must visibly sweep both sides.");
-                Assert.IsTrue(c.NightPatrolLight.GetComponentsInChildren<MeshRenderer>().Length==0,"Beam is owned separately for phase visibility.");
+                AssertNightRoster(c);
+                Assert.IsTrue(c.NightPatrolLights.All(light => light != null && light.isActiveAndEnabled), "The three visible guards each need a live flashlight.");
+                Assert.IsTrue(c.Instruction.Contains("ghim quan sát"), "The HUD must explain the observation checkpoint.");
+                var lamp = c.NightPatrolLights[0];
+                var directions = new System.Collections.Generic.List<Vector3>();
+                for (int frame = 0; frame < 60; frame++)
+                {
+                    c.State.patrolScanSeconds = Mathf.Max(10f, c.Layout.patrolSweepSeconds) * frame / 60;
+                    Call(c, "TickPatrol", 0f);
+                    directions.Add(lamp.transform.forward);
+                }
+                Assert.Greater(directions.Max(from => directions.Max(to => Vector3.Angle(from, to))), 60f,
+                    "The rendered flashlight must visibly sweep both sides over a full cycle.");
+                Assert.IsTrue(lamp.GetComponentsInChildren<MeshRenderer>().Length == 0, "Beam is owned separately for phase visibility.");
                 var beam=GameObject.Find("Luồng đèn nhìn thấy được");Assert.NotNull(beam);Assert.Greater(beam.GetComponent<MeshFilter>().sharedMesh.vertexCount,10);
-                var walker=NightWalker(c);var before=walker.transform.position;
-                for(int i=0;i<50;i++){Call(c,"TickPatrol",.1f);yield return null;}
-                Assert.Greater(Vector3.Distance(before,walker.transform.position),.2f,"The night patrol must actually move.");
+                var sentry = NightWalker(c);
+                var post = sentry.transform.position;
+                for (int i = 0; i < 50; i++) { Call(c, "TickPatrol", .1f);yield return null; }
+                Assert.Less(Vector3.Distance(post, sentry.transform.position), .2f,
+                    "The sentry must hold his assigned post while his light sweeps.");
                 var viewRig=Object.FindObjectsByType<ShadowVale.Gameplay.Player.ThirdPersonCamera>(FindObjectsSortMode.None).First(r=>r.GetComponent<Camera>().enabled);viewRig.enabled=false;var camera=viewRig.GetComponent<Camera>();
-                Place(m,c.Sites["bridge"].position);c.HoldBinoculars(true);camera.transform.position=m.Player.position+new Vector3(0,2,3);camera.transform.LookAt(c.NightPatrolPosition+Vector3.up);
-                Assert.Less(Vector3.Angle(camera.transform.forward,c.NightPatrolPosition+Vector3.up-camera.transform.position),1);
-                var target=c.NightPatrolPosition+Vector3.up;var wall=GameObject.CreatePrimitive(PrimitiveType.Cube);wall.transform.position=Vector3.Lerp(camera.transform.position,target,.5f);wall.transform.rotation=Quaternion.LookRotation(target-camera.transform.position);wall.transform.localScale=new Vector3(20,15,.5f);Physics.SyncTransforms();
+                Place(m, c.NightObservationSpawn);
+                Assert.IsTrue(c.TryReachNightObservationCheckpoint(m.Player.position));
+                Assert.IsTrue(c.NightObservationPositionAllowed(m.Player.position));
+                c.HoldBinoculars(true);
+                camera.transform.position = m.Player.position + new Vector3(0, 2, 3);
+                var target = lamp.transform.position;
+                camera.transform.LookAt(target);
+                Assert.Less(Vector3.Angle(camera.transform.forward, target - camera.transform.position), 1f);
+                var wall=GameObject.CreatePrimitive(PrimitiveType.Cube);wall.transform.position=Vector3.Lerp(camera.transform.position,target,.5f);wall.transform.rotation=Quaternion.LookRotation(target-camera.transform.position);wall.transform.localScale=new Vector3(20,15,.5f);Physics.SyncTransforms();
                 for(int i=0;i<30;i++)Call(c,"Update");Assert.AreEqual(0,(float)typeof(Map02ChapterDirector).GetField("observed",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(c),.001f,"A wall must reset observation progress.");Assert.IsFalse(c.State.Done("N2_01"),"A wall must prevent observing the patrol.");Object.DestroyImmediate(wall);Physics.SyncTransforms();
                 // Real observation is advanced by actual frames with the camera facing the visible guard.
                 c.enabled=true;float end=Time.time+5;
-                while(Time.time<end&&!c.State.Done("N2_01")){camera.transform.LookAt(c.NightPatrolPosition+Vector3.up);yield return null;}
+                while(Time.time<end&&!c.State.Done("N2_01")){camera.transform.LookAt(lamp.transform.position);yield return null;}
                 c.enabled=false;Assert.IsTrue(c.State.Done("N2_01"),"Looking at the visible patrol with held binoculars must complete observation.");c.HoldBinoculars(false);
                 var snapshot=Map02Mission.Parse(JsonUtility.ToJson(m.Capture()));m.Restore(snapshot);yield return null;AssertNightRoster(c);
                 Capture("night2-patrol",c.Sites["bridge"].position+new Vector3(0,2,3),c.NightPatrolPosition+Vector3.up);
-                Load(m,"N2_05");Assert.IsFalse(c.NightPatrolLight.enabled);Assert.IsFalse(GameObject.Find("Luồng đèn nhìn thấy được")!=null);
+                Load(m,"N2_05");Assert.IsTrue(c.NightPatrolLights.All(light=>!light.isActiveAndEnabled));Assert.IsFalse(GameObject.Find("Luồng đèn nhìn thấy được")!=null);
             }
             finally{c.Cancel();c.enabled=true;}
             yield return new ExitPlayMode();
