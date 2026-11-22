@@ -4,14 +4,13 @@ namespace ShadowVale.Map01 {
   GUIStyle DockText(int size=21,bool bold=false)=>new GUIStyle(GUI.skin.label){fontSize=size,fontStyle=bold?FontStyle.Bold:FontStyle.Normal,wordWrap=true,normal={textColor=new Color(.94f,.89f,.75f)}};
   void DockBox(Rect rect,Color colour){Fill(rect,colour);Frame(rect,new Color(.52f,.46f,.29f),1);}
   void DockBoardImage(Rect rect,int board,bool selected=false){
-   Fill(rect,new Color(.58f,.39f,.19f));Frame(rect,new Color(.87f,.69f,.39f),selected?3:1);
-   if(rect.width>rect.height){for(int i=1;i<3;i++)Fill(new Rect(rect.x+4,rect.y+rect.height*i/3,rect.width-8,1),new Color(.32f,.22f,.12f));}
-   if(board==3)GUI.Label(new Rect(rect.center.x-37,rect.center.y-26,90,54),"╱╲╱",new GUIStyle(DockText(37,true)){normal={textColor=Color.black}});
+   Fill(rect,new Color(.58f,.39f,.19f));DayAtlas(rect,board==3?4:3);
+   Frame(rect,selected?DayGold:new Color(.49f,.40f,.23f),selected?3:1);
   }
   void DrawDockBoardPanel(){
    var gold=new Color(.91f,.75f,.4f);var soft=new Color(.1f,.13f,.1f,.98f);var pale=new Color(.79f,.83f,.71f);
-   DockBox(new Rect(80,75,1440,750),new Color(.045f,.065f,.05f,.98f));
-   GUI.Label(new Rect(110,99,1160,46),"SỬA BẬC BẾN · KÊ VÁN",DockText(32,true));
+   Fill(new Rect(0,0,1600,900),new Color(.01f,.02f,.01f,.65f));DaySurface(new Rect(80,75,1440,750));DayHelpButton(new Rect(1100,101,200,44));
+   GUI.Label(new Rect(110,99,950,46),"SỬA BẬC BẾN · KÊ VÁN",DockText(32,true));
    if(DayButton(new Rect(1320,101,175,44),"Đóng [Esc]")){RequestCloseDay();return;}
    GUI.Label(new Rect(115,158,1340,38),$"✓ Hai cọc đã chắc     ▶ Kê ván {Day.BoardCount}/3     → Nhờ chú Bảy thử bến",DockText(23,true));
    GUI.Label(new Rect(115,208,350,36),"① CHỌN MỘT TẤM VÁN",DockText(23,true));
@@ -21,7 +20,7 @@ namespace ShadowVale.Map01 {
     bool enabled=GUI.enabled;GUI.enabled=enabled&&!used&&!Day.DockReady;if(GUI.Button(r,GUIContent.none,GUIStyle.none))SelectDockBoard(i);GUI.enabled=enabled;
     GUI.Label(new Rect(r.x+15,r.y+8,170,28),$"VÁN {i+1}",DockText(22,true));
     GUI.Label(new Rect(r.x+177,r.y+8,160,28),used?"✓ ĐÃ KÊ":chosen?"ĐANG CHỌN":Day.DockReady?"KHÔNG DÙNG":"BẤM ĐỂ XEM",DockText(17,true));
-    DockBoardImage(new Rect(r.x+20,r.y+47,board==4?130:300,21),board);
+    DockBoardImage(new Rect(r.x+20,r.y+42,board==4?130:300,28),board);
    }
    GUI.Label(new Rect(500,208,660,36),"② CHỌN BẬC · CĂN HAI ĐẦU VÁN",DockText(23,true));
    DockBox(new Rect(500,250,650,346),soft);
@@ -38,7 +37,7 @@ namespace ShadowVale.Map01 {
     if(held){board=selectedBoard;offset=dockOffset;}if(board<0)continue;float y=310+slot*100;
     bool turned=held&&selectionRotated;float length=(board==4?.62f:1.28f)*scale;
     var r=turned?new Rect(centre+offset*scale-13,y-65,26,130):new Rect(centre+offset*scale-length*.5f,y-13,length,26);
-    DockBoardImage(r,board,held);if(!held)GUI.Label(new Rect(r.center.x-35,y-13,70,28),"✓",DockText(23,true));
+    DockBoardImage(r,board,held);if(held&&Day.BoardProblem(board,slot,selectionRotated)==null&&Mathf.Abs(offset)<=.07f)Frame(r,StoreGood,3);if(!held)GUI.Label(new Rect(r.center.x-35,y-13,70,28),"✓",DockText(23,true));
    }
    foreach(float side in new[]{-.53f,.53f})GUI.Label(new Rect(centre+side*scale-100,566,200,27),"THANH ĐỠ",new GUIStyle(DockText(17,true)){alignment=TextAnchor.MiddleCenter});
    GUI.Label(new Rect(500,606,650,28),"DỊCH VÁN · hai đầu phải nằm trên hai thanh đỡ",DockText(19,true));

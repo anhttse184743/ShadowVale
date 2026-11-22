@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="3" result="Failed(Child)" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-08 14:10:06Z" end-time="2026-11-08 14:10:55Z" duration="49.5580413">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="907" result="Failed" site="Child" start-time="2026-11-08 14:10:06Z" end-time="2026-11-08 14:10:55Z" duration="49.558041" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1599" name="ShadowVale.Map01.Tests.dll" fullname="G:/game/Capstone/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map01.Tests.dll" runstate="Runnable" testcasecount="474" result="Failed" site="Child" start-time="2026-11-08 14:10:06Z" end-time="2026-11-08 14:10:55Z" duration="49.374244" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="16028" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1600" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="474" result="Failed" site="Child" start-time="2026-11-08 14:10:06Z" end-time="2026-11-08 14:10:55Z" duration="49.368509" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1601" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="474" result="Failed" site="Child" start-time="2026-11-08 14:10:06Z" end-time="2026-11-08 14:10:55Z" duration="49.363532" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="SetUpFixture" id="1507" name="Tests" fullname="ShadowVale.Map01.Tests.SolverForTests" classname="ShadowVale.Map01.Tests.SolverForTests" runstate="Runnable" testcasecount="474" result="Failed" site="Child" start-time="2026-11-08 14:10:06Z" end-time="2026-11-08 14:10:55Z" duration="49.357928" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1381" name="NewGameIntroTests" fullname="ShadowVale.Map01.Tests.NewGameIntroTests" classname="ShadowVale.Map01.Tests.NewGameIntroTests" runstate="Runnable" testcasecount="3" result="Failed" site="Child" start-time="2026-11-08 14:10:06Z" end-time="2026-11-08 14:10:55Z" duration="49.340385" total="3" passed="2" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1384" name="DecoderErrorCleansUpAndReturnsToTutorialChoice" fullname="ShadowVale.Map01.Tests.NewGameIntroTests.DecoderErrorCleansUpAndReturnsToTutorialChoice" methodname="DecoderErrorCleansUpAndReturnsToTutorialChoice" classname="ShadowVale.Map01.Tests.NewGameIntroTests" runstate="Runnable" seed="1267373070" result="Passed" start-time="2026-11-08 14:07:44Z" end-time="2026-11-08 14:08:25Z" duration="40.635960" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="90000" />
+                </properties>
+              </test-case>
+              <test-case id="1383" name="NewGameTutorialWaitsForIntroAndSkipLoadsOnlyOneTutorial" fullname="ShadowVale.Map01.Tests.NewGameIntroTests.NewGameTutorialWaitsForIntroAndSkipLoadsOnlyOneTutorial" methodname="NewGameTutorialWaitsForIntroAndSkipLoadsOnlyOneTutorial" classname="ShadowVale.Map01.Tests.NewGameIntroTests" runstate="Runnable" seed="157338446" result="Failed" start-time="2026-11-08 14:08:25Z" end-time="2026-11-08 14:09:55Z" duration="90.967772" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Expected string length 14 but was 11. Strings differ at index 0.
+  Expected: "Map00_Tutorial"
+  But was:  "01_MainMenu"
+  -----------^
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.NewGameIntroTests+<MenuRoute>d__4.MoveNext () [0x00198] in G:\game\Capstone\ShadowVale\Assets\_Project\Map01\Tests\NewGameIntroTests.cs:58
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+              </test-case>
+              <test-case id="1382" name="RealVideoRendersWithAudioPausesAndFinishesOnce" fullname="ShadowVale.Map01.Tests.NewGameIntroTests.RealVideoRendersWithAudioPausesAndFinishesOnce" methodname="RealVideoRendersWithAudioPausesAndFinishesOnce" classname="ShadowVale.Map01.Tests.NewGameIntroTests" runstate="Runnable" seed="1064151780" result="Passed" start-time="2026-11-08 14:09:56Z" end-time="2026-11-08 14:10:55Z" duration="59.578373" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: C:/Users/dangk/AppData/LocalLow/DefaultCompany/ShadowVale\TestResults.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

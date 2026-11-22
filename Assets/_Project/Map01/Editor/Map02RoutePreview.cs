@@ -10,13 +10,15 @@ using Object=UnityEngine.Object;
 
 namespace ShadowVale.Map01.Editor
 {
-    /// <summary>One-session entry points for manually playing the Day 2 / Night 2 routes, Day 3 and points of Night 3.</summary>
+    /// <summary>One-session entry points for manually playing Map 2 from its start or later checkpoints.</summary>
     [InitializeOnLoad] public static class Map02RoutePreview
     {
         const string Key="ShadowVale.Map02RoutePreview";
         const string MapPath="Assets/_Project/Scenes/Maps/Map 2.unity";
         static Map02RoutePreview(){EditorApplication.update+=Tick;EditorApplication.playModeStateChanged+=OnPlayModeChanged;}
 
+        [MenuItem("ShadowVale/Map 2/Checkpoint bắt đầu Map 2 · Ngày 1",priority=19)]
+        public static void PlayStart()=>Enter("Day1",()=>SessionState.SetBool(Key+".start",true));
         [MenuItem("ShadowVale/Map 2/Chạy thử Ngày 2",priority=20)]
         public static void PlayDayTwo()=>Begin(2);
         [MenuItem("ShadowVale/Map 2/Checkpoint cứu Tâm · M2_D2_04",priority=20)]
@@ -45,6 +47,7 @@ namespace ShadowVale.Map01.Editor
         public static void PlayNightThreeDock()=>BeginAfter("N3_06");
         [MenuItem("ShadowVale/Map 2/Chạy thử Đêm 3 · Hùng ở lại yểm trợ",priority=25)]
         public static void PlayNightThreeCover()=>BeginAfter("N3_07");
+        [MenuItem("ShadowVale/Map 2/Checkpoint bắt đầu Map 2 · Ngày 1",true)]
         [MenuItem("ShadowVale/Map 2/Chạy thử Ngày 2",true)]
         [MenuItem("ShadowVale/Map 2/Checkpoint cứu Tâm · M2_D2_04",true)]
         [MenuItem("ShadowVale/Map 2/Checkpoint lắp ăng-ten · M2_D2_06",true)]
@@ -66,6 +69,7 @@ namespace ShadowVale.Map01.Editor
             SessionState.SetString(Key+".startScene",AssetDatabase.GetAssetPath(EditorSceneManager.playModeStartScene));
             SessionState.SetString(Key+".saveRoot",SessionState.GetString(ForestSaveSlots.EditorTestRootKey,""));
             SessionState.SetString(ForestSaveSlots.EditorTestRootKey,Path.GetFullPath("Temp/Map02RoutePreviewSaves/"+saves));
+            SessionState.EraseBool(Key+".start");SessionState.SetInt(Key+".phase",0);SessionState.EraseString(Key+".after");
             SessionState.EraseString(Key+".performance");
             SessionState.SetBool(Key+".active",true);choose();
             EditorSceneManager.playModeStartScene=map;
@@ -74,17 +78,25 @@ namespace ShadowVale.Map01.Editor
         static void Tick()
         {
             int phase=SessionState.GetInt(Key+".phase",0);string after=SessionState.GetString(Key+".after","");
-            if(phase==0&&after==""||!EditorApplication.isPlaying||EditorApplication.isCompiling)return;
+            bool start=SessionState.GetBool(Key+".start",false);
+            if(phase==0&&after==""&&!start||!EditorApplication.isPlaying||EditorApplication.isCompiling)return;
             var arrival=Object.FindFirstObjectByType<Map02Arrival>();
             if(arrival!=null&&arrival.IsPlaying){arrival.Skip();return;}
             var mission=Object.FindFirstObjectByType<Map02Mission>();
             if(mission?.Ready!=true||mission.Chapter==null)return;
-            SessionState.SetInt(Key+".phase",0);SessionState.EraseString(Key+".after");
+            SessionState.SetInt(Key+".phase",0);SessionState.EraseString(Key+".after");SessionState.EraseBool(Key+".start");
+            if(start){ApplyStart(mission);Debug.Log("[Map 2 chạy thử] Bắt đầu Ngày 1 tại bờ sông. Save thử nằm trong Temp/Map02RoutePreviewSaves/Day1.");return;}
             if(after!=""){ApplyAfter(mission,after);Debug.Log("[Map 2 chạy thử] Đã xong mọi nhiệm vụ tới "+after+". Save thử nằm trong Temp/Map02RoutePreviewSaves.");return;}
             var performance=SessionState.GetString(Key+".performance","");SessionState.EraseString(Key+".performance");
             if(performance!=""){ApplyPerformancePreview(mission,performance);return;}
             ApplyToMission(mission,phase);
             Debug.Log("[Map 2 chạy thử] "+(phase==2?"Ngày 2: nhận lệnh tìm Tâm.":"Đêm 2: quan sát đèn tuần tra ở cầu.")+" Save thử nằm trong Temp/Map02RoutePreviewSaves.");
+        }
+        public static void ApplyStart(Map02Mission mission)
+        {
+            var arrival=mission.Chapter.Sites["arrival"].position;
+            Apply(mission,new Map02ChapterState(),arrival+Vector3.back*1.6f,arrival+Vector3.back*4,
+                "CHECKPOINT BẮT ĐẦU MAP 2 · Ngày 1 — Có chỗ nghỉ chân.");
         }
         public static Map02ChapterState BuildPreviewState(int phase)
         {
@@ -190,6 +202,7 @@ namespace ShadowVale.Map01.Editor
             else SessionState.SetString(ForestSaveSlots.EditorTestRootKey,previousRoot);
             var previousScene=SessionState.GetString(Key+".startScene","");
             SessionState.SetBool(Key+".active",false);SessionState.SetInt(Key+".phase",0);SessionState.EraseString(Key+".after");
+            SessionState.EraseBool(Key+".start");SessionState.EraseString(Key+".performance");
             EditorApplication.delayCall+=()=>EditorSceneManager.playModeStartScene=string.IsNullOrEmpty(previousScene)?null:AssetDatabase.LoadAssetAtPath<SceneAsset>(previousScene);
         }
     }

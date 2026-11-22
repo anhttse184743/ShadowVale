@@ -11,7 +11,26 @@
     "salvageBonusLevel": 2
   },
   "adaptive": { "lowAmmo": 30, "ammoBoost": 2.0, "lowHealth": 0.75, "medkitBoost": 3.0, "medkitPity": 3 },
-  "logistics": { "turnInFloor": 0.3, "operationCredit": [40, 40, 40, 60] },
+  "logistics": {
+    "turnInFloor": 0.15,
+    "turnInCeiling": 0.60,
+    "operationCredit": [30, 40, 50, 50],
+    "mapTwoRewards": [
+      { "id": "D1_06", "points": 10 },
+      { "id": "N1_04", "points": 10 },
+      { "id": "D2_07", "points": 15 },
+      { "id": "N2_05", "points": 15 },
+      { "id": "D3_06", "points": 25 },
+      { "id": "N3_09", "points": 35 }
+    ],
+    "materialTrade": [
+      { "id": "ammo_recovered", "points": 1 },
+      { "id": "scrap_metal", "points": 1 },
+      { "id": "weapon_parts", "points": 6 },
+      { "id": "gun_oil", "points": 4 },
+      { "id": "scope_lens", "points": 8 }
+    ]
+  },
   "fieldCaches": [
     { "id": "c3_field_ak_v1", "label": "Túi đạn AK — 30 viên, 2 gói tiếp liệu", "x": 109.0, "z": 22.3, "minStage": 7 },
     { "id": "c3_field_approach_v1", "label": "Tiếp tế trước C3 — 3 băng, 2 khói, 1 F1", "x": 109.0, "z": 21.0, "minStage": 7 },

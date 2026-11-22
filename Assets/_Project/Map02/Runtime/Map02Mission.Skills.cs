@@ -63,7 +63,7 @@ namespace ShadowVale.Map01
             var actor = Player.GetComponentInChildren<Animator>();
             if (actor != null && actor.runtimeAnimatorController != null) actor.SetTrigger(PlayerCombat.AnimatorParams.Attack);
             enemy.HitPoints.TakeDamage(enemy.HitPoints.Current, enemy.transform.position + Vector3.up, Player.gameObject);
-            if (enemy.Dead) Skills.Award(SkillKind.Stealth);
+            if (enemy.Dead) { Skills.Award(SkillKind.Stealth); TelemetryTakedown(enemy); }
             return true;
         }
 

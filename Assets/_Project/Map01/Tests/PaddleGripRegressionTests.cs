@@ -13,8 +13,9 @@ public sealed class PaddleGripRegressionTests:ForestSceneTestBase {
  static IEnumerator Run(){
   var config=Resources.Load<Map01OpeningCutscene>("Cutscenes/Map01Opening");Assert.NotNull(config);
   var model=Object.Instantiate(config.commanderModel);var actor=model.GetComponentInChildren<Animator>();Assert.NotNull(actor);actor.Rebind();actor.Update(0);
-  var skin=actor.GetComponentsInChildren<SkinnedMeshRenderer>().First(s=>s.sharedMesh!=null&&s.sharedMesh.vertexCount==Resources.Load<Mesh>("Cutscenes/Commander_Paddle_Readable").vertexCount);
-  var seed=Object.Instantiate(Resources.Load<Mesh>("Cutscenes/Commander_Paddle_Readable"));seed.ClearBlendShapes();
+  var fallback=Resources.Load<Mesh>("Cutscenes/Commander_Paddle_Readable");
+  var skin=actor.GetComponentsInChildren<SkinnedMeshRenderer>().First(s=>s.sharedMesh!=null&&(s.sharedMesh.isReadable||(fallback!=null&&s.sharedMesh.vertexCount==fallback.vertexCount)));
+  var seed=Object.Instantiate(skin.sharedMesh.isReadable?skin.sharedMesh:fallback);seed.ClearBlendShapes();
   var zero=new Vector3[seed.vertexCount];var face=new Vector3[seed.vertexCount];face[0]=new Vector3(.001f,.002f,0);
   seed.AddBlendShapeFrame("PaddleGripLeft",100,zero,zero,zero);seed.AddBlendShapeFrame("PaddleGripRight",100,zero,zero,zero);
   seed.AddBlendShapeFrame("FaceTest",50,face,zero,zero);seed.AddBlendShapeFrame("FaceTest",100,face,zero,zero);

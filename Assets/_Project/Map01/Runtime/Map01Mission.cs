@@ -146,7 +146,12 @@ namespace ShadowVale.Map01
             // Shared services the map-agnostic AI tools (debug console, coordinator) resolve.
             ServiceLocator.Register(Noise);
             ServiceLocator.Register<IPlayerObservable>(Stealth);
-            foreach (var point in FindObjectsByType<ForestPoint>(FindObjectsSortMode.None)) RegisterPoint(point);
+            foreach (var point in FindObjectsByType<ForestPoint>(FindObjectsSortMode.None))
+            {
+                if (point.kind == ForestPointKind.StorageChest && point.gameObject.scene == gameObject.scene)
+                    StorageChest = point.GetComponent<Map01StorageChest>();
+                RegisterPoint(point);
+            }
             // Laid out now, not baked into Map 1.unity: a save restored a moment later finds them among the points.
             Map01StoneSites.Attach(this);
             Map01Logistics.For(this);     // The run's loot seed and the base store, before anything rolls loot.
@@ -386,15 +391,31 @@ namespace ShadowVale.Map01
             if (ModernHealth != null) { ModernHealth.TakeDamage(amount, player.position, gameObject); hp = ModernHealth.Current; }
             else hp = Mathf.Max(0, hp - amount);
         }
-        public void SetInventoryOpen(bool open) { InventoryOpen = open; MapOpen = false; BenchOpen = false; }
+        public Map01StorageChest StorageChest { get; private set; }
+        public bool StorageOpen { get; private set; }
+        internal void OpenStorage(Map01StorageChest chest)
+        {
+            if (chest == null || chest != StorageChest || StorageOpen) return;
+            SetInventoryOpen(true);
+            StorageOpen = true;
+            chest.SetOpen(true);
+        }
+        private void CloseStorage()
+        {
+            if (!StorageOpen) return;
+            StorageOpen = false;
+            if (StorageChest != null) StorageChest.SetOpen(false);
+        }
+        public void SetInventoryOpen(bool open) { CloseStorage(); InventoryOpen = open; MapOpen = false; BenchOpen = false; }
         /// <summary>The workbench screen (Map01Hud.Bench). It is the bag's panel slot showing the bench, so
         /// everything that stops play while the bag is open stops it here too.</summary>
         public bool BenchOpen { get; private set; }
-        public void SetBenchOpen(bool open) { InventoryOpen = open; BenchOpen = open; MapOpen = false; }
-        public void SetMapOpen(bool open) { MapOpen = open; InventoryOpen = false; BenchOpen = false; }
+        public void SetBenchOpen(bool open) { CloseStorage(); InventoryOpen = open; BenchOpen = open; MapOpen = false; }
+        public void SetMapOpen(bool open) { CloseStorage(); MapOpen = open; InventoryOpen = false; BenchOpen = false; }
         public bool CloseGameplayPanel()
         {
             if (!InventoryOpen && !MapOpen) return false;
+            CloseStorage();
             InventoryOpen = MapOpen = BenchOpen = false; return true;
         }
         public void AdvancePlaySeconds() { if (!Stopped) PlaySeconds += Time.deltaTime; }

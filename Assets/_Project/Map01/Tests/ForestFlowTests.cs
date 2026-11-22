@@ -372,7 +372,7 @@ namespace ShadowVale.Map01.Tests
             inventory.Receive("rifle_standard", 1, .25f * inventory.MaxCondition("rifle_standard"));
             var captured = inventory.Guns().First(g => g.Slot == null);
             int worth = inventory.TurnInValue(captured);
-            Assert.AreEqual(Mathf.RoundToInt(Map01Loot.Load().BaseValue("rifle_standard") * (Map01Loot.Load().logistics.turnInFloor + (1 - Map01Loot.Load().logistics.turnInFloor) * .25f)), worth);
+            Assert.AreEqual(Mathf.RoundToInt(Map01Loot.Load().BaseValue("rifle_standard") * (Mathf.Lerp(Map01Loot.Load().logistics.turnInFloor, Map01Loot.Load().logistics.turnInCeiling, .25f))), worth);
             Assert.IsTrue(logistics.HandIn(captured));
             Assert.AreEqual(left + worth, logistics.Credit);
             Assert.AreEqual(1, logistics.HandedIn);

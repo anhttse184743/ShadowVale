@@ -67,6 +67,7 @@ namespace ShadowVale.Map01
                 c3?.Restore(data.c3);   // before the guards' snapshots: a woken sleeper is back on the field to receive his
                 inventory.RestoreFromSave(data.items, data.stones, data.crafting, data.craftRemaining);
                 if (data.bag != null) inventory.RestoreLayout(data.bag);
+                mission.StorageChest?.Restore(data.storage);
                 Map01Drops.For(mission).Restore(data.dropped);
                 inventory.RestoreFieldToolkit(data.bag?.fieldKitVersion ?? 0);
                 Map01Smoke.ClearAll();

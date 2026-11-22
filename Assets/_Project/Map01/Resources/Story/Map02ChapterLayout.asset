@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map02ChapterLayout
   actors:
   - role: "Anh Th\xE0nh"
-    prefab: {fileID: 7832698061118072078, guid: 5b2abf7e6f14f3d41b5a1d88cffbafab, type: 3}
+    prefab: {fileID: 58989247059846434, guid: 6f0b208725e3cf944bf9ba70cfad84c5, type: 3}
   - role: "Anh L\u1EF1c"
     prefab: {fileID: 2737592800967087114, guid: b6e1ae955e1b8ba4294dd7a7fff9d165, type: 3}
   - role: "T\xE2m"

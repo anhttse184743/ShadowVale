@@ -51,15 +51,19 @@ namespace ShadowVale.Map01
         static Rect Inset(Rect r,float d)=>new Rect(r.x+d,r.y+d,r.width-2*d,r.height-2*d);
         static string ShortReason(string problem)=>problem switch{"Nền này bị ẩm."=>"nền ẩm ✕","Đang chắn lối."=>"chắn lối xuống ✕","Hai thùng đang chồng nhau."=>"chồng thùng ✕","Thùng vượt ra ngoài nền kho."=>"ra ngoài hầm ✕",_=>problem};
         /// <summary>A crate from above: boards along its length, two battens across, the goods stencilled on it.</summary>
-        static void DrawCrateTop(int crate,Rect r,float alpha,bool label=true)
+        void DrawCrateTop(int crate,Rect r,float alpha,bool label=true)
         {
             Color A(Color c,float k=1)=>new Color(c.r*k,c.g*k,c.b*k,alpha);var wood=CrateWood[crate];
             Fill(Inset(r,3),A(wood));bool wide=r.width>=r.height;
             for(float s=wide?r.y+24:r.x+24;s<(wide?r.yMax-12:r.xMax-12);s+=22)Fill(wide?new Rect(r.x+5,s,r.width-10,2):new Rect(s,r.y+5,2,r.height-10),A(wood,.72f));
             foreach(float k in new[]{.16f,.84f})Fill(wide?new Rect(r.x+r.width*k-6,r.y+4,12,r.height-8):new Rect(r.x+4,r.y+r.height*k-6,r.width-8,12),A(wood,.62f));
             Frame(Inset(r,3),A(wood,.45f),2);
-            if(crate==1)GUI.Label(label?new Rect(r.x,r.y+8,r.width,30):r,"✚",StoreText(label?26:20,new Color(.72f,.14f,.12f,alpha),FontStyle.Bold,label?TextAnchor.UpperCenter:TextAnchor.MiddleCenter));
-            if(label)GUI.Label(Inset(r,6),CrateGoods[crate]+"\n"+Map02DayOneState.Size(crate,false).x+"×"+Map02DayOneState.Size(crate,false).y,StoreText(19,new Color(.12f,.09f,.05f,alpha),FontStyle.Bold,TextAnchor.MiddleCenter));
+            DayAtlas(Inset(r,3),crate,alpha);
+            if(label){
+                var tag=new Rect(r.x+7,r.center.y-28,Mathf.Max(20,r.width-14),56);
+                Fill(tag,new Color(.025f,.04f,.025f,.83f*alpha));
+                GUI.Label(tag,CrateGoods[crate]+"\n"+Map02DayOneState.Size(crate,false).x+"×"+Map02DayOneState.Size(crate,false).y,StoreText(18,new Color(.98f,.95f,.84f,alpha),FontStyle.Bold,TextAnchor.MiddleCenter));
+            }
         }
         void DrawPacking()
         {

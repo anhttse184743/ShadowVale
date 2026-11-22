@@ -1,0 +1,95 @@
+{
+  "date": "2026-11-08",
+  "original": "G:\\game\\Capstone\\ShadowVale_Intro_3Phan_CapCut.mp4",
+  "originalSha256": "991072d610d197ecc51588e41657305fdeb4db7253ff55480ac9307ec99bd5df",
+  "previousBundledSha256": "8a2a1ceab7ebdc5893d0913231175d8866cd945b2187dec60d48c32e52db9559",
+  "output": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\output\\ShadowVale_Intro_20261108\\ShadowVale_Intro_Nam_Hung_20261108.mp4",
+  "sha256": "d42720dc430961eba54c08fbee6f5139c1c578c587a59ab9903cb78e6caca80d",
+  "durationSeconds": 46.96666666666666,
+  "resolution": "1920x1080",
+  "fps": 30,
+  "encoding": "H.264 constrained baseline / no B-frames / AAC stereo 48 kHz 192 kbps",
+  "contextPreservedThroughSeconds": 27.566666666666666,
+  "contextNotes": "Original context picture/audio through the old character dissolve is retained; a 0.6-second last-frame extension supports the replacement dissolve. The supplied source video is unchanged.",
+  "sceneStarts": {
+    "context": 0,
+    "characters": 27.566666666666666,
+    "tutorialLead": 36.96666666666666
+  },
+  "dissolveSeconds": 0.6,
+  "sources": [
+    {
+      "file": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\work\\intro_new_models_20261108\\01_character_gemini.mp4",
+      "sha256": "a03936bbe33ced3c5263f79621dfdb65dbb9d4160546028f29e9b2f13ed1fe7c"
+    },
+    {
+      "file": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\work\\intro_new_models_20261108\\02_tutorial_gemini.mp4",
+      "sha256": "9dea7060d1a082c6e19973e5a8610c96db40c95423bc39c43c1f8dd5cf2c8b4c"
+    }
+  ],
+  "characters": {
+    "Nam": "User reference 1: black tunic, brimmed hat, checkered scarf",
+    "Hung": "User reference 2: brown shirt, field cap, shoulder pouches"
+  },
+  "narration": [
+    {
+      "start": 28.266666666666666,
+      "end": 30.501437499999998,
+      "speaker": "Kể chuyện",
+      "text": "Nam, ít lời, luôn lo cho đồng đội.",
+      "voice": "Anh Khôi",
+      "file": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\output\\CapCut_Intro_20261023\\Narrator_04.wav"
+    },
+    {
+      "start": 31.566666666666666,
+      "end": 34.055125,
+      "speaker": "Kể chuyện",
+      "text": "Hùng, lính thông tin, giữ mạch liên lạc.",
+      "voice": "Anh Khôi",
+      "file": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\output\\CapCut_Intro_20261023\\Narrator_05.wav"
+    },
+    {
+      "start": 38.166666666666664,
+      "end": 43.3500625,
+      "speaker": "Kể chuyện",
+      "text": "Hùng lên đường trinh sát, tìm lối qua rừng. Mỗi bước đi đều phải giữ kín.",
+      "voice": "Anh Khôi",
+      "file": "C:\\Users\\dangk\\Documents\\Codex\\2026-09-20\\du\\work\\intro_new_models_20261108\\tutorial-lead-paced.wav"
+    }
+  ],
+  "visibleWatermarkRemoval": {
+    "requestedByUser": true,
+    "method": "Localized ffmpeg delogo before upscale",
+    "native720pRegion": {
+      "x": 1124,
+      "y": 564,
+      "width": 74,
+      "height": 74
+    }
+  },
+  "cost": {
+    "newPurchase": 0,
+    "tts": "Existing free offline VieNeu preset",
+    "video": "Existing Gemini account quota"
+  },
+  "gameAsset": "G:\\game\\Capstone\\ShadowVale\\Assets\\StreamingAssets\\Video\\ShadowVale_Intro.mp4",
+  "validation": {
+    "decode": "Full ffmpeg decode passed",
+    "contextSSIM": 0.993571,
+    "visual": "Sampled scenes and both new watermark regions passed",
+    "unity": {
+      "passed": [
+        "RealVideoRendersWithAudioPausesAndFinishesOnce",
+        "DecoderErrorCleansUpAndReturnsToTutorialChoice"
+      ],
+      "failed": "NewGameTutorialWaitsForIntroAndSkipLoadsOnlyOneTutorial",
+      "reason": "Tutorial scene load exceeded the existing 60-second test wait: initial 79.330 s, isolated rerun 68.567 s. Logs confirm Map00_Tutorial loaded; not certified as passing.",
+      "results": [
+        "Tests-intro.xml",
+        "Tests-intro-route.xml"
+      ]
+    }
+  },
+  "contextPictureSSIM": 0.993571,
+  "installedSha256": "D42720DC430961EBA54C08FBEE6F5139C1C578C587A59AB9903CB78E6CACA80D"
+}

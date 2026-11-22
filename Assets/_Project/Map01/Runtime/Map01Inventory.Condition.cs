@@ -253,8 +253,9 @@ namespace ShadowVale.Map01
         public int TurnInValue(Gun gun)
         {
             string id = IdOf(gun);
-            float floor = Loot.logistics.turnInFloor;
-            return Mathf.RoundToInt(Loot.BaseValue(id) * (floor + (1f - floor) * FractionOf(gun)));
+            var logistics = Loot.logistics;
+            float value = Mathf.Lerp(logistics.turnInFloor, logistics.turnInCeiling, FractionOf(gun));
+            return Mathf.RoundToInt(Loot.BaseValue(id) * value);
         }
     }
 }

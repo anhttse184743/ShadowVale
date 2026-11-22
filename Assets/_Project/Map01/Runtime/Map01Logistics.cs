@@ -48,6 +48,12 @@ namespace ShadowVale.Map01
         public int HandedIn { get; private set; }
         public event Action Changed;
 
+        internal void ChangeTradeCredit(int delta)
+        {
+            Credit += delta;
+            Changed?.Invoke();
+        }
+
         public static Map01Logistics For(Map01Mission mission)
         {
             if (mission == null) return null;
@@ -93,14 +99,16 @@ namespace ShadowVale.Map01
             {
                 case 0: return quest != null && quest.BaseResupplyOpen;      // Hùng home
                 case 1: return p != null && p.suppliesDelivered;
-                case 2: return p != null && p.radioDisabled;
-                case 3: return p != null && p.commanderKilled;
+                case 2: return p != null && p.radioDisabled && p.powerDisabled;
+                case 3: return story != null && story.CommanderObjectiveComplete;
                 default: return false;
             }
         }
         private static readonly string[] OperationNames = { "Đưa Hùng về căn cứ", "Giao hàng tiếp tế", "Phá đài liên lạc", "Hạ chỉ huy địch" };
 
-        private void Update()
+        private void Update() => CollectRewards();
+
+        private void CollectRewards()
         {
             if (mission == null || !mission.IsInitialized || Map01SaveSystem.IsRestoring) return;
             var credit = data.logistics.operationCredit;
@@ -250,11 +258,15 @@ namespace ShadowVale.Map01
 
         // ---- the save --------------------------------------------------------------------------------------
 
-        public State Capture() => new State
+        public State Capture()
         {
-            seed = Seed, credit = Credit, medkitDry = medkitDry, handedIn = HandedIn, granted = (bool[])granted.Clone(),
-            rolled = rolled.Select(p => new Rolled { point = p.Key, items = Copy(p.Value) }).ToArray(),
-        };
+            CollectRewards();
+            return new State
+            {
+                seed = Seed, credit = Credit, medkitDry = medkitDry, handedIn = HandedIn, granted = (bool[])granted.Clone(),
+                rolled = rolled.Select(p => new Rolled { point = p.Key, items = Copy(p.Value) }).ToArray(),
+            };
+        }
 
         /// <summary>Back to a saved state. A save from before the store keeps its seed but starts the store at 0 points,
         /// with what was already done counted as sent (it was paid in refills then).</summary>

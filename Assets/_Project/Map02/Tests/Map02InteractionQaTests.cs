@@ -38,7 +38,7 @@ namespace ShadowVale.Map01.Tests {
   static IEnumerator Click(Map02ChapterDirector c,Vector2 point,string method="DrawPacking"){yield return Gui(c,EventType.MouseDown,point,method);yield return Gui(c,EventType.MouseUp,point,method);}
   static IEnumerator Packing(){
    Map02Mission m=null;yield return Ready(x=>m=x);var c=m.Chapter;c.Cancel();c.enabled=false;Prefix(m);
-   for(int i=0;i<3;i++)c.State.Increment("D1_04");Open(c,"Packing","D1_04");Set(c,"dayInputReady",true);
+   for(int i=0;i<3;i++)c.State.Increment("D1_04");Open(c,"Packing","D1_04");Call(c,"FinishDayHelp");Set(c,"dayInputReady",true);
    c.State.dayOne.wetPattern=0;
    try{foreach(float scale in new[]{.75f,1f,1.2f}){
     int width=Mathf.RoundToInt(1600*scale),height=Mathf.RoundToInt(900*scale);float resizeUntil=Time.realtimeSinceStartup+15;int stable=0;SetPreviewResolution(width,height);
@@ -55,7 +55,7 @@ namespace ShadowVale.Map01.Tests {
   }
   static IEnumerator DockMouse(){
    Map02Mission m=null;yield return Ready(x=>m=x);var c=m.Chapter;c.Cancel();c.enabled=false;Prefix(m);
-   Open(c,"Dock","D1_05");Set(c,"dayInputReady",true);c.State.dayOne.stakeHits=6;
+   Open(c,"Dock","D1_05");Call(c,"FinishDayHelp");Set(c,"dayInputReady",true);c.State.dayOne.stakeHits=6;
    
    IEnumerator Card(int board)=>Click(c,new Vector2(290,290+Array.IndexOf(c.State.dayOne.boardOrder,board)*90),"DrawDock");
    IEnumerator Confirm()=>Click(c,new Vector2(1340,625),"DrawDock");
@@ -77,6 +77,7 @@ namespace ShadowVale.Map01.Tests {
    try{
     c.enabled=false;m.enabled=false;Keys(Key.E);yield return null;Open(c,"Dock","D1_05");c.State.dayOne.stakeHits=2;Call(c,"SyncDayProps");m.enabled=true;c.enabled=true;
     yield return null;Assert.False(Get<bool>(c,"dayInputReady"));Keys();yield return null;yield return null;Assert.True(Get<bool>(c,"dayInputReady"));
+    Keys(Key.Escape);yield return null;Keys();yield return null;yield return null;Assert.False(Get<bool>(c,"dayHelpVisible"));
     Set(c,"dayClock",Map02DayOneState.SweepSeconds(0)*.5f);Keys(Key.Space);yield return null;
     Assert.AreEqual(2,c.State.dayOne.stakeHits,"Press begins the blow; progress belongs to the later contact");
     yield return WaitGameSeconds(.22f);Assert.AreEqual(3,c.State.dayOne.stakeHits);Assert.AreEqual(0,(int)typeof(Map02ChapterDirector).GetProperty("VisibleStakeIndex",F).GetValue(c));

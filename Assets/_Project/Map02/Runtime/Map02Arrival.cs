@@ -27,6 +27,7 @@ namespace ShadowVale.Map01
         public readonly Dictionary<string,int> Inventory=new();
         public int Stones {get;private set;}
         public Map01Inventory.Layout CharacterBag {get;private set;}
+        public int LogisticsCredit {get;private set;}
         public float CharacterStamina {get;private set;}
         public string RifleAmmo {get;private set;} = "ammo_rifle";
         public float CinematicTime=>CurrentPhase==Phase.Approaching?clock:CurrentPhase==Phase.Mooring?ApproachDuration+clock:ApproachDuration+MoorDuration+clock;
@@ -103,6 +104,7 @@ namespace ShadowVale.Map01
             player=mission.ModernPlayer;combat=mission.ModernCombat;health=mission.ModernHealth;
             foreach(var item in mission.GetComponent<Map01Inventory>().CaptureItems())Inventory[item.item_id]=item.count;
             Stones=mission.GetComponent<Map01Inventory>().Stones;
+            LogisticsCredit=mission.GetComponent<Map01Logistics>()?.Credit??0;
             CharacterBag=mission.GetComponent<Map01Inventory>().CaptureLayout();CharacterStamina=mission.Stamina;
             RifleAmmo=mission.GetComponent<Map01Inventory>().PrimaryAmmo;
             Inventory["ammo_rifle"]=mission.GetComponent<Map01Inventory>().Count("ammo_rifle");

@@ -20,6 +20,8 @@ namespace ShadowVale.Map01
         [Serializable] public sealed class Snapshot
         {
             public int version=1;
+            public int logisticsCredit;
+            public string[] claimedLogisticsRewards;
             public Map02WorldState world;
             public Map02ChapterState chapter;
             public Map01Inventory.Layout bagLayout;
@@ -39,7 +41,7 @@ namespace ShadowVale.Map01
             public string checkpoint, patrolCheckpoint, skillRunId;
         }
         public Map02ChapterDirector Chapter {get;private set;}
-        public string ObjectiveText=>Chapter!=null?Chapter.State.Objective:World.Objective;
+        public string ObjectiveText=>Chapter!=null?Chapter.State.Objective+(trader?.Available==true?"\nCó thể đổi súng ở quân nhu tại kho phía nam.":""):World.Objective;
         bool ObjectiveAvailable(Map02ObjectiveObject t)=>Chapter!=null?Chapter.IsAvailable(t):World.Available(t.work);
         public void RefreshChapter(){SyncSkills();targets=FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None);Notify();}
         public Map02WorldState World { get; private set; } = new Map02WorldState();
@@ -48,7 +50,10 @@ namespace ShadowVale.Map01
         public bool Paused { get; private set; }
         public bool Cinematic => !Ready || dialogue?.Active == true || (Chapter?.Busy==true||Chapter?.Transitioning==true) || World.story.IsCinematic;
         public bool InputBlocked => !Ready || ForestMenu.Visible || ShadowVale.Core.Services.InputFocus.OverlayOpen || Paused || Panel != 0 || dialogue?.Active == true || Chapter?.LocksInput==true || World.story.failed || World.story.IsCinematic;
-        public int Panel { get; private set; } // 1 inventory, 2 journal, 3 map
+        public int Panel { get; private set; } // 1 inventory, 2 journal, 3 map, 4 bench, 5 trader
+        CampTrader trader;
+        int logisticsCredit;
+        readonly HashSet<string> claimedLogisticsRewards=new HashSet<string>();
         public readonly Dictionary<string,int> Inventory = new Dictionary<string,int>();
         public int Stones { get; private set; }
         public float PlaySeconds { get; private set; }
@@ -146,8 +151,16 @@ namespace ShadowVale.Map01
             if(GetComponent<Map01FoliageReveal>()==null)gameObject.AddComponent<Map01FoliageReveal>();
             if(GetComponent<Map02SightCover>()==null)gameObject.AddComponent<Map02SightCover>();
             InitializeCharacter();
+            logisticsCredit=arrival?.LogisticsCredit??0;
+            trader=CampTrader.Install(gameObject, Bag, true,
+                () => Ready && !World.story.failed && Chapter.State.phase==5 && !Chapter.State.finished &&
+                    Chapter.State.activeTask!="N3_08" && !Chapter.State.Done("N3_08"),
+                () => Panel==5,
+                () => Player,
+                () => Chapter.Sites.TryGetValue("southStore",out var site)?site.position:(Vector3?)null,
+                () => logisticsCredit, delta => logisticsCredit+=delta);
             // Map 2's session: the squads' plans, enemy states, noise and shots reach the web backend like Map 1's
-            ShadowVale.Telemetry.TelemetryService.Attach(gameObject,"map02");
+            InstallTelemetry();
             StartCoroutine(PrepareHudChart());
             if (pending != null) { var data=pending; pending=null; Restore(data); }
             if (string.IsNullOrEmpty(checkpoint)) StoreCheckpoint();
@@ -155,7 +168,8 @@ namespace ShadowVale.Map01
         }
         void Update()
         {
-            if(Ready)SyncSkills();
+            TickTelemetry();
+            if(Ready){SyncSkills();CollectLogisticsRewards(true);}
             TickCharacterEffects();
             if (!Ready || Paused || ForestMenu.Visible) return;
             TickMapSafety();
@@ -179,10 +193,18 @@ namespace ShadowVale.Map01
                 return;
             }
             if(World.story.failed||Chapter?.LocksInput==true)return;
+            if(Panel==5&&worldEReady&&kb.eKey.wasPressedThisFrame){CloseGameplayPanel();RequireInteractionRelease();return;}
             if(kb.tabKey.wasPressedThisFrame){TogglePanel(1);return;}
             if(kb.jKey.wasPressedThisFrame){TogglePanel(2);return;}
             if(kb.mKey.wasPressedThisFrame){TogglePanel(3);return;}
             if(Panel!=0)return;
+            if(worldEReady&&kb.eKey.wasPressedThisFrame&&trader!=null&&trader.Near)
+            {
+                SetCharacterPanel(5);
+                RequireInteractionRelease();
+                CharacterHud.OpenTrade(trader);
+                return;
+            }
             if(Chapter?.HasNearbyPost==true){nearest=null;if(worldEReady)Chapter.TryInteractNearbyPost();return;}
             if(worldEReady&&kb.eKey.wasPressedThisFrame){if(Chapter?.UndergroundStore?.TryLootInteraction()==true||Chapter?.UndergroundStore?.TryDoorInteraction()==true)return;if(nearest!=null)Interact(nearest);else TryCharacterInteraction();}
         }
@@ -270,7 +292,16 @@ namespace ShadowVale.Map01
             return "";
         }
         public bool CanSave()=>string.IsNullOrEmpty(SaveBlockReason());
-        public Snapshot Capture(){SyncSkills();SyncBagFromTotals();return new Snapshot {
+        void CollectLogisticsRewards(bool announce)
+        {
+            if(Chapter==null)return;
+            int earned=Map01Loot.Load().logistics.ClaimMapTwoRewards(Chapter.State.Done,claimedLogisticsRewards);
+            if(earned==0)return;
+            logisticsCredit+=earned;
+            if(announce)Say($"Hoàn thành nhiệm vụ. +{earned} điểm hậu cần (còn {logisticsCredit}).");
+        }
+        public Snapshot Capture(){CollectLogisticsRewards(true);SyncSkills();SyncBagFromTotals();return new Snapshot {
+            logisticsCredit=logisticsCredit,claimedLogisticsRewards=claimedLogisticsRewards.OrderBy(id=>id,StringComparer.Ordinal).ToArray(),
             hasCharacterState=Bag!=null,stamina=Stamina,bagLayout=Bag?.CaptureLayout(),exploration=Exploration?.Capture(),
             rifleMagazine=combat?.MagazineRounds(WeaponKind.Rifle)??-1,pistolMagazine=combat?.MagazineRounds(WeaponKind.Pistol)??-1,sniperMagazine=combat?.MagazineRounds(WeaponKind.Sniper)??-1,
             crafting=Bag?.CraftingId,craftRemaining=Bag?.CraftRemaining??0,ground=groundItems.Where(g=>g!=null).Select(g=>new GroundSnapshot{id=g.id,count=g.count,condition=g.condition,position=g.transform.position}).ToArray(),
@@ -308,6 +339,10 @@ namespace ShadowVale.Map01
         }
         public void Restore(Snapshot data)
         {
+            if(Panel==5)CloseGameplayPanel();
+            logisticsCredit=Mathf.Max(0,data.logisticsCredit);
+            claimedLogisticsRewards.Clear();
+            claimedLogisticsRewards.UnionWith(data.claimedLogisticsRewards??Array.Empty<string>());
             player.GetComponent<Map01NamActions>()?.CancelAction();
             Chapter?.Cancel();CancelConversation();World=JsonUtility.FromJson<Map02WorldState>(JsonUtility.ToJson(data.world));dialogue=new Map02ConversationSession(World.story);
             Inventory.Clear();foreach(var item in data.inventory)Inventory[item.id]=item.count;Stones=data.stones;PlaySeconds=data.playSeconds;checkpoint=data.checkpoint;patrolCheckpoint=data.patrolCheckpoint;
@@ -324,6 +359,7 @@ namespace ShadowVale.Map01
             }
             RestoreSkills(data);
             if(Chapter!=null)Chapter.Restore(data.chapter??Map02ChapterState.Migrate(World));
+            CollectLogisticsRewards(false);
             SyncSkills();RestoreCharacter(data);
             if(Chapter?.State.PatrolRouteActive==true)EnsurePatrolCheckpoint();else patrolCheckpoint=null;
             ResetMapSafety();

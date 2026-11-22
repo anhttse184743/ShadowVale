@@ -135,7 +135,7 @@ namespace ShadowVale.Map01
                 if(quest.Stage==7){
                     var c3=GetComponent<Map01C3Mission>();
                     if(Progress.commanderReported)return c3!=null&&c3.Alarmed?"Trại C3 báo động! Dùng vật che, hạ sĩ quan tại điểm 3 rồi rút.":"Lẻn vào nhà chỉ huy C3 và hạ sĩ quan. Tùy chọn: hạ lính tháp canh, tháo dùi kẻng ở cổng, cắt dây điện thoại sau trại.";
-                    if(c3!=null&&c3.CachePoint!=null&&!c3.CachePoint.used)return "Điểm 3: lấy khẩu Mosin trinh sát giấu ở vai đồi Đông Nam doanh trại (5 viên), rồi đứng xa trại ít nhất 18 m, giữ [F] quan sát để báo cáo.";
+                    if(c3!=null&&c3.CachePoint!=null&&!c3.CachePoint.used&&GetComponent<Map01Inventory>().Count("rifle_mosin")==0)return "Điểm 3: có thể đổi Mosin ở quân nhu căn cứ A. Đứng xa trại ít nhất 18 m, giữ [F] quan sát để báo cáo.";
                     return "Điểm 3: đứng xa doanh trại ít nhất 18 m, giữ [F] nhìn về khu trại để báo cáo. Không cần nhắm đúng sĩ quan.";
                 }
                 if(quest.Stage==8)return SafeToReport?"Sĩ quan đã bị hạ. Liên lạc chỉ huy [E] để nhận đường rút.":$"Sĩ quan đã bị hạ. Thoát giao tranh rồi liên lạc chỉ huy [E] — còn {Hunters} lính đang truy lùng gần bạn.";
@@ -331,7 +331,7 @@ namespace ShadowVale.Map01
                 at=Layout.radioApproach.position;label=ResponsePending?"TRẠM ĐÀI — NHÓM PHẢN ỨNG":"ĐIỂM 2 — BẢNG MẠCH ĐÀI";return true;}
             if(quest.Stage==7){
                 var c3=GetComponent<Map01C3Mission>();
-                if(c3!=null&&c3.CachePoint!=null&&c3.CachePoint.isActiveAndEnabled&&!c3.CachePoint.used){at=c3.CachePoint.transform.position;label="ĐỒI ĐÔNG NAM — MOSIN TRINH SÁT";return true;}
+                if(c3!=null&&c3.CachePoint!=null&&c3.CachePoint.isActiveAndEnabled&&!c3.CachePoint.used&&GetComponent<Map01Inventory>().Count("rifle_mosin")==0){at=c3.CachePoint.transform.position;label="ĐỒI ĐÔNG NAM — MOSIN TRINH SÁT";return true;}
                 var field=GetComponent<Map01FieldSupplies>()?.ApproachPoint;
                 if(field!=null&&field.isActiveAndEnabled&&!field.used){at=field.transform.position;label="ĐỒI ĐÔNG NAM — BĂNG, KHÓI, LỰU ĐẠN";return true;}
                 bool hunt=Progress.commanderReported&&quest.CommanderEnemy!=null&&quest.CommanderEnemy.Alive;
