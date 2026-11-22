@@ -65,30 +65,6 @@
       "icon_key": null
     },
     {
-      "code": "ammo_shotgun",
-      "name": "Shells",
-      "description": null,
-      "item_type": "ammo",
-      "rarity": "common",
-      "max_stack": 99,
-      "weight": 0.05,
-      "base_value": 0,
-      "stats": {},
-      "icon_key": null
-    },
-    {
-      "code": "ammo_smg",
-      "name": "SMG Rounds",
-      "description": null,
-      "item_type": "ammo",
-      "rarity": "common",
-      "max_stack": 99,
-      "weight": 0.01,
-      "base_value": 0,
-      "stats": {},
-      "icon_key": null
-    },
-    {
       "code": "ammo_sniper",
       "name": "7.62x54R Rounds",
       "description": null,
@@ -109,18 +85,6 @@
       "max_stack": 64,
       "weight": 0.4,
       "base_value": 20,
-      "stats": {},
-      "icon_key": null
-    },
-    {
-      "code": "carbine_scout",
-      "name": "Scout Carbine",
-      "description": null,
-      "item_type": "weapon",
-      "rarity": "common",
-      "max_stack": 1,
-      "weight": 0,
-      "base_value": 0,
       "stats": {},
       "icon_key": null
     },
@@ -378,18 +342,6 @@
       "icon_key": null
     },
     {
-      "code": "river_documents",
-      "name": "River Documents",
-      "description": null,
-      "item_type": "quest_item",
-      "rarity": "common",
-      "max_stack": 64,
-      "weight": 0.2,
-      "base_value": 0,
-      "stats": {},
-      "icon_key": null
-    },
-    {
       "code": "scope_lens",
       "name": "Scope Lens",
       "description": null,
@@ -410,30 +362,6 @@
       "max_stack": 64,
       "weight": 0.5,
       "base_value": 3,
-      "stats": {},
-      "icon_key": null
-    },
-    {
-      "code": "shotgun_pump",
-      "name": "Pump Shotgun",
-      "description": null,
-      "item_type": "weapon",
-      "rarity": "common",
-      "max_stack": 1,
-      "weight": 0,
-      "base_value": 0,
-      "stats": {},
-      "icon_key": null
-    },
-    {
-      "code": "smg_compact",
-      "name": "Compact SMG",
-      "description": null,
-      "item_type": "weapon",
-      "rarity": "common",
-      "max_stack": 1,
-      "weight": 0,
-      "base_value": 0,
       "stats": {},
       "icon_key": null
     },
@@ -474,18 +402,6 @@
       "icon_key": null
     },
     {
-      "code": "supplies",
-      "name": "Supplies",
-      "description": null,
-      "item_type": "quest_item",
-      "rarity": "common",
-      "max_stack": 64,
-      "weight": 2,
-      "base_value": 0,
-      "stats": {},
-      "icon_key": null
-    },
-    {
       "code": "weapon_parts",
       "name": "Weapon Parts",
       "description": null,
@@ -499,22 +415,6 @@
     }
   ],
   "weapons": [
-    {
-      "item_code": "carbine_scout",
-      "item_type": "weapon",
-      "weapon_class": "rifle",
-      "damage": 20,
-      "fire_rate": 5,
-      "effective_range": 32,
-      "magazine_size": 20,
-      "reload_time_s": 2,
-      "ammo_item_code": "ammo_rifle",
-      "ammo_type": "ammo",
-      "max_durability": 100,
-      "durability_per_use": 0.1,
-      "noise_radius": 16,
-      "is_suppressed": false
-    },
     {
       "item_code": "knife",
       "item_type": "weapon",
@@ -593,38 +493,6 @@
       "max_durability": 100,
       "durability_per_use": 0.35,
       "noise_radius": 18,
-      "is_suppressed": false
-    },
-    {
-      "item_code": "shotgun_pump",
-      "item_type": "weapon",
-      "weapon_class": "shotgun",
-      "damage": 60,
-      "fire_rate": 1.2,
-      "effective_range": 12,
-      "magazine_size": 6,
-      "reload_time_s": 3,
-      "ammo_item_code": "ammo_shotgun",
-      "ammo_type": "ammo",
-      "max_durability": 120,
-      "durability_per_use": 0.4,
-      "noise_radius": 24,
-      "is_suppressed": false
-    },
-    {
-      "item_code": "smg_compact",
-      "item_type": "weapon",
-      "weapon_class": "smg",
-      "damage": 14,
-      "fire_rate": 11,
-      "effective_range": 22,
-      "magazine_size": 35,
-      "reload_time_s": 1.8,
-      "ammo_item_code": "ammo_smg",
-      "ammo_type": "ammo",
-      "max_durability": 90,
-      "durability_per_use": 0.1,
-      "noise_radius": 14,
       "is_suppressed": false
     }
   ],
@@ -863,14 +731,6 @@
     },
     {
       "loot_table_code": "loot_tier_1",
-      "item_code": "ammo_smg",
-      "tier": 1,
-      "weight": 20,
-      "min_qty": 10,
-      "max_qty": 25
-    },
-    {
-      "loot_table_code": "loot_tier_1",
       "item_code": "scrap_metal",
       "tier": 1,
       "weight": 25,
@@ -892,14 +752,6 @@
       "weight": 10,
       "min_qty": 1,
       "max_qty": 1
-    },
-    {
-      "loot_table_code": "loot_tier_2",
-      "item_code": "ammo_shotgun",
-      "tier": 2,
-      "weight": 30,
-      "min_qty": 4,
-      "max_qty": 8
     },
     {
       "loot_table_code": "loot_tier_2",
@@ -18929,7 +18781,7 @@
       "vision_angle_deg": 110,
       "hearing_range": 16,
       "accuracy": 0.85,
-      "weapon_item_code": "carbine_scout",
+      "weapon_item_code": null,
       "fsm_params": {
         "alert_decay_seconds": 6,
         "retreat_hp_threshold": 0.4,
@@ -18976,7 +18828,7 @@
       "vision_angle_deg": 80,
       "hearing_range": 10,
       "accuracy": 0.85,
-      "weapon_item_code": "shotgun_pump",
+      "weapon_item_code": null,
       "fsm_params": {
         "alert_decay_seconds": 10,
         "retreat_hp_threshold": 0.15,
@@ -19023,7 +18875,7 @@
       "vision_angle_deg": 120,
       "hearing_range": 18,
       "accuracy": 0.85,
-      "weapon_item_code": "smg_compact",
+      "weapon_item_code": null,
       "fsm_params": {
         "alert_decay_seconds": 999,
         "retreat_hp_threshold": 0,

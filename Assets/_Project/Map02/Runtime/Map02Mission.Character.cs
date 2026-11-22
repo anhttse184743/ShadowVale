@@ -116,7 +116,8 @@ namespace ShadowVale.Map01
             try
             {
                 var previous=layout??Bag.CaptureLayout();
-                var items=Inventory.Select(p=>new ForestIngredient{item_id=p.Key,count=p.Value}).ToList();
+                var items=Inventory.Where(p=>!ForestInventory.IsRetired(p.Key))
+                    .Select(p=>new ForestIngredient{item_id=p.Key,count=p.Value}).ToList();
                 // Legacy Map 2 snapshots did not list carried weapons. Preserve the actual rifle ID.
                 if(!items.Any(i=>Map01Inventory.SlotOf(i.item_id)==Map01Inventory.Slot.Primary))items.Add(new ForestIngredient{item_id=RifleItemId,count=initial&&layout==null?1:0});
                 Bag.RestoreFromSave(items.ToArray(),Stones,null,0);
@@ -176,7 +177,12 @@ namespace ShadowVale.Map01
             if(!string.IsNullOrEmpty(data.crafting)){var savedLayout=Bag.CaptureLayout();Bag.RestoreFromSave(Bag.CaptureItems(),Stones,data.crafting,data.craftRemaining);Bag.RestoreLayout(savedLayout);}
             Exploration.Restore(data.exploration);Exploration.Reveal(Player.position,14);RefreshExplorationTexture();
             foreach(var item in groundItems)if(item!=null)Destroy(item.gameObject);groundItems.Clear();
-            foreach(var saved in data.ground??Array.Empty<GroundSnapshot>()){DropCharacterItem(saved.id,saved.count,saved.condition);groundItems[groundItems.Count-1].transform.position=saved.position;}
+            foreach (var saved in data.ground ?? Array.Empty<GroundSnapshot>())
+            {
+                if (ForestInventory.IsRetired(saved.id)) continue;
+                DropCharacterItem(saved.id, saved.count, saved.condition);
+                groundItems[groundItems.Count - 1].transform.position = saved.position;
+            }
             Bag.RestoreFieldToolkit(data.bagLayout?.fieldKitVersion ?? 0);
             player.SprintAllowed=()=>CharacterCanSprint;
             GetComponent<Map01StoneThrow>()?.Cancel();

@@ -9,10 +9,14 @@ namespace ShadowVale.Map01
     {
         public static readonly string[] Order = {
             "rifle_standard", "rifle_m16", "knife", "pistol_k54", "rifle_mosin",
-            "ammo_rifle", "ammo_556", "ammo_pistol", "ammo_sniper", "medkit_small", "smoke_bomb", "grenade_f1", "cloth", "herb", "stone", "m1_supply_key", "m1_supply_cargo", "supplies", "river_documents",
+            "ammo_rifle", "ammo_556", "ammo_pistol", "ammo_sniper", "medkit_small", "smoke_bomb", "grenade_f1", "cloth", "herb", "stone", "m1_supply_key", "m1_supply_cargo",
             "scrap_metal", "gunpowder", "gun_oil", "repair_kit", "weapon_parts", "smoke_module", "fuse_module", "blast_charge", "scope_lens",
-            "ammo_smg", "ammo_shotgun", "ammo_recovered", "ak_loading_pack"
+            "ammo_recovered", "ak_loading_pack"
         };
+
+        // Older saves and published bundles can still contain these codes.
+        public static bool IsRetired(string id) => id is "ammo_smg" or "ammo_shotgun" or "river_documents" or "supplies"
+            or "shotgun_pump" or "smg_compact" or "carbine_scout";
 
         /// <summary>
         /// Items whose bag icon is rendered from their 3D model (Resources/Hud/ItemIcons) rather than painted on the
@@ -59,9 +63,7 @@ namespace ShadowVale.Map01
                 case "ammo_rifle": return "Đạn AK";
                 case "ammo_recovered": return "Vật tư đạn thu hồi";
                 case "ak_loading_pack": return "Gói tiếp liệu AK";
-                case "ammo_smg": return "Đạn tiểu liên";
                 case "ammo_pistol": return "Đạn K-54";
-                case "ammo_shotgun": return "Đạn shotgun";
                 case "ammo_sniper": return "Đạn Mosin";
                 case "pistol_k54": return "Súng lục K-54";
                 case "rifle_mosin": return "Súng Mosin ống ngắm PU";
@@ -69,8 +71,6 @@ namespace ShadowVale.Map01
                 case "cloth": return "Vải";
                 case "herb": return "Thảo dược";
                 case "stone": return "Đá ném";
-                case "supplies": return "Hàng tiếp tế";
-                case "river_documents": return "Tài liệu";
                 case "scrap_metal": return "Kim loại vụn";
                 case "gun_oil": return "Dầu súng";
                 case "repair_kit": return "Bộ sửa chữa";
@@ -100,8 +100,6 @@ namespace ShadowVale.Map01
                 case "stone": return "Đồ ném: rơi xuống gây tiếng động 14 m, lính nghe thấy bỏ vị trí đi kiểm tra. Nhấn 4 chọn/đổi đồ ném, giữ chuột trái để ngắm, thả để ném.";
                 case "cloth": return "Vật liệu chế tạo: băng cứu thương (2 vải + 1 thảo dược) và bom khói (1 vải + 1 ống tạo khói).";
                 case "herb": return "Kết hợp 2 vải và 1 thảo dược để làm băng cứu thương.";
-                case "supplies": return "Vật phẩm nhiệm vụ. Mang hàng tiếp tế đến bến sông.";
-                case "river_documents": return "Vật phẩm nhiệm vụ. Mang tài liệu về điểm rút lui.";
                 case "scrap_metal": return "Vật liệu chế tạo: bộ sửa chữa (3, cùng 1 dầu súng) và đạn (1, cùng thuốc súng). Rã súng cũng ra kim loại vụn.";
                 case "gun_oil": return "Vật liệu bảo dưỡng: cùng 3 kim loại vụn làm bộ sửa chữa. Sửa súng ở bàn khi đã mất từ một nửa độ bền cũng cần 1 dầu súng.";
                 case "repair_kit": return "Sửa dã chiến: +35% độ bền (Kỹ thuật cộng thêm), tối đa 80% (Kỹ thuật cao tới 100%). Tab → chuột phải vào súng → Sửa dã chiến. Chế từ 3 kim loại vụn + 1 dầu súng: dã chiến 8 giây, ở bàn 6 giây.";
@@ -158,10 +156,10 @@ namespace ShadowVale.Map01
         {
             switch (id) {
                 case "ammo_rifle": return 0; case "cloth": return 1; case "herb": return 2;
-                case "medkit_small": return 3; case "supplies": return 4; case "river_documents": return 5;
+                case "medkit_small": return 3;
                 case "stone": return 6; case "scrap_metal": return 7; case "gun_oil": return 8;
-                case "repair_kit": return 9; case "ammo_smg": return 10;
-                case "ammo_shotgun": return 12; default: return -1; // ammo_pistol (11) and ammo_sniper (13) now have rendered icons
+                case "repair_kit": return 9;
+                default: return -1; // ammo_pistol (11) and ammo_sniper (13) now have rendered icons
             }
         }
     }

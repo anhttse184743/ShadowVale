@@ -76,6 +76,8 @@ namespace ShadowVale.Map01
             var recipes = (local.craft_recipes ?? new ForestRecipe[0]).Where(r => r != null).ToList();
             foreach (var p in published.CraftRecipes)
             {
+                if (ForestInventory.IsRetired(p.OutputItemId) || p.Inputs.Any(i => ForestInventory.IsRetired(i.ItemId)))
+                    continue;
                 var recipe = recipes.FirstOrDefault(r => r.id == p.Id);
                 if (recipe == null)
                 {
@@ -139,7 +141,7 @@ namespace ShadowVale.Map01
                 }
                 table.rollsMin = p.RollsMin;
                 table.rollsMax = p.Rolls;
-                table.entries = p.Entries.Select(e => new Map01Loot.Entry
+                table.entries = p.Entries.Where(e => !ForestInventory.IsRetired(e.ItemId)).Select(e => new Map01Loot.Entry
                 {
                     item = e.ItemId, tier = e.Tier, weight = e.Weight, min = e.Min, max = e.Max
                 }).ToArray();

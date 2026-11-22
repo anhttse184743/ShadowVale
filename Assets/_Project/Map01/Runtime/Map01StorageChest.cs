@@ -67,7 +67,8 @@ namespace ShadowVale.Map01
             if (saved == null) return;
             foreach (var stack in saved)
             {
-                if (stack.index < 0 || stack.count <= 0 || string.IsNullOrEmpty(stack.id)) continue;
+                if (stack.index < 0 || stack.count <= 0 || string.IsNullOrEmpty(stack.id) ||
+                    ForestInventory.IsRetired(stack.id)) continue;
                 var cell = new Cell { id = stack.id, count = stack.count, condition = stack.condition };
                 if (stack.index < Capacity) Put(stack.index, cell);
                 else overflow.Enqueue(cell);

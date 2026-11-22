@@ -54,8 +54,7 @@ namespace ShadowVale.Map01
         public string Throwable => throwable;
         public bool ThrowableEquipped { get; private set; }
         public int FreeCells => bag.Count(c => c == null);
-        public static bool IsMissionItem(string id) => id == "supplies" || id == "river_documents"
-            || id == Map01Story.KeyItem || id == Map01Story.CargoItem;
+        public static bool IsMissionItem(string id) => id == Map01Story.KeyItem || id == Map01Story.CargoItem;
         /// <summary>Weapons with Nam's own animations so far: the others go in their slot but stay holstered.</summary>
         public static bool Drawable(string id) => id == "rifle_standard" || id == Map01M16.Id || id == "knife" || id == "pistol_k54" || id=="rifle_mosin";
 
@@ -72,7 +71,7 @@ namespace ShadowVale.Map01
         /// Returns how many did not fit. A gun goes in with <paramref name="condition"/> (points; NoCondition = new).</summary>
         private int Store(string id, int amount, float condition = NoCondition)
         {
-            if (string.IsNullOrEmpty(id) || amount <= 0) return 0;
+            if (string.IsNullOrEmpty(id) || amount <= 0 || ForestInventory.IsRetired(id)) return 0;
             if (id == "stone") amount = Mathf.Min(amount, Mathf.Max(0, StoneCapacity - Stones));
             float worn = Worn(id, condition);
             var slot = SlotOf(id);

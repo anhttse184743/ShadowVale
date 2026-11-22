@@ -24,7 +24,7 @@ namespace ShadowVale.Map01
         {
             // Retired delivery/exit markers remain serialized in old scenes and saves.
             // Current extraction is owned by Map01Extraction after the C3 radio report.
-            if (point.kind == ForestPointKind.Exit) { point.enabled = false; return; }
+            if (point.kind is ForestPointKind.Exit or ForestPointKind.Documents) { point.enabled = false; return; }
             Points.Add(point);
             if (point.kind == ForestPointKind.Hide) {
                 hideSpots.Add(point);

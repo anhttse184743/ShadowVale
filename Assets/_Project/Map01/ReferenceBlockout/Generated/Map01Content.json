@@ -7,8 +7,6 @@
     {"id":"rifle_m16","display_name":"M16","category":"weapon","stack_max":1,"weight":3.5},
     { "id": "ammo_rifle",    "display_name": "Rifle Rounds",    "category": "ammo",       "stack_max": 90,  "weight": 0.02 },
     {"id": "ammo_556", "display_name": "Đạn 5,56×45 mm", "category": "ammo", "stack_max": 90, "weight": 0.02},
-    { "id": "ammo_smg",      "display_name": "SMG Rounds",      "category": "ammo",       "stack_max": 120, "weight": 0.01 },
-    { "id": "ammo_shotgun",  "display_name": "Shells",          "category": "ammo",       "stack_max": 32,  "weight": 0.05 },
     { "id": "ammo_pistol",   "display_name": "Pistol Rounds",   "category": "ammo",       "stack_max": 60,  "weight": 0.01 },
     { "id": "ammo_sniper",   "display_name": "Long Rounds",     "category": "ammo",       "stack_max": 20,  "weight": 0.04 },
     { "id": "scrap_metal",   "display_name": "Scrap Metal",     "category": "material",   "stack_max": 20,  "weight": 0.5 },
@@ -21,28 +19,23 @@
   "weapons": [
     { "id": "rifle_standard",  "display_name": "Service Rifle",   "class": "rifle",   "damage": 24.0, "fire_rate": 6.5,  "range": 40.0, "ammo_type": "ammo_rifle",   "magazine_size": 30, "reload_seconds": 2.4, "durability_max": 100, "durability_per_shot": 0.12, "noise_radius": 18.0, "suppressed": false },
     {"id": "rifle_m16", "display_name": "M16", "class": "rifle", "damage": 21.6, "fire_rate": 11.666666666666666, "range": 40.0, "ammo_type": "ammo_556", "magazine_size": 30, "reload_seconds": 2.4, "durability_max": 100, "durability_per_shot": 0.12, "noise_radius": 18.0, "suppressed": false},
-    { "id": "smg_compact",     "display_name": "Compact SMG",     "class": "smg",     "damage": 14.0, "fire_rate": 11.0, "range": 22.0, "ammo_type": "ammo_smg",     "magazine_size": 35, "reload_seconds": 1.8, "durability_max": 90,  "durability_per_shot": 0.10, "noise_radius": 14.0, "suppressed": false },
-    { "id": "shotgun_pump",    "display_name": "Pump Shotgun",    "class": "shotgun", "damage": 60.0, "fire_rate": 1.2,  "range": 12.0, "ammo_type": "ammo_shotgun", "magazine_size": 6,  "reload_seconds": 3.0, "durability_max": 120, "durability_per_shot": 0.40, "noise_radius": 24.0, "suppressed": false },
     { "id": "pistol_silenced", "display_name": "Silenced Pistol", "class": "pistol",  "damage": 18.0, "fire_rate": 4.0,  "range": 20.0, "ammo_type": "ammo_pistol",  "magazine_size": 12, "reload_seconds": 1.5, "durability_max": 80,  "durability_per_shot": 0.15, "noise_radius": 4.0,  "suppressed": true },
-    { "id": "sniper_bolt",     "display_name": "Bolt Rifle",      "class": "sniper",  "damage": 95.0, "fire_rate": 0.8,  "range": 70.0, "ammo_type": "ammo_sniper",  "magazine_size": 5,  "reload_seconds": 3.2, "durability_max": 110, "durability_per_shot": 0.50, "noise_radius": 30.0, "suppressed": false },
-    { "id": "carbine_scout",   "display_name": "Scout Carbine",   "class": "carbine", "damage": 20.0, "fire_rate": 5.0,  "range": 32.0, "ammo_type": "ammo_rifle",   "magazine_size": 20, "reload_seconds": 2.0, "durability_max": 100, "durability_per_shot": 0.10, "noise_radius": 16.0, "suppressed": false }
+    { "id": "sniper_bolt",     "display_name": "Bolt Rifle",      "class": "sniper",  "damage": 95.0, "fire_rate": 0.8,  "range": 70.0, "ammo_type": "ammo_sniper",  "magazine_size": 5,  "reload_seconds": 3.2, "durability_max": 110, "durability_per_shot": 0.50, "noise_radius": 30.0, "suppressed": false }
   ],
   "enemy_archetypes": [
     { "id": "grunt", "display_name": "Militia Grunt",  "max_hp": 80,  "move_speed": 3.2, "vision_range": 14.0, "vision_angle": 90.0,  "hearing_range": 12.0, "weapon_id": "rifle_standard", "alert_decay_seconds": 8.0,  "retreat_hp_threshold": 0.25, "loot_table_id": "loot_tier_1", "is_boss": false },
-    { "id": "scout", "display_name": "Militia Scout",  "max_hp": 55,  "move_speed": 4.2, "vision_range": 20.0, "vision_angle": 110.0, "hearing_range": 16.0, "weapon_id": "carbine_scout",  "alert_decay_seconds": 6.0,  "retreat_hp_threshold": 0.40, "loot_table_id": "loot_tier_1", "is_boss": false },
-    { "id": "heavy", "display_name": "Militia Heavy",  "max_hp": 160, "move_speed": 2.4, "vision_range": 12.0, "vision_angle": 80.0,  "hearing_range": 10.0, "weapon_id": "shotgun_pump",   "alert_decay_seconds": 10.0, "retreat_hp_threshold": 0.15, "loot_table_id": "loot_tier_2", "is_boss": false },
-    { "id": "boss_commander", "display_name": "Commander Varek", "max_hp": 600, "move_speed": 3.6, "vision_range": 18.0, "vision_angle": 120.0, "hearing_range": 18.0, "weapon_id": "smg_compact", "alert_decay_seconds": 999.0, "retreat_hp_threshold": 0.0, "loot_table_id": "loot_tier_3", "is_boss": true }
+    { "id": "scout", "display_name": "Militia Scout",  "max_hp": 55,  "move_speed": 4.2, "vision_range": 20.0, "vision_angle": 110.0, "hearing_range": 16.0, "weapon_id": null,  "alert_decay_seconds": 6.0,  "retreat_hp_threshold": 0.40, "loot_table_id": "loot_tier_1", "is_boss": false },
+    { "id": "heavy", "display_name": "Militia Heavy",  "max_hp": 160, "move_speed": 2.4, "vision_range": 12.0, "vision_angle": 80.0,  "hearing_range": 10.0, "weapon_id": null,   "alert_decay_seconds": 10.0, "retreat_hp_threshold": 0.15, "loot_table_id": "loot_tier_2", "is_boss": false },
+    { "id": "boss_commander", "display_name": "Commander Varek", "max_hp": 600, "move_speed": 3.6, "vision_range": 18.0, "vision_angle": 120.0, "hearing_range": 18.0, "weapon_id": null, "alert_decay_seconds": 999.0, "retreat_hp_threshold": 0.0, "loot_table_id": "loot_tier_3", "is_boss": true }
   ],
   "loot_tables": [
     { "id": "loot_tier_1", "tier": 1, "rolls": 2, "entries": [
       { "item_id": "ammo_rifle",   "weight": 40, "min": 5, "max": 15 },
-      { "item_id": "ammo_smg",     "weight": 20, "min": 10, "max": 25 },
       { "item_id": "scrap_metal",  "weight": 25, "min": 1, "max": 3 },
       { "item_id": "cloth",        "weight": 25, "min": 1, "max": 2 },
       { "item_id": "medkit_small", "weight": 10, "min": 1, "max": 1 }
     ]},
     { "id": "loot_tier_2", "tier": 2, "rolls": 3, "entries": [
-      { "item_id": "ammo_shotgun", "weight": 30, "min": 4, "max": 8 },
       { "item_id": "ammo_pistol",  "weight": 25, "min": 6, "max": 12 },
       { "item_id": "gun_oil",      "weight": 20, "min": 1, "max": 1 },
       { "item_id": "herb",         "weight": 20, "min": 1, "max": 3 },

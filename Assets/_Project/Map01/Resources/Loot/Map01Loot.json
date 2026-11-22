@@ -66,8 +66,6 @@
     { "code": "fuse_module", "type": "Material", "rarity": "Epic", "baseValue": 15, "weight": 0.1 },
     { "code": "blast_charge", "type": "Material", "rarity": "Epic", "baseValue": 20, "weight": 0.4 },
     { "code": "scope_lens", "type": "Material", "rarity": "Epic", "baseValue": 25, "weight": 0.1 },
-    { "code": "supplies", "type": "QuestItem", "rarity": "Common", "baseValue": 0, "weight": 2.0 },
-    { "code": "river_documents", "type": "QuestItem", "rarity": "Common", "baseValue": 0, "weight": 0.2 },
     { "code": "m1_supply_key", "type": "QuestItem", "rarity": "Common", "baseValue": 0, "weight": 0.05 },
     { "code": "m1_supply_cargo", "type": "QuestItem", "rarity": "Common", "baseValue": 0, "weight": 3.0 }
   ],
