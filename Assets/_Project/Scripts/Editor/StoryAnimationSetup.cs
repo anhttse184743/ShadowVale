@@ -78,6 +78,8 @@ namespace ShadowVale.Editor
 
         public static readonly string[] EnemyDeaths = {
             "Enemy_Death_Backward", "Enemy_Death_Forward", "Enemy_Death_Shot", "Enemy_Death_Knees", "Enemy_Death_Stomach" };
+        /// <summary>Playback speed per death: the guard is down in about two seconds, not after the takes' long stagger.</summary>
+        public static readonly float[] EnemyDeathSpeeds = { 1.5f, 1.5f, 2.2f, 2.6f, 2.6f };
 
         [MenuItem("ShadowVale/Setup Story Animations")]
         public static void Run()
@@ -669,7 +671,7 @@ namespace ShadowVale.Editor
 
             // deaths: one of five, picked per guard; the silent takedown has its own
             for (int i = 0; i < EnemyDeaths.Length; i++) {
-                var die = State("Die_" + i, EnemyDeaths[i]);
+                var die = State("Die_" + i, EnemyDeaths[i]); die.speed = EnemyDeathSpeeds[i];
                 var t = root.AddAnyStateTransition(die); t.hasExitTime = false; t.duration = .1f; t.canTransitionToSelf = false;
                 t.AddCondition(AnimatorConditionMode.If, 0, PlayerAnimatorBuilder.Params.Die);
                 t.AddCondition(AnimatorConditionMode.IfNot, 0, "Silent");
