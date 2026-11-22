@@ -35,6 +35,8 @@ namespace ShadowVale.Gameplay.Player
 
         [Header("Look")]
         [SerializeField] private float mouseSensitivity = 0.12f;
+        /// <summary>The player's multiplier from the options menu (1 = as tuned).</summary>
+        public static float SensitivityScale = 1f;
         [SerializeField] private float minPitch = -35f;
         [SerializeField] private float maxPitch = 70f;
         [SerializeField] private float zoomSpeed = 0.01f;
@@ -312,7 +314,7 @@ namespace ShadowVale.Gameplay.Player
 
             if (Cursor.lockState == CursorLockMode.Locked)
             {
-                float sensitivity = mouseSensitivity * (_binoculars ? _activeBinocularFov / hipFov : _scope ? _scopeFov/hipFov : Mathf.Lerp(1f, aimSensitivityScale, _aimBlend));
+                float sensitivity = mouseSensitivity * SensitivityScale * (_binoculars ? _activeBinocularFov / hipFov : _scope ? _scopeFov/hipFov : Mathf.Lerp(1f, aimSensitivityScale, _aimBlend));
                 Vector2 delta = mouse.delta.ReadValue();
 
                 float yawDelta = delta.x * sensitivity;

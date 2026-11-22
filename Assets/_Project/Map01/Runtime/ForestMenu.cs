@@ -7,7 +7,7 @@ namespace ShadowVale.Map01
 {
     /// <summary>Shared title, pause and checkpoint browser for Map 1 and Map 2 sessions.</summary>
     [DefaultExecutionOrder(-200)]
-    public sealed class ForestMenu : MonoBehaviour
+    public sealed partial class ForestMenu : MonoBehaviour
     {
         private static ForestMenu instance;
         public static bool Visible => instance != null && instance.visible;
@@ -103,7 +103,7 @@ namespace ShadowVale.Map01
             var name = SceneManager.GetActiveScene().name;
             // A blank/unsaved editor scene has no gameplay. It must show the title rather than just its skybox.
             visible = HasGameplay ? GameplayPaused : name != "Map 2";
-            browser = saving = quitAuthorized = loading = false; selected = 0; question = message = null; confirmed = null;
+            browser = settings = saving = quitAuthorized = loading = false; selected = 0; question = message = null; confirmed = null;
             ignoreKeysUntil = Time.realtimeSinceStartup + .5f; settleFrames = 10;
             if (mission != null) mission.RefreshTimeScale(); else Time.timeScale = HasGameplay && GameplayPaused ? 0 : 1;
             Refresh();
@@ -156,13 +156,15 @@ namespace ShadowVale.Map01
                 if (question != null) { question = null; confirmed = null; }
                 else if (choosingTutorial) { choosingTutorial = false; selected = 1; }
                 else if (browser) { browser = false; selected = 0; }
+                else if (settings) CloseSettings();
                 else if (HasGameplay) {
                     if (!visible && ClosePanel()) return;
                     visible = !visible; PauseGameplay(visible); Refresh();
                 }
             }
             if (!visible || question != null) return;
-            int count = choosingTutorial ? 3 : browser ? ForestSaveSlots.Count : HasGameplay ? 5 : 4;
+            if (settings) { SettingsKeys(kb); return; }
+            int count = choosingTutorial ? 3 : browser ? ForestSaveSlots.Count : HasGameplay ? 6 : 5;
             if (kb.downArrowKey.wasPressedThisFrame) selected = (selected + 1) % count;
             if (kb.upArrowKey.wasPressedThisFrame) selected = (selected + count - 1) % count;
             if (kb.enterKey.wasPressedThisFrame) { if (browser) SlotAction(); else MainAction(selected); }
@@ -198,21 +200,24 @@ namespace ShadowVale.Map01
                 if (index == 0) Resume();
                 if (index == 1) { Resume(); tutorial.RetryStep(); }
                 if (index == 2) tutorial.SkipAll();
-                if (index == 3) Ask("Về menu chính? Tiến trình hướng dẫn không được lưu.", GoToTitle);
-                if (index == 4) Ask("Thoát game? Tiến trình hướng dẫn không được lưu.", Quit);
+                if (index == 3) OpenSettings();
+                if (index == 4) Ask("Về menu chính? Tiến trình hướng dẫn không được lưu.", GoToTitle);
+                if (index == 5) Ask("Thoát game? Tiến trình hướng dẫn không được lưu.", Quit);
                 return;
             }
             if (!HasGameplay) {
                 if (index == 0 && latest >= 0) StartGame(latest);
                 if (index == 1) BeginNewGame();
                 if (index == 2) OpenSlots(false);
-                if (index == 3) Ask("Thoát game?", Quit);
+                if (index == 3) OpenSettings();
+                if (index == 4) Ask("Thoát game?", Quit);
             } else {
                 if (index == 0) Resume();
                 if (index == 1) OpenSlots(true);
                 if (index == 2) OpenSlots(false);
-                if (index == 3) Ask("Tự động lưu và về menu chính?", GoToTitle);
-                if (index == 4) Ask("Tự động lưu và thoát game?", Quit);
+                if (index == 3) OpenSettings();
+                if (index == 4) Ask("Tự động lưu và về menu chính?", GoToTitle);
+                if (index == 5) Ask("Tự động lưu và thoát game?", Quit);
             }
         }
         private void PlayTutorialIntro()
@@ -357,7 +362,7 @@ namespace ShadowVale.Map01
             if (background != null) GUI.DrawTexture(new Rect(0, 0, 1600, 900), background, ScaleMode.ScaleAndCrop);
             else Fill(new Rect(0, 0, 1600, 900), Ink);
             GUI.enabled = question == null;
-            if (browser) DrawBrowser(); else DrawMain();
+            if (browser) DrawBrowser(); else if (settings) DrawSettings(); else DrawMain();
             GUI.enabled = true;
             if (question != null) {
                 Fill(new Rect(0, 0, 1600, 900), new Color(0, 0, 0, .7f));
@@ -387,11 +392,13 @@ namespace ShadowVale.Map01
             Fill(new Rect(145, 201, 150, 2), Ink); Fill(new Rect(560, 201, 150, 2), Ink);
             GUI.Label(new Rect(300, 180, 255, 45), HasGameplay ? "TẠM DỪNG" : "MENU CHÍNH", caption);
             var labels = choosingTutorial ? new[] { "CHƠI HƯỚNG DẪN", "BỎ QUA HƯỚNG DẪN", "QUAY LẠI" }
-                : tutorial != null ? new[] { "TIẾP TỤC", "THỬ LẠI BƯỚC NÀY", "BỎ QUA HƯỚNG DẪN", "MENU CHÍNH", "THOÁT GAME" }
-                : !HasGameplay ? new[] { "TIẾP TỤC", "CHƠI MỚI", "TẢI GAME", "THOÁT GAME" }
-                : new[] { "TIẾP TỤC", "LƯU GAME", "TẢI GAME", "MENU CHÍNH", "THOÁT GAME" };
+                : tutorial != null ? new[] { "TIẾP TỤC", "THỬ LẠI BƯỚC NÀY", "BỎ QUA HƯỚNG DẪN", "CÀI ĐẶT", "MENU CHÍNH", "THOÁT GAME" }
+                : !HasGameplay ? new[] { "TIẾP TỤC", "CHƠI MỚI", "TẢI GAME", "CÀI ĐẶT", "THOÁT GAME" }
+                : new[] { "TIẾP TỤC", "LƯU GAME", "TẢI GAME", "CÀI ĐẶT", "MENU CHÍNH", "THOÁT GAME" };
+            // The column ends above the save summary plate (y 737) however many rows there are.
+            float step = labels.Length <= 3 ? 115 : labels.Length == 5 ? 96 : 80, tall = labels.Length <= 3 ? 102 : step - 10;
             for (int i = 0; i < labels.Length; i++)
-                if (Button(new Rect(115, 244 + (!HasGameplay ? 115 : 92) * i, 535, !HasGameplay ? 102 : 82), labels[i], selected == i, !(!HasGameplay && !choosingTutorial && i == 0 && latest < 0), true)) { selected = i; MainAction(i); }
+                if (Button(new Rect(115, 244 + step * i, 535, tall), labels[i], selected == i, !(!HasGameplay && !choosingTutorial && i == 0 && latest < 0), true)) { selected = i; MainAction(i); }
             string summary = latest >= 0 && entries[latest] != null ? "Điểm lưu: " + entries[latest].location + "\nThời gian chơi: " + ForestSaveSlots.Duration(entries[latest].playSeconds) : "Chưa có bản lưu";
             Plate(new Rect(115, 737, 535, 72));
             GUI.Label(new Rect(143, 752, 480, 54), message ?? (tutorial != null ? "Hướng dẫn chỉ có checkpoint trong phiên chơi." : choosingTutorial ? "Học điều khiển cùng Hùng trước khi vào Map 1." : summary), small);
