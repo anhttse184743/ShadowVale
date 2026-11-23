@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 namespace ShadowVale.Map01
 {
@@ -36,21 +36,8 @@ namespace ShadowVale.Map01
                 if(i==3){var crack=Part(board,"Open longitudinal split",new Vector3(.02f,.031f,0),new Vector3(.78f,.012f,.025f),iron);crack.localRotation=Quaternion.Euler(0,7,0);}
                 physicalBoards.Add(board);
             }
-            for(int i=0;i<2;i++)
-            {
-                var site=sites[i==0?"bamboo":"gate"].position;var lamp=Group("Inspect oil lamp "+i,site+new Vector3(-2,.9f,1));
-                Part(lamp,"Oil reservoir",Vector3.zero,new Vector3(.18f,.15f,.18f),iron,PrimitiveType.Cylinder);
-                var hood=Part(lamp,"Rotating hood",new Vector3(0,.18f,0),new Vector3(.25f,.27f,.14f),amber);postLamps.Add(lamp);
-                Part(lamp,"Lamp support",new Vector3(0,-.45f,0),new Vector3(.055f,.9f,.055f),wood);
-                var light=new GameObject("Shielded pool of light").AddComponent<Light>();light.transform.SetParent(lamp,false);light.transform.localPosition=new Vector3(0,.18f,.1f);light.type=LightType.Spot;light.range=4.5f;light.spotAngle=65;light.color=new Color(1,.72f,.35f);light.intensity=1.2f;   // a pool on the ground that shows which way the hood is turned
-                light.transform.localRotation=Quaternion.Euler(35,0,0);
-                var gate=Group("Inspect small fence door "+i,site+new Vector3(2,0,1));
-                for(int slat=0;slat<5;slat++)Part(gate,"Fence slat",new Vector3(slat*.17f,.55f,0),new Vector3(.11f,1.1f,.06f),wood);
-                Part(gate,"Cross brace",new Vector3(.34f,.7f,0),new Vector3(.84f,.06f,.08f),edge);postGates.Add(gate);
-                postLatches.Add(Part(gate,"Sliding latch",new Vector3(.6f,.72f,-.07f),new Vector3(.4f,.045f,.04f),iron));
-                var bundle=Group("Inspect patrol path bundle "+i,site+new Vector3(0,0,2));for(int j=0;j<5;j++)Part(bundle,"Firewood",new Vector3(j*.1f-.2f,.11f,0),new Vector3(.09f,.16f,.7f),wood);postBundles.Add(bundle);
-                var rack=Group("Bundle rack "+i,site+new Vector3(-2,0,-1));Part(rack,"Storage shelf",new Vector3(0,.14f,0),new Vector3(.85f,.22f,.8f),cloth);
-            }
+            for(int i=0;i<2;i++)BuildNightPost(sites[i==0?"bamboo":"gate"].position,i,wood,cloth);
+            BuildNightFencePerimeter();
             CreateStoryProps(wood,cloth,iron);ClearDockGrass();SyncDayProps();
         }
         void SyncDayProps()
@@ -71,13 +58,8 @@ namespace ShadowVale.Map01
                 var board=physicalBoards[b];int slot=System.Array.FindIndex(Day.boards,p=>p.x==b);
                 board.rotation=Quaternion.identity;board.position=slot>=0?sites["dock"].position+new Vector3(Day.boards[slot].offset,.27f,1.05f+slot*.3f):sites["dock"].position+new Vector3(1.8f,.08f+System.Array.IndexOf(Day.boardOrder,b)*.07f,0);
             }
-            for(int i=0;i<postLamps.Count;i++)
-            {
-                var p=Day.posts[i];postLamps[i].rotation=Quaternion.Euler(0,p.lampAngle,0);postLamps[i].GetComponentInChildren<Light>().enabled=State.phase%2==1;
-                postGates[i].rotation=Quaternion.Euler(0,p.gateClosed?0:65,0);postLatches[i].localPosition=new Vector3(p.latchSeated?.7f:.42f,.72f,-.07f);
-                postBundles[i].position=sites[i==0?"bamboo":"gate"].position+(p.bundleStowed?new Vector3(-2,.2f,-1):new Vector3(0,0,2));
-            }
+            for(int i=0;i<postLamps.Count;i++)SyncNightPost(i);
         }
-        void ReleaseDayArt(){foreach(var mat in dayMaterials)if(mat!=null)Destroy(mat);dayMaterials.Clear();foreach(var mesh in dayMeshes)if(mesh!=null)Destroy(mesh);dayMeshes.Clear();}
+        void ReleaseDayArt(){nightPropPreview?.Dispose();nightPropPreview=null;foreach(var mat in dayMaterials)if(mat!=null)Destroy(mat);dayMaterials.Clear();foreach(var mesh in dayMeshes)if(mesh!=null)Destroy(mesh);dayMeshes.Clear();}
     }
 }

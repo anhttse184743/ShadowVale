@@ -232,7 +232,7 @@ namespace ShadowVale.Map01
         void DayLateUpdate()
         {
             if(!ready||Mission.Paused||ForestMenu.Visible)return;
-            if(sceneTask!=null)return;DuckLateUpdate();TickDockObserver();
+            if(sceneTask!=null)return;DuckLateUpdate();TickDockObserver();TickNightPropPreview();
             bool carry=State.carry=="D1_04";bool hammer=dayActivity==DayActivity.Dock&&DockHammering;
             if(carry)
             {

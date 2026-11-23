@@ -21,14 +21,13 @@ namespace ShadowVale.Map01
             lines=Map02ChapterDefinition.Load().Lines(task.scene??"").Skip(from).Take(take>0?take:int.MaxValue).ToArray();scenePurpose=0;lines=DayLines(task,lines);
             if(lines.Length==0){Finish(task);return;}
             DropBarks();if(task.id=="N3_07")SpawnEscort(); // They come up behind the tank.
-            ReleaseDayFreePose();sceneTask=task;sceneCoughed=false;pendingVoice=null;PrepareSceneMotion(task);PrepareDayScene(task);lineIndex=0;lineClock=sceneClock=skipHeld=0;lockedPosition=Mission.Player.position;lockedRotation=Mission.Player.rotation;if(State.phase>=2)StageConversation(task);
+            ReleaseDayFreePose();sceneTask=task;sceneCoughed=false;pendingVoice=null;PrepareSceneMotion(task);PrepareDayScene(task);lineIndex=0;lineClock=sceneClock=skipHeld=0;lockedPosition=Mission.Player.position;lockedRotation=Mission.Player.rotation;if(State.phase>=2||IsStandingDialogue(task)&&task.id!="D1_05"&&!dayArrivalStarting)StageConversation(task);
             player.RestoreMotion(false);DialogueVoice.StopAll();
-            var actor=Mission.Player.GetComponentInChildren<Animator>();namIdle=actor.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned");namPose=new Map01CinematicPose(actor,null,task.id=="D1_01");
-            if(task.id=="D1_01"){var arrival=FindFirstObjectByType<Map02Arrival>();arrivalBriefingFloor=arrival?.SpawnPoints?.Length>0?arrival.SpawnPoints[0].y:lockedPosition.y;}
+            var actor=Mission.Player.GetComponentInChildren<Animator>();namIdle=actor.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned");namPose=new Map01CinematicPose(actor,null,IsStandingDialogue(task));
             foreach(var weapon in Mission.Player.GetComponentsInChildren<Weapon>(true))if(weapon.gameObject.activeSelf){hiddenWeapons.Add(weapon.gameObject);weapon.gameObject.SetActive(false);}
             var cam=rig.GetComponent<Camera>();cameraBefore=cam.transform.position;cameraRotation=cam.transform.rotation;cameraFov=cam.fieldOfView;
             protectedBefore=health.CinematicInvulnerable;health.CinematicInvulnerable=true;
-            BeginPerformance(task);PlanEntrances(task);StageTalk(task);StartLine();
+            BeginPerformance(task);PlanEntrances(task);StageTalk(task);PrepareStandingDialogue(task);StartLine();
         }
         void Speak(){voice.Stop();pendingVoice=null;lineClock=0;OnPerformanceLine();if(HoldMealVoice)return;if(!Map02DialogueCatalog.HasApprovedRecording(lines[lineIndex]))return;if(CoughFirst(lines[lineIndex])){lineClock=-CoughLead;pendingVoice=lines[lineIndex].RecordingId;return;}voice.Play(lines[lineIndex].RecordingId);}
         void TickScene(float dt)
@@ -60,14 +59,14 @@ namespace ShadowVale.Map01
             if(doingWork&&workTask?.kind=="antenna"){SampleAntennaTraversal();SampleAntennaSupport();}
             PanToHung();HoldCargo();HungChargeLate();HoldStepsPair();if(sceneTask==null){HoldCoverPosition();UpdateHungRadio();UpdateBandageSleeve();return;}
             HoldConversation();FaceTalk();MoveDaySceneRoots();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=NamPoseClip();namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null||overrideClip==ordinaryWalk);
-            if(sceneTask.id=="D1_01")namPose?.Ground(arrivalBriefingFloor);   // the briefing takes over the retargeted idle from arrival; keep its soles on the same bank
-            SampleDayScene();SamplePerformance();UpdateHungRadio();UpdateBandageSleeve();
+            SampleDayScene();SamplePerformance();CorrectStandingDialogue();UpdateHungRadio();UpdateBandageSleeve();
             string speaker=lines[lineIndex].speaker;Vector3 subject=Mission.Player.position;
             if(!lines[lineIndex].radio&&speaker!="Nam"&&roles.TryGetValue(speaker,out var actor))subject=actor.transform.position;
             if(sceneTask.id=="D1_03"&&speaker=="Ông Sáu")subject=porchDoor-porchOut*.5f;   // his voice from the inner room: look to the doorway
             var focus=Vector3.Lerp(subject,Mission.Player.position,.3f)+Vector3.up*1.25f;
             if(Vector3.Distance(subject,Mission.Player.position)>10)focus=Mission.Player.position+Vector3.up*1.25f;
-            var eye=focus-Mission.Player.forward*3.4f+Mission.Player.right*2.5f+Vector3.up*1.4f;
+            var facing=standingDialogue?BodyForward(dialogueNam,Mission.Player):Mission.Player.forward;
+            var eye=focus-facing*3.4f+Vector3.Cross(Vector3.up,facing)*2.5f+Vector3.up*1.4f;
             if(FinaleCamera(out var staged,out var stagedFocus)){eye=staged;focus=stagedFocus;}else if(TalkCamera(out var talkEye,out var talkFocus)){eye=talkEye;focus=talkFocus;}
             if(sceneTask.id=="DAWN"){focus=Vector3.Lerp(Mission.Player.position,memorialArt!=null?memorialArt.transform.position:sites["ditch"].position,.5f)+Vector3.up*.8f;eye=focus-Mission.Player.forward*4+Mission.Player.right*3+Vector3.up*1.5f;}
             // Medium/wide framing; obstruction tested below.

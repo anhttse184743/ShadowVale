@@ -28,6 +28,7 @@ namespace ShadowVale.Map01
         void OpenDayHelp()
         {
             if (DayHelpKind == null) return;
+            EndLampDrag();
             dayHelpKind = DayHelpKind;
             dayHelpPage = 0;
             dayHelpVisible = true;
@@ -133,16 +134,16 @@ namespace ShadowVale.Map01
             {
                 headings = new[] { "Nhìn hướng vệt sáng", "Xoay chụp đèn", "Xác nhận và báo chốt" };
                 details = new[] {
-                    "Phía trên sơ đồ là NGOÀI LÀNG, cần giữ tối. Phía dưới là TRONG LÀNG.\n\nVệt màu vàng cho biết ánh đèn đang chiếu về đâu.",
-                    "Bấm XOAY TRÁI hoặc XOAY PHẢI. Mỗi bấm xoay một nấc. Có thể giữ A / D để xoay liên tục.\n\nHướng vệt sáng xuống phía TRONG LÀNG, tới khi trạng thái hiện ĐẠT.",
+                    "Phía trên khung quan sát là NGOÀI LÀNG, cần giữ tối. Phía dưới là TRONG LÀNG.\n\nVệt màu vàng cho biết ánh đèn đang chiếu về đâu.",
+                    "Giữ chuột trái trên model đèn rồi kéo ngang để xoay chụp che sáng. Có thể giữ A / D; nhả để dừng.\n\nHướng vệt sáng xuống phía TRONG LÀNG, tới khi trạng thái hiện ĐẠT.",
                     "Bấm XÁC NHẬN KIỂM TRA hoặc E.\n\nSửa tiếp cửa hoặc lối đi nếu còn mục chưa an toàn. Khi cả ba mục đều an toàn, trở lại người gác ở ghim vàng và nhấn E báo cáo." };
             }
             else if (dayHelpKind == "gate")
             {
                 headings = new[] { "Khép cửa sát khung", "Cài thanh chốt", "Xác nhận và báo chốt" };
                 details = new[] {
-                    "Quan sát cánh cửa trên sơ đồ. Nếu còn hé, bấm KHÉP CỬA SÁT KHUNG hoặc A.\n\nDấu ✓ cho biết cửa đã khép, bạn có thể làm bước cài chốt.",
-                    "Bấm CÀI THANH CHỐT hoặc D. Thanh chốt phải đi vào ngàm giữ bên phải.\n\nCửa đã khép và chốt đã cài thì trạng thái sẽ hiện ĐẠT.",
+                    "Quan sát cánh cổng 3D và hai hàng rào nối bên đường. Nếu còn hé, bấm KHÉP CỬA SÁT KHUNG hoặc A.\n\nDấu ✓ cho biết cửa đã khép, bạn có thể làm bước cài chốt.",
+                    "Bấm CÀI THANH CHỐT hoặc D. Quan sát ô CHI TIẾT CHỐT: thanh sắt phải trượt vào ngàm trên cột cổng.\n\nCửa đã khép và chốt đã cài thì trạng thái sẽ hiện ĐẠT.",
                     "Bấm XÁC NHẬN KIỂM TRA hoặc E để kết thúc kiểm tra cửa.\n\nXem các mục đèn và lối đi. Khi cả ba mục đều an toàn, trở lại người gác ở ghim vàng và nhấn E báo cáo." };
             }
             else
@@ -215,14 +216,14 @@ namespace ShadowVale.Map01
                 Fill(new Rect(rect.x + 25, rect.y + 30, rect.width - 50, 90), new Color(.29f, .14f, .10f));
                 GUI.Label(new Rect(rect.x, rect.y + 42, rect.width, 35), "NGOÀI LÀNG · GIỮ TỐI", StoreText(19, DayGold, FontStyle.Bold, TextAnchor.MiddleCenter));
                 Fill(new Rect(rect.x + 25, rect.y + 145, rect.width - 50, 115), new Color(.13f, .27f, .17f));
-                NightAtlas(new Rect(rect.center.x - 38, rect.y + 95, 76, 76), 0);
+                DrawNightModel(new Rect(rect.x+25,rect.y+65,rect.width-50,190));
                 GUI.Label(new Rect(rect.x, rect.y + 189, rect.width, 50), "▼ TRONG LÀNG", StoreText(24, DayInk, FontStyle.Bold, TextAnchor.MiddleCenter));
                 GUI.Label(new Rect(rect.x, rect.y + 275, rect.width, 40), "Xoay ánh sáng về phía trong", StoreText(20, DayInk, FontStyle.Bold, TextAnchor.MiddleCenter));
             }
             else if (dayHelpKind == "gate")
             {
-                NightAtlas(new Rect(rect.x + 35, rect.y + 35, rect.width - 70, 190), 1);
-                NightAtlas(new Rect(rect.x + 160, rect.y + 125, 230, 105), dayHelpPage == 0 ? 3 : 4);
+                DrawNightModel(new Rect(rect.x + 15, rect.y + 25, rect.width - 30, 205));
+                if(dayHelpPage>0)DrawNightModel(new Rect(rect.x+220,rect.y+145,220,105),true);
                 GUI.Label(new Rect(rect.x, rect.y + 265, rect.width, 45), "Khép cửa → cài chốt → xác nhận", StoreText(20, DayInk, FontStyle.Bold, TextAnchor.MiddleCenter));
             }
             else

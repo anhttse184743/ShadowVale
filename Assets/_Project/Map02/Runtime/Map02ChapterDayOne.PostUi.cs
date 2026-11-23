@@ -5,7 +5,7 @@ namespace ShadowVale.Map01
     public sealed partial class Map02ChapterDirector
     {
         Texture2D nightUiAtlas;
-        string PostPartName(int part) => new[] { "ĐÈN DẦU", "CỬA RÀO", "LỐI ĐI GÁC" }[part];
+        string PostPartName(int part) => new[] { "ĐÈN DẦU", "CỔNG & CHỐT CÀI", "LỐI ĐI GÁC" }[part];
 
         void NightAtlas(Rect rect, int tile)
         {
@@ -87,7 +87,7 @@ namespace ShadowVale.Map01
                 if (!DayActivityActive) return;
             }
             GUI.Label(new Rect(115, 703, 1360, 53), dayInputReady ?
-                (string.IsNullOrEmpty(dayFeedback) ? "Xem sơ đồ, làm theo nút bên phải. Bảng sẽ báo lý do nếu chưa đạt." : dayFeedback) :
+                (string.IsNullOrEmpty(dayFeedback) ? "Quan sát model và chi tiết chốt, làm theo nút bên phải. Bảng báo rõ phần chưa an toàn." : dayFeedback) :
                 "Nhả phím hoặc chuột mở bảng để bắt đầu.", DockText(21));
             Fill(new Rect(112, 770, 1380, 47), new Color(.13f, .19f, .12f));
             GUI.Label(new Rect(130, 779, 1340, 35), "Sau khi cả ba mục an toàn: đóng bảng, tới ghim vàng gặp " +
@@ -97,34 +97,28 @@ namespace ShadowVale.Map01
         void DrawNightLamp()
         {
             var post = Day.posts[postIndex];
-            Fill(new Rect(140, 354, 765, 112), new Color(.29f, .14f, .10f));
-            GUI.Label(new Rect(150, 361, 745, 35), "▲ NGOÀI LÀNG · GIỮ TỐI", StoreText(20, new Color(.98f, .73f, .58f), FontStyle.Bold, TextAnchor.MiddleCenter));
-            Fill(new Rect(140, 530, 765, 125), new Color(.13f, .26f, .17f));
-            GUI.Label(new Rect(150, 617, 745, 33), "▼ TRONG LÀNG · HƯỚNG ÁNH SÁNG VỀ ĐÂY", StoreText(20, DayInk, FontStyle.Bold, TextAnchor.MiddleCenter));
-            var centre = new Vector2(520, 500);
-            var previous = GUI.matrix;
-            GUI.matrix = LampBeamMatrix(previous, centre, post.lampAngle);
-            for (int i = 0; i < 15; i++)
-                Fill(new Rect(centre.x + 32 + i * 7, centre.y - 9 - i * 2, 8, 18 + i * 4), new Color(1, .77f, .28f, .18f + i * .025f));
-            GUI.Label(new Rect(centre.x + 144, centre.y - 20, 45, 40), "▶", StoreText(30, DayGold, FontStyle.Bold));
-            GUI.matrix = previous;
-            NightAtlas(new Rect(centre.x - 35, centre.y - 35, 70, 70), 0);
-            GUI.Label(new Rect(970, 307, 505, 86), "Xoay chụp đèn để vệt sáng hướng xuống phía TRONG LÀNG.", DockText(24, true));
+            Fill(new Rect(140,350,765,265),new Color(.045f,.055f,.043f));
+            DrawNightModel(new Rect(140,365,765,240));
+            GUI.Label(new Rect(150,350,745,35),"▲ NGOÀI LÀNG · KHÔNG ĐỂ LỘ SÁNG",StoreText(19,DayGold,FontStyle.Bold,TextAnchor.MiddleCenter));
+            GUI.Label(new Rect(150,619,745,35),"▼ TRONG LÀNG · XOAY CHỤP CHE VỀ PHÍA NÀY",StoreText(19,DayInk,FontStyle.Bold,TextAnchor.MiddleCenter));
+            DrawLampDragSurface(new Rect(140,365,765,240));
+            GUI.Label(new Rect(970, 307, 505, 86), "Chụp kim loại che ánh đèn khỏi phía ngoài. Xoay cửa sáng xuống phía TRONG LÀNG.", DockText(24, true));
             if (DayButton(new Rect(970, 417, 240, 65), "◀ XOAY TRÁI [A]")) TurnPostLamp(-15);
             if (DayButton(new Rect(1230, 417, 245, 65), "XOAY PHẢI [D] ▶")) TurnPostLamp(15);
-            GUI.Label(new Rect(970, 503, 505, 52), "Bấm chuột để xoay từng nấc.\nHoặc giữ A / D để xoay liên tục.", DockText(19));
+            GUI.Label(new Rect(970, 503, 505, 52), "Kéo chuột ngang trên đèn để xoay chụp.\nHoặc giữ A / D. Chụp và vệt sáng xoay cùng nhau.", DockText(19));
         }
 
         void DrawNightGate()
         {
             var post = Day.posts[postIndex];
-            Fill(new Rect(246, 363, 20, 238), new Color(.55f, .44f, .26f));
-            Fill(new Rect(770, 363, 20, 238), new Color(.55f, .44f, .26f));
-            NightAtlas(new Rect(270, 377, post.gateClosed ? 494 : 265, 221), 1);
-            NightAtlas(new Rect(600, 458, 181, 82), post.latchSeated ? 4 : 3);
-            GUI.Label(new Rect(280, 625, 510, 32), post.gateClosed ? "✓ Cửa khép sát khung" : "! Cửa còn hé", StoreText(20, post.gateClosed ? StoreGood : DayGold, FontStyle.Bold, TextAnchor.MiddleCenter));
+            DrawNightModel(new Rect(140,350,555,265));
+            GUI.Label(new Rect(710,355,195,42),"CHI TIẾT CHỐT",StoreText(19,DayGold,FontStyle.Bold,TextAnchor.MiddleCenter));
+            DrawNightModel(new Rect(710,409,195,160),true);
+            Frame(new Rect(710,409,195,160),DayGold,1);
+            GUI.Label(new Rect(710,574,195,46),post.latchSeated?"✓ Chốt vào ngàm":post.gateClosed?"Cài chốt vào ngàm":"Khép cổng để căn ngàm",StoreText(17,post.latchSeated?StoreGood:DayGold,FontStyle.Bold,TextAnchor.MiddleCenter));
+            GUI.Label(new Rect(150,625,745,32),post.gateClosed?"✓ Cánh cổng đã sát khung":"1. Cánh cổng còn mở · Khép cổng trước",StoreText(20,post.gateClosed?StoreGood:DayGold,FontStyle.Bold,TextAnchor.MiddleCenter));
             GUI.Label(new Rect(970, 307, 505, 85), "Làm theo thứ tự: khép cửa, rồi cài thanh chốt vào ngàm giữ.", DockText(24, true));
-            if (DayButton(new Rect(970, 417, 505, 58), (post.gateClosed ? "✓ " : "1. ") + "KHÉP CỬA SÁT KHUNG [A]")) ClosePostGate();
+            if (DayButton(new Rect(970, 417, 505, 58), (post.gateClosed ? "✓ " : "1. ") + "KHÉP CỔNG SÁT KHUNG [A]")) ClosePostGate();
             bool enabled = GUI.enabled;
             GUI.enabled = enabled && post.gateClosed;
             if (DayButton(new Rect(970, 488, 505, 58), (post.latchSeated ? "✓ " : "2. ") + "CÀI THANH CHỐT [D]")) LatchPostGate();
