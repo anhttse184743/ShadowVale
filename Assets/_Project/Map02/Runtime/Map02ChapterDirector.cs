@@ -37,7 +37,7 @@ namespace ShadowVale.Map01
         public Map02ChapterLayout Layout {get;private set;}
         float holdClock,detectionClock;Vector3 workOrigin;AudioSource signalAudio;
         Map01CinematicPose namPose;AnimationClip namIdle;readonly List<GameObject> hiddenWeapons=new List<GameObject>();
-        float arrivalBriefingFloor;
+
         Material originalSky,chapterSky;UnityEngine.Rendering.AmbientMode originalAmbientMode;Color originalSunColor;
         readonly Dictionary<string,Transform> sites=new Dictionary<string,Transform>();
         readonly Dictionary<string,Map02ObjectiveObject> markers=new Dictionary<string,Map02ObjectiveObject>();
@@ -419,6 +419,7 @@ namespace ShadowVale.Map01
         }
         void OnDestroy()
         {
+            if(dialogueGroundMesh!=null)Destroy(dialogueGroundMesh);
             ReleaseEvacuationLightPresentation();
             ReleaseNightPatrolPresentation();ReleaseNightRiverCrossing();Cancel();ResetEffects();RestoreNaturalLighting();ReleaseDayArt();ReleaseDayTwoProps();if(combat!=null){combat.EquipAllowed=null;combat.Attacked-=OnPlayerShot;combat.ReloadDurationMultiplier=1;combat.SetHandsOccupied(false);}if(player!=null){player.SurfaceSpeedMultiplier=1;player.SprintAllowed=null;player.MovementConstraint=null;}
             RenderSettings.skybox=originalSky;RenderSettings.ambientMode=originalAmbientMode;if(chapterSky!=null)Destroy(chapterSky);RenderSettings.ambientLight=ambientBefore;RenderSettings.fog=fogBefore;RenderSettings.fogColor=fogColorBefore;RenderSettings.fogDensity=fogDensityBefore;

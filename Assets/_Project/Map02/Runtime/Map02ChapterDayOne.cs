@@ -81,7 +81,7 @@ namespace ShadowVale.Map01
         void CloseDay(bool checkpoint=true)
         {
             if(!DayActivityActive)return;
-            dayHelpVisible=false;dayActivity=DayActivity.None;ResetStakeStrike();dayCloseRequested=false;EndWorkView();ReleaseStake();ReleaseDockObserver();dayReturnInput=DayInputHeld;dayReturnUntil=Time.unscaledTime+.12f;Cursor.visible=dayCursorVisible;Cursor.lockState=dayCursorLock;
+            EndLampDrag();dayHelpVisible=false;dayActivity=DayActivity.None;ResetStakeStrike();dayCloseRequested=false;EndWorkView();nightPropPreview?.Hide();ReleaseStake();ReleaseDockObserver();dayReturnInput=DayInputHeld;dayReturnUntil=Time.unscaledTime+.12f;Cursor.visible=dayCursorVisible;Cursor.lockState=dayCursorLock;
             combat.Equip(dayWeapon);combat.SetHandsOccupied(false);combat.RestoreAfterCinematic();player.RestoreMotion(false);ForestMenu.SuppressKeysAfterCutscene();
             SyncDayProps();if(checkpoint)Mission.StoreCheckpoint();
         }

@@ -68,6 +68,17 @@ namespace ShadowVale.Map01.Tests {
    }finally{if(recorder!=null){recorder.End();Object.Destroy(recorder.gameObject);}Keys();chapter.Cancel();InputSystem.RemoveDevice(keyboard);RestoreInputRouting(routing);Time.captureFramerate=previousRate;Time.timeScale=previousScale;}
    yield return new ExitPlayMode();
   }
+  IEnumerator DragLamp(){
+   recorder.input="GIỮ CHUỘT TRÁI · KÉO CHỤP ĐÈN 3D";
+   Vector2 Point(float x)=>new Vector2(x*Screen.width/1600f,500*Screen.height/900f);
+   var start=Point(220);recorder.pointer=start;
+   EditorGUIUtility.QueueGameViewInputEvent(new Event{type=EventType.MouseDown,button=0,mousePosition=start});yield return Film(.2f);
+   for(int step=1;step<=60;step++){
+    var p=Point(220+500f*step/60);recorder.pointer=p;
+    EditorGUIUtility.QueueGameViewInputEvent(new Event{type=EventType.MouseDrag,button=0,mousePosition=p,delta=new Vector2(500f/60*Screen.width/1600f,0)});yield return Film(.042f);
+   }
+   EditorGUIUtility.QueueGameViewInputEvent(new Event{type=EventType.MouseUp,button=0,mousePosition=Point(720)});yield return Film(1);recorder.input="";
+  }
   IEnumerator WalkTo(Vector3 destination){
    var path=new UnityEngine.AI.NavMeshPath();Assert.True(UnityEngine.AI.NavMesh.SamplePosition(destination,out var goal,2,UnityEngine.AI.NavMesh.AllAreas));
    Assert.True(UnityEngine.AI.NavMesh.CalculatePath(Object.FindFirstObjectByType<Map02Mission>().Player.position,goal.position,UnityEngine.AI.NavMesh.AllAreas,path));
@@ -88,14 +99,18 @@ namespace ShadowVale.Map01.Tests {
    Assert.NotNull(mission?.Chapter);chapter=mission.Chapter;chapter.Cancel();var save=mission.Capture();save.chapter=new Map02ChapterState();foreach(var task in Map02ChapterDefinition.Load().tasks){if(task.id=="N1_02")break;save.chapter.Complete(task.id);}save.chapter.dayOne.arrivalSeen=true;mission.Restore(save);chapter.Track("N1_02");Call("StartPost",Map02ChapterDefinition.Load().Find("N1_02"));
    var post=chapter.State.dayOne.posts[0];post.faults=7;post.lampAngle=0;post.gateClosed=post.latchSeated=post.bundleStowed=false;Call("SyncDayProps");
    var lamps=Get<System.Collections.Generic.List<Transform>>("postLamps");var gates=Get<System.Collections.Generic.List<Transform>>("postGates");var wood=Get<System.Collections.Generic.List<Transform>>("postBundles");
-   var cc=mission.Player.GetComponent<CharacterController>();cc.enabled=false;mission.Player.position=lamps[0].position-Vector3.up*.9f-Vector3.forward*.8f;cc.enabled=true;
+   var cc=mission.Player.GetComponent<CharacterController>();cc.enabled=false;mission.Player.position=lamps[0].position-Vector3.up*.9f-lamps[0].forward*.85f;cc.enabled=true;
    var routing=RouteInputToGame();keyboard=InputSystem.AddDevice<Keyboard>();keyboard.MakeCurrent();int previousRate=Time.captureFramerate;float previousScale=Time.timeScale;Time.timeScale=1;Time.captureFramerate=24;
-   recorder=new GameObject("Night watch video capture").AddComponent<DockMovieCapture>();recorder.Folder="Logs/NightWatchMovie_20261121";
+   recorder=new GameObject("Night watch video capture").AddComponent<DockMovieCapture>();recorder.Folder="Logs/NightWatchPerimeterMovie_20261123";
    try{
-    yield return Film(.5f);recorder.Begin();yield return Film(1.8f);yield return Tap(Key.E);Assert.AreEqual("Lamp",chapter.DayActivityName);yield return Tutorial();
+        yield return Film(.5f);recorder.Begin();
+    var movieRig=typeof(Map02ChapterDirector).GetField("rig",F).GetValue(chapter);var worldGate=gates[0];
+    var movieEye=worldGate.position+worldGate.rotation*new Vector3(3.3f,2.3f,-5.6f);var movieFocus=worldGate.position+Vector3.up*.8f;
+    movieRig.GetType().GetMethod("SetCinematicView").Invoke(movieRig,new object[]{movieEye,Quaternion.LookRotation(movieFocus-movieEye),52f,1f});
+    yield return Film(3.5f);movieRig.GetType().GetMethod("ClearCinematicView").Invoke(movieRig,null);yield return Film(1.2f);yield return Tap(Key.E);Assert.AreEqual("Lamp",chapter.DayActivityName);yield return Tutorial();
     yield return Click(1220,641);Assert.True(chapter.DayActivityActive,"Unsafe light must remain open");yield return Film(1.2f);
-    for(int turn=0;turn<12;turn++)yield return Click(1350,445);Assert.True(post.LampSafe);yield return Film(1.5f);yield return Click(1220,641);Assert.False(chapter.DayActivityActive);recorder.pointer=new Vector2(-100,-100);
-    yield return WalkTo(gates[0].position);yield return Tap(Key.E);Assert.AreEqual("Gate",chapter.DayActivityName);yield return Tutorial();
+    yield return DragLamp();Assert.True(post.LampSafe);yield return Film(1.5f);yield return Click(1220,641);Assert.False(chapter.DayActivityActive);recorder.pointer=new Vector2(-100,-100);
+    yield return WalkTo(gates[0].GetComponent<Map02NightWatchVisual>().InteractionPosition);yield return Tap(Key.E);Assert.AreEqual("Gate",chapter.DayActivityName);yield return Tutorial();
     yield return Click(1220,516);Assert.False(post.latchSeated);yield return Film(1.3f);yield return Click(1220,445);yield return Film(1);yield return Click(1220,516);Assert.True(post.gateClosed&&post.latchSeated);yield return Film(1);yield return Click(1220,641);Assert.False(chapter.DayActivityActive);recorder.pointer=new Vector2(-100,-100);
     yield return WalkTo(wood[0].position);yield return Tap(Key.E);Assert.AreEqual("Path",chapter.DayActivityName);yield return Tutorial();
     yield return Click(1220,445);Assert.False(post.bundleStowed);yield return Film(1.3f);yield return Click(1220,516);Assert.True(post.bundleStowed);yield return Film(1.3f);yield return Click(1220,641);Assert.True(post.Safe);Assert.False(chapter.State.Done("N1_02"));recorder.pointer=new Vector2(-100,-100);

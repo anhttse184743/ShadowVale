@@ -7,7 +7,16 @@ namespace ShadowVale.Map01
         {
             post=part=-1;if(!ready||Mission.Paused||ForestMenu.Visible||Busy||State.phase!=1||escort!=null||Mission.Panel!=0)return false;
             float best=2.25f*2.25f;
-            for(int p=0;p<2;p++){var id=p==0?"N1_02":"N1_03";if(!State.Available(Map02ChapterDefinition.Load().Find(id))||(Day.postsReached&(1<<p))==0)continue;if(Day.posts[p].Safe&&Vector3.ProjectOnPlane(Mission.Player.position-PostKeeper(id).transform.position,Vector3.up).sqrMagnitude<=9)continue;var props=new[]{postLamps[p],postGates[p],postBundles[p]};for(int i=0;i<3;i++){float distance=Vector3.ProjectOnPlane(Mission.Player.position-props[i].position,Vector3.up).sqrMagnitude;if(distance<best){best=distance;post=p;part=i;}}}
+            for(int p=0;p<2;p++){
+                var id=p==0?"N1_02":"N1_03";if(!State.Available(Map02ChapterDefinition.Load().Find(id))||(Day.postsReached&(1<<p))==0)continue;
+                var state=Day.posts[p];var props=new[]{postLamps[p],postGates[p],postBundles[p]};
+                for(int i=0;i<3;i++){
+                    bool safe=i==0?state.LampSafe:i==1?state.gateClosed&&state.latchSeated:state.bundleStowed;if(safe)continue;
+                    var point=props[i].GetComponent<Map02NightWatchVisual>()?.InteractionPosition??props[i].position;
+                    float distance=Vector3.ProjectOnPlane(Mission.Player.position-point,Vector3.up).sqrMagnitude;
+                    if(distance<best){best=distance;post=p;part=i;}
+                }
+            }
             return part>=0;
         }
         public bool HasNearbyPost=>NearbyPost(out _,out _);
@@ -19,6 +28,7 @@ namespace ShadowVale.Map01
         }
         void DrawNearbyDayProps()
         {
+            DrawNightPropDirections();
             if(!NearbyPost(out var p,out var part))return;
             string[] names={"đèn dầu — xoay chụp che sáng","cửa rào — kiểm tra thanh chốt","lối đi — kiểm tra đồ chắn đường"};
             Cell(new Rect(400,690,800,85),"[E] Kiểm tra "+names[part],new Color(.06f,.08f,.05f,.94f));
