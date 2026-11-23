@@ -1,3 +1,4 @@
+using ShadowVale.Content;
 using ShadowVale.Gameplay.Player;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -351,6 +352,13 @@ namespace ShadowVale.Gameplay.Combat
                 _upperBodyWeight = _equippedKind != WeaponKind.Unarmed ? 1f : 0f;
                 animator.SetLayerWeight(_upperBodyLayer, _upperBodyWeight);
             }
+        }
+
+        private void Start()
+        {
+            // The bootstrap applies staged content in sceneLoaded, after Awake and before Start.
+            if (_weapons.TryGetValue(WeaponKind.Knife, out var knife) && ContentService.TryGetPublished(out var bundle))
+                knife.ApplyPublishedKnifeBalance(bundle);
         }
 
         private void SpawnWeapons()
