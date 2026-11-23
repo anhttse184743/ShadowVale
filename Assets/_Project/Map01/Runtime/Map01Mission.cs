@@ -36,6 +36,7 @@ namespace ShadowVale.Map01
         public TextAsset balanceJson, contentBundle;
 
         public ForestSettings Settings { get; private set; }
+        public MapDifficulty Difficulty { get; private set; } = MapDifficulty.Default;
         public ForestWeapon Weapon { get; private set; }
         public ForestArchetype GuardData { get; private set; }
         public ForestBundle Bundle { get; private set; }
@@ -106,6 +107,8 @@ namespace ShadowVale.Map01
 
         private void Awake()
         {
+            Difficulty = MapDifficulty.ForScene(gameObject.scene, MapId);
+            Difficulty.ApplyLayout(gameObject.scene, MapId);
             quest = GetComponent<Map01Quest>();
             inventory = GetComponent<Map01Inventory>();
             Objectives = GetComponents<MonoBehaviour>().OfType<IMapObjectives>().FirstOrDefault();
