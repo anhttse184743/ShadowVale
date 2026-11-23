@@ -40,6 +40,7 @@ namespace ShadowVale.Map01
             public SkillMissionProgress skillMission;
             public string checkpoint, patrolCheckpoint, skillRunId;
         }
+        public MapDifficulty Difficulty { get; private set; } = MapDifficulty.Default;
         public Map02ChapterDirector Chapter {get;private set;}
         public string ObjectiveText=>Chapter!=null?Chapter.State.Objective+(trader?.Available==true?"\nCó thể đổi súng ở quân nhu tại kho phía nam.":""):World.Objective;
         bool ObjectiveAvailable(Map02ObjectiveObject t)=>Chapter!=null?Chapter.IsAvailable(t):World.Available(t.work);
@@ -147,6 +148,8 @@ namespace ShadowVale.Map01
             Ready=true;
             InstallMapSafety();
             arrival?.ReleasePassengerAnimation();
+            Difficulty = MapDifficulty.ForScene(gameObject.scene, "map02");
+            Difficulty.ApplyLayout(gameObject.scene, "map02");
             Chapter=gameObject.AddComponent<Map02ChapterDirector>();Chapter.Initialize(this,questLayout);RefreshChapter();
             if(GetComponent<Map01FoliageReveal>()==null)gameObject.AddComponent<Map01FoliageReveal>();
             if(GetComponent<Map02SightCover>()==null)gameObject.AddComponent<Map02SightCover>();

@@ -83,7 +83,7 @@ namespace ShadowVale.Map01
                 return;
             }
             if (FireRound(aim, _player, out var impact))
-                _playerHealth.TakeBulletDamage(damage * (RifleItemId == Map01M16.Id ? Map01M16.DamageRelativeToAk : 1f), impact, gameObject, impact - transform.position);
+                _playerHealth.TakeBulletDamage(Difficulty.Damage(damage) * (RifleItemId == Map01M16.Id ? Map01M16.DamageRelativeToAk : 1f), impact, gameObject, impact - transform.position);
         }
 
         /// <summary>Rounds at the spot Nam was last seen: noise and muzzle flash, no hit.</summary>

@@ -49,7 +49,9 @@ namespace ShadowVale.Map01
             if(brain==null)
             {
                 brainBody=new NavMeshEnemyBody(transform,agent,null,HitPoints);   // LateUpdate animates him
-                brain=new EnemyBrain(id,brainBody,this,director.State.phase==2?DayTwoTuning():NightThreeTuning(),Map02CoverTactics.Instance);
+                var tuning = director.State.phase == 2 ? DayTwoTuning() : NightThreeTuning();
+                tuning.VisionRange = Difficulty.Vision(tuning.VisionRange);
+                brain=new EnemyBrain(id,brainBody,this,tuning,Map02CoverTactics.Instance);
                 AgentRegistry.Register(this);   // the coordinator plans the wave from here on
                 if(alerted)brain.ShareContact(target.position,Time.time,Time.time);   // a wave comes in knowing where the lane is held
             }
@@ -76,7 +78,7 @@ namespace ShadowVale.Map01
         public bool Alive=>brain!=null&&!Dead;
         public float HealthFraction=>HitPoints!=null&&HitPoints.Max>0?HitPoints.Current/HitPoints.Max:0;
         public bool SeesPlayer {get;private set;}
-        float IEnemyAgent.VisionRange=>brain!=null?brain.Tuning.VisionRange:34;
+        float IEnemyAgent.VisionRange=>brain!=null?brain.Tuning.VisionRange:Difficulty.Vision(34);
         float IEnemyAgent.VisionConeAngle=>130;
         public void DebugEngage(float seconds){if(brain!=null&&director?.Mission!=null)brain.ShareContact(director.Mission.Player.position,Time.time,Time.time);}
         public void DebugDamage(float fractionOfMax){if(HitPoints!=null)HitPoints.TakeDamage(HitPoints.Max*fractionOfMax,transform.position+Vector3.up,null);}

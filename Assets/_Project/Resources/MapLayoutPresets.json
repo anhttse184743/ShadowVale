@@ -1,0 +1,488 @@
+{
+  "maps": [
+    {
+      "map_code": "map01",
+      "scene": "Map 1",
+      "presets": [
+        {
+          "id": "original",
+          "name": "Bố trí gốc",
+          "description": "Giữ các cụm trang trí như trong Unity.",
+          "hidden": []
+        },
+        {
+          "id": "forest_south",
+          "name": "Lối rừng phía nam",
+          "description": "Thưa bớt cụm dương xỉ trang trí ở phía nam.",
+          "hidden": [
+            {
+              "name": "Fern",
+              "x": -19.311493,
+              "y": 2.3920777,
+              "z": -33.58044
+            },
+            {
+              "name": "Fern",
+              "x": -19.85654,
+              "y": 2.7115479,
+              "z": -33.637573
+            },
+            {
+              "name": "Fern",
+              "x": -22.28393,
+              "y": 3.3174813,
+              "z": -32.0673
+            },
+            {
+              "name": "Fern",
+              "x": -23.111523,
+              "y": 3.3542676,
+              "z": -32.064274
+            },
+            {
+              "name": "Fern",
+              "x": -19.727318,
+              "y": 3.377401,
+              "z": -22.445906
+            },
+            {
+              "name": "Fern",
+              "x": 3.194753,
+              "y": 2.3833337,
+              "z": -29.43278
+            },
+            {
+              "name": "Fern",
+              "x": -27.961798,
+              "y": 3.624435,
+              "z": -29.6074
+            },
+            {
+              "name": "Fern",
+              "x": 4.441539,
+              "y": 2.8909712,
+              "z": -28.132893
+            },
+            {
+              "name": "Fern",
+              "x": -28.72956,
+              "y": 3.5286663,
+              "z": -33.75072
+            },
+            {
+              "name": "Fern",
+              "x": 4.7889276,
+              "y": 2.974053,
+              "z": -25.351707
+            },
+            {
+              "name": "Fern",
+              "x": -30.828056,
+              "y": 3.71973,
+              "z": -29.278555
+            },
+            {
+              "name": "Fern",
+              "x": 3.9459243,
+              "y": 2.5284812,
+              "z": -41.319626
+            },
+            {
+              "name": "Fern",
+              "x": 8.165581,
+              "y": 2.9301276,
+              "z": -30.631107
+            },
+            {
+              "name": "Fern",
+              "x": 3.3805137,
+              "y": 2.3977072,
+              "z": -44.07804
+            },
+            {
+              "name": "Fern",
+              "x": 8.562817,
+              "y": 2.9563107,
+              "z": -30.074535
+            },
+            {
+              "name": "Fern",
+              "x": 8.31653,
+              "y": 2.5585508,
+              "z": -37.89275
+            },
+            {
+              "name": "Fern",
+              "x": -29.290337,
+              "y": 3.77734,
+              "z": -17.775223
+            },
+            {
+              "name": "Fern",
+              "x": -33.281704,
+              "y": 3.8797908,
+              "z": -25.095533
+            }
+          ]
+        },
+        {
+          "id": "forest_north",
+          "name": "Lối rừng phía bắc",
+          "description": "Thưa bớt cụm dương xỉ trang trí ở phía bắc.",
+          "hidden": [
+            {
+              "name": "Fern",
+              "x": 20.65913,
+              "y": 4.7924123,
+              "z": 19.75884
+            },
+            {
+              "name": "Fern",
+              "x": 19.21705,
+              "y": 4.7436457,
+              "z": 17.721645
+            },
+            {
+              "name": "Fern",
+              "x": 27.189846,
+              "y": 5.148511,
+              "z": 27.035496
+            },
+            {
+              "name": "Fern",
+              "x": -2.716207,
+              "y": 3.1442358,
+              "z": 38.236786
+            },
+            {
+              "name": "Fern",
+              "x": 28.11507,
+              "y": 5.2573442,
+              "z": 27.38552
+            },
+            {
+              "name": "Fern",
+              "x": -4.064081,
+              "y": 3.5011148,
+              "z": 38.54518
+            },
+            {
+              "name": "Fern",
+              "x": -6.5082474,
+              "y": 3.5292814,
+              "z": 33.766087
+            },
+            {
+              "name": "Fern",
+              "x": 30.199532,
+              "y": 5.396015,
+              "z": 36.716446
+            },
+            {
+              "name": "Fern",
+              "x": -6.424285,
+              "y": 3.422485,
+              "z": 37.56658
+            },
+            {
+              "name": "Fern",
+              "x": 23.852417,
+              "y": 5.138006,
+              "z": 15.422024
+            },
+            {
+              "name": "Fern",
+              "x": 31.911106,
+              "y": 5.828288,
+              "z": 29.623344
+            },
+            {
+              "name": "Fern",
+              "x": -5.440079,
+              "y": 2.8079228,
+              "z": 19.05847
+            },
+            {
+              "name": "Fern",
+              "x": 14.101141,
+              "y": 3.4173203,
+              "z": 9.945975
+            },
+            {
+              "name": "Fern",
+              "x": 25.319168,
+              "y": 4.487597,
+              "z": 47.76393
+            },
+            {
+              "name": "Fern",
+              "x": 33.059097,
+              "y": 6.138224,
+              "z": 26.301994
+            },
+            {
+              "name": "Fern",
+              "x": 24.981758,
+              "y": 4.436827,
+              "z": 48.253075
+            },
+            {
+              "name": "Fern",
+              "x": 13.218407,
+              "y": 2.6780002,
+              "z": 9.419292
+            },
+            {
+              "name": "Fern",
+              "x": 20.975304,
+              "y": 3.900198,
+              "z": 50.767464
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "map_code": "map02",
+      "scene": "Map 2",
+      "presets": [
+        {
+          "id": "original",
+          "name": "Bố trí gốc",
+          "description": "Giữ các cụm trang trí như trong Unity.",
+          "hidden": []
+        },
+        {
+          "id": "canal_south",
+          "name": "Bờ kênh phía nam",
+          "description": "Thưa bớt cỏ trang trí ở bờ kênh phía nam.",
+          "hidden": [
+            {
+              "name": "Patchy canal grasses",
+              "x": -10.004684,
+              "y": 1,
+              "z": -31.587442
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -9.814493,
+              "y": 1,
+              "z": -32.16217
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -9.218613,
+              "y": 1,
+              "z": -22.118858
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -10.255735,
+              "y": 1,
+              "z": -35.502586
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -8.644398,
+              "y": 1,
+              "z": -21.26536
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -10.14217,
+              "y": 1,
+              "z": -36.617172
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -9.7129135,
+              "y": 1,
+              "z": -37.41323
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -10.388917,
+              "y": 1,
+              "z": -38.181854
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -8.166355,
+              "y": 1,
+              "z": -18.50331
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -7.590815,
+              "y": 1,
+              "z": -17.972698
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -5.6260886,
+              "y": 1,
+              "z": -14.326292
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -5.277039,
+              "y": 1,
+              "z": -11.969571
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -8.974601,
+              "y": 1,
+              "z": -46.094597
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -25.17546,
+              "y": 1,
+              "z": -23.607746
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -9.500652,
+              "y": 1,
+              "z": -48.628757
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -24.672573,
+              "y": 1,
+              "z": -21.517569
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -24.699047,
+              "y": 1,
+              "z": -21.09675
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -26.06601,
+              "y": 1,
+              "z": -24.79896
+            }
+          ]
+        },
+        {
+          "id": "canal_north",
+          "name": "Bờ kênh phía bắc",
+          "description": "Thưa bớt cỏ trang trí ở bờ kênh phía bắc.",
+          "hidden": [
+            {
+              "name": "Patchy canal grasses",
+              "x": -1.7480755,
+              "y": 1,
+              "z": 32.48309
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -0.5730858,
+              "y": 1,
+              "z": 26.64779
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -1.5363264,
+              "y": 1,
+              "z": 25.222662
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -1.0898504,
+              "y": 1,
+              "z": 34.62435
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -1.8672476,
+              "y": 1,
+              "z": 23.289288
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -2.4690537,
+              "y": 1,
+              "z": 38.4721
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -2.1222982,
+              "y": 1,
+              "z": 19.65242
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -2.983715,
+              "y": 1,
+              "z": 16.49465
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -2.8413186,
+              "y": 1,
+              "z": 15.944666
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -3.580061,
+              "y": 1,
+              "z": 12.209831
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -3.311652,
+              "y": 1,
+              "z": 49.100674
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -5.0517173,
+              "y": 1,
+              "z": 10.118305
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": -5.2733383,
+              "y": 1,
+              "z": 9.383478
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": 15.685478,
+              "y": 1,
+              "z": 31.154076
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": 15.961872,
+              "y": 1,
+              "z": 30.544434
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": 15.289324,
+              "y": 1,
+              "z": 24.69963
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": 15.710361,
+              "y": 1,
+              "z": 25.118162
+            },
+            {
+              "name": "Patchy canal grasses",
+              "x": 16.221209,
+              "y": 1,
+              "z": 28.21083
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
