@@ -7,8 +7,8 @@ namespace ShadowVale.Map01
     public sealed partial class ForestMenu
     {
         private bool settings;
-        private const int SettingRows = 5;
-        private static readonly string[] SettingNames = { "ÂM LƯỢNG", "ĐỘ NHẠY CHUỘT", "HIỂN THỊ", "ĐỘ PHÂN GIẢI", "ĐỒNG BỘ DỌC (VSYNC)" };
+        private const int SettingRows = 7;
+        private static readonly string[] SettingNames = { "ÂM LƯỢNG", "ĐỘ NHẠY CHUỘT", "HIỂN THỊ", "ĐỘ PHÂN GIẢI", "ĐỒNG BỘ DỌC (VSYNC)", "CHẤT LƯỢNG ĐỒ HOẠ", "MÀU PHIM" };
 
         /// <summary>The main-menu row "Cài đặt" sits on, so Esc from the page lands back on it.</summary>
         private int SettingsIndex => 3;
@@ -22,7 +22,9 @@ namespace ShadowVale.Map01
                 case 1: return GameOptions.Sensitivity.ToString("0.0") + "×";
                 case 2: return GameOptions.Fullscreen ? "TOÀN MÀN HÌNH" : "CỬA SỔ";
                 case 3: var size = GameOptions.Resolution; return size.x + " × " + size.y;
-                default: return GameOptions.VSync ? "BẬT" : "TẮT";
+                case 4: return GameOptions.VSync ? "BẬT" : "TẮT";
+                case 5: return GameOptions.QualityName;
+                default: return GameOptions.FilmLook ? "BẬT" : "TẮT";
             }
         }
 
@@ -36,7 +38,9 @@ namespace ShadowVale.Map01
                 case 3:
                     var sizes = GameOptions.Resolutions(); int at = Mathf.Max(0, sizes.IndexOf(GameOptions.Resolution));
                     GameOptions.SetResolution(sizes[(at + step + sizes.Count) % sizes.Count]); break;
-                default: GameOptions.SetVSync(!GameOptions.VSync); break;
+                case 4: GameOptions.SetVSync(!GameOptions.VSync); break;
+                case 5: GameOptions.StepQuality(step); break;
+                default: GameOptions.SetFilmLook(!GameOptions.FilmLook); break;
             }
         }
 
@@ -57,15 +61,15 @@ namespace ShadowVale.Map01
             Fill(new Rect(535, 50, 1025, 790), Ink); Frame(new Rect(535, 50, 1025, 790), Gold);
             GUI.Label(new Rect(575, 75, 900, 45), "TUỲ CHỌN TRÒ CHƠI", heading);
             for (int i = 0; i < SettingRows; i++) {
-                var r = new Rect(575, 150 + i * 104, 945, 92);
+                var r = new Rect(575, 140 + i * 84, 945, 76);
                 Fill(r, selected == i ? new Color(.31f, .33f, .18f) : new Color(.12f, .15f, .10f)); Frame(r, selected == i ? Gold : new Color(.3f, .32f, .23f));
                 if (GUI.Button(r, GUIContent.none, GUIStyle.none)) selected = i;
-                GUI.Label(new Rect(r.x + 28, r.y + 26, 420, 45), SettingNames[i], heading);
-                if (Button(new Rect(r.x + 480, r.y + 16, 70, 60), "◀")) { selected = i; ChangeSetting(i, -1); }
+                GUI.Label(new Rect(r.x + 28, r.y + 18, 440, 45), SettingNames[i], heading);
+                if (Button(new Rect(r.x + 480, r.y + 10, 70, 56), "◀")) { selected = i; ChangeSetting(i, -1); }
                 var old = body.alignment; body.alignment = TextAnchor.MiddleCenter;
-                GUI.Label(new Rect(r.x + 560, r.y + 16, 280, 60), SettingValue(i), body);
+                GUI.Label(new Rect(r.x + 560, r.y + 10, 280, 56), SettingValue(i), body);
                 body.alignment = old;
-                if (Button(new Rect(r.x + 850, r.y + 16, 70, 60), "▶")) { selected = i; ChangeSetting(i, 1); }
+                if (Button(new Rect(r.x + 850, r.y + 10, 70, 56), "▶")) { selected = i; ChangeSetting(i, 1); }
             }
             if (Button(new Rect(575, 750, 360, 60), "MẶC ĐỊNH")) GameOptions.ResetToDefaults();
             if (Button(new Rect(1235, 750, 285, 60), "QUAY LẠI")) CloseSettings();
