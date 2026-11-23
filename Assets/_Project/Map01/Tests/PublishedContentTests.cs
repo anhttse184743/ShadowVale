@@ -4,6 +4,7 @@ using NUnit.Framework;
 using ShadowVale.Content;
 using ShadowVale.Core.Services;
 using ShadowVale.Data.Content;
+using ShadowVale.Gameplay.Combat;
 using ShadowVale.Gameplay.Skills;
 using UnityEngine;
 using Newtonsoft.Json.Linq;
@@ -29,6 +30,31 @@ namespace ShadowVale.Map01.Tests
 
         [TearDown]
         public void TearDown() => ServiceLocator.Unregister<ContentService>();
+
+        [Test]
+        public void KnifeSwingUsesPublishedBalanceAndKeepsPrefabDefaultsForOldBundles()
+        {
+            var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/Items/W_Knife.prefab");
+            var instance = Object.Instantiate(prefab);
+            try
+            {
+                var knife = instance.GetComponent<Weapon>();
+                var bundle = new ContentBundle();
+                knife.ApplyPublishedKnifeBalance(bundle);
+                Assert.That(knife.Damage, Is.EqualTo(45f));
+                Assert.That(knife.Range, Is.EqualTo(2f));
+                Assert.That(knife.Cooldown, Is.EqualTo(.75f));
+
+                bundle.Weapons.Add(new WeaponDefinition { Id = "knife", Class = "melee", Damage = 55f, Range = 1.8f });
+                bundle.Items.Add(new ItemDefinition { Id = "knife", Stats = new JObject { ["melee_cooldown_s"] = .86f } });
+                knife.ApplyPublishedKnifeBalance(bundle);
+                Assert.That(knife.Damage, Is.EqualTo(55f));
+                Assert.That(knife.Range, Is.EqualTo(1.8f));
+                Assert.That(knife.Cooldown, Is.EqualTo(.86f).Within(.0001f));
+                Assert.That(knife.Kind, Is.EqualTo(WeaponKind.Knife));
+            }
+            finally { Object.DestroyImmediate(instance); }
+        }
 
         [Test]
         public void TheImportedBundleLeavesMapOnesContentAsItIs()
