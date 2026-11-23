@@ -119,6 +119,7 @@ namespace ShadowVale.Map01
             if(task.id=="D3_04")BeginStepsRehearsal();   // Hùng walks Ông Sáu down to the dock steps, then home for supper
             if(State.finished){Mission.World.story.stage=Map02Stage.Complete;Mission.StoreCheckpoint();}
             if(State.finished)Mission.Say("MAP 2 HOÀN THÀNH · Ta giữ được làng. Hùng đã hy sinh cứu chuyến thuyền cuối.");
+            if(task.id=="DAWN")GameCredits.Roll(6f);   // the end of the game: a few seconds on the dawn, then the outro and the title
         }
     }
 }

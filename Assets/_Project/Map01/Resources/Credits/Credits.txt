@@ -1,0 +1,39 @@
+@logo
+
+> Rạng sáng, khói tan dần trên bờ sông.
+> Chuyến thuyền cuối đã sang được bờ bên kia.
+>
+> Có những người đã không trở về,
+> để làng còn được thấy thêm một buổi sáng.
+>
+> Xin dành trò chơi này cho họ.
+
+
+
+# SHADOWVALE
+
+## Một trò chơi của
+Nhóm ShadowVale
+Đồ án tốt nghiệp · Đại học FPT
+
+
+## Lập trình
+Trần Tuấn Anh
+Nguyễn Đăng Khoa
+Nguyễn Đình Tài
+Nguyễn Công Thịnh
+
+
+## Thiết kế game
+Trần Tuấn Anh
+Nguyễn Đăng Khoa
+Nguyễn Đình Tài
+Nguyễn Công Thịnh
+
+
+## Giảng viên hướng dẫn
+Lại Đức Hùng
+
+
+
+## Cảm ơn bạn đã chơi

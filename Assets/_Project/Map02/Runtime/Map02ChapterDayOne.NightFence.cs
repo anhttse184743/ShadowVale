@@ -15,7 +15,7 @@ namespace ShadowVale.Map01
                 new Vector3(-43,0,-120),new Vector3(-120,0,-120),new Vector3(-120,0,120),
                 new Vector3(-43,0,120),new Vector3(-43,0,43),new Vector3(-48,0,30),
                 new Vector3(-54.5f,0,17),east.position-east.right*4.66f};
-            var crossings=new[]{new Vector3(-51,0,-7.317f),new Vector3(-43,0,-70),new Vector3(-51,0,24)};
+            var crossings=new[]{new Vector3(-51,0,-7.317f),new Vector3(-51,0,24)};
             for(int i=1;i<path.Length;i++)FenceWithCrossings(path[i-1],path[i],crossings);
             FenceWithCrossings(north.position-north.right*4.66f,new Vector3(-120,0,21),System.Array.Empty<Vector3>());
             FenceWithCrossings(north.position+north.right*4.66f,new Vector3(-52.5f,0,21),System.Array.Empty<Vector3>());
@@ -37,12 +37,17 @@ namespace ShadowVale.Map01
             }
             FenceRun(start,end);
         }
+        /// <summary>The riverside stretch of the east line (x = -43) is left open: the Night 3 tank comes out of the bamboo to
+        /// the head of the dock road here and Hùng runs from the bank ditch to its tracks, so a fence (and its NavMesh carving)
+        /// would stand across both (23/11/2026).</summary>
+        static bool OnTheTankRoad(Vector3 p)=>Mathf.Abs(p.x+43)<1.5f&&p.z<-48&&p.z>-91;
         void FenceRun(Vector3 start,Vector3 end)
         {
             float distance=Vector3.ProjectOnPlane(end-start,Vector3.up).magnitude;
             int count=Mathf.Max(1,Mathf.CeilToInt(distance/3.45f));
             for(int i=0;i<count;i++){
                 var a=Vector3.Lerp(start,end,(float)i/count);var b=Vector3.Lerp(start,end,(float)(i+1)/count);
+                if(OnTheTankRoad((a+b)*.5f))continue;
                 a.y=NightGround(a);b.y=NightGround(b);var direction=(b-a).normalized;
                 var section=NightModel("FenceSection",(a+b)*.5f);
                 var normal=Vector3.Cross(direction,Vector3.up).normalized;

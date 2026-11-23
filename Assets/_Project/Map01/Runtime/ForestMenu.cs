@@ -143,7 +143,7 @@ namespace ShadowVale.Map01
         }
         private void Update()
         {
-            if (exploringMap2 || intro!=null&&intro.Active) return;
+            if (exploringMap2 || intro!=null&&intro.Active || GameCredits.Rolling) return;   // Esc skips the credits, not pause
             float now = Time.realtimeSinceStartup;
             if (settleFrames > 0) { settleFrames--; if (now - lastFrameAt > .2f) ignoreKeysUntil = Mathf.Max(ignoreKeysUntil, now + .5f); }
             lastFrameAt = now;
