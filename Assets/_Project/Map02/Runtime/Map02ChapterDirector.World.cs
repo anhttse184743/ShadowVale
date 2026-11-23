@@ -52,6 +52,8 @@ namespace ShadowVale.Map01
             foreach(var lamp in lamps){bool supperLamp=lamp.name.EndsWith("family")&&State.phase<=1;lamp.range=supperLamp?3.5f:State.phase<=1?6:10;if(supperLamp)lamp.transform.position=dayLampFlame!=null?dayLampFlame.position+Vector3.up*.1f:PorchMeal+Vector3.up*.3f;lamp.intensity=Mathf.Lerp(lamp.intensity,night?(State.phase<=1?(Layout!=null?Layout.dayOneOilLampIntensity:.65f):2.5f):0,Mathf.Clamp01(dt));}
             sweepLight.enabled=!NightPatrolStopped;
             if(phaseApplied!=State.phase){phaseApplied=State.phase;}
+            // The film look follows the chapter clock: nights cool, Day 3's afternoon warm, Night 3 greying into dawn.
+            GameLook.SetTime(night?1-FirstLight:0,State.phase==4?1:0,FirstLight);
             if(TickNaturalLighting(dt))return;
             bool golden=State.phase==4; // Day 3: the warmest afternoon of the chapter, against Night 3.
             // Night 3 is fought into first light: the sky greys from the farewell and the tank goes up at dawn (FirstLight).
