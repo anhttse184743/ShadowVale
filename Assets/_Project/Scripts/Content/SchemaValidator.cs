@@ -44,7 +44,7 @@ namespace ShadowVale.Content
 
             foreach (var e in b.EnemyArchetypes)
             {
-                if (!weapons.Contains(e.WeaponId)) errors.Add($"enemy_archetypes[{e.Id}].weapon_id '{e.WeaponId}' unknown");
+                if (!string.IsNullOrEmpty(e.WeaponId) && !weapons.Contains(e.WeaponId)) errors.Add($"enemy_archetypes[{e.Id}].weapon_id '{e.WeaponId}' unknown");
                 if (e.MaxHp <= 0) errors.Add($"enemy_archetypes[{e.Id}].max_hp must be > 0");
                 if (e.RetreatHpThreshold < 0 || e.RetreatHpThreshold > 1) errors.Add($"enemy_archetypes[{e.Id}].retreat_hp_threshold must be in [0,1]");
                 if (!string.IsNullOrEmpty(e.LootTableId) && !loot.Contains(e.LootTableId)) errors.Add($"enemy_archetypes[{e.Id}].loot_table_id '{e.LootTableId}' unknown");

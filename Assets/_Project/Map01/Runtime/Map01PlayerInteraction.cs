@@ -258,13 +258,6 @@ namespace ShadowVale.Map01
                     // [E] opens the bench screen (Map01Hud.Bench) and shuts it again.
                     mission.SetBenchOpen(!mission.BenchOpen); inventory.SuppressFire = true;
                     break;
-                case ForestPointKind.Documents:
-                    // Side content: useful lore, not on the critical path the briefing laid out.
-                    if (point.used) return;
-                    point.used = true; inventory.Receive("river_documents", 1);
-                    Rummage(Map01NamActions.PickUp);
-                    mission.Say("Nam: Tài liệu cũ của đơn vị tuần tra — cất đi, có thể còn hữu ích.", 8);
-                    break;
                 case ForestPointKind.Stones:
                     // Straight into the pocket, crouched or standing: no rummaging take to sit through
                     // a few metres from a guard.

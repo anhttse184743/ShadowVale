@@ -87,7 +87,7 @@ namespace ShadowVale.Tests.EditMode.Data
             Assert.AreEqual(meta.Checksum, bundle.Checksum);
             Assert.AreEqual("cache", cache.SourceName);
 
-            File.WriteAllText(Path.Combine(_directory, meta.VersionId + ".json"), FallbackJson.Replace("\"damage\": 20,", "\"damage\": 99,"));
+            File.WriteAllText(Path.Combine(_directory, meta.VersionId + ".json"), FallbackJson + "\n");
             Assert.IsFalse(cache.TryLoad(out _, out var corrupt));
             StringAssert.Contains("checksum mismatch", corrupt);
         }

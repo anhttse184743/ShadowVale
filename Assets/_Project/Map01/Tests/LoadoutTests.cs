@@ -175,11 +175,11 @@ namespace ShadowVale.Map01.Tests
             var mission = Object.FindFirstObjectByType<Map01Mission>();
             var inventory = mission.GetComponent<Map01Inventory>();
             var drops = Map01Drops.For(mission);
-            inventory.Add("cloth", 6); inventory.Add("supplies", 1);
+            inventory.Add("cloth", 6); inventory.Add(Map01Story.CargoItem, 1);
             int cloth = CellOf(inventory, "cloth");
             Assert.IsTrue(inventory.Drop(cloth, 4));
             Assert.AreEqual(2, inventory.Count("cloth"), "Part of a stack can be put down.");
-            Assert.IsFalse(inventory.Drop(CellOf(inventory, "supplies"), 1), "Mission things cannot be dropped.");
+            Assert.IsFalse(inventory.Drop(CellOf(inventory, Map01Story.CargoItem), 1), "Mission things cannot be dropped.");
             var pile = drops.Piles.Single();
             Assert.AreEqual(("cloth", 4), (pile.id, pile.count));
             Assert.Less(Vector3.Distance(pile.position, mission.player.position), 2f, "It lies at Nam's feet.");
@@ -203,7 +203,6 @@ namespace ShadowVale.Map01.Tests
             drops = Map01Drops.For(mission);
             Assert.AreEqual(1, drops.Piles.Count(), "The pile is still on the ground after loading.");
             Assert.AreEqual("cloth", inventory.Cell(moved)?.id, "The bag comes back as it was arranged.");
-            Assert.AreEqual(0, inventory.Count("supplies"), "A save that still carries the retired \"supplies\" quest item loads without it.");
             point = mission.Interactables.Single(p => p.id != null && p.id.StartsWith(Map01Drops.IdPrefix));
 
             // [E] at the pile picks it up again.

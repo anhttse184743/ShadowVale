@@ -254,7 +254,8 @@ namespace ShadowVale.Map01
         }
 
         private static ForestIngredient[] Copy(ForestIngredient[] items) =>
-            items.Select(i => new ForestIngredient { item_id = i.item_id, count = i.count, condition = i.condition }).ToArray();
+            items.Where(i => !ForestInventory.IsRetired(i.item_id))
+                .Select(i => new ForestIngredient { item_id = i.item_id, count = i.count, condition = i.condition }).ToArray();
 
         // ---- the save --------------------------------------------------------------------------------------
 

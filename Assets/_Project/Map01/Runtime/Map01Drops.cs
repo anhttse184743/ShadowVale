@@ -165,7 +165,9 @@ namespace ShadowVale.Map01
             foreach (var l in lying.Where(l => !l.laid)) { if (l.point != null) mission.UnregisterPoint(l.point); if (l.view != null) Destroy(l.view); }
             lying.RemoveAll(l => !l.laid);
             if (saved == null) return;
-            foreach (var p in saved) if (p != null && !string.IsNullOrEmpty(p.id) && p.count > 0) Spawn(p);
+            foreach (var p in saved)
+                if (p != null && !string.IsNullOrEmpty(p.id) && p.count > 0 && !ForestInventory.IsRetired(p.id))
+                    Spawn(p);
         }
 
         /// <summary>A gun on the ground lies on its side: its thinnest axis upright (the game's AK prefab stands on its

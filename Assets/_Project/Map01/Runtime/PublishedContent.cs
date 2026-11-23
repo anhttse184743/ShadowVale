@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ShadowVale.Content;
 using ShadowVale.Data.Content;
 using UnityEngine;
@@ -9,8 +11,8 @@ namespace ShadowVale.Map01
     /// <summary>
     /// Tunes the maps' hand-authored data (Map01Content.json, Map01Loot.json) with the content version the
     /// designers published on the web. Rows are matched by id/code, so a value the web schema has replaces the
-    /// local one and everything else stays: field crafting (field_seconds, field_max_batch), salvage and repair
-    /// rules, containers placed in the scene. New recipes and loot tables are added; new weapons and enemies are
+    /// local one. Item loot metadata and maps.layout.game_rules tune prices, trade, repair and field crafting;
+    /// absent optional fields keep their local defaults. New recipes and loot tables are added; new weapons and enemies are
     /// not, because the maps pick those by id in code. Without a published version (offline, first run without a
     /// cache) the local files are used as they are.
     /// </summary>
@@ -74,10 +76,12 @@ namespace ShadowVale.Map01
             var recipes = (local.craft_recipes ?? new ForestRecipe[0]).Where(r => r != null).ToList();
             foreach (var p in published.CraftRecipes)
             {
+                if (ForestInventory.IsRetired(p.OutputItemId) || p.Inputs.Any(i => ForestInventory.IsRetired(i.ItemId)))
+                    continue;
                 var recipe = recipes.FirstOrDefault(r => r.id == p.Id);
                 if (recipe == null)
                 {
-                    // Bench only: field crafting has no column in the web schema
+                    // Field crafting remains disabled unless a per-map rule explicitly enables it.
                     recipe = new ForestRecipe { id = p.Id };
                     recipes.Add(recipe);
                 }
@@ -85,6 +89,12 @@ namespace ShadowVale.Map01
                 recipe.output_count = p.OutputCount;
                 recipe.craft_seconds = p.CraftSeconds;
                 recipe.inputs = p.Inputs.Select(i => new ForestIngredient { item_id = i.ItemId, count = i.Count }).ToArray();
+                var field = published.Maps.FirstOrDefault(m => m.Id == Map01Mission.MapId)?.GameRules?["field_crafting"]?[p.Id];
+                if (field != null)
+                {
+                    recipe.field_seconds = field.Value<float?>("seconds") ?? recipe.field_seconds;
+                    recipe.field_max_batch = field.Value<int?>("max_batch") ?? recipe.field_max_batch;
+                }
             }
             local.craft_recipes = recipes.ToArray();
         }
@@ -93,6 +103,30 @@ namespace ShadowVale.Map01
         public static Map01Loot Apply(Map01Loot local, ContentBundle published)
         {
             var tuned = JsonUtility.FromJson<Map01Loot>(JsonUtility.ToJson(local));
+            var rules = published.Maps.FirstOrDefault(m => m.Id == Map01Mission.MapId)?.GameRules;
+            if (rules != null)
+            {
+                if (rules["tier_odds"] is JArray odds) tuned.tierOdds = odds.ToObject<float[]>();
+                // Populate preserves local defaults for optional fields in older/partial bundles.
+                if (rules["adaptive"] is JObject adaptive) JsonConvert.PopulateObject(adaptive.ToString(), tuned.adaptive);
+                if (rules["repair"] is JObject repair) JsonConvert.PopulateObject(repair.ToString(), tuned.repair);
+                if (rules["logistics"] is JObject logistics) JsonConvert.PopulateObject(logistics.ToString(), tuned.logistics,
+                    new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace });
+            }
+            var metadata = published.Items.ToDictionary(i => i.Id);
+            foreach (var item in tuned.items ?? new Map01Loot.Item[0])
+            {
+                if (!metadata.TryGetValue(item.code, out var p)) continue;
+                // Legacy bundles without stats retain their local loot metadata.
+                if (p.Stats == null) continue;
+                item.baseValue = p.BaseValue; item.weight = p.Weight;
+                if (!string.IsNullOrEmpty(p.Rarity)) item.rarity = p.Rarity;
+                item.foundMin = p.Stats.Value<float?>("found_min") ?? item.foundMin;
+                item.foundMax = p.Stats.Value<float?>("found_max") ?? item.foundMax;
+                item.salvageGood = p.Stats.Value<float?>("salvage_good") ?? item.salvageGood;
+                item.salvageGoodItem = p.Stats.Value<string>("salvage_good_item") ?? item.salvageGoodItem;
+                if (p.Stats["salvage"] is JArray salvage) item.salvage = salvage.ToObject<Map01Loot.Yield[]>();
+            }
             var tables = (tuned.lootTables ?? new Map01Loot.Table[0]).ToList();
             var known = new HashSet<string>((tuned.items ?? new Map01Loot.Item[0]).Select(i => i.code));
             foreach (var p in published.LootTables)
@@ -107,7 +141,7 @@ namespace ShadowVale.Map01
                 }
                 table.rollsMin = p.RollsMin;
                 table.rollsMax = p.Rolls;
-                table.entries = p.Entries.Select(e => new Map01Loot.Entry
+                table.entries = p.Entries.Where(e => !ForestInventory.IsRetired(e.ItemId)).Select(e => new Map01Loot.Entry
                 {
                     item = e.ItemId, tier = e.Tier, weight = e.Weight, min = e.Min, max = e.Max
                 }).ToArray();
@@ -135,6 +169,31 @@ namespace ShadowVale.Map01
                 if (!string.IsNullOrEmpty(p.LootTableId)) enemy.lootTable = p.LootTableId;
             }
             return tuned;
+        }
+
+        public static CampTrader.Offer[] TradeStock(bool mapTwo, CampTrader.Offer[] fallback)
+        {
+            if (!ContentService.TryGetPublished(out var published)) return fallback;
+            return TradeStock(published, mapTwo ? "map02" : Map01Mission.MapId, fallback);
+        }
+
+        public static CampTrader.Offer[] TradeStock(ContentBundle published, string mapCode, CampTrader.Offer[] fallback)
+        {
+            var stock = published.Maps.FirstOrDefault(m => m.Id == mapCode)?.GameRules?["trade_offers"] as JArray;
+            if (stock == null) return fallback;
+            var weapons = new HashSet<string>(published.Weapons.Select(w => w.Id));
+            var ammo = new HashSet<string>(published.Items.Where(i => i.Category == "ammo").Select(i => i.Id));
+            var offers = new List<CampTrader.Offer>();
+            foreach (var row in stock)
+            {
+                var gun = row.Value<string>("gun"); var rounds = row.Value<int?>("rounds") ?? 0;
+                var ammunition = row.Value<string>("ammo");
+                if (!weapons.Contains(gun) || !ammo.Contains(ammunition) || rounds < 1) return fallback;
+                // New weapon models still need a gameplay implementation; stock only supports the existing inventory whitelist.
+                if (!ForestInventory.IsWeapon(gun)) return fallback;
+                offers.Add(new CampTrader.Offer(gun, ammunition, rounds));
+            }
+            return offers.ToArray();
         }
     }
 }

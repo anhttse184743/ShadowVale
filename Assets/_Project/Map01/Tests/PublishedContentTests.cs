@@ -6,6 +6,7 @@ using ShadowVale.Core.Services;
 using ShadowVale.Data.Content;
 using ShadowVale.Gameplay.Skills;
 using UnityEngine;
+using Newtonsoft.Json.Linq;
 
 namespace ShadowVale.Map01.Tests
 {
@@ -112,6 +113,43 @@ namespace ShadowVale.Map01.Tests
 
             var local = Local();
             Assert.AreSame(local, PublishedContent.Apply(local));
+        }
+
+        [Test]
+        public void DatabasePricesAndGameRulesReachLootAndFieldCrafting()
+        {
+            var published = Imported();
+            var rifle = published.Items.Single(i => i.Id == "rifle_standard");
+            rifle.BaseValue = 95; rifle.Stats = new JObject();
+            published.Maps.Single(m => m.Id == "map01").GameRules = JObject.Parse(@"{
+                'tier_odds':[60,30,8,2], 'adaptive':{'ammoBoost':4},
+                'logistics':{'materialTrade':[{'id':'weapon_parts','points':11}]},
+                'field_crafting':{'recover_ammo_556':{'seconds':6,'max_batch':2}}
+            }");
+            var local = Map01Loot.Load();
+            var tuned = PublishedContent.Apply(local, published);
+            Assert.AreEqual(95, tuned.BaseValue("rifle_standard"));
+            Assert.AreNotEqual(95, local.BaseValue("rifle_standard"));
+            Assert.AreEqual(4, tuned.adaptive.ammoBoost);
+            Assert.AreEqual(local.adaptive.medkitPity, tuned.adaptive.medkitPity);
+            Assert.AreEqual(11, tuned.logistics.MaterialCredit("weapon_parts"));
+            Assert.AreEqual(1, tuned.logistics.materialTrade.Length, "Published arrays replace local turn-in rules.");
+            CollectionAssert.AreEqual(new float[]{60,30,8,2},tuned.tierOdds);
+            var forest = Local(); PublishedContent.Apply(forest,published);
+            var recipe = forest.craft_recipes.Single(r => r.id == "recover_ammo_556");
+            Assert.AreEqual(6,recipe.field_seconds); Assert.AreEqual(2,recipe.field_max_batch);
+        }
+
+        [Test]
+        public void DatabaseTradeStockCanChangeOrBeEmpty_AndLegacyBundlesKeepLocalStock()
+        {
+            var published=Imported(); var fallback=new[]{new CampTrader.Offer("rifle_standard","ammo_rifle",10)};
+            Assert.AreSame(fallback,PublishedContent.TradeStock(published,"map02",fallback));
+            published.Maps.Single(m=>m.Id=="map02").GameRules=JObject.Parse(@"{'trade_offers':[{'gun':'rifle_m16','ammo':'ammo_556','rounds':25}]}");
+            var offers=PublishedContent.TradeStock(published,"map02",fallback);
+            Assert.AreEqual("rifle_m16",offers.Single().Gun);Assert.AreEqual(25,offers.Single().Rounds);
+            published.Maps.Single(m=>m.Id=="map02").GameRules=JObject.Parse(@"{'trade_offers':[]}");
+            Assert.IsEmpty(PublishedContent.TradeStock(published,"map02",fallback));
         }
     }
 }

@@ -17,7 +17,7 @@ namespace ShadowVale.Tests.EditMode.Data
             Assert.AreEqual("1", bundle.BundleVersion, "version_no of the web bundle it was imported as");
             Assert.AreEqual(SchemaValidator.SupportedSchemaVersion, bundle.SchemaVersion);
             Assert.IsNull(bundle.ContentVersionId, "A shipped bundle is no published version: telemetry sends null.");
-            Assert.GreaterOrEqual(bundle.Weapons.Count, 5, "proposal promises 5–6 weapon classes");
+            CollectionAssert.AreEquivalent(new[] { "knife", "pistol_k54", "rifle_m16", "rifle_mosin", "rifle_standard" }, bundle.Weapons.Select(w => w.Id));
             Assert.GreaterOrEqual(bundle.EnemyArchetypes.Count, 3);
             Assert.GreaterOrEqual(bundle.Maps.Count, 1);
             Assert.AreEqual("tabu", bundle.AiSettings.DefaultSolverVariant,
@@ -45,7 +45,7 @@ namespace ShadowVale.Tests.EditMode.Data
             new FallbackBundleProvider().TryLoad(out var b, out _);
             var svc = new ContentService();
             svc.Apply(b, "test");
-            foreach (var e in b.EnemyArchetypes) Assert.NotNull(svc.GetWeapon(e.WeaponId), e.Id);
+            foreach (var e in b.EnemyArchetypes.Where(e => !string.IsNullOrEmpty(e.WeaponId))) Assert.NotNull(svc.GetWeapon(e.WeaponId), e.Id);
             foreach (var w in b.Weapons.Where(w => w.Class != "melee")) Assert.NotNull(svc.GetItem(w.AmmoType), w.Id);
             Assert.AreEqual(b.Weapons.Count, b.Weapons.Select(w => w.Id).Distinct().Count());
         }
