@@ -252,6 +252,11 @@ namespace ShadowVale.Map01.Tests
                 SessionState.SetString(Key+".report","Logs/Map02Chapter/rescue-feedback-results.xml");
                 names=new[]{"ShadowVale.Map01.Tests.Map02DayTwoRouteTests.RescueFeedbackHandoverAmmoAndAntennaCarrySurviveReload","ShadowVale.Map01.Tests.BandageWeaponTests"};
             }
+            if(request=="incoming-fire")
+            {
+                SessionState.SetString(Key+".report","Logs/HudDirectionPreview/incoming-fire-results.xml");
+                names=new[]{"ShadowVale.Map01.Tests.IncomingFireHudTests"};
+            }
             runner.Execute(new ExecutionSettings(new Filter{testMode=UnityEditor.TestTools.TestRunner.Api.TestMode.EditMode,testNames=names}));
         }
         sealed class Results:ICallbacks

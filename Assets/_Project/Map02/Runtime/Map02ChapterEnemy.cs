@@ -96,11 +96,13 @@ namespace ShadowVale.Map01
         /// </summary>
         void Shoot(Transform target,Vector3 from,Vector3 to,float distance)
         {
+            var targetHealth=target.GetComponent<Health>();
+            targetHealth?.NotifyIncomingFire(from);
             bool hit=Hits(target,distance);var aim=to;
             if(!hit){var side=Vector3.Cross(Vector3.up,(to-from).normalized);aim+=side*(Random.value<.5f?-1:1)*Random.Range(.35f,1f)*(.6f+distance*.03f)+Vector3.up*Random.Range(-.6f,.5f);}
             if(!Physics.Raycast(from,(aim-from).normalized,out var struck,distance+8,~0,QueryTriggerInteraction.Ignore))return;
             var health=struck.transform.GetComponentInParent<Health>();
-            if(health!=null){if(hit&&health==target.GetComponent<Health>())health.TakeDamage(6,struck.point,gameObject);return;}
+            if(health!=null){if(hit&&health==targetHealth)health.TakeDamage(6,struck.point,gameObject);return;}
             if(!(struck.collider is CharacterController))CoverImpact.Play(struck.point,struck.normal);
         }
         /// <summary>Down behind cover (the enemy rig has no crouch clip: the body drops behind it) and his collider with him.</summary>
@@ -198,8 +200,10 @@ namespace ShadowVale.Map01
             // Every damage event requires an actual unobstructed hit, never a periodic HP tax.
             if(observationRules)   // Night 2's scripted volley (Tài): its own hit roll and damage
             {
-                if(Physics.Raycast(from,(to-from).normalized,out var actual,distance+.2f,~0,QueryTriggerInteraction.Ignore)&&actual.transform.GetComponentInParent<Health>()==target.GetComponent<Health>()&&NightObservationShotHits(Random.value))
-                    target.GetComponent<Health>().TakeDamage(target.GetComponent<Health>().Max*.5f,actual.point,gameObject);
+                var targetHealth=target.GetComponent<Health>();
+                targetHealth?.NotifyIncomingFire(from);
+                if(targetHealth!=null&&Physics.Raycast(from,(to-from).normalized,out var actual,distance+.2f,~0,QueryTriggerInteraction.Ignore)&&actual.transform.GetComponentInParent<Health>()==targetHealth&&NightObservationShotHits(Random.value))
+                    targetHealth.TakeDamage(targetHealth.Max*.5f,actual.point,gameObject);
             }
             else Shoot(target,from,to,distance);
         }

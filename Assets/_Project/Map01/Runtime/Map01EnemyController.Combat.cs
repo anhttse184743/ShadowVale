@@ -71,6 +71,7 @@ namespace ShadowVale.Map01
             // Hùng is in the line of fire while he is being held or walked home: every third
             // round goes his way when he is in reach.
             if (++_shots % 3 == 0 && HostageInReach(out var hostage) && SafeShot(hostage)) { FireAtHostage(hostage, damage * (RifleItemId == Map01M16.Id ? Map01M16.DamageRelativeToAk : 1f)); return; }
+            _playerHealth?.NotifyIncomingFire(transform.position);
             Vector3 aim = _player.position + Vector3.up;
             // Not every round finds him (ShotAccuracy): a miss flies past him, tracer and all.
             var shot = ShotAccuracy.For(transform.position, _agent != null ? _agent.velocity : Vector3.zero, attackRange,

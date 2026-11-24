@@ -77,8 +77,6 @@ namespace ShadowVale.Map01
             State.scoutAmbushSpawned=Mathf.Max(State.scoutAmbushSpawned,roster.Length);
             if(!CanSpawnScoutAmbush(State.scoutAmbushSpawned,roster.Any(e=>!e.Dead)))return;
             if(!TryScoutAmbushPoint(State.scoutAmbushSpawned,out var point)){scoutSpawnAt=Time.time+.5f;return;}
-            // Check the pair, not just Nam, before materializing at a fixed field-bank position.
-            if(!ScoutAmbushDistanceClear(point,Mission.Player.position,escort.transform.position)){scoutSpawnAt=Time.time+.25f;return;}
             SpawnEnemy(ScoutAmbushGroup+"_"+State.scoutAmbushSpawned,ScoutAmbushGroup,point,100);
             Enemies[Enemies.Count-1].Hear(Mission.Player.position,true);
             State.scoutAmbushSpawned++;scoutSpawnAt=Time.time+1;
@@ -89,7 +87,9 @@ namespace ShadowVale.Map01
             point=default;if(index<0||index>=5)return false;
             if(!PrepareScoutBridge())return false;
             if(State.scoutAmbushPlanVersion!=5){State.scoutAmbushPoints.Clear();State.scoutAmbushPlanVersion=5;}
-            if(State.scoutAmbushPoints.Count==5){point=State.scoutAmbushPoints[index];return true;}
+            bool hasPlan=State.scoutAmbushPoints.Count==5;
+            if(hasPlan&&ScoutAmbushDistanceClear(State.scoutAmbushPoints[index],Mission.Player.position,escort.transform.position))
+            {point=State.scoutAmbushPoints[index];return true;}
             // Use only the field approach ending before the actual bridge deck.
             if(!NavMesh.SamplePosition(sites["scout"].position,out var start,8,NavMesh.AllAreas)||
                !NavMesh.SamplePosition(scoutBridgeEntry-scoutBridgeForward*3,out var end,2,NavMesh.AllAreas))return false;
@@ -105,26 +105,36 @@ namespace ShadowVale.Map01
             }
             if(corners.Count<2)return false;
             float length=0;for(int i=1;i<corners.Count;i++)length+=Vector3.Distance(corners[i-1],corners[i]);
-            var points=new System.Collections.Generic.List<Vector3>();
-            for(int i=0;i<5;i++)
+            var points=hasPlan?State.scoutAmbushPoints:new System.Collections.Generic.List<Vector3>();
+            // Keep the saved points for other waves when the pair walks toward the next spawn bank.
+            int first=hasPlan?index:0,limit=hasPlan?index+1:5;
+            for(int i=first;i<limit;i++)
             {
                 float distance=length*(.12f+i*.17f);int segment=1;
                 while(segment<corners.Count-1&&distance>Vector3.Distance(corners[segment-1],corners[segment]))
                 {distance-=Vector3.Distance(corners[segment-1],corners[segment]);segment++;}
                 var origin=Vector3.MoveTowards(corners[segment-1],corners[segment],distance);
                 var direction=Vector3.ProjectOnPlane(corners[segment]-corners[segment-1],Vector3.up).normalized;
-                var side=Vector3.Cross(Vector3.up,direction)*(i%2==0?-1:1);bool found=false;
-                for(int attempt=0;attempt<12;attempt++)
-                {
-                    var candidate=origin+side*(20.75f+attempt/3*1.5f)+direction*((attempt%3-1)*.75f);
-                    if(!NavMesh.SamplePosition(candidate,out var hit,2,NavMesh.AllAreas)||Vector3.Dot(hit.position-origin,side)<20.5f)continue;
-                    var connection=new NavMeshPath();
-                    if(!NavMesh.CalculatePath(hit.position,end.position,NavMesh.AllAreas,connection)||connection.status!=NavMeshPathStatus.PathComplete||ScoutPathCrossesBridge(connection))continue;
-                    points.Add(hit.position);found=true;break;
-                }
-                if(!found)return false;
+                var side=Vector3.Cross(Vector3.up,direction)*(i%2==0?-1:1);
+                bool requireClear=i==index;
+                if(!TryScoutBankPoint(origin,direction,side,end.position,requireClear,out var spot)&&
+                   !TryScoutBankPoint(origin,direction,-side,end.position,requireClear,out spot))return false;
+                if(hasPlan)points[i]=spot;else points.Add(spot);
             }
             State.scoutAmbushPoints=points;point=points[index];return true;
+        }
+        bool TryScoutBankPoint(Vector3 origin,Vector3 direction,Vector3 side,Vector3 routeEnd,bool requireClear,out Vector3 spot)
+        {
+            var connection=new NavMeshPath();
+            for(int attempt=0;attempt<12;attempt++)
+            {
+                var candidate=origin+side*(20.75f+attempt/3*1.5f)+direction*((attempt%3-1)*.75f);
+                if(!NavMesh.SamplePosition(candidate,out var hit,2,NavMesh.AllAreas)||Vector3.Dot(hit.position-origin,side)<20.5f)continue;
+                if(requireClear&&!ScoutAmbushDistanceClear(hit.position,Mission.Player.position,escort.transform.position))continue;
+                if(!NavMesh.CalculatePath(hit.position,routeEnd,NavMesh.AllAreas,connection)||connection.status!=NavMeshPathStatus.PathComplete||ScoutPathCrossesBridge(connection))continue;
+                spot=hit.position;return true;
+            }
+            spot=default;return false;
         }
         static bool ScoutDeckContains(BoxCollider deck,Vector3 point)
         {
