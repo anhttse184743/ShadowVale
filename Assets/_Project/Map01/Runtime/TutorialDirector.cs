@@ -144,6 +144,7 @@ namespace ShadowVale.Map01
             mission.player.SetPositionAndRotation(checkpoint.position, checkpoint.rotation); body.enabled = true;
             mission.ModernPlayer.enabled = true; mission.ModernPlayer.RestoreMotion(checkpoint.crouched); mission.Crouched = checkpoint.crouched;
             mission.ModernCombat.enabled = true; mission.ModernCombat.RestoreAfterCinematic();
+            GetComponent<Map01Hud>()?.ClearIncomingFire();
             mission.RestoreHealthFromSave(checkpoint.hp); mission.SetStamina(checkpoint.stamina);
             inventory.RestoreFromSave(checkpoint.items, checkpoint.stones, null, 0);
             inventory.SuppressFire = true;

@@ -165,6 +165,8 @@ namespace ShadowVale.Gameplay.Enemies
             var target = Target ?? ResolvePlayerTarget();
             if (target != null && !target.IsDead && ServiceLocator.TryResolve<IPlayerObservable>(out var player))
             {
+                var health = target as Health;
+                health?.NotifyIncomingFire(transform.position);
                 var victim = target as Component;
                 Vector3 aim = player.Position + Vector3.up;
                 var controller = player is Component pc ? pc.GetComponentInParent<ShadowVale.Gameplay.Player.PlayerController>() : null;
@@ -179,7 +181,7 @@ namespace ShadowVale.Gameplay.Enemies
                 if (_feedback.Fire(aim, victim != null ? victim.transform : null,
                     obstructionMask, out var impact))
                 {
-                    if (target is Health health) health.TakeBulletDamage(damage, impact, gameObject, impact - transform.position);
+                    if (health != null) health.TakeBulletDamage(damage, impact, gameObject, impact - transform.position);
                     else target.TakeDamage(damage, impact, gameObject);
                 }
             }

@@ -17,7 +17,10 @@ namespace ShadowVale.Tests.EditMode.Gameplay
             view = new GameObject("Camera test view"); var camera = view.AddComponent<Camera>();
             camera.nearClipPlane = .1f;
             rig = view.AddComponent<ThirdPersonCamera>(); rig.SetTarget(player.transform); rig.InputAllowed = () => false;
-            Set("_camera", camera); Set("_pitch", 0f); Set("_currentDistance", 2f);
+            // Edit Mode does not run MonoBehaviour.Awake automatically. Initialise the stance
+            // pivot as a real camera does, so normal settling is not mistaken for a shake.
+            typeof(ThirdPersonCamera).GetMethod("Awake", Private).Invoke(rig, null);
+            Set("_pitch", 0f); Set("_currentDistance", 2f);
         }
         [TearDown] public void Cleanup()
         {

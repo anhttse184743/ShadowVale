@@ -28,6 +28,48 @@ namespace ShadowVale.Map01.Tests
             Assert.IsFalse(Map02ChapterDirector.ScoutAmbushDistanceClear(Vector3.zero,Vector3.forward*19.9f,Vector3.back*20));
             Assert.IsFalse(Map02ChapterDirector.ScoutAmbushDistanceClear(Vector3.zero,Vector3.forward*20,Vector3.back*19.9f));
         }
+        [UnityTest,Timeout(180000)] public IEnumerator ScoutRescueCheckpointSpawnsAmbushAfterLeavingRescueSite()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
+            Map02Mission mission=null;
+            float deadline=Time.realtimeSinceStartup+100;
+            while(Time.realtimeSinceStartup<deadline)
+            {
+                mission=Object.FindFirstObjectByType<Map02Mission>();
+                if(mission?.Ready==true&&mission.Chapter!=null)break;
+                Object.FindFirstObjectByType<Map02Arrival>()?.Skip();yield return null;
+            }
+            Assert.NotNull(mission?.Chapter);
+            var preview=Type.GetType("ShadowVale.Map01.Editor.Map02RoutePreview, ShadowVale.Map01.Editor",true);
+            preview.GetMethod("ApplyAfter").Invoke(null,new object[]{mission,"D2_03"});yield return null;
+            var chapter=mission.Chapter;
+            var state=chapter.State;
+            Assert.IsTrue(chapter.ScoutEscortActive);
+            Assert.AreEqual(0,state.scoutAmbushSpawned);
+            var controller=mission.Player.GetComponent<CharacterController>();
+            var departure=Vector3.ProjectOnPlane(mission.Player.forward,Vector3.up).normalized;
+            deadline=Time.realtimeSinceStartup+10;
+            while(!state.scoutAmbushStarted&&Time.realtimeSinceStartup<deadline)
+            {
+                controller.Move(departure*.14f+Vector3.down*.025f);yield return null;
+            }
+            Assert.IsTrue(state.scoutAmbushStarted,$"Nam did not leave the rescue radius. Position {mission.Player.position}, origin {state.scoutRescueOrigin}.");
+            Assert.IsFalse(state.scoutAmbushPassedBridge);
+            Map02ChapterEnemy first=null;
+            deadline=Time.realtimeSinceStartup+4;
+            while(first==null&&Time.realtimeSinceStartup<deadline)
+            {
+                first=chapter.Enemies.SingleOrDefault(e=>e.group==Map02ChapterDirector.ScoutAmbushGroup);yield return null;
+            }
+            Assert.NotNull(first,"Walking in the checkpoint's starting direction must trigger the first ambusher.");
+            Assert.AreEqual(1,state.scoutAmbushSpawned);
+            Assert.IsTrue(Map02ChapterDirector.ScoutAmbushDistanceClear(state.scoutAmbushPoints[0],mission.Player.position,chapter.Companion.transform.position));
+            var saved=Map02Mission.Parse(JsonUtility.ToJson(mission.Capture()));
+            mission.Restore(saved);yield return null;
+            Assert.AreEqual(1,chapter.State.scoutAmbushSpawned);
+            Assert.AreEqual(1,chapter.Enemies.Count(e=>e.group==Map02ChapterDirector.ScoutAmbushGroup));
+            yield return new ExitPlayMode();
+        }
         [TestCase("m1_rescue_hung_defiance")]
         [TestCase("m2v3_scoutescort_warning_01")]
         [TestCase("m2v3_evac_field_01")]

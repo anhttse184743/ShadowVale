@@ -101,6 +101,7 @@ namespace ShadowVale.Map01
         void CommitFinishedTask(Map02ChapterTask task)
         {
             TaskCompleted?.Invoke(task.id);
+            if(task.id=="D2_02"){Bark("m2v3_scoutbridge_01");Bark("m2v3_scoutbridge_02");}
             if(task.id=="D2_03")QueueScoutWarning();
             if(task.id=="N1_03")roles["Hùng"].GoTo(sites["nightOneRest"].position,1.25f);
             if(task.id=="D1_01")roles["Anh Thành"].GoTo(sites["command"].position,1.6f);

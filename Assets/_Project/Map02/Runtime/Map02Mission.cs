@@ -342,6 +342,7 @@ namespace ShadowVale.Map01
         }
         public void Restore(Snapshot data)
         {
+            CharacterHud?.ClearIncomingFire();
             if(Panel==5)CloseGameplayPanel();
             logisticsCredit=Mathf.Max(0,data.logisticsCredit);
             claimedLogisticsRewards.Clear();

@@ -1,0 +1,16 @@
+{
+  "id": "m2v3_echo_promise",
+  "voice": "Anh Khôi",
+  "beforeSha256": "a251547742bd6fb95fd1f9cbdce03b49a99beb7d45964edc613a9b0406c6b76b",
+  "afterSha256": "34711811c8847a31550573564182207ac9fbd5d8de8118487444f757f6974167",
+  "derivedFrom": {
+    "id": "m2v3_sacrifice_02",
+    "resource": "Dialogue/FullGameFree20261023/m2v3_sacrifice_02",
+    "sha256": "d8d172e80b856b1349cdf07ae282cd0f104feabb7501b6613eced6cd9588e5e6",
+    "fullTake": true
+  },
+  "duration": 4.65,
+  "unchangedOtherRecordings": 272,
+  "cost": 0,
+  "userApproved": false
+}

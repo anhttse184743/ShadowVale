@@ -23,6 +23,7 @@ namespace ShadowVale.Map01
         public Camera GameCamera=>cameraRig!=null?cameraRig.GetComponent<Camera>():Camera.main;
         public float Stamina {get;private set;}
         public bool CharacterGearLocked=>!string.IsNullOrEmpty(Chapter?.State.carry)||Chapter?.CompanionLocksGear==true||Chapter?.DayActivityActive==true||Chapter?.MovementLocked==true;
+        bool CharacterAttacksAllowed=>Chapter?.NightPatrolScriptedApproach!=true;
         public bool CharacterCanHeal=>!CharacterGearLocked||Chapter?.ScoutEscortActive==true;
         public bool CharacterCanSprint=>Chapter?.MovementLocked!=true&&Stamina>2;   // wounded he still runs, a little slower (WoundedPace)
         // The player's panel still blocks controls, but field crafting must leave enemies active.
@@ -74,6 +75,7 @@ namespace ShadowVale.Map01
             combat.ReserveRounds=()=>Bag.Count(Bag.HeldAmmoId);
             combat.DrawRounds=requested=>{int n=Mathf.Min(requested,Bag.Count(Bag.HeldAmmoId));Bag.Spend(Bag.HeldAmmoId,n);return n;};
             combat.GunUsable=()=>!Bag.HeldGunBroken();
+            combat.AttackAllowed=()=>CharacterAttacksAllowed;
             combat.InputAllowed=()=>!InputBlocked&&!Bag.SuppressFire&&!Bag.ThrowableEquipped;
             combat.Attacked+=CharacterAttack;
             player.SprintAllowed=()=>CharacterCanSprint;

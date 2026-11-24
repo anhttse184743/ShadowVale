@@ -126,6 +126,7 @@ namespace ShadowVale.Map01
 
         private void OnDestroy()
         {
+            if (incomingFireTexture != null) Destroy(incomingFireTexture);
             if (healthDroplet != null) Destroy(healthDroplet);
             if (compassArrow != null) Destroy(compassArrow);
             if (compassBadge != null) Destroy(compassBadge);

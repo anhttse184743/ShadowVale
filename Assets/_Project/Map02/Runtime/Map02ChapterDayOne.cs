@@ -13,7 +13,7 @@ namespace ShadowVale.Map01
     public sealed partial class Map02ChapterDirector
     {
         Vector3 DayFamily=>sites["dayOneFamily"].position;
-        Vector3 DayTaskPoint(Map02ChapterTask t)=>t.id=="N1_04"?sites["nightOneRest"].position:(t.id=="D1_02"||t.id=="D1_03"||t.id=="N1_01")?DayFamily:sites[t.site].position;
+        Vector3 DayTaskPoint(Map02ChapterTask t)=>t.id=="D2_02"?ScoutApproachPoint:t.id=="N1_04"?sites["nightOneRest"].position:(t.id=="D1_02"||t.id=="D1_03"||t.id=="N1_01")?DayFamily:sites[t.site].position;
         enum DayActivity { None, Packing, Dock, Lamp, Gate, Path }
         DayActivity dayActivity;
         Map02DayOneState Day=>State.dayOne;
@@ -104,7 +104,7 @@ namespace ShadowVale.Map01
                 TickStakeCommit();
                 if(dayCloseRequested&&!StrikeRecovering){CloseDay();return true;}
                 if(kb?.escapeKey.wasPressedThisFrame==true){RequestCloseDay();return true;}
-                dayClock+=Time.deltaTime;
+                dayClock+=dt;
                 TickDayKeyboard(kb);if(!DayActivityActive)return true;
                 if(kb?.spaceKey.isPressed!=true)daySpaceReleased=true;
                 if(dayActivity==DayActivity.Dock&&Day.stakeHits<6&&kb?.spaceKey.wasPressedThisFrame==true&&daySpaceReleased)

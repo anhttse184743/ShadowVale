@@ -90,6 +90,7 @@ namespace ShadowVale.Map01.Tests
                 snapshot=RoundTrip();m.Restore(snapshot);Assert.AreEqual(1,c.State.patrolWarnings);Assert.AreEqual(7,c.State.patrolScanSeconds);
                 Assert.AreEqual(baseline,m.Capture().patrolCheckpoint);Assert.IsTrue(m.RetryPatrol());
                 Assert.Less(Vector3.Distance(m.Player.position,c.NightObservationSpawn),.1f,"Retry must return to the authored observation point.");
+                Assert.IsTrue(c.AtNightObservationBridge(m.Player.position),"Patrol retry must use the walkable bridge observation point.");
                 Assert.IsFalse(c.State.Done("N2_03"));Assert.IsFalse(c.State.Done("N2_04"));Assert.AreEqual(0,c.State.patrolWarnings);
                 Assert.AreEqual(0,c.State.patrolScanSeconds);Assert.IsFalse(c.State.night2ChainCuePlayed);Assert.IsEmpty(c.State.night2RouteVisited);
                 Assert.AreEqual(23,m.Inventory[m.RifleAmmo]);Assert.AreEqual(6,ammo.RoundsInMagazine);Assert.AreEqual(61,m.Player.GetComponent<Health>().Current);
@@ -295,13 +296,23 @@ namespace ShadowVale.Map01.Tests
                     "ShadowVale.Map01.Tests.Map02NightTwoRouteTests",
                     "ShadowVale.Map01.Tests.Map02DayTwoStateTests.AntennaStaysMountedAfterClimbCompletionAndReload"};
             }
+            if(request=="rescue-feedback")
+            {
+                SessionState.SetString(Key+".report","Logs/Map02Chapter/rescue-feedback-results.xml");
+                names=new[]{"ShadowVale.Map01.Tests.Map02DayTwoRouteTests.RescueFeedbackHandoverAmmoAndAntennaCarrySurviveReload","ShadowVale.Map01.Tests.BandageWeaponTests"};
+            }
+            if(request=="incoming-fire")
+            {
+                SessionState.SetString(Key+".report","Logs/HudDirectionPreview/incoming-fire-results.xml");
+                names=new[]{"ShadowVale.Map01.Tests.IncomingFireHudTests"};
+            }
             runner.Execute(new ExecutionSettings(new Filter{testMode=UnityEditor.TestTools.TestRunner.Api.TestMode.EditMode,testNames=names}));
         }
         sealed class Results:ICallbacks
         {
             public void RunStarted(ITestAdaptor tests){}
-            public void TestStarted(ITestAdaptor test){}
-            public void TestFinished(ITestResultAdaptor result){}
+            public void TestStarted(ITestAdaptor test){File.WriteAllText("Logs/Map02Chapter/current-test.txt",test.FullName);}
+            public void TestFinished(ITestResultAdaptor result){File.AppendAllText("Logs/Map02Chapter/current-test.txt","\n"+result.ResultState+"\n"+result.Message);}
             public void RunFinished(ITestResultAdaptor result){if(!SessionState.GetBool(Key,false))return;TestRunnerApi.SaveResultToFile(result,Path.GetFullPath(SessionState.GetString(Key+".report",Report)));SessionState.SetBool(Key,false);}
         }
     }

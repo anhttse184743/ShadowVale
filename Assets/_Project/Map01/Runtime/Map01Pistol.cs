@@ -76,7 +76,7 @@ namespace ShadowVale.Map01
         }
         void OnShot(WeaponKind kind,Vector3 point){if(kind==WeaponKind.Pistol)shotAt=Time.time;}
         bool Available => mission!=null&&combat!=null&&combat.EquippedKind==WeaponKind.Pistol&&actor!=null&&actor.isActiveAndEnabled
-            && !mission.Cinematic && !(mission.ModernHealth?.IsDead??false)
+            && !mission.Cinematic && !combat.HandsOccupied && !(mission.ModernHealth?.IsDead??false)
             && !(mission.Binoculars?.Binoculars??false)&&!(mission.GetComponent<Map01Inventory>()?.IsFieldCrafting??false) && !(actions!=null&&(actions.Busy||actions.StoneActionPlaying));
         void LateUpdate()
         {

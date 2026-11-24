@@ -40,7 +40,7 @@ namespace ShadowVale.Map01
         uint jumpSequence;
         WeaponKind lastWeapon;
         bool Ready => Data!=null&&actor!=null&&actor.isActiveAndEnabled&&mission!=null&&mission.IsInitialized
-            && !mission.Cinematic&&(!mission.Stopped||mission.Paused)&&!(mission.ModernHealth?.IsDead??false)
+            && !mission.Cinematic&&!combat.HandsOccupied&&(!mission.Stopped||mission.Paused)&&!(mission.ModernHealth?.IsDead??false)
             && actions!=null&&!actions.Busy&&!(mission.Binoculars?.Binoculars??false)&&!actions.NonThrowableUpperAction;
 
         public static NamMotionRefresh Install(Map01Mission owner)
