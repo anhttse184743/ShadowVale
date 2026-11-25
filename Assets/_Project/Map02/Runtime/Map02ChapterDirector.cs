@@ -244,6 +244,7 @@ namespace ShadowVale.Map01
             if(nightWarningAudio!=null){if(Mission.Paused||ForestMenu.Visible)nightWarningAudio.Pause();else nightWarningAudio.UnPause();}
             if(!ready||Mission.Paused||ForestMenu.Visible)return;
             if(focusSlowed&&(!CoverFireActive||sceneTask!=null))EndCoverFocus();   // the cover ended some other way: never leave time slowed
+            if(coverZone!=null&&coverZone.enabled&&(!CoverFireActive||sceneTask!=null))coverZone.enabled=false;   // the cover over: its zone ring goes
             rig.AimFovScale=CoverFireActive&&sceneTask==null?CoverAimZoom:1;   // covering Hùng, aiming brings the tank's escort in closer
             combat.ReloadDurationMultiplier=(State.wounded?1.35f:1)*(CoverFireActive&&sceneTask==null?CoverReload:1);TickOutlines();   // covering Hùng, Nam reloads twice as fast
             float dt=Mathf.Min(Time.deltaTime,.1f);

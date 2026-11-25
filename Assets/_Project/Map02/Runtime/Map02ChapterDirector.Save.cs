@@ -80,7 +80,7 @@ namespace ShadowVale.Map01
             CancelEvacuationCapture();
             CancelEvacuationChoices();
             CancelNightPatrolFailure();
-            EndCoverFocus();coverFailClock=-1;liveWave=-1;
+            EndCoverFocus();coverFailClock=-1;liveWave=-1;if(coverZone!=null)coverZone.enabled=false;
             UndergroundStore?.CancelTraversal();
             CancelNightRadio();
             EndScoutEscort();

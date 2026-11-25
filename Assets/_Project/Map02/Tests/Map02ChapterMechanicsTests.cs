@@ -246,7 +246,7 @@ namespace ShadowVale.Map01.Tests
                 // Every wave down: Hùng reaches the tracks at the 30 s mark and the sacrifice begins.
                 for(int w=1;w<Map02ChapterDirector.WaveAt.Length;w++){yield return WaveOut(w);DropWave();yield return null;yield return null;Assert.AreEqual(w+1,c.State.coverWave);}
                 c.State.coverClock=Map02ChapterDirector.CoverSeconds-.2f;float until=Time.realtimeSinceStartup+5;while(Time.realtimeSinceStartup<until&&c.CurrentScene==null)yield return null;
-                Assert.AreEqual("N3_09",c.CurrentScene?.id,"The sacrifice follows the last wave.");Assert.AreEqual(1,Time.timeScale,.001f);yield return null;Assert.AreEqual(1,rig.AimFovScale,.001f,"The zoom is only for the cover.");
+                Assert.AreEqual("N3_09",c.CurrentScene?.id,"The sacrifice follows the last wave.");yield return null;Assert.IsFalse(Object.FindObjectsByType<LineRenderer>(FindObjectsSortMode.None).Any(r=>r.name=="Cover zone ring"&&r.enabled),"The cover over, its zone ring is gone.");Assert.AreEqual(1,Time.timeScale,.001f);yield return null;Assert.AreEqual(1,rig.AimFovScale,.001f,"The zoom is only for the cover.");
             }
             finally{c.Cancel();Time.timeScale=1;}
         }
