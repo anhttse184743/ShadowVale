@@ -15,10 +15,13 @@ namespace ShadowVale.Gameplay.Combat
     /// The bend is measured from where the take holds the barrel on average, not from the barrel this frame:
     /// a kick or a flinch that a clip plays on top still shows, and a reload keeps the bend it started with.
     /// </para>
-    /// Added by <see cref="PlayerCombat"/>. Runs after the camera has moved for the frame (ThirdPersonCamera)
-    /// and before the bones that follow the hands (ForearmTwist).
+    /// Added by <see cref="PlayerCombat"/>. Runs after the camera has moved for the frame (ThirdPersonCamera),
+    /// after the map's own weapon takes have posed the arms (NamMotionRefresh at 1000 lays the K-54 take over
+    /// the Animator), and before the bones that follow the hands (RifleLeftHandGrip, ForearmTwist). Read any
+    /// earlier and the K-54 barrel is measured off the Animator's rifle arms: the body turned some 80 degrees
+    /// off the view and the bend was written over.
     /// </summary>
-    [DefaultExecutionOrder(50)]
+    [DefaultExecutionOrder(1010)]
     [DisallowMultipleComponent]
     public sealed class BarrelAim : MonoBehaviour
     {
@@ -39,6 +42,7 @@ namespace ShadowVale.Gameplay.Combat
         private const float MaxBend = 80f;
 
         private PlayerCombat _combat;
+        private ShadowVale.Gameplay.Player.PlayerController _motor;
         private Transform[] _spine = System.Array.Empty<Transform>();
         private float[] _share = System.Array.Empty<float>();
         // What the animation left in each spine bone, and what was written over it: a frame in which the
@@ -60,6 +64,7 @@ namespace ShadowVale.Gameplay.Combat
         internal void Bind(PlayerCombat combat, Animator animator)
         {
             _combat = combat;
+            _motor = combat != null ? combat.GetComponent<ShadowVale.Gameplay.Player.PlayerController>() : null;
             var chain = new System.Collections.Generic.List<Transform>();
             if (animator != null && animator.isHuman)
                 foreach (HumanBodyBones bone in new[] { HumanBodyBones.Spine, HumanBodyBones.Chest, HumanBodyBones.UpperChest })
@@ -108,7 +113,9 @@ namespace ShadowVale.Gameplay.Combat
             _pose = Quaternion.Inverse(transform.rotation) * muzzle.forward;
             _poseFrame = Time.frameCount;
 
-            bool wanted = _combat.RifleLevelled;
+            // Prone, NamProneMotion (order 80) owns the spine; it wrote over the bend while this ran at 50.
+            // Running after it now, stand aside so lying down still looks the way it was approved.
+            bool wanted = _combat.RifleLevelled && !(_motor != null && _motor.IsProne);
             bool rising = wanted && _weight < 1f;
             _weight = Mathf.MoveTowards(_weight, wanted ? 1f : 0f, Time.deltaTime / BlendTime);
             if (_weight <= 0f || _spine.Length == 0)
