@@ -23,7 +23,7 @@ namespace ShadowVale.Map01.Tests
             {
                 LoadBefore(m,"N1_04");Call(c,"BeginScene",Map02ChapterDefinition.Load().Find("N1_04"),0,0);
                 Assert.AreEqual("hung_theme_night1",((AudioSource)typeof(Map02ChapterDirector).GetField("nightTheme",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(c)).clip.name);Call(c,"EndScene");
-                LoadBefore(m,"D2_01");Begin(m,"D2_01");var hung=c.Actor("Hùng");var avatar=hung.Animator.avatar;var nam=m.Player.GetComponentInChildren<Animator>();var namAvatar=nam.avatar;
+                LoadBefore(m,"D2_01");var hung=c.Actor("Hùng");var hungController=hung.Animator.runtimeAnimatorController;Begin(m,"D2_01");var avatar=hung.Animator.avatar;var nam=m.Player.GetComponentInChildren<Animator>();var namAvatar=nam.avatar;
                 Set(c,"lineIndex",3);Set(c,"lineClock",1f);Call(c,"LateUpdate");Assert.AreEqual("Hùng khựng lại",c.PerformanceBeat);Assert.IsTrue(hung.ConversationHeld);Assert.IsNull(hung.Animator.runtimeAnimatorController);
                 Set(c,"lineIndex",5);Call(c,"LateUpdate");Assert.AreEqual("Hùng quay về máy",c.PerformanceBeat);Call(c,"EndScene");Assert.IsTrue(c.State.Done("D2_01"));Assert.NotNull(hung.Animator.runtimeAnimatorController);Assert.IsFalse(hung.ConversationHeld);Assert.AreSame(avatar,hung.Animator.avatar);Assert.AreSame(namAvatar,nam.avatar);
 
@@ -34,7 +34,9 @@ namespace ShadowVale.Map01.Tests
                 Set(c,"sceneClock",55f);Call(c,"LateUpdate");yield return new WaitForEndOfFrame();Assert.IsTrue(c.NightJacketVisible);Assert.AreEqual("Ngủ và đắp áo",c.PerformanceBeat);Assert.Less(hung.Animator.GetBoneTransform(HumanBodyBones.Hips).position.y-c.Sites["rest"].position.y,.8f,"Sleeping Hùng must lie close to the floor.");Capture(c,"night2-cover");
                 Set(c,"sceneClock",57f);Call(c,"LateUpdate");yield return new WaitForEndOfFrame();Capture(c,"night2-sleep");var coat=GameObject.Find("Đêm 2 — áo khoác Nam đắp cho Hùng").transform;Assert.Greater(Vector3.Dot(hung.Animator.GetBoneTransform(HumanBodyBones.Head).position-coat.position,coat.forward),.6f,"The coat must leave sleeping Hùng's face uncovered.");Assert.AreEqual("hung_theme_night2",((AudioSource)typeof(Map02ChapterDirector).GetField("nightTheme",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(c)).clip.name);
                 m.SetPaused(true);Call(c,"Update");m.SetPaused(false);Call(c,"Update");
-                Set(c,"sceneClock",62.1f);Set(c,"lineClock",30f);DialogueVoice.StopAll();Call(c,"TickScene",0f);Assert.IsTrue(c.State.Done("N2_05"));Assert.AreEqual(4,c.State.phase);Assert.IsFalse(c.NightJacketVisible||hung.ConversationHeld);Assert.NotNull(hung.Animator.runtimeAnimatorController);Assert.AreSame(avatar,hung.Animator.avatar);Assert.AreSame(namAvatar,nam.avatar);Assert.AreEqual(hp,m.Player.GetComponent<Health>().Current);Assert.AreEqual(ammo,m.Bag.Count(m.RifleAmmo));
+                Set(c,"sceneClock",62.1f);Set(c,"lineClock",30f);DialogueVoice.StopAll();Call(c,"TickScene",0f);Assert.IsTrue(c.State.Done("N2_05"));Assert.AreEqual(4,c.State.phase);Assert.IsFalse(c.NightJacketVisible||hung.ConversationHeld);Assert.AreSame(avatar,hung.Animator.avatar);Assert.AreSame(namAvatar,nam.avatar);Assert.AreEqual(hp,m.Player.GetComponent<Health>().Current);Assert.AreEqual(ammo,m.Bag.Count(m.RifleAmmo));
+                // Day 3's sampled locomotion temporarily owns the animator after the cutscene releases it.
+                hung.ReleasePerformance();Assert.NotNull(hungController);Assert.AreSame(hungController,hung.Animator.runtimeAnimatorController);hung.PrimeLocomotion();
                 Call(c,"EndScene");Assert.AreEqual(1,c.State.completed.Count(id=>id=="N2_05"));
 
                 LoadBefore(m,"N2_05");Begin(m,"N2_05");Call(c,"EndScene");Assert.IsTrue(c.State.Done("N2_05"),"Skip must reach the same next morning.");Assert.IsFalse(hung.ConversationHeld||c.NightJacketVisible);

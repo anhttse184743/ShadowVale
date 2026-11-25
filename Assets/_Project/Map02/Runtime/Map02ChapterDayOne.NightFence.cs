@@ -14,17 +14,20 @@ namespace ShadowVale.Map01
                 new Vector3(-57.2f,0,1),new Vector3(-49,0,-10),new Vector3(-43,0,-18),
                 new Vector3(-43,0,-120),new Vector3(-120,0,-120),new Vector3(-120,0,120),
                 new Vector3(-43,0,120),new Vector3(-43,0,43),new Vector3(-48,0,30),
-                new Vector3(-54.5f,0,17),east.position-east.right*4.66f};
-            var crossings=new[]{new Vector3(-51,0,-7.317f),new Vector3(-43,0,-70),new Vector3(-51,0,24)};
+                new Vector3(-54,0,19),east.position-east.right*4.66f};
+            // Leave passages for both Day 2 trails as well as the village lanes.
+            var crossings=new[]{(new Vector3(-51,0,-7.317f),false),(new Vector3(-43,0,-70),false),(new Vector3(-51,0,24),false),
+                (new Vector3(-54.53f,0,16.42f),true),(new Vector3(-47.31f,0,-12.25f),true)};
             for(int i=1;i<path.Length;i++)FenceWithCrossings(path[i-1],path[i],crossings);
-            FenceWithCrossings(north.position-north.right*4.66f,new Vector3(-120,0,21),System.Array.Empty<Vector3>());
-            FenceWithCrossings(north.position+north.right*4.66f,new Vector3(-52.5f,0,21),System.Array.Empty<Vector3>());
+            var noCrossings=System.Array.Empty<(Vector3,bool)>();
+            FenceWithCrossings(north.position-north.right*4.66f,new Vector3(-120,0,21),noCrossings);
+            FenceWithCrossings(north.position+north.right*4.66f,new Vector3(-52.5f,0,21),noCrossings);
         }
-        void FenceWithCrossings(Vector3 start,Vector3 end,Vector3[] crossings)
+        void FenceWithCrossings(Vector3 start,Vector3 end,(Vector3 position,bool clearPassage)[] crossings)
         {
             start.y=end.y=sites["bamboo"].position.y;
             var delta=end-start;var direction=delta.normalized;
-            foreach(var point in crossings){
+            foreach(var (point,clearPassage) in crossings){
                 var p=point;p.y=start.y;float along=Vector3.Dot(p-start,direction);
                 if(along<1.2f||along>delta.magnitude-1.2f||Vector3.Distance(start+direction*along,p)>.12f)continue;
                 FenceRun(start,p-direction*1.10f);FenceRun(p+direction*1.10f,end);
@@ -32,7 +35,10 @@ namespace ShadowVale.Map01
                 passage.rotation=Quaternion.LookRotation(Vector3.Cross(direction,Vector3.up));
                 foreach(var t in passage.GetComponentsInChildren<Transform>(true))
                     if(t.name=="FenceWingLeft"||t.name=="FenceWingRight"||t.name=="Village boundary fence")t.gameObject.SetActive(false);
-                passage.name="Open village lane passage";passage.GetComponent<Map02NightWatchVisual>().SetGate(false,false);
+                passage.name="Open village lane passage";
+                var gate=passage.GetComponent<Map02NightWatchVisual>();
+                if(clearPassage)gate.gateLeaf.gameObject.SetActive(false);
+                gate.SetGate(false,false);
                 return;
             }
             FenceRun(start,end);
