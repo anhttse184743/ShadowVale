@@ -58,7 +58,7 @@ namespace ShadowVale.Map01
                 if(t.kind=="coverFire")
                 {
                     if(State.activeTask!=t.id)return "Tới bờ đất, nhấn E để yểm trợ Hùng.";
-                    return CoverFocusActive?$"Hạ {EscortStanding} lính trong vòng đỏ · còn {CoverFocusLeft:0.0} giây.":$"Hùng đang bò tới xe tăng · {Mathf.Clamp01(State.taskProgress)*100:0}% quãng đường. Giữ vị trí, bật ngắm và chờ lính nhô ra sau xe tăng.";
+                    return CoverFocusActive?$"Hạ {EscortStanding} lính viền đỏ · còn {CoverFocusLeft:0.0} giây.":$"Hùng đang bò tới xe tăng · {Mathf.Clamp01(State.taskProgress)*100:0}% quãng đường. Giữ vị trí, bật ngắm và chờ lính nhô ra sau xe tăng.";
                 }
                 if(IsPatch(t))return $"E bắt đầu vá · đã xong {n}/{t.count} thuyền. Bấm chuột vào chỗ rò khi vòng ngoài thu khít; càng chuẩn càng nhanh xong.";
                 if(t.kind=="repair")return $"E bắt đầu sửa · đã xong {n}/{t.count} phần. Nhấn Space đúng nhịp; sai được thử lại.";

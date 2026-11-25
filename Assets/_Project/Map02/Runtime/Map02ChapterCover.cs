@@ -10,19 +10,20 @@ namespace ShadowVale.Map01
     /// N3_08: Nam covers Hùng from a fixed spot on the bank while Hùng crawls the ditch to the tank (<see cref="CoverSeconds"/>).
     /// Nam does not move; the player brings the rifle up and aims. Until Hùng reaches the tracks, the tank's escort comes out
     /// from behind it in waves (<see cref="WaveAt"/>). As each wave is out, time slows (<see cref="FocusScale"/>) and every
-    /// soldier is marked with a red ring that closes over <see cref="FocusWindow"/> real seconds: one hit drops a man. Miss
+    /// soldier is outlined in red for <see cref="FocusWindow"/> real seconds: one hit drops a man. Miss
     /// one and Hùng is seen: the cover fails and that wave starts again a moment before it comes out (25/11/2026).
     /// </summary>
     public sealed partial class Map02ChapterDirector
     {
-        public const float CoverSeconds=30,FocusWindow=3,FocusScale=.25f,FocusLead=.8f,CoverFailShow=2.6f,CoverLeash=.6f,CoverAimZoom=.45f;
+        public const float CoverSeconds=30,FocusWindow=3,FocusScale=.25f,FocusLead=.8f,CoverFailShow=2.6f,CoverLeash=.6f,CoverAimZoom=.45f,CoverReload=.5f;
         /// <summary>Seconds into the crawl when each wave comes out, and how many men are in it.</summary>
-        public static readonly float[] WaveAt={4,9,14,19,24};
-        public static readonly int[] WaveSize={1,1,1,1,1};   // one man at a time (25/11/2026)
+        public static readonly float[] WaveAt={3,6,9,12,15,18,21,24,27};   // a man every 3 s (25/11/2026)
+        public static readonly int[] WaveSize={1,1,1,1,1,1,1,1,1};   // one man at a time
         const string Escort="N3_08";
         float hungDitchAt;
         Vector3[] hungCanal;float panClock;int pansDone;ParticleSystem sparks;
-        int liveWave=-1;float focusLead,focusLeft=-1,coverFailClock=-1,coverFixedStep;bool focusSlowed;Texture2D focusRing;Vector3[] coverSpots;AnimatorUpdateMode namUpdateMode;
+        int liveWave=-1;float focusLead,focusLeft=-1,coverFailClock=-1,coverFixedStep;bool focusSlowed;Material outlineMaterial,outlineMask;Vector3[] coverSpots;
+        readonly System.Collections.Generic.Dictionary<Map02ChapterEnemy,System.Collections.Generic.List<GameObject>> outlines=new();AnimatorUpdateMode namUpdateMode;
         Animator NamAnimator=>Mission!=null&&Mission.Player!=null?Mission.Player.GetComponentInChildren<Animator>():null;
         public Vector3[] HungCanal=>hungCanal??=BuildCanal();
         /// <summary>A wave is out and its 3 s are running (time slowed, rings shown).</summary>
@@ -74,11 +75,16 @@ namespace ShadowVale.Map01
             var toward=Vector3.ProjectOnPlane(Mission.Player.position-tankAt,Vector3.up).normalized;if(toward.sqrMagnitude<.01f)toward=Vector3.forward;
             var blockers=SightBlockers(tankAt);
             var left=new System.Collections.Generic.List<(Vector3 p,float score)>();var right=new System.Collections.Generic.List<(Vector3 p,float score)>();
-            foreach(float angle in new[]{35f,50f,65f,80f})foreach(float distance in new[]{4f,5.5f})foreach(int side in new[]{-1,1})
+            // In front of the hull, toward Nam, on the road it has just cleared: never back in the grove beside it.
+            foreach(float angle in new[]{0f,12f,24f,36f,48f})foreach(float distance in new[]{4.5f,6f,7.5f})foreach(int side in new[]{-1,1})
             {
+                if(angle==0&&side<0)continue;
                 var p=tankAt+Quaternion.AngleAxis(angle*side,Vector3.up)*toward*distance;
-                if(!NavMesh.SamplePosition(p,out var hit,2.5f,NavMesh.AllAreas))continue;p=hit.position;
-                float score=Hidden(eye,p+Vector3.up*1.3f,blockers)+Hidden(eye,p+Vector3.up*.6f,blockers)*.5f+angle*.002f;
+                if(!NavMesh.SamplePosition(p,out var hit,1.5f,NavMesh.AllAreas))continue;p=hit.position;
+                if(Flat(p,Mission.Player.position)<8)continue;
+                float score=Hidden(eye,p+Vector3.up*1.3f,blockers)+Hidden(eye,p+Vector3.up*.9f,blockers)+angle*.004f;
+                // A shot must reach him: anything solid on the line from Nam's eye to his chest rules the spot out.
+                if(Physics.Linecast(eye,p+Vector3.up*1.3f,out var block,~0,QueryTriggerInteraction.Ignore)&&!block.transform.IsChildOf(Mission.Player))score+=50;
                 (side<0?left:right).Add((p,score));
             }
             bool anyClear=left.Concat(right).Any(s=>s.score<1);   // a clear spot exists: use only clear ones
@@ -155,7 +161,7 @@ namespace ShadowVale.Map01
         }
         void BeginCoverFocus()
         {
-            focusLeft=FocusWindow;
+            focusLeft=FocusWindow;OutlineWave();
             if(!focusSlowed){coverFixedStep=Time.fixedDeltaTime;focusSlowed=true;var nam=NamAnimator;if(nam!=null)namUpdateMode=nam.updateMode;}
             ApplyCoverTime();
         }
@@ -169,7 +175,7 @@ namespace ShadowVale.Map01
         }
         void EndCoverFocus()
         {
-            focusLeft=-1;
+            focusLeft=-1;ClearOutlines();
             if(!focusSlowed)return;
             focusSlowed=false;Time.timeScale=Mission!=null&&Mission.Paused?0:1;Time.fixedDeltaTime=coverFixedStep;
             PlayerTime.IgnoreSlowMotion=false;var nam=NamAnimator;if(nam!=null)nam.updateMode=namUpdateMode;
@@ -246,18 +252,50 @@ namespace ShadowVale.Map01
             var look=Quaternion.LookRotation(roles["Hùng"].transform.position+Vector3.up*.6f-cam.position);
             if(panClock>0)rig.SetCinematicView(cam.position,look,cam.GetComponent<Camera>().fieldOfView,weight);else rig.ClearCinematicView();
         }
-        Texture2D FocusRing()
+        /// <summary>A red rim round each marked man still standing: his body drawn again, pushed out and back-faced
+        /// (Resources/Map02Cover/EnemyOutline), following his animation; gone as he drops or the slow ends.</summary>
+        void OutlineWave()
         {
-            if(focusRing!=null)return focusRing;
-            const int size=128;focusRing=new Texture2D(size,size,TextureFormat.RGBA32,false){name="Cover focus ring",hideFlags=HideFlags.DontSave};
-            var pixels=new Color32[size*size];
-            for(int y=0;y<size;y++)for(int x=0;x<size;x++)
+            if(outlineMaterial==null)
             {
-                float d=Vector2.Distance(new Vector2(x+.5f,y+.5f),new Vector2(size*.5f,size*.5f));
-                float a=Mathf.Clamp01(1-Mathf.Abs(d-58)/2.2f);pixels[y*size+x]=new Color32(255,255,255,(byte)(a*255));
+                var rim=Resources.Load<Shader>("Map02Cover/EnemyOutline");var mask=Resources.Load<Shader>("Map02Cover/EnemyOutlineMask");
+                if(rim==null||mask==null||!rim.isSupported||!mask.isSupported)return;
+                outlineMaterial=new Material(rim){name="Cover focus outline",hideFlags=HideFlags.DontSave};
+                outlineMask=new Material(mask){name="Cover focus outline mask",hideFlags=HideFlags.DontSave};
             }
-            focusRing.SetPixels32(pixels);focusRing.Apply(false,true);return focusRing;
+            foreach(var man in CoverWaveEnemies)
+            {
+                if(man.Dead||outlines.ContainsKey(man))continue;
+                var parts=new System.Collections.Generic.List<GameObject>();
+                foreach(var body in man.GetComponentsInChildren<SkinnedMeshRenderer>())
+                    if(body.enabled&&body.sharedMesh!=null)foreach(var material in new[]{outlineMask,outlineMaterial})
+                    {
+                        var copy=new GameObject(material==outlineMask?"Focus outline mask":"Focus outline");copy.transform.SetParent(body.transform,false);
+                        var skin=copy.AddComponent<SkinnedMeshRenderer>();skin.sharedMesh=body.sharedMesh;skin.bones=body.bones;skin.rootBone=body.rootBone;skin.localBounds=body.localBounds;
+                        skin.updateWhenOffscreen=true;skin.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;skin.receiveShadows=false;
+                        skin.sharedMaterials=Enumerable.Repeat(material,body.sharedMesh.subMeshCount).ToArray();parts.Add(copy);
+                    }
+                foreach(var prop in man.GetComponentsInChildren<MeshRenderer>())   // his rifle and kit
+                {
+                    var filter=prop.GetComponent<MeshFilter>();if(!prop.enabled||filter==null||filter.sharedMesh==null)continue;
+                    foreach(var material in new[]{outlineMask,outlineMaterial})
+                    {
+                        var copy=new GameObject(material==outlineMask?"Focus outline mask":"Focus outline");copy.transform.SetParent(prop.transform,false);
+                        copy.AddComponent<MeshFilter>().sharedMesh=filter.sharedMesh;var r=copy.AddComponent<MeshRenderer>();
+                        r.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;r.receiveShadows=false;r.sharedMaterials=Enumerable.Repeat(material,filter.sharedMesh.subMeshCount).ToArray();parts.Add(copy);
+                    }
+                }
+                outlines[man]=parts;
+            }
         }
+        void TickOutlines()
+        {
+            if(outlines.Count==0)return;
+            foreach(var man in outlines.Keys.Where(m=>m==null||m.Dead||!CoverFocusActive).ToArray()){foreach(var rim in outlines[man])if(rim!=null)Destroy(rim);outlines.Remove(man);}
+            if(outlineMaterial!=null)outlineMaterial.SetColor("_Color",new Color(1,.08f,.05f)*(.8f+.2f*Mathf.Sin(Time.unscaledTime*7)));   // a gentle blink
+        }
+        void ClearOutlines(){foreach(var parts in outlines.Values)foreach(var rim in parts)if(rim!=null)Destroy(rim);outlines.Clear();}
+        public int OutlinedMen=>outlines.Count(p=>p.Key!=null&&!p.Key.Dead&&p.Value.Any(r=>r!=null&&r.name=="Focus outline"));
         void DrawCover(GUIStyle label)
         {
             if(State.activeTask!=Escort||sceneTask!=null)return;
@@ -272,19 +310,11 @@ namespace ShadowVale.Map01
             GUI.color=new Color(.92f,.8f,.45f);GUI.DrawTexture(new Rect(560,108,480*Mathf.Clamp01(State.taskProgress),18),Texture2D.whiteTexture);GUI.color=tint;
             GUI.Label(new Rect(560,128,700,30),$"Hùng đang bò tới xe tăng · đợt lính {Mathf.Min(State.coverWave+(liveWave>=0?1:0),WaveAt.Length)}/{WaveAt.Length}",new GUIStyle(label){fontSize=18});
             if(!CoverFocusActive)return;
-            // Slowed: a cold tint, a red ring closing on each man still standing, and the seconds left.
+            // Slowed: a cold tint and the seconds left; the men themselves carry a red outline (OutlineWave).
             GUI.color=new Color(.05f,.08f,.12f,.22f);GUI.DrawTexture(new Rect(0,0,1600,900),Texture2D.whiteTexture);
-            var cam=rig.GetComponent<Camera>();float left=CoverFocusLeft/FocusWindow,size=Mathf.Lerp(44,120,left),pulse=.82f+.18f*Mathf.Sin(Time.unscaledTime*7);
-            foreach(var e in CoverWaveEnemies)
-            {
-                if(e.Dead)continue;
-                var p=cam.WorldToScreenPoint(e.transform.position+Vector3.up*1.25f);if(p.z<=0)continue;
-                float x=p.x*1600f/Screen.width,y=(Screen.height-p.y)*900f/Screen.height;
-                GUI.color=new Color(1,.12f,.08f,pulse);GUI.DrawTexture(new Rect(x-size*.5f,y-size*.5f,size,size),FocusRing());
-            }
             GUI.color=tint;
             GUI.Label(new Rect(500,170,600,60),CoverFocusLeft.ToString("0.0"),new GUIStyle(label){fontSize=46,fontStyle=FontStyle.Bold,alignment=TextAnchor.MiddleCenter,normal={textColor=new Color(1,.3f,.25f)}});
-            GUI.Label(new Rect(400,226,800,34),"Hạ hết lính trong vòng đỏ trước khi chúng thấy Hùng",new GUIStyle(label){fontSize=20,alignment=TextAnchor.MiddleCenter,normal={textColor=new Color(1,.9f,.85f)}});
+            GUI.Label(new Rect(400,226,800,34),"Hạ lính viền đỏ trước khi chúng thấy Hùng",new GUIStyle(label){fontSize=20,alignment=TextAnchor.MiddleCenter,normal={textColor=new Color(1,.9f,.85f)}});
         }
     }
     static class WeaponKindExtensions

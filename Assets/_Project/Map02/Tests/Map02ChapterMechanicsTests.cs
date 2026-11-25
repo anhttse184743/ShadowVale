@@ -178,7 +178,7 @@ namespace ShadowVale.Map01.Tests
         }
         [UnityTest,Timeout(300000)]public IEnumerator CoverFireWavesSlowTimeAndMustBeDroppedWithinThreeSeconds()
         {
-            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");SetPreviewResolution(1920,1080);yield return new EnterPlayMode();
             yield return CoverFireInPlayMode(); // Closures must be created after the domain reload.
             yield return new ExitPlayMode();
         }
@@ -212,14 +212,14 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual(Map02ChapterDirector.CoverAimZoom,rig.AimFovScale,.001f,"Aiming while covering zooms in a little further.");
                 // Wave 1: time slows, every man is ringed, one hit drops a man, the wave down brings time back.
                 yield return WaveOut(0);
-                Assert.AreEqual(Map02ChapterDirector.WaveSize[0],c.CoverWaveEnemies.Length);Assert.AreEqual(1,c.CoverWaveEnemies.Length,"One man at a time.");Assert.Less(Flat(c.CoverWaveEnemies[0].transform.position,c.Tank.transform.position),7,"He steps out beside the tank.");Assert.AreEqual(Map02ChapterDirector.FocusScale,Time.timeScale,.001f);
-                Assert.IsTrue(ShadowVale.Gameplay.Combat.PlayerTime.IgnoreSlowMotion,"Only the world slows: Nam fires and reloads at real pace.");float p0=ShadowVale.Gameplay.Combat.PlayerTime.Now,g0=Time.time;for(int i=0;i<20;i++)yield return null;
+                Assert.AreEqual(Map02ChapterDirector.WaveSize[0],c.CoverWaveEnemies.Length);Assert.AreEqual(1,c.CoverWaveEnemies.Length,"One man at a time.");Assert.Less(Flat(c.CoverWaveEnemies[0].transform.position,c.Tank.transform.position),8,"He steps out in front of the tank.");Assert.AreEqual(Map02ChapterDirector.FocusScale,Time.timeScale,.001f);
+                Assert.IsTrue(ShadowVale.Gameplay.Combat.PlayerTime.IgnoreSlowMotion,"Only the world slows: Nam fires and reloads at real pace.");Assert.AreEqual(1,c.OutlinedMen,"The man out is outlined in red.");System.IO.Directory.CreateDirectory("Logs/CoverOutline");var aimRig=Object.FindObjectsByType<ShadowVale.Gameplay.Player.ThirdPersonCamera>(FindObjectsSortMode.None).First(r=>r.GetComponent<Camera>().enabled);var man0=c.CoverWaveEnemies[0].transform.position+Vector3.up*1.1f;var eye0=m.Player.position+Vector3.up*1.6f;aimRig.SetCinematicView(eye0,Quaternion.LookRotation(man0-eye0),18,1);for(int i=0;i<4;i++)yield return null;ScreenCapture.CaptureScreenshot("Logs/CoverOutline/outline.png");for(int i=0;i<4;i++)yield return null;aimRig.ClearCinematicView();Assert.AreEqual((c.State.wounded?1.35f:1)*Map02ChapterDirector.CoverReload,m.Player.GetComponent<ShadowVale.Gameplay.Combat.PlayerCombat>().ReloadDurationMultiplier,.001f,"Covering, Nam reloads twice as fast.");float p0=ShadowVale.Gameplay.Combat.PlayerTime.Now,g0=Time.time;for(int i=0;i<20;i++)yield return null;
                 Assert.Greater(ShadowVale.Gameplay.Combat.PlayerTime.Now-p0,(Time.time-g0)*2,"Nam's clock runs ahead of the slowed world.");
                 // Pausing in the slow keeps it paused, and resuming goes back to the slow.
                 m.SetPaused(true);Assert.AreEqual(0,Time.timeScale);m.SetPaused(false);yield return null;Assert.AreEqual(Map02ChapterDirector.FocusScale,Time.timeScale,.001f);
                 var first=c.CoverWaveEnemies[0];first.HitPoints.TakeDamage(1,first.transform.position,m.Player.gameObject);Assert.IsTrue(first.Dead,"One hit drops a marked man.");
                 DropWave();yield return null;yield return null;
-                Assert.IsFalse(c.CoverFocusActive);Assert.AreEqual(1,Time.timeScale,.001f);Assert.AreEqual(1,c.State.coverWave);Assert.IsFalse(ShadowVale.Gameplay.Combat.PlayerTime.IgnoreSlowMotion);Assert.IsNull(c.CurrentScene,"Hùng is not at the tracks yet.");
+                Assert.IsFalse(c.CoverFocusActive);Assert.AreEqual(1,Time.timeScale,.001f);Assert.AreEqual(1,c.State.coverWave);Assert.IsFalse(ShadowVale.Gameplay.Combat.PlayerTime.IgnoreSlowMotion);Assert.AreEqual(0,c.OutlinedMen,"The outline goes with him.");Assert.IsNull(c.CurrentScene,"Hùng is not at the tracks yet.");
                 // Wave 2 left standing: after 3 real seconds the cover fails, then that wave starts again just before it comes out.
                 yield return WaveOut(1);float started=Time.realtimeSinceStartup;
                 while(Time.realtimeSinceStartup<started+5&&!c.CoverFailed)yield return null;
