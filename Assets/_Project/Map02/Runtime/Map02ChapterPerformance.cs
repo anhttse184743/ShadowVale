@@ -132,6 +132,7 @@ namespace ShadowVale.Map01
             var hung=roles["Hùng"];if(hung.Animator!=null&&hung.Animator.isHuman)performanceHung=new PerformanceActor(hung.Animator,hung);
             var nam=Mission.Player.GetComponentInChildren<Animator>();if(nam!=null&&nam.isHuman)performanceNam=new PerformanceActor(nam,existing:namPose);
             if(task.id=="N2_05")BeginNightRest();
+            if(task.id=="D2_06"&&performanceHung!=null)StageAntennaRadio();
         }
         bool PerformanceCanEnd()
         {
@@ -166,7 +167,7 @@ namespace ShadowVale.Map01
                 return;
             }
             if(sceneTask.id=="D2_06")
-            {PerformanceBeat="Hùng nối máy bằng tay trái";LeftRadioGesture(hung);return;}
+            {SampleAntennaRadio(hung);return;}
         }
         static void RotateBone(Animator actor,HumanBodyBones id,Vector3 angles,float weight)
         {var bone=actor.GetBoneTransform(id);if(bone!=null)bone.localRotation*=Quaternion.Slerp(Quaternion.identity,Quaternion.Euler(angles),weight);}
@@ -196,6 +197,7 @@ namespace ShadowVale.Map01
         void ReleasePerformance()
         {
             performanceHung?.Dispose();performanceHung=null;performanceNam?.Dispose();performanceNam=null;
+            if(antennaHandRadio!=null)antennaHandRadio.gameObject.SetActive(false);
             if(nightJacket!=null)Destroy(nightJacket);if(jacketMesh!=null)Destroy(jacketMesh);if(jacketMaterial!=null)Destroy(jacketMaterial);
             if(performanceAudioRoot!=null)Destroy(performanceAudioRoot);performanceAudioRoot=null;
             ReleaseNightRest();

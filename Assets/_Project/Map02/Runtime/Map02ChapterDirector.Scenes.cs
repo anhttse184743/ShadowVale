@@ -62,6 +62,7 @@ namespace ShadowVale.Map01
             HoldConversation();FaceTalk();MoveDaySceneRoots();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=NamPoseClip();namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null||overrideClip==ordinaryWalk);
             if(sceneTask.id=="D1_01")namPose?.Ground(arrivalBriefingFloor);   // the briefing takes over the retargeted idle from arrival; keep its soles on the same bank
             SampleDayScene();SamplePerformance();UpdateHungRadio();UpdateBandageSleeve();
+            if(sceneTask.id=="D2_06"){FrameAntennaRadio();return;}
             string speaker=lines[lineIndex].speaker;Vector3 subject=Mission.Player.position;
             if(!lines[lineIndex].radio&&speaker!="Nam"&&roles.TryGetValue(speaker,out var actor))subject=actor.transform.position;
             if(sceneTask.id=="D1_03"&&speaker=="Ông Sáu")subject=porchDoor-porchOut*.5f;   // his voice from the inner room: look to the doorway

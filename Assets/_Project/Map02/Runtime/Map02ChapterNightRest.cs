@@ -167,8 +167,8 @@ namespace ShadowVale.Map01
             Map01ArmContact.Reach(hungActor,false,rightSupport,rightSupport-nightRestHouse.right*.23f+Vector3.up*.16f,brace);
             var leftSupport=handLine+nightRestHouse.right*Mathf.Lerp(.32f,.39f,lying);
             Map01ArmContact.Reach(hungActor,true,leftSupport,leftSupport+nightRestHouse.right*.23f+Vector3.up*.16f,brace);
-            OrientNightPalm(hungActor,HumanBodyBones.LeftHand,HumanBodyBones.LeftIndexProximal,HumanBodyBones.LeftLittleProximal,-nightRestHouse.forward,openPalm);
-            OrientNightPalm(hungActor,HumanBodyBones.RightHand,HumanBodyBones.RightIndexProximal,HumanBodyBones.RightLittleProximal,-nightRestHouse.forward,openPalm);
+            OrientScenePalm(hungActor,HumanBodyBones.LeftHand,HumanBodyBones.LeftIndexProximal,HumanBodyBones.LeftLittleProximal,-nightRestHouse.forward,openPalm);
+            OrientScenePalm(hungActor,HumanBodyBones.RightHand,HumanBodyBones.RightIndexProximal,HumanBodyBones.RightLittleProximal,-nightRestHouse.forward,openPalm);
             RotateBone(hungActor,HumanBodyBones.Head,new Vector3(5,0,-12),lying);
             RestHeadOnPillow(hungActor,lying);
 
@@ -188,17 +188,25 @@ namespace ShadowVale.Map01
             Map01ArmContact.Reach(namActor,true,palm,palm-nightRestHouse.forward*.27f+nightRestHouse.right*.14f,namSeated);
             var knee=namActor.GetBoneTransform(HumanBodyBones.RightLowerLeg).position+Vector3.up*.061f+nightRestHouse.right*.042f;
             Map01ArmContact.Reach(namActor,false,Vector3.Lerp(knee,grip,reach),nightNamSeat+nightRestHouse.forward*.27f+Vector3.up*.33f,namSeated);
-            OrientNightPalm(namActor,HumanBodyBones.LeftHand,HumanBodyBones.LeftIndexProximal,HumanBodyBones.LeftLittleProximal,-nightRestHouse.right,namSeated);
-            OrientNightPalm(namActor,HumanBodyBones.RightHand,HumanBodyBones.RightIndexProximal,HumanBodyBones.RightLittleProximal,-nightRestHouse.right,namSeated*(1-.6f*reach));
+            OrientScenePalm(namActor,HumanBodyBones.LeftHand,HumanBodyBones.LeftIndexProximal,HumanBodyBones.LeftLittleProximal,-nightRestHouse.right,namSeated);
+            OrientScenePalm(namActor,HumanBodyBones.RightHand,HumanBodyBones.RightIndexProximal,HumanBodyBones.RightLittleProximal,-nightRestHouse.right,namSeated*(1-.6f*reach));
             RotateBone(namActor,HumanBodyBones.Head,new Vector3(14,0,0),namSeated);
         }
 
-        static void OrientNightPalm(Animator actor,HumanBodyBones wrist,HumanBodyBones index,HumanBodyBones little,Vector3 direction,float weight)
+        static void OrientScenePalm(Animator actor,HumanBodyBones wrist,HumanBodyBones index,HumanBodyBones little,Vector3 direction,float weight,bool useNamedFingers=false)
         {
             if(weight<=0)return;
             var hand=actor.GetBoneTransform(wrist);
-            var indexBase=actor.GetBoneTransform(index);var littleBase=actor.GetBoneTransform(little);
-            if(hand==null||indexBase==null||littleBase==null)return;
+            if(hand==null)return;
+            var indexBase=actor.GetBoneTransform(index);
+            var littleBase=actor.GetBoneTransform(little);
+            if(useNamedFingers)
+            {
+                string side=wrist==HumanBodyBones.RightHand?"Right":"Left";
+                indexBase??=hand.Find(side+"HandIndex1");
+                littleBase??=hand.Find(side+"HandPinky1");
+            }
+            if(indexBase==null||littleBase==null)return;
             var fingers=(indexBase.position+littleBase.position)*.5f-hand.position;
             var across=indexBase.position-littleBase.position;
             var align=Quaternion.FromToRotation(fingers,direction);

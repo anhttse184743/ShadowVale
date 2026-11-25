@@ -43,8 +43,9 @@ namespace ShadowVale.Map01
         void DrawBark(GUIStyle label)
         {
             if(bark==null||sceneTask!=null)return;
-            var tint=GUI.color;GUI.color=new Color(0,0,0,.6f);GUI.DrawTexture(new Rect(300,690,1000,66),Texture2D.whiteTexture);GUI.color=tint;
-            GUI.Label(new Rect(320,697,960,56),bark.Caption,new GUIStyle(label){fontSize=21});
+            float top=doingWork&&workTask?.kind=="antenna"?570:690;
+            var tint=GUI.color;GUI.color=new Color(0,0,0,.6f);GUI.DrawTexture(new Rect(300,top,1000,66),Texture2D.whiteTexture);GUI.color=tint;
+            GUI.Label(new Rect(320,top+7,960,56),bark.Caption,new GUIStyle(label){fontSize=21});
         }
 
         // Someone who must be in frame walks in. Far away, they start just behind the camera;
@@ -129,6 +130,7 @@ namespace ShadowVale.Map01
             foreach(var e in entrances.Where(e=>e.startLine==id)){e.actor.SceneDriven=true;e.actor.GoTo(e.to,1.6f);}
             var waiting=entrances.Where(e=>e.gateLine==id).ToArray();
             if(waiting.Length>0){lineGate=()=>waiting.All(e=>Vector3.Distance(e.actor.transform.position,e.to)<1.5f);gateUntil=sceneClock+7;}
+            else if(sceneTask.id=="D2_06"&&lineIndex==0){lineGate=()=>sceneClock>=AntennaRadioRaiseSeconds;gateUntil=float.PositiveInfinity;}
             else if(sceneTask.id=="N2_05"&&id=="m2v3_reconcile_10"){lineGate=()=>sceneClock>=nightWalkUntil+.25f;gateUntil=float.PositiveInfinity;}
             else if(sceneTask.id=="N3_00"&&lineIndex==0){lineGate=()=>AttackClock>=1.2f;gateUntil=float.PositiveInfinity;} // The handover, then a second of black before the flare.
             else if(sceneTask.id=="N3_06"&&lineIndex==0&&id=="m2v3_coordinates_01"){lineGate=()=>sceneClock>=WreckEnd;gateUntil=float.PositiveInfinity;} // The tank shelling the village first.

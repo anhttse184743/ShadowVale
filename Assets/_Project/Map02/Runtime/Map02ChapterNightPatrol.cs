@@ -17,8 +17,8 @@ namespace ShadowVale.Map01
         public bool NightPatrolStopped=>State.phase!=3||State.night2ReachedStore||State.Done("N2_03")||State.Done("N2_05");
         public bool NightObservationRulesActive=>State.phase==3&&!State.Done("N2_05");
         public const float NightPatrolWarningSeconds=1.5f;
-        public const string NightPatrolWarningText="Có người ở mé rừng! Bên kia!";
-        public const string NightPatrolFireOrderText="Tản ra! Chặn đường hắn!";
+        public const string NightPatrolWarningText="Có người ở bờ mương! Bên kia!";
+        public const string NightPatrolFireOrderText="Tiêu diệt con chuột nhắt đó đi!";
         public const float NightPatrolCameraTravelSeconds=3;
         public bool NightPatrolScriptedApproach=>State.phase==3&&State.Done("N2_02")&&!NightPatrolStopped;
         public bool NightPatrolFailureActive=>nightFailureClock>=0;
@@ -47,9 +47,7 @@ namespace ShadowVale.Map01
         {
             if(nightWarningAudio==null){nightWarningAudio=gameObject.AddComponent<AudioSource>();nightWarningAudio.playOnAwake=false;nightWarningAudio.spatialBlend=0;nightWarningAudio.volume=.9f;}
             nightWarningAudio.Stop();nightWarningAudio.priority=16;nightPatrolCaption=caption;
-            // Resolve the enemy's recording through the shared cast instead of a second unvalidated copy.
-            string id=resource=="night2_patrol_warning"?"m1_ops_enemy_spotted":resource=="night2_patrol_fire_order"?"m1_ops_enemy_order":null;
-            nightWarningAudio.clip=id!=null?DialogueVoice.Find(id)?.clip:null;
+            nightWarningAudio.clip=Resources.Load<AudioClip>("OperationsAudio/"+resource);
             if(nightWarningAudio.clip!=null)nightWarningAudio.Play();
         }
         void DrawNightPatrolSuspicionDialogue()

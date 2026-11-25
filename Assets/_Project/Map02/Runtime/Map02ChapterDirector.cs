@@ -222,8 +222,8 @@ namespace ShadowVale.Map01
         void CompleteFamily(Map02ChapterTask task){State.workCount=State.Increment(task.id);if(State.workCount>=task.count)Finish(task);else {Mission.Say("Đã phân công "+State.workCount+"/3 nhà.");UpdateMarkers();Mission.StoreCheckpoint();}}
         void OpenWork(Map02ChapterTask task)
         {
-            if(!string.IsNullOrEmpty(task.scene)&&!State.introduced.Contains(task.id)){
-                BeginScene(task,0,task.kind=="antenna"?1:task.kind=="clear"?3:0);scenePurpose=1;
+            if(task.kind!="antenna"&&!string.IsNullOrEmpty(task.scene)&&!State.introduced.Contains(task.id)){
+                BeginScene(task,0,task.kind=="clear"?3:0);scenePurpose=1;
             }else StartWork(task);
         }
         void StartWork(Map02ChapterTask task)
