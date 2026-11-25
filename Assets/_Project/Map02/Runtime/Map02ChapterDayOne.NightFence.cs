@@ -55,7 +55,29 @@ namespace ShadowVale.Map01
                 section.rotation=Quaternion.LookRotation(normal,Vector3.Cross(normal,direction));
                 section.localScale=new Vector3(Vector3.Distance(a,b)/3.50f,1,1);
                 section.name="Continuous village boundary fence "+NightFenceSections++;
+                nightFenceRuns.Add((section,a,b));
             }
+        }
+        readonly System.Collections.Generic.List<(Transform section,Vector3 a,Vector3 b)> nightFenceRuns=new();
+        /// <summary>Night 3: Hùng's ditch runs under the boundary fence. Leave the sections it crosses open so he never crawls through the bamboo (or around a carved obstacle).</summary>
+        void OpenNightFenceAlong(Vector3[] path)
+        {
+            nightFenceRuns.RemoveAll(r=>r.section==null);
+            foreach(var run in nightFenceRuns)
+            {
+                if(!run.section.gameObject.activeSelf)continue;
+                for(int i=1;i<path.Length;i++)
+                    if(FlatSegmentGap(run.a,run.b,path[i-1],path[i])<.6f){run.section.gameObject.SetActive(false);break;}
+            }
+        }
+        static float FlatSegmentGap(Vector3 a,Vector3 b,Vector3 c,Vector3 d)
+        {
+            Vector2 A=new(a.x,a.z),B=new(b.x,b.z),C=new(c.x,c.z),D=new(d.x,d.z);
+            static float Cross(Vector2 u,Vector2 v)=>u.x*v.y-u.y*v.x;
+            float d1=Cross(B-A,C-A),d2=Cross(B-A,D-A),d3=Cross(D-C,A-C),d4=Cross(D-C,B-C);
+            if(d1*d2<0&&d3*d4<0)return 0;
+            static float ToSegment(Vector2 p,Vector2 s,Vector2 e){var se=e-s;float t=se.sqrMagnitude<1e-6f?0:Mathf.Clamp01(Vector2.Dot(p-s,se)/se.sqrMagnitude);return Vector2.Distance(p,s+se*t);}
+            return Mathf.Min(Mathf.Min(ToSegment(A,C,D),ToSegment(B,C,D)),Mathf.Min(ToSegment(C,A,B),ToSegment(D,A,B)));
         }
     }
 }

@@ -71,6 +71,7 @@ namespace ShadowVale.Map01
             if(!State.Done("N3_07"))return sceneTask?.id=="N3_07"?(sceneClock<EmergeEnd?"emerging":"blocking"):"waiting";
             return "blocking";
         }
+        bool tankDockFenceOpened;
         void TickTank(float dt,bool snap=false)
         {
             var stage=TankStageNow();
@@ -108,6 +109,8 @@ namespace ShadowVale.Map01
             tank.SetActive(visible);tank.transform.position=at;
             var flat=Vector3.ProjectOnPlane(face,Vector3.up);
             if(flat.sqrMagnitude>.01f)tank.transform.rotation=snap?Quaternion.LookRotation(flat):Quaternion.RotateTowards(tank.transform.rotation,Quaternion.LookRotation(flat),70*Mathf.Max(dt,.0001f));
+            // Parked at the dock and turned to the boat: the ditch Hùng will take to the tracks is fixed now, so open the fence over it.
+            if(stage=="blocking"&&!tankDockFenceOpened&&Quaternion.Angle(tank.transform.rotation,Quaternion.LookRotation(flat.sqrMagnitude>.01f?flat:tank.transform.forward))<1){tankDockFenceOpened=true;BuildCanal();}
             if(tankSmoke!=null)
             {
                 if(State.tankDestroyed&&!tankSmoke.isPlaying)tankSmoke.Play();

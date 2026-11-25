@@ -26,7 +26,7 @@ namespace ShadowVale.Map01
             // Authored "hungCanal1..n" points win; otherwise an arc off the road from the bank to the tracks.
             var authored=Layout?.sites?.Where(s=>s.id.StartsWith("hungCanal")).OrderBy(s=>s.id).Select(s=>s.position).ToArray()??Array.Empty<Vector3>();
             var start=sites["ditch"].position;var end=ChargePoint;
-            if(authored.Length>0)return new[]{start}.Concat(authored).Concat(new[]{end}).ToArray();
+            if(authored.Length>0){var route=new[]{start}.Concat(authored).Concat(new[]{end}).ToArray();OpenNightFenceAlong(route);return route;}
             var along=Vector3.ProjectOnPlane(end-start,Vector3.up);var side=Vector3.Cross(Vector3.up,along.normalized);
             if(Vector3.Dot(side,water["boatMid"]-start)>0)side=-side; // Inland, away from the river and the gun.
             var points=new Vector3[9];
@@ -35,7 +35,7 @@ namespace ShadowVale.Map01
                 float t=i/(points.Length-1f);var p=Vector3.Lerp(start,end,t)+side*3f*Mathf.Sin(Mathf.PI*t);
                 points[i]=NavMesh.SamplePosition(p,out var hit,3,NavMesh.AllAreas)?hit.position:p;
             }
-            points[0]=start;points[points.Length-1]=end;return points;
+            points[0]=start;points[points.Length-1]=end;OpenNightFenceAlong(points);return points;
         }
         void SpawnEscort()
         {
