@@ -1,3 +1,4 @@
+using ShadowVale.Content;
 using ShadowVale.Gameplay.Player;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -54,6 +55,9 @@ namespace ShadowVale.Gameplay.Combat
 
         private static readonly Key[] SlotKeys = { Key.Digit1, Key.Digit2, Key.Digit3, Key.Digit4 };
         public System.Func<bool> InputAllowed { get; set; }
+        /// <summary>Optional mission rule for starting or resolving an attack without restricting weapon selection or aiming.</summary>
+        public System.Func<bool> AttackAllowed { get; set; }
+        private bool CanAttack => AttackAllowed?.Invoke() != false;
 
         /// <summary>
         /// A number key (0 for "1") goes to the scene first; returning true means the scene handled
@@ -351,6 +355,13 @@ namespace ShadowVale.Gameplay.Combat
                 _upperBodyWeight = _equippedKind != WeaponKind.Unarmed ? 1f : 0f;
                 animator.SetLayerWeight(_upperBodyLayer, _upperBodyWeight);
             }
+        }
+
+        private void Start()
+        {
+            // The bootstrap applies staged content in sceneLoaded, after Awake and before Start.
+            if (_weapons.TryGetValue(WeaponKind.Knife, out var knife) && ContentService.TryGetPublished(out var bundle))
+                knife.ApplyPublishedKnifeBalance(bundle);
         }
 
         private void SpawnWeapons()

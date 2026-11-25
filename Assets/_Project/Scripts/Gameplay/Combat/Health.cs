@@ -26,6 +26,13 @@ namespace ShadowVale.Gameplay.Combat
         public UnityEvent onDied;
         public UnityEvent onRespawned;
         public event System.Action<DamageNotice> Damaged;
+        public event System.Action<Vector3> IncomingFire;
+
+        /// <summary>Reports a round aimed at this actor, including a miss or a shot stopped by cover.</summary>
+        public void NotifyIncomingFire(Vector3 origin)
+        {
+            if (!IsDead && !CinematicInvulnerable) IncomingFire?.Invoke(origin);
+        }
 
         /// <summary>
         /// Name of the additive/override layer holding the weapon stance. It is muted while dying

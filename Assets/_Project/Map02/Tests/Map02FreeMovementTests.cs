@@ -31,7 +31,6 @@ namespace ShadowVale.Map01.Tests
             {
                 var open=OpenPoint();
                 LoadThrough(m,"D1_03");yield return WaitGameSeconds(1.5f);Interact(m,"D1_04");yield return WaitGameSeconds(.2f);
-                // A load in both hands walks at CarryPace without sprinting (doc Day 1: "Nam chạy chậm lại khi đang khiêng").
                 Assert.AreEqual("D1_04",m.Chapter.State.carry);Place(m,open);yield return CheckMovement(m,Map02ChapterDirector.CarryPace,false);
                 LoadThrough(m,"D2_04");yield return WaitGameSeconds(1.5f);Interact(m,"D2_05");yield return WaitGameSeconds(.2f);
                 Assert.AreEqual("D2_05",m.Chapter.State.carry);Place(m,open);yield return CheckMovement(m,Map02ChapterDirector.CarryPace,false);

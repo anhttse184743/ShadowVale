@@ -70,12 +70,14 @@ write(peak(fade(mono(load("367493_hq.mp3")), 0.01, 0.3), -8), "child_giggle.wav"
 # Hùng's laugh, its own file to reuse later (doc): a short warm laugh.
 write(peak(fade(crop(mono(load("720133_hq.mp3")), 0.42, 2.3), 0.01, 0.4), -6), "hung_laugh.wav")
 
-# "Đợi tới lúc đó, cậu ra nhà tôi. U tôi nấu canh cua rau đay…" for Night 3 (m2v3_echo_promise): the approved
-# promise_05 take up to its third pause, remembered — a short double echo, the tail let ring.
-line = crop(load("m2v3_promise_05.wav", VOICE), 0, 3.45); line = fade(line, 0, 0.12)
-tail = np.zeros((int(1.2 * RATE), 1), np.float32); dry = np.concatenate([line, tail])
-wet = dry.copy(); d1, d2 = int(.19 * RATE), int(.38 * RATE)
-wet[d1:] += dry[:-d1] * .32; wet[d2:] += dry[:-d2] * .16
-write(peak(fade(lowpass(wet, 6000), 0, 0.6), -3), "m2v3_echo_promise.wav", VOICE)
+# Reuse the cast-validated exact-caption master for the remembered line.
+# A fixed crop from an old actor's recording must never replace the current Hùng voice.
+import runpy
+runpy.run_path(os.path.join(REPO, "SourceArt", "Dialogue", "HungEcho20261101", "rebuild_echo.py"), run_name="__main__")
+echo_path = os.path.join(VOICE, "m2v3_echo_promise.wav")
+with wave.open(echo_path, "rb") as echo:
+    made.append(dict(file=os.path.relpath(echo_path, REPO).replace("\\", "/"),
+                     seconds=round(echo.getnframes() / echo.getframerate(), 3), channels=echo.getnchannels(),
+                     sha256=hashlib.sha256(open(echo_path, "rb").read()).hexdigest()))
 
 json.dump(made, open(os.path.join(HERE, "built.json"), "w"), indent=1)

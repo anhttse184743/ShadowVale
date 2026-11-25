@@ -268,7 +268,9 @@ namespace ShadowVale.Map01
         /// </summary>
         private void RebaseHold() { if (_holdingAI) _pausedAt = Time.time; }
         /// <summary>How far he sees Nam standing in the open.</summary>
-        public float VisionRange => visionRange;
+        private MapDifficulty Difficulty => IsBoss || _rescuePost || _pursuer
+            ? MapDifficulty.Default : _mission?.Difficulty ?? MapDifficulty.Default;
+        public float VisionRange => Difficulty.Vision(visionRange);
         /// <summary>His patrol loop; empty for a guard who holds his post.</summary>
         public System.Collections.Generic.IReadOnlyList<Vector3> PatrolPoints => patrolPoints;
         public float DamagePerShot => damage;
@@ -343,7 +345,7 @@ namespace ShadowVale.Map01
         /// <summary>Copies the serialized/boss-adjusted numbers into the brain's tuning.</summary>
         private void SyncTuning()
         {
-            _tuning.VisionRange = visionRange;
+            _tuning.VisionRange = VisionRange;
             _tuning.AttackRange = attackRange;
             _tuning.IsBoss = IsBoss;
         }
@@ -517,8 +519,8 @@ namespace ShadowVale.Map01
         /// <summary>How this guard sees; rebuilt on demand so the boss's longer sight applies at once.
         /// The jetty squad notices Nam within arm's reach only when he is right on them.</summary>
         private VisionProfile Vision => _rescuePost
-            ? new VisionProfile(visionRange, visionAngle, _crouchScale, _hiddenScale, touchRadiusStanding: .9f, touchRadiusCrouched: .65f)
-            : new VisionProfile(visionRange, visionAngle, _crouchScale, _hiddenScale);
+            ? new VisionProfile(VisionRange, visionAngle, _crouchScale, _hiddenScale, touchRadiusStanding: .9f, touchRadiusCrouched: .65f)
+            : new VisionProfile(VisionRange, visionAngle, _crouchScale, _hiddenScale);
 
         private bool CanSeePlayer(out float distance)
         {

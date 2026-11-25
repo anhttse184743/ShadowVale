@@ -60,6 +60,12 @@ namespace ShadowVale.Gameplay.Combat
 
         private void ReadAttackInput()
         {
+            if (!CanAttack)
+            {
+                _firingHeld = false;
+                _automaticBurst = false;
+                return;
+            }
             Mouse mouse = Mouse.current;
             _firingHeld = mouse != null && mouse.leftButton.isPressed && Gun != null && !IsReloading
                 && (_magazine == null || _magazine.Rounds > 0);

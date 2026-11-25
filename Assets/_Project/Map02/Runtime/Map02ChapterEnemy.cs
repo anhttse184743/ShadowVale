@@ -58,6 +58,16 @@ namespace ShadowVale.Map01
             if(mover!=null){if(mover.IsProne)p*=.5f;else if(mover.IsSneaking)p*=.7f;p*=mover.PlanarSpeed>4?.55f:mover.PlanarSpeed>.5f?.85f:1;}
             return Random.value<p;
         }
+        private MapDifficulty Difficulty => director != null && UsesMapDifficulty(group)
+            ? director.Mission.Difficulty : MapDifficulty.Default;
+
+        public static bool UsesMapDifficulty(string roster) => roster == "scout_patrol" ||
+            roster == Map02ChapterDirector.ScoutAmbushGroup || roster == "initial_attack" ||
+            roster == "N3_04" || roster == "N3_04_b" ||
+            roster == "N3_05A" || roster == "N3_05A_b" ||
+            roster == "N3_05B" || roster == "N3_05B_b" ||
+            roster == "N3_05C" || roster == "N3_05C_b";
+
         Map02ChapterDirector director;NavMeshAgent agent;bool alerted;float shot,repath;Animator actor;
         public void Initialize(Map02ChapterDirector owner,string key,string roster,float hp,bool hostile)
         {
@@ -96,11 +106,13 @@ namespace ShadowVale.Map01
         /// </summary>
         void Shoot(Transform target,Vector3 from,Vector3 to,float distance)
         {
+            var targetHealth=target.GetComponent<Health>();
+            targetHealth?.NotifyIncomingFire(from);
             bool hit=Hits(target,distance);var aim=to;
             if(!hit){var side=Vector3.Cross(Vector3.up,(to-from).normalized);aim+=side*(Random.value<.5f?-1:1)*Random.Range(.35f,1f)*(.6f+distance*.03f)+Vector3.up*Random.Range(-.6f,.5f);}
             if(!Physics.Raycast(from,(aim-from).normalized,out var struck,distance+8,~0,QueryTriggerInteraction.Ignore))return;
             var health=struck.transform.GetComponentInParent<Health>();
-            if(health!=null){if(hit&&health==target.GetComponent<Health>())health.TakeDamage(6,struck.point,gameObject);return;}
+            if(health!=null){if(hit&&health==targetHealth)health.TakeDamage(Difficulty.Damage(6),struck.point,gameObject);return;}
             if(!(struck.collider is CharacterController))CoverImpact.Play(struck.point,struck.normal);
         }
         /// <summary>Down behind cover (the enemy rig has no crouch clip: the body drops behind it) and his collider with him.</summary>
@@ -171,7 +183,7 @@ namespace ShadowVale.Map01
             if(investigate.HasValue&&!alerted&&!HoldPosition&&!Fighting){agent.isStopped=false;agent.stoppingDistance=.5f;agent.SetDestination(investigate.Value);if(Vector3.Distance(transform.position,investigate.Value)<1)investigate=null;return;}
             var target=mission.Player;var from=transform.position+Vector3.up*1.45f;var to=PlayerStealthAdapter.For(target.gameObject).SightPoint;   // standing, crouched (behind low cover) or prone
             float distance=Vector3.Distance(from,to);bool sees=false;
-            if(distance<(observationRules?director.NightPatrolDetectionRange:34)&&Physics.Raycast(from,(to-from).normalized,out var hit,distance+.1f,~0,QueryTriggerInteraction.Ignore))sees=hit.transform==target||hit.transform.IsChildOf(target);
+            if(distance<(observationRules?director.NightPatrolDetectionRange:Difficulty.Vision(34))&&Physics.Raycast(from,(to-from).normalized,out var hit,distance+.1f,~0,QueryTriggerInteraction.Ignore))sees=hit.transform==target||hit.transform.IsChildOf(target);
             if(Map01Smoke.Blocks(from,to)||Stealth&&VillageRiceInstances.Conceals(target.GetComponent<PlayerController>()))sees=false;   // the rice hides Nam on the stealth days only
             if(sees&&Stealth)lastSeen=target.position;
             if(sees&&!sawLast)sightSince=Time.time;sawLast=sees;
@@ -181,7 +193,7 @@ namespace ShadowVale.Map01
             {
                 if(director.NightGuardIlluminates(this))alerted=true;
             }
-            else if(sees&&distance<(night?12:24)&&Vector3.Angle(transform.forward,to-from)<65||night&&director.NightGuardIlluminates(this))alerted=true;
+            else if(sees&&distance<(night?12:Difficulty.Vision(24))&&Vector3.Angle(transform.forward,to-from)<65||night&&director.NightGuardIlluminates(this))alerted=true;
             TrackingVisibleTarget=sees&&alerted;
             if(night&&!alerted){director.TickNightPatrolUnit(this,agent);return;}
             if(!alerted){agent.stoppingDistance=.3f;patrolClock+=Time.deltaTime;agent.isStopped=false;if(!agent.pathPending&&agent.remainingDistance<.6f){var point=patrolHome+Quaternion.Euler(0,(Mathf.FloorToInt(patrolClock/4)%3)*120,0)*Vector3.forward*5;if(NavMesh.SamplePosition(point,out var patrol,3,NavMesh.AllAreas))agent.SetDestination(patrol.position);}return;}
@@ -198,8 +210,10 @@ namespace ShadowVale.Map01
             // Every damage event requires an actual unobstructed hit, never a periodic HP tax.
             if(observationRules)   // Night 2's scripted volley (Tài): its own hit roll and damage
             {
-                if(Physics.Raycast(from,(to-from).normalized,out var actual,distance+.2f,~0,QueryTriggerInteraction.Ignore)&&actual.transform.GetComponentInParent<Health>()==target.GetComponent<Health>()&&NightObservationShotHits(Random.value))
-                    target.GetComponent<Health>().TakeDamage(target.GetComponent<Health>().Max*.5f,actual.point,gameObject);
+                var targetHealth=target.GetComponent<Health>();
+                targetHealth?.NotifyIncomingFire(from);
+                if(targetHealth!=null&&Physics.Raycast(from,(to-from).normalized,out var actual,distance+.2f,~0,QueryTriggerInteraction.Ignore)&&actual.transform.GetComponentInParent<Health>()==targetHealth&&NightObservationShotHits(Random.value))
+                    targetHealth.TakeDamage(targetHealth.Max*.5f,actual.point,gameObject);
             }
             else Shoot(target,from,to,distance);
         }

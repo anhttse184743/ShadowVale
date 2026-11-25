@@ -16,9 +16,12 @@ namespace ShadowVale.Map01.Tests {
    var spoken=Map02ChapterDefinition.Load().entries.Where(e=>!string.IsNullOrWhiteSpace(e.text)).ToArray();Assert.GreaterOrEqual(spoken.Length,151);
    foreach(var e in spoken){Assert.True(Map02DialogueCatalog.HasApprovedRecording(e),e.id);Assert.Greater(DialogueVoice.Length(e.RecordingId),.15f,e.id);}
   }
-  [Test]public void NightPatrolReusesApprovedEnemyAudioWithoutNewSynthesis(){
-   foreach(var pair in new[]{("night2_patrol_warning","m1_ops_enemy_spotted",Map02ChapterDirector.NightPatrolWarningText),("night2_patrol_fire_order","m1_ops_enemy_order",Map02ChapterDirector.NightPatrolFireOrderText)}){
-    var source=DialogueVoice.Find(pair.Item2);Assert.NotNull(source.clip);CollectionAssert.AreEqual(File.ReadAllBytes("Assets/Resources/"+source.resource+".wav"),File.ReadAllBytes("Assets/Resources/OperationsAudio/"+pair.Item1+".wav"));StringAssert.EndsWith(pair.Item3,source.caption);
+  [Test]public void NightPatrolHasDedicatedRecordingsForTheRevisedLines(){
+   foreach(var pair in new[]{("night2_patrol_warning","m1_ops_enemy_spotted"),("night2_patrol_fire_order","m1_ops_enemy_order")}){
+    var source=DialogueVoice.Find(pair.Item2);Assert.NotNull(source.clip);
+    var resource="OperationsAudio/"+pair.Item1;var clip=Resources.Load<AudioClip>(resource);
+    Assert.NotNull(clip);Assert.Greater(clip.length,.6f);Assert.AreEqual(48000,clip.frequency);
+    Assert.IsFalse(File.ReadAllBytes("Assets/Resources/"+source.resource+".wav").SequenceEqual(File.ReadAllBytes("Assets/Resources/"+resource+".wav")));
    }
   }
   [UnityTest,Timeout(300000)]public IEnumerator DayThreeReportSpeaksAllThreeLinesBeforeHandingBackControl(){

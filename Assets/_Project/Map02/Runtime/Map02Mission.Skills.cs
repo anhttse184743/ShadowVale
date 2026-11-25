@@ -54,7 +54,7 @@ namespace ShadowVale.Map01
 
         public bool TrySkillTakedown()
         {
-            if (InputBlocked || health.IsDead || Skills == null || Skills.MissionFailed || combat.EquippedKind != WeaponKind.Knife) return false;
+            if (!CharacterAttacksAllowed || InputBlocked || health.IsDead || Skills == null || Skills.MissionFailed || combat.EquippedKind != WeaponKind.Knife) return false;
             if (Time.time < nextTakedown) return true;
             var enemy = Chapter.Enemies.Where(e => e != null && e.CanSilentTakedown(this))
                 .OrderBy(e => (e.transform.position - Player.position).sqrMagnitude).FirstOrDefault();

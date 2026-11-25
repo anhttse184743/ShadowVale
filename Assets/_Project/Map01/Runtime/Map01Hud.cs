@@ -26,6 +26,7 @@ namespace ShadowVale.Map01
         private void Update()
         {
             if (mission == null || !mission.IsInitialized) return;
+            TickIncomingFire();
             if (quest != null && (observedObjectiveStage != quest.Stage || observedRescueAccepted != quest.RescueOrderAccepted))
             {
                 observedObjectiveStage = quest.Stage;
@@ -229,7 +230,11 @@ namespace ShadowVale.Map01
         /// <summary>The bag screen's two plates together (Map01Hud.Bag.cs); messages sit to their left while it is open.</summary>
         private Rect InventoryRect(float width) => new Rect(width - 1175, 60, 1132, 805);
 
-        private void OnGUI() => DrawHud();
+        private void OnGUI()
+        {
+            DrawHud();
+            DrawIncomingFire();
+        }
 
         private void DrawHud()
         {
@@ -265,6 +270,7 @@ namespace ShadowVale.Map01
                 var hint = new Rect(map.center.x - 95, map.yMax + 9, 190, 27);
                 HudFill(hint, new Color(.02f, .03f, .02f, .5f));
                 GUI.Label(hint, "M  MỞ BẢN ĐỒ", hudKey);
+                if (!mission.BenchOpen) DrawEscortHealth(map.x, hint.yMax + 12, map.width);
             }
             DrawRescue(width); // Map01Hud.Rescue.cs
             DrawTakedownHint(width,height);

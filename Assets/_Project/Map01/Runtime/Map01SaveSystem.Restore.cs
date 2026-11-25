@@ -81,6 +81,7 @@ namespace ShadowVale.Map01
                 GetComponent<Map01Story>().RestoreOperationActors(data.enemies);
                 operationStart=data.operationStart;
                 mission.Alarmed = data.alarmed;
+                GetComponent<Map01Hud>()?.ClearIncomingFire();
                 mission.RestoreHealthFromSave(Mathf.Clamp(data.hp, 1, mission.Settings.playerHP));
                 mission.SetStamina(data.stamina);
                 mission.Crouched = data.crouched;

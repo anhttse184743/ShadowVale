@@ -38,6 +38,8 @@ namespace ShadowVale.Map01.Editor
         {Begin(phase);if(SessionState.GetInt(Key+".phase",0)==phase)SessionState.SetString(Key+".performance",id);}
         [MenuItem("ShadowVale/Map 2/Checkpoint kiểm tra đường sơ tán · N2_04",priority=22)]
         public static void PlayEvacuationChoices()=>BeginAfter("N2_03");
+        [MenuItem("ShadowVale/Map 2/Checkpoint Hùng ngủ cuối Đêm 2 · N2_05",priority=22)]
+        public static void PlayNightTwoRest()=>BeginAfter("N2_04");
         // Day 3 / Night 3: every task up to the named one is done; Nam starts by the next one.
         [MenuItem("ShadowVale/Map 2/Chạy thử Ngày 3",priority=22)]
         public static void PlayDayThree()=>BeginAfter("N2_05");
@@ -53,6 +55,7 @@ namespace ShadowVale.Map01.Editor
         [MenuItem("ShadowVale/Map 2/Checkpoint lắp ăng-ten · M2_D2_06",true)]
         [MenuItem("ShadowVale/Map 2/Chạy thử Đêm 2",true)]
         [MenuItem("ShadowVale/Map 2/Checkpoint kiểm tra đường sơ tán · N2_04",true)]
+        [MenuItem("ShadowVale/Map 2/Checkpoint Hùng ngủ cuối Đêm 2 · N2_05",true)]
         [MenuItem("ShadowVale/Map 2/Chạy thử Ngày 3",true)]
         [MenuItem("ShadowVale/Map 2/Chạy thử Đêm 3",true)]
         [MenuItem("ShadowVale/Map 2/Chạy thử Đêm 3 · ra bến, xe tăng chặn đường",true)]
@@ -118,13 +121,10 @@ namespace ShadowVale.Map01.Editor
         public static bool ApplyPerformancePreview(Map02Mission mission,string id)
         {
             if(id!="D2_01"&&id!="N2_05")throw new ArgumentOutOfRangeException(nameof(id));
-            ApplyToMission(mission,id=="D2_01"?2:3);
-            if(id=="N2_05")
-            {
-                var saved=mission.Capture();foreach(var task in Map02ChapterDefinition.Load().tasks.Where(t=>t.phase==3&&t.id!=id))saved.chapter.Complete(task.id);
-                saved.chapter.night2GuidanceStage=7;saved.chapter.night2ChainCuePlayed=true;saved.patrolCheckpoint=null;mission.Restore(saved);
-            }
+            if(id=="N2_05")ApplyAfter(mission,"N2_04");
+            else ApplyToMission(mission,2);
             var marker=Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId==id);
+            if(id=="N2_05")return mission.Interact(marker);
             var body=mission.Player.GetComponent<CharacterController>();bool enabled=body.enabled;body.enabled=false;mission.Player.position=marker.transform.position+Vector3.back*1.6f;body.enabled=enabled;Physics.SyncTransforms();
             return mission.Interact(marker);
         }
@@ -148,6 +148,18 @@ namespace ShadowVale.Map01.Editor
                 var start=mission.Chapter.EvacuationChoicePoint(0);
                 Apply(mission,state,start+Vector3.back*3.5f,start,
                     "CHECKPOINT N2_04 · Kho đã kiểm tra. Tới ghim gần hầm để chọn đường ruộng, đường qua sông hoặc đường trong làng. N mở lại danh sách.");
+                return;
+            }
+            if(task=="N2_04")
+            {
+                state.trackedTask="N2_05";
+                state.night2ObservationCheckpointReached=state.night2HatchOpen=state.night2ReachedStore=true;
+                state.night2EvacuationStarted=true;state.night2EvacuationChoice=3;
+                state.night2GuidanceStage=7;state.night2ChainCuePlayed=true;
+                state.Validate();
+                var meeting=mission.Chapter.Sites["radio"].position;
+                Apply(mission,state,meeting+Vector3.back*1.6f,meeting,
+                    "CHECKPOINT N2_05 · Đã khảo sát đường sơ tán. Nhấn E tại điểm hẹn để nói chuyện với Hùng.");
                 return;
             }
             if(task=="D2_05")

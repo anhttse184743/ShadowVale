@@ -54,7 +54,7 @@ namespace ShadowVale.Map01
                 else if(workTask.kind=="rescueFamily"||workTask.kind=="rescueChild")
                 {if(State.introduced.Contains(workTask.id))StartRescueEscort(workTask);}
             }
-            handsBusy=!string.IsNullOrEmpty(State.carry);combat.SetHandsOccupied(handsBusy);
+            handsBusy=!string.IsNullOrEmpty(State.carry)||CarryingAntenna;combat.SetHandsOccupied(handsBusy);UpdateWorkWeapon();
             player.SurfaceSpeedMultiplier=State.wounded?WoundedPace:1;
             player.SprintAllowed=CanSprintDuringChapter;
             detectionClock=0;scannedAt=-99;patrolLoadGrace=2;
@@ -75,6 +75,8 @@ namespace ShadowVale.Map01
         }
         public void Cancel()
         {
+            if(sceneTask?.id=="N2_05"&&nightRestHouse!=null)
+                Mission.Player.SetPositionAndRotation(nightNamStart,nightNamStartRotation);
             if(doingWork&&workTask?.kind=="antenna"){doingWork=false;ReleaseAntennaTraversal();}
             antennaTied=false;
             CancelEvacuationCapture();
@@ -113,7 +115,7 @@ namespace ShadowVale.Map01
             combat.ReloadDurationMultiplier=State.wounded?1.35f:1;
             if(State.finished)health.CinematicInvulnerable=true;
             if(State.phase==5&&State.activeTask=="N3_08")health.CinematicInvulnerable=true;
-            foreach(var unit in Enemies)if(unit!=null){if(State.Done("N3_09"))unit.gameObject.SetActive(false);else if(unit.group=="scout_patrol")unit.gameObject.SetActive(State.phase==2);}
+            foreach(var unit in Enemies)if(unit!=null){if(State.Done("N3_09"))unit.gameObject.SetActive(false);else if(unit.group=="scout_patrol")unit.gameObject.SetActive(State.phase==2);else if(unit.group==ScoutAmbushGroup)unit.gameObject.SetActive(State.phase==2&&!State.Done("D2_04"));}
             HungLocomotion();
             roles["Hùng"].PrimeLocomotion();SetCommanderRifleCarry(roles["Anh Thành"],!AllyInCombatPose("Anh Thành"));roles["Anh Thành"].SetLocomotion(State.phase<=1?dayNamAnimator.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned"):null,State.phase<=1?ordinaryWalk:null);roles["Anh Thành"].PrimeLocomotion();ArrangeDayFamily();
             SyncDayProps();RefreshMemorial();RefreshDayTwoProps();UpdateMarkers();RefreshNightPatrol();SyncNightBankState();SyncEvacuationPatrol();

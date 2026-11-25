@@ -64,7 +64,7 @@ namespace ShadowVale.Map01
         {
             Layout=Resources.Load<Map02ChapterLayout>("Story/Map02ChapterLayout");
             Mission=mission;player=mission.Player.GetComponent<PlayerController>();combat=mission.Player.GetComponent<PlayerCombat>();health=mission.Player.GetComponent<Health>();
-            combat.EquipAllowed=kind=>!ScoutEscortActive||kind==WeaponKind.Pistol;
+            combat.EquipAllowed=kind=>(!ScoutEscortActive||kind==WeaponKind.Pistol)&&(!CarryingAntenna||kind==WeaponKind.Unarmed);
             rig=FindObjectsByType<ThirdPersonCamera>(FindObjectsSortMode.None).First(c=>c.GetComponent<Camera>()?.enabled==true);
             voice=DialogueVoice.For(gameObject);voice.CanSpeak=()=>!mission.Paused&&!ForestMenu.Visible;
             root=new GameObject("Map 2 chapter markers — replace art under Actor slots");root.transform.SetParent(transform);
@@ -183,7 +183,7 @@ namespace ShadowVale.Map01
             if(t.kind=="families") {if(!State.introduced.Contains(t.id)){BeginScene(t);scenePurpose=2;}else CompleteFamily(t);return true;}
             if(t.kind=="wire")
             {
-                if(State.TakeWire()){UpdateMarkers();Mission.StoreCheckpoint();Mission.Say("Đã lấy cuộn dây và ăng-ten. Mang về trạm, nhấn E giao cho Hùng.");return true;}
+                if(State.TakeWire()){UpdateMarkers();Mission.StoreCheckpoint();handsBusy=true;combat.SetHandsOccupied(true);UpdateWorkWeapon();Mission.Say("Đã lấy cuộn dây và ăng-ten. Mang về trạm, nhấn E giao cho Hùng.");return true;}
                 if(State.DeliverWire()){CommitFinishedTask(t);return true;}
                 return false;
             }
@@ -222,8 +222,8 @@ namespace ShadowVale.Map01
         void CompleteFamily(Map02ChapterTask task){State.workCount=State.Increment(task.id);if(State.workCount>=task.count)Finish(task);else {Mission.Say("Đã phân công "+State.workCount+"/3 nhà.");UpdateMarkers();Mission.StoreCheckpoint();}}
         void OpenWork(Map02ChapterTask task)
         {
-            if(!string.IsNullOrEmpty(task.scene)&&!State.introduced.Contains(task.id)){
-                BeginScene(task,0,task.kind=="antenna"?1:task.kind=="clear"?3:0);scenePurpose=1;
+            if(task.kind!="antenna"&&!string.IsNullOrEmpty(task.scene)&&!State.introduced.Contains(task.id)){
+                BeginScene(task,0,task.kind=="clear"?3:0);scenePurpose=1;
             }else StartWork(task);
         }
         void StartWork(Map02ChapterTask task)
@@ -261,8 +261,8 @@ namespace ShadowVale.Map01
             if(State.finished)return;
             TickTank(dt);TickBambooCrush(dt);TickBoats(dt);TickDressing(dt);TickStepsRehearsal(dt);TickAllies();TickWreck(dt);TickBleeding(dt);
             bool leading=LeadingWounded; // Day 3 / Night 3 escorts and Tâm's keep Nam armed and at pace.
-            bool carrying=!string.IsNullOrEmpty(State.carry)||leading||DayActivityActive;if(carrying!=handsBusy||carrying&&!combat.HandsOccupied){handsBusy=carrying;combat.SetHandsOccupied(carrying);}   // a bag refresh (each save) frees the hands
-            player.SurfaceSpeedMultiplier=leading?EscortPace:!string.IsNullOrEmpty(State.carry)?CarryPace:CoverFireActive?CoverPace:State.wounded?WoundedPace:1;
+            bool carrying=!string.IsNullOrEmpty(State.carry)||CarryingAntenna||leading||DayActivityActive;if(carrying!=handsBusy||carrying&&!combat.HandsOccupied){handsBusy=carrying;combat.SetHandsOccupied(carrying);}   // a bag refresh (each save) frees the hands
+            player.SurfaceSpeedMultiplier=leading?EscortPace:!string.IsNullOrEmpty(State.carry)||CarryingAntenna?CarryPace:CoverFireActive?CoverPace:State.wounded?WoundedPace:1;
             player.SprintAllowed=CanSprintDuringChapter;
             if(sceneTask!=null){TickLight(dt);TickScene(dt);return;}
             if(TickDay(dt))return;
@@ -281,7 +281,6 @@ namespace ShadowVale.Map01
                 if(t.id=="D2_02")EnsureGroup("scout_patrol",3,false);
                 if((t.kind=="escortHung"||t.kind=="escortScout"||t.kind=="patrolHung"||t.kind.StartsWith("rescue"))&&escort!=null&&workTask==t)
                 {
-                    if(t.id=="D2_04"&&!ScoutAmbushCleared)continue;
                     var dest=Destination(t);if(Vector3.Distance(Mission.Player.position,dest)<3&&Vector3.Distance(escort.transform.position,dest)<4&&(secondaryEscort==null||Vector3.Distance(secondaryEscort.transform.position,dest)<5))
                     {if(t.id=="D2_04")EndScoutEscort();bool rescue=t.kind.StartsWith("rescue");escort.StopAt(rescue?SafeSpot(escort.role):dest+(t.id=="D1_02"?Vector3.forward*.6f:Vector3.right*1.4f));escort=null;secondaryEscort?.StopAt(rescue?SafeSpot(secondaryEscort.role):dest+Vector3.left*1.4f);secondaryEscort=null;if(t.kind=="rescueFamily")Finish(t);else if(t.kind=="rescueChild")BeginScene(t,2);else if(t.id=="N1_02"||t.id=="N1_03")StartPost(t);else BeginScene(t);break;}
                 }
@@ -366,7 +365,7 @@ namespace ShadowVale.Map01
         /// <summary>Walking pace with a load in both hands.</summary>
         public const float CarryPace=.85f;
         bool CanSprintDuringChapter() =>
-            !LeadingWounded && !ScoutEscortActive && !CoverFireActive &&
+            !LeadingWounded && !ScoutEscortActive && !CoverFireActive && !CarryingAntenna &&
             string.IsNullOrEmpty(State.carry) && Mission.CharacterCanSprint;
         /// <summary>Walking pace while leading Hùng before Day 3 (no sprinting); see LeadingWounded.</summary>
         public const float EscortPace=.55f;

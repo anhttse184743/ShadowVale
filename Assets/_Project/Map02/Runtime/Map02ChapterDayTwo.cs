@@ -13,10 +13,15 @@ namespace ShadowVale.Map01
     public sealed partial class Map02ChapterDirector
     {
         GameObject dayTwoRoute,scoutTracks,wireCoil,carriedWire,antennaMast,antennaLadder,installedCable;
-        Transform antennaBase;
-        Vector3 antennaFoot;
+        Transform antennaBase,carriedAntenna,carriedWireReel;
+        Vector3 antennaFoot,mountedAntennaPosition;
+        float antennaModelTop,antennaBoomHeight;
         float climbHeight,tieClock;
-        bool antennaTied,antennaAborting;
+        bool antennaTied,antennaAborting,antennaTopCuePlayed;
+        const string AntennaTopCue="m2v3_antenna_01";
+        const float AntennaRadioRaiseSeconds=.55f;
+        Transform antennaHandRadio;
+        static readonly string[] AntennaGripFingers={"RightHandIndex1","RightHandMiddle1","RightHandRing1","RightHandPinky1"};
         Map01CinematicPose antennaPose;AnimationClip antennaIdle;
         readonly List<Material> dayTwoMaterials=new List<Material>();
         readonly List<GameObject> dayTwoApproaches=new List<GameObject>();
@@ -25,6 +30,10 @@ namespace ShadowVale.Map01
         public Transform AntennaBase=>antennaBase;
         public float AntennaClimbHeight=>climbHeight;
         public bool AntennaTied=>antennaTied;
+        public bool CarryingAntenna=>sceneTask==null&&!(doingWork&&workTask?.kind=="antenna")&&
+            (State.carry=="D2_05"||State.Done("D2_05")&&!State.Done("D2_06")&&!antennaTied);
+        const float LadderInset=.30f;
+        float ladderWidthScale=1;
         public string AntennaInstruction=>antennaAborting?"Đang xuống điểm bám an toàn để hủy thao tác.":antennaTied?"Đã cột ăng-ten. Giữ S xuống đất để Hùng nối máy.":climbHeight<Layout.antennaHeight-.05f?"Giữ W leo thang lên cây dừa · thả W để dừng · giữ S xuống · Esc hủy":"A/D xoay hướng · tín hiệu ổn định 2 giây rồi giữ Space cột dây · S xuống · Esc hủy";
 
         Material DayTwoMaterial(string name,Color color)
@@ -116,7 +125,7 @@ namespace ShadowVale.Map01
             var station=sites["radio"].position+Vector3.right*3.5f;
             if(NavMesh.SamplePosition(station,out var baseFloor,3,NavMesh.AllAreas))station=baseFloor.position;
             var baseObject=new GameObject("Cây dựng ăng-ten — điểm bám");baseObject.transform.SetParent(root.transform,false);baseObject.transform.position=station;antennaBase=baseObject.transform;
-            if(palm!=null){var tree=Instantiate(palm.gameObject,antennaBase);tree.name="Dừa cạnh trạm";tree.transform.localPosition=new Vector3(-.3f,0,1.05f);}
+            if(palm!=null){var tree=Instantiate(palm.gameObject,antennaBase);tree.name="Dừa cạnh trạm";tree.transform.localPosition=new Vector3(0,0,1.05f);}
             else RoutePart("Thân cột ăng-ten",PrimitiveType.Cylinder,antennaBase,Vector3.forward*.8f+Vector3.up*3,new Vector3(.4f,3,.4f),wood,true);
             var ladderArt=Resources.Load<GameObject>("Story/Antenna/FieldLadder");
             antennaLadder=ladderArt!=null?Instantiate(ladderArt,antennaBase):new GameObject("Thang lên cây dừa");
@@ -127,15 +136,130 @@ namespace ShadowVale.Map01
             foreach(float x in new[]{-.4f,.4f})RoutePart("Thanh dọc thang",PrimitiveType.Cube,antennaLadder.transform,new Vector3(x,height*.5f,.35f),new Vector3(.075f,height,.09f),wood);
             for(float h=.3f;h<=height;h+=.3f)RoutePart("Bậc thang",PrimitiveType.Cube,antennaLadder.transform,new Vector3(0,h,.35f),new Vector3(.85f,.065f,.12f),wood);
             }
+            // Measure the imported model so the reduction stays exactly 15 cm if its art changes.
+            var ladderBounds=AntennaVisualBounds(antennaLadder);
+            if(ladderBounds.size.x>.15f){ladderWidthScale=(ladderBounds.size.x-.15f)/ladderBounds.size.x;var scale=antennaLadder.transform.localScale;scale.x*=ladderWidthScale;antennaLadder.transform.localScale=scale;}
+            antennaLadder.transform.localPosition=Vector3.forward*LadderInset;
             var metal=DayTwoMaterial("Nhôm ăng-ten",new Color(.47f,.5f,.53f));
+            var antennaArt=Resources.Load<GameObject>("Story/Antenna/FieldAntenna");
             antennaMast=BuildAntenna("Ăng-ten gắn trên cây dừa",antennaBase,metal);
-            antennaMast.transform.localPosition=new Vector3(0,Layout.antennaHeight,.8f);
+            antennaModelTop=AntennaVisualBounds(antennaMast).max.y-antennaMast.transform.position.y;
+            // Align the plane of the receiving rods with the top of the rails plus 10 cm.
+            antennaBoomHeight=antennaModelTop*(antennaArt!=null?1.35f/1.45f:1.30f/1.3225f);
+            float receiverHeight=antennaArt!=null?antennaModelTop*(1.38f/1.45f):antennaBoomHeight;
+            mountedAntennaPosition=new Vector3(.22f,ladderBounds.max.y-antennaBase.position.y+.10f-receiverHeight,1.06f);
+            antennaMast.transform.localPosition=mountedAntennaPosition;
 
             wireCoil=BuildAntennaBundle("Cuộn dây và ăng-ten tại kho",root.transform);wireCoil.transform.position=sites["store"].position+Vector3.up*.2f;
             installedCable=new GameObject("Dây nối ăng-ten xuống trạm");installedCable.transform.SetParent(antennaBase,false);
             var cable=installedCable.AddComponent<LineRenderer>();cable.useWorldSpace=false;cable.widthMultiplier=.018f;cable.sharedMaterial=DayTwoMaterial("Dây nối máy",new Color(.08f,.07f,.05f));cable.positionCount=4;
-            cable.SetPositions(new[]{new Vector3(0,Layout.antennaHeight+1,.8f),new Vector3(.2f,Layout.antennaHeight,.85f),new Vector3(.2f,.2f,.85f),antennaBase.InverseTransformPoint(sites["radio"].position+Vector3.up*.5f)});
-            carriedWire=BuildAntennaBundle("Cuộn dây và ăng-ten Nam đang mang",Mission.Player);carriedWire.transform.localPosition=new Vector3(-.3f,1,-.2f);
+            cable.SetPosition(2,new Vector3(mountedAntennaPosition.x+.12f,.2f,mountedAntennaPosition.z));cable.SetPosition(3,antennaBase.InverseTransformPoint(sites["radio"].position+Vector3.up*.5f));
+            PlaceAntennaCable();
+            carriedWire=new GameObject("Cuộn dây và ăng-ten Nam đang mang");carriedWire.transform.SetParent(Mission.Player,false);
+            carriedAntenna=BuildAntenna("Ăng-ten mang theo",carriedWire.transform,metal).transform;
+            carriedAntenna.localScale=Vector3.one*.65f;
+            carriedWireReel=BuildWire("Cuộn dây Nam cầm tay trái",carriedWire.transform,DayTwoMaterial("Cuộn dây đeo tay",new Color(.12f,.1f,.07f))).transform;
+        }
+        static Bounds AntennaVisualBounds(GameObject model)
+        {
+            var renderers=model.GetComponentsInChildren<Renderer>(true);
+            if(renderers.Length==0)return new Bounds(model.transform.position,Vector3.zero);
+            var bounds=renderers[0].bounds;
+            for(int i=1;i<renderers.Length;i++)bounds.Encapsulate(renderers[i].bounds);
+            return bounds;
+        }
+        void PlaceAntennaCable()
+        {
+            var cable=installedCable.GetComponent<LineRenderer>();
+            var feed=antennaMast.transform.TransformPoint(new Vector3(0,antennaModelTop-.24f,-.33f));
+            cable.SetPosition(0,antennaBase.InverseTransformPoint(feed));
+            cable.SetPosition(1,mountedAntennaPosition+new Vector3(.2f,.48f,.05f));
+        }
+        void StageAntennaRadio()
+        {
+            var hung=performanceHung.role.transform;
+            var toward=Vector3.ProjectOnPlane(antennaBase.position-hung.position,Vector3.up);
+            if(toward.sqrMagnitude>.001f)hung.rotation=Quaternion.LookRotation(toward);
+            if(antennaHandRadio!=null)return;
+
+            antennaHandRadio=new GameObject("Bộ đàm cầm tay của Hùng").transform;
+            antennaHandRadio.SetParent(root.transform,false);
+            var housing=DayMaterial("Vỏ bộ đàm ô liu",new Color(.24f,.27f,.17f));
+            var rubber=DayMaterial("Cao su bộ đàm",new Color(.072f,.08f,.067f));
+            Part(antennaHandRadio,"Thân máy",Vector3.zero,new Vector3(.085f,.153f,.047f),housing);
+            Part(antennaHandRadio,"Nắp đáy",new Vector3(0,-.075f,0),new Vector3(.086f,.014f,.047f),rubber);
+            Part(antennaHandRadio,"Mặt loa",new Vector3(0,.032f,.024f),new Vector3(.064f,.061f,.008f),rubber);
+            for(int i=0;i<5;i++)
+                Part(antennaHandRadio,"Khe loa",new Vector3(0,.014f+i*.008f,.0285f),new Vector3(.047f,.0025f,.002f),housing);
+            Part(antennaHandRadio,"Núm âm lượng",new Vector3(.020f,.084f,0),new Vector3(.019f,.010f,.019f),rubber,PrimitiveType.Cylinder);
+            Part(antennaHandRadio,"Nút phát",new Vector3(.046f,.01f,0),new Vector3(.009f,.029f,.019f),rubber);
+            var aerial=Part(antennaHandRadio,"Cần ăng-ten ngắn",new Vector3(-.027f,.133f,0),new Vector3(.008f,.056f,.008f),rubber,PrimitiveType.Cylinder);
+            aerial.localRotation=Quaternion.Euler(0,0,11);
+            antennaHandRadio.gameObject.SetActive(false);
+        }
+        void SampleAntennaRadio(Animator actor)
+        {
+            if(antennaHandRadio==null)return;
+            var head=actor.GetBoneTransform(HumanBodyBones.Head);
+            var chest=actor.GetBoneTransform(HumanBodyBones.Chest);
+            var hand=actor.GetBoneTransform(HumanBodyBones.LeftHand);
+            if(head==null||chest==null||hand==null)return;
+
+            var hung=performanceHung.role.transform;
+            float raise=Mathf.SmoothStep(0,1,sceneClock/AntennaRadioRaiseSeconds);
+            float listen=lines[lineIndex].radio?Mathf.SmoothStep(0,1,lineClock/.35f):0;
+            var low=chest.position+hung.forward*.18f-hung.right*.22f-Vector3.up*.27f;
+            var speak=head.position+hung.forward*.255f-hung.right*.18f-Vector3.up*.165f;
+            var target=Vector3.Lerp(low,speak+hung.right*(-.075f*listen)+Vector3.up*(.043f*listen),raise);
+            Map01ArmContact.Reach(actor,true,target,chest.position-hung.right*.36f+Vector3.down*.24f,1);
+            var handset=hand.position+hung.forward*.033f+hung.right*.015f+Vector3.up*.034f;
+            antennaHandRadio.SetPositionAndRotation(handset,hung.rotation*Quaternion.Euler(-8,18,-12));
+            antennaHandRadio.gameObject.SetActive(true);
+            RotateBone(actor,HumanBodyBones.Head,new Vector3(8,-9,0),raise);
+            PerformanceBeat=lines[lineIndex].radio?"Hùng nghe trả lời qua bộ đàm":"Hùng thử tín hiệu bằng bộ đàm";
+        }
+        void FrameAntennaRadio()
+        {
+            var hung=roles["Hùng"].transform;
+            var focus=hung.position+Vector3.up*1.32f-hung.right*.065f;
+            var offset=hung.forward*2.16f-hung.right*1.22f+Vector3.up*.18f;
+            var eye=focus+offset;
+            foreach(var hit in Physics.SphereCastAll(focus,.11f,offset.normalized,offset.magnitude,~0,QueryTriggerInteraction.Ignore))
+                if(hit.distance>.45f&&!hit.transform.IsChildOf(Mission.Player)&&hit.collider.GetComponentInParent<Map02ChapterActor>()==null)
+                    eye=focus+offset.normalized*Mathf.Min(Vector3.Distance(eye,focus),Mathf.Max(.64f,hit.distance-.13f));
+            rig.SetCinematicView(eye,Quaternion.LookRotation(focus-eye),36,1);
+        }
+        void HoldAntennaOnShoulder(Animator animator)
+        {
+            var body=Mission.Player;
+            var shoulder=animator.GetBoneTransform(HumanBodyBones.RightUpperArm);
+            var chest=animator.GetBoneTransform(HumanBodyBones.Chest);
+            if(shoulder==null||chest==null)return;
+            var shoulderRest=shoulder.position+body.right*.09f+Vector3.up*.075f;
+            var shaft=(body.forward+Vector3.up*.12f).normalized;
+            var boom=Vector3.ProjectOnPlane(Vector3.up+body.right*.50f,shaft);
+            carriedAntenna.rotation=Quaternion.LookRotation(boom,-shaft);
+            carriedAntenna.position=shoulderRest-carriedAntenna.TransformVector(Vector3.up*(antennaBoomHeight*.53f));
+            var rightGrip=shoulderRest+shaft*.28f+body.right*.043f+Vector3.up*.025f;
+            Map01ArmContact.Reach(animator,false,rightGrip,shoulder.position+body.right*.29f-Vector3.up*.40f,1);
+            OrientScenePalm(animator,HumanBodyBones.RightHand,HumanBodyBones.RightIndexProximal,HumanBodyBones.RightLittleProximal,-body.right,.88f,useNamedFingers:true);
+            var rightHand=animator.GetBoneTransform(HumanBodyBones.RightHand);
+            if(rightHand!=null)
+                foreach(var fingerName in AntennaGripFingers)
+                {
+                    var finger=rightHand.Find(fingerName);
+                    if(finger==null||finger.childCount==0)continue;
+                    var first=finger.GetChild(0);
+                    var close=Vector3.Cross(first.position-finger.position,Vector3.down);
+                    if(close.sqrMagnitude<.000001f)continue;
+                    finger.rotation=Quaternion.AngleAxis(34,close)*finger.rotation;
+                    first.rotation=Quaternion.AngleAxis(39,close)*first.rotation;
+                }
+
+            var leftGrip=chest.position-body.right*.31f+body.forward*.12f-Vector3.up*.46f;
+            Map01ArmContact.Reach(animator,true,leftGrip,chest.position-body.right*.45f-body.forward*.15f,1);
+            var leftHand=animator.GetBoneTransform(HumanBodyBones.LeftHand);
+            if(leftHand!=null)carriedWireReel.SetPositionAndRotation(leftHand.position-Vector3.up*.18f,body.rotation*Quaternion.Euler(90,0,0));
         }
         GameObject BuildAntenna(string name,Transform parent,Material metal)
         {
@@ -197,19 +321,27 @@ namespace ShadowVale.Map01
             foreach(var approach in dayTwoApproaches)approach.SetActive(State.phase==2);
             if(scoutTracks!=null)scoutTracks.SetActive(State.phase==2&&!State.Done("D2_04"));
             wireCoil.SetActive(State.Available(Map02ChapterDefinition.Load().Find("D2_05"))&&State.wireStage==0);
-            carriedWire.SetActive(State.wireStage==1&&State.carry=="D2_05"||State.Done("D2_05")&&!State.Done("D2_06")&&!antennaTied&&!(doingWork&&workTask?.kind=="antenna"));
+            carriedWire.SetActive(CarryingAntenna);
             antennaLadder.SetActive(State.Done("D2_05"));
             bool mounted=State.Done("D2_06")||antennaTied||doingWork&&workTask?.kind=="antenna";
             antennaMast.SetActive(mounted);installedCable.SetActive(State.Done("D2_06")||mounted&&antennaTied);
-            if(!doingWork){antennaMast.transform.localPosition=new Vector3(0,Layout.antennaHeight,.8f);antennaMast.transform.localRotation=Quaternion.Euler(0,Mathf.Lerp(-85,85,.72f),0);}
+            if(!doingWork)
+            {
+                antennaMast.transform.localPosition=mountedAntennaPosition;
+                antennaMast.transform.localRotation=Quaternion.Euler(0,Mathf.Lerp(-85,85,.72f),0);
+                if(mounted)PlaceAntennaCable();
+            }
         }
         void StartAntennaTraversal()
         {
+            ReleaseDayFreePose();
             var actor=Mission.Player.GetComponentInChildren<Animator>();
             if(actor!=null){antennaIdle=actor.runtimeAnimatorController?.animationClips.FirstOrDefault(c=>c.name.Contains("Idle"));antennaPose=new Map01CinematicPose(actor,skinGrounding:false);}
-            climbHeight=tieClock=signalHold=0;signal=.15f;antennaTied=antennaAborting=false;
+            climbHeight=tieClock=signalHold=0;signal=.15f;antennaTied=antennaAborting=antennaTopCuePlayed=false;
+            antennaMast.transform.localPosition=new Vector3(mountedAntennaPosition.x,0,mountedAntennaPosition.z);
+            antennaMast.transform.localRotation=Quaternion.Euler(0,Mathf.Lerp(-85,85,signal),0);
             RefreshDayTwoProps();
-            antennaFoot=antennaBase.position;MoveAntennaPlayer(antennaFoot);
+            antennaFoot=antennaBase.position+antennaBase.forward*LadderInset;MoveAntennaPlayer(antennaFoot);
             Mission.Player.rotation=Quaternion.LookRotation(antennaBase.forward);
             UpdateWorkWeapon();
         }
@@ -228,7 +360,13 @@ namespace ShadowVale.Map01
             float change=antennaAborting?-2.5f:down?-1.2f:up&&!antennaTied?1.2f:0;
             climbHeight=Mathf.Clamp(climbHeight+change*dt,0,Layout.antennaHeight);
             MoveAntennaPlayer(antennaFoot+Vector3.up*climbHeight);
-            if(!antennaTied)antennaMast.transform.localPosition=new Vector3(0,climbHeight,.8f);
+            if(!antennaTied)
+                antennaMast.transform.localPosition=new Vector3(mountedAntennaPosition.x,mountedAntennaPosition.y*(climbHeight/Layout.antennaHeight),mountedAntennaPosition.z);
+            if(!antennaAborting&&!antennaTopCuePlayed&&climbHeight>=Layout.antennaHeight)
+            {
+                antennaTopCuePlayed=true;
+                Bark(AntennaTopCue);
+            }
             bool atTop=climbHeight>=Layout.antennaHeight-.05f&&!antennaAborting;
             if(atTop&&!antennaTied)
             {
@@ -237,7 +375,12 @@ namespace ShadowVale.Map01
                 if(signalAudio!=null)signalAudio.volume=Mathf.Abs(signal-.72f)*.35f;
                 signalHold=Mathf.Abs(signal-.72f)<.055f?signalHold+dt:0;
                 tieClock=signalHold>=2&&tie?tieClock+dt:0;
-                if(tieClock>=1.5f){antennaTied=true;installedCable.SetActive(true);Mission.Say("Đã cột đúng hướng. Giữ S xuống đất; Hùng sẽ nối máy.");}
+                if(tieClock>=1.5f)
+                {
+                    antennaTied=true;antennaMast.transform.localPosition=mountedAntennaPosition;
+                    PlaceAntennaCable();installedCable.SetActive(true);
+                    Mission.Say("Đã cột đúng hướng. Giữ S xuống đất; Hùng sẽ nối máy.");
+                }
             }
             else if(!antennaTied){signalHold=tieClock=0;}
             if(climbHeight<=.001f&&(antennaTied||antennaAborting))EndWork(antennaTied&&!antennaAborting);
@@ -258,13 +401,13 @@ namespace ShadowVale.Map01
                 {
                     var shoulder=animator.GetBoneTransform(left?HumanBodyBones.LeftUpperArm:HumanBodyBones.RightUpperArm);
                     float handHeight=shoulder.position.y-Mission.Player.position.y+.12f+Mathf.Max(0,-cycle)*.18f;
-                    var hand=Mission.Player.position+antennaBase.right*(side*.28f)+antennaBase.forward*.35f+Vector3.up*handHeight;
+                    var hand=Mission.Player.position+antennaBase.right*(side*.28f*ladderWidthScale)+antennaBase.forward*.35f+Vector3.up*handHeight;
                     Map01ArmContact.Reach(animator,left,hand,shoulder.position+antennaBase.right*(side*.22f)+antennaBase.forward*.15f-Vector3.up*.15f,1);
                 }
             }
             if(tieClock>0)
             {
-                var knot=antennaFoot+Vector3.up*(climbHeight+1.35f)+antennaBase.forward*.6f;
+                var knot=antennaBase.TransformPoint(mountedAntennaPosition+new Vector3(0,antennaModelTop-.15f,-.13f));
                 var chest=animator.GetBoneTransform(HumanBodyBones.Chest).position;
                 float loop=Mathf.Sin(tieClock*12)*.06f;
                 Map01ArmContact.Reach(animator,true,knot-antennaBase.right*.08f+Vector3.up*loop,chest-antennaBase.right*.4f,1);
@@ -290,6 +433,12 @@ namespace ShadowVale.Map01
         }
         void ReleaseAntennaTraversal()
         {
+            if(bark?.id==AntennaTopCue){voice.Stop();bark=null;}
+            if(barks.Any(line=>line.id==AntennaTopCue))
+            {
+                var pending=barks.Where(line=>line.id!=AntennaTopCue).ToArray();
+                barks.Clear();foreach(var line in pending)barks.Enqueue(line);
+            }
             antennaPose?.Dispose();antennaPose=null;
             ReleaseWorkWeapon();
             ReleasePerformance();

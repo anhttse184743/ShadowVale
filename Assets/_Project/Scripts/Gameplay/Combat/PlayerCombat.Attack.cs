@@ -12,7 +12,7 @@ namespace ShadowVale.Gameplay.Combat
         private void Attack()
         {
             // Nothing in hand (a scene without weapon prefabs): there is no punch any more.
-            if (_equipped == null) return;
+            if (_equipped == null || !CanAttack) return;
             if (_equippedKind == WeaponKind.Knife && TrySpecialMelee != null && TrySpecialMelee()) return;
             // Everything that can refuse the shot is settled before a single side effect runs.
             // Pulling the trigger on an empty magazine used to burn the cooldown and play the
@@ -107,6 +107,7 @@ namespace ShadowVale.Gameplay.Combat
 
         private void FireShotAlongRay(Weapon gun,ShooterStance stance,bool aiming,Ray? scopedRay)
         {
+            if (!CanAttack) return;
             Camera cam = Camera.main;
             if (cam == null)
             {

@@ -1,3 +1,6 @@
+using System.Linq;
+using Newtonsoft.Json.Linq;
+using ShadowVale.Data.Content;
 using UnityEngine;
 
 namespace ShadowVale.Gameplay.Combat
@@ -65,6 +68,22 @@ namespace ShadowVale.Gameplay.Combat
         public float HipSpread => hipSpread;
         public bool IsGun => kind == WeaponKind.Rifle || kind == WeaponKind.Pistol || kind == WeaponKind.Sniper;
         public Transform Muzzle => muzzle != null ? muzzle : transform;
+
+        public void ApplyPublishedKnifeBalance(ContentBundle bundle)
+        {
+            if (kind != WeaponKind.Knife) return;
+            var profile = bundle.Weapons.FirstOrDefault(weapon => weapon.Id == "knife" && weapon.Class == "melee");
+            if (profile == null) return;
+
+            if (profile.Damage >= 0f && profile.Damage <= 9999.99f) damage = profile.Damage;
+            if (profile.Range >= 0f && profile.Range <= 9999.99f) range = profile.Range;
+            var interval = bundle.Items.FirstOrDefault(item => item.Id == profile.Id)?.Stats?["melee_cooldown_s"];
+            if (interval?.Type is JTokenType.Float or JTokenType.Integer)
+            {
+                float seconds = interval.ToObject<float>();
+                if (seconds >= .1f && seconds <= 5f) cooldown = seconds;
+            }
+        }
 
         /// <summary>Configure an additional scene weapon from its existing content profile.</summary>
         public void Configure(WeaponKind value, float hitDamage, float hitRange, float fireRate, bool repeats, Transform tip, bool lethalHits = false)

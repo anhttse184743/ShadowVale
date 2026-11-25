@@ -73,7 +73,7 @@ namespace ShadowVale.Map01
         void UpdateWorkWeapon()
         {
             if(!ready||!Mission.Ready){ReleaseWorkWeapon();return;}
-            if(doingWork&&workTask?.kind=="antenna")
+            if(CarryingAntenna||doingWork&&workTask?.kind=="antenna")
             {
                 // Climbing uses both hands. Hide the gameplay gun and any work sling.
                 if(slungWorkRifle!=null)slungWorkRifle.SetActive(false);
