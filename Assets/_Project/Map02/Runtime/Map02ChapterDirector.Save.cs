@@ -30,7 +30,7 @@ namespace ShadowVale.Map01
             // Saves from before evacuation-driven lanes stored seconds held.
             var held=Map02ChapterDefinition.Load().Find(State.activeTask);if(held!=null&&held.kind=="defend"&&State.taskProgress>1)State.taskProgress=Mathf.Clamp01(State.taskProgress/Mathf.Max(1,held.seconds));
             if(State.completed.Count==0)foreach(var pair in initialRolePositions)roles[pair.Key].StopAt(pair.Value);
-            placedActors=false;phaseApplied=-1;ApplyState();
+            placedActors=false;phaseApplied=-1;ResetActorsForNewDay();ApplyState();
             if(State.activeTask==Escort&&!State.Done(Escort))ResumeCover();   // a load mid-cover: the unfinished wave starts again
             foreach(var saved in State.actors)if(roles.TryGetValue(saved.role,out var actor))actor.StopAt(saved.position);
             PlaceChildWithMother();
@@ -90,6 +90,15 @@ namespace ShadowVale.Map01
             if(health!=null&&sceneTask!=null)health.CinematicInvulnerable=protectedBefore;
             ClearEntrances();DropBarks();ReleaseConversation();ReleaseSceneAction();phaseFade=0;binocularHeld=false;binocular=false;observed=0;detectionClock=0;if(rig!=null)rig.SetBinoculars(false,1);if(combat!=null)combat.SetHandsOccupied(false);handsBusy=false;if(namPose!=null){namPose.Dispose();namPose=null;combat?.RestoreAfterCinematic();}foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}voice?.Stop();if(Patching)EndPatch();EndStepsRehearsal();sceneTask=null;doingWork=false;lines=null;escort?.StopAt(escort.transform.position);escort=null;secondaryEscort?.StopAt(secondaryEscort.transform.position);secondaryEscort=null;rig?.ClearCinematicView();
         }
+        /// <summary>A new day or night played straight on starts its people as a load (or the test tools) would: no clip still
+        /// forced on anyone, no one left sitting from the day before. What the new phase wants is put back after (Tâm rests
+        /// seated only through Day 2 and Night 2) and by the presentation each frame (26/11/2026).</summary>
+        void ResetActorsForNewDay()
+        {
+            foreach(var actor in roles.Values){if(actor==null)continue;actor.ReleasePerformance();actor.SetSitting(false);}
+            EndDuck();
+            if((State.phase==2||State.phase==3)&&State.Done("D2_04"))PlaceRecoveredScout();
+        }
         void ApplyState()
         {
             Mission.World.story.stage=State.finished?Map02Stage.Complete:State.phase==0?(State.Done("D1_01")?Map02Stage.VillageHelp:Map02Stage.Contact):State.phase==2?Map02Stage.MissingScout:State.phase<5?Map02Stage.QuietPreparation:State.Done("N3_07")?Map02Stage.Breakout:Map02Stage.HoldLanes;
@@ -110,7 +119,7 @@ namespace ShadowVale.Map01
             roles["Tâm"].SetVisible(State.phase>=2);
             roles["Tâm"].SetInjured(State.phase==2&&!State.Done("D2_04")&&State.activeTask!="D2_04");
             PlaceChildWithMother();
-            if(phaseChanged){phaseFade=1.2f;player.RestoreMotion(false);TickLight(10f);}
+            if(phaseChanged){phaseFade=1.2f;player.RestoreMotion(false);TickLight(10f);ResetActorsForNewDay();}
             health.CinematicInvulnerable=State.Done("N3_WOUND")&&!State.Done("N3_CRAWL")||State.activeTask=="N3_08";
             combat.ReloadDurationMultiplier=State.wounded?1.35f:1;
             if(State.finished)health.CinematicInvulnerable=true;

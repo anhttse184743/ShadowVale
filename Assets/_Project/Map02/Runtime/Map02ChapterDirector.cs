@@ -107,29 +107,19 @@ namespace ShadowVale.Map01
             {
                 var actor=new GameObject("Actor slot — "+role);actor.transform.SetParent(root.transform);var slot=actor.AddComponent<Map02ChapterActor>();slot.role=role;roles.Add(role,slot);var art=Layout?.actors?.FirstOrDefault(a=>a.role==role)?.prefab;
                 if(art==null&&(role==Guard||role==SeatedGuard))art=GuardArt;
-                if(art!=null&&!(arrival?.Passengers?.Length>=3&&(role=="Hùng"||role=="Anh Thành")))slot.Bind(Instantiate(art).transform);
+                // Hùng is the one shared character model of both maps (Characters/HungVisual, Hung_V119), never the old Map 2 hung.fbx.
+                if(art!=null&&role!="Hùng")slot.Bind(Instantiate(art).transform);
             }
             TintGuards();
+            Vector3? hungFromBoat=null;
             if(arrival?.Passengers?.Length>=3)
             {
-                if(roles["Hùng"].visual==null)roles["Hùng"].Bind(arrival.Passengers[2]);
-                if(roles["Anh Thành"].visual==null)
-                {
-                    roles["Anh Thành"].Bind(arrival.Passengers[1]);
-                    // The boat commander's root is not at his soles: the arrival lifts it until his soles touch the bank.
-                    // Put the slot (the floor his day locomotion grounds to) on the bank itself, and leave the model
-                    // where the arrival stood it, so he neither floats once he moves nor sinks while the bank scene holds him.
-                    if(arrival.CurrentPhase==Map02Arrival.Phase.Gameplay)
-                    {
-                        var thanh=roles["Anh Thành"];var stood=thanh.visual.position;thanh.StopAt(arrival.SpawnPoints[1]);thanh.visual.position=stood;
-                    }
-                }
-                else
-                {
-                    // The boat uses Map 1's commander; the village uses Thành's named source model.
-                    roles["Anh Thành"].StopAt(arrival.Passengers[1].position);
-                    arrival.Passengers[1].gameObject.SetActive(false);
-                }
+                // The boat brought Map 1's own commander and Hùng; the village plays with its own (the same shared models a
+                // Map 2 save or the test tools use), standing where the boat party stood (26/11/2026).
+                roles["Anh Thành"].StopAt(arrival.SpawnPoints!=null?arrival.SpawnPoints[1]:arrival.Passengers[1].position);
+                arrival.Passengers[1].gameObject.SetActive(false);
+                hungFromBoat=arrival.SpawnPoints!=null?arrival.SpawnPoints[2]:arrival.Passengers[2].position;
+                arrival.Passengers[2].gameObject.SetActive(false);
             }
             if(roles["Hùng"].visual==null)
             {
@@ -140,7 +130,7 @@ namespace ShadowVale.Map01
                 hung.actor.transform.localPosition=Vector3.up*(-dimensions.hungSole*scale);
                 hung.actor.SetBool("Captive",false);hung.actor.SetBool("Wounded",true);hung.actor.SetBool("Dead",false);
                 hung.actor.Play(Map01HungVisual.WoundedState,0,0);
-                roles["Hùng"].Bind(hung.transform);roles["Hùng"].StopAt(sites["arrival"].position);
+                roles["Hùng"].Bind(hung.transform);roles["Hùng"].StopAt(hungFromBoat??sites["arrival"].position);
             }
             if(arrival?.Passengers==null){roles["Hùng"].StopAt(sites["arrival"].position+Vector3.right*1.4f);roles["Anh Thành"].StopAt(sites["arrival"].position+Vector3.left*1.4f);}
             foreach(var role in roles)initialRolePositions[role.Key]=role.Value.transform.position;

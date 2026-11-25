@@ -120,7 +120,10 @@ namespace ShadowVale.Map01
             // Give bridge rail carving a navigation update before chapter paths are surveyed.
             yield return null;
             yield return null;
-            player=arrival != null && arrival.Passengers != null ? arrival.Passengers[0].GetComponent<PlayerController>() : exploration != null ? exploration.player : FindFirstObjectByType<PlayerController>();
+            var boatNam=arrival != null && arrival.Passengers != null ? arrival.Passengers[0] : null;
+            // From the boat, the village's own Nam takes over (Map02Mission.Handover): one Nam for Map 2 however it is reached.
+            if (boatNam != null && exploration != null && exploration.player != null) { player=TakeOverFromBoat(boatNam,exploration.player); PlaysVillageNam=true; }
+            else player=boatNam != null ? boatNam.GetComponent<PlayerController>() : exploration != null ? exploration.player : FindFirstObjectByType<PlayerController>();
             if (player == null) { Debug.LogError("Map 2 has no player to bind.",this); yield break; }
             combat=player.GetComponent<PlayerCombat>();health=player.GetComponent<Health>();
             cameraRig=FindObjectsByType<ThirdPersonCamera>(FindObjectsSortMode.None).FirstOrDefault(c=>c.GetComponent<Camera>() != null && c.GetComponent<Camera>().enabled);
@@ -154,6 +157,7 @@ namespace ShadowVale.Map01
             if(GetComponent<Map01FoliageReveal>()==null)gameObject.AddComponent<Map01FoliageReveal>();
             if(GetComponent<Map02SightCover>()==null)gameObject.AddComponent<Map02SightCover>();
             InitializeCharacter();
+            ApplyCarried();
             logisticsCredit=arrival?.LogisticsCredit??0;
             trader=CampTrader.Install(gameObject, Bag, true,
                 () => Ready && !World.story.failed && Chapter.State.phase==5 && !Chapter.State.finished &&
