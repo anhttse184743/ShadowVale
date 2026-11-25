@@ -346,8 +346,10 @@ namespace ShadowVale.Map01
             private readonly float runLength,idleLength;
             private float sampleTime,movementWeight;
             private readonly Mesh baked=new Mesh();
+            private readonly System.Collections.Generic.List<Vector3> bakedVertices=new();
             private readonly SkinnedMeshRenderer[] skins;
             private readonly Map01SkinContact contact;
+            private readonly bool bakeWithScale;
             public PosePlayer(Animator actor,Transform characterRoot,AnimationClip moving,AnimationClip resting)
             {
                 this.actor=actor;this.characterRoot=characterRoot;controller=actor.runtimeAnimatorController;rootMotion=actor.applyRootMotion;culling=actor.cullingMode;
@@ -359,8 +361,10 @@ namespace ShadowVale.Map01
                 run.SetSpeed(0);idle.SetSpeed(0);
                 mixer=AnimationMixerPlayable.Create(graph,2);graph.Connect(idle,0,mixer,0);graph.Connect(run,0,mixer,1);
                 AnimationPlayableOutput.Create(graph,"Run and settle",actor).SetSourcePlayable(mixer);graph.Play();
-                skins=actor.GetComponentsInChildren<SkinnedMeshRenderer>();
-                contact=new Map01SkinContact(actor);
+                var replacement=actor.transform.Find("Nam_AoBaBa_Visual");
+                bakeWithScale=replacement!=null;
+                skins=(replacement!=null?replacement:actor.transform).GetComponentsInChildren<SkinnedMeshRenderer>();
+                if(!bakeWithScale)contact=new Map01SkinContact(actor);
             }
             public void Sample(float time,float weight)
             {
@@ -387,8 +391,8 @@ namespace ShadowVale.Map01
                         ground=Mathf.Max(ground,hit.point.y);
                 }
                 if(float.IsNegativeInfinity(ground))ground=characterRoot.position.y;
-                float sole=contact.LowestY();
-                if(float.IsInfinity(sole))foreach(var skin in skins){skin.BakeMesh(baked);foreach(var v in baked.vertices)sole=Mathf.Min(sole,skin.transform.TransformPoint(v).y);}
+                float sole=contact?.LowestY()??float.PositiveInfinity;
+                if(float.IsInfinity(sole))sole=Map01CinematicPose.LowestVisibleY(skins,baked,bakedVertices,bakeWithScale);
                 if(!float.IsInfinity(sole))actor.transform.position+=Vector3.up*Mathf.Clamp(ground-sole,-.35f,.35f);
             }
             public void Dispose()

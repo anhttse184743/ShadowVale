@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
@@ -17,7 +18,9 @@ namespace ShadowVale.Map01 {
         readonly float[] layers;
         readonly Map01SkinContact contact;
         readonly SkinnedMeshRenderer[] skins;
+        readonly bool bakeWithScale;
         readonly Mesh baked=new Mesh();
+        readonly List<Vector3> bakedVertices=new();
         PlayableGraph graph;
         AnimationClipPlayable playable;
         AnimationClip selected,secondaryClip;
@@ -28,7 +31,13 @@ namespace ShadowVale.Map01 {
             actor=target;originalAvatar=target.avatar;controller=actor.runtimeAnimatorController;rootMotion=actor.applyRootMotion;culling=actor.cullingMode;
             localPosition=actor.transform.localPosition;localRotation=actor.transform.localRotation;
             layers=new float[controller!=null?actor.layerCount:0];for(int i=0;i<layers.Length;i++)layers[i]=actor.GetLayerWeight(i);
-            contact=skinGrounding?Map01InteractionWarmup.Contact(actor):null;skins=actor.GetComponentsInChildren<SkinnedMeshRenderer>();
+            if(skinGrounding) {
+                var replacement=actor.transform.Find("Nam_AoBaBa_Visual");
+                bakeWithScale=replacement!=null;
+                skins=(replacement!=null?replacement:actor.transform).GetComponentsInChildren<SkinnedMeshRenderer>();
+                // The replacement's remapped bind poses give a different height from its rendered skin.
+                if(!bakeWithScale)contact=Map01InteractionWarmup.Contact(actor);
+            }
             actor.runtimeAnimatorController=null;actor.applyRootMotion=false;actor.cullingMode=AnimatorCullingMode.AlwaysAnimate;
             if(poseAvatar!=null&&poseAvatar!=actor.avatar)BindAvatar(poseAvatar);
             graph=PlayableGraph.Create("Map 1 rescue pose");graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);graph.Play();
@@ -87,10 +96,21 @@ namespace ShadowVale.Map01 {
             if(controller!=null)for(int i=0;i<Mathf.Min(layers.Length,actor.layerCount);i++)actor.SetLayerWeight(i,layers[i]);
         }
         public void Ground(float floor) {
-            if(contact==null)return;
-            float sole=contact.LowestY();
-            if(float.IsInfinity(sole))foreach(var skin in skins)if(skin!=null){skin.BakeMesh(baked);foreach(var p in baked.vertices)sole=Mathf.Min(sole,skin.transform.TransformPoint(p).y);}
+            if(skins==null)return;
+            float sole=contact?.LowestY()??float.PositiveInfinity;
+            if(float.IsInfinity(sole))sole=LowestVisibleY(skins,baked,bakedVertices,bakeWithScale);
             if(!float.IsInfinity(sole))actor.transform.position+=Vector3.up*Mathf.Clamp(floor-sole,-.4f,.4f);
+        }
+        internal static float LowestVisibleY(SkinnedMeshRenderer[] skins,Mesh mesh,List<Vector3> vertices,bool useScale) {
+            float lowest=float.PositiveInfinity;
+            foreach(var skin in skins) {
+                if(skin==null||!skin.enabled||skin.forceRenderingOff||!skin.gameObject.activeInHierarchy)continue;
+                skin.BakeMesh(mesh,useScale);
+                mesh.GetVertices(vertices);
+                var toWorld=skin.transform.localToWorldMatrix;
+                foreach(var point in vertices)lowest=Mathf.Min(lowest,toWorld.MultiplyPoint3x4(point).y);
+            }
+            return lowest;
         }
         public static AnimationClip Clip(string name)=>Map01InteractionWarmup.Asset<AnimationClip>("Rescue/Story/"+name);
     }
