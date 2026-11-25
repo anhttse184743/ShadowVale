@@ -70,8 +70,7 @@ namespace ShadowVale.Map01
             string role=null;var person=mapTwo?.Companion(out role);
             if(person!=null){float distance=Vector3.Distance(mapTwo.Player.position,person.position);notes+="\n"+role+" · "+distance.ToString("0")+" m · Đang theo sau";}
             float notesHeight = string.IsNullOrEmpty(notes) ? 0 : objectiveSmall.CalcHeight(new GUIContent(notes), 292) + 18;
-            float escortHeight = ShowObjectiveEscortHealth ? 45 : 0;
-            float height = Mathf.Max(152, 258 + textHeight + (guiding ? 32 : 0) + c3Height + notesHeight + escortHeight + 14 - 186);
+            float height = Mathf.Max(152, 258 + textHeight + (guiding ? 32 : 0) + c3Height + notesHeight + 14 - 186);
             // See-through: a faint shade and shadowed lettering instead of the plate, so the
             // world stays visible behind the objective.
             HudFill(new Rect(28, 186, 337, height), new Color(.02f, .03f, .02f, .22f * GUI.color.a));
@@ -103,9 +102,7 @@ namespace ShadowVale.Map01
                 float noteAlpha = GUI.color.a;
                 HudFill(new Rect(49, c3y + 3, 292, 1), new Color(.6f, .51f, .3f, .5f * noteAlpha));
                 ShadowLabel(new Rect(49, c3y + 12, 292, notesHeight - 18), notes, objectiveSmall);
-                c3y += notesHeight;
             }
-            if (ShowObjectiveEscortHealth) DrawObjectiveEscortHealth(c3y + 4);
             GUI.color = previousColor;
             GUI.matrix = previousMatrix;
         }
