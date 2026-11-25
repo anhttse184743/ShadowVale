@@ -15,14 +15,14 @@ namespace ShadowVale.Map01
     /// </summary>
     public sealed partial class Map02ChapterDirector
     {
-        public const float CoverSeconds=30,FocusWindow=3,FocusScale=.25f,FocusLead=.8f,CoverFailShow=2.6f,CoverLeash=.6f,CoverAimZoom=.45f,CoverReload=.5f;
+        public const float CoverSeconds=30,FocusWindow=3,FocusScale=.25f,FocusLead=.8f,CoverFailShow=2.6f,CoverZone=4,CoverZoneGrace=2,CoverAimZoom=.45f,CoverReload=.5f,OutlineWidth=.0016f,OutlineStartWidth=.03f,OutlineCloseSeconds=.55f,CoverMusicVolume=.38f,CoverMusicFadeIn=1.5f,CoverMusicFadeOut=4f;
         /// <summary>Seconds into the crawl when each wave comes out, and how many men are in it.</summary>
         public static readonly float[] WaveAt={3,6,9,12,15,18,21,24,27};   // a man every 3 s (25/11/2026)
         public static readonly int[] WaveSize={1,1,1,1,1,1,1,1,1};   // one man at a time
         const string Escort="N3_08";
         float hungDitchAt;
         Vector3[] hungCanal;float panClock;int pansDone;ParticleSystem sparks;
-        int liveWave=-1;float focusLead,focusLeft=-1,coverFailClock=-1,coverFixedStep;bool focusSlowed;Material outlineMaterial,outlineMask;Vector3[] coverSpots;
+        int liveWave=-1;float focusLead,focusLeft=-1,coverFailClock=-1,coverFixedStep;bool focusSlowed;Material outlineMaterial,outlineMask;AudioSource coverMusic;bool coverMusicPaused,coverFailedLeaving;float zoneWarning=-1;LineRenderer coverZone;float outlineStartedAt=-10;Vector3[] coverSpots;
         readonly System.Collections.Generic.Dictionary<Map02ChapterEnemy,System.Collections.Generic.List<GameObject>> outlines=new();AnimatorUpdateMode namUpdateMode;
         Animator NamAnimator=>Mission!=null&&Mission.Player!=null?Mission.Player.GetComponentInChildren<Animator>():null;
         public Vector3[] HungCanal=>hungCanal??=BuildCanal();
@@ -153,11 +153,44 @@ namespace ShadowVale.Map01
             if(cc!=null)cc.enabled=true;Physics.SyncTransforms();
         }
         /// <summary>Covering Hùng, Nam stays put on the bank: only aiming and firing.</summary>
-        Vector3 HoldCoverMovement(Vector3 displacement)=>CoverFireActive?new Vector3(0,displacement.y,0):displacement;
+        /// <summary>Nam moves freely inside the cover zone; nothing holds him (the zone is enforced by detection, below).</summary>
+        Vector3 HoldCoverMovement(Vector3 displacement)=>displacement;
+        float CoverZoneOffset=>markers.TryGetValue(Escort,out var mark)&&Mission?.Player!=null?Vector3.ProjectOnPlane(Mission.Player.position-mark.transform.position,Vector3.up).magnitude:0;
+        /// <summary>Seconds left to get back into the cover zone, or -1 while Nam is inside it.</summary>
+        public float CoverZoneWarning=>zoneWarning;
+        /// <summary>Covering Hùng, Nam may shift about his spot on the bank (<see cref="CoverZone"/> m). Step out and he is
+        /// warned; stay out <see cref="CoverZoneGrace"/> s, or go far beyond it, and he is seen: the cover fails.</summary>
         void HoldCoverPosition()
         {
-            if(!CoverFireActive||sceneTask!=null||!markers.TryGetValue(Escort,out var mark))return;
-            if(Vector3.ProjectOnPlane(Mission.Player.position-mark.transform.position,Vector3.up).magnitude>CoverLeash+1.5f)PlaceAtCoverSpot();
+            if(!CoverFireActive||sceneTask!=null||CoverFailed){zoneWarning=-1;DrawCoverZone(false,false);return;}
+            float off=CoverZoneOffset;bool outside=off>CoverZone;
+            DrawCoverZone(true,outside);
+            if(!outside){zoneWarning=-1;return;}
+            if(zoneWarning<0)zoneWarning=CoverZoneGrace;
+            zoneWarning-=Mission.Paused||ForestMenu.Visible?0:Time.unscaledDeltaTime;
+            if(zoneWarning<=0||off>CoverZone+3)FailCover(true);
+        }
+        void DrawCoverZone(bool show,bool outside)
+        {
+            if(!show){if(coverZone!=null)coverZone.enabled=false;return;}
+            if(!markers.TryGetValue(Escort,out var mark))return;
+            if(coverZone==null)
+            {
+                var ring=new GameObject("Cover zone ring");ring.transform.SetParent(root.transform,false);
+                coverZone=ring.AddComponent<LineRenderer>();coverZone.loop=true;coverZone.useWorldSpace=true;coverZone.widthMultiplier=.06f;coverZone.positionCount=48;
+                coverZone.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;coverZone.receiveShadows=false;
+                var plain=new Material(Map01Fx.Unlit){name="Cover zone ring",hideFlags=HideFlags.DontSave,mainTexture=null};if(plain.HasProperty("_BaseMap"))plain.SetTexture("_BaseMap",null);coverZone.sharedMaterial=plain;
+                var center=mark.transform.position;
+                for(int i=0;i<coverZone.positionCount;i++)
+                {
+                    var p=center+Quaternion.Euler(0,i*360f/coverZone.positionCount,0)*Vector3.forward*CoverZone;
+                    p.y=Physics.Raycast(p+Vector3.up*3,Vector3.down,out var hit,8,~0,QueryTriggerInteraction.Ignore)?hit.point.y+.06f:center.y+.06f;
+                    coverZone.SetPosition(i,p);
+                }
+            }
+            coverZone.enabled=true;
+            var color=outside?new Color(1,.15f,.1f,.55f+.35f*Mathf.Sin(Time.unscaledTime*12)):new Color(.95f,.85f,.55f,.28f);
+            coverZone.startColor=coverZone.endColor=color;
         }
         void BeginCoverFocus()
         {
@@ -180,10 +213,39 @@ namespace ShadowVale.Map01
             focusSlowed=false;Time.timeScale=Mission!=null&&Mission.Paused?0:1;Time.fixedDeltaTime=coverFixedStep;
             PlayerTime.IgnoreSlowMotion=false;var nam=NamAnimator;if(nam!=null)nam.updateMode=namUpdateMode;
         }
-        void FailCover()
+        /// <summary>The battle music under the cover fire (Resources/Map02Cover/CoverBattleMusic, a 30 s cut of the last-mission
+        /// track): it comes in as Nam takes the bank, keeps going through retries, pauses with the game, and once the cover is
+        /// over it fades away under Hùng's run to the tracks. Real-time, so the slow does not drag it.</summary>
+        void TickCoverMusic(bool hush)
         {
-            EndCoverFocus();coverFailClock=0;rig.Shake(.25f,.5f);
-            Mission.Say("Hùng bị phát hiện! Yểm trợ thất bại.");
+            if(!ready)return;
+            bool on=CoverFireActive&&sceneTask==null&&!State.finished;
+            if(coverMusic==null)
+            {
+                if(!on)return;
+                var clip=Resources.Load<AudioClip>("Map02Cover/CoverBattleMusic");if(clip==null)return;
+                coverMusic=gameObject.AddComponent<AudioSource>();coverMusic.clip=clip;coverMusic.loop=true;coverMusic.playOnAwake=false;
+                coverMusic.spatialBlend=0;coverMusic.volume=0;coverMusic.bypassListenerEffects=true;coverMusic.priority=16;
+            }
+            if(hush){if(coverMusic.isPlaying){coverMusic.Pause();coverMusicPaused=true;}return;}
+            float dt=Mathf.Min(Time.unscaledDeltaTime,.1f);
+            if(on)
+            {
+                if(!coverMusic.isPlaying){if(coverMusicPaused)coverMusic.UnPause();else coverMusic.Play();coverMusicPaused=false;}
+                coverMusic.volume=Mathf.MoveTowards(coverMusic.volume,CoverMusicVolume,dt*CoverMusicVolume/CoverMusicFadeIn);
+            }
+            else if(coverMusic.isPlaying||coverMusicPaused)
+            {
+                if(coverMusicPaused){coverMusic.UnPause();coverMusicPaused=false;}
+                coverMusic.volume=Mathf.MoveTowards(coverMusic.volume,0,dt*CoverMusicVolume/CoverMusicFadeOut);
+                if(coverMusic.volume<=0){coverMusic.Stop();coverMusic.time=0;}
+            }
+        }
+        public bool CoverMusicPlaying=>coverMusic!=null&&coverMusic.isPlaying&&coverMusic.volume>0;
+        void FailCover(bool leftZone=false)
+        {
+            EndCoverFocus();coverFailClock=0;zoneWarning=-1;coverFailedLeaving=leftZone;rig.Shake(.25f,.5f);
+            Mission.Say(leftZone?"Nam rời vị trí và bị phát hiện! Yểm trợ thất bại.":"Hùng bị phát hiện! Yểm trợ thất bại.");
         }
         /// <summary>Returns true when Hùng has reached the tracks and the sacrifice begins.</summary>
         bool TickCover(Map02ChapterTask t,float dt)
@@ -285,14 +347,20 @@ namespace ShadowVale.Map01
                         r.shadowCastingMode=UnityEngine.Rendering.ShadowCastingMode.Off;r.receiveShadows=false;r.sharedMaterials=Enumerable.Repeat(material,filter.sharedMesh.subMeshCount).ToArray();parts.Add(copy);
                     }
                 }
-                outlines[man]=parts;
+                outlines[man]=parts;outlineStartedAt=Time.unscaledTime;   // the rim closes in on him as he comes out
             }
         }
         void TickOutlines()
         {
             if(outlines.Count==0)return;
             foreach(var man in outlines.Keys.Where(m=>m==null||m.Dead||!CoverFocusActive).ToArray()){foreach(var rim in outlines[man])if(rim!=null)Destroy(rim);outlines.Remove(man);}
-            if(outlineMaterial!=null)outlineMaterial.SetColor("_Color",new Color(1,.08f,.05f)*(.8f+.2f*Mathf.Sin(Time.unscaledTime*7)));   // a gentle blink
+            if(outlineMaterial==null)return;
+            // As a man comes out the rim starts as a wide red halo and closes onto his silhouette, flashing, so the eye
+            // goes to him; then it settles to a thin rim with a gentle blink.
+            float since=Time.unscaledTime-outlineStartedAt,closing=Mathf.Clamp01(since/OutlineCloseSeconds),eased=1-(1-closing)*(1-closing)*(1-closing);
+            outlineMaterial.SetFloat("_Width",Mathf.Lerp(OutlineStartWidth,OutlineWidth,eased));
+            float glow=closing<1?(Mathf.Repeat(since,.12f)<.07f?1.25f:.45f):.8f+.2f*Mathf.Sin(Time.unscaledTime*7);
+            outlineMaterial.SetColor("_Color",new Color(1,.08f,.05f)*glow);
         }
         void ClearOutlines(){foreach(var parts in outlines.Values)foreach(var rim in parts)if(rim!=null)Destroy(rim);outlines.Clear();}
         public int OutlinedMen=>outlines.Count(p=>p.Key!=null&&!p.Key.Dead&&p.Value.Any(r=>r!=null&&r.name=="Focus outline"));
@@ -303,12 +371,16 @@ namespace ShadowVale.Map01
             if(CoverFailed)
             {
                 GUI.color=new Color(0,0,0,.55f);GUI.DrawTexture(new Rect(0,0,1600,900),Texture2D.whiteTexture);GUI.color=tint;
-                GUI.Label(new Rect(300,350,1000,200),"HÙNG BỊ PHÁT HIỆN\nYỂM TRỢ THẤT BẠI\nThử lại…",new GUIStyle(label){fontSize=34,fontStyle=FontStyle.Bold,alignment=TextAnchor.MiddleCenter,normal={textColor=new Color(1,.85f,.8f)}});
+                GUI.Label(new Rect(300,350,1000,200),(coverFailedLeaving?"NAM RỜI VỊ TRÍ · BỊ PHÁT HIỆN":"HÙNG BỊ PHÁT HIỆN")+"\nYỂM TRỢ THẤT BẠI\nThử lại…",new GUIStyle(label){fontSize=34,fontStyle=FontStyle.Bold,alignment=TextAnchor.MiddleCenter,normal={textColor=new Color(1,.85f,.8f)}});
                 return;
             }
             GUI.color=new Color(0,0,0,.55f);GUI.DrawTexture(new Rect(560,108,480,18),Texture2D.whiteTexture);
             GUI.color=new Color(.92f,.8f,.45f);GUI.DrawTexture(new Rect(560,108,480*Mathf.Clamp01(State.taskProgress),18),Texture2D.whiteTexture);GUI.color=tint;
             GUI.Label(new Rect(560,128,700,30),$"Hùng đang bò tới xe tăng · đợt lính {Mathf.Min(State.coverWave+(liveWave>=0?1:0),WaveAt.Length)}/{WaveAt.Length}",new GUIStyle(label){fontSize=18});
+            if(zoneWarning>=0)
+            {
+                GUI.Label(new Rect(400,300,800,90),$"QUAY LẠI VỊ TRÍ YỂM TRỢ!\nRời vùng là bị phát hiện · {zoneWarning:0.0}",new GUIStyle(label){fontSize=30,fontStyle=FontStyle.Bold,alignment=TextAnchor.MiddleCenter,normal={textColor=new Color(1,.35f,.3f)}});
+            }
             if(!CoverFocusActive)return;
             // Slowed: a cold tint and the seconds left; the men themselves carry a red outline (OutlineWave).
             GUI.color=new Color(.05f,.08f,.12f,.22f);GUI.DrawTexture(new Rect(0,0,1600,900),Texture2D.whiteTexture);

@@ -239,7 +239,7 @@ namespace ShadowVale.Map01
             bool hush=!ready||Mission.Paused||ForestMenu.Visible||Mission.World.story.failed;
             PauseMealCrickets(hush);PauseSupperSound(hush);TickAmbience(Mathf.Min(Time.deltaTime,.1f),hush);
             if(ready)SyncNightAudioPause();
-            TickChapterSoundscape();
+            TickChapterSoundscape();TickCoverMusic(hush);
             if(ready)SetBinoculars((binocularHeld||Keyboard.current?.fKey.isPressed==true)&&!Mission.InputBlocked&&!ForestMenu.Visible);
             if(nightWarningAudio!=null){if(Mission.Paused||ForestMenu.Visible)nightWarningAudio.Pause();else nightWarningAudio.UnPause();}
             if(!ready||Mission.Paused||ForestMenu.Visible)return;
