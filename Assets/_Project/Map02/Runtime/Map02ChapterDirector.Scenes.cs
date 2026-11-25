@@ -30,7 +30,7 @@ namespace ShadowVale.Map01
             protectedBefore=health.CinematicInvulnerable;health.CinematicInvulnerable=true;
             BeginPerformance(task);PlanEntrances(task);StageTalk(task);StartLine();
         }
-        void Speak(){voice.Stop();pendingVoice=null;lineClock=0;OnPerformanceLine();if(HoldMealVoice)return;if(!Map02DialogueCatalog.HasApprovedRecording(lines[lineIndex]))return;if(CoughFirst(lines[lineIndex])){lineClock=-CoughLead;pendingVoice=lines[lineIndex].RecordingId;return;}voice.Play(lines[lineIndex].RecordingId);}
+        void Speak(){voice.Stop();pendingVoice=null;lineClock=0;if(HoldMealVoice)return;if(!Map02DialogueCatalog.HasApprovedRecording(lines[lineIndex]))return;if(CoughFirst(lines[lineIndex])){lineClock=-CoughLead;pendingVoice=lines[lineIndex].RecordingId;return;}voice.Play(lines[lineIndex].RecordingId);}
         void TickScene(float dt)
         {
             sceneClock+=dt;lineClock+=dt;TickPendingVoice();TickMealVoice();TickMealCrickets();TickSupperSound();TickChildPeek();
@@ -84,6 +84,7 @@ namespace ShadowVale.Map01
         void EndScene()
         {
             if(sceneTask==null)return; // Repeated finish/skip calls are harmless.
+            if(sceneTask.id=="N2_05")LandAtNightRest();
             foreach(var e in entrances)if(Vector3.Distance(e.actor.transform.position,e.to)>=1.5f)e.actor.StopAt(e.to); // Skipped walks end where the scene meant them to.
             ClearEntrances();
             ReleaseConversation();ReleaseDayScene();ReleaseSceneAction();var task=sceneTask;if(task.id=="N3_09")roles["Hùng"].StopAt(RetreatPoint);int purpose=scenePurpose;scenePurpose=0;namPose?.Dispose();namPose=null;foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();voice.Stop();sceneTask=null;lines=null;rig.ClearCinematicView();health.CinematicInvulnerable=protectedBefore;

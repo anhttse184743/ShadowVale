@@ -10,17 +10,21 @@ namespace ShadowVale.Map01
             var lower=actor.GetBoneTransform(left?HumanBodyBones.LeftLowerArm:HumanBodyBones.RightLowerArm);
             var hand=actor.GetBoneTransform(left?HumanBodyBones.LeftHand:HumanBodyBones.RightHand);
             if(upper==null||lower==null||hand==null||weight<=0)return;
-            var wrist=hand.localRotation;var origin=upper.position;
-            float a=Vector3.Distance(origin,lower.position),b=Vector3.Distance(lower.position,hand.position);
+            ReachLimb(upper,lower,hand,target,elbowHint,actor.transform.forward,-actor.transform.up,weight);
+        }
+        internal static void ReachLimb(Transform upper,Transform lower,Transform end,Vector3 target,Vector3 bendHint,Vector3 forward,Vector3 down,float weight)
+        {
+            var endRotation=end.localRotation;var origin=upper.position;
+            float a=Vector3.Distance(origin,lower.position),b=Vector3.Distance(lower.position,end.position);
             var delta=target-origin;float d=Mathf.Clamp(delta.magnitude,Mathf.Abs(a-b)+.005f,(a+b)*.97f);
-            var axis=delta.sqrMagnitude>.00001f?delta.normalized:actor.transform.forward;
-            var bend=Vector3.ProjectOnPlane(elbowHint-origin,axis);
-            if(bend.sqrMagnitude<.00001f)bend=Vector3.ProjectOnPlane(-actor.transform.up,axis);
+            var axis=delta.sqrMagnitude>.00001f?delta.normalized:forward;
+            var bend=Vector3.ProjectOnPlane(bendHint-origin,axis);
+            if(bend.sqrMagnitude<.00001f)bend=Vector3.ProjectOnPlane(down,axis);
             bend.Normalize();float along=(a*a+d*d-b*b)/(2*d);
             var elbow=origin+axis*along+bend*Mathf.Sqrt(Mathf.Max(0,a*a-along*along));
             upper.rotation=Quaternion.Slerp(upper.rotation,Quaternion.FromToRotation(lower.position-origin,elbow-origin)*upper.rotation,weight);
-            lower.rotation=Quaternion.Slerp(lower.rotation,Quaternion.FromToRotation(hand.position-lower.position,origin+axis*d-lower.position)*lower.rotation,weight);
-            hand.localRotation=wrist;
+            lower.rotation=Quaternion.Slerp(lower.rotation,Quaternion.FromToRotation(end.position-lower.position,origin+axis*d-lower.position)*lower.rotation,weight);
+            end.localRotation=endRotation;
         }
         public static void Radio(Animator actor,float weight)
         {

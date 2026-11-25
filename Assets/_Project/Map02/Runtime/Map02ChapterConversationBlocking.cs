@@ -15,7 +15,7 @@ namespace ShadowVale.Map01
         {
             ReleaseConversation();
             // These scenes stage physical action rather than a face-to-face conversation.
-            if (task.id == "N3_09" || task.id == "DAWN" || task.id == "N3_WOUND" || task.kind == "crawl") return;
+            if (task.id == "N2_05" || task.id == "N3_09" || task.id == "DAWN" || task.id == "N3_WOUND" || task.kind == "crawl") return;
             // Day 3 onwards is staged scene by scene (people walk into frame, the supper places, the ditch):
             // moving Nam beside the first speaker or pinning that speaker would undo it.
             if (task.phase >= 4) return;

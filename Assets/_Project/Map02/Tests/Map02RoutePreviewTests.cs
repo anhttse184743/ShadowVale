@@ -83,6 +83,7 @@ namespace ShadowVale.Map01.Tests
         [TestCase("D2_03","D2_04",2,"escortScout")]
         [TestCase("D2_05","D2_06",2,"antenna")]
         [TestCase("N2_03","N2_04",3,"inspectRoute")]
+        [TestCase("N2_04","N2_05",3,"cinematic")]
         public void MissionCheckpointsKeepTheNextTaskPending(string completed,string pending,int phase,string kind)
         {
             var type=Type.GetType("ShadowVale.Map01.Editor.Map02RoutePreview, ShadowVale.Map01.Editor",true);
@@ -99,6 +100,7 @@ namespace ShadowVale.Map01.Tests
         [TestCase("PlayScoutRescue","ShadowVale/Map 2/Checkpoint cứu Tâm · M2_D2_04")]
         [TestCase("PlayAntenna","ShadowVale/Map 2/Checkpoint lắp ăng-ten · M2_D2_06")]
         [TestCase("PlayEvacuationChoices","ShadowVale/Map 2/Checkpoint kiểm tra đường sơ tán · N2_04")]
+        [TestCase("PlayNightTwoRest","ShadowVale/Map 2/Checkpoint Hùng ngủ cuối Đêm 2 · N2_05")]
         public void MissionCheckpointMenusRemainAvailable(string method,string menu)
         {
             var type=Type.GetType("ShadowVale.Map01.Editor.Map02RoutePreview, ShadowVale.Map01.Editor",true);
@@ -122,7 +124,7 @@ namespace ShadowVale.Map01.Tests
             Assert.NotNull(mission?.Chapter);
             var type=Type.GetType("ShadowVale.Map01.Editor.Map02RoutePreview, ShadowVale.Map01.Editor",true);
             var apply=type.GetMethod("ApplyAfter",BindingFlags.Public|BindingFlags.Static);
-            var completed=new[]{"D2_03","D2_05","N2_03"};var pending=new[]{"D2_04","D2_06","N2_04"};
+            var completed=new[]{"D2_03","D2_05","N2_03","N2_04"};var pending=new[]{"D2_04","D2_06","N2_04","N2_05"};
             for(int i=0;i<completed.Length;i++)
             {
                 apply.Invoke(null,new object[]{mission,completed[i]});yield return null;
@@ -156,6 +158,15 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsTrue(mission.Retry());yield return null;
                 Assert.AreEqual(pending[i],mission.Chapter.TrackedTask.id,"Retry changed the checkpoint task.");
                 Assert.Less(Vector3.Distance(position,mission.Player.position),1f,"Retry must return to the selected checkpoint.");
+                if(pending[i]=="N2_05")
+                {
+                    Assert.AreEqual(3,mission.Chapter.State.phase);
+                    Assert.IsNull(mission.Chapter.CurrentScene,"Opening or retrying the checkpoint must wait for player interaction.");
+                    var marker=Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId=="N2_05");
+                    Assert.IsTrue(marker.WithinReach(mission.Player));
+                    Assert.IsTrue(mission.Interact(marker));
+                    Assert.AreEqual("N2_05",mission.Chapter.CurrentScene?.id);
+                }
             }
             yield return new ExitPlayMode();
         }
