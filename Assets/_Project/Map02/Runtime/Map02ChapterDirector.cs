@@ -25,7 +25,7 @@ namespace ShadowVale.Map01
         public void HoldBinoculars(bool held){binocularHeld=held;SetBinoculars(held&&!Mission.InputBlocked);}
         void SetBinoculars(bool held){if(ScoutEscortActive||held&&player?.IsProne==true&&EvacuationChoicesActive&&State.night2EvacuationChoice==1)held=false;if(binocular==held)return;binocular=held;rig?.SetBinoculars(held,held?2:1);}
         public bool LocksInput=>Busy||DayReturningInput||State.finished||Transitioning;
-        public bool MovementLocked=>DuckStartled;   // Night 3 no longer holds Nam in place: the cover fire (N3_08) only slows him (CoverPace)
+        public bool MovementLocked=>DuckStartled;   // the cover fire (N3_08) holds Nam on his spot through the movement constraint, not here, so he can still aim
         /// <summary>Covering Hùng (N3_08): Nam can shift along the bank, slowly, never sprint.</summary>
         public bool CoverFireActive=>State.activeTask=="N3_08"&&!State.Done("N3_08");
         public const float CoverPace=.45f;
@@ -243,6 +243,7 @@ namespace ShadowVale.Map01
             if(ready)SetBinoculars((binocularHeld||Keyboard.current?.fKey.isPressed==true)&&!Mission.InputBlocked&&!ForestMenu.Visible);
             if(nightWarningAudio!=null){if(Mission.Paused||ForestMenu.Visible)nightWarningAudio.Pause();else nightWarningAudio.UnPause();}
             if(!ready||Mission.Paused||ForestMenu.Visible)return;
+            if(focusSlowed&&(!CoverFireActive||sceneTask!=null))EndCoverFocus();   // the cover ended some other way: never leave time slowed
             float dt=Mathf.Min(Time.deltaTime,.1f);
             if(EvacuationCaptureActive){TickEvacuationCapture(dt);return;}
             if(NightPatrolFailureActive){TickNightPatrolFailure(dt);return;}

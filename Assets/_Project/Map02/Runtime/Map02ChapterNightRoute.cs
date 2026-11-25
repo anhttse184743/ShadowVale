@@ -89,6 +89,7 @@ namespace ShadowVale.Map01
         }
         public Vector3 ConstrainNightMovement(Vector3 from,Vector3 displacement)
         {
+            if(CoverFireActive)return HoldCoverMovement(displacement);   // N3_08: Nam holds his spot on the bank
             if(UndergroundStore?.ContainsAuthorizedPlayer(from)==true)return displacement;
             if(!NightBankMovementRestricted)return displacement;
             // Vertical motion is untouched. Clip horizontal travel before CharacterController.Move,

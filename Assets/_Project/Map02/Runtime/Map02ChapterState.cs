@@ -139,6 +139,8 @@ namespace ShadowVale.Map01
         public float taskProgress;
         /// <summary>Seconds of the cover fire (N3_08) so far; taskProgress is then Hùng's share of the ditch.</summary>
         public float coverClock;
+        /// <summary>Waves of the tank's escort Nam has cleared in the cover fire (N3_08).</summary>
+        public int coverWave;
         public int workCount;
         public bool wounded,hungDead,radioTransferred,tankDestroyed,artilleryFired,finished,gearStored;
         /// <summary>Nam's shoulder has been dressed with a medkit: it no longer bleeds.</summary>
@@ -151,7 +153,7 @@ namespace ShadowVale.Map01
         {
             var t=Map02ChapterDefinition.Load().Find(id);
             if(!Available(t))return false;
-            completed.Add(id);activeTask=null;taskProgress=0;coverClock=0;workCount=0;carry=null;
+            completed.Add(id);activeTask=null;taskProgress=0;coverClock=0;coverWave=0;workCount=0;carry=null;
             if(id=="D2_05")wireStage=2;
             if(id=="N3_04")evacuation=60;
             if(id=="N3_05A")evacuation=70;if(id=="N3_05B")evacuation=80;if(id=="N3_05C")evacuation=90;
@@ -203,7 +205,7 @@ namespace ShadowVale.Map01
             if(version!=3||phase<0||phase>6||completed==null||enemies==null||combatGroups==null||completed.Distinct().Count()!=completed.Count||
                 completed.Any(id=>def.Find(id)==null)||completed.Any(id=>(def.Find(id).requires??Array.Empty<string>()).Any(pre=>!Done(pre)))||
                 enemies.Any(e=>e==null||string.IsNullOrEmpty(e.id)||e.health<0||!float.IsFinite(e.health))||enemies.Select(e=>e.id).Distinct().Count()!=enemies.Count||
-                workCount<0||!float.IsFinite(taskProgress)||taskProgress<0||!float.IsFinite(coverClock)||coverClock<0||evacuation<0||evacuation>100||
+                workCount<0||!float.IsFinite(taskProgress)||taskProgress<0||!float.IsFinite(coverClock)||coverClock<0||coverWave<0||evacuation<0||evacuation>100||
                 (hungDead&&!Done("N3_09"))||(finished&&!Done("DAWN")))throw new System.IO.InvalidDataException("Tiến trình ba ngày đêm Map 2 không hợp lệ.");
         }
         public static string PhaseName(int p)=>new[]{"NGÀY 1 · CÓ CHỖ NGHỈ CHÂN","ĐÊM 1 · BUỔI TRỰC CHUNG","NGÀY 2 · NGƯỜI CHƯA TRỞ VỀ","ĐÊM 2 · GIỮ MỘT KHOẢNG YÊN","NGÀY 3 · LO CHO NGƯỜI Ở LẠI","ĐÊM 3 · KHÔNG KỊP TRỞ TAY","BÌNH MINH · CHỖ TRỰC CÒN TRỐNG"}[Mathf.Clamp(p,0,6)];

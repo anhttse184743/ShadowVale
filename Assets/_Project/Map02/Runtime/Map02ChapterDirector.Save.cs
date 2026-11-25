@@ -31,6 +31,7 @@ namespace ShadowVale.Map01
             var held=Map02ChapterDefinition.Load().Find(State.activeTask);if(held!=null&&held.kind=="defend"&&State.taskProgress>1)State.taskProgress=Mathf.Clamp01(State.taskProgress/Mathf.Max(1,held.seconds));
             if(State.completed.Count==0)foreach(var pair in initialRolePositions)roles[pair.Key].StopAt(pair.Value);
             placedActors=false;phaseApplied=-1;ApplyState();
+            if(State.activeTask==Escort&&!State.Done(Escort))ResumeCover();   // a load mid-cover: the unfinished wave starts again
             foreach(var saved in State.actors)if(roles.TryGetValue(saved.role,out var actor))actor.StopAt(saved.position);
             PlaceChildWithMother();
             if(State.phase==2||State.phase==3){roles["Anh Thành"].StopAt(sites["command"].position);if(State.Done("D2_04"))PlaceRecoveredScout();}
@@ -40,7 +41,7 @@ namespace ShadowVale.Map01
             if(State.phase>=5&&State.Done("N3_02"))foreach(var name in new[]{"Ông Sáu","Chị Lành"})if(Vector3.Distance(roles[name].transform.position,sites["southStore"].position)>8)roles[name].StopAt(sites["southStore"].position+(name=="Ông Sáu"?Vector3.right:Vector3.left)*1.4f);
             if(State.phase>=5&&State.Done("N3_03")&&Vector3.Distance(roles["Bé Tí"].transform.position,sites["southStore"].position)>8)roles["Bé Tí"].StopAt(SafeSpot("Bé Tí"));
             hungCanal=null;
-            if(State.activeTask=="N3_08"&&State.taskProgress>1){State.coverClock=State.taskProgress;State.taskProgress=Mathf.Clamp01(State.coverClock/CoverSlowest);} // Saves that counted seconds.
+            if(State.activeTask=="N3_08"&&State.taskProgress>1){State.coverClock=State.taskProgress;State.taskProgress=Mathf.Clamp01(State.coverClock/CoverSeconds);} // Saves that counted seconds.
             if(State.phase==5&&State.Done("N3_00")&&!State.hungDead)
             {
                 if(State.activeTask=="N3_08"){TickTank(0,true);roles["Hùng"].StopAt(Along(HungCanal,State.taskProgress*Length(HungCanal)));pansDone=Mathf.FloorToInt(State.taskProgress*3);}
@@ -79,6 +80,7 @@ namespace ShadowVale.Map01
             CancelEvacuationCapture();
             CancelEvacuationChoices();
             CancelNightPatrolFailure();
+            EndCoverFocus();coverFailClock=-1;liveWave=-1;
             UndergroundStore?.CancelTraversal();
             CancelNightRadio();
             EndScoutEscort();

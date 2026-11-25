@@ -40,7 +40,7 @@ namespace ShadowVale.Map01
                 if(State.Done("N3_09"))return .9f;
                 if(sceneTask?.id=="N3_09")return Mathf.Lerp(.6f,.9f,Mathf.Clamp01(sceneClock/FadeAt));
                 if(State.Done("N3_08"))return .6f;
-                if(State.activeTask=="N3_08")return Mathf.Lerp(.35f,.6f,Mathf.Clamp01(State.coverClock/CoverSlowest));
+                if(State.activeTask=="N3_08")return Mathf.Lerp(.35f,.6f,Mathf.Clamp01(State.coverClock/CoverSeconds));
                 if(State.Done("N3_07")||sceneTask?.id=="N3_07")return sceneTask?.id=="N3_07"?Mathf.Lerp(.15f,.35f,Mathf.Clamp01(sceneClock/60)):.35f;
                 return 0;
             }

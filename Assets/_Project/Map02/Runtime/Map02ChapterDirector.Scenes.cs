@@ -20,7 +20,7 @@ namespace ShadowVale.Map01
             if(!State.Available(task))return;
             lines=Map02ChapterDefinition.Load().Lines(task.scene??"").Skip(from).Take(take>0?take:int.MaxValue).ToArray();scenePurpose=0;lines=DayLines(task,lines);
             if(lines.Length==0){Finish(task);return;}
-            DropBarks();if(task.id=="N3_07")SpawnEscort(); // They come up behind the tank.
+            DropBarks();   // the tank's escort no longer stands behind it from N3_07: it comes out in waves during the cover (N3_08)
             ReleaseDayFreePose();sceneTask=task;sceneCoughed=false;pendingVoice=null;PrepareSceneMotion(task);PrepareDayScene(task);lineIndex=0;lineClock=sceneClock=skipHeld=0;lockedPosition=Mission.Player.position;lockedRotation=Mission.Player.rotation;if(State.phase>=2||IsStandingDialogue(task)&&task.id!="D1_05"&&!dayArrivalStarting)StageConversation(task);
             player.RestoreMotion(false);DialogueVoice.StopAll();
             var actor=Mission.Player.GetComponentInChildren<Animator>();namIdle=actor.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned");namPose=new Map01CinematicPose(actor,null,IsStandingDialogue(task));
