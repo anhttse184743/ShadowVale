@@ -87,7 +87,7 @@ namespace ShadowVale.Gameplay.Combat
         /// <summary>The scene draws the weapon slots in its own HUD, so the stock hotbar row
         /// (<c>WeaponHotbar</c>) stays hidden. The number keys are 1/2/3 either way.</summary>
         public bool DrawsOwnWeaponHud { get; set; }
-        public float AttackCooldownRemaining => Mathf.Max(0, _nextAttackTime - Time.time);
+        public float AttackCooldownRemaining => Mathf.Max(0, _nextAttackTime - PlayerTime.Now);
 
         /// <summary>Half-angle of the cone the next shot can land in, in degrees.</summary>
         public float CurrentSpreadDegrees => _spread.ConeHalfAngle(CurrentStance(), _aiming, _equippedKind, _equipped != null && _equipped.UsesM16Handling);
@@ -243,7 +243,7 @@ namespace ShadowVale.Gameplay.Combat
         /// layer too, but leaves the rifle in its carry: that does not count.
         /// </summary>
         public bool GunPresentationReady { get; set; } = true;
-        internal bool RifleLevelled => Gun != null && GunPresentationReady && (_aiming || _firingHeld || Time.time < _fireHoldUntil);
+        internal bool RifleLevelled => Gun != null && GunPresentationReady && (_aiming || _firingHeld || PlayerTime.Now < _fireHoldUntil);
 
         internal bool RecoilPosePlaying => animator != null && _upperBodyLayer > 0
             && (animator.GetCurrentAnimatorStateInfo(_upperBodyLayer).IsName("Attack_Rifle")
@@ -273,7 +273,7 @@ namespace ShadowVale.Gameplay.Combat
             if (animator == null || animator.runtimeAnimatorController == null) return;
             animator.Rebind();
             _upperBodyHoldUntil=_faceCameraHoldUntil=_fireHoldUntil=0;
-            _nextAttackTime=Time.time;
+            _nextAttackTime=PlayerTime.Now;
             _magazine?.CancelReload();_spread.Reset();
             _rifleBody=animator.HasState(0,Animator.StringToHash(RifleLocomotionState));
             _upperBodyLayer = animator.GetLayerIndex(UpperBodyLayer);
@@ -399,8 +399,8 @@ namespace ShadowVale.Gameplay.Combat
             }
             else
             {
-                _magazine?.Tick(Time.deltaTime, DrawRounds);
-                _spread.Tick(Time.deltaTime, _equipped != null && _equipped.UsesM16Handling);
+                _magazine?.Tick(PlayerTime.DeltaTime, DrawRounds);
+                _spread.Tick(PlayerTime.DeltaTime, _equipped != null && _equipped.UsesM16Handling);
             }
 
             if (dead || _handsOccupied || (InputAllowed != null && !InputAllowed()))

@@ -1,3 +1,4 @@
+using ShadowVale.Gameplay.Combat;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
@@ -37,6 +38,8 @@ namespace ShadowVale.Gameplay.Player
         [SerializeField] private float mouseSensitivity = 0.12f;
         /// <summary>The player's multiplier from the options menu (1 = as tuned).</summary>
         public static float SensitivityScale = 1f;
+        /// <summary>Scales the aimed field of view; below 1 a scene can zoom the shoulder aim in further (Map 2 cover fire).</summary>
+        public float AimFovScale { get; set; } = 1f;
         [SerializeField] private float minPitch = -35f;
         [SerializeField] private float maxPitch = 70f;
         [SerializeField] private float zoomSpeed = 0.01f;
@@ -183,15 +186,15 @@ namespace ShadowVale.Gameplay.Player
         {
             if (amplitude <= 0f || seconds <= 0f) return;
             if (amplitude < ShakeAmplitude) return;
-            _shakeAmplitude = amplitude; _shakeLength = seconds; _shakeUntil = Time.time + seconds;
+            _shakeAmplitude = amplitude; _shakeLength = seconds; _shakeUntil = PlayerTime.Now + seconds;
         }
         /// <summary>Current shake in metres, fading to zero over its length.</summary>
-        public float ShakeAmplitude => Time.time < _shakeUntil ? _shakeAmplitude * ((_shakeUntil - Time.time) / _shakeLength) : 0f;
+        public float ShakeAmplitude => PlayerTime.Now < _shakeUntil ? _shakeAmplitude * ((_shakeUntil - PlayerTime.Now) / _shakeLength) : 0f;
         private void ApplyShake()
         {
             float amount = ShakeAmplitude;
             if (amount <= 0f) return;
-            float t = Time.time * 25f;
+            float t = PlayerTime.Now * 25f;
             transform.position += new Vector3(Mathf.PerlinNoise(t, 0.3f) - .5f, Mathf.PerlinNoise(0.7f, t) - .5f, Mathf.PerlinNoise(t, t) - .5f) * (2f * amount);
         }
         private void LateUpdate()
@@ -215,22 +218,22 @@ namespace ShadowVale.Gameplay.Player
             // After the player's input, so a pull that cancels the climb is credited before any
             // of it is handed back. Before the binoculars too: a burst fired just before raising
             // them still settles.
-            RecoverRecoil(Time.deltaTime);
+            RecoverRecoil(PlayerTime.DeltaTime);
 
             if (_binoculars || _scope)
             {
                 // Straight from the eyes: no arm, no shoulder, so nothing of the character in view.
                 Quaternion look = Quaternion.Euler(_pitch, _yaw, 0f);
-                _camera.fieldOfView = Mathf.Lerp(_camera.fieldOfView, _binoculars?_activeBinocularFov:_scopeFov, 1f - Mathf.Exp(-binocularZoomSpeed * Time.deltaTime));
+                _camera.fieldOfView = Mathf.Lerp(_camera.fieldOfView, _binoculars?_activeBinocularFov:_scopeFov, 1f - Mathf.Exp(-binocularZoomSpeed * PlayerTime.DeltaTime));
                 transform.SetPositionAndRotation(target.position + Vector3.up * (_binoculars?_eyeHeight:_scopeEyeHeight) + look * Vector3.forward * 0.15f, look);
                 return;
             }
 
-            _aimBlend = Mathf.MoveTowards(_aimBlend, _aiming ? 1f : 0f, aimBlendSpeed * Time.deltaTime);
-            _camera.fieldOfView = Mathf.Lerp(hipFov, aimFov, _aimBlend);
+            _aimBlend = Mathf.MoveTowards(_aimBlend, _aiming ? 1f : 0f, aimBlendSpeed * PlayerTime.DeltaTime);
+            _camera.fieldOfView = Mathf.Lerp(hipFov, aimFov * AimFovScale, _aimBlend);
 
             Quaternion rotation = Quaternion.Euler(_pitch, _yaw, 0f);
-            _stancePivot = Mathf.Lerp(_stancePivot, target.GetComponent<PlayerController>()?.IsProne == true ? .55f : pivotHeight, 1-Mathf.Exp(-10*Time.deltaTime));
+            _stancePivot = Mathf.Lerp(_stancePivot, target.GetComponent<PlayerController>()?.IsProne == true ? .55f : pivotHeight, 1-Mathf.Exp(-10*PlayerTime.DeltaTime));
             Vector3 head = target.position + Vector3.up * _stancePivot;
             Vector3 shoulder = rotation * Vector3.right * Mathf.Lerp(shoulderOffset, aimShoulderOffset, _aimBlend);
             float radius = CameraCollisionRadius();
@@ -244,7 +247,7 @@ namespace ShadowVale.Gameplay.Player
 
             _currentDistance = desired < _currentDistance
                 ? desired
-                : Mathf.Lerp(_currentDistance, desired, 1f - Mathf.Exp(-8f * Time.deltaTime));
+                : Mathf.Lerp(_currentDistance, desired, 1f - Mathf.Exp(-8f * PlayerTime.DeltaTime));
 
             Vector3 cameraPosition = pivot - rotation * Vector3.forward * _currentDistance;
             float? surfaceFloor = SurfaceCameraFloor?.Invoke();
@@ -424,7 +427,7 @@ namespace ShadowVale.Gameplay.Player
             for (int i = 0; i < _hidden.Length; i++)
                 if (_hidden[i] != null) _hidden[i].shadowCastingMode = _hiddenModes[i];
             _hidden = System.Array.Empty<Renderer>();
-            _camera.fieldOfView = Mathf.Lerp(hipFov, aimFov, _aimBlend);
+            _camera.fieldOfView = Mathf.Lerp(hipFov, aimFov * AimFovScale, _aimBlend);
         }
     }
 }

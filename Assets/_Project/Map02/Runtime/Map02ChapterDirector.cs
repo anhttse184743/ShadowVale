@@ -244,6 +244,7 @@ namespace ShadowVale.Map01
             if(nightWarningAudio!=null){if(Mission.Paused||ForestMenu.Visible)nightWarningAudio.Pause();else nightWarningAudio.UnPause();}
             if(!ready||Mission.Paused||ForestMenu.Visible)return;
             if(focusSlowed&&(!CoverFireActive||sceneTask!=null))EndCoverFocus();   // the cover ended some other way: never leave time slowed
+            rig.AimFovScale=CoverFireActive&&sceneTask==null?CoverAimZoom:1;   // covering Hùng, aiming brings the tank's escort in closer
             float dt=Mathf.Min(Time.deltaTime,.1f);
             if(EvacuationCaptureActive){TickEvacuationCapture(dt);return;}
             if(NightPatrolFailureActive){TickNightPatrolFailure(dt);return;}
@@ -256,7 +257,7 @@ namespace ShadowVale.Map01
             if(UndergroundStore?.IsClimbing==true)return;
             if(phaseFade>0){phaseFade=Mathf.Max(0,phaseFade-dt);TickLight(dt);return;}
             if(State.finished)return;
-            TickTank(dt);TickBoats(dt);TickDressing(dt);TickStepsRehearsal(dt);TickAllies();TickWreck(dt);TickBleeding(dt);
+            TickTank(dt);TickBambooCrush(dt);TickBoats(dt);TickDressing(dt);TickStepsRehearsal(dt);TickAllies();TickWreck(dt);TickBleeding(dt);
             bool leading=LeadingWounded; // Day 3 / Night 3 escorts and Tâm's keep Nam armed and at pace.
             bool carrying=!string.IsNullOrEmpty(State.carry)||leading||DayActivityActive;if(carrying!=handsBusy||carrying&&!combat.HandsOccupied){handsBusy=carrying;combat.SetHandsOccupied(carrying);}   // a bag refresh (each save) frees the hands
             player.SurfaceSpeedMultiplier=leading?EscortPace:!string.IsNullOrEmpty(State.carry)?CarryPace:CoverFireActive?CoverPace:State.wounded?WoundedPace:1;

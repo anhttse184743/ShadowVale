@@ -95,6 +95,6 @@ namespace ShadowVale.Gameplay.Combat
                 if (clip != null && clip.name == clipName) return clip.length;
             return 0f;
         }
-        public void RestoreAttackCooldown(float remaining) => _nextAttackTime = Time.time + Mathf.Max(0, remaining);
+        public void RestoreAttackCooldown(float remaining) => _nextAttackTime = PlayerTime.Now + Mathf.Max(0, remaining);
     }
 }

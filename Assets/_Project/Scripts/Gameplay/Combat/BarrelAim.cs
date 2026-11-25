@@ -110,7 +110,7 @@ namespace ShadowVale.Gameplay.Combat
 
             bool wanted = _combat.RifleLevelled;
             bool rising = wanted && _weight < 1f;
-            _weight = Mathf.MoveTowards(_weight, wanted ? 1f : 0f, Time.deltaTime / BlendTime);
+            _weight = Mathf.MoveTowards(_weight, wanted ? 1f : 0f, PlayerTime.DeltaTime / BlendTime);
             if (_weight <= 0f || _spine.Length == 0)
             {
                 _settled = false;
@@ -121,7 +121,7 @@ namespace ShadowVale.Gameplay.Combat
             // or reloading, it stays where the aim had it, so neither is mistaken for the aim pose.
             if (!_settled || rising) _held = _pose;
             else if (wanted && !_combat.IsReloading && !_combat.RecoilPosePlaying)
-                _held = Vector3.Slerp(_held, _pose, 1f - Mathf.Exp(-Time.deltaTime / PoseSettleTime)).normalized;
+                _held = Vector3.Slerp(_held, _pose, 1f - Mathf.Exp(-PlayerTime.DeltaTime / PoseSettleTime)).normalized;
 
             Camera view = Camera.main;
             if (view == null) return;
@@ -131,7 +131,7 @@ namespace ShadowVale.Gameplay.Combat
                 ? hit.distance : gun.Range;
             // The direction follows the view at once; only the distance it converges at is eased, so the
             // barrel does not snap as the crosshair crosses the edge of something near.
-            _focus = _settled ? Mathf.Lerp(_focus, focus, 1f - Mathf.Exp(-Time.deltaTime / RefocusTime)) : focus;
+            _focus = _settled ? Mathf.Lerp(_focus, focus, 1f - Mathf.Exp(-PlayerTime.DeltaTime / RefocusTime)) : focus;
             _settled = true;
             Vector3 point = eye + look * Mathf.Max(_focus, nearest);
 

@@ -15,14 +15,15 @@ namespace ShadowVale.Map01
     /// </summary>
     public sealed partial class Map02ChapterDirector
     {
-        public const float CoverSeconds=30,FocusWindow=3,FocusScale=.25f,FocusLead=.8f,CoverFailShow=2.6f,CoverLeash=.6f;
+        public const float CoverSeconds=30,FocusWindow=3,FocusScale=.25f,FocusLead=.8f,CoverFailShow=2.6f,CoverLeash=.6f,CoverAimZoom=.45f;
         /// <summary>Seconds into the crawl when each wave comes out, and how many men are in it.</summary>
-        public static readonly float[] WaveAt={5,14,23};
-        public static readonly int[] WaveSize={2,3,3};
+        public static readonly float[] WaveAt={4,9,14,19,24};
+        public static readonly int[] WaveSize={1,1,1,1,1};   // one man at a time (25/11/2026)
         const string Escort="N3_08";
         float hungDitchAt;
         Vector3[] hungCanal;float panClock;int pansDone;ParticleSystem sparks;
-        int liveWave=-1;float focusLead,focusLeft=-1,coverFailClock=-1,coverFixedStep;bool focusSlowed;Texture2D focusRing;
+        int liveWave=-1;float focusLead,focusLeft=-1,coverFailClock=-1,coverFixedStep;bool focusSlowed;Texture2D focusRing;Vector3[] coverSpots;AnimatorUpdateMode namUpdateMode;
+        Animator NamAnimator=>Mission!=null&&Mission.Player!=null?Mission.Player.GetComponentInChildren<Animator>():null;
         public Vector3[] HungCanal=>hungCanal??=BuildCanal();
         /// <summary>A wave is out and its 3 s are running (time slowed, rings shown).</summary>
         public bool CoverFocusActive=>focusLeft>=0;
@@ -50,28 +51,74 @@ namespace ShadowVale.Map01
         }
         static string WaveId(int wave,int i)=>Escort+"_w"+wave+"_"+i;
         Map02ChapterEnemy[] WaveMen(int wave)=>Enemies.Where(e=>e!=null&&e.group==Escort&&e.id.StartsWith(Escort+"_w"+wave+"_")).ToArray();
-        /// <summary>Each wave steps out from behind the tank, on alternating sides, so the rings are spread across the hull.</summary>
+        /// <summary>Each man steps out beside the tank where Nam can see him clearly, alternating sides; never behind the hull
+        /// or the bamboo, where he could not be shot in three seconds (25/11/2026).</summary>
         void SpawnWave(int wave)
         {
-            var dock=tank!=null?tank.transform.position:sites["tankDock"].position;
-            var forward=Vector3.ProjectOnPlane(Mission.Player.position-dock,Vector3.up).normalized;if(forward.sqrMagnitude<.01f)forward=Vector3.forward;
-            var right=Vector3.Cross(Vector3.up,forward);
-            var spots=new[]{right*3.6f,-right*3.6f,-forward*4.5f+right*1.6f,right*5.4f-forward*2f,-right*5.4f-forward*2f};
-            int offset=wave*2;
+            var spots=coverSpots??=ClearSpots();   // the tank stands still through the cover: worked out once
             for(int i=0;i<WaveSize[wave];i++)
             {
-                var p=dock+spots[(i+offset)%spots.Length];if(NavMesh.SamplePosition(p,out var hit,3,NavMesh.AllAreas))p=hit.position;
+                var p=spots[(wave+i)%spots.Length];
                 SpawnEnemy(WaveId(wave,i),Escort,p,100,true);
-                var man=Enemies[Enemies.Count-1];man.transform.rotation=Quaternion.LookRotation(-forward);
+                var man=Enemies[Enemies.Count-1];var face=Vector3.ProjectOnPlane(Mission.Player.position-p,Vector3.up);if(face.sqrMagnitude>.01f)man.transform.rotation=Quaternion.LookRotation(face);
                 man.HitPoints.Damaged+=_=>{if(!man.Dead)man.HitPoints.TakeDamage(10000,man.transform.position,Mission.Player.gameObject);};   // one hit drops a marked man
             }
             if(!State.combatGroups.Contains(Escort))State.combatGroups.Add(Escort);
             liveWave=wave;focusLead=FocusLead;focusLeft=-1;
             Mission.Say(wave==0?"Lính địch nhô ra sau xe tăng!":"Thêm lính sau xe tăng!");
         }
+        /// <summary>Spots beside the tank in clear sight of Nam's eye, best first, alternating left and right of the hull.</summary>
+        Vector3[] ClearSpots()
+        {
+            var tankAt=tank!=null?tank.transform.position:sites["tankDock"].position;var eye=Mission.Player.position+Vector3.up*1.5f;
+            var toward=Vector3.ProjectOnPlane(Mission.Player.position-tankAt,Vector3.up).normalized;if(toward.sqrMagnitude<.01f)toward=Vector3.forward;
+            var blockers=SightBlockers(tankAt);
+            var left=new System.Collections.Generic.List<(Vector3 p,float score)>();var right=new System.Collections.Generic.List<(Vector3 p,float score)>();
+            foreach(float angle in new[]{35f,50f,65f,80f})foreach(float distance in new[]{4f,5.5f})foreach(int side in new[]{-1,1})
+            {
+                var p=tankAt+Quaternion.AngleAxis(angle*side,Vector3.up)*toward*distance;
+                if(!NavMesh.SamplePosition(p,out var hit,2.5f,NavMesh.AllAreas))continue;p=hit.position;
+                float score=Hidden(eye,p+Vector3.up*1.3f,blockers)+Hidden(eye,p+Vector3.up*.6f,blockers)*.5f+angle*.002f;
+                (side<0?left:right).Add((p,score));
+            }
+            bool anyClear=left.Concat(right).Any(s=>s.score<1);   // a clear spot exists: use only clear ones
+            var l=left.Where(s=>!anyClear||s.score<1).OrderBy(s=>s.score).Select(s=>s.p).ToArray();var r=right.Where(s=>!anyClear||s.score<1).OrderBy(s=>s.score).Select(s=>s.p).ToArray();
+            var spots=new System.Collections.Generic.List<Vector3>();
+            for(int i=0;i<Mathf.Max(l.Length,r.Length);i++){if(i<r.Length)spots.Add(r[i]);if(i<l.Length)spots.Add(l[i]);}
+            if(spots.Count==0)spots.Add(tankAt+toward*4);
+            return spots.ToArray();
+        }
+        /// <summary>Scenery near the tank that can stand between Nam and a man: props and foliage drawn as objects (they often
+        /// have no collider) and the terrain's own trees.</summary>
+        (Bounds[] boxes,Vector3[] trees) SightBlockers(Vector3 around)
+        {
+            var boxes=FindObjectsByType<Renderer>(FindObjectsSortMode.None).Where(r=>r.enabled&&r.gameObject.activeInHierarchy&&!(r is SkinnedMeshRenderer)&&!(r is ParticleSystemRenderer)&&!(r is LineRenderer)
+                &&(tank==null||!r.transform.IsChildOf(tank.transform))&&!r.transform.IsChildOf(Mission.Player)&&r.bounds.size.magnitude<25&&Vector3.Distance(r.bounds.center,around)<45).Select(r=>r.bounds).ToArray();
+            var trees=new System.Collections.Generic.List<Vector3>();
+            foreach(var terrain in Terrain.activeTerrains)
+            {
+                var data=terrain.terrainData;if(data==null)continue;
+                foreach(var tree in data.treeInstances){var w=terrain.transform.position+Vector3.Scale(tree.position,data.size);if(Vector3.Distance(w,around)<45)trees.Add(w);}
+            }
+            return (boxes,trees.ToArray());
+        }
+        /// <summary>0 when the line from the eye to the point is clear, more the more is in the way.</summary>
+        float Hidden(Vector3 eye,Vector3 point,(Bounds[] boxes,Vector3[] trees) blockers)
+        {
+            float hidden=0,length=Vector3.Distance(eye,point);var ray=new Ray(eye,(point-eye)/length);
+            foreach(var hit in Physics.RaycastAll(ray,length-.4f,~0,QueryTriggerInteraction.Ignore))
+                if(!hit.transform.IsChildOf(Mission.Player)&&hit.collider.GetComponentInParent<Map02ChapterEnemy>()==null)hidden+=hit.collider is TerrainCollider?5:2;
+            foreach(var box in blockers.boxes)if(box.IntersectRay(ray,out var at)&&at<length-.6f&&at>1)hidden+=1;
+            foreach(var tree in blockers.trees)
+            {
+                var flat=new Vector3(tree.x,0,tree.z);var a=new Vector3(eye.x,0,eye.z);var b=new Vector3(point.x,0,point.z);var ab=b-a;
+                float t=Mathf.Clamp01(Vector3.Dot(flat-a,ab)/Mathf.Max(ab.sqrMagnitude,.01f));if(t<.98f&&Vector3.Distance(a+ab*t,flat)<1.6f)hidden+=2;
+            }
+            return hidden;
+        }
         void StartCover(Map02ChapterTask t)
         {
-            health.CinematicInvulnerable=true;hungCanal=null;EndCoverFocus();coverFailClock=-1;liveWave=-1;
+            health.CinematicInvulnerable=true;hungCanal=null;coverSpots=null;EndCoverFocus();coverFailClock=-1;liveWave=-1;
             PlaceAtCoverSpot();
             ResumeCover();
             combat.Equip(WeaponKind.Rifle);combat.SetHandsOccupied(false);
@@ -109,7 +156,7 @@ namespace ShadowVale.Map01
         void BeginCoverFocus()
         {
             focusLeft=FocusWindow;
-            if(!focusSlowed){coverFixedStep=Time.fixedDeltaTime;focusSlowed=true;}
+            if(!focusSlowed){coverFixedStep=Time.fixedDeltaTime;focusSlowed=true;var nam=NamAnimator;if(nam!=null)namUpdateMode=nam.updateMode;}
             ApplyCoverTime();
         }
         void ApplyCoverTime()
@@ -117,12 +164,15 @@ namespace ShadowVale.Map01
             if(!focusSlowed)return;
             bool hold=Mission.Paused||ForestMenu.Visible;
             Time.timeScale=hold?0:FocusScale;Time.fixedDeltaTime=coverFixedStep*FocusScale;
+            // Only the world slows: Nam's firing, reloading, recoil, view and his own animation keep real pace.
+            PlayerTime.IgnoreSlowMotion=true;var nam=NamAnimator;if(nam!=null)nam.updateMode=AnimatorUpdateMode.UnscaledTime;
         }
         void EndCoverFocus()
         {
             focusLeft=-1;
             if(!focusSlowed)return;
             focusSlowed=false;Time.timeScale=Mission!=null&&Mission.Paused?0:1;Time.fixedDeltaTime=coverFixedStep;
+            PlayerTime.IgnoreSlowMotion=false;var nam=NamAnimator;if(nam!=null)nam.updateMode=namUpdateMode;
         }
         void FailCover()
         {
@@ -204,7 +254,7 @@ namespace ShadowVale.Map01
             for(int y=0;y<size;y++)for(int x=0;x<size;x++)
             {
                 float d=Vector2.Distance(new Vector2(x+.5f,y+.5f),new Vector2(size*.5f,size*.5f));
-                float a=Mathf.Clamp01(1-Mathf.Abs(d-56)/4.5f);pixels[y*size+x]=new Color32(255,255,255,(byte)(a*255));
+                float a=Mathf.Clamp01(1-Mathf.Abs(d-58)/2.2f);pixels[y*size+x]=new Color32(255,255,255,(byte)(a*255));
             }
             focusRing.SetPixels32(pixels);focusRing.Apply(false,true);return focusRing;
         }
@@ -224,14 +274,13 @@ namespace ShadowVale.Map01
             if(!CoverFocusActive)return;
             // Slowed: a cold tint, a red ring closing on each man still standing, and the seconds left.
             GUI.color=new Color(.05f,.08f,.12f,.22f);GUI.DrawTexture(new Rect(0,0,1600,900),Texture2D.whiteTexture);
-            var cam=rig.GetComponent<Camera>();float left=CoverFocusLeft/FocusWindow,size=Mathf.Lerp(44,120,left),pulse=.75f+.25f*Mathf.Sin(Time.unscaledTime*18);
+            var cam=rig.GetComponent<Camera>();float left=CoverFocusLeft/FocusWindow,size=Mathf.Lerp(44,120,left),pulse=.82f+.18f*Mathf.Sin(Time.unscaledTime*7);
             foreach(var e in CoverWaveEnemies)
             {
                 if(e.Dead)continue;
                 var p=cam.WorldToScreenPoint(e.transform.position+Vector3.up*1.25f);if(p.z<=0)continue;
                 float x=p.x*1600f/Screen.width,y=(Screen.height-p.y)*900f/Screen.height;
                 GUI.color=new Color(1,.12f,.08f,pulse);GUI.DrawTexture(new Rect(x-size*.5f,y-size*.5f,size,size),FocusRing());
-                GUI.color=new Color(1,.2f,.15f,.9f);GUI.DrawTexture(new Rect(x-3,y-3,6,6),Texture2D.whiteTexture);
             }
             GUI.color=tint;
             GUI.Label(new Rect(500,170,600,60),CoverFocusLeft.ToString("0.0"),new GUIStyle(label){fontSize=46,fontStyle=FontStyle.Bold,alignment=TextAnchor.MiddleCenter,normal={textColor=new Color(1,.3f,.25f)}});
