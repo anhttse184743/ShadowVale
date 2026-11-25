@@ -98,7 +98,15 @@ namespace ShadowVale.Map01
             // for a moment; read as airborne, it played a jump and its landing on the spot.
             if(body==null)body=motor.GetComponent<CharacterController>();
             bool nowGrounded=!motor.enabled||body==null||!body.enabled||motor.IsGrounded;
-            if(motor.JumpSequence!=jumpSequence||(!nowGrounded&&grounded))
+            // Claude 26/11 (approved step 1): a placement a few centimetres up or a step down a kerb left the ground for a few
+            // frames and played the whole jump and landing (0.55 s) on the spot. Only the jump key or a fall that lasts plays it,
+            // and a teleport (further than any run moves in a frame) drops a jump that was under way.
+            Vector3 root=motor.transform.position;
+            if(rootKnown&&(root-lastRoot).sqrMagnitude>TeleportMetres*TeleportMetres&&motor.JumpSequence==jumpSequence){airborneFor=0;jumping=landing=false;}
+            lastRoot=root;rootKnown=true;
+            airborneFor=nowGrounded?0:airborneFor+Time.deltaTime;
+            bool fell=!jumping&&airborneFor>=FallGraceSeconds&&airborneFor-Time.deltaTime<FallGraceSeconds;
+            if(motor.JumpSequence!=jumpSequence||fell)
             {
                 jumping=true;landing=false;jumpElapsed=0;jumpSequence=motor.JumpSequence;
             }
@@ -112,7 +120,8 @@ namespace ShadowVale.Map01
             grounded=nowGrounded;
             string id=null,prop=null;float frame=0,bodyFrame=-1,bodyWeight=1;
             bool owns=throwable||pistolOn||knife||jumping||landing||Time.time-holsterAt<1;
-            if(!owns){Release();return;}
+            if(!owns){FadeOut();return;}
+            fadeOutAt=-1;
             if(jumping||landing)
             {
                 string key=throwable?ThrowableKey():pistolOn?"pistol":knife?"knife":"unarmed";id="jump_"+key;var c=Clip(id);
@@ -166,8 +175,9 @@ namespace ShadowVale.Map01
             if(MotionId!=id)
             {
                 Array.Copy(last,previous,last.Length);transitionAt=Time.time;MotionId=id;
+                blendSeconds=BlendSeconds(id,frame,bodyWeight);
             }
-            float blend=Mathf.SmoothStep(0,1,(Time.time-transitionAt)/.1f);SourceFrame=frame;AppliedWeight=blend;
+            float blend=Mathf.SmoothStep(0,1,(Time.time-transitionAt)/blendSeconds);SourceFrame=frame;AppliedWeight=blend;
             if(bodyWeight>0&&!ownsTwist&&twist!=null){twist.BeginAuthoredPose();ownsTwist=true;}
             else if(bodyWeight==0&&ownsTwist&&twist!=null){twist.EndAuthoredPose();ownsTwist=false;}
             for(int i=0;i<bones.Length;i++)
@@ -240,12 +250,59 @@ namespace ShadowVale.Map01
         }
         void Release()
         {
+            ReleaseState();fadeOutAt=-1;
+            if(bones!=null)for(int i=0;i<bones.Length;i++)last[i]=Map01PistolAnimationData.Pose.Read(bones[i]);
+        }
+        void ReleaseState()
+        {
             AppliedWeight=0;MotionId=null;ActiveProp=null;
             foreach(var p in props.Values){p.root.SetActive(false);p.detached.SetActive(false);}
             SetKnifeHidden(false);
             SetHolsterHidden(false);
             if(ownsTwist&&twist!=null)twist.EndAuthoredPose();ownsTwist=false;
-            if(bones!=null)for(int i=0;i<bones.Length;i++)last[i]=Map01PistolAnimationData.Pose.Read(bones[i]);
+        }
+
+        // Claude 26/11 (approved step 1). Every take used to blend in over 0.1 s however far the hands had to go: a reload from
+        // the low carry moved the wrist 20 cm a frame (about 12 m/s). The blend now lasts as long as the hands need at about
+        // 3 m/s at its fastest, 0.1-0.4 s. Reactions (a stab, a shot, a throw, a jump) keep their snap.
+        const float TeleportMetres=1.5f,FallGraceSeconds=.15f,FadeOutSeconds=.2f,MinBlend=.1f,MaxBlend=.4f,BlendSecondsPerMetre=.5f;
+        float blendSeconds=MinBlend,fadeOutAt=-1,airborneFor;
+        Vector3 lastRoot;bool rootKnown;
+        Map01PistolAnimationData.Pose[] fadeFrom,measureHold;
+        float BlendSeconds(string id,float frame,float bodyWeight)
+        {
+            if(bodyWeight==0||id.StartsWith("jump_",StringComparison.Ordinal)||id=="knife_attack"||id=="pistol_fire"||id.EndsWith("_throw",StringComparison.Ordinal))return MinBlend;
+            var hips=actor.GetBoneTransform(HumanBodyBones.Hips);var left=actor.GetBoneTransform(HumanBodyBones.LeftHand);var right=actor.GetBoneTransform(HumanBodyBones.RightHand);
+            if(hips==null||left==null||right==null)return MinBlend;
+            if(measureHold==null||measureHold.Length!=bones.Length)measureHold=new Map01PistolAnimationData.Pose[bones.Length];
+            for(int i=0;i<bones.Length;i++)if(upper[i])measureHold[i]=Map01PistolAnimationData.Pose.Read(bones[i]);
+            for(int i=0;i<bones.Length;i++)if(upper[i])previous[i].Apply(bones[i]);
+            Vector3 l0=hips.InverseTransformPoint(left.position),r0=hips.InverseTransformPoint(right.position);
+            for(int i=0;i<bones.Length;i++)if(upper[i])Data.bones[i].At(frame).Apply(bones[i]);
+            Vector3 l1=hips.InverseTransformPoint(left.position),r1=hips.InverseTransformPoint(right.position);
+            for(int i=0;i<bones.Length;i++)if(upper[i])measureHold[i].Apply(bones[i]);
+            float metres=Mathf.Max(hips.TransformVector(l1-l0).magnitude,hips.TransformVector(r1-r0).magnitude);
+            return Mathf.Clamp(metres*BlendSecondsPerMetre,MinBlend,MaxBlend);
+        }
+
+        // Claude 26/11 (approved step 1). Handing the arms back to the Animator (to the rifle, or empty hands) cut over in one frame
+        // (wrists 25-29 cm). The last pose is now held and faded out over the Animator's in 0.2 s. A cinematic, a story action or
+        // death still takes the arms at once through Release().
+        void FadeOut()
+        {
+            if(MotionId!=null)
+            {
+                if(fadeFrom==null||fadeFrom.Length!=last.Length)fadeFrom=new Map01PistolAnimationData.Pose[last.Length];
+                Array.Copy(last,fadeFrom,last.Length);fadeOutAt=Time.time;ReleaseState();
+            }
+            if(fadeOutAt<0){Release();return;}
+            float weight=1f-Mathf.SmoothStep(0,1,(Time.time-fadeOutAt)/FadeOutSeconds);
+            if(weight<=0){Release();return;}
+            for(int i=0;i<bones.Length;i++)
+            {
+                var pose=Map01PistolAnimationData.Pose.Mix(Map01PistolAnimationData.Pose.Read(bones[i]),fadeFrom[i],weight);
+                pose.Apply(bones[i]);last[i]=pose;
+            }
         }
         void OnDisable(){if(Data!=null)Release();}
         void OnDestroy()
