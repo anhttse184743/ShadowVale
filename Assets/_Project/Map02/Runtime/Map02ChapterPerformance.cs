@@ -26,33 +26,99 @@ namespace ShadowVale.Map01
                 ownsPose=existing==null;pose=existing??new Map01CinematicPose(actor,skinGrounding:true);
                 if(actor.isHuman)muscles=new HumanPoseHandler(actor.avatar,actor.transform);
             }
-            public void Sample(float seconds,AnimationClip clip=null)
-            {pose.Sample(clip!=null?clip:idle,seconds,clip==null);actor.transform.SetLocalPositionAndRotation(local,rotation);}
-            public void FoldLegs(float amount)
+            public void Sample(float seconds,AnimationClip clip=null,bool loop=false)
+            {pose.Sample(clip!=null?clip:idle,seconds,loop||clip==null);actor.transform.SetLocalPositionAndRotation(local,rotation);}
+            public void SlowToIdle(AnimationClip walk,float phase,AnimationClip standing,float blend)
+            {
+                if(blend<=0){Sample(phase,walk,true);return;}
+                pose.SampleBlend(walk,phase,standing,0,blend,true);
+                actor.transform.SetLocalPositionAndRotation(local,rotation);
+            }
+            public float[] CaptureMuscles()
+            {
+                var p=new HumanPose();muscles.GetHumanPose(ref p);return p.muscles;
+            }
+            public void FoldLegs(float amount,float[] seatedMuscles=null,float openHands=0)
             {
                 if(muscles==null)return;var p=new HumanPose();muscles.GetHumanPose(ref p);
                 for(int i=0;i<HumanTrait.MuscleName.Length;i++)
-                {var n=HumanTrait.MuscleName[i];if(n.Contains("Upper Leg Front-Back"))p.muscles[i]=Mathf.Lerp(p.muscles[i],.65f,amount);else if(n.Contains("Lower Leg Stretch"))p.muscles[i]=Mathf.Lerp(p.muscles[i],-.8f,amount);}
+                {
+                    var n=HumanTrait.MuscleName[i];
+                    if(seatedMuscles!=null&&(n.Contains(" Leg ")||n.Contains(" Foot ")||n.Contains(" Toes ")))
+                        p.muscles[i]=Mathf.Lerp(p.muscles[i],seatedMuscles[i],amount);
+                    else if(seatedMuscles==null&&n.Contains("Upper Leg Front-Back"))p.muscles[i]=Mathf.Lerp(p.muscles[i],.65f,amount);
+                    else if(seatedMuscles==null&&n.Contains("Lower Leg Stretch"))p.muscles[i]=Mathf.Lerp(p.muscles[i],-.8f,amount);
+                    else if(openHands>0&&n.EndsWith(" Stretched",StringComparison.Ordinal))p.muscles[i]=Mathf.Lerp(p.muscles[i],.30f,openHands);
+                }
                 muscles.SetHumanPose(ref p);
             }
             public void PlaceHips(Vector3 point,Quaternion bodyRotation)
             {actor.transform.rotation=bodyRotation;var hips=actor.GetBoneTransform(HumanBodyBones.Hips);if(hips!=null)actor.transform.position+=point-hips.position;}
-            public void Ground(float floor)
+            public void Ground(float floor,float weight=1)
             {
                 float lowest=float.PositiveInfinity;
                 var replacement=actor.transform.Find("Nam_AoBaBa_Visual");
                 foreach(var skin in actor.GetComponentsInChildren<SkinnedMeshRenderer>())
-                {if(!skin.enabled||replacement!=null&&!skin.transform.IsChildOf(replacement))continue;skin.BakeMesh(groundMesh,replacement!=null);groundMesh.GetVertices(groundVertices);foreach(var v in groundVertices)lowest=Mathf.Min(lowest,skin.transform.TransformPoint(v).y);}
-                if(!float.IsPositiveInfinity(lowest))actor.transform.position+=Vector3.up*Mathf.Clamp(floor-lowest,-1,1);
+                {if(!skin.enabled||skin.forceRenderingOff||replacement!=null&&!skin.transform.IsChildOf(replacement))continue;skin.BakeMesh(groundMesh,replacement!=null);groundMesh.GetVertices(groundVertices);foreach(var v in groundVertices)lowest=Mathf.Min(lowest,skin.transform.TransformPoint(v).y);}
+                if(!float.IsPositiveInfinity(lowest))actor.transform.position+=Vector3.up*(Mathf.Clamp(floor-lowest,-1,1)*weight);
+            }
+            public void SettleBack(float surface,float weight)
+            {
+                var hips=actor.GetBoneTransform(HumanBodyBones.Hips).position;
+                var chest=actor.GetBoneTransform(HumanBodyBones.Chest).position;
+                var axis=Vector3.ProjectOnPlane(chest-hips,Vector3.up).normalized;
+                var across=Vector3.Cross(Vector3.up,axis);
+                var pelvisContact=new Vector3(0,float.PositiveInfinity,0);
+                var backContact=pelvisContact;
+                float torsoLength=Vector3.Dot(chest-hips,axis);
+                foreach(var skin in actor.GetComponentsInChildren<SkinnedMeshRenderer>())
+                {
+                    if(!skin.enabled||skin.forceRenderingOff)continue;
+                    skin.BakeMesh(groundMesh);groundMesh.GetVertices(groundVertices);
+                    foreach(var vertex in groundVertices)
+                    {
+                        var p=skin.transform.TransformPoint(vertex);var offset=p-hips;
+                        if(Mathf.Abs(Vector3.Dot(offset,across))>.155f)continue;
+                        float along=Vector3.Dot(offset,axis);
+                        if(Mathf.Abs(along)<.12f&&p.y<pelvisContact.y)pelvisContact=p;
+                        if(Mathf.Abs(along-torsoLength)<.115f&&p.y<backContact.y)backContact=p;
+                    }
+                }
+                if(float.IsInfinity(pelvisContact.y)||float.IsInfinity(backContact.y)){Ground(surface,weight);return;}
+                var contactAxis=backContact-pelvisContact;
+                float pitch=Mathf.Atan2(contactAxis.y,Vector3.Dot(contactAxis,axis))*Mathf.Rad2Deg;
+                var correction=Quaternion.AngleAxis(Mathf.Clamp(pitch,-15,15)*weight,across);
+                var anchoredPelvis=hips+correction*(pelvisContact-hips);
+                var anchoredBack=hips+correction*(backContact-hips);
+                float lift=(surface-Mathf.Min(anchoredPelvis.y,anchoredBack.y))*weight;
+                actor.transform.SetPositionAndRotation(hips+correction*(actor.transform.position-hips)+Vector3.up*lift,correction*actor.transform.rotation);
+            }
+            public void MeasureBlanketProfile(Transform mat,float back,float rowStep,float left,float columnStep,float[,] profile)
+            {
+                Array.Clear(profile,0,profile.Length);
+                foreach(var skin in actor.GetComponentsInChildren<SkinnedMeshRenderer>())
+                {
+                    if(!skin.enabled||skin.forceRenderingOff)continue;
+                    skin.BakeMesh(groundMesh);groundMesh.GetVertices(groundVertices);
+                    var intoMat=mat.worldToLocalMatrix*skin.transform.localToWorldMatrix;
+                    foreach(var v in groundVertices)
+                    {
+                        var p=intoMat.MultiplyPoint3x4(v);
+                        if(Mathf.Abs(p.x)>.48f||p.y<.025f||p.y>.56f)continue;
+                        int row=Mathf.RoundToInt((p.z-back)/rowStep),column=Mathf.RoundToInt((p.x-left)/columnStep);
+                        for(int i=Mathf.Max(0,row-2);i<=Mathf.Min(profile.GetLength(0)-1,row+2);i++)
+                            for(int j=Mathf.Max(0,column-2);j<=Mathf.Min(profile.GetLength(1)-1,column+2);j++)
+                                profile[i,j]=Mathf.Max(profile[i,j],p.y-.014f*Mathf.Abs(i-row)-.024f*Mathf.Abs(j-column));
+                    }
+                }
             }
             public void Dispose()
             {muscles?.Dispose();UnityEngine.Object.Destroy(groundMesh);if(ownsPose)pose.Dispose();if(actor!=null)actor.transform.SetLocalPositionAndRotation(local,rotation);if(role!=null){role.StopAt(position);role.transform.rotation=facing;role.ConversationHeld=false;}}
         }
         PerformanceActor performanceHung,performanceNam;
-        float nightRestAt=-1,nightOutroAt=-1;
+        float nightOutroAt=-1;
         GameObject nightJacket;Mesh jacketMesh;Material jacketMaterial;AudioSource performanceSound,nightTheme;
         GameObject performanceAudioRoot;
-        readonly System.Collections.Generic.Dictionary<Renderer,bool> quietFrameRenderers=new System.Collections.Generic.Dictionary<Renderer,bool>();
         bool jacketSoundPlayed;
         public string PerformanceBeat {get;private set;}="";
         public bool NightJacketVisible=>nightJacket!=null&&nightJacket.activeSelf;
@@ -66,19 +132,20 @@ namespace ShadowVale.Map01
             if(task.id!="D2_01"&&task.id!="D2_06"&&task.id!="N2_05")return;
             var hung=roles["Hùng"];if(hung.Animator!=null&&hung.Animator.isHuman)performanceHung=new PerformanceActor(hung.Animator,hung);
             var nam=Mission.Player.GetComponentInChildren<Animator>();if(nam!=null&&nam.isHuman)performanceNam=new PerformanceActor(nam,existing:namPose);
-            if(task.id=="N2_05")BuildNightJacket();
+            if(task.id=="N2_05")BeginNightRest();
+            if(task.id=="D2_06"&&performanceHung!=null)StageAntennaRadio();
         }
-        void OnPerformanceLine()
-        {if(sceneTask?.id=="N2_05"&&lineIndex>=5&&nightRestAt<0)nightRestAt=sceneClock;}
         bool PerformanceCanEnd()
         {
             if(sceneTask?.id!="N2_05")return true;
-            if(nightOutroAt<0){nightOutroAt=sceneClock;PerformanceBeat="Hùng thiếp ngủ";return false;}
+            if(sceneClock<nightWalkUntil)return false;
+            if(nightOutroAt<0){nightOutroAt=sceneClock;return false;}
             return sceneClock-nightOutroAt>=12;
         }
         void SamplePerformance()
         {
             if(sceneTask==null||performanceHung==null)return;
+            if(sceneTask.id=="N2_05"){SampleNightRest();return;}
             var hung=performanceHung.actor;var role=roles["Hùng"];var nam=performanceNam?.actor;
             performanceHung.Sample(sceneClock,sceneTask.id=="D2_01"?Layout.hungHurtReaction:sceneTask.id=="D2_06"?Layout.hungLeftRadio:null);
             if(sceneTask.id=="D2_01")
@@ -101,63 +168,7 @@ namespace ShadowVale.Map01
                 return;
             }
             if(sceneTask.id=="D2_06")
-            {PerformanceBeat="Hùng nối máy bằng tay trái";LeftRadioGesture(hung);return;}
-            if(nightRestAt<0)
-            {
-                PerformanceBeat="Làm lành tại điểm hẹn";
-                RotateBone(hung,HumanBodyBones.Head,new Vector3(4,lineIndex==1?-25:0,0),1);
-                if(nam!=null&&lineIndex>=2&&lineIndex<=4)RotateBone(nam,HumanBodyBones.Head,new Vector3(-3,0,Mathf.Sin(sceneClock*2)*2),1);
-                return;
-            }
-            PerformanceBeat=NightSilentOutro?"Ngủ và đắp áo":"Đổi ca tại chỗ nghỉ";
-            // Tâm rests beside this spot in gameplay. Exclude the non-speaking
-            // background actor from this close shot without changing his saved position.
-            if(quietFrameRenderers.Count==0&&roles["Tâm"].visual!=null)
-                foreach(var renderer in roles["Tâm"].visual.GetComponentsInChildren<Renderer>(true)){quietFrameRenderers[renderer]=renderer.forceRenderingOff;renderer.forceRenderingOff=true;}
-            var rest=sites["rest"].position;role.transform.SetPositionAndRotation(rest,Quaternion.Euler(0,180,0));
-            lockedPosition=rest+Vector3.right*1.05f;lockedRotation=Quaternion.Euler(0,180,0);Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);
-            float outro=nightOutroAt<0?0:sceneClock-nightOutroAt;
-            float lie=nightOutroAt<0?0:Mathf.SmoothStep(0,1,outro/3);
-            performanceHung.Sample(sceneClock,lie>.5f?Layout.hungNightSleep:Layout.hungNightRest);
-            if(Layout.hungNightSleep==null||lie<.5f)
-            {
-                performanceHung.FoldLegs(1);
-                var upright=role.transform.rotation;
-                performanceHung.PlaceHips(rest+Vector3.up*Mathf.Lerp(.48f,.28f,lie),Quaternion.Slerp(upright,Quaternion.AngleAxis(90,role.transform.forward)*upright,lie));
-                performanceHung.Ground(rest.y);
-                var rightArm=hung.GetBoneTransform(HumanBodyBones.RightLowerArm);var chest=hung.GetBoneTransform(HumanBodyBones.Chest);
-                Map01ArmContact.Reach(hung,true,rightArm.position+hung.transform.forward*.05f,chest.position+hung.transform.up*.3f,1);
-                RotateBone(hung,HumanBodyBones.Head,new Vector3(8,0,-8),1);
-                RotateBone(hung,HumanBodyBones.Chest,new Vector3(Mathf.Sin(sceneClock*1.3f)*.5f,0,0),lie);
-            }
-            if(nam!=null&&outro>=3)
-            {
-                performanceNam.Sample(sceneClock,Layout.namCoverJacket);
-                if(Layout.namCoverJacket==null)
-                {
-                    performanceNam.FoldLegs(Mathf.SmoothStep(0,1,(outro-3)/1.5f));
-                    performanceNam.PlaceHips(lockedPosition+Vector3.up*.65f,Quaternion.LookRotation(Vector3.ProjectOnPlane(rest-lockedPosition,Vector3.up)));
-                    performanceNam.Ground(rest.y);
-                    var chest=nam.GetBoneTransform(HumanBodyBones.Chest);
-                    var contact=hung.GetBoneTransform(HumanBodyBones.Chest).position+Vector3.up*.12f;
-                    float reach=Mathf.Sin(Mathf.Clamp01((outro-3)/5)*Mathf.PI);
-                    Map01ArmContact.Reach(nam,true,Vector3.Lerp(chest.position-nam.transform.right*.2f,contact,reach),chest.position-nam.transform.right*.4f,1);
-                    Map01ArmContact.Reach(nam,false,Vector3.Lerp(chest.position+nam.transform.right*.2f,contact+Vector3.forward*.25f,reach),chest.position+nam.transform.right*.4f,1);
-                    if(outro>8)RotateBone(nam,HumanBodyBones.Head,new Vector3(0,-35,0),1);
-                }
-            }
-            if(nightJacket!=null)
-            {
-                nightJacket.SetActive(outro>=4);
-                var chest=hung.GetBoneTransform(HumanBodyBones.Chest).position;
-                var hips=hung.GetBoneTransform(HumanBodyBones.Hips).position;
-                var bodyAxis=Vector3.ProjectOnPlane(hung.GetBoneTransform(HumanBodyBones.Head).position-hips,Vector3.up).normalized;
-                var from=nam!=null?nam.GetBoneTransform(HumanBodyBones.LeftHand).position:chest+Vector3.up;
-                float settle=Mathf.SmoothStep(0,1,(outro-4)/3);
-                nightJacket.transform.SetPositionAndRotation(Vector3.Lerp(from,hips-bodyAxis*.12f+Vector3.up*.14f,settle),Quaternion.LookRotation(bodyAxis.sqrMagnitude>.01f?bodyAxis:role.transform.forward));
-                if(outro>=6&&!jacketSoundPlayed)
-                {jacketSoundPlayed=true;performanceSound.Play();nightTheme.clip=Layout.hungThemeNightTwo!=null?Layout.hungThemeNightTwo:Resources.Load<AudioClip>("OperationsAudio/hung_theme_night2");if(nightTheme.clip!=null)nightTheme.Play();}
-            }
+            {SampleAntennaRadio(hung);return;}
         }
         static void RotateBone(Animator actor,HumanBodyBones id,Vector3 angles,float weight)
         {var bone=actor.GetBoneTransform(id);if(bone!=null)bone.localRotation*=Quaternion.Slerp(Quaternion.identity,Quaternion.Euler(angles),weight);}
@@ -177,24 +188,6 @@ namespace ShadowVale.Map01
             if(climbHeight>1)RotateBone(hung.Animator,HumanBodyBones.Head,new Vector3(-20,0,0),1);
             PerformanceBeat="Hùng hướng dẫn bằng tay trái";
         }
-        void SamplePerformanceCamera()
-        {
-            if(sceneTask?.id!="N2_05"||nightRestAt<0)return;
-            var rest=sites["rest"].position;var focus=rest+Vector3.up*.55f+Vector3.right*.5f;
-            var eye=rest+new Vector3(-3.2f,1.8f,-3.5f);
-            rig.SetCinematicView(eye,Quaternion.LookRotation(focus-eye),52,1);
-        }
-        void BuildNightJacket()
-        {
-            nightJacket=new GameObject("Đêm 2 — áo khoác Nam đắp cho Hùng");nightJacket.transform.SetParent(root.transform,false);
-            jacketMaterial=new Material(Shader.Find("Universal Render Pipeline/Lit")){name="Áo khoác dã chiến"};jacketMaterial.SetColor("_BaseColor",new Color(.17f,.21f,.12f));jacketMaterial.SetFloat("_Smoothness",.12f);jacketMaterial.SetFloat("_Cull",0);
-            const int rows=14,columns=10;var vertices=new Vector3[(rows+1)*(columns+1)];var triangles=new int[rows*columns*6];
-            for(int z=0;z<=rows;z++)for(int x=0;x<=columns;x++)
-            {float u=x/(float)columns*2-1,v=z/(float)rows;float width=v>.65f?.45f:.32f;vertices[z*(columns+1)+x]=new Vector3(u*width,Mathf.Cos(u*Mathf.PI*.5f)*.12f+Mathf.Sin(v*30+u*3)*.015f,(v-.5f)*.9f);}
-            int k=0;for(int z=0;z<rows;z++)for(int x=0;x<columns;x++){int a=z*(columns+1)+x,b=a+columns+1;triangles[k++]=a;triangles[k++]=b;triangles[k++]=a+1;triangles[k++]=a+1;triangles[k++]=b;triangles[k++]=b+1;}
-            jacketMesh=new Mesh{name="Áo khoác mềm — dựng cảnh"};jacketMesh.vertices=vertices;jacketMesh.triangles=triangles;jacketMesh.RecalculateNormals();jacketMesh.RecalculateBounds();nightJacket.AddComponent<MeshFilter>().sharedMesh=jacketMesh;nightJacket.AddComponent<MeshRenderer>().sharedMaterial=jacketMaterial;nightJacket.SetActive(false);
-            EnsurePerformanceAudio();
-        }
         void EnsurePerformanceAudio()
         {
             if(performanceAudioRoot!=null)return;
@@ -205,11 +198,12 @@ namespace ShadowVale.Map01
         void ReleasePerformance()
         {
             performanceHung?.Dispose();performanceHung=null;performanceNam?.Dispose();performanceNam=null;
+            if(antennaHandRadio!=null)antennaHandRadio.gameObject.SetActive(false);
             if(nightJacket!=null)Destroy(nightJacket);if(jacketMesh!=null)Destroy(jacketMesh);if(jacketMaterial!=null)Destroy(jacketMaterial);
             if(performanceAudioRoot!=null)Destroy(performanceAudioRoot);performanceAudioRoot=null;
-            foreach(var pair in quietFrameRenderers)if(pair.Key!=null)pair.Key.forceRenderingOff=pair.Value;quietFrameRenderers.Clear();
+            ReleaseNightRest();
             nightJacket=null;jacketMesh=null;jacketMaterial=null;performanceSound=null;nightTheme=null;
-            nightRestAt=nightOutroAt=-1;jacketSoundPlayed=false;PerformanceBeat="";
+            nightOutroAt=-1;jacketSoundPlayed=false;PerformanceBeat="";
         }
     }
 }

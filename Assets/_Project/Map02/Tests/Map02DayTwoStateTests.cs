@@ -197,10 +197,10 @@ namespace ShadowVale.Map01.Tests
             Map02Mission m=null;float deadline=Time.realtimeSinceStartup+100;
             while(Time.realtimeSinceStartup<deadline){m=Object.FindFirstObjectByType<Map02Mission>();if(m?.Ready==true&&m.Chapter!=null)break;Object.FindFirstObjectByType<Map02Arrival>()?.Skip();yield return null;}
             Assert.NotNull(m?.Chapter);
-            VerifyAntennaClimb(m);
+            yield return VerifyAntennaClimb(m);
             yield return new ExitPlayMode();
         }
-        static void VerifyAntennaClimb(Map02Mission m)
+        static IEnumerator VerifyAntennaClimb(Map02Mission m)
         {
             var c=m.Chapter;c.enabled=false;
             object Call(string name,params object[] args)=>typeof(Map02ChapterDirector).GetMethod(name,BindingFlags.NonPublic|BindingFlags.Instance).Invoke(c,args);
@@ -210,15 +210,20 @@ namespace ShadowVale.Map01.Tests
             {
                 var save=m.Capture();save.chapter=Through("D2_04");save.patrolCheckpoint=null;m.Restore(save);
                 var marker=Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId=="D2_05");
-                Place(m,marker.transform.position);Assert.IsTrue(m.Interact(marker));Call("HoldCargo");
+                Place(m,marker.transform.position);Assert.IsTrue(m.Interact(marker));Call("HoldCargo");Call("LateUpdate");
                 Assert.IsTrue(c.HeldCargo==null||!c.HeldCargo.activeSelf,"Wire pickup must never show a supply box.");
                 Assert.IsTrue(Prop("carriedWire").activeSelf);Assert.IsNotNull(Prop("carriedWire").transform.Find("Ăng-ten mang theo"));
+                CaptureAntennaReview(m,"shoulder",m.Player.rotation*new Vector3(2.4f,1.35f,2.9f));
                 Place(m,marker.transform.position);Assert.IsTrue(m.Interact(marker));Assert.IsTrue(Prop("antennaLadder").activeSelf);Assert.IsFalse(Prop("antennaMast").activeSelf);
                 marker=Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId=="D2_06");
                 Assert.Less(Vector3.Distance(marker.transform.position,c.AntennaBase.position),.01f);
-                Place(m,marker.transform.position);Assert.IsTrue(m.Interact(marker));if(c.ConversationActive)Call("EndScene");
+                Place(m,marker.transform.position);Assert.IsTrue(m.Interact(marker));
+                Assert.IsFalse(c.ConversationActive,"The first line must not interrupt the start of the climb.");
+                const string cue="m2v3_antenna_01";
+                Assert.IsFalse(c.HasBark(cue));
                 var foot=m.Player.position;
                 Step(.9f,up:true);Call("UpdateWorkWeapon");Call("SampleAntennaTraversal");
+                Assert.IsFalse(c.HasBark(cue),"The first line must wait until the top.");
                 var animator=m.Player.GetComponentInChildren<Animator>();
                 var leftFoot=animator.GetBoneTransform(HumanBodyBones.LeftFoot);var rightFoot=animator.GetBoneTransform(HumanBodyBones.RightFoot);
                 Assert.Less(Mathf.Abs(Vector3.Dot(leftFoot.position-rightFoot.position,m.Player.right)),.40f,"Feet must remain between the ladder rails.");
@@ -228,19 +233,50 @@ namespace ShadowVale.Map01.Tests
                 WriteAntennaPose(m,animator);
                 CaptureAntennaReview(m,"climb",new Vector3(2.7f,1.5f,-3.4f));
                 for(int i=0;i<50;i++)Step(.1f,up:true);
+                Assert.IsTrue(c.HasBark(cue));Call("TickBark",0f);
+                Assert.AreEqual(cue,c.CurrentBark?.id);
                 Call("SampleAntennaTraversal");CaptureAntennaReview(m,"top",new Vector3(3.5f,2.2f,-4.5f));
                 for(int i=0;i<26;i++)Step(.1f,right:true);for(int i=0;i<21;i++)Step(.1f);for(int i=0;i<16;i++)Step(.1f,tie:true);
                 Assert.IsTrue(c.AntennaTied);var mounted=Prop("antennaMast").transform.position;
+                Assert.AreEqual(.10f,AntennaReceiverHeight(Prop("antennaMast"))-VisualTop(Prop("antennaLadder")),.014f);
                 for(int i=0;i<40&&c.CurrentScene==null;i++)Step(.1f,down:true);
                 Assert.Less(Vector3.Distance(m.Player.position,foot),.01f);Assert.IsTrue(Prop("antennaMast").activeSelf);
                 Assert.Less(Vector3.Distance(mounted,Prop("antennaMast").transform.position),.01f,"Antenna must stay on the tree while Nam descends.");
+                Assert.IsTrue(c.WaitingForLine,"Hùng raises the radio before speaking.");
+                Call("TickScene",.7f);Call("LateUpdate");
+                Assert.AreEqual("m2v3_antenna_02",c.CurrentLineId);
+                Assert.IsFalse(c.WaitingForLine);
+                var radio=GameObject.Find("Bộ đàm cầm tay của Hùng");Assert.NotNull(radio);
+                var hung=c.Actor("Hùng").Animator;
+                Assert.Less(Vector3.Distance(radio.transform.position,hung.GetBoneTransform(HumanBodyBones.LeftHand).position),.10f);
+                var head=hung.GetBoneTransform(HumanBodyBones.Head).position;
+                Assert.Less(Vector3.Distance(radio.transform.TransformPoint(Vector3.up*.065f),head),.38f);
+                Assert.Greater(Vector3.Dot(radio.transform.position-head,c.Actor("Hùng").transform.forward),.19f,"The handset must clear Hùng's face.");
+                var camera=m.GameCamera.GetComponent<ShadowVale.Gameplay.Player.ThirdPersonCamera>();
+                var cameraType=camera.GetType();
+                var shotPosition=cameraType.GetField("cinematicPosition",BindingFlags.Instance|BindingFlags.NonPublic);
+                var shotRotation=cameraType.GetField("cinematicRotation",BindingFlags.Instance|BindingFlags.NonPublic);
+                var eye=(Vector3)shotPosition.GetValue(camera);var facing=(Quaternion)shotRotation.GetValue(camera);
+                Assert.Greater(Vector3.Dot(facing*Vector3.forward,(hung.GetBoneTransform(HumanBodyBones.Chest).position-eye).normalized),.97f);
+                yield return new WaitForEndOfFrame();Call("LateUpdate");
+                CaptureAntennaReview(m,"radio-call",eye-m.Player.position,eye+facing*Vector3.forward,36);
+                typeof(Map02ChapterDirector).GetField("lineClock",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(c,30f);
+                DialogueVoice.StopAll();Call("TickScene",0f);Call("LateUpdate");
+                Assert.AreEqual("m2v3_antenna_03",c.CurrentLineId);
+                Assert.Less(Vector3.Distance(eye,(Vector3)shotPosition.GetValue(camera)),.001f);
+                Assert.Less(Quaternion.Angle(facing,(Quaternion)shotRotation.GetValue(camera)),.1f,"The reply must stay on Hùng's shot.");
                 Call("EndScene");Assert.IsTrue(c.State.Done("D2_06"));
+                Assert.IsFalse(radio.activeSelf);
                 save=Map02Mission.Parse(JsonUtility.ToJson(m.Capture()));m.Restore(save);
                 Assert.IsTrue(Prop("antennaMast").activeSelf);Assert.IsTrue(Prop("installedCable").activeSelf);Assert.IsFalse(Prop("carriedWire").activeSelf);
                 Assert.Less(Vector3.Distance(mounted,Prop("antennaMast").transform.position),.01f);
+                Assert.AreEqual(.10f,AntennaReceiverHeight(Prop("antennaMast"))-VisualTop(Prop("antennaLadder")),.014f);
+                CaptureAntennaReview(m,"installed",new Vector3(3.2f,4.7f,-5.4f),mounted+Vector3.up*.83f);
             }
             finally{c.Cancel();c.enabled=true;}
         }
+        static float VisualTop(GameObject prop)=>prop.GetComponentsInChildren<Renderer>().Max(r=>r.bounds.max.y);
+        static float AntennaReceiverHeight(GameObject prop)=>prop.transform.TransformPoint(Vector3.up*1.38f).y;
         static void WriteAntennaPose(Map02Mission mission,Animator animator)
         {
             var lines=new System.Collections.Generic.List<string>();
@@ -248,11 +284,11 @@ namespace ShadowVale.Map01.Tests
                 lines.Add(bone+" "+mission.Player.InverseTransformPoint(animator.GetBoneTransform(bone).position).ToString("F3"));
             Directory.CreateDirectory("Logs/Map02Chapter/AntennaMechanics");File.WriteAllLines("Logs/Map02Chapter/AntennaMechanics/pose-check.txt",lines);
         }
-        static void CaptureAntennaReview(Map02Mission mission,string name,Vector3 offset)
+        static void CaptureAntennaReview(Map02Mission mission,string name,Vector3 offset,Vector3? focus=null,float fieldOfView=48)
         {
             Directory.CreateDirectory("Logs/Map02Chapter/AntennaMechanics");
             var go=new GameObject("Antenna review camera");var camera=go.AddComponent<Camera>();
-            camera.transform.position=mission.Player.position+offset;camera.transform.LookAt(mission.Player.position+Vector3.up*1.1f);camera.fieldOfView=48;camera.farClipPlane=150;
+            camera.transform.position=mission.Player.position+offset;camera.transform.LookAt(focus??mission.Player.position+Vector3.up*1.1f);camera.fieldOfView=fieldOfView;camera.farClipPlane=150;
             var target=new RenderTexture(1200,1000,24);var previous=RenderTexture.active;
             try{camera.targetTexture=target;camera.Render();RenderTexture.active=target;var png=new Texture2D(1200,1000,TextureFormat.RGB24,false);png.ReadPixels(new Rect(0,0,1200,1000),0,0);png.Apply();File.WriteAllBytes("Logs/Map02Chapter/AntennaMechanics/unity-"+name+".png",png.EncodeToPNG());Object.DestroyImmediate(png);}
             finally{RenderTexture.active=previous;camera.targetTexture=null;Object.DestroyImmediate(target);Object.DestroyImmediate(go);}

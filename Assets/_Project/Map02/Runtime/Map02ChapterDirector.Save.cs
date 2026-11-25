@@ -74,6 +74,8 @@ namespace ShadowVale.Map01
         }
         public void Cancel()
         {
+            if(sceneTask?.id=="N2_05"&&nightRestHouse!=null)
+                Mission.Player.SetPositionAndRotation(nightNamStart,nightNamStartRotation);
             if(doingWork&&workTask?.kind=="antenna"){doingWork=false;ReleaseAntennaTraversal();}
             antennaTied=false;
             CancelEvacuationCapture();

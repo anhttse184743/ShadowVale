@@ -84,9 +84,7 @@ def verify():
             assert policy[line["speaker"]] is policy[recorded["speaker"]], line["id"]
             spoken += 1
 
-    for direct, id in [("OperationsAudio/night2_patrol_warning", "m1_ops_enemy_spotted"),
-                       ("OperationsAudio/night2_patrol_fire_order", "m1_ops_enemy_order"),
-                       ("Map02DayOne/hung_invitation", "m2v3_promise_05"),
+    for direct, id in [("Map02DayOne/hung_invitation", "m2v3_promise_05"),
                        ("Dialogue/VI/m1_open_reply", "free_literal_7be0a5941d33")]:
         assert sha(root / (direct + ".wav")) == sha(path(by_id[id])), direct + ": stale direct audio copy"
 

@@ -1138,6 +1138,20 @@
       "radio": false
     },
     {
+      "id": "m2v3_reconcile_10",
+      "conversation": "m2v3_reconcile",
+      "speaker": "Hùng",
+      "text": "Tôi mệt quá, tôi nghỉ trước nhé",
+      "radio": false
+    },
+    {
+      "id": "m2v3_reconcile_11",
+      "conversation": "m2v3_reconcile",
+      "speaker": "Nam",
+      "text": "Cậu cứ nghỉ ngơi",
+      "radio": false
+    },
+    {
       "id": "m2v3_demolition_01",
       "conversation": "m2v3_demolition",
       "speaker": "Anh Lực",

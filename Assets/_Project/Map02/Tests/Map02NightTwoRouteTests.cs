@@ -103,7 +103,7 @@ namespace ShadowVale.Map01.Tests
             Call(c,"TickPatrol",0f);Assert.AreEqual(1,c.State.patrolWarnings);
             Assert.AreEqual(1.5f,c.State.patrolFocusSeconds,.001f);
             Assert.IsFalse(m.InputBlocked,"The warning must still let Nam go prone.");
-            AssertPatrolLine(c,"m1_ops_enemy_spotted",Map02ChapterDirector.NightPatrolWarningText);
+            AssertPatrolLine(c,"night2_patrol_warning","Có người ở bờ mương! Bên kia!");
             var camera=m.GameCamera.GetComponent<ThirdPersonCamera>();
             camera.RestoreLook(Quaternion.LookRotation(c.NightPatrolPosition+Vector3.up-m.Player.position));
             c.enabled=true;
@@ -117,7 +117,7 @@ namespace ShadowVale.Map01.Tests
             Assert.IsTrue(m.InputBlocked);Assert.IsFalse(m.World.story.failed);
             while(!(bool)Field(c,"nightFireOrderStarted")&&Time.realtimeSinceStartup<until)yield return null;
             Assert.IsTrue((bool)Field(c,"nightFireOrderStarted"));
-            AssertPatrolLine(c,"m1_ops_enemy_order",Map02ChapterDirector.NightPatrolFireOrderText);
+            AssertPatrolLine(c,"night2_patrol_fire_order","Tiêu diệt con chuột nhắt đó đi!");
             Assert.AreEqual(3,c.Enemies.Count(e=>e.group==Map02ChapterDirector.NightPatrolGroup&&e.GetComponent<EnemyFeedback>()!=null),
                 "All three guards fire once the camera reaches the patrol.");
             Assert.Greater(Vector3.Distance(cameraStart,m.GameCamera.transform.position),1f,"The rendering camera must move to the patrol.");
@@ -174,7 +174,7 @@ namespace ShadowVale.Map01.Tests
         {
             var audio=(AudioSource)Field(c,"nightWarningAudio");
             Assert.NotNull(audio);Assert.NotNull(audio.clip);
-            Assert.AreSame(DialogueVoice.Find(recording).clip,audio.clip);
+            Assert.AreSame(Resources.Load<AudioClip>("OperationsAudio/"+recording),audio.clip);
             Assert.IsTrue(audio.isPlaying,"The patrol line must start playing.");
             Assert.AreEqual(caption,Field(c,"nightPatrolCaption"));
         }

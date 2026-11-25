@@ -270,6 +270,7 @@ namespace ShadowVale.Map01
                 var hint = new Rect(map.center.x - 95, map.yMax + 9, 190, 27);
                 HudFill(hint, new Color(.02f, .03f, .02f, .5f));
                 GUI.Label(hint, "M  MỞ BẢN ĐỒ", hudKey);
+                if (!mission.BenchOpen) DrawEscortHealth(map.x, hint.yMax + 12, map.width);
             }
             DrawRescue(width); // Map01Hud.Rescue.cs
             DrawTakedownHint(width,height);

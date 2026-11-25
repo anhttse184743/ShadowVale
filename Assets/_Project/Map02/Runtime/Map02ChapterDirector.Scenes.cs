@@ -29,7 +29,7 @@ namespace ShadowVale.Map01
             protectedBefore=health.CinematicInvulnerable;health.CinematicInvulnerable=true;
             BeginPerformance(task);PlanEntrances(task);StageTalk(task);PrepareStandingDialogue(task);StartLine();
         }
-        void Speak(){voice.Stop();pendingVoice=null;lineClock=0;OnPerformanceLine();if(HoldMealVoice)return;if(!Map02DialogueCatalog.HasApprovedRecording(lines[lineIndex]))return;if(CoughFirst(lines[lineIndex])){lineClock=-CoughLead;pendingVoice=lines[lineIndex].RecordingId;return;}voice.Play(lines[lineIndex].RecordingId);}
+        void Speak(){voice.Stop();pendingVoice=null;lineClock=0;if(HoldMealVoice)return;if(!Map02DialogueCatalog.HasApprovedRecording(lines[lineIndex]))return;if(CoughFirst(lines[lineIndex])){lineClock=-CoughLead;pendingVoice=lines[lineIndex].RecordingId;return;}voice.Play(lines[lineIndex].RecordingId);}
         void TickScene(float dt)
         {
             sceneClock+=dt;lineClock+=dt;TickPendingVoice();TickMealVoice();TickMealCrickets();TickSupperSound();TickChildPeek();
@@ -60,6 +60,7 @@ namespace ShadowVale.Map01
             PanToHung();HoldCargo();HungChargeLate();HoldStepsPair();if(sceneTask==null){HoldCoverPosition();UpdateHungRadio();UpdateBandageSleeve();return;}
             HoldConversation();FaceTalk();MoveDaySceneRoots();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=NamPoseClip();namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null||overrideClip==ordinaryWalk);
             SampleDayScene();SamplePerformance();CorrectStandingDialogue();UpdateHungRadio();UpdateBandageSleeve();
+            if(sceneTask.id=="D2_06"){FrameAntennaRadio();return;}
             string speaker=lines[lineIndex].speaker;Vector3 subject=Mission.Player.position;
             if(!lines[lineIndex].radio&&speaker!="Nam"&&roles.TryGetValue(speaker,out var actor))subject=actor.transform.position;
             if(sceneTask.id=="D1_03"&&speaker=="Ông Sáu")subject=porchDoor-porchOut*.5f;   // his voice from the inner room: look to the doorway
@@ -83,6 +84,7 @@ namespace ShadowVale.Map01
         void EndScene()
         {
             if(sceneTask==null)return; // Repeated finish/skip calls are harmless.
+            if(sceneTask.id=="N2_05")LandAtNightRest();
             foreach(var e in entrances)if(Vector3.Distance(e.actor.transform.position,e.to)>=1.5f)e.actor.StopAt(e.to); // Skipped walks end where the scene meant them to.
             ClearEntrances();
             ReleaseConversation();ReleaseDayScene();ReleaseSceneAction();var task=sceneTask;if(task.id=="N3_09")roles["Hùng"].StopAt(RetreatPoint);int purpose=scenePurpose;scenePurpose=0;namPose?.Dispose();namPose=null;foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();voice.Stop();sceneTask=null;lines=null;rig.ClearCinematicView();health.CinematicInvulnerable=protectedBefore;

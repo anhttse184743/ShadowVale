@@ -69,12 +69,19 @@ namespace ShadowVale.Map01.Tests
                 Call(c,"Update");Call(c,"LateUpdate");Assert.IsTrue(c.CarryingAntenna);Assert.IsTrue(pistol.HandsOccupied);
                 Assert.IsTrue(m.Player.GetComponentsInChildren<ShadowVale.Gameplay.Combat.Weapon>(true).SelectMany(w=>w.GetComponentsInChildren<Renderer>(true)).All(r=>r.forceRenderingOff),"Antenna carrying must hide every gameplay gun.");
                 var nam=m.Player.GetComponentInChildren<Animator>();
-                foreach(var bone in new[]{HumanBodyBones.LeftHand,HumanBodyBones.RightHand})
-                    Assert.Greater(Vector3.Dot(nam.GetBoneTransform(bone).position-m.Player.position,m.Player.forward),.2f,"Both hands must hold the antenna in front of Nam.");
+                var shoulder=nam.GetBoneTransform(HumanBodyBones.RightUpperArm).position;
+                var rightHand=nam.GetBoneTransform(HumanBodyBones.RightHand).position;
+                var leftHand=nam.GetBoneTransform(HumanBodyBones.LeftHand).position;
+                Assert.Less(Vector3.Distance(rightHand,shoulder),.42f,"Nam's right hand must steady the load at his shoulder.");
+                Assert.Greater(rightHand.y-leftHand.y,.28f,"The wire reel is carried separately in the lowered left hand.");
+                var antenna=m.Player.Find("Cuộn dây và ăng-ten Nam đang mang/Ăng-ten mang theo");
+                Assert.NotNull(antenna);
+                Assert.Less(Vector3.Dot(antenna.TransformPoint(Vector3.up*1.35f)-shoulder,m.Player.forward),-.25f,"The receiver stays behind Nam.");
+                Assert.Greater(Vector3.Dot(rightHand-shoulder,m.Player.forward),.2f,"The right hand holds the mast in front of the shoulder.");
                 CaptureAntenna(m,"day2-antenna-carry");
                 saved=Map02Mission.Parse(JsonUtility.ToJson(m.Capture()));m.Restore(saved);Assert.AreEqual(1,c.State.wireStage);
                 Assert.AreEqual("D2_05",c.State.carry);Place(m,Marker("D2_05").transform.position);Assert.IsTrue(m.Interact(Marker("D2_05")));Assert.IsTrue(c.State.Done("D2_05"));
-                Assert.IsTrue(c.CarryingAntenna,"Both hands stay on the antenna until installation starts.");
+                Assert.IsTrue(c.CarryingAntenna,"Nam keeps carrying the antenna until installation starts.");
                 CheckLadderWidth(c);
                 StartAntenna(m);Assert.IsFalse(c.CarryingAntenna);Assert.IsFalse(c.MaySave);var foot=m.Player.position;
                 Step(c,1,true);Assert.Greater(m.Player.position.y,foot.y+.9f);var stopped=m.Player.position;Step(c,.5f);Assert.Less(Vector3.Distance(stopped,m.Player.position),.001f,"Releasing W must stop climbing.");
@@ -145,12 +152,12 @@ namespace ShadowVale.Map01.Tests
         static void CaptureAntenna(Map02Mission m,string name="day2-antenna")
         {
             if(m.Chapter.AntennaClimbHeight>0)Call(m.Chapter,"SampleAntennaTraversal");
-            var go=new GameObject("Antenna QA camera");var camera=go.AddComponent<Camera>();camera.transform.position=m.Player.position+(m.Chapter.CarryingAntenna?m.Player.forward*3-m.Player.right*2+Vector3.up*1.6f:new Vector3(5,2,-7));camera.transform.LookAt(m.Player.position+Vector3.up);camera.fieldOfView=55;camera.farClipPlane=180;
+            var go=new GameObject("Antenna QA camera");var camera=go.AddComponent<Camera>();camera.transform.position=m.Player.position+(m.Chapter.CarryingAntenna?m.Player.forward*1.6f+m.Player.right*3.45f+Vector3.up*1.55f:new Vector3(5,2,-7));camera.transform.LookAt(m.Player.position+Vector3.up);camera.fieldOfView=55;camera.farClipPlane=180;
             var rt=new RenderTexture(1000,800,24);var previous=RenderTexture.active;
             try{camera.targetTexture=rt;camera.Render();RenderTexture.active=rt;var image=new Texture2D(rt.width,rt.height,TextureFormat.RGB24,false);image.ReadPixels(new Rect(0,0,rt.width,rt.height),0,0);image.Apply();File.WriteAllBytes("Logs/Map02Chapter/"+name+".png",image.EncodeToPNG());Object.DestroyImmediate(image);}
             finally{RenderTexture.active=previous;camera.targetTexture=null;Object.DestroyImmediate(rt);Object.DestroyImmediate(go);}
         }
-        static void StartAntenna(Map02Mission m){var c=m.Chapter;Place(m,Marker("D2_06").transform.position);Assert.IsTrue(m.Interact(Marker("D2_06")));if(c.ConversationActive)Call(c,"EndScene");Assert.IsTrue(c.Busy);}
+        static void StartAntenna(Map02Mission m){var c=m.Chapter;Place(m,Marker("D2_06").transform.position);Assert.IsTrue(m.Interact(Marker("D2_06")));Assert.IsFalse(c.ConversationActive);Assert.IsTrue(c.Busy);}
         static Map02ObjectiveObject Marker(string id)=>Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId==id);
         static object Call(Map02ChapterDirector c,string method,params object[] args)
         {
