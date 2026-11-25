@@ -103,10 +103,10 @@ namespace ShadowVale.Map01
         {
             var flames=Map01Fx.System(root.transform,"Shell crater fire",GroundAt(at)+Vector3.up*.3f,Map01Fx.Glow,1,140);
             var fm=flames.main;fm.loop=true;fm.startLifetime=new ParticleSystem.MinMaxCurve(.5f,1.1f);fm.startSpeed=new ParticleSystem.MinMaxCurve(1,2.4f);fm.startSize=new ParticleSystem.MinMaxCurve(.8f,1.8f);fm.startColor=new ParticleSystem.MinMaxGradient(new Color(1,.7f,.25f,.95f),new Color(1,.33f,.07f,.9f));
-            var fe=flames.emission;fe.rateOverTime=55;var fs=flames.shape;fs.shapeType=ParticleSystemShapeType.Box;fs.scale=new Vector3(2.2f,.2f,2.2f);Map01Fx.Grow(flames,1,.3f);flames.Play();
-            var smoke=Map01Fx.System(flames.transform,"Shell crater smoke",GroundAt(at)+Vector3.up*1.5f,Map01Fx.Lit,6,120);
+            var fe=flames.emission;fe.rateOverTime=55;var fs=flames.shape;fs.shapeType=ParticleSystemShapeType.Box;fs.scale=new Vector3(2.2f,.2f,2.2f);Map01Fx.Grow(flames,1,.3f);Map01Fx.Flame(flames,.7f);flames.Play();
+            var smoke=Map01Fx.System(flames.transform,"Shell crater smoke",GroundAt(at)+Vector3.up*1.5f,Map01Fx.Smoke,6,120);
             var sm=smoke.main;sm.loop=true;sm.startLifetime=new ParticleSystem.MinMaxCurve(5,8);sm.startSpeed=new ParticleSystem.MinMaxCurve(1.5f,2.6f);sm.startSize=new ParticleSystem.MinMaxCurve(2.4f,4);sm.startColor=new Color(.08f,.075f,.07f,.7f);
-            var se=smoke.emission;se.rateOverTime=9;Map01Fx.Grow(smoke,1,2.4f);Map01Fx.Wind(smoke,Map01Fx.Breeze*3);smoke.Play();
+            var se=smoke.emission;se.rateOverTime=9;Map01Fx.Grow(smoke,1,2.4f);Map01Fx.Rise(smoke,Map01Fx.Breeze*3,.6f);smoke.Play();
             var glow=new GameObject("Crater firelight").AddComponent<Light>();glow.transform.SetParent(flames.transform,false);glow.transform.localPosition=Vector3.up;glow.type=LightType.Point;glow.range=12;glow.intensity=4;glow.color=new Color(1,.5f,.2f);glow.shadows=LightShadows.None;
             Destroy(flames.gameObject,seconds);
         }
@@ -116,30 +116,30 @@ namespace ShadowVale.Map01
             var go=new GameObject("Burning house (tank)");go.transform.SetParent(root.transform);go.transform.position=at+Vector3.up*1.5f;
             var light=go.AddComponent<Light>();light.type=LightType.Point;light.range=28;light.color=new Color(1,.46f,.17f);light.shadows=LightShadows.None;
             // Smoke in two layers: a dense black core off the fire, a wide grey column above it drifting with the wind.
-            var smoke=Map01Fx.System(root.transform,"House smoke (tank)",at+Vector3.up*2.5f,Map01Fx.Lit,9,420);
+            var smoke=Map01Fx.System(root.transform,"House smoke (tank)",at+Vector3.up*2.5f,Map01Fx.Smoke,9,420);
             var sm=smoke.main;sm.loop=true;sm.startLifetime=new ParticleSystem.MinMaxCurve(7,10);sm.startSpeed=new ParticleSystem.MinMaxCurve(2,3.2f);sm.startSize=new ParticleSystem.MinMaxCurve(3.5f,6);sm.startColor=new Color(.07f,.065f,.06f,.72f);
             var se=smoke.emission;se.rateOverTime=24;var ss=smoke.shape;ss.shapeType=ParticleSystemShapeType.Sphere;ss.radius=1.8f;
-            Map01Fx.Grow(smoke,1,2.8f);Map01Fx.Wind(smoke,Map01Fx.Breeze*3);smoke.Play();
-            var column=Map01Fx.System(smoke.transform,"House smoke column (tank)",at+Vector3.up*9,Map01Fx.Lit,12,220);
+            Map01Fx.Grow(smoke,1,2.8f);Map01Fx.Rise(smoke,Map01Fx.Breeze*3,.8f);smoke.Play();
+            var column=Map01Fx.System(smoke.transform,"House smoke column (tank)",at+Vector3.up*9,Map01Fx.Smoke,12,220);
             var cm=column.main;cm.loop=true;cm.startLifetime=new ParticleSystem.MinMaxCurve(10,14);cm.startSpeed=new ParticleSystem.MinMaxCurve(2.8f,4);cm.startSize=new ParticleSystem.MinMaxCurve(6,10);cm.startColor=new Color(.24f,.23f,.22f,.38f);
-            var ce=column.emission;ce.rateOverTime=8;var cs=column.shape;cs.shapeType=ParticleSystemShapeType.Sphere;cs.radius=2.5f;Map01Fx.Grow(column,1,2.2f);Map01Fx.Wind(column,Map01Fx.Breeze*5);column.Play();
+            var ce=column.emission;ce.rateOverTime=8;var cs=column.shape;cs.shapeType=ParticleSystemShapeType.Sphere;cs.radius=2.5f;Map01Fx.Grow(column,1,2.2f);Map01Fx.Rise(column,Map01Fx.Breeze*5,.8f);column.Play();
             var flame=Map01Fx.System(root.transform,"House flames (tank)",at+Vector3.up*1.2f,Map01Fx.Glow,1,600);
             var fm=flame.main;fm.loop=true;fm.startLifetime=new ParticleSystem.MinMaxCurve(.7f,1.4f);fm.startSpeed=new ParticleSystem.MinMaxCurve(1.6f,3.8f);fm.startSize=new ParticleSystem.MinMaxCurve(1.6f,3.8f);
             fm.startColor=new ParticleSystem.MinMaxGradient(new Color(1,.72f,.28f,1),new Color(1,.34f,.07f,.95f));
-            var fe=flame.emission;fe.rateOverTime=170;var fs=flame.shape;fs.shapeType=ParticleSystemShapeType.Box;fs.scale=new Vector3(4.8f,2,4.8f);Map01Fx.Grow(flame,1,.2f);flame.Play();
+            var fe=flame.emission;fe.rateOverTime=170;var fs=flame.shape;fs.shapeType=ParticleSystemShapeType.Box;fs.scale=new Vector3(4.8f,2,4.8f);Map01Fx.Grow(flame,1,.2f);Map01Fx.Flame(flame,1f);flame.Play();
             // A white-yellow heart to the fire, and burning patches round the foot of the house.
             var core=Map01Fx.System(flame.transform,"Fire core",at+Vector3.up*1.4f,Map01Fx.Glow,1,200);
             var km=core.main;km.loop=true;km.startLifetime=new ParticleSystem.MinMaxCurve(.4f,.8f);km.startSpeed=new ParticleSystem.MinMaxCurve(1,2.2f);km.startSize=new ParticleSystem.MinMaxCurve(.9f,1.8f);km.startColor=new Color(1,.93f,.62f,1);
-            var ke=core.emission;ke.rateOverTime=70;var ks=core.shape;ks.shapeType=ParticleSystemShapeType.Box;ks.scale=new Vector3(3.2f,1.2f,3.2f);Map01Fx.Grow(core,1,.3f);core.Play();
+            var ke=core.emission;ke.rateOverTime=70;var ks=core.shape;ks.shapeType=ParticleSystemShapeType.Box;ks.scale=new Vector3(3.2f,1.2f,3.2f);Map01Fx.Grow(core,1,.3f);Map01Fx.Flame(core,.5f);core.Play();
             for(int i=0;i<3;i++)
             {
                 var patch=Map01Fx.System(flame.transform,"Ground fire",GroundAt(at+Quaternion.Euler(0,i*120+30,0)*Vector3.forward*3.4f)+Vector3.up*.3f,Map01Fx.Glow,1,90);
                 var pm=patch.main;pm.loop=true;pm.startLifetime=new ParticleSystem.MinMaxCurve(.5f,1);pm.startSpeed=new ParticleSystem.MinMaxCurve(.8f,1.8f);pm.startSize=new ParticleSystem.MinMaxCurve(.6f,1.3f);pm.startColor=new ParticleSystem.MinMaxGradient(new Color(1,.7f,.25f,.95f),new Color(1,.35f,.08f,.9f));
-                var pe=patch.emission;pe.rateOverTime=40;var ps=patch.shape;ps.shapeType=ParticleSystemShapeType.Box;ps.scale=new Vector3(1.4f,.2f,1.4f);Map01Fx.Grow(patch,1,.3f);patch.Play();
+                var pe=patch.emission;pe.rateOverTime=40;var ps=patch.shape;ps.shapeType=ParticleSystemShapeType.Box;ps.scale=new Vector3(1.4f,.2f,1.4f);Map01Fx.Grow(patch,1,.3f);Map01Fx.Flame(patch,.6f);patch.Play();
             }
             var embers=Map01Fx.System(flame.transform,"Embers",at+Vector3.up*2,Map01Fx.Glow,2,80);
             var em=embers.main;em.loop=true;em.startLifetime=new ParticleSystem.MinMaxCurve(1.5f,3);em.startSpeed=new ParticleSystem.MinMaxCurve(2.5f,6);em.startSize=new ParticleSystem.MinMaxCurve(.06f,.16f);em.startColor=new Color(1,.6f,.2f,1);em.gravityModifier=-.05f;
-            var ee=embers.emission;ee.rateOverTime=45;var es=embers.shape;es.shapeType=ParticleSystemShapeType.Box;es.scale=new Vector3(4,1,4);embers.Play();
+            var ee=embers.emission;ee.rateOverTime=45;var es=embers.shape;es.shapeType=ParticleSystemShapeType.Box;es.scale=new Vector3(4,1,4);Map01Fx.Ember(embers);embers.Play();
             return (light,smoke,flame);
         }
         /// <summary>A smaller fire (out in the fields): fewer flames and less of the upper column.</summary>
