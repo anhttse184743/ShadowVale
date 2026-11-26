@@ -449689,7 +449689,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8bb3162131d34abc9a285a7bb807a644, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map02Exploration
+  m_EditorClassIdentifier: ShadowVale.Map02::ShadowVale.Map01.Map02Exploration
   player: {fileID: 1813526511}
   boatLandingSpawn: {fileID: 17875140}
   followCamera: {fileID: 742639933}

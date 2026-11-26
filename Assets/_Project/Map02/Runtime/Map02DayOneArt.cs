@@ -4,6 +4,7 @@ using UnityEngine;
 namespace ShadowVale.Map01
 {
     [CreateAssetMenu(menuName="ShadowVale/Map 2/Day one performance")]
+    [UnityEngine.Scripting.APIUpdating.MovedFrom(false, sourceAssembly: "ShadowVale.Map01")]
     public sealed class Map02DayOneArt:ScriptableObject
     {
         [Serializable] public sealed class Action {public string id;public AnimationClip clip;}

@@ -25,10 +25,9 @@ namespace ShadowVale.Map01
                 if(t.id=="N2_02")return "Tại đầu cầu, nhấn E báo bộ đàm rồi men bờ mương phía ruộng đến kho.";
                 if(t.id=="N2_03"&&NightPatrolScriptedApproach)return "Men bờ mương tới nắp hầm. Súng và đòn dao bị khóa. Nhấn Z nằm khi thấy dấu ?; tổ tuần tra chỉ cảnh báo một lần.";
                 if(t.id=="N2_03")return UndergroundStore?.Inside==true?"Tới kệ vật tư ở ghim vàng, nhấn E kiểm tra kho. Tới chân thang, Space bám thang · W lên / S xuống.":"Men bờ mương tới nắp hầm. E mở nắp, tới điểm cạnh miệng hầm và nhấn Ctrl bám thang xuống · Space bám thang lên · W lên / S xuống. Không thể nhảy xuống.";
-                if(t.id=="N2_04")return EvacuationInstruction;
+                if(t.kind=="inspectRoute")return EvacuationInstruction;
                 if(t.id=="D2_03")return "Theo lối lúa bị giẫm từ cầu tới khoảng trống. Tâm nằm bị thương tại ghim vàng; đến gần, nhấn E để giúp.";
                 if(t.kind=="inspectDoor")return "Tới ghim trước nắp hầm kho kín, nhìn vào chốt rồi nhấn E kiểm tra. Đến gần thôi chưa tính hoàn tất.";
-                if(t.kind=="inspectRoute")return NightTwoRouteProgress<3?$"Đã kiểm {NightTwoRouteProgress}/4 đoạn. Đi theo ghim kế tiếp: {NightRouteNames[NightTwoRouteProgress]}. Phải kiểm theo thứ tự; không đi tắt tới bến.":"Đã kiểm 3/4 đoạn. Tới bậc bến ở ghim vàng, nhấn E xác nhận bậc chắc chắn.";
                 if(t.kind=="wire")return State.wireStage==1?"Đang mang cuộn dây và ăng-ten. Tới trạm ở ghim vàng, nhấn E giao cho Hùng.":"Tới kho kín ở ghim vàng, nhấn E lấy cuộn dây và ăng-ten.";
                 if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)?$"Đang mang thùng {n+1}/{t.count}. Tới ghim vàng rồi nhấn E để đặt.":$"Đã chuyển {n}/{t.count}. Tới ghim vàng, nhấn E nhận thùng tiếp theo.";
                 if(ScoutEscortActive)
@@ -79,7 +78,7 @@ namespace ShadowVale.Map01
         {
             var task=Map02ChapterDefinition.Load().Find(marker.chapterId);if(task==null)return true;
             if(task.kind=="reach"||task.kind=="crawl"||task.kind=="binocular")return false;
-            if(task.kind=="inspectRoute"&&NightTwoRouteProgress<3)return false;
+            if(task.kind=="inspectRoute")return evacuationConfigured&&UndergroundStore?.Inside!=true&&State.night2EvacuationChoice!=1;
             if(task.id=="N3_WOUND"||task.id=="N3_07"||task.id=="N3_09"||task.kind=="defend")return false; // Run on their own.
             return State.activeTask!=task.id||!(escort!=null||task.kind=="defend"||task.kind=="coverFire");
         }
@@ -95,12 +94,11 @@ namespace ShadowVale.Map01
         public string Prompt(Map02ChapterTask t)
         {
             int n=State.Count(t.id);
-            if(t.id=="N2_04")return EvacuationPrompt;
+            if(t.kind=="inspectRoute")return EvacuationPrompt;
             if(t.id=="N2_03")return UndergroundStore?.Inside==true?"Kiểm tra kệ vật tư trong hầm":"Mở nắp hầm kho · Ctrl để xuống";
             if(t.id=="D2_03")return "Giúp Tâm — trinh sát bị thương";
             if(t.id=="D1_04"&&n>=3)return "Sắp xếp ba thùng vào kho kín";
             if(t.kind=="inspectDoor")return "Kiểm tra chốt cửa hầm còn kín";
-            if(t.kind=="inspectRoute")return NightTwoRouteProgress<3?$"Kiểm tra {NightRouteNames[NightTwoRouteProgress]} ({NightTwoRouteProgress}/4)":"Xác nhận bậc bến chắc chắn (3/4)";
             if(t.kind=="wire")return State.wireStage==1?"Giao cuộn dây và ăng-ten cho Hùng":"Lấy cuộn dây và ăng-ten trong kho kín";
             if(t.kind=="carry")return !string.IsNullOrEmpty(State.carry)&&State.activeTask==t.id?$"Đặt thùng {n+1}/{t.count} tại {(t.id=="D1_04"?"kho kín":"chỗ trú bến nam")}":$"Nhận thùng {n+1}/{t.count} tại {(t.id=="D1_04"?"bến cập":"kho kín")}";
             if(t.kind=="families")return $"Dặn dò hộ dân {n+1}/{t.count}";

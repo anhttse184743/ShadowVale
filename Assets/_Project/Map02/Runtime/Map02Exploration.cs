@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 namespace ShadowVale.Map01
 {
     /// <summary>Local exploration rig for Map 2; independent of Map 1 mission/save state.</summary>
+    [UnityEngine.Scripting.APIUpdating.MovedFrom(false, sourceAssembly: "ShadowVale.Map01")]
     public sealed class Map02Exploration : MonoBehaviour
     {
         public PlayerController player;

@@ -310,7 +310,6 @@ namespace ShadowVale.Map01
                 if(t.kind=="antenna"&&antennaBase!=null)pos=antennaBase.position;
                 if(t.kind=="wire"&&State.wireStage==1)pos=sites["radio"].position;
                 if(t.kind=="inspectDoor"){pos=NightDoorStand;mark.radius=1.8f;}
-                if(t.kind=="inspectRoute"){pos=NightRouteMarker;mark.radius=NightTwoRouteProgress==3?1.8f:2.4f;}
                 if(t.kind=="carry"&&State.activeTask==t.id&&string.IsNullOrEmpty(State.carry))pos=sites[t.id=="D1_04"?"arrival":"store"].position;
                 if(t.kind=="carry"&&State.activeTask!=t.id)pos=sites[t.id=="D1_04"?"arrival":"store"].position;
                 if(t.id=="D1_04"&&State.Count(t.id)>=3)pos=sites["store"].position;
@@ -318,7 +317,7 @@ namespace ShadowVale.Map01
                 if(t.kind=="families")pos=sites["family"+Mathf.Clamp(State.Count(t.id),0,2)].position;
                 if(t.id=="N2_01"||t.id=="N2_02")pos=NightObservationSpawn;
                 if(t.kind=="inspectDoor")pos=UndergroundStore?.Inside==true?UndergroundStore.InspectionPoint:NightDoorStand;
-                if(t.kind=="inspectRoute")pos=UndergroundStore?.Inside==true?UndergroundStore.BottomStand:NightRouteMarker;
+                if(t.kind=="inspectRoute"){pos=UndergroundStore?.Inside==true?UndergroundStore.BottomStand:EvacuationMarker;mark.radius=2.4f;}
                 if(t.kind=="demolition")pos=CrateMarker(t);
                 if(t.kind=="escortHung"||t.kind=="patrolHung"||t.kind=="escortScout")pos=escort!=null&&workTask==t?Destination(t):roles[t.kind=="escortScout"?"Tâm":"Hùng"].transform.position;
                 if(t.kind.StartsWith("rescue")&&escort!=null&&workTask==t)pos=Destination(t);

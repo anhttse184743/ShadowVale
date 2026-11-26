@@ -10,13 +10,7 @@ namespace ShadowVale.Map01
     /// </summary>
     public sealed partial class Map02ChapterDirector
     {
-        static readonly string[] NightRouteIds={"ditchApproach","villageLane","southBank","dockStairs"};
-        static readonly string[] NightRouteNames={"bờ mương","lối qua xóm","bờ nam","bậc bến"};
         public Vector3[] NightTwoRoute {get;private set;}=Array.Empty<Vector3>();
-        public int NightTwoRouteProgress
-        {
-            get{int i=0;while(i<NightRouteIds.Length&&State.night2RouteVisited.Contains(NightRouteIds[i]))i++;return i;}
-        }
         public Vector3 NightDoorPosition=>sites["nightHatch"].position;
         public Map02UndergroundStore UndergroundStore {get;private set;}
         public Vector3 NightDoorStand=>UndergroundStore!=null?UndergroundStore.TopStand:NightDoorPosition+Vector3.left*1.8f;
@@ -165,7 +159,7 @@ namespace ShadowVale.Map01
             }
             if(task.kind=="inspectRoute")
             {
-                return InteractEvacuationChoice(task);
+                return InteractEvacuationChoice();
             }
             if(task.id=="N2_05"&&NightReturnPending)
             {
@@ -179,7 +173,6 @@ namespace ShadowVale.Map01
             if(State.phase!=3)return;
             TickEvacuationChoices(dt);
         }
-        Vector3 NightRouteMarker=>EvacuationMarker;
         void ShowNightRadio(int index)
         {
             var entries=Map02ChapterDefinition.Load().Lines("lights");if(index<0||index>=entries.Length)return;

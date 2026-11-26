@@ -43,12 +43,12 @@ namespace ShadowVale.Map01
                 if(!State.night2EvacuationStarted)return "Tới ghim gần hầm kho để bắt đầu kiểm tra đường sơ tán.";
                 if(evacuationMenu)return "Chọn hướng bằng chuột hoặc phím 1 / 2 / 3. Chỉ cần tìm một đường sơ tán phù hợp.";
                 if(State.night2EvacuationChoice==0)return "Về điểm kiểm tra gần kho, nhấn E để chọn hướng.";
-                if(State.night2EvacuationChoice==1)return State.night2FieldObserved?"Đã phát hiện địch. Trong bụi cây ở ghim, nhấn E báo cáo chỉ huy. Z nằm tránh đèn; N chọn hướng khác.":$"Trong bụi cây: đứng hoặc ngồi, giữ yên F quan sát 1 giây ({Mathf.Clamp01(evacuationObserved)*100:0}%). Một lính quét bên hông khi đi. Z nằm tránh đèn, nằm không quan sát được. N chọn hướng khác.";
+                if(State.night2EvacuationChoice==1)return State.night2FieldObserved?"Đã phát hiện địch. Vào bụi cây ở ghim để Nam tự báo cáo qua bộ đàm.":$"Trong bụi cây: đứng hoặc ngồi, giữ yên F quan sát 1 giây ({Mathf.Clamp01(evacuationObserved)*100:0}%). Bộ đàm tự mở khi quan sát đủ. Một lính quét bên hông khi đi. Z nằm tránh đèn, nằm không quan sát được. N chọn hướng khác.";
                 return State.night2EvacuationChoice==2?"Tới ghim bên bờ sông, nhấn E báo cáo đường phải lội nước. N chọn hướng khác.":"Tới ghim đường trong làng, nhấn E báo cáo kết quả kiểm tra. N chọn hướng khác.";
             }
         }
         public string EvacuationPrompt=>State.night2EvacuationChoice==0?"Chọn hướng kiểm tra đường sơ tán":
-            State.night2EvacuationChoice==1&&!State.night2FieldObserved?"Nấp trong bụi cây · giữ F quan sát 1 giây":"Báo cáo chỉ huy qua bộ đàm";
+            State.night2EvacuationChoice==1?"Quan sát toán lính từ bụi cây":"Báo cáo chỉ huy qua bộ đàm";
         Vector3 EvacuationMarker=>evacuationConfigured?EvacuationChoicePoint(State.night2EvacuationChoice):Layout.nightEvacuationStart;
 
         bool TryEvacuationFloor(Vector3 wanted,out Vector3 point)
@@ -102,18 +102,19 @@ namespace ShadowVale.Map01
             Cursor.visible=Mission.Paused||Mission.Panel!=0;
             Cursor.lockState=Cursor.visible?CursorLockMode.None:CursorLockMode.Locked;
         }
-        bool InteractEvacuationChoice(Map02ChapterTask task)
+        bool InteractEvacuationChoice()
         {
             if(!evacuationConfigured){Mission.Say("Tuyến kiểm tra chưa được bố trí trên NavMesh.");return false;}
             if(UndergroundStore?.Inside==true){Mission.Say("Tới chân thang, Space bám thang rồi W lên mặt đất trước khi chọn hướng khảo sát.");return false;}
-            var point=EvacuationChoicePoint(State.night2EvacuationChoice);
-            if(Vector3.Distance(Mission.Player.position,point)>3)return false;
             if(State.night2EvacuationChoice==0){State.night2EvacuationStarted=true;OpenEvacuationMenu();return true;}
-            if(State.night2EvacuationChoice==1&&Vector3.ProjectOnPlane(Mission.Player.position-evacuationPoints[1],Vector3.up).sqrMagnitude>2.25f)
-            {Mission.Say("Trở vào bụi cây ở ghim để báo cáo an toàn.");return false;}
-            if(!State.CanReportEvacuationRoute){Mission.Say("Đứng trong bụi cây, giữ F và nhìn rõ toán lính đủ 1 giây trước khi báo cáo.");return false;}
+            if(State.night2EvacuationChoice==1||!State.CanReportEvacuationRoute)return false;
+            BeginEvacuationReport();
+            return true;
+        }
+        void BeginEvacuationReport()
+        {
             evacuationReportChoice=State.night2EvacuationChoice;evacuationLine=0;evacuationLineClock=0;
-            CancelNightRadio();voice?.Stop();DropBarks();SetBinoculars(false);player.RestoreMotion(false);Mission.RequireInteractionRelease();SpeakEvacuationLine();return true;
+            CancelNightRadio();voice?.Stop();DropBarks();SetBinoculars(false);player.RestoreMotion(false);Mission.RequireInteractionRelease();SpeakEvacuationLine();
         }
         void SpeakEvacuationLine()
         {
@@ -166,18 +167,29 @@ namespace ShadowVale.Map01
             if(State.night2EvacuationStarted&&State.night2EvacuationChoice==0&&!evacuationMenu){OpenEvacuationMenu();return;}
             SyncEvacuationPatrol();
             TickEvacuationFieldPatrol(dt);
-            if(State.night2EvacuationChoice!=1||State.night2FieldObserved)return;
-            if(ObserveEvacuationPatrol(dt))
-            {
-                State.night2FieldObserved=true;UpdateMarkers();Mission.Say("Đã phát hiện toán địch. Nhấn E trong bụi cây để báo cáo chỉ huy.");Mission.StoreCheckpoint();
-            }
+            if(State.night2EvacuationChoice==1&&UndergroundStore?.Inside!=true&&!Mission.InputBlocked)
+                TickEvacuationFieldReport(dt);
         }
+        void TickEvacuationFieldReport(float dt)
+        {
+            if(State.night2FieldObserved)
+            {
+                if(!InEvacuationObservationCover)return;
+            }
+            else
+            {
+                if(!ObserveEvacuationPatrol(dt))return;
+                State.night2FieldObserved=true;
+                Mission.StoreCheckpoint();
+            }
+            BeginEvacuationReport();
+        }
+        bool InEvacuationObservationCover=>Vector3.ProjectOnPlane(Mission.Player.position-evacuationPoints[1],Vector3.up).sqrMagnitude<=2.25f&&
+            Mathf.Abs(Mission.Player.position.y-evacuationPoints[1].y)<1.5f;
         bool ObserveEvacuationPatrol(float dt)
         {
             var cam=rig.GetComponent<Camera>();
-            bool bush=Vector3.ProjectOnPlane(Mission.Player.position-evacuationPoints[1],Vector3.up).sqrMagnitude<=2.25f&&
-                Mathf.Abs(Mission.Player.position.y-evacuationPoints[1].y)<1.5f;
-            bool visible=bush&&binocular&&!player.IsMoving&&!player.IsProne&&Enemies.Any(unit=>unit!=null&&unit.group==EvacuationPatrolGroup&&!unit.Dead&&
+            bool visible=InEvacuationObservationCover&&binocular&&!player.IsMoving&&!player.IsProne&&Enemies.Any(unit=>unit!=null&&unit.group==EvacuationPatrolGroup&&!unit.Dead&&
                 Vector3.Distance(cam.transform.position,unit.transform.position)<65&&
                 Vector3.Angle(cam.transform.forward,unit.transform.position+Vector3.up-cam.transform.position)<Mathf.Min(25,cam.fieldOfView*.5f)&&
                 EvacuationObservationVisible(cam,unit));
@@ -363,7 +375,7 @@ namespace ShadowVale.Map01
             {
                 GUI.Box(new Rect(380,225,840,415),GUIContent.none);
                 GUI.Label(new Rect(410,245,780,50),"KIỂM TRA ĐƯỜNG SƠ TÁN",title);
-                GUI.Label(new Rect(410,300,780,65),"Chọn một hướng để kiểm tra. Báo cáo qua bộ đàm khi tới nơi.",label);
+                GUI.Label(new Rect(410,300,780,65),"Chọn một hướng để kiểm tra. Đường ruộng tự báo cáo sau khi quan sát đủ.",label);
                 for(int i=1;i<=3;i++)
                 {
                     bool rejected=(State.night2RejectedRoutes&(1<<(i-1)))!=0;

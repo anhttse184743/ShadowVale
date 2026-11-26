@@ -3,6 +3,7 @@ using UnityEngine;
 namespace ShadowVale.Map01
 {
     /// <summary>Inspector-authored interaction on a real prop; no civilian mesh is required.</summary>
+    [UnityEngine.Scripting.APIUpdating.MovedFrom(false, sourceAssembly: "ShadowVale.Map01")]
     public sealed class Map02ObjectiveObject : MonoBehaviour
     {
         public string saveId;
