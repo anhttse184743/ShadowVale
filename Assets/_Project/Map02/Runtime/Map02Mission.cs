@@ -185,6 +185,7 @@ namespace ShadowVale.Map01
             RefreshRoute();
             if (!World.story.failed) PlaySeconds+=Time.deltaTime;
             if (health != null && health.IsDead && !World.story.failed) { World.story.Fail("Nam đã hy sinh. Trở về checkpoint để thử lại.");CancelConversation();Notify(); }
+            TickPendingCheckpoint();
             // What [E] would use, and its outline, whatever the input device.
             if(!dialogue.Active&&!World.story.failed&&Chapter?.LocksInput!=true&&Panel==0)
             {
@@ -346,6 +347,7 @@ namespace ShadowVale.Map01
         }
         public void Restore(Snapshot data)
         {
+            checkpointPending=false;
             CharacterHud?.ClearIncomingFire();
             if(Panel==5)CloseGameplayPanel();
             logisticsCredit=Mathf.Max(0,data.logisticsCredit);
@@ -390,7 +392,24 @@ namespace ShadowVale.Map01
             if(string.IsNullOrEmpty(saved))return false;
             Restore(Parse(saved));patrolCheckpoint=saved;checkpoint=saved;SetPaused(false);return true;
         }
-        public void StoreCheckpoint(){if(!Ready||!CanSave())return;if(Chapter?.State.PatrolRouteActive!=true)patrolCheckpoint=null;var data=Capture();data.checkpoint=null;checkpoint=JsonUtility.ToJson(data);}
+        // A task can close while Nam cannot be saved yet: mid-reload after a wave, still in a work view, a conversation, a bandage.
+        // The checkpoint then waits and is taken the first frame he can be (as Map 1's operation checkpoints do), instead of being
+        // dropped: a death after it went back to the task before, without the rounds and kit picked up since (Khoa, 26/11/2026).
+        bool checkpointPending;
+        public bool CheckpointPending=>checkpointPending;
+        public void StoreCheckpoint()
+        {
+            if(!Ready)return;
+            if(!CanSave()){checkpointPending=!World.story.failed&&(health==null||!health.IsDead);return;}
+            checkpointPending=false;
+            if(Chapter?.State.PatrolRouteActive!=true)patrolCheckpoint=null;var data=Capture();data.checkpoint=null;checkpoint=JsonUtility.ToJson(data);
+        }
+        void TickPendingCheckpoint()
+        {
+            if(!checkpointPending)return;
+            if(World.story.failed||health!=null&&health.IsDead){checkpointPending=false;return;}
+            if(CanSave())StoreCheckpoint();
+        }
         // A checkpoint is stored as each task closes, often mid-sprint or wounded: a retry gives back the bag as it was, but
         // fresh legs and at least half health, so a retry is never a slower or weaker start than the fight that was lost.
         public bool Retry(){if(string.IsNullOrEmpty(checkpoint))return false;var saved=checkpoint;Restore(Parse(saved));checkpoint=saved;SetPaused(false);
