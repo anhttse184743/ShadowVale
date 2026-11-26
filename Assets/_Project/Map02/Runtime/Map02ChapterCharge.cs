@@ -10,15 +10,8 @@ namespace ShadowVale.Map01
     public sealed partial class Map02ChapterDirector
     {
         const float LookBackFrom=PlantEnd+1.2f,CrouchStride=1.1f;   // m/s the crouched walk is authored at
+        // Nam's authored crouch clips are also used by Hùng while he carries the charge.
         AnimationClip crouchWalk,crouchIdle;
-        /// <summary>Nam's crouched walk and crouch, for Hùng keeping low with the charge.</summary>
-        AnimationClip CrouchWalk=>crouchWalk!=null?crouchWalk:crouchWalk=NamClip("Nam_Crouch_Walk_F");
-        AnimationClip CrouchIdle=>crouchIdle!=null?crouchIdle:crouchIdle=NamClip("Nam_Crouch_Idle");
-        AnimationClip NamClip(string name)
-        {
-            var controller=dayNamAnimator!=null?dayNamAnimator.runtimeAnimatorController:Mission.Player.GetComponentInChildren<Animator>()?.runtimeAnimatorController;
-            if(controller==null)return null;foreach(var c in controller.animationClips)if(c!=null&&c.name==name)return c;return null;
-        }
         Map02UpperBodyPose hungCarry;float hungCarryClock;Vector3 hungLastAt;GameObject heldCharge;
         /// <summary>Hùng has the charge in his arms.</summary>
         public bool HungCarriesCharge=>CoverFireActive&&sceneTask==null||sceneTask?.id=="N3_09"&&sceneClock<RiseEnd;
@@ -37,7 +30,7 @@ namespace ShadowVale.Map01
                 hungLastAt=hung.transform.position;
                 hungCarry??=new Map02UpperBodyPose(animator,DayClip("Carry"),true);   // arms round the bundle, the rest crouched
                 hungCarryClock+=dt*pace/CrouchStride;
-                var lower=pace>.1f?CrouchWalk??ordinaryWalk:CrouchIdle??namCalmIdle;
+                var lower=pace>.1f?crouchWalk??ordinaryWalk:crouchIdle??namCalmIdle;
                 if(lower!=null)hungCarry.Sample(lower,pace>.1f?hungCarryClock:Time.time);
                 var chest=animator.GetBoneTransform(HumanBodyBones.Chest);var body=hung.transform;
                 Charge().SetActive(true);

@@ -3,7 +3,7 @@ using UnityEngine;
 namespace ShadowVale.Gameplay.Combat
 {
     /// <summary>
-    /// Lays the rifle on the crosshair.
+    /// Aligns the gun with the crosshair after the final pose is applied.
     /// <para>
     /// A shot is traced from the middle of the view and its streak is drawn from the muzzle, but the aim and
     /// fire takes hold the rifle level whatever the view does: look up or down and the barrel pointed somewhere
@@ -15,10 +15,10 @@ namespace ShadowVale.Gameplay.Combat
     /// The bend is measured from where the take holds the barrel on average, not from the barrel this frame:
     /// a kick or a flinch that a clip plays on top still shows, and a reload keeps the bend it started with.
     /// </para>
-    /// Added by <see cref="PlayerCombat"/>. Runs after the camera has moved for the frame (ThirdPersonCamera)
-    /// and before the bones that follow the hands (ForearmTwist).
+    /// Added by <see cref="PlayerCombat"/>. Runs after the camera and the authored weapon and escort poses,
+    /// before the bones that follow the hands (ForearmTwist) and before gunfire is resolved.
     /// </summary>
-    [DefaultExecutionOrder(50)]
+    [DefaultExecutionOrder(4000)]
     [DisallowMultipleComponent]
     public sealed class BarrelAim : MonoBehaviour
     {
@@ -39,6 +39,7 @@ namespace ShadowVale.Gameplay.Combat
         private const float MaxBend = 80f;
 
         private PlayerCombat _combat;
+        private Animator _animator;
         private Transform[] _spine = System.Array.Empty<Transform>();
         private float[] _share = System.Array.Empty<float>();
         // What the animation left in each spine bone, and what was written over it: a frame in which the
@@ -60,6 +61,7 @@ namespace ShadowVale.Gameplay.Combat
         internal void Bind(PlayerCombat combat, Animator animator)
         {
             _combat = combat;
+            _animator = animator;
             var chain = new System.Collections.Generic.List<Transform>();
             if (animator != null && animator.isHuman)
                 foreach (HumanBodyBones bone in new[] { HumanBodyBones.Spine, HumanBodyBones.Chest, HumanBodyBones.UpperChest })
@@ -95,7 +97,8 @@ namespace ShadowVale.Gameplay.Combat
         {
             Unbend();
 
-            Weapon gun = _combat != null && _combat.isActiveAndEnabled ? _combat.Gun : null;
+            Weapon gun = _combat != null && _combat.isActiveAndEnabled && _animator != null
+                && _animator.runtimeAnimatorController != null ? _combat.Gun : null;
             if (gun == null)
             {
                 _weight = 0f;

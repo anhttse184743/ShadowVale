@@ -10,6 +10,7 @@ using UnityEditor.Animations;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Playables;
 using UnityEngine.TestTools;
 
 namespace ShadowVale.Map01.Tests
@@ -18,6 +19,34 @@ namespace ShadowVale.Map01.Tests
     public sealed class StoryAnimationTests : ForestSceneTestBase
     {
         private const string Controllers = "Assets/_Project/Art/Characters/Animations/Controllers/";
+        [Test]
+        public void ReleasedCinematicPoseCannotRetakeControlFromTheNextPose()
+        {
+            var prefab=AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Prefabs/Player/Player.prefab");
+            var instance=Object.Instantiate(prefab);
+            try
+            {
+                var actor=instance.GetComponentInChildren<Animator>();
+                var controller=actor.runtimeAnimatorController;
+                var clip=controller.animationClips.First(c=>c.name=="Idle_Tuned");
+                using var previous=new Map01CinematicPose(actor,skinGrounding:false);
+                previous.Sample(clip,0);
+                previous.Dispose();
+                Assert.AreSame(controller,actor.runtimeAnimatorController);
+                using(var next=new Map01CinematicPose(actor,skinGrounding:false))
+                {
+                    next.Sample(clip,0);
+                    previous.Dispose();
+                    Assert.IsNull(actor.runtimeAnimatorController,"The next pose still owns this Animator.");
+                    previous.SampleBlend(clip,0,clip,0,.5f);
+                    var graph=(PlayableGraph)typeof(Map01CinematicPose).GetField("graph",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(previous);
+                    Assert.IsFalse(graph.IsValid(),"A released pose must never create another graph.");
+                }
+                Assert.AreSame(controller,actor.runtimeAnimatorController);
+            }
+            finally{Object.DestroyImmediate(instance);}
+        }
+
         [Test]
         public void HungEscortKeepsTheOriginalLimpClip()
         {

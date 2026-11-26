@@ -36,7 +36,7 @@ namespace ShadowVale.Map01
         public List<Map02ChapterEnemy> Enemies {get;}=new List<Map02ChapterEnemy>();
         public Map02ChapterLayout Layout {get;private set;}
         float holdClock,detectionClock;Vector3 workOrigin;AudioSource signalAudio;
-        Map01CinematicPose namPose;AnimationClip namIdle;readonly List<GameObject> hiddenWeapons=new List<GameObject>();
+        Map01CinematicPose namPose;readonly List<GameObject> hiddenWeapons=new List<GameObject>();
 
         Material originalSky,chapterSky;UnityEngine.Rendering.AmbientMode originalAmbientMode;Color originalSunColor;
         readonly Dictionary<string,Transform> sites=new Dictionary<string,Transform>();

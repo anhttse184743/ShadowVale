@@ -52,6 +52,9 @@ namespace ShadowVale.Map01
         void SampleSacrifice()
         {
             var hung=roles["Hùng"];var t=sceneClock;var tracks=tank.transform.position;
+            var fallClip=Layout?.hungFallClip;
+            // The carry is sampled in LateUpdate. Release it before this frame's planting pose takes over.
+            if(t>=RiseEnd&&hungCarry!=null)DropCharge();
             if(t<RiseEnd)hung.SceneMove(Vector3.Lerp(hungRiseFrom,ChargePoint,t/RiseEnd),tracks,2.6f);
             else if(t<PlantEnd)hung.SceneMove(ChargePoint,tracks,0);
             else if(t<BlastAt)
@@ -60,15 +63,24 @@ namespace ShadowVale.Map01
                 float u=Mathf.Clamp01((t-PlantEnd)/(LookBackFrom-PlantEnd));
                 hung.SceneMove(Vector3.Lerp(ChargePoint,LookBackSpot,u),t<LookBackFrom?LookBackSpot:Mission.Player.position,t<LookBackFrom?1.3f:0);
             }
-            else if(!shotFired){shotFired=true;hung.StopAt(LookBackSpot);hung.SetDead(true);}   // gone in the blast
+            else if(!shotFired){shotFired=true;hung.StopAt(LookBackSpot);if(fallClip==null)hung.SetDead(true);}
             if(t>=BlastAt&&!blasted)
             {
-                blasted=true;rig.Shake(.6f,1.2f);BlowTank();
+                blasted=true;hung.SetDead(true);rig.Shake(.6f,1.2f);BlowTank();
                 foreach(var e in Enemies)if(e!=null&&!e.Dead&&e.group==Escort)e.HitPoints.TakeDamage(1000,e.transform.position+Vector3.up,null);   // the escort goes with it
             }
-            var clipNow=t<PlantEnd?Layout?.hungPlantRetreatClip:t<LookBackFrom?ordinaryWalk:t<BlastAt?namCalmIdle:null;
+            var plantClip=Layout?.hungPlantRetreatClip;
+            if(plantClip==null)plantClip=crouchIdle;
+            var clipNow=t<PlantEnd?plantClip:t<LookBackFrom?ordinaryWalk:t<ShotAt?namCalmIdle:t<BlastAt?fallClip:null;
             if(t>=RiseEnd&&clipNow!=null&&hung.visual!=null)
-            {var animator=hung.visual.GetComponentInChildren<Animator>();if(animator!=null){hungActionPose??=new Map01CinematicPose(animator,null,false);hungActionPose.Sample(clipNow,t-RiseEnd,t>=PlantEnd);}}
+            {
+                var animator=hung.visual.GetComponentInChildren<Animator>();
+                if(animator!=null)
+                {
+                    hungActionPose??=new Map01CinematicPose(animator,null,false);
+                    hungActionPose.Sample(clipNow,t>=ShotAt?t-ShotAt:t-RiseEnd,t>=PlantEnd&&t<ShotAt);
+                }
+            }
             TickNhipSau(t);
         }
         void RearFlash()

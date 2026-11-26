@@ -82,7 +82,8 @@ namespace ShadowVale.Map01
         {
             if(!DayActivityActive)return;
             EndLampDrag();dayHelpVisible=false;dayActivity=DayActivity.None;ResetStakeStrike();dayCloseRequested=false;EndWorkView();nightPropPreview?.Hide();ReleaseStake();ReleaseDockObserver();dayReturnInput=DayInputHeld;dayReturnUntil=Time.unscaledTime+.12f;Cursor.visible=dayCursorVisible;Cursor.lockState=dayCursorLock;
-            combat.Equip(dayWeapon);combat.SetHandsOccupied(false);combat.RestoreAfterCinematic();player.RestoreMotion(false);ForestMenu.SuppressKeysAfterCutscene();
+            ReleaseDayFreePose(restoreGameplay:false);
+            player.RestoreMotion(false);combat.Equip(dayWeapon);combat.SetHandsOccupied(false);combat.RestoreAfterCinematic();ForestMenu.SuppressKeysAfterCutscene();
             SyncDayProps();if(checkpoint)Mission.StoreCheckpoint();
         }
         void StartPost(Map02ChapterTask t)

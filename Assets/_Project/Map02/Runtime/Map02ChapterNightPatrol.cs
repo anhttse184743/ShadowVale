@@ -150,11 +150,11 @@ namespace ShadowVale.Map01
         {
             if(NightPatrolFailureActive)
             {
-                health.CinematicInvulnerable=nightFailureProtected;combat.SetHandsOccupied(false);rig.ClearCinematicView();
-                var actor=Mission.Player.GetComponentInChildren<Animator>();
-                if(actor!=null&&actor.runtimeAnimatorController!=null){actor.ResetTrigger(PlayerCombat.AnimatorParams.Die);actor.Play(PlayerCombat.LocomotionState,0,0);}
+                if(health!=null)health.CinematicInvulnerable=nightFailureProtected;
+                if(combat!=null){combat.SetHandsOccupied(false);combat.RestoreAfterCinematic();}
+                if(rig!=null)rig.ClearCinematicView();
             }
-            nightFailureClock=-1;nightWarningAudio?.Stop();
+            nightFailureClock=-1;if(nightWarningAudio!=null)nightWarningAudio.Stop();
         }
         public float NightPatrolScanRate=>NightObservationRulesActive?.5f:1f;
         public float NightPatrolDetectionRange=>NightObservationRulesActive?40:Layout!=null?Mathf.Clamp(Layout.nightPatrolLightRange,10,55):28;

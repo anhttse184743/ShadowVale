@@ -109,10 +109,10 @@ namespace ShadowVale.Map01
             var actor=mission.player.GetComponentInChildren<Animator>();var clips=actor.runtimeAnimatorController!=null?actor.runtimeAnimatorController.animationClips:Array.Empty<AnimationClip>();
             OwnStoryActors();storyBeat=1;nextHeartbeat=0;
             bool knife=mission.ModernCombat.EquippedKind==WeaponKind.Knife;
-            alarmCrouch=knife?Map01CinematicPose.Clip("Nam_Bush_Recovery"):clips.FirstOrDefault(c=>c.name=="Nam_Crouch_Idle");
+            alarmCrouch=knife?Map01CinematicPose.Clip("Nam_Bush_Recovery"):T005fApprovedPose.CrouchIdle(clips);
             alarmCrouch??=introNamIdle;
             alarmWalk=clips.FirstOrDefault(c=>c.name.Contains(storySneaking?"Crouch_Walk_B":"Rifle_Walk_B"));alarmReverseWalk=false;
-            if(alarmWalk==null&&storySneaking){alarmWalk=clips.FirstOrDefault(c=>c.name=="Nam_Crouch_Walk_F");alarmReverseWalk=alarmWalk!=null;}
+            if(alarmWalk==null&&storySneaking){alarmWalk=T005fApprovedPose.CrouchWalk(clips);alarmReverseWalk=alarmWalk!=null;}
             alarmWalk??=clips.FirstOrDefault(c=>c.name.Contains("Walk_B"))??introNamIdle;
             alarmRetreat=introNamPosition;
             foreach(float side in new[]{0f,.55f,-.55f}){

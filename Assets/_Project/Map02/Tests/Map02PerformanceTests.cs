@@ -52,6 +52,11 @@ namespace ShadowVale.Map01.Tests
                     Assert.Greater(Vector3.Dot(torso.normalized,Vector3.up),.98f);
                     Assert.Greater(Vector3.Dot(feet,m.Player.right),.14f,$"Nam's steps cross at {t:F2}s.");
                 }
+                var pose=Get(c,"namPose");
+                var graphField=typeof(Map01CinematicPose).GetField("graph",BindingFlags.Instance|BindingFlags.NonPublic);
+                var blendGraph=graphField.GetValue(pose);
+                Set(c,"sceneClock",walkUntil-.2f);Call(c,"LateUpdate");
+                Assert.AreEqual(blendGraph,graphField.GetValue(pose),"Keep the walk-to-idle blend graph alive across consecutive frames.");
 
                 var house=(Transform)Get(c,"nightRestHouse");Assert.AreEqual("Bamboo thatch house 6",house.name);
                 var mat=GameObject.Find("Chiếu cói");Assert.NotNull(mat);

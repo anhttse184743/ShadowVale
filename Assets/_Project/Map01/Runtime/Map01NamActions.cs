@@ -79,7 +79,11 @@ namespace ShadowVale.Map01
             if (mission == null || mission.player == null) return null;
             var actions = mission.player.GetComponent<Map01NamActions>();
             if (actions == null) actions = mission.player.gameObject.AddComponent<Map01NamActions>();
-            if (actions.mission == null) actions.Bind(mission);
+            if (actions.mission == null || actions.mission.MapOne != mission.MapOne || actions.mission.MapTwo != mission.MapTwo)
+            {
+                actions.Bind(mission);
+                actions.enabled = true;
+            }
             return actions;
         }
 
@@ -91,6 +95,7 @@ namespace ShadowVale.Map01
             controller = owner.player.GetComponent<PlayerController>(); combat = owner.ModernCombat;
             body = owner.player.GetComponent<CharacterController>();
             if (actor == null || actor.runtimeAnimatorController == null) return;
+            stoneFingers.Clear();
             upperLayer = actor.GetLayerIndex(UpperLayer); stanceLayer = actor.GetLayerIndex(PlayerCombat.UpperBodyLayer);
             hasFullMoves = actor.HasState(0, Animator.StringToHash("Act_Takedown"));
             // Nam's fingers deliberately use generic bone curves, not Humanoid muscles.
@@ -127,8 +132,9 @@ namespace ShadowVale.Map01
             foreach(var bone in saved)bone.bone.localRotation=bone.rotation;
         }
 
-        private bool Ready(int layer) => actor != null && layer > 0 && actor.isActiveAndEnabled;
-        private bool ReadyFull => actor != null && hasFullMoves && actor.isActiveAndEnabled;
+        private bool HasGameplayAnimator => actor != null && actor.runtimeAnimatorController != null && actor.isActiveAndEnabled;
+        private bool Ready(int layer) => layer > 0 && HasGameplayAnimator;
+        private bool ReadyFull => hasFullMoves && HasGameplayAnimator;
 
         private void Fire(int id) { actor.SetInteger("Action", id); actor.SetTrigger("DoAction"); }
 

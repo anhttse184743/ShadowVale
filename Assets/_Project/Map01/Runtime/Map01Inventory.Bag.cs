@@ -258,7 +258,7 @@ namespace ShadowVale.Map01
             if (drawn) {
                 bool wasThrowable = ThrowableEquipped;
                 ThrowableEquipped = false; GetComponent<Map01StoneThrow>()?.Cancel();
-                if (wasThrowable) Map01NamActions.For(mission.MapOne)?.CancelAction();
+                if (wasThrowable) Map01NamActions.For(mission)?.CancelAction();
                 mission.ModernCombat.SetHandsOccupied(false);
             }
             return drawn;
@@ -303,7 +303,7 @@ namespace ShadowVale.Map01
             if(mission?.MapTwo?.CharacterGearLocked==true)return;
             if (System.Array.IndexOf(Throwables, id) < 0) return;
             GetComponent<Map01StoneThrow>()?.Cancel();
-            Map01NamActions.For(mission.MapOne)?.CancelAction();
+            Map01NamActions.For(mission)?.CancelAction();
             throwable = id; ThrowableEquipped = true; ThrowableChosenAt = Time.time;
             mission?.ModernCombat?.SetHandsOccupied(true);
             Changed?.Invoke();

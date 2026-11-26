@@ -42,26 +42,37 @@ namespace ShadowVale.Map01
         {
             if (owner?.player == null) return null;
             var result = owner.player.GetComponent<NamProneMotion>();
-            if (result != null) return result;
+            if (result != null)
+            {
+                result.BindSession(owner);
+                return result;
+            }
             var data = Resources.Load<NamProneAnimationData>("Animations/NamProne");
             if (data == null) { Debug.LogError("Missing shared Nam prone animation data."); return null; }
             result = owner.player.gameObject.AddComponent<NamProneMotion>();
-            result.mission = owner; result.data = data;
-            result.movement = owner.player.GetComponent<PlayerController>(); result.combat = owner.ModernCombat;
+            result.data = data;
             result.actor = owner.player.GetComponentInChildren<Animator>();
-            result.actions = owner.player.GetComponent<Map01NamActions>(); result.bag = owner.GetComponent<Map01Inventory>();
             var nodes = result.actor.GetComponentsInChildren<Transform>(true).GroupBy(t => t.name).ToDictionary(g => g.Key, g => g.First());
             result.bones = data.Find("unarmed").bones.Select(t => nodes[t.name]).ToArray();
             result.previous = new Map01PistolAnimationData.Pose[result.bones.Length];
             result.displayed = new Map01PistolAnimationData.Pose[result.bones.Length];
             result.twist = result.actor.GetComponent<ForearmTwist>();
             result.rightHand = result.actor.GetBoneTransform(HumanBodyBones.RightHand);
-            result.movement.ProneAllowed = () => result.Available && result.movement.enabled && !result.combat.IsReloading;
-            result.combat.ProneReloadAvailable = () => result != null && result.CanReloadProne;
-            PlayerStealthAdapter.For(owner.player.gameObject).VisibilityProbe = () => VillageRiceInstances.Conceals(result.movement) ? 0f : 1f;
+            result.BindSession(owner);
             return result;
         }
-        bool Available => mission != null && !mission.Cinematic && !(mission.ModernHealth?.IsDead ?? false)
+        void BindSession(CharacterHudSession owner)
+        {
+            mission = owner;
+            movement = owner.player.GetComponent<PlayerController>(); combat = owner.ModernCombat;
+            actions = owner.player.GetComponent<Map01NamActions>(); bag = owner.GetComponent<Map01Inventory>();
+            movement.ProneAllowed = () => Available && movement.enabled && !combat.IsReloading;
+            combat.ProneReloadAvailable = () => this != null && CanReloadProne;
+            PlayerStealthAdapter.For(owner.player.gameObject).VisibilityProbe = () => VillageRiceInstances.Conceals(movement) ? 0f : 1f;
+            enabled = true;
+        }
+        bool CinematicOwnsPose => mission?.Cinematic == true || actor == null || actor.runtimeAnimatorController == null;
+        bool Available => mission != null && !CinematicOwnsPose && !(mission.ModernHealth?.IsDead ?? false)
             && !(actions != null && actions.Busy) && !(mission.Binoculars?.Binoculars ?? false);
         void LateUpdate()
         {
@@ -76,7 +87,7 @@ namespace ShadowVale.Map01
             reloadingPose = reload;
             // Standing story actions get their original full-body pose.
             if (movement.IsProne && !Available) movement.TrySetProne(false);
-            weight = Mathf.MoveTowards(weight, active ? 1 : 0, Time.deltaTime / .24f);
+            weight = CinematicOwnsPose ? 0 : Mathf.MoveTowards(weight, active ? 1 : 0, Time.deltaTime / .24f);
             if (weight > 0 && !ownsTwist && twist != null) { twist.BeginAuthoredPose(); ownsTwist = true; }
             if (weight <= 0) { ReleaseTwist(); selected = null; return; }
             if (movement.PlanarSpeed > .03f) clock += Time.deltaTime * Mathf.Clamp(movement.PlanarSpeed / .65f, 0, 1.4f);
