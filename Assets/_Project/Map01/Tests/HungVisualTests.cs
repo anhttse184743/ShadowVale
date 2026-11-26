@@ -22,7 +22,7 @@ namespace ShadowVale.Map01.Tests
             Assert.IsNotNull(skin);
             Assert.IsNotNull(skin.sharedMaterial.GetTexture("_BaseMap"), "Hung must use the supplied skin texture.");
             Assert.IsNotNull(skin.sharedMaterial.GetTexture("_BumpMap"));
-            Assert.AreEqual("Assets/_Project/Art/Characters/NPCs/Materials/hung - Wounded.mat",
+            Assert.AreEqual("Assets/_Project/Art/Characters/NPCs/Hung_Meshy/Hung_V119.mat",
                 UnityEditor.AssetDatabase.GetAssetPath(skin.sharedMaterial));
             Assert.IsFalse(visual.actor.applyRootMotion);
             Assert.AreEqual(1, visual.actor.layerCount, "Hung has no weapon/aim layer.");
