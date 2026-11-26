@@ -228,7 +228,7 @@ namespace ShadowVale.Map01
                 ||Layout.shelterDoor==null||agent==null||!agent.enabled||!agent.isOnNavMesh)return;
             var visual=mission.hung.GetComponentInChildren<Map01HungVisual>();
             if(visual!=null&&visual.IsRising)return;
-            agent.speed=Map01HungVisual.LimpSpeed;
+            agent.speed=Map01HungVisual.EscortSpeed;
             agent.stoppingDistance=Mathf.Min(.5f,Layout.doorRadius*.25f);
             agent.autoBraking=true;
             if(Time.time<nextHomePathCheck)return;

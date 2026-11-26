@@ -79,6 +79,13 @@ namespace ShadowVale.Map01
         private bool sawRise;
         /// <summary>Ground speed (m/s) at which the Hung_DiKhapKhieng cycle plants its feet.</summary>
         public const float LimpSpeed = 1.8f;
+        /// <summary>Escort pace (m/s). 26/11: 1.8 m/s read as a brisk walk, too fast for a wounded man.</summary>
+        public const float EscortSpeed = 1.1f;
+        /// <summary>
+        /// Speed at which AC_Hung's wounded blend reaches the full limp. It equals the escort pace: blending toward
+        /// the (much longer) idle clip stretches the cycle and the planted foot slides.
+        /// </summary>
+        public const float LimpBlendSpeed = EscortSpeed;
         private GameObject rope;
         private Mesh soleMesh;
         private Map01SkinContact skinContact;
@@ -267,8 +274,8 @@ namespace ShadowVale.Map01
             float speed = !down && !Captive && agent != null && agent.isOnNavMesh && !agent.isStopped
                 ? agent.velocity.magnitude : 0;
             actor.SetFloat("Speed", speed, .12f, Time.deltaTime);
-            // The limp is authored at its natural pace; if the escort hurries him, play it faster rather than slide.
-            actor.SetFloat("LimpRate", Mathf.Max(1, speed / LimpSpeed));
+            // The limp is authored at LimpSpeed; at the slower escort pace it plays slower so the planted foot stays put.
+            actor.SetFloat("LimpRate", Mathf.Max(speed, LimpBlendSpeed) / LimpSpeed);
             if (speed > .15f) talkUntil = 0;
             actor.SetBool("Talking", !down && !Captive && Time.time < talkUntil);
         }
