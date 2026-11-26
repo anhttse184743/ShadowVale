@@ -31,12 +31,12 @@ namespace ShadowVale.Map01.Tests
         {
             var d=Resources.Load<NamMotionData>("Characters/NamMotionV3");Assert.NotNull(d);
             Assert.AreEqual("77727ffeab59bf989dfd9fdd568fbe859ce35541ae6df2a92e6341a32c59ac2c",d.sourceHash);
-            Assert.AreEqual(49,d.clips.Length);Assert.AreEqual(49,d.clips.Select(c=>c.id).Distinct().Count());Assert.NotNull(d.Find("pistol_draw"));Assert.NotNull(d.Find("pistol_holster"));/* T049 26/11: +K-54 draw, holster */Assert.AreEqual(62,d.bones.Length);Assert.AreEqual(3208,d.frames);Assert.AreEqual(60,d.fps);
+            Assert.AreEqual(49,d.clips.Length);Assert.AreEqual(49,d.clips.Select(c=>c.id).Distinct().Count());Assert.NotNull(d.Find("pistol_draw"));Assert.NotNull(d.Find("pistol_holster"));/* T049 26/11: +K-54 draw, holster, appended after the v3 take: 3208 -> 3312 frames */Assert.AreEqual(62,d.bones.Length);Assert.AreEqual(3312,d.frames);Assert.AreEqual(60,d.fps);
             Assert.IsTrue(d.rootFlightRemoved&&d.rootXZRemoved);
             Assert.IsTrue(d.bones.Any(t=>t.name=="LeftForeArmTwist2")&&d.bones.Any(t=>t.name=="RightHandThumb3"));
             foreach(var t in d.bones){Assert.AreEqual(d.frames,t.poses.Length);foreach(var p in t.poses){Assert.IsFalse(float.IsNaN(p.position.x)||float.IsInfinity(p.position.y));Assert.That(Quaternion.Dot(p.rotation,p.rotation),Is.InRange(.98f,1.02f));}}
             Assert.AreEqual(5,d.props.Length);
-            foreach(var p in d.props){Assert.NotNull(p.prefab);Assert.IsNotEmpty(p.parts);foreach(var part in p.parts){Assert.AreEqual(3208,part.track.poses.Length);Assert.AreEqual(3208,part.visible.Length);}}
+            foreach(var p in d.props){Assert.NotNull(p.prefab);Assert.IsNotEmpty(p.parts);foreach(var part in p.parts){Assert.AreEqual(d.frames,part.track.poses.Length);Assert.AreEqual(d.frames,part.visible.Length);}}
         }
         [Test]public void JumpControllerExitsOnActualGroundedAndPreservesStoryStates()
         {
