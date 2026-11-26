@@ -286,6 +286,7 @@ namespace ShadowVale.Map01
             mission.Cinematic=false;mission.ModernHealth.CinematicInvulnerable=invulnerable;rig?.ClearCinematicView();
             if(mode==Mode.Execution&&enemy!=null){var actor=enemy.GetComponentInChildren<Animator>();if(actor!=null&&actor.parameters.Any(p=>p.name=="Engaged"))actor.SetBool("Engaged",false);}
             if(mode==Mode.Shelter){
+                mission.ModernPlayer.RestoreMotion(mission.Crouched);
                 var cc=mission.player.GetComponent<CharacterController>();if(cc!=null)cc.enabled=characterEnabled;
                 mission.ModernPlayer.enabled=playerEnabled;mission.ModernCombat.enabled=combatEnabled;
                 if(hungVisual!=null)hungVisual.enabled=hungVisualEnabled;

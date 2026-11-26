@@ -29,6 +29,7 @@ namespace ShadowVale.Map01
         bool NightReturnPending=>State.night2GuidanceStage<7||liveRadioRemaining>0||chainRemaining>0;
 
         RiverWater[] nightRivers=Array.Empty<RiverWater>();
+        BoxCollider[] nightBridgeDecks=Array.Empty<BoxCollider>();
         static readonly Vector3[] NightCapsuleOffsets={Vector3.zero,Vector3.left*.3f,Vector3.right*.3f,Vector3.forward*.3f,Vector3.back*.3f};
         public Vector3[] NightBankRoute {get;private set;}=Array.Empty<Vector3>();
         public bool NightBankMovementRestricted=>State.phase==3&&!State.Done("N2_03");
@@ -54,6 +55,7 @@ namespace ShadowVale.Map01
             for(int i=0;i<NightBankRoute.Length;i++)if(NavMesh.SamplePosition(NightBankRoute[i],out var hit,1,NavMesh.AllAreas))NightBankRoute[i]=hit.position;
             if(NightBankRoute.Length>0)NightBankRoute[NightBankRoute.Length-1]=NightDoorPosition;
             nightRivers=FindObjectsByType<RiverWater>(FindObjectsSortMode.None);
+            nightBridgeDecks=Array.FindAll(FindObjectsByType<BoxCollider>(FindObjectsSortMode.None),Map02BridgeRails.IsBridgeDeck);
         }
         static Vector3 NearestPlanarPoint(Vector3 p,Vector3 a,Vector3 b)
         {
@@ -62,10 +64,13 @@ namespace ShadowVale.Map01
         }
         bool OnNightBridge(Vector3 p)
         {
-            var deck=NightObservationBridge;if(deck==null)return false;
-            var local=deck.transform.InverseTransformPoint(p)-deck.center;
-            // Shrink to the walkable deck, so the exception never admits the river below it.
-            return Mathf.Abs(local.x)<=deck.size.x*.5f+.4f&&Mathf.Abs(local.z)<=deck.size.z*.5f-.25f&&p.y>=deck.bounds.max.y-.5f;
+            foreach(var deck in nightBridgeDecks)
+            {
+                if(deck==null||!deck.enabled||!deck.gameObject.activeInHierarchy||p.y<deck.bounds.max.y-.5f)continue;
+                var local=deck.transform.InverseTransformPoint(p)-deck.center;
+                if(Mathf.Abs(local.x)<=deck.size.x*.5f+.4f&&Mathf.Abs(local.z)<=deck.size.z*.5f-.25f)return true;
+            }
+            return false;
         }
         public bool NightBankPositionAllowed(Vector3 p)
         {

@@ -25,7 +25,15 @@ namespace ShadowVale.Map01
         public static Map01Mosin Install(Map01Mission owner)=>Install(CharacterHudSession.For(owner.gameObject));
         public static Map01Mosin Install(CharacterHudSession owner)
         {
-            var existing=owner.player.GetComponent<Map01Mosin>();if(existing!=null){existing.mission=owner;existing.combat=owner.ModernCombat;existing.actions=Map01NamActions.For(owner.MapOne);existing.cameraRig=owner.gameCamera.GetComponent<ThirdPersonCamera>();return existing;}
+            var existing=owner.player.GetComponent<Map01Mosin>();
+            if(existing!=null)
+            {
+                existing.mission=owner;existing.combat=owner.ModernCombat;existing.actions=Map01NamActions.For(owner);
+                existing.cameraRig=owner.gameCamera!=null?owner.gameCamera.GetComponent<ThirdPersonCamera>():null;
+                existing.normalCrosshair=GameObject.Find("Crosshair");
+                if(existing.data!=null){existing.aim=existing.weight=0;existing.wasReloading=false;existing.shotAt=-100;existing.enabled=true;}
+                return existing;
+            }
             if(owner.Bundle?.weapons==null||!owner.Bundle.weapons.Any(w=>w!=null&&w.id=="rifle_mosin"))return null;
             var asset=Resources.Load<Map01PistolAnimationData>("Weapons/MosinV13");
             if(asset==null){Debug.LogError("Mosin motion asset is missing. Build ShadowVale/Mosin/Build motion assets.");return null;}
@@ -34,7 +42,7 @@ namespace ShadowVale.Map01
         }
         void Bind(CharacterHudSession owner,Map01PistolAnimationData asset)
         {
-            mission=owner;data=asset;combat=owner.ModernCombat;actor=GetComponentInChildren<Animator>();actions=Map01NamActions.For(owner.MapOne);cameraRig=owner.gameCamera.GetComponent<ThirdPersonCamera>();
+            mission=owner;data=asset;combat=owner.ModernCombat;actor=GetComponentInChildren<Animator>();actions=Map01NamActions.For(owner);cameraRig=owner.gameCamera.GetComponent<ThirdPersonCamera>();
             normalCrosshair=GameObject.Find("Crosshair");
             var map=actor.GetComponentsInChildren<Transform>(true).GroupBy(t=>t.name).ToDictionary(g=>g.Key,g=>g.First());
             bones=data.bones.Select(t=>map.TryGetValue(t.name,out var bone)?bone:null).ToArray();
@@ -51,7 +59,7 @@ namespace ShadowVale.Map01
             twist=GetComponentInChildren<ForearmTwist>();combat.Attacked+=OnShot;
         }
         void OnShot(WeaponKind kind,Vector3 point){if(kind==WeaponKind.Sniper)shotAt=Time.time;}
-        bool Available=>mission!=null&&combat!=null&&combat.EquippedKind==WeaponKind.Sniper&&actor!=null&&actor.isActiveAndEnabled&&!mission.Cinematic
+        bool Available=>mission!=null&&combat!=null&&combat.EquippedKind==WeaponKind.Sniper&&actor!=null&&actor.isActiveAndEnabled&&actor.runtimeAnimatorController!=null&&!mission.Cinematic
             &&!(mission.ModernHealth?.IsDead??false)&&!(mission.Binoculars?.Binoculars??false)&&!(mission.GetComponent<Map01Inventory>()?.IsFieldCrafting??false)&&!(actions!=null&&(actions.Busy||actions.StoneActionPlaying));
         void Update()
         {
@@ -67,7 +75,7 @@ namespace ShadowVale.Map01
             if(data==null)return;
             bool active=Available,interrupted=combat.EquippedKind==WeaponKind.Sniper&&!active;
             if(interrupted)combat.CancelReload();
-            weight=interrupted?0:Mathf.MoveTowards(weight,active?1:0,Time.deltaTime/combat.StanceBlendSeconds);
+            weight=interrupted||mission?.Cinematic==true||actor==null||actor.runtimeAnimatorController==null?0:Mathf.MoveTowards(weight,active?1:0,Time.deltaTime/combat.StanceBlendSeconds);
             if(twist!=null){if(weight>0&&authoredTwist&&!ownsTwist){ownsTwist=true;twist.BeginAuthoredPose();}else if(weight<=0||!authoredTwist)ReleaseTwist();}
             if(weight<=0){if(combat.EquippedKind==WeaponKind.Sniper)combat.GunPresentationReady=false;return;}
             clock+=Time.deltaTime;bool levelled=combat.IsAiming||Time.time-shotAt<Weapon.Cooldown;

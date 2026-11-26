@@ -219,7 +219,9 @@ namespace ShadowVale.Map01
         }
         void FinishTraversal(bool intoRoom)
         {
-            Owner.State.night2InsideStore=intoRoom;ReleasePose();IsClimbing=false;body.enabled=bodyWasEnabled;motor.RestoreMotion(false);Owner.UpdateMarkers();Owner.Mission.RequireInteractionRelease();Owner.Mission.StoreCheckpoint();
+            Owner.State.night2InsideStore=intoRoom;
+            ReleaseTraversal();
+            Owner.UpdateMarkers();Owner.Mission.RequireInteractionRelease();Owner.Mission.StoreCheckpoint();
         }
         void LateUpdate()
         {
@@ -240,10 +242,22 @@ namespace ShadowVale.Map01
             }
         }
         void Bone(HumanBodyBones b,Vector3 angles){var t=actor.GetBoneTransform(b);if(t!=null)t.localRotation*=Quaternion.Euler(angles);}
-        void ReleasePose(){foreach(var pair in climbRest)if(pair.Key!=null)pair.Key.localRotation=pair.Value;climbRest.Clear();climbPose?.Dispose();climbPose=null;cameraRig?.ClearCinematicView();if(combat!=null){combat.SetHandsOccupied(false);combat.Equip(priorWeapon);}}
+        void ReleaseTraversal()
+        {
+            IsClimbing=false;
+            foreach(var pair in climbRest)if(pair.Key!=null)pair.Key.localRotation=pair.Value;
+            climbRest.Clear();climbPose?.Dispose();climbPose=null;
+            if(cameraRig!=null)cameraRig.ClearCinematicView();
+            if(motor!=null)motor.RestoreMotion(false);
+            if(combat!=null){combat.SetHandsOccupied(false);combat.Equip(priorWeapon);combat.RestoreAfterCinematic();}
+            if(body!=null)body.enabled=bodyWasEnabled;
+        }
         public void CancelTraversal()
         {
-            if(!IsClimbing)return;Owner.Mission.Player.position=Inside?BottomLanding:TopStand;ReleasePose();IsClimbing=false;body.enabled=bodyWasEnabled;motor.RestoreMotion(false);
+            if(!IsClimbing)return;
+            var playerRoot=Owner!=null&&Owner.Mission!=null?Owner.Mission.Player:null;
+            if(playerRoot!=null)playerRoot.position=Inside?BottomLanding:TopStand;
+            ReleaseTraversal();
         }
         public void SyncState()
         {
@@ -298,10 +312,11 @@ namespace ShadowVale.Map01
         }
         void OnDestroy()
         {
+            CancelTraversal();
             if(motor!=null&&motor.JumpInteraction==jumpHandler)motor.JumpInteraction=previousJumpInteraction;
             if(motor!=null&&motor.CrouchInteraction==crouchHandler)motor.CrouchInteraction=previousCrouchInteraction;
             foreach(var entry in crops)if(entry.field!=null){entry.field.plants=entry.plants;entry.field.sizes=entry.sizes;entry.field.Rebuild();}
-            CancelTraversal();if(cutTerrain!=null){if(terrainFilter!=null)terrainFilter.sharedMesh=sourceTerrain;if(terrainCollider!=null)terrainCollider.sharedMesh=sourceTerrain;Destroy(cutTerrain);}
+            if(cutTerrain!=null){if(terrainFilter!=null)terrainFilter.sharedMesh=sourceTerrain;if(terrainCollider!=null)terrainCollider.sharedMesh=sourceTerrain;Destroy(cutTerrain);}
         }
     }
 }

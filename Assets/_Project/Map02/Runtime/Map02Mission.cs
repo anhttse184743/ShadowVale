@@ -193,6 +193,11 @@ namespace ShadowVale.Map01
                 InteractHighlight.Focus(nearest!=null?Chapter?.HighlightFor(nearest)??nearest.transform:NearestGroundItem()?.transform);
             }
             var kb=Keyboard.current;if(kb==null)return;bool worldEReady=WorldEReady(kb);
+            if(Panel==0&&!ShadowVale.Core.Services.InputFocus.OverlayOpen)
+            {
+                if(kb.f9Key.wasPressedThisFrame&&!Cinematic){LoadQuickSave();return;}
+                if(kb.f5Key.wasPressedThisFrame){Say(SaveSlot(ForestSaveSlots.QuickSlot,out var error)?"Đã lưu nhanh Map 2.":error);return;}
+            }
             if(dialogue.Active)
             {
                 if(kb.escapeKey.wasPressedThisFrame){CancelConversation();return;}
@@ -418,9 +423,27 @@ namespace ShadowVale.Map01
         {
             error=SaveBlockReason();if(!string.IsNullOrEmpty(error))return false;
             var career=player.GetComponent<SkillCampaignPersistence>();if(career!=null&&!career.TryFlush(out error))return false;
-            try{ForestSaveSlots.Write(slot,new ForestSaveSlots.Entry{sceneName="Map 2",savedAt=DateTime.UtcNow.ToString("o"),playSeconds=PlaySeconds,location=ObjectiveText,checkpoint=JsonUtility.ToJson(Capture())});return true;}
+            try
+            {
+                var payload=JsonUtility.ToJson(Capture());
+                Parse(payload);
+                ForestSaveSlots.Write(slot,new ForestSaveSlots.Entry{sceneName="Map 2",savedAt=DateTime.UtcNow.ToString("o"),playSeconds=PlaySeconds,location=ObjectiveText,checkpoint=payload});
+                return true;
+            }
             catch(Exception e){error="Không thể lưu Map 2: "+e.Message;return false;}
         }
+
+        void LoadQuickSave()
+        {
+            try
+            {
+                if(!ForestSaveSlots.Exists(ForestSaveSlots.QuickSlot)){Say("Chưa có bản lưu nhanh.");return;}
+                if(skillCareer!=null&&!skillCareer.TryFlush(out var error)){Say(error);return;}
+                ForestMenu.LoadSavedGame(ForestSaveSlots.QuickSlot);
+            }
+            catch(Exception e){Say("Không thể tải bản lưu nhanh: "+e.Message);}
+        }
+
         public bool AutoSaveOnExit(out string error)=>SaveSlot(ForestSaveSlots.AutoSlot,out error);
         public static void BeginGame(ForestSaveSlots.Entry entry)
         {

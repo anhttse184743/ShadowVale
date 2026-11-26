@@ -19,6 +19,12 @@ namespace ShadowVale.Map01
         float frame, weight, smoothedSpeed;
         static readonly int BlendSpeed = Animator.StringToHash("T005fBlendSpeed");
 
+        public static AnimationClip CrouchIdle(AnimationClip[] clips) =>
+            clips.FirstOrDefault(clip=>clip.name=="Nam_Crouch_Idle_V21") ?? clips.FirstOrDefault(clip=>clip.name=="Nam_Crouch_Idle");
+
+        public static AnimationClip CrouchWalk(AnimationClip[] clips) =>
+            clips.FirstOrDefault(clip=>clip.name=="Nam_Crouch_Walk_New") ?? clips.FirstOrDefault(clip=>clip.name=="Nam_Crouch_Walk_F");
+
         static bool IsArm(string n) => new[] { "Left", "Right" }.Any(s => n.StartsWith(s+"Shoulder") || n.StartsWith(s+"Arm") || n.StartsWith(s+"ForeArm") || n.StartsWith(s+"Hand"));
 
         void Awake()
@@ -45,6 +51,7 @@ namespace ShadowVale.Map01
         void Update()
         {
             if (!actor || !motor || !combat) return;
+            if (actor.runtimeAnimatorController == null) { smoothedSpeed = 0f; return; }
             var target = actor.GetFloat("Speed");
             smoothedSpeed = Free && motor.IsSneaking ? Mathf.MoveTowards(smoothedSpeed,target,Time.deltaTime*1.2f/.20f) : target;
             actor.SetFloat(BlendSpeed,smoothedSpeed);
@@ -53,6 +60,7 @@ namespace ShadowVale.Map01
         void LateUpdate()
         {
             if (!actor || !motor || !combat || tracks == null) return;
+            if (actor.runtimeAnimatorController == null) { weight = 0f; return; }
             if (!motion) motion = motor.GetComponent<NamMotionRefresh>();
             float applied = motion ? motion.AppliedWeight : 0f;
             bool active = Free && motor.IsSneaking && motor.IsGrounded && motor.PlanarSpeed < .05f && applied < .01f && (!motion || !motion.JumpPlaying);

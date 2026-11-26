@@ -87,7 +87,7 @@ namespace ShadowVale.Map01
             Item = ready;
             mission.ModernCombat?.CancelReload();
             Aiming = true;
-            Map01NamActions.For(mission.MapOne)?.Hold(Map01NamActions.ThrowAim, true);   // the stone drawn back
+            Map01NamActions.For(mission)?.Hold(Map01NamActions.ThrowAim, true);   // the stone drawn back
             Plan(AimTarget());
         }
 
@@ -96,7 +96,7 @@ namespace ShadowVale.Map01
         {
             Aiming = false;
             faceThrowUntil = 0;
-            Map01NamActions.For(mission.MapOne)?.Hold(Map01NamActions.ThrowAim, false);
+            Map01NamActions.For(mission)?.Hold(Map01NamActions.ThrowAim, false);
             Show(false);
         }
 
@@ -110,7 +110,7 @@ namespace ShadowVale.Map01
             Plan(target);
             Aiming = false;
             Show(false);
-            var nam = Map01NamActions.For(mission.MapOne);
+            var nam = Map01NamActions.For(mission);
             if (Launch()) { faceThrowUntil=Time.time+1.1f; nam?.ThrowNow(); } else nam?.Hold(Map01NamActions.ThrowAim, false);
         }
 
@@ -125,7 +125,7 @@ namespace ShadowVale.Map01
             Plan(target);
             mission.ModernCombat?.CancelReload();
             if (!Launch()) return false;
-            Map01NamActions.For(mission.MapOne)?.ThrowNow();
+            Map01NamActions.For(mission)?.ThrowNow();
             faceThrowUntil=Time.time+1.1f;
             return true;
         }

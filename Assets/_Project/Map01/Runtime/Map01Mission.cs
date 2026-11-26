@@ -337,6 +337,8 @@ namespace ShadowVale.Map01
             // The carried actor outlives Map 1; its scene-specific arm/scope drivers must not.
             if(player.TryGetComponent(out Map01Pistol pistolMotion))pistolMotion.enabled=false;
             if(player.TryGetComponent(out Map01Mosin mosinMotion))mosinMotion.enabled=false;
+            if(player.TryGetComponent(out NamProneMotion proneMotion))proneMotion.enabled=false;
+            if(player.TryGetComponent(out NamMotionRefresh motionRefresh))motionRefresh.enabled=false;
             ModernCombat.GunPresentationReady=true;
             GetComponent<DialogueVoice>()?.Stop();
             ModernCombat.Attacked-=OnPlayerAttacked;

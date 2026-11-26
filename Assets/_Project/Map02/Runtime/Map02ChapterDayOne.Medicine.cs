@@ -25,7 +25,7 @@ namespace ShadowVale.Map01
         {
             var lanh=roles["Chị Lành"];if(medicineStart<0&&lines!=null&&lines[lineIndex].speaker=="Nam")medicineStart=sceneClock;
             float t=medicineStart<0?0:sceneClock-medicineStart;
-            namPose?.Sample(medicineStart<0?namIdle:DayClip("NamTraoThuoc"),t,false);lanh.SamplePerformance(DayClip("LanhNhanThuoc"),t,false);lanh.GroundPerformance(lanh.transform.position.y);
+            namPose?.Sample(medicineStart<0?namCalmIdle:DayClip("NamTraoThuoc"),t,false);lanh.SamplePerformance(DayClip("LanhNhanThuoc"),t,false);lanh.GroundPerformance(lanh.transform.position.y);
             // Unity's humanoid retarget leaves the hands some centimetres off where Blender had them (his higher and nearer, hers
             // short), so the packet is held where the take means it, 0.40 m before his chest at 1.22 m, and both pairs of hands
             // are put on it: his from either end, hers either side from under; then it goes with her hands to her chest.

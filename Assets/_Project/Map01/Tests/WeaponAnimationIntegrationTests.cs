@@ -18,23 +18,26 @@ namespace ShadowVale.Map01.Tests
         static void Quiet(){foreach(var enemy in M.Enemies)enemy.enabled=false;M.ModernHealth.CinematicInvulnerable=true;M.GetComponent<Map01Rescue>().MarkIntroSeen();}
         sealed class ThrowKeyHold:System.IDisposable
         {
-            bool pressed=true;readonly Mouse device;readonly Mouse[] physical;readonly System.Action restore;
+            bool pressed=true;readonly Mouse device;readonly Mouse[] physical;readonly Keyboard testKeyboard;readonly System.Action restore;
             public ThrowKeyHold(System.Action restore){
                 this.restore=restore;physical=InputSystem.devices.OfType<Mouse>().Where(m=>m.enabled).ToArray();
                 foreach(var mouse in physical)InputSystem.DisableDevice(mouse);
+                if(Keyboard.current==null)testKeyboard=InputSystem.AddDevice<Keyboard>();
                 device=InputSystem.AddDevice<Mouse>("HeldThrowableMouse");InputSystem.onBeforeUpdate+=Pump;
                 Pump();InputSystem.Update();
             }
             void Pump(){device.MakeCurrent();InputSystem.QueueStateEvent(device,pressed?new MouseState().WithButton(MouseButton.Left):new MouseState());}
             public void Release(){pressed=false;Pump();InputSystem.Update();}
             public void Press(){pressed=true;Pump();InputSystem.Update();}
-            public void Dispose(){InputSystem.onBeforeUpdate-=Pump;InputSystem.RemoveDevice(device);foreach(var mouse in physical)if(mouse.added)InputSystem.EnableDevice(mouse);restore();}
+            public void Dispose(){InputSystem.onBeforeUpdate-=Pump;InputSystem.RemoveDevice(device);if(testKeyboard!=null)InputSystem.RemoveDevice(testKeyboard);foreach(var mouse in physical)if(mouse.added)InputSystem.EnableDevice(mouse);restore();}
         }
         static ThrowKeyHold HoldThrowKey()
         {
             var previous=RouteInputToGame();return new ThrowKeyHold(()=>RestoreInputRouting(previous));
         }
-        static GameObject Held(string id)=>M.player.GetComponentsInChildren<Transform>(true).FirstOrDefault(t=>(t.name=="Throwable in hand — "+id||t.name==id+" in hand"))?.gameObject;
+        static GameObject Held(string id)=>M.player.GetComponentsInChildren<Transform>(true)
+            .Where(t=>t.name=="Throwable in hand — "+id||t.name==id+" in hand")
+            .OrderByDescending(t=>t.gameObject.activeInHierarchy).FirstOrDefault()?.gameObject;
         [UnityTest]
         public IEnumerator GrenadeUsesItsOwnModelReleasesOnceAndKeepsHandsBusyThroughRecovery()
         {
@@ -53,7 +56,7 @@ namespace ShadowVale.Map01.Tests
             Assert.IsFalse(projectile.GetComponentsInChildren<Transform>().Any(t=>t.name=="ring"||t.name.StartsWith("ring.")),"The real imported F1 ring.001 is removed from the airborne grenade.");
             Assert.IsFalse(Held("grenade_f1").activeSelf);Assert.AreEqual(rounds,M.ModernCombat.RoundsInMagazine);Assert.AreEqual(count-1,bag.Count("grenade_f1"),"One release spends exactly one item.");
             yield return WaitGameSeconds(1f);Assert.IsFalse(thrower.PresentingThrow);Assert.IsFalse(M.ModernCombat.InputAllowed());Assert.IsTrue(Held("grenade_f1").activeSelf,"One grenade remains selected after recovery.");
-            Assert.IsTrue(bag.Draw(Map01Inventory.Slot.Primary));yield return null;Assert.IsTrue(M.ModernCombat.InputAllowed());
+            Assert.IsTrue(bag.Draw(Map01Inventory.Slot.Primary));yield return WaitGameSeconds(.1f);Assert.IsTrue(M.ModernCombat.InputAllowed(),"Releasing the mouse lets the drawn weapon receive gameplay input.");
             Assert.IsTrue(M.player.GetComponentsInChildren<Weapon>(true).Where(w=>w.gameObject.activeInHierarchy).SelectMany(w=>w.GetComponentsInChildren<Renderer>()).All(r=>!r.forceRenderingOff),"Drawing the primary restores its rendering.");
             }
             yield return new ExitPlayMode();

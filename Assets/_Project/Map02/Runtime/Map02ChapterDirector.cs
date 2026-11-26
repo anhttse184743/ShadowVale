@@ -29,14 +29,14 @@ namespace ShadowVale.Map01
         /// <summary>Covering Hùng (N3_08): Nam can shift along the bank, slowly, never sprint.</summary>
         public bool CoverFireActive=>State.activeTask=="N3_08"&&!State.Done("N3_08");
         public const float CoverPace=.45f;
-        public bool MaySave=>!Busy&&State.patrolFocusSeconds<=0;
+        public bool MaySave=>!Busy;
         public string SaveReason=>"Hãy hoàn tất thao tác hoặc hội thoại trước khi lưu.";
         public IReadOnlyDictionary<string,Transform> Sites=>sites;
         public Map02ChapterTask CurrentScene=>sceneTask;
         public List<Map02ChapterEnemy> Enemies {get;}=new List<Map02ChapterEnemy>();
         public Map02ChapterLayout Layout {get;private set;}
         float holdClock,detectionClock;Vector3 workOrigin;AudioSource signalAudio;
-        Map01CinematicPose namPose;AnimationClip namIdle;readonly List<GameObject> hiddenWeapons=new List<GameObject>();
+        Map01CinematicPose namPose;readonly List<GameObject> hiddenWeapons=new List<GameObject>();
 
         Material originalSky,chapterSky;UnityEngine.Rendering.AmbientMode originalAmbientMode;Color originalSunColor;
         readonly Dictionary<string,Transform> sites=new Dictionary<string,Transform>();
