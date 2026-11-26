@@ -196,6 +196,7 @@ namespace ShadowVale.Gameplay.Player
         }
         private void LateUpdate()
         {
+            RefreshFirstPersonVisuals();
             // Only the rendering camera owns look input and the global cursor.
             // Arrival leaves a second village rig in the scene with its Camera disabled.
             if (target == null || _camera == null || !_camera.isActiveAndEnabled)
@@ -384,7 +385,10 @@ namespace ShadowVale.Gameplay.Player
 
         public void SetTarget(Transform newTarget)
         {
+            if (target == newTarget) return;
+            RestoreFirstPersonVisuals();
             target = newTarget;
+            RefreshFirstPersonVisuals();
         }
 
         public void SetAiming(bool value)
@@ -407,24 +411,36 @@ namespace ShadowVale.Gameplay.Player
         }
         private void RefreshFirstPersonVisuals()
         {
-            bool value=_binoculars||_scope;
-            if(value==_firstPersonHidden||target==null)return;
-            _firstPersonHidden=value;
-            if (value)
+            bool hide = (_binoculars || _scope) && target != null && isActiveAndEnabled &&
+                _camera != null && _camera.isActiveAndEnabled;
+            if (hide == _firstPersonHidden) return;
+            if (!hide)
             {
-                _hidden = target.GetComponentsInChildren<Renderer>();
-                _hiddenModes = new ShadowCastingMode[_hidden.Length];
-                for (int i = 0; i < _hidden.Length; i++)
-                {
-                    _hiddenModes[i] = _hidden[i].shadowCastingMode;
-                    _hidden[i].shadowCastingMode = ShadowCastingMode.ShadowsOnly;
-                }
+                RestoreFirstPersonVisuals();
+                if (_camera != null) _camera.fieldOfView = Mathf.Lerp(hipFov, aimFov, _aimBlend);
                 return;
             }
+
+            _firstPersonHidden = true;
+            // A holstered weapon can be drawn while the first-person view is still active.
+            _hidden = target.GetComponentsInChildren<Renderer>(true);
+            _hiddenModes = new ShadowCastingMode[_hidden.Length];
+            for (int i = 0; i < _hidden.Length; i++)
+            {
+                _hiddenModes[i] = _hidden[i].shadowCastingMode;
+                _hidden[i].shadowCastingMode = ShadowCastingMode.ShadowsOnly;
+            }
+        }
+
+        private void OnDisable() => RestoreFirstPersonVisuals();
+
+        private void RestoreFirstPersonVisuals()
+        {
             for (int i = 0; i < _hidden.Length; i++)
                 if (_hidden[i] != null) _hidden[i].shadowCastingMode = _hiddenModes[i];
             _hidden = System.Array.Empty<Renderer>();
-            _camera.fieldOfView = Mathf.Lerp(hipFov, aimFov, _aimBlend);
+            _hiddenModes = System.Array.Empty<ShadowCastingMode>();
+            _firstPersonHidden = false;
         }
     }
 }

@@ -14,6 +14,7 @@ namespace ShadowVale.Map01
             public string savedAt, location, checkpoint, thumbnail, sceneName;
             public float playSeconds;
         }
+        public const int QuickSlot = 0;
         public const int AutoSlot = 4;
         public const int Count = 5;
 #if UNITY_EDITOR
@@ -81,7 +82,7 @@ namespace ShadowVale.Map01
                 catch (Exception) { /* A damaged slot must not hide other valid slots. */ }
             return result;
         }
-        public static string Title(int slot) => slot == AutoSlot ? "TỰ ĐỘNG LƯU KHI THOÁT" : slot == 0 ? "LƯU NHANH" : "Ô LƯU " + slot.ToString("00");
+        public static string Title(int slot) => slot == AutoSlot ? "TỰ ĐỘNG LƯU KHI THOÁT" : slot == QuickSlot ? "LƯU NHANH" : "Ô LƯU " + slot.ToString("00");
         public static string Duration(float seconds) => TimeSpan.FromSeconds(seconds).ToString(@"hh\:mm\:ss");
     }
 }

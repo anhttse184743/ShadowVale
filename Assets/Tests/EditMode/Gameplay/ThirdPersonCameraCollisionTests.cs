@@ -2,6 +2,7 @@ using System.Reflection;
 using NUnit.Framework;
 using ShadowVale.Gameplay.Player;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace ShadowVale.Tests.EditMode.Gameplay
 {
@@ -77,6 +78,38 @@ namespace ShadowVale.Tests.EditMode.Gameplay
             var corners=new Vector3[4];camera.CalculateFrustumCorners(new Rect(0,0,1,1),camera.nearClipPlane,Camera.MonoOrStereoscopicEye.Mono,corners);
             foreach(var corner in corners) Assert.Greater(view.transform.TransformPoint(corner).z,player.transform.position.z-1.15f);
         }
+
+        [Test] public void FirstPersonRestoresWeaponsWhenTheViewChangesOrStopsRendering()
+        {
+            var rifle = player.AddComponent<MeshRenderer>();
+            var holstered = new GameObject("Holstered weapon");
+            holstered.transform.SetParent(player.transform);
+            var pistol = holstered.AddComponent<MeshRenderer>();
+            pistol.shadowCastingMode = ShadowCastingMode.Off;
+            holstered.SetActive(false);
+            wall = new GameObject("New camera target");
+            var newRifle = wall.AddComponent<MeshRenderer>();
+
+            rig.SetBinoculars(true, 1.6f);
+            holstered.SetActive(true);
+            Assert.AreEqual(ShadowCastingMode.ShadowsOnly, rifle.shadowCastingMode);
+            Assert.AreEqual(ShadowCastingMode.ShadowsOnly, pistol.shadowCastingMode);
+            rig.SetTarget(wall.transform);
+            Assert.AreEqual(ShadowCastingMode.On, rifle.shadowCastingMode);
+            Assert.AreEqual(ShadowCastingMode.Off, pistol.shadowCastingMode);
+            Assert.AreEqual(ShadowCastingMode.ShadowsOnly, newRifle.shadowCastingMode);
+
+            var camera = view.GetComponent<Camera>();
+            camera.enabled = false;
+            Tick();
+            Assert.AreEqual(ShadowCastingMode.On, newRifle.shadowCastingMode);
+            camera.enabled = true;
+            Tick();
+            Assert.AreEqual(ShadowCastingMode.ShadowsOnly, newRifle.shadowCastingMode);
+            rig.SetBinoculars(false, 1.6f);
+            Assert.AreEqual(ShadowCastingMode.On, newRifle.shadowCastingMode);
+        }
+
         [Test] public void CursorComesBackWhenTheScreenThatTookItCloses()
         {
             // What the camera asks for, and the real cursor too where this editor has one (batch mode has none).

@@ -68,13 +68,18 @@ namespace ShadowVale.Map01
             bool focusing=State.patrolFocusSeconds>0;
             if(focusing)
             {
-                State.patrolFocusSeconds=Mathf.Max(0,State.patrolFocusSeconds-dt);
-                if(State.patrolFocusSeconds<=0&&NightPatrolScriptedApproach)
+                if(player.IsProne)State.patrolWarningHidden=true;
+                // On load, give Nam control again before the saved warning can expire.
+                if(patrolLoadGrace<=0)
                 {
-                    if(!nightWarningHidden&&!player.IsProne){BeginNightPatrolFailure();return;}
-                    nightWarningHidden=false;
+                    State.patrolFocusSeconds=Mathf.Max(0,State.patrolFocusSeconds-dt);
+                    if(State.patrolFocusSeconds<=0)
+                    {
+                        bool hidden=State.patrolWarningHidden;
+                        State.patrolWarningHidden=false;
+                        if(!hidden&&NightPatrolScriptedApproach){BeginNightPatrolFailure();return;}
+                    }
                 }
-                else if(player.IsProne)nightWarningHidden=true;
             }
             else
             {
@@ -101,7 +106,7 @@ namespace ShadowVale.Map01
                 if(State.patrolWarnings>=2)BeginNightPatrolFailure();
                 else
                 {
-                    nightWarningHidden=false;State.patrolFocusSeconds=NightPatrolWarningSeconds;
+                    State.patrolWarningHidden=false;State.patrolFocusSeconds=NightPatrolWarningSeconds;
                     State.patrolFocusDirection=Mission.Player.position; // Fixed world point, shared by all guards.
                     ShowNightPatrolSuspicion();
                 }

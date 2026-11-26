@@ -57,6 +57,8 @@ namespace ShadowVale.Map01
             player.SurfaceSpeedMultiplier=State.wounded?WoundedPace:1;
             player.SprintAllowed=CanSprintDuringChapter;
             detectionClock=0;scannedAt=-99;patrolLoadGrace=2;
+            if(NightPatrolScriptedApproach&&State.patrolFocusSeconds>0&&!State.patrolWarningHidden)
+                ShowNightPatrolSuspicion();
             if(State.phase==1&&State.Done("N1_03")&&!State.Done("N1_04"))roles["Hùng"].GoTo(sites["nightOneRest"].position,1.25f);
             ArrangeDayFamily();UpdateMarkers();SyncDayProps();TickLight(10f);
             TickTank(0,true);TickBoats(0,true);
@@ -74,8 +76,9 @@ namespace ShadowVale.Map01
         }
         public void Cancel()
         {
-            if(sceneTask?.id=="N2_05"&&nightRestHouse!=null)
-                Mission.Player.SetPositionAndRotation(nightNamStart,nightNamStartRotation);
+            var playerRoot=Mission!=null?Mission.Player:null;
+            if(sceneTask?.id=="N2_05"&&nightRestHouse!=null&&playerRoot!=null)
+                playerRoot.SetPositionAndRotation(nightNamStart,nightNamStartRotation);
             if(doingWork&&workTask?.kind=="antenna"){doingWork=false;ReleaseAntennaTraversal();}
             antennaTied=false;
             CancelEvacuationCapture();
@@ -86,7 +89,26 @@ namespace ShadowVale.Map01
             EndScoutEscort();
             ReleaseWorkWeapon();ReleaseDayScene();ReleaseDayFreePose();CloseDay(false);EndDuck();dayReturnInput=false;dayArrivalStarting=dayDockEnding=false;
             if(health!=null&&sceneTask!=null)health.CinematicInvulnerable=protectedBefore;
-            ClearEntrances();DropBarks();ReleaseConversation();ReleaseSceneAction();phaseFade=0;binocularHeld=false;binocular=false;observed=0;detectionClock=0;if(rig!=null)rig.SetBinoculars(false,1);if(combat!=null)combat.SetHandsOccupied(false);handsBusy=false;if(namPose!=null){namPose.Dispose();namPose=null;combat?.RestoreAfterCinematic();}foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}voice?.Stop();if(Patching)EndPatch();EndStepsRehearsal();sceneTask=null;doingWork=false;lines=null;escort?.StopAt(escort.transform.position);escort=null;secondaryEscort?.StopAt(secondaryEscort.transform.position);secondaryEscort=null;rig?.ClearCinematicView();
+            ClearEntrances();DropBarks();ReleaseConversation();ReleaseSceneAction();
+            phaseFade=0;binocularHeld=false;binocular=false;observed=0;detectionClock=0;handsBusy=false;
+            if(rig!=null)rig.SetBinoculars(false,1);
+            bool hadPose=namPose!=null;
+            namPose?.Dispose();namPose=null;
+            foreach(var weapon in hiddenWeapons)if(weapon!=null)weapon.SetActive(true);
+            hiddenWeapons.Clear();
+            if(combat!=null)
+            {
+                combat.SetHandsOccupied(false);
+                if(hadPose)combat.RestoreAfterCinematic();
+            }
+            if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}
+            if(voice!=null)voice.Stop();
+            if(Patching)EndPatch();
+            EndStepsRehearsal();sceneTask=null;doingWork=false;lines=null;
+            if(escort!=null)escort.StopAt(escort.transform.position);
+            if(secondaryEscort!=null)secondaryEscort.StopAt(secondaryEscort.transform.position);
+            escort=secondaryEscort=null;
+            if(rig!=null)rig.ClearCinematicView();
         }
         void ApplyState()
         {

@@ -28,7 +28,10 @@ namespace ShadowVale.Map01.Tests
             EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
             Map02Mission m=null;float until=Time.realtimeSinceStartup+100;
             while(Time.realtimeSinceStartup<until){m=Object.FindFirstObjectByType<Map02Mission>();if(m?.Ready==true&&m.Chapter!=null)break;Object.FindFirstObjectByType<Map02Arrival>()?.Skip();yield return null;}
-            Assert.NotNull(m?.Chapter);Physics.SyncTransforms();
+            Assert.NotNull(m?.Chapter);
+            var night=m.Capture();night.chapter=Through("D2_07");m.Restore(night);
+            Assert.IsTrue(m.Chapter.NightBankMovementRestricted);
+            Physics.SyncTransforms();
             var probe=new GameObject("Bridge collision character probe");probe.layer=m.Player.gameObject.layer;var body=probe.AddComponent<CharacterController>();body.height=1.75f;body.radius=.3f;body.center=Vector3.up*.875f;body.stepOffset=.3f;
             try
             {
@@ -45,9 +48,19 @@ namespace ShadowVale.Map01.Tests
                         Assert.Greater(side*(local.z-deck.center.z),.6f,"Probe must really move toward the rail.");
                     }
                     var start=deck.transform.TransformPoint(new Vector3(deck.center.x-deck.size.x*.4f,top,deck.center.z));
-                    var end=deck.transform.TransformPoint(new Vector3(deck.center.x+deck.size.x*.4f,top,deck.center.z));PlaceProbe(body,start);
-                    int steps=Mathf.CeilToInt(Vector3.Distance(start,end)/.15f);for(int step=0;step<steps;step++)body.Move(deck.transform.right*.15f+Vector3.down*.03f);
-                    Assert.Greater(deck.transform.InverseTransformPoint(probe.transform.position).x-deck.center.x,deck.size.x*.3f,"Bridge centre must stay passable.");
+                    var end=deck.transform.TransformPoint(new Vector3(deck.center.x+deck.size.x*.4f,top,deck.center.z));
+                    int steps=Mathf.CeilToInt(Vector3.Distance(start,end)/.15f);
+                    foreach(int direction in new[]{1,-1})
+                    {
+                        PlaceProbe(body,direction>0?start:end);
+                        for(int step=0;step<steps;step++)
+                        {
+                            var movement=deck.transform.right*(direction*.15f)+Vector3.down*.03f;
+                            body.Move(m.Chapter.ConstrainNightMovement(probe.transform.position,movement));
+                        }
+                        float reached=direction*(deck.transform.InverseTransformPoint(probe.transform.position).x-deck.center.x);
+                        Assert.Greater(reached,deck.size.x*.3f,deck.transform.parent.name+" must remain passable from both ends during Night 2.");
+                    }
                     var path=new NavMeshPath();Assert.IsTrue(NavMesh.SamplePosition(start,out var a,2,NavMesh.AllAreas));Assert.IsTrue(NavMesh.SamplePosition(end,out var b,2,NavMesh.AllAreas));
                     Assert.IsTrue(NavMesh.CalculatePath(a.position,b.position,NavMesh.AllAreas,path));Assert.AreEqual(NavMeshPathStatus.PathComplete,path.status);
                 }

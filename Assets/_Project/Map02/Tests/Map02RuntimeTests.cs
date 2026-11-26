@@ -6,6 +6,8 @@ using System.Reflection;
 using NUnit.Framework;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.TestTools;
 using ShadowVale.Gameplay.Combat;
 using Object=UnityEngine.Object;
@@ -63,6 +65,77 @@ namespace ShadowVale.Map01.Tests
             finally{storage.SetValue(null,old);m.SetPaused(false);}
             yield return new ExitPlayMode();
         }
+
+        [UnityTest, Timeout(180000)] public IEnumerator QuickSaveAndLoadRestoreMapTwoThroughTheGameplayKeys()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");
+            yield return new EnterPlayMode();
+            float deadline = Time.realtimeSinceStartup + 60;
+            Map02Mission mission = null;
+            while (Time.realtimeSinceStartup < deadline)
+            {
+                mission = Object.FindFirstObjectByType<Map02Mission>();
+                if (mission?.Ready == true && mission.Chapter != null) break;
+                Object.FindFirstObjectByType<Map02Arrival>()?.Skip();
+                yield return null;
+            }
+            Assert.NotNull(mission?.Chapter);
+            var afterArrival = mission.Capture();
+            afterArrival.chapter.dayOne.arrivalSeen = true;
+            mission.Restore(afterArrival);
+            var storage = typeof(ForestSaveSlots).GetField("storageRoot", BindingFlags.Static | BindingFlags.NonPublic);
+            var oldStorage = storage.GetValue(null);
+            var routing = RouteInputToGame();
+            var keyboard = InputSystem.AddDevice<Keyboard>();
+            keyboard.MakeCurrent();
+            try
+            {
+                storage.SetValue(null, Path.GetFullPath("Temp/Map02QuickSaveTests/" + Guid.NewGuid().ToString("N")));
+                deadline = Time.realtimeSinceStartup + 10;
+                while ((mission.Cinematic || !mission.CanSave()) && Time.realtimeSinceStartup < deadline)
+                    yield return null;
+                Assert.IsTrue(mission.CanSave(), mission.SaveBlockReason());
+                Assert.IsFalse(mission.InputBlocked, "Quick save must be tested during free movement.");
+                var health = mission.Player.GetComponent<Health>();
+                health.RestoreHealth(61);
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.F5));
+                deadline = Time.realtimeSinceStartup + 5;
+                while (!ForestSaveSlots.Exists(ForestSaveSlots.QuickSlot) && Time.realtimeSinceStartup < deadline)
+                    yield return null;
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+                yield return null;
+                var entry = ForestSaveSlots.Read(ForestSaveSlots.QuickSlot);
+                Assert.NotNull(entry, "F5 must write the quick slot. HUD: " + mission.HudMessage);
+                Assert.AreEqual("Map 2", entry.sceneName);
+                Assert.AreEqual(61, Map02Mission.Parse(entry.checkpoint).health);
+
+                health.RestoreHealth(22);
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState(Key.F9));
+                deadline = Time.realtimeSinceStartup + 10;
+                while (mission != null && Time.realtimeSinceStartup < deadline) yield return null;
+                InputSystem.QueueStateEvent(keyboard, new KeyboardState());
+                Assert.IsTrue(mission == null, "F9 must replace the live scene with the saved scene.");
+                deadline = Time.realtimeSinceStartup + 60;
+                Map02Mission restored = null;
+                while (Time.realtimeSinceStartup < deadline)
+                {
+                    restored = Object.FindFirstObjectByType<Map02Mission>();
+                    if (restored?.Ready == true && restored.Chapter != null && restored != mission) break;
+                    Object.FindFirstObjectByType<Map02Arrival>()?.Skip();
+                    yield return null;
+                }
+                Assert.NotNull(restored?.Chapter);
+                Assert.AreEqual(61, restored.Player.GetComponent<Health>().Current);
+            }
+            finally
+            {
+                InputSystem.RemoveDevice(keyboard);
+                RestoreInputRouting(routing);
+                storage.SetValue(null, oldStorage);
+            }
+            yield return new ExitPlayMode();
+        }
+
         static void Move(Map02Mission m,Vector3 p){var c=m.Player.GetComponent<CharacterController>();c.enabled=false;m.Player.position=p;c.enabled=true;Physics.SyncTransforms();}
     }
 }

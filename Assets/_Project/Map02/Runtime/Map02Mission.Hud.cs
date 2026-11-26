@@ -91,7 +91,7 @@ namespace ShadowVale.Map01
                 }
             }
             GUI.Label(new Rect(28,310+plateHeight,350,50),"J chọn việc / xem hướng dẫn · M bản đồ",hudCaption);
-            GUI.Label(new Rect(28,355+plateHeight,350,50),HasCheckpoint?"Đã có checkpoint · Esc lưu / tải":"Chưa có checkpoint",hudCaption);
+            GUI.Label(new Rect(28,355+plateHeight,350,50),"F5 lưu nhanh · F9 tải nhanh · Esc menu",hudCaption);
             hudCombatIcons??=Resources.Load<Texture2D>("Hud/CombatIcons");
             if(hudHealth==null)
             {

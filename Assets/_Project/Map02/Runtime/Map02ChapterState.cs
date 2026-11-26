@@ -48,6 +48,7 @@ namespace ShadowVale.Map01
         public float patrolScanSeconds;
         public int nightPatrolSeed,nightPatrolCycle;
         public float patrolFocusSeconds;
+        public bool patrolWarningHidden;
         public Vector3 patrolFocusDirection;
         public int night2GuidanceStage;
         public bool night2ChainCuePlayed;
@@ -110,6 +111,7 @@ namespace ShadowVale.Map01
             introduced.RemoveAll(id=>id=="N2_03"||id=="N2_04"||id=="N2_05");
             activeTask=carry=null;trackedTask="N2_03";taskProgress=0;workCount=0;
             patrolWarnings=0;patrolScanSeconds=patrolFocusSeconds=0;patrolFocusDirection=Vector3.zero;night2GuidanceStage=1;night2ChainCuePlayed=false;night2HatchOpen=night2InsideStore=night2ReachedStore=false;night2RouteVisited.Clear();
+            patrolWarningHidden=false;
             night2EvacuationStarted=night2FieldObserved=false;night2EvacuationChoice=night2RejectedRoutes=0;night2EvacuationPatrolClock=0;
             night2EvacuationPatrolAtEnd=false;
             night2EvacuationPatrolTriggered=false;night2EvacuationPatrolVersion=0;night2EvacuationPatrolDirection=1;

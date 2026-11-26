@@ -29,7 +29,7 @@ namespace ShadowVale.Map01
         /// <summary>Covering Hùng (N3_08): Nam can shift along the bank, slowly, never sprint.</summary>
         public bool CoverFireActive=>State.activeTask=="N3_08"&&!State.Done("N3_08");
         public const float CoverPace=.45f;
-        public bool MaySave=>!Busy&&State.patrolFocusSeconds<=0;
+        public bool MaySave=>!Busy;
         public string SaveReason=>"Hãy hoàn tất thao tác hoặc hội thoại trước khi lưu.";
         public IReadOnlyDictionary<string,Transform> Sites=>sites;
         public Map02ChapterTask CurrentScene=>sceneTask;

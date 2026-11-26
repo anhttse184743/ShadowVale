@@ -62,7 +62,7 @@ namespace ShadowVale.Map01
                 m.DrawCharacterAwareness(width,height,hudSmall);
                 DrawHudFeedback(width,height);
                 if(!string.IsNullOrEmpty(m.InteractionPrompt))GUI.Label(new Rect(width/2-360,height-160,720,50),"[E] "+m.InteractionPrompt,hudBody);
-                GUI.Label(new Rect(28,height-52,width-430,50),"Tab Túi đồ · 1 Súng chính · 2 Súng ngắn · 3 Dao · 4 Đồ ném · R Nạp đạn · H Hồi máu\nM Bản đồ · J Nhiệm vụ · Esc Menu",hudSmall);
+                GUI.Label(new Rect(28,height-52,width-430,50),"Tab Túi đồ · 1 Súng chính · 2 Súng ngắn · 3 Dao · 4 Đồ ném · R Nạp đạn · H Hồi máu\nM Bản đồ · J Nhiệm vụ · F5 Lưu nhanh · F9 Tải nhanh · Esc Menu",hudSmall);
             }
             finally{GUI.matrix=matrix;GUI.color=color;GUI.depth=depth;}
         }
