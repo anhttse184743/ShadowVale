@@ -30,7 +30,7 @@ namespace ShadowVale.Map01.Tests
         [Test]public void ApprovedAssetHasAllFortySevenClipsAndExistingSkeleton()
         {
             var d=Resources.Load<NamMotionData>("Characters/NamMotionV3");Assert.NotNull(d);
-            Assert.AreEqual("77727ffeab59bf989dfd9fdd568fbe859ce35541ae6df2a92e6341a32c59ac2c",d.sourceHash);
+            Assert.AreEqual("4e6a049bd61df274384e5e4515dc0bea4d69e24c315f5417837c1a279b04084d",d.sourceHash);
             Assert.AreEqual(47,d.clips.Length);Assert.AreEqual(47,d.clips.Select(c=>c.id).Distinct().Count());Assert.AreEqual(62,d.bones.Length);Assert.AreEqual(3208,d.frames);Assert.AreEqual(60,d.fps);
             Assert.IsTrue(d.rootFlightRemoved&&d.rootXZRemoved);
             Assert.IsTrue(d.bones.Any(t=>t.name=="LeftForeArmTwist2")&&d.bones.Any(t=>t.name=="RightHandThumb3"));

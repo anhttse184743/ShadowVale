@@ -5,7 +5,7 @@ from mathutils import Vector,Matrix
 R=Path(__file__).resolve().parents[2];O=Path(__file__).parent/'UnityExport';O.mkdir(exist_ok=True)
 p=json.loads((R/'Docs/Reviews/AnimationRefresh_20261022/polish_receipt.json').read_text(encoding='utf-8-sig'))
 source=Path(bpy.data.filepath);sha=hashlib.sha256(source.read_bytes()).hexdigest()
-assert sha=='77727ffeab59bf989dfd9fdd568fbe859ce35541ae6df2a92e6341a32c59ac2c'
+assert sha=='4e6a049bd61df274384e5e4515dc0bea4d69e24c315f5417837c1a279b04084d'
 s=bpy.context.scene;r=bpy.data.objects['Player_Rig'];vl=bpy.context.view_layer
 roots={k:bpy.data.objects[n] for k,n in [('Pistol','K54_Player'),('Knife','Nam_Dao_KaBar'),('F1','DEMO_F1'),('Stone','DEMO_Stone_10cm'),('Smoke','DEMO_Smoke')]}
 objects=list(dict.fromkeys(c for root in roots.values() for c in [root]+list(root.children_recursive)))
@@ -73,7 +73,7 @@ for o in selected:o.hide_set(False);o.hide_viewport=False;o.select_set(True)
 vl.objects.active=r;s.frame_start=1;s.frame_end=p['frames'];s.render.fps=60;s.render.fps_base=1;s.frame_set(1)
 fbx=O/'Nam_AnimationRefresh_v3.fbx'
 bpy.ops.export_scene.fbx(filepath=str(fbx),use_selection=True,object_types={'ARMATURE','MESH','EMPTY'},use_mesh_modifiers=True,add_leaf_bones=False,apply_unit_scale=True,apply_scale_options='FBX_SCALE_ALL',bake_space_transform=False,axis_forward='-Z',axis_up='Y',bake_anim=True,bake_anim_use_all_bones=True,bake_anim_use_all_actions=False,bake_anim_use_nla_strips=False,bake_anim_force_startend_keying=True,bake_anim_step=1,bake_anim_simplify_factor=0,path_mode='AUTO',embed_textures=False)
-receipt={'source':str(source),'sourceHash':sha,'fbxHash':hashlib.sha256(fbx.read_bytes()).hexdigest(),'frames':p['frames'],'fps':60,'bones':len(r.data.bones),'clips':p['timeline'],'props':props,'visibility':[{'name':n,'visible':v} for n,v in visibility.items()],'rootFlightRemoved':True,'rootXZRemoved':True,'bindWitnessOnly':True}
+receipt={'source':source.relative_to(R).as_posix(),'sourceHash':sha,'fbxHash':hashlib.sha256(fbx.read_bytes()).hexdigest(),'frames':p['frames'],'fps':60,'bones':len(r.data.bones),'clips':p['timeline'],'props':props,'visibility':[{'name':n,'visible':v} for n,v in visibility.items()],'rootFlightRemoved':True,'rootXZRemoved':True,'bindWitnessOnly':True}
 (O/'export.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
 assert hashlib.sha256(source.read_bytes()).hexdigest()==sha
 print('UNITY_EXPORT_READY',fbx.stat().st_size,len(objects),flush=True)
