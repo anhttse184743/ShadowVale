@@ -55,6 +55,7 @@ namespace ShadowVale.Map01.Tests
                 Set("sceneClock",start+3.6f);Call("LateUpdate");Assert.AreEqual(1,c.State.dayOne.medicineMask&1,"Given once she has it.");Assert.NotNull(c.CurrentScene,"The scene holds until the packet is hers.");c.Cancel();
                 // D1_05: Nam at the stake with the two-handed mallet, chú Bảy observing beside the spare boards; a press lands a blow.
                 LoadBefore("D1_05");var dock=Map02ChapterDefinition.Load().Find("D1_05");var kind=typeof(Map02ChapterDirector).GetNestedType("DayActivity",BindingFlags.NonPublic);
+                var gameplayController=nam.runtimeAnimatorController;
                 typeof(Map02ChapterDirector).GetMethod("OpenDay",Private).Invoke(c,new object[]{System.Enum.Parse(kind,"Dock"),dock});Call("FinishDayHelp");Call("DayLateUpdate");
                 var stake=((System.Collections.Generic.List<Transform>)Get("physicalStakes"))[0];var bay=c.Actor("Chú Bảy").Animator;
                 Assert.AreEqual(.76f,Vector3.Distance(Flat(m.Player.position),Flat(stake.position)),.1f,"Nam stands at the stake.");
@@ -67,7 +68,13 @@ namespace ShadowVale.Map01.Tests
                 // The dock is worked in the world: the camera is in on the stake, side on, and the controls are a strip.
                 var lens2=Object.FindObjectsByType<Camera>(FindObjectsSortMode.None).First(x=>x.enabled&&x.targetTexture==null).transform;
                 Assert.Less(Vector3.Distance(lens2.position,stake.position),4.5f,"The camera comes in on the stake.");Assert.Greater(Vector3.Dot(lens2.forward,(stake.position-lens2.position).normalized),.8f,"The stake is in view.");
-                Call("StrikeStake",true);yield return WaitGameSeconds(.1f);ScreenCapture.CaptureScreenshot(Folder+"/stake-blow.png");yield return null;c.enabled=false;Call("CloseDay",false);c.Cancel();
+                Call("StrikeStake",true);yield return WaitGameSeconds(.1f);ScreenCapture.CaptureScreenshot(Folder+"/stake-blow.png");yield return null;c.enabled=false;
+                Assert.NotNull(gameplayController);
+                Assert.IsNull(nam.runtimeAnimatorController,"The hammer pose must be active before closing the work.");
+                Call("CloseDay",false);
+                Assert.AreSame(gameplayController,nam.runtimeAnimatorController,"Closing the dock work must hand Nam back before the next gameplay update.");
+                Assert.IsFalse(mallet.gameObject.activeSelf);
+                c.Cancel();
                 // Laying the boards: the board in hand hangs over the step it would go on.
                 LoadBefore("D1_05");c.State.dayOne.stakeHits=6;typeof(Map02ChapterDirector).GetMethod("OpenDay",Private).Invoke(c,new object[]{System.Enum.Parse(kind,"Dock"),dock});
                 {var cc=m.Player.GetComponent<CharacterController>();cc.enabled=false;m.Player.SetPositionAndRotation(new Vector3(stake.position.x,c.Sites["dock"].position.y,stake.position.z)-Vector3.forward*.95f,Quaternion.identity);cc.enabled=true;}

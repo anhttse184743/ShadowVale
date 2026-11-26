@@ -174,14 +174,12 @@ namespace ShadowVale.Map01
             transform.position=new Vector3(mission.hung.position.x,ground,mission.hung.position.z);
             // Humanoid retargeting changes the foot plane after the neutral scale calibration.
             // Measure the evaluated skin, without changing the skeleton or standing scale.
-            if(skinContact==null)skinContact=new Map01SkinContact(actor);
-            float sole=skinContact.LowestY();
+            // The stand-up puts weight on the knees before the feet. Measure the rendered contact
+            // during the rescue, where the cheap skin estimate can miss the lowest bent surface.
+            float sole=rescueContactActive?float.PositiveInfinity:(skinContact??=new Map01SkinContact(actor)).LowestY();
             if(float.IsInfinity(sole)){
                 if (soleMesh == null) soleMesh = new Mesh();
-                foreach (var skin in actor.GetComponentsInChildren<SkinnedMeshRenderer>()) {
-                    skin.BakeMesh(soleMesh); soleMesh.GetVertices(soleVertices);
-                    foreach (var vertex in soleVertices) sole = Mathf.Min(sole, skin.transform.TransformPoint(vertex).y);
-                }
+                sole=Map01CinematicPose.LowestVisibleY(actor.GetComponentsInChildren<SkinnedMeshRenderer>(),soleMesh,soleVertices,false);
             }
             if (!float.IsInfinity(sole)) transform.position += Vector3.up * (ground - sole);
         }

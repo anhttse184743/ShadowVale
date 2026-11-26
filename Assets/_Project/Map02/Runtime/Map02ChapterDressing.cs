@@ -253,8 +253,17 @@ namespace ShadowVale.Map01
                 var roof=sites["family"].position+Vector3.up*4.2f+Vector3.back*1.5f;
                 var go=new GameObject("Ông Sáu's burning roof");go.transform.SetParent(root.transform);go.transform.position=roof;
                 HouseFire=go.AddComponent<Light>();HouseFire.type=LightType.Point;HouseFire.range=18;HouseFire.color=new Color(1,.45f,.16f);HouseFire.shadows=LightShadows.None;
-                houseSmoke=Map01Fx.System(root.transform,"Roof smoke",roof,Map01Fx.Lit,3,90);var main=houseSmoke.main;main.loop=true;main.startLifetime=4;main.startSpeed=1.6f;main.startSize=2.4f;main.startColor=new Color(.16f,.14f,.13f,.7f);
-                var emission=houseSmoke.emission;emission.rateOverTime=10;houseSmoke.Play();
+                houseSmoke=Map01Fx.System(root.transform,"Roof smoke",roof,Map01Fx.Smoke,3,90);var main=houseSmoke.main;main.loop=true;main.startLifetime=4;main.startSpeed=1.6f;main.startSize=2.4f;main.startColor=new Color(.16f,.14f,.13f,.7f);
+                var emission=houseSmoke.emission;emission.rateOverTime=10;Map01Fx.Grow(houseSmoke,1,2.2f);Map01Fx.Rise(houseSmoke,Map01Fx.Breeze*3,.5f);houseSmoke.Play();
+                // Flames along the thatch, with embers: the roof is seen burning, not only smoking (26/11/2026).
+                var flames=Map01Fx.System(houseSmoke.transform,"Roof flames",roof+Vector3.down*.6f,Map01Fx.Glow,1,160);
+                var fm=flames.main;fm.loop=true;fm.startLifetime=new ParticleSystem.MinMaxCurve(.6f,1.1f);fm.startSpeed=new ParticleSystem.MinMaxCurve(1.2f,2.6f);fm.startSize=new ParticleSystem.MinMaxCurve(1f,2.2f);
+                fm.startColor=new ParticleSystem.MinMaxGradient(new Color(1,.85f,.55f),new Color(1,.6f,.3f));
+                var fe=flames.emission;fe.rateOverTime=60;var fs=flames.shape;fs.shapeType=ParticleSystemShapeType.Box;fs.scale=new Vector3(3.2f,.5f,1.6f);
+                Map01Fx.Flame(flames,.8f);flames.Play();
+                var sparks=Map01Fx.System(houseSmoke.transform,"Roof embers",roof,Map01Fx.Glow,2,40);
+                var sm=sparks.main;sm.loop=true;sm.startLifetime=new ParticleSystem.MinMaxCurve(1.2f,2.4f);sm.startSpeed=new ParticleSystem.MinMaxCurve(2f,4.5f);sm.startSize=new ParticleSystem.MinMaxCurve(.06f,.14f);sm.gravityModifier=-.05f;
+                var se=sparks.emission;se.rateOverTime=18;var ss=sparks.shape;ss.shapeType=ParticleSystemShapeType.Box;ss.scale=new Vector3(3f,.5f,1.4f);Map01Fx.Ember(sparks);sparks.Play();
             }
             if(HouseFire==null)return;
             HouseFire.enabled=burning;HouseFire.intensity=2.6f+Mathf.PerlinNoise(Time.time*3.5f,7)*1.8f;

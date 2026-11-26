@@ -26,7 +26,7 @@ namespace ShadowVale.Map01 {
         AnimationClip selected,secondaryClip;
         AnimationClipPlayable secondary;
         AnimationMixerPlayable mixer;
-        bool mixed;
+        bool mixed, disposed;
         public Map01CinematicPose(Animator target,Avatar poseAvatar=null,bool skinGrounding=true) {
             actor=target;originalAvatar=target.avatar;controller=actor.runtimeAnimatorController;rootMotion=actor.applyRootMotion;culling=actor.cullingMode;
             localPosition=actor.transform.localPosition;localRotation=actor.transform.localRotation;
@@ -43,7 +43,7 @@ namespace ShadowVale.Map01 {
             graph=PlayableGraph.Create("Map 1 rescue pose");graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);graph.Play();
         }
         public void Sample(AnimationClip clip,float seconds,bool loop=false) {
-            if(clip==null||!graph.IsValid())return;
+            if(disposed||actor==null||clip==null||!graph.IsValid())return;
             if(mixed)ResetGraph();
             if(selected!=clip) {
                 if(playable.IsValid())graph.DestroyPlayable(playable);
@@ -58,7 +58,7 @@ namespace ShadowVale.Map01 {
             graph=PlayableGraph.Create("Map 1 rescue pose");graph.SetTimeUpdateMode(DirectorUpdateMode.Manual);graph.Play();selected=secondaryClip=null;mixed=false;
         }
         public void RestoreGameplayAvatar(){
-            if(actor.avatar==originalAvatar)return;
+            if(disposed||actor==null||actor.avatar==originalAvatar)return;
             ResetGraph();BindAvatar(originalAvatar);
         }
         void BindAvatar(Avatar avatar){
@@ -73,6 +73,7 @@ namespace ShadowVale.Map01 {
             actor.avatar=avatar;actor.Rebind();
         }
         public void SampleBlend(AnimationClip first,float firstTime,AnimationClip recovery,float recoveryTime,float weight,bool loopFirst=false){
+            if(disposed||actor==null)return;
             if(first==null||recovery==null){Sample(first,firstTime);return;}
             if(!mixed||selected!=first||secondaryClip!=recovery){
                 ResetGraph();playable=AnimationClipPlayable.Create(graph,first);secondary=AnimationClipPlayable.Create(graph,recovery);
@@ -84,6 +85,8 @@ namespace ShadowVale.Map01 {
             weight=Mathf.Clamp01(weight);mixer.SetInputWeight(0,1-weight);mixer.SetInputWeight(1,weight);graph.Evaluate(0);
         }
         public void Dispose() {
+            if(disposed)return;
+            disposed=true;
             if(graph.IsValid())graph.Destroy();
             if (baked != null) {
                 if (Application.isPlaying) UnityEngine.Object.Destroy(baked);
@@ -92,11 +95,12 @@ namespace ShadowVale.Map01 {
             if(actor==null)return;
             if(actor.avatar!=originalAvatar)BindAvatar(originalAvatar);
             actor.runtimeAnimatorController=controller;actor.applyRootMotion=rootMotion;actor.cullingMode=culling;
-            actor.transform.SetLocalPositionAndRotation(localPosition,localRotation);actor.Rebind();if(actor.isActiveAndEnabled)actor.Update(0);
+            actor.transform.SetLocalPositionAndRotation(localPosition,localRotation);actor.Rebind();
             if(controller!=null)for(int i=0;i<Mathf.Min(layers.Length,actor.layerCount);i++)actor.SetLayerWeight(i,layers[i]);
+            if(actor.isActiveAndEnabled)actor.Update(0);
         }
         public void Ground(float floor) {
-            if(skins==null)return;
+            if(disposed||actor==null||skins==null)return;
             float sole=contact?.LowestY()??float.PositiveInfinity;
             if(float.IsInfinity(sole))sole=LowestVisibleY(skins,baked,bakedVertices,bakeWithScale);
             if(!float.IsInfinity(sole))actor.transform.position+=Vector3.up*Mathf.Clamp(floor-sole,-.4f,.4f);

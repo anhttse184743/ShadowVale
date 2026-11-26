@@ -3,7 +3,7 @@ using UnityEngine;
 namespace ShadowVale.Gameplay.Combat
 {
     /// <summary>
-    /// Lays the rifle on the crosshair.
+    /// Aligns the gun with the crosshair after the final pose is applied.
     /// <para>
     /// A shot is traced from the middle of the view and its streak is drawn from the muzzle, but the aim and
     /// fire takes hold the rifle level whatever the view does: look up or down and the barrel pointed somewhere
@@ -15,13 +15,12 @@ namespace ShadowVale.Gameplay.Combat
     /// The bend is measured from where the take holds the barrel on average, not from the barrel this frame:
     /// a kick or a flinch that a clip plays on top still shows, and a reload keeps the bend it started with.
     /// </para>
-    /// Added by <see cref="PlayerCombat"/>. Runs after the camera has moved for the frame (ThirdPersonCamera),
-    /// after the map's own weapon takes have posed the arms (NamMotionRefresh at 1000 lays the K-54 take over
-    /// the Animator), and before the bones that follow the hands (RifleLeftHandGrip, ForearmTwist). Read any
-    /// earlier and the K-54 barrel is measured off the Animator's rifle arms: the body turned some 80 degrees
-    /// off the view and the bend was written over.
+    /// Added by <see cref="PlayerCombat"/>. Runs after the camera and the authored weapon and escort poses
+    /// (NamMotionRefresh at 1000 lays the K-54 take over the Animator: read any earlier and the K-54 barrel is
+    /// measured off the Animator's rifle arms), before the bones that follow the hands (ForearmTwist) and
+    /// before gunfire is resolved.
     /// </summary>
-    [DefaultExecutionOrder(1010)]
+    [DefaultExecutionOrder(4000)]
     [DisallowMultipleComponent]
     public sealed class BarrelAim : MonoBehaviour
     {
@@ -43,6 +42,7 @@ namespace ShadowVale.Gameplay.Combat
 
         private PlayerCombat _combat;
         private ShadowVale.Gameplay.Player.PlayerController _motor;
+        private Animator _animator;
         private Transform[] _spine = System.Array.Empty<Transform>();
         private float[] _share = System.Array.Empty<float>();
         // What the animation left in each spine bone, and what was written over it: a frame in which the
@@ -65,6 +65,7 @@ namespace ShadowVale.Gameplay.Combat
         {
             _combat = combat;
             _motor = combat != null ? combat.GetComponent<ShadowVale.Gameplay.Player.PlayerController>() : null;
+            _animator = animator;
             var chain = new System.Collections.Generic.List<Transform>();
             if (animator != null && animator.isHuman)
                 foreach (HumanBodyBones bone in new[] { HumanBodyBones.Spine, HumanBodyBones.Chest, HumanBodyBones.UpperChest })
@@ -100,7 +101,8 @@ namespace ShadowVale.Gameplay.Combat
         {
             Unbend();
 
-            Weapon gun = _combat != null && _combat.isActiveAndEnabled ? _combat.Gun : null;
+            Weapon gun = _combat != null && _combat.isActiveAndEnabled && _animator != null
+                && _animator.runtimeAnimatorController != null ? _combat.Gun : null;
             if (gun == null)
             {
                 _weight = 0f;
@@ -117,7 +119,7 @@ namespace ShadowVale.Gameplay.Combat
             // Running after it now, stand aside so lying down still looks the way it was approved.
             bool wanted = _combat.RifleLevelled && !(_motor != null && _motor.IsProne);
             bool rising = wanted && _weight < 1f;
-            _weight = Mathf.MoveTowards(_weight, wanted ? 1f : 0f, Time.deltaTime / BlendTime);
+            _weight = Mathf.MoveTowards(_weight, wanted ? 1f : 0f, PlayerTime.DeltaTime / BlendTime);
             if (_weight <= 0f || _spine.Length == 0)
             {
                 _settled = false;
@@ -128,7 +130,7 @@ namespace ShadowVale.Gameplay.Combat
             // or reloading, it stays where the aim had it, so neither is mistaken for the aim pose.
             if (!_settled || rising) _held = _pose;
             else if (wanted && !_combat.IsReloading && !_combat.RecoilPosePlaying)
-                _held = Vector3.Slerp(_held, _pose, 1f - Mathf.Exp(-Time.deltaTime / PoseSettleTime)).normalized;
+                _held = Vector3.Slerp(_held, _pose, 1f - Mathf.Exp(-PlayerTime.DeltaTime / PoseSettleTime)).normalized;
 
             Camera view = Camera.main;
             if (view == null) return;
@@ -138,7 +140,7 @@ namespace ShadowVale.Gameplay.Combat
                 ? hit.distance : gun.Range;
             // The direction follows the view at once; only the distance it converges at is eased, so the
             // barrel does not snap as the crosshair crosses the edge of something near.
-            _focus = _settled ? Mathf.Lerp(_focus, focus, 1f - Mathf.Exp(-Time.deltaTime / RefocusTime)) : focus;
+            _focus = _settled ? Mathf.Lerp(_focus, focus, 1f - Mathf.Exp(-PlayerTime.DeltaTime / RefocusTime)) : focus;
             _settled = true;
             Vector3 point = eye + look * Mathf.Max(_focus, nearest);
 

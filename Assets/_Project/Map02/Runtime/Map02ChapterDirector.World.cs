@@ -40,7 +40,7 @@ namespace ShadowVale.Map01
                 if(State.Done("N3_09"))return .9f;
                 if(sceneTask?.id=="N3_09")return Mathf.Lerp(.6f,.9f,Mathf.Clamp01(sceneClock/FadeAt));
                 if(State.Done("N3_08"))return .6f;
-                if(State.activeTask=="N3_08")return Mathf.Lerp(.35f,.6f,Mathf.Clamp01(State.coverClock/CoverSlowest));
+                if(State.activeTask=="N3_08")return Mathf.Lerp(.35f,.6f,Mathf.Clamp01(State.coverClock/CoverSeconds));
                 if(State.Done("N3_07")||sceneTask?.id=="N3_07")return sceneTask?.id=="N3_07"?Mathf.Lerp(.15f,.35f,Mathf.Clamp01(sceneClock/60)):.35f;
                 return 0;
             }
@@ -52,6 +52,8 @@ namespace ShadowVale.Map01
             foreach(var lamp in lamps){bool supperLamp=lamp.name.EndsWith("family")&&State.phase<=1;lamp.range=supperLamp?3.5f:State.phase<=1?6:10;if(supperLamp)lamp.transform.position=dayLampFlame!=null?dayLampFlame.position+Vector3.up*.1f:PorchMeal+Vector3.up*.3f;lamp.intensity=Mathf.Lerp(lamp.intensity,night?(State.phase<=1?(Layout!=null?Layout.dayOneOilLampIntensity:.65f):2.5f):0,Mathf.Clamp01(dt));}
             sweepLight.enabled=!NightPatrolStopped;
             if(phaseApplied!=State.phase){phaseApplied=State.phase;}
+            // The film look follows the chapter clock: nights cool, Day 3's afternoon warm, Night 3 greying into dawn.
+            GameLook.SetTime(night?1-FirstLight:0,State.phase==4?1:0,FirstLight);
             if(TickNaturalLighting(dt))return;
             bool golden=State.phase==4; // Day 3: the warmest afternoon of the chapter, against Night 3.
             // Night 3 is fought into first light: the sky greys from the farewell and the tank goes up at dawn (FirstLight).
@@ -68,13 +70,18 @@ namespace ShadowVale.Map01
             bool focusing=State.patrolFocusSeconds>0;
             if(focusing)
             {
-                State.patrolFocusSeconds=Mathf.Max(0,State.patrolFocusSeconds-dt);
-                if(State.patrolFocusSeconds<=0&&NightPatrolScriptedApproach)
+                if(player.IsProne)State.patrolWarningHidden=true;
+                // On load, give Nam control again before the saved warning can expire.
+                if(patrolLoadGrace<=0)
                 {
-                    if(!nightWarningHidden&&!player.IsProne){BeginNightPatrolFailure();return;}
-                    nightWarningHidden=false;
+                    State.patrolFocusSeconds=Mathf.Max(0,State.patrolFocusSeconds-dt);
+                    if(State.patrolFocusSeconds<=0)
+                    {
+                        bool hidden=State.patrolWarningHidden;
+                        State.patrolWarningHidden=false;
+                        if(!hidden&&NightPatrolScriptedApproach){BeginNightPatrolFailure();return;}
+                    }
                 }
-                else if(player.IsProne)nightWarningHidden=true;
             }
             else
             {
@@ -101,7 +108,7 @@ namespace ShadowVale.Map01
                 if(State.patrolWarnings>=2)BeginNightPatrolFailure();
                 else
                 {
-                    nightWarningHidden=false;State.patrolFocusSeconds=NightPatrolWarningSeconds;
+                    State.patrolWarningHidden=false;State.patrolFocusSeconds=NightPatrolWarningSeconds;
                     State.patrolFocusDirection=Mission.Player.position; // Fixed world point, shared by all guards.
                     ShowNightPatrolSuspicion();
                 }

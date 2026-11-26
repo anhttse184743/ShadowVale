@@ -63,7 +63,7 @@ namespace ShadowVale.Map01.Tests
                 Load("N3_07");var cover=Mark("N3_08");Move(cover);Assert.IsTrue(m.Interact(cover));
                 Assert.IsTrue(c.HasBark("m2v3_sacrifice_01"),"\"Đi đi! Tôi che cho!\" opens the cover fire without taking control away.");Assert.IsFalse(c.Busy);
                 var controller=m.Player.GetComponent<ShadowVale.Gameplay.Player.PlayerController>();var combat=m.Player.GetComponent<ShadowVale.Gameplay.Combat.PlayerCombat>();var hp=m.Player.GetComponent<ShadowVale.Gameplay.Combat.Health>();
-                Assert.IsTrue(c.CoverFireActive);var approach=new UnityEngine.AI.NavMeshPath();Assert.IsTrue(UnityEngine.AI.NavMesh.CalculatePath(c.Actor("Hùng").transform.position,c.ChargePoint,UnityEngine.AI.NavMesh.AllAreas,approach));Assert.AreEqual(UnityEngine.AI.NavMeshPathStatus.PathComplete,approach.status);Assert.IsTrue(controller.InputAllowed(), "Cover fire lets Nam reposition.");
+                Assert.IsTrue(c.CoverFireActive);var approach=new UnityEngine.AI.NavMeshPath();Assert.IsTrue(UnityEngine.AI.NavMesh.CalculatePath(c.Actor("Hùng").transform.position,c.ChargePoint,UnityEngine.AI.NavMesh.AllAreas,approach));Assert.AreEqual(UnityEngine.AI.NavMeshPathStatus.PathComplete,approach.status);Assert.IsTrue(controller.InputAllowed(), "Cover fire keeps Nam's input (aiming); his spot is held by the movement constraint.");
                 Assert.IsTrue(combat.InputAllowed(), "Cover fire must keep aiming and shooting available.");
                 Assert.IsTrue(hp.CinematicInvulnerable);
                 typeof(Map02ChapterDirector).GetMethod("Update", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(c, null);
@@ -176,9 +176,9 @@ namespace ShadowVale.Map01.Tests
             finally{c.Cancel();hp.CinematicInvulnerable=false;}
             yield return new ExitPlayMode();
         }
-        [UnityTest,Timeout(300000)]public IEnumerator CoverFireTakesSixtyToNinetySecondsWhateverNamHits()
+        [UnityTest,Timeout(300000)]public IEnumerator CoverFireWavesSlowTimeAndMustBeDroppedWithinThreeSeconds()
         {
-            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");SetPreviewResolution(1920,1080);yield return new EnterPlayMode();
             yield return CoverFireInPlayMode(); // Closures must be created after the domain reload.
             yield return new ExitPlayMode();
         }
@@ -190,31 +190,65 @@ namespace ShadowVale.Map01.Tests
             void Load(string id){var snapshot=m.Capture();var s=new Map02ChapterState();foreach(var t in def.tasks){s.Complete(t.id);if(t.id==id)break;}snapshot.chapter=s;m.Restore(snapshot);}
             void Place(Vector3 p){var cc=m.Player.GetComponent<CharacterController>();cc.enabled=false;m.Player.position=p;cc.enabled=true;Physics.SyncTransforms();}
             Map02ObjectiveObject Mark(string id)=>Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId==id);
-            Map02ChapterEnemy[] Squad()=>c.Enemies.Where(e=>e!=null&&e.group=="N3_08").ToArray();
-            IEnumerator Begin(){Load("N3_07");var cover=Mark("N3_08");Place(cover.transform.position);Assert.IsTrue(m.Interact(cover));yield return null;yield return null;}
-            float Off(Vector3 p,Vector3[] line){float best=float.MaxValue;for(int i=1;i<line.Length;i++){var a=line[i-1];var b=line[i];var t=Mathf.Clamp01(Vector3.Dot(p-a,b-a)/Mathf.Max(.0001f,(b-a).sqrMagnitude));best=Mathf.Min(best,Vector3.Distance(p,a+(b-a)*t));}return best;}
+            float Flat(Vector3 a,Vector3 b)=>Vector3.Distance(new Vector3(a.x,0,a.z),new Vector3(b.x,0,b.z));
+            IEnumerator Begin(){Load("N3_07");var cover=Mark("N3_08");Place(cover.transform.position+Vector3.right);Assert.IsTrue(m.Interact(cover));yield return null;yield return null;}
+            IEnumerator WaveOut(int wave)
+            {
+                c.State.coverClock=Map02ChapterDirector.WaveAt[wave]-.05f;float until=Time.realtimeSinceStartup+8;
+                while(Time.realtimeSinceStartup<until&&!c.CoverFocusActive)yield return null;
+                Assert.IsTrue(c.CoverFocusActive,"Wave "+(wave+1)+" comes out and time slows.");
+            }
+            void DropWave(){foreach(var e in c.CoverWaveEnemies)if(!e.Dead)e.HitPoints.TakeDamage(1,e.transform.position,m.Player.gameObject);}
             try
             {
                 yield return Begin();
-                var squad=Squad();Assert.AreEqual(4,squad.Length,"The tank's escort is four men behind it.");Assert.IsTrue(squad.All(e=>e.HoldPosition));
-                var spots=squad.Select(e=>e.transform.position).ToArray();yield return WaitGameSeconds(2f);
-                for(int i=0;i<squad.Length;i++)Assert.Less(Vector3.Distance(spots[i],squad[i].transform.position),.6f,"The escort holds behind the tank, it never chases Nam.");
-                Assert.Less(Off(c.Actor("Hùng").transform.position,c.HungCanal),.5f,"Hùng moves along the ditch.");
-                Assert.IsFalse(c.Instruction.Contains("giây"),c.Instruction);
-                // A round past a soldier's head makes him duck; a soldier ducking does not fire.
-                var target=squad[0];var chest=target.transform.position+Vector3.up*1.3f;
-                typeof(Map02ChapterDirector).GetMethod("SuppressAlong",BindingFlags.NonPublic|BindingFlags.Instance).Invoke(c,new object[]{new Ray(chest+Vector3.right*20+Vector3.up*.8f,(chest+Vector3.up*.8f-(chest+Vector3.right*20+Vector3.up*.8f)).normalized)});
-                Assert.IsTrue(target.Suppressed);
-                // Nobody hit: Hùng still reaches the tracks by 90 s.
-                c.State.coverClock=Map02ChapterDirector.CoverSlowest-1;c.State.taskProgress=(Map02ChapterDirector.CoverSlowest-1)/Map02ChapterDirector.CoverSlowest;float until=Time.time+5;while(Time.time<until&&c.CurrentScene==null)yield return null;
-                Assert.AreEqual("N3_09",c.CurrentScene?.id);Assert.LessOrEqual(c.State.coverClock,Map02ChapterDirector.CoverSlowest+1);
-                // Everyone round the tank down: Hùng goes for the tracks at once (26/10/2026), whatever the clock says.
-                yield return Begin();
-                foreach(var e in Squad())e.HitPoints.TakeDamage(1000,e.transform.position,m.Player.gameObject);
-                c.State.coverClock=30;c.State.taskProgress=.3f;float started=Time.time;until=Time.time+8;while(Time.time<until&&c.CurrentScene==null)yield return null;
-                Assert.AreEqual("N3_09",c.CurrentScene?.id,"With the escort down the sacrifice follows at once.");Assert.Less(Time.time-started,5,"A beat, not the rest of the minute.");
+                // Nam is set on his spot on the bank and held there: aiming only.
+                Assert.IsTrue(c.CoverFireActive);Assert.Less(Flat(m.Player.position,Mark("N3_08").transform.position),.8f,"Nam takes the fixed cover spot.");
+                var held=c.ConstrainNightMovement(m.Player.position,new Vector3(1,-.1f,1));Assert.AreEqual(1,held.x,.0001f,"Nam may move about his cover spot.");
+                Assert.IsTrue(m.Player.GetComponent<ShadowVale.Gameplay.Combat.PlayerCombat>().InputAllowed(),"He can still aim and fire.");
+                yield return null;Assert.AreEqual(c.BambooToCrush,c.CrushedBamboo,"Past the tank's drive out, the bamboo it went through lies flat.");Debug.Log("[Cover] bamboo crushed: "+c.CrushedBamboo);
+                // Inside the zone he moves freely; stepping out warns him, staying out gets him seen and the cover restarts.
+                var spot=Mark("N3_08").transform.position;Place(spot+Vector3.right*(Map02ChapterDirector.CoverZone-1));yield return null;yield return null;
+                Assert.Less(c.CoverZoneWarning,0,"Inside the zone, no warning.");Assert.IsFalse(c.CoverFailed);
+                Place(spot+Vector3.right*(Map02ChapterDirector.CoverZone+1));yield return null;yield return null;
+                Assert.Greater(c.CoverZoneWarning,0,"Out of the zone, he is warned.");Assert.IsFalse(c.CoverFailed,"Not at once.");
+                float outAt=Time.realtimeSinceStartup;while(Time.realtimeSinceStartup<outAt+Map02ChapterDirector.CoverZoneGrace+1.5f&&!c.CoverFailed)yield return null;
+                Assert.IsTrue(c.CoverFailed,"Staying out gets Nam seen: the cover fails.");
+                while(Time.realtimeSinceStartup<outAt+10&&c.CoverFailed)yield return null;
+                Assert.IsFalse(c.CoverFailed);Assert.Less(Flat(m.Player.position,spot),1,"The retry puts him back on his spot.");
+                Place(spot+Vector3.right*(Map02ChapterDirector.CoverZone+1));yield return null;yield return null;Place(spot);yield return null;yield return null;
+                Assert.Less(c.CoverZoneWarning,0,"Back inside in time, the warning clears.");Assert.IsFalse(c.CoverFailed);
+                var music=Resources.Load<AudioClip>("Map02Cover/CoverBattleMusic");Assert.NotNull(music,"The cover has its battle music.");Assert.AreEqual(30,music.length,.5f,"A 30 s cut.");
+                Assert.AreEqual(0,c.Enemies.Count(e=>e!=null&&e.group=="N3_08"&&!e.Dead),"No one is out before the first wave.");Assert.IsFalse(c.CoverFocusActive);
+                var rig=Object.FindObjectsByType<ShadowVale.Gameplay.Player.ThirdPersonCamera>(FindObjectsSortMode.None).First(r=>r.GetComponent<Camera>().enabled);yield return null;
+                Assert.AreEqual(Map02ChapterDirector.CoverAimZoom,rig.AimFovScale,.001f,"Aiming while covering zooms in a little further.");
+                // Wave 1: time slows, every man is ringed, one hit drops a man, the wave down brings time back.
+                yield return WaveOut(0);
+                Assert.AreEqual(Map02ChapterDirector.WaveSize[0],c.CoverWaveEnemies.Length);Assert.AreEqual(1,c.CoverWaveEnemies.Length,"One man at a time.");Assert.Less(Flat(c.CoverWaveEnemies[0].transform.position,c.Tank.transform.position),8,"He steps out in front of the tank.");Assert.AreEqual(Map02ChapterDirector.FocusScale,Time.timeScale,.001f);
+                Assert.IsTrue(ShadowVale.Gameplay.Combat.PlayerTime.IgnoreSlowMotion,"Only the world slows: Nam fires and reloads at real pace.");Assert.AreEqual(1,c.OutlinedMen,"The man out is outlined in red.");System.IO.Directory.CreateDirectory("Logs/CoverOutline");ScreenCapture.CaptureScreenshot("Logs/CoverOutline/closing.png");yield return null;System.IO.Directory.CreateDirectory("Logs/CoverOutline");var aimRig=Object.FindObjectsByType<ShadowVale.Gameplay.Player.ThirdPersonCamera>(FindObjectsSortMode.None).First(r=>r.GetComponent<Camera>().enabled);var man0=c.CoverWaveEnemies[0].transform.position+Vector3.up*1.1f;var eye0=m.Player.position+Vector3.up*1.6f;aimRig.SetCinematicView(eye0,Quaternion.LookRotation(man0-eye0),18,1);for(int i=0;i<4;i++)yield return null;ScreenCapture.CaptureScreenshot("Logs/CoverOutline/outline.png");for(int i=0;i<4;i++)yield return null;aimRig.ClearCinematicView();Assert.AreEqual((c.State.wounded?1.35f:1)*Map02ChapterDirector.CoverReload,m.Player.GetComponent<ShadowVale.Gameplay.Combat.PlayerCombat>().ReloadDurationMultiplier,.001f,"Covering, Nam reloads twice as fast.");float p0=ShadowVale.Gameplay.Combat.PlayerTime.Now,g0=Time.time;for(int i=0;i<20;i++)yield return null;
+                Assert.Greater(ShadowVale.Gameplay.Combat.PlayerTime.Now-p0,(Time.time-g0)*2,"Nam's clock runs ahead of the slowed world.");
+                // Pausing in the slow keeps it paused, and resuming goes back to the slow.
+                m.SetPaused(true);Assert.AreEqual(0,Time.timeScale);m.SetPaused(false);yield return null;Assert.AreEqual(Map02ChapterDirector.FocusScale,Time.timeScale,.001f);
+                var first=c.CoverWaveEnemies[0];first.HitPoints.TakeDamage(1,first.transform.position,m.Player.gameObject);Assert.IsTrue(first.Dead,"One hit drops a marked man.");
+                DropWave();yield return null;yield return null;
+                Assert.IsFalse(c.CoverFocusActive);Assert.AreEqual(1,Time.timeScale,.001f);Assert.AreEqual(1,c.State.coverWave);Assert.IsFalse(ShadowVale.Gameplay.Combat.PlayerTime.IgnoreSlowMotion);Assert.AreEqual(0,c.OutlinedMen,"The outline goes with him.");Assert.IsNull(c.CurrentScene,"Hùng is not at the tracks yet.");
+                // Wave 2 left standing: after 3 real seconds the cover fails, then that wave starts again just before it comes out.
+                yield return WaveOut(1);float started=Time.realtimeSinceStartup;
+                while(Time.realtimeSinceStartup<started+5&&!c.CoverFailed)yield return null;
+                Assert.IsTrue(c.CoverFailed,"Not dropping the wave in time fails the cover.");Assert.GreaterOrEqual(Time.realtimeSinceStartup-started,Map02ChapterDirector.FocusWindow-.2f,"The window is three real seconds.");
+                Assert.AreEqual(1,Time.timeScale,.001f);
+                while(Time.realtimeSinceStartup<started+10&&c.CoverFailed)yield return null;
+                Assert.IsFalse(c.CoverFailed);Assert.AreEqual(1,c.State.coverWave,"The retry is the same wave.");Assert.Less(c.State.coverClock,Map02ChapterDirector.WaveAt[1]);
+                Assert.AreEqual(0,c.Enemies.Count(e=>e!=null&&e.group=="N3_08"&&!e.Dead),"The failed wave's men are gone until it comes out again.");
+                // A save taken in the slow loads at normal speed, before the unfinished wave.
+                yield return WaveOut(1);var saved=m.Capture();m.Restore(saved);yield return null;
+                Assert.IsFalse(c.CoverFocusActive);Assert.AreEqual(1,Time.timeScale,.001f);Assert.AreEqual(1,c.State.coverWave);Assert.Less(Flat(m.Player.position,Mark("N3_08").transform.position),.8f);
+                // Every wave down: Hùng reaches the tracks at the 30 s mark and the sacrifice begins.
+                for(int w=1;w<Map02ChapterDirector.WaveAt.Length;w++){yield return WaveOut(w);DropWave();yield return null;yield return null;Assert.AreEqual(w+1,c.State.coverWave);}
+                c.State.coverClock=Map02ChapterDirector.CoverSeconds-.2f;float until=Time.realtimeSinceStartup+5;while(Time.realtimeSinceStartup<until&&c.CurrentScene==null)yield return null;
+                Assert.AreEqual("N3_09",c.CurrentScene?.id,"The sacrifice follows the last wave.");yield return null;Assert.IsFalse(Object.FindObjectsByType<LineRenderer>(FindObjectsSortMode.None).Any(r=>r.name=="Cover zone ring"&&r.enabled),"The cover over, its zone ring is gone.");Assert.AreEqual(1,Time.timeScale,.001f);yield return null;Assert.AreEqual(1,rig.AimFovScale,.001f,"The zoom is only for the cover.");
             }
-            finally{c.Cancel();}
+            finally{c.Cancel();Time.timeScale=1;}
         }
         [UnityTest,Timeout(240000)]public IEnumerator TankAndBoatsAreWhereTheNightThreeStoryPutsThem()
         {

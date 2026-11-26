@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using NUnit.Framework;
 using ShadowVale.Gameplay.Combat;
+using ShadowVale.Gameplay.Player;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -106,6 +107,45 @@ namespace ShadowVale.Map01.Tests
             Assert.IsFalse(float.IsNaN(combat.WeaponFor(WeaponKind.Pistol).Muzzle.position.x));Assert.AreEqual(1,M.player.GetComponent<Map01Pistol>().PoseWeight,.01f);
             M.Cinematic=true;yield return null;Assert.AreEqual(0,M.player.GetComponent<Map01Pistol>().PoseWeight,.001f);
             M.Cinematic=false;yield return WaitGameSeconds(.3f);Assert.AreEqual(1,M.player.GetComponent<Map01Pistol>().PoseWeight,.01f);
+            yield return new ExitPlayMode();
+        }
+        [UnityTest]
+        public IEnumerator K54MuzzleTracksTheCrosshairAfterTheStandingAndCrouchedPoses()
+        {
+            OpenSandbox();yield return new EnterPlayMode();yield return WaitForMap01Ready();Quiet();
+            var mission=M;
+            var combat=mission.ModernCombat;
+            Assert.IsTrue(mission.GetComponent<Map01Inventory>().Draw(Map01Inventory.Slot.Pistol));
+            var pistol=combat.WeaponFor(WeaponKind.Pistol);
+            var view=mission.gameCamera.transform;
+            var rig=view.GetComponent<ThirdPersonCamera>();
+            var refresh=mission.player.GetComponent<NamMotionRefresh>();
+            var hand=mission.player.GetComponentInChildren<Animator>().GetBoneTransform(HumanBodyBones.RightHand);
+            var hitMask=(LayerMask)typeof(PlayerCombat).GetField("hitMask",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(combat);
+            var routing=RouteInputToGame();heldMouse=InputSystem.AddDevice<Mouse>();rightDown=true;InputSystem.onBeforeUpdate+=HoldRight;
+            try
+            {
+                float yaw=mission.player.eulerAngles.y;
+                foreach(bool crouched in new[]{false,true})
+                {
+                    mission.ModernPlayer.RestoreMotion(crouched);mission.Crouched=crouched;
+                    combat.RestoreAfterCinematic();
+                    foreach(float pitch in new[]{-22f,0f,18f})
+                    {
+                        rig.RestoreLook(Quaternion.Euler(pitch,yaw+25f,0));
+                        yield return WaitGameSeconds(.8f);yield return new WaitForEndOfFrame();
+                        Assert.IsTrue(combat.IsAiming);
+                        Assert.AreEqual("pistol_aim",refresh.MotionId);
+                        Assert.AreSame(hand,pistol.transform.parent,"The authored K54 take must use the hand after gameplay is restored.");
+                        float near=Vector3.Dot(pistol.Muzzle.position-view.position,view.forward)+2.5f;
+                        float distance=Physics.Raycast(view.position,view.forward,out var hit,pistol.Range,hitMask,QueryTriggerInteraction.Ignore)?hit.distance:pistol.Range;
+                        Vector3 focus=view.position+view.forward*Mathf.Max(distance,near);
+                        float error=Vector3.Angle(pistol.Muzzle.forward,focus-pistol.Muzzle.position);
+                        Assert.Less(error,4f,$"K54 aim error {error:F2}° at pitch {pitch} (crouched: {crouched}).");
+                    }
+                }
+            }
+            finally{rightDown=false;InputSystem.onBeforeUpdate-=HoldRight;InputSystem.RemoveDevice(heldMouse);heldMouse=null;RestoreInputRouting(routing);}
             yield return new ExitPlayMode();
         }
         [UnityTest]

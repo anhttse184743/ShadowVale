@@ -52,13 +52,14 @@ if(gameViewOnly)SceneManager.sceneUnloaded+=InvalidateSourceBoatRendering;
 // Per-frame PNG recording is opt-in: synchronous disk I/O must not determine gameplay regression timing.
 bool recordFrames=UnityEditor.SessionState.GetBool("ShadowVale.Map02.RecordTransferFrames",false);
 var entries=new System.Collections.Generic.List<string>();int frame=0;float next=0,start=Time.realtimeSinceStartup,deadline=start+180;
-bool complete=false;Map02Arrival arrival=null;
+bool complete=false,checkedArrivalDrivers=false;Map02Arrival arrival=null;
 LogAssert.Expect(LogType.Log,"Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.");
 while(Time.realtimeSinceStartup<deadline) {
 arrival=Object.FindFirstObjectByType<Map02Arrival>();
 if(arrival!=null&&arrival.CurrentPhase==Map02Arrival.Phase.Gameplay)break;
 if(extraction!=null&&extraction.HasDeparted&&!complete){complete=true;Assert.AreEqual(Map01Quest.CompleteStage,mission.GetComponent<Map01Quest>().Stage);Assert.NotNull(ForestSaveSlots.Read(ForestSaveSlots.AutoSlot));}
 if(arrival!=null&&arrival.CurrentPhase!=Map02Arrival.Phase.Loading) {
+if(!checkedArrivalDrivers){AssertMap1WeaponDriversStopped(arrival);checkedArrivalDrivers=true;}
 hull=arrival.GetComponentsInChildren<MeshRenderer>(true).Single(r=>r.name=="Moored wooden sampan");
 Assert.IsTrue(hull.gameObject.activeInHierarchy&&hull.enabled&&!hull.forceRenderingOff,"Hull must survive scene unload cleanup.");
 Assert.IsTrue(hull.HasPropertyBlock(),"Moving boat must use its own draw properties after transfer.");
@@ -75,12 +76,16 @@ yield return new WaitUntil(()=>rendered||Time.realtimeSinceStartup>=deadline);if
 }
 if(recordFrames)File.WriteAllLines(folder+"/frames.csv",entries);
 SceneManager.sceneUnloaded-=InvalidateSourceBoatRendering;
-Assert.IsTrue(complete,"The full departure must finish without skipping.");Assert.NotNull(arrival);Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);AssertMap1WeaponDriversStopped(arrival);
+Assert.IsTrue(complete,"The full departure must finish without skipping.");Assert.IsTrue(checkedArrivalDrivers);Assert.NotNull(arrival);Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);
 AssertDryPartySpawn(arrival);VerifyGameplayRifle(arrival.Passengers[0]);Assert.AreEqual(72,arrival.Passengers[0].GetComponent<Health>().Current);Assert.AreEqual(17,arrival.Passengers[0].GetComponent<PlayerCombat>().RoundsInMagazine);
 var session=Object.FindFirstObjectByType<Map02Mission>();
 float bindDeadline=Time.realtimeSinceStartup+10;
 while(session!=null&&!session.Ready&&Time.realtimeSinceStartup<bindDeadline)yield return null;
 Assert.NotNull(session);Assert.IsTrue(session.Ready);Assert.Greater(session.AvailableObjectiveCount,0);Assert.IsTrue(session.HasCheckpoint);
+// The village's own Nam takes over from the boat's and is handed what he carried (26/11/2026).
+Assert.IsTrue(session.PlaysVillageNam);Assert.AreNotSame(arrival.Passengers[0],session.Player);Assert.IsFalse(arrival.Passengers[0].gameObject.activeInHierarchy);
+Assert.AreEqual(72,session.Player.GetComponent<Health>().Current);Assert.AreEqual(17,session.Player.GetComponent<PlayerCombat>().RoundsInMagazine);
+AssertCarriedAnimationDriversReady(arrival);
 if(gameViewOnly){ScreenCapture.CaptureScreenshot(folder+"/gameplay.png");yield return WaitGameSeconds(.3f);}else Capture(camera,folder+"/gameplay.png");
 }
 static void InvalidateSourceBoatRendering(Scene scene) {
@@ -101,6 +106,17 @@ Assert.IsFalse(mosin.enabled,"Mosin cannot keep querying the unloaded Map 1 miss
 Assert.IsFalse(pistol.enabled,"Map 1 pistol pose must release the arrival cinematic.");
 Assert.IsFalse(mosin.Scoped);Assert.IsTrue(carried.GetComponent<PlayerCombat>().GunPresentationReady);
 }
+static void AssertCarriedAnimationDriversReady(Map02Arrival arrival) {
+var mission=Object.FindFirstObjectByType<Map02Mission>();
+Assert.IsTrue(mission?.Ready==true);
+// The Nam who plays Map 2: the village's own once he has taken over from the boat's, else the carried one.
+var carried=mission.PlaysVillageNam?mission.Player:arrival.Passengers[0];
+foreach(var driver in new MonoBehaviour[]{carried.GetComponent<Map01Pistol>(),carried.GetComponent<Map01Mosin>(),carried.GetComponent<Map01NamActions>(),carried.GetComponent<NamProneMotion>()}) {
+Assert.NotNull(driver);Assert.IsTrue(driver.enabled,driver.GetType().Name);
+var session=(CharacterHudSession)driver.GetType().GetField("mission",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(driver);
+Assert.AreSame(mission,session.MapTwo,driver.GetType().Name+" must use the receiving mission on the carried actor.");
+}
+}
 [TearDown]public void ClearTransferFaultInjection()=>SceneManager.sceneUnloaded-=InvalidateSourceBoatRendering;
 [UnityTest]public IEnumerator CompletedCheckpointTransfersVisibleBoatAndKeepsRowersHandsFree() {
 EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;
@@ -120,6 +136,7 @@ while(SceneManager.GetActiveScene().name!="Map 2"&&Time.realtimeSinceStartup<dea
 var arrival=Object.FindFirstObjectByType<Map02Arrival>();Assert.NotNull(arrival);
 while(arrival.CurrentPhase==Map02Arrival.Phase.Loading&&Time.realtimeSinceStartup<deadline)yield return null;
 Assert.AreEqual(Map02Arrival.Phase.Approaching,arrival.CurrentPhase);
+AssertMap1WeaponDriversStopped(arrival);
 yield return WaitGameSeconds(.3f);
 Directory.CreateDirectory("Logs/Map02/Checkpoint");Capture(Camera.main,"Logs/Map02/Checkpoint/approach.png");
 var hull=arrival.GetComponentsInChildren<MeshFilter>(true).Single(m=>m.name=="Moored wooden sampan");
@@ -195,18 +212,24 @@ Assert.AreSame(originalPlayer,arrival.Passengers[0]);Assert.AreSame(originalHung
 Assert.IsNull(originalPlayer.GetComponent<PlayerCombat>().SlotPressed,"Unloading Map 1 must release the old bag's number-key handler.");
 LogAssert.Expect(LogType.Log,"Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.");
 yield return RecordArrival(arrival);
-Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);AssertMap1WeaponDriversStopped(arrival);
+Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);
 Assert.IsTrue(UnityEditor.EditorSettings.asyncShaderCompilation,"Restore the editor preference after arrival.");
-VerifyGameplayRifle(originalPlayer);
-Assert.AreEqual(ammo,originalPlayer.GetComponent<PlayerCombat>().RoundsInMagazine);
-Assert.AreEqual(hp,originalPlayer.GetComponent<Health>().Current);
+var session=Object.FindFirstObjectByType<Map02Mission>();float bindDeadline=Time.realtimeSinceStartup+10;
+while(session!=null&&!session.Ready&&Time.realtimeSinceStartup<bindDeadline)yield return null;
+Assert.IsTrue(session!=null&&session.Ready);Assert.IsTrue(session.PlaysVillageNam,"The village's own Nam takes over from the boat's.");
+var nam=session.Player;Assert.AreNotSame(originalPlayer,nam);Assert.IsFalse(originalPlayer.gameObject.activeInHierarchy,"Map 1's Nam is retired on the bank.");
+// As in SkippedArrivalUsesSameDrySpawn: the arrival leads into Thành's bank briefing, with the rifle stowed; finish it first.
+if(session.Chapter?.CurrentScene?.id=="D1_01"){typeof(Map02ChapterDirector).GetMethod("EndScene",BindingFlags.Instance|BindingFlags.NonPublic).Invoke(session.Chapter,null);yield return WaitGameSeconds(.2f);}
+VerifyGameplayRifle(nam);
+Assert.AreEqual(ammo,nam.GetComponent<PlayerCombat>().RoundsInMagazine,"The magazine he arrived with.");
+Assert.AreEqual(hp,nam.GetComponent<Health>().Current,"The health he arrived with.");
 Assert.AreEqual(reserve,arrival.Inventory["ammo_rifle"]);
 Assert.AreEqual(4,arrival.Inventory["cloth"]);
 Assert.AreEqual(1,Object.FindObjectsByType<Map02Arrival>(FindObjectsSortMode.None).Length);
 AssertDryPartySpawn(arrival);
-Assert.IsTrue(originalPlayer.GetComponent<CharacterController>().enabled);
-ShotTracerLifecycleTests.FireAfterArrival(originalPlayer.GetComponent<PlayerCombat>());
-yield return WaitGameSeconds(.5f);Capture(Camera.main,"Logs/Map02/gameplay.png");yield return new ExitPlayMode();
+Assert.IsTrue(nam.GetComponent<CharacterController>().enabled);
+ShotTracerLifecycleTests.FireAfterArrival(nam.GetComponent<PlayerCombat>());
+yield return WaitGameSeconds(.5f);AssertCarriedAnimationDriversReady(arrival);Capture(Camera.main,"Logs/Map02/gameplay.png");yield return new ExitPlayMode();
 }
 [UnityTest]public IEnumerator SkippedArrivalUsesSameDrySpawn() {
 EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;
@@ -216,15 +239,17 @@ mission.player.GetComponent<CharacterController>().enabled=false;mission.player.
 yield return WaitGameSeconds(.3f);extraction.Skip();extraction.ContinueToMap2();
 while(SceneManager.GetActiveScene().name!="Map 2")yield return null;
 var arrival=Object.FindFirstObjectByType<Map02Arrival>();while(arrival.CurrentPhase==Map02Arrival.Phase.Loading)yield return null;
+AssertMap1WeaponDriversStopped(arrival);
 var routing=RouteInputToGame();var mouse=InputSystem.AddDevice<Mouse>();
 InputSystem.QueueStateEvent(mouse,new MouseState().WithButton(MouseButton.Right));InputSystem.Update();
 Assert.IsFalse(arrival.Passengers[0].GetComponent<PlayerCombat>().IsAiming,"Arrival keeps gameplay aim inactive before handing back controls.");
 LogAssert.Expect(LogType.Log,"Map 2 arrival complete. Party on dry bank; inventory, health and magazine retained.");
 arrival.Skip();arrival.Skip();
 yield return WaitGameSeconds(.2f);
-Assert.IsTrue(arrival.Passengers[0].GetComponent<PlayerCombat>().IsAiming,"After handoff, aim follows the held right mouse button.");
+Transform Nam()=>Object.FindFirstObjectByType<Map02Mission>()?.Player??arrival.Passengers[0];   // the village's Nam once he has taken over
+Assert.IsTrue(Nam().GetComponent<PlayerCombat>().IsAiming,"After handoff, aim follows the held right mouse button.");
 InputSystem.QueueStateEvent(mouse,new MouseState());InputSystem.Update();yield return WaitGameSeconds(.2f);
-Assert.IsFalse(arrival.Passengers[0].GetComponent<PlayerCombat>().IsAiming);
+Assert.IsFalse(Nam().GetComponent<PlayerCombat>().IsAiming);
 // Arrival now leads directly into Thành's bank briefing. Finish that
 // scene before checking the restored gameplay rifle, not while it is stowed.
 var chapter=Object.FindFirstObjectByType<Map02Mission>()?.Chapter;
@@ -233,11 +258,11 @@ if(chapter?.CurrentScene?.id=="D1_01"){
  Assert.IsFalse(chapter.State.Done("D1_01"),"Bank briefing must not complete contact with Lực.");
  yield return WaitGameSeconds(.2f);
 }
-VerifyGameplayRifle(arrival.Passengers[0]);
+VerifyGameplayRifle(Nam());
 InputSystem.RemoveDevice(mouse);RestoreInputRouting(routing);
-Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);AssertMap1WeaponDriversStopped(arrival);
+Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);AssertCarriedAnimationDriversReady(arrival);
 AssertDryPartySpawn(arrival);
-ShotTracerLifecycleTests.FireAfterArrival(arrival.Passengers[0].GetComponent<PlayerCombat>());
+ShotTracerLifecycleTests.FireAfterArrival(Nam().GetComponent<PlayerCombat>());
 yield return new ExitPlayMode();
 }
 static IEnumerator AssertDryPartyAfterLateUpdate(Map02Arrival arrival) {
@@ -259,6 +284,17 @@ lines.Add($"actor={i} sole={sole:F5} spawn={arrival.SpawnPoints[i]} root={arriva
 Directory.CreateDirectory("Logs/Map02/Checkpoint");File.WriteAllLines("Logs/Map02/Checkpoint/sole-contacts.txt",lines);
 }
 static void AssertDryPartySpawn(Map02Arrival arrival) {
+// Once Map 2 has taken over, the party on the bank is the village's own Nam, Thành and Hùng (26/11/2026).
+var session=Object.FindFirstObjectByType<Map02Mission>();
+if(session!=null&&session.PlaysVillageNam&&session.Chapter!=null) {
+var party=new[]{session.Player,session.Chapter.Actor("Anh Thành").transform,session.Chapter.Actor("Hùng").transform};
+for(int i=0;i<3;i++) {
+Assert.Less(Vector3.ProjectOnPlane(party[i].position-arrival.SpawnPoints[i],Vector3.up).magnitude,.6f,"Village actor "+i+" stands where the boat party stood.");
+Assert.Greater(party[i].position.y,.5f);
+Assert.Less(Mathf.Abs(RenderedSoleHeight(party[i])-arrival.SpawnPoints[i].y),.06f,"Village actor "+i+" stands on the bank, not in or above it.");
+}
+return;
+}
 for(int i=0;i<3;i++) {
 Assert.Less(Vector3.ProjectOnPlane(arrival.Passengers[i].position-arrival.SpawnPoints[i],Vector3.up).magnitude,.1f);
 Assert.Greater(arrival.Passengers[i].position.y,.5f);
@@ -296,7 +332,8 @@ Assert.AreSame(anchor,gun.transform.parent,"Cinematic grip must return to gamepl
 Assert.IsTrue(config.TryGetOffset(WeaponKind.Rifle,out var offset));
 Assert.Less(Vector3.Distance(gun.transform.localScale,Vector3.one*WeaponGripConfig.EffectiveScale(offset)),.001f);
 var animator=root.GetComponentInChildren<Animator>();
-Assert.IsTrue(animator.GetCurrentAnimatorStateInfo(0).IsName(PlayerCombat.RifleLocomotionState));
+var info=animator.GetCurrentAnimatorStateInfo(0);var clips=animator.GetCurrentAnimatorClipInfo(0);var sessionInfo=Object.FindFirstObjectByType<Map02Mission>();
+Assert.IsTrue(info.IsName(PlayerCombat.RifleLocomotionState),$"state hash {info.shortNameHash} clip {(clips.Length>0?clips[0].clip.name:"-")} transition {animator.IsInTransition(0)} equipped {combat.EquippedKind} hands {combat.HandsOccupied} controller {animator.runtimeAnimatorController?.name} scene {sessionInfo?.Chapter?.CurrentScene?.id} nam {root.name}");
 Assert.Less(animator.GetLayerWeight(animator.GetLayerIndex("UpperBody")),.01f);
 }
 static IEnumerator RecordArrival(Map02Arrival arrival) {

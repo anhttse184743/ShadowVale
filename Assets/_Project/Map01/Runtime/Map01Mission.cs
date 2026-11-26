@@ -276,6 +276,7 @@ namespace ShadowVale.Map01
             foreach (var enemy in Enemies) enemy.BindMission(this);
             // Map 1's story pieces; the tutorial (no Hùng to rescue, no quest) has none of them.
             if (hung != null && quest != null) Map01OpeningCutscene.Attach(this);
+            if (hung != null && quest != null) Map01BunkerHold.Attach(this);   // no leaving the bunker before the rescue order
             if (gameObject.scene.name == "Map 1") Map01Ambience.Attach(this);
             GetComponent<Map01Story>()?.Initialize();
             GetComponent<Map01Quest>()?.EnsureCommander();
@@ -336,6 +337,8 @@ namespace ShadowVale.Map01
             // The carried actor outlives Map 1; its scene-specific arm/scope drivers must not.
             if(player.TryGetComponent(out Map01Pistol pistolMotion))pistolMotion.enabled=false;
             if(player.TryGetComponent(out Map01Mosin mosinMotion))mosinMotion.enabled=false;
+            if(player.TryGetComponent(out NamProneMotion proneMotion))proneMotion.enabled=false;
+            if(player.TryGetComponent(out NamMotionRefresh motionRefresh))motionRefresh.enabled=false;
             ModernCombat.GunPresentationReady=true;
             GetComponent<DialogueVoice>()?.Stop();
             ModernCombat.Attacked-=OnPlayerAttacked;

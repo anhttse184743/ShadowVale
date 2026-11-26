@@ -24,9 +24,9 @@ namespace ShadowVale.Gameplay.Combat
                 return;
             }
 
-            bool levelled = _aiming || _firingHeld || Time.time < _upperBodyHoldUntil;
+            bool levelled = _aiming || _firingHeld || PlayerTime.Now < _upperBodyHoldUntil;
             _aimPoseBlend = Mathf.MoveTowards(
-                _aimPoseBlend, levelled ? 1f : 0f, Time.deltaTime / Mathf.Max(0.01f, gripBlendTime));
+                _aimPoseBlend, levelled ? 1f : 0f, PlayerTime.DeltaTime / Mathf.Max(0.01f, gripBlendTime));
 
             WeaponGripConfig.GetPose(offset, false, out Vector3 carryPos, out Quaternion carryRot);
             WeaponGripConfig.GetPose(offset, true, out Vector3 aimPos, out Quaternion aimRot);
@@ -49,7 +49,7 @@ namespace ShadowVale.Gameplay.Combat
                 return;
             }
 
-            bool locked = _aiming || _firingHeld || Time.time < _faceCameraHoldUntil;
+            bool locked = _aiming || _firingHeld || PlayerTime.Now < _faceCameraHoldUntil;
             bool holdingGun = _equipped != null && _equipped.IsGun;
             _controller.SetFaceCameraYaw(locked, locked && holdingGun ? -PoseAimYaw() : 0f);
         }
@@ -104,7 +104,7 @@ namespace ShadowVale.Gameplay.Combat
                 return;
             }
 
-            bool attacking = Time.time < _upperBodyHoldUntil;
+            bool attacking = PlayerTime.Now < _upperBodyHoldUntil;
             // With Nam's own AK carry in the base layer (Locomotion_Rifle), his arms already hold the
             // rifle: the stance layer only comes up to aim, fire, reload or take a hit.
             bool carried = _rifleBody && _equippedKind == WeaponKind.Rifle && !_aiming && !_firingHeld && !attacking
@@ -121,7 +121,7 @@ namespace ShadowVale.Gameplay.Combat
             }
             float target = (_equippedKind != WeaponKind.Unarmed || attacking) && !carried ? 1f : 0f;
             _upperBodyWeight = Mathf.MoveTowards(
-                _upperBodyWeight, target, Time.deltaTime / Mathf.Max(0.01f, stanceBlendTime));
+                _upperBodyWeight, target, PlayerTime.DeltaTime / Mathf.Max(0.01f, stanceBlendTime));
             animator.SetLayerWeight(_upperBodyLayer, _upperBodyWeight);
         }
     }

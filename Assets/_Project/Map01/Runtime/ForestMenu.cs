@@ -143,7 +143,7 @@ namespace ShadowVale.Map01
         }
         private void Update()
         {
-            if (exploringMap2 || intro!=null&&intro.Active) return;
+            if (exploringMap2 || intro!=null&&intro.Active || GameCredits.Rolling) return;   // Esc skips the credits, not pause
             float now = Time.realtimeSinceStartup;
             if (settleFrames > 0) { settleFrames--; if (now - lastFrameAt > .2f) ignoreKeysUntil = Mathf.Max(ignoreKeysUntil, now + .5f); }
             lastFrameAt = now;
@@ -180,8 +180,15 @@ namespace ShadowVale.Map01
         private void StartGame(int slot)
         {
             if (TitleContentBlocked) return;
-            try { loading = true;var entry=slot>=0?ForestSaveSlots.Read(slot):null;if(entry?.sceneName=="Map 2")MapTwoBridge.BeginGame(entry);else Map01SaveSystem.BeginGame(slot); }
+            try { loading = true; LoadSavedGame(slot); }
             catch (Exception e) { loading = false; message = "Không thể mở bản lưu: " + e.Message; }
+        }
+
+        internal static void LoadSavedGame(int slot)
+        {
+            var entry = slot >= 0 ? ForestSaveSlots.Read(slot) : null;
+            if (entry?.sceneName == "Map 2") MapTwoBridge.BeginGame(entry);
+            else Map01SaveSystem.BeginGame(slot);
         }
         // The map owns the real-time briefing; loading an existing save never requests it.
         private void BeginNewGame()

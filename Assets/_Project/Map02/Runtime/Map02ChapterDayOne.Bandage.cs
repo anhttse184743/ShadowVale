@@ -7,7 +7,12 @@ namespace ShadowVale.Map01
     /// </summary>
     public sealed partial class Map02ChapterDirector
     {
-        static readonly Vector3 BandageStool=new Vector3(-.001f,0,-.026f),BandageLanh=new Vector3(.56f,0,.12f);
+        static readonly Vector3 BandageStool=new Vector3(-.001f,0,-.026f);
+        // 26/11/2026 (Khoa: she pressed into Hùng's arm): with the shared Hùng (V119) measured over the wrap, .20 forward keeps her
+        // hands on the wrap best (1.8 cm) with her forearms clear of his upper arm; leaning less leaves her hands short of it.
+        static readonly Vector3 BandageLanh=new Vector3(.56f,0,.20f);
+        /// <summary>Most her spine may bend toward the wrap to bring her hands to it.</summary>
+        const float BandageLean=24f;
         const float BandageRollIn=3.3f,BandageRollOut=19.9f,WrapStart=5f,WrapEnd=18.6f;
         Transform bandageSleeve;Vector3 bandageAt;Quaternion bandageFacing;
         float dressingRadius=.057f;bool dressingMeasured;
@@ -97,7 +102,7 @@ namespace ShadowVale.Map01
             var neck = actor.GetBoneTransform(HumanBodyBones.Neck);
             var authoredNeck = neck != null ? neck.rotation : Quaternion.identity;
             var lean = Quaternion.FromToRotation(torso, torso + correction);
-            spine.rotation = Quaternion.RotateTowards(Quaternion.identity, lean, 24f * contact) * spine.rotation;
+            spine.rotation = Quaternion.RotateTowards(Quaternion.identity, lean, BandageLean * contact) * spine.rotation;
             // Counter the extra torso bend at the neck so the face keeps its authored direction toward the wound.
             if (neck != null)
                 neck.rotation = Quaternion.RotateTowards(neck.rotation, authoredNeck, 18f * contact);

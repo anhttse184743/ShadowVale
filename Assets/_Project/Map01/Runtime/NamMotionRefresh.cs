@@ -243,7 +243,10 @@ namespace ShadowVale.Map01
         void ApplyPistol(float frame)
         {
             if(pistol==null||pistol.GunTransform==null||pistolParts==null)return;
-            var prop=Data.FindProp("Pistol");prop.root.At(frame).Apply(pistol.GunTransform);
+            var gun=pistol.GunTransform;
+            // Gameplay restore may return the gun to the generic weapon anchor. The take is right-hand local.
+            if(gun.parent!=hand)gun.SetParent(hand,false);
+            var prop=Data.FindProp("Pistol");prop.root.At(frame).Apply(gun);
             for(int i=0;i<pistolParts.Length;i++)
             {
                 var t=pistolParts[i];if(t==null)continue;
