@@ -276,6 +276,7 @@ namespace ShadowVale.Map01
             foreach (var enemy in Enemies) enemy.BindMission(this);
             // Map 1's story pieces; the tutorial (no Hùng to rescue, no quest) has none of them.
             if (hung != null && quest != null) Map01OpeningCutscene.Attach(this);
+            if (hung != null && quest != null) Map01BunkerHold.Attach(this);   // no leaving the bunker before the rescue order
             if (gameObject.scene.name == "Map 1") Map01Ambience.Attach(this);
             GetComponent<Map01Story>()?.Initialize();
             GetComponent<Map01Quest>()?.EnsureCommander();

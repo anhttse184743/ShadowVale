@@ -20,7 +20,7 @@ public sealed class Map02BandageQaTests:ForestSceneTestBase {
   var save=m.Capture();var state=new Map02ChapterState();state.Complete("D1_01");state.dayOne.arrivalSeen=true;save.chapter=state;m.Restore(save);
   var hung=c.Actor("Hùng");hung.StopAt(c.Sites["dayOneFamily"].position+Vector3.forward*.6f);
   Call("BeginScene",Map02ChapterDefinition.Load().Find("D1_02"),0,0);
-  var rows=new List<string>{"t,right-palm-error-m,left-palm-error-m,bandage-axis-error-m"};
+  var rows=new List<string>{"t,right-palm-error-m,left-palm-error-m,bandage-axis-error-m"};var pressRows=new List<string>{"t,lanh-chest-to-hung-arm-m,lanh-forearm-to-hung-shoulder-m"};
   var contactFailures = new List<string>();
   string folder="Logs/Map02Qa_20261027/Bandage";Directory.CreateDirectory(folder);
   bool previousAsync = EditorSettings.asyncShaderCompilation;
@@ -48,6 +48,14 @@ public sealed class Map02BandageQaTests:ForestSceneTestBase {
       contactFailures.Add($"{t}s: {(left ? "left" : "right")} palm misses the wrap path by {distance * 100:F2} cm.");
     }
     if (!(sleeveError < .004f)) contactFailures.Add($"{t}s: dressing misses the upper arm axis by {sleeveError * 100:F2} cm.");
+    // Her body must not press into his arm (Khoa, 26/11/2026): chest and forearms against his right upper arm and shoulder.
+    var hisShoulder = h.GetBoneTransform(HumanBodyBones.RightShoulder) != null ? h.GetBoneTransform(HumanBodyBones.RightShoulder).position : a;
+    float chest = Mathf.Min(Distance(l.GetBoneTransform(HumanBodyBones.Chest).position, hisShoulder, b), Distance((l.GetBoneTransform(HumanBodyBones.UpperChest) ?? l.GetBoneTransform(HumanBodyBones.Chest)).position, hisShoulder, b));
+    float forearm = Mathf.Min(SegmentDistance(l.GetBoneTransform(HumanBodyBones.RightLowerArm).position, l.GetBoneTransform(HumanBodyBones.RightHand).position, hisShoulder, a),
+                              SegmentDistance(l.GetBoneTransform(HumanBodyBones.LeftLowerArm).position, l.GetBoneTransform(HumanBodyBones.LeftHand).position, hisShoulder, a));
+    pressRows.Add(System.FormattableString.Invariant($"{t},{chest},{forearm}"));
+    if (!(chest > .30f)) contactFailures.Add($"{t}s: Lành's chest is {chest * 100:F1} cm from Hùng's arm, pressed into it.");
+    if (!(forearm > .07f)) contactFailures.Add($"{t}s: Lành's forearm is {forearm * 100:F1} cm from Hùng's upper arm (bone axes), pressed into it.");
    }
    rows.Add(System.FormattableString.Invariant($"{t},{rightPalmError},{leftPalmError},{sleeveError}"));
    if (t == 6 || t == 11 || t == 17 || t == 23)
@@ -71,10 +79,11 @@ public sealed class Map02BandageQaTests:ForestSceneTestBase {
   }finally{
    EditorSettings.asyncShaderCompilation = previousAsync;
    ShaderUtil.allowAsyncCompilation = previousShaderCompilation;
-   File.WriteAllLines(folder+"/contacts.csv",rows);c.Cancel();c.enabled=true;
+   File.WriteAllLines(folder+"/contacts.csv",rows);File.WriteAllLines(folder+"/press.csv",pressRows);c.Cancel();c.enabled=true;
   }
  }
- static float Distance(Vector3 p,Vector3 a,Vector3 b){var ab=b-a;return Vector3.Distance(p,a+ab*Mathf.Clamp01(Vector3.Dot(p-a,ab)/ab.sqrMagnitude));}
+ static float SegmentDistance(Vector3 p0,Vector3 p1,Vector3 q0,Vector3 q1){float best=float.MaxValue;for(int i=0;i<=10;i++){var p=Vector3.Lerp(p0,p1,i/10f);best=Mathf.Min(best,Distance(p,q0,q1));}return best;}
+static float Distance(Vector3 p,Vector3 a,Vector3 b){var ab=b-a;return Vector3.Distance(p,a+ab*Mathf.Clamp01(Vector3.Dot(p-a,ab)/ab.sqrMagnitude));}
  static void Capture(Camera camera,Vector3 focus,Vector3 offset,string path){
   Assert.NotNull(camera);var pos=camera.transform.position;var rot=camera.transform.rotation;var target=camera.targetTexture;var active=RenderTexture.active;
   var rt=RenderTexture.GetTemporary(1280,720,24);var tex=new Texture2D(1280,720,TextureFormat.RGB24,false);

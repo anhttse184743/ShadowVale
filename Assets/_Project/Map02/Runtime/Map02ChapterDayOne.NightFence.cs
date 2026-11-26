@@ -16,12 +16,16 @@ namespace ShadowVale.Map01
                 new Vector3(-43,0,120),new Vector3(-43,0,43),new Vector3(-48,0,30),
                 new Vector3(-54,0,19),east.position-east.right*4.66f};
             // Leave passages for both Day 2 trails as well as the village lanes.
+            // Every route a task walks crosses the fence through an open passage, never round it (26/11/2026, measured from
+            // the NavMesh routes between consecutive task markers with and without the fence):
+            //   (-46.30,34.43) and (-62.85,21) Day 1, Thành's briefing to Hùng at the family yard (D1_01 -> D1_02);
+            //   (-56.96,2.48) beside the east gate, Day 2's walk back with Tâm (scout -> command) and Night 2 (N2_04 -> N2_05).
             var crossings=new[]{(new Vector3(-51,0,-7.317f),false),(new Vector3(-51,0,24),false),   // (-43,-70) is inside the open riverside stretch (OnTheTankRoad)
-                (new Vector3(-54.53f,0,16.42f),true),(new Vector3(-47.31f,0,-12.25f),true)};
+                (new Vector3(-54.53f,0,16.42f),true),(new Vector3(-47.31f,0,-12.25f),true),
+                (new Vector3(-46.30f,0,34.43f),true),(new Vector3(-62.85f,0,21f),true),(new Vector3(-56.96f,0,2.48f),true)};
             for(int i=1;i<path.Length;i++)FenceWithCrossings(path[i-1],path[i],crossings);
-            var noCrossings=System.Array.Empty<(Vector3,bool)>();
-            FenceWithCrossings(north.position-north.right*4.66f,new Vector3(-120,0,21),noCrossings);
-            FenceWithCrossings(north.position+north.right*4.66f,new Vector3(-52.5f,0,21),noCrossings);
+            FenceWithCrossings(north.position-north.right*4.66f,new Vector3(-120,0,21),crossings);
+            FenceWithCrossings(north.position+north.right*4.66f,new Vector3(-52.5f,0,21),crossings);
         }
         void FenceWithCrossings(Vector3 start,Vector3 end,(Vector3 position,bool clearPassage)[] crossings)
         {
@@ -30,7 +34,8 @@ namespace ShadowVale.Map01
             foreach(var (point,clearPassage) in crossings){
                 var p=point;p.y=start.y;float along=Vector3.Dot(p-start,direction);
                 if(along<1.2f||along>delta.magnitude-1.2f||Vector3.Distance(start+direction*along,p)>.12f)continue;
-                FenceRun(start,p-direction*1.10f);FenceRun(p+direction*1.10f,end);
+                // Either side may hold another passage: a line can be crossed by more than one route.
+                FenceWithCrossings(start,p-direction*1.10f,crossings);FenceWithCrossings(p+direction*1.10f,end,crossings);
                 var passage=NightModel("VillageGate",p);passage.position=new Vector3(p.x,NightGround(p),p.z);
                 passage.rotation=Quaternion.LookRotation(Vector3.Cross(direction,Vector3.up));
                 foreach(var t in passage.GetComponentsInChildren<Transform>(true))
