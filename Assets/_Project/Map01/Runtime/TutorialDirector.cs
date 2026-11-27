@@ -210,7 +210,7 @@ namespace ShadowVale.Map01
                     if (player.IsSprinting) distance += travel;
                     Progress = distance / mission.Settings.tutorialSprintDistance; done = Progress >= 1; break;
                 case TutorialStep.Crouch:
-                    Cue("CTRL / C", "Nhấn Ctrl hoặc C để đi khom. Nhấn lại để đứng lên.", player.IsSneaking);
+                    Cue("CTRL", "Nhấn Ctrl để đi khom. Nhấn lại để đứng lên.", player.IsSneaking);
                     if (player.IsSneaking) distance += travel;
                     Progress = distance / mission.Settings.tutorialCrouchDistance; done = Progress >= 1; break;
                 case TutorialStep.Weapons:

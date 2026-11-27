@@ -26,6 +26,11 @@ namespace ShadowVale.Map01.Editor
         }
         static Arm armL, armR;
         static readonly StringBuilder mlog = new();
+        // Forearm roll the hand search may use, where its strain starts climbing, and how steeply. T049 defaults; T052 (knife
+        // thrust only) narrows them so the stab no longer wrings the wrist to the end of its range.
+        static float rollLimit = ForearmRoll, rollKnee = 50, rollStrain = .2f;
+        // Blade elevation keys of the thrust (deg above horizontal) at T = { 0, 10, 21, 27, 40, 60, end }; null = T049's.
+        static float[] thrustElevation;
 
         // ---------------------------------------------------------------- set-up
         static void SetupArms(Rest rest, StringBuilder log)
@@ -145,7 +150,7 @@ namespace ShadowVale.Map01.Editor
             }
             float Cost(float roll, float flex, float dev)
             {
-                if (Mathf.Abs(roll) > ForearmRoll) return float.MaxValue;
+                if (Mathf.Abs(roll) > rollLimit) return float.MaxValue;
                 float lf = flex >= 0 ? WristFlex : WristExt, lr = dev >= 0 ? WristRadial : WristUlnar;
                 if ((flex / lf) * (flex / lf) + (dev / lr) * (dev / lr) > 1) return float.MaxValue;
                 Quaternion w = parent * Local(roll, flex, dev);
@@ -154,10 +159,10 @@ namespace ShadowVale.Map01.Editor
                 if (hint.sqrMagnitude > 1e-6f && th.sqrMagnitude > 1e-6f) c += upWeight * Vector3.Angle(th, hint);
                 // Strain: cheap near neutral, steep past a relaxed wrist (25 deg bend, 15 deg tilt) and past half the forearm roll.
                 return c + .06f * (Mathf.Abs(flex) + Mathf.Abs(dev)) + .03f * Mathf.Abs(roll)
-                         + .35f * (Mathf.Max(0, Mathf.Abs(flex) - 25) + Mathf.Max(0, Mathf.Abs(dev) - 15)) + .2f * Mathf.Max(0, Mathf.Abs(roll) - 50);
+                         + .35f * (Mathf.Max(0, Mathf.Abs(flex) - 25) + Mathf.Max(0, Mathf.Abs(dev) - 15)) + rollStrain * Mathf.Max(0, Mathf.Abs(roll) - rollKnee);
             }
             float bR = 0, bF = 0, bD = 0, bC = Cost(0, 0, 0);
-            for (float r = -75; r <= 75.1f; r += 15) for (float fl = -55; fl <= 65.1f; fl += 10) for (float dv = -28; dv <= 18.1f; dv += 6)
+            for (float r = -rollLimit; r <= rollLimit + .1f; r += rollLimit / 5) for (float fl = -55; fl <= 65.1f; fl += 10) for (float dv = -28; dv <= 18.1f; dv += 6)
             { float c = Cost(r, fl, dv); if (c < bC) { bC = c; bR = r; bF = fl; bD = dv; } }
             foreach (var (sr, sf, sd) in new[] { (7.5f, 5f, 3f), (3f, 2f, 1.5f), (1f, 1f, .5f) })
             {
@@ -431,7 +436,7 @@ namespace ShadowVale.Map01.Editor
             float[] TH = { th0, -22, 50, 52, 5, th0, th0 };
             float[] EPS = { ep0, 100, 20, 18, 80, ep0, ep0 };
             float[] IN = { .05f, .02f, .12f, .14f, .08f, .05f, .05f };
-            float[] EL = { 45, 48, 38, 38, 45, 45, 45 };       // blade elevation above horizontal (forward grip: blade leads upward)
+            float[] EL = thrustElevation ?? new float[] { 45, 48, 38, 38, 45, 45, 45 };       // blade elevation above horizontal (forward grip: blade leads upward)
             float[] YAW = { 0, 12, -16, -18, 4, 0, 0 };
             float[] LEAN = { 0, -2, 10, 11, 3, 0, 0 };
             float[] CLAV = { 0, -6, 12, 12, 0, 0, 0 };
