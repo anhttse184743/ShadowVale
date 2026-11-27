@@ -78,6 +78,9 @@ namespace ShadowVale.Gameplay.Player
         public float SurfaceSpeedMultiplier { get; set; } = 1;
         public float? AssistedWalkSpeed { get; set; }
         public float WalkSpeed=>walkSpeed;
+
+        public void SetMovementCamera(Transform view) => cameraTransform = view;
+
         public void RestoreMotion(bool sneaking)
         {
             SetProne(false, true);

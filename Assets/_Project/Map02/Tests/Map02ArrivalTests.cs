@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
 using ShadowVale.Gameplay.Combat;
+using ShadowVale.Gameplay.Player;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 namespace ShadowVale.Map01.Tests {
@@ -262,8 +263,29 @@ VerifyGameplayRifle(Nam());
 InputSystem.RemoveDevice(mouse);RestoreInputRouting(routing);
 Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);AssertCarriedAnimationDriversReady(arrival);
 AssertDryPartySpawn(arrival);
+AssertGameplayCameraDirections(Nam());
 ShotTracerLifecycleTests.FireAfterArrival(Nam().GetComponent<PlayerCombat>());
 yield return new ExitPlayMode();
+}
+static void AssertGameplayCameraDirections(Transform nam) {
+var rig=Camera.main.GetComponent<ThirdPersonCamera>();
+var movement=nam.GetComponent<PlayerController>();
+var toCameraSpace=typeof(PlayerController).GetMethod("ToCameraSpace",BindingFlags.Instance|BindingFlags.NonPublic);
+var aimRig=typeof(PlayerCombat).GetField("cameraRig",BindingFlags.Instance|BindingFlags.NonPublic);
+Assert.AreSame(rig,aimRig.GetValue(nam.GetComponent<PlayerCombat>()));
+var previous=rig.transform.rotation;
+try {
+foreach(float yaw in new[]{0f,90f}) {
+rig.RestoreLook(Quaternion.Euler(20,yaw,0));
+var forward=Vector3.ProjectOnPlane(rig.transform.forward,Vector3.up).normalized;
+var right=Vector3.ProjectOnPlane(rig.transform.right,Vector3.up).normalized;
+foreach(var (key,input,expected) in new[]{(Key.W,Vector2.up,forward),(Key.S,Vector2.down,-forward),
+    (Key.A,Vector2.left,-right),(Key.D,Vector2.right,right)}) {
+var actual=(Vector3)toCameraSpace.Invoke(movement,new object[]{input});
+Assert.That(Vector3.Dot(actual,expected),Is.GreaterThan(.99f),$"{key} must follow the active camera at yaw {yaw}°.");
+}
+}
+} finally { rig.RestoreLook(previous); }
 }
 static IEnumerator AssertDryPartyAfterLateUpdate(Map02Arrival arrival) {
 // A coroutine resumes before LateUpdate. Sample the same final pose the camera renders, including the

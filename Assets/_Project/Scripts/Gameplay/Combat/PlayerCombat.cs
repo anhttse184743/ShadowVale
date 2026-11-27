@@ -176,6 +176,8 @@ namespace ShadowVale.Gameplay.Combat
         [SerializeField] private ThirdPersonCamera cameraRig;
         [SerializeField] private Health health;
 
+        public void SetCameraRig(ThirdPersonCamera rig) => cameraRig = rig;
+
         private readonly System.Collections.Generic.Dictionary<WeaponKind, Weapon> _weapons = new();
         private PlayerController _controller;
         private CharacterController _characterController;

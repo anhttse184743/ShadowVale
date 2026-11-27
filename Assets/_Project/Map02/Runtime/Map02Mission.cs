@@ -127,6 +127,14 @@ namespace ShadowVale.Map01
             if (player == null) { Debug.LogError("Map 2 has no player to bind.",this); yield break; }
             combat=player.GetComponent<PlayerCombat>();health=player.GetComponent<Health>();
             cameraRig=FindObjectsByType<ThirdPersonCamera>(FindObjectsSortMode.None).FirstOrDefault(c=>c.GetComponent<Camera>() != null && c.GetComponent<Camera>().enabled);
+            if (cameraRig != null)
+            {
+                // The boat camera can remain active after the village player takes over.
+                player.SetMovementCamera(cameraRig.transform);
+                combat?.SetCameraRig(cameraRig);
+                cameraRig.SetTarget(Player);
+                cameraRig.InputAllowed=()=>!InputBlocked;
+            }
             if (arrival != null) { foreach(var pair in arrival.Inventory) Inventory[pair.Key]=pair.Value; Stones=arrival.Stones; }
             // The exploration-only R reset conflicts with gameplay reload. Its scene instance
             // stays disabled after the mission takes ownership, never the shared prefab.
@@ -139,7 +147,6 @@ namespace ShadowVale.Map01
                 combat.DrawRounds=requested=>{int n=Mathf.Min(requested,combat.ReserveRounds());Inventory[RifleAmmo]=combat.ReserveRounds()-n;return n;};
             }
             player.InputAllowed=()=>!InputBlocked&&Chapter?.MovementLocked!=true;
-            if(cameraRig!=null){cameraRig.SetTarget(Player);cameraRig.InputAllowed=()=>!InputBlocked;}
             voice=DialogueVoice.For(gameObject);voice.CanSpeak=()=>!Paused&&!ForestMenu.Visible;
             if(FindFirstObjectByType<Map02QuestLayout>()==null)
             {

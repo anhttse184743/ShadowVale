@@ -229,6 +229,8 @@ namespace ShadowVale.Map01
                 if(clock>=MoorDuration){CurrentPhase=Phase.Disembarking;clock=0;speech.Play("m2_ashore_order");}
             } else {
                 for(int i=0;i<3;i++)ExitPassenger(i,clock-i*PassengerDelay);
+                // Frame the landed pose after retargeting it onto the visible characters.
+                SampleApprovedPoses();
                 float reveal=Mathf.SmoothStep(0,1,(clock-RevealStart)/8);
                 Vector3 shotFrom=new Vector3(-5.5f,3.2f,-90.8f),shotOn=DockPoint(new Vector3(-1.2f,1.1f,0));
                 if(MisstepCamera(out var landingEye,out var landingFocus,out float landing)){shotFrom=Vector3.Lerp(shotFrom,landingEye,landing);shotOn=Vector3.Lerp(shotOn,landingFocus,landing);}
@@ -316,7 +318,7 @@ namespace ShadowVale.Map01
                 }
                 return;
             }
-            foreach(var pose in poses)pose.Sample();
+            for(int i=0;i<poses.Length;i++)if(c1Poses[i]==null)poses[i].Sample();
             if(CurrentPhase==Phase.Approaching)source.ArrivalPaddleContacts(clock,1);
             else if(CurrentPhase==Phase.Mooring) {
                 float p=Mathf.SmoothStep(0,1,clock/MoorDuration);
@@ -340,7 +342,7 @@ namespace ShadowVale.Map01
             // Authored hand support/release and arm swing must remain visible while rising/walking.
             if(CurrentPhase==Phase.Disembarking){source.SetPaddleGrip(0,0);if(clock<PassengerDelay)source.ArrivalRestHands(actors[1],clock);}
             // Injured arm stays supported throughout arrival; release to the chapter driver only at handoff.
-            source.ApplyInjuredPassenger();
+            if(c1Poses[2]==null)source.ApplyInjuredPassenger();
             if(CurrentPhase==Phase.Disembarking)for(int i=0;i<3;i++) {
                 if(ashore[i])GroundStandingFeet(i);
                 float t=clock-i*PassengerDelay;
@@ -351,7 +353,6 @@ namespace ShadowVale.Map01
                 if(t>stairStart+StairDuration && !ashore[i])PlantShoreFeet(i);
             }
             MisstepContacts();
-            SampleApprovedVisuals();
         }
         public void Skip(){if(CurrentPhase!=Phase.Loading && CurrentPhase!=Phase.Gameplay)Finish();}
         bool chapterOwnsPassengers;

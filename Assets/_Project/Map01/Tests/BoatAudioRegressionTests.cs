@@ -50,8 +50,8 @@ namespace ShadowVale.Map01.Tests {
       if(count!=1)errors.Add(capturedStage+" guns="+count);
       Assert.Greater(capturedBody.Gun.GetComponentsInChildren<MeshRenderer>().Length,0,"Sling must have real meshes");
       if(capturedArrival?.CurrentPhase==Map02Arrival.Phase.Gameplay)return;
-      bool c1=capturedArrival!=null&&capturedArrival.MisstepActor(0)!=capturedBody.GetComponent<Animator>();
-      var visibleActor=c1?capturedArrival.MisstepActor(0):capturedBody.GetComponent<Animator>();
+      bool c1=capturedArrival!=null&&capturedArrival.MisstepOwns(0);
+      var visibleActor=capturedBody.GetComponent<Animator>();
       bool expectSlung=capturedArrival!=null;
       Assert.AreEqual(expectSlung,capturedBody.Slung,"Held throughout Map 1; slung only from Map 2 arrival");
       Assert.AreSame(visibleActor.GetBoneTransform(expectSlung?HumanBodyBones.Chest:HumanBodyBones.RightHand),capturedBody.Gun.parent,"The single gun must use the correct hand/shoulder socket");
@@ -73,8 +73,8 @@ namespace ShadowVale.Map01.Tests {
      };
     }yield return null;
    }
-   File.WriteAllLines(Folder+"/"+(mosin?"Mosin":"AK")+"-audit.txt",rows.Concat(new[]{"samples="+samples,"replacementBodySamples="+c1Samples}).Concat(errors));
-   Assert.True(gameplay,"Natural boat sequence must return control");Assert.Greater(samples,50);Assert.Greater(c1Samples,10,"Must audit the actual replacement body, not only the seated pose");Assert.IsEmpty(errors,string.Join("\n",errors.Take(15)));
+   File.WriteAllLines(Folder+"/"+(mosin?"Mosin":"AK")+"-audit.txt",rows.Concat(new[]{"samples="+samples,"landingAssistSamples="+c1Samples}).Concat(errors));
+   Assert.True(gameplay,"Natural boat sequence must return control");Assert.Greater(samples,50);Assert.Greater(c1Samples,10,"Must audit the assist on the landing");Assert.IsEmpty(errors,string.Join("\n",errors.Take(15)));
   }
   [UnityTest,Timeout(240000)]public IEnumerator QuietSingleWaterBedDucksUnderDialogueAndPauses(){
    EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();float until=Time.realtimeSinceStartup+100;Map02Mission m=null;

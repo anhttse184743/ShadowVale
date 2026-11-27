@@ -48,6 +48,10 @@ namespace ShadowVale.Map01.Tests
             Directory.CreateDirectory(Folder);var log=new List<string>();
             bool hasWornPack=arrival.Passengers[0].GetComponentsInChildren<SkinnedMeshRenderer>()
                 .Any(r=>r.name=="Nam_BaloRanRi" && r.enabled && !r.forceRenderingOff);
+            var namSkins=VisibleBodySkins(arrival.Passengers[0]);
+            var hungSkins=VisibleBodySkins(arrival.Passengers[2]);
+            Assert.IsNotEmpty(namSkins);
+            Assert.IsNotEmpty(hungSkins);
             while(!arrival.MisstepPlayed&&arrival.IsPlaying&&Time.realtimeSinceStartup<until)yield return null;
             Assert.IsTrue(arrival.MisstepPlayed,"C1 plays on the natural landing.");
             Assert.IsTrue(arrival.UsesApprovedMisstep,"The v4 content must be used, not the optional old Humanoid fallback.");
@@ -78,6 +82,8 @@ namespace ShadowVale.Map01.Tests
                 capture.draw=()=>{frame=ContactFrame.Read(arrival,hung,nam);ScreenCapture.CaptureScreenshot(Folder+"/"+(skipWhileDown?"skip-":"")+name+".png");};
                 while(frame==null&&Time.realtimeSinceStartup<until)yield return null;
                 Assert.NotNull(frame,"A rendered arrival frame must be sampled after LateUpdate.");
+                CollectionAssert.AreEquivalent(namSkins,VisibleBodySkins(arrival.Passengers[0]),$"Nam keeps his current skin at {name}.");
+                CollectionAssert.AreEquivalent(hungSkins,VisibleBodySkins(arrival.Passengers[2]),$"Hùng keeps his current skin at {name}.");
                 float c=frame.clock;
                 Assert.IsTrue(frame.framed,"Both Nam and Hùng stay inside the landing camera as they get up and walk on.");
                 log.Add($"{name} t={c:F2} bank={bank:F3} hungHips={P(frame.hungHips)} hungRKnee={P(frame.hungKnee)} hungLHand={P(frame.hungHand)} namHips={P(frame.namHips)} namRHand={P(frame.namHand)} namLHand={P(frame.namLeftHand)} pack={(frame.hasPack?P(frame.pack):"worn")} worn={frame.worn} packBounds={P(arrival.MisstepPackBounds.center)}/{P(arrival.MisstepPackBounds.size)} hungShoulder={P(frame.hungShoulder)} armReach={frame.armReach:F3} floorTarget={P(frame.floorTarget)} floorReach={Vector3.Distance(frame.hungShoulder,frame.floorTarget):F3} rifle={frame.rifleVisible}");
@@ -137,9 +143,11 @@ namespace ShadowVale.Map01.Tests
             File.WriteAllText(Folder+"/c1-continuity.txt",$"Nam assisting spine peak angular speed: {maxSpineRate:F2} degrees/second at {maxSpineAt:F3} s (2.75–4.95 s). Limit 500; a broken endpoint solve exceeded 970–1030 degrees/second.");
             Assert.Less(maxSpineRate,500,"Nam's assisting spine must not snap to a maximum bend when the reach endpoint misses.");
             Assert.AreEqual(Map02Arrival.Phase.Gameplay,arrival.CurrentPhase);
-            Assert.AreEqual(1,arrival.Passengers[0].GetComponentsInChildren<Animator>(true).Length,"The gameplay model must be restored after C1.");
+            Assert.AreEqual(1,arrival.Passengers[0].GetComponentsInChildren<Animator>(true).Length,"The source rig must be removed after C1.");
             for(int i=0;i<3;i++)Assert.Less(Vector3.ProjectOnPlane(arrival.Passengers[i].position-arrival.SpawnPoints[i],Vector3.up).magnitude,.1f,"Everyone ends at their place on the bank, actor "+i);
         }
+        static SkinnedMeshRenderer[] VisibleBodySkins(Transform passenger) => passenger.GetComponentsInChildren<SkinnedMeshRenderer>()
+            .Where(r=>r.enabled&&!r.forceRenderingOff&&r.name!="Nam_BaloRanRi"&&r.GetComponentInParent<ShadowVale.Gameplay.Combat.Weapon>()==null).ToArray();
         sealed class ContactFrame
         {
             public float clock,armReach;public bool hasPack,worn,rifleVisible,framed;
