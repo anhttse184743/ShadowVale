@@ -43,7 +43,8 @@ namespace ShadowVale.Map01
             if(walkWeight<=0||dayWalk==null)SamplePerformance(rest,dayPoseClock,true);
             else if(walkWeight>=1)SamplePerformance(dayWalk,dayPoseClock,true);
             else{pose??=new Map01CinematicPose(animator,null,true);pose.SampleBlend(rest,dayPoseClock,dayWalk,dayPoseClock,walkWeight,true);}
-            pose?.Ground(transform.position.y);
+            // Like LateUpdate's visual correction: the NavMesh socket can sit above the rendered floor.
+            pose?.Ground(RenderedFloor(out var floor)?floor:transform.position.y);
         }
         public void PrimeLocomotion()=>DayLocomotion(false);
         public void Bind(Transform existing)
@@ -71,17 +72,23 @@ namespace ShadowVale.Map01
             if(dayIdle!=null||visual==null||!visual.gameObject.activeInHierarchy)return;
             // NavMesh sockets can sit a little above the rendered village floor.
             // Correct only the visual, keeping navigation and saved actor coordinates unchanged.
+            RenderedFloor(out var floor);
+            float sole=SettleSoles();
+            var local=visual.localPosition;   // the sole correction holds even where no floor is found under the socket
+            local.y=visualY+(float.IsNegativeInfinity(floor)?0:Mathf.Clamp(floor-transform.position.y,-.6f,.6f))-sole;visual.localPosition=local;
+        }
+        /// <summary>The highest walkable rendered surface under the actor (NegativeInfinity when none).</summary>
+        bool RenderedFloor(out float floor)
+        {
             int count=Physics.RaycastNonAlloc(transform.position+Vector3.up*.6f,Vector3.down,floorHits,1.3f,~0,QueryTriggerInteraction.Ignore);
-            float floor=float.NegativeInfinity;
+            floor=float.NegativeInfinity;
             for(int i=0;i<count;i++)
             {
                 var hit=floorHits[i];
                 if(hit.normal.y<.55f||hit.transform.IsChildOf(transform)||hit.collider is CharacterController||hit.collider.GetComponentInParent<ShadowVale.Gameplay.Combat.Health>()!=null||hit.collider.GetComponentInParent<Map02ObjectiveObject>()!=null)continue;
                 floor=Mathf.Max(floor,hit.point.y);
             }
-            float sole=SettleSoles();
-            var local=visual.localPosition;   // the sole correction holds even where no floor is found under the socket
-            local.y=visualY+(float.IsNegativeInfinity(floor)?0:Mathf.Clamp(floor-transform.position.y,-.6f,.6f))-sole;visual.localPosition=local;
+            return !float.IsNegativeInfinity(floor);
         }
         // Some rigs and clips (Hùng's carried-over model, his limp) keep both feet a hand's width above the visual's base.
         // The lowest toe over the last moments is what stands on the ground: lower the visual to it at once when the

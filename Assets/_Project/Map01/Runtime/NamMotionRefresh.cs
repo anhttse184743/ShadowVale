@@ -92,13 +92,29 @@ namespace ShadowVale.Map01
             {
                 if(knife)drawAt=Time.time;
                 if(lastWeapon==WeaponKind.Knife&&!knife&&!throwable)holsterAt=Time.time;
+                // Claude 26/11 (step 3): K-54 draw and holster, when the data carries them. One hand at a time: the knife goes
+                // away before the pistol comes out, and the pistol before the knife.
+                if(HasPistolDraw)
+                {
+                    if(lastWeapon==WeaponKind.Pistol&&!pistolOn&&!throwable)pistolHolsterAt=Time.time;
+                    if(pistolOn&&lastWeapon!=WeaponKind.Pistol)pistolDrawAt=Time.time+Mathf.Max(0,1-(Time.time-holsterAt));
+                    if(knife&&Time.time-pistolHolsterAt<Clip("pistol_holster").Seconds)drawAt=pistolHolsterAt+Clip("pistol_holster").Seconds;
+                }
                 lastWeapon=combat.EquippedKind;
             }
             // Only a running body leaves the ground. A teleport (save load, retry, a scripted placement) switches the controller off
             // for a moment; read as airborne, it played a jump and its landing on the spot.
             if(body==null)body=motor.GetComponent<CharacterController>();
             bool nowGrounded=!motor.enabled||body==null||!body.enabled||motor.IsGrounded;
-            if(motor.JumpSequence!=jumpSequence||(!nowGrounded&&grounded))
+            // Claude 26/11 (approved step 1): a placement a few centimetres up or a step down a kerb left the ground for a few
+            // frames and played the whole jump and landing (0.55 s) on the spot. Only the jump key or a fall that lasts plays it,
+            // and a teleport (further than any run moves in a frame) drops a jump that was under way.
+            Vector3 root=motor.transform.position;
+            if(rootKnown&&(root-lastRoot).sqrMagnitude>TeleportMetres*TeleportMetres&&motor.JumpSequence==jumpSequence){airborneFor=0;jumping=landing=false;}
+            lastRoot=root;rootKnown=true;
+            airborneFor=nowGrounded?0:airborneFor+Time.deltaTime;
+            bool fell=!jumping&&airborneFor>=FallGraceSeconds&&airborneFor-Time.deltaTime<FallGraceSeconds;
+            if(motor.JumpSequence!=jumpSequence||fell)
             {
                 jumping=true;landing=false;jumpElapsed=0;jumpSequence=motor.JumpSequence;
             }
@@ -111,8 +127,11 @@ namespace ShadowVale.Map01
             if(throwable||jumping||landing||combat.IsAiming||combat.IsReloading)holsterAt=-100;
             grounded=nowGrounded;
             string id=null,prop=null;float frame=0,bodyFrame=-1,bodyWeight=1;
-            bool owns=throwable||pistolOn||knife||jumping||landing||Time.time-holsterAt<1;
-            if(!owns){Release();return;}
+            bool pistolHolstering=HasPistolDraw&&Time.time-pistolHolsterAt<Clip("pistol_holster").Seconds;
+            bool owns=throwable||pistolOn||knife||jumping||landing||Time.time-holsterAt<1||pistolHolstering;
+            bool pistolHidden=false;
+            if(!owns){FadeOut();return;}
+            fadeOutAt=-1;
             if(jumping||landing)
             {
                 string key=throwable?ThrowableKey():pistolOn?"pistol":knife?"knife":"unarmed";id="jump_"+key;var c=Clip(id);
@@ -124,6 +143,11 @@ namespace ShadowVale.Map01
             else if(Time.time-holsterAt<1)
             {
                 id="knife_holster";frame=Clip(id).At(Time.time-holsterAt);prop="Knife";
+                if(motor.PlanarSpeed>.05f)bodyFrame=-2;else if(motor.IsSneaking)bodyFrame=CrouchLegs();
+            }
+            else if(pistolHolstering)
+            {
+                id="pistol_holster";frame=Clip(id).At(Time.time-pistolHolsterAt);
                 if(motor.PlanarSpeed>.05f)bodyFrame=-2;else if(motor.IsSneaking)bodyFrame=CrouchLegs();
             }
             else if(throwable)
@@ -144,7 +168,10 @@ namespace ShadowVale.Map01
             {
                 bool levelled=combat.IsAiming||Time.time-lastShot<.6f;
                 aim=Mathf.MoveTowards(aim,levelled?1:0,Time.deltaTime/.35f);
-                if(combat.IsReloading){id="pistol_reload";frame=Clip(id).Normalized(combat.ReloadProgress);}
+                bool drawing=HasPistolDraw&&Time.time>=pistolDrawAt&&Time.time-pistolDrawAt<Clip("pistol_draw").Seconds&&!levelled&&!combat.IsReloading;
+                if(drawing){id="pistol_draw";frame=Clip(id).At(Time.time-pistolDrawAt);pistolHidden=frame<ClipEvent("pistol_draw");}
+                else if(Time.time<pistolDrawAt&&!levelled){id=Locomotion("pistol");frame=MotionFrame(id);pistolHidden=true;}
+                else if(combat.IsReloading){id="pistol_reload";frame=Clip(id).Normalized(combat.ReloadProgress);}
                 else if(wasReloading){id="pistol_reload";frame=Clip(id).end;}
                 else if(Time.time-lastShot<combat.WeaponFor(WeaponKind.Pistol).Cooldown){id="pistol_fire";frame=Clip(id).At(Time.time-lastShot);}
                 else if(aim>0&&aim<1){id=levelled?"pistol_raise":"pistol_lower";frame=Clip(id).Normalized(levelled?aim:1-aim);}
@@ -166,8 +193,9 @@ namespace ShadowVale.Map01
             if(MotionId!=id)
             {
                 Array.Copy(last,previous,last.Length);transitionAt=Time.time;MotionId=id;
+                blendSeconds=BlendSeconds(id,frame,bodyWeight);
             }
-            float blend=Mathf.SmoothStep(0,1,(Time.time-transitionAt)/.1f);SourceFrame=frame;AppliedWeight=blend;
+            float blend=Mathf.SmoothStep(0,1,(Time.time-transitionAt)/blendSeconds);SourceFrame=frame;AppliedWeight=blend;
             if(bodyWeight>0&&!ownsTwist&&twist!=null){twist.BeginAuthoredPose();ownsTwist=true;}
             else if(bodyWeight==0&&ownsTwist&&twist!=null){twist.EndAuthoredPose();ownsTwist=false;}
             for(int i=0;i<bones.Length;i++)
@@ -187,9 +215,10 @@ namespace ShadowVale.Map01
                 if(on)ApplyProp(entry.Value,frame,released);
             }
             SetKnifeHidden(prop=="Knife");
-            bool holstering=id=="knife_holster";
-            SetHolsterHidden(holstering);
-            if(holstering)combat.GunPresentationReady=false;
+            bool holstering=id=="knife_holster"||id=="pistol_holster";
+            SetHolsterHidden(holstering||pistolHidden);
+            if(holstering||id=="pistol_draw"||pistolHidden)combat.GunPresentationReady=false;
+            ShowPistolVisual(id=="pistol_holster"&&frame<ClipEvent("pistol_holster"),frame);
             if(prop=="Pistol")ApplyPistol(frame);
         }
         // Crouched, a throw or the knife's holster is the upper body's: the legs keep the crouch they are in, the refreshed
@@ -243,17 +272,98 @@ namespace ShadowVale.Map01
         }
         void Release()
         {
+            ReleaseState();fadeOutAt=-1;
+            if(bones!=null)for(int i=0;i<bones.Length;i++)last[i]=Map01PistolAnimationData.Pose.Read(bones[i]);
+        }
+        // Claude 26/11 (step 3). The K-54 draw/holster takes appended by T049NamArmFix (clip label "...|event=<frame>": the frame the
+        // gun leaves the hand, or is in it). Equip switches the real pistol off before its holster plays, so a render-only copy
+        // made inside an inactive holder (no Weapon script ever wakes on it) shows the gun going back into the holster.
+        float pistolDrawAt=-100,pistolHolsterAt=-100;GameObject pistolVisual,pistolVisualHolder;
+        bool HasPistolDraw=>clips!=null&&clips.ContainsKey("pistol_draw")&&clips.ContainsKey("pistol_holster");
+        float ClipEvent(string id)
+        {
+            if(clips==null||!clips.TryGetValue(id,out var c)||c.label==null)return float.MaxValue;
+            int at=c.label.IndexOf("|event=",StringComparison.Ordinal);
+            return at>=0&&float.TryParse(c.label.Substring(at+7),System.Globalization.NumberStyles.Float,System.Globalization.CultureInfo.InvariantCulture,out var f)?f:float.MaxValue;
+        }
+        void ShowPistolVisual(bool show,float frame)
+        {
+            if(!show){if(pistolVisual!=null)pistolVisual.SetActive(false);return;}
+            if(pistolVisual==null)
+            {
+                if(pistol==null||pistol.GunTransform==null)return;
+                pistolVisualHolder=new GameObject("K54 holster visual holder");pistolVisualHolder.SetActive(false);pistolVisualHolder.transform.SetParent(hand,false);
+                pistolVisual=Instantiate(pistol.GunTransform.gameObject,pistolVisualHolder.transform,false);pistolVisual.name="K54 holster visual";
+                foreach(var b in pistolVisual.GetComponentsInChildren<MonoBehaviour>(true))DestroyImmediate(b);
+                foreach(var b in pistolVisual.GetComponentsInChildren<Behaviour>(true))b.enabled=false; // lights, audio: off (URP light data depends on the Light)
+                foreach(var c in pistolVisual.GetComponentsInChildren<Collider>(true))DestroyImmediate(c);
+                // Only the gun's meshes, each as the real gun has it: no muzzle flame, tracer or particles.
+                var real=pistol.GunTransform.GetComponentsInChildren<Renderer>(true);var copy=pistolVisual.GetComponentsInChildren<Renderer>(true);
+                for(int i=0;i<copy.Length;i++)
+                    copy[i].enabled=(copy[i] is MeshRenderer||copy[i] is SkinnedMeshRenderer)&&i<real.Length&&real[i].enabled;
+                pistolVisual.SetActive(true);pistolVisual.transform.SetParent(hand,false);pistolVisualHolder.SetActive(true);
+                Destroy(pistolVisualHolder);
+            }
+            pistolVisual.SetActive(true);
+            Data.FindProp("Pistol").root.At(frame).Apply(pistolVisual.transform);
+        }
+        void ReleaseState()
+        {
+            if(pistolVisual!=null)pistolVisual.SetActive(false);
             AppliedWeight=0;MotionId=null;ActiveProp=null;
             foreach(var p in props.Values){p.root.SetActive(false);p.detached.SetActive(false);}
             SetKnifeHidden(false);
             SetHolsterHidden(false);
             if(ownsTwist&&twist!=null)twist.EndAuthoredPose();ownsTwist=false;
-            if(bones!=null)for(int i=0;i<bones.Length;i++)last[i]=Map01PistolAnimationData.Pose.Read(bones[i]);
+        }
+
+        // Claude 26/11 (approved step 1). Every take used to blend in over 0.1 s however far the hands had to go: a reload from
+        // the low carry moved the wrist 20 cm a frame (about 12 m/s). The blend now lasts as long as the hands need at about
+        // 3 m/s at its fastest, 0.1-0.4 s. Reactions (a stab, a shot, a throw, a jump) keep their snap.
+        const float TeleportMetres=1.5f,FallGraceSeconds=.15f,FadeOutSeconds=.2f,MinBlend=.1f,MaxBlend=.4f,BlendSecondsPerMetre=.5f;
+        float blendSeconds=MinBlend,fadeOutAt=-1,airborneFor;
+        Vector3 lastRoot;bool rootKnown;
+        Map01PistolAnimationData.Pose[] fadeFrom,measureHold;
+        float BlendSeconds(string id,float frame,float bodyWeight)
+        {
+            if(bodyWeight==0||id.StartsWith("jump_",StringComparison.Ordinal)||id=="knife_attack"||id=="pistol_fire"||id.EndsWith("_throw",StringComparison.Ordinal))return MinBlend;
+            var hips=actor.GetBoneTransform(HumanBodyBones.Hips);var left=actor.GetBoneTransform(HumanBodyBones.LeftHand);var right=actor.GetBoneTransform(HumanBodyBones.RightHand);
+            if(hips==null||left==null||right==null)return MinBlend;
+            if(measureHold==null||measureHold.Length!=bones.Length)measureHold=new Map01PistolAnimationData.Pose[bones.Length];
+            for(int i=0;i<bones.Length;i++)if(upper[i])measureHold[i]=Map01PistolAnimationData.Pose.Read(bones[i]);
+            for(int i=0;i<bones.Length;i++)if(upper[i])previous[i].Apply(bones[i]);
+            Vector3 l0=hips.InverseTransformPoint(left.position),r0=hips.InverseTransformPoint(right.position);
+            for(int i=0;i<bones.Length;i++)if(upper[i])Data.bones[i].At(frame).Apply(bones[i]);
+            Vector3 l1=hips.InverseTransformPoint(left.position),r1=hips.InverseTransformPoint(right.position);
+            for(int i=0;i<bones.Length;i++)if(upper[i])measureHold[i].Apply(bones[i]);
+            float metres=Mathf.Max(hips.TransformVector(l1-l0).magnitude,hips.TransformVector(r1-r0).magnitude);
+            return Mathf.Clamp(metres*BlendSecondsPerMetre,MinBlend,MaxBlend);
+        }
+
+        // Claude 26/11 (approved step 1). Handing the arms back to the Animator (to the rifle, or empty hands) cut over in one frame
+        // (wrists 25-29 cm). The last pose is now held and faded out over the Animator's in 0.2 s. A cinematic, a story action or
+        // death still takes the arms at once through Release().
+        void FadeOut()
+        {
+            if(MotionId!=null)
+            {
+                if(fadeFrom==null||fadeFrom.Length!=last.Length)fadeFrom=new Map01PistolAnimationData.Pose[last.Length];
+                Array.Copy(last,fadeFrom,last.Length);fadeOutAt=Time.time;ReleaseState();
+            }
+            if(fadeOutAt<0){Release();return;}
+            float weight=1f-Mathf.SmoothStep(0,1,(Time.time-fadeOutAt)/FadeOutSeconds);
+            if(weight<=0){Release();return;}
+            for(int i=0;i<bones.Length;i++)
+            {
+                var pose=Map01PistolAnimationData.Pose.Mix(Map01PistolAnimationData.Pose.Read(bones[i]),fadeFrom[i],weight);
+                pose.Apply(bones[i]);last[i]=pose;
+            }
         }
         void OnDisable(){if(Data!=null)Release();}
         void OnDestroy()
         {
             if(combat!=null)combat.Attacked-=Attacked;
+            if(pistolVisual!=null)Destroy(pistolVisual);
             foreach(var p in props.Values){if(p.root!=null)Destroy(p.root);if(p.detached!=null)Destroy(p.detached);}
         }
     }

@@ -1,0 +1,7 @@
+Hung clips: Idle_Tuned 9,92s, Nam_Rifle_Walk_F 1,00s
+Hung crouch candidates: Nam_Crouch_Idle_V21, Nam_Crouch_Walk_New, T013_CrouchTurnLeft, T013_CrouchTurnRight, Nam_Crouch_AimIdle, Nam_Crouch_Reload, Nam_Binoculars_Crouch, Nam_Crouch_ThrowAim, Nam_Crouch_Throw
+Hung idle Idle_Tuned@0,00; stride Nam_Rifle_Walk_F@0,80 74 deg; low Nam_Binoculars_Crouch@0,93 hips 0,36 m; left twist Nam_Rifle_Walk_F@0,75 40,9 deg
+ChiHuy clips: Nam_Rifle_Idle 8,57s, Nam_Rifle_Walk_F 1,00s, Nam_Rifle_Run 0,67s, Nam_Rifle_AimIdle 3,10s, Nam_Rifle_Fire 0,27s, Enemy_Search_LookAround 10,63s, Enemy_Startled 3,67s, Enemy_HitReaction 2,30s, Enemy_Death_Backward 2,60s, Enemy_Death_Forward 2,57s, Enemy_Death_Shot 4,60s, Enemy_Death_Knees 5,77s, Enemy_Death_Stomach 5,60s, Enemy_Takedown_Neck_Victim 2,20s
+ChiHuy idle Nam_Rifle_Idle@0,00; stride Nam_Rifle_Run@0,43 80 deg; low Enemy_Death_Knees@3,17 hips 0,54 m
+ChiHuy idle ankle heights L 0,127 R 0,115 m
+T047 ANH OK

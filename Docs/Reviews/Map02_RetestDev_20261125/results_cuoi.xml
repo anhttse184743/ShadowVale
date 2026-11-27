@@ -1,0 +1,692 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="102" result="Failed(Child)" total="102" passed="101" failed="1" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-11-25 17:06:09Z" end-time="2026-11-25 17:06:17Z" duration="8,4978189">
+  <test-suite type="TestSuite" id="1000" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="1000" result="Failed" site="Child" start-time="2026-11-25 17:06:09Z" end-time="2026-11-25 17:06:17Z" duration="8.497819" total="102" passed="101" failed="1" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <failure>
+      <message><![CDATA[One or more child tests had errors]]></message>
+    </failure>
+    <test-suite type="Assembly" id="1988" name="ShadowVale.Map02.Tests.dll" fullname="D:/DO_AN_GAME/ShadowVale/Library/ScriptAssemblies/ShadowVale.Map02.Tests.dll" runstate="Runnable" testcasecount="224" result="Failed" site="Child" start-time="2026-11-25 17:06:11Z" end-time="2026-11-25 17:06:17Z" duration="6.116009" total="102" passed="101" failed="1" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="14220" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <failure>
+        <message><![CDATA[One or more child tests had errors]]></message>
+      </failure>
+      <test-suite type="TestSuite" id="1989" name="ShadowVale" fullname="ShadowVale" runstate="Runnable" testcasecount="224" result="Failed" site="Child" start-time="2026-11-25 17:06:12Z" end-time="2026-11-25 17:06:17Z" duration="5.933707" total="102" passed="101" failed="1" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <failure>
+          <message><![CDATA[One or more child tests had errors]]></message>
+        </failure>
+        <test-suite type="TestSuite" id="1990" name="Map01" fullname="ShadowVale.Map01" runstate="Runnable" testcasecount="224" result="Failed" site="Child" start-time="2026-11-25 17:06:12Z" end-time="2026-11-25 17:06:17Z" duration="5.892732" total="102" passed="101" failed="1" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <failure>
+            <message><![CDATA[One or more child tests had errors]]></message>
+          </failure>
+          <test-suite type="TestSuite" id="1991" name="Tests" fullname="ShadowVale.Map01.Tests" runstate="Runnable" testcasecount="224" result="Failed" site="Child" start-time="2026-11-25 17:06:12Z" end-time="2026-11-25 17:06:17Z" duration="5.861186" total="102" passed="101" failed="1" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <failure>
+              <message><![CDATA[One or more child tests had errors]]></message>
+            </failure>
+            <test-suite type="TestFixture" id="1710" name="Map02AlliedCommanderConsistencyTests" fullname="ShadowVale.Map01.Tests.Map02AlliedCommanderConsistencyTests" classname="ShadowVale.Map01.Tests.Map02AlliedCommanderConsistencyTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-25 16:55:57Z" end-time="2026-11-25 16:56:00Z" duration="2.754546" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1711" name="DirectMap2UsesNewCommanderModelWithControllerAndRifle" fullname="ShadowVale.Map01.Tests.Map02AlliedCommanderConsistencyTests.DirectMap2UsesNewCommanderModelWithControllerAndRifle" methodname="DirectMap2UsesNewCommanderModelWithControllerAndRifle" classname="ShadowVale.Map01.Tests.Map02AlliedCommanderConsistencyTests" runstate="Runnable" seed="900713391" result="Passed" start-time="2026-11-25 16:55:46Z" end-time="2026-11-25 16:56:00Z" duration="13.744788" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1754" name="Map02ChapterMechanicsTests" fullname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests" classname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-25 16:57:06Z" end-time="2026-11-25 16:57:07Z" duration="0.880839" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1758" name="CoverFireTakesSixtyToNinetySecondsWhateverNamHits" fullname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.CoverFireTakesSixtyToNinetySecondsWhateverNamHits" methodname="CoverFireTakesSixtyToNinetySecondsWhateverNamHits" classname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests" runstate="Runnable" seed="2016102383" result="Passed" start-time="2026-11-25 16:56:00Z" end-time="2026-11-25 16:56:12Z" duration="12.242407" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+              </test-case>
+              <test-case id="1757" name="LaneHoldsFollowEvacuationAndTheFallenDropRounds" fullname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.LaneHoldsFollowEvacuationAndTheFallenDropRounds" methodname="LaneHoldsFollowEvacuationAndTheFallenDropRounds" classname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests" runstate="Runnable" seed="1194274568" result="Passed" start-time="2026-11-25 16:56:12Z" end-time="2026-11-25 16:56:23Z" duration="10.574862" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+              <test-case id="1755" name="RepairAndAntennaRequireActualInputAndCoverFireSlowsMovement" fullname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.RepairAndAntennaRequireActualInputAndCoverFireSlowsMovement" methodname="RepairAndAntennaRequireActualInputAndCoverFireSlowsMovement" classname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests" runstate="Runnable" seed="1940050003" result="Passed" start-time="2026-11-25 16:56:23Z" end-time="2026-11-25 16:56:34Z" duration="11.222216" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+              <test-case id="1759" name="TankAndBoatsAreWhereTheNightThreeStoryPutsThem" fullname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.TankAndBoatsAreWhereTheNightThreeStoryPutsThem" methodname="TankAndBoatsAreWhereTheNightThreeStoryPutsThem" classname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests" runstate="Runnable" seed="1712162809" result="Passed" start-time="2026-11-25 16:56:34Z" end-time="2026-11-25 16:56:57Z" duration="22.952667" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <output><![CDATA[Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+]]></output>
+              </test-case>
+              <test-case id="1756" name="WoundBankAndSacrificeRunWithoutPressingEAndRadioCallsKeepControl" fullname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests.WoundBankAndSacrificeRunWithoutPressingEAndRadioCallsKeepControl" methodname="WoundBankAndSacrificeRunWithoutPressingEAndRadioCallsKeepControl" classname="ShadowVale.Map01.Tests.Map02ChapterMechanicsTests" runstate="Runnable" seed="1366613521" result="Passed" start-time="2026-11-25 16:56:57Z" end-time="2026-11-25 16:57:07Z" duration="9.596661" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1760" name="Map02ChapterTests" fullname="ShadowVale.Map01.Tests.Map02ChapterTests" classname="ShadowVale.Map01.Tests.Map02ChapterTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-11-25 16:57:18Z" end-time="2026-11-25 16:57:32Z" duration="13.388496" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1766" name="DayOneAllowsFreeOrderButDoesNotOpenNightBeforeReport" fullname="ShadowVale.Map01.Tests.Map02ChapterTests.DayOneAllowsFreeOrderButDoesNotOpenNightBeforeReport" methodname="DayOneAllowsFreeOrderButDoesNotOpenNightBeforeReport" classname="ShadowVale.Map01.Tests.Map02ChapterTests" runstate="Runnable" seed="1548024548" result="Passed" start-time="2026-11-25 16:57:07Z" end-time="2026-11-25 16:57:07Z" duration="0.002548" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1764" name="DayThreeAndNightThreeFollowTheRevisedScript" fullname="ShadowVale.Map01.Tests.Map02ChapterTests.DayThreeAndNightThreeFollowTheRevisedScript" methodname="DayThreeAndNightThreeFollowTheRevisedScript" classname="ShadowVale.Map01.Tests.Map02ChapterTests" runstate="Runnable" seed="452456337" result="Passed" start-time="2026-11-25 16:57:07Z" end-time="2026-11-25 16:57:07Z" duration="0.003959" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1765" name="EntireChapterHasSevenPhasesAndExactlyOneSacrifice" fullname="ShadowVale.Map01.Tests.Map02ChapterTests.EntireChapterHasSevenPhasesAndExactlyOneSacrifice" methodname="EntireChapterHasSevenPhasesAndExactlyOneSacrifice" classname="ShadowVale.Map01.Tests.Map02ChapterTests" runstate="Runnable" seed="1592586683" result="Passed" start-time="2026-11-25 16:57:07Z" end-time="2026-11-25 16:57:07Z" duration="0.003573" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1761" name="EverySpokenChapterCueKeepsItsExactRecordingAcrossAllSevenPhases" fullname="ShadowVale.Map01.Tests.Map02ChapterTests.EverySpokenChapterCueKeepsItsExactRecordingAcrossAllSevenPhases" methodname="EverySpokenChapterCueKeepsItsExactRecordingAcrossAllSevenPhases" classname="ShadowVale.Map01.Tests.Map02ChapterTests" runstate="Runnable" seed="741875318" result="Passed" start-time="2026-11-25 16:57:07Z" end-time="2026-11-25 16:57:07Z" duration="0.565177" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1762" name="EveryTaskHasValidDependenciesUniqueIdentityAndNoOrphanedDialogue" fullname="ShadowVale.Map01.Tests.Map02ChapterTests.EveryTaskHasValidDependenciesUniqueIdentityAndNoOrphanedDialogue" methodname="EveryTaskHasValidDependenciesUniqueIdentityAndNoOrphanedDialogue" classname="ShadowVale.Map01.Tests.Map02ChapterTests" runstate="Runnable" seed="1987021803" result="Passed" start-time="2026-11-25 16:57:07Z" end-time="2026-11-25 16:57:07Z" duration="0.002614" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1768" name="InvalidAndOutOfOrderSavesAreRejected" fullname="ShadowVale.Map01.Tests.Map02ChapterTests.InvalidAndOutOfOrderSavesAreRejected" methodname="InvalidAndOutOfOrderSavesAreRejected" classname="ShadowVale.Map01.Tests.Map02ChapterTests" runstate="Runnable" seed="433923973" result="Passed" start-time="2026-11-25 16:57:07Z" end-time="2026-11-25 16:57:07Z" duration="0.001467" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1769" name="LiveMapHasReachableObjectivesAndSkipSaveRestorePreserveChapter" fullname="ShadowVale.Map01.Tests.Map02ChapterTests.LiveMapHasReachableObjectivesAndSkipSaveRestorePreserveChapter" methodname="LiveMapHasReachableObjectivesAndSkipSaveRestorePreserveChapter" classname="ShadowVale.Map01.Tests.Map02ChapterTests" runstate="Runnable" seed="249306794" result="Passed" start-time="2026-11-25 16:57:07Z" end-time="2026-11-25 16:57:32Z" duration="24.209259" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <output><![CDATA[Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+]]></output>
+              </test-case>
+              <test-case id="1763" name="NothingTheHudShowsBeforeDawnGivesAwayHungsDeath" fullname="ShadowVale.Map01.Tests.Map02ChapterTests.NothingTheHudShowsBeforeDawnGivesAwayHungsDeath" methodname="NothingTheHudShowsBeforeDawnGivesAwayHungsDeath" classname="ShadowVale.Map01.Tests.Map02ChapterTests" runstate="Runnable" seed="953350426" result="Passed" start-time="2026-11-25 16:57:32Z" end-time="2026-11-25 16:57:32Z" duration="0.008857" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1767" name="SaveRoundTripKeepsCargoCountsNightWarningAmmoAndEnding" fullname="ShadowVale.Map01.Tests.Map02ChapterTests.SaveRoundTripKeepsCargoCountsNightWarningAmmoAndEnding" methodname="SaveRoundTripKeepsCargoCountsNightWarningAmmoAndEnding" classname="ShadowVale.Map01.Tests.Map02ChapterTests" runstate="Runnable" seed="353079437" result="Passed" start-time="2026-11-25 16:57:32Z" end-time="2026-11-25 16:57:32Z" duration="0.001411" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1772" name="Map02CheckpointRetryTests" fullname="ShadowVale.Map01.Tests.Map02CheckpointRetryTests" classname="ShadowVale.Map01.Tests.Map02CheckpointRetryTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-25 16:58:46Z" end-time="2026-11-25 16:58:50Z" duration="4.843958" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1776" name="AWallTakesTheRoundsAndOpenGroundDoesNot" fullname="ShadowVale.Map01.Tests.Map02CheckpointRetryTests.AWallTakesTheRoundsAndOpenGroundDoesNot" methodname="AWallTakesTheRoundsAndOpenGroundDoesNot" classname="ShadowVale.Map01.Tests.Map02CheckpointRetryTests" runstate="Runnable" seed="1652296001" result="Passed" start-time="2026-11-25 16:57:32Z" end-time="2026-11-25 16:57:38Z" duration="6.370054" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="120000" />
+                </properties>
+                <output><![CDATA[There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+There are no audio listeners in the scene. Please ensure there is always one audio listener in the scene
+]]></output>
+              </test-case>
+              <test-case id="1775" name="DayTwoAmbushFightsUnderTheCoordinatorAndThePatrolKeepsItsStealth" fullname="ShadowVale.Map01.Tests.Map02CheckpointRetryTests.DayTwoAmbushFightsUnderTheCoordinatorAndThePatrolKeepsItsStealth" methodname="DayTwoAmbushFightsUnderTheCoordinatorAndThePatrolKeepsItsStealth" classname="ShadowVale.Map01.Tests.Map02CheckpointRetryTests" runstate="Runnable" seed="2100740741" result="Passed" start-time="2026-11-25 16:57:38Z" end-time="2026-11-25 16:58:01Z" duration="22.802288" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+              </test-case>
+              <test-case id="1774" name="NightThreeRiflemenTakeCoverAndFightWithTheSharedBrain" fullname="ShadowVale.Map01.Tests.Map02CheckpointRetryTests.NightThreeRiflemenTakeCoverAndFightWithTheSharedBrain" methodname="NightThreeRiflemenTakeCoverAndFightWithTheSharedBrain" classname="ShadowVale.Map01.Tests.Map02CheckpointRetryTests" runstate="Runnable" seed="261388516" result="Passed" start-time="2026-11-25 16:58:01Z" end-time="2026-11-25 16:58:37Z" duration="36.095796" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+              </test-case>
+              <test-case id="1773" name="RetryAfterDyingRestoresTheBagHealthAndStaminaOfTheCheckpoint" fullname="ShadowVale.Map01.Tests.Map02CheckpointRetryTests.RetryAfterDyingRestoresTheBagHealthAndStaminaOfTheCheckpoint" methodname="RetryAfterDyingRestoresTheBagHealthAndStaminaOfTheCheckpoint" classname="ShadowVale.Map01.Tests.Map02CheckpointRetryTests" runstate="Runnable" seed="1706966591" result="Passed" start-time="2026-11-25 16:58:37Z" end-time="2026-11-25 16:58:50Z" duration="13.382928" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+              </test-case>
+              <test-case id="1777" name="RiflemenHitLessFarOffAndNeverWithTheFirstShot" fullname="ShadowVale.Map01.Tests.Map02CheckpointRetryTests.RiflemenHitLessFarOffAndNeverWithTheFirstShot" methodname="RiflemenHitLessFarOffAndNeverWithTheFirstShot" classname="ShadowVale.Map01.Tests.Map02CheckpointRetryTests" runstate="Runnable" seed="1271543335" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.021022" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1809" name="Map02DayOneTests" fullname="ShadowVale.Map01.Tests.Map02DayOneTests" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" testcasecount="19" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.062202" total="19" passed="19" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1828" name="ApprovedAcknowledgementsReuseExactCaptionOnly" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.ApprovedAcknowledgementsReuseExactCaptionOnly" methodname="ApprovedAcknowledgementsReuseExactCaptionOnly" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="1600354256" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.002283" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1820" name="CorruptSavedGeometryIsRejected" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.CorruptSavedGeometryIsRejected" methodname="CorruptSavedGeometryIsRejected" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="226796991" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.001957" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1830" name="DayOneTasksKeepThreeIndependentBranches" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.DayOneTasksKeepThreeIndependentBranches" methodname="DayOneTasksKeepThreeIndependentBranches" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="1463685016" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.001782" asserts="0">
+                <properties />
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1827" name="EveryChoreOrderWaitsForReport" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.011038" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1821" name="EveryChoreOrderWaitsForReport(&quot;D1_03&quot;,&quot;D1_04&quot;,&quot;D1_05&quot;)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(&quot;D1_03&quot;,&quot;D1_04&quot;,&quot;D1_05&quot;)" methodname="EveryChoreOrderWaitsForReport" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="68560711" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.000935" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1822" name="EveryChoreOrderWaitsForReport(&quot;D1_03&quot;,&quot;D1_05&quot;,&quot;D1_04&quot;)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(&quot;D1_03&quot;,&quot;D1_05&quot;,&quot;D1_04&quot;)" methodname="EveryChoreOrderWaitsForReport" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="2109395599" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.000154" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1823" name="EveryChoreOrderWaitsForReport(&quot;D1_04&quot;,&quot;D1_03&quot;,&quot;D1_05&quot;)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(&quot;D1_04&quot;,&quot;D1_03&quot;,&quot;D1_05&quot;)" methodname="EveryChoreOrderWaitsForReport" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="463882052" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.000096" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1824" name="EveryChoreOrderWaitsForReport(&quot;D1_04&quot;,&quot;D1_05&quot;,&quot;D1_03&quot;)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(&quot;D1_04&quot;,&quot;D1_05&quot;,&quot;D1_03&quot;)" methodname="EveryChoreOrderWaitsForReport" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="1406182312" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.000093" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1825" name="EveryChoreOrderWaitsForReport(&quot;D1_05&quot;,&quot;D1_03&quot;,&quot;D1_04&quot;)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(&quot;D1_05&quot;,&quot;D1_03&quot;,&quot;D1_04&quot;)" methodname="EveryChoreOrderWaitsForReport" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="1533974943" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.000106" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1826" name="EveryChoreOrderWaitsForReport(&quot;D1_05&quot;,&quot;D1_04&quot;,&quot;D1_03&quot;)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryChoreOrderWaitsForReport(&quot;D1_05&quot;,&quot;D1_04&quot;,&quot;D1_03&quot;)" methodname="EveryChoreOrderWaitsForReport" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="1303431683" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.000095" asserts="0">
+                  <properties />
+                </test-case>
+              </test-suite>
+              <test-suite type="ParameterizedMethod" id="1813" name="EveryWetTemplateHasSolution" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryWetTemplateHasSolution" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" testcasecount="3" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.006116" total="3" passed="3" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1810" name="EveryWetTemplateHasSolution(0)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryWetTemplateHasSolution(0)" methodname="EveryWetTemplateHasSolution" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="108530441" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.001381" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1811" name="EveryWetTemplateHasSolution(1)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryWetTemplateHasSolution(1)" methodname="EveryWetTemplateHasSolution" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="1690729939" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.000162" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1812" name="EveryWetTemplateHasSolution(2)" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.EveryWetTemplateHasSolution(2)" methodname="EveryWetTemplateHasSolution" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="277275401" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.000092" asserts="0">
+                  <properties />
+                </test-case>
+              </test-suite>
+              <test-case id="1814" name="InvalidCrateMoveLeavesPreviousPosition" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.InvalidCrateMoveLeavesPreviousPosition" methodname="InvalidCrateMoveLeavesPreviousPosition" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="1612353081" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.001293" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1818" name="LampNeedsShieldAndGateNeedsBothSteps" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.LampNeedsShieldAndGateNeedsBothSteps" methodname="LampNeedsShieldAndGateNeedsBothSteps" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="381569587" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.000276" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1829" name="NamAcknowledgesOnceAfterTheCompleteInstructionBlock" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.NamAcknowledgesOnceAfterTheCompleteInstructionBlock" methodname="NamAcknowledgesOnceAfterTheCompleteInstructionBlock" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="1786918277" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.001264" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1817" name="PostsContainOnlySpecifiedFaultCounts" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.PostsContainOnlySpecifiedFaultCounts" methodname="PostsContainOnlySpecifiedFaultCounts" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="388273580" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.001582" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1815" name="SaveAndResetKeepPuzzleIdentity" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.SaveAndResetKeepPuzzleIdentity" methodname="SaveAndResetKeepPuzzleIdentity" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="974350054" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.000625" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1816" name="StakeHitsAndRepairUnitsAreDifferent" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.StakeHitsAndRepairUnitsAreDifferent" methodname="StakeHitsAndRepairUnitsAreDifferent" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="1308244255" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.000688" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1819" name="TwoQuestPacketsAreIdempotent" fullname="ShadowVale.Map01.Tests.Map02DayOneTests.TwoQuestPacketsAreIdempotent" methodname="TwoQuestPacketsAreIdempotent" classname="ShadowVale.Map01.Tests.Map02DayOneTests" runstate="Runnable" seed="1166396448" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:58:50Z" duration="0.000242" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1834" name="Map02DayOneVisualTests" fullname="ShadowVale.Map01.Tests.Map02DayOneVisualTests" classname="ShadowVale.Map01.Tests.Map02DayOneVisualTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-25 16:58:59Z" end-time="2026-11-25 16:59:02Z" duration="2.470471" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1835" name="CaptureWorkAndPorchStaging" fullname="ShadowVale.Map01.Tests.Map02DayOneVisualTests.CaptureWorkAndPorchStaging" methodname="CaptureWorkAndPorchStaging" classname="ShadowVale.Map01.Tests.Map02DayOneVisualTests" runstate="Runnable" seed="1328927022" result="Passed" start-time="2026-11-25 16:58:50Z" end-time="2026-11-25 16:59:02Z" duration="11.356260" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1839" name="Map02DayTwoRouteTests" fullname="ShadowVale.Map01.Tests.Map02DayTwoRouteTests" classname="ShadowVale.Map01.Tests.Map02DayTwoRouteTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-25 16:59:23Z" end-time="2026-11-25 16:59:24Z" duration="1.416650" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1840" name="DayTwoRoutesRescueWireAndAntennaArePlayable" fullname="ShadowVale.Map01.Tests.Map02DayTwoRouteTests.DayTwoRoutesRescueWireAndAntennaArePlayable" methodname="DayTwoRoutesRescueWireAndAntennaArePlayable" classname="ShadowVale.Map01.Tests.Map02DayTwoRouteTests" runstate="Runnable" seed="739714508" result="Passed" start-time="2026-11-25 16:59:02Z" end-time="2026-11-25 16:59:13Z" duration="10.842932" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+              <test-case id="1841" name="RescueFeedbackHandoverAmmoAndAntennaCarrySurviveReload" fullname="ShadowVale.Map01.Tests.Map02DayTwoRouteTests.RescueFeedbackHandoverAmmoAndAntennaCarrySurviveReload" methodname="RescueFeedbackHandoverAmmoAndAntennaCarrySurviveReload" classname="ShadowVale.Map01.Tests.Map02DayTwoRouteTests" runstate="Runnable" seed="13677142" result="Passed" start-time="2026-11-25 16:59:13Z" end-time="2026-11-25 16:59:24Z" duration="11.721387" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1842" name="Map02DayTwoStateTests" fullname="ShadowVale.Map01.Tests.Map02DayTwoStateTests" classname="ShadowVale.Map01.Tests.Map02DayTwoStateTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-11-25 16:59:46Z" end-time="2026-11-25 16:59:47Z" duration="1.519491" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1848" name="AntennaStaysMountedAfterClimbCompletionAndReload" fullname="ShadowVale.Map01.Tests.Map02DayTwoStateTests.AntennaStaysMountedAfterClimbCompletionAndReload" methodname="AntennaStaysMountedAfterClimbCompletionAndReload" classname="ShadowVale.Map01.Tests.Map02DayTwoStateTests" runstate="Runnable" seed="1657046250" result="Passed" start-time="2026-11-25 16:59:24Z" end-time="2026-11-25 16:59:36Z" duration="11.495937" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+              <test-case id="1846" name="InvalidNewStateIsRejectedWithoutChangingVersionThree" fullname="ShadowVale.Map01.Tests.Map02DayTwoStateTests.InvalidNewStateIsRejectedWithoutChangingVersionThree" methodname="InvalidNewStateIsRejectedWithoutChangingVersionThree" classname="ShadowVale.Map01.Tests.Map02DayTwoStateTests" runstate="Runnable" seed="520768819" result="Passed" start-time="2026-11-25 16:59:36Z" end-time="2026-11-25 16:59:36Z" duration="0.004996" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1847" name="LiveWireEscortAndPatrolSaveLoadKeepTheirContracts" fullname="ShadowVale.Map01.Tests.Map02DayTwoStateTests.LiveWireEscortAndPatrolSaveLoadKeepTheirContracts" methodname="LiveWireEscortAndPatrolSaveLoadKeepTheirContracts" classname="ShadowVale.Map01.Tests.Map02DayTwoStateTests" runstate="Runnable" seed="919857935" result="Passed" start-time="2026-11-25 16:59:36Z" end-time="2026-11-25 16:59:47Z" duration="11.267655" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+              <test-case id="1844" name="OldVersionThreeWireSavesKeepCompletedTasksAndPendingWork" fullname="ShadowVale.Map01.Tests.Map02DayTwoStateTests.OldVersionThreeWireSavesKeepCompletedTasksAndPendingWork" methodname="OldVersionThreeWireSavesKeepCompletedTasksAndPendingWork" classname="ShadowVale.Map01.Tests.Map02DayTwoStateTests" runstate="Runnable" seed="1089016786" result="Passed" start-time="2026-11-25 16:59:47Z" end-time="2026-11-25 16:59:47Z" duration="0.003196" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1845" name="PatrolResetRewindsOnlyNightRouteAndKeepsChapterResources" fullname="ShadowVale.Map01.Tests.Map02DayTwoStateTests.PatrolResetRewindsOnlyNightRouteAndKeepsChapterResources" methodname="PatrolResetRewindsOnlyNightRouteAndKeepsChapterResources" classname="ShadowVale.Map01.Tests.Map02DayTwoStateTests" runstate="Runnable" seed="899896294" result="Passed" start-time="2026-11-25 16:59:47Z" end-time="2026-11-25 16:59:47Z" duration="0.001684" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1843" name="WireRequiresPickupAndDeliveryAndCannotBeDuplicated" fullname="ShadowVale.Map01.Tests.Map02DayTwoStateTests.WireRequiresPickupAndDeliveryAndCannotBeDuplicated" methodname="WireRequiresPickupAndDeliveryAndCannotBeDuplicated" classname="ShadowVale.Map01.Tests.Map02DayTwoStateTests" runstate="Runnable" seed="187430841" result="Passed" start-time="2026-11-25 16:59:47Z" end-time="2026-11-25 16:59:47Z" duration="0.000884" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1854" name="Map02EndingTests" fullname="ShadowVale.Map01.Tests.Map02EndingTests" classname="ShadowVale.Map01.Tests.Map02EndingTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-11-25 16:59:47Z" end-time="2026-11-25 16:59:47Z" duration="0.004260" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1855" name="SacrificeCannotSkipEvacuationOrTriggerDuringEarlierEscort" fullname="ShadowVale.Map01.Tests.Map02EndingTests.SacrificeCannotSkipEvacuationOrTriggerDuringEarlierEscort" methodname="SacrificeCannotSkipEvacuationOrTriggerDuringEarlierEscort" classname="ShadowVale.Map01.Tests.Map02EndingTests" runstate="Runnable" seed="732036207" result="Passed" start-time="2026-11-25 16:59:47Z" end-time="2026-11-25 16:59:47Z" duration="0.000571" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1856" name="SaveKeepsEndingEventAndDoesNotReplayIt" fullname="ShadowVale.Map01.Tests.Map02EndingTests.SaveKeepsEndingEventAndDoesNotReplayIt" methodname="SaveKeepsEndingEventAndDoesNotReplayIt" classname="ShadowVale.Map01.Tests.Map02EndingTests" runstate="Runnable" seed="454923812" result="Passed" start-time="2026-11-25 16:59:47Z" end-time="2026-11-25 16:59:47Z" duration="0.000476" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1868" name="Map02FinaleTests" fullname="ShadowVale.Map01.Tests.Map02FinaleTests" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-11-25 17:01:49Z" end-time="2026-11-25 17:01:50Z" duration="0.755502" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1876" name="CastAndPropsCapture" fullname="ShadowVale.Map01.Tests.Map02FinaleTests.CastAndPropsCapture" methodname="CastAndPropsCapture" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Explicit" seed="1372110519" result="Passed" start-time="2026-11-25 16:59:47Z" end-time="2026-11-25 17:00:02Z" duration="14.219946" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="_SKIPREASON" value="Manual art review; writes Logs/Map02Models/*.png, asserts only that the cast has models." />
+                </properties>
+                <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+              <test-case id="1872" name="DayThreeCrateAndNightThreeOpeningsAreDressed" fullname="ShadowVale.Map01.Tests.Map02FinaleTests.DayThreeCrateAndNightThreeOpeningsAreDressed" methodname="DayThreeCrateAndNightThreeOpeningsAreDressed" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Runnable" seed="2008922016" result="Passed" start-time="2026-11-25 17:00:02Z" end-time="2026-11-25 17:00:11Z" duration="9.408463" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+              <test-case id="1875" name="NightThreePerformanceProbe" fullname="ShadowVale.Map01.Tests.Map02FinaleTests.NightThreePerformanceProbe" methodname="NightThreePerformanceProbe" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Explicit" seed="2089702190" result="Passed" start-time="2026-11-25 17:00:11Z" end-time="2026-11-25 17:01:05Z" duration="54.279042" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="600000" />
+                  <property name="_SKIPREASON" value="Manual performance probe; writes Logs/GD8/perf.txt, asserts nothing." />
+                </properties>
+                <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 15 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 16 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 4 to make 17 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 13 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+              <test-case id="1869" name="SacrificeAndCounterAttackFollowTheScriptClock" fullname="ShadowVale.Map01.Tests.Map02FinaleTests.SacrificeAndCounterAttackFollowTheScriptClock" methodname="SacrificeAndCounterAttackFollowTheScriptClock" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Runnable" seed="2104371889" result="Passed" start-time="2026-11-25 17:01:05Z" end-time="2026-11-25 17:01:14Z" duration="9.202753" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+              <test-case id="1870" name="SkippingTheSacrificeAtAnyMomentLandsOnTheSameDawn" fullname="ShadowVale.Map01.Tests.Map02FinaleTests.SkippingTheSacrificeAtAnyMomentLandsOnTheSameDawn" methodname="SkippingTheSacrificeAtAnyMomentLandsOnTheSameDawn" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Runnable" seed="792260190" result="Passed" start-time="2026-11-25 17:01:14Z" end-time="2026-11-25 17:01:24Z" duration="9.051880" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+              <test-case id="1871" name="TankShotAndFarewellAreStagedWithoutCloseUps" fullname="ShadowVale.Map01.Tests.Map02FinaleTests.TankShotAndFarewellAreStagedWithoutCloseUps" methodname="TankShotAndFarewellAreStagedWithoutCloseUps" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Runnable" seed="1246054605" result="Passed" start-time="2026-11-25 17:01:24Z" end-time="2026-11-25 17:01:32Z" duration="8.706638" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+              <test-case id="1874" name="TelemetryStagesKeepTheirOrderThroughTheChapter" fullname="ShadowVale.Map01.Tests.Map02FinaleTests.TelemetryStagesKeepTheirOrderThroughTheChapter" methodname="TelemetryStagesKeepTheirOrderThroughTheChapter" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Runnable" seed="130507145" result="Passed" start-time="2026-11-25 17:01:32Z" end-time="2026-11-25 17:01:41Z" duration="9.028495" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+              <test-case id="1873" name="TheTankRollsItsTracksAndWheelsWhenItDrives" fullname="ShadowVale.Map01.Tests.Map02FinaleTests.TheTankRollsItsTracksAndWheelsWhenItDrives" methodname="TheTankRollsItsTracksAndWheelsWhenItDrives" classname="ShadowVale.Map01.Tests.Map02FinaleTests" runstate="Runnable" seed="541686395" result="Passed" start-time="2026-11-25 17:01:41Z" end-time="2026-11-25 17:01:50Z" duration="8.681456" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1893" name="Map02NightTwoRouteTests" fullname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests" classname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-25 17:02:38Z" end-time="2026-11-25 17:02:39Z" duration="1.020724" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1897" name="NightCanBeCompletedWithoutCombatUsingRealDoorAndOrderedRoute" fullname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests.NightCanBeCompletedWithoutCombatUsingRealDoorAndOrderedRoute" methodname="NightCanBeCompletedWithoutCombatUsingRealDoorAndOrderedRoute" classname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests" runstate="Runnable" seed="833826985" result="Passed" start-time="2026-11-25 17:01:50Z" end-time="2026-11-25 17:02:11Z" duration="20.588079" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+              <test-case id="1895" name="NightPatrolPlaysFailureSceneAfterTheRadioReport" fullname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests.NightPatrolPlaysFailureSceneAfterTheRadioReport" methodname="NightPatrolPlaysFailureSceneAfterTheRadioReport" classname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests" runstate="Runnable" seed="1972684755" result="Passed" start-time="2026-11-25 17:02:11Z" end-time="2026-11-25 17:02:30Z" duration="19.570091" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                </properties>
+                <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 15 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 9 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 13 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 15 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+              <test-case id="1894" name="PatrolCarriesApprovedTorchAndFiresOnlyThroughClearSight" fullname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests.PatrolCarriesApprovedTorchAndFiresOnlyThroughClearSight" methodname="PatrolCarriesApprovedTorchAndFiresOnlyThroughClearSight" classname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests" runstate="Runnable" seed="388989412" result="Passed" start-time="2026-11-25 17:02:30Z" end-time="2026-11-25 17:02:39Z" duration="9.028052" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <output><![CDATA[Reduced additional punctual light shadows resolution by 4 to make 17 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+              <test-case id="1896" name="VersionThreeDefaultsKeepCompletedTasksAndResetTheWholeNightRoute" fullname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests.VersionThreeDefaultsKeepCompletedTasksAndResetTheWholeNightRoute" methodname="VersionThreeDefaultsKeepCompletedTasksAndResetTheWholeNightRoute" classname="ShadowVale.Map01.Tests.Map02NightTwoRouteTests" runstate="Runnable" seed="18320494" result="Passed" start-time="2026-11-25 17:02:39Z" end-time="2026-11-25 17:02:39Z" duration="0.003797" asserts="0">
+                <properties />
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1898" name="Map02NightWatchModelTests" fullname="ShadowVale.Map01.Tests.Map02NightWatchModelTests" classname="ShadowVale.Map01.Tests.Map02NightWatchModelTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-25 17:02:47Z" end-time="2026-11-25 17:02:59Z" duration="12.001792" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1899" name="BlenderModelsKeepFrameFixedAndShowRealBoltAndShield" fullname="ShadowVale.Map01.Tests.Map02NightWatchModelTests.BlenderModelsKeepFrameFixedAndShowRealBoltAndShield" methodname="BlenderModelsKeepFrameFixedAndShowRealBoltAndShield" classname="ShadowVale.Map01.Tests.Map02NightWatchModelTests" runstate="Runnable" seed="1834832686" result="Passed" start-time="2026-11-25 17:02:39Z" end-time="2026-11-25 17:02:59Z" duration="20.121748" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1900" name="Map02PerformanceTests" fullname="ShadowVale.Map01.Tests.Map02PerformanceTests" classname="ShadowVale.Map01.Tests.Map02PerformanceTests" runstate="Runnable" testcasecount="1" result="Passed" start-time="2026-11-25 17:03:07Z" end-time="2026-11-25 17:03:10Z" duration="2.856154" total="1" passed="1" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1901" name="DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel" fullname="ShadowVale.Map01.Tests.Map02PerformanceTests.DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel" methodname="DayTwoReactionAndNightSleepRestoreTheirActorsOnFinishSkipAndCancel" classname="ShadowVale.Map01.Tests.Map02PerformanceTests" runstate="Runnable" seed="1996939421" result="Passed" start-time="2026-11-25 17:02:59Z" end-time="2026-11-25 17:03:10Z" duration="10.714412" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 6 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 7 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 8 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 6 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 8 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1916" name="Map02ReportAndNightPatrolTests" fullname="ShadowVale.Map01.Tests.Map02ReportAndNightPatrolTests" classname="ShadowVale.Map01.Tests.Map02ReportAndNightPatrolTests" runstate="Runnable" testcasecount="1" result="Failed" site="Child" start-time="2026-11-25 17:03:18Z" end-time="2026-11-25 17:03:26Z" duration="7.948465" total="1" passed="0" failed="1" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <failure>
+                <message><![CDATA[One or more child tests had errors]]></message>
+              </failure>
+              <test-case id="1917" name="ScoutReportsWithoutMovingCommanderAndNightPatrolIsVisible" fullname="ShadowVale.Map01.Tests.Map02ReportAndNightPatrolTests.ScoutReportsWithoutMovingCommanderAndNightPatrolIsVisible" methodname="ScoutReportsWithoutMovingCommanderAndNightPatrolIsVisible" classname="ShadowVale.Map01.Tests.Map02ReportAndNightPatrolTests" runstate="Runnable" seed="1510590348" result="Failed" start-time="2026-11-25 17:03:10Z" end-time="2026-11-25 17:03:26Z" duration="15.671322" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="240000" />
+                </properties>
+                <failure>
+                  <message><![CDATA[  Looking at the visible patrol with held binoculars must complete observation.
+  Expected: True
+  But was:  False
+]]></message>
+                  <stack-trace><![CDATA[at ShadowVale.Map01.Tests.Map02ReportAndNightPatrolTests+<ScoutReportsWithoutMovingCommanderAndNightPatrolIsVisible>d__0.MoveNext () [0x009ca] in D:\DO_AN_GAME\ShadowVale\Assets\_Project\Map02\Tests\Map02ReportAndNightPatrolTests.cs:71
+at UnityEngine.TestTools.TestEnumerator+<Execute>d__7.MoveNext () [0x0003a] in .\Library\PackageCache\com.unity.test-framework@bd7f943e9647\UnityEngine.TestRunner\NUnitExtensions\Attributes\TestEnumerator.cs:44
+]]></stack-trace>
+                </failure>
+                <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1918" name="Map02RoutePreviewTests" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" testcasecount="24" result="Passed" start-time="2026-11-25 17:04:02Z" end-time="2026-11-25 17:04:03Z" duration="0.837045" total="24" passed="24" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-suite type="ParameterizedMethod" id="1943" name="MissionCheckpointMenusRemainAvailable" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionCheckpointMenusRemainAvailable" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-25 17:03:26Z" end-time="2026-11-25 17:03:26Z" duration="0.009100" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1938" name="MissionCheckpointMenusRemainAvailable(&quot;PlayStart&quot;,&quot;ShadowVale/Map 2/Checkpoint bắt đầu Map 2 · Ngày 1&quot;)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionCheckpointMenusRemainAvailable(&quot;PlayStart&quot;,&quot;ShadowVale/Map 2/Checkpoint bắt đầu Map 2 · Ngày 1&quot;)" methodname="MissionCheckpointMenusRemainAvailable" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="1207048001" result="Passed" start-time="2026-11-25 17:03:26Z" end-time="2026-11-25 17:03:26Z" duration="0.003321" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1939" name="MissionCheckpointMenusRemainAvailable(&quot;PlayScoutRescue&quot;,&quot;ShadowVale/Map 2/Checkpoint cứu Tâm · M2_D2_04&quot;)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionCheckpointMenusRemainAvailable(&quot;PlayScoutRescue&quot;,&quot;ShadowVale/Map 2/Checkpoint cứu Tâm · M2_D2_04&quot;)" methodname="MissionCheckpointMenusRemainAvailable" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="1550125665" result="Passed" start-time="2026-11-25 17:03:26Z" end-time="2026-11-25 17:03:26Z" duration="0.000294" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1940" name="MissionCheckpointMenusRemainAvailable(&quot;PlayAntenna&quot;,&quot;ShadowVale/Map 2/Checkpoint lắp ăng-ten · M2_D2_06&quot;)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionCheckpointMenusRemainAvailable(&quot;PlayAntenna&quot;,&quot;ShadowVale/Map 2/Checkpoint lắp ăng-ten · M2_D2_06&quot;)" methodname="MissionCheckpointMenusRemainAvailable" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="1976497911" result="Passed" start-time="2026-11-25 17:03:26Z" end-time="2026-11-25 17:03:26Z" duration="0.000224" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1941" name="MissionCheckpointMenusRemainAvailable(&quot;PlayEvacuationChoices&quot;,&quot;ShadowVale/Map 2/Checkpoint kiểm tra đường sơ tán · N2_04&quot;)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionCheckpointMenusRemainAvailable(&quot;PlayEvacuationChoices&quot;,&quot;ShadowVale/Map 2/Checkpoint kiểm tra đường sơ tán · N2_04&quot;)" methodname="MissionCheckpointMenusRemainAvailable" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="413028101" result="Passed" start-time="2026-11-25 17:03:26Z" end-time="2026-11-25 17:03:26Z" duration="0.000224" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1942" name="MissionCheckpointMenusRemainAvailable(&quot;PlayNightTwoRest&quot;,&quot;ShadowVale/Map 2/Checkpoint Hùng ngủ cuối Đêm 2 · N2_05&quot;)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionCheckpointMenusRemainAvailable(&quot;PlayNightTwoRest&quot;,&quot;ShadowVale/Map 2/Checkpoint Hùng ngủ cuối Đêm 2 · N2_05&quot;)" methodname="MissionCheckpointMenusRemainAvailable" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="253891541" result="Passed" start-time="2026-11-25 17:03:26Z" end-time="2026-11-25 17:03:26Z" duration="0.000213" asserts="0">
+                  <properties />
+                </test-case>
+              </test-suite>
+              <test-suite type="ParameterizedMethod" id="1937" name="MissionCheckpointsKeepTheNextTaskPending" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionCheckpointsKeepTheNextTaskPending" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-25 17:03:26Z" end-time="2026-11-25 17:03:26Z" duration="0.005932" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1933" name="MissionCheckpointsKeepTheNextTaskPending(&quot;D2_03&quot;,&quot;D2_04&quot;,2,&quot;escortScout&quot;)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionCheckpointsKeepTheNextTaskPending(&quot;D2_03&quot;,&quot;D2_04&quot;,2,&quot;escortScout&quot;)" methodname="MissionCheckpointsKeepTheNextTaskPending" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="1492583205" result="Passed" start-time="2026-11-25 17:03:26Z" end-time="2026-11-25 17:03:26Z" duration="0.001090" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1934" name="MissionCheckpointsKeepTheNextTaskPending(&quot;D2_05&quot;,&quot;D2_06&quot;,2,&quot;antenna&quot;)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionCheckpointsKeepTheNextTaskPending(&quot;D2_05&quot;,&quot;D2_06&quot;,2,&quot;antenna&quot;)" methodname="MissionCheckpointsKeepTheNextTaskPending" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="1878857949" result="Passed" start-time="2026-11-25 17:03:26Z" end-time="2026-11-25 17:03:26Z" duration="0.000426" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1935" name="MissionCheckpointsKeepTheNextTaskPending(&quot;N2_03&quot;,&quot;N2_04&quot;,3,&quot;inspectRoute&quot;)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionCheckpointsKeepTheNextTaskPending(&quot;N2_03&quot;,&quot;N2_04&quot;,3,&quot;inspectRoute&quot;)" methodname="MissionCheckpointsKeepTheNextTaskPending" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="301633449" result="Passed" start-time="2026-11-25 17:03:26Z" end-time="2026-11-25 17:03:26Z" duration="0.000447" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1936" name="MissionCheckpointsKeepTheNextTaskPending(&quot;N2_04&quot;,&quot;N2_05&quot;,3,&quot;cinematic&quot;)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionCheckpointsKeepTheNextTaskPending(&quot;N2_04&quot;,&quot;N2_05&quot;,3,&quot;cinematic&quot;)" methodname="MissionCheckpointsKeepTheNextTaskPending" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="1777465464" result="Passed" start-time="2026-11-25 17:03:26Z" end-time="2026-11-25 17:03:26Z" duration="0.000436" asserts="0">
+                  <properties />
+                </test-case>
+              </test-suite>
+              <test-case id="1944" name="MissionCheckpointsRestoreTheirTaskAndRetryPoint" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionCheckpointsRestoreTheirTaskAndRetryPoint" methodname="MissionCheckpointsRestoreTheirTaskAndRetryPoint" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="768702713" result="Passed" start-time="2026-11-25 17:03:26Z" end-time="2026-11-25 17:03:35Z" duration="9.408920" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                </properties>
+                <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 13 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1932" name="MissionVoiceCatalogKeepsRecordingsFromBothBranches" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionVoiceCatalogKeepsRecordingsFromBothBranches" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-25 17:03:35Z" end-time="2026-11-25 17:03:35Z" duration="0.020075" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1927" name="MissionVoiceCatalogKeepsRecordingsFromBothBranches(&quot;m1_rescue_hung_defiance&quot;)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionVoiceCatalogKeepsRecordingsFromBothBranches(&quot;m1_rescue_hung_defiance&quot;)" methodname="MissionVoiceCatalogKeepsRecordingsFromBothBranches" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="447426141" result="Passed" start-time="2026-11-25 17:03:35Z" end-time="2026-11-25 17:03:35Z" duration="0.008510" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1928" name="MissionVoiceCatalogKeepsRecordingsFromBothBranches(&quot;m2v3_scoutescort_warning_01&quot;)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionVoiceCatalogKeepsRecordingsFromBothBranches(&quot;m2v3_scoutescort_warning_01&quot;)" methodname="MissionVoiceCatalogKeepsRecordingsFromBothBranches" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="1740535295" result="Passed" start-time="2026-11-25 17:03:35Z" end-time="2026-11-25 17:03:35Z" duration="0.000301" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1929" name="MissionVoiceCatalogKeepsRecordingsFromBothBranches(&quot;m2v3_evac_field_01&quot;)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionVoiceCatalogKeepsRecordingsFromBothBranches(&quot;m2v3_evac_field_01&quot;)" methodname="MissionVoiceCatalogKeepsRecordingsFromBothBranches" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="1521401429" result="Passed" start-time="2026-11-25 17:03:35Z" end-time="2026-11-25 17:03:35Z" duration="0.002222" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1930" name="MissionVoiceCatalogKeepsRecordingsFromBothBranches(&quot;m2v3_evac_river_01&quot;)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionVoiceCatalogKeepsRecordingsFromBothBranches(&quot;m2v3_evac_river_01&quot;)" methodname="MissionVoiceCatalogKeepsRecordingsFromBothBranches" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="714954638" result="Passed" start-time="2026-11-25 17:03:35Z" end-time="2026-11-25 17:03:35Z" duration="0.001804" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1931" name="MissionVoiceCatalogKeepsRecordingsFromBothBranches(&quot;m2v3_evac_village_01&quot;)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.MissionVoiceCatalogKeepsRecordingsFromBothBranches(&quot;m2v3_evac_village_01&quot;)" methodname="MissionVoiceCatalogKeepsRecordingsFromBothBranches" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="2054129397" result="Passed" start-time="2026-11-25 17:03:35Z" end-time="2026-11-25 17:03:35Z" duration="0.000661" asserts="0">
+                  <properties />
+                </test-case>
+              </test-suite>
+              <test-case id="1945" name="PreviewStartsAtTheSelectedRouteAndCreatesItsOwnRetryPoint" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.PreviewStartsAtTheSelectedRouteAndCreatesItsOwnRetryPoint" methodname="PreviewStartsAtTheSelectedRouteAndCreatesItsOwnRetryPoint" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="311883459" result="Passed" start-time="2026-11-25 17:03:35Z" end-time="2026-11-25 17:03:44Z" duration="9.071259" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                </properties>
+              </test-case>
+              <test-suite type="ParameterizedMethod" id="1924" name="ScoutAmbushKeepsFiveSequentialWaves" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.ScoutAmbushKeepsFiveSequentialWaves" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-25 17:03:44Z" end-time="2026-11-25 17:03:44Z" duration="0.007572" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+                <properties />
+                <test-case id="1919" name="ScoutAmbushKeepsFiveSequentialWaves(0,False,True)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.ScoutAmbushKeepsFiveSequentialWaves(0,False,True)" methodname="ScoutAmbushKeepsFiveSequentialWaves" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="1405969291" result="Passed" start-time="2026-11-25 17:03:44Z" end-time="2026-11-25 17:03:44Z" duration="0.001406" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1920" name="ScoutAmbushKeepsFiveSequentialWaves(4,False,True)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.ScoutAmbushKeepsFiveSequentialWaves(4,False,True)" methodname="ScoutAmbushKeepsFiveSequentialWaves" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="1236130305" result="Passed" start-time="2026-11-25 17:03:44Z" end-time="2026-11-25 17:03:44Z" duration="0.000179" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1921" name="ScoutAmbushKeepsFiveSequentialWaves(5,False,False)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.ScoutAmbushKeepsFiveSequentialWaves(5,False,False)" methodname="ScoutAmbushKeepsFiveSequentialWaves" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="1277907677" result="Passed" start-time="2026-11-25 17:03:44Z" end-time="2026-11-25 17:03:44Z" duration="0.000147" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1922" name="ScoutAmbushKeepsFiveSequentialWaves(0,True,False)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.ScoutAmbushKeepsFiveSequentialWaves(0,True,False)" methodname="ScoutAmbushKeepsFiveSequentialWaves" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="1473028668" result="Passed" start-time="2026-11-25 17:03:44Z" end-time="2026-11-25 17:03:44Z" duration="0.000142" asserts="0">
+                  <properties />
+                </test-case>
+                <test-case id="1923" name="ScoutAmbushKeepsFiveSequentialWaves(-1,False,False)" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.ScoutAmbushKeepsFiveSequentialWaves(-1,False,False)" methodname="ScoutAmbushKeepsFiveSequentialWaves" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="657965413" result="Passed" start-time="2026-11-25 17:03:44Z" end-time="2026-11-25 17:03:44Z" duration="0.000137" asserts="0">
+                  <properties />
+                </test-case>
+              </test-suite>
+              <test-case id="1925" name="ScoutAmbushKeepsItsDepartureAndSafeSpawnDistances" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.ScoutAmbushKeepsItsDepartureAndSafeSpawnDistances" methodname="ScoutAmbushKeepsItsDepartureAndSafeSpawnDistances" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="990502161" result="Passed" start-time="2026-11-25 17:03:44Z" end-time="2026-11-25 17:03:44Z" duration="0.000823" asserts="0">
+                <properties />
+              </test-case>
+              <test-case id="1926" name="ScoutRescueCheckpointSpawnsAmbushAfterLeavingRescueSite" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.ScoutRescueCheckpointSpawnsAmbushAfterLeavingRescueSite" methodname="ScoutRescueCheckpointSpawnsAmbushAfterLeavingRescueSite" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="956235398" result="Passed" start-time="2026-11-25 17:03:44Z" end-time="2026-11-25 17:03:54Z" duration="9.530224" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                </properties>
+                <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+              <test-case id="1946" name="StartCheckpointRestoresDayOneAndRetriesBeforeTheFirstTask" fullname="ShadowVale.Map01.Tests.Map02RoutePreviewTests.StartCheckpointRestoresDayOneAndRetriesBeforeTheFirstTask" methodname="StartCheckpointRestoresDayOneAndRetriesBeforeTheFirstTask" classname="ShadowVale.Map01.Tests.Map02RoutePreviewTests" runstate="Runnable" seed="1936149218" result="Passed" start-time="2026-11-25 17:03:54Z" end-time="2026-11-25 17:04:03Z" duration="8.720230" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="180000" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1954" name="Map02SuppliesAndCastTests" fullname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests" classname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-25 17:04:48Z" end-time="2026-11-25 17:04:55Z" duration="6.509729" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1958" name="DayThreeScenesAndTestRunsStartWhereTheyShould" fullname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.DayThreeScenesAndTestRunsStartWhereTheyShould" methodname="DayThreeScenesAndTestRunsStartWhereTheyShould" classname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests" runstate="Runnable" seed="864370706" result="Passed" start-time="2026-11-25 17:04:03Z" end-time="2026-11-25 17:04:12Z" duration="9.806823" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+                <output><![CDATA[Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+]]></output>
+              </test-case>
+              <test-case id="1957" name="HungWalksOngSauDownToTheDockStepsAfterTheFamilies" fullname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.HungWalksOngSauDownToTheDockStepsAfterTheFamilies" methodname="HungWalksOngSauDownToTheDockStepsAfterTheFamilies" classname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests" runstate="Runnable" seed="76988256" result="Passed" start-time="2026-11-25 17:04:12Z" end-time="2026-11-25 17:04:30Z" duration="17.730763" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+                <output><![CDATA[Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+              <test-case id="1955" name="SuppliesGoFromTheStoreCartToWhereTheStoryTakesThem" fullname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.SuppliesGoFromTheStoreCartToWhereTheStoryTakesThem" methodname="SuppliesGoFromTheStoreCartToWhereTheStoryTakesThem" classname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests" runstate="Runnable" seed="1514844949" result="Passed" start-time="2026-11-25 17:04:30Z" end-time="2026-11-25 17:04:40Z" duration="9.526081" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+              </test-case>
+              <test-case id="1956" name="TheCastStandsAsTallAsNamWithTheirFeetOnTheGround" fullname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests.TheCastStandsAsTallAsNamWithTheirFeetOnTheGround" methodname="TheCastStandsAsTallAsNamWithTheirFeetOnTheGround" classname="ShadowVale.Map01.Tests.Map02SuppliesAndCastTests" runstate="Runnable" seed="89141409" result="Passed" start-time="2026-11-25 17:04:40Z" end-time="2026-11-25 17:04:54Z" duration="14.804679" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1959" name="Map02TalkStagingTests" fullname="ShadowVale.Map01.Tests.Map02TalkStagingTests" classname="ShadowVale.Map01.Tests.Map02TalkStagingTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-11-25 17:06:12Z" end-time="2026-11-25 17:06:17Z" duration="5.660468" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1962" name="AfterTheHitNamKeepsLowAndMakesHisOwnWayToAnhLucsCover" fullname="ShadowVale.Map01.Tests.Map02TalkStagingTests.AfterTheHitNamKeepsLowAndMakesHisOwnWayToAnhLucsCover" methodname="AfterTheHitNamKeepsLowAndMakesHisOwnWayToAnhLucsCover" classname="ShadowVale.Map01.Tests.Map02TalkStagingTests" runstate="Runnable" seed="1602782183" result="Passed" start-time="2026-11-25 17:04:55Z" end-time="2026-11-25 17:05:05Z" duration="10.930554" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+              </test-case>
+              <test-case id="1960" name="TalkersHoldTheirMarksFaceTheSpeakerAndEachLineHasItsShot" fullname="ShadowVale.Map01.Tests.Map02TalkStagingTests.TalkersHoldTheirMarksFaceTheSpeakerAndEachLineHasItsShot" methodname="TalkersHoldTheirMarksFaceTheSpeakerAndEachLineHasItsShot" classname="ShadowVale.Map01.Tests.Map02TalkStagingTests" runstate="Runnable" seed="193610736" result="Passed" start-time="2026-11-25 17:05:05Z" end-time="2026-11-25 17:05:24Z" duration="18.821054" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+                <output><![CDATA[Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Reduced additional punctual light shadows resolution by 2 to make 6 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 6 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+              <test-case id="1961" name="TheFarewellOpensOnTheTankGunSwingingOntoTheBoat" fullname="ShadowVale.Map01.Tests.Map02TalkStagingTests.TheFarewellOpensOnTheTankGunSwingingOntoTheBoat" methodname="TheFarewellOpensOnTheTankGunSwingingOntoTheBoat" classname="ShadowVale.Map01.Tests.Map02TalkStagingTests" runstate="Runnable" seed="1891149143" result="Passed" start-time="2026-11-25 17:05:24Z" end-time="2026-11-25 17:05:48Z" duration="23.358119" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+                <output><![CDATA[Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Reduced additional punctual light shadows resolution by 2 to make 12 shadow maps fit in the 2048x2048 shadow atlas. To avoid this, increase shadow atlas size, decrease big shadow resolutions, or reduce the number of shadow maps active in the same frame
+]]></output>
+              </test-case>
+              <test-case id="1964" name="TheTankShellsTheVillageBeforeTheRadioCall" fullname="ShadowVale.Map01.Tests.Map02TalkStagingTests.TheTankShellsTheVillageBeforeTheRadioCall" methodname="TheTankShellsTheVillageBeforeTheRadioCall" classname="ShadowVale.Map01.Tests.Map02TalkStagingTests" runstate="Runnable" seed="395681719" result="Passed" start-time="2026-11-25 17:05:48Z" end-time="2026-11-25 17:06:04Z" duration="16.057584" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                </properties>
+                <output><![CDATA[Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+Animator is not playing an AnimatorController
+]]></output>
+              </test-case>
+              <test-case id="1963" name="WoundedNamRunsALittleSlowerAndBleedsUntilBandaged" fullname="ShadowVale.Map01.Tests.Map02TalkStagingTests.WoundedNamRunsALittleSlowerAndBleedsUntilBandaged" methodname="WoundedNamRunsALittleSlowerAndBleedsUntilBandaged" classname="ShadowVale.Map01.Tests.Map02TalkStagingTests" runstate="Runnable" seed="78129690" result="Passed" start-time="2026-11-25 17:06:04Z" end-time="2026-11-25 17:06:17Z" duration="13.701565" asserts="0">
+                <properties>
+                  <property name="_JOINTYPE" value="UnityCombinatorial" />
+                  <property name="Timeout" value="300000" />
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Can't call Animator.Update on inactive object
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1976" name="Map02WorldStateTests" fullname="ShadowVale.Map01.Tests.Map02WorldStateTests" classname="ShadowVale.Map01.Tests.Map02WorldStateTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-11-25 17:06:17Z" end-time="2026-11-25 17:06:17Z" duration="0.007035" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1977" name="CargoCannotBeDeliveredBeforePickupOrCollectedTwice" fullname="ShadowVale.Map01.Tests.Map02WorldStateTests.CargoCannotBeDeliveredBeforePickupOrCollectedTwice" methodname="CargoCannotBeDeliveredBeforePickupOrCollectedTwice" classname="ShadowVale.Map01.Tests.Map02WorldStateTests" runstate="Runnable" seed="427639300" result="Passed" start-time="2026-11-25 17:06:17Z" end-time="2026-11-25 17:06:17Z" duration="0.001276" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1978" name="PreparationStockDoesNotRefillPlayerAmmunitionOrSkipPhysicalDelivery" fullname="ShadowVale.Map01.Tests.Map02WorldStateTests.PreparationStockDoesNotRefillPlayerAmmunitionOrSkipPhysicalDelivery" methodname="PreparationStockDoesNotRefillPlayerAmmunitionOrSkipPhysicalDelivery" classname="ShadowVale.Map01.Tests.Map02WorldStateTests" runstate="Runnable" seed="1071793005" result="Passed" start-time="2026-11-25 17:06:17Z" end-time="2026-11-25 17:06:17Z" duration="0.000231" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1980" name="ReachingPropMeansThePlayerIsActuallyWithinItsRadius" fullname="ShadowVale.Map01.Tests.Map02WorldStateTests.ReachingPropMeansThePlayerIsActuallyWithinItsRadius" methodname="ReachingPropMeansThePlayerIsActuallyWithinItsRadius" classname="ShadowVale.Map01.Tests.Map02WorldStateTests" runstate="Runnable" seed="1846878031" result="Passed" start-time="2026-11-25 17:06:17Z" end-time="2026-11-25 17:06:17Z" duration="0.000520" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1979" name="SaveRoundTripKeepsCargoAndRejectsDuplicatePickup" fullname="ShadowVale.Map01.Tests.Map02WorldStateTests.SaveRoundTripKeepsCargoAndRejectsDuplicatePickup" methodname="SaveRoundTripKeepsCargoAndRejectsDuplicatePickup" classname="ShadowVale.Map01.Tests.Map02WorldStateTests" runstate="Runnable" seed="1300460965" result="Passed" start-time="2026-11-25 17:06:17Z" end-time="2026-11-25 17:06:17Z" duration="0.000202" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[Saving results to: Logs/Map02Chapter/latest-full-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>

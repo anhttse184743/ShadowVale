@@ -64,6 +64,8 @@ namespace ShadowVale.Map01
         {
             Layout=Resources.Load<Map02ChapterLayout>("Story/Map02ChapterLayout");
             Mission=mission;player=mission.Player.GetComponent<PlayerController>();combat=mission.Player.GetComponent<PlayerCombat>();health=mission.Player.GetComponent<Health>();
+            // The wounded crawl keeps him low; Ctrl cannot stand him up mid-crawl (it used to, for one frame, before the crawl put him back).
+            player.SneakHeld=()=>sceneTask==null&&!Mission.Cinematic&&State.AvailableTasks.Any(t=>t.kind=="crawl");
             combat.EquipAllowed=kind=>(!ScoutEscortActive||kind==WeaponKind.Pistol)&&(!CarryingAntenna||kind==WeaponKind.Unarmed);
             rig=FindObjectsByType<ThirdPersonCamera>(FindObjectsSortMode.None).First(c=>c.GetComponent<Camera>()?.enabled==true);
             voice=DialogueVoice.For(gameObject);voice.CanSpeak=()=>!mission.Paused&&!ForestMenu.Visible;
@@ -413,7 +415,7 @@ namespace ShadowVale.Map01
         {
             if(dialogueGroundMesh!=null)Destroy(dialogueGroundMesh);
             ReleaseEvacuationLightPresentation();
-            ReleaseNightPatrolPresentation();ReleaseNightRiverCrossing();Cancel();ResetEffects();RestoreNaturalLighting();ReleaseDayArt();ReleaseDayTwoProps();if(combat!=null){combat.EquipAllowed=null;combat.Attacked-=OnPlayerShot;combat.ReloadDurationMultiplier=1;combat.SetHandsOccupied(false);}if(player!=null){player.SurfaceSpeedMultiplier=1;player.SprintAllowed=null;player.MovementConstraint=null;}
+            ReleaseNightPatrolPresentation();ReleaseNightRiverCrossing();Cancel();ResetEffects();RestoreNaturalLighting();ReleaseDayArt();ReleaseDayTwoProps();if(combat!=null){combat.EquipAllowed=null;combat.Attacked-=OnPlayerShot;combat.ReloadDurationMultiplier=1;combat.SetHandsOccupied(false);}if(player!=null){player.SurfaceSpeedMultiplier=1;player.SprintAllowed=null;player.MovementConstraint=null;player.SneakHeld=null;}
             RenderSettings.skybox=originalSky;RenderSettings.ambientMode=originalAmbientMode;if(chapterSky!=null)Destroy(chapterSky);RenderSettings.ambientLight=ambientBefore;RenderSettings.fog=fogBefore;RenderSettings.fogColor=fogColorBefore;RenderSettings.fogDensity=fogDensityBefore;
             if(sun!=null){sun.intensity=sunIntensity;sun.transform.rotation=sunRotation;sun.color=originalSunColor;}
         }

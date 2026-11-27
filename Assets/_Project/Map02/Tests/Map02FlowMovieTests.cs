@@ -144,7 +144,7 @@ namespace ShadowVale.Map01.Tests
                         }
                         yield return Dialogue();
                     }
-                    else if(task.kind=="crawl") {Key(UnityEngine.InputSystem.Key.C);yield return WaitDoneOrScene(task.id,40);Key();yield return Dialogue();}
+                    else if(task.kind=="crawl") {Key(UnityEngine.InputSystem.Key.LeftCtrl);yield return WaitDoneOrScene(task.id,40);Key();yield return Dialogue();}
                     else yield return Dialogue();
                     yield return WaitDone(task.id,12);
                     movie.Snapshot(task.id);yield return WaitGameSeconds(.8f);

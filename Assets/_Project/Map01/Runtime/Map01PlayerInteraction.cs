@@ -93,7 +93,6 @@ namespace ShadowVale.Map01
             {
                 mission.SetMapOpen(!mission.MapOpen); inventory.SuppressFire = true;
             }
-            if (kb.cKey.wasPressedThisFrame) mission.Crouched = !mission.Crouched;
             if (kb.f5Key.wasPressedThisFrame) saveSystem?.SaveSlot(ForestSaveSlots.QuickSlot, out _);
             if (kb.hKey.wasPressedThisFrame) inventory.UseItem("medkit_small");
             if (mission.InventoryOpen || mission.MapOpen)

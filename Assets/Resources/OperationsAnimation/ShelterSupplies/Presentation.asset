@@ -17,6 +17,7 @@ MonoBehaviour:
   collect: {fileID: -623603649343465320, guid: 1dce4964482a876419d6cfe9a879a973, type: 3}
   handoff: {fileID: -623603649343465320, guid: 08f231aa19134b644b9fa1a2945b7370, type: 3}
   hungRest: {fileID: -623603649343465320, guid: 15b4d132cd7e59c4a9e935a6bcda42d8, type: 3}
+  hungRestHuman: {fileID: -623603649343465320, guid: 19b7687e746478a4ca6a90dffa127d1e, type: 3}
   collectCloth: {fileID: 4900000, guid: 0bc712878d53f7840a01d9e51dbd2f37, type: 3}
   handoffCloth: {fileID: 4900000, guid: 7891fa38d893c574d9ac3e6695dd9285, type: 3}
   basisX: {x: -1, y: 0, z: 0}

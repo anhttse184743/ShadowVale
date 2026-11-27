@@ -299,7 +299,7 @@ namespace ShadowVale.Map01
             if(mode!=Mode.Takedown)mission.ModernCombat?.RestoreAfterCinematic();
             if(mode==Mode.Intro&&!restoring){
                 rescue.CompleteApproachIntro();
-                mission.Say("Hùng đang bị giam giữ. Đã chuyển sang đi lén — [C] đổi tư thế. Tận dụng vật che để tiếp cận.",6);
+                mission.Say("Hùng đang bị giam giữ. Đã chuyển sang đi lén — [Ctrl] đổi tư thế. Tận dụng vật che để tiếp cận.",6);
             }
         }
         private void OnGUI()

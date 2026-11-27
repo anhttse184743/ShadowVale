@@ -251,6 +251,18 @@ namespace ShadowVale.Map01
             foot.rotation=Quaternion.Slerp(original,heel,weight);
         }
 
+        /// <summary>Where the pillow sits along the mat: under Hùng's head once he lies back, from his own spine length,
+        /// so a re-proportioned model (T042 Meshy Hùng, a shorter torso than the old one) still lands on it.</summary>
+        float NightPillowDistance()
+        {
+            var actor=performanceHung?.actor;
+            if(actor==null||!actor.isHuman)return .69f;
+            float length=0;var previous=actor.GetBoneTransform(HumanBodyBones.Hips);
+            foreach(var bone in new[]{HumanBodyBones.Spine,HumanBodyBones.Chest,HumanBodyBones.UpperChest,HumanBodyBones.Neck,HumanBodyBones.Head})
+            {var next=actor.GetBoneTransform(bone);if(next==null||previous==null)continue;length+=Vector3.Distance(previous.position,next.position);previous=next;}
+            return length>.2f?Mathf.Clamp(length-.01f,.4f,.75f):.69f;
+        }
+        const float NightPillowTop=.047f,NightSkullBelowHeadBone=.075f;
         void RestHeadOnPillow(Animator actor,float lying)
         {
             float weight=Mathf.SmoothStep(0,1,(lying-.78f)/.22f);
@@ -260,7 +272,10 @@ namespace ShadowVale.Map01
             if(neck==null||head==null)return;
             var set=neck.rotation;
             var toward=head.position-neck.position;
-            var raised=Vector3.ProjectOnPlane(toward+Vector3.up*.035f,nightRestHouse.right);
+            // Lift the head until the back of the skull rests on the pillow's crown, whatever the model's proportions.
+            float rest=nightPillow.position.y+NightPillowTop+NightSkullBelowHeadBone;
+            float lift=Mathf.Clamp(rest-head.position.y,.035f,.14f);
+            var raised=Vector3.ProjectOnPlane(toward+Vector3.up*lift,nightRestHouse.right);
             if(raised.sqrMagnitude>.001f)neck.rotation=Quaternion.Slerp(set,Quaternion.FromToRotation(toward,raised)*set,weight);
         }
 
@@ -367,7 +382,7 @@ namespace ShadowVale.Map01
         {
             nightPillow=new GameObject("Gối tre đan").transform;
             nightPillow.SetParent(nightRestProps,false);
-            nightPillow.localPosition=new Vector3(0,.094f,.69f);
+            nightPillow.localPosition=new Vector3(0,.094f,NightPillowDistance());
             nightPillowReed=NightRestMaterial("Tre đan vàng nhạt",new Color(.68f,.50f,.24f));
             nightPillowBand=NightRestMaterial("Viền tre đỏ đất",new Color(.51f,.20f,.13f));
             const int rings=40,sides=48;
@@ -409,9 +424,14 @@ namespace ShadowVale.Map01
         const float BlanketFoot=-1.09f,BlanketProfileStep=.036f,BlanketProfileLeft=-.48f,BlanketProfileWidth=.04f;
         readonly float[,] blanketProfile=new float[43,25];
         Vector3[] blanketDraped;
+        const float NightBlanketFaceGap=.16f;
         Vector3 ShapeNightBlanket(float unfold,float lift,Animator hung)
         {
-            float length=Mathf.Lerp(.27f,1.45f,unfold);
+            // Pulled up to the shoulders, never over the face: stop short of Hùng's head on a model with a shorter torso (T042).
+            float full=1.45f;
+            var face=hung!=null?hung.GetBoneTransform(HumanBodyBones.Head):null;
+            if(face!=null)full=Mathf.Clamp(nightJacket.transform.InverseTransformPoint(face.position).z-NightBlanketFaceGap-BlanketFoot,.6f,1.45f);
+            float length=Mathf.Lerp(.27f,full,unfold);
             if(hung!=null)performanceHung.MeasureBlanketProfile(nightJacket.transform,BlanketFoot,BlanketProfileStep,BlanketProfileLeft,BlanketProfileWidth,blanketProfile);
             for(int z=0;z<=BlanketRows;z++)for(int x=0;x<=BlanketColumns;x++)
             {

@@ -660,7 +660,9 @@ namespace ShadowVale.Map01.Tests
             var story = mission.GetComponent<Map01Story>();
             var rescue = mission.GetComponent<Map01Rescue>();
             var points = Object.FindObjectsByType<ForestPoint>(FindObjectsSortMode.None);
-            foreach (var e in mission.Enemies) e.enabled = false;
+            // Frozen guards must not stand in his way either: a disabled controller leaves its NavMeshAgent parked on the
+            // jetty, and at the escort pace Hùng's avoidance stalls behind patrol_0 there.
+            foreach (var e in mission.Enemies) { e.enabled = false; var guardAgent = e.GetComponent<UnityEngine.AI.NavMeshAgent>(); if (guardAgent != null) guardAgent.enabled = false; }
             // Input is present, but Hùng's world movement must not target Nam.
             var keyboard = InputSystem.AddDevice<Keyboard>();
             try
@@ -698,7 +700,7 @@ namespace ShadowVale.Map01.Tests
                 var hungAgent = mission.hung.GetComponent<UnityEngine.AI.NavMeshAgent>();
                 Assert.Less(Vector3.Distance(hungAgent.destination, to.position), 1f, "The destination is the shelter, never Nam.");
                 Assert.Less(rescue.RemainingHomeDistance(),initialDistance-1f,"Hùng advances toward base without waiting for Nam.");
-                Assert.AreEqual(Map01HungVisual.LimpSpeed, hungAgent.speed, .01f, "He limps home at his own pace, never sprints.");
+                Assert.AreEqual(Map01HungVisual.EscortSpeed, hungAgent.speed, .01f, "He limps home at his own pace, never sprints.");
                 PlaceNam(mission,held);
                 float beforeCovering=rescue.RemainingHomeDistance();
                 yield return WaitGameSeconds(2f);

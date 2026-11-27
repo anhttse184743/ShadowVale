@@ -7,6 +7,8 @@ namespace ShadowVale.Map01
     {
         public GameObject namModel,hungModel;
         public AnimationClip collect,handoff,hungRest;
+        [Tooltip("Humanoid copy of hungRest; poses the live Hùng model on the cot.")]
+        public AnimationClip hungRestHuman;
         public TextAsset collectCloth,handoffCloth;
         public Vector3 basisX,basisY,basisZ;
         public float namFloorOffset;
