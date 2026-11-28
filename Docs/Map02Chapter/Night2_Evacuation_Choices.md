@@ -7,7 +7,7 @@ Cập nhật 27/10/2026 theo bản đồ người dùng đánh dấu. Thay thế
 1. Kiểm tra kệ hầm kho xong, leo lên mặt đất.
 2. Tới ghim bắt đầu gần hầm. Danh sách hiện ba lựa chọn: “Kiểm tra đường ruộng”, “Kiểm tra đường qua sông”, “Kiểm tra đường từ trong làng”.
 3. Chọn bằng chuột hoặc phím 1/2/3; ghim N2_04 chuyển tới điểm của hướng đó. Có thể nhấn N để đổi hướng khi đang khảo sát.
-4. Đường ruộng: đứng trong bụi cây ở ghim (bán kính 1,5 m), đứng yên giữ F và nhìn rõ một lính trong toán tuần tra liên tục 1 giây. Mất đường nhìn, hạ ống nhòm hoặc ra ngoài bụi cây thì tiến độ chưa hoàn tất về 0. Đã quan sát đủ thì E báo cáo khi ở trong bụi cây.
+4. Đường ruộng: ở trong bụi cây tại ghim (bán kính 1,5 m), đứng hoặc ngồi yên, giữ F và nhìn rõ một lính trong toán tuần tra liên tục 1 giây. Mất đường nhìn, hạ ống nhòm hoặc ra ngoài bụi cây thì tiến độ chưa hoàn tất về 0. Nam tự mở bộ đàm báo cáo ngay khi quan sát đủ.
 5. Đường qua sông: tới ghim trên bờ, E báo cáo; không buộc Nam phải lội mới biết tuyến cần qua nước.
 6. Đường trong làng: tới ghim, E báo cáo. Nghe phản hồi chấp thuận xong là hoàn tất N2_04, mở ghim về điểm hẹn Hùng ở căn cứ. Không yêu cầu từng kiểm tra hai hướng còn lại.
 7. Hai hướng bị từ chối được đánh dấu “Đã loại”, hiện lại danh sách để chọn hướng khác. Chỉ báo cáo, không tự động thất bại khi kiểm tra một hướng không phù hợp.
@@ -52,7 +52,7 @@ Bụi cây dùng prefab BushB đã có, tham chiếu từ Layout. Các điểm v
 
 ## Cách duyệt trong Unity
 
-Đi tới hết N2_03, lên hầm và tới ghim gần kho. Lần thử đầu chọn 3, tới ghim làng rồi E: phải hoàn thành sau phản hồi, không cần hai đường kia. Retry/load trước N2_04 rồi thử 1: chưa F đủ 1 giây thì E chưa báo cáo, đủ thì nghe ba lượt và chọn lại. Thử 2: nghe ba lượt và chọn lại. Cuối cùng thử cố đi vào vùng đèn: phải thất bại và retry vẫn giữ kho đã kiểm tra, không làm lại N2_01–02. Kiểm tra thêm pause, lưu/tải và chuyển Ngày 3 sau cảnh Hùng.
+Đi tới hết N2_03, lên hầm và tới ghim gần kho. Lần thử đầu chọn 3, tới ghim làng rồi E: phải hoàn thành sau phản hồi, không cần hai đường kia. Retry/load trước N2_04 rồi thử 1: giữ F đủ 1 giây trong bụi cây để bộ đàm tự mở, nghe ba lượt và chọn lại. Thử 2: nhấn E ở ghim bờ sông, nghe ba lượt và chọn lại. Cuối cùng thử cố đi vào vùng đèn: phải thất bại và retry vẫn giữ kho đã kiểm tra, không làm lại N2_01–02. Kiểm tra thêm pause, lưu/tải và chuyển Ngày 3 sau cảnh Hùng.
 
 ## Sửa tuần tra theo đồ thị người dùng
 

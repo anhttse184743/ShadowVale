@@ -120,10 +120,21 @@ namespace ShadowVale.Map01
             // Give bridge rail carving a navigation update before chapter paths are surveyed.
             yield return null;
             yield return null;
-            player=arrival != null && arrival.Passengers != null ? arrival.Passengers[0].GetComponent<PlayerController>() : exploration != null ? exploration.player : FindFirstObjectByType<PlayerController>();
+            var boatNam=arrival != null && arrival.Passengers != null ? arrival.Passengers[0] : null;
+            // From the boat, the village's own Nam takes over (Map02Mission.Handover): one Nam for Map 2 however it is reached.
+            if (boatNam != null && exploration != null && exploration.player != null) { player=TakeOverFromBoat(boatNam,exploration.player); PlaysVillageNam=true; }
+            else player=boatNam != null ? boatNam.GetComponent<PlayerController>() : exploration != null ? exploration.player : FindFirstObjectByType<PlayerController>();
             if (player == null) { Debug.LogError("Map 2 has no player to bind.",this); yield break; }
             combat=player.GetComponent<PlayerCombat>();health=player.GetComponent<Health>();
             cameraRig=FindObjectsByType<ThirdPersonCamera>(FindObjectsSortMode.None).FirstOrDefault(c=>c.GetComponent<Camera>() != null && c.GetComponent<Camera>().enabled);
+            if (cameraRig != null)
+            {
+                // The boat camera can remain active after the village player takes over.
+                player.SetMovementCamera(cameraRig.transform);
+                combat?.SetCameraRig(cameraRig);
+                cameraRig.SetTarget(Player);
+                cameraRig.InputAllowed=()=>!InputBlocked;
+            }
             if (arrival != null) { foreach(var pair in arrival.Inventory) Inventory[pair.Key]=pair.Value; Stones=arrival.Stones; }
             // The exploration-only R reset conflicts with gameplay reload. Its scene instance
             // stays disabled after the mission takes ownership, never the shared prefab.
@@ -136,7 +147,6 @@ namespace ShadowVale.Map01
                 combat.DrawRounds=requested=>{int n=Mathf.Min(requested,combat.ReserveRounds());Inventory[RifleAmmo]=combat.ReserveRounds()-n;return n;};
             }
             player.InputAllowed=()=>!InputBlocked&&Chapter?.MovementLocked!=true;
-            if(cameraRig!=null){cameraRig.SetTarget(Player);cameraRig.InputAllowed=()=>!InputBlocked;}
             voice=DialogueVoice.For(gameObject);voice.CanSpeak=()=>!Paused&&!ForestMenu.Visible;
             if(FindFirstObjectByType<Map02QuestLayout>()==null)
             {
@@ -154,6 +164,7 @@ namespace ShadowVale.Map01
             if(GetComponent<Map01FoliageReveal>()==null)gameObject.AddComponent<Map01FoliageReveal>();
             if(GetComponent<Map02SightCover>()==null)gameObject.AddComponent<Map02SightCover>();
             InitializeCharacter();
+            ApplyCarried();
             logisticsCredit=arrival?.LogisticsCredit??0;
             trader=CampTrader.Install(gameObject, Bag, true,
                 () => Ready && !World.story.failed && Chapter.State.phase==5 && !Chapter.State.finished &&
@@ -181,6 +192,7 @@ namespace ShadowVale.Map01
             RefreshRoute();
             if (!World.story.failed) PlaySeconds+=Time.deltaTime;
             if (health != null && health.IsDead && !World.story.failed) { World.story.Fail("Nam đã hy sinh. Trở về checkpoint để thử lại.");CancelConversation();Notify(); }
+            TickPendingCheckpoint();
             // What [E] would use, and its outline, whatever the input device.
             if(!dialogue.Active&&!World.story.failed&&Chapter?.LocksInput!=true&&Panel==0)
             {
@@ -188,6 +200,11 @@ namespace ShadowVale.Map01
                 InteractHighlight.Focus(nearest!=null?Chapter?.HighlightFor(nearest)??nearest.transform:NearestGroundItem()?.transform);
             }
             var kb=Keyboard.current;if(kb==null)return;bool worldEReady=WorldEReady(kb);
+            if(Panel==0&&!ShadowVale.Core.Services.InputFocus.OverlayOpen)
+            {
+                if(kb.f9Key.wasPressedThisFrame&&!Cinematic){LoadQuickSave();return;}
+                if(kb.f5Key.wasPressedThisFrame){Say(SaveSlot(ForestSaveSlots.QuickSlot,out var error)?"Đã lưu nhanh Map 2.":error);return;}
+            }
             if(dialogue.Active)
             {
                 if(kb.escapeKey.wasPressedThisFrame){CancelConversation();return;}
@@ -342,6 +359,8 @@ namespace ShadowVale.Map01
         }
         public void Restore(Snapshot data)
         {
+            checkpointPending=false;
+            CharacterHud?.ClearIncomingFire();
             if(Panel==5)CloseGameplayPanel();
             logisticsCredit=Mathf.Max(0,data.logisticsCredit);
             claimedLogisticsRewards.Clear();
@@ -385,7 +404,24 @@ namespace ShadowVale.Map01
             if(string.IsNullOrEmpty(saved))return false;
             Restore(Parse(saved));patrolCheckpoint=saved;checkpoint=saved;SetPaused(false);return true;
         }
-        public void StoreCheckpoint(){if(!Ready||!CanSave())return;if(Chapter?.State.PatrolRouteActive!=true)patrolCheckpoint=null;var data=Capture();data.checkpoint=null;checkpoint=JsonUtility.ToJson(data);}
+        // A task can close while Nam cannot be saved yet: mid-reload after a wave, still in a work view, a conversation, a bandage.
+        // The checkpoint then waits and is taken the first frame he can be (as Map 1's operation checkpoints do), instead of being
+        // dropped: a death after it went back to the task before, without the rounds and kit picked up since (Khoa, 26/11/2026).
+        bool checkpointPending;
+        public bool CheckpointPending=>checkpointPending;
+        public void StoreCheckpoint()
+        {
+            if(!Ready)return;
+            if(!CanSave()){checkpointPending=!World.story.failed&&(health==null||!health.IsDead);return;}
+            checkpointPending=false;
+            if(Chapter?.State.PatrolRouteActive!=true)patrolCheckpoint=null;var data=Capture();data.checkpoint=null;checkpoint=JsonUtility.ToJson(data);
+        }
+        void TickPendingCheckpoint()
+        {
+            if(!checkpointPending)return;
+            if(World.story.failed||health!=null&&health.IsDead){checkpointPending=false;return;}
+            if(CanSave())StoreCheckpoint();
+        }
         // A checkpoint is stored as each task closes, often mid-sprint or wounded: a retry gives back the bag as it was, but
         // fresh legs and at least half health, so a retry is never a slower or weaker start than the fight that was lost.
         public bool Retry(){if(string.IsNullOrEmpty(checkpoint))return false;var saved=checkpoint;Restore(Parse(saved));checkpoint=saved;SetPaused(false);
@@ -394,9 +430,27 @@ namespace ShadowVale.Map01
         {
             error=SaveBlockReason();if(!string.IsNullOrEmpty(error))return false;
             var career=player.GetComponent<SkillCampaignPersistence>();if(career!=null&&!career.TryFlush(out error))return false;
-            try{ForestSaveSlots.Write(slot,new ForestSaveSlots.Entry{sceneName="Map 2",savedAt=DateTime.UtcNow.ToString("o"),playSeconds=PlaySeconds,location=ObjectiveText,checkpoint=JsonUtility.ToJson(Capture())});return true;}
+            try
+            {
+                var payload=JsonUtility.ToJson(Capture());
+                Parse(payload);
+                ForestSaveSlots.Write(slot,new ForestSaveSlots.Entry{sceneName="Map 2",savedAt=DateTime.UtcNow.ToString("o"),playSeconds=PlaySeconds,location=ObjectiveText,checkpoint=payload});
+                return true;
+            }
             catch(Exception e){error="Không thể lưu Map 2: "+e.Message;return false;}
         }
+
+        void LoadQuickSave()
+        {
+            try
+            {
+                if(!ForestSaveSlots.Exists(ForestSaveSlots.QuickSlot)){Say("Chưa có bản lưu nhanh.");return;}
+                if(skillCareer!=null&&!skillCareer.TryFlush(out var error)){Say(error);return;}
+                ForestMenu.LoadSavedGame(ForestSaveSlots.QuickSlot);
+            }
+            catch(Exception e){Say("Không thể tải bản lưu nhanh: "+e.Message);}
+        }
+
         public bool AutoSaveOnExit(out string error)=>SaveSlot(ForestSaveSlots.AutoSlot,out error);
         public static void BeginGame(ForestSaveSlots.Entry entry)
         {

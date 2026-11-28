@@ -28,6 +28,13 @@ public sealed class RescueRadioIntroTests:ForestSceneTestBase {
         var m=Object.FindFirstObjectByType<Map01Mission>();var rescue=m.GetComponent<Map01Rescue>();
         typeof(ForestSaveSlots).GetField("storageRoot",BindingFlags.NonPublic|BindingFlags.Static).SetValue(null,Path.GetFullPath("Logs/RescueRadio/saves/"+Guid.NewGuid().ToString("N")));
         foreach(var enemy in m.Enemies)enemy.enabled=false;
+        var body=m.player.GetComponent<CharacterController>();
+        body.enabled=false;
+        Vector3 facing=Vector3.ProjectOnPlane(rescue.CaptivePost-rescue.RetryPoint,Vector3.up);
+        m.player.SetPositionAndRotation(rescue.RetryPoint,Quaternion.LookRotation(facing));
+        body.enabled=true;
+        Physics.SyncTransforms();
+        yield return null;
         m.ModernCombat.Equip(skip?WeaponKind.Knife:WeaponKind.Rifle);m.Crouched=skip;m.ModernPlayer.RestoreMotion(skip);
         var actor=m.player.GetComponentInChildren<Animator>();var controller=actor.runtimeAnimatorController;var avatar=actor.avatar;
         actor.SetFloat(PlayerCombat.AnimatorParams.Speed,5);actor.Update(.1f);
@@ -41,6 +48,7 @@ public sealed class RescueRadioIntroTests:ForestSceneTestBase {
         Directory.CreateDirectory("Logs/RescueRadio");
         var pump=m.gameObject.AddComponent<ExtractionCapturePump>();
         try{
+            AssertNamGrounded(m, actor);
             while(d.IsPlaying&&Time.realtimeSinceStartup<deadline){
                 InputSystem.QueueStateEvent(keyboard,new KeyboardState(Key.W,Key.LeftShift));
                 InputSystem.QueueStateEvent(mouse,new MouseState().WithButton(MouseButton.Right));
@@ -51,6 +59,7 @@ public sealed class RescueRadioIntroTests:ForestSceneTestBase {
                 var id=voice?.CurrentId;
                 if(id!=null&&id!=previous){
                     previous=id;heard.Add(id);
+                    if(id.StartsWith("m1_v2_rescue_approach_",StringComparison.Ordinal))AssertNamGrounded(m, actor);
                     if(!skip){string capture=id;pump.draw=()=>{Capture(m.gameCamera,"Logs/RescueRadio/"+capture+".png");};}
                 }
                 if(d.Elapsed>1){
@@ -63,7 +72,7 @@ public sealed class RescueRadioIntroTests:ForestSceneTestBase {
                 yield return null;
             }
             Assert.IsFalse(d.IsPlaying);Assert.IsTrue(rescue.IntroSeen);Assert.IsFalse(rescue.Failed||m.Cinematic);
-            if(!skip){CollectionAssert.AreEqual(new[]{"m1_rescue_interrogate","m1_story_11","m1_v2_rescue_approach_01","m1_v2_rescue_approach_02","m1_v2_rescue_approach_03"},heard);Assert.Greater(d.Elapsed,8);Assert.Less(d.Elapsed,24);}
+            if(!skip){CollectionAssert.AreEqual(new[]{"m1_rescue_interrogate","m1_story_11","m1_v2_rescue_approach_01","m1_v2_rescue_approach_02","m1_v2_rescue_approach_03"},heard);Assert.Greater(d.Elapsed,8);Assert.Less(d.Elapsed,36);}
             Assert.IsFalse(heard.Contains("m1_rescue_intro_nam"));
             Assert.AreSame(controller,actor.runtimeAnimatorController);Assert.AreSame(avatar,actor.avatar);
             Assert.IsTrue(m.ModernPlayer.enabled&&m.ModernCombat.enabled&&m.player.GetComponent<CharacterController>().enabled);
@@ -72,6 +81,23 @@ public sealed class RescueRadioIntroTests:ForestSceneTestBase {
             Assert.IsFalse(m.GetComponentsInChildren<DialogueVoice>().Any(v=>v.HasSpeech));
             File.WriteAllLines("Logs/RescueRadio/"+(skip?"skip":"natural")+".txt",heard);
         }finally{Object.Destroy(pump);InputSystem.RemoveDevice(keyboard);InputSystem.RemoveDevice(mouse);RestoreInputRouting(input);}
+    }
+    static void AssertNamGrounded(Map01Mission mission, Animator actor){
+        Vector3 position=mission.player.position;
+        var floor=Physics.RaycastAll(position+Vector3.up*.6f,Vector3.down,2f,~0,QueryTriggerInteraction.Ignore)
+            .Where(hit=>hit.normal.y>.6f&&hit.point.y<=position.y+.25f&&!hit.transform.IsChildOf(mission.player)&&hit.collider.GetComponentInParent<Health>()==null)
+            .Max(hit=>hit.point.y);
+        float sole=float.PositiveInfinity;
+        var mesh=new Mesh();
+        try{
+            var replacement=actor.transform.Find("Nam_AoBaBa_Visual");
+            foreach(var skin in (replacement!=null?replacement:actor.transform).GetComponentsInChildren<SkinnedMeshRenderer>()){
+                if(!skin.enabled||skin.forceRenderingOff)continue;
+                skin.BakeMesh(mesh,replacement!=null);
+                foreach(var vertex in mesh.vertices)sole=Mathf.Min(sole,skin.transform.TransformPoint(vertex).y);
+            }
+        }finally{Object.Destroy(mesh);}
+        Assert.That(sole-floor,Is.InRange(-.05f,.08f),$"Nam's visible shoes should rest on the ground during the rescue intro (root {position.y:F3}, sole {sole:F3}, floor {floor:F3}).");
     }
     static void Capture(Camera camera,string path){
         var rt=RenderTexture.GetTemporary(960,540,24);var old=camera.targetTexture;var active=RenderTexture.active;var image=new Texture2D(960,540,TextureFormat.RGB24,false);

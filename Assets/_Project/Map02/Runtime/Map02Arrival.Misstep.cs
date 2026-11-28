@@ -98,7 +98,7 @@ namespace ShadowVale.Map01
                     pose.Play(turn[0]);pose.Rate(turn[0].length/C1NamTurn);if(w>C1NamToSpot+C1NamTurn*.5f)SlingRifle();
                     passenger.SetPositionAndRotation(spot,Quaternion.Slerp(Quaternion.LookRotation(Vector3.ProjectOnPlane(spot-top,Vector3.up)),NamFacing,Mathf.SmoothStep(0,1,(w-C1NamToSpot)/C1NamTurn)));return true;
                 }
-                pose.Play(approvedC1!=null?stand[0]:c1Nam);pose.Rate(0);passenger.SetPositionAndRotation(spot,NamFacing);StartApprovedVisual(0);return true;   // waiting, watching him climb
+                pose.Play(approvedC1!=null?stand[0]:c1Nam);pose.Rate(0);passenger.SetPositionAndRotation(spot,NamFacing);StartApprovedPose(0);return true;   // waiting, watching him climb
             }
             float n=clock-c1Start;
             if(n<c1Nam.length){passenger.SetPositionAndRotation(C1Point(C1Nam0+C1Travel(c1NamTravel,n)),NamFacing);if(approvedC1==null)TickPack(n);return true;}
@@ -107,12 +107,12 @@ namespace ShadowVale.Map01
         void BeginMisstep()
         {
             c1Start=clock;c1HungFrom=Passengers[2].position;poses[2].Play(approvedC1!=null?stand[2]:c1Hung,true);poses[2].Rate(approvedC1!=null?0:1);
-            poses[0].Play(approvedC1!=null?stand[0]:c1Nam);poses[0].Rate(approvedC1!=null?0:1);StartApprovedVisual(0);StartApprovedVisual(2);
+            poses[0].Play(approvedC1!=null?stand[0]:c1Nam);poses[0].Rate(approvedC1!=null?0:1);StartApprovedPose(0);StartApprovedPose(2);
         }
         /// <summary>The walk on from where the scene left him to his place on the bank (the usual shore walk, from there).</summary>
         void WalkOn(int index,Vector3 start,float elapsed,float seconds)
         {
-            RestoreApprovedVisual(index);
+            EndApprovedPose(index);
             var passenger=Passengers[index];var pose=poses[index];
             pose.Play(walk[index]);float p=Mathf.Clamp01(elapsed/seconds);
             pose.Rate(Vector3.Distance(start,SpawnPoints[index])/seconds*walk[index].length/WalkStride);
@@ -254,9 +254,9 @@ namespace ShadowVale.Map01
             knee.rotation=Quaternion.FromToRotation(foot.position-knee.position,origin+axis*d-knee.position)*knee.rotation;
         }
         float RevealStart=>Misstep?(c1Start>=0?c1Start+c1Nam.length-.5f:float.MaxValue):7;
-        // One sling follows Nam's current body through the model swap.
+        // One sling follows Nam's torso throughout the scene.
         void SlingRifle()=>Map01BoatCarry.For(actors[0]).Stow();
-        void EndMisstep(){EndPack();RestoreApprovedVisual(0);RestoreApprovedVisual(2);}
+        void EndMisstep(){EndPack();EndApprovedPose(0);EndApprovedPose(2);}
         // ---- the pack: Nam's own (baked from his skinned pack), on his back, in his hand, on the ground and back on ------
         void TickPack(float n)
         {
@@ -286,28 +286,20 @@ namespace ShadowVale.Map01
         }
         bool BakePack()
         {
-            c1WornPack=Passengers[0].GetComponentsInChildren<SkinnedMeshRenderer>(true).FirstOrDefault(r=>r.name=="Nam_BaloRanRi");
-            // A replacement character may retain the old pack renderer disabled for rollback.
-            // The C1 visual hides renderers temporarily, so use their saved state if available.
-            if(!PackWasVisible(c1WornPack)){c1WornPack=null;c1PackSuppressed=true;return false;}
-            var originalChest=actors[0].GetBoneTransform(HumanBodyBones.UpperChest)??actors[0].GetBoneTransform(HumanBodyBones.Chest);
-            var visual=MisstepActor(0);c1Chest=visual.GetBoneTransform(HumanBodyBones.UpperChest)??visual.GetBoneTransform(HumanBodyBones.Chest);
-            if(c1WornPack==null||c1Chest==null||originalChest==null){c1Track=null;return false;}
+            c1WornPack=Passengers[0].GetComponentsInChildren<SkinnedMeshRenderer>()
+                .FirstOrDefault(r=>r.name=="Nam_BaloRanRi"&&r.enabled&&!r.forceRenderingOff);
+            if(c1WornPack==null){c1PackSuppressed=true;return false;}
+            var nam=MisstepActor(0);
+            c1Chest=nam.GetBoneTransform(HumanBodyBones.UpperChest)??nam.GetBoneTransform(HumanBodyBones.Chest);
+            if(c1Chest==null){c1Track=null;return false;}
             var mesh=BakeC1Prop(c1WornPack,out var centre,approvedC1?.backpackMesh);boatMeshes.Add(mesh);
             c1Pack=new GameObject("Nam's pack — set down at the landing").transform;c1Pack.SetParent(transform.parent,true);
             c1Pack.SetPositionAndRotation(centre,c1WornPack.transform.rotation);
             var art=new GameObject("Mesh");art.transform.SetParent(c1Pack,false);
             art.AddComponent<MeshFilter>().sharedMesh=mesh;art.AddComponent<MeshRenderer>().sharedMaterials=c1WornPack.sharedMaterials;
-            // The gameplay and approved rigs have different chest bone rolls. Transfer the pack in an
-            // anatomical frame (shoulders/head), not the raw bone's axes or import scale.
-            var originalBasis=C1ChestBasis(actors[0]);c1PackInChest=Quaternion.Inverse(originalBasis)*(centre-originalChest.position);c1PackRotInChest=Quaternion.Inverse(originalBasis)*c1Pack.rotation;
+            var chestBasis=C1ChestBasis(nam);c1PackInChest=Quaternion.Inverse(chestBasis)*(centre-c1Chest.position);c1PackRotInChest=Quaternion.Inverse(chestBasis)*c1Pack.rotation;
             c1PackRot0=c1Pack.rotation;c1Blender0=C1Rotation(c1Track.pack[0].rot);
             c1WornPack.enabled=false;return true;
-        }
-        bool PackWasVisible(SkinnedMeshRenderer pack)
-        {
-            if(pack==null)return false;
-            return c1Hidden[0].TryGetValue(pack,out bool wasVisible)?wasVisible:pack.enabled;
         }
         // Snapshot in world units directly from skin weights/bind poses. This avoids the imported
         // renderer's 100x local scale and 0.01 parent introducing a different pivot/size in BakeMesh.

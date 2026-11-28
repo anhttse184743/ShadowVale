@@ -26,7 +26,7 @@ namespace ShadowVale.Map01
                     Time.timeScale = 1; Map01Mission.ReloadScene(gameObject.scene);
                     return;
                 }
-                if (ForestSaveSlots.Exists(0)) { BeginGame(0); return; }
+                if (ForestSaveSlots.Exists(ForestSaveSlots.QuickSlot)) { ForestMenu.LoadSavedGame(ForestSaveSlots.QuickSlot); return; }
                 if (!File.Exists(SavePath)) { mission.Say("Chưa có bản lưu nhanh."); return; }
                 string json = File.ReadAllText(SavePath);
                 pendingCheckpoint = JsonUtility.ToJson(NormalizeFailedAttempt(JsonUtility.FromJson<CheckpointData>(json), json)); pendingSeconds = 0; pendingMessage = null;
@@ -81,6 +81,7 @@ namespace ShadowVale.Map01
                 GetComponent<Map01Story>().RestoreOperationActors(data.enemies);
                 operationStart=data.operationStart;
                 mission.Alarmed = data.alarmed;
+                GetComponent<Map01Hud>()?.ClearIncomingFire();
                 mission.RestoreHealthFromSave(Mathf.Clamp(data.hp, 1, mission.Settings.playerHP));
                 mission.SetStamina(data.stamina);
                 mission.Crouched = data.crouched;

@@ -63,16 +63,22 @@ namespace ShadowVale.Map01
         AnimationClip hungMapOneWalk;
         void LoadDayPerformances()
         {
-            dayArt=Resources.Load<Map02DayOneArt>("Story/Map02DayOneArt");dayNamAnimator=Mission.Player.GetComponentInChildren<Animator>();ordinaryWalk=dayNamAnimator.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Walk_Tuned");namCalmIdle=dayNamAnimator.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned");
+            dayArt=Resources.Load<Map02DayOneArt>("Story/Map02DayOneArt");
+            dayNamAnimator=Mission.Player.GetComponentInChildren<Animator>();
+            var clips=dayNamAnimator.runtimeAnimatorController.animationClips;
+            ordinaryWalk=clips.FirstOrDefault(c=>c.name=="Walk_Tuned");
+            namCalmIdle=clips.FirstOrDefault(c=>c.name=="Idle_Tuned");
+            crouchWalk=T005fApprovedPose.CrouchWalk(clips);
+            crouchIdle=T005fApprovedPose.CrouchIdle(clips);
             hungMapOneWalk=Resources.Load<Map01HungVisual>("Characters/HungVisual")?.actor?.runtimeAnimatorController?.animationClips.FirstOrDefault(clip=>clip.name.Contains("DiKhapKhieng"))??dayArt?.Find("InjuredWalk");
             if(dayArt==null)Debug.LogWarning("Map 2 Day 1 performance asset is missing. Run ShadowVale.Map01.Editor.Map02DayOneBuilder.Build.",this);
         }
         void FreeNamPose(AnimationClip clip,float clock,bool loop=true)
         {if(clip==null)return;dayNamPose??=new Map01CinematicPose(dayNamAnimator,null,false);dayNamPose.Sample(clip,clock,loop);}
-        void ReleaseDayFreePose()
+        void ReleaseDayFreePose(bool restoreGameplay=true)
         {
             bool held=dayNamPose!=null||cargoPose!=null;dayNamPose?.Dispose();dayNamPose=null;cargoPose?.Dispose();cargoPose=null;
-            if(held)RestoreNamAnimator();   // releasing a pose rebinds Nam's animator, which forgets the weapon in his hands
+            if(held&&restoreGameplay)RestoreNamAnimator();   // releasing a pose rebinds Nam's animator, which forgets the weapon in his hands
         }
         void CreateStoryProps(Material wood,Material cloth,Material iron)
         {
@@ -135,7 +141,7 @@ namespace ShadowVale.Map01
             if(task.id=="D1_03"&&HandOverMocap)SampleHandOver();
             else if(task.id=="D1_03"||task.id=="N1_03")
             {
-                namPose?.Sample(DayClip("Medicine")??namIdle,Mathf.Min(sceneClock,4),false);
+                namPose?.Sample(DayClip("Medicine")??namCalmIdle,Mathf.Min(sceneClock,4),false);
                 medicineArt.gameObject.SetActive(sceneClock>=1.3f&&sceneClock<3.3f);if(medicineArt.gameObject.activeSelf){var hand=dayNamAnimator.GetBoneTransform(HumanBodyBones.RightHand);medicineArt.position=hand.position;medicineArt.rotation=hand.rotation;}
                 if(sceneClock>=3.3f)Day.GiveMedicine(task.id=="D1_03"?0:1);
             }
@@ -143,13 +149,13 @@ namespace ShadowVale.Map01
             if(task.id=="N1_04"&&ShiftMocap){SampleShift();return;}
             if(task.id=="N1_04"&&sceneClock<dayApproachDuration){
                 bool namArrived=sceneClock>=PathDuration(dayNamPath),hungArrived=sceneClock>=PathDuration(dayHungPath);
-                namPose?.Sample(namArrived?namIdle:ordinaryWalk,sceneClock,true);
+                namPose?.Sample(namArrived?namCalmIdle:ordinaryWalk,sceneClock,true);
                 hung.SamplePerformance(hungArrived?DayClip("InjuredIdle"):HungDayWalk,hungArrived?sceneClock:sceneClock*1.25f/HungDayWalkSpeed,true);return;
             }
             if(task.id=="N1_04")
             {
                 hung.SamplePerformance(DayClip("RestHung"),Mathf.Min(sceneClock-dayApproachDuration,4),false);
-                namPose?.Sample(DayClip("RestNam")??namIdle,Mathf.Min(sceneClock-dayApproachDuration,4),false);
+                namPose?.Sample(DayClip("RestNam")??namCalmIdle,Mathf.Min(sceneClock-dayApproachDuration,4),false);
             }
         }
         // Chị Lành's veranda lies between the front posts and the doorway of the house beside the family site.
@@ -233,14 +239,15 @@ namespace ShadowVale.Map01
         {
             if(!ready||Mission.Paused||ForestMenu.Visible)return;
             if(sceneTask!=null)return;DuckLateUpdate();TickDockObserver();TickNightPropPreview();
-            bool carry=State.carry=="D1_04";bool hammer=dayActivity==DayActivity.Dock&&DockHammering;
+            bool carry=State.carry=="D1_04"||CarryingAntenna;bool hammer=dayActivity==DayActivity.Dock&&DockHammering;
             if(carry)
             {
                 dayNamPose?.Dispose();dayNamPose=null;
                 cargoPose??=new Map02UpperBodyPose(dayNamAnimator,DayClip("Carry"));
-                cargoPose.Sample(player.IsMoving?ordinaryWalk:dayNamAnimator.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned"),Time.time);
+                cargoPose.Sample(player.IsMoving?ordinaryWalk:namCalmIdle,Time.time);
                 player.SetFaceCameraYaw(false);
-                int i=State.Count("D1_04");if(i<physicalCrates.Count){var crate=physicalCrates[i];crate.gameObject.SetActive(true);var l=dayNamAnimator.GetBoneTransform(HumanBodyBones.LeftHand);var r=dayNamAnimator.GetBoneTransform(HumanBodyBones.RightHand);HoldCrate(crate,i,(l.position+r.position)*.5f);}
+                if(CarryingAntenna)HoldAntennaOnShoulder(dayNamAnimator);
+                else{int i=State.Count("D1_04");if(i<physicalCrates.Count){var crate=physicalCrates[i];crate.gameObject.SetActive(true);var l=dayNamAnimator.GetBoneTransform(HumanBodyBones.LeftHand);var r=dayNamAnimator.GetBoneTransform(HumanBodyBones.RightHand);HoldCrate(crate,i,(l.position+r.position)*.5f);}}
             }
             else if(hammer&&StakeMocap)SampleStake(Time.deltaTime);
             else if(hammer)

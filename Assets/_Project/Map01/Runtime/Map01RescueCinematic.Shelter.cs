@@ -29,7 +29,7 @@ namespace ShadowVale.Map01
             hungYieldPath=hungFirst?null:YieldRoute(player.player.position,player.hung.position,leaderPath,entranceHeading,gap);
             var followerStart=hungYieldPath!=null?hungYieldPath[hungYieldPath.Length-1]:follower.position;
             var followerPath=RouteThrough(followerStart,layout.shelterRun.Take(layout.shelterRun.Length-1).Select(t=>t.position).Append(followerEnd).ToArray());
-            namPath=hungFirst?followerPath:leaderPath;hungPath=hungFirst?leaderPath:followerPath;
+            namPath=ClearOfScenery(player,hungFirst?followerPath:leaderPath);hungPath=ClearOfScenery(player,hungFirst?leaderPath:followerPath);
             // Stop at Nam's first interior marker, independent of Hung's progress.
             var insideRoute=RouteThrough(player.player.position,layout.shelterRun.Take(Mathf.Min(3,layout.shelterRun.Length)).Select(t=>t.position).ToArray());
             if(insideRoute.Length<2)return false;
@@ -78,6 +78,37 @@ namespace ShadowVale.Map01
                 foreach (var p in path.Skip(1)) if (Vector3.Distance(route[route.Count - 1], p) > .02f) route.Add(p);
             }
             return route.ToArray();
+        }
+        /// <summary>
+        /// Routes join NavMesh corners with straight legs, and the NavMesh runs under the half-buried entrance rocks:
+        /// with Hùng at the door first, Nam's leg cut the corner of "Embedded entrance rock 1 5" and his legs sank
+        /// 30-40 cm into it. Each 10 cm of a route that has scenery at leg height is moved sideways to the nearest
+        /// clear point on the NavMesh; a clear route is returned unchanged.
+        /// </summary>
+        private static Vector3[] ClearOfScenery(Map01Mission owner,Vector3[] route)
+        {
+            if(route.Length<2)return route;
+            float total=Length(route);var dense=new System.Collections.Generic.List<Vector3>{route[0]};
+            for(float d=.1f;d<total-.05f;d+=.1f)dense.Add(AtDistance(route,d,out _));
+            dense.Add(route[route.Length-1]);
+            bool Blocked(Vector3 p)=>Physics.OverlapCapsule(p+Vector3.up*.45f,p+Vector3.up*.9f,.2f,owner.ObstructionMask,QueryTriggerInteraction.Ignore)
+                .Any(c=>!c.transform.IsChildOf(owner.player)&&!c.transform.IsChildOf(owner.hung)&&c.GetComponentInParent<Health>()==null&&c.GetComponentInParent<Animator>()==null);
+            bool changed=false;
+            for(int i=1;i<dense.Count-1;i++){
+                if(!Blocked(dense[i]))continue;
+                var along=Vector3.ProjectOnPlane(dense[i+1]-dense[i-1],Vector3.up).normalized;var side=Vector3.Cross(Vector3.up,along);
+                foreach(float s in new[]{.15f,-.15f,.3f,-.3f,.45f,-.45f,.6f,-.6f}){
+                    var q=dense[i]+side*s;
+                    if(!NavMesh.SamplePosition(q,out var hit,.3f,NavMesh.AllAreas))continue;
+                    q=new Vector3(q.x,hit.position.y,q.z);if(Blocked(q))continue;
+                    dense[i]=q;changed=true;break;
+                }
+            }
+            if(!changed)return route;
+            // Ease the detour in and out so the walk does not side-step; keep any smoothed point that stays clear.
+            for(int pass=0;pass<3;pass++)
+                for(int i=1;i<dense.Count-1;i++){var eased=Vector3.Lerp(dense[i],(dense[i-1]+dense[i+1])*.5f,.5f);if(!Blocked(eased))dense[i]=eased;}
+            return dense.ToArray();
         }
         private static Vector3[] YieldRoute(Vector3 nam,Vector3 hung,Vector3[] route,Vector3 entranceHeading,float gap)
         {

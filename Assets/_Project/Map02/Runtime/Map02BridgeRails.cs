@@ -8,12 +8,15 @@ namespace ShadowVale.Map01
     public static class Map02BridgeRails
     {
         public const string Left="Bridge side barrier L",Right="Bridge side barrier R";
+        internal static bool IsBridgeDeck(BoxCollider collider) => collider != null &&
+            (collider.name == "Walkable bridge deck" || collider.name == "Bridge deck");
+
         public static List<BoxCollider> Install(Scene scene)
         {
             var rails=new List<BoxCollider>();
             foreach(var root in scene.GetRootGameObjects())foreach(var deck in root.GetComponentsInChildren<BoxCollider>(true))
             {
-                if(deck.name!="Walkable bridge deck"&&deck.name!="Bridge deck")continue;
+                if(!IsBridgeDeck(deck))continue;
                 foreach(int side in new[]{-1,1})
                 {
                     string name=side<0?Left:Right;var child=deck.transform.Find(name);

@@ -60,6 +60,12 @@ namespace ShadowVale.Gameplay.Combat
 
         private void ReadAttackInput()
         {
+            if (!CanAttack)
+            {
+                _firingHeld = false;
+                _automaticBurst = false;
+                return;
+            }
             Mouse mouse = Mouse.current;
             _firingHeld = mouse != null && mouse.leftButton.isPressed && Gun != null && !IsReloading
                 && (_magazine == null || _magazine.Rounds > 0);
@@ -73,7 +79,7 @@ namespace ShadowVale.Gameplay.Combat
             bool pressed = automatic ? mouse.leftButton.isPressed : mouse.leftButton.wasPressedThisFrame;
             bool continuing = _automaticBurst;
             _automaticBurst = automatic && pressed && !IsReloading;
-            if (!pressed || Time.time < _nextAttackTime)
+            if (!pressed || PlayerTime.Now < _nextAttackTime)
             {
                 return;
             }
@@ -84,7 +90,7 @@ namespace ShadowVale.Gameplay.Combat
             // silently reducing the fire rate to the frame rate. Never replay a long backlog after a stall.
             const int maxCatchUp = 4;
             int fired = 0;
-            while (Time.time >= _nextAttackTime && fired < maxCatchUp)
+            while (PlayerTime.Now >= _nextAttackTime && fired < maxCatchUp)
             {
                 float deadline = _nextAttackTime;
                 float cooldown = _equipped.Cooldown;
@@ -94,8 +100,8 @@ namespace ShadowVale.Gameplay.Combat
                 fired++;
                 if (_equipped == null || !_equipped.Automatic || IsReloading) break;
             }
-            if (fired == maxCatchUp && _nextAttackTime <= Time.time)
-                _nextAttackTime = Time.time + _equipped.Cooldown;
+            if (fired == maxCatchUp && _nextAttackTime <= PlayerTime.Now)
+                _nextAttackTime = PlayerTime.Now + _equipped.Cooldown;
         }
     }
 }

@@ -77,18 +77,17 @@ namespace ShadowVale.Map01
             return notes.Length > 0 ? notes.ToString() : null;
         }
 
-        private bool ShowObjectiveEscortHealth => rescue != null && quest != null &&
-            quest.Stage == Map01Quest.EscortStage && rescue.Exposed && !rescue.HungDown;
-
-        private void DrawObjectiveEscortHealth(float y)
+        private void DrawEscortHealth(float x, float y, float width)
         {
-            ShadowLabel(new Rect(49, y, 292, 24), "HÙNG", objectiveSmall);
-            var bar = new Rect(49, y + 25, 292, 10);
-            float alpha = GUI.color.a;
-            HudFill(bar, new Color(0, 0, 0, .6f * alpha));
+            if (Event.current.type != EventType.Repaint || quest == null || quest.Stage != Map01Quest.EscortStage) return;
+            if (rescue == null) rescue = GetComponent<Map01Rescue>();
+            if (rescue == null || !rescue.Exposed || rescue.HungDown) return;
+
+            ShadowLabel(new Rect(x, y, width, 24), "HÙNG", hudSmall);
+            var bar = new Rect(x, y + 25, width, 10);
+            HudFill(bar, new Color(0, 0, 0, .6f));
             float left = Mathf.Clamp01(rescue.HungHealth / Mathf.Max(1f, rescue.HungMaxHealth));
             var tint = Time.time - rescue.HungHitAt < .25f ? Color.white : Color.Lerp(Warning, new Color(.45f, .75f, .35f), left);
-            tint.a *= alpha;
             HudFill(new Rect(bar.x, bar.y, bar.width * left, bar.height), tint);
         }
 

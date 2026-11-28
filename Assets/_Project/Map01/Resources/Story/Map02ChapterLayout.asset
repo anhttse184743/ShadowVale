@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c2318a6bb1dc2ca4aa293962e67c852b, type: 3}
   m_Name: Map02ChapterLayout
-  m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map02ChapterLayout
+  m_EditorClassIdentifier: ShadowVale.Map02::ShadowVale.Map01.Map02ChapterLayout
   actors:
   - role: "Anh Th\xE0nh"
     prefab: {fileID: 58989247059846434, guid: 6f0b208725e3cf944bf9ba70cfad84c5, type: 3}

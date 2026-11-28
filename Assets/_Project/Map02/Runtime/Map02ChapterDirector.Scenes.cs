@@ -20,16 +20,16 @@ namespace ShadowVale.Map01
             if(!State.Available(task))return;
             lines=Map02ChapterDefinition.Load().Lines(task.scene??"").Skip(from).Take(take>0?take:int.MaxValue).ToArray();scenePurpose=0;lines=DayLines(task,lines);
             if(lines.Length==0){Finish(task);return;}
-            DropBarks();if(task.id=="N3_07")SpawnEscort(); // They come up behind the tank.
+            DropBarks();   // the tank's escort no longer stands behind it from N3_07: it comes out in waves during the cover (N3_08)
             ReleaseDayFreePose();sceneTask=task;sceneCoughed=false;pendingVoice=null;PrepareSceneMotion(task);PrepareDayScene(task);lineIndex=0;lineClock=sceneClock=skipHeld=0;lockedPosition=Mission.Player.position;lockedRotation=Mission.Player.rotation;if(State.phase>=2||IsStandingDialogue(task)&&task.id!="D1_05"&&!dayArrivalStarting)StageConversation(task);
             player.RestoreMotion(false);DialogueVoice.StopAll();
-            var actor=Mission.Player.GetComponentInChildren<Animator>();namIdle=actor.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned");namPose=new Map01CinematicPose(actor,null,IsStandingDialogue(task));
+            namPose=new Map01CinematicPose(dayNamAnimator,null,IsStandingDialogue(task));
             foreach(var weapon in Mission.Player.GetComponentsInChildren<Weapon>(true))if(weapon.gameObject.activeSelf){hiddenWeapons.Add(weapon.gameObject);weapon.gameObject.SetActive(false);}
             var cam=rig.GetComponent<Camera>();cameraBefore=cam.transform.position;cameraRotation=cam.transform.rotation;cameraFov=cam.fieldOfView;
             protectedBefore=health.CinematicInvulnerable;health.CinematicInvulnerable=true;
             BeginPerformance(task);PlanEntrances(task);StageTalk(task);PrepareStandingDialogue(task);StartLine();
         }
-        void Speak(){voice.Stop();pendingVoice=null;lineClock=0;OnPerformanceLine();if(HoldMealVoice)return;if(!Map02DialogueCatalog.HasApprovedRecording(lines[lineIndex]))return;if(CoughFirst(lines[lineIndex])){lineClock=-CoughLead;pendingVoice=lines[lineIndex].RecordingId;return;}voice.Play(lines[lineIndex].RecordingId);}
+        void Speak(){voice.Stop();pendingVoice=null;lineClock=0;if(HoldMealVoice)return;if(!Map02DialogueCatalog.HasApprovedRecording(lines[lineIndex]))return;if(CoughFirst(lines[lineIndex])){lineClock=-CoughLead;pendingVoice=lines[lineIndex].RecordingId;return;}voice.Play(lines[lineIndex].RecordingId);}
         void TickScene(float dt)
         {
             sceneClock+=dt;lineClock+=dt;TickPendingVoice();TickMealVoice();TickMealCrickets();TickSupperSound();TickChildPeek();
@@ -58,8 +58,15 @@ namespace ShadowVale.Map01
             DayLateUpdate();UpdateWorkWeapon();if(!ready)return;
             if(doingWork&&workTask?.kind=="antenna"){SampleAntennaTraversal();SampleAntennaSupport();}
             PanToHung();HoldCargo();HungChargeLate();HoldStepsPair();if(sceneTask==null){HoldCoverPosition();UpdateHungRadio();UpdateBandageSleeve();return;}
-            HoldConversation();FaceTalk();MoveDaySceneRoots();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);var overrideClip=NamPoseClip();namPose?.Sample(overrideClip!=null?overrideClip:namIdle,sceneClock,overrideClip==null||overrideClip==ordinaryWalk);
+            HoldConversation();FaceTalk();MoveDaySceneRoots();Mission.Player.SetPositionAndRotation(lockedPosition,lockedRotation);
+            // The authored walk-to-rest blend samples Nam itself. Sampling idle first would tear down its mixer each frame.
+            if(sceneTask.id!="N2_05"||nightRestHouse==null||performanceHung==null||performanceNam==null)
+            {
+                var overrideClip=NamPoseClip();
+                namPose?.Sample(overrideClip!=null?overrideClip:namCalmIdle,sceneClock,overrideClip==null||overrideClip==ordinaryWalk);
+            }
             SampleDayScene();SamplePerformance();CorrectStandingDialogue();UpdateHungRadio();UpdateBandageSleeve();
+            if(sceneTask.id=="D2_06"){FrameAntennaRadio();return;}
             string speaker=lines[lineIndex].speaker;Vector3 subject=Mission.Player.position;
             if(!lines[lineIndex].radio&&speaker!="Nam"&&roles.TryGetValue(speaker,out var actor))subject=actor.transform.position;
             if(sceneTask.id=="D1_03"&&speaker=="Ông Sáu")subject=porchDoor-porchOut*.5f;   // his voice from the inner room: look to the doorway
@@ -83,6 +90,7 @@ namespace ShadowVale.Map01
         void EndScene()
         {
             if(sceneTask==null)return; // Repeated finish/skip calls are harmless.
+            if(sceneTask.id=="N2_05")LandAtNightRest();
             foreach(var e in entrances)if(Vector3.Distance(e.actor.transform.position,e.to)>=1.5f)e.actor.StopAt(e.to); // Skipped walks end where the scene meant them to.
             ClearEntrances();
             ReleaseConversation();ReleaseDayScene();ReleaseSceneAction();var task=sceneTask;if(task.id=="N3_09")roles["Hùng"].StopAt(RetreatPoint);int purpose=scenePurpose;scenePurpose=0;namPose?.Dispose();namPose=null;foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();voice.Stop();sceneTask=null;lines=null;rig.ClearCinematicView();health.CinematicInvulnerable=protectedBefore;
@@ -101,6 +109,7 @@ namespace ShadowVale.Map01
         void CommitFinishedTask(Map02ChapterTask task)
         {
             TaskCompleted?.Invoke(task.id);
+            if(task.id=="D2_02"){Bark("m2v3_scoutbridge_01");Bark("m2v3_scoutbridge_02");}
             if(task.id=="D2_03")QueueScoutWarning();
             if(task.id=="N1_03")roles["Hùng"].GoTo(sites["nightOneRest"].position,1.25f);
             if(task.id=="D1_01")roles["Anh Thành"].GoTo(sites["command"].position,1.6f);
@@ -119,6 +128,7 @@ namespace ShadowVale.Map01
             if(task.id=="D3_04")BeginStepsRehearsal();   // Hùng walks Ông Sáu down to the dock steps, then home for supper
             if(State.finished){Mission.World.story.stage=Map02Stage.Complete;Mission.StoreCheckpoint();}
             if(State.finished)Mission.Say("MAP 2 HOÀN THÀNH · Ta giữ được làng. Hùng đã hy sinh cứu chuyến thuyền cuối.");
+            if(task.id=="DAWN")GameCredits.Roll(6f);   // the end of the game: a few seconds on the dawn, then the outro and the title
         }
     }
 }

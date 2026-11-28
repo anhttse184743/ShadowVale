@@ -70,11 +70,17 @@ namespace ShadowVale.Gameplay.Player
         // A nearby ladder may consume Space before stance changes and jumping.
         public System.Func<bool> JumpInteraction { get; set; }
         public System.Func<bool> CrouchInteraction { get; set; }
+        // A story beat that keeps him low (Map 2's wounded crawl): the crouch key cannot stand him up, so there is no
+        // one-frame stand-and-crouch flicker as the story puts him back down.
+        public System.Func<bool> SneakHeld { get; set; }
         // Mission-local movement bounds; applied before collision, including sprint and jump travel.
         public System.Func<Vector3,Vector3,Vector3> MovementConstraint { get; set; }
         public float SurfaceSpeedMultiplier { get; set; } = 1;
         public float? AssistedWalkSpeed { get; set; }
         public float WalkSpeed=>walkSpeed;
+
+        public void SetMovementCamera(Transform view) => cameraTransform = view;
+
         public void RestoreMotion(bool sneaking)
         {
             SetProne(false, true);
@@ -244,12 +250,15 @@ namespace ShadowVale.Gameplay.Player
                     if (_sprintToggled) _sneakToggled = false;
                 }
 
-                if (kb.leftCtrlKey.wasPressedThisFrame || kb.rightCtrlKey.wasPressedThisFrame || kb.cKey.wasPressedThisFrame)
+                // 27/11: Ctrl is the one crouch key. C used to toggle it too (here and again in Map01PlayerInteraction),
+                // so the hints disagreed (Ctrl / [C]) and Ctrl+C in one frame cancelled out.
+                if (kb.leftCtrlKey.wasPressedThisFrame || kb.rightCtrlKey.wasPressedThisFrame)
                 {
                     _sneakToggled = !_sneakToggled;
                     if (_sneakToggled) _sprintToggled = false;
                 }
             }
+            if (SneakHeld != null && SneakHeld()) { _sneakToggled = true; _sprintToggled = false; }
 
             if (SprintAllowed != null && !SprintAllowed()) _sprintToggled = false;
             IsSneaking = _sneakToggled;

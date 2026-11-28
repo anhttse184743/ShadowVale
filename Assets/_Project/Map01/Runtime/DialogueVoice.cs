@@ -7,13 +7,14 @@ namespace ShadowVale.Map01 {
     /// <summary>One spoken character at a time. Remote lines use the catalog's processed radio clips.</summary>
     public sealed class DialogueVoice : MonoBehaviour {
         [Serializable] public sealed class Line {
-            public string id, caption, match, resource, language;
+            public string id, caption, match, resource, language, speaker, voice, provider;
             public bool radio;
             public float duration;
             [NonSerialized] public AudioClip clip;
         }
         [Serializable] sealed class Catalog { public Line[] entries; }
         static Catalog catalog;
+        static readonly HashSet<string> rejectedCasting = new();
         static DialogueVoice active;
         readonly Queue<Line> pending=new();
         readonly HashSet<string> cinematicCues=new();
@@ -27,13 +28,16 @@ namespace ShadowVale.Map01 {
         public static bool AnySpeech=>active!=null&&active.HasSpeech;
         public bool HasSpeech=>pending.Count>0 || source!=null && (source.isPlaying || paused);
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        static void Reset(){catalog=null;active=null;}
+        static void Reset(){catalog=null;active=null;rejectedCasting.Clear();}
         static Line Metadata(string id) {
             if(catalog==null) {
                 var json=Resources.Load<TextAsset>("Dialogue/voice-catalog");
                 catalog=json!=null?JsonUtility.FromJson<Catalog>(json.text):new Catalog{entries=Array.Empty<Line>()};
             }
-            return catalog.entries.FirstOrDefault(e=>e.id==id);
+            var line=catalog.entries.FirstOrDefault(e=>e.id==id);
+            if(line==null||DialogueCasting.IsAllowed(line.speaker,line.voice,line.provider))return line;
+            if(rejectedCasting.Add(line.id))Debug.LogError($"Dialogue voice cast mismatch: {line.id} · {line.speaker} · {line.voice} · {line.provider}");
+            return null;
         }
         public static System.Collections.IEnumerator Preload(string id){
             var line=Metadata(id);if(line==null||line.clip!=null)yield break;
@@ -60,7 +64,7 @@ namespace ShadowVale.Map01 {
                 // Exact-text aliases let chapter cues share an approved recording.
                 // They are alternatives, not additional utterances of the same line.
                 .GroupBy(e=>e.match,StringComparer.Ordinal).Select(group=>group.First())
-                .OrderBy(e=>text.IndexOf(e.match,StringComparison.Ordinal)).Select(e=>Find(e.id)).ToArray();
+                .OrderBy(e=>text.IndexOf(e.match,StringComparison.Ordinal)).Select(e=>Find(e.id)).Where(e=>e!=null).ToArray();
             if(matches.Length==0)return 0;Begin(matches);
             return matches.Sum(e=>e.clip!=null?e.clip.length+.18f:0);
         }

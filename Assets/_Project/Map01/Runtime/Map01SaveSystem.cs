@@ -173,8 +173,12 @@ namespace ShadowVale.Map01
             {
                 try
                 {
-                    if (string.IsNullOrEmpty(missionStart)) { error = "Chưa có mốc đầu nhiệm vụ để lưu lại."; return false; }
-                    var data = PrepareRetry(JsonUtility.FromJson<CheckpointData>(missionStart));
+                    // Fallen during the operation: the checkpoint "Thử lại" goes back to (RestartCurrentMission), not the
+                    // mission start, so quitting dead and continuing gives back the same bag (Khoa, 26/11/2026).
+                    bool operation = mission.PlayerHealth <= 0 && quest.Stage >= Map01Quest.ScoutStage && quest.Stage <= Map01Quest.ReportBossStage && HasOperationCheckpoint;
+                    if (!operation && string.IsNullOrEmpty(missionStart)) { error = "Chưa có mốc đầu nhiệm vụ để lưu lại."; return false; }
+                    var data = PrepareRetry(JsonUtility.FromJson<CheckpointData>(operation ? operationStart : missionStart));
+                    if (operation) data.operationStart = operationStart;
                     ForestSaveSlots.Write(ForestSaveSlots.AutoSlot, new ForestSaveSlots.Entry
                     {
                         sceneName = "Map 1", savedAt = DateTime.UtcNow.ToString("o"), playSeconds = mission.PlaySeconds,

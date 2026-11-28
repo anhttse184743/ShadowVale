@@ -12,7 +12,7 @@ namespace ShadowVale.Gameplay.Combat
         private void Attack()
         {
             // Nothing in hand (a scene without weapon prefabs): there is no punch any more.
-            if (_equipped == null) return;
+            if (_equipped == null || !CanAttack) return;
             if (_equippedKind == WeaponKind.Knife && TrySpecialMelee != null && TrySpecialMelee()) return;
             // Everything that can refuse the shot is settled before a single side effect runs.
             // Pulling the trigger on an empty magazine used to burn the cooldown and play the
@@ -44,8 +44,8 @@ namespace ShadowVale.Gameplay.Combat
             // during sustained fire, but only while the weapon is genuinely mid-burst: once the
             // schedule is more than a cooldown stale the burst is over, and resuming from it
             // would leave no delay at all before the next shot.
-            _nextAttackTime = Time.time - _nextAttackTime > cooldown
-                ? Time.time + cooldown
+            _nextAttackTime = PlayerTime.Now - _nextAttackTime > cooldown
+                ? PlayerTime.Now + cooldown
                 : _nextAttackTime + cooldown;
 
             // The muzzle is where a gunshot is heard from; an empty hand has none, so fall back
@@ -61,7 +61,7 @@ namespace ShadowVale.Gameplay.Combat
             }
             Attacked?.Invoke(_equippedKind, sound.position);
 
-            _upperBodyHoldUntil = Time.time + cooldown + attackLayerTail;
+            _upperBodyHoldUntil = PlayerTime.Now + cooldown + attackLayerTail;
             if (animator != null && _equippedKind != WeaponKind.Pistol && _equippedKind != WeaponKind.Sniper)
             {
                 animator.SetTrigger(AnimatorParams.Attack);
@@ -69,7 +69,7 @@ namespace ShadowVale.Gameplay.Combat
 
             if (_equipped != null && _equipped.IsGun)
             {
-                _faceCameraHoldUntil = Time.time + cooldown + faceCameraTail;
+                _faceCameraHoldUntil = PlayerTime.Now + cooldown + faceCameraTail;
                 _fireHoldUntil = _upperBodyHoldUntil;
                 _pendingGunfire.Add(new PendingGunShot(_equipped,CurrentStance(),_aiming,scopedRay));
             }
@@ -107,6 +107,7 @@ namespace ShadowVale.Gameplay.Combat
 
         private void FireShotAlongRay(Weapon gun,ShooterStance stance,bool aiming,Ray? scopedRay)
         {
+            if (!CanAttack) return;
             Camera cam = Camera.main;
             if (cam == null)
             {
@@ -119,7 +120,7 @@ namespace ShadowVale.Gameplay.Combat
             // How steady the shooter is decides the cone, and how long they have held the
             // trigger widens it. The weapon's own HipSpread is no longer consulted: one flat
             // number could not tell a crouched aimed tap from a shot fired mid-jump.
-            Vector2 kick = _spread.Fire(Time.time, gun.UsesM16Handling);
+            Vector2 kick = _spread.Fire(PlayerTime.Now, gun.UsesM16Handling);
             direction = WeaponSpreadState.Scatter(direction, _spread.ConeHalfAngle(stance, aiming, gun.Kind, gun.UsesM16Handling));
             if (gun.Kind == WeaponKind.Sniper) kick = new Vector2(1.8f,.12f);
             var skills = GetComponent<ShadowVale.Gameplay.Skills.PlayerSkills>();

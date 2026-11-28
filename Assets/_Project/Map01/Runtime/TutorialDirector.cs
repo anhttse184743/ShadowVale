@@ -144,6 +144,7 @@ namespace ShadowVale.Map01
             mission.player.SetPositionAndRotation(checkpoint.position, checkpoint.rotation); body.enabled = true;
             mission.ModernPlayer.enabled = true; mission.ModernPlayer.RestoreMotion(checkpoint.crouched); mission.Crouched = checkpoint.crouched;
             mission.ModernCombat.enabled = true; mission.ModernCombat.RestoreAfterCinematic();
+            GetComponent<Map01Hud>()?.ClearIncomingFire();
             mission.RestoreHealthFromSave(checkpoint.hp); mission.SetStamina(checkpoint.stamina);
             inventory.RestoreFromSave(checkpoint.items, checkpoint.stones, null, 0);
             inventory.SuppressFire = true;
@@ -209,7 +210,7 @@ namespace ShadowVale.Map01
                     if (player.IsSprinting) distance += travel;
                     Progress = distance / mission.Settings.tutorialSprintDistance; done = Progress >= 1; break;
                 case TutorialStep.Crouch:
-                    Cue("CTRL / C", "Nhấn Ctrl hoặc C để đi khom. Nhấn lại để đứng lên.", player.IsSneaking);
+                    Cue("CTRL", "Nhấn Ctrl để đi khom. Nhấn lại để đứng lên.", player.IsSneaking);
                     if (player.IsSneaking) distance += travel;
                     Progress = distance / mission.Settings.tutorialCrouchDistance; done = Progress >= 1; break;
                 case TutorialStep.Weapons:

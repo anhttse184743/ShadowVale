@@ -31,7 +31,6 @@ namespace ShadowVale.Map01.Tests
             {
                 var open=OpenPoint();
                 LoadThrough(m,"D1_03");yield return WaitGameSeconds(1.5f);Interact(m,"D1_04");yield return WaitGameSeconds(.2f);
-                // A load in both hands walks at CarryPace without sprinting (doc Day 1: "Nam chạy chậm lại khi đang khiêng").
                 Assert.AreEqual("D1_04",m.Chapter.State.carry);Place(m,open);yield return CheckMovement(m,Map02ChapterDirector.CarryPace,false);
                 LoadThrough(m,"D2_04");yield return WaitGameSeconds(1.5f);Interact(m,"D2_05");yield return WaitGameSeconds(.2f);
                 Assert.AreEqual("D2_05",m.Chapter.State.carry);Place(m,open);yield return CheckMovement(m,Map02ChapterDirector.CarryPace,false);
@@ -52,6 +51,13 @@ namespace ShadowVale.Map01.Tests
                 keys=new[]{Key.W};yield return WaitGameSeconds(.2f);Assert.IsFalse(m.Chapter.Binoculars,"Releasing F must immediately lower the binoculars.");
                 keys=new[]{Key.F};yield return WaitGameSeconds(.2f);Assert.IsTrue(m.Chapter.Binoculars);
                 m.SetCharacterPanel(1);yield return WaitGameSeconds(.2f);Assert.IsFalse(m.Chapter.Binoculars);m.SetCharacterPanel(0);
+                keys=System.Array.Empty<Key>();yield return WaitGameSeconds(.2f);
+                m.Bag.Add("grenade_f1",1);m.Bag.SelectThrowable("grenade_f1");
+                var thrower=m.GetComponent<Map01StoneThrow>();var actions=m.Player.GetComponent<Map01NamActions>();
+                thrower.BeginAim();yield return WaitGameSeconds(.3f);
+                Assert.IsTrue(thrower.Aiming);Assert.IsTrue(actions.ThrowableHeld,"Map 2 must play the shared throwable hold animation.");
+                Assert.IsTrue(m.Bag.Draw(Map01Inventory.Slot.Primary));yield return null;
+                Assert.IsFalse(actions.ThrowableHeld,"Drawing the rifle must release the throwable pose.");
             }
             finally{keys=System.Array.Empty<Key>();rightDown=false;InputSystem.onBeforeUpdate-=Pump;InputSystem.RemoveDevice(keyboard);InputSystem.RemoveDevice(mouse);RestoreInputRouting(routing);}
             yield return new ExitPlayMode();

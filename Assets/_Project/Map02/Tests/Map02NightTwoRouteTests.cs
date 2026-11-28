@@ -7,6 +7,9 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.TestTools;
+using ShadowVale.Gameplay.Combat;
+using ShadowVale.Gameplay.Enemies;
+using ShadowVale.Gameplay.Player;
 using Object=UnityEngine.Object;
 
 namespace ShadowVale.Map01.Tests
@@ -83,6 +86,132 @@ namespace ShadowVale.Map01.Tests
             try{camera.targetTexture=rt;camera.Render();RenderTexture.active=rt;image.ReadPixels(new Rect(0,0,1000,900),0,0);image.Apply();Directory.CreateDirectory("Logs/Map02Chapter");File.WriteAllBytes("Logs/Map02Chapter/night2-held-flashlight-runtime.png",image.EncodeToPNG());}
             finally{RenderTexture.active=previous;camera.targetTexture=null;Object.DestroyImmediate(image);Object.DestroyImmediate(rt);Object.DestroyImmediate(go);}
         }
+        [UnityTest,Timeout(180000)]public IEnumerator NightPatrolPlaysFailureSceneAfterTheRadioReport()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
+            Map02Mission m=null;float until=Time.realtimeSinceStartup+100;
+            while(Time.realtimeSinceStartup<until){m=Object.FindFirstObjectByType<Map02Mission>();if(m?.Ready==true&&m.Chapter!=null)break;Object.FindFirstObjectByType<Map02Arrival>()?.Skip();yield return null;}
+            Assert.NotNull(m?.Chapter);var c=m.Chapter;c.enabled=false;
+            Load(m,"N2_01");Place(m,Marker("N2_02").transform.position);
+            var combat=m.Player.GetComponent<PlayerCombat>();
+            Assert.IsTrue(combat.AttackAllowed());
+            Assert.IsTrue(m.Interact(Marker("N2_02")));Assert.IsTrue(c.NightPatrolScriptedApproach);
+            CheckNightAttacksBlocked(m,combat);
+            // Let the normal world tick drive the warning and cinematic using an actual walkable point in the beam.
+            typeof(Map02ChapterDirector).GetField("patrolLoadGrace",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(c,0f);
+            Assert.IsTrue(PlaceInPatrolBeam(m),"No unobstructed point in the authored patrol light was found.");
+            Call(c,"TickPatrol",0f);Assert.AreEqual(1,c.State.patrolWarnings);
+            Assert.AreEqual(1.5f,c.State.patrolFocusSeconds,.001f);
+            Assert.IsFalse(m.InputBlocked,"The warning must still let Nam go prone.");
+            AssertPatrolLine(c,"night2_patrol_warning","Có người ở bờ mương! Bên kia!");
+            var standingWarning=SaveNightMission(m,"N2_03");
+            Assert.AreEqual(1.5f,standingWarning.chapter.patrolFocusSeconds,.001f);
+            Assert.IsFalse(standingWarning.chapter.patrolWarningHidden);
+            var camera=m.GameCamera.GetComponent<ThirdPersonCamera>();
+            camera.RestoreLook(Quaternion.LookRotation(c.NightPatrolPosition+Vector3.up-m.Player.position));
+            c.enabled=true;
+            yield return null;
+            yield return new WaitForEndOfFrame();
+            var cameraStart=m.GameCamera.transform.position;
+            ScreenCapture.CaptureScreenshot("Logs/Map02Chapter/night2-patrol-warning.png");
+            until=Time.realtimeSinceStartup+12f;
+            while(!c.NightPatrolFailureActive&&Time.realtimeSinceStartup<until)yield return null;
+            Assert.IsTrue(c.NightPatrolFailureActive,"Standing through the warning must play the scene.");
+            Assert.IsTrue(m.InputBlocked);Assert.IsFalse(m.World.story.failed);
+            while(!(bool)Field(c,"nightFireOrderStarted")&&Time.realtimeSinceStartup<until)yield return null;
+            Assert.IsTrue((bool)Field(c,"nightFireOrderStarted"));
+            AssertPatrolLine(c,"night2_patrol_fire_order","Tiêu diệt con chuột nhắt đó đi!");
+            Assert.AreEqual(3,c.Enemies.Count(e=>e.group==Map02ChapterDirector.NightPatrolGroup&&e.GetComponent<EnemyFeedback>()!=null),
+                "All three guards fire once the camera reaches the patrol.");
+            Assert.Greater(Vector3.Distance(cameraStart,m.GameCamera.transform.position),1f,"The rendering camera must move to the patrol.");
+            ScreenCapture.CaptureScreenshot("Logs/Map02Chapter/night2-patrol-cutscene.png");
+            var actor=m.Player.GetComponentInChildren<Animator>();Assert.NotNull(actor);
+            until=Time.realtimeSinceStartup+10f;
+            while(!actor.GetCurrentAnimatorStateInfo(0).IsName("Die")&&!m.World.story.failed&&Time.realtimeSinceStartup<until)yield return null;
+            Assert.IsTrue(actor.GetCurrentAnimatorStateInfo(0).IsName("Die"),"Nam must play his death animation before the failure screen.");
+            while(!m.World.story.failed&&Time.realtimeSinceStartup<until)yield return null;
+            Assert.IsTrue(m.World.story.failed,"The cutscene must reach the failure screen before retrying.");
+            until=Time.realtimeSinceStartup+15f;
+            while(c.NightPatrolFailureActive&&Time.realtimeSinceStartup<until)yield return null;
+            Assert.IsFalse(c.NightPatrolFailureActive);Assert.IsFalse(m.World.story.failed);
+            Assert.IsTrue(c.State.Done("N2_02"));Assert.AreEqual(0,c.State.patrolWarnings);
+            c.enabled=false;
+            typeof(Map02ChapterDirector).GetField("patrolLoadGrace",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(c,0f);
+            Assert.IsTrue(PlaceInPatrolBeam(m));
+            Call(c,"TickPatrol",0f);
+            var motor=m.Player.GetComponent<PlayerController>();
+            m.Player.GetComponent<CharacterController>().Move(Vector3.down*.2f);
+            Assert.IsTrue(motor.TrySetProne(true));
+            Call(c,"TickPatrol",.5f);
+            var hiddenWarning=SaveNightMission(m,"N2_03");
+            Assert.AreEqual(1,hiddenWarning.chapter.patrolFocusSeconds,.001f);
+            Assert.IsTrue(hiddenWarning.chapter.patrolWarningHidden);
+            m.Restore(hiddenWarning);yield return null;
+            Call(c,"TickPatrol",1.01f);
+            Assert.AreEqual(1,c.State.patrolFocusSeconds,.001f,"Loading must give Nam control before the saved warning counts down.");
+            Call(c,"TickPatrol",1f);
+            Call(c,"TickPatrol",1.01f);
+            Assert.AreEqual(0,c.State.patrolFocusSeconds);
+            Assert.IsFalse(c.NightPatrolFailureActive,"Going prone within the warning saves Nam once.");
+            Assert.AreEqual(1,c.State.patrolWarnings);
+            Assert.IsTrue(motor.TrySetProne(false));
+            Assert.IsTrue(PlaceInPatrolBeam(m));
+            Call(c,"TickPatrol",0f);
+            Assert.IsTrue(c.NightPatrolFailureActive,"Being exposed again must start the cutscene immediately.");
+            Assert.AreEqual(0f,c.State.patrolFocusSeconds);
+            c.Cancel();
+            yield return new ExitPlayMode();
+        }
+        static void CheckNightAttacksBlocked(Map02Mission m,PlayerCombat combat)
+        {
+            Assert.IsFalse(combat.AttackAllowed());
+            var attack=typeof(PlayerCombat).GetMethod("Attack",BindingFlags.Instance|BindingFlags.NonPublic);
+            int attacks=0;
+            combat.Attacked+=(_,__)=>attacks++;
+            var original=combat.EquippedKind;
+            try
+            {
+                Assert.IsTrue(combat.Equip(WeaponKind.Rifle));
+                int rounds=combat.RoundsInMagazine;
+                attack.Invoke(combat,null);
+                Assert.AreEqual(rounds,combat.RoundsInMagazine);
+                Assert.IsTrue(combat.Equip(WeaponKind.Knife));
+                attack.Invoke(combat,null);
+                Assert.IsFalse(m.TrySkillTakedown());
+                Assert.AreEqual(0,attacks);
+            }
+            finally{combat.Equip(original);}
+        }
+        static void AssertPatrolLine(Map02ChapterDirector c,string recording,string caption)
+        {
+            var audio=(AudioSource)Field(c,"nightWarningAudio");
+            Assert.NotNull(audio);Assert.NotNull(audio.clip);
+            Assert.AreSame(Resources.Load<AudioClip>("OperationsAudio/"+recording),audio.clip);
+            Assert.IsTrue(audio.isPlaying,"The patrol line must start playing.");
+            Assert.AreEqual(caption,Field(c,"nightPatrolCaption"));
+        }
+        static bool PlaceInPatrolBeam(Map02Mission m)
+        {
+            var c=m.Chapter;
+            for(int phase=0;phase<10;phase++)
+            {
+                c.State.patrolScanSeconds=phase;
+                Call(c,"TickPatrol",0f);
+                foreach(var beam in c.NightPatrolLights)
+                for(int meters=6;meters<38;meters+=2)
+                {
+                    var origin=beam.transform.position;
+                    var point=origin+beam.transform.forward*meters-Vector3.up;
+                    if(!NavMesh.SamplePosition(point,out var floor,2,NavMesh.AllAreas)||!c.NightBankPositionAllowed(floor.position)||
+                        Vector3.Distance(floor.position,c.NightDoorStand)<4)continue;
+                    Place(m,floor.position);
+                    if(Vector3.Angle(beam.transform.forward,m.Player.position+Vector3.up-origin)>=10)continue;
+                    var args=new object[]{c.NightPatrolPosition+Vector3.up*1.7f,c.NightPatrolLight.transform.forward,0f,0f};
+                    if((bool)Call(c,"NightPatrolExposure",args))return true;
+                }
+            }
+            return false;
+        }
         [Test]public void VersionThreeDefaultsKeepCompletedTasksAndResetTheWholeNightRoute()
         {
             var state=Through("N2_03");state.night2GuidanceStage=0;state.night2RouteVisited=null;state.Validate();Assert.IsTrue(state.Done("N2_03"));Assert.AreEqual(1,state.night2GuidanceStage);Assert.NotNull(state.night2RouteVisited);
@@ -98,7 +227,13 @@ namespace ShadowVale.Map01.Tests
             Assert.NotNull(m?.Chapter);var c=m.Chapter;c.enabled=false;
             try
             {
+                Load(m,"D2_07");Place(m,c.NightObservationSpawn);
+                Assert.IsTrue(c.TryReachNightObservationCheckpoint(m.Player.position));
+                Assert.IsTrue(SaveNightMission(m,"N2_01").chapter.night2ObservationCheckpointReached);
+                yield return null;
                 Load(m,"N2_01");Assert.AreEqual(3,c.NightPatrolLights.Count(l=>l!=null&&l.enabled));
+                SaveNightMission(m,"N2_02");
+                yield return null;
                 var hung=c.Actor("Hùng").transform.position;Place(m,Marker("N2_02").transform.position);Assert.IsTrue(m.Interact(Marker("N2_02")));Assert.IsTrue(c.State.Done("N2_02"));Assert.IsFalse(c.Busy||m.InputBlocked);Assert.IsTrue(m.CanSave());
                 Call(c,"TickNightRadio",20f,70f,false,12f);Assert.AreEqual(1,c.State.night2GuidanceStage,"A line saying the light approaches must wait for the real turn.");
                 Call(c,"TickNightRadio",0f,20f,true,12f);Assert.AreEqual(2,c.State.night2GuidanceStage);
@@ -113,18 +248,39 @@ namespace ShadowVale.Map01.Tests
                 Assert.Less(Vector3.Distance(hung,c.Actor("Hùng").transform.position),.01f,"Hùng remains at the radio station.");
 
                 Place(m,c.NightDoorStand);Call(c,"Update");Assert.IsFalse(c.State.Done("N2_03"),"Arriving at the store alone cannot inspect the door.");
+                Assert.IsTrue(m.Player.GetComponent<PlayerCombat>().AttackAllowed(),"Weapon restrictions end at the store.");
                 var camera=Object.FindObjectsByType<ShadowVale.Gameplay.Player.ThirdPersonCamera>(FindObjectsSortMode.None).First(r=>r.GetComponent<Camera>().enabled);camera.enabled=false;
                 Assert.IsTrue(c.NightBankMovementRestricted);Assert.IsTrue(c.NightBankPositionAllowed(c.Sites["command"].position),"Only the river is blocked, not village roads.");
                 Assert.IsFalse(m.Interact(Marker("N2_03")),"Surface arrival cannot inspect underground supplies.");
                 var store=c.UndergroundStore;Assert.IsTrue(store.TryDoorInteraction());Assert.IsFalse(c.State.Done("N2_03"));yield return WaitGameSeconds(1.3f);
+                var animator=m.Player.GetComponentInChildren<Animator>();
+                var controller=animator.runtimeAnimatorController;
+                var combat=m.Player.GetComponent<PlayerCombat>();
+                var weapon=combat.EquippedKind;
+                var character=m.Player.GetComponent<CharacterController>();
+                Assert.NotNull(controller);
                 Place(m,store.TopStand);m.Player.GetComponent<CharacterController>().Move(Vector3.down*.12f);Assert.IsTrue(store.TryEnterLadder());
+                store.StepTraversal(.1f,true,false);
+                store.CancelTraversal();
+                Assert.IsTrue(character.enabled);
+                Assert.AreSame(controller,animator.runtimeAnimatorController);
+                Assert.AreEqual(weapon,combat.EquippedKind);
+                Assert.IsFalse(combat.HandsOccupied);
+                Place(m,store.TopStand);character.Move(Vector3.down*.12f);Assert.IsTrue(store.TryEnterLadder());
                 for(int i=0;i<90&&store.IsClimbing;i++)store.StepTraversal(.1f,true,false);
-                Assert.IsTrue(store.Inside);Place(m,store.InspectionPoint);c.UpdateMarkers();Assert.IsTrue(m.Interact(Marker("N2_03")));Assert.IsTrue(c.State.Done("N2_03"));Assert.IsTrue(c.State.night2ChainCuePlayed);Assert.IsFalse(c.NightBankMovementRestricted);
+                Assert.AreSame(controller,animator.runtimeAnimatorController);
+                Assert.AreEqual((int)weapon,animator.GetInteger(PlayerCombat.AnimatorParams.Weapon));
+                Assert.IsTrue(store.Inside);Place(m,store.InspectionPoint);
+                var insideStore=SaveNightMission(m,"N2_03");
+                m.Restore(insideStore);yield return null;
+                Assert.IsTrue(store.Inside);Assert.Less(Vector3.Distance(store.InspectionPoint,m.Player.position),.3f);
+                c.UpdateMarkers();Assert.IsTrue(m.Interact(Marker("N2_03")));Assert.IsTrue(c.State.Done("N2_03"));Assert.IsTrue(c.State.night2ChainCuePlayed);Assert.IsFalse(c.NightBankMovementRestricted);
                 CaptureDoor(c);
                 Place(m,store.BottomStand);m.Player.GetComponent<CharacterController>().Move(Vector3.down*.12f);Assert.IsTrue(store.TryEnterLadder(true));for(int i=0;i<90&&store.IsClimbing;i++)store.StepTraversal(.1f,false,true);Assert.IsFalse(store.Inside);
                 Place(m,c.EvacuationChoicePoint(0));Call(c,"TickNightTwoRoute",0f);
                 Assert.IsTrue(c.EvacuationMenuVisible);
                 Assert.IsTrue(c.SelectEvacuationChoice(3),"Village can be the first and only inspected route.");
+                Assert.AreEqual(3,SaveNightMission(m,"N2_04").chapter.night2EvacuationChoice);
                 Assert.Less(Vector3.Distance(Marker("N2_04").transform.position,c.EvacuationChoicePoint(3)),.05f);
                 Assert.AreEqual(5,c.Enemies.Count(e=>e.group==Map02ChapterDirector.EvacuationPatrolGroup));
                 Place(m,c.EvacuationChoicePoint(3));Assert.IsFalse(c.State.Done("N2_04"),"Arrival alone does not report.");
@@ -137,6 +293,7 @@ namespace ShadowVale.Map01.Tests
                 Assert.AreEqual(0,c.State.night2RejectedRoutes);
                 // No warning or kill is required for any of these inspections.
                 Assert.AreEqual(0,c.State.patrolWarnings);Assert.AreEqual(3,c.Enemies.Count(e=>e.group==Map02ChapterDirector.NightPatrolGroup&&!e.Dead));
+                SaveNightMission(m,"N2_05");
                 Place(m,Marker("N2_05").transform.position);Call(c,"TickNightRadio",20f,90f,false,90f);Assert.IsTrue(m.Interact(Marker("N2_05")));Assert.AreEqual("N2_05",c.CurrentScene?.id);Call(c,"EndScene");Assert.AreEqual(4,c.State.phase);
             }
             finally{m.SetPaused(false);c.Cancel();c.enabled=true;}
@@ -155,6 +312,16 @@ namespace ShadowVale.Map01.Tests
             foreach(var point in c.NightTwoRoute){var path=new NavMeshPath();Assert.IsTrue(NavMesh.CalculatePath(previous,point,NavMesh.AllAreas,path));Assert.AreEqual(NavMeshPathStatus.PathComplete,path.status);Map02DayTwoRouteTests.WalkRoute(m,path.corners,"night2 evacuation");previous=point;}
         }
         static object Field(Map02ChapterDirector c,string field)=>typeof(Map02ChapterDirector).GetField(field,BindingFlags.Instance|BindingFlags.NonPublic).GetValue(c);
+        static Map02Mission.Snapshot SaveNightMission(Map02Mission mission,string task)
+        {
+            const int slot=3;
+            Assert.IsTrue(mission.SaveSlot(slot,out var error),$"{task}: {error}");
+            var entry=ForestSaveSlots.Read(slot);
+            Assert.AreEqual("Map 2",entry.sceneName);
+            var saved=Map02Mission.Parse(entry.checkpoint);
+            Assert.AreEqual(task,saved.chapter.TrackedTask?.id);
+            return saved;
+        }
         static object Call(Map02ChapterDirector c,string method,params object[] args)=>typeof(Map02ChapterDirector).GetMethod(method,BindingFlags.Instance|BindingFlags.NonPublic).Invoke(c,args);
         static Map02ObjectiveObject Marker(string id)=>Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId==id);
         static Map02ChapterState Through(string id){var state=new Map02ChapterState();foreach(var t in Map02ChapterDefinition.Load().tasks){Assert.IsTrue(state.Complete(t.id),t.id);if(t.id==id)break;}return state;}

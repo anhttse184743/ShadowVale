@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 339a0f230671aa94f87ab57f87b3cafb, type: 3}
   m_Name: Map02DayOneArt
-  m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map02DayOneArt
+  m_EditorClassIdentifier: ShadowVale.Map02::ShadowVale.Map01.Map02DayOneArt
   actions:
   - id: Carry
     clip: {fileID: 7400000, guid: 76be74ac9be768c48a1449a3eaf37e23, type: 2}

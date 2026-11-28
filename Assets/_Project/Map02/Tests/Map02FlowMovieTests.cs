@@ -129,10 +129,12 @@ namespace ShadowVale.Map01.Tests
                     else if(task.kind=="defend"||task.kind=="coverFire")
                     {
                         movie.note="GIAO TRANH MÔ PHỎNG · Video kiểm tra thứ tự nhiệm vụ, không đo cân bằng chiến đấu.";
-                        float limit=Time.time+(task.kind=="coverFire"?Map02ChapterDirector.CoverSlowest+20:150),fire=Time.time;
+                        float limit=Time.time+(task.kind=="coverFire"?Map02ChapterDirector.CoverSeconds+20:150),fire=Time.time;
                         while(!chapter.State.Done(task.id)&&chapter.CurrentScene==null&&Time.time<limit)
                         {
-                            if(Time.time>fire+4)
+                            if(task.kind=="coverFire"&&chapter.CoverFocusActive)   // a wave is out: the slowed 3 s are real seconds
+                            {foreach(var enemy in chapter.CoverWaveEnemies.Where(e=>!e.Dead).ToArray())enemy.HitPoints.TakeDamage(200,enemy.transform.position,mission.Player.gameObject);}
+                            else if(task.kind!="coverFire"&&Time.time>fire+4)
                             {
                                 foreach(var enemy in chapter.Enemies.Where(e=>e!=null&&!e.Dead).ToArray())
                                 {enemy.HitPoints.TakeDamage(200,enemy.transform.position,mission.Player.gameObject);yield return WaitGameSeconds(.65f);}
@@ -142,7 +144,7 @@ namespace ShadowVale.Map01.Tests
                         }
                         yield return Dialogue();
                     }
-                    else if(task.kind=="crawl") {Key(UnityEngine.InputSystem.Key.C);yield return WaitDoneOrScene(task.id,40);Key();yield return Dialogue();}
+                    else if(task.kind=="crawl") {Key(UnityEngine.InputSystem.Key.LeftCtrl);yield return WaitDoneOrScene(task.id,40);Key();yield return Dialogue();}
                     else yield return Dialogue();
                     yield return WaitDone(task.id,12);
                     movie.Snapshot(task.id);yield return WaitGameSeconds(.8f);

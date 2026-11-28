@@ -35,7 +35,13 @@ namespace ShadowVale.Map01
         public static Map01Pistol Install(Map01Mission owner)=>Install(CharacterHudSession.For(owner.gameObject));
         public static Map01Pistol Install(CharacterHudSession owner)
         {
-            var existing=owner.player.GetComponent<Map01Pistol>();if(existing!=null){existing.mission=owner;existing.combat=owner.ModernCombat;existing.actions=Map01NamActions.For(owner.MapOne);return existing;}
+            var existing=owner.player.GetComponent<Map01Pistol>();
+            if(existing!=null)
+            {
+                existing.mission=owner;existing.combat=owner.ModernCombat;existing.actions=Map01NamActions.For(owner);
+                if(existing.data!=null){existing.aim=existing.weight=0;existing.wasReloading=false;existing.shotAt=-100;existing.enabled=true;}
+                return existing;
+            }
             if(owner.Bundle?.weapons==null||!owner.Bundle.weapons.Any(w=>w!=null&&w.id=="pistol_k54"))return null;
             var asset=Resources.Load<Map01PistolAnimationData>("Weapons/K54V12");
             if(asset==null){Debug.LogError("K54 v12 animation asset is missing; rebuild ShadowVale/K54/Build approved assets.");return null;}
@@ -46,7 +52,7 @@ namespace ShadowVale.Map01
         void Bind(CharacterHudSession owner,Map01PistolAnimationData asset)
         {
             mission=owner;data=asset;combat=owner.ModernCombat;actor=GetComponentInChildren<Animator>();
-            actions=Map01NamActions.For(owner.MapOne);
+            actions=Map01NamActions.For(owner);
             var map=actor.GetComponentsInChildren<Transform>(true).GroupBy(t=>t.name).ToDictionary(g=>g.Key,g=>g.First());
             bones=data.bones.Select(t=>map.TryGetValue(t.name,out var bone)?bone:null).ToArray();
             rightHand=map.TryGetValue("RightHand",out var handBone)?handBone:actor.isHuman?actor.GetBoneTransform(HumanBodyBones.RightHand):null;
@@ -76,7 +82,7 @@ namespace ShadowVale.Map01
         }
         void OnShot(WeaponKind kind,Vector3 point){if(kind==WeaponKind.Pistol)shotAt=Time.time;}
         bool Available => mission!=null&&combat!=null&&combat.EquippedKind==WeaponKind.Pistol&&actor!=null&&actor.isActiveAndEnabled
-            && !mission.Cinematic && !(mission.ModernHealth?.IsDead??false)
+            && actor.runtimeAnimatorController!=null && !mission.Cinematic && !combat.HandsOccupied && !(mission.ModernHealth?.IsDead??false)
             && !(mission.Binoculars?.Binoculars??false)&&!(mission.GetComponent<Map01Inventory>()?.IsFieldCrafting??false) && !(actions!=null&&(actions.Busy||actions.StoneActionPlaying));
         void LateUpdate()
         {
@@ -85,7 +91,7 @@ namespace ShadowVale.Map01
             // Story actions own the arms immediately. A weapon swap blends back into locomotion.
             bool interrupted=combat.EquippedKind==WeaponKind.Pistol&&!active;
             if(interrupted)combat.CancelReload();
-            weight=interrupted?0:Mathf.MoveTowards(weight,active?1:0,Time.deltaTime/combat.StanceBlendSeconds);
+            weight=interrupted||mission?.Cinematic==true||actor==null||actor.runtimeAnimatorController==null?0:Mathf.MoveTowards(weight,active?1:0,Time.deltaTime/combat.StanceBlendSeconds);
             if(twist!=null){if(weight>0&&authoredTwist&&!ownsTwist){ownsTwist=true;twist.BeginAuthoredPose();}else if(weight<=0||!authoredTwist)ReleaseTwist();}
             if(weight<=0){if(combat.EquippedKind==WeaponKind.Pistol)combat.GunPresentationReady=false;return;}
             clock+=Time.deltaTime;

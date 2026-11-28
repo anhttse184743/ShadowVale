@@ -22,6 +22,7 @@ namespace ShadowVale.Map01.Tests
             Assert.NotNull(mission?.Chapter);chapter=mission.Chapter;chapter.enabled=false;
         }
         static void Call(string method,params object[] args)=>typeof(Map02ChapterDirector).GetMethod(method,Private).Invoke(chapter,args);
+        static object Field(string name)=>typeof(Map02ChapterDirector).GetField(name,Private).GetValue(chapter);
         static float Clock=>(float)typeof(Map02ChapterDirector).GetField("sceneClock",Private).GetValue(chapter);
         static void Load(string id)
         {
@@ -60,9 +61,22 @@ namespace ShadowVale.Map01.Tests
             try
             {
                 Load("N3_08");Assert.AreEqual("N3_09",chapter.CurrentScene?.id);
+                Assert.AreEqual("Nam_Crouch_Walk_New",(Field("crouchWalk") as AnimationClip)?.name,"Use the approved crouch walk even after Nam's controller is detached.");
+                Assert.AreEqual("Nam_Crouch_Idle_V21",(Field("crouchIdle") as AnimationClip)?.name);
+                Until("N3_09",Map02ChapterDirector.RiseEnd-.2f);
+                Call("HungChargeLate");
+                Assert.NotNull(Field("hungCarry"),"Hùng must be carrying the charge before he reaches the tracks.");
+                Until("N3_09",Map02ChapterDirector.RiseEnd+.1f);
+                Assert.AreEqual("N3_09",chapter.CurrentScene?.id);
+                Assert.NotNull(chapter.Tank);
+                Assert.IsNull(Field("hungCarry"),"The carry graph must be released before the planting pose samples Hùng's Animator.");
+                Assert.NotNull(Field("hungActionPose"),$"Hùng must keep the authored crouch at the tracks (scene time {Clock:F2}, visible: {HungVisible}).");
                 Until("N3_09",Map02ChapterDirector.ShotAt-.2f);Assert.IsFalse(chapter.State.hungDead);if(HungArt)Assert.IsTrue(HungVisible,"Hùng is alive until the shot at 8 s.");Assert.AreEqual("blocking",chapter.TankStage);
                 Until("N3_09",Map02ChapterDirector.ShotAt+.3f);Assert.AreNotEqual("destroyed",chapter.TankStage,"One second between his fall and the blast.");
-                Until("N3_09",Map02ChapterDirector.BlastAt+.4f);Assert.AreEqual("destroyed",chapter.TankStage);
+                Assert.IsTrue(HungVisible,"Keep Hùng visible while the authored hit and fall plays.");
+                var selected=typeof(Map01CinematicPose).GetField("selected",Private).GetValue(Field("hungActionPose"));
+                Assert.AreSame(chapter.Layout.hungFallClip,selected);
+                Until("N3_09",Map02ChapterDirector.BlastAt+.4f);Assert.AreEqual("destroyed",chapter.TankStage);Assert.IsFalse(HungVisible);
                 Assert.LessOrEqual(chapter.ListenerCutoff,10.5f,"Deaf right after the blast.");Assert.Greater(chapter.EffectGrey,0);
                 Until("N3_09",Map02ChapterDirector.EchoAt-.5f);Assert.IsTrue(chapter.WaitingForLine);Assert.AreEqual("m2v3_sacrifice_02",chapter.CurrentLineId);
                 Until("N3_09",Map02ChapterDirector.EchoAt+.3f);Assert.IsFalse(chapter.WaitingForLine,"The promise echoes after the blast.");

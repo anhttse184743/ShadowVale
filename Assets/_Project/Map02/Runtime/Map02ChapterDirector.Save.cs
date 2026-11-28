@@ -30,7 +30,8 @@ namespace ShadowVale.Map01
             // Saves from before evacuation-driven lanes stored seconds held.
             var held=Map02ChapterDefinition.Load().Find(State.activeTask);if(held!=null&&held.kind=="defend"&&State.taskProgress>1)State.taskProgress=Mathf.Clamp01(State.taskProgress/Mathf.Max(1,held.seconds));
             if(State.completed.Count==0)foreach(var pair in initialRolePositions)roles[pair.Key].StopAt(pair.Value);
-            placedActors=false;phaseApplied=-1;ApplyState();
+            placedActors=false;phaseApplied=-1;ResetActorsForNewDay();ApplyState();
+            if(State.activeTask==Escort&&!State.Done(Escort))ResumeCover();   // a load mid-cover: the unfinished wave starts again
             foreach(var saved in State.actors)if(roles.TryGetValue(saved.role,out var actor))actor.StopAt(saved.position);
             PlaceChildWithMother();
             if(State.phase==2||State.phase==3){roles["Anh Thành"].StopAt(sites["command"].position);if(State.Done("D2_04"))PlaceRecoveredScout();}
@@ -40,7 +41,7 @@ namespace ShadowVale.Map01
             if(State.phase>=5&&State.Done("N3_02"))foreach(var name in new[]{"Ông Sáu","Chị Lành"})if(Vector3.Distance(roles[name].transform.position,sites["southStore"].position)>8)roles[name].StopAt(sites["southStore"].position+(name=="Ông Sáu"?Vector3.right:Vector3.left)*1.4f);
             if(State.phase>=5&&State.Done("N3_03")&&Vector3.Distance(roles["Bé Tí"].transform.position,sites["southStore"].position)>8)roles["Bé Tí"].StopAt(SafeSpot("Bé Tí"));
             hungCanal=null;
-            if(State.activeTask=="N3_08"&&State.taskProgress>1){State.coverClock=State.taskProgress;State.taskProgress=Mathf.Clamp01(State.coverClock/CoverSlowest);} // Saves that counted seconds.
+            if(State.activeTask=="N3_08"&&State.taskProgress>1){State.coverClock=State.taskProgress;State.taskProgress=Mathf.Clamp01(State.coverClock/CoverSeconds);} // Saves that counted seconds.
             if(State.phase==5&&State.Done("N3_00")&&!State.hungDead)
             {
                 if(State.activeTask=="N3_08"){TickTank(0,true);roles["Hùng"].StopAt(Along(HungCanal,State.taskProgress*Length(HungCanal)));pansDone=Mathf.FloorToInt(State.taskProgress*3);}
@@ -53,10 +54,12 @@ namespace ShadowVale.Map01
                 else if(workTask.kind=="rescueFamily"||workTask.kind=="rescueChild")
                 {if(State.introduced.Contains(workTask.id))StartRescueEscort(workTask);}
             }
-            handsBusy=!string.IsNullOrEmpty(State.carry);combat.SetHandsOccupied(handsBusy);
+            handsBusy=!string.IsNullOrEmpty(State.carry)||CarryingAntenna;combat.SetHandsOccupied(handsBusy);UpdateWorkWeapon();
             player.SurfaceSpeedMultiplier=State.wounded?WoundedPace:1;
             player.SprintAllowed=CanSprintDuringChapter;
             detectionClock=0;scannedAt=-99;patrolLoadGrace=2;
+            if(NightPatrolScriptedApproach&&State.patrolFocusSeconds>0&&!State.patrolWarningHidden)
+                ShowNightPatrolSuspicion();
             if(State.phase==1&&State.Done("N1_03")&&!State.Done("N1_04"))roles["Hùng"].GoTo(sites["nightOneRest"].position,1.25f);
             ArrangeDayFamily();UpdateMarkers();SyncDayProps();TickLight(10f);
             TickTank(0,true);TickBoats(0,true);
@@ -74,17 +77,49 @@ namespace ShadowVale.Map01
         }
         public void Cancel()
         {
+            var playerRoot=Mission!=null?Mission.Player:null;
+            if(sceneTask?.id=="N2_05"&&nightRestHouse!=null&&playerRoot!=null)
+                playerRoot.SetPositionAndRotation(nightNamStart,nightNamStartRotation);
             if(doingWork&&workTask?.kind=="antenna"){doingWork=false;ReleaseAntennaTraversal();}
             antennaTied=false;
             CancelEvacuationCapture();
             CancelEvacuationChoices();
             CancelNightPatrolFailure();
+            EndCoverFocus();coverFailClock=-1;liveWave=-1;if(coverZone!=null)coverZone.enabled=false;
             UndergroundStore?.CancelTraversal();
             CancelNightRadio();
             EndScoutEscort();
             ReleaseWorkWeapon();ReleaseDayScene();ReleaseDayFreePose();CloseDay(false);EndDuck();dayReturnInput=false;dayArrivalStarting=dayDockEnding=false;
             if(health!=null&&sceneTask!=null)health.CinematicInvulnerable=protectedBefore;
-            ClearEntrances();DropBarks();ReleaseConversation();ReleaseSceneAction();phaseFade=0;binocularHeld=false;binocular=false;observed=0;detectionClock=0;if(rig!=null)rig.SetBinoculars(false,1);if(combat!=null)combat.SetHandsOccupied(false);handsBusy=false;if(namPose!=null){namPose.Dispose();namPose=null;combat?.RestoreAfterCinematic();}foreach(var w in hiddenWeapons)if(w!=null)w.SetActive(true);hiddenWeapons.Clear();if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}voice?.Stop();if(Patching)EndPatch();EndStepsRehearsal();sceneTask=null;doingWork=false;lines=null;escort?.StopAt(escort.transform.position);escort=null;secondaryEscort?.StopAt(secondaryEscort.transform.position);secondaryEscort=null;rig?.ClearCinematicView();
+            ClearEntrances();DropBarks();ReleaseConversation();ReleaseSceneAction();
+            phaseFade=0;binocularHeld=false;binocular=false;observed=0;detectionClock=0;handsBusy=false;
+            if(rig!=null)rig.SetBinoculars(false,1);
+            bool hadPose=namPose!=null;
+            namPose?.Dispose();namPose=null;
+            foreach(var weapon in hiddenWeapons)if(weapon!=null)weapon.SetActive(true);
+            hiddenWeapons.Clear();
+            if(combat!=null)
+            {
+                combat.SetHandsOccupied(false);
+                if(hadPose)combat.RestoreAfterCinematic();
+            }
+            if(signalAudio!=null){signalAudio.Stop();Destroy(signalAudio);signalAudio=null;}
+            if(voice!=null)voice.Stop();
+            if(Patching)EndPatch();
+            EndStepsRehearsal();sceneTask=null;doingWork=false;lines=null;
+            if(escort!=null)escort.StopAt(escort.transform.position);
+            if(secondaryEscort!=null)secondaryEscort.StopAt(secondaryEscort.transform.position);
+            escort=secondaryEscort=null;
+            if(rig!=null)rig.ClearCinematicView();
+        }
+        /// <summary>A new day or night played straight on starts its people as a load (or the test tools) would: no clip still
+        /// forced on anyone, no one left sitting from the day before. What the new phase wants is put back after (Tâm rests
+        /// seated only through Day 2 and Night 2) and by the presentation each frame (26/11/2026).</summary>
+        void ResetActorsForNewDay()
+        {
+            foreach(var actor in roles.Values){if(actor==null)continue;actor.ReleasePerformance();actor.SetSitting(false);}
+            EndDuck();
+            if((State.phase==2||State.phase==3)&&State.Done("D2_04"))PlaceRecoveredScout();
         }
         void ApplyState()
         {
@@ -106,14 +141,14 @@ namespace ShadowVale.Map01
             roles["Tâm"].SetVisible(State.phase>=2);
             roles["Tâm"].SetInjured(State.phase==2&&!State.Done("D2_04")&&State.activeTask!="D2_04");
             PlaceChildWithMother();
-            if(phaseChanged){phaseFade=1.2f;player.RestoreMotion(false);TickLight(10f);}
+            if(phaseChanged){phaseFade=1.2f;player.RestoreMotion(false);TickLight(10f);ResetActorsForNewDay();}
             health.CinematicInvulnerable=State.Done("N3_WOUND")&&!State.Done("N3_CRAWL")||State.activeTask=="N3_08";
             combat.ReloadDurationMultiplier=State.wounded?1.35f:1;
             if(State.finished)health.CinematicInvulnerable=true;
             if(State.phase==5&&State.activeTask=="N3_08")health.CinematicInvulnerable=true;
-            foreach(var unit in Enemies)if(unit!=null){if(State.Done("N3_09"))unit.gameObject.SetActive(false);else if(unit.group=="scout_patrol")unit.gameObject.SetActive(State.phase==2);}
+            foreach(var unit in Enemies)if(unit!=null){if(State.Done("N3_09"))unit.gameObject.SetActive(false);else if(unit.group=="scout_patrol")unit.gameObject.SetActive(State.phase==2);else if(unit.group==ScoutAmbushGroup)unit.gameObject.SetActive(State.phase==2&&!State.Done("D2_04"));}
             HungLocomotion();
-            roles["Hùng"].PrimeLocomotion();SetCommanderRifleCarry(roles["Anh Thành"],!AllyInCombatPose("Anh Thành"));roles["Anh Thành"].SetLocomotion(State.phase<=1?dayNamAnimator.runtimeAnimatorController.animationClips.FirstOrDefault(c=>c.name=="Idle_Tuned"):null,State.phase<=1?ordinaryWalk:null);roles["Anh Thành"].PrimeLocomotion();ArrangeDayFamily();
+            roles["Hùng"].PrimeLocomotion();SetCommanderRifleCarry(roles["Anh Thành"],!AllyInCombatPose("Anh Thành"));roles["Anh Thành"].SetLocomotion(State.phase<=1?namCalmIdle:null,State.phase<=1?ordinaryWalk:null);roles["Anh Thành"].PrimeLocomotion();ArrangeDayFamily();
             SyncDayProps();RefreshMemorial();RefreshDayTwoProps();UpdateMarkers();RefreshNightPatrol();SyncNightBankState();SyncEvacuationPatrol();
         }
     }

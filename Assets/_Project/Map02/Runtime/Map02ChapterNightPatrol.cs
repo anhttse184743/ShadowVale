@@ -17,13 +17,13 @@ namespace ShadowVale.Map01
         public bool NightPatrolStopped=>State.phase!=3||State.night2ReachedStore||State.Done("N2_03")||State.Done("N2_05");
         public bool NightObservationRulesActive=>State.phase==3&&!State.Done("N2_05");
         public const float NightPatrolWarningSeconds=1.5f;
-        public const string NightPatrolWarningText="Có người ở mé rừng! Bên kia!";
-        public const string NightPatrolFireOrderText="Tản ra! Chặn đường hắn!";
+        public const string NightPatrolWarningText="Có người ở bờ mương! Bên kia!";
+        public const string NightPatrolFireOrderText="Tiêu diệt con chuột nhắt đó đi!";
         public const float NightPatrolCameraTravelSeconds=3;
         public bool NightPatrolScriptedApproach=>State.phase==3&&State.Done("N2_02")&&!NightPatrolStopped;
         public bool NightPatrolFailureActive=>nightFailureClock>=0;
         float nightFailureClock=-1,nightVolleyClock;
-        bool nightWarningHidden,nightFailureHit,nightFailureProtected,nightFireOrderStarted;
+        bool nightFailureHit,nightFailureProtected,nightFireOrderStarted;
         Vector3 nightFailurePosition;
         Quaternion nightFailureRotation;
         Vector3 nightFailureCameraPosition;
@@ -47,7 +47,8 @@ namespace ShadowVale.Map01
         {
             if(nightWarningAudio==null){nightWarningAudio=gameObject.AddComponent<AudioSource>();nightWarningAudio.playOnAwake=false;nightWarningAudio.spatialBlend=0;nightWarningAudio.volume=.9f;}
             nightWarningAudio.Stop();nightWarningAudio.priority=16;nightPatrolCaption=caption;
-            nightWarningAudio.clip=Resources.Load<AudioClip>("OperationsAudio/"+resource);nightWarningAudio.Play();
+            nightWarningAudio.clip=Resources.Load<AudioClip>("OperationsAudio/"+resource);
+            if(nightWarningAudio.clip!=null)nightWarningAudio.Play();
         }
         void DrawNightPatrolSuspicionDialogue()
         {
@@ -80,7 +81,7 @@ namespace ShadowVale.Map01
             nightFailureCameraFov=rig.GetComponent<Camera>().fieldOfView;
             nightFailurePosition=Mission.Player.position;nightFailureRotation=Mission.Player.rotation;
             nightFailureProtected=health.CinematicInvulnerable;health.CinematicInvulnerable=true;
-            State.patrolFocusSeconds=0;State.patrolFocusDirection=nightFailurePosition;
+            State.patrolFocusSeconds=0;State.patrolWarningHidden=false;State.patrolFocusDirection=nightFailurePosition;
             SetBinoculars(false);player.RestoreMotion(false);combat.SetHandsOccupied(true);
             rig.SetCinematicView(nightFailureCameraPosition,nightFailureCameraRotation,nightFailureCameraFov,1);
             DropBarks();voice?.Stop();
@@ -149,11 +150,11 @@ namespace ShadowVale.Map01
         {
             if(NightPatrolFailureActive)
             {
-                health.CinematicInvulnerable=nightFailureProtected;combat.SetHandsOccupied(false);rig.ClearCinematicView();
-                var actor=Mission.Player.GetComponentInChildren<Animator>();
-                if(actor!=null&&actor.runtimeAnimatorController!=null){actor.ResetTrigger(PlayerCombat.AnimatorParams.Die);actor.Play(PlayerCombat.LocomotionState,0,0);}
+                if(health!=null)health.CinematicInvulnerable=nightFailureProtected;
+                if(combat!=null){combat.SetHandsOccupied(false);combat.RestoreAfterCinematic();}
+                if(rig!=null)rig.ClearCinematicView();
             }
-            nightFailureClock=-1;nightWarningHidden=false;nightWarningAudio?.Stop();
+            nightFailureClock=-1;if(nightWarningAudio!=null)nightWarningAudio.Stop();
         }
         public float NightPatrolScanRate=>NightObservationRulesActive?.5f:1f;
         public float NightPatrolDetectionRange=>NightObservationRulesActive?40:Layout!=null?Mathf.Clamp(Layout.nightPatrolLightRange,10,55):28;
@@ -191,8 +192,8 @@ namespace ShadowVale.Map01
         {
             get
             {
-                if(nightObservationBridge==null)nightObservationBridge=FindObjectsByType<BoxCollider>(FindObjectsSortMode.None)
-                    .Where(c=>c.enabled&&(c.name=="Walkable bridge deck"||c.name=="Bridge deck"))
+                if(nightObservationBridge==null)nightObservationBridge=nightBridgeDecks
+                    .Where(c=>c!=null&&c.enabled&&c.gameObject.activeInHierarchy)
                     .OrderBy(c=>Vector3.Distance(c.bounds.center,sites["bridge"].position)).FirstOrDefault();
                 return nightObservationBridge;
             }

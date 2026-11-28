@@ -123,13 +123,13 @@ namespace ShadowVale.Map01
             if(t<0)
             {
                 bool namArrived=sceneClock>=PathDuration(dayNamPath),hungArrived=sceneClock>=PathDuration(dayHungPath);
-                namPose?.Sample(namArrived?namIdle:ordinaryWalk,sceneClock,true);
+                namPose?.Sample(namArrived?namCalmIdle:ordinaryWalk,sceneClock,true);
                 hung.SamplePerformance(hungArrived?DayClip("InjuredIdle"):HungDayWalk,hungArrived?sceneClock:sceneClock*1.25f/HungDayWalkSpeed,true);
                 if(hungArrived)hung.transform.rotation=Quaternion.RotateTowards(hung.transform.rotation,MealFacing,220*Time.deltaTime);
                 SampleSupperProps(0);return;
             }
             HungNativeBody(true);NamSupperGear(false);LaySupperRifle(true);
-            namPose?.Sample(DayClip("LoiHuaNam")??namIdle,t,false);hung.SamplePerformance(DayClip("LoiHuaHung")??DayClip("RestHung"),t,false);
+            namPose?.Sample(DayClip("LoiHuaNam")??namCalmIdle,t,false);hung.SamplePerformance(DayClip("LoiHuaHung")??DayClip("RestHung"),t,false);
             AlignBody(hung.transform,hung.Animator.transform,MealSeat(true),MealFacing,out var hp,out var hr);hung.transform.SetPositionAndRotation(hp,hr);
             SampleSupperProps(t);CorrectMealHands(t);
         }

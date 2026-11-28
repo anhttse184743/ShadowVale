@@ -10,13 +10,7 @@ namespace ShadowVale.Map01
     /// </summary>
     public sealed partial class Map02ChapterDirector
     {
-        static readonly string[] NightRouteIds={"ditchApproach","villageLane","southBank","dockStairs"};
-        static readonly string[] NightRouteNames={"bờ mương","lối qua xóm","bờ nam","bậc bến"};
         public Vector3[] NightTwoRoute {get;private set;}=Array.Empty<Vector3>();
-        public int NightTwoRouteProgress
-        {
-            get{int i=0;while(i<NightRouteIds.Length&&State.night2RouteVisited.Contains(NightRouteIds[i]))i++;return i;}
-        }
         public Vector3 NightDoorPosition=>sites["nightHatch"].position;
         public Map02UndergroundStore UndergroundStore {get;private set;}
         public Vector3 NightDoorStand=>UndergroundStore!=null?UndergroundStore.TopStand:NightDoorPosition+Vector3.left*1.8f;
@@ -29,6 +23,7 @@ namespace ShadowVale.Map01
         bool NightReturnPending=>State.night2GuidanceStage<7||liveRadioRemaining>0||chainRemaining>0;
 
         RiverWater[] nightRivers=Array.Empty<RiverWater>();
+        BoxCollider[] nightBridgeDecks=Array.Empty<BoxCollider>();
         static readonly Vector3[] NightCapsuleOffsets={Vector3.zero,Vector3.left*.3f,Vector3.right*.3f,Vector3.forward*.3f,Vector3.back*.3f};
         public Vector3[] NightBankRoute {get;private set;}=Array.Empty<Vector3>();
         public bool NightBankMovementRestricted=>State.phase==3&&!State.Done("N2_03");
@@ -54,6 +49,7 @@ namespace ShadowVale.Map01
             for(int i=0;i<NightBankRoute.Length;i++)if(NavMesh.SamplePosition(NightBankRoute[i],out var hit,1,NavMesh.AllAreas))NightBankRoute[i]=hit.position;
             if(NightBankRoute.Length>0)NightBankRoute[NightBankRoute.Length-1]=NightDoorPosition;
             nightRivers=FindObjectsByType<RiverWater>(FindObjectsSortMode.None);
+            nightBridgeDecks=Array.FindAll(FindObjectsByType<BoxCollider>(FindObjectsSortMode.None),Map02BridgeRails.IsBridgeDeck);
         }
         static Vector3 NearestPlanarPoint(Vector3 p,Vector3 a,Vector3 b)
         {
@@ -62,10 +58,13 @@ namespace ShadowVale.Map01
         }
         bool OnNightBridge(Vector3 p)
         {
-            var deck=NightObservationBridge;if(deck==null)return false;
-            var local=deck.transform.InverseTransformPoint(p)-deck.center;
-            // Shrink to the walkable deck, so the exception never admits the river below it.
-            return Mathf.Abs(local.x)<=deck.size.x*.5f+.4f&&Mathf.Abs(local.z)<=deck.size.z*.5f-.25f&&p.y>=deck.bounds.max.y-.5f;
+            foreach(var deck in nightBridgeDecks)
+            {
+                if(deck==null||!deck.enabled||!deck.gameObject.activeInHierarchy||p.y<deck.bounds.max.y-.5f)continue;
+                var local=deck.transform.InverseTransformPoint(p)-deck.center;
+                if(Mathf.Abs(local.x)<=deck.size.x*.5f+.4f&&Mathf.Abs(local.z)<=deck.size.z*.5f-.25f)return true;
+            }
+            return false;
         }
         public bool NightBankPositionAllowed(Vector3 p)
         {
@@ -89,6 +88,7 @@ namespace ShadowVale.Map01
         }
         public Vector3 ConstrainNightMovement(Vector3 from,Vector3 displacement)
         {
+            if(CoverFireActive)return HoldCoverMovement(displacement);   // N3_08: Nam holds his spot on the bank
             if(UndergroundStore?.ContainsAuthorizedPlayer(from)==true)return displacement;
             if(!NightBankMovementRestricted)return displacement;
             // Vertical motion is untouched. Clip horizontal travel before CharacterController.Move,
@@ -159,7 +159,7 @@ namespace ShadowVale.Map01
             }
             if(task.kind=="inspectRoute")
             {
-                return InteractEvacuationChoice(task);
+                return InteractEvacuationChoice();
             }
             if(task.id=="N2_05"&&NightReturnPending)
             {
@@ -173,7 +173,6 @@ namespace ShadowVale.Map01
             if(State.phase!=3)return;
             TickEvacuationChoices(dt);
         }
-        Vector3 NightRouteMarker=>EvacuationMarker;
         void ShowNightRadio(int index)
         {
             var entries=Map02ChapterDefinition.Load().Lines("lights");if(index<0||index>=entries.Length)return;

@@ -172,6 +172,9 @@ namespace ShadowVale.Map01.Tests
             foreach(var id in new[]{"D3_03","D3_04","D3_05"})
             {
                 Set(id);yield return Frames(3);var marker=Marker(id);Place(marker.transform.position+Vector3.back*1.2f);yield return null;
+                // The marker sits on the NavMesh (~10 cm above the rendered floor here): let Nam land before measuring.
+                var motor=mission.Player.GetComponent<ShadowVale.Gameplay.Player.PlayerController>();
+                for(int f=0;f<120&&!motor.IsGrounded;f++)yield return null;yield return Frames(2);
                 var before=mission.Player.position;Assert.IsTrue(mission.Interact(marker),id+" begins");
                 yield return Frames(10);Assert.AreEqual(id,chapter.CurrentScene?.id);
                 Assert.Less(Vector3.Distance(before,mission.Player.position),.05f,id+": Nam stays where he started the scene.");

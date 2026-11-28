@@ -28,6 +28,48 @@ namespace ShadowVale.Map01.Tests
             Assert.IsFalse(Map02ChapterDirector.ScoutAmbushDistanceClear(Vector3.zero,Vector3.forward*19.9f,Vector3.back*20));
             Assert.IsFalse(Map02ChapterDirector.ScoutAmbushDistanceClear(Vector3.zero,Vector3.forward*20,Vector3.back*19.9f));
         }
+        [UnityTest,Timeout(180000)] public IEnumerator ScoutRescueCheckpointSpawnsAmbushAfterLeavingRescueSite()
+        {
+            EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 2.unity");yield return new EnterPlayMode();
+            Map02Mission mission=null;
+            float deadline=Time.realtimeSinceStartup+100;
+            while(Time.realtimeSinceStartup<deadline)
+            {
+                mission=Object.FindFirstObjectByType<Map02Mission>();
+                if(mission?.Ready==true&&mission.Chapter!=null)break;
+                Object.FindFirstObjectByType<Map02Arrival>()?.Skip();yield return null;
+            }
+            Assert.NotNull(mission?.Chapter);
+            var preview=Type.GetType("ShadowVale.Map01.Editor.Map02RoutePreview, ShadowVale.Map01.Editor",true);
+            preview.GetMethod("ApplyAfter").Invoke(null,new object[]{mission,"D2_03"});yield return null;
+            var chapter=mission.Chapter;
+            var state=chapter.State;
+            Assert.IsTrue(chapter.ScoutEscortActive);
+            Assert.AreEqual(0,state.scoutAmbushSpawned);
+            var controller=mission.Player.GetComponent<CharacterController>();
+            var departure=Vector3.ProjectOnPlane(mission.Player.forward,Vector3.up).normalized;
+            deadline=Time.realtimeSinceStartup+10;
+            while(!state.scoutAmbushStarted&&Time.realtimeSinceStartup<deadline)
+            {
+                controller.Move(departure*.14f+Vector3.down*.025f);yield return null;
+            }
+            Assert.IsTrue(state.scoutAmbushStarted,$"Nam did not leave the rescue radius. Position {mission.Player.position}, origin {state.scoutRescueOrigin}.");
+            Assert.IsFalse(state.scoutAmbushPassedBridge);
+            Map02ChapterEnemy first=null;
+            deadline=Time.realtimeSinceStartup+4;
+            while(first==null&&Time.realtimeSinceStartup<deadline)
+            {
+                first=chapter.Enemies.SingleOrDefault(e=>e.group==Map02ChapterDirector.ScoutAmbushGroup);yield return null;
+            }
+            Assert.NotNull(first,"Walking in the checkpoint's starting direction must trigger the first ambusher.");
+            Assert.AreEqual(1,state.scoutAmbushSpawned);
+            Assert.IsTrue(Map02ChapterDirector.ScoutAmbushDistanceClear(state.scoutAmbushPoints[0],mission.Player.position,chapter.Companion.transform.position));
+            var saved=Map02Mission.Parse(JsonUtility.ToJson(mission.Capture()));
+            mission.Restore(saved);yield return null;
+            Assert.AreEqual(1,chapter.State.scoutAmbushSpawned);
+            Assert.AreEqual(1,chapter.Enemies.Count(e=>e.group==Map02ChapterDirector.ScoutAmbushGroup));
+            yield return new ExitPlayMode();
+        }
         [TestCase("m1_rescue_hung_defiance")]
         [TestCase("m2v3_scoutescort_warning_01")]
         [TestCase("m2v3_evac_field_01")]
@@ -41,6 +83,7 @@ namespace ShadowVale.Map01.Tests
         [TestCase("D2_03","D2_04",2,"escortScout")]
         [TestCase("D2_05","D2_06",2,"antenna")]
         [TestCase("N2_03","N2_04",3,"inspectRoute")]
+        [TestCase("N2_04","N2_05",3,"cinematic")]
         public void MissionCheckpointsKeepTheNextTaskPending(string completed,string pending,int phase,string kind)
         {
             var type=Type.GetType("ShadowVale.Map01.Editor.Map02RoutePreview, ShadowVale.Map01.Editor",true);
@@ -57,6 +100,7 @@ namespace ShadowVale.Map01.Tests
         [TestCase("PlayScoutRescue","ShadowVale/Map 2/Checkpoint cứu Tâm · M2_D2_04")]
         [TestCase("PlayAntenna","ShadowVale/Map 2/Checkpoint lắp ăng-ten · M2_D2_06")]
         [TestCase("PlayEvacuationChoices","ShadowVale/Map 2/Checkpoint kiểm tra đường sơ tán · N2_04")]
+        [TestCase("PlayNightTwoRest","ShadowVale/Map 2/Checkpoint Hùng ngủ cuối Đêm 2 · N2_05")]
         public void MissionCheckpointMenusRemainAvailable(string method,string menu)
         {
             var type=Type.GetType("ShadowVale.Map01.Editor.Map02RoutePreview, ShadowVale.Map01.Editor",true);
@@ -80,7 +124,7 @@ namespace ShadowVale.Map01.Tests
             Assert.NotNull(mission?.Chapter);
             var type=Type.GetType("ShadowVale.Map01.Editor.Map02RoutePreview, ShadowVale.Map01.Editor",true);
             var apply=type.GetMethod("ApplyAfter",BindingFlags.Public|BindingFlags.Static);
-            var completed=new[]{"D2_03","D2_05","N2_03"};var pending=new[]{"D2_04","D2_06","N2_04"};
+            var completed=new[]{"D2_03","D2_05","N2_03","N2_04"};var pending=new[]{"D2_04","D2_06","N2_04","N2_05"};
             for(int i=0;i<completed.Length;i++)
             {
                 apply.Invoke(null,new object[]{mission,completed[i]});yield return null;
@@ -114,6 +158,15 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsTrue(mission.Retry());yield return null;
                 Assert.AreEqual(pending[i],mission.Chapter.TrackedTask.id,"Retry changed the checkpoint task.");
                 Assert.Less(Vector3.Distance(position,mission.Player.position),1f,"Retry must return to the selected checkpoint.");
+                if(pending[i]=="N2_05")
+                {
+                    Assert.AreEqual(3,mission.Chapter.State.phase);
+                    Assert.IsNull(mission.Chapter.CurrentScene,"Opening or retrying the checkpoint must wait for player interaction.");
+                    var marker=Object.FindObjectsByType<Map02ObjectiveObject>(FindObjectsSortMode.None).Single(t=>t.chapterId=="N2_05");
+                    Assert.IsTrue(marker.WithinReach(mission.Player));
+                    Assert.IsTrue(mission.Interact(marker));
+                    Assert.AreEqual("N2_05",mission.Chapter.CurrentScene?.id);
+                }
             }
             yield return new ExitPlayMode();
         }

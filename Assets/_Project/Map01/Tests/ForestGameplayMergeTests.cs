@@ -52,12 +52,16 @@ namespace ShadowVale.Map01.Tests
                 int ammo = inventory.Count("ammo_rifle");
                 Assert.IsTrue(combat.TryConsumeRound());
                 Assert.AreEqual(ammo - 1, inventory.Count("ammo_rifle"));
-                var enemies = UnityEngine.Object.FindObjectsByType<Map01EnemyController>(FindObjectsSortMode.None);
+                // Sleeping actors reject noises. Select two awake guards from the saved roster,
+                // rather than relying on Unity's unspecified object enumeration order.
+                var enemies = mission.Enemies.Where(e=>e.Alive&&e.enabled&&!e.BedPoseOwned&&!e.IsBoss)
+                    .OrderBy(e=>e.SaveId,StringComparer.Ordinal).ToArray();
                 Assert.Greater(enemies.Length, 1);
                 var wounded = enemies[0]; var dead = enemies[1];
                 string woundedId = wounded.SaveId, deadId = dead.SaveId;
                 wounded.GetComponent<Health>().RestoreHealth(23);
-                wounded.Hear(wounded.transform.position, 10);
+                Assert.IsTrue(wounded.Hear(wounded.transform.position, 10),"The selected awake guard must hear the test noise.");
+                Assert.IsTrue(wounded.Alerted);
                 dead.GetComponent<Health>().RestoreHealth(0);
                 Assert.IsFalse(saveSystem.CanSave(), "Alerted enemies must block manual backups.");
                 Assert.IsTrue(saveSystem.AutoSaveOnExit(out var error), error);

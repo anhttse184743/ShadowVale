@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d87067a89bdc3f4459862ca18806c1d2, type: 3}
   m_Name: Approved
-  m_EditorClassIdentifier: ShadowVale.Map01::ShadowVale.Map01.Map02ArrivalC1Data
+  m_EditorClassIdentifier: ShadowVale.Map02::ShadowVale.Map01.Map02ArrivalC1Data
   nam: {fileID: 330225290533594390, guid: 02a412ccf19951e4699ae3935028a90b, type: 3}
   hung: {fileID: 8466026582100891607, guid: 3d351e9c7c831a546b9bf1e7d2b24f30, type: 3}
   namMotion: {fileID: -623603649343465320, guid: 724c8ea0f1f513c4999bf819ba80326c, type: 3}

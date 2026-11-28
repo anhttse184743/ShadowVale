@@ -3,6 +3,7 @@ using UnityEngine;
 namespace ShadowVale.Map01
 {
     [CreateAssetMenu(menuName="ShadowVale/Map 2/Chapter layout")]
+    [UnityEngine.Scripting.APIUpdating.MovedFrom(false, sourceAssembly: "ShadowVale.Map01")]
     public sealed class Map02ChapterLayout : ScriptableObject
     {
         [Serializable] public sealed class Site {public string id;public Vector3 position;}
