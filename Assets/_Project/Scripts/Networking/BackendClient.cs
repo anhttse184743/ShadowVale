@@ -10,11 +10,11 @@ namespace ShadowVale.Networking
     /// <summary>What the backend said, reduced to what the game can do about it.</summary>
     public enum BackendOutcome
     {
-        /// <summary>2xx, or 409 for an upload the backend already has.</summary>
+        /// <summary>2xx: the backend accepted the request.</summary>
         Ok,
         /// <summary>304: the cached copy is still current.</summary>
         NotModified,
-        /// <summary>400/413/422: the request itself is wrong, sending it again cannot help.</summary>
+        /// <summary>400/409/413/422: the request was rejected and retrying it unchanged cannot help.</summary>
         Rejected,
         /// <summary>Anything else (offline, timeout, 401, 404, 429, 5xx): keep what we have, try later.</summary>
         RetryLater,
@@ -70,9 +70,9 @@ namespace ShadowVale.Networking
 
         public static BackendOutcome Classify(int status)
         {
-            if (status >= 200 && status < 300 || status == 409) return BackendOutcome.Ok;
+            if (status >= 200 && status < 300) return BackendOutcome.Ok;
             if (status == 304) return BackendOutcome.NotModified;
-            if (status == 400 || status == 413 || status == 422) return BackendOutcome.Rejected;
+            if (status == 400 || status == 409 || status == 413 || status == 422) return BackendOutcome.Rejected;
             return BackendOutcome.RetryLater;
         }
 

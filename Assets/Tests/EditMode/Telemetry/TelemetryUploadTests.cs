@@ -39,24 +39,24 @@ namespace ShadowVale.Tests.EditMode.Telemetry
         // ---- Disk queue ------------------------------------------------------------------------
 
         [Test]
-        public void TheQueueKeepsOneFilePerSessionOldestFirstAndDropsTheOldestPastItsLimit()
+        public void TheQueueKeepsOneFilePerSessionWithoutDroppingOlderOfflineSessions()
         {
-            var q = new DiskQueue(_root, maxFiles: 3);
-            for (int i = 0; i < 4; i++)
+            var q = new DiskQueue(_root);
+            for (int i = 0; i < 52; i++)
             {
                 string path = q.Enqueue("s" + i, "{\"i\":" + i + "}");
                 File.SetLastWriteTimeUtc(path, new DateTime(2026, 1, 1).AddMinutes(i));
             }
-            q.Enqueue("s3", "{\"i\":33}"); // Same session again: replaced, not duplicated.
+            q.Enqueue("s51", "{\"i\":33}"); // Same session again: replaced, not duplicated.
             var pending = q.Pending();
-            CollectionAssert.AreEqual(new[] { "s1", "s2", "s3" }, pending.Select(DiskQueue.SessionIdOf));
-            Assert.AreEqual("{\"i\":33}", File.ReadAllText(pending[2]));
+            CollectionAssert.AreEqual(Enumerable.Range(0, 52).Select(i => "s" + i), pending.Select(DiskQueue.SessionIdOf));
+            Assert.AreEqual("{\"i\":33}", File.ReadAllText(pending[51]));
             Assert.IsEmpty(Directory.GetFiles(q.PendingDirectory, "*.tmp"), "No half-written temp file left behind.");
 
             q.Reject(pending[0]);
             q.Complete(pending[1]);
-            CollectionAssert.AreEqual(new[] { "s3" }, q.Pending().Select(DiskQueue.SessionIdOf));
-            Assert.IsTrue(File.Exists(Path.Combine(q.RejectedDirectory, "s1.json")));
+            CollectionAssert.AreEqual(Enumerable.Range(2, 50).Select(i => "s" + i), q.Pending().Select(DiskQueue.SessionIdOf));
+            Assert.IsTrue(File.Exists(Path.Combine(q.RejectedDirectory, "s0.json")));
         }
 
         [Test]
@@ -71,7 +71,7 @@ namespace ShadowVale.Tests.EditMode.Telemetry
 
         [TestCase(200, UploadOutcome.Sent)]
         [TestCase(201, UploadOutcome.Sent)]
-        [TestCase(409, UploadOutcome.Sent)]
+        [TestCase(409, UploadOutcome.Rejected)]
         [TestCase(400, UploadOutcome.Rejected)]
         [TestCase(422, UploadOutcome.Rejected)]
         [TestCase(404, UploadOutcome.RetryLater)]
@@ -140,6 +140,22 @@ namespace ShadowVale.Tests.EditMode.Telemetry
         }
 
         [Test]
+        public void APartiallyAcceptedBatchIsRetainedForInspection()
+        {
+            const string acknowledgement = "{\"events\":{\"accepted\":2,\"rejected\":1},\"coordinationResults\":{\"rejected\":0}}";
+            using var server = new FakeBackend(new ConcurrentQueue<int>(new[] { 200 }), new ConcurrentQueue<(string, string, string)>(), acknowledgement);
+            var queue = new DiskQueue(_root);
+            queue.Enqueue("partial", Upload("partial"));
+
+            var result = new TelemetryUploader(server.Url, gameKey: Key).FlushAsync(queue).Result;
+
+            Assert.AreEqual(0, result.Sent);
+            Assert.AreEqual(1, result.Rejected);
+            Assert.IsEmpty(queue.Pending());
+            Assert.AreEqual(Upload("partial"), File.ReadAllText(Path.Combine(queue.RejectedDirectory, "partial.json")));
+        }
+
+        [Test]
         public void ASessionQueuedBeforeTheBackendContractIsSetAsideUnsentAndWithoutAKeyNothingGoes()
         {
             var seen = new ConcurrentQueue<(string, string, string)>();
@@ -202,7 +218,7 @@ namespace ShadowVale.Tests.EditMode.Telemetry
             private readonly Task _loop;
             public string Url { get; }
 
-            public FakeBackend(ConcurrentQueue<int> statuses, ConcurrentQueue<(string, string, string)> seen)
+            public FakeBackend(ConcurrentQueue<int> statuses, ConcurrentQueue<(string, string, string)> seen, string responseBody = null)
             {
                 int port = 19000 + (Environment.TickCount & 0x7fffffff) % 1000;
                 Url = $"http://127.0.0.1:{port}";
@@ -219,6 +235,12 @@ namespace ShadowVale.Tests.EditMode.Telemetry
                             using (var reader = new StreamReader(ctx.Request.InputStream)) body = reader.ReadToEnd();
                             seen.Enqueue((ctx.Request.HttpMethod + " " + ctx.Request.Headers["X-Game-Key"], body, ctx.Request.Url.AbsolutePath));
                             ctx.Response.StatusCode = statuses.TryDequeue(out int s) ? s : 201;
+                            if (responseBody != null)
+                            {
+                                byte[] response = System.Text.Encoding.UTF8.GetBytes(responseBody);
+                                ctx.Response.ContentLength64 = response.Length;
+                                ctx.Response.OutputStream.Write(response, 0, response.Length);
+                            }
                             ctx.Response.Close();
                         }
                         catch (Exception) { return; } // Listener stopped.

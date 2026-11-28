@@ -30,11 +30,15 @@ namespace ShadowVale.Telemetry
             string json = ContentJson.Serialize(session);
             try
             {
-                if (!string.IsNullOrEmpty(config.ResearchDirectory)) new ResearchExporter(config.ResearchDirectory).Append(json);
                 if (!string.IsNullOrEmpty(config.RootDirectory))
-                    new DiskQueue(config.RootDirectory, config.MaxQueuedSessions).Enqueue(session.SessionId, uploadJson ?? json);
+                    new DiskQueue(config.RootDirectory).Enqueue(session.SessionId, uploadJson ?? json);
             }
-            catch (Exception e) { Debug.LogWarning("[Telemetry] could not store session: " + e.Message); }
+            catch (Exception e) { Debug.LogWarning("[Telemetry] could not queue session: " + e.Message); }
+            try
+            {
+                if (!string.IsNullOrEmpty(config.ResearchDirectory)) new ResearchExporter(config.ResearchDirectory).Append(json);
+            }
+            catch (Exception e) { Debug.LogWarning("[Telemetry] could not write research export: " + e.Message); }
             return json;
         }
 
@@ -47,7 +51,7 @@ namespace ShadowVale.Telemetry
             if (config == null || !config.UploadEnabled || string.IsNullOrEmpty(config.RootDirectory)) return null;
             if (!force && DateTime.UtcNow.Ticks < Interlocked.Read(ref _nextAttemptTicks)) return null;
             if (Interlocked.CompareExchange(ref _flushing, 1, 0) != 0) return null;
-            var queue = new DiskQueue(config.RootDirectory, config.MaxQueuedSessions);
+            var queue = new DiskQueue(config.RootDirectory);
             var uploader = new TelemetryUploader(config.ApiBaseUrl, gameKey: config.GameKey);
             return Task.Run(async () =>
             {
