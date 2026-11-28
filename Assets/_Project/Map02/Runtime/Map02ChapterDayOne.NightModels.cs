@@ -34,6 +34,16 @@ namespace ShadowVale.Map01
                     var sample = gate.position + gate.right * (child.name.EndsWith("Left") ? -2.87f : 2.87f);
                     child.position += Vector3.up * Mathf.Clamp(NightGround(sample) - gate.position.y, -.25f, .25f);
                 }
+            // Fixed wings are decoration: trim them before they can cross a home or a mission lane.
+            foreach(var child in gate.GetComponentsInChildren<Transform>())
+                if(child.name=="FenceWingLeft"||child.name=="FenceWingRight"){
+                    var meshes=child.GetComponentsInChildren<Renderer>();if(meshes.Length==0)continue;
+                    var bounds=meshes[0].bounds;foreach(var mesh in meshes)bounds.Encapsulate(mesh.bounds);
+                    if(fenceClearance.AllowsBounds(bounds))continue;
+                    child.gameObject.SetActive(false);
+                    foreach(var barrier in gate.GetComponentsInChildren<Collider>())
+                        if(barrier.name=="Village boundary fence"&&bounds.SqrDistance(barrier.bounds.center)<.5f)barrier.gameObject.SetActive(false);
+                }
             postGates.Add(gate); postLatches.Add(gate.GetComponent<Map02NightWatchVisual>().bolt);
             var start=point-gate.forward*2.2f+gate.right*.5f;start.y=NightGround(start);
             var stow=point-gate.forward*2.2f-gate.right*2f;stow.y=NightGround(stow);nightWoodStart.Add(start);nightWoodStow.Add(stow);

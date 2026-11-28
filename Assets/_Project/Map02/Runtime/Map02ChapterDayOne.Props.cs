@@ -36,6 +36,7 @@ namespace ShadowVale.Map01
                 if(i==3){var crack=Part(board,"Open longitudinal split",new Vector3(.02f,.031f,0),new Vector3(.78f,.012f,.025f),iron);crack.localRotation=Quaternion.Euler(0,7,0);}
                 physicalBoards.Add(board);
             }
+            PrepareFenceClearance();
             for(int i=0;i<2;i++)BuildNightPost(sites[i==0?"bamboo":"gate"].position,i,wood,cloth);
             BuildNightFencePerimeter();
             CreateStoryProps(wood,cloth,iron);ClearDockGrass();SyncDayProps();

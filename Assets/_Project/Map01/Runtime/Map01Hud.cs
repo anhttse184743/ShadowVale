@@ -258,6 +258,7 @@ namespace ShadowVale.Map01
             }
             if (!mission.BenchOpen) DrawObjective(); // The bench screen covers the screen; nothing peeks out at its edge.
             if (guiding) DrawCompass(width);
+            DrawRequiredObservationReminder(width); // Above the world target marker, below modal screens.
             if (!mission.InventoryOpen && !mission.MapOpen) DrawCombatHud(width, height);
             if (mission.BenchOpen && trade != null && trade.Open) DrawTrade(width, height, trade);
             else if (mission.BenchOpen) DrawBench(width, height); // Map01Hud.Craft.cs

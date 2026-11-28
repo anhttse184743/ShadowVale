@@ -1,15 +1,24 @@
 using UnityEngine;
+using System.Linq;
 namespace ShadowVale.Map01
 {
     public sealed partial class Map02ChapterDirector
     {
+        Map02FenceClearance fenceClearance;
+        void PrepareFenceClearance()
+        {
+            fenceClearance=new Map02FenceClearance(sites.Values.Select(t=>t.position));
+            fenceClearance.Protect(Layout.dayTwoOpenRoute);fenceClearance.Protect(Layout.dayTwoCoveredRoute);
+            fenceClearance.Protect(Layout.nightTwoEvacuationRoute);fenceClearance.Protect(Layout.nightTwoBankRoute);
+            foreach(var renderer in FindObjectsByType<Renderer>(FindObjectsSortMode.None))
+                if((renderer.name=="Weathered garden fence post"||renderer.name=="Bamboo garden rail")&&!fenceClearance.AllowsBounds(renderer.bounds))renderer.gameObject.SetActive(false);
+        }
         public int NightFenceSections { get; private set; }
         void BuildNightFencePerimeter()
         {
             var east=postGates[0];var north=postGates[1];
-            // Closed scenery loop: the only breaks are real gateways, never blunt
-            // cut ends in the player's view. The distant returns lie beyond the
-            // playable terrain, while existing village lanes remain open.
+            // Boundary follows the village edge; homes and mission lanes always take priority.
+            // Unsafe spans are omitted, leaving deliberate openings instead of clipping buildings.
             var path=new[]{east.position+east.right*4.66f,
                 new Vector3(-57.2f,0,1),new Vector3(-49,0,-10),new Vector3(-43,0,-18),
                 new Vector3(-43,0,-120),new Vector3(-120,0,-120),new Vector3(-120,0,120),
@@ -31,22 +40,14 @@ namespace ShadowVale.Map01
         {
             start.y=end.y=sites["bamboo"].position.y;
             var delta=end-start;var direction=delta.normalized;
-            foreach(var (point,clearPassage) in crossings){
-                var p=point;p.y=start.y;float along=Vector3.Dot(p-start,direction);
-                if(along<1.2f||along>delta.magnitude-1.2f||Vector3.Distance(start+direction*along,p)>.12f)continue;
-                // Either side may hold another passage: a line can be crossed by more than one route.
-                FenceWithCrossings(start,p-direction*1.10f,crossings);FenceWithCrossings(p+direction*1.10f,end,crossings);
-                var passage=NightModel("VillageGate",p);passage.position=new Vector3(p.x,NightGround(p),p.z);
-                passage.rotation=Quaternion.LookRotation(Vector3.Cross(direction,Vector3.up));
-                foreach(var t in passage.GetComponentsInChildren<Transform>(true))
-                    if(t.name=="FenceWingLeft"||t.name=="FenceWingRight"||t.name=="Village boundary fence")t.gameObject.SetActive(false);
-                passage.name="Open village lane passage";
-                var gate=passage.GetComponent<Map02NightWatchVisual>();
-                if(clearPassage)gate.gateLeaf.gameObject.SetActive(false);
-                gate.SetGate(false,false);
-                return;
+            var cursor=start;
+            foreach(var crossing in crossings.Select(c=>Vector3.Dot(new Vector3(c.position.x,start.y,c.position.z)-start,direction))
+                .Where(d=>d>2&&d<delta.magnitude-2).OrderBy(d=>d)){
+                var point=start+direction*crossing;
+                if(!crossings.Any(c=>Vector3.Distance(new Vector3(c.position.x,start.y,c.position.z),point)<.12f))continue;
+                FenceRun(cursor,point-direction*2);cursor=point+direction*2;
             }
-            FenceRun(start,end);
+            FenceRun(cursor,end);
         }
         /// <summary>The riverside stretch of the east line (x = -43) is left open: the Night 3 tank comes out of the bamboo to
         /// the head of the dock road here and Hùng runs from the bank ditch to its tracks, so a fence (and its NavMesh carving)
@@ -60,6 +61,7 @@ namespace ShadowVale.Map01
                 var a=Vector3.Lerp(start,end,(float)i/count);var b=Vector3.Lerp(start,end,(float)(i+1)/count);
                 if(OnTheTankRoad((a+b)*.5f))continue;
                 a.y=NightGround(a);b.y=NightGround(b);var direction=(b-a).normalized;
+                if(!fenceClearance.Allows(a,b))continue;
                 var section=NightModel("FenceSection",(a+b)*.5f);
                 var normal=Vector3.Cross(direction,Vector3.up).normalized;
                 section.rotation=Quaternion.LookRotation(normal,Vector3.Cross(normal,direction));

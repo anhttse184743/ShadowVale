@@ -12,6 +12,14 @@ namespace ShadowVale.Map01.Tests
 {
     public sealed class Map01InteractionReviewTests:ForestSceneTestBase
     {
+        [Test]public void RequiredBinocularReminderExplainsRecoveryAfterAnEarlyKill()
+        {
+            Assert.IsNull(Map01Story.BuildObservationReminder(false,true,8));
+            StringAssert.Contains("[F]",Map01Story.BuildObservationReminder(true,false,50));
+            StringAssert.Contains("18 m",Map01Story.BuildObservationReminder(true,true,8));
+            StringAssert.Contains("chưa thay thế",Map01Story.BuildObservationReminder(true,true,8));
+            StringAssert.Contains("18–120 m",Map01Story.BuildObservationReminder(true,false,130));
+        }
         [TestCase(18,30,true,true,true)][TestCase(100,25,true,true,true)][TestCase(36,36,true,true,false)]
         [TestCase(10,0,true,true,false)][TestCase(36,0,false,true,false)][TestCase(36,0,true,false,false)]
         public void CampObservationDoesNotRequirePinpointingAnOfficer(float distance,float angle,bool binoculars,bool still,bool expected)
@@ -21,6 +29,26 @@ namespace ShadowVale.Map01.Tests
         [TestCase("[E] Mở khóa hòm",true)]
         public void AmbientSpeechHasNoCaptionButCommanderAndHintsRemain(string text,bool shown)
         {Assert.AreEqual(shown,Map01Mission.GameplayCaption(text)!=null);}
+        [UnityTest,Timeout(180000)]public IEnumerator RequiredBinocularHintAppearsBeforeZoomAndAfterEarlyOfficerKill()
+        {
+            Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");SetPreviewResolution(1280,720);yield return new EnterPlayMode();yield return CheckObservationHud();yield return new ExitPlayMode();
+        }
+        static IEnumerator CheckObservationHud()
+        {
+            Map01Mission m=null;float until=Time.realtimeSinceStartup+90;
+            while(Time.realtimeSinceStartup<until){m=Object.FindFirstObjectByType<Map01Mission>();if(m?.IsInitialized==true)break;yield return null;}Assert.NotNull(m);
+            foreach(var enemy in m.Enemies)enemy.enabled=false;
+            var story=m.GetComponent<Map01Story>();var quest=m.GetComponent<Map01Quest>();
+            quest.RestoreStoryStage(Map01Quest.BossStage,new Map01Story.Snapshot{rescueAccepted=true,supplies=true,suppliesDelivered=true,supplyReported=true,radioDisabled=true,powerDisabled=true});
+                        var at=story.Layout.commanderPost.position+Vector3.back*35;
+            Assert.True(UnityEngine.AI.NavMesh.SamplePosition(at,out var ground,80,UnityEngine.AI.NavMesh.AllAreas));
+            var cc=m.player.GetComponent<CharacterController>();cc.enabled=false;m.player.position=ground.position+Vector3.up*.1f;cc.enabled=true;
+            yield return WaitGameSeconds(.8f);StringAssert.Contains("[F]",story.RequiredObservationReminder);
+            Directory.CreateDirectory("Logs/FenceReview_20261128");ScreenCapture.CaptureScreenshot("Logs/FenceReview_20261128/map1-binocular-reminder.png");yield return null;yield return null;
+            story.Progress.commanderKilled=true;StringAssert.Contains("chưa thay thế",story.RequiredObservationReminder);yield return WaitGameSeconds(.2f);
+            ScreenCapture.CaptureScreenshot("Logs/FenceReview_20261128/map1-early-kill-reminder.png");yield return null;yield return null;
+            story.Progress.commanderReported=true;Assert.IsNull(story.RequiredObservationReminder);
+        }
         [UnityTest]public IEnumerator WarmDialogueStartsWithoutBlockingAndKeepsAnklesPlanted()
         {
             Map01OpeningCutscene.CancelPending();EditorSceneManager.OpenScene("Assets/_Project/Scenes/Maps/Map 1.unity");yield return new EnterPlayMode();yield return null;yield return Review();yield return new ExitPlayMode();

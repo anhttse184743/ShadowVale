@@ -403,6 +403,7 @@ namespace ShadowVale.Map01
                 }
             }
             if(Busy){GUI.Box(new Rect(430,32,1050,42),GUIContent.none);GUI.Label(new Rect(443,36,1030,35),Map02ChapterState.PhaseName(State.phase),label);}
+            DrawRequiredObservationReminder();
             if(State.phase==3&&!State.Done("N2_01")&&binocular)
             {
                 DrawNightObservationGuide(label);
