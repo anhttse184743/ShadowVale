@@ -31,4 +31,20 @@ namespace ShadowVale.AI.Fsm
             AgentId = agentId; PlayerPosition = playerPosition; Seen = seen;
         }
     }
+
+    /// <summary>
+    /// An enemy joined a fight already knowing where the player is (a wave sent at a held lane, a squad-mate's
+    /// radio), without spotting him himself. Telemetry opens or joins the encounter on it; unlike
+    /// <see cref="PlayerContactEvent"/> the coordinator ignores it, so it never radios anyone else in.
+    /// </summary>
+    public readonly struct EnemyJoinedFightEvent : IEvent
+    {
+        public readonly string AgentId;
+        public readonly Vector3 PlayerPosition;
+
+        public EnemyJoinedFightEvent(string agentId, Vector3 playerPosition)
+        {
+            AgentId = agentId; PlayerPosition = playerPosition;
+        }
+    }
 }

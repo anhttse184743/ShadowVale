@@ -21,7 +21,7 @@ namespace ShadowVale.Map01
     /// </summary>
     public sealed partial class Map02ChapterEnemy : IEnemyWeapon, IEnemyAgent
     {
-        EnemyBrain brain;NavMeshEnemyBody brainBody;float sharedAt=-10,lastFired=-10;
+        EnemyBrain brain;NavMeshEnemyBody brainBody;float sharedAt=-10,lastFired=-10;bool engagedLastTick;
         /// <summary>At his cover and not shooting: down behind it, up for a moment as he fires.</summary>
         public bool InCoverDucked {get;private set;}
         /// <summary>The open battle of Night 3 (not the tank's escort).</summary>
@@ -57,6 +57,12 @@ namespace ShadowVale.Map01
             }
             agent.stoppingDistance=.5f;
             SeesPlayer=sees;brain.Tick(new PerceptionSample(sees,distance,target.position),Time.time,Time.deltaTime);
+            // A wave or a radioed squad-mate joins the fight already knowing where Nam is (ShareContact), which the brain
+            // keeps quiet so alerts never cascade; telemetry still needs the start of his fight to open an encounter
+            // (capture rate, escape time). A sighting is reported by the brain itself.
+            bool engaged=brain.Memory.Engaged(Time.time);
+            if(engaged&&!engagedLastTick&&!sees)ShadowVale.Core.Events.EventBus.Publish(new EnemyJoinedFightEvent(id,target.position));
+            engagedLastTick=engaged;
             if(!sees&&Time.time<returnFireUntil){brainBody.Face(returnFireAt);FireSuppressive(returnFireAt);}
             alerted=alerted||brain.Memory.Engaged(Time.time);
             bool atCover=brain.Memory.HasAssignment&&brain.Memory.ReachedAssignment&&agent.velocity.sqrMagnitude<.04f&&brain.State!=EnemyStateId.Retreat;

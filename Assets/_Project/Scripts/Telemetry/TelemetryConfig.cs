@@ -21,6 +21,10 @@ namespace ShadowVale.Telemetry
         public string ApiBaseUrl { get; set; } = DefaultApiBaseUrl;
         /// <summary>The backend's X-Game-Key; without one sessions wait in the queue.</summary>
         public string GameKey { get; set; }
+        /// <summary>human | replay; null = SVL_SESSION_SOURCE. The replay harness sets it for its own runs.</summary>
+        public string Source { get; set; }
+        /// <summary>For replay: the solver configuration code the run benchmarks; null = SVL_SOLVER_VARIANT.</summary>
+        public string RequestedVariant { get; set; }
         /// <summary>Holds <c>pending/</c>, <c>rejected/</c>; research exports go to its sibling <c>research/</c>.</summary>
         public string RootDirectory { get; set; }
         public string ResearchDirectory { get; set; }

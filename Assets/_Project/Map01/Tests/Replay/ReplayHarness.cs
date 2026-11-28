@@ -84,6 +84,26 @@ namespace ShadowVale.Map01.Tests.Replay
             public TelemetrySessionDto Session;
         }
 
+        /// <summary>
+        /// SVL_REPLAY_UPLOAD=1: each run (except the <c>none</c> control, which has no solver configuration) is also a
+        /// <c>replay</c> session on the web backend (SVL_API_BASE_URL / SVL_GAME_KEY or StreamingAssets/Config/backend.json),
+        /// registered with its variant as the configuration code, so the web's AI comparison and scalability views show the
+        /// harness's runs (source = replay, never mixed with players). Off by default: test runs stay off the shared database.
+        /// </summary>
+        public static bool Uploads => Environment.GetEnvironmentVariable("SVL_REPLAY_UPLOAD") == "1";
+
+        public static TelemetryConfig UploadConfig(string variant)
+        {
+            var config = TelemetryConfig.FromEnvironment();
+            config.Enabled = true;
+            config.UploadEnabled = true;
+            config.Source = "replay";
+            config.RequestedVariant = variant;
+            // The harness writes its own research record
+            config.ResearchDirectory = null;
+            return config;
+        }
+
         /// <summary>One run: reload the map, set the variant and seed, play the bot, collect telemetry.</summary>
         public static IEnumerator RunOne(Spec spec, Action<Result> done)
         {
@@ -116,8 +136,9 @@ namespace ShadowVale.Map01.Tests.Replay
 
                 var running = mission.GetComponent<TelemetryService>();
                 if (running != null) running.End(upload: false);
-                var telemetry = TelemetryService.Attach(mission.gameObject, Map01Mission.MapId,
-                    new TelemetryConfig { UploadEnabled = false, RootDirectory = null, ResearchDirectory = null });
+                bool upload = Uploads && spec.Variant != NoCoordination;
+                var telemetry = TelemetryService.Attach(mission.gameObject, Map01Mission.MapId, upload ? UploadConfig(spec.Variant)
+                    : new TelemetryConfig { UploadEnabled = false, RootDirectory = null, ResearchDirectory = null });
 
                 var camp = scouting.Camps[Mathf.Clamp(spec.Camp, 0, scouting.Camps.Count - 1)];
                 Vector3 approach = spawn - camp.Center; approach.y = 0;
@@ -169,7 +190,7 @@ namespace ShadowVale.Map01.Tests.Replay
                     EventBus.Unsubscribe(onDiscard);
                 }
                 bot.Release();
-                var session = telemetry.End(upload: false);
+                var session = telemetry.End(upload);
                 bool dead = health != null && health.IsDead;
                 done(new Result
                 {

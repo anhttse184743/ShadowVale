@@ -79,6 +79,7 @@ namespace ShadowVale.Telemetry
         {
             if (_unsubscribe.Count > 0) return;
             Listen<PlayerContactEvent>(OnContact);
+            Listen<EnemyJoinedFightEvent>(e => Encounters.OnContact(e.AgentId, Now));
             Listen<EnemyStateChangedEvent>(OnStateChanged);
             Listen<NoiseEvent>(OnNoise);
             Listen<TakedownEvent>(OnTakedown);

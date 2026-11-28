@@ -74,6 +74,8 @@ namespace ShadowVale.Map01.Tests
                 Assert.IsTrue(dto.Events.Any(e=>e.Type=="coordination_replan"),"The wave is planned and recorded: "+string.Join(",",dto.Summary.EventCounts.Keys));
                 Assert.IsTrue(dto.Events.Any(e=>e.Type=="enemy_state_changed"));
                 Assert.Greater(service.Session.Plans.Count,0,"Plans become coordination results for the AI comparison.");
+                Assert.Greater(dto.Encounters.Count,0,"The wave comes in knowing where Nam is, yet its fight is an encounter (capture rate, escape time).");
+                Assert.AreEqual("captured",dto.Encounters.Last().Result,"Nam fell while they fought him.");
                 var shot=dto.Events.First(e=>e.Type=="shot_fired");
                 StringAssert.DoesNotMatch("^(rifle|pistol|sniper|unarmed)$",(string)shot.Payload["weapon"],"Shots are counted by item code, not weapon kind.");
                 var kill=dto.Events.Single(e=>e.Type=="enemy_killed");

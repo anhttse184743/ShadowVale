@@ -26,7 +26,9 @@ namespace ShadowVale.Telemetry
     public sealed class TelemetryService : MonoBehaviour
     {
         public const string SourceEnvironment = "SVL_SESSION_SOURCE";
-        private static readonly TimeSpan StartTimeout = TimeSpan.FromSeconds(10);
+        // Render's free tier sleeps and takes ~25 s to answer the first request; a shorter wait left those sessions
+        // without a solver, so outside the AI comparison
+        private static readonly TimeSpan StartTimeout = TimeSpan.FromSeconds(60);
 
         public TelemetrySession Session { get; private set; }
         public TelemetryConfig Config { get; private set; }
@@ -66,7 +68,7 @@ namespace ShadowVale.Telemetry
                 ContentVersion = hasContent && content.Version != null ? content.Version : "embedded",
                 ContentVersionId = hasContent ? content.ContentVersionId : null,
                 InstallId = string.IsNullOrEmpty(config.RootDirectory) ? Guid.NewGuid().ToString() : InstallId.Get(config.RootDirectory),
-                Source = Env(SourceEnvironment) == "replay" ? "replay" : "human",
+                Source = (config.Source ?? Env(SourceEnvironment)) == "replay" ? "replay" : "human",
                 ConfiguredVariant = ServiceLocator.TryResolve<ISquadSolver>(out var solver) ? solver.VariantId
                     : _coordinator != null ? _coordinator.StartingVariant : "greedy",
             };
@@ -91,7 +93,7 @@ namespace ShadowVale.Telemetry
                 ["installId"] = context.InstallId,
                 ["source"] = context.Source,
                 // Replay runs ask for the configuration they benchmark; humans get an A/B arm
-                ["requestedVariant"] = context.Source == "replay" ? Env(SquadCoordinator.VariantEnvironment) : null,
+                ["requestedVariant"] = context.Source == "replay" ? Config.RequestedVariant ?? Env(SquadCoordinator.VariantEnvironment) : null,
                 ["contentVersionId"] = context.ContentVersionId,
                 ["mapCode"] = context.MapId,
                 ["clientVersion"] = context.BuildVersion,
@@ -133,7 +135,8 @@ namespace ShadowVale.Telemetry
             catch (Exception) { return; }
             if (solver == null) return;
             AssignedSolver = solver.Value<string>("code");
-            if (_coordinator == null || !string.IsNullOrWhiteSpace(Env(SquadCoordinator.VariantEnvironment))) return;
+            // A replay run sets its own variant and tuning; the backend only echoes the configuration it asked for
+            if (_coordinator == null || Session.Context.Source == "replay" || !string.IsNullOrWhiteSpace(Env(SquadCoordinator.VariantEnvironment))) return;
 
             var settings = _coordinator.Settings;
             settings.LatencyBudgetMs = solver.Value<int?>("timeBudgetMs") ?? settings.LatencyBudgetMs;

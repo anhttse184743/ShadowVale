@@ -20,7 +20,9 @@ namespace ShadowVale.Map01.Tests.Replay
     /// <item><c>SVL_REPLAY_VARIANTS</c> (greedy,qiea) — remote ones need the sidecar, skipped if it is down;
     /// <c>none</c> is the no-coordination control;</item>
     /// <item><c>SVL_REPLAY_BOTS</c> (same_route,same_bush,stone_lure), <c>SVL_REPLAY_CAMP</c> (1), <c>SVL_REPLAY_FPS</c> (30);</item>
-    /// <item><c>SVL_REPLAY_OUT</c> the jsonl to append to (default research/replay-&lt;time&gt;.jsonl).</item>
+    /// <item><c>SVL_REPLAY_OUT</c> the jsonl to append to (default research/replay-&lt;time&gt;.jsonl);</item>
+    /// <item><c>SVL_REPLAY_UPLOAD=1</c> also sends each run to the web backend as a <c>replay</c> session (AI comparison
+    /// with source = replay); the backend needs a configuration whose code is each variant.</item>
     /// </list>
     /// Then: <c>svl-bench replay &lt;file&gt;</c>.
     /// </summary>
