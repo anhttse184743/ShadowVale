@@ -8,6 +8,17 @@ namespace ShadowVale.Map01
         public Map02ChapterTask TrackedTask=>State.TrackedTask;
         public Map02ObjectiveObject TrackedMarker=>TrackedTask!=null&&markers.TryGetValue(TrackedTask.id,out var mark)?mark:null;
         public bool Track(string id)=>State.Track(id);
+        public string RequiredObservationReminder=>State.phase==3&&!State.Done("N2_01")
+            ?!State.night2ObservationCheckpointReached?"CẦN TRINH SÁT BẰNG ỐNG NHÒM · Tới ghim quan sát ở đầu cầu, sau đó giữ [F] nhìn tổ tuần tra đủ 2 giây."
+            :"CẦN TRINH SÁT BẰNG ỐNG NHÒM · Giữ [F], nhìn rõ tổ tuần tra trong 40 m đủ 2 giây. Quan sát và báo bộ đàm xong mới vào kho."
+            :null;
+        void DrawRequiredObservationReminder()
+        {
+            var text=RequiredObservationReminder;
+            if(string.IsNullOrEmpty(text)||binocular||Busy||Mission.Panel!=0||ForestMenu.Visible)return;
+            var rect=new Rect(410,145,780,88);GUI.Box(rect,GUIContent.none);
+            GUI.Label(new Rect(rect.x+15,rect.y+9,rect.width-30,rect.height-18),text,new GUIStyle(GUI.skin.label){fontSize=20,wordWrap=true,normal={textColor=new Color(1,.87f,.55f)}});
+        }
         public string Purpose=>TrackedTask?.purpose??"";
         public string Instruction
         {

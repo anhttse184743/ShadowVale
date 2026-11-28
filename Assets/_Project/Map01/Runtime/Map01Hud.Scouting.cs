@@ -200,5 +200,14 @@ namespace ShadowVale.Map01
             texture.SetPixels(pixels); texture.Apply();
             return texture;
         }
+        private void DrawRequiredObservationReminder(float width)
+        {
+            if(mission.Stopped||mission.BenchOpen||mission.InventoryOpen||mission.MapOpen||scouting==null)return;
+            var reminder=GetComponent<Map01Story>()?.RequiredObservationReminder;
+            if(!scouting.Binoculars&&!string.IsNullOrEmpty(reminder)&&!mission.Cinematic){
+                var plate=new Rect(width/2-350,176,700,84);HudPanel(plate);HudBorder(plate,HudGold,2);
+                GUI.Label(new Rect(plate.x+16,plate.y+9,plate.width-32,68),reminder,hudSmall);
+            }
+        }
     }
 }

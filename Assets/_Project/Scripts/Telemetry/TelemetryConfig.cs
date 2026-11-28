@@ -27,8 +27,6 @@ namespace ShadowVale.Telemetry
         /// <summary>Seconds between player-position samples (heatmap).</summary>
         public float PositionSampleSeconds { get; set; } = 5f;
         public int MaxEvents { get; set; } = 4000;
-        /// <summary>Queued sessions kept at most; the oldest go first.</summary>
-        public int MaxQueuedSessions { get; set; } = 50;
         /// <summary>Above this share of fallback plans a session is not valid for comparing variants.</summary>
         public double MaxFallbackRateForComparison { get; set; } = 0.2;
 

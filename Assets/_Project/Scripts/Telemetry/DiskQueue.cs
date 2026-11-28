@@ -18,13 +18,11 @@ namespace ShadowVale.Telemetry
 
         public string PendingDirectory { get; }
         public string RejectedDirectory { get; }
-        public int MaxFiles { get; }
 
-        public DiskQueue(string root, int maxFiles = 50)
+        public DiskQueue(string root)
         {
             PendingDirectory = Path.Combine(root, "pending");
             RejectedDirectory = Path.Combine(root, "rejected");
-            MaxFiles = Math.Max(1, maxFiles);
         }
 
         /// <summary>Stores a session's batch under its id (replacing an older copy of the same session).</summary>
@@ -34,9 +32,8 @@ namespace ShadowVale.Telemetry
             string path = Path.Combine(PendingDirectory, Safe(sessionId) + ".json");
             string tmp = path + ".tmp";
             File.WriteAllText(tmp, json, Utf8);
-            if (File.Exists(path)) File.Delete(path);
-            File.Move(tmp, path);
-            Prune();
+            if (File.Exists(path)) File.Replace(tmp, path, null);
+            else File.Move(tmp, path);
             return path;
         }
 
@@ -65,13 +62,6 @@ namespace ShadowVale.Telemetry
             string to = Path.Combine(RejectedDirectory, Path.GetFileName(path));
             if (File.Exists(to)) File.Delete(to);
             File.Move(path, to);
-        }
-
-        /// <summary>A queue that cannot drain (no backend for months) must not grow without bound: drop the oldest.</summary>
-        private void Prune()
-        {
-            var files = Pending();
-            for (int i = 0; i < files.Count - MaxFiles; i++) File.Delete(files[i]);
         }
 
         private static string Safe(string id)

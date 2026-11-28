@@ -39,6 +39,14 @@ namespace ShadowVale.Map01
         public bool CanBrief=>quest.Stage==0&&!Progress.rescueAccepted||quest.Stage==2;
         public bool RadioReport=>quest.Stage==4&&!Progress.supplyReported||quest.Stage==6||quest.Stage==8;
         public bool CanDeliver=>quest.Stage==4&&Progress.supplyReported&&!Progress.suppliesDelivered;
+        public string RequiredObservationReminder=>BuildObservationReminder(quest!=null&&quest.Stage==Map01Quest.BossStage&&!Progress.commanderReported,Progress.commanderKilled,
+            Layout!=null&&mission?.player!=null?Vector3.Distance(mission.player.position,Layout.commanderPost.position):0);
+        public static string BuildObservationReminder(bool required,bool officerDead,float distance)
+        {
+            if(!required)return null;
+            string instruction=distance<18?"Lùi ra cách trại ít nhất 18 m, dừng lại, giữ [F] và nhìn về doanh trại đến khi xác nhận.":distance>120?"Tới cách doanh trại 18–120 m, dừng lại và giữ [F] để quan sát.":"Dừng lại, giữ [F] và nhìn về doanh trại. Chờ xác nhận rồi báo cáo.";
+            return (officerDead?"CHƯA HOÀN TẤT TRINH SÁT · Hạ địch chưa thay thế bước quan sát.\n":"CẦN DÙNG ỐNG NHÒM TRƯỚC KHI ĐỘT NHẬP\n")+instruction;
+        }
         public bool CommanderObjectiveComplete=>Progress.supplies&&Progress.suppliesDelivered&&Progress.radioDisabled&&Progress.powerDisabled&&Progress.commanderAreaReached&&Progress.commanderConfirmed&&Progress.commanderReported&&Progress.commanderKilled;
         Map01Mission mission; Map01Quest quest; Map01OpeningCutscene opening; Map01StoryDialogue dialogue;
         Map01OperationPuzzleUI puzzleUI;float confirmTime;Vector3 previousObservationPosition;bool checkpointPending;

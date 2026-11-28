@@ -2,6 +2,8 @@ using System;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ShadowVale.Networking;
 
 namespace ShadowVale.Telemetry
@@ -20,8 +22,8 @@ namespace ShadowVale.Telemetry
     /// Sends queued sessions to the web backend: <c>PUT /api/game/sessions/{id}</c> with the game key, the
     /// body being the session's <c>SessionUpload</c> (<see cref="SessionUploadMapper"/>). Off the main thread,
     /// never throws, never blocks gameplay. The backend stores events and plan rows by their ids, so a retry
-    /// after a lost response stores nothing twice. 400/413/422 set a batch aside; anything else (offline,
-    /// no key, 401, 404, 429, 5xx) leaves it queued. A file still in the pre-backend format (snake_case,
+    /// after a lost response stores nothing twice. 400/409/413/422 and partial acceptance set a batch aside.
+    /// Temporary failures (offline, no key, 401, 404, 429, 5xx) leave it queued. A file in the pre-backend format (snake_case,
     /// no installId) can never be accepted and is set aside without being sent.
     /// </summary>
     public sealed class TelemetryUploader
@@ -40,7 +42,17 @@ namespace ShadowVale.Telemetry
             if (!json.Contains("\"installId\"")) return UploadOutcome.Rejected;
             var response = await _client.SendJsonAsync(HttpMethod.Put, Endpoints.Session(_client.ApiBaseUrl, sessionId), json, _timeout, ct)
                 .ConfigureAwait(false);
-            return response.Status == 0 ? UploadOutcome.RetryLater : Classify(response.Status);
+            var outcome = Classify(response.Status);
+            if (outcome != UploadOutcome.Sent || string.IsNullOrWhiteSpace(response.Text)) return outcome;
+
+            try
+            {
+                var acknowledgement = JObject.Parse(response.Text);
+                int eventsRejected = (int?)acknowledgement["events"]?["rejected"] ?? 0;
+                int resultsRejected = (int?)acknowledgement["coordinationResults"]?["rejected"] ?? 0;
+                return eventsRejected > 0 || resultsRejected > 0 ? UploadOutcome.Rejected : UploadOutcome.Sent;
+            }
+            catch (JsonException) { return UploadOutcome.RetryLater; }
         }
 
         public static UploadOutcome Classify(int status) => BackendClient.Classify(status) switch
