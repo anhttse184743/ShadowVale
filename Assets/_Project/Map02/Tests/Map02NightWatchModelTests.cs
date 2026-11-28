@@ -38,7 +38,10 @@ namespace ShadowVale.Map01.Tests
                 save.chapter.dayOne.arrivalSeen=true;mission.Restore(save);chapter.Track("N1_02");
                 var gate = Get<List<Transform>>("postGates")[0].GetComponent<Map02NightWatchVisual>();
                 var lamp = Get<List<Transform>>("postLamps")[0].GetComponent<Map02NightWatchVisual>();
-                Assert.Greater(chapter.NightFenceSections,150,"The perimeter continues beyond the gateway view; it is not two short cut-off panels");Assert.NotNull(gate.gateLeaf);Assert.NotNull(gate.bolt);Assert.NotNull(lamp.hood);
+                var perimeter=Object.FindObjectsByType<Transform>(FindObjectsSortMode.None).Where(t=>t.name.StartsWith("Continuous village boundary fence")).ToArray();
+                Assert.IsNotEmpty(perimeter,"The village keeps an actual perimeter while leaving routes open");
+                Assert.Greater(perimeter.Max(t=>t.position.z)-perimeter.Min(t=>t.position.z),200,"The long boundary continues beyond both ends of the village view");
+                Assert.Less(perimeter.Min(t=>t.position.x),-110,"The western boundary stays outside the houses and lanes");Assert.NotNull(gate.gateLeaf);Assert.NotNull(gate.bolt);Assert.NotNull(lamp.hood);
                 var nodes=gate.GetComponentsInChildren<Transform>();
                 var fixedFrame=nodes.First(t=>t.name=="GateFrame");var position=fixedFrame.position;var rotation=fixedFrame.rotation;
                 var receiver=nodes.First(t=>t.name=="ReceiverPlate");
